@@ -909,8 +909,7 @@ func parseFHHomeErshouHouseListItemNode(
                             toTracerParams(offset, key: "rank") <|>
                             toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                             toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                            imprIdTraceParam(item.logPB) <|>
-                            groupIdTraceParam(item.logPB) <|>
+                            toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
                             toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                             toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                     return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -982,14 +981,13 @@ func parseErshouHouseListItemNode(
             .map { (e) -> ElementRecord in
                 let (offset, item) = e
                 let theParams = tracerParams <|>
+                    traceExtension <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    imprIdTraceParam(item.logPB) <|>
-                    groupIdTraceParam(item.logPB) <|>
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                    traceExtension
+                    toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }
         
@@ -1095,8 +1093,8 @@ func parseErshouHouseListRowItemNode(
 //                toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+//                imprIdTraceParam(item.logPB) <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams("old", key: "house_type")
@@ -1175,9 +1173,8 @@ func parseErshouRelatedHouseListItemNode(
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -1311,6 +1308,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
             
             let houseType = HouseType(rawValue: item.houseType ?? 0) ?? .newHouse
             let houseShowParams = TracerParams.momoid() <|>
+                traceParam <|>
                 toTracerParams(houseTypeStringByHouseType(houseType: houseType), key: "house_type") <|>
                 toTracerParams("left_pic", key: "card_type") <|>
                 toTracerParams(categoryNameByHouseType(houseType: houseType), key: "page_type") <|>
@@ -1318,8 +1316,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
                 toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
                 toTracerParams(item.followId ?? "be_null", key: "group_id") <|>
-                toTracerParams("be_null", key: "element_type") <|>
-                traceParam
+                toTracerParams("be_null", key: "element_type")
 
             let finalHouseShowParams = houseShowParams
                 .exclude("element_from")

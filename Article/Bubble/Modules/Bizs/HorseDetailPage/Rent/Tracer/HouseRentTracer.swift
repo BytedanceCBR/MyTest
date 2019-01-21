@@ -29,7 +29,7 @@ class HouseRentTracer: NSObject, NSCopying {
     @objc
     var rank: String
     @objc
-    var imprId: String
+    var imprId: String?
     @objc
     var hasRecordGoDetail: Bool
     @objc

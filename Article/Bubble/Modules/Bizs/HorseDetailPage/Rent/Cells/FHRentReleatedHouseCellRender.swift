@@ -69,9 +69,9 @@ func parseRentReleatedHouseListItemNode(
                     toTracerParams("related", key: "element_type") <|>
                     toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
                     toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
-                    searchIdTraceParam(item.logPb) <|>
-                    imprIdTraceParam(item.logPb) <|>
-                    groupIdTraceParam(item.logPb) <|>
+                    toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
+                    toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.logPb as? [String : Any] ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }

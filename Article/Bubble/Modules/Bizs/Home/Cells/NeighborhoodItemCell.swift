@@ -208,8 +208,7 @@ func parseNeighborhoodRowItemNode(
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? searchIdDetail, key: "search_id") <|>
                 toTracerParams("be_null", key: "element_type") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("enter_from").exclude("element_from"))
     }

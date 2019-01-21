@@ -361,9 +361,8 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             toTracerParams(ershouHouseData.neighborhoodInfo?.id ?? "be_null", key: "group_id") <|>
             toTracerParams("no_pic", key: "card_type") <|>
             toTracerParams("neighborhood", key: "house_type") <|>
-            searchIdTraceParam(ershouHouseData.neighborhoodInfo?.logPB) <|>
-            groupIdTraceParam(ershouHouseData.neighborhoodInfo?.logPB) <|>
-            imprIdTraceParam(ershouHouseData.neighborhoodInfo?.logPB) <|>
+            toTracerParams(ershouHouseData.neighborhoodInfo?.searchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(ershouHouseData.neighborhoodInfo?.imprId ?? "be_null", key: "impr_id") <|>
             toTracerParams("old_detail", key: "page_type") <|>
             toTracerParams("be_null", key: "element_type")
         let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("enter_from").exclude("element_from"))

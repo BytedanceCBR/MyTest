@@ -27,15 +27,12 @@ func parseRentNeighborhoodInfoNode(model: FHRentDetailResponseModel?,
         toTracerParams(tracer.cardType, key: "card_type") <|>
         toTracerParams(tracer.pageType, key: "page_type") <|>
         toTracerParams("be_null", key: "element_type") <|>
-        imprIdTraceParam(tracer.logPb) <|>
-        searchIdTraceParam(tracer.logPb) <|>
-        groupIdTraceParam(tracer.logPb) <|>
-//        toTracerParams("", key: "group_id") <|>
-//        toTracerParams("", key: "impr_id") <|>
-//        toTracerParams("", key: "search_id") <|>
+        toTracerParams(model?.data?.neighborhoodInfo?.searchId ?? "be_null", key: "search_id") <|>
+        toTracerParams(model?.data?.neighborhoodInfo?.imprId ?? "be_null", key: "impr_id") <|>
+        toTracerParams(model?.data?.neighborhoodInfo?.id ?? "be_null", key: "group_id") <|>
         toTracerParams(tracer.rank, key: "rank") <|>
         toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
-        toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
+        toTracerParams(model?.data?.neighborhoodInfo?.logPb ?? "be_null", key: "log_pb") <|>
         toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id")
     let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams)
     let elementRecord: ElementRecord = { (params) in
