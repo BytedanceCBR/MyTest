@@ -516,8 +516,8 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
                     return;
                 }
                 
-                if (vcStack.count > closeStackCouuntResult + 1) {
-                    NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 1;
+                if (vcStack.count > closeStackCouuntResult + 2) {
+                    NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
                     if (retainVCs == 0) {
                         self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
                     }else

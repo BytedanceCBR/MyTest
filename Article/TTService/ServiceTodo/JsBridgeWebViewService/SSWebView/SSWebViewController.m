@@ -108,9 +108,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         params[@"bounce_disable"] = @"1"; // 添加支持bounce_disable设置
     }
     NSString * urlStr = nil;
+    self.closeStackCount = 0;
     if ([params.allKeys containsObject:@"url"]) {
         urlStr = [params objectForKey:@"url"];
-        self.closeStackCount = [params objectForKey:@""];
         
         if ([params.allKeys containsObject:@"ttencoding"]) {
             if ([[params objectForKey:@"ttencoding"] isEqualToString:@"base64"]) {
@@ -487,6 +487,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     [self showShareButtonAcition];
     
     self.ssWebView.closeStackCounts = self.closeStackCount;
+    
 }
 
 // 注册全局通知监听器
@@ -705,6 +706,46 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
     
     [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
+    
+    [self setUpCloseCountVC];
+}
+
+- (void)setUpCloseCountVC
+{
+    
+    NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    
+    NSInteger closeStackCouuntResult = self.closeStackCount;
+    
+    if (closeStackCouuntResult == 0) {
+        return;
+    }
+    
+    if (vcStack.count > closeStackCouuntResult + 2) {
+        NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
+        if (retainVCs == 0) {
+            self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+        }else
+        {
+            NSMutableArray *viewControllersArray = [NSMutableArray new];
+            [viewControllersArray addObject:vcStack.firstObject];
+            
+            for (int i = 0; i < retainVCs; i++) {
+                if (vcStack.count > i) {
+                    [viewControllersArray addObject:vcStack[i + 1]];
+                }
+            }
+            
+            [viewControllersArray addObject:vcStack.lastObject];
+            
+            self.navigationController.viewControllers = viewControllersArray;
+        }
+    }else
+    {
+        if (self.navigationController.viewControllers.count >=2) {
+            self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject, nil];
+        }
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
