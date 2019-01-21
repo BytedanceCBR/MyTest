@@ -99,7 +99,7 @@
 
     self.leftView.titleLabel.text = [NSString stringWithFormat:@"%@%@",model.cityName,model.cityTitleDesc];
     self.leftView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.cityDetailDesc];
-    self.leftView.icon.image = [UIImage imageNamed:@"home_setting-arrow"];
+    self.leftView.icon.image = [UIImage imageNamed:@"home_setting_arrow"];
     self.leftView.leftPadding = 20 * WIDTHSCALE;
     self.leftView.rightPadding = 10 * WIDTHSCALE;
     
