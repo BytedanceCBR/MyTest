@@ -969,8 +969,8 @@ func parseNewHouseFloorPanCollectionNode(
                 toTracerParams("new_detail", key: "enter_from") <|>
                 toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(newHouseData.id ?? "be_null", key: "group_id") <|>
-
                 traceExtension
+            
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -1017,8 +1017,8 @@ fileprivate func fillGuessLikeFloorPanCell(
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("house_model", key: "element_type") <|>
                     //实际上这个地方是空
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
-
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                    traceExtension
 
             return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
         }
