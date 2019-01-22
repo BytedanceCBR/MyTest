@@ -1432,6 +1432,7 @@ CHECKOUT OPTIONS:
     :commit: 3f62c697d6e29dba82511a3e7c432bd7d368a316
     :git: git@code.byted.org:TTIOS/BDTBasePlayer
   ios_house_filter:
+    :commit: 1a362dcfb5f68eecd199619ee6a31e37a152b953
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.0
   React:
