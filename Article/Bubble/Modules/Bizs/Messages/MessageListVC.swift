@@ -550,68 +550,6 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                     TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://neighborhood_detail?neighborhood_id=\(houseId)"), userInfo: userInfo)
                 }
 
-//                switch houseType {
-//                case .newHouse:
-//                    openNewHouseDetailPage(
-//                        houseId: Int64(houseId) ?? 0,
-//                        logPB: logPb as? [String: Any],
-//                        disposeBag: disposeBag,
-//                        tracerParams: params <|> toTracerParams("new_message_list", key: "enter_from"),
-//                        navVC: navVC)(TracerParams.momoid() <|>
-//                            beNull(key: "element_from") <|>
-//                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
-//                case .secondHandHouse:
-//
-//                    let listType = selectTraceParam(self.traceParams, key: "category_name")
-//                    var elementParams = TracerParams.momoid()
-//                                        <|> toTracerParams(rankByIndexPath(indexPath), key: "rank")
-//                                        <|> beNull(key: "element_from")
-//
-//                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
-//
-//                        params = params <|> toTracerParams("recommend_message_list", key: "enter_from")
-//                        elementParams = elementParams <|> toTracerParams("be_null", key: "element_from")
-//
-//                    }else {
-//                        params = params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
-//                    }
-//                    openErshouHouseDetailPage(
-//                        houseId: Int64(houseId) ?? 0,
-//                        logPB: logPb as? [String: Any],
-//                        disposeBag: disposeBag,
-//                        tracerParams: params,
-//                        navVC: navVC)(elementParams)
-//
-//                case .rentHouse:
-//
-//                    var tracerDict:[String:Any] = [:]
-//                    tracerDict["card_type"] = "left_pic"
-//
-//                    let listType = selectTraceParam(self.traceParams, key: "category_name")
-//                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
-//                        tracerDict["enter_from"] = "recommend_message_list"
-//                    }else {
-//                        tracerDict["enter_from"] = listType ?? "rent_message_list"
-//                    }
-//                    tracerDict["element_from"] = "be_null"
-//                    tracerDict["log_pb"] = selectTraceParam(params, key: "log_pb") ?? "be_null"
-//                    tracerDict["rank"] = rankByIndexPath(indexPath)
-//                    tracerDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from")
-//                    tracerDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id")
-//
-//                    let userInfo = TTRouteUserInfo(info: ["tracer": tracerDict])
-//                    TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
-//
-//                default:
-//                    openErshouHouseDetailPage(
-//                        houseId: Int64(houseId) ?? 0,
-//                        logPB: logPb as? [String: Any],
-//                        disposeBag: disposeBag,
-//                        tracerParams: params <|> toTracerParams("neighborhood_message_list", key: "enter_from"),
-//                        navVC: navVC)(TracerParams.momoid() <|>
-//                            beNull(key: "element_from") <|>
-//                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
-//                }
             } else {
                 assertionFailure()
             }
