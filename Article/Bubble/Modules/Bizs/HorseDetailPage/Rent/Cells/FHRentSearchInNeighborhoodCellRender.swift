@@ -27,8 +27,10 @@ func parseRentSearchInNeighborhoodNode(
             let openParams = params <|>
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent_detail", key: "enter_from") <|>
-                toTracerParams("same_neighborhood", key: "element_from")
-
+                toTracerParams("same_neighborhood", key: "element_from") <|>
+                toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+                toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id")
+            
             let sectionParms = params <|>
                 toTracerParams(tracer.rank, key: "rank") <|>
                 toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
