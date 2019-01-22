@@ -104,7 +104,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     BOOL hasRead = [self _hasReadOfArticle:schemaString];
     
     if (!hasRead) {
-        NSString *titleString  = NSLocalizedString(@"要闻推送", nil);
+        NSString *titleString  = NSLocalizedString(@"实时推送", nil);
         NSString *detailString = title;
         NSString *attachmentURLString = [dict tt_stringValueForKey:kSSAPNsAlertManagerAttachmentKey];
         NSString *importanceString    = [dict tt_stringValueForKey:kSSAPNsAlertManagerImportanceKey];
@@ -275,7 +275,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
         BOOL hasRead = [self _hasReadOfArticle:schemaString];
         
         if (!hasRead) {
-            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"要闻推送", nil) message:title preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"实时推送", nil) message:title preferredType:TTThemedAlertControllerTypeAlert];
             [alert addActionWithTitle:NSLocalizedString(@"忽略", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 wrapperTrackEvent(@"apn", @"news_alert_close");
             }];
