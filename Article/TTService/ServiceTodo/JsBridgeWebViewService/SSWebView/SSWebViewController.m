@@ -88,6 +88,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 //这是我见过写的最乱的代码.
 - (void)dealloc
 {
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.requestURL = nil;
@@ -103,7 +104,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 {
     NSMutableDictionary *params = [NSMutableDictionary new];
     [params addEntriesFromDictionary:paramObj.allParams];
-    params[@"use_wk"] = @"1";  // 添加默认支持使用WKWebView
+    BOOL iOS8 = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0;
+    if (iOS8) {
+        params[@"use_wk"] = @"0";  // 添加默认支持使用WKWebView
+    } else {
+        params[@"use_wk"] = @"1";  // 添加默认支持使用WKWebView
+    }
     if (![params valueForKey:@"bounce_disable"]) {
         params[@"bounce_disable"] = @"1"; // 添加支持bounce_disable设置
     }
