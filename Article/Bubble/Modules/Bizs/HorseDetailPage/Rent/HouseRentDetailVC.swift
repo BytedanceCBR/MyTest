@@ -375,8 +375,12 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                                                               houseType: .rentHouse,
                                                               followAction: .rentHouse,
                                                               statusBehavior: theDetailModel.follwUpStatus)
+                        if followUpOrCancel {
+                            detailPageViewModel?.recordDeletedFollowEvent(tracerParamsFollow)
+                        } else {
+                            detailPageViewModel?.recordFollowEvent(tracerParamsFollow)
+                        }
                     }
-                    detailPageViewModel?.recordFollowEvent(tracerParamsFollow)
                 })
                 .disposed(by: disposeBag)
             //绑定关注状态回调

@@ -672,6 +672,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         followAction: .newHouse,
                         followId: "\(houseId)",
                         disposeBag: disposeBag)()
+                self.recordDeletedFollowEvent(traceParam)
             } else {
                 followIt(
                         houseType: .newHouse,

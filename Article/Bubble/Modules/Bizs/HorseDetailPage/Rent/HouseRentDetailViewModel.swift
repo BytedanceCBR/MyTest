@@ -446,6 +446,10 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         recordEvent(key: TraceEventName.click_follow, params: traceParam)
     }
 
+    func recordDeletedFollowEvent(_ traceParam: TracerParams) {
+        recordEvent(key: TraceEventName.delete_follow, params: traceParam)
+    }
+
     func requestReletedData() {
 
         let task = HouseRentAPI.requestHouseRentRelated("\(self.houseId)") { [weak self] (model, error) in

@@ -124,6 +124,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return re
     }()
 
+    private var hasRecordRealtorShow = false
+
     init(houseId: Int64,
          houseType: HouseType,
          isShowBottomBar: Bool = true,
@@ -727,7 +729,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             navBar.rightBtn.rx.tap
                 .bind(onNext:  { [weak detailPageViewModel] in
                     
-                    var tracerParams = EnvContext.shared.homePageParams
+                    var tracerParams = TracerParams.momoid() <|> self.traceParams
                     if let params = detailPageViewModel?.goDetailTraceParam {
                         tracerParams = tracerParams <|> params
                             .exclude("house_type")
@@ -873,9 +875,29 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         })
         if leftWidth > 0, let contactPhone = contactPhone {
             self.bindJumpToRealtorDetail(contactPhone: contactPhone, targetView: self.bottomBar.leftView)
+            if let tracerModel =  self.detailPageViewModel?.tracerModel, hasRecordRealtorShow == false {
+                self.recordRealtorShow(contact: contactPhone,
+                                       traceModel: tracerModel,
+                                       offset: 0)
+                hasRecordRealtorShow = true
+            }
         }
 
         
+    }
+
+    fileprivate func recordRealtorShow(contact: FHHouseDetailContact, traceModel: HouseRentTracer, offset: Int) {
+
+        let params:[String: Any] = ["page_type": "old_detail",
+                                    "element_type": "old_detail_related",
+                                    "rank": traceModel.rank,
+                                    "origin_from": traceModel.originFrom ?? "be_null",
+                                    "origin_search_id": traceModel.originSearchId ?? "be_null",
+                                    "log_pb": traceModel.logPb ?? "be_null",
+                                    "realtor_id": contact.realtorId ?? "be_null",
+                                    "realtor_rank": offset,
+                                    "realtor_position": "detail_button"]
+        recordEvent(key: "realtor_show", params: params)
     }
 
     fileprivate func bindJumpToRealtorDetail(contactPhone: FHHouseDetailContact, targetView: UIControl) {
@@ -1244,8 +1266,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     deinit {
          UIApplication.shared.statusBarStyle = .default
     }
-
-
 
 }
 

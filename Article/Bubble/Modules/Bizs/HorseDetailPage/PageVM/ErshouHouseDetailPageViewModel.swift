@@ -226,19 +226,22 @@ import RxCocoa
                 theCell.onAreaDisplay(displayArea: CGRect(x: 0,
                                                           y: 0,
                                                           width: visibleArea.width,
-                                                          height: visibleArea.height - 15))
+                                                          height: visibleArea.height))
             }
         })
     }
 
     func catulateVisibleArea(containerFrame: CGRect, targetFrame: CGRect) -> CGRect {
-        let buttomBarHeight: CGFloat = 64
+        let buttomBarHeight: CGFloat = 67
         let realVisible = CGRect(x: containerFrame.minX,
                                  y: containerFrame.minY,
                                  width: containerFrame.width,
                                  height: containerFrame.height - buttomBarHeight)
         let intersectionFrame = realVisible.intersection(targetFrame)
-        return intersectionFrame
+        return CGRect(x: intersectionFrame.minX,
+                      y: intersectionFrame.minY,
+                      width: intersectionFrame.width,
+                      height: intersectionFrame.height - buttomBarHeight)
     }
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
