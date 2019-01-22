@@ -95,6 +95,7 @@
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
         [self.viewModel loadListCityData:configDataModel];
+        self.hasShowenConfigListData = YES;
         [self checkShowLocationErrorAlert];
         // 兼容重新覆盖安装App逻辑(v0.5.0版本开始，后续如果线上没有0.4版本，可以删除当前track)
         if ([TTSandBoxHelper isAPPFirstLaunch]) {
@@ -134,7 +135,8 @@
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
-            [self requestCurrentLocationWithToast:NO needSwitchCity:YES];
+            BOOL isFirstInstallApp = [TTSandBoxHelper isAPPFirstLaunch];
+            [self requestCurrentLocationWithToast:NO needSwitchCity:isFirstInstallApp];
         } else {
             [self checkShowLocationErrorAlert];
         }
@@ -389,10 +391,10 @@
             if (hasToast) {
                 [[ToastManager manager] showToast:@"定位成功" duration:1.0 isUserInteraction:YES];
             }
-            //如果用户首次安装，且没有选过城市，自动跳到首页
+            //如果用户首次安装，且没有选过城市，且有城市列表，自动跳到首页
             BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-            if (!hasSelectedCity && isNeedSwitchCity) {
-                [self.viewModel cityNameBtnClick];
+            if (!hasSelectedCity && isNeedSwitchCity && wSelf.hasShowenConfigListData) {
+                [wSelf.viewModel cityNameBtnClick];
             }
         } else {
             wSelf.locationBar.isLocationSuccess = NO;
