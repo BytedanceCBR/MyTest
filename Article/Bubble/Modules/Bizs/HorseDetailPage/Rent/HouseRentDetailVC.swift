@@ -371,7 +371,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             toTracerParams(self.houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.houseRentTracer.elementFrom , key: "element_from") <|>
             toTracerParams(self.houseRentTracer.originFrom ?? "be_null" , key: "origin_from") <|>
-            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null" , key: "ofigin_search_id") <|>
+            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null" , key: "origin_search_id") <|>
             toTracerParams(self.houseRentTracer.rank, key: "rank")
     }
 
@@ -656,7 +656,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         
         var params = TracerParams.momoid() <|>
             toTracerParams(self.houseRentTracer.originFrom ?? "be_null" , key: "origin_from") <|>
-            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null" , key: "ofigin_search_id") <|>
+            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null" , key: "origin_search_id") <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
             toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
