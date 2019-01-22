@@ -202,18 +202,20 @@ extension DetailPageViewModel {
                 return
             }
             
-            var tracerParams = TracerParams.momoid()
-            if let followTraceParams = self?.followTraceParams {
-                
-                let paramsMap = followTraceParams.paramsGetter([:])
-                tracerParams = tracerParams <|>
-                    toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
-            }
-            tracerParams = tracerParams <|>
-                toTracerParams(followId, key: "group_id") <|>
-                toTracerParams(self?.logPB ?? [:], key: "log_pb")
-            recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
-            
+//            var tracerParams = TracerParams.momoid()
+//            if let followTraceParams = self?.followTraceParams {
+//
+//                let paramsMap = followTraceParams.paramsGetter([:])
+//                tracerParams = tracerParams <|>
+//                    toTracerParams(paramsMap["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+//                    toTracerParams(paramsMap["origin_from"] ?? "be_null", key: "origin_from") <|>
+//                    toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
+//            }
+//            tracerParams = tracerParams <|>
+//                toTracerParams(followId, key: "group_id") <|>
+//                toTracerParams(self?.logPB ?? [:], key: "log_pb")
+//            recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
+
             requestCancelFollow(
                     houseType: houseType,
                     followId: followId,
@@ -296,10 +298,13 @@ extension DetailPageViewModel {
     }
     
     func recordFollowEvent(_ traceParam: TracerParams) {
-        
         recordEvent(key: TraceEventName.click_follow, params: traceParam)
-        
     }
+
+    func recordDeletedFollowEvent(_ traceParam: TracerParams) {
+        recordEvent(key: TraceEventName.delete_follow, params: traceParam)
+    }
+
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton, traceParam) in
