@@ -706,6 +706,7 @@ func getNewHouseDetailPageViewModel(
         navVC: UINavigationController?,
         tableView: UITableView) -> NewHouseDetailPageViewModel {
     let re = NewHouseDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
+    re.currentVC = detailPageVC
     re.showQuickLoginAlert = { [weak detailPageVC] (title, subTitle) in
         detailPageVC?.showQuickLoginAlert(title: title, subTitle: subTitle)
     }
