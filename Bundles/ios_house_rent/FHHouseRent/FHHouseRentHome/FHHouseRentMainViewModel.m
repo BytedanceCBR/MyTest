@@ -22,6 +22,7 @@
 #import <FHConfigModel.h>
 #import "FHSpringboardView.h"
 #import <UIImageView+WebCache.h>
+#import <UIImageView+BDWebImage.h>
 #import "UIColor+Theme.h"
 #import "TTReachability.h"
 #import "FHMainManager+Toast.h"
@@ -151,7 +152,8 @@
         item.nameLabel.text = model.title;
         FHConfigDataRentOpDataItemsImageModel *imgModel = [model.image firstObject];
         NSURL *imgUrl = [NSURL URLWithString:imgModel.url];
-        [item.iconView sd_setImageWithURL:imgUrl placeholderImage:placeHolder];
+        [item.iconView bd_setImageWithURL:imgUrl placeholder:placeHolder];
+//        [item.iconView bd_setImageWithURL:imgUrl placeholderImage:placeHolder];
         [items addObject:item];
     }
     if (items.count > MAX_ICON_COUNT) {
@@ -491,8 +493,8 @@
         }
      
         FHSearchHouseDataItemsHouseImageModel *imgModel = [model.houseImage firstObject];
-        [rentCell setHouseImages:model.houseImageTag];
-        [rentCell.iconView sd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholderImage:self.placeHolderImage];
+        [rentCell setHouseImages:model.houseImageTag];        
+        [rentCell.iconView bd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholder:self.placeHolderImage];
         
                 
         cell = rentCell;

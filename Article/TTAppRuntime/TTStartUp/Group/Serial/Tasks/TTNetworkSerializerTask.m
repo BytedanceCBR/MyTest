@@ -41,6 +41,13 @@
     [[self class] settingNetworkSerializerClass];
 }
 
++(BOOL)isArm64
+{
+    NSInteger i = 0;
+    return sizeof(i) >= 8;
+}
+
+
 + (void)settingNetworkSerializerClass {
     //add by songlu
     Monitorblock block = ^(NSDictionary* data, NSString* logType) {
@@ -71,13 +78,13 @@
     [TTNetworkManager setHttpDnsEnabled:isHttpDnsEnabled];
 
     BOOL isChromiumEnabled = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isChromiumEnabled;
-    isChromiumEnabled = YES;//TODO: hard code
+//    isChromiumEnabled = NO;//TODO: hard code
+    isChromiumEnabled = [self isArm64];
     if (isChromiumEnabled) {
         [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeLibChromium];
+    } else {
+        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
     }
-    //    } else {
-    //        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
-    //    }
 
 //    // 初始化SafeGuard配置
 //    [[AKSafeGuardHelper sharedInstance] initSafeGuard];
