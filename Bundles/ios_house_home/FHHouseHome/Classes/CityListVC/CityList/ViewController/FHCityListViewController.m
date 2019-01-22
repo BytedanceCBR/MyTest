@@ -41,6 +41,7 @@
 
 @property (nonatomic, weak)     FHIndexSectionView       *sectionView;
 @property (nonatomic, strong)   FHIndexSectionTipView       *sectionTipView;
+@property (nonatomic, assign)   BOOL       hasShowenConfigListData;
 
 @end
 
@@ -49,6 +50,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.hasShowenConfigListData = NO;
         self.disablePanGesture = [paramObj.userInfo.allInfo[@"disablePanGes"] boolValue];
     }
     return self;
@@ -124,9 +126,11 @@
     [[ToastManager manager] dismissCustomLoading];
     [self.emptyView hideEmptyView];
     [self.viewModel loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
+    self.hasShowenConfigListData = YES;
+    if (noti) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
+    }
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
@@ -139,10 +143,18 @@
 
 - (void)configDataLoadError:(NSNotification *)noti {
     [[ToastManager manager] dismissCustomLoading];
-    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.tableView);
-    }];
+    if (noti) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
+    }
+    if (self.hasShowenConfigListData) {
+        [self.emptyView hideEmptyView];
+    } else {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.tableView);
+        }];
+    }
 }
 
 - (void)checkConfigDataWithNoConfigData {
@@ -154,6 +166,7 @@
                 if (isSuccess) {
                     [wSelf.emptyView hideEmptyView];
                     [wSelf.viewModel loadListCityData:model.data];
+                    wSelf.hasShowenConfigListData = YES;
                 }
             }];
         }
@@ -167,6 +180,7 @@
             if (isSuccess) {
                 [wSelf.emptyView hideEmptyView];
                 [wSelf.viewModel loadListCityData:model.data];
+                wSelf.hasShowenConfigListData = YES;
             }
         }];
     }
@@ -174,8 +188,21 @@
 
 // 重新加载
 - (void)retryLoadData {
-    [[ToastManager manager] showCustomLoading:@"加载中"];
-    [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
+    // 重新加载只加载列表
+    if ([TTReachability isNetworkConnected]) {
+        __weak typeof(self) wSelf = self;
+        [[ToastManager manager] showCustomLoading:@"加载中"];
+        [[FHLocManager sharedInstance] requestConfigByCityId:0 completion:^(BOOL isSuccess, FHConfigModel * _Nullable model) {
+            [[ToastManager manager] dismissCustomLoading];
+            if (isSuccess) {
+                [wSelf.emptyView hideEmptyView];
+                [wSelf.viewModel loadListCityData:model.data];
+                wSelf.hasShowenConfigListData = YES;
+            }
+        }];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
+    }
 }
 
 // 有config数据，进入城市列表
@@ -356,16 +383,6 @@
         [[ToastManager manager] dismissCustomLoading];
         if (reGeocode && reGeocode.city.length > 0) {
             // 定位成功
-            FHConfigDataModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
-            if (model == NULL) {
-                // 没有数据
-                [wSelf configDataLoadError:nil];
-            } else {
-                [wSelf.emptyView hideEmptyView];
-                if (!wSelf.viewModel.hasReloadListData) {
-                    [wSelf.viewModel loadListCityData:model];
-                }
-            }
             wSelf.locationBar.cityName = reGeocode.city;
             wSelf.locationBar.isLocationSuccess = YES;
             [FHLocManager sharedInstance].isLocationSuccess = YES;
