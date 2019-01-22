@@ -27,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^clearSortCondition)();
 @property(nonatomic , copy) NSString * (^getConditions)();
 @property(nonatomic , copy) void (^showNotify)(NSString *message);
+@property(nonatomic , copy) NSString *_Nullable (^getSortTypeString)();
+
 //@property(nonatomic , copy) void (^overwriteFilter)(NSString *houseListUrl); //与Android一致，不回写筛选器
 
 @property(nonatomic , strong) FHFakeInputNavbar *navbar;

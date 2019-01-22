@@ -60,11 +60,11 @@
  "media_id": 2762033087,  // 媒体号，如果不为0，显示『头条号』表示
  "description": "观察移动互联网带来的变革",  // 用户签名
  "bg_img_url": "http://p3.pstatp.com/origin/bc30011684fa86d4b71",  // 背景图片
- "verified_content": "好多房创始人兼CEO",  // 认证内容
+ "verified_content": "幸福里创始人兼CEO",  // 认证内容
  "screen_name": "张一鸣",
  "visit_count_recent": 5721,  // 最近来访人数
  "is_blocked": 0,  // 是否被拉黑
- "user_auth_info": "{\"auth_type\": \"1\", \"auth_info\": \"好多房创始人兼CEO\"}",  // 用户认证信息
+ "user_auth_info": "{\"auth_type\": \"1\", \"auth_info\": \"幸福里创始人兼CEO\"}",  // 用户认证信息
  "name": "张一鸣",  // 用户名
  "big_avatar_url": "http://p9.pstatp.com/large/7697/5037049012",  // 大图地址，点头像是访问这个
  "gender": 1,  // 性别，1男2女

@@ -97,6 +97,7 @@ class HouseNumberPageControlPlugin: PhotoBrowserPlugin {
         self.theThresholdTracer = thresholdTracer()
         self.stayParams = TracerParams.momoid() <|>
             traceStayTime()
+    
     }
     
     func photoBrowser(_ photoBrowser: PhotoBrowser, viewWillDisappear view: UIView) {
@@ -673,8 +674,14 @@ fileprivate func fillCycleImageCell(_ imageGroups: [ImageGroup]?,
 // MARK: PictureBrowserDataSource
 extension CycleImageCell: PhotoBrowserDelegate {
 
+    func returnStayParamsTime(){
+        self.traceParams = (self.traceParams ?? TracerParams.momoid()) <|>
+            traceStayTime()
+    }
+    
     /// 共有多少张图片
     func numberOfPhotos(in photoBrowser: JXPhotoBrowser.PhotoBrowser) -> Int {
+        returnStayParamsTime()
         return headerImages.count
     }
 
@@ -717,7 +724,10 @@ extension CycleImageCell: PhotoBrowserDelegate {
         
         if var tracerParams = self.traceParams {
 
-            tracerParams = tracerParams <|> toTracerParams(imageModel.url, key: "picture_id")
+            tracerParams = tracerParams <|>
+            toTracerParams(imageModel.url, key: "picture_id") <|>
+            toTracerParams("large", key: "show_type")
+            
             recordEvent(key: TraceEventName.picture_save, params: tracerParams.exclude("rank"))
         }
         UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
@@ -731,7 +741,7 @@ extension CycleImageCell: PhotoBrowserDelegate {
             let status:PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
             if status != .authorized {
                 
-                let alert = TTThemedAlertController(title: "无照片访问权限", message: "请在手机的「设置-隐私-照片」选项中，允许好多房访问您的照片", preferredType: .alert)
+                let alert = TTThemedAlertController(title: "无照片访问权限", message: "请在手机的「设置-隐私-照片」选项中，允许幸福里访问您的照片", preferredType: .alert)
                 alert.addAction(withTitle: "取消", actionType: .cancel) {
                 }
                 alert.addAction(withTitle: "立刻前往", actionType: .normal, actionBlock: {

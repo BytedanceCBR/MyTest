@@ -180,7 +180,7 @@ class FHWebViewController: BaseViewController,TTRouteInitializeProtocol,UIWebVie
         self.errorVM = NHErrorViewModel(
             errorMask: infoDisplay,
             requestRetryText: "网络异常",
-            requestNilDataText: "啊哦～您还没收到相关消息",
+            requestNilDataText: "数据走丢了",
             requestNilDataImage: "empty_message",
             requestErrorText: "网络异常",
             isUserClickEnable: false)

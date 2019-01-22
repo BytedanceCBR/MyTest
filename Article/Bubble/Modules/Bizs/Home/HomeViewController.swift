@@ -101,15 +101,15 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
         self.detailPageViewModel?.homePageCommonParams = homePageCommonParams
         self.errorVM = NHErrorViewModel(
             errorMask:infoDisplay,
-            requestRetryText:"网络不给力，试试刷新页面",
-            requestNilDataText:"当前城市暂未开通，敬请期待～",
+            requestRetryText:"网络异常，请检查网络连接",
+            requestNilDataText:"当前城市暂未开通服务，敬请期待",
             requestNilDataImage:"group-9",
             requestErrorText: "数据异常",
             requestErrorImage: "group-8",
             isUserClickEnable: true,
             retryAction: { [weak self] in
                     if EnvContext.shared.client.reachability.connection == .none {
-                        EnvContext.shared.toast.showToast("网络不给力,请稍后重试")
+                        EnvContext.shared.toast.showToast("网络不给力，请稍后重试")
                     }else
                     {
                         EnvContext.shared.client.generalBizconfig.fetchConfiguration()
@@ -119,7 +119,7 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
         self.detailPageViewModel?.onError = { [weak self] (error) in
             //天真说:首页很关键，大部分时候都要显示点击重试
             self?.infoDisplay.isHidden = false
-            self?.infoDisplay.label.text = "网络不给力，点击屏幕重试"
+            self?.infoDisplay.label.text = "网络异常，请检查网络连接"
         }
         
         self.detailPageViewModel?.endTTUpdateCallBack = { [weak self] in
@@ -141,7 +141,7 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
             {
                 //天真说:首页很关键，大部分时候都要显示点击重试
                 self?.infoDisplay.isHidden = false
-                self?.infoDisplay.label.text = "网络不给力，点击屏幕重试"
+                self?.infoDisplay.label.text = "网络异常，请检查网络连接"
             }
         }
         

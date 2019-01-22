@@ -22,6 +22,7 @@
 - (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl;
 - (void)setUpCloseBtnControlForWeb:(NSNumber *)isShow;
 - (void)setupCloseCallBackPreviousVC:(NSDictionary *)params;
+- (void)setupCloseStackVCCount:(NSNumber *)count;
 - (void)setupOpenPageTagStr:(NSString *)tagStr;
 - (NSString *)getOpenPageTagStr;
 /// 如果有adid，则上报impression

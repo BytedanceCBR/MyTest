@@ -1703,7 +1703,7 @@ TTRefreshViewDelegate>
 //        [[TTAuthorizeHintView alloc]
 //         initAuthorizeHintWithImageName:@"img_popup_locate"
 //         title:NSLocalizedString(@"开启定位服务设置", nil)
-//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“好多房”定位服务", nil)
+//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“幸福里”定位服务", nil)
 //         confirmBtnTitle:@"我知道了"
 //         animated:YES
 //         completed:nil];

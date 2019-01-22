@@ -21,6 +21,8 @@
 #import <objc/runtime.h>
 #import "TTNetworkUtilities.h"
 
+static NSInteger kGetLightRequestRetryCount = 3;
+
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
@@ -65,35 +67,35 @@
             }
         }
         
+        __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
+        
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
             if (isSuccess) {
                 FHConfigDataModel *configModel = model.data;
                 [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
-                        if (isSuccess) {
-                            
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
-                            
-                            if(completion)
-                            {
-                                completion(YES);
-                            }
-                            [[ToastManager manager] dismissCustomLoading];
-                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                                
-                            }];
-                        }else
+                
+                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                    //首次请求频道无论成功失败都跳转
+                    if (retryGetLightCount == kGetLightRequestRetryCount) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                        
+                        if(completion)
                         {
-                            if(completion)
-                            {
-                                completion(NO);
-                            }
-                            [[ToastManager manager] dismissCustomLoading];
-                            [[ToastManager manager] showToast:@"切换城市失败"];
+                            completion(YES);
                         }
-                    }];
+                        [[ToastManager manager] dismissCustomLoading];
+                        [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                            
+                        }];
+                    }
+                    //重试3次请求频道
+                    if (!isSuccessed && (retryGetLightCount > 0)) {
+                        retryGetLightCount--;
+                        [[TTArticleCategoryManager sharedManager] startGetCategory];
+                    }
+                }];
             }else
             {
                 if(completion)
@@ -120,7 +122,7 @@
  */
 + (BOOL)isSameLocCityToUserSelect
 {
-    return [[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable;
+    return ![[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable.boolValue;
 }
 
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey

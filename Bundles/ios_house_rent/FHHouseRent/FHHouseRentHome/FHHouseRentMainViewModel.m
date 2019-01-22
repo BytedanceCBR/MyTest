@@ -67,6 +67,7 @@
 @property(nonatomic , assign) CGFloat headerHeight;
 
 @property(nonatomic , copy) NSString *originSearchId;
+@property(nonatomic , copy) NSString *originFrom;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
 @end
@@ -260,6 +261,9 @@
                 }
                 wself.showNotify(tip);
             }
+            
+            [wself addHouseRankLog];
+
         }
        
        wself.tableView.mj_footer.hidden = NO;
@@ -301,7 +305,7 @@
         if (wself.houseList.count == 0) {
             NSString *tip;
             if (self.conditionFilter.length > 0) {
-                tip = @"没有找到相关信息，换个条件试试吧~";
+                tip = @"暂无搜索结果";
             }else{
                 tip = @"数据走丢了";
             }
@@ -1051,6 +1055,7 @@
         return nil ;
     }
     
+    self.originFrom = originFrom;
     NSMutableDictionary *param = [[self baseLogParam]mutableCopy];
     param[@"category_name"] = @"rent_list";
     param[@"enter_type"] = @"click";
@@ -1092,6 +1097,25 @@
 -(void)addSearchLog
 {
     
+}
+
+- (void)addHouseRankLog
+{
+    
+    NSString *sortType;
+    if (self.getSortTypeString) {
+        sortType = self.getSortTypeString();
+    }
+    if (sortType.length < 1) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = @"renting";
+    params[@"rank_type"] = sortType;
+    params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
+    params[@"origin_from"] = @"renting";
+    TRACK_EVENT(@"house_rank",params);
 }
 
 -(NSString *)originFromWithFilterType:(FHHouseRentFilterType)filterType

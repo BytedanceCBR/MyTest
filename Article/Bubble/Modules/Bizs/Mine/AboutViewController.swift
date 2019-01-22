@@ -18,7 +18,7 @@ class AboutViewController: BaseViewController, TTRouteInitializeProtocol  {
     
     lazy var logoIcon: UIImageView = {
         let re  = UIImageView()
-        re.image = #imageLiteral(resourceName: "about")
+        re.image = UIImage(named: "about")
         return re
     }()
 
@@ -67,7 +67,6 @@ class AboutViewController: BaseViewController, TTRouteInitializeProtocol  {
         view.addSubview(logoIcon)
         logoIcon.snp.makeConstraints { maker in
             maker.center.equalToSuperview()
-            maker.width.height.equalTo(180)
         }
 
         view.addSubview(versionLabel)

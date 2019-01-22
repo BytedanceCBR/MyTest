@@ -210,6 +210,7 @@ fileprivate class TableViewDelegate: FHListDataSourceDelegate {
             let openUrl = item.data.openUrl {
             let tracerParams = TracerParams.momoid() <|>
                     toTracerParams("official_message_list", key: "category_name") <|>
+                toTracerParams(item.data.logPb ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.data.id ?? "be_null", key: "official_message_id")
             recordEvent(key: "click_official_message", params: tracerParams)
             TTRoute.shared().openURL(byPushViewController: URL(string: "\(openUrl)&hide_more=1"))

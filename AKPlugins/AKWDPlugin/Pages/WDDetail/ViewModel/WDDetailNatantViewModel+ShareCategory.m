@@ -53,7 +53,7 @@
 - (NSString *)shareDesc
 {
     NSString *abstract = self.detailModel.answerEntity.abstract;
-    return isEmptyString(abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil):abstract;
+    return isEmptyString(abstract) ? NSLocalizedString(@"好房就在幸福里", nil):abstract;
 }
 
 - (NSString *)qqZoneDesc

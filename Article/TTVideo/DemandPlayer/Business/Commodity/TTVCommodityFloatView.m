@@ -393,6 +393,7 @@ static NSString *kTTPlayerSpecialSellItemCellDismisToMoreButtonTimesKey = @"kTTP
     }
     if (self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateWillShow ||
         self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateDidShow) {
+        
         origin.y -= 20;
     }
     return origin;

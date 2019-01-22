@@ -116,6 +116,7 @@
         FHHouseFindSectionItem *item = self.itemList[index];
         FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectZero];
         baseView.tracerDict = self.tracerDict;
+        [baseView updateDataWithItem:item];
         baseView.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
             
             [wself handlePlaceholder:paramObj];
@@ -379,7 +380,7 @@
     self.currentSelectIndex = index;
     FHHouseFindSectionItem *item = self.itemList[index];
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + index];
-    [baseView updateDataWithItem:item];
+    [baseView refreshData];
     NSString *placeholder = [self.sugDict objectForKey:[self placeholderKeyByHouseType:item.houseType]];
     if (self.sugSelectBlock) {
         self.sugSelectBlock(placeholder);

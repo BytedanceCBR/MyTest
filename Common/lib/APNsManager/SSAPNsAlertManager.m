@@ -353,11 +353,13 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     [@"mapfind_house" isEqualToString:host] ||
     [@"mapfind_rent" isEqualToString:host] ||
     [@"rent_main" isEqualToString:host] ||
+    [@"webview" isEqualToString:host] ||
+    [@"realtor_detail" isEqualToString:host] ||
     [@"main" isEqualToString:host];
 }
 
 + (void)showF100PushNotificationInAppAlert:(NSDictionary *)dict {
-    NSString* title = @"好多房";
+    NSString* title = @"幸福里";
     NSString* content = [dict tt_stringValueForKey:kSSAPNsAlertManagerTitleKey];
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
 

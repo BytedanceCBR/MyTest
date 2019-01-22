@@ -186,17 +186,16 @@ func parseNearbyNewHouseListNode(
             // house_show
             let hsRecords = theDatas.enumerated().map({ (index, item) -> ElementRecord in
                 let tempParams = TracerParams.momoid() <|>
+                    traceExtension <|>
                     toTracerParams("new", key: "house_type") <|>
                     toTracerParams("left_pic", key: "card_type") <|>
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("related", key: "element_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                    toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    imprIdTraceParam(item.logPB) <|>
-                    groupIdTraceParam(item.logPB) <|>
-                    toTracerParams(index, key: "rank") <|>
-                    traceExtension
+                    toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                    toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
+                    toTracerParams(index, key: "rank")
 
                 return onceRecord(key: "house_show", params: tempParams)
             })
@@ -211,7 +210,7 @@ func parseNearbyNewHouseListNode(
                     let theParams = traceExtension <|>
                         toTracerParams("left_pic", key: "card_type") <|>
                         toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                        toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                         toTracerParams("related", key: "element_from") <|>
                         toTracerParams("new_detail", key: "enter_from") <|>
                         toTracerParams(offset, key: "rank")

@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
  class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var listLogPB: Any?
 
     var source: String?
     
@@ -129,18 +130,30 @@ import RxCocoa
                     self?.infoMaskView?.isUserInteractionEnabled = false
                     return
                 }
-                
-                if let result = self?.processData()([]) {
-                    
-                    self?.dataSource.datas = result
-                    self?.tableView?.reloadData()
-                    DispatchQueue.main.async {
-                        if let tableView = self?.tableView, let datas = self?.dataSource.datas {
-                            self?.traceCellByVisibleRect(tableView: tableView)
-                            self?.traceDisplayCell(tableView: tableView, datas: datas)
+                DispatchQueue.global().async {
+                    if let result = self?.processData()([]),
+                        result.count > 0 {
+                        DispatchQueue.main.async {
+                            if let ershouHouseData = self?.ershouHouseData.value {
+                                if let contact = ershouHouseData.data?.highlightedRealtor {
+                                    self?.contactPhone.accept(contact)
+                                } else {
+                                    self?.contactPhone.accept(ershouHouseData.data?.contact)
+                                }
+                            }
+                            self?.dataSource.datas = result
+                            self?.tableView?.reloadData()
+                            self?.onDataArrived?()
+
+                            DispatchQueue.main.async {
+                                if let tableView = self?.tableView,
+                                    let datas = self?.dataSource.datas {
+                                    self?.traceCellByVisibleRect(tableView: tableView)
+                                    self?.traceDisplayCell(tableView: tableView, datas: datas)
+                                }
+                            }
                         }
                     }
-                    
                 }
             }
             .disposed(by: disposeBag)
@@ -235,17 +248,9 @@ import RxCocoa
             self.showMessageAlert?("正在加载")
         }
         requestErshouHouseDetail(houseId: houseId, logPB: logPB)
+                .observeOn(MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] (response) in
-                    if showLoading {
-                        self?.dismissMessageAlert?()
-                    }
                     if let response = response{
-                        if let contact = response.data?.highlightedRealtor {
-                            self?.contactPhone.accept(contact)
-                        } else {
-                            self?.contactPhone.accept(response.data?.contact)
-                        }
-
                         if response.status == 0{
                             if let idStr = response.data?.id
                             {
@@ -254,7 +259,6 @@ import RxCocoa
                                     self?.titleValue.accept(response.data?.title)
                                     self?.ershouHouseData.accept(response)
                                     self?.requestReletedData()
-                                    self?.onDataArrived?()
                                 }else
                                 {
                                     self?.onEmptyData?()
@@ -270,6 +274,10 @@ import RxCocoa
                     }else
                     {
                         self?.onEmptyData?()
+                    }
+                    //关闭loading
+                    if showLoading {
+                        self?.dismissMessageAlert?()
                     }
                     if let status = response?.data?.userStatus {
                         self?.followStatus.accept(Result.success(status.houseSubStatus == 1))
@@ -338,10 +346,12 @@ import RxCocoa
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
-                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
-                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(String(code), key: "rank")
             }
+            
+            traceExtension = traceExtension <|>
+                toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from")
             
             if let logPb = traceParamsDic["log_pb"] {
                 traceExtension = traceExtension <|>
@@ -899,8 +909,7 @@ func parseFHHomeErshouHouseListItemNode(
                             toTracerParams(offset, key: "rank") <|>
                             toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                             toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                            imprIdTraceParam(item.logPB) <|>
-                            groupIdTraceParam(item.logPB) <|>
+                            toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
                             toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                             toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                     return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -954,7 +963,8 @@ func parseErshouHouseListItemNode(
                         toTracerParams(elementFrom, key: "element_from") <|>
                         toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                        traceExtension,
                     navVC: navVC)
         }
         
@@ -971,14 +981,13 @@ func parseErshouHouseListItemNode(
             .map { (e) -> ElementRecord in
                 let (offset, item) = e
                 let theParams = tracerParams <|>
+                    traceExtension <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    imprIdTraceParam(item.logPB) <|>
-                    groupIdTraceParam(item.logPB) <|>
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                    traceExtension
+                    toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }
         
@@ -1084,8 +1093,8 @@ func parseErshouHouseListRowItemNode(
 //                toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+//                imprIdTraceParam(item.logPB) <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams("old", key: "house_type")
@@ -1164,9 +1173,8 @@ func parseErshouRelatedHouseListItemNode(
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -1300,6 +1308,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
             
             let houseType = HouseType(rawValue: item.houseType ?? 0) ?? .newHouse
             let houseShowParams = TracerParams.momoid() <|>
+                traceParam <|>
                 toTracerParams(houseTypeStringByHouseType(houseType: houseType), key: "house_type") <|>
                 toTracerParams("left_pic", key: "card_type") <|>
                 toTracerParams(categoryNameByHouseType(houseType: houseType), key: "page_type") <|>
@@ -1307,8 +1316,7 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
                 toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
                 toTracerParams(item.followId ?? "be_null", key: "group_id") <|>
-                toTracerParams("be_null", key: "element_type") <|>
-                traceParam
+                toTracerParams("be_null", key: "element_type")
 
             let finalHouseShowParams = houseShowParams
                 .exclude("element_from")

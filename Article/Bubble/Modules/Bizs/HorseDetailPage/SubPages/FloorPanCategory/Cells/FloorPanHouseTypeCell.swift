@@ -189,9 +189,8 @@ func parseFloorPanItemsNode(
                         toTracerParams(paramsDict["origin_from"] ?? "be_null", key: "origin_from") <|>
                         toTracerParams(paramsDict["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
                         toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                        imprIdTraceParam(item.logPB) <|>
-                        searchIdTraceParam(item.logPB) <|>
-                        groupIdTraceParam(item.logPB) <|>
+                        toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                        toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
                         toTracerParams(item.id ?? "be_null", key: "group_id")
                 return onceRecord(key: TraceEventName.house_show, params: theParams)
         }

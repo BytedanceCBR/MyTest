@@ -76,7 +76,7 @@ typedef NS_ENUM(NSInteger, TTCommentUserRelationType) {
 /// @return 用户关系
 - (NSString *)userRelationStr;
 
-/// 用户信息 格式:头条号,认证信息 例如 头条号作者,好多房开发工程师
+/// 用户信息 格式:头条号,认证信息 例如 头条号作者,幸福里开发工程师
 /// @return 用户信息
 - (NSString *)userInfoStr;
 

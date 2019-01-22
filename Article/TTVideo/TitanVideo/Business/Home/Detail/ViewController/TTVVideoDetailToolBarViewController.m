@@ -1786,7 +1786,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     if (!isEmptyString(self.videoInfo.title)){
         timeLineTitle = [NSString stringWithFormat:@"%@-%@", self.videoInfo.title, @""];
     }else{
-        timeLineTitle = NSLocalizedString(@"真房源，好中介，快流通", nil);
+        timeLineTitle = NSLocalizedString(@"好房就在幸福里", nil);
     }
     return timeLineTitle;
 }
@@ -1795,7 +1795,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (NSString *)shareDesc
 {
     Article *convertedArticle = [self.videoInfo ttv_convertedArticle];
-    NSString *detail = isEmptyString(convertedArticle.abstract) ? NSLocalizedString(@"真房源，好中介，快流通", nil) : convertedArticle.abstract;
+    NSString *detail = isEmptyString(convertedArticle.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : convertedArticle.abstract;
     return detail;
 }
 

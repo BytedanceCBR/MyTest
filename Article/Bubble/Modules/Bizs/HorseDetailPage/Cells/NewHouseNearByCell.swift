@@ -516,7 +516,7 @@ class NewHouseNearByCell: BaseUITableViewCell, MAMapViewDelegate, AMapSearchDele
             }
             
             segmentedControl.sectionTitleArray = categorys.map { [weak self] in
-                $0.rawValue + (self?.titleDatas?[$0.rawValue] ?? "")
+                $0.rawValue + (self?.titleDatas?[$0.rawValue] ?? "(0)")
             }
         }
     }
@@ -735,13 +735,16 @@ func parseNeighorhoodNearByNode(
             toTracerParams(selectTraceParam(traceExtension, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseId, key: "group_id") <|>
             toTracerParams("map_list", key: "click_type") <|>
-            toTracerParams("neighborhood_detail", key: "enter_from")
+            toTracerParams("neighborhood_detail", key: "enter_from") <|>
+            traceExtension
+        
         let mapSelectorParams =  EnvContext.shared.homePageParams <|>
             params <|>
             beNull(key: "map_tag") <|>
             toTracerParams("neighborhood_detail", key: "page_type") <|>
             toTracerParams("neighborhood_nearby", key: "element_type") <|>
-            toTracerParams("map", key: "click_type")
+            toTracerParams("map", key: "click_type") <|>
+            traceExtension
         if let lat = data.neighborhoodInfo?.gaodeLat, let lng = data.neighborhoodInfo?.gaodeLng {
 
             selector = openMapPage(
@@ -807,21 +810,22 @@ func parseNewHouseNearByNode(
         let showParams = TracerParams.momoid() <|>
             toTracerParams("new_detail", key: "page_type") <|>
             toTracerParams("map", key: "element_type") <|>
-        traceExt
+           traceExt
         
         let params = TracerParams.momoid() <|>
             toTracerParams("map", key: "element_from") <|>
             toTracerParams(selectTraceParam(traceExt, key: "log_pb") ?? "be_null", key: "log_pb") <|>
             toTracerParams(houseId, key: "group_id") <|>
             toTracerParams("map_list", key: "click_type") <|>
-            toTracerParams("new_detail", key: "enter_from")
+            toTracerParams("new_detail", key: "enter_from") <|>
+            traceExt
         let mapSelectorParams = EnvContext.shared.homePageParams <|>
             params <|>
             beNull(key: "map_tag") <|>
             toTracerParams("new_detail", key: "page_type") <|>
             toTracerParams("neighborhood_nearby", key: "element_type") <|>
             toTracerParams("map", key: "click_type") <|>
-        traceExt
+            traceExt
         if let lat = newHouseData.coreInfo?.geodeLat, let lng = newHouseData.coreInfo?.geodeLng {
             //            recordEvent(key: "click_map", params: params)
             
@@ -887,6 +891,8 @@ func openMapPage(
         recordEvent(key: "click_map", params: clickMapParams)
         let vc = LBSMapPageVC(centerPointName: title)
         vc.openMapType = openMapType
+        let traceParas = traceParams.paramsGetter([:])
+        
         vc.tracerParams = traceParams
         vc.centerPointStr.accept((lat, lng))
 //        关闭工作由mapView自己实现

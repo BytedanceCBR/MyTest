@@ -220,6 +220,7 @@ static BOOL s_loginAlertShowing = NO;
                                                  excludedPlatforms:(NSArray<NSString *> *)exPlatformNames
                                                         completion:(TTAccountLoginCompletionBlock)completedBlock
 {
+    return nil;
     if ([titleString length] == 0) titleString = NSLocalizedString(@"手机登录", nil);
     if (!vc) vc = [TTUIResponderHelper topNavigationControllerFor:[TTUIResponderHelper topmostViewController]];
     
@@ -258,6 +259,7 @@ static BOOL s_loginAlertShowing = NO;
                                                             source:(NSString *)source
                                                subscribeCompletion:(TTAccountLoginCompletionBlock)subscribeCompletedBlock
 {
+    return nil;
     if (!vc) vc = [TTUIResponderHelper topNavigationControllerFor:[TTUIResponderHelper topmostViewController]];
     
     TTAccountLoginViewController *accountLoginVC = [[TTAccountLoginViewController alloc] initWithTitle:[TTAccountLoginConfLogic loginDialogTitleForType:type] source:source isPasswordLogin:YES];

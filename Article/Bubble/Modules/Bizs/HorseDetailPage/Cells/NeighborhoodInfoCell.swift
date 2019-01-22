@@ -361,9 +361,8 @@ func parseNeighborhoodInfoNode(_ ershouHouseData: ErshouHouseData, traceExtensio
             toTracerParams(ershouHouseData.neighborhoodInfo?.id ?? "be_null", key: "group_id") <|>
             toTracerParams("no_pic", key: "card_type") <|>
             toTracerParams("neighborhood", key: "house_type") <|>
-            searchIdTraceParam(ershouHouseData.neighborhoodInfo?.logPB) <|>
-            groupIdTraceParam(ershouHouseData.neighborhoodInfo?.logPB) <|>
-            imprIdTraceParam(ershouHouseData.neighborhoodInfo?.logPB) <|>
+            toTracerParams(ershouHouseData.neighborhoodInfo?.searchId ?? "be_null", key: "search_id") <|>
+            toTracerParams(ershouHouseData.neighborhoodInfo?.imprId ?? "be_null", key: "impr_id") <|>
             toTracerParams("old_detail", key: "page_type") <|>
             toTracerParams("be_null", key: "element_type")
         let tracer = onceRecord(key: TraceEventName.house_show, params: houseShowParams.exclude("enter_from").exclude("element_from"))
@@ -479,6 +478,18 @@ func fillNeighborhoodInfoCell(_ data: ErshouHouseData, tracer: ElementRecord, ne
 }
 }
 
+func getEvaluateWebParams(parmasMap: [String:Any]?) -> String {
+    if let traceDic = parmasMap {
+        if let data = try? JSONSerialization.data(withJSONObject: traceDic) {
+            return String(bytes: data, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        } else {
+            return ""
+        }
+    } else {
+        return ""
+    }
+}
+
 func openEvaluateWebPage(
     urlStr: String,
     title: String = "小区评测",
@@ -502,12 +513,11 @@ func openEvaluateWebPage(
             
             recordEvent(key: "enter_neighborhood_evaluation", params: openParams)
             
-            
-            let jumpUrl = "fschema://fh_webview" //route协议
             let parmasMap = openParams.paramsGetter([:]) //埋点参数
-            let stayPageTraceEventName = "stay_neighborhood_evaluation" //埋点Event ,不传不上报
-            
-            let userInfo = TTRouteUserInfo(info: ["event":stayPageTraceEventName,"tracer": parmasMap, "title": title, "url": urlStr])
+            let reportParams = getEvaluateWebParams(parmasMap: parmasMap)
+            let jumpUrl = "sslocal://webview" //route协议
+            let openUrl = "\(urlStr)&report_params=\(reportParams)"
+            let userInfo = TTRouteUserInfo(info: ["title": title, "url": openUrl])
             
             TTRoute.shared().openURL(byPushViewController: URL(string: jumpUrl), userInfo: userInfo)
             FRRouteHelper.openWebView(forURL: urlStr)

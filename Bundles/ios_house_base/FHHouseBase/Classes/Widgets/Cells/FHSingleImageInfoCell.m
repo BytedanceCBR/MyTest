@@ -39,6 +39,7 @@
 
 @property(nonatomic, assign) CGFloat topMargin;
 @property(nonatomic, assign) CGFloat bottomMargin;
+@property(nonatomic, assign) BOOL lastShowTag;
 
 @end
 
@@ -76,7 +77,7 @@
         make.left.mas_equalTo(@20);
         make.top.mas_equalTo(self.headView.mas_bottom);
         make.width.mas_equalTo(@114);
-        make.height.mas_equalTo(85);
+//        make.height.mas_equalTo(85);
 
     }];
     
@@ -160,7 +161,8 @@
         make.center.mas_equalTo(self.imageTopLeftLabelBgView);
     }];
     
-    
+    _lastShowTag = YES;
+
 }
 
 -(void)refreshTopMargin:(CGFloat)top {
@@ -221,6 +223,12 @@
 
 -(void)updateLayoutComponents:(BOOL)isShowTags {
 
+    if (_lastShowTag && isShowTags) {
+        //没有变更不需要改变
+        return;
+    }
+    _lastShowTag = isShowTags;
+    
     CGSize fitSize = self.cellModel.titleSize;
     self.majorTitle.numberOfLines = isShowTags ? 1 : 2;
 

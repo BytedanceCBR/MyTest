@@ -22,6 +22,8 @@ protocol DetailPageViewModel: class {
     var source: String? { get set } // 页面来源
 
     var logPB: Any?  { get set }
+
+    var listLogPB: Any? { get set }
     
     var searchId: String? { get set }
 
@@ -459,8 +461,18 @@ extension DetailPageViewModel {
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
                         alert.dismiss()
                         let tracerParamsInform = EnvContext.shared.homePageParams <|> (self.goDetailTraceParam ?? TracerParams.momoid())
+                        var informShowParams = isHouseModelDetail ? traceParam : tracerParamsInform
+                            .exclude("house_type")
+                            .exclude("element_type")
+                            .exclude("search_id")
+                            .exclude("group_id")
+
+                        if let logPb = self.logPB {
+                            informShowParams = informShowParams <|>
+                                toTracerParams(logPb, key: "log_pb")
+                        }
                         recordEvent(key: TraceEventName.inform_show,
-                                    params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                                    params: informShowParams)
                         
                         self.sendClickConfimTrace(traceConfirm: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
                         
@@ -484,7 +496,7 @@ extension DetailPageViewModel {
         {
             let tracerParamsInform = EnvContext.shared.homePageParams <|> (goDetailTraceParam ?? TracerParams.momoid())
             recordEvent(key: TraceEventName.inform_show,
-                        params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type"))
+                        params: isHouseModelDetail ? traceParam : tracerParamsInform.exclude("house_type").exclude("element_type").exclude("search_id").exclude("group_id"))
             
             alert.showFrom(tempView)
         }
@@ -670,11 +682,11 @@ struct DetailDataParser {
 }
 
 func oneTimeRender(_ parser: @escaping TableCellRender) -> TableCellRender {
-    var executed = false
+    var executed: Int = 0
     return { (cell) in
-        if !executed {
+        if executed != cell.hashValue {
             parser(cell)
-            executed = true
+            executed = cell.hashValue
         }
     }
 }
@@ -853,11 +865,3 @@ func getStringFromLogPb(key: String, logPb: Any?) -> String {
     }
     return "be_null"
 }
-
-var getSearchIdFromLogPb = curry(getStringFromLogPb)("search_id")
-var getGroupIdFromLogPb = curry(getStringFromLogPb)("group_id")
-var getImprIdFromLogPb = curry(getStringFromLogPb)("impr_id")
-
-var searchIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getSearchIdFromLogPb($0), key: "search_id") }
-var groupIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getGroupIdFromLogPb($0), key: "group_id") }
-var imprIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getImprIdFromLogPb($0), key: "impr_id") }

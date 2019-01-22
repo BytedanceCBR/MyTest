@@ -199,9 +199,9 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
         paramDict["element_type"] = "same_neighborhood"
         paramDict["log_pb"] = model.logPB ?? "be_null"
         paramDict["rank"] = indexPath.row
-        paramDict["impr_id"] = getImprIdFromLogPb(model.logPB)
-        paramDict["group_id"] = getGroupIdFromLogPb(model.logPB)
-        paramDict["search_id"] = getSearchIdFromLogPb(model.logPB)
+        paramDict["impr_id"] = model.impr_id ?? "be_null"
+        paramDict["group_id"] = model.id ?? "be_null"
+        paramDict["search_id"] = model.searchId ?? "be_null"
         paramDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
         paramDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
         recordEvent(key: "house_show", params: paramDict)
@@ -221,9 +221,9 @@ class FHSameHouseItemListCell: BaseUITableViewCell, RefreshableTableViewCell {
         paramDict["page_type"] = "neighborhood_detail"
         paramDict["element_type"] = "same_neighborhood"
         paramDict["log_pb"] = model.logPb ?? "be_null"
-        paramDict["impr_id"] = getImprIdFromLogPb(model.logPb)
-        paramDict["group_id"] = getGroupIdFromLogPb(model.logPb)
-        paramDict["search_id"] = getSearchIdFromLogPb(model.logPb)
+        paramDict["impr_id"] = model.imprId ?? "be_null"
+        paramDict["group_id"] = model.id ?? "be_null"
+        paramDict["search_id"] = model.searchId ?? "be_null"
         paramDict["rank"] = indexPath.row
         paramDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from") ?? "be_null"
         paramDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id") ?? "be_null"
