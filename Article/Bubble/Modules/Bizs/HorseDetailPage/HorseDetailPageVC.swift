@@ -159,7 +159,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
         self.allParams = paramObj?.allParams
-        makerTraceParam(paramObj?.allParams)
         if let source = paramObj?.userInfo.allInfo["source"] as? String {
             self.source = source;
         }
@@ -213,6 +212,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
         // 之前为了解决状态栏引入，暂时保留
         self.isFromPush = true
+        
+        makerTraceParam(allParams: paramObj?.allParams)
 
         self.netStateInfoVM = NHErrorViewModel(
             errorMask: infoMaskView,
@@ -310,7 +311,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     }
 
     // 构建埋点参数方法
-    fileprivate func makerTraceParam(_ allParams : [AnyHashable : Any]?) {
+    fileprivate func makerTraceParam(allParams : [AnyHashable : Any]?) {
         guard let allParams = allParams else {
             return
         }
@@ -319,7 +320,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         /*
          traceParam[@"log_pb"] = [cellModel logPb];
          */
-        if let tracerDic = allParams["tracer"] as? [String:Any] {
+        if let tracerDic = allParams["tracer"] as? [String:Any]  {
             // 通过“tracer”传入的参数
             traceParams = traceParams <|> mapTracerParams(tracerDic)
         }
@@ -371,6 +372,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let pageType = pageTypeString(houseType)
 
         var tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
+        
+        tracer.merge(traceParams.paramsGetter([:])) { $1 }
+        
         if tracer.count == 0, let content = tracerDict["report_params"] as? String {
             let paramsDict = getDictionaryFromJSONString(jsonString: content)
             tracer = paramsDict ?? [:]
@@ -393,6 +397,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         result.originFrom = tracer["origin_from"] as? String
         result.originSearchId = tracer["origin_search_id"] as? String
         result.enterFrom = tracer["enter_from"] as? String ?? "be_null"
+     
         result.elementFrom = tracer["element_from"] as? String ?? "be_null"
 
         return result

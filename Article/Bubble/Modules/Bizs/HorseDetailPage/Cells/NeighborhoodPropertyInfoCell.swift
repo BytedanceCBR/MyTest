@@ -324,7 +324,7 @@ func parseNeighborhoodPropertyListNode(_ data: NeighborhoodDetailData, traceExte
         let params = TracerParams.momoid() <|>
             toTracerParams("neighborhood_info", key: "element_type") <|>
             toTracerParams("neighborhood_detail", key: "page_type") <|>
-        traceExtension
+            traceExtension
         
         if let count = data.baseInfo?.count, count > 0 {
             let cellRender = curry(fillNeighborhoodPropertyListCell)(data.baseInfo)(disposeBag)
