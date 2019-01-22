@@ -889,7 +889,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             if let realtorId = contactPhone.realtorId ,
                 let traceModel = self.detailPageViewModel?.tracerModel {
                 traceModel.elementFrom = "old_detail_button"
-                let reportParams = getRealtorReportParams(traceModel: traceModel)
+                let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "0")
                 let openUrl = "fschema://realtor_detail"
                 let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
                 var theTraceModel = traceModel.copy() as? HouseRentTracer
