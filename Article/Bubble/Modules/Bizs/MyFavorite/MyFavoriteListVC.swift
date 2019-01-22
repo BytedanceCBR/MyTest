@@ -261,6 +261,8 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
                 EnvContext.shared.homePageParams <|>
                 toTracerParams(categoryName ?? "be_null", key: "category_name") <|>
                 toTracerParams("minetab", key: "enter_from") <|>
+                toTracerParams("click", key: "enter_type") <|>
+                toTracerParams("be_null", key: "element_from") <|>
                 toTracerParams(self?.categoryListVM?.originSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(self?.categoryListVM?.originSearchId ?? "be_null", key: "origin_search_id")
             
