@@ -31,6 +31,7 @@
 #import "FHEnvContext.h"
 #import "FHRecommendSecondhandHouseTitleCell.h"
 #import "FHRecommendSecondhandHouseTitleModel.h"
+#import "FHHouseBridgeManager.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -987,6 +988,10 @@
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSString *urlStr;
+
+    id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
+    [contextBridge setTraceValue:self.originFrom forKey:@"origin_from"];
+    [contextBridge setTraceValue:self.originSearchId forKey:@"origin_search_id"];
 
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
