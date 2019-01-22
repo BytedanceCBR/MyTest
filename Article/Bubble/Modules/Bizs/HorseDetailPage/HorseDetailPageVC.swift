@@ -186,8 +186,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             
                 if let reportParams = urlParams["report_params"]
                 {
-                    let paramsDict : NSDictionary = getDictionaryFromJSONString(jsonString: reportParams)
-                    if let parmasTrace = paramsDict as? [String : Any]
+                    if let parmasTrace = getDictionaryFromJSONString(jsonString: reportParams)
                     {
                         let traceParamsReport = mapTracerParams(parmasTrace)
                         traceParams = traceParams <|>
@@ -238,15 +237,13 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         //TODO 增加push打开详情的original_from
     }
 
-    fileprivate func getDictionaryFromJSONString(jsonString:String) ->NSDictionary{
-
-        let jsonData:Data = jsonString.data(using: .utf8)!
-
-        let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers)
-        if dict != nil {
-            return dict as! NSDictionary
+    fileprivate func getDictionaryFromJSONString(jsonString:String) -> [String: Any]?{
+        if let jsonData = jsonString.data(using: .utf8),
+            let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) {
+            return dict as? [String : Any]
+        } else {
+            return [:]
         }
-        return NSDictionary()
     }
 
     static func getHouseId(_ dict: [AnyHashable: Any]?) -> (String, HouseType) {
@@ -375,8 +372,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
         var tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
         if tracer.count == 0, let content = tracerDict["report_params"] as? String {
-            let paramsDict : NSDictionary = getDictionaryFromJSONString(jsonString: content)
-            tracer = paramsDict as? [AnyHashable: Any] ?? [:]
+            let paramsDict = getDictionaryFromJSONString(jsonString: content)
+            tracer = paramsDict ?? [:]
         }
         let cardType = tracer["card_type"] as? String ?? "be_null"
         let result = HouseRentTracer(pageType: pageType,
