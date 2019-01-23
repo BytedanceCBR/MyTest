@@ -23,11 +23,11 @@ class FHPhoneCallViewModel: NSObject {
                      traceModel: HouseRentTracer?,
                      contact: FHHouseDetailContact,
                      disposeBag: DisposeBag) {
+        let theTraceModel = traceModel?.copy()
         btn.rx.tap
             .debounce(0.5, scheduler: MainScheduler.instance)
             .bind { [weak self] () in
                 let searchId = traceModel?.searchId ?? "be_null"
-
                 self?.callRealtorPhone(contactPhone: contact,
                                        houseId: houseId,
                                        houseType: houseType,
@@ -37,7 +37,7 @@ class FHPhoneCallViewModel: NSObject {
                                         self?.traceCall(rank: rank,
                                                         contact: contact,
                                                         isVirtualNumber: isVirtualNumber,
-                                                        traceModel: traceModel)
+                                                        traceModel: theTraceModel as? HouseRentTracer)
                 })
             }
             .disposed(by: disposeBag)
