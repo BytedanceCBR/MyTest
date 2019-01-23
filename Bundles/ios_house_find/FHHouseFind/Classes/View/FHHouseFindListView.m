@@ -58,7 +58,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    
+    [self.viewModel viewWillAppear:animated];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
