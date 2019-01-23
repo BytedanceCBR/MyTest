@@ -402,14 +402,14 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                      cardType: cardType)
         result.groupId = "\(houseId)"
         result.logPb = tracer["log_pb"]
-        if let rank = tracerDict["rank"] as? String {
+        if let rank = tracer["rank"] as? Int {
+            result.rank = "\(rank)"
+        } else if let rank = tracer["rank"] as? String {
             result.rank = rank
-        } else {
-            if let rank = tracer["rank"] as? Int {
-                result.rank = "\(rank)"
-            } else if let rank = tracer["index"] {
-                result.rank = "\(rank)"
-            }
+        } else if let rank = tracer["index"] {
+            result.rank = "\(rank)"
+        } else if let rank = tracerDict["rank"] as? String {
+            result.rank = rank
         }
         result.originFrom = tracer["origin_from"] as? String
         result.originSearchId = tracer["origin_search_id"] as? String
@@ -896,7 +896,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         })
         if leftWidth > 0, let contactPhone = contactPhone {
             self.bindJumpToRealtorDetail(contactPhone: contactPhone, targetView: self.bottomBar.leftView)
-            if let tracerModel =  self.detailPageViewModel?.tracerModel, hasRecordRealtorShow == false {
+            if let tracerModel =  self.detailPageViewModel?.tracerModel?.copy() as? HouseRentTracer, hasRecordRealtorShow == false {
                 self.recordRealtorShow(contact: contactPhone,
                                        traceModel: tracerModel,
                                        offset: 0)
@@ -910,7 +910,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     fileprivate func recordRealtorShow(contact: FHHouseDetailContact, traceModel: HouseRentTracer, offset: Int) {
 
         let params:[String: Any] = ["page_type": "old_detail",
-                                    "element_type": "old_detail_related",
+                                    "element_type": "old_detail_button",
                                     "rank": traceModel.rank,
                                     "origin_from": traceModel.originFrom ?? "be_null",
                                     "origin_search_id": traceModel.originSearchId ?? "be_null",

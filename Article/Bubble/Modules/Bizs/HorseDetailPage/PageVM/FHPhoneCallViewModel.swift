@@ -55,7 +55,7 @@ class FHPhoneCallViewModel: NSObject {
             toTracerParams(traceModel?.logPb ?? "be_null", key: "log_pb") <|>
             toTracerParams(traceModel?.originSearchId ?? "be_null", key: "origin_search_id") <|>
             toTracerParams(traceModel?.originFrom ?? "be_null", key: "origin_from") <|>
-            toTracerParams(contact.realtorId ?? "be_null", key: "realthor_id") <|>
+            toTracerParams(contact.realtorId ?? "be_null", key: "realtor_id") <|>
             toTracerParams(rank, key: "realtor_rank") <|>
             toTracerParams("detail_related", key: "realtor_position") <|>
             toTracerParams(isVirtualNumber ? 1 : 0, key: "has_associate") <|>
