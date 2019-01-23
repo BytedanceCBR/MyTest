@@ -272,6 +272,14 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     toTracerParams(String(code), key: "rank")
             }
             
+            if let code = (traceParamsDic["rank"] ?? traceParamsDic["index"]) as? String {
+                traceExtension = traceExtension <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
+                    toTracerParams(code, key: "rank")
+            }
+            
+            
             if let logPb = traceParamsDic["log_pb"] {
                 traceExtension = traceExtension <|>
                     toTracerParams(logPb, key: "log_pb")
