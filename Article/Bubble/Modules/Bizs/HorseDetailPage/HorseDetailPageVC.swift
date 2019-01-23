@@ -717,10 +717,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         self.followForSendPhone(false)
                     }else {
                         var titleStr:String = "询底价"
+                        var confirmBtnTitle:String = "获取底价"
                         if self.houseType == .neighborhood {
                             titleStr = "咨询经纪人"
+                            confirmBtnTitle = "提交"
                         }
-                        self.showSendPhoneAlert(title: titleStr, subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "提交")
+                        self.showSendPhoneAlert(title: titleStr, subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: confirmBtnTitle)
                     }
 
                 })
