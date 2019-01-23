@@ -308,6 +308,7 @@ import RxCocoa
                         followAction: .ershouHouse,
                         followId: "\(houseId)",
                         disposeBag: disposeBag)()
+                self.recordDeletedFollowEvent(traceParam)
             } else {
                 followIt(
                         houseType: .secondHandHouse,
