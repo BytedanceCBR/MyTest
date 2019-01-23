@@ -125,9 +125,11 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     }
 
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
-        let params = EnvContext.shared.homePageParams <|>
+        let params = TracerParams.momoid() <|>
                 toTracerParams("\(self.houseId)", key: "group_id") <|>
-                toTracerParams("neighborhood_detail", key: "page_type")
+                toTracerParams("neighborhood_detail", key: "page_type") <|>
+                toTracerParams(self.tracerModel?.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                toTracerParams(self.tracerModel?.originFrom ?? "be_null", key: "origin_from")
 
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
             if !recordRowIndex.contains(indexPath) {
@@ -263,7 +265,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             
             let traceParamsDic = traceParams.paramsGetter([:])
             var traceExtension: TracerParams = TracerParams.momoid()
-            if let code = traceParamsDic["rank"] as? Int {
+            if let code = (traceParamsDic["rank"] ?? traceParamsDic["index"]) as? Int {
                 traceExtension = traceExtension <|>
                     toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
                     toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
