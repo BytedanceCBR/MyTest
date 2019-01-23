@@ -188,9 +188,26 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                     if let parmasTrace = getDictionaryFromJSONString(jsonString: reportParams)
                     {
                         let traceParamsReport = mapTracerParams(parmasTrace)
+                        
+                        
                         traceParams = traceParams <|>
                         traceParamsReport
 
+                        let traceParamsDict = traceParams.paramsGetter([:])
+                        
+                        if let rank = traceParamsDict["rank"] as? Int {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams("\(rank)",key:"rank")
+                        } else if let rank = traceParamsDict["index"] {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams("\(rank)",key:"rank")
+                        }
+                        
+                        if let element_from = traceParamsDict["element_from"] as? String {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams(element_from,key:"element_from")
+                        }else
+                        {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams("be_null",key:"element_from")
+                        }
+                        
                         self.logPB = parmasTrace["log_pb"] as? [String: Any]
                     }
                     
@@ -1181,9 +1198,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         
 
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
-        tracerParams = tracerParams <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.detailPageViewModel?.listLogPB ?? "be_null", key: "log_pb")
+        if let listLogPB = self.detailPageViewModel?.listLogPB
+        {
+            tracerParams = tracerParams <|>
+                toTracerParams(listLogPB ?? "be_null", key: "log_pb")
+        }
+
         
         recordEvent(key: TraceEventName.inform_show,
                         params: tracerParams.exclude("element_type"))
