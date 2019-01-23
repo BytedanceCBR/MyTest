@@ -20,6 +20,7 @@
 #import "FHHouseType.h"
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
+#import "TTArticleCategoryManager.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -107,7 +108,9 @@
          return;
      }else
      {
-         if (cellModel.idx) {
+         BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+         
+         if (cellModel.idx && isHasFindHouseCategory) {
              [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
 
              NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
