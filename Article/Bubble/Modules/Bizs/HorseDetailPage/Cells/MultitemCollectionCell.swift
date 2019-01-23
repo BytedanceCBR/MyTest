@@ -584,7 +584,7 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
         theCell.itemRecorders = items.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
             let params = TracerParams.momoid() <|>
-                    toTracerParams(offset, key: "rank") <|>
+                    traceExtension <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
@@ -593,7 +593,7 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
                     toTracerParams("old", key: "house_type") <|>
                     toTracerParams("old_detail", key: "page_type") <|>
                     toTracerParams("same_neighborhood", key: "element_type") <|>
-                    traceExtension
+                    toTracerParams(offset, key: "rank")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
         }
     }
@@ -935,13 +935,13 @@ fileprivate func searchInNeighborhoodItemCellSelector(
         navVC: UINavigationController?,
         disposeBag: DisposeBag) {
     let theParams = itemTracerParams <|>
+            traceExtension <|>
             toTracerParams("slide", key: "card_type") <|>
             itemTracerParams <|>
             toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
             toTracerParams("related", key: "element_from") <|>
-            toTracerParams("new_detail", key: "enter_from") <|>
-            traceExtension
+            toTracerParams("new_detail", key: "enter_from")
     if let id = item.id, let houseId = Int64(id) {
         openNewHouseDetailPage(
                 houseId: houseId,
@@ -965,12 +965,12 @@ func parseNewHouseFloorPanCollectionNode(
         if newHouseData.floorPan?.list?.count ?? 0 > 0 {
             let cellRender = oneTimeRender(curry(fillGuessLikeFloorPanCell)(newHouseData.floorPan?.list ?? [])(newHouseData.logPB)(newHouseData.contact?.phone?.count ?? 0 < 1)(logPb)(traceExtension)(navVC)(followPage)(bottomBarBinder))
             let params = TracerParams.momoid() <|>
+                traceExtension <|>
                 toTracerParams("house_model", key: "element_type") <|>
                 toTracerParams("new_detail", key: "enter_from") <|>
                 toTracerParams(newHouseData.logPB ?? "be_null", key: "log_pb") <|>
-                toTracerParams(newHouseData.id ?? "be_null", key: "group_id") <|>
-                traceExtension
-            
+                toTracerParams(newHouseData.id ?? "be_null", key: "group_id")
+
             return TableSectionNode(
                 items: [cellRender],
                 selectors: nil,
@@ -1006,6 +1006,7 @@ fileprivate func fillGuessLikeFloorPanCell(
         theCell.itemRecorders = data.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
             let params = TracerParams.momoid() <|>
+                    traceExtension <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
@@ -1017,8 +1018,7 @@ fileprivate func fillGuessLikeFloorPanCell(
                     toTracerParams("new_detail", key: "page_type") <|>
                     toTracerParams("house_model", key: "element_type") <|>
                     //实际上这个地方是空
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                    traceExtension
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
 
             return onceRecord(key: TraceEventName.house_show, params: params.exclude("enter_from").exclude("element_from"))
         }
