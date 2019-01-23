@@ -22,6 +22,8 @@ protocol DetailPageViewModel: class {
     var source: String? { get set } // 页面来源
 
     var logPB: Any?  { get set }
+
+    var listLogPB: Any? { get set }
     
     var searchId: String? { get set }
 
@@ -200,18 +202,20 @@ extension DetailPageViewModel {
                 return
             }
             
-            var tracerParams = TracerParams.momoid()
-            if let followTraceParams = self?.followTraceParams {
-                
-                let paramsMap = followTraceParams.paramsGetter([:])
-                tracerParams = tracerParams <|>
-                    toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
-            }
-            tracerParams = tracerParams <|>
-                toTracerParams(followId, key: "group_id") <|>
-                toTracerParams(self?.logPB ?? [:], key: "log_pb")
-            recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
-            
+//            var tracerParams = TracerParams.momoid()
+//            if let followTraceParams = self?.followTraceParams {
+//
+//                let paramsMap = followTraceParams.paramsGetter([:])
+//                tracerParams = tracerParams <|>
+//                    toTracerParams(paramsMap["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+//                    toTracerParams(paramsMap["origin_from"] ?? "be_null", key: "origin_from") <|>
+//                    toTracerParams(paramsMap["enter_from"] ?? "be_null", key: "page_type")
+//            }
+//            tracerParams = tracerParams <|>
+//                toTracerParams(followId, key: "group_id") <|>
+//                toTracerParams(self?.logPB ?? [:], key: "log_pb")
+//            recordEvent(key: TraceEventName.delete_follow, params: tracerParams)
+
             requestCancelFollow(
                     houseType: houseType,
                     followId: followId,
@@ -294,10 +298,13 @@ extension DetailPageViewModel {
     }
     
     func recordFollowEvent(_ traceParam: TracerParams) {
-        
         recordEvent(key: TraceEventName.click_follow, params: traceParam)
-        
     }
+
+    func recordDeletedFollowEvent(_ traceParam: TracerParams) {
+        recordEvent(key: TraceEventName.delete_follow, params: traceParam)
+    }
+
 
     func bindBottomView(params: TracerParams) -> FollowUpBottomBarBinder {
         return { [unowned self] (bottomBar, followUpButton, traceParam) in
@@ -680,11 +687,11 @@ struct DetailDataParser {
 }
 
 func oneTimeRender(_ parser: @escaping TableCellRender) -> TableCellRender {
-    var executed = false
+    var executed: Int = 0
     return { (cell) in
-        if !executed {
+        if executed != cell.hashValue {
             parser(cell)
-            executed = true
+            executed = cell.hashValue
         }
     }
 }
@@ -863,11 +870,3 @@ func getStringFromLogPb(key: String, logPb: Any?) -> String {
     }
     return "be_null"
 }
-
-var getSearchIdFromLogPb = curry(getStringFromLogPb)("search_id")
-var getGroupIdFromLogPb = curry(getStringFromLogPb)("group_id")
-var getImprIdFromLogPb = curry(getStringFromLogPb)("impr_id")
-
-var searchIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getSearchIdFromLogPb($0), key: "search_id") }
-var groupIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getGroupIdFromLogPb($0), key: "group_id") }
-var imprIdTraceParam:(Any?) -> TracerPremeter = { toTracerParams(getImprIdFromLogPb($0), key: "impr_id") }

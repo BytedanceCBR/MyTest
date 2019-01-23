@@ -122,7 +122,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
  */
 + (BOOL)isSameLocCityToUserSelect
 {
-    return [[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable;
+    return ![[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable.boolValue;
 }
 
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey

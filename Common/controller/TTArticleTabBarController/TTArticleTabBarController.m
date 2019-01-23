@@ -1060,10 +1060,13 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         //tip view动画消失或者已经展示
         return NO;
     }
-    
-    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
-    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {//进详情页
-        return NO;
+
+    // 修复线上发现的闪退问题
+    if ([self.viewControllers count] > self.lastSelectedIndex) {
+        UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
+        if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {//进详情页
+            return NO;
+        }
     }
     
     if (_categoryManagerView.isShowing){//频道管理

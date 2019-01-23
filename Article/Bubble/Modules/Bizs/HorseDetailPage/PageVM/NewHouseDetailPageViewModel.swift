@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var listLogPB: Any?
+
     var tracerModel: HouseRentTracer?
 
     var source: String?
@@ -670,6 +672,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         followAction: .newHouse,
                         followId: "\(houseId)",
                         disposeBag: disposeBag)()
+                self.recordDeletedFollowEvent(traceParam)
             } else {
                 followIt(
                         houseType: .newHouse,
@@ -703,6 +706,7 @@ func getNewHouseDetailPageViewModel(
         navVC: UINavigationController?,
         tableView: UITableView) -> NewHouseDetailPageViewModel {
     let re = NewHouseDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
+    re.currentVC = detailPageVC
     re.showQuickLoginAlert = { [weak detailPageVC] (title, subTitle) in
         detailPageVC?.showQuickLoginAlert(title: title, subTitle: subTitle)
     }

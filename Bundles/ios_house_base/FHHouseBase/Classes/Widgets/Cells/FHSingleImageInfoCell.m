@@ -77,7 +77,7 @@
         make.left.mas_equalTo(@20);
         make.top.mas_equalTo(self.headView.mas_bottom);
         make.width.mas_equalTo(@114);
-//        make.height.mas_equalTo(85);
+        make.height.mas_equalTo(85);
 
     }];
     

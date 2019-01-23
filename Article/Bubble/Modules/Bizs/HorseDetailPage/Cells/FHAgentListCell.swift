@@ -453,9 +453,8 @@ func fillAgentListCell(
             itemView.rx.controlEvent(.touchUpInside)
                 .bind {
                     traceModel?.elementFrom = "old_detail_related"
-                    let reportParams = getRealtorReportParams(traceModel: traceModel)
-                    let openUrl = "fschema://realtor_detail"
-
+                    let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "\(offset)")
+                    var openUrl = "fschema://realtor_detail"
 //                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
                     let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
                     let theTraceModel = traceModel?.copy() as? HouseRentTracer
@@ -491,7 +490,7 @@ func fillAgentListCell(
     }
 }
 
-func getRealtorReportParams(traceModel: HouseRentTracer?) -> String {
+func getRealtorReportParams(traceModel: HouseRentTracer?, rank: String) -> String {
     if let traceModel = traceModel {
         var dict:[String: Any] = [:]
         dict["enter_from"] = traceModel.enterFrom
@@ -501,6 +500,7 @@ func getRealtorReportParams(traceModel: HouseRentTracer?) -> String {
         dict["search_id"] = traceModel.searchId ?? "be_null"
         dict["origin_search_id"] = traceModel.originSearchId ?? "be_null"
         dict["group_id"] = traceModel.groupId ?? "be_null"
+        dict["rank"] = rank
         if let logPb = traceModel.logPb as? [AnyHashable: Any] {
             dict["impr_id"] = (logPb["impr_id"] as? String) ?? "be_null"
         }

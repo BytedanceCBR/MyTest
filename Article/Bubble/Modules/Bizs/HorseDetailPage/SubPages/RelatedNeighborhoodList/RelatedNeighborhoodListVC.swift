@@ -106,6 +106,8 @@ class RelatedNeighborhoodListVC: BaseSubPageViewController, PageableVC, UIViewCo
         stayTimeParams = tracerParams.exclude("card_type") <|> traceStayTime()
         recordEvent(key: TraceEventName.enter_category, params: tracerParams.exclude("card_type"))
         
+        self.relatedNeighborhoodListViewModel?.tracerParams = tracerParams
+        
         self.errorVM?.onRequestViewDidLoad()
     }
 

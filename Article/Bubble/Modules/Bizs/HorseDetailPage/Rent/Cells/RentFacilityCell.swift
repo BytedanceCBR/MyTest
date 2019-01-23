@@ -52,7 +52,7 @@ func parseRentFacilityCellNode(model: FHRentDetailResponseModel?,
         toTracerParams(tracer.pageType, key: "page_type")
     let tracerEvaluationRecord = elementShowOnceRecord(params: params)
     return {
-        if (model?.data?.facilities?.count ?? 0) != 0 {
+        if facilities?.count ?? 0 != 0 {
             return TableSectionNode(
                 items: [render],
                 selectors: nil,

@@ -21,6 +21,7 @@ enum RequestSuccessType: Int {
 
 
 class HomeListViewModel: DetailPageViewModel {
+    var listLogPB: Any?
 
     var tracerModel: HouseRentTracer?
 
@@ -357,7 +358,7 @@ class HomeListViewModel: DetailPageViewModel {
         if let dataItems = items{
             let theDataItems = dataItems.map {[weak self] (item) -> HouseItemInnerEntity in
                 var newItem = item
-                newItem.fhSearchId = self?.originSearchId
+                newItem.searchId = self?.originSearchId
                 return newItem
             }
             let dataParser = DetailDataParser.monoid()
@@ -793,7 +794,7 @@ func parseFHHomeNewHouseListItemNode(
                         toTracerParams(offset, key: "rank") <|>
                         toTracerParams("maintab", key: "enter_from") <|>
                         toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
-                        toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
+                        toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                         toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
                     navVC:navVC)
         }
@@ -809,7 +810,8 @@ func parseFHHomeNewHouseListItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    imprIdTraceParam(item.logPB) <|>
+                    toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+//                    imprIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }
@@ -870,7 +872,8 @@ func paresNewHouseListRowItemNode(
                 toTracerParams("new_list", key: "page_type") <|>
                 beNull(key: "element_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                imprIdTraceParam(item.logPB) <|>
+                toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
+//                imprIdTraceParam(item.logPB) <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
     }
@@ -1119,7 +1122,8 @@ func parseFHHomeRentHouseListRowItemNode(
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    imprIdTraceParam(item.logPB) <|>
+                    toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+//                    imprIdTraceParam(item.logPB) <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
         }

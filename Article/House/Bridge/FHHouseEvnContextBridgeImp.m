@@ -7,7 +7,7 @@
 
 #import "FHHouseEvnContextBridgeImp.h"
 #import "Bubble-Swift.h"
-
+#import "FHEnvContext.h"
 
 @implementation FHHouseEvnContextBridgeImp
 
@@ -44,7 +44,7 @@
 
 -(BOOL)locationSameAsChooseCity
 {
-    return YES;
+    return [FHEnvContext isSameLocCityToUserSelect];
 }
 
 -(CLLocationCoordinate2D)currentLocation

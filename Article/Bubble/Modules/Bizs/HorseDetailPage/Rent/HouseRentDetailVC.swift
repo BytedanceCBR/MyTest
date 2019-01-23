@@ -160,7 +160,7 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
     }
 
     private func getTraceParams(routeParamObj paramObj: TTRouteParamObj?) {
-        if let tracer = paramObj?.userInfo.allInfo["tracer"] as? [String: Any] {
+        if let tracer = getTracerFrom(routeParamObj: paramObj) {
             self.houseRentTracer.cardType = tracer["card_type"] as? String ?? "be_null"
             self.houseRentTracer.enterFrom = tracer["enter_from"] as? String ?? "be_null"
             self.houseRentTracer.elementFrom = tracer["element_from"] as? String ?? "be_null"
@@ -197,6 +197,12 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             }
             self.houseRentTracer.originFrom = tracer["origin_from"] as? String ?? "be_null"
             self.logPB = tracer["log_pb"] as? [String: Any]
+
+            if let rank = tracer["rank"] as? Int {
+                self.houseRentTracer.rank = "\(rank)"
+            } else if let rank = tracer["index"] {
+                self.houseRentTracer.rank = "\(rank)"
+            }
         } else {
             self.isFromPush = true
             self.houseRentTracer.enterFrom = "push"
@@ -206,7 +212,27 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
         if let hsp = paramObj?.userInfo.allInfo["house_search_params"] as? [String : Any] {
             self.houseSearchParams = paramsOfMap(hsp)
         }
-        
+    }
+
+
+    private func getTracerFrom(routeParamObj paramObj: TTRouteParamObj?) -> [String: Any]? {
+        if let tracer = paramObj?.userInfo.allInfo["tracer"] as? [String: Any] {
+            return tracer
+        } else if let content = paramObj?.allParams["report_params"] as? String {
+            return getDictionaryFromJSONString(jsonString: content)
+        } else {
+            return nil
+        }
+    }
+
+
+    fileprivate func getDictionaryFromJSONString(jsonString: String) -> [String: Any]? {
+        if let jsonData = jsonString.data(using: .utf8),
+            let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) {
+            return dict as? [String : Any]
+        } else {
+            return [:]
+        }
     }
 
     private func isFromSearch(routeParamObj paramObj: TTRouteParamObj?) -> Bool {
@@ -344,6 +370,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
             toTracerParams(self.houseRentTracer.groupId ?? "be_null", key: "group_id") <|>
             toTracerParams(self.houseRentTracer.logPb ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.houseRentTracer.elementFrom , key: "element_from") <|>
+            toTracerParams(self.houseRentTracer.originFrom ?? "be_null" , key: "origin_from") <|>
+            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null" , key: "origin_search_id") <|>
             toTracerParams(self.houseRentTracer.rank, key: "rank")
     }
 
@@ -375,8 +403,12 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
                                                               houseType: .rentHouse,
                                                               followAction: .rentHouse,
                                                               statusBehavior: theDetailModel.follwUpStatus)
+                        if followUpOrCancel {
+                            detailPageViewModel?.recordDeletedFollowEvent(tracerParamsFollow)
+                        } else {
+                            detailPageViewModel?.recordFollowEvent(tracerParamsFollow)
+                        }
                     }
-                    detailPageViewModel?.recordFollowEvent(tracerParamsFollow)
                 })
                 .disposed(by: disposeBag)
             //绑定关注状态回调
@@ -623,8 +655,8 @@ class HouseRentDetailVC: BaseHouseDetailPage, TTRouteInitializeProtocol, UIViewC
     fileprivate func openSharePanel() {
         
         var params = TracerParams.momoid() <|>
-            toTracerParams(self.houseRentTracer.originFrom, key: "origin_from") <|>
-            toTracerParams(self.houseRentTracer.originSearchId, key: "origin_search_id") <|>
+            toTracerParams(self.houseRentTracer.originFrom ?? "be_null" , key: "origin_from") <|>
+            toTracerParams(self.houseRentTracer.originSearchId ?? "be_null" , key: "origin_search_id") <|>
             toTracerParams(enterFromByHouseType(houseType: houseType), key: "page_type") <|>
             toTracerParams(self.houseRentTracer.cardType, key: "card_type") <|>
             toTracerParams(self.houseRentTracer.enterFrom, key: "enter_from") <|>
