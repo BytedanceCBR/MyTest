@@ -215,7 +215,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     followAction: .neighborhood,
                     followId: "\(houseId)",
                     disposeBag: disposeBag)()
-
+                self.recordDeletedFollowEvent(traceParam)
             } else {
                 followIt(
                     houseType: .neighborhood,
