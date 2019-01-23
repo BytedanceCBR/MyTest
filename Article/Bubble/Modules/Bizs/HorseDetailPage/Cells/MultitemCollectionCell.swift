@@ -584,7 +584,6 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
         theCell.itemRecorders = items.take(5).enumerated().map { e -> (TracerParams) -> Void in
             let (offset, item) = e
             let params = TracerParams.momoid() <|>
-                    toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                     toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
@@ -593,7 +592,8 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
                     toTracerParams("old", key: "house_type") <|>
                     toTracerParams("old_detail", key: "page_type") <|>
                     toTracerParams("same_neighborhood", key: "element_type") <|>
-                    traceExtension
+                    traceExtension <|>
+                    toTracerParams(offset, key: "rank")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
         }
     }
