@@ -402,14 +402,14 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                      cardType: cardType)
         result.groupId = "\(houseId)"
         result.logPb = tracer["log_pb"]
-        if let rank = tracerDict["rank"] as? String {
+        if let rank = tracer["rank"] as? Int {
+            result.rank = "\(rank)"
+        } else if let rank = tracer["rank"] as? String {
             result.rank = rank
-        } else {
-            if let rank = tracer["rank"] as? Int {
-                result.rank = "\(rank)"
-            } else if let rank = tracer["index"] {
-                result.rank = "\(rank)"
-            }
+        } else if let rank = tracer["index"] {
+            result.rank = "\(rank)"
+        } else if let rank = tracerDict["rank"] as? String {
+            result.rank = rank
         }
         result.originFrom = tracer["origin_from"] as? String
         result.originSearchId = tracer["origin_search_id"] as? String
