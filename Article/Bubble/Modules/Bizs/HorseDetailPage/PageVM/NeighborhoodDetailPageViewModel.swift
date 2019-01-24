@@ -602,6 +602,11 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             }
         }
     }
+    
+//    deinit {
+//        print("neighborhoodDetailPageViewModel deinit")
+//
+//    }
 }
 
 func getNeighborhoodDetailPageViewModel() -> (UITableView, EmptyMaskView, UINavigationController?, String?) -> DetailPageViewModel {
