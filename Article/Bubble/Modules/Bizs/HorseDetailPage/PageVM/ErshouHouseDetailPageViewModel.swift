@@ -620,7 +620,7 @@ import RxCocoa
 
                 openNeighborhoodDetailPage(
                     neighborhoodId: Int64(id),
-                    logPB: nil,
+                    logPB: logPb as? [String : Any],
                     disposeBag: self.disposeBag,
                     tracerParams: params,
                     sameNeighborhoodFollowUp: sameNeighborhoodFollowUp,
