@@ -133,6 +133,13 @@
     [[TTNetworkManager shareInstance] setCommonParamsblock:^(void) {
         NSMutableDictionary *commonParams = [NSMutableDictionary dictionaryWithDictionary:[TTNetworkUtilities commonURLParameters]];
     
+        //因为fparams里会有未处理的version_code ，需要后面的把这个冲掉 @xiefei
+        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        
+        [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            [commonParams setValue:obj forKey:key];
+        }];
+        
         /*
          * 因为feed流要求版本与头条一致，当前为0.x.x 待后面正式后要注意更改对应关系
          */
@@ -176,11 +183,6 @@
         }
 
 //      NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
-        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
-        
-        [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            [commonParams setValue:obj forKey:key];
-        }];
 
 //        [commonParams setValue:@([[AKTaskSettingHelper shareInstance] appIsReviewing]) forKey:@"review_flag"];
         NSDictionary* result = [commonParams copy];
