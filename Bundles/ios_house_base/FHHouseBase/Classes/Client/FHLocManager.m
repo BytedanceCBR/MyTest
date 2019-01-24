@@ -16,6 +16,7 @@
 #import "TTSandBoxHelper.h"
 #import "FHHomeConfigManager.h"
 #import "FHUtils.h"
+#import "FHCityListViewModel.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -133,6 +134,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (openUrl) {
             [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
+                // 进历史
+                if (isSuccess) {
+                    FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
+                    [cityListViewModel switchCityByOpenUrlSuccess];
+                }
             }];
             NSDictionary *params = @{@"click_type":@"switch",
                                      @"enter_from":@"default"};
