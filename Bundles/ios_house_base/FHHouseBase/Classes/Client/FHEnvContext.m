@@ -312,7 +312,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 // 检查是否需要swizze route方法的canopenurl逻辑，之所以在这个地方处理是因为push（2个场景）和外部链接可以打开App，但是城市列表如果未选择，不能进行跳转
 - (void)checkExchangeCanOpenURLMethod {
-    if([(id)[FHUtils contentForKey:@"config_key_select_city_id"] integerValue] > 0) {
+    //判断是否展示过城市
+    BOOL isSavedSearchConfig = [[FHEnvContext sharedInstance].generalBizConfig isSavedSearchConfig];
+    if([(id)[FHUtils contentForKey:@"config_key_select_city_id"] integerValue] > 0 || isSavedSearchConfig) {
         // 旧版本选择过城市
         [FHUtils setContent:@(YES) forKey:kUserHasSelectedCityKey];
     }
