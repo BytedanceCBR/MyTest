@@ -325,6 +325,23 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     }
 }
 
+- (void)switchCityByOpenUrlSuccess {
+    NSString *cityName = [[[FHEnvContext sharedInstance] generalBizConfig] configCache].currentCityName;
+    NSString *cityId = [[[FHEnvContext sharedInstance] generalBizConfig] configCache].currentCityId;
+    FHHistoryCityListModel *item = NULL;
+    if (cityId.length > 0) {
+        for (FHConfigDataCityListModel *obj in self.cityList) {
+            if ([obj.cityId isEqualToString:cityId]) {
+                item = obj;
+                break;
+            }
+        }
+    }
+    if (item) {
+        [self addCityToHistory:item];
+    }
+}
+
 // 切换城市
 - (void)switchCityByCityId:(NSString *)cityId switchCompletion:(void(^)(BOOL isSuccess))switchCompletion {
     if (cityId.length > 0) {
