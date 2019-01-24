@@ -123,6 +123,14 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
     }
 }
 
+- (BOOL)isSavedSearchConfig
+{
+    NSString *configJsonStr = [self.searchConfigCache objectForKey:@"search_config"];
+    if (kIsNSString(configJsonStr)) {
+        return YES;
+    }
+    return NO;
+}
 //临时方案,弃用
 //- (FHSearchConfigModel *)getSearchConfigFromLocal
 //{
