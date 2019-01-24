@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)isSavedSearchConfig;
 
+- (NSString *)readLocalDefaultCityNamePreviousVersion;
+
 @end
 
 NS_ASSUME_NONNULL_END

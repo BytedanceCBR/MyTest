@@ -355,11 +355,20 @@ static NSInteger kGetLightRequestRetryCount = 3;
 //获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal
 {
+    //>=0.5版本存储cityname
     if (kIsNSString([FHUtils contentForKey:kUserDefaultCityName]))
     {
         return [FHUtils contentForKey:kUserDefaultCityName];
     }
-    return @"深圳"; //无网默认
+    
+    //0.4版本以及之前保存cityname
+    NSString *cityNameStr = [[[FHEnvContext sharedInstance] generalBizConfig] readLocalDefaultCityNamePreviousVersion];
+    if ([cityNameStr isKindOfClass:[NSString class]])
+    {
+        return cityNameStr;
+    }
+    
+    return @"深圳";
 }
 
 //保存当前城市名称

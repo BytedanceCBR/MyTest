@@ -13,11 +13,14 @@
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
+static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
+
 
 @interface FHGeneralBizConfig ()
 @property (nonatomic, strong) YYCache *generalConfigCache;
 @property (nonatomic, strong) YYCache *searchConfigCache;
 @property (nonatomic, strong) YYCache *userSelectCache;
+@property (nonatomic, strong) YYCache *userDefaultSelectCityCache;
 
 @end
 
@@ -38,6 +41,15 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
     }
     return _searchConfigCache;
 }
+
+- (YYCache *)userDefaultSelectCityCache
+{
+    if (!_userDefaultSelectCityCache) {
+        _userDefaultSelectCityCache = [YYCache cacheWithName:kUserDefaultCityNamePre05_Key];
+    }
+    return _userDefaultSelectCityCache;
+}
+
 
 - (YYCache *)userSelectCache
 {
@@ -131,6 +143,16 @@ static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
     }
     return NO;
 }
+
+- (NSString *)readLocalDefaultCityNamePreviousVersion
+{
+    NSString *configJsonStr = [self.userDefaultSelectCityCache objectForKey:@"usercurrentcity"];
+    if (kIsNSString(configJsonStr)) {
+        return configJsonStr;
+    }
+    return nil;
+}
+
 //临时方案,弃用
 //- (FHSearchConfigModel *)getSearchConfigFromLocal
 //{
