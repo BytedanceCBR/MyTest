@@ -933,14 +933,14 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                                                       followId: "\(self.houseId)",
                                                       disposeBag: self.disposeBag)
 
-        targetView.rx.controlEvent(.touchUpInside).bind { [unowned self,weak delegate] () in
+        targetView.rx.controlEvent(.touchUpInside).bind { [unowned self] () in
             if let realtorId = contactPhone.realtorId ,
-                let traceModel = self.detailPageViewModel?.tracerModel, let delegate = delegate {
+                let traceModel = self.detailPageViewModel?.tracerModel {
                 traceModel.elementFrom = "old_detail_button"
                 let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "0")
                 let openUrl = "fschema://realtor_detail"
                 let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
-                var theTraceModel = traceModel.copy() as? HouseRentTracer
+                let theTraceModel = traceModel.copy() as? HouseRentTracer
                 theTraceModel?.elementFrom = "old_detail_button"
                 theTraceModel?.enterFrom = "old_detal"
                 let info: [String: Any] = ["url": jumpUrl,
