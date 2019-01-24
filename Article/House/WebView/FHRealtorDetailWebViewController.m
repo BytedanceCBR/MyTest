@@ -47,7 +47,7 @@ static NSString *s_oldAgent = nil;
         @strongify(self);
         self->_realtorId = params[@"realtor_id"];
         NSString* phone = params[@"phone"];
-        HouseRentTracer* theTracerModel = [_tracerModel copy];
+        HouseRentTracer* theTracerModel = [self->_tracerModel copy];
         theTracerModel.pageType = @"realtor_detail";
         if (self->_realtorId != nil && phone != nil) {
             [self->_phoneCallViewModel requestVirtualNumberAndCallWithRealtorId:self->_realtorId
