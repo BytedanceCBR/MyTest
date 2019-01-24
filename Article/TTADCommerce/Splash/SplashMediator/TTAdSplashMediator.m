@@ -150,7 +150,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (void)requestWithUrl:(NSString *)urlString responseBlock:(TTAdSplashResponseBlock)responseBlock
 {
-    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] params:nil method:@"GET" needCommonParams:NO callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         responseBlock(obj, error,response.statusCode);
     }];
 }
