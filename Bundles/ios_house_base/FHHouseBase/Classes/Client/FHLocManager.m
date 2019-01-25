@@ -323,6 +323,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                         [wSelf updateAllConfig:model isNeedDiff:YES];
                     }
                 }
+                
+                FHConfigDataModel *configCache = [[FHEnvContext sharedInstance] getConfigFromCache];
+                
+                if (!configCache) {
+                    [wSelf updateAllConfig:model isNeedDiff:NO];
+                }
+                
                 self.retryConfigCount = 3;
             }];
         }
