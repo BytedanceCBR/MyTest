@@ -93,7 +93,8 @@
         }];
     }
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (configDataModel) {
+    NSArray *cityList = [configDataModel cityList];
+    if (configDataModel && cityList.count > 0) {
         [self.viewModel loadListCityData:configDataModel];
         self.hasShowenConfigListData = YES;
         [self checkShowLocationErrorAlert];
