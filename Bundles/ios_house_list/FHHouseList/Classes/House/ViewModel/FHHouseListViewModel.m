@@ -396,9 +396,9 @@
     
     if (model) {
 
-        NSString *searchId;
-        NSString *houseListOpenUrl;
-        NSString *mapFindHouseOpenUrl;
+//        NSString *searchId;
+//        NSString *houseListOpenUrl;
+//        NSString *mapFindHouseOpenUrl;
         NSArray *itemArray = @[];
         NSArray *recommendItemArray = @[];
         BOOL hasMore = NO;
@@ -414,15 +414,15 @@
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) {
 
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
-            houseListOpenUrl = houseModel.houseListOpenUrl;
-            mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            self.houseListOpenUrl = houseModel.houseListOpenUrl;
+            self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
             redirectTips = houseModel.redirectTips;
             recommendHouseDataModel = houseModel.recommendSearchModel;
             recommendItemArray = recommendHouseDataModel.items;
-            searchId = houseModel.searchId;
+            self.searchId = houseModel.searchId;
             if (recommendItemArray.count > 0) {
                 self.recommendSearchId = recommendHouseDataModel.searchId;
                 if (!hasMore) {
@@ -436,8 +436,8 @@
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
-            searchId = houseModel.searchId;
-            houseListOpenUrl = houseModel.houseListOpenUrl;
+            self.searchId = houseModel.searchId;
+            self.houseListOpenUrl = houseModel.houseListOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
@@ -446,9 +446,9 @@
         } else if ([model isKindOfClass:[FHHouseRentModel class]]) {
 
             FHHouseRentDataModel *houseModel = ((FHHouseRentModel *)model).data;
-            searchId = houseModel.searchId;
-            houseListOpenUrl = houseModel.houseListOpenUrl;
-            mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            self.searchId = houseModel.searchId;
+            self.houseListOpenUrl = houseModel.houseListOpenUrl;
+            self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
@@ -457,8 +457,8 @@
         } else if ([model isKindOfClass:[FHHouseNeighborModel class]]) {
 
             FHHouseNeighborDataModel *houseModel = ((FHHouseNeighborModel *)model).data;
-            searchId = houseModel.searchId;
-            houseListOpenUrl = houseModel.houseListOpenUrl;
+            self.searchId = houseModel.searchId;
+            self.houseListOpenUrl = houseModel.houseListOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
@@ -466,13 +466,11 @@
 
         }
         
-        self.searchId = searchId;
-        
         if (self.isFirstLoad) {
-            self.originSearchId = searchId;
+            self.originSearchId = self.searchId;
             self.isFirstLoad = NO;
-            if (searchId.length > 0 ) {
-                SETTRACERKV(UT_ORIGIN_SEARCH_ID, searchId);
+            if (self.searchId.length > 0 ) {
+                SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
             }
         }
         self.showPlaceHolder = NO;
@@ -483,12 +481,10 @@
         if (self.isRefresh) {
             [self addHouseSearchLog];
             [self addHouseRankLog];
-            [self refreshHouseListUrlCallback:houseListOpenUrl];
+            [self refreshHouseListUrlCallback:self.houseListOpenUrl];
         } else {
             [self addCategoryRefreshLog];
         }
-        self.houseListOpenUrl = houseListOpenUrl;
-        self.mapFindHouseOpenUrl = mapFindHouseOpenUrl;
 
         if (!self.fromRecommend) {
             
