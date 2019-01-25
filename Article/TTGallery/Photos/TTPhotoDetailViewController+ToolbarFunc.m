@@ -722,7 +722,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
                     title = self.activityActionManager.qqShareTitleText;
                 }
                 if (isEmptyString(title)) {
-                    title = NSLocalizedString(@"好多房", nil);
+                    title = NSLocalizedString(@"幸福里", nil);
                 }
                 UIImage *shareImage = self.activityActionManager.shareToWeixinMomentOrQZoneImage ? self.activityActionManager.shareToWeixinMomentOrQZoneImage : self.activityActionManager.shareImage;
                 TTQQZoneContentItem *qqZoneContentItem = [[TTQQZoneContentItem alloc] initWithTitle:title desc:qqZoneText webPageUrl:qqZoneShareURL thumbImage:shareImage imageUrl:self.activityActionManager.shareImageURL shareTye:TTShareWebPage];

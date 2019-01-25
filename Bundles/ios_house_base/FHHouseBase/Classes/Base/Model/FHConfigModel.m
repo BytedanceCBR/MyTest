@@ -160,6 +160,7 @@
                            @"neighborhoodFilterOrder": @"neighborhood_filter_order",
                            @"rentFilter": @"rent_filter",
                            @"courtFilter": @"court_filter",
+                           @"diffCode": @"diff_code",
                            @"saleHistoryFilter": @"sale_history_filter",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -365,6 +366,15 @@
 
 
 @implementation  FHConfigDataCityListModel
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.enable = true; // 默认是开通的
+    }
+    return self;
+}
 
 + (JSONKeyMapper*)keyMapper
 {

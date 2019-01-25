@@ -136,6 +136,16 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     return self;
 }
 
+- (void)initShareButtonAcition
+{
+     SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+     rightButton.frame = CGRectMake(10, 0, 30, 30);
+    [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    [rightButton setImage:[UIImage imageNamed:@"ic-navigation-share-dark"] forState:UIControlStateNormal];
+     [rightButton addTarget:self action:@selector(shareBtnClick)  forControlEvents:UIControlEventTouchUpInside];
+    _navigationBar.rightBarView = rightButton;
+}
+
 //从SSWebViewController透传的condition
 - (void)initBaseCondition:(NSDictionary *)baseCondition {
     NSDictionary *param = baseCondition;
@@ -163,6 +173,19 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (void)setRightButtonDisplay:(BOOL)rightButtonDisplayed {
     self.navigationBar.rightBarView.hidden = !rightButtonDisplayed;
+}
+
+- (void)setupFShareBtn:(BOOL)isShowBtn
+{
+    if (isShowBtn) {
+        [self initShareButtonAcition];
+        self.navigationBar.rightBarView.hidden = NO;
+    }
+}
+
+- (void)shareBtnClick
+{
+    [self.ssWebContainer.ssWebView ttr_fireEvent:@"clickShare" data:nil];
 }
 
 - (void)getShareInfoFormWap
@@ -483,7 +506,42 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
             if (self.viewController.navigationController.viewControllers.count == 1 && self.viewController.navigationController.presentingViewController) {
                 [self.viewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
             } else {
-                [self.viewController.navigationController popViewControllerAnimated:YES];
+                
+                NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+                
+                NSInteger closeStackCouuntResult = self.closeStackCounts;
+                
+                if (closeStackCouuntResult == 0) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                    return;
+                }
+                
+                if (vcStack.count > closeStackCouuntResult + 2) {
+                    NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
+                    if (retainVCs == 0) {
+                        self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+                    }else
+                    {
+                        NSMutableArray *viewControllersArray = [NSMutableArray new];
+                        [viewControllersArray addObject:vcStack.firstObject];
+                        
+                        for (int i = 0; i < retainVCs; i++) {
+                            if (vcStack.count > i) {
+                                [viewControllersArray addObject:vcStack[i + 1]];
+                            }
+                        }
+                        
+                        [viewControllersArray addObject:vcStack.lastObject];
+                        
+                        self.navigationController.viewControllers = viewControllersArray;
+                    }
+                }else
+                {
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    return;
+                }
+                
+                [self.navigationController popViewControllerAnimated:YES];
             }
         } else {
             if (self.viewController.presentingViewController) {

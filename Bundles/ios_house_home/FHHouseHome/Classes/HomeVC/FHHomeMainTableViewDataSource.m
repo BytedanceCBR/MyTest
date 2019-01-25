@@ -20,6 +20,7 @@
 #import "FHHouseType.h"
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
+#import "TTArticleCategoryManager.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -107,7 +108,9 @@
          return;
      }else
      {
-         if (cellModel.idx) {
+         BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+         
+         if (cellModel.idx && isHasFindHouseCategory) {
              [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
 
              NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
@@ -172,12 +175,13 @@
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"element_from"] = @"be_null";
         traceParam[@"log_pb"] = theModel.logPb;
         traceParam[@"origin_from"] = [self pageTypeString];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = @(indexPath.row);
         traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        traceParam[@"element_from"] = @"maintab_list";
+        traceParam[@"enter_from"] = @"maintab";
         
         NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
                                @"tracer": traceParam
@@ -282,4 +286,8 @@
     }
 }
 
+- (void)resetTraceCahce
+{
+    [self.traceRecordDict removeAllObjects];
+}
 @end

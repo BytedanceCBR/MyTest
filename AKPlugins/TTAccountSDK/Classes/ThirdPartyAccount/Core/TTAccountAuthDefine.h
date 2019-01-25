@@ -34,7 +34,7 @@ NS_ENUM(NSInteger, TTAccountAuthType) {
     TTAccountAuthTypeTwitter   = 8, /** Twitter */
     
     /** attention: [10-1000) 之间为公司产品类型；与BDSDKProductType定义产品类型顺序一致 */
-    TTAccountAuthTypeToutiao   = 10, /** 好多房 */
+    TTAccountAuthTypeToutiao   = 10, /** 幸福里 */
     TTAccountAuthTypeDouyin    = 11, /** 抖音 */
     TTAccountAuthTypeHuoshan   = 12, /** 火山 */
     TTAccountAuthTypeTTVideo   = 13, /** 西瓜视频 */

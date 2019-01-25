@@ -267,6 +267,7 @@ struct SystemNotificationResponse: Mappable {
         var timestamp: Int64?
         var dateStr: String?
         var bottonName: String?
+        var logPb: Any?
 
         init?(map: Map) {
 
@@ -281,6 +282,7 @@ struct SystemNotificationResponse: Mappable {
             timestamp <- map["timestamp"]
             dateStr <- map["date_str"]
             bottonName <- map["button_name"]
+            logPb <- map["log_pb"]
         }
     }
 

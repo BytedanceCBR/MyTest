@@ -92,7 +92,7 @@ pod "TTUIWidget"
  v0.7.26 | [TTPanelController] : 修复TTPanelController中的item在iPad无法完全的UI bug
  v0.7.27 | [UIView+Refresh_ErrorHandler] : 修复iOS7系统由OBJC_ASSOCIATION_ASSIGN引起的野指针访问时crash的问题
  v0.7.28 | [TTPageController/TTFoldableLayout] :  修复 iOS 8.1 及以下版本，嘉聊视频直播室自动收起时底部会留白的问题。
- v0.7.29 | [TTGradientView/UIView+Refresh_ErrorHandler] :  替换"好多房"加载态为"你关心的才是头条"
+ v0.7.29 | [TTGradientView/UIView+Refresh_ErrorHandler] :  替换"幸福里"加载态为"你关心的才是头条"
  v0.7.30 | [TTNavigationController] : TTNavigationController对tabbar截图大小调整，能截取到超出tabbar bounds的view
  v0.7.31 | [TTNavigationController] : 修复TTNavigationController对tabbar截图bug
  v0.7.32 | [TTGradientView] : 加载态扫描动画修改动画时间，加入停顿时间&防止动画视图被多次添加

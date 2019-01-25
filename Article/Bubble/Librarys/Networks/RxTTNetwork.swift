@@ -120,4 +120,38 @@ extension Reactive where Base: TTNetworkManager {
             }
         })
     }
+
+
+    func requestForBinaryOnBgThread(
+        url: String,
+        params: [String: Any]? = nil,
+        method: String = "GET",
+        needCommonParams: Bool = false) -> Observable<Data> {
+        return Observable.create({ (observable) -> Disposable in
+            let task = TTNetworkManager.shareInstance()
+                .requestForBinary(
+                    withURL: url,
+                    params: params,
+                    method: method,
+                    needCommonParams: needCommonParams,
+                    callback: { (error, response) in
+                        DispatchQueue.global().async {
+                            if let error = error {
+                                observable.onError(error)
+                            } else {
+                                if let response = response as? Data {
+                                    observable.onNext(response)
+                                    observable.onCompleted()
+                                } else {
+                                    assertionFailure("网络数据读取失败")
+                                    observable.onCompleted()
+                                }
+                            }
+                        }
+                })
+            return Disposables.create {
+                task?.cancel()
+            }
+        })
+    }
 }

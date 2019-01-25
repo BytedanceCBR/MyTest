@@ -24,7 +24,7 @@
 //"house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
 "house_list_in_neighborhood" = "FHNeighborListViewController";
 "neighborhood_sales_list"   = "_TtC6Bubble20TransactionHistoryVC";
-"fh_webview"            = "_TtC6Bubble19FHWebViewController";
+//"fh_webview"            = "_TtC6Bubble19FHWebViewController";
 "fh_house_detail_map"   = "_TtC6Bubble12LBSMapPageVC";
 // SSAppPageController
 "home"                  = "SSAppPageManagerNotificationHome";
@@ -93,6 +93,6 @@
 "renthouse_main"  =  "FHHouseRentHomeVC";
 "rent_main"  =  "FHHouseRentHomeVC";
 "realtor_detail"       = "FHRealtorDetailWebViewController";
-"webview_oc"           = "FHWebviewViewController";
+//"webview_oc"           = "FHWebviewViewController";
 "city_list"            = "FHCityListViewController";
 "city_search"          = "FHCitySearchViewController";

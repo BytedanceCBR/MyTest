@@ -15,6 +15,8 @@ class RelatedNeighborhoodListViewModel: BaseSubPageViewModel, TableViewTracer {
 
     var searchId: String?
     
+    var tracerParams = TracerParams.momoid()
+    
     func request(neighborhoodId: String) {
         
         if EnvContext.shared.client.reachability.connection == .none {
@@ -32,7 +34,7 @@ class RelatedNeighborhoodListViewModel: BaseSubPageViewModel, TableViewTracer {
             loader()
                 .subscribe(onNext: { [unowned self] (response) in
                     if let data = response?.data {
-                        let params = TracerParams.momoid() <|>
+                        let params = self.tracerParams <|>
                             toTracerParams("neighborhood_nearby_list", key: "page_type") <|>
                             toTracerParams("neighborhood_nearby_list", key: "enter_from") <|>
                             toTracerParams("neighborhood_nearby", key: "element_type")

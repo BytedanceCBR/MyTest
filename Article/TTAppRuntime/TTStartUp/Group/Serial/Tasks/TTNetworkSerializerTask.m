@@ -41,6 +41,13 @@
     [[self class] settingNetworkSerializerClass];
 }
 
++(BOOL)isArm64
+{
+    NSInteger i = 0;
+    return sizeof(i) >= 8;
+}
+
+
 + (void)settingNetworkSerializerClass {
     //add by songlu
     Monitorblock block = ^(NSDictionary* data, NSString* logType) {
@@ -71,13 +78,13 @@
     [TTNetworkManager setHttpDnsEnabled:isHttpDnsEnabled];
 
     BOOL isChromiumEnabled = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isChromiumEnabled;
-    isChromiumEnabled = YES;//TODO: hard code
+//    isChromiumEnabled = NO;//TODO: hard code
+    isChromiumEnabled = [self isArm64];
     if (isChromiumEnabled) {
         [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeLibChromium];
+    } else {
+        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
     }
-    //    } else {
-    //        [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
-    //    }
 
 //    // 初始化SafeGuard配置
 //    [[AKSafeGuardHelper sharedInstance] initSafeGuard];
@@ -126,6 +133,13 @@
     [[TTNetworkManager shareInstance] setCommonParamsblock:^(void) {
         NSMutableDictionary *commonParams = [NSMutableDictionary dictionaryWithDictionary:[TTNetworkUtilities commonURLParameters]];
     
+        //因为fparams里会有未处理的version_code ，需要后面的把这个冲掉 @xiefei
+        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        
+        [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            [commonParams setValue:obj forKey:key];
+        }];
+        
         /*
          * 因为feed流要求版本与头条一致，当前为0.x.x 待后面正式后要注意更改对应关系
          */
@@ -161,6 +175,7 @@
         NSString *cityId = configModel.currentCityId;
         if (cityId.length > 0) {
             [commonParams setValue:cityId forKey:@"f_city_id"];
+            [commonParams setValue:cityId forKey:@"city_id"];
         }
 
         if (/*[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].figerprintEnabled &&*/ !isEmptyString([TTFingerprintManager sharedInstance].fingerprint)) {
@@ -168,11 +183,6 @@
         }
 
 //      NSDictionary* fParams = [[EnvContext shared] client].commonParamsProvider();
-        NSDictionary* fParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
-        
-        [fParams enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            [commonParams setValue:obj forKey:key];
-        }];
 
 //        [commonParams setValue:@([[AKTaskSettingHelper shareInstance] appIsReviewing]) forKey:@"review_flag"];
         NSDictionary* result = [commonParams copy];

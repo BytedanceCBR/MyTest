@@ -293,6 +293,7 @@ struct FloorPan: Mappable {
     var list: [Item]?
     var hasMore = false
     var logPB: [String: Any]?
+    var searchId: String?
 
     init?(map: Map) {
         
@@ -302,6 +303,7 @@ struct FloorPan: Mappable {
         list <- map["list"]
         hasMore <- map["has_more"]
         logPB <- map["log_pb"]
+        searchId <- map["search_id"]
 
     }
     
@@ -315,6 +317,8 @@ struct FloorPan: Mappable {
         var squaremeter: String?
         var roomCount: Int = -1
         var logPB: Any?
+        var searchId: String?
+        var imprId: String?
 
         init?(map: Map) {
             
@@ -329,6 +333,8 @@ struct FloorPan: Mappable {
             squaremeter <- map["squaremeter"]
             logPB <- map["log_pb"]
             roomCount <- map["room_count"]
+            searchId <- map["search_id"]
+            imprId <- map["impr_id"]
         }
     }
 }
@@ -503,6 +509,8 @@ struct FloorPlanInfoData: Mappable {
         var roomCount: Int?
         var logPB: Any?
         
+        var searchId: String?
+        var imprId: String?
         var fhSearchId: String?
 
         init?(map: Map) {
@@ -518,7 +526,9 @@ struct FloorPlanInfoData: Mappable {
             roomCount <- map["roomCount"]
             images <- map["images"]
             logPB <- map["log_pb"]
-            fhSearchId <- map["fhSearchId"]
+            searchId <- map["search_id"]
+            imprId <- map["impr_id"]
+            fhSearchId <- map["search_id"]
 
         }
     }

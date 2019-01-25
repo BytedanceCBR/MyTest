@@ -134,7 +134,7 @@
         case TTFullScreenErrorViewTypeLocationServiceDisabled: {
             [self.errorImage setImage:[UIImage themedImageNamed:@"not_location_loading"]];
             self.errorMsg.text = NSLocalizedString(@"定位服务不可用", nil);
-            self.errorSubMsg.text = NSLocalizedString(@"开启定位，添加你的位置（设置>隐私>定位服务>开启好多房定位服务",nil);
+            self.errorSubMsg.text = NSLocalizedString(@"开启定位，添加你的位置（设置>隐私>定位服务>开启幸福里定位服务",nil);
             self.actionBtn.hidden = NO;
             [self.actionBtn setTitle:NSLocalizedString(@"开启服务", nil) forState:UIControlStateNormal];
             break;

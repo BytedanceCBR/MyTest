@@ -77,6 +77,15 @@
         }
         self.configModel = [[FHMapSearchConfigModel alloc] initWithDictionary:param error:nil];
         self.configModel.mapOpenUrl = [paramObj.sourceURL absoluteString];
+        if (self.configModel.houseType < FHHouseTypeNewHouse) {
+            NSString *host = paramObj.sourceURL.host;
+            if ([host isEqualToString:@"mapfind_rent"]) {
+                self.configModel.houseType = FHHouseTypeRentHouse;
+            }else if([host isEqualToString:@"mapfind_house"]){
+                self.configModel.houseType = FHHouseTypeSecondHandHouse;
+            }
+        }
+        
         NSHashTable *hashTable =  (NSHashTable *) paramObj.userInfo.allInfo[OPENURL_CALLBAK];
         if ([hashTable isKindOfClass:[NSHashTable class]]) {
             id delegate = hashTable.anyObject;

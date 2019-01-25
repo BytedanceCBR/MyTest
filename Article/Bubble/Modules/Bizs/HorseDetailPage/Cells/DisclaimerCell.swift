@@ -19,7 +19,7 @@ class DisclaimerCell: BaseUITableViewCell {
         re.numberOfLines = 0
         re.lineBreakMode = NSLineBreakMode.byWordWrapping
         re.textColor = hexStringToUIColor(hex: kFHCoolGrey2Color)
-        re.font = CommonUIStyle.Font.pingFangRegular(13)
+        re.font = CommonUIStyle.Font.pingFangRegular(12)
         re.backgroundColor = hexStringToUIColor(hex: "#f4f5f6")
         return re
     }()
@@ -65,7 +65,12 @@ func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSecti
         if data.disclaimer == nil && data.contact == nil {
             return nil
         }
-        let cellRender = curry(fillErshouHouseDisclaimerCell)(data.disclaimer)(data.contact)
+        var contact: FHHouseDetailContact? = nil
+        // 当且仅当没有合作经纪人时，才在disclaimer中显示爬取经纪人
+        if data.highlightedRealtor == nil {
+            contact = data.contact
+        }
+        let cellRender = curry(fillErshouHouseDisclaimerCell)(data.disclaimer)(contact)
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,
@@ -226,10 +231,10 @@ fileprivate func rangeOfArray(_ range: [Int]?, originalLength: Int) -> NSRange {
 fileprivate func highLightTextStyle() -> [NSAttributedStringKey: Any] {
     return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: "#f85959"),
 //            NSAttributedStringKey.underlineStyle: NSUnderlineStyle.patternSolid,
-            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
+            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12)]
 }
 
 fileprivate func commonTextStyle() -> [NSAttributedStringKey: Any] {
     return [NSAttributedStringKey.foregroundColor: hexStringToUIColor(hex: kFHCoolGrey2Color),
-            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(13)]
+            NSAttributedStringKey.font: CommonUIStyle.Font.pingFangRegular(12)]
 }

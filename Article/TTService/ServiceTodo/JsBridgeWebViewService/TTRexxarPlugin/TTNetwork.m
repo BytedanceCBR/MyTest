@@ -10,11 +10,12 @@
 #import "TTNetworkUtilities.h"
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTBridgeDefines.h"
+#import "FHEnvContext.h"
 
 @implementation TTNetwork
 
-- (void)commonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSDictionary *commonParams = [TTNetworkUtilities commonURLParameters];
+- (void)getNetCommonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
     
     if (!commonParams) {
         if (callback) {
@@ -56,8 +57,13 @@
     
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
     [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
-        if (callback && [obj isKindOfClass:[NSData class]]) {
-            callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding] ? : @"",
+        NSString *result = @"";
+        
+        if([obj isKindOfClass:[NSData class]]){
+            result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+        }
+        if (callback) {
+            callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
                                                       @"status": @(response.statusCode),
                                                       @"code": error?@(0): @(1),
                                                       @"beginReqNetTime": startTime

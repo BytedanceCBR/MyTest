@@ -131,10 +131,10 @@
     //内测弹窗
     NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
     NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
-    NSString * channelValue = @"local_test";
+    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
     NSString * aidValue = @"1370";
-//    NSString * baseUrl = [CommonURLSetting baseURL];
-    NSString * baseUrl = @"https://i.snssdk.com";
+    NSString * baseUrl = [CommonURLSetting baseURL];
+//    NSString * baseUrl = @"https://i.snssdk.com";
     
     [TTAppUpdateHelper sharedInstance].delegate = self;
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
@@ -206,7 +206,7 @@
     CGFloat bottomPadding = 0;
     CGFloat topPadding = 0;
     
-    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//好多房设计稿整体topbar高度120
+    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//幸福里设计稿整体topbar高度120
     bottomPadding = 44;
     
     if ([TTDeviceHelper isIPhoneXDevice]){

@@ -168,5 +168,7 @@
 
 #define kFHColorCoral @"red1"//= "#ff5b4c"
 #define kFHColorLightishGreen @"green1"//= "#69db82"
+#define kFHColorCoralPink @"red2"//= "#ff5869"
+#define kFHColorDarkBlue @"darkblue1"//= "#0b1626"
 
 #endif

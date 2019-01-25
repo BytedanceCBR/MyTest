@@ -380,7 +380,7 @@
     if (![TTReachability isNetworkConnected]) {
         if (showLoading) {
             [self.listController dismissLoadingAlert];
-            [self.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+            [self.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
             [self.maskView showRetry:YES];
             [self showMaskView:YES];
         }else{
@@ -431,7 +431,7 @@
                 NSString *tip = nil;
                 BOOL showRetry = YES;
                 if ([wself.configModel.conditionQuery containsString:@"&"]) {
-                    tip = @"没有找到相关信息，换个条件试试吧~";
+                    tip = @"暂无搜索结果";
                     showRetry = NO;
                 }else{
                     tip = @"数据走丢了";
@@ -451,7 +451,7 @@
                 }
                 
                 if (showLoading) {
-                    [wself.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+                    [wself.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
                     [wself.maskView showRetry:YES];
                     [wself showMaskView:YES];
                 }else{
@@ -491,7 +491,7 @@
     if (![TTReachability isNetworkConnected]) {
         if (showLoading) {
             [self.listController dismissLoadingAlert];
-            [self.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+            [self.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
             [self.maskView showRetry:YES];
             [self showMaskView:YES];
         }else{
@@ -547,7 +547,7 @@
                 NSString *tip = nil;
                 BOOL showRetry = YES;
                 if ([wself.configModel.conditionQuery containsString:@"&"]) {
-                    tip = @"没有找到相关信息，换个条件试试吧~";
+                    tip = @"暂无搜索结果";
                     showRetry = NO;
                 }else{
                     tip = @"数据走丢了";
@@ -562,7 +562,7 @@
         }else{
             if (error) {
                 if (showLoading) {
-                    [wself.maskView showErrorWithTip:@"网络不给力，试试刷新页面"];
+                    [wself.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
                     [wself.maskView showRetry:YES];
                     [wself showMaskView:YES];
                 }else{
@@ -709,7 +709,8 @@
     if (neighbor.logPb) {
         param[@"log_pb"] = [neighbor.logPb toDictionary];
     }
-    
+    param[@"category_name"] = nil;
+    param[@"element_from"] = nil;
     [FHUserTracker writeEvent:@"house_show" params:param];
 }
 
@@ -749,7 +750,8 @@
     if (logPb) {
         param[@"log_pb"] = logPb;
     }
-    
+    param[@"category_name"] = nil;
+    param[@"element_from"] = nil;
     [FHUserTracker writeEvent:@"house_show" params:param];
     _houseLogs[@(indexPath.row)] = @(1);
 }
@@ -758,7 +760,6 @@
 {
     NSMutableDictionary *param = [self logBaseParams];
     param[@"search_id"] = houseDataModel.searchId;
-//    param[@"enter_from"] = @"old_list";
     param[@"category_name"] = nil;
     param[@"element_from"] = nil;
     

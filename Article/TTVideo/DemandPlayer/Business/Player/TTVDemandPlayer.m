@@ -886,9 +886,11 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     if (isFull) {
         [self.playerController exitFullScreen:YES completion:^(BOOL finished) {
             self.playerStateStore.state.exitFullScreeenType = TTVPlayerExitFullScreeenTypeUnknow;
+
         }];
     }else{
         [self.playerController enterFullScreen:YES completion:^(BOOL finished) {
+
         }];
     }
 }

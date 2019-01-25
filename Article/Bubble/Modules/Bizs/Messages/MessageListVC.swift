@@ -94,9 +94,13 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
                 category_name = "neighborhood_message_list"
                 origin_from = "messagetab_neighborhood"
             case "307":
-                // "房源推荐"
+                // "房源推荐-二手房"
                 category_name = "recommend_message_list"
-                origin_from = "messagetab_recommend"
+                origin_from = "messagetab_recommend_old"
+            case "309":
+                // "房源推荐-租房"
+                category_name = "recommend_message_list"
+                origin_from = "messagetab_recommend_rent"
                 
             default:
                 break
@@ -179,7 +183,7 @@ class MessageListVC: BaseViewController, UITableViewDelegate, PageableVC, TTRout
             maker.top.bottom.right.left.equalTo(tableView)
         }
         
-        self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常",requestNilDataText:"啊哦～你还没有收到消息～",requestNilDataImage:"empty_message",isUserClickEnable:false)
+        self.errorVM = NHErrorViewModel(errorMask:emptyMaskView,requestRetryText:"网络异常",requestNilDataText:"暂无消息",requestNilDataImage:"empty_message",isUserClickEnable:false)
         self.errorVM?.onRequestViewDidLoad()
     }
     
@@ -546,68 +550,6 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                     TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://neighborhood_detail?neighborhood_id=\(houseId)"), userInfo: userInfo)
                 }
 
-//                switch houseType {
-//                case .newHouse:
-//                    openNewHouseDetailPage(
-//                        houseId: Int64(houseId) ?? 0,
-//                        logPB: logPb as? [String: Any],
-//                        disposeBag: disposeBag,
-//                        tracerParams: params <|> toTracerParams("new_message_list", key: "enter_from"),
-//                        navVC: navVC)(TracerParams.momoid() <|>
-//                            beNull(key: "element_from") <|>
-//                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
-//                case .secondHandHouse:
-//
-//                    let listType = selectTraceParam(self.traceParams, key: "category_name")
-//                    var elementParams = TracerParams.momoid()
-//                                        <|> toTracerParams(rankByIndexPath(indexPath), key: "rank")
-//                                        <|> beNull(key: "element_from")
-//
-//                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
-//
-//                        params = params <|> toTracerParams("recommend_message_list", key: "enter_from")
-//                        elementParams = elementParams <|> toTracerParams("be_null", key: "element_from")
-//
-//                    }else {
-//                        params = params <|> toTracerParams(listType ?? "old_message_list", key: "enter_from")
-//                    }
-//                    openErshouHouseDetailPage(
-//                        houseId: Int64(houseId) ?? 0,
-//                        logPB: logPb as? [String: Any],
-//                        disposeBag: disposeBag,
-//                        tracerParams: params,
-//                        navVC: navVC)(elementParams)
-//
-//                case .rentHouse:
-//
-//                    var tracerDict:[String:Any] = [:]
-//                    tracerDict["card_type"] = "left_pic"
-//
-//                    let listType = selectTraceParam(self.traceParams, key: "category_name")
-//                    if let categoryName = listType as? String, categoryName == "recommend_message_list"  {
-//                        tracerDict["enter_from"] = "recommend_message_list"
-//                    }else {
-//                        tracerDict["enter_from"] = listType ?? "rent_message_list"
-//                    }
-//                    tracerDict["element_from"] = "be_null"
-//                    tracerDict["log_pb"] = selectTraceParam(params, key: "log_pb") ?? "be_null"
-//                    tracerDict["rank"] = rankByIndexPath(indexPath)
-//                    tracerDict["origin_from"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_from")
-//                    tracerDict["origin_search_id"] = selectTraceParam(EnvContext.shared.homePageParams, key: "origin_search_id")
-//
-//                    let userInfo = TTRouteUserInfo(info: ["tracer": tracerDict])
-//                    TTRoute.shared()?.openURL(byPushViewController: URL(string: "fschema://rent_detail?house_id=\(houseId)"), userInfo: userInfo)
-//
-//                default:
-//                    openErshouHouseDetailPage(
-//                        houseId: Int64(houseId) ?? 0,
-//                        logPB: logPb as? [String: Any],
-//                        disposeBag: disposeBag,
-//                        tracerParams: params <|> toTracerParams("neighborhood_message_list", key: "enter_from"),
-//                        navVC: navVC)(TracerParams.momoid() <|>
-//                            beNull(key: "element_from") <|>
-//                            toTracerParams(rankByIndexPath(indexPath), key: "rank"))
-//                }
             } else {
                 assertionFailure()
             }
@@ -655,9 +597,6 @@ fileprivate  class ChatDetailListTableViewModel: NSObject, UITableViewDelegate, 
                                 toTracerParams(elementType, key: "element_type") <|>
                                 toTracerParams(houseTypeStringByHouseType(item.houseType ?? 2), key: "house_type") <|>
                                 toTracerParams("left_pic", key: "card_type") <|>
-                                imprIdTraceParam(item.logPb) <|>
-                                groupIdTraceParam(item.logPb) <|>
-                                searchIdTraceParam(item.logPb) <|>
                                 toTracerParams(listType ?? "", key: "page_type")
 
                         recordEvent(key: TraceEventName.house_show, params: params

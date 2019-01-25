@@ -77,7 +77,7 @@ class HouseDetailPageBottomBarView: UIView {
         nameLabel.snp.makeConstraints { (maker) in
             maker.left.equalTo(avatarView.snp.right).offset(10)
             maker.top.equalTo(avatarView).offset(2)
-            maker.right.equalToSuperview()
+            maker.right.equalTo(licenceIcon.snp.left)
         }
 
         licenceIcon.snp.makeConstraints { (make) in
@@ -106,12 +106,16 @@ class HouseDetailPageBottomBarView: UIView {
     func displayLicence(isDisplay: Bool) {
         licenceIcon.isHidden = !isDisplay
         if isDisplay {
-            nameLabel.snp.updateConstraints { (make) in
+            nameLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(avatarView.snp.right).offset(10)
                 make.right.equalTo(licenceIcon.snp.left)
+                make.top.equalTo(avatarView).offset(2)
             }
         } else {
-            nameLabel.snp.updateConstraints { (make) in
+            nameLabel.snp.remakeConstraints { (make) in
+                make.left.equalTo(avatarView.snp.right).offset(10)
                 make.right.equalToSuperview()
+                make.top.equalTo(avatarView).offset(2)
             }
         }
     }

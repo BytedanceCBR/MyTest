@@ -115,7 +115,7 @@ class FHHouseContactBottomBarViewModel {
             toTracerParams(0, key: "is_dial") <|>
             toTracerParams(isVirtualNumber ? 1 : 0, key: "has_associate")
         // 谢飞不打，我就不打has_auth
-        recordEvent(key: "click_call", params: params)
+        recordEvent(key: "click_call", params: params.exclude("search_id"))
     }
 
     func bindBottomBarViewBehavior() {
@@ -153,7 +153,6 @@ class FHHouseContactBottomBarViewModel {
                         {
                             traceParamsClick = TracerParams.momoid() <|>
                                 traceParamsV <|>
-                                EnvContext.shared.homePageParams <|>
                                 toTracerParams(self.searchId ?? "be_null", key: "search_id") <|>
                                 toTracerParams("be_null", key: "search_id") <|>
                                 toTracerParams("\(self.houseId)", key: "group_id")
@@ -171,10 +170,12 @@ class FHHouseContactBottomBarViewModel {
 
                 }else {
                     var titleStr: String = "询底价"
+                    var confirmBtnTitle:String = "获取底价"
                     if self.houseType == .neighborhood {
                         titleStr = "咨询经纪人"
+                        confirmBtnTitle = "提交"
                     }
-                    self.showSendPhoneAlert?(titleStr, "提交后将安排专业经纪人与您联系", "提交")
+                    self.showSendPhoneAlert?(titleStr, "提交后将安排专业经纪人与您联系", confirmBtnTitle)
                 }
 
             })

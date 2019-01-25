@@ -2198,7 +2198,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     NSMutableDictionary *mdict = info.mutableCopy;
     //todo
     [mdict setValue:@"detail_wenda_comment_dig" forKey:@"fromPage"];
-    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category"]  forKey:@"categoryName"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category_name"]  forKey:@"categoryName"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"enter_from"]  forKey:@"enterFrom"];
     [mdict setValue:self.detailModel.answerEntity.ansid forKey:@"groupId"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"qid"] forKey:@"qid"];
     [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"] forKey:@"logPb"];

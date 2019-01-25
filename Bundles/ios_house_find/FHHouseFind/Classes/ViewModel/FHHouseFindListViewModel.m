@@ -55,7 +55,7 @@
         param[@"element_from"] = @"be_null";
         param[@"origin_from"] = @"findtab_related";
         self.tracerDict = param;
-        self.tracerModel = [[FHTracerModel alloc]initWithDictionary:self.tracerDict error:nil];
+        self.tracerModel = [FHTracerModel makerTracerModelWithDic:self.tracerDict];
         self.originFrom = self.tracerModel.originFrom;
     }
     return self;
@@ -104,7 +104,8 @@
     }
     [self refreshHouseItemList];
     
-    if (self.itemList.count < 1) {
+    
+    if (self.itemList.count < 1 || ![[[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable boolValue]) {
         // 当前城市未开通
         [self.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
         return;
@@ -115,6 +116,7 @@
         FHHouseFindSectionItem *item = self.itemList[index];
         FHHouseFindListView *baseView = [[FHHouseFindListView alloc]initWithFrame:CGRectZero];
         baseView.tracerDict = self.tracerDict;
+        [baseView updateDataWithItem:item];
         baseView.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
             
             [wself handlePlaceholder:paramObj];
@@ -327,9 +329,10 @@
                 [currentBaseView viewWillAppear:YES];
                 
                 [wself endTrack];
-                [wself addEnterCategoryLog];
                 [wself addStayCategoryLogBy:wself.lastSelectIndex];
                 [wself resetStayTime];
+                [wself startTrack];
+                [wself addEnterCategoryLog];
             }
 
         }
@@ -365,9 +368,10 @@
             [currentBaseView viewWillAppear:YES];
             
             [self endTrack];
-            [self addEnterCategoryLog];
             [self addStayCategoryLogBy:self.lastSelectIndex];
             [self resetStayTime];
+            [self startTrack];
+            [self addEnterCategoryLog];
         }
     }
 }
@@ -378,7 +382,7 @@
     self.currentSelectIndex = index;
     FHHouseFindSectionItem *item = self.itemList[index];
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + index];
-    [baseView updateDataWithItem:item];
+    [baseView refreshData];
     NSString *placeholder = [self.sugDict objectForKey:[self placeholderKeyByHouseType:item.houseType]];
     if (self.sugSelectBlock) {
         self.sugSelectBlock(placeholder);

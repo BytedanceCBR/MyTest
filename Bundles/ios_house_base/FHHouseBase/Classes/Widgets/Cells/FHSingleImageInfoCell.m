@@ -39,6 +39,7 @@
 
 @property(nonatomic, assign) CGFloat topMargin;
 @property(nonatomic, assign) CGFloat bottomMargin;
+@property(nonatomic, assign) BOOL lastShowTag;
 
 @end
 
@@ -160,7 +161,8 @@
         make.center.mas_equalTo(self.imageTopLeftLabelBgView);
     }];
     
-    
+    _lastShowTag = YES;
+
 }
 
 -(void)refreshTopMargin:(CGFloat)top {
@@ -221,6 +223,12 @@
 
 -(void)updateLayoutComponents:(BOOL)isShowTags {
 
+    if (_lastShowTag && isShowTags) {
+        //没有变更不需要改变
+        return;
+    }
+    _lastShowTag = isShowTags;
+    
     CGSize fitSize = self.cellModel.titleSize;
     self.majorTitle.numberOfLines = isShowTags ? 1 : 2;
 
@@ -328,6 +336,7 @@
     }
     else
     {
+         self.roomSpaceLabel.text = @"";
         [self updateOriginPriceLabelConstraints:nil];
     }
     

@@ -19,6 +19,9 @@
 #import "ToastManager.h"
 #import "TTArticleCategoryManager.h"
 #import <objc/runtime.h>
+#import "TTNetworkUtilities.h"
+
+static NSInteger kGetLightRequestRetryCount = 3;
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -64,46 +67,35 @@
             }
         }
         
+        __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
+        
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
-        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess) {
+        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
             if (isSuccess) {
-                FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-                if (configModel.cityAvailability.enable) {
-                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccess) {
-                        if (isSuccess) {
-                            
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
-                            
-                            if(completion)
-                            {
-                                completion(YES);
-                            }
-                            [[ToastManager manager] dismissCustomLoading];
-                            [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                                
-                            }];
-                        }else
-                        {
-                            if(completion)
-                            {
-                                completion(NO);
-                            }
-                            [[ToastManager manager] dismissCustomLoading];
-                            [[ToastManager manager] showToast:@"切换城市失败"];
-                        }
-                    }];
-                }else
-                {
-                    if(completion)
-                    {
-                        completion(YES);
-                    }
-                    [[ToastManager manager] dismissCustomLoading];
-                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                FHConfigDataModel *configModel = model.data;
+                [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
+                
+                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                    //首次请求频道无论成功失败都跳转
+                    if (retryGetLightCount == kGetLightRequestRetryCount) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
                         
-                    }];
-                }
+                        if(completion)
+                        {
+                            completion(YES);
+                        }
+                        [[ToastManager manager] dismissCustomLoading];
+                        [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                            
+                        }];
+                    }
+                    //重试3次请求频道
+                    if (!isSuccessed && (retryGetLightCount > 0)) {
+                        retryGetLightCount--;
+                        [[TTArticleCategoryManager sharedManager] startGetCategory];
+                    }
+                }];
             }else
             {
                 if(completion)
@@ -130,7 +122,7 @@
  */
 + (BOOL)isSameLocCityToUserSelect
 {
-    return [[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable;
+    return ![[FHEnvContext sharedInstance] getConfigFromCache].citySwitch.enable.boolValue;
 }
 
 + (void)recordEvent:(NSDictionary *)params andEventKey:(NSString *)traceKey
@@ -167,9 +159,13 @@
 
 - (void)updateRequestCommonParams
 {
+    NSDictionary *param = [TTNetworkUtilities commonURLParameters];
+    
     //初始化公共请求参数
     NSMutableDictionary *requestParam = [[NSMutableDictionary alloc] initWithDictionary:self.commonRequestParam];
-    
+    if (param) {
+        [requestParam addEntriesFromDictionary:param];
+    }
     
     requestParam[@"app_id"] = @"1370";
     requestParam[@"aid"] = @"1370";
@@ -236,9 +232,6 @@
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
     
-    //更新公共参数
-    [self updateRequestCommonParams];
-    
     //开始定位
     [self startLocation];
     
@@ -269,8 +262,9 @@
         };
         
         [BDAccount sharedAccount].accountConf = conf;
-        
     }];
+    //更新公共参数
+    [self updateRequestCommonParams];
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
@@ -318,7 +312,9 @@
 
 // 检查是否需要swizze route方法的canopenurl逻辑，之所以在这个地方处理是因为push（2个场景）和外部链接可以打开App，但是城市列表如果未选择，不能进行跳转
 - (void)checkExchangeCanOpenURLMethod {
-    if([(id)[FHUtils contentForKey:kUserDefaultCityId] integerValue] > 0) {
+    //判断是否展示过城市
+    BOOL isSavedSearchConfig = [[FHEnvContext sharedInstance].generalBizConfig isSavedSearchConfig];
+    if([(id)[FHUtils contentForKey:@"config_key_select_city_id"] integerValue] > 0 || isSavedSearchConfig) {
         // 旧版本选择过城市
         [FHUtils setContent:@(YES) forKey:kUserHasSelectedCityKey];
     }
@@ -359,11 +355,20 @@
 //获取当前保存的城市名称
 + (NSString *)getCurrentUserDeaultCityNameFromLocal
 {
+    //>=0.5版本存储cityname
     if (kIsNSString([FHUtils contentForKey:kUserDefaultCityName]))
     {
         return [FHUtils contentForKey:kUserDefaultCityName];
     }
-    return @"深圳"; //无网默认
+    
+    //0.4版本以及之前保存cityname
+    NSString *cityNameStr = [[[FHEnvContext sharedInstance] generalBizConfig] readLocalDefaultCityNamePreviousVersion];
+    if ([cityNameStr isKindOfClass:[NSString class]])
+    {
+        return cityNameStr;
+    }
+    
+    return @"深圳";
 }
 
 //保存当前城市名称

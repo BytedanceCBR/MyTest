@@ -231,7 +231,7 @@ TTRefreshViewDelegate
 @property(nonatomic, retain)ExploreItemActionManager * itemActionManager;
 
 @property (nonatomic, strong) NSDate *disappearDate;
-
+@property (nonatomic, assign) BOOL isLoginStatusChanged;
 @property(nonatomic, assign) BOOL isLastReadRefresh;
 
 /**
@@ -958,6 +958,8 @@ TTRefreshViewDelegate
 {
     [super willAppear];
     _isShowing = YES;
+    self.isLoginStatusChanged = NO;
+
     if (!self.categoryID && [SSCommonLogic shouldUseOptimisedLaunch]) {
         return;
     }
@@ -1282,6 +1284,8 @@ TTRefreshViewDelegate
             BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
             
             if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
+                //修改头部类型
+                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
                 return 1;
             }else
             {
@@ -1538,31 +1542,33 @@ TTRefreshViewDelegate
             
 //            [dictTraceParams setValue:@"click_category" forKey:@"enter_from"];
             
-            if ([obj.categoryID isEqualToString:@"f_wenda"])
-            {
-                [dictTraceParams setValue:obj.categoryID forKey:@"category_name"];
-                [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
-                [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
-                [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
-                [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
-                [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
-                [dictTraceParams setValue:@"be_null" forKey:@"ansid"];
-                [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"qid"];
-                [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
-                [TTTracker eventV3:@"client_show" params:dictTraceParams];
-                
-            }else {
-                
-                [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
-                [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
-                [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
-                [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
-                [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
-                [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
-                [TTTracker eventV3:@"client_show" params:dictTraceParams];
-                
-                [_cellIdDict setObject:@"" forKey:obj.itemID];
-                
+            if (!self.isLoginStatusChanged) {
+                if ([obj.categoryID isEqualToString:@"f_wenda"])
+                {
+                    [dictTraceParams setValue:obj.categoryID forKey:@"category_name"];
+                    [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+                    [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
+                    [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
+                    [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
+                    [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
+                    [dictTraceParams setValue:@"be_null" forKey:@"ansid"];
+                    [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"qid"];
+                    [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
+                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    
+                }else {
+                    
+                    [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+                    [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
+                    [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
+                    [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
+                    [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
+                    [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
+                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    
+                    [_cellIdDict setObject:@"" forKey:obj.itemID];
+                    
+                }
             }
             
         }else
@@ -2842,7 +2848,7 @@ TTRefreshViewDelegate
 //        [[TTAuthorizeHintView alloc]
 //         initAuthorizeHintWithImageName:@"img_popup_locate"
 //         title:NSLocalizedString(@"开启定位服务设置", nil)
-//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“好多房”定位服务", nil)
+//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“幸福里”定位服务", nil)
 //         confirmBtnTitle:@"我知道了"
 //         animated:YES
 //         completed:nil];
@@ -3541,7 +3547,7 @@ TTRefreshViewDelegate
         self.ttLoadingView.frame = CGRectZero;
     }
     [self.listView finishPullDownWithSuccess:NO];
-    
+    self.isLoginStatusChanged = YES;
     [self reloadListView];
 }
 
