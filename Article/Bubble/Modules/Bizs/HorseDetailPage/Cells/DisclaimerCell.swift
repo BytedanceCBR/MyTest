@@ -65,7 +65,12 @@ func parseErshouHouseDisclaimerNode(_ data: ErshouHouseData) -> () -> TableSecti
         if data.disclaimer == nil && data.contact == nil {
             return nil
         }
-        let cellRender = curry(fillErshouHouseDisclaimerCell)(data.disclaimer)(data.contact)
+        var contact: FHHouseDetailContact? = nil
+        // 当且仅当没有合作经纪人时，才在disclaimer中显示爬取经纪人
+        if data.highlightedRealtor == nil {
+            contact = data.contact
+        }
+        let cellRender = curry(fillErshouHouseDisclaimerCell)(data.disclaimer)(contact)
         return TableSectionNode(
             items: [cellRender],
             selectors: nil,

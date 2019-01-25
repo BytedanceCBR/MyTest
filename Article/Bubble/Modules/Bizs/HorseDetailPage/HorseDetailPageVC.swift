@@ -464,7 +464,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             var dictTracePara = traceParams.paramsGetter([:])
             if (dictTracePara["search_id"] != nil) && searchId == nil
             {
-                searchId = (dictTracePara["search_id"] as! String)
+                searchId = (dictTracePara["search_id"] as? String)
             }
             if let searchId = searchId {
                 self.searchId = searchId
@@ -748,9 +748,14 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         
         if let detailPageViewModel = detailPageViewModel {
             navBar.rightBtn.rx.tap
-                .bind(onNext:  { [weak detailPageViewModel] in
+                .bind(onNext:  { [weak detailPageViewModel, weak self] in
                     
-                    var tracerParams = TracerParams.momoid() <|> self.traceParams
+                    var tracerParams = TracerParams.momoid()
+                
+                    if let traceP = self?.traceParams {
+                        
+                        tracerParams = tracerParams <|> traceP
+                    }
                     if let params = detailPageViewModel?.goDetailTraceParam {
                         tracerParams = tracerParams <|> params
                             .exclude("house_type")
@@ -935,7 +940,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "0")
                 let openUrl = "fschema://realtor_detail"
                 let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
-                var theTraceModel = traceModel.copy() as? HouseRentTracer
+                let theTraceModel = traceModel.copy() as? HouseRentTracer
                 theTraceModel?.elementFrom = "old_detail_button"
                 theTraceModel?.enterFrom = "old_detal"
                 let info: [String: Any] = ["url": jumpUrl,
@@ -1177,19 +1182,19 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
-            .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.currentInputPhoneNumber, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
+            .bind { [unowned self, weak alert] void in
+                if let phoneNum = alert?.sendPhoneView.currentInputPhoneNumber, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
-                        [unowned self]  in
+                        [unowned self, weak alert]  in
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
-                        alert.dismiss()
+                        alert?.dismiss()
                         self.sendClickConfirmTrace()
                         self.followForSendPhone(true)
                     }
                 }else
                 {
-                    alert.sendPhoneView.showErrorText()
+                    alert?.sendPhoneView.showErrorText()
                 }
                 
 

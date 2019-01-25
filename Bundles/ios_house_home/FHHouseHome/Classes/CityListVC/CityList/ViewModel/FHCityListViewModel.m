@@ -195,7 +195,10 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     NSMutableDictionary *citiesDict = [NSMutableDictionary new];
     
     for (FHConfigDataCityListModel *city in self.cityList) {
-        
+        // 服务端返回为空，需要做兼容判断，但是会导致当前城市不在城市列表
+        if (city.simplePinyin.length == 0) {
+            continue;
+        }
         NSString *alp = [[city.simplePinyin substringWithRange:NSMakeRange(0, 1)] uppercaseString];
         if (!citiesDict[alp]) {
             citiesDict[alp] = [NSMutableArray new];
@@ -322,6 +325,23 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
                 }
             }
         }];
+    }
+}
+
+- (void)switchCityByOpenUrlSuccess {
+    NSString *cityName = [[[FHEnvContext sharedInstance] generalBizConfig] configCache].currentCityName;
+    NSString *cityId = [[[FHEnvContext sharedInstance] generalBizConfig] configCache].currentCityId;
+    FHHistoryCityListModel *item = NULL;
+    if (cityId.length > 0) {
+        for (FHConfigDataCityListModel *obj in self.cityList) {
+            if ([obj.cityId isEqualToString:cityId]) {
+                item = obj;
+                break;
+            }
+        }
+    }
+    if (item) {
+        [self addCityToHistory:item];
     }
 }
 

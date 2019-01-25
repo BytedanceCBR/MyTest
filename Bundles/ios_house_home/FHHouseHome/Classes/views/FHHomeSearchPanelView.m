@@ -93,13 +93,7 @@
     label.font = [UIFont themeFontSemibold:14];
     label.textColor = [UIColor colorWithHexString:@"#081f33"];
     label.numberOfLines = 1;
-    if ([[FHEnvContext getCurrentUserDeaultCityNameFromLocal] isKindOfClass:[NSString class]])
-    {
-        label.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-    }else
-    {
-        label.text = @"深圳";
-    }
+    label.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     self.countryLabel = label;
     [self addSubview:self.countryLabel];
     

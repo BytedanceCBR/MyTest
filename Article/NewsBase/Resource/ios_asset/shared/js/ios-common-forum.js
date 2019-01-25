@@ -350,7 +350,7 @@ link: "sslocal://profile?refer=all&source=article_top_author&uid=" + t.media_use
 intro: a.description,
 avatar: a.avatar_url,
 isAuthorSelf: !!t.is_author
-}, (n.h5_settings.is_liteapp || !t.media_user_id) && (n.author.link = "sslocal://media?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
+}, (n.h5_settings.is_liteapp || !t.media_user_id) && (n.author.link = "");
 var i = {
 auth_type: "",
 auth_info: ""

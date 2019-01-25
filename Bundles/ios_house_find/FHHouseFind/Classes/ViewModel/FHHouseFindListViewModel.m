@@ -329,9 +329,10 @@
                 [currentBaseView viewWillAppear:YES];
                 
                 [wself endTrack];
-                [wself addEnterCategoryLog];
                 [wself addStayCategoryLogBy:wself.lastSelectIndex];
                 [wself resetStayTime];
+                [wself startTrack];
+                [wself addEnterCategoryLog];
             }
 
         }
@@ -367,9 +368,10 @@
             [currentBaseView viewWillAppear:YES];
             
             [self endTrack];
-            [self addEnterCategoryLog];
             [self addStayCategoryLogBy:self.lastSelectIndex];
             [self resetStayTime];
+            [self startTrack];
+            [self addEnterCategoryLog];
         }
     }
 }

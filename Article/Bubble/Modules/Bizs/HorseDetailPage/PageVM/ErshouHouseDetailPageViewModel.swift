@@ -89,6 +89,9 @@ import RxCocoa
 
     var tracerModel: HouseRentTracer?
 
+//    deinit {
+//        print("ErshouHouseDetailPageViewModel deinit")
+//    }
 
     init(
         tableView: UITableView,
@@ -526,8 +529,8 @@ import RxCocoa
                                     bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                             }
                         }
-                    }, filter: { () -> Bool in
-                        self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
+                    }, filter: {[weak self] () -> Bool in
+                        self?.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 })
                 <- parseRelatedNeighborhoodCollectionNode(
                     relatedItems,
@@ -620,7 +623,7 @@ import RxCocoa
 
                 openNeighborhoodDetailPage(
                     neighborhoodId: Int64(id),
-                    logPB: nil,
+                    logPB: logPb as? [String : Any],
                     disposeBag: self.disposeBag,
                     tracerParams: params,
                     sameNeighborhoodFollowUp: sameNeighborhoodFollowUp,
@@ -815,11 +818,11 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         indexPath: IndexPath,
         tableView: UITableView) {
         let tempCell = cell
-        tempCell.refreshCallback = { [weak tableView, weak tempCell] in
+        tempCell.refreshCallback = { [weak tableView, weak tempCell, weak self] in
             tableView?.beginUpdates()
             if let refreshCell = tempCell {
                 let tempRefreshCell = refreshCell
-                self.datas[indexPath.section].items[indexPath.row](refreshCell)
+                self?.datas[indexPath.section].items[indexPath.row](refreshCell)
                 tempRefreshCell.setNeedsUpdateConstraints()
             }
             tableView?.endUpdates()

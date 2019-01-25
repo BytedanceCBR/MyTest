@@ -336,6 +336,7 @@
     }
     else
     {
+         self.roomSpaceLabel.text = @"";
         [self updateOriginPriceLabelConstraints:nil];
     }
     
