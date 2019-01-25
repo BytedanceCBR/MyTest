@@ -32,6 +32,7 @@
 #import "FHRecommendSecondhandHouseTitleCell.h"
 #import "FHRecommendSecondhandHouseTitleModel.h"
 #import "FHHouseBridgeManager.h"
+#import "FHCityListViewModel.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -137,7 +138,11 @@
     if (self.redirectTips.openUrl.length > 0) {
 
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
-            
+            // 进历史
+            if (isSuccess) {
+                FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
+                [cityListViewModel switchCityByOpenUrlSuccess];
+            }
         }];
         NSDictionary *params = @{@"click_type":@"switch",
                                  @"enter_from":@"search"};
