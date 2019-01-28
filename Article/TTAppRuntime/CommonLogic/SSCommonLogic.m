@@ -6139,6 +6139,13 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
     return settingSwitchTime;
 }
 
++ (NSInteger)configEditProfileEntry
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger settingSwitchTime = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+    return settingSwitchTime;
+}
+
 + (NSInteger)findTabShowHouse {
     
     NSDictionary *fhSettings = [self fhSettings];
