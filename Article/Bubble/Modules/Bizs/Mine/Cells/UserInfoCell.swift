@@ -129,12 +129,12 @@ func parseUserInfoNode(
         var selector: ((TracerParams) -> Void)? = nil
         if info != nil {
             selector = { (params) in
-                // add by zyk状态获取
-                let vState = 0
+             
+                let vState = SSCommonLogic.configEditProfileEntry()
                 // 0：不可编辑；1：Toast提示；2：可编辑个人权限
                 if (vState == 1) {
                     // Toast 提示
-                    EnvContext.shared.toast.showToast("修改功能升级中，敬请期待")
+                    EnvContext.shared.toast.showToast("个人资料功能升级中，敬请期待")
                 } else if (vState == 2) {
                     // 跳转
                     let vc = TTEditUserProfileViewController()
@@ -184,8 +184,8 @@ func fillUserInfoCell(_ info: TTAccountUserEntity?, cell: BaseUITableViewCell) -
             theCell.userDesc.text = "登录后，关注房源永不丢失"
             theCell.editBtn.isHidden = true
         }
-        // add by zyk状态获取
-        let vState = 0
+     
+        let vState = SSCommonLogic.configEditProfileEntry()
         theCell.setUserInfoState(state: vState)
 
         if let urlStr = info?.avatarURL {
