@@ -85,12 +85,12 @@ class UserInfoCell: BaseUITableViewCell {
     // state:0 展示username，居中，desc不显示，不可点击；（默认）
     // state:1 展示username，展示desc，点击toast提示；
     // state:2 展示username，展示desc，点击到编辑页面
-    func setUserInfoState(state:Int) {
+    func setUserInfoState(state:Int, hasLogin:Bool = false) {
         var vState = state;
         if (vState > 2 || vState < 0) {
             vState = 0;
         }
-        if (vState == 0) {
+        if (vState == 0 && hasLogin) {
             userDesc.isHidden = true
             editBtn.isHidden = true
             userName.snp.remakeConstraints { (maker) in
@@ -177,16 +177,19 @@ func parseUserInfoNode(
 func fillUserInfoCell(_ info: TTAccountUserEntity?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? UserInfoCell {
         theCell.userName.text = info?.name ?? "登录"
+        var hasLogin = false
         if info != nil {
             theCell.userDesc.text = "查看并编辑个人资料"
             theCell.editBtn.isHidden = false
+            hasLogin = true
         } else {
             theCell.userDesc.text = "登录后，关注房源永不丢失"
             theCell.editBtn.isHidden = true
+            hasLogin = false
         }
      
         let vState = SSCommonLogic.configEditProfileEntry()
-        theCell.setUserInfoState(state: vState)
+        theCell.setUserInfoState(state: vState, hasLogin: hasLogin)
 
         if let urlStr = info?.avatarURL {
             theCell.avatarView.contentMode = .scaleAspectFill
