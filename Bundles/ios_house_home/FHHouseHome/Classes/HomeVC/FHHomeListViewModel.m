@@ -253,9 +253,24 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         if (model.data.items.count == 0) {
             self.tableViewV.hidden = YES;
-            [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-            [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
-            return;
+            
+            if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])
+            {
+                [self.homeViewController.view sendSubviewToBack:self.tableViewV];
+                [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                
+                return;
+            }
+            
+            if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.homeViewController.view sendSubviewToBack:self.tableViewV];
+                        [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                    });
+                });
+                return;
+            }
         }
         
         NSString *cahceKey = [self getCurrentHouseTypeChacheKey];
