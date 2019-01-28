@@ -102,7 +102,7 @@ class UserInfoCell: BaseUITableViewCell {
         } else {
             userDesc.isHidden = false
             editBtn.isHidden = false
-            userName.snp.makeConstraints { maker in
+            userName.snp.remakeConstraints { maker in
                 maker.top.equalTo(64)
                 maker.left.equalTo(20)
                 maker.height.equalTo(34)
