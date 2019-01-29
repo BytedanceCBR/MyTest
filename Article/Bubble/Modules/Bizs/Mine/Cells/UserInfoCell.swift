@@ -81,6 +81,35 @@ class UserInfoCell: BaseUITableViewCell {
             maker.width.height.equalTo(16)
         }
     }
+    
+    // state:0 展示username，居中，desc不显示，不可点击；（默认）
+    // state:1 展示username，展示desc，点击toast提示；
+    // state:2 展示username，展示desc，点击到编辑页面
+    func setUserInfoState(state:Int, hasLogin:Bool = false) {
+        var vState = state;
+        if (vState > 2 || vState < 0) {
+            vState = 0;
+        }
+        if (vState == 0 && hasLogin) {
+            userDesc.isHidden = true
+            editBtn.isHidden = true
+            userName.snp.remakeConstraints { (maker) in
+                maker.centerY.equalTo(avatarView)
+                maker.left.equalTo(20)
+                maker.height.equalTo(34)
+                maker.right.lessThanOrEqualTo(avatarView.snp.left).offset(-10)
+            }
+        } else {
+            userDesc.isHidden = false
+            editBtn.isHidden = false
+            userName.snp.remakeConstraints { maker in
+                maker.top.equalTo(64)
+                maker.left.equalTo(20)
+                maker.height.equalTo(34)
+                maker.right.lessThanOrEqualTo(avatarView.snp.left).offset(-10)
+            }
+        }
+    }
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -100,8 +129,17 @@ func parseUserInfoNode(
         var selector: ((TracerParams) -> Void)? = nil
         if info != nil {
             selector = { (params) in
-                let vc = TTEditUserProfileViewController()
-                openEditProfile(vc)
+             
+                let vState = SSCommonLogic.configEditProfileEntry()
+                // 0：不可编辑；1：Toast提示；2：可编辑个人权限
+                if (vState == 1) {
+                    // Toast 提示
+                    EnvContext.shared.toast.showToast("个人资料功能升级中，敬请期待")
+                } else if (vState == 2) {
+                    // 跳转
+                    let vc = TTEditUserProfileViewController()
+                    openEditProfile(vc)
+                }
                 
                 let map = ["event_type":"house_app2c", "click_type":"edit_info", "page_type":"minetab"]
                 recordEvent(key: TraceEventName.click_minetab, params: map)
@@ -139,13 +177,19 @@ func parseUserInfoNode(
 func fillUserInfoCell(_ info: TTAccountUserEntity?, cell: BaseUITableViewCell) -> Void {
     if let theCell = cell as? UserInfoCell {
         theCell.userName.text = info?.name ?? "登录"
+        var hasLogin = false
         if info != nil {
             theCell.userDesc.text = "查看并编辑个人资料"
             theCell.editBtn.isHidden = false
+            hasLogin = true
         } else {
             theCell.userDesc.text = "登录后，关注房源永不丢失"
             theCell.editBtn.isHidden = true
+            hasLogin = false
         }
+     
+        let vState = SSCommonLogic.configEditProfileEntry()
+        theCell.setUserInfoState(state: vState, hasLogin: hasLogin)
 
         if let urlStr = info?.avatarURL {
             theCell.avatarView.contentMode = .scaleAspectFill
