@@ -114,7 +114,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             if ([configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
-                [self.tableViewV reloadData];
+                [UIView performWithoutAnimation:^{
+                    NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
+                    [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                }];
                 return;
             }
             
