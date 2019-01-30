@@ -248,11 +248,14 @@
         return groupKey;
     }
 
-    if ([self isInHouseApp]) {
-        return @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";
-    }
-    
-    return @"group.todayExtenstionShareDefaults";
+//    if ([self isInHouseApp]) {
+//        return @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";
+//    }
+//
+//    return @"group.todayExtenstionShareDefaults";
+//
+    return @"group.com.f100.client.extension";
+
 }
 
 + (void)saveObj:(NSObject<NSCoding> *)obj forKey:(NSString *)key

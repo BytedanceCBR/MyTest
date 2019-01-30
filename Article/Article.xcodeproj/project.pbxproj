@@ -797,6 +797,9 @@
 		61501BAF2148BC1100870420 /* UITableView+FHExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BA92148BC1100870420 /* UITableView+FHExts.swift */; };
 		61501BB32148C8B600870420 /* FHListDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */; };
 		61501BB42148C8B600870420 /* FHListDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */; };
+		61787F492201AE9C003CB249 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 61787F482201AE9C003CB249 /* NotificationService.m */; };
+		61787F4D2201AE9C003CB249 /* InhouseNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 61787F452201AE9C003CB249 /* InhouseNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		61787F552201B534003CB249 /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 61787F542201B533003CB249 /* TTNotificationServiceExtensionBase.m */; };
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */; };
@@ -7431,6 +7434,16 @@
 		FEFB7DE81D33450900627ABC /* ExploreDetailPhoneGroupPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFB7DE71D33450900627ABC /* ExploreDetailPhoneGroupPicADView.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		61787F4B2201AE9C003CB249 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 61787F442201AE9C003CB249;
+			remoteInfo = InhouseNotificationServiceExtension;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		48AE54AE19E4F209005B68B1 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -7498,6 +7511,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				61787F4D2201AE9C003CB249 /* InhouseNotificationServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8624,6 +8638,13 @@
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
 		61501BA92148BC1100870420 /* UITableView+FHExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FHExts.swift"; sourceTree = "<group>"; };
 		61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHListDataSourceDelegate.swift; sourceTree = "<group>"; };
+		61787F452201AE9C003CB249 /* InhouseNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InhouseNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		61787F472201AE9C003CB249 /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
+		61787F482201AE9C003CB249 /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
+		61787F4A2201AE9C003CB249 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61787F512201AEDD003CB249 /* InhouseNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InhouseNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
+		61787F532201B533003CB249 /* TTNotificationServiceExtensionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNotificationServiceExtensionBase.h; sourceTree = "<group>"; };
+		61787F542201B533003CB249 /* TTNotificationServiceExtensionBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNotificationServiceExtensionBase.m; sourceTree = "<group>"; };
 		617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIHFeedCollectionHouseCell.m; sourceTree = "<group>"; };
 		617C25B52143E28A0007E2C4 /* NIHFeedCollectionHouseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIHFeedCollectionHouseCell.h; sourceTree = "<group>"; };
 		61A446EE2152906C0072B46E /* FHDemanderTrackerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHDemanderTrackerManager.h; sourceTree = "<group>"; };
@@ -10128,10 +10149,7 @@
 		D40CAEFF21BFF3250018E256 /* FHHomeBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBridgeImp.h; sourceTree = "<group>"; };
 		D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBridgeImp.m; sourceTree = "<group>"; };
 		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D479494B21ECC93600548965 /* f100 copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy-Info.plist"; sourceTree = "<absolute>"; };
-		D47950BF21ECC94300548965 /* f100 copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy2-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy2-Info.plist"; sourceTree = "<absolute>"; };
 		D479581521ECC94E00548965 /* NewsLiteChannel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsLiteChannel.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D479581621ECC94F00548965 /* f100 copy3-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy3-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy3-Info.plist"; sourceTree = "<absolute>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
 		D50168272089EC4A00B8F1C7 /* TTMessageNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMessageNotificationManager.h; sourceTree = "<group>"; };
@@ -11032,6 +11050,13 @@
 				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61787F422201AE9C003CB249 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12350,6 +12375,7 @@
 		3AA5027515876A1F00EB27FA = {
 			isa = PBXGroup;
 			children = (
+				61787F402201AE44003CB249 /* Extensions */,
 				D47950BE21ECC94200548965 /* Resources-iPad */,
 				B388CB152142652900653188 /* Article-Bridging-Header.h */,
 				3D2D487D21A28E590011A0EC /* House */,
@@ -12371,13 +12397,11 @@
 				A8323FEE1B81B87300DD5533 /* Source */,
 				A8323FED1B81B59600DD5533 /* Targets-Config */,
 				A8A57F531B16F44D00783AA9 /* Resource */,
+				61787F462201AE9C003CB249 /* InhouseNotificationServiceExtension */,
 				3AA5028315876A1F00EB27FA /* Frameworks */,
 				3AA5028115876A1F00EB27FA /* Products */,
 				FEE188E21FFCB587005310BB /* Recovered References */,
 				54DD0068D708A01BB386FC65 /* Pods */,
-				D479494B21ECC93600548965 /* f100 copy-Info.plist */,
-				D47950BF21ECC94300548965 /* f100 copy2-Info.plist */,
-				D479581621ECC94F00548965 /* f100 copy3-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -12388,6 +12412,7 @@
 				FEFA5A5D205FB1A8001F50D8 /* NewsLiteInHouse.app */,
 				B373CF102174587A008F9905 /* f100.app */,
 				D479581521ECC94E00548965 /* NewsLiteChannel.app */,
+				61787F452201AE9C003CB249 /* InhouseNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -14020,6 +14045,35 @@
 			);
 			name = listViewContainer;
 			path = "New Group";
+			sourceTree = "<group>";
+		};
+		61787F402201AE44003CB249 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				61787F522201B533003CB249 /* NotificationServiceExtensionBase */,
+			);
+			name = Extensions;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		61787F462201AE9C003CB249 /* InhouseNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				61787F512201AEDD003CB249 /* InhouseNotificationServiceExtension.entitlements */,
+				61787F472201AE9C003CB249 /* NotificationService.h */,
+				61787F482201AE9C003CB249 /* NotificationService.m */,
+				61787F4A2201AE9C003CB249 /* Info.plist */,
+			);
+			path = InhouseNotificationServiceExtension;
+			sourceTree = "<group>";
+		};
+		61787F522201B533003CB249 /* NotificationServiceExtensionBase */ = {
+			isa = PBXGroup;
+			children = (
+				61787F532201B533003CB249 /* TTNotificationServiceExtensionBase.h */,
+				61787F542201B533003CB249 /* TTNotificationServiceExtensionBase.m */,
+			);
+			path = NotificationServiceExtensionBase;
 			sourceTree = "<group>";
 		};
 		61A446ED2152904A0072B46E /* Tracker */ = {
@@ -19957,6 +20011,23 @@
 			productReference = 3AA5028015876A1F00EB27FA /* NewsLite.app */;
 			productType = "com.apple.product-type.application";
 		};
+		61787F442201AE9C003CB249 /* InhouseNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61787F4E2201AE9D003CB249 /* Build configuration list for PBXNativeTarget "InhouseNotificationServiceExtension" */;
+			buildPhases = (
+				61787F412201AE9C003CB249 /* Sources */,
+				61787F422201AE9C003CB249 /* Frameworks */,
+				61787F432201AE9C003CB249 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = InhouseNotificationServiceExtension;
+			productName = InhouseNotificationServiceExtension;
+			productReference = 61787F452201AE9C003CB249 /* InhouseNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B373C7F92174587A008F9905 /* f100 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B373CF0D2174587A008F9905 /* Build configuration list for PBXNativeTarget "f100" */;
@@ -20038,6 +20109,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				61787F4C2201AE9C003CB249 /* PBXTargetDependency */,
 			);
 			name = NewsLiteInHouse;
 			productName = Article;
@@ -20050,6 +20122,7 @@
 		3AA5027715876A1F00EB27FA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 0640;
 				TargetAttributes = {
 					3AA5027F15876A1F00EB27FA = {
@@ -20086,6 +20159,16 @@
 							};
 						};
 					};
+					61787F442201AE9C003CB249 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = X46375UBYG;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					B373C7F92174587A008F9905 = {
 						DevelopmentTeam = J3249442BT;
 						ProvisioningStyle = Manual;
@@ -20098,6 +20181,9 @@
 						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
@@ -20133,6 +20219,7 @@
 				FEFA5259205FB1A8001F50D8 /* NewsLiteInHouse */,
 				B373C7F92174587A008F9905 /* f100 */,
 				D47950C221ECC94E00548965 /* NewsLiteChannel */,
+				61787F442201AE9C003CB249 /* InhouseNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -20220,6 +20307,13 @@
 				B388CB262142652A00653188 /* Assets.xcassets in Resources */,
 				B362E6F721539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */,
 				D97EB6B01E1CA04200EE4473 /* VideoResource.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61787F432201AE9C003CB249 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23552,6 +23646,15 @@
 				D5041F5C205802B600BAEE7F /* AKRedPacketOptionalLoginView.m in Sources */,
 				438F9E531F94B8DE0050F83E /* TTVMidInsertADService.m in Sources */,
 				52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61787F412201AE9C003CB249 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61787F492201AE9C003CB249 /* NotificationService.m in Sources */,
+				61787F552201B534003CB249 /* TTNotificationServiceExtensionBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -28777,6 +28880,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		61787F4C2201AE9C003CB249 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 61787F442201AE9C003CB249 /* InhouseNotificationServiceExtension */;
+			targetProxy = 61787F4B2201AE9C003CB249 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		48F775FA166494DC002FB812 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -29113,6 +29224,101 @@
 					"-Wno-documentation",
 				);
 				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		61787F4F2201AE9D003CB249 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = InhouseNotificationServiceExtension/InhouseNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = InhouseNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		61787F502201AE9D003CB249 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = InhouseNotificationServiceExtension/InhouseNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = X46375UBYG;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = InhouseNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -29774,6 +29980,15 @@
 			buildConfigurations = (
 				3AA5029915876A1F00EB27FA /* Debug */,
 				3AA5029A15876A1F00EB27FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61787F4E2201AE9D003CB249 /* Build configuration list for PBXNativeTarget "InhouseNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61787F4F2201AE9D003CB249 /* Debug */,
+				61787F502201AE9D003CB249 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

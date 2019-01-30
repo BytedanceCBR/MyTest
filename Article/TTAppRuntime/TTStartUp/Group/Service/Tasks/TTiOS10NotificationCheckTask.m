@@ -55,13 +55,14 @@
 
 - (NSString *)suiteName
 {
-    NSString *suiteName = @"group.todayExtenstionShareDefaults";
-    NSString *bundleInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
-    NSRange resRange = [bundleInfo rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
-    if (resRange.location != NSNotFound) {
-        suiteName = @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";;
-    }
-    
+//    NSString *suiteName = @"group.todayExtenstionShareDefaults";
+//    NSString *bundleInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+//    NSRange resRange = [bundleInfo rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
+//    if (resRange.location != NSNotFound) {
+//        suiteName = @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";;
+//    }
+
+    NSString *suiteName = @"group.com.f100.client.extension";
     return suiteName;
 }
 
