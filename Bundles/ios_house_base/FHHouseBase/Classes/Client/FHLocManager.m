@@ -320,13 +320,15 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
                     if ([currentCityid isEqualToString:model.data.currentCityId] || !currentCityid) {
                         //更新config
-                        [wSelf updateAllConfig:model isNeedDiff:YES];
+                        [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
+                        [wSelf updateAllConfig:model isNeedDiff:NO];
                     }
                 }
                 
                 FHConfigDataModel *configCache = [[FHEnvContext sharedInstance] getConfigFromCache];
                 
                 if (!configCache) {
+                    [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                     [wSelf updateAllConfig:model isNeedDiff:NO];
                 }
                 
@@ -363,6 +365,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)updateAllConfig:(FHConfigModel * _Nullable) model isNeedDiff:(BOOL)needDiff
 {
+
     if (![model isKindOfClass:[FHConfigModel class]]) {
         return ;
     }
