@@ -254,7 +254,7 @@ class CategoryListPageVC: BaseViewController, TTRouteInitializeProtocol {
         }
         if self.associationalWord?.isEmpty ?? true &&
             navBar.searchInput.placeholder == nil {
-            navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(self.houseType.value))
+//            navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(self.houseType.value))
         }
         self.conditionFilterViewModel = ConditionFilterViewModel(
             conditionPanelView: conditionPanelView,
