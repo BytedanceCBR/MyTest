@@ -105,6 +105,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 [[ToastManager manager] dismissCustomLoading];
                 [[ToastManager manager] showToast:@"切换城市失败"];
             }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
         }];
     }
 }
