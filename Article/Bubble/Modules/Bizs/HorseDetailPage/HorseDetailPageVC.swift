@@ -451,9 +451,17 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         }
     }
 
+    func test() {
+        let openUrl = "snssdk1370://test_detail"
+        let info: [String: Any] = ["house_type": 2]
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+            self.test()
+        }
         self.ttTrackStayEnable = true
         view.backgroundColor = UIColor.white
         
