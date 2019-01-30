@@ -1619,7 +1619,6 @@
 		B373C8962174587A008F9905 /* ConstraintArray+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAC12142652900653188 /* ConstraintArray+Extensions.swift */; };
 		B373C8972174587A008F9905 /* TTWeixinOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB79D1F1332DA0002B455 /* TTWeixinOpenURLTask.m */; };
 		B373C89A2174587A008F9905 /* ExploreItemActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBDEE1F13332C0002B455 /* ExploreItemActionManager.m */; };
-		B373C89B2174587A008F9905 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
 		B373C89C2174587A008F9905 /* TTEditPGCTableViewControllerImp.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5C71F1332D90002B455 /* TTEditPGCTableViewControllerImp.m */; };
 		B373C89D2174587A008F9905 /* ExploreMovieLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D25570B1E8271CD00FF96A7 /* ExploreMovieLoadingView.m */; };
 		B373C89E2174587A008F9905 /* TTVFeedListViewController+HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = F876922D1F31D0D200D59CA5 /* TTVFeedListViewController+HeaderView.m */; };
@@ -3024,7 +3023,6 @@
 		B373CE512174587A008F9905 /* AKProfileHeaderInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F21205802A400BAEE7F /* AKProfileHeaderInfoView.m */; };
 		B373CE522174587A008F9905 /* TTRDynamicPluginRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = 325B68661F5E54E1008AC35F /* TTRDynamicPluginRegister.m */; };
 		B373CE532174587A008F9905 /* TTDetailNatantRewardViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5931F1332D90002B455 /* TTDetailNatantRewardViewModel.m */; };
-		B373CE542174587A008F9905 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
 		B373CE552174587A008F9905 /* ExploreChannelListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8EAEA219EBED5800DA0740 /* ExploreChannelListView.m */; };
 		B373CE562174587A008F9905 /* TTVVideoDetailNatantInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F876919E1F31D0D200D59CA5 /* TTVVideoDetailNatantInfoModel.m */; };
 		B373CE582174587A008F9905 /* TTVDetailFollowRecommendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47A169081F9F3050004CE29E /* TTVDetailFollowRecommendView.m */; };
@@ -3267,10 +3265,6 @@
 		B388CBF52142652B00653188 /* HomeSpringBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA672142652900653188 /* HomeSpringBoard.swift */; };
 		B388CBF62142652B00653188 /* HomeSpringBoardItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA682142652900653188 /* HomeSpringBoardItemView.swift */; };
 		B388CBF72142652B00653188 /* HomeSpringBoardItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA682142652900653188 /* HomeSpringBoardItemView.swift */; };
-		B388CBF82142652B00653188 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
-		B388CBF92142652B00653188 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
-		B388CBFA2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
-		B388CBFB2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
 		B388CBFC2142652B00653188 /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6C2142652900653188 /* BaseTextField.swift */; };
 		B388CBFD2142652B00653188 /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6C2142652900653188 /* BaseTextField.swift */; };
 		B388CBFE2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
@@ -3798,7 +3792,6 @@
 		D479516221ECC94E00548965 /* ConstraintArray+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAC12142652900653188 /* ConstraintArray+Extensions.swift */; };
 		D479516321ECC94E00548965 /* TTWeixinOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB79D1F1332DA0002B455 /* TTWeixinOpenURLTask.m */; };
 		D479516421ECC94E00548965 /* ExploreItemActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBDEE1F13332C0002B455 /* ExploreItemActionManager.m */; };
-		D479516521ECC94E00548965 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
 		D479516621ECC94E00548965 /* TTEditPGCTableViewControllerImp.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5C71F1332D90002B455 /* TTEditPGCTableViewControllerImp.m */; };
 		D479516721ECC94E00548965 /* ExploreMovieLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D25570B1E8271CD00FF96A7 /* ExploreMovieLoadingView.m */; };
 		D479516821ECC94E00548965 /* TTVFeedListViewController+HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = F876922D1F31D0D200D59CA5 /* TTVFeedListViewController+HeaderView.m */; };
@@ -5319,7 +5312,6 @@
 		D479575721ECC94E00548965 /* AKProfileHeaderInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F21205802A400BAEE7F /* AKProfileHeaderInfoView.m */; };
 		D479575821ECC94E00548965 /* TTRDynamicPluginRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = 325B68661F5E54E1008AC35F /* TTRDynamicPluginRegister.m */; };
 		D479575921ECC94E00548965 /* TTDetailNatantRewardViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5931F1332D90002B455 /* TTDetailNatantRewardViewModel.m */; };
-		D479575A21ECC94E00548965 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
 		D479575B21ECC94E00548965 /* ExploreChannelListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8EAEA219EBED5800DA0740 /* ExploreChannelListView.m */; };
 		D479575C21ECC94E00548965 /* TTVVideoDetailNatantInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F876919E1F31D0D200D59CA5 /* TTVVideoDetailNatantInfoModel.m */; };
 		D479575D21ECC94E00548965 /* TTVDetailFollowRecommendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47A169081F9F3050004CE29E /* TTVDetailFollowRecommendView.m */; };
@@ -9832,8 +9824,6 @@
 		B388CA652142652900653188 /* SearchTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		B388CA672142652900653188 /* HomeSpringBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoard.swift; sourceTree = "<group>"; };
 		B388CA682142652900653188 /* HomeSpringBoardItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoardItemView.swift; sourceTree = "<group>"; };
-		B388CA6A2142652900653188 /* CountryListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListVC.swift; sourceTree = "<group>"; };
-		B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListHistoryDataSource.swift; sourceTree = "<group>"; };
 		B388CA6C2142652900653188 /* BaseTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
 		B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewTableViewDataSource.swift; sourceTree = "<group>"; };
 		B388CA6E2142652900653188 /* HomeListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeListViewModel.swift; sourceTree = "<group>"; };
@@ -16977,7 +16967,6 @@
 				B388CA622142652900653188 /* HomeViewController.swift */,
 				B388CA652142652900653188 /* SearchTextField.swift */,
 				B388CA662142652900653188 /* SpringBoard */,
-				B388CA692142652900653188 /* CountryList */,
 				B388CA6C2142652900653188 /* BaseTextField.swift */,
 				B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */,
 				B388CA6E2142652900653188 /* HomeListViewModel.swift */,
@@ -17008,15 +16997,6 @@
 				B388CA682142652900653188 /* HomeSpringBoardItemView.swift */,
 			);
 			path = SpringBoard;
-			sourceTree = "<group>";
-		};
-		B388CA692142652900653188 /* CountryList */ = {
-			isa = PBXGroup;
-			children = (
-				B388CA6A2142652900653188 /* CountryListVC.swift */,
-				B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */,
-			);
-			path = CountryList;
 			sourceTree = "<group>";
 		};
 		B388CA702142652900653188 /* Messages */ = {
@@ -21951,7 +21931,6 @@
 				B388CC802142652B00653188 /* ConstraintArray+Extensions.swift in Sources */,
 				A97DBBF71F1332E30002B455 /* TTWeixinOpenURLTask.m in Sources */,
 				A97DC07A1F1333300002B455 /* ExploreItemActionManager.m in Sources */,
-				B388CBF82142652B00653188 /* CountryListVC.swift in Sources */,
 				A97DB8EB1F1332DD0002B455 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				2D2557831E8271CD00FF96A7 /* ExploreMovieLoadingView.m in Sources */,
 				F87695441F31D0D700D59CA5 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -23466,7 +23445,6 @@
 				D5041F47205802A400BAEE7F /* AKProfileHeaderInfoView.m in Sources */,
 				325B68671F5E54E1008AC35F /* TTRDynamicPluginRegister.m in Sources */,
 				A97DB8931F1332DC0002B455 /* TTDetailNatantRewardViewModel.m in Sources */,
-				B388CBFA2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */,
 				A85E5BB21C08030700DDDE88 /* ExploreChannelListView.m in Sources */,
 				F87694641F31D0D500D59CA5 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				47A169091F9F3050004CE29E /* TTVDetailFollowRecommendView.m in Sources */,
@@ -23681,7 +23659,6 @@
 				B373C8962174587A008F9905 /* ConstraintArray+Extensions.swift in Sources */,
 				B373C8972174587A008F9905 /* TTWeixinOpenURLTask.m in Sources */,
 				B373C89A2174587A008F9905 /* ExploreItemActionManager.m in Sources */,
-				B373C89B2174587A008F9905 /* CountryListVC.swift in Sources */,
 				B373C89C2174587A008F9905 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				B373C89D2174587A008F9905 /* ExploreMovieLoadingView.m in Sources */,
 				B373C89E2174587A008F9905 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -25202,7 +25179,6 @@
 				B373CE512174587A008F9905 /* AKProfileHeaderInfoView.m in Sources */,
 				B373CE522174587A008F9905 /* TTRDynamicPluginRegister.m in Sources */,
 				B373CE532174587A008F9905 /* TTDetailNatantRewardViewModel.m in Sources */,
-				B373CE542174587A008F9905 /* CountryListHistoryDataSource.swift in Sources */,
 				B373CE552174587A008F9905 /* ExploreChannelListView.m in Sources */,
 				B373CE562174587A008F9905 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				B373CE582174587A008F9905 /* TTVDetailFollowRecommendView.m in Sources */,
@@ -25417,7 +25393,6 @@
 				D479516221ECC94E00548965 /* ConstraintArray+Extensions.swift in Sources */,
 				D479516321ECC94E00548965 /* TTWeixinOpenURLTask.m in Sources */,
 				D479516421ECC94E00548965 /* ExploreItemActionManager.m in Sources */,
-				D479516521ECC94E00548965 /* CountryListVC.swift in Sources */,
 				D479516621ECC94E00548965 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				D479516721ECC94E00548965 /* ExploreMovieLoadingView.m in Sources */,
 				D479516821ECC94E00548965 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -26938,7 +26913,6 @@
 				D479575721ECC94E00548965 /* AKProfileHeaderInfoView.m in Sources */,
 				D479575821ECC94E00548965 /* TTRDynamicPluginRegister.m in Sources */,
 				D479575921ECC94E00548965 /* TTDetailNatantRewardViewModel.m in Sources */,
-				D479575A21ECC94E00548965 /* CountryListHistoryDataSource.swift in Sources */,
 				D479575B21ECC94E00548965 /* ExploreChannelListView.m in Sources */,
 				D479575C21ECC94E00548965 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				D479575D21ECC94E00548965 /* TTVDetailFollowRecommendView.m in Sources */,
@@ -27153,7 +27127,6 @@
 				B388CC812142652B00653188 /* ConstraintArray+Extensions.swift in Sources */,
 				FEFA5314205FB1A8001F50D8 /* TTWeixinOpenURLTask.m in Sources */,
 				FEFA5315205FB1A8001F50D8 /* ExploreItemActionManager.m in Sources */,
-				B388CBF92142652B00653188 /* CountryListVC.swift in Sources */,
 				FEFA5316205FB1A8001F50D8 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				FEFA5317205FB1A8001F50D8 /* ExploreMovieLoadingView.m in Sources */,
 				FEFA5318205FB1A8001F50D8 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -28674,7 +28647,6 @@
 				FEFA5988205FB1A8001F50D8 /* AKProfileHeaderInfoView.m in Sources */,
 				FEFA598A205FB1A8001F50D8 /* TTRDynamicPluginRegister.m in Sources */,
 				FEFA598C205FB1A8001F50D8 /* TTDetailNatantRewardViewModel.m in Sources */,
-				B388CBFB2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */,
 				FEFA598D205FB1A8001F50D8 /* ExploreChannelListView.m in Sources */,
 				FEFA598F205FB1A8001F50D8 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				FEFA5990205FB1A8001F50D8 /* TTVDetailFollowRecommendView.m in Sources */,

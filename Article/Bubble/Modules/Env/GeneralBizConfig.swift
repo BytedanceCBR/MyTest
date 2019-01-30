@@ -40,7 +40,7 @@ class GeneralBizConfig {
     
     var disposeBagConfig = DisposeBag()
     
-    let cityHistoryDataSource = CountryListHistoryDataSource()
+//    let cityHistoryDataSource = CountryListHistoryDataSource()
     
     var hasSetTemporySelectCity = false
     
