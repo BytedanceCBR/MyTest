@@ -409,7 +409,7 @@ class SuggestionListVC: BaseViewController , UITextFieldDelegate , TTRouteInitia
         houseType
 //            .debug("bindHouseTypeObv")
             .subscribe(onNext: { [weak self] (type) in
-                self?.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(type))
+//                self?.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(type))
                 self?.navBar.searchTypeLabel.text = type.stringValue()
                 let size = self?.navBar.searchTypeLabel.sizeThatFits(CGSize(width: 100, height: 20)) ?? CGSize(width: 42, height: 20)
                 self?.navBar.searchTypeLabel.snp.updateConstraints({ (maker) in

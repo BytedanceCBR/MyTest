@@ -689,7 +689,7 @@ class HouseFindVC: BaseViewController, UIGestureRecognizerDelegate {
         vc.suggestionParams = condition
         vc.queryString = query
         vc.navBar.isShowTypeSelector = false
-        vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
+//        vc.navBar.setSearchPlaceHolderText(text: searchBarPlaceholder(houseType))
         if let houseSearchParams = houseSearchParams {
             vc.allParams = ["houseSearch": houseSearchParams]
         }

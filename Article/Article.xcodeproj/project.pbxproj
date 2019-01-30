@@ -1569,7 +1569,6 @@
 		B373C8612174587A008F9905 /* UIImageView+TTCornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AECC4BC1D1AB4F300C2B87B /* UIImageView+TTCornerRadius.m */; };
 		B373C8622174587A008F9905 /* ConfigEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAA92142652900653188 /* ConfigEntities.swift */; };
 		B373C8632174587A008F9905 /* TTDetailNatantRelateReadView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5801F1332D90002B455 /* TTDetailNatantRelateReadView.m */; };
-		B373C8642174587A008F9905 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
 		B373C8652174587A008F9905 /* TTDetailNatantContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5761F1332D90002B455 /* TTDetailNatantContainerView.m */; };
 		B373C8662174587A008F9905 /* TTRHealthScore.m in Sources */ = {isa = PBXBuildFile; fileRef = D51D405A1FBAD75E0037D144 /* TTRHealthScore.m */; };
 		B373C8682174587A008F9905 /* ExploreArticleTitleLargePicCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0201E1B215BE400F9E484 /* ExploreArticleTitleLargePicCellView.m */; };
@@ -2608,7 +2607,6 @@
 		B373CC9F2174587A008F9905 /* TGSquareGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAF12142652900653188 /* TGSquareGridPulse.swift */; };
 		B373CCA02174587A008F9905 /* RNData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2845741DF5402100170DE7 /* RNData.m */; };
 		B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F34205802A400BAEE7F /* AKMinePhotoCarouselEntry.m */; };
-		B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
 		B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		B373CCA42174587A008F9905 /* TTVCommodityFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA31F94B8DC0050F83E /* TTVCommodityFloatView.m */; };
 		B373CCA52174587A008F9905 /* TTADVideoMZTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A47CD1FD70AFC00E46510 /* TTADVideoMZTracker.m */; };
@@ -3257,8 +3255,6 @@
 		B388CBEB2142652B00653188 /* SearchUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA602142652900653188 /* SearchUITextField.swift */; };
 		B388CBEC2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		B388CBED2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
-		B388CBEE2142652B00653188 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
-		B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
 		B388CBF22142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF32142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF42142652B00653188 /* HomeSpringBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA672142652900653188 /* HomeSpringBoard.swift */; };
@@ -3267,8 +3263,6 @@
 		B388CBF72142652B00653188 /* HomeSpringBoardItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA682142652900653188 /* HomeSpringBoardItemView.swift */; };
 		B388CBFC2142652B00653188 /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6C2142652900653188 /* BaseTextField.swift */; };
 		B388CBFD2142652B00653188 /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6C2142652900653188 /* BaseTextField.swift */; };
-		B388CBFE2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
-		B388CBFF2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
 		B388CC002142652B00653188 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6E2142652900653188 /* HomeListViewModel.swift */; };
 		B388CC012142652B00653188 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6E2142652900653188 /* HomeListViewModel.swift */; };
 		B388CC022142652B00653188 /* HeaderViewControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6F2142652900653188 /* HeaderViewControl.swift */; };
@@ -3736,7 +3730,6 @@
 		D479512A21ECC94E00548965 /* UIImageView+TTCornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AECC4BC1D1AB4F300C2B87B /* UIImageView+TTCornerRadius.m */; };
 		D479512B21ECC94E00548965 /* ConfigEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAA92142652900653188 /* ConfigEntities.swift */; };
 		D479512C21ECC94E00548965 /* TTDetailNatantRelateReadView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5801F1332D90002B455 /* TTDetailNatantRelateReadView.m */; };
-		D479512D21ECC94E00548965 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
 		D479512E21ECC94E00548965 /* TTDetailNatantContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5761F1332D90002B455 /* TTDetailNatantContainerView.m */; };
 		D479512F21ECC94E00548965 /* TTRHealthScore.m in Sources */ = {isa = PBXBuildFile; fileRef = D51D405A1FBAD75E0037D144 /* TTRHealthScore.m */; };
 		D479513021ECC94E00548965 /* ExploreArticleTitleLargePicCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0201E1B215BE400F9E484 /* ExploreArticleTitleLargePicCellView.m */; };
@@ -4860,7 +4853,6 @@
 		D479559221ECC94E00548965 /* RNData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2845741DF5402100170DE7 /* RNData.m */; };
 		D479559321ECC94E00548965 /* AKMinePhotoCarouselEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F34205802A400BAEE7F /* AKMinePhotoCarouselEntry.m */; };
 		D479559421ECC94E00548965 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
-		D479559521ECC94E00548965 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
 		D479559621ECC94E00548965 /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		D479559721ECC94E00548965 /* ErshouHouseListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3634121A29D9E0097FCB6 /* ErshouHouseListViewModel.swift */; };
 		D479559821ECC94E00548965 /* TTVCommodityFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA31F94B8DC0050F83E /* TTVCommodityFloatView.m */; };
@@ -9820,12 +9812,10 @@
 		B388CA5F2142652900653188 /* MultiImageInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiImageInfoCell.swift; sourceTree = "<group>"; };
 		B388CA602142652900653188 /* SearchUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUITextField.swift; sourceTree = "<group>"; };
 		B388CA612142652900653188 /* HomeHeaderSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderSearchView.swift; sourceTree = "<group>"; };
-		B388CA622142652900653188 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		B388CA652142652900653188 /* SearchTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		B388CA672142652900653188 /* HomeSpringBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoard.swift; sourceTree = "<group>"; };
 		B388CA682142652900653188 /* HomeSpringBoardItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoardItemView.swift; sourceTree = "<group>"; };
 		B388CA6C2142652900653188 /* BaseTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
-		B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewTableViewDataSource.swift; sourceTree = "<group>"; };
 		B388CA6E2142652900653188 /* HomeListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeListViewModel.swift; sourceTree = "<group>"; };
 		B388CA6F2142652900653188 /* HeaderViewControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderViewControl.swift; sourceTree = "<group>"; };
 		B388CA722142652900653188 /* ChatDetailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDetailListCell.swift; sourceTree = "<group>"; };
@@ -16964,11 +16954,9 @@
 				B388CA572142652900653188 /* Cells */,
 				B388CA602142652900653188 /* SearchUITextField.swift */,
 				B388CA612142652900653188 /* HomeHeaderSearchView.swift */,
-				B388CA622142652900653188 /* HomeViewController.swift */,
 				B388CA652142652900653188 /* SearchTextField.swift */,
 				B388CA662142652900653188 /* SpringBoard */,
 				B388CA6C2142652900653188 /* BaseTextField.swift */,
-				B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */,
 				B388CA6E2142652900653188 /* HomeListViewModel.swift */,
 				B388CA6F2142652900653188 /* HeaderViewControl.swift */,
 			);
@@ -21874,7 +21862,6 @@
 				0AECC4BD1D1AB4F300C2B87B /* UIImageView+TTCornerRadius.m in Sources */,
 				B388CC5E2142652B00653188 /* ConfigEntities.swift in Sources */,
 				A97DB86F1F1332DB0002B455 /* TTDetailNatantRelateReadView.m in Sources */,
-				B388CBFE2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */,
 				A97DB85B1F1332DB0002B455 /* TTDetailNatantContainerView.m in Sources */,
 				D51D405B1FBAD75F0037D144 /* TTRHealthScore.m in Sources */,
 				6BE020EE1B215BE600F9E484 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -22993,7 +22980,6 @@
 				760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				D5041F4F205802A400BAEE7F /* AKMinePhotoCarouselEntry.m in Sources */,
 				3DF3640021A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
-				B388CBEE2142652B00653188 /* HomeViewController.swift in Sources */,
 				70E7C2C81F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m in Sources */,
 				438F9E331F94B8DD0050F83E /* TTVCommodityFloatView.m in Sources */,
 				7E6A47CE1FD70AFC00E46510 /* TTADVideoMZTracker.m in Sources */,
@@ -23603,7 +23589,6 @@
 				B373C8612174587A008F9905 /* UIImageView+TTCornerRadius.m in Sources */,
 				B373C8622174587A008F9905 /* ConfigEntities.swift in Sources */,
 				B373C8632174587A008F9905 /* TTDetailNatantRelateReadView.m in Sources */,
-				B373C8642174587A008F9905 /* HomeViewTableViewDataSource.swift in Sources */,
 				B373C8652174587A008F9905 /* TTDetailNatantContainerView.m in Sources */,
 				B373C8662174587A008F9905 /* TTRHealthScore.m in Sources */,
 				B373C8682174587A008F9905 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -24727,7 +24712,6 @@
 				B373CCA02174587A008F9905 /* RNData.m in Sources */,
 				B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */,
 				760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
-				B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */,
 				B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640221A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
 				B373CCA42174587A008F9905 /* TTVCommodityFloatView.m in Sources */,
@@ -25337,7 +25321,6 @@
 				D479512A21ECC94E00548965 /* UIImageView+TTCornerRadius.m in Sources */,
 				D479512B21ECC94E00548965 /* ConfigEntities.swift in Sources */,
 				D479512C21ECC94E00548965 /* TTDetailNatantRelateReadView.m in Sources */,
-				D479512D21ECC94E00548965 /* HomeViewTableViewDataSource.swift in Sources */,
 				D479512E21ECC94E00548965 /* TTDetailNatantContainerView.m in Sources */,
 				D479512F21ECC94E00548965 /* TTRHealthScore.m in Sources */,
 				D479513021ECC94E00548965 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -26461,7 +26444,6 @@
 				D479559221ECC94E00548965 /* RNData.m in Sources */,
 				D479559321ECC94E00548965 /* AKMinePhotoCarouselEntry.m in Sources */,
 				D479559421ECC94E00548965 /* PriceChangeHistoryCell.swift in Sources */,
-				D479559521ECC94E00548965 /* HomeViewController.swift in Sources */,
 				D479559621ECC94E00548965 /* TTAdFullScreenVideoViewController.m in Sources */,
 				D479559721ECC94E00548965 /* ErshouHouseListViewModel.swift in Sources */,
 				D479559821ECC94E00548965 /* TTVCommodityFloatView.m in Sources */,
@@ -27071,7 +27053,6 @@
 				FEFA52CC205FB1A8001F50D8 /* UIImageView+TTCornerRadius.m in Sources */,
 				B388CC5F2142652B00653188 /* ConfigEntities.swift in Sources */,
 				FEFA52CD205FB1A8001F50D8 /* TTDetailNatantRelateReadView.m in Sources */,
-				B388CBFF2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */,
 				FEFA52D0205FB1A8001F50D8 /* TTDetailNatantContainerView.m in Sources */,
 				FEFA52D4205FB1A8001F50D8 /* TTRHealthScore.m in Sources */,
 				FEFA52D5205FB1A8001F50D8 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -28195,7 +28176,6 @@
 				FEFA579E205FB1A8001F50D8 /* RNData.m in Sources */,
 				FEFA579F205FB1A8001F50D8 /* AKMinePhotoCarouselEntry.m in Sources */,
 				760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
-				B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */,
 				FEFA57A0205FB1A8001F50D8 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640121A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
 				FEFA57A2205FB1A8001F50D8 /* TTVCommodityFloatView.m in Sources */,
