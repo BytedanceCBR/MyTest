@@ -9,7 +9,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>好多房</string>
+	<string>幸福里</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIcons</key>
@@ -182,7 +182,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.6.2.5</string>
+	<string>6.6.2.6</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
@@ -283,13 +283,13 @@
 	<key>NSLocationUsageDescription</key>
 	<string>方便为您推荐本地房源</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>好多房将持续定位</string>
+	<string>幸福里将持续定位</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>方便您使用发语音功能</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>要允许好多房访问您设备上的照片、媒体内容和文件吗？</string>
+	<string>要允许幸福里访问您设备上的照片、媒体内容和文件吗？</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>要允许好多房访问您设备上的照片、媒体内容和文件吗？</string>
+	<string>要允许幸福里访问您设备上的照片、媒体内容和文件吗？</string>
 	<key>SSAppID</key>
 	<string>1370</string>
 	<key>SSMID</key>
@@ -336,6 +336,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>65000</string>
+	<string>65100</string>
 </dict>
 </plist>

@@ -28,12 +28,12 @@
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.font = [UIFont themeFontRegular:14];
         _tipLabel.textColor = [UIColor themeGray];
-        _tipLabel.text = @"网络不给力，试试刷新页面";
+        _tipLabel.text = @"网络异常，请检查网络连接";
         [_tipLabel sizeToFit];
         
         _retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_retryButton setTitleColor:[UIColor themeBlue] forState:UIControlStateNormal];
-        [_retryButton setTitle:@"重新加载" forState:UIControlStateNormal];
+        [_retryButton setTitle:@"刷新" forState:UIControlStateNormal];
         _retryButton.layer.cornerRadius  = 15;
         _retryButton.titleLabel.font = [UIFont themeFontRegular:14];
         _retryButton.layer.borderColor = [[UIColor themeBlue]CGColor];
@@ -80,17 +80,17 @@
 }
 
 - (void)showEmptyWithType:(FHEmptyMaskViewType)maskViewType {
-    NSString *tips = @"网络不给力，试试刷新页面";
+    NSString *tips = @"网络异常，请检查网络连接";
     BOOL showenRetry = YES;
     NSString *imageName = kFHErrorMaskNoNetWorkImageName;
     switch (maskViewType) {
         case FHEmptyMaskViewTypeNoNetWorkAndRefresh:
-            tips = @"网络不给力，试试刷新页面";
+            tips = @"网络异常，请检查网络连接";
             showenRetry = YES;
             imageName = kFHErrorMaskNoNetWorkImageName;
             break;
         case FHEmptyMaskViewTypeNoNetWorkNotRefresh:
-            tips = @"网络不给力，试试刷新页面";
+            tips = @"网络异常，请检查网络连接";
             showenRetry = NO;
             imageName = kFHErrorMaskNoNetWorkImageName;
             break;
@@ -105,12 +105,12 @@
             imageName = kFHErrorMaskNetWorkErrorImageName;
             break;
         case FHEmptyMaskViewTypeEmptyMessage:
-            tips = @"啊哦~你还没有收到消息~";
+            tips = @"暂无消息";
             showenRetry = NO;
             imageName = kFHErrorMaskNoMessageImageName;
             break;
         case FHEmptyMaskViewTypeNoDataForCondition:
-            tips = @"没有找到相关的信息，换个条件试试吧~";
+            tips = @"暂无搜索结果";
             showenRetry = NO;
             imageName = kFHErrorMaskNetWorkErrorImageName;
             break;

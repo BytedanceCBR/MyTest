@@ -82,7 +82,7 @@
         } else if ([model.groupSource isEqualToString:HotsoonGroupSource]) {
             _shareCopyContent = [NSString stringWithFormat:@"%@在火山星球上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else if ([model.groupSource isEqualToString:ToutiaoGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在好多房上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else {
             _shareCopyContent = [NSString stringWithFormat:@"%@分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         }

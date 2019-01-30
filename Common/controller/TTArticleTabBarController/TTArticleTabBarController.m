@@ -710,6 +710,22 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [[TTTabBarManager sharedTTTabBarManager] reloadIconAndTitleForItem:item];
 }
 
+- (void)onAccountLogin
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
+    });
+}
+
+- (void)onAccountLogout
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
+    });
+}
+
 #pragma mark - Orientation
 
 - (BOOL)shouldAutorotate
@@ -1044,10 +1060,13 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         //tip view动画消失或者已经展示
         return NO;
     }
-    
-    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
-    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {//进详情页
-        return NO;
+
+    // 修复线上发现的闪退问题
+    if ([self.viewControllers count] > self.lastSelectedIndex) {
+        UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
+        if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {//进详情页
+            return NO;
+        }
     }
     
     if (_categoryManagerView.isShowing){//频道管理

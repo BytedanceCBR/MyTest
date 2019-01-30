@@ -6128,9 +6128,22 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
 }
 
 + (BOOL)wendaShareEnable {
-
     NSDictionary *fhSettings = [self fhSettings];
     return [fhSettings tta_boolForKey:@"f_wenda_share_enable"];
+}
+
++ (NSInteger)configSwitchTimeDaysCount
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger settingSwitchTime = [fhSettings tt_integerValueForKey:@"f_switch_city_time"];
+    return settingSwitchTime;
+}
+
++ (NSInteger)configEditProfileEntry
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger settingSwitchTime = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+    return settingSwitchTime;
 }
 
 + (NSInteger)findTabShowHouse {

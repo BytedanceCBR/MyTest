@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>compileBitcode</key>
-	<false/>
+	<true/>
 	<key>destination</key>
 	<string>export</string>
 	<key>method</key>
@@ -11,7 +11,7 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.bytedance.fp1</key>
-		<string>combytedancefp1_InHouse</string>
+		<string>com.bytedance.fp1_InHouse</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>iPhone Distribution</string>

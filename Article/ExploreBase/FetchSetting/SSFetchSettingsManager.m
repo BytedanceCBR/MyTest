@@ -294,7 +294,7 @@ static SSFetchSettingsManager * manager;
 {
     BOOL result = [[NSUserDefaults standardUserDefaults] boolForKey:SSFetchSettingsManagerFetchedDefaultInfoKey];
     if (result) {
-        NSString * shareFrom = NSLocalizedString(@"分享来自 #好多房#", nil);
+        NSString * shareFrom = NSLocalizedString(@"分享来自 #幸福里#", nil);
         NSString * noShareURLStrings = [NSString stringWithFormat:@"【{title:50}】 (%@ )", shareFrom];
         NSString * twitterURLStrings = [NSString stringWithFormat:@"【{title:50}】{share_url} (%@ )", shareFrom];
         NSDictionary * defaultTemp =  @{
@@ -302,8 +302,8 @@ static SSFetchSettingsManager * manager;
                                         @"qzone_sns":   noShareURLStrings,
                                         @"twitter":     twitterURLStrings,
                                         @"renren_sns":  noShareURLStrings,
-                                        @"system":      [NSString stringWithFormat:@"%@：【{title:50}】{share_url}", NSLocalizedString(@"分享自好多房", nil)],
-                                        @"weixin":      [NSString stringWithFormat:@"%@【{title:50}", NSLocalizedString(@"好多房", nil)],
+                                        @"system":      [NSString stringWithFormat:@"%@：【{title:50}】{share_url}", NSLocalizedString(@"分享自幸福里", nil)],
+                                        @"weixin":      [NSString stringWithFormat:@"%@【{title:50}", NSLocalizedString(@"幸福里", nil)],
                                         @"qq_weibo":    [NSString stringWithFormat:@"【{title:50}】 (%@ @headlineapp )", NSLocalizedString(@"分享来自", nil)],
                                         @"facebook":    [NSString stringWithFormat:@"【{title:50}】{share_url} (%@ )", shareFrom],
                                         @"sina_weibo":  noShareURLStrings

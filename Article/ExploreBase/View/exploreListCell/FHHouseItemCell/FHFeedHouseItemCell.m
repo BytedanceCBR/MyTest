@@ -11,6 +11,8 @@
 #import "FHFeedHouseItemViewModel.h"
 #import "FHFeedHouseFooterView.h"
 #import "UIColor+Theme.h"
+#import "TTArticleCategoryManager.h"
+#import "FHEnvContext.h"
 
 @implementation FHFeedHouseItemCell
 
@@ -137,16 +139,32 @@
 
     [super refreshUI];
 
-    if (self.orderedData.preCellType == ExploreOrderedDataCellTypeFHHouse || self.orderedData.preCellType == ExploreOrderedDataCellTypeNull) {
+    // 是否有找房频道
+    BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+    
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    
+    if (self.orderedData.preCellType == ExploreOrderedDataCellTypeFHHouse) {
         
         self.topView.frame = CGRectMake(0, 0, self.width, 0);
         self.topLine.frame = CGRectMake(0, self.topView.bottom, self.width, 6);
 
     }
-//    else if (self.orderedData.preCellType == ExploreOrderedDataCellTypeNull) {
-//
-//
-//    }
+    else if (self.orderedData.preCellType == ExploreOrderedDataCellTypeNull) {
+
+        if (isHasFindHouseCategory) {
+            
+            self.topView.frame = CGRectMake(0, 0, self.width, 0);
+            self.topLine.frame = CGRectMake(0, self.topView.bottom, self.width, 0);
+        }else if (!configDataModel.opData && !configDataModel.opData2 && !configDataModel.cityStats) {
+            
+            self.topView.frame = CGRectMake(0, 0, self.width, 0);
+            self.topLine.frame = CGRectMake(0, self.topView.bottom, self.width, 0);
+        }else {
+            self.topView.frame = CGRectMake(0, 0, self.width, 0);
+            self.topLine.frame = CGRectMake(0, self.topView.bottom, self.width, 6);
+        }
+    }
     else if (self.orderedData.preCellHasBottomPadding) {
 
         self.topLine.frame = CGRectMake(0, 0, self.width, 0);

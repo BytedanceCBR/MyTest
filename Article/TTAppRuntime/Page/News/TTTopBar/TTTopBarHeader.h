@@ -18,7 +18,7 @@
 //搜索框在背景图上左边距
 #define kSearchFieldLeft (kMineIconLeft + kMineIconW + kMineIconRightGap)
 #define kSearchFieldExtendLeft 15
-#define kSearchImageBackLeft 20
+#define kSearchImageBackLeft 15
 #define kSearchLabelBackColor [UIColor colorWithHexString:@"#f2f4f5"]
 #define kSearchFieldExtendRight 15
 #define kLogoSearchFieldLeft (kTopBarIconWidth + kLogoIconRight + kLogoIconLeft)

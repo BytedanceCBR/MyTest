@@ -22,6 +22,7 @@
 #import <FHConfigModel.h>
 #import "FHSpringboardView.h"
 #import <UIImageView+WebCache.h>
+#import <UIImageView+BDWebImage.h>
 #import "UIColor+Theme.h"
 #import "TTReachability.h"
 #import "FHMainManager+Toast.h"
@@ -67,6 +68,7 @@
 @property(nonatomic , assign) CGFloat headerHeight;
 
 @property(nonatomic , copy) NSString *originSearchId;
+@property(nonatomic , copy) NSString *originFrom;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
 @end
@@ -150,7 +152,8 @@
         item.nameLabel.text = model.title;
         FHConfigDataRentOpDataItemsImageModel *imgModel = [model.image firstObject];
         NSURL *imgUrl = [NSURL URLWithString:imgModel.url];
-        [item.iconView sd_setImageWithURL:imgUrl placeholderImage:placeHolder];
+        [item.iconView bd_setImageWithURL:imgUrl placeholder:placeHolder];
+//        [item.iconView bd_setImageWithURL:imgUrl placeholderImage:placeHolder];
         [items addObject:item];
     }
     if (items.count > MAX_ICON_COUNT) {
@@ -260,6 +263,9 @@
                 }
                 wself.showNotify(tip);
             }
+            
+            [wself addHouseRankLog];
+
         }
        
        wself.tableView.mj_footer.hidden = NO;
@@ -301,7 +307,7 @@
         if (wself.houseList.count == 0) {
             NSString *tip;
             if (self.conditionFilter.length > 0) {
-                tip = @"没有找到相关信息，换个条件试试吧~";
+                tip = @"暂无搜索结果";
             }else{
                 tip = @"数据走丢了";
             }
@@ -487,8 +493,8 @@
         }
      
         FHSearchHouseDataItemsHouseImageModel *imgModel = [model.houseImage firstObject];
-        [rentCell setHouseImages:model.houseImageTag];
-        [rentCell.iconView sd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholderImage:self.placeHolderImage];
+        [rentCell setHouseImages:model.houseImageTag];        
+        [rentCell.iconView bd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholder:self.placeHolderImage];
         
                 
         cell = rentCell;
@@ -544,7 +550,8 @@
     
     id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
     [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
-    
+    [envBridge setTraceValue:self.originSearchId forKey:@"origin_search_id"];
+
     NSMutableDictionary* tracer = [[self.viewController.tracerModel neatLogDict] mutableCopy];
     tracer[@"card_type"] = @"left_pic";
     tracer[@"element_from"] = @"be_null";
@@ -1051,6 +1058,7 @@
         return nil ;
     }
     
+    self.originFrom = originFrom;
     NSMutableDictionary *param = [[self baseLogParam]mutableCopy];
     param[@"category_name"] = @"rent_list";
     param[@"enter_type"] = @"click";
@@ -1092,6 +1100,25 @@
 -(void)addSearchLog
 {
     
+}
+
+- (void)addHouseRankLog
+{
+    
+    NSString *sortType;
+    if (self.getSortTypeString) {
+        sortType = self.getSortTypeString();
+    }
+    if (sortType.length < 1) {
+        return;
+    }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = @"renting";
+    params[@"rank_type"] = sortType;
+    params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
+    params[@"origin_from"] = @"renting";
+    TRACK_EVENT(@"house_rank",params);
 }
 
 -(NSString *)originFromWithFilterType:(FHHouseRentFilterType)filterType

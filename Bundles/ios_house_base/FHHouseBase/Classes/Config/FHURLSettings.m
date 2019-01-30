@@ -345,7 +345,7 @@ extern NSString * logBaseURL(void);
 
 + (NSString*)userProtocolURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=好多房用户协议",[self baseURL]];
+    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=幸福里用户协议",[self baseURL]];
 }
 
 #pragma mark -- 删除

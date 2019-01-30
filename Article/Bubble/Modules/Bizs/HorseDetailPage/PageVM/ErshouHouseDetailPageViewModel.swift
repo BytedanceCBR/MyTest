@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
  class ErshouHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var listLogPB: Any?
 
     var source: String?
     
@@ -88,6 +89,9 @@ import RxCocoa
 
     var tracerModel: HouseRentTracer?
 
+//    deinit {
+//        print("ErshouHouseDetailPageViewModel deinit")
+//    }
 
     init(
         tableView: UITableView,
@@ -129,18 +133,30 @@ import RxCocoa
                     self?.infoMaskView?.isUserInteractionEnabled = false
                     return
                 }
-                
-                if let result = self?.processData()([]) {
-                    
-                    self?.dataSource.datas = result
-                    self?.tableView?.reloadData()
-                    DispatchQueue.main.async {
-                        if let tableView = self?.tableView, let datas = self?.dataSource.datas {
-                            self?.traceCellByVisibleRect(tableView: tableView)
-                            self?.traceDisplayCell(tableView: tableView, datas: datas)
+                DispatchQueue.global().async {
+                    if let result = self?.processData()([]),
+                        result.count > 0 {
+                        DispatchQueue.main.async {
+                            if let ershouHouseData = self?.ershouHouseData.value {
+                                if let contact = ershouHouseData.data?.highlightedRealtor {
+                                    self?.contactPhone.accept(contact)
+                                } else {
+                                    self?.contactPhone.accept(ershouHouseData.data?.contact)
+                                }
+                            }
+                            self?.dataSource.datas = result
+                            self?.tableView?.reloadData()
+                            self?.onDataArrived?()
+
+                            DispatchQueue.main.async {
+                                if let tableView = self?.tableView,
+                                    let datas = self?.dataSource.datas {
+                                    self?.traceCellByVisibleRect(tableView: tableView)
+                                    self?.traceDisplayCell(tableView: tableView, datas: datas)
+                                }
+                            }
                         }
                     }
-                    
                 }
             }
             .disposed(by: disposeBag)
@@ -213,19 +229,22 @@ import RxCocoa
                 theCell.onAreaDisplay(displayArea: CGRect(x: 0,
                                                           y: 0,
                                                           width: visibleArea.width,
-                                                          height: visibleArea.height - 15))
+                                                          height: visibleArea.height))
             }
         })
     }
 
     func catulateVisibleArea(containerFrame: CGRect, targetFrame: CGRect) -> CGRect {
-        let buttomBarHeight: CGFloat = 64
+        let buttomBarHeight: CGFloat = 67
         let realVisible = CGRect(x: containerFrame.minX,
                                  y: containerFrame.minY,
                                  width: containerFrame.width,
                                  height: containerFrame.height - buttomBarHeight)
         let intersectionFrame = realVisible.intersection(targetFrame)
-        return intersectionFrame
+        return CGRect(x: intersectionFrame.minX,
+                      y: intersectionFrame.minY,
+                      width: intersectionFrame.width,
+                      height: intersectionFrame.height - buttomBarHeight)
     }
 
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
@@ -235,17 +254,9 @@ import RxCocoa
             self.showMessageAlert?("正在加载")
         }
         requestErshouHouseDetail(houseId: houseId, logPB: logPB)
+                .observeOn(MainScheduler.asyncInstance)
                 .subscribe(onNext: { [weak self] (response) in
-                    if showLoading {
-                        self?.dismissMessageAlert?()
-                    }
                     if let response = response{
-                        if let contact = response.data?.highlightedRealtor {
-                            self?.contactPhone.accept(contact)
-                        } else {
-                            self?.contactPhone.accept(response.data?.contact)
-                        }
-
                         if response.status == 0{
                             if let idStr = response.data?.id
                             {
@@ -254,7 +265,6 @@ import RxCocoa
                                     self?.titleValue.accept(response.data?.title)
                                     self?.ershouHouseData.accept(response)
                                     self?.requestReletedData()
-                                    self?.onDataArrived?()
                                 }else
                                 {
                                     self?.onEmptyData?()
@@ -270,6 +280,10 @@ import RxCocoa
                     }else
                     {
                         self?.onEmptyData?()
+                    }
+                    //关闭loading
+                    if showLoading {
+                        self?.dismissMessageAlert?()
                     }
                     if let status = response?.data?.userStatus {
                         self?.followStatus.accept(Result.success(status.houseSubStatus == 1))
@@ -297,6 +311,7 @@ import RxCocoa
                         followAction: .ershouHouse,
                         followId: "\(houseId)",
                         disposeBag: disposeBag)()
+                self.recordDeletedFollowEvent(traceParam)
             } else {
                 followIt(
                         houseType: .secondHandHouse,
@@ -338,10 +353,12 @@ import RxCocoa
             var traceExtension: TracerParams = TracerParams.momoid()
             if let code = traceParamsDic["rank"] as? Int {
                 traceExtension = traceExtension <|>
-                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
-                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(String(code), key: "rank")
             }
+            
+            traceExtension = traceExtension <|>
+                toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from")
             
             if let logPb = traceParamsDic["log_pb"] {
                 traceExtension = traceExtension <|>
@@ -512,8 +529,8 @@ import RxCocoa
                                     bottomBarBinder: self.bindBottomView(params: loadMoreParams <|> toTracerParams("old_detail", key: "page_type")))
                             }
                         }
-                    }, filter: { () -> Bool in
-                        self.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
+                    }, filter: {[weak self] () -> Bool in
+                        self?.relateNeighborhoodData.value?.data?.items?.count ?? 0 > 0
                 })
                 <- parseRelatedNeighborhoodCollectionNode(
                     relatedItems,
@@ -606,7 +623,7 @@ import RxCocoa
 
                 openNeighborhoodDetailPage(
                     neighborhoodId: Int64(id),
-                    logPB: nil,
+                    logPB: logPb as? [String : Any],
                     disposeBag: self.disposeBag,
                     tracerParams: params,
                     sameNeighborhoodFollowUp: sameNeighborhoodFollowUp,
@@ -801,11 +818,11 @@ fileprivate class DataSource: NSObject, UITableViewDelegate, UITableViewDataSour
         indexPath: IndexPath,
         tableView: UITableView) {
         let tempCell = cell
-        tempCell.refreshCallback = { [weak tableView, weak tempCell] in
+        tempCell.refreshCallback = { [weak tableView, weak tempCell, weak self] in
             tableView?.beginUpdates()
             if let refreshCell = tempCell {
                 let tempRefreshCell = refreshCell
-                self.datas[indexPath.section].items[indexPath.row](refreshCell)
+                self?.datas[indexPath.section].items[indexPath.row](refreshCell)
                 tempRefreshCell.setNeedsUpdateConstraints()
             }
             tableView?.endUpdates()
@@ -899,8 +916,7 @@ func parseFHHomeErshouHouseListItemNode(
                             toTracerParams(offset, key: "rank") <|>
                             toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                             toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                            imprIdTraceParam(item.logPB) <|>
-                            groupIdTraceParam(item.logPB) <|>
+                            toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
                             toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                             toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                     return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -954,7 +970,8 @@ func parseErshouHouseListItemNode(
                         toTracerParams(elementFrom, key: "element_from") <|>
                         toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                         toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                        toTracerParams(item.logPB ?? "be_null", key: "log_pb"),
+                        toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
+                        traceExtension,
                     navVC: navVC)
         }
         
@@ -971,14 +988,13 @@ func parseErshouHouseListItemNode(
             .map { (e) -> ElementRecord in
                 let (offset, item) = e
                 let theParams = tracerParams <|>
+                    traceExtension <|>
                     toTracerParams(offset, key: "rank") <|>
                     toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                     toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                     toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                    imprIdTraceParam(item.logPB) <|>
-                    groupIdTraceParam(item.logPB) <|>
-                    toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
-                    traceExtension
+                    toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+                    toTracerParams(item.logPB ?? "be_null", key: "log_pb")
                 return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from"))
         }
         
@@ -1084,8 +1100,8 @@ func parseErshouHouseListRowItemNode(
 //                toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb") <|>
                 toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
+//                imprIdTraceParam(item.logPB) <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams("old", key: "house_type")
@@ -1164,9 +1180,8 @@ func parseErshouRelatedHouseListItemNode(
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.cellstyle == 1 ? "three_pic" : "left_pic", key: "card_type") <|>
                 toTracerParams(item.id ?? "be_null", key: "group_id") <|>
-                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
-                imprIdTraceParam(item.logPB) <|>
-                groupIdTraceParam(item.logPB) <|>
+                toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.impr_id ?? "be_null", key: "impr_id") <|>
                 toTracerParams(elementType, key: "element_type") <|>
                 toTracerParams(item.logPB ?? "be_null", key: "log_pb")
             return onceRecord(key: TraceEventName.house_show, params: theParams.exclude("element_from").exclude("enter_from"))
@@ -1287,18 +1302,20 @@ func parseFollowUpListRowItemNode(_ data: UserFollowData,
             
             var item = item
             item.fhSearchId = data.searchId
-                        
+            
             
             let selector = openDetailPage(
                 houseType: HouseType(rawValue: item.houseType!),
                 followUpId: Int64(item.followId!) ?? 0,
                 originSearchId: (data.searchId ?? "be_null"),
+                tracceParam: traceParam,
                 disposeBag: disposeBag,
                 logPB: item.logPB as? [String : Any],
                 navVC: navVC)
             
             let houseType = HouseType(rawValue: item.houseType ?? 0) ?? .newHouse
             let houseShowParams = TracerParams.momoid() <|>
+                traceParam <|>
                 toTracerParams(houseTypeStringByHouseType(houseType: houseType), key: "house_type") <|>
                 toTracerParams("left_pic", key: "card_type") <|>
                 toTracerParams(categoryNameByHouseType(houseType: houseType), key: "page_type") <|>
@@ -1382,13 +1399,15 @@ fileprivate func openDetailPage(
     houseType: HouseType?,
     followUpId: Int64,
     originSearchId: String = "be_null",
+    tracceParam: TracerParams = TracerParams.momoid(),
     disposeBag: DisposeBag,
     logPB: [String: Any]? = nil,
     navVC: UINavigationController?) -> (TracerParams) -> Void {
     var params = TracerParams.momoid() <|>
         toTracerParams("old", key: "house_type") <|>
         beNull(key: "element_from") <|>
-        toTracerParams("left_pic", key: "card_type")
+        toTracerParams("left_pic", key: "card_type") <|>
+        tracceParam
     guard let houseType = houseType else {
         return openErshouHouseDetailPage(houseId: followUpId, disposeBag: disposeBag, tracerParams: params, navVC: navVC)
     }

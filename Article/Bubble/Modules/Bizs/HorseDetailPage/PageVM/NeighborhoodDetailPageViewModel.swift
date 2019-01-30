@@ -9,6 +9,8 @@ import RxSwift
 
 class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     
+    var listLogPB: Any?
+
     var tracerModel: HouseRentTracer?
 
     var source: String?
@@ -123,9 +125,11 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
     }
 
     func traceDisplayCell(tableView: UITableView?, datas: [TableSectionNode]) {
-        let params = EnvContext.shared.homePageParams <|>
+        let params = TracerParams.momoid() <|>
                 toTracerParams("\(self.houseId)", key: "group_id") <|>
-                toTracerParams("neighborhood_detail", key: "page_type")
+                toTracerParams("neighborhood_detail", key: "page_type") <|>
+                toTracerParams(self.tracerModel?.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                toTracerParams(self.tracerModel?.originFrom ?? "be_null", key: "origin_from")
 
         tableView?.indexPathsForVisibleRows?.forEach({ [unowned self] (indexPath) in
             if !recordRowIndex.contains(indexPath) {
@@ -211,7 +215,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                     followAction: .neighborhood,
                     followId: "\(houseId)",
                     disposeBag: disposeBag)()
-
+                self.recordDeletedFollowEvent(traceParam)
             } else {
                 followIt(
                     houseType: .neighborhood,
@@ -261,12 +265,20 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             
             let traceParamsDic = traceParams.paramsGetter([:])
             var traceExtension: TracerParams = TracerParams.momoid()
-            if let code = traceParamsDic["rank"] as? Int {
+            if let code = (traceParamsDic["rank"] ?? traceParamsDic["index"]) as? Int {
                 traceExtension = traceExtension <|>
                     toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
                     toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
                     toTracerParams(String(code), key: "rank")
             }
+            
+            if let code = (traceParamsDic["rank"] ?? traceParamsDic["index"]) as? String {
+                traceExtension = traceExtension <|>
+                    toTracerParams(traceParamsDic["origin_search_id"] ?? "be_null", key: "origin_search_id") <|>
+                    toTracerParams(traceParamsDic["origin_from"] ?? "be_null", key: "origin_from") <|>
+                    toTracerParams(code, key: "rank")
+            }
+            
             
             if let logPb = traceParamsDic["log_pb"] {
                 traceExtension = traceExtension <|>
@@ -384,6 +396,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                             let transactionTrace = theParams <|>
                                 toTracerParams("neighborhood_trade_list", key: "category_name") <|>
                                 toTracerParams("neighborhood_trade", key: "element_from") <|>
+                                toTracerParams("neighborhood_detail", key: "page_type") <|>
                                 toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
                                 traceExtension
                             
@@ -500,44 +513,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                 }, filter: {[weak self] () -> Bool in
                     self?.houseInSameNeighborhood.value?.data?.items.count ?? 0 > 0
                 })
-//                <- parseNeighborSameHouseListItemNode(houseInSameNeighborhood.value?.data?.items, traceExtension: traceExtension, disposeBag: disposeBag, tracerParams: traceParams, navVC: self.navVC)
-//                <- parseSearchInNeighborhoodCollectionNode(
-//                    houseInSameNeighborhood.value?.data,
-//                    traceExtension: traceExtension,
-//                    followStatus: self.followStatus,
-//                    navVC: self.navVC)
-//                <- parseOpenAllNode(houseInSameNeighborhood.value?.data?.hasMore ?? false, "查看同小区在售\(houseInSameNeighborhood.value?.data?.total ?? 0)套房源", barHeight: 0) { [unowned self] in
-//                    if let id = data.id ,
-//                        let title = data.name {
-//
-//                        let loadMoreParams = EnvContext.shared.homePageParams <|>
-//                            toTracerParams("same_neighborhood", key: "element_type") <|>
-//                            toTracerParams(id, key: "group_id") <|>
-//                            toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-//                            toTracerParams("neighborhood_detail", key: "page_type")
-//                        recordEvent(key: "click_loadmore", params: loadMoreParams)
-//
-//                        let params = paramsOfMap([EventKeys.category_name: HouseCategory.same_neighborhood_list.rawValue]) <|>
-//                            theParams <|>
-//                            toTracerParams("slide", key: "card_type") <|>
-//                            toTracerParams("neighborhood_detail", key: "enter_from") <|>
-//                            // TODO: 埋点缺失logPB
-//                            //                            toTracerParams(self.houseInSameNeighborhood.value?.data?.logPB ?? [:], key: "log_pb") <|>
-//                            toTracerParams("same_neighborhood", key: "element_from") <|>
-//                            toTracerParams(data.logPB ?? "be_null", key: "log_pb")
-//
-//                        openErshouHouseList(
-//                            title: title+"(\(self.houseInSameNeighborhood.value?.data?.total ?? 0))",
-//                            neighborhoodId: id,
-//                            searchId: self.houseInSameNeighborhood.value?.data?.searchId,
-//                            disposeBag: self.disposeBag,
-//                            navVC: self.navVC,
-//                            searchSource: .neighborhoodDetail,
-//                            followStatus: self.followStatus,
-//                            tracerParams: params,
-//                            bottomBarBinder: self.bindBottomView(params: TracerParams.momoid()))
-//                    }
-//                }
             return dataParser.parser
         } else {
             return DetailDataParser.monoid().parser
@@ -627,6 +602,11 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             }
         }
     }
+    
+//    deinit {
+//        print("neighborhoodDetailPageViewModel deinit")
+//
+//    }
 }
 
 func getNeighborhoodDetailPageViewModel() -> (UITableView, EmptyMaskView, UINavigationController?, String?) -> DetailPageViewModel {

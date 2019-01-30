@@ -83,10 +83,11 @@
     _viewModel = [[FHHouseFindListViewModel alloc]initWithScrollView:_scrollView viewController:self];
     [_viewModel setErrorMaskView:_errorMaskView];
     [_viewModel setSegmentView:_segmentView];
-    [_viewModel addConfigObserver];
     _viewModel.sugSelectBlock = ^(NSString * _Nullable placeholder) {
         [wself.searchBar setPlaceHolder:placeholder];
     };
+    [_viewModel addConfigObserver];
+
 }
 
 - (void)setupUI
@@ -151,7 +152,7 @@
     _segmentView.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
     _segmentView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
-    _segmentView.isNeedNetworkCheck = YES;
+    _segmentView.isNeedNetworkCheck = NO;
     _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:18],NSFontAttributeName,

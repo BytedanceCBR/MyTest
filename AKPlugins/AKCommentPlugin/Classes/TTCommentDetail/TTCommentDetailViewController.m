@@ -116,6 +116,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 
     self.enterFrom = baseCondition[@"enterFrom"];
     self.categoryID = baseCondition[@"categoryID"];
+    if (isEmptyString(self.categoryID)) {
+        self.categoryID = _categoryName;
+    }
     self.logPb = baseCondition[@"logPb"];
 
     self.store.enterFrom = self.enterFrom;

@@ -21,7 +21,7 @@
 #import "TTPushResourceMgr.h"
 #import "TTArticleTabBarController.h"
 #import "TTAccountManager.h"
-//#import "Bubble-Swift.h"
+#import "FHHouseBridgeManager.h"
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -104,7 +104,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     BOOL hasRead = [self _hasReadOfArticle:schemaString];
     
     if (!hasRead) {
-        NSString *titleString  = NSLocalizedString(@"要闻推送", nil);
+        NSString *titleString  = NSLocalizedString(@"实时推送", nil);
         NSString *detailString = title;
         NSString *attachmentURLString = [dict tt_stringValueForKey:kSSAPNsAlertManagerAttachmentKey];
         NSString *importanceString    = [dict tt_stringValueForKey:kSSAPNsAlertManagerImportanceKey];
@@ -275,7 +275,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
         BOOL hasRead = [self _hasReadOfArticle:schemaString];
         
         if (!hasRead) {
-            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"要闻推送", nil) message:title preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"实时推送", nil) message:title preferredType:TTThemedAlertControllerTypeAlert];
             [alert addActionWithTitle:NSLocalizedString(@"忽略", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 wrapperTrackEvent(@"apn", @"news_alert_close");
             }];
@@ -353,11 +353,13 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     [@"mapfind_house" isEqualToString:host] ||
     [@"mapfind_rent" isEqualToString:host] ||
     [@"rent_main" isEqualToString:host] ||
+    [@"webview" isEqualToString:host] ||
+    [@"realtor_detail" isEqualToString:host] ||
     [@"main" isEqualToString:host];
 }
 
 + (void)showF100PushNotificationInAppAlert:(NSDictionary *)dict {
-    NSString* title = @"好多房";
+    NSString* title = @"幸福里";
     NSString* content = [dict tt_stringValueForKey:kSSAPNsAlertManagerTitleKey];
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
 
@@ -449,9 +451,10 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                                                    @"origin_search_id": @"be_null"
 //                                                   @"group_id": paramObj.allParams[@"group_id"],
                                                    }};
-//                [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
-//                [[EnvContext shared] setTraceValueWithValue:@"be_null" key:@"origin_search_id"];
-
+                id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+                [envBridge setTraceValue:@"push" forKey:@"origin_from"];
+                [envBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
+                
                 TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
                 [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
             }

@@ -781,7 +781,12 @@
     [traceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
     [traceParams setValue:dictTraceData.itemID forKey:@"item_id"];
     [traceParams setValue:@"click_favorite" forKey:@"enter_from"];
-    [traceParams setValue:dictTraceData.article.groupModel.groupID forKey:@"group_id"];
+    if (isEmptyString(dictTraceData.article.groupModel.groupID)) {
+        [traceParams setValue:dictTraceData.itemID forKey:@"group_id"];
+    } else {
+        [traceParams setValue:dictTraceData.article.groupModel.groupID forKey:@"group_id"];
+    }
+    
     
     if (dictTraceData.logPb&&[dictTraceData.logPb isKindOfClass:[NSDictionary class]]) {
         [traceParams setValue:dictTraceData.logPb[@"impr_id"] forKey:@"impr_id"];

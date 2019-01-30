@@ -24,6 +24,8 @@
 #import "TTUIResponderHelper.h"
 #import "FHIndexSectionView.h"
 #import "FHUserTracker.h"
+#import "FHEnvContext.h"
+#import "TTSandBoxHelper.h"
 
 // 进入当前页面肯定有城市数据
 @interface FHCityListViewController ()<FHIndexSectionDelegate>
@@ -38,6 +40,8 @@
 @property (nonatomic, assign)   BOOL       disablePanGesture;
 
 @property (nonatomic, weak)     FHIndexSectionView       *sectionView;
+@property (nonatomic, strong)   FHIndexSectionTipView       *sectionTipView;
+@property (nonatomic, assign)   BOOL       hasShowenConfigListData;
 
 @end
 
@@ -46,6 +50,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.hasShowenConfigListData = NO;
         self.disablePanGesture = [paramObj.userInfo.allInfo[@"disablePanGes"] boolValue];
     }
     return self;
@@ -75,6 +80,8 @@
         make.bottom.mas_equalTo(self.view);
     }];
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(50, 0, 0, 0)];
+    self.sectionTipView = [[FHIndexSectionTipView alloc] init];
+    [self.sectionTipView addToSuperView:self.view];
 }
 
 - (void)setupData {
@@ -86,26 +93,51 @@
         }];
     }
     FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (configDataModel) {
-        [self.viewModel loadListCityData];
+    NSArray *cityList = [configDataModel cityList];
+    if (configDataModel && cityList.count > 0) {
+        [self.viewModel loadListCityData:configDataModel];
+        self.hasShowenConfigListData = YES;
         [self checkShowLocationErrorAlert];
+        // 兼容重新覆盖安装App逻辑(v0.5.0版本开始，后续如果线上没有0.4版本，可以删除当前track)
+        if ([TTSandBoxHelper isAPPFirstLaunch]) {
+            // 第一次覆盖安装而且未选择城市
+            [self fetchConfigDataFirstLaunch];
+        }
     } else {
         [[ToastManager manager] showCustomLoading:@"加载中"];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadError:) name:kFHAllConfigLoadErrorNotice object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        // 第一次提前请求config数据
+        [self checkConfigDataWithNoConfigData];
+    }
+}
+
+- (void)connectionChanged:(NSNotification *)notification {
+    if ([FHEnvContext isNetworkConnected]) {
+        FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
+        BOOL shown = !self.emptyView.hidden;
+        if (shown && configDataModel == NULL) {
+            // 请求config数据
+            [self checkConfigDataWithNoConfigData];
+        }
     }
 }
 
 - (void)configDataLoadSuccess:(NSNotification *)noti {
     [[ToastManager manager] dismissCustomLoading];
     [self.emptyView hideEmptyView];
-    [self.viewModel loadListCityData];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.viewModel loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
+    self.hasShowenConfigListData = YES;
+    if (noti) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
+    }
     // 定位当前城市
     if ([TTReachability isNetworkConnected]) {
         if ([self locAuthorization]) {
-            [self requestCurrentLocationWithToast:NO];
+            BOOL isFirstInstallApp = [TTSandBoxHelper isAPPFirstLaunch];
+            [self requestCurrentLocationWithToast:NO needSwitchCity:isFirstInstallApp];
         } else {
             [self checkShowLocationErrorAlert];
         }
@@ -114,31 +146,85 @@
 
 - (void)configDataLoadError:(NSNotification *)noti {
     [[ToastManager manager] dismissCustomLoading];
-    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.tableView);
-    }];
+    if (noti) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadSuccessNotice object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kFHAllConfigLoadErrorNotice object:nil];
+    }
+    if (self.hasShowenConfigListData) {
+        [self.emptyView hideEmptyView];
+    } else {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.tableView);
+        }];
+    }
+}
+
+- (void)checkConfigDataWithNoConfigData {
+    FHConfigDataModel *configDataModel  = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (configDataModel == NULL) {
+        if ([TTReachability isNetworkConnected]) {
+            __weak typeof(self) wSelf = self;
+            [[FHLocManager sharedInstance] requestConfigByCityId:0 completion:^(BOOL isSuccess, FHConfigModel * _Nullable model) {
+                if (isSuccess) {
+                    [wSelf.emptyView hideEmptyView];
+                    [wSelf.viewModel loadListCityData:model.data];
+                    wSelf.hasShowenConfigListData = YES;
+                }
+            }];
+        }
+    }
+}
+
+- (void)fetchConfigDataFirstLaunch {
+    if ([TTReachability isNetworkConnected]) {
+        __weak typeof(self) wSelf = self;
+        [[FHLocManager sharedInstance] requestConfigByCityId:0 completion:^(BOOL isSuccess, FHConfigModel * _Nullable model) {
+            if (isSuccess) {
+                [wSelf.emptyView hideEmptyView];
+                [wSelf.viewModel loadListCityData:model.data];
+                wSelf.hasShowenConfigListData = YES;
+            }
+        }];
+    }
 }
 
 // 重新加载
 - (void)retryLoadData {
-    [[ToastManager manager] showCustomLoading:@"加载中"];
-    [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
+    // 重新加载只加载列表
+    if ([TTReachability isNetworkConnected]) {
+        __weak typeof(self) wSelf = self;
+        [[ToastManager manager] showCustomLoading:@"加载中"];
+        [[FHLocManager sharedInstance] requestConfigByCityId:0 completion:^(BOOL isSuccess, FHConfigModel * _Nullable model) {
+            [[ToastManager manager] dismissCustomLoading];
+            if (isSuccess) {
+                [wSelf.emptyView hideEmptyView];
+                [wSelf.viewModel loadListCityData:model.data];
+                wSelf.hasShowenConfigListData = YES;
+            }
+        }];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
+    }
 }
 
+// 有config数据，进入城市列表
 - (void)checkShowLocationErrorAlert {
     BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-    if (!hasSelectedCity) {
-        // 定位失败弹窗
-        TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"定位失败，请手动选择城市" message:nil preferredType:TTThemedAlertControllerTypeAlert];
-        [alertVC addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            
+    if (!hasSelectedCity && ![FHLocManager sharedInstance].isLocationSuccess) {
+        // 未选择城市而且定位失败，重新定位
+        __weak typeof(self) wSelf = self;
+        [[FHLocManager sharedInstance] requestCurrentLocation:YES completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
+            if (reGeocode && reGeocode.city.length > 0) {
+                // 定位成功
+                wSelf.locationBar.cityName = reGeocode.city;
+                wSelf.locationBar.isLocationSuccess = YES;
+                [FHLocManager sharedInstance].isLocationSuccess = YES;
+            } else {
+                // 定位失败弹窗
+                [[ToastManager manager] showToast:@"定位失败，请手动选择城市"];
+            }
         }];
-        
-        UIViewController *topVC = [TTUIResponderHelper topmostViewController];
-        if (topVC) {
-            [alertVC showFrom:topVC animated:YES];
-        }
     }
 }
 
@@ -262,7 +348,7 @@
             // custom loading
             [[ToastManager manager] showCustomLoading:@"定位中"];
         }
-        [self requestCurrentLocationWithToast:YES];
+        [self requestCurrentLocationWithToast:YES needSwitchCity:NO];
     } else {
         // 无网络
         [[ToastManager manager] showToast:@"网络异常"];
@@ -288,13 +374,13 @@
 - (void)checkLocAuthorization {
     if ([self locAuthorization]) {
         if ([TTReachability isNetworkConnected] && !self.locationBar.isLocationSuccess) {
-            [self requestCurrentLocationWithToast:NO];
+            [self requestCurrentLocationWithToast:NO needSwitchCity:NO];
         }
     }
 }
 
 // 请求定位信息
-- (void)requestCurrentLocationWithToast:(BOOL)hasToast {
+- (void)requestCurrentLocationWithToast:(BOOL)hasToast needSwitchCity:(BOOL)isNeedSwitchCity {
     __weak typeof(self) wSelf = self;
     [[FHLocManager sharedInstance] requestCurrentLocation:YES completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
         [[ToastManager manager] dismissCustomLoading];
@@ -306,10 +392,10 @@
             if (hasToast) {
                 [[ToastManager manager] showToast:@"定位成功" duration:1.0 isUserInteraction:YES];
             }
-            //如果用户首次安装，且没有选过城市，自动跳到首页
+            //如果用户首次安装，且没有选过城市，且有城市列表，自动跳到首页
             BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-            if (!hasSelectedCity) {
-                [self.viewModel cityNameBtnClick];
+            if (!hasSelectedCity && isNeedSwitchCity && wSelf.hasShowenConfigListData) {
+                [wSelf.viewModel cityNameBtnClick];
             }
         } else {
             wSelf.locationBar.isLocationSuccess = NO;
@@ -330,6 +416,7 @@
 - (void)indexSectionView:(FHIndexSectionView *)view didSelecteedTitle:(NSString *)title atSectoin:(NSInteger)section {
     if (section >= 0) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:section] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        [self.sectionTipView showWithText:title];
     }
 }
 
@@ -346,6 +433,7 @@
 }
 
 - (void)indexSectionViewTouchesEnd {
+    [self.sectionTipView dismiss];
     if (self.disablePanGesture) {
         // 已经禁止滑动手势
         return;

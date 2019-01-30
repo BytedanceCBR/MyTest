@@ -305,6 +305,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *saleHistoryFilter;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *courtFilterOrder;
 
+@property (nonatomic, strong , nullable) NSString *diffCode;
+
 @end
 
 

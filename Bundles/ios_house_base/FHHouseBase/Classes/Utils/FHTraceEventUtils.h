@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHTraceEventUtils : NSObject
 
 + (NSString *) generateEnterfrom:(NSString *)categoryName;
-
++ (NSString *)generateEnterfrom:(NSString *)categoryName enterFrom:(NSString *)enterFrom;
 @end
 
 NS_ASSUME_NONNULL_END

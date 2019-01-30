@@ -24,7 +24,7 @@
                                useBarHeight:(BOOL)useBarHeight
 {
     [self __upp_openWebViewWithUrl:[NSString stringWithFormat:@"%@/f100/download/user_agreement.html&hide_more=1",EnvContext.networkConfig.host]
-                             title:NSLocalizedString(@"好多房用户协议", nil)
+                             title:NSLocalizedString(@"幸福里用户协议", nil)
                 fromViewController:navVC
                    useNavBarHeight:useBarHeight];
 }
@@ -38,7 +38,7 @@
                                    useBarHeight:(BOOL)useBarHeight
 {
     [self __upp_openWebViewWithUrl:TT_USER_PRIVACY_PROTECTION_ADDRESS
-                             title:NSLocalizedString(@"好多房隐私政策", nil)
+                             title:NSLocalizedString(@"幸福里隐私政策", nil)
                 fromViewController:navVC
                    useNavBarHeight:useBarHeight];
 }

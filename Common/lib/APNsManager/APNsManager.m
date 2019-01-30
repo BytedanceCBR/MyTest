@@ -28,6 +28,8 @@
 #import "TTArticleTabBarController.h"
 //#import "Bubble-Swift.h"
 #import "TTLaunchTracer.h"
+#import "FHHouseBridgeManager.h"
+
 @interface APNsManager ()
 @end
 
@@ -178,7 +180,10 @@ static APNsManager *_sharedManager = nil;
 //                    return;
 //                }
                 
-//                [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+                id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+                [envBridge setTraceValue:@"push" forKey:@"origin_from"];
+                [envBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
+                
                 NSDictionary* info = @{@"isFromPush": @(1),
                                        @"tracer":@{@"enter_from": @"push",
                                                    @"element_from": @"be_null",

@@ -336,7 +336,7 @@ link: "ss://pro?refer=all&source=article_top_author&uid=" + t.media_user_id + "&
 intro: a.description,
 avatar: a.avatar_url,
 isAuthorSelf: !!t.is_author
-}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = (i.h5_settings.is_liteapp && client.isIOS ? "sslocal" : "bytedance") + "://media?refer=all&media_id=" + a.id + "&loc=0&entry_id=" + a.id);
+}, (i.h5_settings.is_liteapp || !t.media_user_id) && (i.author.link = "");
 var n = {
 auth_type: "",
 auth_info: ""

@@ -268,7 +268,7 @@
         _termButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         _termButton.contentHorizontalAlignment =
         UIControlContentHorizontalAlignmentLeft;
-        [_termButton setTitle:NSLocalizedString(@"好多房用户协议", nil)
+        [_termButton setTitle:NSLocalizedString(@"幸福里用户协议", nil)
                      forState:UIControlStateNormal];
         _termButton.titleLabel.font =
         [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:12]];

@@ -201,16 +201,16 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
 
     private func setUpErrorVM()
     {
-        var nilDataText : String? = "啊哦～你还没有关注"
+        var nilDataText : String? = "暂未关注"
         switch houseType {
         case .newHouse:
-            nilDataText = "啊哦～你还没有关注的新房"
+            nilDataText = "暂未关注新房"
         case .secondHandHouse:
-            nilDataText = "啊哦～你还没有关注的二手房"
+            nilDataText = "暂未关注二手房"
         case .neighborhood:
-            nilDataText = "啊哦～你还没有关注的小区"
+            nilDataText = "暂未关注小区"
         case .rentHouse:
-            nilDataText = "啊哦～你还没有关注的租房"
+            nilDataText = "暂未关注租房"
         }
         
         self.errorVM = NHErrorViewModel(
@@ -261,6 +261,8 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
                 EnvContext.shared.homePageParams <|>
                 toTracerParams(categoryName ?? "be_null", key: "category_name") <|>
                 toTracerParams("minetab", key: "enter_from") <|>
+                toTracerParams("click", key: "enter_type") <|>
+                toTracerParams("be_null", key: "element_from") <|>
                 toTracerParams(self?.categoryListVM?.originSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams(self?.categoryListVM?.originSearchId ?? "be_null", key: "origin_search_id")
             
@@ -290,13 +292,13 @@ class MyFavoriteListVC: BaseViewController, UITableViewDelegate {
         emptyMaskView.isHidden = false
         switch houseType {
         case .newHouse:
-            emptyMaskView.label.text = "啊哦～你还没有关注的新房"
+            emptyMaskView.label.text = "暂未关注新房"
         case .secondHandHouse:
-            emptyMaskView.label.text = "啊哦～你还没有关注的二手房"
+            emptyMaskView.label.text = "暂未关注二手房"
         case .neighborhood:
-            emptyMaskView.label.text = "啊哦～你还没有关注的小区"
+            emptyMaskView.label.text = "暂未关注小区"
         case .rentHouse:
-            emptyMaskView.label.text = "啊哦～你还没有关注的租房"
+            emptyMaskView.label.text = "暂未关注租房"
         }
         
     }

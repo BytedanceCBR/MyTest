@@ -27,7 +27,7 @@ import SnapKit
         re.setTitleColor(hexStringToUIColor(hex: "#299cff"), for: .normal)
         re.layer.masksToBounds = true
         re.layer.borderWidth = 1
-        re.setTitle("重新加载", for: .normal)
+        re.setTitle("刷新", for: .normal)
         re.layer.cornerRadius = 15
         re.titleLabel?.font = CommonUIStyle.Font.pingFangRegular(14)
         re.layer.borderColor = hexStringToUIColor(hex: "#299cff").cgColor

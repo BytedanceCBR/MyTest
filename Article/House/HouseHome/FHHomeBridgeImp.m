@@ -15,6 +15,7 @@
 #import "TTTabBarManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTTabBarProvider.h"
+#import "FHUtils.h"
 
 @implementation FHHomeBridgeImp
 
@@ -62,7 +63,7 @@
 
 - (void)jumpToTabbarFirst
 {
-    
+
     [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:@"f_house_news" withShow:NO];
     [[EnvContext shared].client.messageManager startSyncCategoryBadge];
     
@@ -72,6 +73,7 @@
         [userInfo setValue:firstTabItemIdentifier forKey:@"tag"];
         [userInfo copy];
     })];
+    
 }
 
 - (BOOL)isCurrentTabFirst
@@ -81,4 +83,31 @@
     }
     return NO;
 }
+
+- (BOOL)isNeedSwitchCityCompare
+{
+    NSInteger daysCount = [SSCommonLogic configSwitchTimeDaysCount];
+    
+    if (daysCount == 0) {
+        return YES;
+    }
+    
+    NSString *stringDate = (NSString *)[FHUtils contentForKey:@"f_save_switch_local_time"];
+    if(stringDate)
+    {
+        NSDate *saveDate = [FHUtils dateFromString:stringDate];
+        
+        NSInteger timeCount = [FHUtils numberOfDaysWithFromDate:saveDate toDate:[NSDate date]];
+        
+        if (timeCount >= daysCount) {
+            return YES;
+        }else
+        {
+            return NO;
+        }
+    }
+    
+    return YES;
+}
+
 @end

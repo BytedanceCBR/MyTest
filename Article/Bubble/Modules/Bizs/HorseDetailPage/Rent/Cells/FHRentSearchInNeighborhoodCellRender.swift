@@ -27,12 +27,16 @@ func parseRentSearchInNeighborhoodNode(
             let openParams = params <|>
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent_detail", key: "enter_from") <|>
-                toTracerParams("same_neighborhood", key: "element_from")
-
+                toTracerParams("same_neighborhood", key: "element_from") <|>
+                toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+                toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id")
+            
             let sectionParms = params <|>
                 toTracerParams(tracer.rank, key: "rank") <|>
                 toTracerParams(tracer.logPb ?? "be_null", key: "log_pb") <|>
                 toTracerParams("same_neighborhood", key: "element_type") <|>
+                toTracerParams(tracer.originFrom ?? "be_null", key: "origin_from") <|>
+                toTracerParams(tracer.originSearchId ?? "be_null", key: "origin_search_id") <|>
                 toTracerParams(tracer.pageType, key: "page_type")
 
 
@@ -72,13 +76,12 @@ fileprivate func fillSearchInNeighborhoodCollectionCell(
             let params = EnvContext.shared.homePageParams <|>
                 toTracerParams(offset, key: "rank") <|>
                 toTracerParams(item.logPb ?? "be_null", key: "log_pb") <|>
-//                toTracerParams(item.fhSearchId ?? "be_null", key: "search_id") <|>
                 toTracerParams("slide", key: "card_type") <|>
                 toTracerParams("rent", key: "house_type") <|>
                 toTracerParams("rent_detail", key: "page_type") <|>
-                searchIdTraceParam(item.logPb) <|>
-                imprIdTraceParam(item.logPb) <|>
-                groupIdTraceParam(item.logPb) <|>
+                toTracerParams(item.searchId ?? "be_null", key: "search_id") <|>
+                toTracerParams(item.imprId ?? "be_null", key: "impr_id") <|>
+                toTracerParams(item.id ?? "be_null", key: "group_id") <|>
                 toTracerParams("same_neighborhood", key: "element_type")
             return onceRecord(key: "house_show", params: params.exclude("enter_from").exclude("element_from"))
             } ?? []

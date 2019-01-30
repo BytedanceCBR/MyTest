@@ -193,10 +193,9 @@ NSString *const TTWebViewRequestKey = @"request";
         [self forwardTemaiTracker:URL.query];
         return NO;
     }
-    if ([request.URL.scheme isEqualToString:@"sslocal"] || [request.URL.scheme hasPrefix:@"snssdk35"]) {
-        
+//    if ([request.URL.scheme isEqualToString:@"sslocal"] || [request.URL.scheme hasPrefix:@"snssdk35"]) {
+    if ([[TTRoute sharedRoute] canOpenURL:URL]) {
         [[TTRoute sharedRoute] openURLByViewController:URL userInfo:nil];
-        
         return NO;
     }
     // bridge logic

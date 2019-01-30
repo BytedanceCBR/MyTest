@@ -8,6 +8,8 @@ import RxCocoa
 import RxSwift
 class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTracer {
 
+    var listLogPB: Any?
+
     var tracerModel: HouseRentTracer?
 
     var source: String?
@@ -482,8 +484,8 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
             toTracerParams(logPB ?? "be_null", key: "log_pb")
 
         detailPage.navBar.backBtn.rx.tap
-                .subscribe(onNext: { void in
-                    self.navVC?.popViewController(animated: true)
+                .subscribe(onNext: {[weak self] void in
+                    self?.navVC?.popViewController(animated: true)
                 })
                 .disposed(by: disposeBag)
         navVC?.pushViewController(detailPage, animated: true)
@@ -507,17 +509,17 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
             toTracerParams("new_detail", key: "enter_from") <|>
             toTracerParams(logPB ?? "be_null", key: "log_pb")
         detailPage.navBar.backBtn.rx.tap
-                .subscribe(onNext: { void in
-                    self.navVC?.popViewController(animated: true)
+                .subscribe(onNext: {[weak self] void in
+                    self?.navVC?.popViewController(animated: true)
                 })
                 .disposed(by: disposeBag)
         navVC?.pushViewController(detailPage, animated: true)
     }
     
-    deinit {
-        
+//    deinit {
+//        
 //        print("newhouseDetailPageViewModel deinit")
-    }
+//    }
 
 //MARK: - 订阅
     func handleOpenCourtNotify(closeAlert: @escaping () -> Void) -> (BehaviorRelay<Bool>) -> Void {
@@ -670,6 +672,7 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
                         followAction: .newHouse,
                         followId: "\(houseId)",
                         disposeBag: disposeBag)()
+                self.recordDeletedFollowEvent(traceParam)
             } else {
                 followIt(
                         houseType: .newHouse,
@@ -703,6 +706,7 @@ func getNewHouseDetailPageViewModel(
         navVC: UINavigationController?,
         tableView: UITableView) -> NewHouseDetailPageViewModel {
     let re = NewHouseDetailPageViewModel(tableView: tableView, infoMaskView: infoMaskView, navVC: navVC)
+    re.currentVC = detailPageVC
     re.showQuickLoginAlert = { [weak detailPageVC] (title, subTitle) in
         detailPageVC?.showQuickLoginAlert(title: title, subTitle: subTitle)
     }

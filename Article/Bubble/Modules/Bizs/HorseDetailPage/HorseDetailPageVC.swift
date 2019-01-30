@@ -83,6 +83,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return re
     }()
 
+    var disableSendGoDetail: String = "0"
     
     var isShowFollowNavBtn = false
 
@@ -100,8 +101,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         return re
     }()
 
-    var logPB: [String: Any]?
-    var searchId: String? 
+    var logPB: [String: Any]? {
+        didSet {
+            self.detailPageViewModel?.listLogPB = self.logPB
+        }
+    }
+    var searchId: String?
 
     var houseSearchParams: TracerParams? {
         didSet {
@@ -118,6 +123,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         let re = LicenceBrowserViewModel()
         return re
     }()
+
+    private var hasRecordRealtorShow = false
 
     init(houseId: Int64,
          houseType: HouseType,
@@ -152,16 +159,20 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         super.init(nibName: nil, bundle: nil)
         self.pageViewModelProvider = getPageViewModelProvider(by: houseType)
         self.allParams = paramObj?.allParams
-        makerTraceParam(paramObj?.allParams)
         if let source = paramObj?.userInfo.allInfo["source"] as? String {
             self.source = source;
         }
+        
+
+        if let userInfo = paramObj?.userInfo.allInfo, let tracer = userInfo["tracer"] as? [String: Any] {
+            self.logPB = tracer["log_pb"] as? [String : Any]
+        }
+
         
         // 处理h5页面通过scheme进入，需要修改后续的origin_from、log_pb
         if let urlStr = paramObj?.sourceURL.absoluteString,
             let realStr = urlStr.removingPercentEncoding,
             let urlParams = realStr.urlParameters {
-            if let typeStr = urlParams["type"], typeStr == "activity" {
                 if let origin_from = urlParams["origin_from"],
                     origin_from.count > 0 {
                     traceParams = traceParams <|> toTracerParams(origin_from,key:"origin_from")
@@ -170,17 +181,56 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         toTracerParams(origin_from, key: "origin_from")
                     
                 }
+            
+            
+                if let reportParams = urlParams["report_params"]
+                {
+                    if let parmasTrace = getDictionaryFromJSONString(jsonString: reportParams)
+                    {
+                        let traceParamsReport = mapTracerParams(parmasTrace)
+                        
+                        
+                        traceParams = traceParams <|>
+                        traceParamsReport
+
+                        let traceParamsDict = traceParams.paramsGetter([:])
+                        
+                        if let rank = traceParamsDict["rank"] as? Int {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams("\(rank)",key:"rank")
+                        } else if let rank = traceParamsDict["index"] {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams("\(rank)",key:"rank")
+                        }
+                        
+                        if let element_from = traceParamsDict["element_from"] as? String {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams(element_from,key:"element_from")
+                        }else
+                        {
+                            traceParams = traceParams.exclude("index") <|>  toTracerParams("be_null",key:"element_from")
+                        }
+                        
+                        self.logPB = parmasTrace["log_pb"] as? [String: Any]
+                    }
+                    
+                }
+            
+                if let disableGoDetail = urlParams["disable_go_detail"]
+                {
+                        self.disableSendGoDetail = disableGoDetail;
+                }
+            
                 if let log_pb = urlParams["log_pb"],
                     log_pb.count > 2,
                     let jsonData = log_pb.data(using: .utf8) {
                     if let log_dic = try? JSONSerialization.jsonObject(with: jsonData) {
                         traceParams = traceParams <|> toTracerParams(log_dic,key:"log_pb")
+                        self.logPB = log_dic as? [String: Any]
                     }
                 }
-            }
         }
         // 之前为了解决状态栏引入，暂时保留
         self.isFromPush = true
+        
+        makerTraceParam(allParams: paramObj?.allParams)
 
         self.netStateInfoVM = NHErrorViewModel(
             errorMask: infoMaskView,
@@ -203,6 +253,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                 self?.navigationController?.popViewController(animated: true)
             }.disposed(by: disposeBag)
         //TODO 增加push打开详情的original_from
+    }
+
+    fileprivate func getDictionaryFromJSONString(jsonString:String) -> [String: Any]?{
+        if let jsonData = jsonString.data(using: .utf8),
+            let dict = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) {
+            return dict as? [String : Any]
+        } else {
+            return [:]
+        }
     }
 
     static func getHouseId(_ dict: [AnyHashable: Any]?) -> (String, HouseType) {
@@ -269,7 +328,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     }
 
     // 构建埋点参数方法
-    fileprivate func makerTraceParam(_ allParams : [AnyHashable : Any]?) {
+    fileprivate func makerTraceParam(allParams : [AnyHashable : Any]?) {
         guard let allParams = allParams else {
             return
         }
@@ -278,7 +337,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         /*
          traceParam[@"log_pb"] = [cellModel logPb];
          */
-        if let tracerDic = allParams["tracer"] as? [String:Any] {
+        if let tracerDic = allParams["tracer"] as? [String:Any]  {
             // 通过“tracer”传入的参数
             traceParams = traceParams <|> mapTracerParams(tracerDic)
         }
@@ -328,23 +387,34 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     fileprivate func tracerDictToTracerModel(tracerDict: [AnyHashable : Any]) -> HouseRentTracer {
         let houseTypeStr = houseType(houseType: houseType)
         let pageType = pageTypeString(houseType)
-        let tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
+
+        var tracer = tracerDict["tracer"] as? [AnyHashable: Any] ?? [:]
+        
+        tracer.merge(traceParams.paramsGetter([:])) { $1 }
+        
+        if tracer.count == 0, let content = tracerDict["report_params"] as? String {
+            let paramsDict = getDictionaryFromJSONString(jsonString: content)
+            tracer = paramsDict ?? [:]
+        }
         let cardType = tracer["card_type"] as? String ?? "be_null"
         let result = HouseRentTracer(pageType: pageType,
                                      houseType: houseTypeStr,
                                      cardType: cardType)
         result.groupId = "\(houseId)"
         result.logPb = tracer["log_pb"]
-        if let rank = tracerDict["rank"] as? String {
+        if let rank = tracer["rank"] as? Int {
+            result.rank = "\(rank)"
+        } else if let rank = tracer["rank"] as? String {
             result.rank = rank
-        } else {
-            if let rank = tracer["rank"] as? Int {
-                result.rank = "\(rank)"
-            }
+        } else if let rank = tracer["index"] {
+            result.rank = "\(rank)"
+        } else if let rank = tracerDict["rank"] as? String {
+            result.rank = rank
         }
         result.originFrom = tracer["origin_from"] as? String
         result.originSearchId = tracer["origin_search_id"] as? String
         result.enterFrom = tracer["enter_from"] as? String ?? "be_null"
+     
         result.elementFrom = tracer["element_from"] as? String ?? "be_null"
 
         return result
@@ -394,7 +464,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             var dictTracePara = traceParams.paramsGetter([:])
             if (dictTracePara["search_id"] != nil) && searchId == nil
             {
-                searchId = (dictTracePara["search_id"] as! String)
+                searchId = (dictTracePara["search_id"] as? String)
             }
             if let searchId = searchId {
                 self.searchId = searchId
@@ -543,7 +613,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
 
 
         if let detailPageViewModel = detailPageViewModel {
-
+            detailPageViewModel.listLogPB = self.logPB
             detailPageViewModel.followStatus
                 .filter { (result) -> Bool in
                     if case .success(_) = result {
@@ -650,6 +720,8 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         traceParams = traceParams <|>
                             toTracerParams(self.enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
                             toTracerParams(self.detailPageViewModel?.searchId ?? "be_null", key: "search_id") <|>
+                            toTracerParams(self.detailPageViewModel?.tracerModel?.originSearchId ?? "be_null", key: "origin_search_id") <|>
+                            toTracerParams(self.detailPageViewModel?.tracerModel?.originFrom ?? "be_null", key: "origin_from") <|>
                             toTracerParams("\(self.houseId)", key: "group_id")
                         self.detailPageViewModel?.callRealtorPhone(contactPhone: contactPhone,
                                                                    bottomBar: self.bottomBar,
@@ -662,10 +734,12 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
                         self.followForSendPhone(false)
                     }else {
                         var titleStr:String = "询底价"
+                        var confirmBtnTitle:String = "获取底价"
                         if self.houseType == .neighborhood {
                             titleStr = "咨询经纪人"
+                            confirmBtnTitle = "提交"
                         }
-                        self.showSendPhoneAlert(title: titleStr, subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: "提交")
+                        self.showSendPhoneAlert(title: titleStr, subTitle: "提交后将安排专业经纪人与您联系", confirmBtnTitle: confirmBtnTitle)
                     }
 
                 })
@@ -674,9 +748,14 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         
         if let detailPageViewModel = detailPageViewModel {
             navBar.rightBtn.rx.tap
-                .bind(onNext:  { [weak detailPageViewModel] in
+                .bind(onNext:  { [weak detailPageViewModel, weak self] in
                     
-                    var tracerParams = EnvContext.shared.homePageParams
+                    var tracerParams = TracerParams.momoid()
+                
+                    if let traceP = self?.traceParams {
+                        
+                        tracerParams = tracerParams <|> traceP
+                    }
                     if let params = detailPageViewModel?.goDetailTraceParam {
                         tracerParams = tracerParams <|> params
                             .exclude("house_type")
@@ -718,12 +797,15 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             toTracerParams(enterFromByHouseType(houseType: self.houseType), key: "page_type") <|>
             toTracerParams("\(self.houseId)", key: "group_id")).exclude("house_type")
 
-        recordEvent(key: "go_detail", params: traceParams
-            .exclude("group_id")
-            .exclude("search_id")
-            .exclude("house_type")
-            .exclude("element_type")
-            .exclude("maintab_search"))
+        if self.disableSendGoDetail == "0" {
+            recordEvent(key: "go_detail", params: traceParams
+                .exclude("group_id")
+                .exclude("search_id")
+                .exclude("house_type")
+                .exclude("element_type")
+                .exclude("maintab_search"))
+        }
+
         
         detailPageViewModel?.goDetailTraceParam = traceParams
             .exclude("house_type")
@@ -769,7 +851,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     func refreshSecondHouseBottomBar(contactPhone: FHHouseDetailContact?) {
         self.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
         
-        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 150 : 0
+        let leftWidth = contactPhone?.showRealtorinfo == 1 ? 160 : 0
         self.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
         
         if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
@@ -787,19 +869,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             }
             self.bottomBar.agencyLabel.text = agencyName
             self.bottomBar.agencyLabel.isHidden = false
-//            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-//                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
-//                maker.top.equalTo(self.bottomBar.avatarView).offset(2)
-//                maker.right.equalTo(self.bottomBar.licenceIcon.snp.left).offset(4)
-//            })
-
         }else {
-            
-//            self.bottomBar.nameLabel.snp.remakeConstraints({ (maker) in
-//                maker.left.equalTo(self.bottomBar.avatarView.snp.right).offset(10)
-//                maker.centerY.equalTo(self.bottomBar.avatarView)
-//                maker.right.equalToSuperview()
-//            })
             self.bottomBar.agencyLabel.isHidden = true
             
         }
@@ -814,24 +884,46 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             let item = FHLicenceImageItem(url: certificate, title: "从业人员信息卡")
             licenseViews.append(item)
         }
+        if licenseViews.count > 0 {
+            self.bottomBar.displayLicence(isDisplay: true)
+            licenceBrowserViewModel.setImages(images: licenseViews)
+            self.bottomBar.licenceIcon.rx.tap
+                .bind(onNext: { [weak self] in
+                    self?.licenceBrowserViewModel.open()
+                })
+                .disposed(by: disposeBag)
+        } else {
+            self.bottomBar.displayLicence(isDisplay: false)
+        }
 
-        licenceBrowserViewModel.setImages(images: licenseViews)
-
-        self.bottomBar.licenceIcon.rx.tap
-            .bind(onNext: { [weak self] in
-                self?.licenceBrowserViewModel.open()
-            })
-            .disposed(by: disposeBag)
-        
         self.bottomBar.leftView.snp.updateConstraints({ (maker) in
-            
             maker.width.equalTo(leftWidth)
         })
         if leftWidth > 0, let contactPhone = contactPhone {
             self.bindJumpToRealtorDetail(contactPhone: contactPhone, targetView: self.bottomBar.leftView)
+            if let tracerModel =  self.detailPageViewModel?.tracerModel?.copy() as? HouseRentTracer, hasRecordRealtorShow == false {
+                self.recordRealtorShow(contact: contactPhone,
+                                       traceModel: tracerModel,
+                                       offset: 0)
+                hasRecordRealtorShow = true
+            }
         }
 
         
+    }
+
+    fileprivate func recordRealtorShow(contact: FHHouseDetailContact, traceModel: HouseRentTracer, offset: Int) {
+
+        let params:[String: Any] = ["page_type": "old_detail",
+                                    "element_type": "old_detail_button",
+                                    "rank": traceModel.rank,
+                                    "origin_from": traceModel.originFrom ?? "be_null",
+                                    "origin_search_id": traceModel.originSearchId ?? "be_null",
+                                    "log_pb": traceModel.logPb ?? "be_null",
+                                    "realtor_id": contact.realtorId ?? "be_null",
+                                    "realtor_rank": offset,
+                                    "realtor_position": "detail_button"]
+        recordEvent(key: "realtor_show", params: params)
     }
 
     fileprivate func bindJumpToRealtorDetail(contactPhone: FHHouseDetailContact, targetView: UIControl) {
@@ -845,14 +937,17 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             if let realtorId = contactPhone.realtorId ,
                 let traceModel = self.detailPageViewModel?.tracerModel {
                 traceModel.elementFrom = "old_detail_button"
-                let reportParams = getRealtorReportParams(traceModel: traceModel)
+                let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "0")
                 let openUrl = "fschema://realtor_detail"
                 let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
+                let theTraceModel = traceModel.copy() as? HouseRentTracer
+                theTraceModel?.elementFrom = "old_detail_button"
+                theTraceModel?.enterFrom = "old_detal"
                 let info: [String: Any] = ["url": jumpUrl,
                                            "title": "经纪人详情页",
                                            "realtorId": realtorId,
                                            "delegate": delegate,
-                                           "trace": traceModel]
+                                           "trace": theTraceModel]
                 let userInfo = TTRouteUserInfo(info: info)
                 TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
             }
@@ -1087,19 +1182,19 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     func showSendPhoneAlert(title: String, subTitle: String, confirmBtnTitle: String) {
         let alert = NIHNoticeAlertView(alertType: .alertTypeSendPhone,title: title, subTitle: subTitle, confirmBtnTitle: confirmBtnTitle)
         alert.sendPhoneView.confirmBtn.rx.tap
-            .bind { [unowned self] void in
-                if let phoneNum = alert.sendPhoneView.currentInputPhoneNumber, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
+            .bind { [unowned self, weak alert] void in
+                if let phoneNum = alert?.sendPhoneView.currentInputPhoneNumber, phoneNum.count == 11, phoneNum.prefix(1) == "1", isPureInt(string: phoneNum)
                 {
                     self.detailPageViewModel?.sendPhoneNumberRequest(houseId: self.houseId, phone: phoneNum, from: gethouseTypeSendPhoneFromStr(houseType: self.houseType)){
-                        [unowned self]  in
+                        [unowned self, weak alert]  in
                         EnvContext.shared.client.sendPhoneNumberCache?.setObject(phoneNum as NSString, forKey: "phonenumber")
-                        alert.dismiss()
+                        alert?.dismiss()
                         self.sendClickConfirmTrace()
                         self.followForSendPhone(true)
                     }
                 }else
                 {
-                    alert.sendPhoneView.showErrorText()
+                    alert?.sendPhoneView.showErrorText()
                 }
                 
 
@@ -1108,11 +1203,11 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         
 
         var tracerParams = EnvContext.shared.homePageParams <|> traceParams
-        tracerParams = tracerParams <|>
-//            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
-            toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
-            toTracerParams(self.searchId ?? "be_null", key: "search_id")
+        if let listLogPB = self.detailPageViewModel?.listLogPB
+        {
+            tracerParams = tracerParams <|>
+                toTracerParams(listLogPB ?? "be_null", key: "log_pb")
+        }
 
         
         recordEvent(key: TraceEventName.inform_show,
@@ -1127,7 +1222,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         tracerParams = tracerParams <|>
             //            toTracerParams(enterFromByHouseType(houseType: houseType), key: "enter_from") <|>
             toTracerParams(self.houseId, key: "group_id") <|>
-            toTracerParams(self.detailPageViewModel?.logPB ?? "be_null", key: "log_pb") <|>
+            toTracerParams(self.detailPageViewModel?.listLogPB ?? "be_null", key: "log_pb") <|>
             toTracerParams(self.searchId ?? "be_null", key: "search_id")
         
         recordEvent(key: TraceEventName.click_confirm,
@@ -1200,8 +1295,6 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
     deinit {
          UIApplication.shared.statusBarStyle = .default
     }
-
-
 
 }
 

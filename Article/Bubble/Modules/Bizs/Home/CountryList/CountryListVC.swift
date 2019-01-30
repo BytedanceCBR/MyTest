@@ -89,12 +89,7 @@ class CountryListVC: BaseViewController {
         }
         dataSource.onItemSelect = self.onItemSelect
         dataSource.onItemClick = { cityId in
-            FHLocManager.sharedInstance().requestConfig(byCityId: cityId){
-                (isSuccess) in
-                print("xxxx city = \(cityId) = \(isSuccess)")
-                self.navigationController?.popViewController(animated: true)
-                FHHomeConfigManager.sharedInstance().openCategoryFeedStart()
-            }
+      
         }
         tableView.dataSource = dataSource
         tableView.delegate = dataSource
