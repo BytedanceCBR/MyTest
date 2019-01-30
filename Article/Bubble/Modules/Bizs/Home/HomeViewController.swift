@@ -434,13 +434,13 @@ class HomeViewController: BaseViewController, UIViewControllerErrorHandler {
 
 
 extension HomeViewController {
-    private func openCountryList() {
-        let vc = CountryListVC()
-        vc.onClose = { _ in
-            self.navigationController?.popViewController(animated: true)
-        }
-        vc.onItemSelect
-                .subscribe(onNext: { [unowned self] i in
+//    private func openCountryList() {
+//        let vc = CountryListVC()
+//        vc.onClose = { _ in
+//            self.navigationController?.popViewController(animated: true)
+//        }
+//        vc.onItemSelect
+//                .subscribe(onNext: { [unowned self] i in
 //                    EnvContext.shared.client.generalBizconfig.currentSelectCityId.accept(i)
 //                    EnvContext.shared.client.generalBizconfig.setCurrentSelectCityId(cityId: i)
 //                    self.navigationController?.popViewController(animated: true)
@@ -462,10 +462,10 @@ extension HomeViewController {
 //                            }
 //                        })
 //                        .disposed(by: self.disposeBag)
-                })
-                .disposed(by: self.disposeBag)
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
+//                })
+//                .disposed(by: self.disposeBag)
+//        self.navigationController?.pushViewController(vc, animated: true)
+//    }
 
 }
 
