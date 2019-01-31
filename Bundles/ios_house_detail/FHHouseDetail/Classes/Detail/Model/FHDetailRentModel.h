@@ -6,7 +6,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -10,7 +10,6 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
-#import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,12 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseDetailViewController *detailController;
-@property (nonatomic, strong) NSMutableArray<FHDetailBaseModelProtocol> *items;// 子类维护的数据源
+@property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源
 
 // 子类实现
 - (void)registerCellClasses;
-- (Class)cellClassForEntity:(id<FHDetailBaseModelProtocol>)model;
-- (NSString *)cellIdentifierForEntity:(id<FHDetailBaseModelProtocol>)model;
+- (Class)cellClassForEntity:(id)model;
+- (NSString *)cellIdentifierForEntity:(id)model;
 - (void)startLoadData;
 
 // 刷新数据

@@ -14,9 +14,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 子Cell的命名规则，FHDetailXXXCell，比如FHDetailOldMapViewCell
 @interface FHDetailBaseCell : UITableViewCell
 
+// 当前方法不需重写
 + (Class)cellViewClass;
+
+// 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
 - (void)refreshWithData:(id)data;
 
 @end
