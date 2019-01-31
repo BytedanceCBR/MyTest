@@ -97,4 +97,8 @@
 "city_list"            = "FHCityListViewController";
 "city_search"          = "FHCitySearchViewController";
 
+//map
+"fh_map_detail"        = "FHDetailMapPageViewController";
+
+
 "test_detail"           = "FHHouseDetailViewController";

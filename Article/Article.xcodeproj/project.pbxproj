@@ -2463,7 +2463,6 @@
 		B373CC0B2174587A008F9905 /* TTArticleDetailMemoryMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78DAE81F56639800474BA8 /* TTArticleDetailMemoryMonitor.m */; };
 		B373CC0C2174587A008F9905 /* SSAPNsAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA75D1F33489E005DAD27 /* SSAPNsAlertManager.m */; };
 		B373CC0D2174587A008F9905 /* ExploreDetailToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 068D0C151B6B542E00F87E57 /* ExploreDetailToolbarView.m */; };
-		B373CC0E2174587A008F9905 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		B373CC0F2174587A008F9905 /* TTVCommodityEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA11F94B8DC0050F83E /* TTVCommodityEntity.m */; };
 		B373CC102174587A008F9905 /* TTViewControllerHierarchyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D7FA31F28360300C55747 /* TTViewControllerHierarchyHelper.m */; };
 		B373CC112174587A008F9905 /* TTFeedSaveRemoteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFAE3D1F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m */; };
@@ -3253,8 +3252,6 @@
 		B388CBE92142652B00653188 /* MultiImageInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA5F2142652900653188 /* MultiImageInfoCell.swift */; };
 		B388CBEA2142652B00653188 /* SearchUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA602142652900653188 /* SearchUITextField.swift */; };
 		B388CBEB2142652B00653188 /* SearchUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA602142652900653188 /* SearchUITextField.swift */; };
-		B388CBEC2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
-		B388CBED2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		B388CBF22142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF32142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF42142652B00653188 /* HomeSpringBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA672142652900653188 /* HomeSpringBoard.swift */; };
@@ -4694,7 +4691,6 @@
 		D47954F321ECC94E00548965 /* TTArticleDetailMemoryMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78DAE81F56639800474BA8 /* TTArticleDetailMemoryMonitor.m */; };
 		D47954F421ECC94E00548965 /* SSAPNsAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA75D1F33489E005DAD27 /* SSAPNsAlertManager.m */; };
 		D47954F521ECC94E00548965 /* ExploreDetailToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 068D0C151B6B542E00F87E57 /* ExploreDetailToolbarView.m */; };
-		D47954F621ECC94E00548965 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		D47954F721ECC94E00548965 /* TTVCommodityEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA11F94B8DC0050F83E /* TTVCommodityEntity.m */; };
 		D47954F821ECC94E00548965 /* TTViewControllerHierarchyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D7FA31F28360300C55747 /* TTViewControllerHierarchyHelper.m */; };
 		D47954F921ECC94E00548965 /* TTFeedSaveRemoteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFAE3D1F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m */; };
@@ -9811,7 +9807,6 @@
 		B388CA5E2142652900653188 /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
 		B388CA5F2142652900653188 /* MultiImageInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiImageInfoCell.swift; sourceTree = "<group>"; };
 		B388CA602142652900653188 /* SearchUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUITextField.swift; sourceTree = "<group>"; };
-		B388CA612142652900653188 /* HomeHeaderSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderSearchView.swift; sourceTree = "<group>"; };
 		B388CA652142652900653188 /* SearchTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		B388CA672142652900653188 /* HomeSpringBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoard.swift; sourceTree = "<group>"; };
 		B388CA682142652900653188 /* HomeSpringBoardItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoardItemView.swift; sourceTree = "<group>"; };
@@ -16953,7 +16948,6 @@
 			children = (
 				B388CA572142652900653188 /* Cells */,
 				B388CA602142652900653188 /* SearchUITextField.swift */,
-				B388CA612142652900653188 /* HomeHeaderSearchView.swift */,
 				B388CA652142652900653188 /* SearchTextField.swift */,
 				B388CA662142652900653188 /* SpringBoard */,
 				B388CA6C2142652900653188 /* BaseTextField.swift */,
@@ -22819,7 +22813,6 @@
 				4A78DAE91F56639800474BA8 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				ABBEA75E1F33489E005DAD27 /* SSAPNsAlertManager.m in Sources */,
 				068D0C161B6B542E00F87E57 /* ExploreDetailToolbarView.m in Sources */,
-				B388CBEC2142652B00653188 /* HomeHeaderSearchView.swift in Sources */,
 				438F9E2F1F94B8DD0050F83E /* TTVCommodityEntity.m in Sources */,
 				4A8D7FA41F28360300C55747 /* TTViewControllerHierarchyHelper.m in Sources */,
 				A9AFAE641F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -24553,7 +24546,6 @@
 				B373CC0B2174587A008F9905 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				B373CC0C2174587A008F9905 /* SSAPNsAlertManager.m in Sources */,
 				B373CC0D2174587A008F9905 /* ExploreDetailToolbarView.m in Sources */,
-				B373CC0E2174587A008F9905 /* HomeHeaderSearchView.swift in Sources */,
 				B373CC0F2174587A008F9905 /* TTVCommodityEntity.m in Sources */,
 				B373CC102174587A008F9905 /* TTViewControllerHierarchyHelper.m in Sources */,
 				B373CC112174587A008F9905 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -26285,7 +26277,6 @@
 				D47954F321ECC94E00548965 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				D47954F421ECC94E00548965 /* SSAPNsAlertManager.m in Sources */,
 				D47954F521ECC94E00548965 /* ExploreDetailToolbarView.m in Sources */,
-				D47954F621ECC94E00548965 /* HomeHeaderSearchView.swift in Sources */,
 				D47954F721ECC94E00548965 /* TTVCommodityEntity.m in Sources */,
 				D47954F821ECC94E00548965 /* TTViewControllerHierarchyHelper.m in Sources */,
 				D47954F921ECC94E00548965 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -28017,7 +28008,6 @@
 				FEFA56F6205FB1A8001F50D8 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				FEFA56F7205FB1A8001F50D8 /* SSAPNsAlertManager.m in Sources */,
 				FEFA56F8205FB1A8001F50D8 /* ExploreDetailToolbarView.m in Sources */,
-				B388CBED2142652B00653188 /* HomeHeaderSearchView.swift in Sources */,
 				FEFA56F9205FB1A8001F50D8 /* TTVCommodityEntity.m in Sources */,
 				FEFA56FD205FB1A8001F50D8 /* TTViewControllerHierarchyHelper.m in Sources */,
 				FEFA56FE205FB1A8001F50D8 /* TTFeedSaveRemoteOperation.m in Sources */,

@@ -321,7 +321,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     if ([currentCityid isEqualToString:model.data.currentCityId] || !currentCityid) {
                         //更新config
                         [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                        [wSelf updateAllConfig:model isNeedDiff:NO];
+                        [wSelf updateAllConfig:model isNeedDiff:YES];
                     }
                 }
                 
