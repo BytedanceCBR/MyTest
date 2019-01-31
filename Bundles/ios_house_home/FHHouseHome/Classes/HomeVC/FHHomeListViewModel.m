@@ -113,6 +113,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
+            if ([configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
+                [self.tableViewV reloadData];
+                return;
+            }
+            
             //防止二次刷新
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && configDataModel.cityAvailability.enable == YES) {
                 return;
@@ -306,7 +311,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
-        if (model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch && !isFirstChange) {
+        if ((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
+            
             [self.homeViewController showNotify:model.data.refreshTip];
             
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];

@@ -1257,8 +1257,8 @@ DEPENDENCIES:
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
   - TTAdSplashSDK (= 0.4.4)
-  - TTAppUpdateHelper/TTUpdateHelper
-  - TTAppUpdateHelper/TTUpdateView
+  - TTAppUpdateHelper/TTUpdateHelper (= 1.0.9)
+  - TTAppUpdateHelper/TTUpdateView (= 1.0.9)
   - TTAudio (= 0.1.4)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
@@ -1476,7 +1476,7 @@ SPEC CHECKSUMS:
   Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
-  FHHouseDetail: dca81d6326acfc43803399629c7c3410f1b2093f
+  FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: 1ac3175d71379d03dee33ab37d3feb386fe1c290
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
   FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
@@ -1584,6 +1584,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 9933274b6e62bf1a15dca16d764f9b347d89b531
+PODFILE CHECKSUM: ce7830fd51982797d659146028ddc42010f8b02f
 
 COCOAPODS: 1.4.0
