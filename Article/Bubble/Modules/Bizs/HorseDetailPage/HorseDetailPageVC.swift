@@ -450,10 +450,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self?.netStateInfoVM?.onRequestNormalData()
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.ttTrackStayEnable = true
         view.backgroundColor = UIColor.white
         

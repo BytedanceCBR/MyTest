@@ -1,5 +1,5 @@
 //
-//  FHDetailMainModel.h
+//  FHDetailNewModel.h
 //  FHHouseDetail
 //
 //  Created by 张元科 on 2019/1/30.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHDetailMainModel : NSObject
+@interface FHDetailNewModel : NSObject
 
 @end
 
