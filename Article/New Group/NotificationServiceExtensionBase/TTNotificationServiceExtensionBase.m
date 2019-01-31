@@ -65,9 +65,13 @@
 //    if (resRange.location != NSNotFound) {
 //        suiteName = @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";;
 //    }
-    
-    NSString *suiteName = @"group.com.f100.client.extension";
-    
+    //
+    NSString *suiteName = @"group.com.f100.client.store.extension";
+    NSString *bundleInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+    NSRange resRange = [bundleInfo rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
+    if (resRange.location != NSNotFound) {
+        suiteName = @"group.com.f100.client.extension";;
+    }
     NSURL *directoryURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:suiteName];
     NSString *checkfilePath = [directoryURL.path stringByAppendingPathComponent:@"security.dummy"];
     NSError *error = nil;

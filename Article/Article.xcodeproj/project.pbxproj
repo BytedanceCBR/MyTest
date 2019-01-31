@@ -20172,10 +20172,20 @@
 					B373C7F92174587A008F9905 = {
 						DevelopmentTeam = J3249442BT;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					D47950C221ECC94E00548965 = {
 						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					FEFA5259205FB1A8001F50D8 = {
 						DevelopmentTeam = X46375UBYG;

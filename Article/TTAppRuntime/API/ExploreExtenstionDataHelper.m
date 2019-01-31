@@ -254,8 +254,11 @@
 //
 //    return @"group.todayExtenstionShareDefaults";
 //
-    return @"group.com.f100.client.extension";
-
+    if ([self isInHouseApp]) {
+        return @"group.com.f100.client.extension";
+    }
+    
+    return @"group.com.f100.client.store.extension";
 }
 
 + (void)saveObj:(NSObject<NSCoding> *)obj forKey:(NSString *)key
@@ -293,7 +296,7 @@
 }
 
 + (BOOL)isInHouseApp {
-    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
+    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
     if (isRange.location != NSNotFound) {
         return YES;
     }
