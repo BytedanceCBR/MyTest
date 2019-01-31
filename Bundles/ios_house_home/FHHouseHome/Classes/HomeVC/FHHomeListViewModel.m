@@ -18,6 +18,10 @@
 #import "TTCategoryStayTrackManager.h"
 #import "ToastManager.h"
 #import "ArticleListNotifyBarView.h"
+#import <UIScrollView+Refresh.h>
+#import <MJRefresh.h>
+#import "FHRefreshCustomFooter.h"
+
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
     FHHomePullTriggerTypePullDown = 2  //下拉刷新
@@ -32,6 +36,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) FHHouseType currentHouseType;
 @property (nonatomic, assign) FHHomePullTriggerType currentPullType;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSArray <FHHomeHouseDataItemsModel *> *>* itemsDataCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* itemsSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* originSearchIdCache;
@@ -62,9 +67,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
         
         WeakSelf;
-        // 上拉刷新，修改tabbar条和请求数据
-        [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
-            StrongSelf;
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             if ([FHEnvContext isNetworkConnected]) {
                 [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
             }else
@@ -77,6 +80,23 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [[ToastManager manager] showToast:@"网络异常"];
             }
         }];
+        self.tableViewV.mj_footer = self.refreshFooter;
+        
+        // 上拉刷新，修改tabbar条和请求数据
+//        [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
+//            StrongSelf;
+//            if ([FHEnvContext isNetworkConnected]) {
+//                [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
+//            }else
+//            {
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [self.tableViewV finishPullUpWithSuccess:YES];
+//                    });
+//                });
+//                [[ToastManager manager] showToast:@"网络异常"];
+//            }
+//        }];
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
@@ -113,10 +133,20 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
+            self.dataSource.showPlaceHolder = YES;
+            
+            [self reloadHomeTableHeaderSection];
+            
+            [self updateCategoryViewSegmented:isFirstChange];
+
             if ([configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
                 [UIView performWithoutAnimation:^{
-                    NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
-                    [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                    if ([self.tableViewV numberOfRowsInSection:0] > 0) {
+                        [self.tableViewV beginUpdates];
+                            NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
+                            [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                        [self.tableViewV endUpdates];
+                    }
                 }];
                 return;
             }
@@ -126,13 +156,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
-            self.dataSource.showPlaceHolder = YES;
-            
-            [self reloadHomeTableHeaderSection];
-            
             [self resetAllCacheData];
-            
-            [self updateCategoryViewSegmented:isFirstChange];
             
             [self requestOriginData:isFirstChange];
             
@@ -155,7 +179,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
             
             self.tableViewV.hasMore = [self.isItemsHasMoreCache[cacheKey] boolValue];
-            
+            [self updateTableViewWithMoreData:[self.isItemsHasMoreCache[cacheKey] boolValue]];
+
             if (kIsNSString(cacheKey)) {
                 NSArray *modelsCache = self.itemsDataCache[cacheKey];
                 
@@ -205,6 +230,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             break;
     }
 }
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableViewV.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@" -- 暂无更多数据 -- "];
+        [self.tableViewV.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableViewV.mj_footer endRefreshing];
+    }
+}
+
 
 - (NSTimeInterval)getCurrentTime
 {
@@ -307,6 +343,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         
         self.tableViewV.hasMore = model.data.hasMore;
+        [self updateTableViewWithMoreData:model.data.hasMore];
         
         self.hasShowedData = YES;
         
@@ -402,7 +439,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         self.tableViewV.hasMore = model.data.hasMore;
-        
+        [self updateTableViewWithMoreData:model.data.hasMore];
+
         [self checkLoadingAndEmpty];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
@@ -537,7 +575,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
-//    NSLog(@"models oucnt = %d currentHouseType= %d", models.count, self.currentHouseType);
     
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
