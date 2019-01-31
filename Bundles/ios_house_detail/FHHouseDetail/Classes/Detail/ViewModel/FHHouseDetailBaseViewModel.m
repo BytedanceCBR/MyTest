@@ -12,8 +12,11 @@
 #import "FHHouseRentDetailViewModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailBaseCell.h"
+#import "UITableView+FDTemplateLayoutCell.h"
 
-@interface FHHouseDetailBaseViewModel ()
+@interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
+
+@property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 
 @end
 
@@ -44,6 +47,7 @@
     self = [super init];
     if (self) {
         _items = [NSMutableArray new];
+        _cellHeightCaches = [NSMutableDictionary new];
         self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
@@ -72,13 +76,13 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
 }
 // cell class
-- (Class)cellClassForEntity:(id<FHDetailBaseModel>)model {
+- (Class)cellClassForEntity:(id<FHDetailBaseModelProtocol>)model {
     // sub implements.........
     // Donothing
     return [FHDetailBaseCell class];
 }
 // cell identifier
-- (NSString *)cellIdentifierForEntity:(id<FHDetailBaseModel>)model {
+- (NSString *)cellIdentifierForEntity:(id<FHDetailBaseModelProtocol>)model {
     // sub implements.........
     // Donothing
     return @"";
@@ -87,14 +91,6 @@
 - (void)startLoadData {
     // sub implements.........
     // Donothing
-    
-    // test
-    FHDetailTestModel *test = [[FHDetailTestModel alloc] init];
-    [self.items addObject:test];
-    FHDetailTestModel *test1 = [[FHDetailTestModel alloc] init];
-    [self.items addObject:test1];
-    
-    [self reloadData];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -123,12 +119,6 @@
     return [[UITableViewCell alloc] init];
 }
 
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 100;
-}
-
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
@@ -141,6 +131,35 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if(indexPath.row == 1) {
+        [tableView beginUpdates];
+            NSInteger row = indexPath.row;
+            if (row >= 0 && row < self.items.count) {
+                id data = self.items[row];
+                FHDetailBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+                // 处理折叠展开逻辑
+                FHDetailTest2Model *test = (FHDetailTest2Model *)data;
+                test.isExpand = !test.isExpand;
+                [cell refreshWithData:data];
+                [cell setNeedsUpdateConstraints];
+            }
+        [tableView endUpdates];
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = self.cellHeightCaches[tempKey];
+    if (cellHeight) {
+        return [cellHeight floatValue];
+    }
+    return UITableViewAutomaticDimension;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
+    self.cellHeightCaches[tempKey] = cellHeight;
 }
 
 @end

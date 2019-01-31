@@ -10,11 +10,28 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FHDetailBaseModel <NSObject>
+@protocol FHDetailBaseModelProtocol <NSObject>
 
 @end
 
-@interface FHDetailTestModel : NSObject <FHDetailBaseModel>
+@protocol FHBaseExpandModelProtocol <FHDetailBaseModelProtocol>
+
+@required
+@property (nonatomic, assign)   BOOL       isExpand; // 是否折叠展开
+
+@end
+
+@interface FHDetailTest1Model : NSObject <FHDetailBaseModelProtocol>
+
+@end
+
+@interface FHDetailTest2Model : NSObject <FHBaseExpandModelProtocol>
+
+@property (nonatomic, assign)   BOOL       isExpand;
+
+@end
+
+@interface FHDetailTest3Model : NSObject <FHDetailBaseModelProtocol>
 
 @end
 

@@ -6,14 +6,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Masonry.h>
+#import <UIFont+House.h>
+#import <UIColor+Theme.h>
+#import "TTDeviceHelper.h"
+#import "FHUserTracker.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailBaseCell : UITableViewCell
 
 + (Class)cellViewClass;
-+ (NSString *)cellIdentifier;
-+ (CGFloat)heightForData:(id)data cellWidth:(CGFloat)width;
 - (void)refreshWithData:(id)data;
 
 @end

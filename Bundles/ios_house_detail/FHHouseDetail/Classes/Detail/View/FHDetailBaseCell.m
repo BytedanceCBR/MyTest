@@ -11,22 +11,18 @@
 
 + (Class)cellViewClass
 {
-    return [FHDetailBaseCell class];
+    return [self class];
 }
 
 + (NSString *)cellIdentifier {
-    return @"FHDetailBaseCell";
+    return NSStringFromClass([self cellViewClass]);
 }
-
-+ (CGFloat)heightForData:(id)data cellWidth:(CGFloat)width {
-    return 0;
-}
-
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.backgroundColor = [UIColor redColor];
+        self.backgroundColor = [UIColor whiteColor];
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }

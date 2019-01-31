@@ -7,11 +7,21 @@
 
 #import "FHDetailBaseModel.h"
 
-@interface FHDetailTestModel ()
+@interface FHDetailTest1Model ()
 
 @end
 
-@implementation FHDetailTestModel
+@implementation FHDetailTest1Model
+
+
+@end
+
+@implementation FHDetailTest2Model
+
+
+@end
+
+@implementation FHDetailTest3Model
 
 
 @end

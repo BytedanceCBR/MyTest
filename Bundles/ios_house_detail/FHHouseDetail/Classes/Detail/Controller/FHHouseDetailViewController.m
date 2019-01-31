@@ -7,6 +7,7 @@
 
 #import "FHHouseDetailViewController.h"
 #import "FHHouseDetailBaseViewModel.h"
+#import "TTReachability.h"
 
 @interface FHHouseDetailViewController ()
 
@@ -30,6 +31,16 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
+    [self startLoadData];
+}
+
+- (void)startLoadData {
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewModel startLoadData];
+    } else {
+        //TODO: 需要看是否显示当前空页面
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
 }
 
 - (void)setupUI {
@@ -47,6 +58,9 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+        _tableView.estimatedSectionFooterHeight = 0;
+        _tableView.estimatedSectionHeaderHeight = 0;
     }
 }
 
