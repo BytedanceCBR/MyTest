@@ -22,7 +22,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        self.houseType = [paramObj.allParams[@"house_type"] integerValue];
     }
     return self;
 }
