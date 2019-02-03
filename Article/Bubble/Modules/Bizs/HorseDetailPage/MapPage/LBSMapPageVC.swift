@@ -269,8 +269,8 @@ class LBSMapPageVC: BaseViewController, MAMapViewDelegate, AMapSearchDelegate, T
                      Item(name: "医院", icon: #imageLiteral(resourceName: "tab-hospital"), selectedIcon: #imageLiteral(resourceName: "tab-hospital-pressed")),
                      Item(name: "休闲", icon: #imageLiteral(resourceName: "tab-relaxation"), selectedIcon: #imageLiteral(resourceName: "tab-relaxation-pressed")),
                      Item(name: "购物", icon: #imageLiteral(resourceName: "tab-mall"), selectedIcon: #imageLiteral(resourceName: "tab-mall-pressed")),
-                     Item(name: "健身", icon: #imageLiteral(resourceName:"tab-swim"), selectedIcon: #imageLiteral(resourceName: "tab-swim_press")),
-                     Item(name: "美食", icon: #imageLiteral(resourceName: "tab-food"), selectedIcon: #imageLiteral(resourceName: "tab-food_press"))]
+                     Item(name: "健身", icon: #imageLiteral(resourceName:"tab-swim"), selectedIcon: #imageLiteral(resourceName: "tab-mall-pressed")),
+                     Item(name: "美食", icon: #imageLiteral(resourceName: "tab-food"), selectedIcon: #imageLiteral(resourceName: "tab-mall-pressed"))]
         let categoryParams = [
             "银行": "bank",
             "公交": "bus",

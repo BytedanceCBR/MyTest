@@ -8,13 +8,45 @@
 #import "FHDetailMapPageViewController.h"
 #import "FHDetailMapPageNaviBarView.h"
 #import <MAMapKit/MAMapKit.h>
+#import <AMapLocationKit/AMapLocationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
+#import <AMapFoundationKit/AMapFoundationKit.h>
+#import <TTDeviceHelper.h>
+#import <TTUIResponderHelper.h>
+#import <UIViewAdditions.h>
+#import <FHEnvContext.h>
+#import <ToastManager.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 
-@interface FHDetailMapPageViewController () <TTRouteInitializeProtocol>
+static NSInteger const kBottomBarTagValue = 100;
+static NSInteger const kBottomButtonLabelTagValue = 1000;
+
+@interface FHMyMAAnnotation : MAPointAnnotation
+@property (nonnull, strong) NSString *type;
+@end
+
+@implementation FHMyMAAnnotation
+
+@end
+
+@interface FHDetailMapPageViewController () <TTRouteInitializeProtocol,AMapSearchDelegate,MAMapViewDelegate>
+
 @property (nonatomic, strong) FHDetailMapPageNaviBarView *naviBar;
 @property (nonatomic, strong) MAMapView *mapView;
+@property (nonnull, strong) UIView *mapContainer;
 @property (nonatomic, strong) UIView * bottomBarView;
+@property (nonatomic, strong) UIButton * previouseIconButton;
+@property (nonatomic, strong) UILabel * previouseLabel;
 @property (nonatomic, assign) NSInteger selectedIndex;
+@property (nonatomic, strong) NSArray * nameArray;
+@property (nonatomic, strong) NSArray * imageNameArray;
+@property (nonatomic, strong) NSArray * keyWordArray;
+@property (nonatomic, strong) NSString * searchCategory;
+@property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
+@property (nonatomic, strong) AMapSearchAPI *searchApi;
+@property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
+
+
 @end
 
 @implementation FHDetailMapPageViewController
@@ -23,6 +55,10 @@
     self = [super init];
     if (self) {
         TTRouteUserInfo *userInfo = paramObj.userInfo;
+        self.searchApi = [[AMapSearchAPI alloc] init];
+        self.searchApi.delegate = self;
+        self.selectedIndex = 0;
+        self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
         NSLog(@"userinfo = %@",[userInfo.allInfo objectForKey:@"url"]);
     }
     return self;
@@ -32,7 +68,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _nameArray = [NSArray arrayWithObjects:@"银行",@"公交",@"地铁",@"教育",@"医院",@"休闲",@"购物",@"健身",@"美食", nil];
+    _imageNameArray = [NSArray arrayWithObjects:@"tab-bank",@"tab-bus",@"tab-subway",@"tab-education",@"tab-hospital",@"tab-relaxation",@"tab-mall",@"tab-swim",@"tab-food", nil];
+    _keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
+    
+    
     [self setUpNaviBar];
+    
+    [self setUpBottomBarView];
+    
+    [self setUpMapView];
     
     // Do any additional setup after loading the view.
 }
@@ -71,139 +116,223 @@
 {
     _bottomBarView = [UIView new];
     [self.view addSubview:_bottomBarView];
-    
-    
+    CGFloat bottomBarHeight = 43;
     [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        if (@available(iOS 11.0 , *)) {
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide.bottomAnchor);
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            make.bottom.equalTo(self.view).offset(-40);
         }else
         {
             make.bottom.equalTo(self.view);
         }
-        make.left.top.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(43);
+        make.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(bottomBarHeight);
         make.left.right.equalTo(self.view);
     }];
     
-    NSArray *nameArray = [NSArray arrayWithObjects:@"银行",@"公交",@"地铁",@"教育",@"医院",@"休闲",@"购物",@"健身",@"美食", nil];
-    NSArray *imageNameArray = [NSArray arrayWithObjects:@"tab-bank-1",@"tab-bus",@"tab-subway",@"tab-education",@"tab-hospital",@"tab-relaxation",@"tab-mall",@"tab-swim",@"tab-food", nil];
-    NSArray *keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
-    
-    
-    //        let items = [Item(name: "银行", icon: #imageLiteral(resourceName: "tab-bank-1"), selectedIcon: #imageLiteral(resourceName: "tab-bank-pressed")),
-    //                     Item(name: "公交", icon: #imageLiteral(resourceName: "tab-bus"), selectedIcon: #imageLiteral(resourceName: "tab-bus-pressed")),
-    //                     Item(name: "地铁", icon: #imageLiteral(resourceName: "tab-subway"), selectedIcon: #imageLiteral(resourceName: "tab-subway-pressed")),
-    //                     Item(name: "教育", icon: #imageLiteral(resourceName: "tab-education"), selectedIcon: #imageLiteral(resourceName: "tab-education-pressed")),
-    //                     Item(name: "医院", icon: #imageLiteral(resourceName: "tab-hospital"), selectedIcon: #imageLiteral(resourceName: "tab-hospital-pressed")),
-    //                     Item(name: "休闲", icon: #imageLiteral(resourceName: "tab-relaxation"), selectedIcon: #imageLiteral(resourceName: "tab-relaxation-pressed")),
-    //                     Item(name: "购物", icon: #imageLiteral(resourceName: "tab-mall"), selectedIcon: #imageLiteral(resourceName: "tab-mall-pressed")),
-    //                     Item(name: "健身", icon: #imageLiteral(resourceName:"tab-swim"), selectedIcon: #imageLiteral(resourceName: "tab-swim_press")),
-    //                     Item(name: "美食", icon: #imageLiteral(resourceName: "tab-food"), selectedIcon: #imageLiteral(resourceName: "tab-food_press"))]
-//    let categoryParams = [
-//                          "银行": "bank",
-//                          "公交": "bus",
-//                          "地铁": "subway",
-//                          "教育": "school",
-//                          "医院": "hospital",
-//                          "休闲": "entertainment",
-//                          "购物": "shopping",
-//                          "健身": "gym",
-//                          "美食": "food"
-//                          ]
-//
     
     UIScrollView *scrollViewItem = [[UIScrollView alloc] init];
+    scrollViewItem.tag = kBottomBarTagValue;
     [_bottomBarView addSubview:scrollViewItem];
     
     CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 6.5;
+    scrollViewItem.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, bottomBarHeight);
+    scrollViewItem.contentSize = CGSizeMake(itemWidth * [_nameArray count], bottomBarHeight);
+    scrollViewItem.showsVerticalScrollIndicator = NO;
+    scrollViewItem.showsHorizontalScrollIndicator = NO;
     
-    scrollViewItem.contentSize = CGSizeMake(itemWidth, 43);
-    
-    
-    for (int i = 0; i < [nameArray count]; i++) {
+    for (int i = 0; i < [_nameArray count]; i++) {
         UIView *iconView = [[UIView alloc] initWithFrame:CGRectMake(itemWidth * i, 0, itemWidth, scrollViewItem.contentSize.height)];
         [scrollViewItem addSubview:iconView];
-        
+
         UIButton *buttonIcon = [UIButton buttonWithType:UIButtonTypeCustom];
         if (i == self.selectedIndex) {
-            [buttonIcon setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",imageNameArray[i]]] forState:UIControlStateSelected];
+            NSString *stringName = [NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]];
+            [buttonIcon setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]]] forState:UIControlStateNormal];
+            self.previouseIconButton = buttonIcon;
         }else
         {
-            [buttonIcon setImage:[UIImage imageNamed:imageNameArray[i]] forState:UIControlStateNormal];
+        [buttonIcon setImage:[UIImage imageNamed:_imageNameArray[i]] forState:UIControlStateNormal];
         }
+        
+        [buttonIcon addTarget:self action:@selector(typeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        buttonIcon.tag = i;
         [buttonIcon setFrame:CGRectMake((itemWidth - 32) / 2, 0, 32, 32)];
         [iconView addSubview:buttonIcon];
-        
-        
+
         
         UILabel *buttonLabel = [UILabel new];
-        buttonLabel.text = nameArray[i];
+        buttonLabel.text = _nameArray[i];
         buttonLabel.textAlignment = NSTextAlignmentCenter;
         buttonLabel.font = [UIFont themeFontRegular:9];
-        buttonLabel.textColor = [UIColor themeGray];
-        [iconView setFrame:CGRectMake(0, 30, itemWidth, 13)];
+        if (i == self.selectedIndex) {
+            buttonLabel.textColor = [UIColor themeBlue];
+            self.previouseLabel = buttonLabel;
+        }else
+        {
+            buttonLabel.textColor = [UIColor themeGray];
+        }
+        buttonLabel.tag = i + kBottomButtonLabelTagValue;
+        [buttonLabel setFrame:CGRectMake(0, 30, itemWidth, 13)];
         [iconView addSubview:buttonLabel];
-      
-        
-//        UILabel *buttonLabel = [[UILabel alloc] init];
-//        addSubview(iconButton)
-//        iconButton.snp.makeConstraints { maker in
-//            maker.height.width.equalTo(32)
-//            maker.centerX.equalToSuperview()
-//            maker.top.equalToSuperview()
-//        }
-//
-//        addSubview(label)
-//        label.snp.makeConstraints { maker in
-//            maker.top.equalTo(iconButton.snp.bottom).offset(-5)
-//            maker.centerX.equalToSuperview()
-//            maker.height.equalTo(13)
-//            maker.bottom.equalTo(-3)
-//        }
+    }
+}
+
+- (UILabel *)getLabelFromTag:(NSInteger)index
+{
+    UIView *scrollContent = [_bottomBarView viewWithTag:kBottomBarTagValue];
+    UILabel *buttonLabel = (UILabel *)[scrollContent viewWithTag:index + kBottomButtonLabelTagValue];
+    return buttonLabel;
+}
+
+- (void)typeButtonClick:(UIButton *)button
+{
+    UILabel *buttonLabel = [self getLabelFromTag:button.tag];
+    
+    if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
+        [self.previouseIconButton setImage:[UIImage imageNamed:_imageNameArray[self.previouseIconButton.tag]] forState:UIControlStateNormal];
+        self.previouseLabel.textColor = [UIColor themeGray];
+        buttonLabel.textColor = [UIColor themeBlue];
+        [button setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[button.tag]]] forState:UIControlStateNormal];
+    }
+    self.previouseIconButton = button;
+    self.previouseLabel = buttonLabel;
+}
+
+- (void)requestPoiInfo:(CLLocationCoordinate2D)center andKeyWord:(NSString *)categoryName
+{
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
     }
     
+    AMapPOIKeywordsSearchRequest *requestPoi = [AMapPOIKeywordsSearchRequest new];
+    requestPoi.keywords = categoryName;
+    requestPoi.location = [AMapGeoPoint locationWithLatitude:self.centerPoint.latitude longitude:self.centerPoint.longitude];
+    requestPoi.requireExtension = YES;
+    requestPoi.requireSubPOIs = YES;
+    requestPoi.cityLimit = YES;
     
-    
-//    scrollViewItem.contentSize = CGSize(width: UIScreen.main.bounds.width/6.5 * CGFloat(items.count), height: 43)
-//    items.forEach { contentScrollView.addSubview($0) }
-//    items.snp.distributeViewsAlong(axisType: .horizontal, fixedSpacing: 0)
-//    items.snp.makeConstraints { maker in
-//        maker.top.bottom.equalToSuperview()
-//        maker.width.equalTo(UIScreen.main.bounds.width/6.5)
-//    }
-//    contentScrollView.backgroundColor = UIColor.white
-    
-
+    [self.searchApi AMapPOIIDSearch:requestPoi];
 }
+
+//func requestPOIInfo(center: CLLocationCoordinate2D, category: String) {
+//    search.cancelAllRequests()
+//
+//    if EnvContext.shared.client.reachability.connection == .none {
+//        EnvContext.shared.toast.showToast("网络异常")
+//        return
+//    }
+//    let request = AMapPOIKeywordsSearchRequest()
+//    request.keywords = category
+//    request.location = AMapGeoPoint.location(withLatitude: CGFloat(center.latitude), longitude: CGFloat(center.longitude))
+//    request.requireExtension = true
+//    request.requireSubPOIs = true
+//    request.cityLimit = true
+//    search.aMapPOIKeywordsSearch(request)
+//}
 
 
 - (void)setUpMapView
 {
+    _mapContainer = [UIView new];
+    //[TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom
+    [self.view addSubview:_mapContainer];
+    [_mapContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            make.bottom.equalTo(self.view).offset(-83);
+        }else
+        {
+            make.bottom.equalTo(self.view);
+        }
+        make.top.equalTo(self.naviBar.mas_bottom);
+        make.left.right.equalTo(self.view);
+    }];
+    [_mapContainer setBackgroundColor:[UIColor redColor]];
     
-    _mapView = [[MAMapView alloc] initWithFrame:self.view.frame];
-//    let mapView = MAMapView(frame: mapContainer.bounds)
-//    mapView.delegate = self
-//    mapView.showsCompass = false
-//    mapView.showsScale = true
-//    mapView.isZoomEnabled = true
-//    mapView.isScrollEnabled = true
-//    mapView.showsUserLocation = false
-//    mapView.zoomLevel = 15
-//    mapContainer.addSubview(mapView)
-//    mapView.snp.makeConstraints { maker in
-//        maker.top.bottom.right.left.equalToSuperview()
+    
+    _mapView = [[MAMapView alloc] init];
+    _mapView.delegate = self;
+    _mapView.showsCompass = NO;
+    _mapView.showsScale = YES;
+    _mapView.zoomEnabled = YES;
+    _mapView.scrollEnabled = YES;
+    _mapView.showsUserLocation = NO;
+    _mapView.zoomLevel  = 15;
+    [_mapContainer addSubview:_mapView];
+    [_mapView setBackgroundColor:[UIColor blueColor]];
+    [_mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.bottom.equalTo(self.mapContainer);
+    }];
+    [_mapView setBackgroundColor:[UIColor blueColor]];
+    [_mapView setCenterCoordinate:self.centerPoint];
+    
+    
+    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style" ofType:@"data"];
+    if ([stylePath isKindOfClass:[NSString class]]) {
+        NSURL *styleUrl = [NSURL URLWithString:stylePath];
+        if ([styleUrl isKindOfClass: [NSURL class]]) {
+            NSData *dataStype = [NSData dataWithContentsOfFile:styleUrl];
+            if ([dataStype isKindOfClass:[NSData class]]) {
+                _mapView.customMapStyleEnabled = YES;
+                [_mapView setCustomMapStyleWithWebData:dataStype];
+            }
+        }
+    }
+    
+    [self requestPoiInfo:self.centerPoint andKeyWord:@"交通"];
+}
+
+#pragma poi Delegate
+- (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response
+{
+    if (response.count == 0) {
+        [[ToastManager manager] showToast:@"暂无相关信息"];
+        return;
+    }
+    
+    NSInteger poiCount = response.pois.count > 50 ? 50 :  response.pois.count;
+    NSMutableArray *poiArray = [NSMutableArray new];
+    for (NSInteger i = 0; i < poiCount; i++) {
+        AMapPOI * poi = response.pois[i];
+        
+        FHMyMAAnnotation *maAnna = [FHMyMAAnnotation new];
+        maAnna.type = self.searchCategory;
+        maAnna.coordinate = CLLocationCoordinate2DMake(poi.location.latitude,poi.location.longitude);
+        maAnna.title = poi.name;
+        
+        [poiArray addObject:maAnna];
+    }
+    
+    self.poiAnnotations = poiArray;
+    
+    
+
+//    let pois = response.pois.take(50).map { (poi) -> MyMAAnnotation in
+//        let re = MyMAAnnotation()
+//        re.type = searchCategory.value
+//        re.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(poi.location.latitude), longitude: CLLocationDegrees(poi.location.longitude))
+//        re.title = poi.name
+//        return re
 //    }
-//    //        if let stylePath = Bundle.main.path(forResource: "gaode_map_style", ofType: "data"){
-//    //            if let styleUrl = URL(string:stylePath){
-//    //                if let styleData = try? Data(contentsOf: styleUrl) {
-//    //                    mapView.customMapStyleEnabled = true
-//    //                    mapView.setCustomMapStyleWithWebData(styleData)
-//    //                }
-//    //            }
-//    //        }
-//
-//
-//    self.mapView = mapView
+}
+
+#pragma MapViewDelegata
+- (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
+{
+    MACircle * cicle = [MACircle circleWithMapRect:MAMapRectZero];
+    MAOverlayRenderer *overlayRender = [[MAOverlayRenderer alloc] initWithOverlay:overlay];
+    return overlayRender;
+}
+
+#pragma safeInset
+
+- (void)viewSafeAreaInsetsDidChange
+{
+    [super viewSafeAreaInsetsDidChange];
+    UIEdgeInsets safeInset = self.view.safeAreaInsets;
+    if (safeInset.top > 0 || [TTDeviceHelper isIPhoneXDevice]){
+       
+    }
 }
 
 -(CGFloat)statusBarHeight
