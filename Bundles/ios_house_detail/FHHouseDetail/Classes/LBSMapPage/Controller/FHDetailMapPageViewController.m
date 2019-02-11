@@ -11,6 +11,8 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
+#import <MAMapKit/MAMapKit.h>
+
 #import <TTDeviceHelper.h>
 #import <TTUIResponderHelper.h>
 #import <UIViewAdditions.h>
@@ -41,6 +43,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, strong) NSArray * nameArray;
 @property (nonatomic, strong) NSArray * imageNameArray;
 @property (nonatomic, strong) NSArray * keyWordArray;
+@property (nonatomic, strong) NSArray * iconImageArray;
 @property (nonatomic, strong) NSString * searchCategory;
 @property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
@@ -71,8 +74,8 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _nameArray = [NSArray arrayWithObjects:@"银行",@"公交",@"地铁",@"教育",@"医院",@"休闲",@"购物",@"健身",@"美食", nil];
     _imageNameArray = [NSArray arrayWithObjects:@"tab-bank",@"tab-bus",@"tab-subway",@"tab-education",@"tab-hospital",@"tab-relaxation",@"tab-mall",@"tab-swim",@"tab-food", nil];
     _keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
-    
-    
+    _iconImageArray = [NSArray arrayWithObjects:@"icon-bank",@"icon-bus",@"icon-subway",@"icon_education",@"icon_hospital",@"icon-relaxation",@"icon-mall",@"icon_swim",@"icon-restaurant", nil];
+
     [self setUpNaviBar];
     
     [self setUpBottomBarView];
@@ -91,6 +94,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     __weak typeof(self) wself = self;
     _naviBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
+    };
+    
+    _naviBar.naviMapActionBlock = ^{
+        [wself createMenu];
     };
 
     CGFloat navHeight = 44;
@@ -175,6 +182,9 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         [buttonLabel setFrame:CGRectMake(0, 30, itemWidth, 13)];
         [iconView addSubview:buttonLabel];
     }
+    
+    self.searchCategory = self.nameArray[self.selectedIndex];
+    
 }
 
 - (UILabel *)getLabelFromTag:(NSInteger)index
@@ -186,6 +196,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)typeButtonClick:(UIButton *)button
 {
+    if (button == self.previouseIconButton) {
+        return;
+    }
+    
     UILabel *buttonLabel = [self getLabelFromTag:button.tag];
     
     if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
@@ -194,8 +208,18 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         buttonLabel.textColor = [UIColor themeBlue];
         [button setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[button.tag]]] forState:UIControlStateNormal];
     }
+    if (self.nameArray.count > button.tag) {
+        self.searchCategory = self.nameArray[button.tag];
+        [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
+    }
     self.previouseIconButton = button;
     self.previouseLabel = buttonLabel;
+}
+
+- (void)cleanAllAnnotations
+{
+    [self.mapView removeAnnotations:self.poiAnnotations];
+    [self.poiAnnotations removeAllObjects];
 }
 
 - (void)requestPoiInfo:(CLLocationCoordinate2D)center andKeyWord:(NSString *)categoryName
@@ -214,23 +238,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     [self.searchApi AMapPOIIDSearch:requestPoi];
 }
-
-//func requestPOIInfo(center: CLLocationCoordinate2D, category: String) {
-//    search.cancelAllRequests()
-//
-//    if EnvContext.shared.client.reachability.connection == .none {
-//        EnvContext.shared.toast.showToast("网络异常")
-//        return
-//    }
-//    let request = AMapPOIKeywordsSearchRequest()
-//    request.keywords = category
-//    request.location = AMapGeoPoint.location(withLatitude: CGFloat(center.latitude), longitude: CGFloat(center.longitude))
-//    request.requireExtension = true
-//    request.requireSubPOIs = true
-//    request.cityLimit = true
-//    search.aMapPOIKeywordsSearch(request)
-//}
-
 
 - (void)setUpMapView
 {
@@ -267,19 +274,112 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     [_mapView setCenterCoordinate:self.centerPoint];
     
     
-    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style" ofType:@"data"];
-    if ([stylePath isKindOfClass:[NSString class]]) {
-        NSURL *styleUrl = [NSURL URLWithString:stylePath];
-        if ([styleUrl isKindOfClass: [NSURL class]]) {
-            NSData *dataStype = [NSData dataWithContentsOfFile:styleUrl];
-            if ([dataStype isKindOfClass:[NSData class]]) {
-                _mapView.customMapStyleEnabled = YES;
-                [_mapView setCustomMapStyleWithWebData:dataStype];
-            }
-        }
-    }
+//    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style" ofType:@"data"];
+//    if ([stylePath isKindOfClass:[NSString class]]) {
+//        NSURL *styleUrl = [NSURL URLWithString:stylePath];
+//        if ([styleUrl isKindOfClass: [NSURL class]]) {
+//            NSData *dataStype = [NSData dataWithContentsOfFile:styleUrl];
+//            if ([dataStype isKindOfClass:[NSData class]]) {
+//                _mapView.customMapStyleEnabled = YES;
+//                [_mapView setCustomMapStyleWithWebData:dataStype];
+//            }
+//        }
+//    }
     
     [self requestPoiInfo:self.centerPoint andKeyWord:@"交通"];
+}
+
+- (void)createMenu
+{
+    UIApplication *shareApplication = [UIApplication sharedApplication];
+    UIAlertController *optionMenu = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    NSString * qqUrlString = [NSString stringWithFormat:@"qqmap://map/routeplan?from=我的位置&type=drive&tocoord=%f,%f&to="")&coord_type=1&policy=0",self.centerPoint.latitude,self.centerPoint.longitude];
+    UIApplication *application = [UIApplication sharedApplication];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"qqmap://"]]) {
+        UIAlertAction *qqmapAction = [UIAlertAction actionWithTitle:@"腾讯地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSURL *qqurl = [NSURL URLWithString:[qqUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            if ([qqurl isKindOfClass:[NSURL class]]) {
+                [application openURL:qqurl];
+            }
+        }];
+        
+        [optionMenu addAction:qqmapAction];
+    }
+    
+    
+    
+    NSString * iosMapUrlString = [NSString stringWithFormat:@"iosamap://path?sourceApplication=applicationName&sid=BGVIS1&did=BGVIS2&dlat=%f&dlon=%f&dev=0&t=0",self.centerPoint.latitude,self.centerPoint.longitude];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"iosamap://"]]) {
+        UIAlertAction *iosmapAction = [UIAlertAction actionWithTitle:@"高德地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSURL *iosMapurl = [NSURL URLWithString:[iosMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            if ([iosMapurl isKindOfClass:[NSURL class]]) {
+                [application openURL:iosMapurl];
+            }
+        }];
+        
+        [optionMenu addAction:iosmapAction];
+    }
+
+    NSString * googleMapUrlString = [NSString stringWithFormat:@"comgooglemaps://?x-source=app名&x-success=comgooglemaps://&saddr=&daddr=%f,%f&directionsmode=driving",self.centerPoint.latitude,self.centerPoint.longitude];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"comgooglemaps://"]]) {
+        UIAlertAction *googlemapAction = [UIAlertAction actionWithTitle:@"Google地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSURL *googleMapurl = [NSURL URLWithString:[googleMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            if ([googleMapurl isKindOfClass:[NSURL class]]) {
+                [application openURL:googleMapurl];
+            }
+        }];
+        
+        [optionMenu addAction:googlemapAction];
+    }
+    
+    if (self.centerPoint.latitude != 0 && self.centerPoint.longitude != 0)
+    {
+        UIAlertAction *appleAction = [UIAlertAction actionWithTitle:@"苹果地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            MKMapItem *mapItemCurrent = [MKMapItem mapItemForCurrentLocation];
+            
+            MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:[[MKPlacemark alloc] initWithCoordinate:self.centerPoint postalAddress:nil]];
+            NSDictionary *dictOptions = [NSDictionary dictionaryWithObjectsAndKeys:MKLaunchOptionsDirectionsModeDriving, MKLaunchOptionsDirectionsModeKey,@(YES),MKLaunchOptionsShowsTrafficKey,nil];
+            
+            [MKMapItem openMapsWithItems:@[mapItemCurrent,toLocation] launchOptions:dictOptions];
+        }];
+   
+        [optionMenu addAction:appleAction];
+    }
+    
+    
+    NSString * baiduMapUrlString = [NSString stringWithFormat:@"baidumap://map/direction?origin={{我的位置}}&destination=latlng:%f,%f|name=\("")&mode=driving&coord_type=gcj02",self.centerPoint.latitude,self.centerPoint.longitude];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"baidumap://"]]) {
+        UIAlertAction *baiduAction = [UIAlertAction actionWithTitle:@"百度地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSURL *baiduMapUrlString = [NSURL URLWithString:[googleMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+            if ([baiduMapUrlString isKindOfClass:[NSURL class]]) {
+                [application openURL:baiduMapUrlString];
+            }
+        }];
+        
+        [optionMenu addAction:baiduAction];
+    }
+    
+    [self presentViewController:optionMenu animated:YES completion:nil];
+
+}
+
+- (void)setUpAnnotations
+{
+    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
+    userAnna.type = @"user";
+    userAnna.coordinate = self.centerPoint;
+    [self.mapView addAnnotation:userAnna];
+    
+    for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
+        [self.mapView addAnnotation:self.poiAnnotations[i]];
+    }
+    [self.mapView setCenterCoordinate:self.centerPoint];
 }
 
 #pragma poi Delegate
@@ -289,6 +389,8 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         [[ToastManager manager] showToast:@"暂无相关信息"];
         return;
     }
+    
+    [self cleanAllAnnotations];
     
     NSInteger poiCount = response.pois.count > 50 ? 50 :  response.pois.count;
     NSMutableArray *poiArray = [NSMutableArray new];
@@ -305,18 +407,43 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     self.poiAnnotations = poiArray;
     
-    
+    [self setUpAnnotations];
+}
 
-//    let pois = response.pois.take(50).map { (poi) -> MyMAAnnotation in
-//        let re = MyMAAnnotation()
-//        re.type = searchCategory.value
-//        re.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(poi.location.latitude), longitude: CLLocationDegrees(poi.location.longitude))
-//        re.title = poi.name
-//        return re
-//    }
+- (UIImage *)getIconImageFromCategory:(NSString *)category
+{
+    if ([self.nameArray containsObject:category]) {
+        NSInteger indexValue = [self.nameArray indexOfObject:category];
+        UIImage *image = [UIImage imageNamed:self.iconImageArray[indexValue]];
+        return image;
+    }else
+    {
+        return [UIImage imageNamed:@"icon-location"];
+    }
 }
 
 #pragma MapViewDelegata
+
+- (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
+{
+    if ([annotation isKindOfClass:[FHMyMAAnnotation class]]) {
+        NSString *pointResueseIdetifier = @"pointReuseIndetifier";
+        MAAnnotationView *annotationV = [mapView dequeueReusableAnnotationViewWithIdentifier:pointResueseIdetifier];
+        if (annotationV == nil) {
+            annotationV = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
+        }
+        
+        annotationV.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
+        annotationV.centerOffset = CGPointMake(0, -18);
+        annotationV.canShowCallout = true;
+        
+        return annotationV ? annotationV : [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
+    }
+    
+    return [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
+}
+
+
 - (MAOverlayRenderer *)mapView:(MAMapView *)mapView rendererForOverlay:(id <MAOverlay>)overlay
 {
     MACircle * cicle = [MACircle circleWithMapRect:MAMapRectZero];
