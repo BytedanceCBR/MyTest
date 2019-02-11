@@ -121,6 +121,7 @@
     return _placeHolder;
 }
 
+// 模型要实现FHDetailPhotoHeaderCellProtocol
 -(void)updateWithImages:(NSArray<FHDetailPhotoHeaderModelProtocol>*)images
 {
     self.images = images;

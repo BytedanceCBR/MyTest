@@ -33,7 +33,6 @@
 - (void)startLoadData {
     // @"6611077800981971207"
     [FHHouseDetailAPI requestOldDetail:self.houseId completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
-        NSLog(@"%@",model);
         if (model && error == NULL) {
             [self processDetailData:model];
         } else {
