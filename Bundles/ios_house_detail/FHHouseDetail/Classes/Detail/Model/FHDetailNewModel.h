@@ -67,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailNewDataSmallImageGroupImagesModel<NSObject>
 @end
 
-@interface FHDetailNewDataSmallImageGroupImagesModel : JSONModel
+@interface FHDetailNewDataSmallImageGroupImagesModel : JSONModel<FHDetailPhotoHeaderModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *width;

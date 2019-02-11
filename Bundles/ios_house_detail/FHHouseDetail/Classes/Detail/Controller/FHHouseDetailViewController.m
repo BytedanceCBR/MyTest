@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
+@property (nonatomic, copy)   NSString* houseId; // 房源id
 
 @end
 
@@ -23,6 +24,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+        self.houseId = paramObj.allParams[@"house_id"];
     }
     return self;
 }
@@ -46,6 +48,7 @@
 - (void)setupUI {
     [self configTableView];
     self.viewModel = [FHHouseDetailBaseViewModel createDetailViewModelWithHouseType:self.houseType withController:self tableView:_tableView];
+    self.viewModel.houseId = self.houseId;
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);

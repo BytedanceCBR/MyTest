@@ -43,53 +43,35 @@
             completion(model,error);
         }
     } callbackInMainThread:YES];
-    
-//    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url
-//                                                              params:paramDic
-//                                                              method:@"GET"
-//                                                    needCommonParams:YES
-//                                                            callback:^(NSError *error, id obj) {
-//                                                                FHDetailNewModel *model = nil;
-//                                                                if (!error) {
-//                                                                    model = [[FHDetailNewModel alloc] initWithData:obj error:&error];
-//                                                                }
-//
-//                                                                if (![model.status isEqualToString:@"0"]) {
-//                                                                    error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-//                                                                }
-//
-//                                                                if (completion) {
-//                                                                    completion(model,error);
-//                                                                }
-//                                                            }];
-    
 }
 
-//+(TTHttpTask*)requestOldDetail:(NSString*)houseId
-//                    completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion
-//{
-//
-//    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-//    NSString* url = [host stringByAppendingString:@"/f100/api/rental/info"];
-//    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url
-//                                                              params:@{@"rental_f_code": rentCode}
-//                                                              method:@"GET"
-//                                                    needCommonParams:YES
-//                                                            callback:^(NSError *error, id obj) {
-//                                                                FHRentDetailResponseModel *model = nil;
-//                                                                if (!error) {
-//                                                                    model = [[FHRentDetailResponseModel alloc] initWithData:obj error:&error];
-//                                                                }
-//
-//                                                                if (![model.status isEqualToString:@"0"]) {
-//                                                                    error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-//                                                                }
-//
-//                                                                if (completion) {
-//                                                                    completion(model,error);
-//                                                                }
-//                                                            }];
-//}
++(TTHttpTask*)requestOldDetail:(NSString*)houseId
+                    completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion
+{
+
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/house/info"];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"house_id"] = houseId ?: @"";
+    paramDic[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailOldModel *model = nil;
+        if (!error) {
+            model = [[FHDetailOldModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
 //
 //+(TTHttpTask*)requestNeighborhoodDetail:(NSString*)houseId
 //                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion

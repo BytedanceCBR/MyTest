@@ -244,4 +244,10 @@
 }
 @end
 
+// MARK 自定义类型
+
+@implementation FHDetailPhotoHeaderModel
+
+@end
+
 
