@@ -888,19 +888,23 @@ func openMapPage(
     openMapType: OpenMapType? = .autoMatchType,
     disposeBag: DisposeBag) -> (TracerParams) -> Void{
     return { (_) in
-        recordEvent(key: "click_map", params: clickMapParams)
-        let vc = LBSMapPageVC(centerPointName: title)
-        vc.openMapType = openMapType
-        let traceParas = traceParams.paramsGetter([:])
-        
-        vc.tracerParams = traceParams
-        vc.centerPointStr.accept((lat, lng))
-//        关闭工作由mapView自己实现
-//        vc.navBar.backBtn.rx.tap
-//            .subscribe(onNext: { void in
-//                navVC?.popViewController(animated: true)
-//            })
-//            .disposed(by: disposeBag)
-        navVC?.pushViewController(vc, animated: true)
+        let url = URL(string: "sslocal://fh_map_detail")
+        let info = ["category": "公交","latitude":39.98269504123264,"longitude":116.3078908962674] as [String : Any]
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byPushViewController: url, userInfo: userInfo)
+//        recordEvent(key: "click_map", params: clickMapParams)
+//        let vc = LBSMapPageVC(centerPointName: title)
+//        vc.openMapType = openMapType
+//        let traceParas = traceParams.paramsGetter([:])
+//
+//        vc.tracerParams = traceParams
+//        vc.centerPointStr.accept((lat, lng))
+////        关闭工作由mapView自己实现
+////        vc.navBar.backBtn.rx.tap
+////            .subscribe(onNext: { void in
+////                navVC?.popViewController(animated: true)
+////            })
+////            .disposed(by: disposeBag)
+//        navVC?.pushViewController(vc, animated: true)
     }
 }
