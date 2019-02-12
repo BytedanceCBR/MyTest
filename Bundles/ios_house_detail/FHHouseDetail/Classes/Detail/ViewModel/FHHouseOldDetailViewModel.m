@@ -31,12 +31,29 @@
 }
 // 网络数据请求
 - (void)startLoadData {
-    // @"6611077800981971207"
-    [FHHouseDetailAPI requestOldDetail:self.houseId completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+    // 详情页数据-Main
+//    NSDictionary *logpb = @{@"abc":@"vvv",@"def":@"cccc"};
+    // add by zyk 记得logpb数据 传入
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestOldDetail:self.houseId logPB:nil completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
-            [self processDetailData:model];
+            if (model.data) {
+                [wSelf processDetailData:model];
+                wSelf.detailController.hasValidateData = YES;
+                NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                // 周边小区
+                [wSelf requestRelatedNeighborhoodSearch:neighborhoodId];
+                // 周边房源
+                [wSelf requestRelatedHouseSearch];
+                // 同小区房源
+                [wSelf requestHouseInSameNeighborhoodSearch:neighborhoodId];
+            } else {
+                wSelf.detailController.hasValidateData = NO;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            }
         } else {
-            
+            wSelf.detailController.hasValidateData = NO;
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         }
     }];
 }
@@ -50,6 +67,27 @@
         [self.items addObject:headerCellModel];
     }
     [self reloadData];
+}
+
+// 周边小区
+- (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId {
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
+        NSLog(@"%@",model);
+    }];
+}
+
+// 同小区房源
+- (void)requestHouseInSameNeighborhoodSearch:(NSString *)neighborhoodId {
+    NSString *houseId = self.houseId;
+}
+
+// 周边房源
+- (void)requestRelatedHouseSearch {
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+        NSLog(@"%@",model);
+    }];
 }
 
 @end

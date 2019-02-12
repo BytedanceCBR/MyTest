@@ -40,9 +40,13 @@
     if ([TTReachability isNetworkConnected]) {
         [self.viewModel startLoadData];
     } else {
-        //TODO: 需要看是否显示当前空页面
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
+}
+
+// 重新加载
+- (void)retryLoadData {
+    [self startLoadData];
 }
 
 - (void)setupUI {
