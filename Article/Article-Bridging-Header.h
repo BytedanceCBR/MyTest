@@ -91,8 +91,6 @@
 #import "ArticleListNotifyBarView.h"
 #import "FRRouteHelper.h"
 
-#import "HouseRentDetailPageVC.h"
-
 #import "TTRefreshView+HomePage.h"
 
 //for bridge
