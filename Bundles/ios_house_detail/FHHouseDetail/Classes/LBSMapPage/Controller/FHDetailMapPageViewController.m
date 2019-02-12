@@ -20,16 +20,10 @@
 #import <ToastManager.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 
+#import "FHMyMAAnnotation.h"
+
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
-
-@interface FHMyMAAnnotation : MAPointAnnotation
-@property (nonnull, strong) NSString *type;
-@end
-
-@implementation FHMyMAAnnotation
-
-@end
 
 @interface FHDetailMapPageViewController () <TTRouteInitializeProtocol,AMapSearchDelegate,MAMapViewDelegate>
 

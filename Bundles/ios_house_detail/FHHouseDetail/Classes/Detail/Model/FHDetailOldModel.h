@@ -172,10 +172,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // MARK 自定义类型
-
-@interface FHDetailPhotoHeaderModel : FHDetailBaseModel
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
-@end
+//
+//@interface FHDetailPhotoHeaderModel : FHDetailBaseModel
+//@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
+//@end
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER
