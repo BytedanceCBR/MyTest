@@ -205,7 +205,7 @@
                                   count:(NSInteger)count
                              completion:(void(^)(FHDetailRelatedHouseResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_house?house_id=%@&offset=%ld",houseId,offset];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_house?house_id=%@&offset=%@",houseId,offset];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (query.length > 0) {
         url = [NSString stringWithFormat:@"%@&%@",url,query];
@@ -232,7 +232,7 @@
     } callbackInMainThread:NO];
 }
 
-// 二手房周边小区
+// 二手房(小区详情)周边小区
 +(TTHttpTask*)requestRelatedNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId
                                                       searchId:(NSString*)searchId
                                                         offset:(NSString *)offset
@@ -240,7 +240,7 @@
                                                          count:(NSInteger)count
                                                     completion:(void(^)(FHDetailRelatedNeighborhoodResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_neighborhood?neighborhood_id=%@&offset=%ld",neighborhoodId,offset];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_neighborhood?neighborhood_id=%@&offset=%@",neighborhoodId,offset];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (query.length > 0) {
         url = [NSString stringWithFormat:@"%@&%@",url,query];
@@ -270,7 +270,7 @@
     } callbackInMainThread:NO];
 }
 
-// 二手房-同小区房源
+// 二手房（小区）-同小区房源
 +(TTHttpTask*)requestHouseInSameNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId
                                                            houseId:(NSString*)houseId
                                                           searchId:(NSString*)searchId

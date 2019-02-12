@@ -10,13 +10,17 @@
 #import "FHHouseDetailAPI.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailNeighborhoodModel.h"
+#import "FHDetailRelatedNeighborhoodResponseModel.h"
+#import "FHDetailRelatedHouseResponseModel.h"
+#import "FHRentSameNeighborhoodResponse.h"
+#import "FHDetailSameNeighborhoodHouseResponseModel.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
-//@property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
-//@property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
-//@property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
+@property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
+@property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
 
 @end
 
@@ -51,7 +55,6 @@
                 wSelf.detailController.hasValidateData = YES;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求
-                 // add by zyk neighborhoodId 不需要
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
                 wSelf.detailController.hasValidateData = NO;
@@ -79,12 +82,12 @@
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
-    // 同小区房源
-//    [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
-//    // 周边小区
-//    [self requestRelatedNeighborhoodSearch:neighborhoodId];
-//    // 周边房源
-//    [self requestRelatedHouseSearch];
+    // 周边小区
+    [self requestRelatedNeighborhoodSearch:neighborhoodId];
+    // 同小区房源-二手房
+    [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId];
+    // 同小区房源-租房
+    [self requestHouseInSameNeighborhoodSearchRent:neighborhoodId];
 }
 
 // 处理详情页周边请求数据
@@ -92,18 +95,6 @@
     if (self.requestRelatedCount >= 3) {
         
     }
-}
-
-/*
-// 同小区房源
-- (void)requestHouseInSameNeighborhoodSearch:(NSString *)neighborhoodId {
-    NSString *houseId = self.houseId;
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
-        wSelf.requestRelatedCount += 1;
-        wSelf.sameNeighborhoodHouseData = model.data;
-        [wSelf processDetailRelatedData];
-    }];
 }
 
 // 周边小区
@@ -116,15 +107,26 @@
     }];
 }
 
-// 周边房源
-- (void)requestRelatedHouseSearch {
+// 同小区房源-二手房
+- (void)requestHouseInSameNeighborhoodSearchErShou:(NSString *)neighborhoodId {
+    NSString *houseId = self.houseId;
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
-        wSelf.relatedHouseData = model.data;
+        wSelf.sameNeighborhoodErshouHouseData = model.data;
         [wSelf processDetailRelatedData];
     }];
 }
- */
+
+// 同小区房源-租房
+- (void)requestHouseInSameNeighborhoodSearchRent:(NSString *)neighborhoodId {
+    NSString *houseId = self.houseId;
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestHouseRentSameNeighborhood:houseId withNeighborhoodId:neighborhoodId completion:^(FHRentSameNeighborhoodResponseModel * _Nonnull model, NSError * _Nonnull error) {
+        wSelf.requestRelatedCount += 1;
+        wSelf.sameNeighborhoodRentHouseData = model.data;
+        [wSelf processDetailRelatedData];
+    }];
+}
 
 @end

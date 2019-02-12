@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
                                   query:(NSString*)query
                                   count:(NSInteger)count
                              completion:(void(^)(FHDetailRelatedHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
-// 二手房-周边小区
+// 二手房（小区）-周边小区
 +(TTHttpTask*)requestRelatedNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId
                                                         searchId:(NSString*)searchId
                                                         offset:(NSString *)offset
@@ -61,7 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
                                                          count:(NSInteger)count
                                                     completion:(void(^)(FHDetailRelatedNeighborhoodResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
-// 二手房-同小区房源
+// 二手房（小区）-同小区房源
 +(TTHttpTask*)requestHouseInSameNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId
                                                            houseId:(NSString*)houseId
                                                           searchId:(NSString*)searchId

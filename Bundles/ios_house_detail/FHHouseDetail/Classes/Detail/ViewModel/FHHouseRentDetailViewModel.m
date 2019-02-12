@@ -11,13 +11,14 @@
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailNeighborhoodModel.h"
 #import "FHDetailRentModel.h"
+#import "FHHouseRentRelatedResponse.h"
+#import "FHRentSameNeighborhoodResponse.h"
 
 @interface FHHouseRentDetailViewModel ()
 
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
-//@property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
-//@property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
-//@property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData;
+@property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodHouseData;
+@property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
 
 @end
 
@@ -52,7 +53,6 @@
                 wSelf.detailController.hasValidateData = YES;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求
-                // add by zyk neighborhoodId 不需要??
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
                 wSelf.detailController.hasValidateData = NO;
@@ -81,52 +81,40 @@
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
     // 同小区房源
-    //    [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
-    //    // 周边小区
-    //    [self requestRelatedNeighborhoodSearch:neighborhoodId];
-    //    // 周边房源
-    //    [self requestRelatedHouseSearch];
+    [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
+    // 周边房源
+    [self requestRelatedHouseSearch];
 }
 
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
-    if (self.requestRelatedCount >= 3) {
+    if (self.requestRelatedCount >= 2) {
         
     }
 }
 
-/*
+
  // 同小区房源
  - (void)requestHouseInSameNeighborhoodSearch:(NSString *)neighborhoodId {
- NSString *houseId = self.houseId;
- __weak typeof(self) wSelf = self;
- [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
- wSelf.requestRelatedCount += 1;
- wSelf.sameNeighborhoodHouseData = model.data;
- [wSelf processDetailRelatedData];
- }];
+     NSString *houseId = self.houseId;
+     __weak typeof(self) wSelf = self;
+     [FHHouseDetailAPI requestHouseRentSameNeighborhood:houseId withNeighborhoodId:neighborhoodId completion:^(FHRentSameNeighborhoodResponseModel * _Nonnull model, NSError * _Nonnull error) {
+         wSelf.requestRelatedCount += 1;
+         wSelf.sameNeighborhoodHouseData = model.data;
+         [wSelf processDetailRelatedData];
+     }];
  }
- 
- // 周边小区
- - (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId {
- __weak typeof(self) wSelf = self;
- [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
- wSelf.requestRelatedCount += 1;
- wSelf.relatedNeighborhoodData = model.data;
- [wSelf processDetailRelatedData];
- }];
- }
- 
+
  // 周边房源
  - (void)requestRelatedHouseSearch {
- __weak typeof(self) wSelf = self;
- [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
- wSelf.requestRelatedCount += 1;
- wSelf.relatedHouseData = model.data;
- [wSelf processDetailRelatedData];
- }];
+     __weak typeof(self) wSelf = self;
+     [FHHouseDetailAPI requestHouseRentRelated:self.houseId completion:^(FHHouseRentRelatedResponseModel * _Nonnull model, NSError * _Nonnull error) {
+         wSelf.requestRelatedCount += 1;
+         wSelf.relatedHouseData = model.data;
+         [wSelf processDetailRelatedData];
+     }];
  }
- */
+
 
 @end
 
