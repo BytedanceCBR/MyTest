@@ -16,6 +16,7 @@
 #import "TTSandBoxHelper.h"
 #import "FHHomeConfigManager.h"
 #import "FHUtils.h"
+#import "FHCityListViewModel.h"
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -133,6 +134,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (openUrl) {
             [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
+                // 进历史
+                if (isSuccess) {
+                    FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
+                    [cityListViewModel switchCityByOpenUrlSuccess];
+                }
             }];
             NSDictionary *params = @{@"click_type":@"switch",
                                      @"enter_from":@"default"};
@@ -305,17 +311,25 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     return;
                 }
                 
-                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView) {
+                BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+
+                if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                 }else
                 {
                     NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
-                    
-                    if (currentCityid == model.data.currentCityId || !currentCityid) {
+                    if ([currentCityid isEqualToString:model.data.currentCityId] || !currentCityid) {
                         //更新config
                         [wSelf updateAllConfig:model isNeedDiff:YES];
                     }
                 }
+                
+                FHConfigDataModel *configCache = [[FHEnvContext sharedInstance] getConfigFromCache];
+                
+                if (!configCache) {
+                    [wSelf updateAllConfig:model isNeedDiff:NO];
+                }
+                
                 self.retryConfigCount = 3;
             }];
         }

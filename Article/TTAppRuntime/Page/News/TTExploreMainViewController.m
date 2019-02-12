@@ -140,11 +140,11 @@
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
         [self.view addSubview:view];
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
-        if (!downloadUrl) {
-            return;
-        }
-        NSURL *url = [NSURL URLWithString:downloadUrl];
-        [[UIApplication sharedApplication] openURL:url];
+//        if (!downloadUrl) {
+//            return;
+//        }
+//        NSURL *url = [NSURL URLWithString:downloadUrl];
+//        [[UIApplication sharedApplication] openURL:url];
     } closeBlock:^{
         
     }];

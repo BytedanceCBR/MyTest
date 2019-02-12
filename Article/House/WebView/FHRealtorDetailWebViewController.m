@@ -47,13 +47,15 @@ static NSString *s_oldAgent = nil;
         @strongify(self);
         self->_realtorId = params[@"realtor_id"];
         NSString* phone = params[@"phone"];
+        HouseRentTracer* theTracerModel = [self->_tracerModel copy];
+        theTracerModel.pageType = @"realtor_detail";
         if (self->_realtorId != nil && phone != nil) {
             [self->_phoneCallViewModel requestVirtualNumberAndCallWithRealtorId:self->_realtorId
-                                                                     traceModel:self->_tracerModel
+                                                                     traceModel:theTracerModel
                                                                           phone:phone
-                                                                        houseId:self->_tracerModel.groupId
-                                                                       searchId:self->_tracerModel.searchId
-                                                                         imprId:self->_tracerModel.imprId
+                                                                        houseId:theTracerModel.groupId
+                                                                       searchId:theTracerModel.searchId
+                                                                         imprId:theTracerModel.imprId
                                                                     onSuccessed:^{
                                                                         completion(TTRJSBMsgSuccess, @{});
                                                                     }];
