@@ -70,7 +70,6 @@
     
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
-    _bottomBar.backgroundColor = [UIColor redColor];
 
     [self addDefaultEmptyViewFullScreen];
 
@@ -79,8 +78,13 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
     }];
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.view);
+        make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(64);
+        if (@available(iOS 11.0, *)) {
+            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom);
+        }else {
+            make.bottom.mas_equalTo(self.view);
+        }
     }];
 
 }
