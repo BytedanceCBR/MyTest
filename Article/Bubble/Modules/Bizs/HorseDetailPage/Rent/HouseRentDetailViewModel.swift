@@ -405,7 +405,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     func requestDetailData() {
 //        let task =
-        FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
+        FHHouseDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
             if model != nil && error == nil {
                 self?.logPb = model?.data?.logPb as? [String : Any]
                 self?.searchId = self?.logPb?["search_id"] as? String
@@ -452,11 +452,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     func requestReletedData() {
 
-        let task = HouseRentAPI.requestHouseRentRelated("\(self.houseId)") { [weak self] (model, error) in
+        let task = FHHouseDetailAPI.requestHouseRentRelated("\(self.houseId)") { [weak self] (model, error) in
             self?.relateErshouHouseData.accept(model)
         }
 
-        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: self.detailData.value?.data?.neighborhoodInfo?.id ?? "") { [weak self] (model, error) in
+        let task1 = FHHouseDetailAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: self.detailData.value?.data?.neighborhoodInfo?.id ?? "") { [weak self] (model, error) in
             self?.houseInSameNeighborhood.accept(model)
         }
     }
