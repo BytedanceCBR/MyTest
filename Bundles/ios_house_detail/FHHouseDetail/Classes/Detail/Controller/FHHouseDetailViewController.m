@@ -32,6 +32,7 @@
     if (self) {
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.houseId = paramObj.allParams[@"house_id"];
+        
     }
     return self;
 }
@@ -47,13 +48,16 @@
     if ([TTReachability isNetworkConnected]) {
         [self.viewModel startLoadData];
     } else {
-        //TODO: 需要看是否显示当前空页面
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
 }
 
-- (void)setupUI
-{
+// 重新加载
+- (void)retryLoadData {
+    [self startLoadData];
+}
+
+- (void)setupUI {
     [self configTableView];
     self.viewModel = [FHHouseDetailBaseViewModel createDetailViewModelWithHouseType:self.houseType withController:self tableView:_tableView];
     self.viewModel.houseId = self.houseId;

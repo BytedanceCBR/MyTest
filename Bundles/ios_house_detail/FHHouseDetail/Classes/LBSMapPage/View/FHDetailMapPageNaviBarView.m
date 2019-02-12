@@ -60,7 +60,8 @@
         make.right.mas_equalTo(self).offset(-12);
         make.bottom.mas_equalTo(self).offset(-12);
     }];
-    
+    [_rightBtn addTarget:self action:@selector(naviMapBtnClick) forControlEvents:UIControlEventTouchUpInside];
+
     
     _titleLabel = [UILabel new];
     _titleLabel.text = @"位置及周边";
@@ -92,6 +93,13 @@
 {
     if (self.backActionBlock) {
         self.backActionBlock();
+    }
+}
+
+- (void)naviMapBtnClick
+{
+    if (self.naviMapActionBlock) {
+        self.naviMapActionBlock();
     }
 }
 

@@ -157,7 +157,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
 @property (nonatomic, strong , nullable) FHDetailOldDataShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailOldDataContactModel *contact ;
@@ -172,10 +172,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // MARK 自定义类型
-
-@interface FHDetailPhotoHeaderModel : FHDetailBaseModel
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
-@end
+//
+//@interface FHDetailPhotoHeaderModel : FHDetailBaseModel
+//@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
+//@end
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER

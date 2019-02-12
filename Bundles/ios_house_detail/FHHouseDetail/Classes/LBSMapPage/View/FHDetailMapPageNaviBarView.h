@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) void (^backActionBlock)();
 
+@property(nonatomic , copy) void (^naviMapActionBlock)();
+
 - (instancetype)initWithBackImage:(UIImage *)image;
 
 @end

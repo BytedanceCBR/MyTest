@@ -403,9 +403,22 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
         return UITableViewAutomaticDimension
     }
 
+    func test(houseId:Int64) {
+        let openUrl = "snssdk1370://test_detail"
+        let info: [String: Any] = ["house_type": 3,
+                                   "house_id":"\(houseId)"]
+        let userInfo = TTRouteUserInfo(info: info)
+        TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
+    }
+    
     func requestDetailData() {
 //        let task =
-        FHRentDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
+            self.test(houseId: self.houseId)
+        }
+
+        
+        FHHouseDetailAPI.requestRentDetail("\(self.houseId)") { [weak self] (model, error) in
             if model != nil && error == nil {
                 self?.logPb = model?.data?.logPb as? [String : Any]
                 self?.searchId = self?.logPb?["search_id"] as? String
@@ -452,11 +465,11 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     func requestReletedData() {
 
-        let task = HouseRentAPI.requestHouseRentRelated("\(self.houseId)") { [weak self] (model, error) in
+        let task = FHHouseDetailAPI.requestHouseRentRelated("\(self.houseId)") { [weak self] (model, error) in
             self?.relateErshouHouseData.accept(model)
         }
 
-        let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: self.detailData.value?.data?.neighborhoodInfo?.id ?? "") { [weak self] (model, error) in
+        let task1 = FHHouseDetailAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: self.detailData.value?.data?.neighborhoodInfo?.id ?? "") { [weak self] (model, error) in
             self?.houseInSameNeighborhood.accept(model)
         }
     }
