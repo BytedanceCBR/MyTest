@@ -220,6 +220,11 @@
         _saveButton.layer.cornerRadius = 6.f;
         _saveButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
         [self.view addSubview:_saveButton];
+        if (self.mode == PhotosScrollViewSupportBrowse) {
+            _saveButton.hidden = YES;
+            _indexPromptLabel.centerX = self.view.width/2;
+            _indexPromptLabel.autoresizingMask  = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+        }
     }
     
     // layout
@@ -317,6 +322,9 @@
     self.topBar.frame = CGRectMake(0, topInset, self.view.width, topBarHeight);
     self.saveButton.frame = CGRectMake(self.view.width - saveButtonRightPadding - saveButtonWidth, self.view.height - saveButtonHeight - saveButtonBottomPadding - bottomInset, saveButtonWidth, saveButtonHeight);
     self.indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, indexPormptLabelWidth, indexPormptLabelHeight);
+    if (self.mode == PhotosScrollViewSupportBrowse) {
+        self.indexPromptLabel.centerX = self.view.width/2;
+    }
 
 }
 

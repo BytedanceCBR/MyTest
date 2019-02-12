@@ -171,6 +171,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailOldDataModel *data ;
 @end
 
+// MARK 自定义类型
+
+@interface FHDetailPhotoHeaderModel : FHDetailBaseModel
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
+@end
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER

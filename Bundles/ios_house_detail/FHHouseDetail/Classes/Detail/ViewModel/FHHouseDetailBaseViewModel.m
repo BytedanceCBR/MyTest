@@ -51,7 +51,6 @@
         self.detailController = viewController;
         self.tableView = tableView;
         [self configTableView];
-        [self startLoadData];
     }
     return self;
 }
