@@ -157,7 +157,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
 @property (nonatomic, strong , nullable) FHDetailOldDataShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailOldDataContactModel *contact ;
