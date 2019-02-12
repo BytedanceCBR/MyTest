@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 子Cell的命名规则，FHDetailXXXCell，比如FHDetailOldMapViewCell
 @interface FHDetailBaseCell : UITableViewCell
 
+// 当前cell的模型数据
+@property (nonatomic, weak , nullable) id currentData;
+
 // 当前方法不需重写
 + (Class)cellViewClass;
 

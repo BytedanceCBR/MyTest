@@ -10,6 +10,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHDetailPhotoHeaderModelProtocol <AbstractJSONModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, strong , nullable) NSArray *urlList;
+
+@end
+
 @protocol FHSearchHouseDataItemsTagsModel<NSObject>
 
 @end
@@ -29,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSearchHouseDataItemsHouseImageModel  : JSONModel
+@interface  FHSearchHouseDataItemsHouseImageModel  : JSONModel<FHDetailPhotoHeaderModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *url;
 @property (nonatomic, copy , nullable) NSString *width;
