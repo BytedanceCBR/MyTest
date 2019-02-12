@@ -7,6 +7,16 @@
 
 //GENERATED CODE , DON'T EDIT
 #import "FHDetailNewModel.h"
+
+@implementation FHDetailNearbyMapModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailNewDataGlobalPricingModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -31,21 +41,6 @@
 }
 @end
 
-@implementation FHDetailNewDataSmallImageGroupImagesModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"urlList": @"url_list",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailNewDataSmallImageGroupModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName

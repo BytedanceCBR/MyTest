@@ -25,6 +25,7 @@
     if (self) {
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.houseId = paramObj.allParams[@"house_id"];
+        
     }
     return self;
 }

@@ -20,16 +20,10 @@
 #import <ToastManager.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 
+#import "FHMyMAAnnotation.h"
+
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
-
-@interface FHMyMAAnnotation : MAPointAnnotation
-@property (nonnull, strong) NSString *type;
-@end
-
-@implementation FHMyMAAnnotation
-
-@end
 
 @interface FHDetailMapPageViewController () <TTRouteInitializeProtocol,AMapSearchDelegate,MAMapViewDelegate>
 
@@ -61,8 +55,15 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         self.searchApi = [[AMapSearchAPI alloc] init];
         self.searchApi.delegate = self;
         self.selectedIndex = 0;
-        self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
-        NSLog(@"userinfo = %@",[userInfo.allInfo objectForKey:@"url"]);
+        
+        if ([userInfo.allInfo objectForKey:@"latitude"] && [userInfo.allInfo objectForKey:@"longitude"]) {
+            self.centerPoint = CLLocationCoordinate2DMake([[userInfo.allInfo objectForKey:@"latitude"] floatValue], [[userInfo.allInfo objectForKey:@"longitude"] floatValue]);
+        }
+        
+        if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
+            self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
+        }
+//      NSLog(@"userinfo = %@",userInfo.allInfo);
     }
     return self;
 }
@@ -75,7 +76,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _imageNameArray = [NSArray arrayWithObjects:@"tab-bank",@"tab-bus",@"tab-subway",@"tab-education",@"tab-hospital",@"tab-relaxation",@"tab-mall",@"tab-swim",@"tab-food", nil];
     _keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
     _iconImageArray = [NSArray arrayWithObjects:@"icon-bank",@"icon-bus",@"icon-subway",@"icon_education",@"icon_hospital",@"icon-relaxation",@"icon-mall",@"icon_swim",@"icon-restaurant", nil];
+    
+    NSInteger selectIndex = [_nameArray indexOfObject:self.searchCategory];
 
+    self.selectedIndex = selectIndex;
+    
     [self setUpNaviBar];
     
     [self setUpBottomBarView];
@@ -364,6 +369,12 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         
         [optionMenu addAction:baiduAction];
     }
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [optionMenu addAction:cancelAction];
+
     
     [self presentViewController:optionMenu animated:YES completion:nil];
 

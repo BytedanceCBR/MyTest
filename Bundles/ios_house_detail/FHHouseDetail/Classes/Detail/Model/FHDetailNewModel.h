@@ -10,6 +10,12 @@
 #import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@interface FHDetailNearbyMapModel : JSONModel
+
+@end
+
+
 @interface FHDetailNewDataUserStatusModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
@@ -64,21 +70,9 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailNewDataSmallImageGroupModel<NSObject>
 @end
 
-@protocol FHDetailNewDataSmallImageGroupImagesModel<NSObject>
-@end
-
-@interface FHDetailNewDataSmallImageGroupImagesModel : JSONModel<FHDetailPhotoHeaderModelProtocol>
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-@end
-
 @interface FHDetailNewDataSmallImageGroupModel : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *images;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) NSString *name;
 @end
@@ -211,7 +205,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHDetailNewDataModel *data ;
 @end
-
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER
