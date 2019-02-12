@@ -253,7 +253,13 @@
                 [dictUrlList addObject:url];
             }
         }
-        
+        // 兼容租房逻辑
+        if (dictUrlList.count == 0) {
+            NSString *url = dict[@"url"];
+            if (url.length > 0) {
+                [dictUrlList addObject:@{@"url":url}];
+            }
+        }
         dict[@"url_list"] = dictUrlList;
         
         TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
