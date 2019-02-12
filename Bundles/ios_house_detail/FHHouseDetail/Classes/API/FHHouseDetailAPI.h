@@ -11,8 +11,9 @@
 #import "FHHouseType.h"
 #import "FHMainApi.h"
 
-@class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel;
+@class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel;
+@class FHHouseRentRelatedResponseModel,FHRentSameNeighborhoodResponseModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,10 +29,23 @@ NS_ASSUME_NONNULL_BEGIN
                     completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 小区详情页请求
-+(TTHttpTask*)requestNeighborhoodDetail:(NSString*)houseId
++(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
+                                  logPB:(NSDictionary *)logPB
+                                  query:(NSString*)query
                     completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 租房详情页请求
++(TTHttpTask*)requestRentDetail:(NSString*)rentCode
+                     completion:(void(^)(FHRentDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 租房-周边房源
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
+                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion;
+
+// 租房-同小区房源
++ (TTHttpTask*)requestHouseRentSameNeighborhood:(NSString*)rentId
+                             withNeighborhoodId:(NSString*)neighborhoodId
+                                     completion:(void(^)(FHRentSameNeighborhoodResponseModel* model , NSError *error))completion;
 
 // 二手房-周边房源
 +(TTHttpTask*)requestRelatedHouseSearch:(NSString*)houseId

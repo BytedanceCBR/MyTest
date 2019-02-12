@@ -1442,15 +1442,6 @@
 		B32FD34121A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
 		B32FD34221A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
 		B32FD34321A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
-		B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
-		B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
-		B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
 		B32FD35521A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35621A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35721A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
@@ -3774,7 +3765,6 @@
 		D479515A21ECC94E00548965 /* TTInterfaceTipBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A59F1FCE9C7900FCE0EC /* TTInterfaceTipBaseModel.m */; };
 		D479515B21ECC94E00548965 /* TTVSegmentedPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692D11F31D0D300D59CA5 /* TTVSegmentedPageViewController.m */; };
 		D479515C21ECC94E00548965 /* ExploreAddEntryListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 486F87381A21BBC200F5AE99 /* ExploreAddEntryListCell.m */; };
-		D479515D21ECC94E00548965 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
 		D479515E21ECC94E00548965 /* FHHeaderSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */; };
 		D479515F21ECC94E00548965 /* FloorPanCategoryDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3632E21A29D9E0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift */; };
 		D479516021ECC94E00548965 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2846351DF5407000170DE7 /* TTLayOutUnifyADGroupPicCellModel.m */; };
@@ -5184,7 +5174,6 @@
 		D47956E221ECC94E00548965 /* QuickLoginAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3634A21A29D9E0097FCB6 /* QuickLoginAlert.swift */; };
 		D47956E321ECC94E00548965 /* TTFeedCollectionHTSListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 485782AE1EE953F900307CEF /* TTFeedCollectionHTSListCell.m */; };
 		D47956E421ECC94E00548965 /* RelatedNeighborhoodListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633B21A29D9E0097FCB6 /* RelatedNeighborhoodListViewModel.swift */; };
-		D47956E521ECC94E00548965 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
 		D47956E621ECC94E00548965 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D24F7DF1E5D9F7C0021AE37 /* ExploreVideoDetailUnUnifyLargePicADView.m */; };
 		D47956E721ECC94E00548965 /* TTPersonalHomeHeaderOperationView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2F71F1333610002B455 /* TTPersonalHomeHeaderOperationView.m */; };
 		D47956E821ECC94E00548965 /* ExploreVideoDetailAppLeftPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCACFFF1DDC237200EBF9CF /* ExploreVideoDetailAppLeftPicADView.m */; };
@@ -5253,7 +5242,6 @@
 		D479572721ECC94E00548965 /* TSVActivityBannerOriginalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A7A8EC1FD1223700070FDD /* TSVActivityBannerOriginalData.m */; };
 		D479572821ECC94E00548965 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CABD2142652900653188 /* FPSMonitor.swift */; };
 		D479572921ECC94E00548965 /* TTRNCellManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBCA9D31F67812B00C518C3 /* TTRNCellManager.m */; };
-		D479572A21ECC94E00548965 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
 		D479572B21ECC94E00548965 /* TTFastCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFABA01F0E432B00C1E28D /* TTFastCoding.m */; };
 		D479572C21ECC94E00548965 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAE62142652900653188 /* TGPacman.swift */; };
 		D479572D21ECC94E00548965 /* TTDetailNatantRelateReadPlainView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB57E1F1332D90002B455 /* TTDetailNatantRelateReadPlainView.m */; };
@@ -9754,12 +9742,6 @@
 		B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseHouseDetailPage.swift; sourceTree = "<group>"; };
 		B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentSearchInNeighborhoodCellRender.swift; sourceTree = "<group>"; };
 		B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentReleatedHouseCellRender.swift; sourceTree = "<group>"; };
-		B32FD34521A67A51007B9966 /* HouseRentAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentAPI.h; sourceTree = "<group>"; };
-		B32FD34621A67A51007B9966 /* HouseRentAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentAPI.m; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 1; };
-		B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentRelatedResponse.h; sourceTree = "<group>"; };
-		B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentRelatedResponse.m; sourceTree = "<group>"; };
-		B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRentSameNeighborhoodResponse.h; sourceTree = "<group>"; };
-		B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRentSameNeighborhoodResponse.m; sourceTree = "<group>"; };
 		B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseContactBottomBarViewModel.swift; sourceTree = "<group>"; };
 		B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHFilterRedDotManager.swift; sourceTree = "<group>"; };
 		B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindPageControl.swift; sourceTree = "<group>"; };
@@ -16743,7 +16725,6 @@
 		B32FD2C921A26E2D007B9966 /* HouseRent */ = {
 			isa = PBXGroup;
 			children = (
-				B32FD34421A67A33007B9966 /* API */,
 				B32FD2CA21A26E37007B9966 /* Detail */,
 			);
 			path = HouseRent;
@@ -16808,19 +16789,6 @@
 				B32FD33321A570EA007B9966 /* HouseRentTracer.swift */,
 			);
 			path = Tracer;
-			sourceTree = "<group>";
-		};
-		B32FD34421A67A33007B9966 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD34521A67A51007B9966 /* HouseRentAPI.h */,
-				B32FD34621A67A51007B9966 /* HouseRentAPI.m */,
-				B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */,
-				B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */,
-				B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */,
-				B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */,
-			);
-			path = API;
 			sourceTree = "<group>";
 		};
 		B388C9D82142652800653188 /* Bubble */ = {
@@ -21904,7 +21872,6 @@
 				A97DB9A71F1332DE0002B455 /* TTHistoryViewController.m in Sources */,
 				FEF8A5A51FCE9C7B00FCE0EC /* TTInterfaceTipBaseModel.m in Sources */,
 				F87696401F31D0D900D59CA5 /* TTVSegmentedPageViewController.m in Sources */,
-				B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				3DF363D621A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				486F87391A21BBC200F5AE99 /* ExploreAddEntryListCell.m in Sources */,
 				6B28469A1DF5407100170DE7 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -23308,7 +23275,6 @@
 				A97DC0821F1333310002B455 /* NewsDetailConstant.m in Sources */,
 				3DF363F421A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
 				485782AF1EE953F900307CEF /* TTFeedCollectionHTSListCell.m in Sources */,
-				B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				2D24F7E01E5D9F7C0021AE37 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				A97DC48A1F1333640002B455 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				2DCAD01A1DDC237200EBF9CF /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -23377,7 +23343,6 @@
 				1B5B58BD1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m in Sources */,
 				48A7A8ED1FD1223700070FDD /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7A2142652B00653188 /* FPSMonitor.swift in Sources */,
-				B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				9CBCA9D51F67812B00C518C3 /* TTRNCellManager.m in Sources */,
 				A9AFABA51F0E432B00C1E28D /* TTFastCoding.m in Sources */,
 				B388CCBE2142652C00653188 /* TGPacman.swift in Sources */,
@@ -23629,7 +23594,6 @@
 				B373C8912174587A008F9905 /* TTInterfaceTipBaseModel.m in Sources */,
 				B373C8922174587A008F9905 /* TTVSegmentedPageViewController.m in Sources */,
 				B373C8932174587A008F9905 /* ExploreAddEntryListCell.m in Sources */,
-				B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				6124ECCA21AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D821A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				B373C8942174587A008F9905 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -25039,7 +25003,6 @@
 				3DF3641721A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				B373CDE32174587A008F9905 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F621A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				B373CDE42174587A008F9905 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				B373CDE52174587A008F9905 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				B373CDE62174587A008F9905 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -25108,7 +25071,6 @@
 				B373CE242174587A008F9905 /* TSVActivityBannerOriginalData.m in Sources */,
 				B373CE252174587A008F9905 /* FPSMonitor.swift in Sources */,
 				B373CE262174587A008F9905 /* TTRNCellManager.m in Sources */,
-				B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				B373CE272174587A008F9905 /* TTFastCoding.m in Sources */,
 				B373CE282174587A008F9905 /* TGPacman.swift in Sources */,
 				B373CE292174587A008F9905 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -25360,7 +25322,6 @@
 				D479515A21ECC94E00548965 /* TTInterfaceTipBaseModel.m in Sources */,
 				D479515B21ECC94E00548965 /* TTVSegmentedPageViewController.m in Sources */,
 				D479515C21ECC94E00548965 /* ExploreAddEntryListCell.m in Sources */,
-				D479515D21ECC94E00548965 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				D479515E21ECC94E00548965 /* FHHeaderSegmentCell.swift in Sources */,
 				D479515F21ECC94E00548965 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				D479516021ECC94E00548965 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -26770,7 +26731,6 @@
 				D47956E221ECC94E00548965 /* QuickLoginAlert.swift in Sources */,
 				D47956E321ECC94E00548965 /* TTFeedCollectionHTSListCell.m in Sources */,
 				D47956E421ECC94E00548965 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				D47956E521ECC94E00548965 /* FHHouseRentRelatedResponse.m in Sources */,
 				D47956E621ECC94E00548965 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				D47956E721ECC94E00548965 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				D47956E821ECC94E00548965 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -26839,7 +26799,6 @@
 				D479572721ECC94E00548965 /* TSVActivityBannerOriginalData.m in Sources */,
 				D479572821ECC94E00548965 /* FPSMonitor.swift in Sources */,
 				D479572921ECC94E00548965 /* TTRNCellManager.m in Sources */,
-				D479572A21ECC94E00548965 /* HouseRentAPI.m in Sources */,
 				D479572B21ECC94E00548965 /* TTFastCoding.m in Sources */,
 				D479572C21ECC94E00548965 /* TGPacman.swift in Sources */,
 				D479572D21ECC94E00548965 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -27091,7 +27050,6 @@
 				FEFA5309205FB1A8001F50D8 /* TTInterfaceTipBaseModel.m in Sources */,
 				FEFA530A205FB1A8001F50D8 /* TTVSegmentedPageViewController.m in Sources */,
 				FEFA530B205FB1A8001F50D8 /* ExploreAddEntryListCell.m in Sources */,
-				B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				6124ECC921AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D721A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				FEFA530E205FB1A8001F50D8 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -28501,7 +28459,6 @@
 				3DF3641621A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				FEFA590E205FB1A8001F50D8 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F521A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				FEFA5910205FB1A8001F50D8 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				FEFA5912205FB1A8001F50D8 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				FEFA5915205FB1A8001F50D8 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -28570,7 +28527,6 @@
 				FEFA595B205FB1A8001F50D8 /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7B2142652B00653188 /* FPSMonitor.swift in Sources */,
 				FEFA595C205FB1A8001F50D8 /* TTRNCellManager.m in Sources */,
-				B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				FEFA595E205FB1A8001F50D8 /* TTFastCoding.m in Sources */,
 				B388CCBF2142652C00653188 /* TGPacman.swift in Sources */,
 				FEFA595F205FB1A8001F50D8 /* TTDetailNatantRelateReadPlainView.m in Sources */,

@@ -101,15 +101,14 @@
 #import <FHHouseRent/FHHouseRent.h>
 
 #import <FHHouseBase/FHBaseTableViewCell.h>
-#import "HouseRentAPI.h"
 #import <FHHouseBase/FHHouseSuggestionDelegate.h>
 
 #import "FHHomeConfigManager.h"
 #import "FHNewHouseItemModel.h"
+#import "FHHouseDetailAPI.h"
+#import "FHDetailRentModel.h"
 #import "FHHouseRentRelatedResponse.h"
 #import "FHRentSameNeighborhoodResponse.h"
-#import "FHRentDetailAPI.h"
-#import "FHRentDetailResponse.h"
 #import "TTFullScreenLoadingView.h"
 
 #import "FHHomeHeaderTableViewCell.h"

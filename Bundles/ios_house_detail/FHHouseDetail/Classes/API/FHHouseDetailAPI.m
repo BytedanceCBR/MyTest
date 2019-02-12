@@ -13,6 +13,9 @@
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
+#import "FHDetailRentModel.h"
+#import "FHHouseRentRelatedResponse.h"
+#import "FHRentSameNeighborhoodResponse.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -79,34 +82,121 @@
         }
     } callbackInMainThread:NO];
 }
-//
-//+(TTHttpTask*)requestNeighborhoodDetail:(NSString*)houseId
-//                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion
-//{
-//
-//    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-//    NSString* url = [host stringByAppendingString:@"/f100/api/rental/info"];
-//    return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url
-//                                                              params:@{@"rental_f_code": rentCode}
-//                                                              method:@"GET"
-//                                                    needCommonParams:YES
-//                                                            callback:^(NSError *error, id obj) {
-//                                                                FHRentDetailResponseModel *model = nil;
-//                                                                if (!error) {
-//                                                                    model = [[FHRentDetailResponseModel alloc] initWithData:obj error:&error];
-//                                                                }
-//
-//                                                                if (![model.status isEqualToString:@"0"]) {
-//                                                                    error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-//                                                                }
-//
-//                                                                if (completion) {
-//                                                                    completion(model,error);
-//                                                                }
-//                                                            }];
-//}
+
++(TTHttpTask*)requestNeighborhoodDetail:(NSString*)neighborhoodId
+                                  logPB:(NSDictionary *)logPB
+                                  query:(NSString*)query
+                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nullable error))completion
+{
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/neighborhood/info?neighborhood_id=%@",neighborhoodId];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (logPB) {
+        [paramDic addEntriesFromDictionary:logPB];
+    }
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailNeighborhoodModel *model = nil;
+        if (!error) {
+            model = [[FHDetailNeighborhoodModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
 
 // 租房详情页请求
++(TTHttpTask*)requestRentDetail:(NSString*)rentCode
+                     completion:(void(^)(FHRentDetailResponseModel *model , NSError *error))completion {
+    
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/rental/info"];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"rental_f_code"] = rentCode;
+    
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHRentDetailResponseModel *model = nil;
+        if (!error) {
+            model = [[FHRentDetailResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 租房-周边房源
++ (TTHttpTask*)requestHouseRentRelated:(NSString*)rentId
+                            completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/related_rent"];
+    return [[TTNetworkManager shareInstance]
+            requestForBinaryWithURL:url
+            params:@{@"rent_id": rentId, @"count": @(5)}
+            method:@"GET"
+            needCommonParams:YES
+            callback:^(NSError *error, id obj) {
+                FHHouseRentRelatedResponseModel* model = nil;
+                if (!error) {
+                    model = [[FHHouseRentRelatedResponseModel alloc] initWithData:obj error:&error];
+                }
+                if (![model.status isEqualToString:@"0"]) {
+                    error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }
+                
+                if (completion) {
+                    completion(model,error);
+                }
+            }];
+}
+
+// 租房-同小区房源
++ (TTHttpTask*)requestHouseRentSameNeighborhood:(NSString*)rentId
+                             withNeighborhoodId:(NSString*)neighborhoodId
+                                     completion:(void(^)(FHRentSameNeighborhoodResponseModel* model , NSError *error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/same_neighborhood_rent"];
+    return [[TTNetworkManager shareInstance]
+            requestForBinaryWithURL:url
+            params:@{@"rent_id": rentId,
+                     @"neighborhood_id": neighborhoodId,
+                     @"count": @(5),
+                     }
+            method:@"GET"
+            needCommonParams:YES
+            callback:^(NSError *error, id obj) {
+                FHRentSameNeighborhoodResponseModel* model = nil;
+                if (!error) {
+                    model = [[FHRentSameNeighborhoodResponseModel alloc] initWithData:obj error:&error];
+                }
+                if (![model.status isEqualToString:@"0"]) {
+                    error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+                }
+                
+                if (completion) {
+                    completion(model,error);
+                }
+            }];
+}
 
 // 二手房-周边房源
 +(TTHttpTask*)requestRelatedHouseSearch:(NSString*)houseId

@@ -163,7 +163,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         self?.houseInSameNeighborhood.accept(response)
                     })
                     .disposed(by: disposeBag)
-            let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: neighborhoodId) { [weak self] (model, error) in
+            let task1 = FHHouseDetailAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: neighborhoodId) { [weak self] (model, error) in
 
                 self?.rentHouseInSameNeighborhood.accept(model)
             }
