@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <JSONModel.h>
+#import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -200,7 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataHouseImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
 @property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataFacilitiesModel> *facilities;
 @property (nonatomic, copy , nullable) NSString *pricing;
