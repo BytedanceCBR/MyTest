@@ -87,6 +87,7 @@
     FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
     [self.items addObject:grayLine];
     
+    self.contactViewModel.contactPhone = model.data.contact;
     
     [self reloadData];
 }

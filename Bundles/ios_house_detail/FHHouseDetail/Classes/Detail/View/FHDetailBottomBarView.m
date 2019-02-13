@@ -11,6 +11,7 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "Masonry.h"
+#import <BDWebImage.h>
 
 @interface FHDetailBottomBarView ()
 
@@ -84,6 +85,32 @@
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(44);
     }];
+    [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.licenceIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.leftView.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(jump2RealtorDetail)];
+    [self.leftView addGestureRecognizer:tap];
+}
+
+- (void)contactBtnDidClick:(UIButton *)btn
+{
+    if (self.bottomBarContactBlock) {
+        self.bottomBarContactBlock();
+    }
+}
+
+- (void)licenseBtnDidClick:(UIButton *)btn
+{
+    if (self.bottomBarLicenseBlock) {
+        self.bottomBarLicenseBlock();
+    }
+}
+
+- (void)jump2RealtorDetail
+{
+    if (self.bottomBarRealtorBlock) {
+        self.bottomBarRealtorBlock();
+    }
 }
 
 - (void)displayLicense:(BOOL)isDisplay
@@ -102,6 +129,43 @@
             make.right.mas_equalTo(self);
         }];
     }
+}
+
+- (void)refreshBottomBar:(FHDetailOldDataContactModel *)contactPhone contactTitle:(NSString *)contactTitle
+{
+    [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
+    [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
+
+    self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
+    CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? 160 : 0;
+    [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+    if (contactPhone.realtorName.length > 0) {
+        if (contactPhone.realtorName.length > 4) {
+            NSString *realtorName = [NSString stringWithFormat:@"%@...",[contactPhone.realtorName substringToIndex:3]];
+            self.nameLabel.text = realtorName;
+        }
+    }else {
+        self.nameLabel.text = @"经纪人";
+    }
+    if (contactPhone.agencyName.length > 0) {
+        if (contactPhone.agencyName.length > 4) {
+            NSString *agencyName = [NSString stringWithFormat:@"%@...",[contactPhone.agencyName substringToIndex:3]];
+            self.agencyLabel.text = agencyName;
+            self.agencyLabel.hidden = NO;
+        }
+    }else {
+        self.agencyLabel.hidden = YES;
+    }
+    NSMutableArray *licenseViews = @[].mutableCopy;
+    if (contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0) {
+        [self displayLicense:YES];
+    }else {
+        [self displayLicense:NO];
+    }
+    [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(leftWidth);
+    }];
+    // add by zjing for test 缺少点击跳转经纪人详情页，埋点以及营业执照和从业人员信息卡展示
 }
 
 - (UIControl *)leftView

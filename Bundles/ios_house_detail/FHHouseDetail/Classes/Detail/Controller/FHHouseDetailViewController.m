@@ -11,6 +11,8 @@
 #import "FHDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
+#import "UIFont+House.h"
+#import "FHHouseDetailContactViewModel.h"
 
 @interface FHHouseDetailViewController ()
 
@@ -70,7 +72,19 @@
     
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
+    
+    _bottomStatusBar = [[UILabel alloc]init];
+    _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
+    _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
+    _bottomStatusBar.text = @"该房源已停售";
+    _bottomStatusBar.font = [UIFont themeFontRegular:14];
+    _bottomStatusBar.textColor = [UIColor whiteColor];
+    _bottomStatusBar.hidden = YES;
+    [self.view addSubview:_bottomStatusBar];
 
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc]initWithNavBar:_navBar bottomBar:_bottomBar];
+    self.viewModel.contactViewModel.houseType = self.houseType;
+    
     [self addDefaultEmptyViewFullScreen];
 
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -86,7 +100,11 @@
             make.bottom.mas_equalTo(self.view);
         }
     }];
-
+    [_bottomStatusBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.bottomBar.mas_top);
+        make.height.mas_equalTo(0);
+    }];
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset
