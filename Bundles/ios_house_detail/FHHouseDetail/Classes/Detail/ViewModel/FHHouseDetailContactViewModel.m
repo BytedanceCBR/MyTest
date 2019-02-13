@@ -8,12 +8,22 @@
 #import "FHHouseDetailContactViewModel.h"
 #import "TTRoute.h"
 #import "TTShareManager.h"
+#import "WXApi.h"
+#import <TencentOpenAPI/QQApiInterface.h>
+#import <TTActivityContentItemProtocol.h>
+#import <TTWechatTimelineContentItem.h>
+#import <TTWechatContentItem.h>
+#import <TTQQFriendContentItem.h>
+#import <TTQQZoneContentItem.h>
+#import "BDWebImage.h"
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
 
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
+
+@property (nonatomic, strong) TTShareManager *shareManager;
 
 @end
 
@@ -72,25 +82,29 @@
 //    recordEvent(key: "click_share", params: params)
 //    shareParams = params
     
-    
-//    if let shareItem = self.detailPageViewModel?.getShareItem() {
-//
-//        var shareContentItems = [TTActivityContentItemProtocol]()
-//
-//        //            if TTAccountAuthWeChat.isAppInstalled() {
-//        //判断是否有微信
-//        shareContentItems.append(createWeChatTimelineShareItem(shareItem: shareItem))
-//        shareContentItems.append(createWeChatShareItem(shareItem: shareItem))
-//        //            }
-//
-//        if QQApiInterface.isQQInstalled() && QQApiInterface.isQQSupportApi() {
-//            //判断是否有qq
-//            shareContentItems.append(createQQFriendShareItem(shareItem: shareItem))
-//            shareContentItems.append(createQQZoneContentItem(shareItem: shareItem))
-//        }
-//
-//        self.shareManager.displayActivitySheet(withContent: shareContentItems)
-//    }
+    if (!self.shareInfo) {
+        return;
+    }
+    UIImage *shareImage = [[BDImageCache sharedImageCache]imageFromDiskCacheForKey:self.shareInfo.coverImage] ? : [UIImage imageNamed:@"default_image"];
+    NSString *title = self.shareInfo.title ? : @"";
+    NSString *desc = self.shareInfo.desc ? : @"";
+    NSString *webPageUrl = self.shareInfo.shareUrl ? : @"";
+
+    NSMutableArray *shareContentItems = @[].mutableCopy;
+    TTWechatContentItem *wechatItem = [[TTWechatContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
+    [shareContentItems addObject:wechatItem];
+    TTWechatTimelineContentItem *timeLineItem = [[TTWechatTimelineContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
+    [shareContentItems addObject:timeLineItem];
+
+    // 大师说PM说微信不用判断
+    if ([QQApiInterface isQQInstalled] && [QQApiInterface isQQSupportApi]) {
+
+        TTQQFriendContentItem *qqFriendItem = [[TTQQFriendContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage imageUrl:@"" shareTye:TTShareWebPage];
+        [shareContentItems addObject:qqFriendItem];
+        TTQQZoneContentItem *qqZoneItem = [[TTQQZoneContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage imageUrl:@"" shareTye:TTShareWebPage];
+        [shareContentItems addObject:qqZoneItem];
+    }
+    [self.shareManager displayActivitySheetWithContent:shareContentItems];
 }
 
 - (void)setContactPhone:(FHDetailOldDataContactModel *)contactPhone
@@ -181,4 +195,11 @@
     
 }
 
+- (TTShareManager *)shareManager
+{
+    if (!_shareManager) {
+        _shareManager = [[TTShareManager alloc]init];
+    }
+    return _shareManager;
+}
 @end
