@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   NSInteger         type;// 1：二手房，2：新房
 @property (nonatomic, copy)     NSString       *name;
 @property (nonatomic, copy)     NSString       *aliasName;
-@property (nonatomic, strong)   NSArray       *tags;
+@property (nonatomic, strong)   NSArray       *tags;// FHSearchHouseDataItemsTagsModel item类型
 
 @end
 

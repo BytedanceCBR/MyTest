@@ -164,12 +164,16 @@
 - (void)setTags:(NSArray *)tags {
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
     __block CGFloat height = 0;
-    NSMutableAttributedString *dotAttributedString = [self createTagAttributeTextNormal:@"." fontSize:12.0];
-    [tags enumerateObjectsUsingBlock:^(NSAttributedString*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSMutableAttributedString *dotAttributedString = [self createTagAttributeTextNormal:@" · " fontSize:12.0];
+    [tags enumerateObjectsUsingBlock:^(FHSearchHouseDataItemsTagsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (![obj isKindOfClass:[FHSearchHouseDataItemsTagsModel class]]) {
+            *stop = YES;
+        }
         if (idx > 0) {
             [text appendAttributedString:dotAttributedString];
         }
-        [text appendAttributedString:obj];
+        NSAttributedString *attr = [self createTagAttributeTextNormal:obj.content fontSize:12.0];
+        [text appendAttributedString:attr];
         YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake(UIScreen.mainScreen.bounds.size.width - 40, 10000) text:text];
         CGFloat lineHeight = tagLayout.textBoundingSize.height;
         // 只显示一行
@@ -178,8 +182,8 @@
                 height = lineHeight;
             } else {
                 // 删除： · tag
-                if ((text.length - (obj.length + 3)) >= 0) {
-                    [text deleteCharactersInRange:NSMakeRange((text.length - (obj.length + 3)) , obj.length + 3)];
+                if ((text.length - (attr.length + 3)) >= 0) {
+                    [text deleteCharactersInRange:NSMakeRange((text.length - (attr.length + 3)) , attr.length + 3)];
                 }
             }
         }
