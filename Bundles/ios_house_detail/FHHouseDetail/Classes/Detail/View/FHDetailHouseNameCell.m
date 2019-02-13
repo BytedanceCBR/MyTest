@@ -44,12 +44,20 @@
     }
     self.currentData = data;
     //
-    NSInteger type = ((FHDetailHouseNameModel *)data).type;
+    self.bottomLine.hidden = YES;
+    FHDetailHouseNameModel *model = (FHDetailHouseNameModel *)data;
+    NSInteger type = model.type;
     if (type == 1) {
         // 二手房
+        self.bottomLine.hidden = YES;
     } else if (type == 2) {
         // 新房
+        self.bottomLine.hidden = NO;
     }
+    self.nameLabel.text = model.name;
+    [self setAlias:model.aliasName];
+    [self setTags:model.tags];
+    [self layoutIfNeeded];
 }
 
 
