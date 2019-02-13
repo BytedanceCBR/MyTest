@@ -17,6 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHDetailHouseDataItemsHouseImageModel<NSObject>
+@end
+
 @interface  FHDetailHouseDataItemsHouseImageModel  : JSONModel<FHDetailPhotoHeaderModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *url;

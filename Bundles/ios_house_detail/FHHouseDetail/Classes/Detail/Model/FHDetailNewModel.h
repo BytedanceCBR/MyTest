@@ -72,7 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNewDataSmallImageGroupModel : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *images;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, copy , nullable) NSString *name;
 @end

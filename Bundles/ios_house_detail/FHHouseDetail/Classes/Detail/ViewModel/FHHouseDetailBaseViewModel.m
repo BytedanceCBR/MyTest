@@ -146,4 +146,12 @@
     self.cellHeightCaches[tempKey] = cellHeight;
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView != self.tableView) {
+        return;
+    }
+    [self.detailController refreshContentOffset:scrollView.contentOffset];
+}
+
 @end

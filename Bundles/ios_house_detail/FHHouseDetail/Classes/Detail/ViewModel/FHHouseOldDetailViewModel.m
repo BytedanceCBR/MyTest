@@ -13,6 +13,8 @@
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
+#import "FHDetailGrayLineCell.h"
+#import "FHDetailHouseNameCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -28,11 +30,22 @@
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
+    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
+    // 头部滑动图片
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
+    }
+    // 标题
+    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
+        return [FHDetailHouseNameCell class];
+    }
+    // 灰色分割线
+    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+        return [FHDetailGrayLineCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -70,11 +83,27 @@
 - (void)processDetailData:(FHDetailOldModel *)model {
     // 清空数据源
     [self.items removeAllObjects];
+    // 添加头滑动图片
     if (model.data.houseImage) {
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.houseImage;
         [self.items addObject:headerCellModel];
     }
+    // 添加标题
+    if (model.data) {
+        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
+        houseName.type = 1;
+        houseName.name = model.data.title;
+        houseName.aliasName = nil;
+        houseName.tags = model.data.tags;
+        [self.items addObject:houseName];
+    }
+    // 添加分割线
+    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+    [self.items addObject:grayLine];
+    
+    self.contactViewModel.contactPhone = model.data.contact;
+    
     [self reloadData];
 }
 
