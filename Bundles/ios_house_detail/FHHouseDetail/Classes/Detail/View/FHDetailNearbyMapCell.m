@@ -20,7 +20,9 @@
 
 #import "FHMyMAAnnotation.h"
 #import "FHDetailNearbyMapItemCell.h"
+#import "FHDetailNewModel.h"
 
+#import "TTRoute.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -36,6 +38,7 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) UIView *bottomLine;
 @property (nonatomic , strong) UILabel *emptyInfoLabel;
 @property (nonatomic , strong) UIButton *mapMaskBtn;
+@property (nonatomic , strong) UIButton *mapMaskBtnLocation;
 @property (nonatomic , assign) CLLocationCoordinate2D centerPoint;
 @property (nonatomic , strong) AMapSearchAPI *searchApi;
 @property (nonatomic , strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
@@ -45,6 +48,7 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) NSArray * nameArray;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
+
 @end
 
 @implementation FHDetailNearbyMapCell
@@ -68,11 +72,25 @@ static const float kSegementedPadingTop = 5;
         self.searchApi = [[AMapSearchAPI alloc] init];
         self.searchApi.delegate = self;
         
-        [self requestPoiInfo:self.centerPoint andKeyWord:_nameArray.firstObject];
-        
         [self setUpLocationListTableView];
     }
     return self;
+}
+
+- (void)willMoveToWindow:(UIWindow *)newWindow
+{
+    [self requestPoiInfo:self.centerPoint andKeyWord:_nameArray.firstObject];
+}
+
+- (void)refreshWithData:(id)data {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailNearbyMapModel class]]) {
+        return;
+    }
+    
+    FHDetailNearbyMapModel *dataModel = (FHDetailNearbyMapModel *)data;
+    dataModel.cell = self;
+    
+    self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
 }
 
 - (void)setUpSegmentedControl
@@ -155,17 +173,40 @@ static const float kSegementedPadingTop = 5;
     
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtn];
+//    [_mapMaskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.equalTo(_mapImageView);
+//    }];
     [_mapMaskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(_mapImageView);
+        make.top.equalTo(self.segmentedControl.mas_bottom);
+        make.left.right.equalTo(self.contentView);
+        make.bottom.equalTo(self.contentView);
     }];
     [_mapMaskBtn setBackgroundColor:[UIColor clearColor]];
     
+    [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick) forControlEvents:UIControlEventTouchUpInside];
     
     WeakSelf;
     [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
         StrongSelf;
         self.mapImageView.image = resultImage;
     }];
+}
+
+- (void)mapMaskBtnClick
+{
+    //地图页调用示例
+    double longitude = self.centerPoint.longitude;
+    double latitude = self.centerPoint.latitude;
+    NSNumber *latitudeNum = @(latitude);
+    NSNumber *longitudeNum = @(longitude);
+    NSString *selectCategory = @"公交";
+    if (_nameArray.count > _segmentedControl.selectedSegmentIndex) {
+        if (_segmentedControl.selectedSegmentIndex != 0) {
+            selectCategory = [NSString stringWithFormat:@"%@",_nameArray[_segmentedControl.selectedSegmentIndex]];
+        }
+    }
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"category":selectCategory,@"latitude":latitudeNum,@"longitude":longitudeNum}];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 - (void)setUpLocationListTableView
@@ -203,22 +244,31 @@ static const float kSegementedPadingTop = 5;
         make.height.mas_equalTo(20);
     }];
     
+    
+    _mapMaskBtnLocation = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.contentView addSubview:_mapMaskBtnLocation];
+
+    [_mapMaskBtnLocation mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.locationList);
+    }];
+    [_mapMaskBtnLocation setBackgroundColor:[UIColor clearColor]];
+    [_mapMaskBtnLocation addTarget:self action:@selector(mapMaskBtnClick) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)changeListLayout:(NSInteger)poiCount
 {
-    [_segmentedControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.equalTo(self.contentView);
-        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
-        make.height.mas_equalTo(kSegementedHeight);
-    }];
-    
-    [_mapImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView);
-        make.top.equalTo(self.segmentedControl.mas_bottom);
-        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
-        make.height.mas_equalTo(160);
-    }];
+//    [_segmentedControl mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        make.left.top.equalTo(self.contentView);
+//        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
+//        make.height.mas_equalTo(kSegementedHeight);
+//    }];
+//
+//    [_mapImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//        make.left.equalTo(self.contentView);
+//        make.top.equalTo(self.segmentedControl.mas_bottom);
+//        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
+//        make.height.mas_equalTo(160);
+//    }];
     
     [_locationList mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_mapImageView.mas_bottom).offset(10);
@@ -234,20 +284,24 @@ static const float kSegementedPadingTop = 5;
             make.width.mas_greaterThanOrEqualTo(100);
             make.height.mas_equalTo(20);
         }];
-        
-        [_mapMaskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(_mapImageView);
-        }];
     }else
     {
         _emptyInfoLabel.hidden = YES;
     }
-
-    [self.contentView setNeedsLayout];
-    [self.contentView layoutIfNeeded];
     
-    [self setNeedsLayout];
-    [self.contentView layoutIfNeeded];
+    [_mapMaskBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.segmentedControl.mas_bottom);
+        make.left.right.equalTo(self.contentView);
+        make.bottom.equalTo(self.contentView);
+    }];
+    
+    [_mapMaskBtnLocation mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.locationList);
+    }];
+    
+    if (self.indexChangeCallBack) {
+        self.indexChangeCallBack();
+    }
 }
 
 - (void)cleanAllAnnotations
@@ -277,9 +331,6 @@ static const float kSegementedPadingTop = 5;
 
 - (void)changePoiData
 {
-    if (self.poiAnnotations.count == 8) {
-        [self.poiAnnotations removeAllObjects];
-    }
     [_locationList reloadData];
     
     [self changeListLayout:self.poiAnnotations.count];
@@ -404,7 +455,7 @@ static const float kSegementedPadingTop = 5;
             UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 38)];
             titleLabel.text = annotation.title;
             titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
-            backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 14 + 10, 35);
+            backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 35);
             
             UIImage *imageAnna = [UIImage imageNamed:@"mapcell_annotation_bg"];
             

@@ -62,10 +62,37 @@
         [self.items addObject:headerCellModel];
     }
     
-    FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-    [self.items addObject:nearbyMapModel];
+    if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
+        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
+        nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
+        nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
+        [self.items addObject:nearbyMapModel];
+        
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
+                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
+                    [self reloadData];
+                };
+            }
+        });
+    }
+    
+    if (model.data.imageGroup) {
+        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        NSMutableArray *arrayHouseImage = [NSMutableArray new];
+        for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
+            FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
+            for (NSInteger j = 0; j < groupModel.images.count; j++) {
+                [arrayHouseImage addObject:groupModel.images[j]];
+            }
+        }
+        headerCellModel.houseImage = arrayHouseImage;
+        [self.items addObject:headerCellModel];
+    }
     
     [self reloadData];
+    
 }
 
 @end
