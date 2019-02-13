@@ -9,17 +9,25 @@
 #import "FHHouseDetailAPI.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailBaseCell.h"
+#import "FHDetailNearbyMapCell.h"
+#import "FHDetailPhotoHeaderCell.h"
 
 @implementation FHHouseNewDetailViewModel
 
 // 注册cell类型
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHDetailNearbyMapModel class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapModel class])];
+    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+
+    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
+    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+        return [FHDetailPhotoHeaderCell class];
+    }
+    
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
-        return [FHDetailNearbyMapModel class];
+        return [FHDetailNearbyMapCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -31,10 +39,10 @@
 
 - (void)startLoadData
 {
+    __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:@"6581052152733499652" completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
-       
+        [wSelf processDetailData:model];
     }];
-    
 }
 
 
@@ -43,9 +51,20 @@
     [self.items removeAllObjects];
     if (model.data.imageGroup) {
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-//        headerCellModel.houseImage = model.data.imageGroup;
+        NSMutableArray *arrayHouseImage = [NSMutableArray new];
+        for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
+            FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
+            for (NSInteger j = 0; j < groupModel.images.count; j++) {
+                [arrayHouseImage addObject:groupModel.images[j]];
+            }
+        }
+        headerCellModel.houseImage = arrayHouseImage;
         [self.items addObject:headerCellModel];
     }
+    
+    FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
+    [self.items addObject:nearbyMapModel];
+    
     [self reloadData];
 }
 
