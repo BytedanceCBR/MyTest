@@ -158,21 +158,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-
-
-@interface FHRentDetailResponseDataContactModel : JSONModel
-@property (nonatomic, copy , nullable) NSString *phone;
-@property (nonatomic, assign) NSInteger style;
-@property (nonatomic, copy , nullable) NSString *realtorName;
-@property (nonatomic, copy , nullable) NSString *avatarUrl;
-@property (nonatomic, copy , nullable) NSString *realtorId;
-@property (nonatomic, copy , nullable) NSString *agencyName;
-@property (nonatomic, assign) NSInteger showRealtorinfo;
-@property (nonatomic, copy, nullable) NSString *businessLicense;
-@property (nonatomic, copy, nullable) NSString *certificate;
-
-@end
-
 @protocol FHRentDetailResponseDataTagModel <NSObject>
 
 @end
@@ -200,7 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataDisclaimerModel *disclaimer;
 @property (nonatomic, copy, nullable) NSString *reportUrl;
-@property (nonatomic, strong , nullable) FHRentDetailResponseDataContactModel *contact;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataUserStatusModel* userStatus;
 @property (nonatomic, assign) NSInteger status;

@@ -243,22 +243,6 @@
 }
 @end
 
-@implementation FHDetailNewDataContactModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"noticeDesc": @"notice_desc",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailNewDataDisclaimerRichTextModel
 + (JSONKeyMapper*)keyMapper
 {

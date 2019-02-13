@@ -47,5 +47,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@interface FHDetailContactModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *style;
+@property (nonatomic, copy , nullable) NSString *certificate;
+@property (nonatomic, copy , nullable) NSString *avatarUrl;
+@property (nonatomic, copy , nullable) NSString *homePage;
+@property (nonatomic, copy , nullable) NSString *realtorId;
+@property (nonatomic, copy , nullable) NSString *businessLicense;
+@property (nonatomic, copy , nullable) NSString *agencyId;
+@property (nonatomic, copy , nullable) NSString *phone;
+@property (nonatomic, copy , nullable) NSString *agencyName;
+@property (nonatomic, copy , nullable) NSString *realtorName;
+@property (nonatomic, assign) NSInteger showRealtorinfo;
+
+@property (nonatomic, copy , nullable) NSString *noticeDesc;
+
+@end
 
 NS_ASSUME_NONNULL_END

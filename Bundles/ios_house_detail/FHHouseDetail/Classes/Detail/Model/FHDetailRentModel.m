@@ -79,34 +79,7 @@
 }
 
 @end
-
-@implementation FHRentDetailResponseDataContactModel
-
-
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"realtorName": @"realtor_name",
-                           @"avatarUrl": @"avatar_url",
-                           @"realtorId": @"realtor_id",
-                           @"agencyName": @"agency_name",
-                           @"showRealtorinfo": @"show_realtorinfo",
-                           @"businessLicense": @"business_license",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-
-@end
-
-
+ 
 @implementation  FHRentDetailResponseDataTagModel
 
 + (JSONKeyMapper*)keyMapper

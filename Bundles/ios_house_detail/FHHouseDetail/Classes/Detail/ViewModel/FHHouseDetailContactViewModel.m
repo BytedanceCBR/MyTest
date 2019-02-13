@@ -108,7 +108,7 @@
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
 }
 
-- (void)setContactPhone:(FHDetailOldDataContactModel *)contactPhone
+- (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
     NSString *contactTitle = @"电话咨询";

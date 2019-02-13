@@ -131,7 +131,7 @@
     }
 }
 
-- (void)refreshBottomBar:(FHDetailOldDataContactModel *)contactPhone contactTitle:(NSString *)contactTitle
+- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle
 {
     [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
     [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];

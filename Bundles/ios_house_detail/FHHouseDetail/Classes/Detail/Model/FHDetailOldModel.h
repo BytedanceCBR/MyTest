@@ -114,21 +114,6 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface FHDetailOldDataContactModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *style;
-@property (nonatomic, copy , nullable) NSString *certificate;
-@property (nonatomic, copy , nullable) NSString *avatarUrl;
-@property (nonatomic, copy , nullable) NSString *homePage;
-@property (nonatomic, copy , nullable) NSString *realtorId;
-@property (nonatomic, copy , nullable) NSString *businessLicense;
-@property (nonatomic, copy , nullable) NSString *agencyId;
-@property (nonatomic, copy , nullable) NSString *phone;
-@property (nonatomic, copy , nullable) NSString *agencyName;
-@property (nonatomic, copy , nullable) NSString *realtorName;
-@property (nonatomic, assign) NSInteger showRealtorinfo;
-@end
-
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
@@ -152,8 +137,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
-@property (nonatomic, strong , nullable) FHDetailOldDataContactModel *contact ;
-@property (nonatomic, strong , nullable) FHDetailOldDataContactModel *highlightedRealtor;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @end
 

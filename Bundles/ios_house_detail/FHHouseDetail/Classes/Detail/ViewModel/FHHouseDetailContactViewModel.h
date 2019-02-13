@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailContactViewModel : NSObject
 
-@property (nonatomic, strong) FHDetailOldDataContactModel *contactPhone;
+@property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, strong) FHDetailShareInfoModel *shareInfo;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 
--(instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
+- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 
 @end
 

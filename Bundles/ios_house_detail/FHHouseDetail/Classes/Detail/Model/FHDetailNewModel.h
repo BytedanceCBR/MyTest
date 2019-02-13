@@ -77,12 +77,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @end
 
-@interface FHDetailNewDataContactModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *phone;
-@property (nonatomic, copy , nullable) NSString *noticeDesc;
-@end
-
 @protocol FHDetailNewDataFloorpanListListModel<NSObject>
 @end
 
@@ -182,7 +176,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataImageGroupModel> *imageGroup;
 @property (nonatomic, strong , nullable) FHDetailNewDataTimelineModel *timeline ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
-@property (nonatomic, strong , nullable) FHDetailNewDataContactModel *contact ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *floorpanList ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
