@@ -68,6 +68,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         WeakSelf;
         self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+            StrongSelf;
             if ([FHEnvContext isNetworkConnected]) {
                 [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
             }else
@@ -133,10 +134,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
-            self.dataSource.showPlaceHolder = YES;
-            
-            [self reloadHomeTableHeaderSection];
-            
             [self updateCategoryViewSegmented:isFirstChange];
 
             if ([configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
@@ -155,6 +152,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && configDataModel.cityAvailability.enable == YES) {
                 return;
             }
+            
+            [self reloadHomeTableHeaderSection];
             
             [self resetAllCacheData];
             
@@ -285,6 +284,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         StrongSelf;
         
         if (!model || error) {
+            
+            if (isFirstChange) {
+                //首次请求失败尝试重试一次
+                [self requestOriginData:NO];
+                return;
+            }
+            
             if (![FHEnvContext isNetworkConnected]) {
                 [self.homeViewController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
             }else
