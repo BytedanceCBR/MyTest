@@ -126,7 +126,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *phone;
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *realtorName;
-@property (nonatomic, copy , nullable) NSString *showRealtorinfo;
+@property (nonatomic, assign) NSInteger showRealtorinfo;
 @end
 
 @interface FHDetailOldDataModel : JSONModel
@@ -153,6 +153,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailOldDataContactModel *contact ;
+@property (nonatomic, strong , nullable) FHDetailOldDataContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @end
 

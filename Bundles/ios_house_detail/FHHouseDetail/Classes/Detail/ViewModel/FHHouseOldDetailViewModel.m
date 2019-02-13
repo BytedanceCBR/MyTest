@@ -101,8 +101,11 @@
     // 添加分割线
     FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
     [self.items addObject:grayLine];
-    
-    self.contactViewModel.contactPhone = model.data.contact;
+    if (model.data.highlightedRealtor) {
+        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
+    }else {
+        self.contactViewModel.contactPhone = model.data.contact;
+    }
     self.contactViewModel.shareInfo = model.data.shareInfo;
 
     [self reloadData];
