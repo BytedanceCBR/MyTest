@@ -30,3 +30,16 @@
     return YES;
 }
 @end
+
+@implementation FHDetailGrayLineModel
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _lineHeight = 6.0;
+    }
+    return self;
+}
+
+@end
