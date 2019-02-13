@@ -14,4 +14,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// 模型
+@interface FHDetailGrayLineModel : FHDetailBaseModel
+
+@property (nonatomic, assign)   CGFloat       lineHeight;
+
+@end
+
+
 NS_ASSUME_NONNULL_END

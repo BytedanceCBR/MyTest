@@ -38,11 +38,4 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *houseImage;
 @end
 
-// cell底部灰条
-@interface FHDetailGrayLineModel : FHDetailBaseModel
-
-@property (nonatomic, assign)   CGFloat       lineHeight;
-
-@end
-
 NS_ASSUME_NONNULL_END
