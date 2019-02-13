@@ -32,7 +32,7 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     private let houseId: Int64
 
-    private var shareInfo: FHRentDetailResponseDataShareInfoModel?
+    private var shareInfo: FHDetailShareInfoModel?
     
     var contactPhone = BehaviorRelay<FHHouseDetailContact?>(value: nil)
 

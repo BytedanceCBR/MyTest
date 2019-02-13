@@ -173,15 +173,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHRentDetailResponseDataShareInfoModel : JSONModel
-@property (nonatomic, copy , nullable) NSString *coverImage;
-@property (nonatomic, copy , nullable) NSString *desc;
-@property (nonatomic, assign) NSInteger isVideo;
-@property (nonatomic, copy, nullable) NSString * shareUrl;
-@property (nonatomic, copy , nullable) NSString *title;
-
-@end
-
 @protocol FHRentDetailResponseDataTagModel <NSObject>
 
 @end
@@ -210,7 +201,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataDisclaimerModel *disclaimer;
 @property (nonatomic, copy, nullable) NSString *reportUrl;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataContactModel *contact;
-@property (nonatomic, strong , nullable) FHRentDetailResponseDataShareInfoModel *shareInfo;
+@property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataUserStatusModel* userStatus;
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, copy, nullable) NSString *camplaintUrl;

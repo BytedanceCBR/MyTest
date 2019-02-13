@@ -127,15 +127,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListModel> *list;
 @end
 
-@interface FHDetailNewDataShareInfoModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *coverImage;
-@property (nonatomic, copy , nullable) NSString *isVideo;
-@property (nonatomic, copy , nullable) NSString *description;
-@property (nonatomic, copy , nullable) NSString *shareUrl;
-@property (nonatomic, copy , nullable) NSString *title;
-@end
-
 @interface FHDetailNewDataCoreInfoSaleStatusModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *content;
@@ -193,7 +184,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
 @property (nonatomic, strong , nullable) FHDetailNewDataContactModel *contact ;
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *floorpanList ;
-@property (nonatomic, strong , nullable) FHDetailNewDataShareInfoModel *shareInfo ;
+@property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoModel *coreInfo ;
 @property (nonatomic, strong , nullable) FHDetailNewDataDisclaimerModel *disclaimer ;

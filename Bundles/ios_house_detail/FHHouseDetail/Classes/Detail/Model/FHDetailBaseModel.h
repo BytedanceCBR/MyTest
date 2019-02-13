@@ -45,4 +45,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface FHDetailShareInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *coverImage;
+@property (nonatomic, copy , nullable) NSString *isVideo;
+@property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *shareUrl;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+
 NS_ASSUME_NONNULL_END

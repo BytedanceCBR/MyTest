@@ -41,5 +41,23 @@
     }
     return self;
 }
+@end
 
+@implementation FHDetailShareInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"coverImage": @"cover_image",
+                           @"isVideo": @"is_video",
+                           @"shareUrl": @"share_url",
+                           @"desc": @"description",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
 @end

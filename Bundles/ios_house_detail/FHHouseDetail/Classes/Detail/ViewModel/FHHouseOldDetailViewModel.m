@@ -88,7 +88,8 @@
     [self.items addObject:grayLine];
     
     self.contactViewModel.contactPhone = model.data.contact;
-    
+//    self.contactViewModel.contactPhone = model.data.shareInfo;
+
     [self reloadData];
 }
 

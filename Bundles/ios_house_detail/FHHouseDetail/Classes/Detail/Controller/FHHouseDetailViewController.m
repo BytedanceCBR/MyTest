@@ -64,10 +64,14 @@
     self.viewModel = [FHHouseDetailBaseViewModel createDetailViewModelWithHouseType:self.houseType withController:self tableView:_tableView];
     self.viewModel.houseId = self.houseId;
     [self.view addSubview:_tableView];
-    
+
+    __weak typeof(self)wself = self;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     _navBar = [[FHDetailNavBar alloc]initWithFrame:CGRectMake(0, 0, screenBounds.size.width, navBarHeight + 44)];
+    _navBar.backActionBlock = ^{
+        [wself.navigationController popViewControllerAnimated:YES];
+    };
     [self.view addSubview:_navBar];
     
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];

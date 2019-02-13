@@ -113,14 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @end
 
-@interface FHDetailOldDataShareInfoModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *coverImage;
-@property (nonatomic, copy , nullable) NSString *isVideo;
-@property (nonatomic, copy , nullable) NSString *description;
-@property (nonatomic, copy , nullable) NSString *shareUrl;
-@property (nonatomic, copy , nullable) NSString *title;
-@end
 
 @interface FHDetailOldDataContactModel : JSONModel
 
@@ -158,7 +150,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
-@property (nonatomic, strong , nullable) FHDetailOldDataShareInfoModel *shareInfo ;
+@property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailOldDataContactModel *contact ;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;

@@ -72,15 +72,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @end
 
-@interface FHDetailNeighborhoodDataShareInfoModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *coverImage;
-@property (nonatomic, copy , nullable) NSString *isVideo;
-@property (nonatomic, copy , nullable) NSString *description;
-@property (nonatomic, copy , nullable) NSString *shareUrl;
-@property (nonatomic, copy , nullable) NSString *title;
-@end
-
 @protocol FHDetailNeighborhoodDataTotalSalesListModel<NSObject>
 @end
 
@@ -124,7 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataBaseInfoModel> *baseInfo;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodInfoModel *neighborhoodInfo ;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataShareInfoModel *shareInfo ;
+@property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataTotalSalesModel *totalSales ;
 @property (nonatomic, copy , nullable) NSString *totalSalesCount;
 @property (nonatomic, copy , nullable) NSString *id;

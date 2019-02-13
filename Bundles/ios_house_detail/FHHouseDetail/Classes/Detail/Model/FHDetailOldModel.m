@@ -173,23 +173,6 @@
 }
 @end
 
-@implementation FHDetailOldDataShareInfoModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"coverImage": @"cover_image",
-                           @"isVideo": @"is_video",
-                           @"shareUrl": @"share_url",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailOldDataPriceTrendModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
