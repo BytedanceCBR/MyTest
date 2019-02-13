@@ -16,6 +16,7 @@
 #import <TTQQFriendContentItem.h>
 #import <TTQQZoneContentItem.h>
 #import "BDWebImage.h"
+#import "TTPhotoScrollViewController.h"
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
 
@@ -143,8 +144,59 @@
 
 - (void)licenseAction
 {
+    NSMutableArray *images = @[].mutableCopy;
+    // "营业执照"
+    if (self.contactPhone.businessLicense.length > 0) {
+        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:self.contactPhone.businessLicense];
+        model.imageType = TTImageTypeLarge;
+        if (model) {
+            [images addObject:model];
+        }
+    }
+    // "从业人员信息卡"
+    if (self.contactPhone.certificate.length > 0) {
+        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:self.contactPhone.certificate];
+        model.imageType = TTImageTypeLarge;
+        if (model) {
+            [images addObject:model];
+        }
+    }
+    if (images.count == 0) {
+        return;
+    }
     
+    TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
+    vc.dragToCloseDisabled = YES;
+    vc.mode = PhotosScrollViewSupportBrowse;
+    vc.startWithIndex = 0;
+    vc.imageInfosModels = images;
+    
+    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+    CGRect frame = [self.bottomBar convertRect:self.bottomBar.bounds toView:window];
+    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index+1];
+    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
+    for (NSInteger i = 0 ; i < images.count ; i++) {
+        [frames addObject:[NSNull null]];
+    }
+    for (NSInteger i = 0 ; i < images.count; i++) {
+        [placeholders addObject:placeholder];
+    }
+    
+    NSValue *frameValue = [NSValue valueWithCGRect:frame];
+    [frames addObject:frameValue];
+    vc.placeholderSourceViewFrames = frames;
+    vc.placeholders = placeholders;
+//    __weak typeof(self) weakSelf = self;
+//    vc.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
+//        if (currentIndex >= 0 && currentIndex < weakSelf.images.count) {
+//            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
+//            [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+//        }
+//    };
+    [vc presentPhotoScrollView];
 }
+
 
 - (void)jump2RealtorDetail
 {

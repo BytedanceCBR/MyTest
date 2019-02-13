@@ -74,7 +74,7 @@
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel);
         make.top.mas_equalTo(self.nameLabel.mas_bottom);
-        make.right.mas_equalTo(self);
+        make.right.mas_equalTo(self.leftView);
     }];
 
     [self addSubview:self.contactBtn];
