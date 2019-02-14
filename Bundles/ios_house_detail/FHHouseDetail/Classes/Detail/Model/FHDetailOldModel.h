@@ -113,6 +113,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @end
 
+@protocol FHPriceChangeHistoryPriceChangeHistoryHistoryModel<NSObject>
+@end
+
+@interface FHPriceChangeHistoryPriceChangeHistoryHistoryModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *changeDesc;
+@property (nonatomic, copy , nullable) NSString *dateStr;
+@end
+
+@interface FHPriceChangeHistoryPriceChangeHistoryModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *detailUrl;
+@property (nonatomic, strong , nullable) NSArray<FHPriceChangeHistoryPriceChangeHistoryHistoryModel> *history;
+@property (nonatomic, copy , nullable) NSString *priceChangeDesc;
+@end
 
 @interface FHDetailOldDataModel : JSONModel
 
@@ -126,7 +141,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailOldDataUserStatusModel *userStatus ;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, copy , nullable) NSString *priceChangeHistory;
+@property (nonatomic, strong , nullable) FHPriceChangeHistoryPriceChangeHistoryModel *priceChangeHistory;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmV;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *DataSourceId;
