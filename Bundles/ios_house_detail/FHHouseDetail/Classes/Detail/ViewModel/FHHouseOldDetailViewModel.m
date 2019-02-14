@@ -18,6 +18,7 @@
 #import "FHDetailErshouHouseCoreInfoCell.h"
 #import "FHDetailPropertyListCell.h"
 #import "FHDetailPriceChangeHistoryCell.h"
+#import "FHDetailAgentListCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -38,6 +39,7 @@
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoCell class])];
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryCell class])];
+    [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -64,6 +66,10 @@
     // 属性列表
     if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
         return [FHDetailPropertyListCell class];
+    }
+    // 推荐经纪人
+    if ([model isKindOfClass:[FHDetailAgentListModel class]]) {
+        return [FHDetailAgentListCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -138,6 +144,21 @@
     // 添加分割线
     FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
     [self.items addObject:grayLine];
+    // 推荐经纪人
+    if (model.data.recommendedRealtors.count > 0) {
+        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        agentListModel.tableView = self.tableView;
+        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        [self.items addObject:agentListModel];
+        // test
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        grayLine.lineHeight = 400;
+        [self.items addObject:grayLine];
+    }
+
+    
+    
+    // --
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
