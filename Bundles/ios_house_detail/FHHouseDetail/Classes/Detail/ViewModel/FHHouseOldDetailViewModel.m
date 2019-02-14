@@ -16,6 +16,9 @@
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailErshouHouseCoreInfoCell.h"
+#import "FHDetailPropertyListCell.h"
+#import "FHDetailPriceChangeHistoryCell.h"
+#import "FHDetailAgentListCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -34,6 +37,9 @@
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoCell class])];
+    [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
+    [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryCell class])];
+    [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -52,6 +58,18 @@
     // Core Info
     if ([model isKindOfClass:[FHDetailErshouHouseCoreInfoModel class]]) {
         return [FHDetailErshouHouseCoreInfoCell class];
+    }
+    // 价格变动
+    if ([model isKindOfClass:[FHDetailPriceChangeHistoryModel class]]) {
+        return [FHDetailPriceChangeHistoryCell class];
+    }
+    // 属性列表
+    if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
+        return [FHDetailPropertyListCell class];
+    }
+    // 推荐经纪人
+    if ([model isKindOfClass:[FHDetailAgentListModel class]]) {
+        return [FHDetailAgentListCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -110,9 +128,37 @@
         coreInfoModel.coreInfo = model.data.coreInfo;
         [self.items addObject:coreInfoModel];
     }
+    // 价格变动
+    if (model.data.priceChangeHistory) {
+        FHDetailPriceChangeHistoryModel *priceChangeHistoryModel = [[FHDetailPriceChangeHistoryModel alloc] init];
+        priceChangeHistoryModel.priceChangeHistory = model.data.priceChangeHistory;
+        priceChangeHistoryModel.baseViewModel = self;
+        [self.items addObject:priceChangeHistoryModel];
+    }
+    // 添加属性列表
+    if (model.data.baseInfo) {
+        FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
+        propertyModel.baseInfo = model.data.baseInfo;
+        [self.items addObject:propertyModel];
+    }
     // 添加分割线
     FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
     [self.items addObject:grayLine];
+    // 推荐经纪人
+    if (model.data.recommendedRealtors.count > 0) {
+        FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        agentListModel.tableView = self.tableView;
+        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        [self.items addObject:agentListModel];
+        // test
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        grayLine.lineHeight = 400;
+        [self.items addObject:grayLine];
+    }
+
+    
+    
+    // --
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {

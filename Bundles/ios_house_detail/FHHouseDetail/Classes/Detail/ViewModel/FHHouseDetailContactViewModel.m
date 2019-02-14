@@ -17,8 +17,15 @@
 #import <TTQQZoneContentItem.h>
 #import "BDWebImage.h"
 #import "TTPhotoScrollViewController.h"
+#import "FHURLSettings.h"
+#import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
+#import <TTWechatTimelineActivity.h>
+#import <TTWechatActivity.h>
+#import <TTQQFriendActivity.h>
+#import <TTQQZoneActivity.h>
 
-@interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
+
+@interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
@@ -144,6 +151,7 @@
 
 - (void)licenseAction
 {
+    // add by zjing for test 缺少title
     NSMutableArray *images = @[].mutableCopy;
     // "营业执照"
     if (self.contactPhone.businessLicense.length > 0) {
@@ -187,28 +195,34 @@
     [frames addObject:frameValue];
     vc.placeholderSourceViewFrames = frames;
     vc.placeholders = placeholders;
-//    __weak typeof(self) weakSelf = self;
-//    vc.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
-//        if (currentIndex >= 0 && currentIndex < weakSelf.images.count) {
-//            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
-//            [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-//        }
-//    };
     [vc presentPhotoScrollView];
 }
 
 
 - (void)jump2RealtorDetail
 {
-    
-    
-//    if let realtorId = contactPhone.realtorId ,
+    if (self.contactPhone.realtorId.length < 1) {
+        return;
+    }
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
+    // add by zjing for test 埋点参数
+    NSString *reportParams;
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,self.contactPhone.realtorId,reportParams];
+    NSMutableDictionary *info = @{}.mutableCopy;
+    info[@"url"] = jumpUrl;
+    info[@"title"] = @"经纪人详情页";
+    info[@"realtorId"] = self.contactPhone.realtorId;
+    info[@"delegate"] = self;
+//    info[@"trace"] = theTraceModel;
+
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+    [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+
 //        let traceModel = self.detailPageViewModel?.tracerModel {
 //            traceModel.elementFrom = "old_detail_button"
 //            let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "0")
-//            let openUrl = "fschema://realtor_detail"
-//            let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
-//            let theTraceModel = traceModel.copy() as? HouseRentTracer
+    //            let theTraceModel = traceModel.copy() as? HouseRentTracer
 //            theTraceModel?.elementFrom = "old_detail_button"
 //            theTraceModel?.enterFrom = "old_detal"
 //            let info: [String: Any] = ["url": jumpUrl,
@@ -216,27 +230,22 @@
 //                                       "realtorId": realtorId,
 //                                       "delegate": delegate,
 //                                       "trace": theTraceModel]
-//            let userInfo = TTRouteUserInfo(info: info)
-//            TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
+    
 }
 
 #pragma mark TTShareManagerDelegate
 - (void)shareManager:(TTShareManager *)shareManager clickedWith:(id<TTActivityProtocol>)activity sharePanel:(id<TTActivityPanelControllerProtocol>)panelController
 {
-//    guard let activity = activity else {
-//        return
-//    }
-//    var platform = "be_null"
-//    if activity.isKind(of: TTWechatTimelineActivity.self)  { // 微信朋友圈
-//        platform = "weixin_moments"
-//    } else if activity.isKind(of: TTWechatActivity.self)  { // 微信朋友分享
-//        platform = "weixin"
-//    } else if activity.isKind(of: TTQQFriendActivity.self)  { //
-//        platform = "qq"
-//    } else if activity.isKind(of: TTQQZoneActivity.self)  {
-//        platform = "qzone"
-//    }
-//
+    NSString *platform = @"be_null";
+    if ([activity isKindOfClass:[TTWechatTimelineActivity class]]) {
+        platform = @"weixin_moments";
+    }else if ([activity isKindOfClass:[TTWechatActivity class]]) {
+        platform = @"weixin";
+    }else if ([activity isKindOfClass:[TTQQFriendActivity class]]) {
+        platform = @"qq";
+    }else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
+        platform = @"qzone";
+    }
 //    if let shareParams = shareParams {
 //        recordEvent(key: "share_platform", params: shareParams <|> toTracerParams(platform, key: "platform"))
 //    }

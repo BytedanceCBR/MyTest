@@ -16,6 +16,9 @@
 #import "FHDetailRentModel.h"
 #import "FHHouseRentRelatedResponse.h"
 #import "FHRentSameNeighborhoodResponse.h"
+#import "TTAccount.h"
+#import "TTInstallIDManager.h"
+#import "TTAccountUserEntity.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -46,9 +49,11 @@
         }
         
         if (completion) {
-            completion(model,error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
         }
-    } callbackInMainThread:YES];
+    } callbackInMainThread:NO];
 }
 
 +(TTHttpTask*)requestOldDetail:(NSString*)houseId
@@ -302,6 +307,150 @@
             model = [[FHDetailSameNeighborhoodHouseResponseModel alloc] initWithDictionary:jsonObj error:&error];
         }
         
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 详情页线索提交表单
++ (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
+                                         phone:(NSString*)phone
+                                          from:(NSString*)from
+                                    completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
+    NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (houseId.length > 0) {
+        paramDic[@"a"] = houseId;
+    }
+    if (userName.length > 0) {
+        paramDic[@"b"] = userName;
+    }
+    if (phone.length > 0) {
+        paramDic[@"c"] = phone;
+    }
+    if (from.length > 0) {
+        paramDic[@"d"] = from;
+    }
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+
+        FHDetailResponseModel *model = nil;
+        if (!error) {
+            model = [[FHDetailResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 中介转接电话
++ (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId
+                            houseId:(NSString*)houseId
+                            houseType:(FHHouseType)houseType
+                          searchId:(NSString*)searchId
+                          imprId:(NSString*)imprId
+                         completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (realtorId.length > 0) {
+        paramDic[@"realtor_id"] = realtorId;
+    }
+    if (houseId.length > 0) {
+        paramDic[@"house_id"] = houseId;
+    }
+    paramDic[@"house_type"] = @(houseType);
+    if (searchId.length > 0) {
+        paramDic[@"search_id"] = searchId;
+    }
+    if (imprId.length > 0) {
+        paramDic[@"impr_id"] = imprId;
+    }
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailResponseModel *model = nil;
+        if (!error) {
+            model = [[FHDetailResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 房源关注
++ (TTHttpTask*)requestFollow:(NSString*)followId
+                          houseType:(FHHouseType)houseType
+                           actionType:(FHFollowActionType)actionType
+                         completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/user_follow"];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (followId.length > 0) {
+        paramDic[@"followId"] = followId;
+    }
+    paramDic[@"house_type"] = @(houseType);
+    paramDic[@"action_type"] = @(actionType);
+
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:POST needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailResponseModel *model = nil;
+        if (!error) {
+            model = [[FHDetailUserFollowResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 房源取消关注
++ (TTHttpTask*)requestCancelFollow:(NSString*)followId
+                   houseType:(FHHouseType)houseType
+                  actionType:(FHFollowActionType)actionType
+                  completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/cancel_user_follow"];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (followId.length > 0) {
+        paramDic[@"followId"] = followId;
+    }
+    paramDic[@"house_type"] = @(houseType);
+    paramDic[@"action_type"] = @(actionType);
+    
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:POST needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailResponseModel *model = nil;
+        if (!error) {
+            model = [[FHDetailUserFollowResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
         if (![model.status isEqualToString:@"0"]) {
             error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
         }
