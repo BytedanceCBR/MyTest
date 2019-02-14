@@ -63,7 +63,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setupUI];
+        
     }
     return self;
 }
@@ -74,10 +74,6 @@
     label.textColor = [UIColor colorWithHexString:hexColor];
     label.font = [UIFont themeFontRegular:fontSize];
     return label;
-}
-
-- (void)setupUI {
-    
 }
 
 @end

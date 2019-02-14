@@ -129,6 +129,10 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    FHDetailBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell.didClickCellBlk) {
+        cell.didClickCellBlk();
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {

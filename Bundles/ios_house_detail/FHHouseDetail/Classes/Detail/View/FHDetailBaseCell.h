@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
 - (void)refreshWithData:(id)data;
 
+// Cell点击事件，可以不用实现
+@property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
+
 @end
 
 NS_ASSUME_NONNULL_END
