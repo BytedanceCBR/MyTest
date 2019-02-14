@@ -133,10 +133,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
                 return;
             }
-            
+            //更新切换
             [self updateCategoryViewSegmented:isFirstChange];
 
-            if ([configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
+            //非首次只刷新头部
+            if (!isFirstChange && [configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
                 [UIView performWithoutAnimation:^{
                     if ([self.tableViewV numberOfRowsInSection:0] > 0) {
                         [self.tableViewV beginUpdates];
@@ -152,11 +153,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && configDataModel.cityAvailability.enable == YES) {
                 return;
             }
-            
+            //刷新头部
             [self reloadHomeTableHeaderSection];
             
+            //清除缓存数据
             [self resetAllCacheData];
             
+            //请求推荐房源
             [self requestOriginData:isFirstChange];
             
             isFirstChange = NO;

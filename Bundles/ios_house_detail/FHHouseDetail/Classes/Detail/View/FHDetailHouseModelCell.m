@@ -7,6 +7,13 @@
 
 #import "FHDetailHouseModelCell.h"
 #import "TTRoute.h"
+#import "FHDetailNewModel.h"
+
+@interface FHDetailHouseModelCell()
+
+@property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *allItems;
+
+@end
 
 @implementation FHDetailHouseModelCell
 
@@ -36,9 +43,17 @@
     [view addGestureRecognizer:tapGes];
 }
 
+- (void)refreshWithData:(id)data
+{
+    if ([data isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+        _allItems = [NSArray arrayWithArray:((FHDetailNewDataFloorpanListModel *)data).list];
+    }
+}
+
 - (void)tapClick
 {
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:nil];
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":self.allItems}];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
 }
 
 - (void)awakeFromNib {

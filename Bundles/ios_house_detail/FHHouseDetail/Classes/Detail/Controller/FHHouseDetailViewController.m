@@ -34,7 +34,6 @@
     if (self) {
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.houseId = paramObj.allParams[@"house_id"];
-        
     }
     return self;
 }
@@ -86,7 +85,7 @@
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
 
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc]initWithNavBar:_navBar bottomBar:_bottomBar];
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar];
     self.viewModel.contactViewModel.houseType = self.houseType;
     
     [self addDefaultEmptyViewFullScreen];
@@ -132,6 +131,16 @@
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
     }
+}
+
+- (UIView *)getNaviBar
+{
+    return self.navBar;
+}
+
+- (UIView *)getBottomBar
+{
+    return self.bottomBar;
 }
 
 @end
