@@ -71,20 +71,35 @@
     }
     // > 3 添加折叠展开
     if (model.recommendedRealtors.count > 3) {
+        if (_foldButton) {
+            [_foldButton removeFromSuperview];
+            _foldButton = nil;
+        }
         _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
+        [self.contentView addSubview:_foldButton];
+        [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.containerView.mas_bottom);
+            make.height.mas_equalTo(58);
+            make.left.right.mas_equalTo(self.contentView);
+        }];
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.contentView).offset(-58);
+        }];
+        [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(self.contentView).offset(-20);
+        }];
     }
     [self updateItems];
-//    [self test];
 }
 
-//- (void)test {
-//     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
-//    model.isFold = !model.isFold;
-//    [self updateItems];
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [self test];
-//    });
-//}
+- (void)foldButtonClick:(UIButton *)button {
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    model.isFold = !model.isFold;
+    self.foldButton.isFold = model.isFold;
+    [self updateItems];
+}
 
 - (BOOL)shouldShowContact:(FHDetailContactModel* )contact {
     BOOL result  = NO;
@@ -150,6 +165,14 @@
         }
         [self setNeedsUpdateConstraints];
         [model.tableView endUpdates];
+    } else if (model.recommendedRealtors.count > 0) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(66 * model.recommendedRealtors.count);
+        }];
+    } else {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
     }
 }
 

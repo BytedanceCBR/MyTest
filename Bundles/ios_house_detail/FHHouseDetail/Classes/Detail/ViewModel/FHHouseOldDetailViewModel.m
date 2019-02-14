@@ -152,7 +152,7 @@
         [self.items addObject:agentListModel];
         // test
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        grayLine.lineHeight = 600;
+        grayLine.lineHeight = 400;
         [self.items addObject:grayLine];
     }
 
