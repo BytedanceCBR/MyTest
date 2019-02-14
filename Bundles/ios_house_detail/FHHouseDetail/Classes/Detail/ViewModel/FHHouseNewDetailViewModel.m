@@ -11,6 +11,7 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
+#import "FHDetailHouseModelCell.h"
 
 @implementation FHHouseNewDetailViewModel
 
@@ -18,12 +19,19 @@
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
 
+    [self.tableView registerClass:[FHDetailHouseModelCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseModelCell class])];
+
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
+
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
+    }
+    
+    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+        return [FHDetailHouseModelCell class];
     }
     
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
@@ -62,6 +70,11 @@
         [self.items addObject:headerCellModel];
     }
     
+    //楼盘户型
+    if (model.data.floorpanList) {
+        [self.items addObject:model.data.floorpanList];
+    }
+    
     if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
@@ -78,21 +91,7 @@
         });
     }
     
-    if (model.data.imageGroup) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-        NSMutableArray *arrayHouseImage = [NSMutableArray new];
-        for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-            FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
-            for (NSInteger j = 0; j < groupModel.images.count; j++) {
-                [arrayHouseImage addObject:groupModel.images[j]];
-            }
-        }
-        headerCellModel.houseImage = arrayHouseImage;
-        [self.items addObject:headerCellModel];
-    }
-    
     [self reloadData];
-    
 }
 
 @end

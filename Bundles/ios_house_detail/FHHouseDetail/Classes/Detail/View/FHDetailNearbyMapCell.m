@@ -65,6 +65,7 @@ static const float kSegementedPadingTop = 5;
         _countCategoryDict = [NSMutableDictionary new];
         _poiDatasDict = [NSMutableDictionary new];
         
+        //初始化左右切换
         [self setUpSegmentedControl];
 
         [self setUpMapImageView];
@@ -257,19 +258,6 @@ static const float kSegementedPadingTop = 5;
 
 - (void)changeListLayout:(NSInteger)poiCount
 {
-//    [_segmentedControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-//        make.left.top.equalTo(self.contentView);
-//        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
-//        make.height.mas_equalTo(kSegementedHeight);
-//    }];
-//
-//    [_mapImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(self.contentView);
-//        make.top.equalTo(self.segmentedControl.mas_bottom);
-//        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
-//        make.height.mas_equalTo(160);
-//    }];
-    
     [_locationList mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_mapImageView.mas_bottom).offset(10);
         make.left.right.equalTo(self.contentView);
