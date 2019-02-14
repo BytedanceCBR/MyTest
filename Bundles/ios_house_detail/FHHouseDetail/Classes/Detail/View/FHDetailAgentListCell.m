@@ -15,10 +15,13 @@
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
 #import "FHExtendHotAreaButton.h"
+#import "FHDetailFoldViewButton.h"
 
 @interface FHDetailAgentListCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, strong)   UIView       *containerView;
+@property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
 
 @end
 
@@ -41,12 +44,58 @@
     }
     self.currentData = data;
     //
-    
+    for (UIView *v in self.containerView.subviews) {
+        [v removeFromSuperview];
+    }
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
+    if (model.recommendedRealtors.count > 0) {
+        __block NSInteger itemsCount = 0;
+        CGFloat vHeight = 66.0;
+        [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] init];
+            [self.containerView addSubview:itemView];
+            [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(itemsCount * vHeight);
+                make.left.right.mas_equalTo(self.containerView);
+                make.height.mas_equalTo(vHeight);
+            }];
+            itemView.name.text = obj.realtorName;
+            itemView.agency.text = obj.agencyName;
+            if (obj.avatarUrl.length > 0) {
+                [itemView.avator bd_setImageWithURL:[NSURL URLWithString:obj.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+            }
+            itemView.licenceIcon.hidden = ![self shouldShowContact:obj];
+            itemsCount += 1;
+        }];
 
-    [self layoutIfNeeded];
+    }
+    // > 3 添加折叠展开
+    if (model.recommendedRealtors.count > 3) {
+        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
+    }
+    [self updateItems];
+//    [self test];
 }
 
+//- (void)test {
+//     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+//    model.isFold = !model.isFold;
+//    [self updateItems];
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self test];
+//    });
+//}
+
+- (BOOL)shouldShowContact:(FHDetailContactModel* )contact {
+    BOOL result  = NO;
+    if (contact.businessLicense.length > 0) {
+        result = YES;
+    }
+    if (contact.certificate.length > 0) {
+        result = YES;
+    }
+    return result;
+}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -74,8 +123,35 @@
         make.left.top.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(46);
     }];
+    _containerView = [[UIView alloc] init];
+    _containerView.clipsToBounds = YES;
+    _containerView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:_containerView];
+    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.left.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(0);
+        make.bottom.mas_equalTo(self.contentView);
+    }];
 }
 
+- (void)updateItems {
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (model.recommendedRealtors.count > 3) {
+        [model.tableView beginUpdates];
+        if (model.isFold) {
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(66 * 3);
+            }];
+        } else {
+            [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(66 * model.recommendedRealtors.count);
+            }];
+        }
+        [self setNeedsUpdateConstraints];
+        [model.tableView endUpdates];
+    }
+}
 
 @end
 
@@ -161,5 +237,14 @@
 
 @implementation FHDetailAgentListModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _isFold = YES;
+    }
+    return self;
+}
 
 @end
+    

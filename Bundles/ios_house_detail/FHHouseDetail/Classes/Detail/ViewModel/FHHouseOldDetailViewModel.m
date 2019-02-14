@@ -147,8 +147,13 @@
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         [self.items addObject:agentListModel];
+        // test
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        grayLine.lineHeight = 600;
+        [self.items addObject:grayLine];
     }
 
     

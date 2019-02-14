@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailAgentListModel : FHDetailBaseModel
 
+@property (nonatomic, weak)     UITableView       *tableView;
+@property (nonatomic, assign)   BOOL       isFold; // 折叠
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 
 @end
