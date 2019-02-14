@@ -87,7 +87,27 @@
             }
         }];
         // 添加单列数据
-        
+        if (singles.count > 0) {
+            // 重新计算topOffset
+            topOffset = 6 + (doubleCount / 2 + doubleCount % 2) * listRowHeight;
+            [singles enumerateObjectsUsingBlock:^(FHDetailOldDataBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                FHPropertyListRowView *v = [[FHPropertyListRowView alloc] init];
+                [self.contentView addSubview:v];
+                [v mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.top.mas_equalTo(topOffset);
+                    make.left.mas_equalTo(20);
+                    make.width.mas_equalTo(viewWidth * 2);
+                    make.height.mas_equalTo(listRowHeight);
+                }];
+                v.keyLabel.text = obj.attr;
+                v.valueLabel.text = obj.value;
+                lastView = v;
+                lastViewLeftOffset = 20;
+                lastTopOffset = topOffset;
+                
+                topOffset += listRowHeight;
+            }];
+        }
         // 父视图布局
         if (lastView) {
             CGFloat vWidTemp = viewWidth;
