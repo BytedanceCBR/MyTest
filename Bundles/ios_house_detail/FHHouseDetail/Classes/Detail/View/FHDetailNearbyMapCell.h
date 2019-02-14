@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNearbyMapCell : FHDetailBaseCell
 
+//左右有切换回调
+@property (nonatomic,copy) void (^indexChangeCallBack)();
+
 @end
 
 NS_ASSUME_NONNULL_END
