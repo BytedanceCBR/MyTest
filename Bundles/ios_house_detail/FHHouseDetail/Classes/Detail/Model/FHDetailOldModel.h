@@ -113,29 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *name;
 @end
 
-@interface FHDetailOldDataShareInfoModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *coverImage;
-@property (nonatomic, copy , nullable) NSString *isVideo;
-@property (nonatomic, copy , nullable) NSString *description;
-@property (nonatomic, copy , nullable) NSString *shareUrl;
-@property (nonatomic, copy , nullable) NSString *title;
-@end
-
-@interface FHDetailOldDataContactModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *style;
-@property (nonatomic, copy , nullable) NSString *certificate;
-@property (nonatomic, copy , nullable) NSString *avatarUrl;
-@property (nonatomic, copy , nullable) NSString *homePage;
-@property (nonatomic, copy , nullable) NSString *realtorId;
-@property (nonatomic, copy , nullable) NSString *businessLicense;
-@property (nonatomic, copy , nullable) NSString *agencyId;
-@property (nonatomic, copy , nullable) NSString *phone;
-@property (nonatomic, copy , nullable) NSString *agencyName;
-@property (nonatomic, copy , nullable) NSString *realtorName;
-@property (nonatomic, copy , nullable) NSString *showRealtorinfo;
-@end
 
 @interface FHDetailOldDataModel : JSONModel
 
@@ -158,9 +135,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
-@property (nonatomic, strong , nullable) FHDetailOldDataShareInfoModel *shareInfo ;
+@property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
-@property (nonatomic, strong , nullable) FHDetailOldDataContactModel *contact ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @end
 

@@ -74,7 +74,7 @@
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel);
         make.top.mas_equalTo(self.nameLabel.mas_bottom);
-        make.right.mas_equalTo(self);
+        make.right.mas_equalTo(self.leftView);
     }];
 
     [self addSubview:self.contactBtn];
@@ -117,13 +117,13 @@
 {
     self.licenceIcon.hidden = !isDisplay;
     if (isDisplay) {
-        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
-            make.right.mas_equalTo(self.licenceIcon.mas_left);
+            make.right.mas_equalTo(self.licenceIcon.mas_left).mas_offset(-4);
         }];
     } else {
-        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
             make.right.mas_equalTo(self);
@@ -131,7 +131,7 @@
     }
 }
 
-- (void)refreshBottomBar:(FHDetailOldDataContactModel *)contactPhone contactTitle:(NSString *)contactTitle
+- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle
 {
     [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
     [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
@@ -141,18 +141,17 @@
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
     if (contactPhone.realtorName.length > 0) {
         if (contactPhone.realtorName.length > 4) {
-            NSString *realtorName = [NSString stringWithFormat:@"%@...",[contactPhone.realtorName substringToIndex:3]];
+            NSString *realtorName = [NSString stringWithFormat:@"%@...",[contactPhone.realtorName substringToIndex:4]];
             self.nameLabel.text = realtorName;
+        }else {
+            self.nameLabel.text = contactPhone.realtorName;
         }
     }else {
         self.nameLabel.text = @"经纪人";
     }
     if (contactPhone.agencyName.length > 0) {
-        if (contactPhone.agencyName.length > 4) {
-            NSString *agencyName = [NSString stringWithFormat:@"%@...",[contactPhone.agencyName substringToIndex:3]];
-            self.agencyLabel.text = agencyName;
-            self.agencyLabel.hidden = NO;
-        }
+        self.agencyLabel.text = contactPhone.agencyName;
+        self.agencyLabel.hidden = NO;
     }else {
         self.agencyLabel.hidden = YES;
     }

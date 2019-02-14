@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FHDetailOldModel.h"
+#import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy)void(^bottomBarRealtorBlock)(void);
 @property(nonatomic, copy)void(^bottomBarLicenseBlock)(void);
 
-- (void)refreshBottomBar:(FHDetailOldDataContactModel *)contactPhone contactTitle:(NSString *)contactTitle;
+- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle;
 
 @end
 

@@ -48,29 +48,6 @@
 }
 @end
 
-@implementation FHDetailOldDataContactModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"businessLicense": @"business_license",
-                           @"realtorName": @"realtor_name",
-                           @"homePage": @"home_page",
-                           @"realtorId": @"realtor_id",
-                           @"agencyId": @"agency_id",
-                           @"agencyName": @"agency_name",
-                           @"avatarUrl": @"avatar_url",
-                           @"showRealtorinfo": @"show_realtorinfo",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailOldDataNeighborhoodInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -155,6 +132,7 @@
                            @"houseOverreview": @"house_overreview",
                            @"uploadAt": @"upload_at",
                            @"coreInfo": @"core_info",
+                           @"highlightedRealtor": @"highlighted_realtor",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -173,23 +151,6 @@
 }
 @end
 
-@implementation FHDetailOldDataShareInfoModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"coverImage": @"cover_image",
-                           @"isVideo": @"is_video",
-                           @"shareUrl": @"share_url",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailOldDataPriceTrendModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
