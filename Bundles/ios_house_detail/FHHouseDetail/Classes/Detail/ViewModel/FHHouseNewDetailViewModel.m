@@ -11,6 +11,7 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
+#import "FHDetailHouseModelCell.h"
 
 @implementation FHHouseNewDetailViewModel
 
@@ -18,12 +19,19 @@
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
 
+    [self.tableView registerClass:[FHDetailHouseModelCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseModelCell class])];
+
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
+
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
+    }
+    
+    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+        return [FHDetailHouseModelCell class];
     }
     
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
@@ -62,8 +70,26 @@
         [self.items addObject:headerCellModel];
     }
     
-    FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-    [self.items addObject:nearbyMapModel];
+    //楼盘户型
+    if (model.data.floorpanList) {
+        [self.items addObject:model.data.floorpanList];
+    }
+    
+    if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
+        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
+        nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
+        nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
+        [self.items addObject:nearbyMapModel];
+        
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
+                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
+                    [self reloadData];
+                };
+            }
+        });
+    }
     
     [self reloadData];
 }

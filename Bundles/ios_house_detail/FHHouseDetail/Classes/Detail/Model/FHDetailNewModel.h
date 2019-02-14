@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNearbyMapModel : JSONModel
 
+@property (nonatomic, weak , nullable) UITableViewCell *cell;
+@property (nonatomic, copy , nullable) NSString *gaodeLng;
+@property (nonatomic, copy , nullable) NSString *gaodeLat;
+
 @end
 
 
