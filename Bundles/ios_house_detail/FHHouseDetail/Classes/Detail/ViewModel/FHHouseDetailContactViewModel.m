@@ -19,6 +19,10 @@
 #import "TTPhotoScrollViewController.h"
 #import "FHURLSettings.h"
 #import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
+#import <TTWechatTimelineActivity.h>
+#import <TTWechatActivity.h>
+#import <TTQQFriendActivity.h>
+#import <TTQQZoneActivity.h>
 
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
@@ -232,20 +236,16 @@
 #pragma mark TTShareManagerDelegate
 - (void)shareManager:(TTShareManager *)shareManager clickedWith:(id<TTActivityProtocol>)activity sharePanel:(id<TTActivityPanelControllerProtocol>)panelController
 {
-//    guard let activity = activity else {
-//        return
-//    }
-//    var platform = "be_null"
-//    if activity.isKind(of: TTWechatTimelineActivity.self)  { // 微信朋友圈
-//        platform = "weixin_moments"
-//    } else if activity.isKind(of: TTWechatActivity.self)  { // 微信朋友分享
-//        platform = "weixin"
-//    } else if activity.isKind(of: TTQQFriendActivity.self)  { //
-//        platform = "qq"
-//    } else if activity.isKind(of: TTQQZoneActivity.self)  {
-//        platform = "qzone"
-//    }
-//
+    NSString *platform = @"be_null";
+    if ([activity isKindOfClass:[TTWechatTimelineActivity class]]) {
+        platform = @"weixin_moments";
+    }else if ([activity isKindOfClass:[TTWechatActivity class]]) {
+        platform = @"weixin";
+    }else if ([activity isKindOfClass:[TTQQFriendActivity class]]) {
+        platform = @"qq";
+    }else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
+        platform = @"qzone";
+    }
 //    if let shareParams = shareParams {
 //        recordEvent(key: "share_platform", params: shareParams <|> toTracerParams(platform, key: "platform"))
 //    }

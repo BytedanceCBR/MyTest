@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHHouseListModel.h"
+#import "FHBaseModelProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -62,6 +63,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
+
+@end
+
+@interface  FHDetailResponseModel  : JSONModel <FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+
+@end
+
+@interface  FHDetailUserFollowStatusModel  : JSONModel
+
+@property (nonatomic, assign) NSInteger followStatus;
+
+@end
+
+@interface  FHDetailUserFollowResponseModel  : JSONModel <FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHDetailUserFollowStatusModel *data;
 
 @end
 
