@@ -17,8 +17,11 @@
 #import <TTQQZoneContentItem.h>
 #import "BDWebImage.h"
 #import "TTPhotoScrollViewController.h"
+#import "FHURLSettings.h"
+#import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
 
-@interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
+
+@interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
@@ -144,6 +147,7 @@
 
 - (void)licenseAction
 {
+    // add by zjing for test 缺少title
     NSMutableArray *images = @[].mutableCopy;
     // "营业执照"
     if (self.contactPhone.businessLicense.length > 0) {
@@ -187,28 +191,34 @@
     [frames addObject:frameValue];
     vc.placeholderSourceViewFrames = frames;
     vc.placeholders = placeholders;
-//    __weak typeof(self) weakSelf = self;
-//    vc.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
-//        if (currentIndex >= 0 && currentIndex < weakSelf.images.count) {
-//            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
-//            [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-//        }
-//    };
     [vc presentPhotoScrollView];
 }
 
 
 - (void)jump2RealtorDetail
 {
-    
-    
-//    if let realtorId = contactPhone.realtorId ,
+    if (self.contactPhone.realtorId.length < 1) {
+        return;
+    }
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
+    // add by zjing for test 埋点参数
+    NSString *reportParams;
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,self.contactPhone.realtorId,reportParams];
+    NSMutableDictionary *info = @{}.mutableCopy;
+    info[@"url"] = jumpUrl;
+    info[@"title"] = @"经纪人详情页";
+    info[@"realtorId"] = self.contactPhone.realtorId;
+    info[@"delegate"] = self;
+//    info[@"trace"] = theTraceModel;
+
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+    [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+
 //        let traceModel = self.detailPageViewModel?.tracerModel {
 //            traceModel.elementFrom = "old_detail_button"
 //            let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "0")
-//            let openUrl = "fschema://realtor_detail"
-//            let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(realtorId)&report_params=\(reportParams)"
-//            let theTraceModel = traceModel.copy() as? HouseRentTracer
+    //            let theTraceModel = traceModel.copy() as? HouseRentTracer
 //            theTraceModel?.elementFrom = "old_detail_button"
 //            theTraceModel?.enterFrom = "old_detal"
 //            let info: [String: Any] = ["url": jumpUrl,
@@ -216,8 +226,7 @@
 //                                       "realtorId": realtorId,
 //                                       "delegate": delegate,
 //                                       "trace": theTraceModel]
-//            let userInfo = TTRouteUserInfo(info: info)
-//            TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
+    
 }
 
 #pragma mark TTShareManagerDelegate

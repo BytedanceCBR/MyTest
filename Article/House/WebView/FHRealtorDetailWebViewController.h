@@ -6,13 +6,10 @@
 //
 
 #import "SSWebViewController.h"
+#import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
 
 NS_ASSUME_NONNULL_BEGIN
-@protocol FHRealtorDetailWebViewControllerDelegate <NSObject>
 
--(void)followUpAction;
-
-@end
 @interface FHRealtorDetailWebViewController : SSWebViewController
 @property (nonatomic, weak) id<FHRealtorDetailWebViewControllerDelegate> delegate;
 @end
