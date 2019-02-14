@@ -16,6 +16,7 @@
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailErshouHouseCoreInfoCell.h"
+#import "FHDetailPropertyListCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -34,6 +35,7 @@
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoCell class])];
+    [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -52,6 +54,10 @@
     // Core Info
     if ([model isKindOfClass:[FHDetailErshouHouseCoreInfoModel class]]) {
         return [FHDetailErshouHouseCoreInfoCell class];
+    }
+    // 属性列表
+    if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
+        return [FHDetailPropertyListCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -109,6 +115,12 @@
         FHDetailErshouHouseCoreInfoModel *coreInfoModel = [[FHDetailErshouHouseCoreInfoModel alloc] init];
         coreInfoModel.coreInfo = model.data.coreInfo;
         [self.items addObject:coreInfoModel];
+    }
+    // 添加属性列表
+    if (model.data.baseInfo) {
+        FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
+        propertyModel.baseInfo = model.data.baseInfo;
+        [self.items addObject:propertyModel];
     }
     // 添加分割线
     FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
