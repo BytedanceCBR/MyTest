@@ -17,6 +17,7 @@
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailErshouHouseCoreInfoCell.h"
 #import "FHDetailPropertyListCell.h"
+#import "FHDetailPriceChangeHistoryCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -36,6 +37,7 @@
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoCell class])];
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
+    [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -54,6 +56,10 @@
     // Core Info
     if ([model isKindOfClass:[FHDetailErshouHouseCoreInfoModel class]]) {
         return [FHDetailErshouHouseCoreInfoCell class];
+    }
+    // 价格变动
+    if ([model isKindOfClass:[FHDetailPriceChangeHistoryModel class]]) {
+        return [FHDetailPriceChangeHistoryCell class];
     }
     // 属性列表
     if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
@@ -115,6 +121,13 @@
         FHDetailErshouHouseCoreInfoModel *coreInfoModel = [[FHDetailErshouHouseCoreInfoModel alloc] init];
         coreInfoModel.coreInfo = model.data.coreInfo;
         [self.items addObject:coreInfoModel];
+    }
+    // 价格变动
+    if (model.data.priceChangeHistory) {
+        FHDetailPriceChangeHistoryModel *priceChangeHistoryModel = [[FHDetailPriceChangeHistoryModel alloc] init];
+        priceChangeHistoryModel.priceChangeHistory = model.data.priceChangeHistory;
+        priceChangeHistoryModel.baseViewModel = self;
+        [self.items addObject:priceChangeHistoryModel];
     }
     // 添加属性列表
     if (model.data.baseInfo) {
