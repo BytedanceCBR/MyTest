@@ -47,6 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@protocol FHDetailContactModel<NSObject>
+@end
+
 @interface FHDetailContactModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *style;
