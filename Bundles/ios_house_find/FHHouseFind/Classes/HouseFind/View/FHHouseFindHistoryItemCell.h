@@ -8,8 +8,15 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+/*
+ * 找房历史下的子cell
+ */
 @interface FHHouseFindHistoryItemCell : UICollectionViewCell
+
+
++(CGFloat)widthForTitle:(NSString *)title subtitle:(NSString *)subtitle;
+
+-(void)udpateWithTitle:(NSString *)title subtitle:(NSString *)subtitle;
 
 @end
 

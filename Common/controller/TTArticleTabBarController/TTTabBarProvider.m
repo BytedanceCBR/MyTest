@@ -31,6 +31,8 @@
 #import "AKActivityViewController.h"
 #import "Bubble-Swift.h"
 #import "FHHouseFindListViewController.h"
+#import <FHHouseFind/FHHouseFindViewController.h>
+
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -124,6 +126,9 @@ static NSString *lastTabIdentifier;
            houseFindVC = [[HouseFindVC alloc] init];
 
         }
+        
+//        houseFindVC = [[FHHouseFindViewController alloc] init];
+        
         return houseFindVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {

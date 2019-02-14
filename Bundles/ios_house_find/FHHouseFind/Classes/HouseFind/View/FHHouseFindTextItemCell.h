@@ -8,8 +8,10 @@
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+// 默认显示的cell
 @interface FHHouseFindTextItemCell : UICollectionViewCell
+
+-(void)updateWithTitle:(NSString *)title highlighted:(BOOL)highlighted;
 
 @end
 

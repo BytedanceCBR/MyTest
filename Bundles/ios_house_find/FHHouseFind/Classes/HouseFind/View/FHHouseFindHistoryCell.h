@@ -9,7 +9,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHFHistoryDataDataModel;
+@protocol FHHouseFindHistoryCellDelegate;
+
+//找房 历史cell
 @interface FHHouseFindHistoryCell : UICollectionViewCell
+
+@property(nonatomic , weak) id<FHHouseFindHistoryCellDelegate> delegate;
+
+-(void)updateWithItems:(NSArray *)items;
+
+@end
+
+@protocol FHHouseFindHistoryCellDelegate <NSObject>
+
+@required
+
+-(void)selectHistory:(FHHFHistoryDataDataModel *)model;
 
 @end
 

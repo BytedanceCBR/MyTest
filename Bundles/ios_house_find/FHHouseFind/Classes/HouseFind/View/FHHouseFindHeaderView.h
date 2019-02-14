@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindHeaderView : UICollectionReusableView
 
+@property(nonatomic , copy) void (^deleteBlock)(void);
+
+-(void)updateTitle:(NSString *)title showDelete:(BOOL)showDelete;
+
 @end
 
 NS_ASSUME_NONNULL_END
