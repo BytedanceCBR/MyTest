@@ -126,6 +126,7 @@
     if (model.data.priceChangeHistory) {
         FHDetailPriceChangeHistoryModel *priceChangeHistoryModel = [[FHDetailPriceChangeHistoryModel alloc] init];
         priceChangeHistoryModel.priceChangeHistory = model.data.priceChangeHistory;
+        priceChangeHistoryModel.baseViewModel = self;
         [self.items addObject:priceChangeHistoryModel];
     }
     // 添加属性列表

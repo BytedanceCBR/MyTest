@@ -8,6 +8,7 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailOldModel.h"
+#import "FHHouseDetailBaseViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface  FHDetailPriceChangeHistoryModel: FHDetailBaseModel
 
+@property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;
 @property (nonatomic, strong , nullable) FHPriceChangeHistoryPriceChangeHistoryModel *priceChangeHistory;
 
 @end

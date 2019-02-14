@@ -11,6 +11,8 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
+#import "FHURLSettings.h"
+#import "TTRoute.h"
 
 @interface FHDetailPriceChangeHistoryCell ()
 
@@ -95,6 +97,40 @@
         make.height.mas_equalTo(0.5);
         make.bottom.mas_equalTo(self.contentView);
     }];
+    
+    __weak typeof(self) wSelf = self;
+    self.didClickCellBlk = ^{
+        [wSelf clickCell];
+    };
+}
+
+- (void)clickCell {
+    if (self.currentData) {
+        FHDetailPriceChangeHistoryModel *model = (FHDetailPriceChangeHistoryModel *)self.currentData;
+        NSString *pushUrl = model.priceChangeHistory.detailUrl;
+        NSArray *historyData = model.priceChangeHistory.history;
+        NSString *houseId = model.baseViewModel.houseId;
+        if (pushUrl.length > 0 && historyData && houseId.length > 0) {
+            // add by zyk 埋点记得添加
+            /*
+             // 埋点
+             let params = EnvContext.shared.homePageParams <|>
+             toTracerParams("old_detail", key: "page_type") <|>
+             tracerParams <|>
+             theTracerParams
+             recordEvent(key: "click_price_variation", params: params)
+             */
+            NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+            NSString* url = [[NSString stringWithFormat:@"%@%@",host,pushUrl] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+            NSDictionary *history = @{@"history":historyData};
+            NSDictionary *jsData = @{@"data":history,@"house_id":houseId};
+            NSDictionary *jsParams = @{@"requestPageData":jsData};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"url":url,@"title":@"价格变动",@"fhJSParams":jsParams}];
+            NSString *jumpUrl = @"sslocal://webview";
+            [[TTRoute sharedRoute] openURLByPushViewController:[[NSURL alloc] initWithString:jumpUrl] userInfo:userInfo];
+            
+        }
+    }
 }
 
 @end

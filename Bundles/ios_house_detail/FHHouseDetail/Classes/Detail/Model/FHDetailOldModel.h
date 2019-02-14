@@ -125,7 +125,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPriceChangeHistoryPriceChangeHistoryModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *detailUrl;
-@property (nonatomic, strong , nullable) NSArray<FHPriceChangeHistoryPriceChangeHistoryHistoryModel> *history;
+@property (nonatomic, strong , nullable) NSArray *history;
 @property (nonatomic, copy , nullable) NSString *priceChangeDesc;
 @end
 
