@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 // FHDetailHouseOutlineInfoModel
 @interface FHDetailHouseOutlineInfoModel : FHDetailBaseModel
 
+@property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;
 @property (nonatomic, strong , nullable) FHDetailOldDataHouseOverreviewModel *houseOverreview ;
 
 @end

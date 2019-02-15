@@ -111,6 +111,7 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
+    self.detailData = model;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -147,28 +148,32 @@
         propertyModel.baseInfo = model.data.baseInfo;
         [self.items addObject:propertyModel];
     }
-    // 添加分割线
-    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-    [self.items addObject:grayLine];
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         [self.items addObject:agentListModel];
     }
-    if (model.data.baseInfo) {
-        // 添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-    }
     // 房源概况
     if (model.data.houseOverreview) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
         FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
         infoModel.houseOverreview = model.data.houseOverreview;
+        infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
     
+    // 小区信息
+    if (model.data.neighborhoodInfo) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+    }
     
     // --
     if (model.data.highlightedRealtor) {

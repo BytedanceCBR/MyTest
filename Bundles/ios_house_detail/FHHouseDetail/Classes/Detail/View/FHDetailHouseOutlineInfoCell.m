@@ -22,6 +22,8 @@
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 
+@property (nonatomic, strong)   UIButton       *infoButton;
+
 @end
 
 @implementation FHDetailHouseOutlineInfoCell
@@ -90,8 +92,27 @@
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(52);// 46 + 6
     }];
+    // infoButton
+    _infoButton = [[UIButton alloc] init];
+    [_infoButton setImage:[UIImage imageNamed:@"info-outline-material"] forState:UIControlStateNormal];
+    [_infoButton setTitle:@"举报" forState:UIControlStateNormal];
+    NSAttributedString *attriStr = [[NSAttributedString alloc] initWithString:@"举报" attributes:@{
+                                                                                                 NSFontAttributeName:[UIFont themeFontRegular:12],
+                                                                                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#299cff"]
+                                                                                                 }];
+    [_infoButton setAttributedTitle:attriStr forState:UIControlStateNormal];
+    _infoButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
+    [self.headerView addSubview:_infoButton];
+    
+    [_infoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.headerView.label);
+        make.right.mas_equalTo(self.headerView).offset(-25);
+    }];
+    
+    [self.infoButton addTarget:self action:@selector(feedBackButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     _containerView.backgroundColor = [UIColor whiteColor];
@@ -99,8 +120,29 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
+}
+
+- (void)feedBackButtonClick:(UIButton *)button {
+    FHDetailHouseOutlineInfoModel *model = (FHDetailHouseOutlineInfoModel *)self.currentData;
+    FHDetailOldModel *ershouData = (FHDetailOldModel *)model.baseViewModel.detailData;
+    NSDictionary *jsonDic = [ershouData toDictionary];
+    if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
+        // 记得添加埋点 add by zyk
+        NSString *openUrl = @"sslocal://webview";
+        NSDictionary *pageData = @{@"data":jsonDic};
+        NSDictionary *commonParams = @{};// 记得修改此处的数据 add by zyk
+        NSDictionary *commonParamsData = @{@"data":commonParams};
+        NSDictionary *jsParams = @{@"requestPageData":pageData,
+                                   @"getNetCommonParams":commonParamsData
+                                   };
+        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,model.houseOverreview.reportUrl];
+        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
+    }
 }
 
 @end
@@ -147,7 +189,7 @@
         make.left.mas_equalTo(self.iconImg);
         make.right.mas_equalTo(-20);
         make.top.mas_equalTo(self).offset(32);
-        make.bottom.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).offset(-10);
     }];
 }
 
