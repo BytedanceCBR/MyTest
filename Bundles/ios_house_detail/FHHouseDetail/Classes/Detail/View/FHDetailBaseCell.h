@@ -31,4 +31,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// FHDetailBaseCollectionCell
+@interface FHDetailBaseCollectionCell : UICollectionViewCell
+
+// 当前cell的模型数据
+@property (nonatomic, weak , nullable) id currentData;
+
+// 当前方法不需重写
++ (Class)cellViewClass;
+
+// 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
+- (void)refreshWithData:(id)data;
+
+// Cell点击事件，可以不用实现
+@property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
+
+@end
+
 NS_ASSUME_NONNULL_END
