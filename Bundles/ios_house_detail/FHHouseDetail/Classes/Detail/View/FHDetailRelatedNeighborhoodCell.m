@@ -58,6 +58,10 @@
         NSString *identifier = NSStringFromClass([FHDetailNeighborhoodItemCollectionCell class]);
         FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:170 cellIdentifier:identifier cellCls:[FHDetailNeighborhoodItemCollectionCell class] datas:model.relatedNeighborhoodData.items];
         [self.containerView addSubview:colView];
+        __weak typeof(self) wSelf = self;
+        colView.clickBlk = ^(NSInteger index) {
+            [wSelf collectionCellClick:index];
+        };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
             make.left.right.mas_equalTo(self.containerView);
@@ -68,7 +72,6 @@
     
     [self layoutIfNeeded];
 }
-
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -105,6 +108,15 @@
     FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
     if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.hasMore) {
         // 点击事件处理
+    }
+}
+// cell 点击
+- (void)collectionCellClick:(NSInteger)index {
+    FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
+    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
+        // 点击cell处理
+        FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
+        
     }
 }
 
