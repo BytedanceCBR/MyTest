@@ -10,6 +10,8 @@
 #import "FHDetailOldModel.h"
 #import "FHHouseDetailBaseViewModel.h"
 
+typedef void(^kFHMultitemCollectionCellClickBlk)(NSInteger index);
+
 NS_ASSUME_NONNULL_BEGIN
 
 // 横向滚动列表
@@ -25,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (instancetype)initWithFlowLayout:(UICollectionViewFlowLayout *)flowLayout viewHeight:(CGFloat)collectionViewHeight cellIdentifier:(NSString *)cellIdentifier cellCls:(Class)cls datas:(NSArray *)datas;
 - (void)reloadData;
+
+@property (nonatomic, copy)     kFHMultitemCollectionCellClickBlk       clickBlk;
 
 @end
 

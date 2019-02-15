@@ -19,7 +19,7 @@
 
 @property (nonatomic, strong)   UICollectionView       *collectionContainer;
 @property (nonatomic, copy)     NSString       *cellIdentifier;
-
+@property (nonatomic, strong)   NSMutableDictionary       *houseShowCache;
 @property (nonatomic, strong)   NSArray       *datas;// 数据数组
 
 @end
@@ -34,6 +34,7 @@
         self.cellIdentifier = cellIdentifier;
         [self registerCls:cls forIdentifier:cellIdentifier];
         self.datas = datas;
+        self.houseShowCache = [NSMutableDictionary new];
         _collectionContainer.delegate = self;
         _collectionContainer.dataSource = self;
     }
@@ -84,10 +85,19 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    if (self.clickBlk) {
+        self.clickBlk(indexPath.row);
+    }
 }
 
+// house_show埋点
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    if ([self.houseShowCache valueForKey:tempKey]) {
+        return;
+    }
+    [self.houseShowCache setValue:@(YES) forKey:tempKey];
+    // 添加house_show埋点
 }
 
 @end
