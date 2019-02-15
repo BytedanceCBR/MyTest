@@ -23,7 +23,11 @@
 #import <TTWechatActivity.h>
 #import <TTQQFriendActivity.h>
 #import <TTQQZoneActivity.h>
-
+#import "FHHouseDetailAPI.h"
+#import "TTReachability.h"
+#import "FHHouseDetailFollowUpViewModel.h"
+#import "FHHouseDetailPhoneCallViewModel.h"
+#import "NSDictionary+TTAdditions.h"
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
@@ -32,6 +36,8 @@
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 
 @property (nonatomic, strong) TTShareManager *shareManager;
+@property (nonatomic, strong)FHHouseDetailFollowUpViewModel *followUpViewModel;
+@property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
 @end
 
@@ -41,6 +47,10 @@
 {
     self = [super init];
     if (self) {
+        
+        _followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
+        _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]init];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
         
         _navBar = navBar;
         _bottomBar = bottomBar;
@@ -56,19 +66,47 @@
             [wself jump2RealtorDetail];
         };
  
-        _navBar.collectActionBlock = ^{
-            [wself collectAction];
+        _navBar.collectActionBlock = ^(BOOL followStatus){
+            if (!followStatus) {
+                
+                [wself followAction];
+            }else {
+                [wself cancelFollowAction];
+            }
         };
         _navBar.shareActionBlock = ^{
             [wself shareAction];
         };
+
     }
     return self;
 }
 
-- (void)collectAction
+- (void)refreshFollowStatus:(NSNotification *)noti
 {
+    NSDictionary *userInfo = noti.userInfo;
+    NSString *followId = [userInfo tt_stringValueForKey:@"followId"];
+    BOOL followStatus = [userInfo tt_boolValueForKey:@"followStatus"];
+    if (![followId isEqualToString:self.houseId]) {
+        return;
+    }
+    [self.navBar setFollowStatus:followStatus];
 
+}
+- (void)setFollowStatus:(BOOL)followStatus
+{
+    _followStatus = followStatus;
+    [self.navBar setFollowStatus:followStatus];
+}
+
+- (void)followAction
+{
+    [self.followUpViewModel followHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType];
+}
+
+- (void)cancelFollowAction
+{
+    [self.followUpViewModel cancelFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType];
 }
 
 - (void)shareAction
@@ -135,18 +173,38 @@
         // 填表单
     }else {
         // 拨打电话
-        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", self.contactPhone.phone];
-        NSURL *url = [NSURL URLWithString:urlStr];
-        if ([[UIApplication sharedApplication]canOpenURL:url]) {
-            if (@available(iOS 10.0, *)) {
-                [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
-            } else {
-                // Fallback on earlier versions
-                [[UIApplication sharedApplication]openURL:url];
+        __weak typeof(self)wself = self;
+        if (![TTReachability isNetworkConnected]) {
+            
+            NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
+            [self callPhone:urlStr];
+            return;
+        }
+        [self.bottomBar startLoading];
+        [FHHouseDetailAPI requestVirtualNumber:self.contactPhone.phone houseId:self.houseId houseType:self.houseType searchId:self.searchId imprId:self.imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+            
+            [wself.bottomBar stopLoading];
+            NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
+            if (!error && model.data.virtualNumber.length > 0) {
+                urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
             }
+            [wself callPhone:urlStr];
+        }];
+    }
+    // add by zjing for test 关注功能
+}
+
+- (void)callPhone:(NSString *)phone
+{
+    NSURL *url = [NSURL URLWithString:phone];
+    if ([[UIApplication sharedApplication]canOpenURL:url]) {
+        if (@available(iOS 10.0, *)) {
+            [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
+        } else {
+            // Fallback on earlier versions
+            [[UIApplication sharedApplication]openURL:url];
         }
     }
-    // 关注功能
 }
 
 - (void)licenseAction
@@ -262,5 +320,10 @@
         _shareManager = [[TTShareManager alloc]init];
     }
     return _shareManager;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 @end

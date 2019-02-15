@@ -405,8 +405,20 @@ class HouseRentDetailViewMode: NSObject, UITableViewDataSource, UITableViewDeleg
 
     func test(houseId:Int64) {
         let openUrl = "snssdk1370://test_detail"
+        var theImprId: String?
+        var theSearchId: String?
+        
+        if let logPB = self.logPb as? [String: Any],
+            let imprId = logPB["impr_id"] as? String,
+            let searchId = self.searchId {
+            theImprId = imprId
+            theSearchId = searchId
+            
+        }
         let info: [String: Any] = ["house_type": 3,
-                                   "house_id":"\(houseId)"]
+                                   "house_id":"\(houseId)",
+                                    "search_id":"\(theSearchId ?? "")",
+                                    "impr_id":"\(theImprId ?? "")"]
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
     }

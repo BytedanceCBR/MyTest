@@ -167,6 +167,16 @@
     // add by zjing for test 缺少点击跳转经纪人详情页，埋点以及营业执照和从业人员信息卡展示
 }
 
+- (void)startLoading
+{
+    [self.contactBtn startLoading];
+}
+
+- (void)stopLoading
+{
+    [self.contactBtn stopLoading];
+}
+
 - (UIControl *)leftView
 {
     if (!_leftView) {

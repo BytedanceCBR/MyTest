@@ -144,6 +144,7 @@
         self.contactViewModel.contactPhone = model.data.contact;
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;
+    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
 
     [self reloadData];
 }

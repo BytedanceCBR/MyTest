@@ -84,6 +84,32 @@
 }
 @end
 
+@implementation FHDetailVirtualNumModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"realtorId": @"realtor_id",
+                           @"virtualNumber": @"virtual_number",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailVirtualNumResponseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
 @implementation FHDetailUserFollowStatusModel
 + (JSONKeyMapper*)keyMapper
 {

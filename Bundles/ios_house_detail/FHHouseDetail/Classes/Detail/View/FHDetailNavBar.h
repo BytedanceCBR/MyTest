@@ -13,9 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) void (^backActionBlock)();
 @property(nonatomic , copy) void (^shareActionBlock)();
-@property(nonatomic , copy) void (^collectActionBlock)();
+@property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
 - (void)refreshAlpha:(CGFloat)alpha;
+- (void)setFollowStatus:(BOOL)followStatus;
 
 @end
 
