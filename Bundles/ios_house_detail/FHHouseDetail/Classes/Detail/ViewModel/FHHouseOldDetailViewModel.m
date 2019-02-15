@@ -22,6 +22,7 @@
 #import "FHDetailHouseOutlineInfoCell.h"
 #import "FHDetailSuggestTipCell.h"
 #import "FHDetailRelatedNeighborhoodCell.h"
+#import "FHDetailRelatedHouseCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -46,6 +47,7 @@
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCell class])];
     [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipCell class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
+    [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -88,6 +90,10 @@
     // 周边小区
     if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
         return [FHDetailRelatedNeighborhoodCell class];
+    }
+    // 周边房源
+    if ([model isKindOfClass:[FHDetailRelatedHouseModel class]]) {
+        return [FHDetailRelatedHouseCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -240,6 +246,9 @@
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
+            FHDetailRelatedHouseModel *infoModel = [[FHDetailRelatedHouseModel alloc] init];
+            infoModel.relatedHouseData = self.relatedHouseData;
+            [self.items addObject:infoModel];
         }
         [self reloadData];
     }
