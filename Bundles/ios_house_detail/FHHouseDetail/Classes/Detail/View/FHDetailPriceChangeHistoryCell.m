@@ -13,6 +13,7 @@
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
+#import "UILabel+House.h"
 
 @interface FHDetailPriceChangeHistoryCell ()
 
@@ -59,20 +60,12 @@
     return self;
 }
 
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 - (void)setupUI {
     _leftIconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ershou_price_tips_22"]];
     [self.contentView addSubview:_leftIconImageView];
     _rightArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-detail"]];
     [self.contentView addSubview:_rightArrowImageView];
-    _infoLabel = [self createLabel:@"" textColor:@"#3d6e99" fontSize:12];
+    _infoLabel = [UILabel createLabel:@"" textColor:@"#3d6e99" fontSize:12];
     [self.contentView addSubview:_infoLabel];
     
     [self.leftIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {

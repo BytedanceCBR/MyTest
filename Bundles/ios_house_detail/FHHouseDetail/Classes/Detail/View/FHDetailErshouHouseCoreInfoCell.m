@@ -11,6 +11,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
+#import "UILabel+House.h"
 
 @implementation FHDetailErshouHouseCoreInfoCell
 
@@ -68,14 +69,6 @@
     return self;
 }
 
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 @end
 
 // FHDetailHouseCoreInfoItemView
@@ -95,22 +88,14 @@
     return self;
 }
 
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 - (void)setupUI {
     self.backgroundColor = [UIColor colorWithHexString:@"#f7f8f9"];
     self.layer.cornerRadius = 4.0;
     
-    _keyLabel = [self createLabel:@"" textColor:@"#ff5b4c" fontSize:16];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:16];
     [self addSubview:_keyLabel];
     
-    _valueLabel = [self createLabel:@"" textColor:@"#a1aab3" fontSize:12];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:12];
     [self addSubview:_valueLabel];
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {

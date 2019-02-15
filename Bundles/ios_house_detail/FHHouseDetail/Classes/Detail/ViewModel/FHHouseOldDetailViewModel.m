@@ -19,6 +19,7 @@
 #import "FHDetailPropertyListCell.h"
 #import "FHDetailPriceChangeHistoryCell.h"
 #import "FHDetailAgentListCell.h"
+#import "FHDetailHouseOutlineInfoCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -40,6 +41,7 @@
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryCell class])];
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListCell class])];
+    [self.tableView registerClass:[FHDetailHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -70,6 +72,10 @@
     // 推荐经纪人
     if ([model isKindOfClass:[FHDetailAgentListModel class]]) {
         return [FHDetailAgentListCell class];
+    }
+    // 房源概况
+    if ([model isKindOfClass:[FHDetailHouseOutlineInfoModel class]]) {
+        return [FHDetailHouseOutlineInfoCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -150,12 +156,18 @@
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         [self.items addObject:agentListModel];
-        // test
+    }
+    if (model.data.baseInfo) {
+        // 添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        grayLine.lineHeight = 400;
         [self.items addObject:grayLine];
     }
-
+    // 房源概况
+    if (model.data.houseOverreview) {
+        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
+        infoModel.houseOverreview = model.data.houseOverreview;
+        [self.items addObject:infoModel];
+    }
     
     
     // --
