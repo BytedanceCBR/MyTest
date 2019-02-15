@@ -21,6 +21,7 @@
 #import "FHDetailAgentListCell.h"
 #import "FHDetailHouseOutlineInfoCell.h"
 #import "FHDetailSuggestTipCell.h"
+#import "FHDetailRelatedNeighborhoodCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -44,6 +45,7 @@
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListCell class])];
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCell class])];
     [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipCell class])];
+    [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -82,6 +84,10 @@
     // 购房小建议
     if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
         return [FHDetailSuggestTipCell class];
+    }
+    // 周边小区
+    if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
+        return [FHDetailRelatedNeighborhoodCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -216,7 +222,26 @@
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
-        
+        //  同小区房源
+        if (self.sameNeighborhoodHouseData) {
+            
+        }
+        // 周边小区
+        if (self.relatedNeighborhoodData) {
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
+            infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            [self.items addObject:infoModel];
+        }
+        // 周边房源
+        if (self.relatedHouseData) {
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+        }
+        [self reloadData];
     }
 }
 

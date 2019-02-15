@@ -23,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
  flowLayout.minimumLineSpacing = 10;
  flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
  */
-- (instancetype)initWithFlowLayout:(UICollectionViewFlowLayout *)flowLayout viewHeight:(CGFloat)collectionViewHeight cellIdentifier:(NSString *)cellIdentifier datas:(NSArray *)datas;
+- (instancetype)initWithFlowLayout:(UICollectionViewFlowLayout *)flowLayout viewHeight:(CGFloat)collectionViewHeight cellIdentifier:(NSString *)cellIdentifier cellCls:(Class)cls datas:(NSArray *)datas;
+- (void)reloadData;
 
 @end
 
