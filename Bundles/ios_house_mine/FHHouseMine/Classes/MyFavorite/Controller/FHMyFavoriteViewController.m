@@ -1,17 +1,17 @@
 //
-//  FHHouseMineViewController.m
-//  FHHouseMine
+//  FHMyFavoriteViewController.m
+//  AFgzipRequestSerializer
 //
-//  Created by 谢思铭 on 2019/1/31.
+//  Created by 谢思铭 on 2019/2/14.
 //
 
-#import "FHHouseMineViewController.h"
+#import "FHMyFavoriteViewController.h"
 
-@interface FHHouseMineViewController ()
+@interface FHMyFavoriteViewController ()
 
 @end
 
-@implementation FHHouseMineViewController
+@implementation FHMyFavoriteViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
