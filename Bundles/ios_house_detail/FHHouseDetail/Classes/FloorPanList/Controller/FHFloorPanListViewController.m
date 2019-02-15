@@ -12,6 +12,7 @@
 
 @interface FHFloorPanListViewController ()
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
+@property (nonatomic , strong) UIView *segementBottomLine;
 @property (nonatomic , strong) UIScrollView *leftFilterView;
 @property (nonatomic , strong) UIView *leftView;
 @property (nonatomic , strong) UITableView *floorListTable;
@@ -40,23 +41,22 @@
     [self refreshContentOffset:CGPointMake(0, 500)];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
-    
     [self setUpSegmentedControl];
     
     [self setUpLeftView];
     
     [self setUpFloorListTable];
     
-    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andItems:_floorList];
+    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList];
     // Do any additional setup after loading the view.
 }
 
 - (void)setUpSegmentedControl
 {
+    
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
-    _segmentedControl.sectionTitles = @[@"全部(0)",@"3室(0)",@"4室(0)",@"5室(0)"];
-    _segmentedControl.selectionIndicatorHeight = 1;
+    _segmentedControl.selectionIndicatorHeight = 2;
     _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#299cff"];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
@@ -71,13 +71,10 @@
                                      [UIColor colorWithHexString:@"#299cff"],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
-    _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5);
+    _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 30);
     _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     WeakSelf;
-    _segmentedControl.indexChangeBlock = ^(NSInteger index) {
-     StrongSelf;
-        
-    };
+
     [self.view addSubview:_segmentedControl];
     
     [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -86,6 +83,17 @@
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(40);
     }];
+    
+    _segementBottomLine = [UIView new];
+    _segementBottomLine.backgroundColor = [UIColor colorWithHexString:@"#f0f0f0"];
+    [_segmentedControl addSubview:_segementBottomLine];
+    [_segementBottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(_segmentedControl);
+        make.left.right.equalTo(_segmentedControl);
+        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
+        make.height.mas_equalTo(1);
+    }];
+    
 }
 
 - (void)setUpLeftView

@@ -20,5 +20,7 @@ TTR_EXPORT_HANDLER(handleNavBack)
 
 // 禁用滑动返回
 TTR_EXPORT_HANDLER(disableDragBack)
+TTR_EXPORT_HANDLER(setNativeTitle)
+TTR_EXPORT_HANDLER(setNativeDividerVisible)
 
 @end
