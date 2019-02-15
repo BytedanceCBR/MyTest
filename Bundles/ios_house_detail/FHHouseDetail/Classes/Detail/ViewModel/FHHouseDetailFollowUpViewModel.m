@@ -9,6 +9,11 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHDetailBaseModel.h"
+#import "UIView+Toast.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import "TTUIResponderHelper.h"
+#import "TTDeviceHelper.h"
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
@@ -28,25 +33,24 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 if (model.data.followStatus == 0) {
         
                     NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-                    if (toastCount < 3) {
+                    if (toastCount < 83) {
                         [[ToastManager manager] showToast:@"已加入关注列表"];
+                        CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
+                        style.cornerRadius = 12;
+                        style.messageAlignment = NSTextAlignmentCenter;
+                        style.messageColor = [UIColor whiteColor];
+                        style.backgroundColor = [UIColor colorWithHexString:@"#081f33" alpha:0.96];
+                        style.messageFont = [UIFont themeFontRegular:10];
+                        style.verticalPadding = 5;
+                        style.horizontalPadding = 6;
+                        style.isCustomPosition = YES;
+                        style.customX = [UIScreen mainScreen].bounds.size.width - 20;
+                        style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
                         toastCount += 1;
+                        [[TTUIResponderHelper topmostViewController].view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
                         [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
                         [[NSUserDefaults standardUserDefaults]synchronize];
                     }
-                    // add by zjing for test toast
-//                    if (toastCount < 3) {
-//
-//                        var style = fhCommonToastStyle()
-//                        style.isCustomPosition = true
-//                        style.customX = UIScreen.main.bounds.size.width - 20
-//                        style.backgroundColor = hexStringToUIColor(hex: kFHDarkIndigoColor, alpha: 0.6)
-//                        style.messageFont = CommonUIStyle.Font.pingFangRegular(10)
-//                        style.verticalOffset = 65 + (CommonUIStyle.Screen.isIphoneX ? 20 : 0)
-//                        style.cornerRadius = 12
-//                        style.verticalPadding = 5
-//                        style.horizontalPadding = 6
-//                        fhShowToast("已加入关注列表", position: .top, style: style)
 
                 }else {
                     NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
