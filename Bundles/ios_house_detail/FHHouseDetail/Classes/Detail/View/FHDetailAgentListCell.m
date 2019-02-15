@@ -16,6 +16,7 @@
 #import "FHDetailHeaderView.h"
 #import "FHExtendHotAreaButton.h"
 #import "FHDetailFoldViewButton.h"
+#import "UILabel+House.h"
 
 @interface FHDetailAgentListCell ()
 
@@ -51,6 +52,7 @@
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 66.0;
+        // add by zyk -- 点击事件添加
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] init];
             [self.containerView addSubview:itemView];
@@ -122,14 +124,6 @@
     return self;
 }
 
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 - (void)setupUI {
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"推荐经纪人";
@@ -192,14 +186,6 @@
     return self;
 }
 
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 - (void)setupUI {
     _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default-avatar-icons"]];
     _avator.layer.cornerRadius = 23;
@@ -215,12 +201,12 @@
     [_callBtn setImage:[UIImage imageNamed:@"icon-phone"] forState:UIControlStateNormal];
     [self addSubview:_callBtn];
     
-    self.name = [self createLabel:@"" textColor:@"#081f33" fontSize:16];
+    self.name = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
     _name.font = [UIFont themeFontMedium:16];
     _name.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_name];
     
-    self.agency = [self createLabel:@"" textColor:@"#a1aab3" fontSize:14];
+    self.agency = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:14];
     _agency.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_agency];
     
