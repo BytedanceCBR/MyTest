@@ -155,7 +155,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     }];
     
     _moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    NSAttributedString *attributeString = [[NSAttributedString alloc] initWithString:@"更多楼盘信息" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+    NSAttributedString *attributeString = [[NSAttributedString alloc] initWithString:@"更多楼盘信息" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
     [_moreBtn setAttributedTitle:attributeString forState:UIControlStateNormal];
     _moreBtn.backgroundColor = [UIColor colorWithHexString:@"#f6f7f8"];
     _moreBtn.layer.cornerRadius = 5;
