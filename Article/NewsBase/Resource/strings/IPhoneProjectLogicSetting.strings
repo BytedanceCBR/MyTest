@@ -10,8 +10,8 @@
 //"house_list"            = "_TtC6Bubble18CategoryListPageVC";
 "house_list"            = "FHHouseListViewController";
 
-"flogin"                = "_TtC6Bubble12QuickLoginVC";
-//"flogin"                = "FHLoginViewController";
+//"flogin"                = "_TtC6Bubble12QuickLoginVC";
+"flogin"                = "FHLoginViewController";
 
 //"aboutUs"               = "_TtC6Bubble19AboutViewController";
 "aboutUs"               = "FHAboutUsViewController";
