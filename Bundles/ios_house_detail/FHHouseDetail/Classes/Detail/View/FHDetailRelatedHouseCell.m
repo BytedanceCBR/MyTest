@@ -15,6 +15,7 @@
 #import "TTRoute.h"
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
+#import "FHSingleImageInfoCell.h"
 
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -65,6 +66,8 @@
         }
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
+        tv.scrollEnabled = NO;
+        [tv registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
