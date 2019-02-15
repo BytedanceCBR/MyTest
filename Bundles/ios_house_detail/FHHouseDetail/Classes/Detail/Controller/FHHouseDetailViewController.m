@@ -91,7 +91,7 @@
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
 
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc]initWithNavBar:_navBar bottomBar:_bottomBar];
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar];
     self.viewModel.contactViewModel.houseType = self.houseType;
     self.viewModel.contactViewModel.houseId = self.houseId;
     self.viewModel.contactViewModel.searchId = self.searchId;
@@ -140,6 +140,16 @@
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
     }
+}
+
+- (UIView *)getNaviBar
+{
+    return self.navBar;
+}
+
+- (UIView *)getBottomBar
+{
+    return self.bottomBar;
 }
 
 @end

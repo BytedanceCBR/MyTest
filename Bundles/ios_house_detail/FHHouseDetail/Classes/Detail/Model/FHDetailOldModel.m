@@ -133,6 +133,7 @@
                            @"uploadAt": @"upload_at",
                            @"coreInfo": @"core_info",
                            @"highlightedRealtor": @"highlighted_realtor",
+                           @"recommendedRealtors": @"recommended_realtors",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

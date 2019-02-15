@@ -6,12 +6,13 @@
 //
 
 #import "FHHouseDetailBaseViewModel.h"
+#import "FHDetailNewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanListViewModel : FHHouseDetailBaseViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType;
+-(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems;
 
 @end
 

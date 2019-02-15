@@ -107,7 +107,13 @@ static const float kSegementedPadingTop = 5;
     {
         _segmentedControl.selectedSegmentIndex = _segmentedControl.selectedSegmentIndex;
     }
-    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - (titles.count == 1 ? 20 : 10), kSegementedPadingTop, kSegementedOneWidth * titles.count, kSegementedHeight);
+    CGFloat leftPading = 0;
+    
+    if (titles.count == 1) {
+        leftPading = 8;
+    }
+    
+    _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - kSegementedOneWidth * titles.count - (titles.count == 1 ? 20 : 10) + leftPading, kSegementedPadingTop, kSegementedOneWidth * titles.count, kSegementedHeight);
 }
 /*
  // Only override drawRect: if you perform custom drawing.

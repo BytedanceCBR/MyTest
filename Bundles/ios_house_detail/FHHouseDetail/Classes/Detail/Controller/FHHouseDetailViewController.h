@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshContentOffset:(CGPoint)contentOffset;
 
+- (UIView *)getNaviBar;
+
+- (UIView *)getBottomBar;
+
 @end
 
 NS_ASSUME_NONNULL_END
