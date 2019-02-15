@@ -14,6 +14,7 @@
 #import "FHDetailNewModel.h"
 #import "YYLabel.h"
 #import <YYText.h>
+#import "UILabel+House.h"
 
 @interface FHDetailHouseNameCell ()
 
@@ -71,25 +72,17 @@
     return self;
 }
 
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 - (void)setupUI {
-    _nameLabel = [self createLabel:@"" textColor:@"#081f33" fontSize:24];
+    _nameLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:24];
     _nameLabel.font = [UIFont themeFontMedium:24];
     _nameLabel.numberOfLines = 2;
     [self.contentView addSubview:_nameLabel];
     
-    _aliasLabel = [self createLabel:@"别名" textColor:@"#a1aab3" fontSize:12];
+    _aliasLabel = [UILabel createLabel:@"别名" textColor:@"#a1aab3" fontSize:12];
     _aliasLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_aliasLabel];
     
-    _secondaryLabel = [self createLabel:@"" textColor:@"#081f33" fontSize:12];
+    _secondaryLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:12];
     [self.contentView addSubview:_secondaryLabel];
     
     _tagsView = [[YYLabel alloc] init];

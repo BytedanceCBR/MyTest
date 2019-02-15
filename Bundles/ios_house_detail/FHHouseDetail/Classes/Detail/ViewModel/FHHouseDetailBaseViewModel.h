@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseDetailViewController *detailController;
 @property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源
+@property (nonatomic, strong)   NSObject       *detailData; // 详情页数据：FHDetailOldDataModel等
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 
 // 子类实现

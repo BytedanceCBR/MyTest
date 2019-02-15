@@ -43,6 +43,8 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openHotsoon" for:@"openHotsoon"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openApp" for:@"openApp"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.disableDragBack" for:@"disableDragBack"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setNativeTitle" for:@"setNativeTitle"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setNativeDividerVisible" for:@"setNativeDividerVisible"];
     
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShare.share" for:@"share"];
