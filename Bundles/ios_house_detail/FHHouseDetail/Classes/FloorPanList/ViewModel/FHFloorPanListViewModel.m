@@ -8,21 +8,28 @@
 #import "FHFloorPanListViewModel.h"
 #import "FHHouseDetailAPI.h"
 #import "FHFloorPanListCell.h"
+#import <FHEnvContext.h>
+
+static const NSString *kDefaultLeftFilterStatus = @"0";
+static const NSString *kDefaultTopFilterStatus = @"-1";
 
 @interface FHFloorPanListViewModel()
-@property (nonatomic , strong) UITableView *floorListTable;
-@property (nonatomic , strong) UIScrollView *leftFilterView;
+@property (nonatomic , weak) UITableView *floorListTable;
+@property (nonatomic , weak) UIScrollView *leftFilterView;
 @property (nonatomic , strong) UILabel *currentTapLabel;
 @property (nonatomic , weak) UIViewController *floorListVC;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *allItems;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *currentItems;
+@property (nonatomic , assign) NSInteger leftFilterIndex;
+@property (nonatomic , strong) NSMutableArray *topRoomCountArray;
+@property (nonatomic , weak) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) NSArray * nameLeftArray;
 @end
 
 
 @implementation FHFloorPanListViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems {
+-(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems {
     self = [super init];
     if (self) {
         _nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
@@ -31,9 +38,19 @@
         _allItems = allItems;
         _floorListVC = viewController;
         _currentItems = _allItems;
+        _segmentedControl = segmentView;
+        if (_allItems.count > 0) {
+            _segmentedControl.sectionTitles = [self getSegementViewTitlsArray];
+        }
         [self configTableView];
         
         [self setUpLeftFilterView];
+        
+        WeakSelf;
+        _segmentedControl.indexChangeBlock = ^(NSInteger index) {
+            StrongSelf;
+            [self refreshCurrentShowList];
+        };
     }
     return self;
 }
@@ -75,12 +92,14 @@
             _currentTapLabel = labelClick;
             labelClick.textColor = [UIColor themeBlue2];
             labelClick.backgroundColor = [UIColor whiteColor];
+            _leftFilterIndex = 0;
         }else
         {
             labelClick.textColor = [UIColor themeBlue1];
             labelClick.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
         }
         labelClick.font = [UIFont themeFontRegular:15];
+        labelClick.tag = i;
         [labelContentView addSubview:labelClick];
         labelClick.textAlignment = NSTextAlignmentCenter;
         labelClick.userInteractionEnabled = YES;
@@ -100,7 +119,8 @@
 - (void)labelClickAction:(UITapGestureRecognizer *)tap
 {
     UIView *tapView = tap.view;
-    
+    _leftFilterIndex = tapView.tag;
+
     if (_currentTapLabel) {
         _currentTapLabel.textColor = [UIColor themeBlue1];
         _currentTapLabel.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
@@ -111,6 +131,82 @@
           ((UILabel *)tapView).backgroundColor = [UIColor whiteColor];
           _currentTapLabel = tapView;
     }
+    
+    [self refreshCurrentShowList];
+}
+
+- (NSArray *)getSegementViewTitlsArray
+{
+    _topRoomCountArray = [NSMutableArray new];
+    for (NSInteger i = 0; i < _allItems.count; i++) {
+        FHDetailNewDataFloorpanListListModel * model = _allItems[i];
+        if (model.roomCount && ![_topRoomCountArray containsObject:model.roomCount]) {
+            [_topRoomCountArray addObject:model.roomCount];
+        }
+    }
+    
+    NSMutableArray *titlesArray = [NSMutableArray new];
+    if (_topRoomCountArray.count > 0) {
+        [_topRoomCountArray sortUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2){
+            if ([obj1 integerValue] < [obj2 integerValue]){
+                return NSOrderedAscending;
+            }else{
+                return NSOrderedDescending;}
+        }];
+        [titlesArray addObject:[NSString stringWithFormat:@"全部(%d)",_allItems.count]];
+        
+        for (NSInteger i = 0; i < _topRoomCountArray.count; i++) {
+            [titlesArray addObject:[NSString stringWithFormat:@"%@室(%d)",_topRoomCountArray[i],_allItems.count]];
+        }
+    }
+    return titlesArray;
+}
+
+- (void)refreshCurrentShowList
+{
+    _currentItems = [self getSelectFilterDataList];
+    if (_currentItems.count == 0) {
+        [[ToastManager manager] showToast:@"暂无相关房型~"];
+    }
+    [_floorListTable reloadData];
+}
+
+- (NSArray<FHDetailNewDataFloorpanListListModel *> *)getSelectFilterDataList
+{
+    NSString *roomCuntKey = kDefaultTopFilterStatus;
+    if ( _segmentedControl.selectedSegmentIndex != 0 && _topRoomCountArray.count > _segmentedControl.selectedSegmentIndex - 1) {
+        roomCuntKey = _topRoomCountArray[_segmentedControl.selectedSegmentIndex - 1];
+    }
+    
+    NSString *status = kDefaultLeftFilterStatus;
+    if (self.currentTapLabel.tag != 0) {
+        status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
+    }
+    
+    NSMutableArray *currentItemsArray = [NSMutableArray new];
+    for(FHDetailNewDataFloorpanListListModel *model in _allItems)
+    {
+        if([status isEqualToString:kDefaultLeftFilterStatus] && [roomCuntKey isEqualToString:kDefaultTopFilterStatus])
+        {
+            [currentItemsArray addObject:model];
+        }
+        else if([status isEqualToString:kDefaultLeftFilterStatus])
+        {
+            if ([model.roomCount isEqualToString:roomCuntKey] && ![roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
+                [currentItemsArray addObject:model];
+            }
+        }else if ([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
+            if ([model.saleStatus.id isEqualToString:status]) {
+                [currentItemsArray addObject:model];
+            }
+        }else
+        {
+            if ([model.roomCount isEqualToString:roomCuntKey] && [model.saleStatus.id isEqualToString:status]) {
+                [currentItemsArray addObject:model];
+            }
+        }
+    }
+    return currentItemsArray;
 }
 
 // 注册cell类型
@@ -139,43 +235,6 @@
 }
 
 - (void)processDetailData:(FHDetailNewModel *)model {
-    // 清空数据源
-    [self.items removeAllObjects];
-    //    if (model.data.imageGroup) {
-    //        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-    //        NSMutableArray *arrayHouseImage = [NSMutableArray new];
-    //        for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-    //            FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
-    //            for (NSInteger j = 0; j < groupModel.images.count; j++) {
-    //                [arrayHouseImage addObject:groupModel.images[j]];
-    //            }
-    //        }
-    //        headerCellModel.houseImage = arrayHouseImage;
-    //        [self.items addObject:headerCellModel];
-    //    }
-    //
-    //    //楼盘户型
-    //    if (model.data.floorpanList) {
-    //        [self.items addObject:model.data.floorpanList];
-    //    }
-    //
-    //    if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
-    //        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-    //        nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
-    //        nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
-    //        [self.items addObject:nearbyMapModel];
-    //
-    //        __weak typeof(self) wSelf = self;
-    //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    //            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
-    //                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
-    //                    [self reloadData];
-    //                };
-    //            }
-    //        });
-    //    }
-    //
-    [self reloadData];
 }
 
 #pragma UITableViewDelegate

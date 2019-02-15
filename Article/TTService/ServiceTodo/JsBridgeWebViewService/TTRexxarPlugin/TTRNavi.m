@@ -225,4 +225,22 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 //    controller.ttDisableDragBack = NO;
 }
 
+- (void)setNativeTitleWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    if(param[@"title"]){
+        NSString *title = param[@"title"];
+        if ([controller respondsToSelector:@selector(setTitleText:)]) {
+            [controller performSelector:@selector(setTitleText:) withObject:title];
+        }
+    }
+}
+
+- (void)setNativeDividerVisibleWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    if(param[@"isVisible"]){
+        BOOL isVisible = [param[@"isVisible"] boolValue];
+        controller.ttNeedHideBottomLine = !isVisible;
+    }
+}
+
 @end
