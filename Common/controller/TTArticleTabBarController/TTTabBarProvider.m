@@ -33,6 +33,7 @@
 #import "FHHouseFindListViewController.h"
 #import "FHMessageViewController.h"
 #import "FHMineViewController.h"
+#import <FHHouseFind/FHHouseFindViewController.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -123,8 +124,8 @@ static NSString *lastTabIdentifier;
             houseFindVC = [[FHHouseFindListViewController alloc]init];
 
         }else {
-           houseFindVC = [[HouseFindVC alloc] init];
-
+//           houseFindVC = [[HouseFindVC alloc] init];
+            houseFindVC = [[FHHouseFindViewController alloc] init];
         }
         return houseFindVC;
 

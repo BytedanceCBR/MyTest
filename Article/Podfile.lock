@@ -1259,8 +1259,8 @@ DEPENDENCIES:
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (= 0.1.25)
   - TTAdSplashSDK (= 0.4.4)
-  - TTAppUpdateHelper/TTUpdateHelper
-  - TTAppUpdateHelper/TTUpdateView
+  - TTAppUpdateHelper/TTUpdateHelper (= 1.0.9)
+  - TTAppUpdateHelper/TTUpdateView (= 1.0.9)
   - TTAudio (= 0.1.4)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
@@ -1589,6 +1589,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: a4114e4c6d0f1ca054d6c66b7b642700b20bb97b
+PODFILE CHECKSUM: a1ff6a52b8d4578768bd01e6c7ff2df844171a87
 
 COCOAPODS: 1.4.0

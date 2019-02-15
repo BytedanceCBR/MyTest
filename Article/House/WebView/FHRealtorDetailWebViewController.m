@@ -66,7 +66,8 @@ static NSString *s_oldAgent = nil;
 }
 
 -(NSMutableDictionary*)goDetailParams {
-    NSParameterAssert(_tracerModel);
+    // add by zjing for test
+//    NSParameterAssert(_tracerModel);
     NSDictionary* params = @{@"page_type": @"realtor_detail",
                              @"enter_from": _tracerModel.enterFrom ? : @"be_null",
                              @"element_from": _tracerModel.elementFrom ? : @"be_null",

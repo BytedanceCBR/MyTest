@@ -450,10 +450,9 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
             self?.netStateInfoVM?.onRequestNormalData()
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         self.ttTrackStayEnable = true
         view.backgroundColor = UIColor.white
         
@@ -852,7 +851,7 @@ class HorseDetailPageVC: BaseViewController, TTRouteInitializeProtocol, TTShareM
         self.bottomBar.leftView.isHidden = contactPhone?.showRealtorinfo == 1 ? false : true
         
         let leftWidth = contactPhone?.showRealtorinfo == 1 ? 160 : 0
-        self.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
+        self.bottomBar.avatarView.bd_setImage(with: URL(string: contactPhone?.avatarUrl ?? ""), placeholder: UIImage(named: "detail_default_avatar"))
         
         if var realtorName = contactPhone?.realtorName, realtorName.count > 0 {
             if realtorName.count > 4 {

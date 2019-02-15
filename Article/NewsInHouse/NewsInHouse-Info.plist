@@ -54,16 +54,6 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>sinaweibo</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>sinaweibosso.com.ss.iphone.article.news</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
 			<string>own</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
@@ -74,110 +64,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>renren</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>rm2080814com.ss.iphone.article.News</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
 			<string>tencent</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>tencent1107515843</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.taobao.taesdk</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>tbopen23178686</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.ss.iphone.article.News</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>tbopen23261993</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>alipayShare</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>ap2015090200249164</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>kepler</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>jdf9a9dd25be324eaa980edc530c7a3266</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>jdmobile</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>jda40966f7a51ee8f7d</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>dingtalk</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>dingoamfoom0wrwiyexx2z</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>hotsoon</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bdefc41a8703eae8ce</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>aweme</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bd3ffc36cf30e111d0</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>mqqapi</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>1107515843</string>
 			</array>
 		</dict>
 	</array>

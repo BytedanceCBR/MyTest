@@ -192,7 +192,7 @@ class FHAgentListCell: BaseUITableViewCell, RefreshableTableViewCell {
 
     lazy var arrowIcon: UIImageView = {
         let re = UIImageView()
-        re.image = UIImage(named: "defaultAvatar")
+        re.image = UIImage(named: "detail_default_avatar")
         return re
     }()
 
@@ -431,7 +431,7 @@ func fillAgentListCell(
             itemView.agency.text = contact.agencyName
             if let avatarUrl = contact.avatarUrl {
                 itemView.avator.bd_setImage(with: URL(string: avatarUrl),
-                                            placeholder: UIImage(named: "defaultAvatar"))
+                                            placeholder: UIImage(named: "detail_default_avatar"))
             }
             itemView.licenceIcon.isHidden = !shouldShowContact(contact: contact)
             //点击电话

@@ -817,7 +817,7 @@ TTEditUserProfileViewControllerDelegate
 - (TTSettingSectionType)sectionTypeAtSection:(NSInteger)section
 {
     NSArray *sectionTypeList = [self supportSettingSectionTypeArray];
-    if (section > sectionTypeList.count) {
+    if (section >= sectionTypeList.count) {
         return kTTSettingSectionTypeNone;
     }
     NSNumber *sectionTypeObject = sectionTypeList[section];
