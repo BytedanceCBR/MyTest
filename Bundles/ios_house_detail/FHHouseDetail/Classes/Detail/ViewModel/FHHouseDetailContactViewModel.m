@@ -28,6 +28,7 @@
 #import "FHHouseDetailFollowUpViewModel.h"
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHDetailNoticeAlertView.h"
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 

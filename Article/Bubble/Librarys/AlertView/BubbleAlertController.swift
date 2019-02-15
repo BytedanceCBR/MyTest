@@ -166,7 +166,7 @@ class BubbleAlertTitleView: UIView {
 
     lazy var closeBtn: UIButton = {
         let re = ExtendHotAreaButton()
-        re.setImage(UIImage(named: "icon-closed"), for: .normal)
+        re.setImage(UIImage(named: "detail_alert_closed"), for: .normal)
         return re
     }()
 
