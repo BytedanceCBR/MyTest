@@ -37,7 +37,7 @@
         make.height.mas_equalTo(100);
     }];
     
-    [view setBackgroundColor:[UIColor redColor]];
+    [view setBackgroundColor:[UIColor whiteColor]];
     
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapClick)];
     [view addGestureRecognizer:tapGes];
@@ -53,7 +53,10 @@
 - (void)tapClick
 {
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":self.allItems}];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+    
+//    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":self.allItems}];
+//    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
 }
 
 - (void)awakeFromNib {
