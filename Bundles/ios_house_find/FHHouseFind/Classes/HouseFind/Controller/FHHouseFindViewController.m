@@ -51,9 +51,15 @@
     
     [self.view addSubview:_contentView];
     _viewModel = [[FHHouseFindViewModel alloc] initWithCollectionView:_contentView segmentControl:self.segmentView];
-    _viewModel.noDataBlock = ^{
-        [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-        wself.errorMaskView.hidden = NO;
+    _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
+        if (noData) {
+            [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+        }else if(!available){
+            [wself.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
+        }else{
+            wself.errorMaskView.hidden = YES;
+        }
+        wself.searchButton.hidden = !wself.errorMaskView.isHidden;
     };
     
     _searchBar = [[FHHouseFindFakeSearchBar alloc]initWithFrame:CGRectZero];
@@ -81,8 +87,9 @@
     
     _viewModel.searchBar = _searchBar;
     _viewModel.splitLine = _splitLine;
+    _viewModel.searchButton = _searchButton;
     
-    [_viewModel setupHouseContent];
+    [_viewModel setupHouseContent:nil];
     
 }
 
@@ -124,7 +131,7 @@
     [_searchButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(200, 50));
-        make.bottom.mas_equalTo(self.contentView).offset(-50);
+        make.bottom.mas_equalTo(self.contentView).offset(-70);
     }];
     
 }
@@ -164,7 +171,8 @@
         _searchButton.layer.shadowOffset = CGSizeMake(0, 2);
         _searchButton.layer.shadowColor = [RGBA(41, 156, 255,0.4) CGColor];
         _searchButton.layer.cornerRadius = 26;
-        _searchButton.layer.masksToBounds = YES;
+        _searchButton.layer.shadowRadius = 10;
+//        _searchButton.layer.masksToBounds = YES;
     }
     return _searchButton;
     
@@ -182,6 +190,21 @@
     [super viewWillDisappear:animated];
     [_viewModel viewWillDisappear];
     
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground
+{
+    [self.viewModel endTrack];
+    [self.viewModel addStayCategoryLog];
+    [self.viewModel resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground
+{
+    [self.viewModel resetStayTime];
+    [self.viewModel startTrack];
 }
 
 

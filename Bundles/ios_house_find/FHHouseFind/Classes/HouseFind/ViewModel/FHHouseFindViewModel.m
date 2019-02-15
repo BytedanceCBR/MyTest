@@ -18,6 +18,10 @@
 #import <FHHouseList/FHHouseListAPI.h>
 #import "FHMainApi+HouseFind.h"
 #import <TTRoute/TTRoute.h>
+#import <FHHouseBase/FHEnvContext.h>
+#import <TTReachability/TTReachability.h>
+#import <FHCommonUI/ToastManager.h>
+#import <FHHouseBase/FHUserTracker.h>
 
 #define MAIN_CELL_ID @"main_cell_id"
 #define HEADER_ID @"header_id"
@@ -27,7 +31,9 @@
 
 #define ITEM_HOR_MARGIN 20
 
-@interface FHHouseFindViewModel()<UICollectionViewDataSource,UICollectionViewDelegate,FHHouseFindPriceCellDelegate,FHHouseFindHistoryCellDelegate>
+@interface FHHouseFindViewModel()<UICollectionViewDataSource,UICollectionViewDelegate,
+                            FHHouseFindPriceCellDelegate,FHHouseFindHistoryCellDelegate,
+                            FHHouseFindMainCellDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) HMSegmentedControl *segmentControl;
@@ -39,7 +45,9 @@
 @property (nonatomic , strong) NSArray *houseTypes;
 @property (nonatomic , strong) NSMutableDictionary *selectMap; // housetype : FHHouseFindSelectModel
 @property (nonatomic , strong) NSMutableDictionary *historyMap;// housetype : [history]
-//@property (nonatomic , assign) NSInteger currentIndex;
+@property (nonatomic , strong) NSMutableDictionary *historyTracerMap; // housetype : [history record]
+@property (nonatomic , strong) RACDisposable *configDisposable;
+@property (nonatomic , assign) BOOL networkConnected;
 
 @end
 
@@ -60,14 +68,47 @@
         
         _selectMap = [NSMutableDictionary new];
         _historyMap = [NSMutableDictionary new];
+        _historyTracerMap = [NSMutableDictionary new];
         
         __weak typeof(self) wself = self;
         _segmentControl.indexChangeBlock = ^(NSInteger index) {
             [wself.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
         };
         
+        __block BOOL isFirstChange = YES;
+        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
+            //过滤多余刷新
+            if ([[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
+                return;
+            }
+            //城市更新 重新刷新
+            [wself setupHouseContent:x];
+            isFirstChange = NO;
+            
+        }];
+        self.configDisposable = disposable;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        
+        _networkConnected = [TTReachability isNetworkConnected];
+        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
+        tapGesture.cancelsTouchesInView = NO;
+        [collectionView addGestureRecognizer:tapGesture];
+        
     }
     return self;
+}
+
+-(void)dealloc
+{
+    [self.configDisposable dispose];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+-(void)onTap
+{
+    [self.collectionView endEditing:YES];
 }
 
 -(void)showSearchHouse
@@ -78,6 +119,12 @@
     if (selectModel.items.count > 0) {
         for (FHHouseFindSelectItemModel *item in selectModel.items ) {
             NSString *q = [item selectQuery];
+            if (!q) {
+#if DEBUG
+                NSLog(@"WARNING select query is nil for item : %@",item);
+#endif
+                continue;
+            }
             if (query.length > 0) {
                 [query appendString:@"&"];
             }
@@ -115,30 +162,57 @@
         FHHouseType ht =  [self.houseTypes[self.segmentControl.selectedSegmentIndex] integerValue];
         [self requestHistory:ht];
     }
-
+    [self startTrack];
 }
 
 -(void)viewWillDisappear
 {
-    
+    [self endTrack];
+    [self addStayCategoryLog];
 }
 
--(void)setupHouseContent
+-(void)setupHouseContent:(FHConfigDataModel *)configData
 {
-    FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (!configData) {
+        configData = [[FHEnvContext sharedInstance] getConfigFromCache];
+    }
+        
+    [self.historyMap removeAllObjects];
+    [self.selectMap removeAllObjects];
+    self.houseTypes = nil;
+    self.secondFilter = nil;
+    self.courtFilter = nil;
+    self.rentFilter = nil;
+    self.neighborhoodFilter = nil;
+    
+    /*
+     if (self.itemList.count < 1 || ![[[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable boolValue]) {
+     // 当前城市未开通
+     [self.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
+     return;
+     }
+     */
+    
     if (!configData) {
         //show no data
         
-        if (self.noDataBlock) {
-            self.noDataBlock();
+        if (self.showNoDataBlock) {
+            self.showNoDataBlock(YES,NO);
         }
         
-        self.secondFilter = nil;
-        self.courtFilter = nil;
-        self.rentFilter = nil;
-        self.neighborhoodFilter = nil;
+        
         
     }else{
+        
+        BOOL avaiable = configData.cityAvailability.enable;
+        
+        if (self.showNoDataBlock) {
+            self.showNoDataBlock(NO,avaiable);
+        }
+        if (!avaiable) {
+            return;
+        }
+        
         NSMutableArray *titles = [NSMutableArray new];
         NSMutableArray *houseTypes = [NSMutableArray new];
         if (configData.searchTabFilter) {
@@ -220,6 +294,12 @@
         
         FHHouseFindMainCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:MAIN_CELL_ID forIndexPath:indexPath];
         cell.collectionView.tag = [self.houseTypes[indexPath.item] integerValue];
+        if (!cell.delegate) {
+            cell.delegate = self;
+        }
+        
+        [cell showErrorView:!_networkConnected];
+        
         return cell;
         
     }else{
@@ -230,6 +310,8 @@
         if (indexPath.section == 0 && histories.count > 0) {
             //history
             FHHouseFindHistoryCell *hcell = [collectionView dequeueReusableCellWithReuseIdentifier:HISTORY_CELL_ID forIndexPath:indexPath];
+            hcell.delegate = self;
+            hcell.tag = ht;
             [hcell updateWithItems:histories];
             return hcell;
         }
@@ -241,7 +323,7 @@
         NSArray *filter = [self filterOfHouseType:ht];
         if (filter.count > section) {
             
-            FHHouseFindSelectModel *model = self.selectMap[@(ht)];
+            FHHouseFindSelectModel *model = [self selectModelWithType:ht];            
             FHSearchFilterConfigItem *item = filter[section];
             if ([item.tabId integerValue] == FHSearchTabIdTypePrice) {
                 
@@ -250,6 +332,12 @@
                 pcell.delegate = self;
                 
                 FHHouseFindSelectItemModel *priceItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
+                if (!priceItem) {
+                    priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
+                    priceItem.rate = item.rate;
+                }else{
+                    priceItem.rate = item.rate;
+                }
                 if (priceItem) {
                     [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];
                 }
@@ -294,6 +382,13 @@
     }else if([kind isEqualToString:UICollectionElementKindSectionHeader]){
         FHHouseFindHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:HEADER_ID forIndexPath:indexPath];
         FHHouseType ht = collectionView.tag;
+        headerView.tag = ht;
+        if (!headerView.deleteBlock) {
+            __weak typeof(self) wself = self;
+            headerView.deleteBlock = ^(FHHouseFindHeaderView * _Nonnull headerView) {
+                [wself clearHistoryOfHouseType:headerView.tag];
+            };
+        }
         NSArray *histories = self.historyMap[@(ht)];
         if (indexPath.section == 0 && histories.count > 0) {
             [headerView updateTitle:@"搜索历史" showDelete:YES];
@@ -322,17 +417,19 @@
     if (collectionView == self.collectionView) {
         FHHouseFindMainCell *fcell = (FHHouseFindMainCell *)cell;
         if (!fcell.collectionView.dataSource) {
-            fcell.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 70, 0);
+            fcell.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 90, 0);
             [self registerCell:fcell.collectionView];
             fcell.collectionView.delegate = self;
             fcell.collectionView.dataSource = self;
-            
             fcell.collectionView.clipsToBounds = YES;
-            
-            FHHouseType ht = [self.houseTypes[indexPath.item] integerValue];
-            [self requestHistory:ht];
-            
         }
+        
+        FHHouseType ht = [self.houseTypes[indexPath.item] integerValue];
+        if (!self.historyMap[@(ht)]) {
+            //因为cell 可能会复用，每次请求时再次判断一下
+            [self requestHistory:ht];
+        }
+        
         [fcell.collectionView reloadData];
     }
 }
@@ -375,11 +472,7 @@
     }
     
     FHHouseType ht = collectionView.tag;
-    FHHouseFindSelectModel *model = self.selectMap[@(ht)];
-    if (!model) {
-        model = [[FHHouseFindSelectModel alloc] init];
-        self.selectMap[@(ht)] = model;
-    }
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     
     NSArray *filter = [self filterOfHouseType:ht];
     NSArray *histories = self.historyMap[@(ht)];
@@ -516,12 +609,7 @@
 -(void)updateLowerPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell
 {
     FHHouseType ht = cell.tag;
-    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
-    
-    FHHouseFindSelectItemModel *priceItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
-    if (!priceItem) {
-        priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
-    }
+    FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
     
     priceItem.lowerPrice = price;
 }
@@ -529,17 +617,34 @@
 -(void)updateHigherPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell
 {
     FHHouseType ht = cell.tag;
+    FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
+    
+    priceItem.higherPrice = price;
+}
+
+-(FHHouseFindSelectItemModel *)priceItemWithHouseType:(FHHouseType)ht
+{
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     
     FHHouseFindSelectItemModel *priceItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
     if (!priceItem) {
         priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
+        
     }
-    
-    priceItem.higherPrice = price;
+    return priceItem;
 }
 
 -(FHHouseFindSelectModel *)selectModelWithType:(FHHouseType)ht
+{
+    FHHouseFindSelectModel *model = self.selectMap[@(ht)];
+    if (!model) {
+        model = [[FHHouseFindSelectModel alloc] init];
+        self.selectMap[@(ht)] = model;
+    }
+    return model;
+}
+
+-(FHHouseFindSelectModel *)selectModelWithHouseType:(FHHouseType)ht
 {
     FHHouseFindSelectModel *model = self.selectMap[@(ht)];
     if (!model) {
@@ -616,6 +721,32 @@
     
 }
 
+-(void)willShowHistory:(FHHFHistoryDataDataModel *)model rank:(NSInteger)rank houseType:(FHHouseType)houseType
+{
+    NSMutableSet *records = _historyTracerMap[@(houseType)];
+    if (!records) {
+        records = [NSMutableSet new];
+        _historyTracerMap[@(houseType)] = records;
+    }
+    
+    if ([records containsObject:@(rank)]) {
+        return;
+    }
+    
+    [records addObject:@(rank)];
+    
+    
+    NSDictionary *param =
+        @{
+          @"history_id":model.historyId?:@"",
+          @"rank" : @(rank),
+          @"show_type":@"slide",
+          @"word":model.text?:@""
+          };
+    
+    [FHUserTracker writeEvent:@"search_history_show" params:param];
+    
+}
 
 -(NSArray<FHSearchFilterConfigItem *> *)filterOfHouseType:(FHHouseType) ht
 {
@@ -650,6 +781,28 @@
     }
 }
 
+#pragma mark - network
+-(void)connectionChanged:(NSNotification *)notification
+{
+    TTReachability *reachability = (TTReachability *)notification.object;
+    NetworkStatus status = [reachability currentReachabilityStatus];
+    if ((status != NotReachable) != _networkConnected) {
+        //网络发生变化
+        _networkConnected = !_networkConnected;
+        [self.collectionView reloadData];
+    }
+    self.searchButton.hidden = !_networkConnected;
+}
+
+-(void)refreshInErrorView:(FHHouseFindMainCell *)cell
+{
+    if (![TTReachability isNetworkConnected]) {
+        return;
+    }
+    _networkConnected = YES;
+    [self.collectionView reloadData];
+}
+
 #pragma mark - request
 -(void)requestHistory:(FHHouseType)housetype
 {
@@ -661,14 +814,18 @@
             return ;
         }
         
+        wself.historyTracerMap[@(housetype)] = nil;
+        
         __strong typeof(self) sself = wself;
         
         if (model) {
             sself.historyMap[@(housetype)] = model.data.data;
-            if ([sself currentHouseType] == housetype ) {
+//            if ([sself currentHouseType] == housetype ) {
                 //加载的当前是一种类型
-                [sself.collectionView reloadData];
-            }
+                [sself reloadContentOfHouseType:housetype];
+                
+//                [sself.collectionView reloadData];
+//            }
         }
 #if DEBUG
         else if (error){
@@ -678,6 +835,76 @@
         
         
     }];
+}
+
+-(void)clearHistoryOfHouseType:(FHHouseType)ht
+{
+    if (![TTReachability isNetworkConnected]) {
+        
+        SHOW_TOAST(@"网络异常");
+        return;
+    }
+    
+    __weak typeof(self) wself = self;
+    [FHMainApi clearHFHistoryByHouseType:[@(ht) description] completion:^(FHFHClearHistoryModel * _Nonnull model, NSError * _Nonnull error) {
+        if (!wself) {
+            return ;
+        }
+        if (!error) {
+            wself.historyMap[@(ht)] = nil;
+            if ([wself currentHouseType] == ht ) {
+                //加载的当前是一种类型
+                [wself.collectionView reloadData];
+            }
+        }else{
+            SHOW_TOAST(@"历史记录删除失败");
+        }
+    }];
+    
+}
+
+-(void)reloadContentOfHouseType:(FHHouseType)ht
+{
+    NSInteger index = [self.houseTypes indexOfObject:@(ht)];
+    if (index >= 0) {
+        FHHouseFindMainCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
+        if (cell) {
+            [cell.collectionView reloadData];
+        }
+    }
+}
+
+#pragma mark - user track
+- (void)addStayCategoryLog
+{
+    NSInteger duration = (NSInteger)(self.trackStayTime * 1000.0);
+    if (duration <= 0) {//当前页面没有在展示过
+        return;
+    }
+
+    NSDictionary *tracerDict =
+        @{
+          @"stay_time":@(duration),
+          @"tab_name":@"find",
+          @"enter_type":@"click_tab",
+          @"with_tips":@"0"
+          };
+    [FHUserTracker writeEvent:@"stay_tab" params:tracerDict];
+}
+
+- (void)resetStayTime
+{
+    self.trackStayTime = 0;
+}
+
+- (void)startTrack
+{
+    self.trackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (void)endTrack
+{
+    self.trackStayTime += [[NSDate date] timeIntervalSince1970] - self.trackStartTime;
 }
 
 @end

@@ -27,7 +27,6 @@
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         layout.minimumInteritemSpacing = 13;
-//        layout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
         
         _collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
         _collectionView.backgroundColor = [UIColor whiteColor];
@@ -65,6 +64,13 @@
     return cell;
 }
 
+-(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(nonnull UICollectionViewCell *)cell forItemAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    if (self.delegate) {
+        FHHFHistoryDataDataModel *model = _historyItems[indexPath.item];
+        [self.delegate willShowHistory:model rank:indexPath.item houseType:self.tag];
+    }
+}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {

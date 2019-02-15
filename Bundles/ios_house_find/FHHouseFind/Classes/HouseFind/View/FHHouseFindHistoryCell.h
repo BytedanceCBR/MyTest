@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FHHouseBase/FHHouseType.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,6 +27,8 @@ NS_ASSUME_NONNULL_BEGIN
 @required
 
 -(void)selectHistory:(FHHFHistoryDataDataModel *)model;
+
+-(void)willShowHistory:(FHHFHistoryDataDataModel *)model rank:(NSInteger)rank houseType:(FHHouseType)houseType;
 
 @end
 

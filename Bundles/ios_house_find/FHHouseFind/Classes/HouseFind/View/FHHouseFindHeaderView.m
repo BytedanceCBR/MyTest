@@ -59,8 +59,8 @@
 
 -(void)deleteAction
 {
-    if (!_deleteBlock) {
-        _deleteBlock();
+    if (_deleteBlock) {
+        _deleteBlock(self);
     }
 }
 

@@ -20,12 +20,12 @@
 
 -(NSString *)selectQuery
 {
-    if (!_configOption) {
-        return nil;
-    }
-    
     NSMutableString *query = [[NSMutableString alloc] init];
     if (self.tabId == FHSearchTabIdTypePrice) {
+ 
+        if (!self.rate) {
+            return nil;
+        }
         
         NSInteger r = self.rate.integerValue;
         if (self.lowerPrice && self.higherPrice) {            
@@ -72,6 +72,10 @@
          */
         
     }else{
+        
+        if (!_configOption) {
+            return nil;
+        }
         
         for (NSNumber *index in self.selectIndexes) {
             if (self.configOption.options.count > index.integerValue) {

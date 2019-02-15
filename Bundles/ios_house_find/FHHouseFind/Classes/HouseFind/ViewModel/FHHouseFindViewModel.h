@@ -10,11 +10,15 @@
 NS_ASSUME_NONNULL_BEGIN
 @class HMSegmentedControl;
 @class FHHouseFindSearchBar;
+@class FHConfigDataModel;
 @interface FHHouseFindViewModel : NSObject
 
 @property(nonatomic , strong) FHHouseFindSearchBar *searchBar;
 @property(nonatomic , strong) UIView *splitLine;
-@property(nonatomic , copy)   void (^noDataBlock)();
+@property(nonatomic , strong) UIButton *searchButton;
+@property(nonatomic , copy)   void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
+@property (nonatomic , assign) NSTimeInterval trackStartTime;
+@property (nonatomic , assign) NSTimeInterval trackStayTime;
 
 -(instancetype)initWithCollectionView:(UICollectionView *)collectionView segmentControl:(HMSegmentedControl *)segmentControl;
 
@@ -22,13 +26,27 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showSugPage;//点击搜索框进入sug页面
 
--(void)setupHouseContent;
+-(void)setupHouseContent:(FHConfigDataModel *)configData;
 
 -(void)viewWillAppear;
 
 -(void)viewWillDisappear;
 
+- (void)addStayCategoryLog;
+- (void)resetStayTime;
+- (void)endTrack;
+- (void)startTrack;
 
 @end
+
+//@protocol FHHouseFindViewModelDelegate <NSObject>
+//
+//-(void)showNoDataView;
+//
+//-(void)hideNoDataView;
+//
+//-()
+//
+//@end
 
 NS_ASSUME_NONNULL_END

@@ -7,7 +7,13 @@
 
 #import "FHHouseFindMainCell.h"
 #import <Masonry/Masonry.h>
+#import <FHCommonUI/FHErrorView.h>
 
+@interface FHHouseFindMainCell ()
+
+@property(nonatomic , strong) FHErrorView *errorView;
+
+@end
 
 @implementation FHHouseFindMainCell
 
@@ -30,5 +36,29 @@
     }
     return self;
 }
+
+-(FHErrorView *)errorView
+{
+    if (!_errorView) {
+        _errorView  =[[FHErrorView alloc] initWithFrame:self.bounds];
+        _errorView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        [_errorView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        __weak typeof(self) wself = self;
+        _errorView.retryBlock = ^{
+            if (wself.delegate) {
+                [wself.delegate refreshInErrorView:wself];
+            }
+        };
+        [self addSubview:_errorView];
+    }
+    return _errorView;
+}
+
+-(void)showErrorView:(BOOL)showError
+{
+    self.errorView.hidden = !showError;
+}
+
+
 
 @end
