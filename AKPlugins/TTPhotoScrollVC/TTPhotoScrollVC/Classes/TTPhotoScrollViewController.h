@@ -14,6 +14,7 @@ typedef void(^TTPhotoScrollViewDismissBlock) ();
 typedef enum : NSUInteger {
     PhotosScrollViewSupportDownloadMode = 0, // default value
     PhotosScrollViewSupportSelectMode = 1,
+    PhotosScrollViewSupportBrowse = 2 , //仅仅浏览
 } PhotosScrollViewMode;
 
 typedef NS_ENUM(NSInteger, TTPhotoScrollViewMoveDirection) {

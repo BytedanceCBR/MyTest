@@ -149,8 +149,6 @@
                         NSString *indexV = [NSString stringWithFormat:@"%ld",(NSInteger)(ratio*groupView.items.count)];
                         [groupView  sendRelateReadTrace:indexV];
                     }
-                    
-                    NSLog(@"content y = %f",natantContentoffsetY - view.frame.origin.y);
                 }
                 if (shouldSend) {
                     [view trackEventIfNeededWithStyle:style];

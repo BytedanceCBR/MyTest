@@ -63,6 +63,7 @@ static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.
 {
     self.configCache = [self getGeneralConfigFromLocal];
     if (self.configCache) {
+        [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = NO;
         [[FHEnvContext sharedInstance] acceptConfigDataModel:self.configCache];
     }
 }

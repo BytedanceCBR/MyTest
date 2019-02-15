@@ -158,7 +158,6 @@
     }else {
         self.centerView.icon.hidden = YES;
         self.centerView.subtitleLabel.hidden = YES;
-
     }
     
     [self.centerView.titleLabel sizeToFit];

@@ -1387,8 +1387,6 @@
 		AFDE897618165D2A0090BAD9 /* EssayContentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AFDE897518165D2A0090BAD9 /* EssayContentManager.m */; };
 		B119472D1CF7FF4700561B49 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
 		B1E346601DD33F51002B14C5 /* SSMoviePlayerTrackManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E2BE261DCADA6D00AC62B6 /* SSMoviePlayerTrackManager.m */; };
-		B302205A2192B7B500400F76 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
-		B302205B2192B7B700400F76 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
 		B30912C021E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
 		B30912C121E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
 		B30912C221E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
@@ -1396,13 +1394,6 @@
 		B30912C521E4D40100E530C3 /* LicenceBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */; };
 		B30912C721E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */; };
 		B30912C821E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */; };
-		B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
-		B32FD2CD21A26E55007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
-		B32FD2CE21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
-		B32FD2CF21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
-		B32FD2D321A29BB4007B9966 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
-		B32FD2D421A29BB4007B9966 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
-		B32FD2D521A29BB4007B9966 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
 		B32FD30221A3B479007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
 		B32FD30321A3B479007B9966 /* RentCoreInfoCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */; };
 		B32FD30421A3B479007B9966 /* RentPropertyListNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FD21A3B479007B9966 /* RentPropertyListNode.swift */; };
@@ -1445,15 +1436,6 @@
 		B32FD34121A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
 		B32FD34221A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
 		B32FD34321A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
-		B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
-		B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
-		B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
 		B32FD35521A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35621A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35721A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
@@ -1572,7 +1554,6 @@
 		B373C8612174587A008F9905 /* UIImageView+TTCornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AECC4BC1D1AB4F300C2B87B /* UIImageView+TTCornerRadius.m */; };
 		B373C8622174587A008F9905 /* ConfigEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAA92142652900653188 /* ConfigEntities.swift */; };
 		B373C8632174587A008F9905 /* TTDetailNatantRelateReadView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5801F1332D90002B455 /* TTDetailNatantRelateReadView.m */; };
-		B373C8642174587A008F9905 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
 		B373C8652174587A008F9905 /* TTDetailNatantContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5761F1332D90002B455 /* TTDetailNatantContainerView.m */; };
 		B373C8662174587A008F9905 /* TTRHealthScore.m in Sources */ = {isa = PBXBuildFile; fileRef = D51D405A1FBAD75E0037D144 /* TTRHealthScore.m */; };
 		B373C8682174587A008F9905 /* ExploreArticleTitleLargePicCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0201E1B215BE400F9E484 /* ExploreArticleTitleLargePicCellView.m */; };
@@ -1622,7 +1603,6 @@
 		B373C8962174587A008F9905 /* ConstraintArray+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAC12142652900653188 /* ConstraintArray+Extensions.swift */; };
 		B373C8972174587A008F9905 /* TTWeixinOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB79D1F1332DA0002B455 /* TTWeixinOpenURLTask.m */; };
 		B373C89A2174587A008F9905 /* ExploreItemActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBDEE1F13332C0002B455 /* ExploreItemActionManager.m */; };
-		B373C89B2174587A008F9905 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
 		B373C89C2174587A008F9905 /* TTEditPGCTableViewControllerImp.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5C71F1332D90002B455 /* TTEditPGCTableViewControllerImp.m */; };
 		B373C89D2174587A008F9905 /* ExploreMovieLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D25570B1E8271CD00FF96A7 /* ExploreMovieLoadingView.m */; };
 		B373C89E2174587A008F9905 /* TTVFeedListViewController+HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = F876922D1F31D0D200D59CA5 /* TTVFeedListViewController+HeaderView.m */; };
@@ -1775,7 +1755,6 @@
 		B373C9342174587A008F9905 /* SSWebViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBE391F13332C0002B455 /* SSWebViewContainer.m */; };
 		B373C9352174587A008F9905 /* TSVShortVideoDecoupledFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F2B3D5411FDFB25E00E53E04 /* TSVShortVideoDecoupledFetchManager.m */; };
 		B373C9362174587A008F9905 /* TGAudioEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAEB2142652900653188 /* TGAudioEqualizer.swift */; };
-		B373C9372174587A008F9905 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9E02142652800653188 /* TabViewController.swift */; };
 		B373C9382174587A008F9905 /* TTVVideoDetailToolBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691901F31D0D200D59CA5 /* TTVVideoDetailToolBarViewController.m */; };
 		B373C9392174587A008F9905 /* ExploreSubscribeFetchRemoteListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA0BC21A1C9BFD00FA69FF /* ExploreSubscribeFetchRemoteListManager.m */; };
 		B373C93A2174587A008F9905 /* TTVSwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DAC1F94B8DC0050F83E /* TTVSwipeView.m */; };
@@ -2080,7 +2059,6 @@
 		B373CA762174587A008F9905 /* TTVDetailFollowRecommendCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47A1690E1F9F309C004CE29E /* TTVDetailFollowRecommendCollectionView.m */; };
 		B373CA772174587A008F9905 /* TTVWhiteBoardSubject.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692B11F31D0D300D59CA5 /* TTVWhiteBoardSubject.m */; };
 		B373CA782174587A008F9905 /* TTPersonalHomeMultiplePlatformFollowersInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = F23C0C832007B09800B8072A /* TTPersonalHomeMultiplePlatformFollowersInfoView.m */; };
-		B373CA792174587A008F9905 /* HomePageSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA642142652900653188 /* HomePageSearchPanel.swift */; };
 		B373CA7A2174587A008F9905 /* TSVShortVideoListFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C8A69F1F1362D000A52D8B /* TSVShortVideoListFetchManager.m */; };
 		B373CA7B2174587A008F9905 /* TTVFavoriteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692121F31D0D200D59CA5 /* TTVFavoriteAction.m */; };
 		B373CA7C2174587A008F9905 /* TTExploreMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5A11F1332D90002B455 /* TTExploreMainViewController.m */; };
@@ -2122,7 +2100,6 @@
 		B373CAA22174587A008F9905 /* AKUIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC2AA312063A5E200BCBAFF /* AKUIHelper.m */; };
 		B373CAA32174587A008F9905 /* TTTableViewBaseCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C0DF0741D66E7D30067342D /* TTTableViewBaseCellView.m */; };
 		B373CAA42174587A008F9905 /* TSVRecUserCardCollectionViewCellViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48828EE01F7B863F006A57BB /* TSVRecUserCardCollectionViewCellViewModel.m */; };
-		B373CAA52174587A008F9905 /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		B373CAA62174587A008F9905 /* ExploreBaseADCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE020031B215BE400F9E484 /* ExploreBaseADCell.m */; };
 		B373CAA72174587A008F9905 /* ToastAlertCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CB052142652900653188 /* ToastAlertCenter.swift */; };
 		B373CAA82174587A008F9905 /* TTLayOutCellViewBase+UFCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B28460D1DF5407000170DE7 /* TTLayOutCellViewBase+UFCell.m */; };
@@ -2471,7 +2448,6 @@
 		B373CC0B2174587A008F9905 /* TTArticleDetailMemoryMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78DAE81F56639800474BA8 /* TTArticleDetailMemoryMonitor.m */; };
 		B373CC0C2174587A008F9905 /* SSAPNsAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA75D1F33489E005DAD27 /* SSAPNsAlertManager.m */; };
 		B373CC0D2174587A008F9905 /* ExploreDetailToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 068D0C151B6B542E00F87E57 /* ExploreDetailToolbarView.m */; };
-		B373CC0E2174587A008F9905 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		B373CC0F2174587A008F9905 /* TTVCommodityEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA11F94B8DC0050F83E /* TTVCommodityEntity.m */; };
 		B373CC102174587A008F9905 /* TTViewControllerHierarchyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D7FA31F28360300C55747 /* TTViewControllerHierarchyHelper.m */; };
 		B373CC112174587A008F9905 /* TTFeedSaveRemoteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFAE3D1F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m */; };
@@ -2615,7 +2591,6 @@
 		B373CC9F2174587A008F9905 /* TGSquareGridPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAF12142652900653188 /* TGSquareGridPulse.swift */; };
 		B373CCA02174587A008F9905 /* RNData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2845741DF5402100170DE7 /* RNData.m */; };
 		B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F34205802A400BAEE7F /* AKMinePhotoCarouselEntry.m */; };
-		B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
 		B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		B373CCA42174587A008F9905 /* TTVCommodityFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA31F94B8DC0050F83E /* TTVCommodityFloatView.m */; };
 		B373CCA52174587A008F9905 /* TTADVideoMZTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E6A47CD1FD70AFC00E46510 /* TTADVideoMZTracker.m */; };
@@ -3030,7 +3005,6 @@
 		B373CE512174587A008F9905 /* AKProfileHeaderInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F21205802A400BAEE7F /* AKProfileHeaderInfoView.m */; };
 		B373CE522174587A008F9905 /* TTRDynamicPluginRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = 325B68661F5E54E1008AC35F /* TTRDynamicPluginRegister.m */; };
 		B373CE532174587A008F9905 /* TTDetailNatantRewardViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5931F1332D90002B455 /* TTDetailNatantRewardViewModel.m */; };
-		B373CE542174587A008F9905 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
 		B373CE552174587A008F9905 /* ExploreChannelListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8EAEA219EBED5800DA0740 /* ExploreChannelListView.m */; };
 		B373CE562174587A008F9905 /* TTVVideoDetailNatantInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F876919E1F31D0D200D59CA5 /* TTVVideoDetailNatantInfoModel.m */; };
 		B373CE582174587A008F9905 /* TTVDetailFollowRecommendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47A169081F9F3050004CE29E /* TTVDetailFollowRecommendView.m */; };
@@ -3203,8 +3177,6 @@
 		B388CB1F2142652A00653188 /* FTTNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DE2142652800653188 /* FTTNavigationController.m */; };
 		B388CB202142652A00653188 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DF2142652800653188 /* BaseNavigationViewController.swift */; };
 		B388CB212142652A00653188 /* BaseNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DF2142652800653188 /* BaseNavigationViewController.swift */; };
-		B388CB222142652A00653188 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9E02142652800653188 /* TabViewController.swift */; };
-		B388CB232142652A00653188 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9E02142652800653188 /* TabViewController.swift */; };
 		B388CB242142652A00653188 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9E12142652800653188 /* Client.swift */; };
 		B388CB252142652A00653188 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9E12142652800653188 /* Client.swift */; };
 		B388CB262142652A00653188 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
@@ -3265,26 +3237,14 @@
 		B388CBE92142652B00653188 /* MultiImageInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA5F2142652900653188 /* MultiImageInfoCell.swift */; };
 		B388CBEA2142652B00653188 /* SearchUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA602142652900653188 /* SearchUITextField.swift */; };
 		B388CBEB2142652B00653188 /* SearchUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA602142652900653188 /* SearchUITextField.swift */; };
-		B388CBEC2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
-		B388CBED2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
-		B388CBEE2142652B00653188 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
-		B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
-		B388CBF02142652B00653188 /* HomePageSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA642142652900653188 /* HomePageSearchPanel.swift */; };
-		B388CBF12142652B00653188 /* HomePageSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA642142652900653188 /* HomePageSearchPanel.swift */; };
 		B388CBF22142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF32142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF42142652B00653188 /* HomeSpringBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA672142652900653188 /* HomeSpringBoard.swift */; };
 		B388CBF52142652B00653188 /* HomeSpringBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA672142652900653188 /* HomeSpringBoard.swift */; };
 		B388CBF62142652B00653188 /* HomeSpringBoardItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA682142652900653188 /* HomeSpringBoardItemView.swift */; };
 		B388CBF72142652B00653188 /* HomeSpringBoardItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA682142652900653188 /* HomeSpringBoardItemView.swift */; };
-		B388CBF82142652B00653188 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
-		B388CBF92142652B00653188 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
-		B388CBFA2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
-		B388CBFB2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
 		B388CBFC2142652B00653188 /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6C2142652900653188 /* BaseTextField.swift */; };
 		B388CBFD2142652B00653188 /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6C2142652900653188 /* BaseTextField.swift */; };
-		B388CBFE2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
-		B388CBFF2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
 		B388CC002142652B00653188 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6E2142652900653188 /* HomeListViewModel.swift */; };
 		B388CC012142652B00653188 /* HomeListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6E2142652900653188 /* HomeListViewModel.swift */; };
 		B388CC022142652B00653188 /* HeaderViewControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6F2142652900653188 /* HeaderViewControl.swift */; };
@@ -3615,7 +3575,7 @@
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -3650,8 +3610,6 @@
 		D40CAF0121BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
 		D40CAF0221BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
 		D40CAF0321BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
-		D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
-		D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D47950C721ECC94E00548965 /* TTShareMethodUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621C41F500EFA00B4CC0C /* TTShareMethodUtil.m */; };
 		D47950C821ECC94E00548965 /* TTNPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D70F6F01D445C910021AAB3 /* TTNPopupView.m */; };
 		D47950C921ECC94E00548965 /* RxSwift+Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAFC2142652900653188 /* RxSwift+Then.swift */; };
@@ -3754,7 +3712,6 @@
 		D479512A21ECC94E00548965 /* UIImageView+TTCornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AECC4BC1D1AB4F300C2B87B /* UIImageView+TTCornerRadius.m */; };
 		D479512B21ECC94E00548965 /* ConfigEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAA92142652900653188 /* ConfigEntities.swift */; };
 		D479512C21ECC94E00548965 /* TTDetailNatantRelateReadView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5801F1332D90002B455 /* TTDetailNatantRelateReadView.m */; };
-		D479512D21ECC94E00548965 /* HomeViewTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */; };
 		D479512E21ECC94E00548965 /* TTDetailNatantContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5761F1332D90002B455 /* TTDetailNatantContainerView.m */; };
 		D479512F21ECC94E00548965 /* TTRHealthScore.m in Sources */ = {isa = PBXBuildFile; fileRef = D51D405A1FBAD75E0037D144 /* TTRHealthScore.m */; };
 		D479513021ECC94E00548965 /* ExploreArticleTitleLargePicCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0201E1B215BE400F9E484 /* ExploreArticleTitleLargePicCellView.m */; };
@@ -3802,7 +3759,6 @@
 		D479515A21ECC94E00548965 /* TTInterfaceTipBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A59F1FCE9C7900FCE0EC /* TTInterfaceTipBaseModel.m */; };
 		D479515B21ECC94E00548965 /* TTVSegmentedPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692D11F31D0D300D59CA5 /* TTVSegmentedPageViewController.m */; };
 		D479515C21ECC94E00548965 /* ExploreAddEntryListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 486F87381A21BBC200F5AE99 /* ExploreAddEntryListCell.m */; };
-		D479515D21ECC94E00548965 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
 		D479515E21ECC94E00548965 /* FHHeaderSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */; };
 		D479515F21ECC94E00548965 /* FloorPanCategoryDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3632E21A29D9E0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift */; };
 		D479516021ECC94E00548965 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2846351DF5407000170DE7 /* TTLayOutUnifyADGroupPicCellModel.m */; };
@@ -3810,7 +3766,6 @@
 		D479516221ECC94E00548965 /* ConstraintArray+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAC12142652900653188 /* ConstraintArray+Extensions.swift */; };
 		D479516321ECC94E00548965 /* TTWeixinOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB79D1F1332DA0002B455 /* TTWeixinOpenURLTask.m */; };
 		D479516421ECC94E00548965 /* ExploreItemActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBDEE1F13332C0002B455 /* ExploreItemActionManager.m */; };
-		D479516521ECC94E00548965 /* CountryListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6A2142652900653188 /* CountryListVC.swift */; };
 		D479516621ECC94E00548965 /* TTEditPGCTableViewControllerImp.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5C71F1332D90002B455 /* TTEditPGCTableViewControllerImp.m */; };
 		D479516721ECC94E00548965 /* ExploreMovieLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D25570B1E8271CD00FF96A7 /* ExploreMovieLoadingView.m */; };
 		D479516821ECC94E00548965 /* TTVFeedListViewController+HeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = F876922D1F31D0D200D59CA5 /* TTVFeedListViewController+HeaderView.m */; };
@@ -3977,7 +3932,6 @@
 		D479520921ECC94E00548965 /* SSWebViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBE391F13332C0002B455 /* SSWebViewContainer.m */; };
 		D479520A21ECC94E00548965 /* TSVShortVideoDecoupledFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F2B3D5411FDFB25E00E53E04 /* TSVShortVideoDecoupledFetchManager.m */; };
 		D479520B21ECC94E00548965 /* TGAudioEqualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAEB2142652900653188 /* TGAudioEqualizer.swift */; };
-		D479520C21ECC94E00548965 /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388C9E02142652800653188 /* TabViewController.swift */; };
 		D479520D21ECC94E00548965 /* TTVVideoDetailToolBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691901F31D0D200D59CA5 /* TTVVideoDetailToolBarViewController.m */; };
 		D479520E21ECC94E00548965 /* ExploreSubscribeFetchRemoteListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1BFA0BC21A1C9BFD00FA69FF /* ExploreSubscribeFetchRemoteListManager.m */; };
 		D479520F21ECC94E00548965 /* TTVSwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DAC1F94B8DC0050F83E /* TTVSwipeView.m */; };
@@ -4276,7 +4230,6 @@
 		D479533421ECC94E00548965 /* TTAdAnimationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A4931F20B01C005E4A06 /* TTAdAnimationCell.m */; };
 		D479533521ECC94E00548965 /* TGOrbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAD72142652900653188 /* TGOrbit.swift */; };
 		D479533621ECC94E00548965 /* TTVCommodityItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA51F94B8DC0050F83E /* TTVCommodityItemView.m */; };
-		D479533721ECC94E00548965 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
 		D479533821ECC94E00548965 /* SSFeedbackPostViewBase.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB6281F1332D90002B455 /* SSFeedbackPostViewBase.m */; };
 		D479533921ECC94E00548965 /* TSVCardTopInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB9288C1FD027D9004ADDB0 /* TSVCardTopInfoView.m */; };
 		D479533A21ECC94E00548965 /* ActionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A88BDD001C02CB47005C1B7A /* ActionButton.m */; };
@@ -4301,7 +4254,6 @@
 		D479534D21ECC94E00548965 /* TTVWhiteBoardSubject.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692B11F31D0D300D59CA5 /* TTVWhiteBoardSubject.m */; };
 		D479534E21ECC94E00548965 /* NewHouseInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3630B21A29D9D0097FCB6 /* NewHouseInfoCell.swift */; };
 		D479534F21ECC94E00548965 /* TTPersonalHomeMultiplePlatformFollowersInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = F23C0C832007B09800B8072A /* TTPersonalHomeMultiplePlatformFollowersInfoView.m */; };
-		D479535021ECC94E00548965 /* HomePageSearchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA642142652900653188 /* HomePageSearchPanel.swift */; };
 		D479535121ECC94E00548965 /* TSVShortVideoListFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C8A69F1F1362D000A52D8B /* TSVShortVideoListFetchManager.m */; };
 		D479535221ECC94E00548965 /* HorseDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3634F21A29D9E0097FCB6 /* HorseDetailPageVC.swift */; };
 		D479535321ECC94E00548965 /* TTVFavoriteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692121F31D0D200D59CA5 /* TTVFavoriteAction.m */; };
@@ -4346,7 +4298,6 @@
 		D479537A21ECC94E00548965 /* AKUIHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = FEC2AA312063A5E200BCBAFF /* AKUIHelper.m */; };
 		D479537B21ECC94E00548965 /* TTTableViewBaseCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C0DF0741D66E7D30067342D /* TTTableViewBaseCellView.m */; };
 		D479537C21ECC94E00548965 /* TSVRecUserCardCollectionViewCellViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48828EE01F7B863F006A57BB /* TSVRecUserCardCollectionViewCellViewModel.m */; };
-		D479537D21ECC94E00548965 /* NIHSearchPanelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */; };
 		D479537E21ECC94E00548965 /* ExploreBaseADCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE020031B215BE400F9E484 /* ExploreBaseADCell.m */; };
 		D479537F21ECC94E00548965 /* ToastAlertCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CB052142652900653188 /* ToastAlertCenter.swift */; };
 		D479538021ECC94E00548965 /* TTLayOutCellViewBase+UFCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B28460D1DF5407000170DE7 /* TTLayOutCellViewBase+UFCell.m */; };
@@ -4490,7 +4441,6 @@
 		D479540A21ECC94E00548965 /* AKAwardCoinVideoMonitorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041EF12058029000BAEE7F /* AKAwardCoinVideoMonitorManager.m */; };
 		D479540B21ECC94E00548965 /* TTArticleMomentDigUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D504399F2079B87700DA4953 /* TTArticleMomentDigUsersViewController.m */; };
 		D479540C21ECC94E00548965 /* TTSettingMineTabManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6841F333FDE005DAD27 /* TTSettingMineTabManager.m */; };
-		D479540D21ECC94E00548965 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
 		D479540E21ECC94E00548965 /* TSVFeedFollowCellContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B050C631FDAD1F80058498E /* TSVFeedFollowCellContentView.m */; };
 		D479540F21ECC94E00548965 /* ArticleGetRemoteDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC916DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m */; };
 		D479541021ECC94E00548965 /* TTNetworkStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B47725B1CFC416B00D3F8DC /* TTNetworkStub.m */; };
@@ -4723,7 +4673,6 @@
 		D47954F321ECC94E00548965 /* TTArticleDetailMemoryMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78DAE81F56639800474BA8 /* TTArticleDetailMemoryMonitor.m */; };
 		D47954F421ECC94E00548965 /* SSAPNsAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA75D1F33489E005DAD27 /* SSAPNsAlertManager.m */; };
 		D47954F521ECC94E00548965 /* ExploreDetailToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 068D0C151B6B542E00F87E57 /* ExploreDetailToolbarView.m */; };
-		D47954F621ECC94E00548965 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		D47954F721ECC94E00548965 /* TTVCommodityEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA11F94B8DC0050F83E /* TTVCommodityEntity.m */; };
 		D47954F821ECC94E00548965 /* TTViewControllerHierarchyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D7FA31F28360300C55747 /* TTViewControllerHierarchyHelper.m */; };
 		D47954F921ECC94E00548965 /* TTFeedSaveRemoteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFAE3D1F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m */; };
@@ -4882,7 +4831,6 @@
 		D479559221ECC94E00548965 /* RNData.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2845741DF5402100170DE7 /* RNData.m */; };
 		D479559321ECC94E00548965 /* AKMinePhotoCarouselEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F34205802A400BAEE7F /* AKMinePhotoCarouselEntry.m */; };
 		D479559421ECC94E00548965 /* PriceChangeHistoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760CF73E21AAE0900006BE07 /* PriceChangeHistoryCell.swift */; };
-		D479559521ECC94E00548965 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA622142652900653188 /* HomeViewController.swift */; };
 		D479559621ECC94E00548965 /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		D479559721ECC94E00548965 /* ErshouHouseListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3634121A29D9E0097FCB6 /* ErshouHouseListViewModel.swift */; };
 		D479559821ECC94E00548965 /* TTVCommodityFloatView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA31F94B8DC0050F83E /* TTVCommodityFloatView.m */; };
@@ -5218,7 +5166,6 @@
 		D47956E221ECC94E00548965 /* QuickLoginAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3634A21A29D9E0097FCB6 /* QuickLoginAlert.swift */; };
 		D47956E321ECC94E00548965 /* TTFeedCollectionHTSListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 485782AE1EE953F900307CEF /* TTFeedCollectionHTSListCell.m */; };
 		D47956E421ECC94E00548965 /* RelatedNeighborhoodListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633B21A29D9E0097FCB6 /* RelatedNeighborhoodListViewModel.swift */; };
-		D47956E521ECC94E00548965 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
 		D47956E621ECC94E00548965 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D24F7DF1E5D9F7C0021AE37 /* ExploreVideoDetailUnUnifyLargePicADView.m */; };
 		D47956E721ECC94E00548965 /* TTPersonalHomeHeaderOperationView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2F71F1333610002B455 /* TTPersonalHomeHeaderOperationView.m */; };
 		D47956E821ECC94E00548965 /* ExploreVideoDetailAppLeftPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCACFFF1DDC237200EBF9CF /* ExploreVideoDetailAppLeftPicADView.m */; };
@@ -5287,7 +5234,6 @@
 		D479572721ECC94E00548965 /* TSVActivityBannerOriginalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A7A8EC1FD1223700070FDD /* TSVActivityBannerOriginalData.m */; };
 		D479572821ECC94E00548965 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CABD2142652900653188 /* FPSMonitor.swift */; };
 		D479572921ECC94E00548965 /* TTRNCellManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBCA9D31F67812B00C518C3 /* TTRNCellManager.m */; };
-		D479572A21ECC94E00548965 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
 		D479572B21ECC94E00548965 /* TTFastCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFABA01F0E432B00C1E28D /* TTFastCoding.m */; };
 		D479572C21ECC94E00548965 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAE62142652900653188 /* TGPacman.swift */; };
 		D479572D21ECC94E00548965 /* TTDetailNatantRelateReadPlainView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB57E1F1332D90002B455 /* TTDetailNatantRelateReadPlainView.m */; };
@@ -5329,13 +5275,11 @@
 		D479575121ECC94E00548965 /* RentCoreInfoCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */; };
 		D479575221ECC94E00548965 /* TSVRecUserCardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 48828EE61F7B866D006A57BB /* TSVRecUserCardModel.m */; };
 		D479575321ECC94E00548965 /* TTAppSettingsStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7671F1332DA0002B455 /* TTAppSettingsStartupTask.m */; };
-		D479575421ECC94E00548965 /* CurrentCitySwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */; };
 		D479575521ECC94E00548965 /* TTEditUGCProfileViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5D21F1332D90002B455 /* TTEditUGCProfileViewModel.m */; };
 		D479575621ECC94E00548965 /* AKImageAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F30205802A400BAEE7F /* AKImageAlertModel.m */; };
 		D479575721ECC94E00548965 /* AKProfileHeaderInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F21205802A400BAEE7F /* AKProfileHeaderInfoView.m */; };
 		D479575821ECC94E00548965 /* TTRDynamicPluginRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = 325B68661F5E54E1008AC35F /* TTRDynamicPluginRegister.m */; };
 		D479575921ECC94E00548965 /* TTDetailNatantRewardViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5931F1332D90002B455 /* TTDetailNatantRewardViewModel.m */; };
-		D479575A21ECC94E00548965 /* CountryListHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */; };
 		D479575B21ECC94E00548965 /* ExploreChannelListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B8EAEA219EBED5800DA0740 /* ExploreChannelListView.m */; };
 		D479575C21ECC94E00548965 /* TTVVideoDetailNatantInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F876919E1F31D0D200D59CA5 /* TTVVideoDetailNatantInfoModel.m */; };
 		D479575D21ECC94E00548965 /* TTVDetailFollowRecommendView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47A169081F9F3050004CE29E /* TTVDetailFollowRecommendView.m */; };
@@ -9772,11 +9716,6 @@
 		B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRealtorDetailWebViewController.m; sourceTree = "<group>"; };
 		B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenceBrowserViewModel.swift; sourceTree = "<group>"; };
 		B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRealtorDetailWebViewControllerImpl.swift; sourceTree = "<group>"; };
-		B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCitySwitcher.swift; sourceTree = "<group>"; };
-		B32FD2CB21A26E55007B9966 /* HouseRentDetailPageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentDetailPageVC.h; sourceTree = "<group>"; };
-		B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentDetailPageVC.m; sourceTree = "<group>"; };
-		B32FD2D121A29BB4007B9966 /* FHCycleImageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHCycleImageCell.h; sourceTree = "<group>"; };
-		B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHCycleImageCell.m; sourceTree = "<group>"; };
 		B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentCycleImageCellRender.swift; sourceTree = "<group>"; };
 		B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentCoreInfoCellRender.swift; sourceTree = "<group>"; };
 		B32FD2FD21A3B479007B9966 /* RentPropertyListNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentPropertyListNode.swift; sourceTree = "<group>"; };
@@ -9791,12 +9730,6 @@
 		B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseHouseDetailPage.swift; sourceTree = "<group>"; };
 		B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentSearchInNeighborhoodCellRender.swift; sourceTree = "<group>"; };
 		B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentReleatedHouseCellRender.swift; sourceTree = "<group>"; };
-		B32FD34521A67A51007B9966 /* HouseRentAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentAPI.h; sourceTree = "<group>"; };
-		B32FD34621A67A51007B9966 /* HouseRentAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentAPI.m; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 1; };
-		B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentRelatedResponse.h; sourceTree = "<group>"; };
-		B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentRelatedResponse.m; sourceTree = "<group>"; };
-		B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRentSameNeighborhoodResponse.h; sourceTree = "<group>"; };
-		B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRentSameNeighborhoodResponse.m; sourceTree = "<group>"; };
 		B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseContactBottomBarViewModel.swift; sourceTree = "<group>"; };
 		B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHFilterRedDotManager.swift; sourceTree = "<group>"; };
 		B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindPageControl.swift; sourceTree = "<group>"; };
@@ -9812,7 +9745,6 @@
 		B388C9DD2142652800653188 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		B388C9DE2142652800653188 /* FTTNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTTNavigationController.m; sourceTree = "<group>"; };
 		B388C9DF2142652800653188 /* BaseNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationViewController.swift; sourceTree = "<group>"; };
-		B388C9E02142652800653188 /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		B388C9E12142652800653188 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		B388C9E22142652800653188 /* FTTNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTTNavigationController.h; sourceTree = "<group>"; };
 		B388C9E32142652800653188 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -9845,16 +9777,10 @@
 		B388CA5E2142652900653188 /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
 		B388CA5F2142652900653188 /* MultiImageInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiImageInfoCell.swift; sourceTree = "<group>"; };
 		B388CA602142652900653188 /* SearchUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUITextField.swift; sourceTree = "<group>"; };
-		B388CA612142652900653188 /* HomeHeaderSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderSearchView.swift; sourceTree = "<group>"; };
-		B388CA622142652900653188 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		B388CA642142652900653188 /* HomePageSearchPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomePageSearchPanel.swift; sourceTree = "<group>"; };
 		B388CA652142652900653188 /* SearchTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		B388CA672142652900653188 /* HomeSpringBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoard.swift; sourceTree = "<group>"; };
 		B388CA682142652900653188 /* HomeSpringBoardItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoardItemView.swift; sourceTree = "<group>"; };
-		B388CA6A2142652900653188 /* CountryListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListVC.swift; sourceTree = "<group>"; };
-		B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountryListHistoryDataSource.swift; sourceTree = "<group>"; };
 		B388CA6C2142652900653188 /* BaseTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
-		B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewTableViewDataSource.swift; sourceTree = "<group>"; };
 		B388CA6E2142652900653188 /* HomeListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeListViewModel.swift; sourceTree = "<group>"; };
 		B388CA6F2142652900653188 /* HeaderViewControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderViewControl.swift; sourceTree = "<group>"; };
 		B388CA722142652900653188 /* ChatDetailListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatDetailListCell.swift; sourceTree = "<group>"; };
@@ -10127,11 +10053,7 @@
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D40CAEFF21BFF3250018E256 /* FHHomeBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBridgeImp.h; sourceTree = "<group>"; };
 		D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBridgeImp.m; sourceTree = "<group>"; };
-		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D479494B21ECC93600548965 /* f100 copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy-Info.plist"; sourceTree = "<absolute>"; };
-		D47950BF21ECC94300548965 /* f100 copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy2-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy2-Info.plist"; sourceTree = "<absolute>"; };
 		D479581521ECC94E00548965 /* NewsLiteChannel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsLiteChannel.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D479581621ECC94F00548965 /* f100 copy3-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy3-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy3-Info.plist"; sourceTree = "<absolute>"; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
 		D50168272089EC4A00B8F1C7 /* TTMessageNotificationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTMessageNotificationManager.h; sourceTree = "<group>"; };
@@ -11029,7 +10951,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -12375,9 +12297,6 @@
 				3AA5028115876A1F00EB27FA /* Products */,
 				FEE188E21FFCB587005310BB /* Recovered References */,
 				54DD0068D708A01BB386FC65 /* Pods */,
-				D479494B21ECC93600548965 /* f100 copy-Info.plist */,
-				D47950BF21ECC94300548965 /* f100 copy2-Info.plist */,
-				D479581621ECC94F00548965 /* f100 copy3-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -12699,7 +12618,6 @@
 			isa = PBXGroup;
 			children = (
 				D46DA52321A43B74009D50C7 /* HouseHome */,
-				B32FD2C921A26E2D007B9966 /* HouseRent */,
 				3D2D487E21A28E590011A0EC /* Bridge */,
 				760CF74221ABE7A00006BE07 /* WebView */,
 			);
@@ -16785,34 +16703,6 @@
 			path = TTDislikeView;
 			sourceTree = "<group>";
 		};
-		B32FD2C921A26E2D007B9966 /* HouseRent */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD34421A67A33007B9966 /* API */,
-				B32FD2CA21A26E37007B9966 /* Detail */,
-			);
-			path = HouseRent;
-			sourceTree = "<group>";
-		};
-		B32FD2CA21A26E37007B9966 /* Detail */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD2D021A29B85007B9966 /* Cell */,
-				B32FD2CB21A26E55007B9966 /* HouseRentDetailPageVC.h */,
-				B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */,
-			);
-			path = Detail;
-			sourceTree = "<group>";
-		};
-		B32FD2D021A29B85007B9966 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD2D121A29BB4007B9966 /* FHCycleImageCell.h */,
-				B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
 		B32FD2F921A3B479007B9966 /* Rent */ = {
 			isa = PBXGroup;
 			children = (
@@ -16855,19 +16745,6 @@
 			path = Tracer;
 			sourceTree = "<group>";
 		};
-		B32FD34421A67A33007B9966 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD34521A67A51007B9966 /* HouseRentAPI.h */,
-				B32FD34621A67A51007B9966 /* HouseRentAPI.m */,
-				B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */,
-				B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */,
-				B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */,
-				B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */,
-			);
-			path = API;
-			sourceTree = "<group>";
-		};
 		B388C9D82142652800653188 /* Bubble */ = {
 			isa = PBXGroup;
 			children = (
@@ -16892,10 +16769,8 @@
 				B388C9DD2142652800653188 /* BaseViewController.swift */,
 				B388C9DE2142652800653188 /* FTTNavigationController.m */,
 				B388C9DF2142652800653188 /* BaseNavigationViewController.swift */,
-				B388C9E02142652800653188 /* TabViewController.swift */,
 				B388C9E12142652800653188 /* Client.swift */,
 				B388C9E22142652800653188 /* FTTNavigationController.h */,
-				B324F8632191C76400E15CE8 /* CurrentCitySwitcher.swift */,
 			);
 			path = Launch;
 			sourceTree = "<group>";
@@ -16995,14 +16870,9 @@
 			children = (
 				B388CA572142652900653188 /* Cells */,
 				B388CA602142652900653188 /* SearchUITextField.swift */,
-				B388CA612142652900653188 /* HomeHeaderSearchView.swift */,
-				B388CA622142652900653188 /* HomeViewController.swift */,
-				B388CA632142652900653188 /* Search */,
 				B388CA652142652900653188 /* SearchTextField.swift */,
 				B388CA662142652900653188 /* SpringBoard */,
-				B388CA692142652900653188 /* CountryList */,
 				B388CA6C2142652900653188 /* BaseTextField.swift */,
-				B388CA6D2142652900653188 /* HomeViewTableViewDataSource.swift */,
 				B388CA6E2142652900653188 /* HomeListViewModel.swift */,
 				B388CA6F2142652900653188 /* HeaderViewControl.swift */,
 			);
@@ -17024,15 +16894,6 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		B388CA632142652900653188 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				B388CA642142652900653188 /* HomePageSearchPanel.swift */,
-				D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */,
-			);
-			path = Search;
-			sourceTree = "<group>";
-		};
 		B388CA662142652900653188 /* SpringBoard */ = {
 			isa = PBXGroup;
 			children = (
@@ -17040,15 +16901,6 @@
 				B388CA682142652900653188 /* HomeSpringBoardItemView.swift */,
 			);
 			path = SpringBoard;
-			sourceTree = "<group>";
-		};
-		B388CA692142652900653188 /* CountryList */ = {
-			isa = PBXGroup;
-			children = (
-				B388CA6A2142652900653188 /* CountryListVC.swift */,
-				B388CA6B2142652900653188 /* CountryListHistoryDataSource.swift */,
-			);
-			path = CountryList;
 			sourceTree = "<group>";
 		};
 		B388CA702142652900653188 /* Messages */ = {
@@ -20486,13 +20338,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20664,6 +20512,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -20750,6 +20599,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -20857,13 +20707,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP-User] sgmpreaction";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20875,8 +20721,6 @@
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-resources.sh",
@@ -20930,6 +20774,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -20965,8 +20810,6 @@
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_ali@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_weixin@2x.png",
@@ -21018,6 +20861,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -21114,6 +20958,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -21199,6 +21044,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -21430,15 +21276,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-NewsLiteChannel-checkManifestLockResult.txt",
 			);
@@ -21636,6 +21478,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -21721,6 +21564,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -21926,7 +21770,6 @@
 				0AECC4BD1D1AB4F300C2B87B /* UIImageView+TTCornerRadius.m in Sources */,
 				B388CC5E2142652B00653188 /* ConfigEntities.swift in Sources */,
 				A97DB86F1F1332DB0002B455 /* TTDetailNatantRelateReadView.m in Sources */,
-				B388CBFE2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */,
 				A97DB85B1F1332DB0002B455 /* TTDetailNatantContainerView.m in Sources */,
 				D51D405B1FBAD75F0037D144 /* TTRHealthScore.m in Sources */,
 				6BE020EE1B215BE600F9E484 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -21975,7 +21818,6 @@
 				A97DB9A71F1332DE0002B455 /* TTHistoryViewController.m in Sources */,
 				FEF8A5A51FCE9C7B00FCE0EC /* TTInterfaceTipBaseModel.m in Sources */,
 				F87696401F31D0D900D59CA5 /* TTVSegmentedPageViewController.m in Sources */,
-				B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				3DF363D621A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				486F87391A21BBC200F5AE99 /* ExploreAddEntryListCell.m in Sources */,
 				6B28469A1DF5407100170DE7 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -21983,7 +21825,6 @@
 				B388CC802142652B00653188 /* ConstraintArray+Extensions.swift in Sources */,
 				A97DBBF71F1332E30002B455 /* TTWeixinOpenURLTask.m in Sources */,
 				A97DC07A1F1333300002B455 /* ExploreItemActionManager.m in Sources */,
-				B388CBF82142652B00653188 /* CountryListVC.swift in Sources */,
 				A97DB8EB1F1332DD0002B455 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				2D2557831E8271CD00FF96A7 /* ExploreMovieLoadingView.m in Sources */,
 				F87695441F31D0D700D59CA5 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -22146,7 +21987,6 @@
 				A97DC0EA1F1333310002B455 /* SSWebViewContainer.m in Sources */,
 				F2B3D5421FDFB26000E53E04 /* TSVShortVideoDecoupledFetchManager.m in Sources */,
 				B388CCC82142652C00653188 /* TGAudioEqualizer.swift in Sources */,
-				B388CB222142652A00653188 /* TabViewController.swift in Sources */,
 				F87694501F31D0D500D59CA5 /* TTVVideoDetailToolBarViewController.m in Sources */,
 				1BFA0BC31A1C9BFD00FA69FF /* ExploreSubscribeFetchRemoteListManager.m in Sources */,
 				438F9E431F94B8DE0050F83E /* TTVSwipeView.m in Sources */,
@@ -22190,7 +22030,6 @@
 				AC09CC7E1D6D8E7F00D3151A /* TTSegmentedControl.m in Sources */,
 				FE0572C7205B70E800427AE6 /* AKHTTPPostRequestSerializer.m in Sources */,
 				FE1FC31E206922D800664B00 /* ExploreMixedListBaseView+Monitor.m in Sources */,
-				B324F8642191C76400E15CE8 /* CurrentCitySwitcher.swift in Sources */,
 				A97DBCC71F1332E50002B455 /* TTStartupTask.m in Sources */,
 				FEF53DC82068EE2400EEA647 /* FRImageInfoModel.m in Sources */,
 				A97DBC9F1F1332E50002B455 /* TTLocationStartupTask.m in Sources */,
@@ -22469,7 +22308,6 @@
 				F876960C1F31D0D800D59CA5 /* TTVWhiteBoardSubject.m in Sources */,
 				F23C0C862007B09B00B8072A /* TTPersonalHomeMultiplePlatformFollowersInfoView.m in Sources */,
 				3DF3642421A29D9F0097FCB6 /* HorseDetailPageVC.swift in Sources */,
-				B388CBF02142652B00653188 /* HomePageSearchPanel.swift in Sources */,
 				48C8A6B01F1362D000A52D8B /* TSVShortVideoListFetchManager.m in Sources */,
 				F87695181F31D0D600D59CA5 /* TTVFavoriteAction.m in Sources */,
 				A97DB8AB1F1332DC0002B455 /* TTExploreMainViewController.m in Sources */,
@@ -22513,7 +22351,6 @@
 				FEC2AA332063A5EE00BCBAFF /* AKUIHelper.m in Sources */,
 				9C0DF0751D66E7D30067342D /* TTTableViewBaseCellView.m in Sources */,
 				48828EE11F7B863F006A57BB /* TSVRecUserCardCollectionViewCellViewModel.m in Sources */,
-				D42F3C43214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */,
 				6BE020931B215BE600F9E484 /* ExploreBaseADCell.m in Sources */,
 				B388CCF02142652C00653188 /* ToastAlertCenter.swift in Sources */,
 				6B28464A1DF5407000170DE7 /* TTLayOutCellViewBase+UFCell.m in Sources */,
@@ -22632,7 +22469,6 @@
 				A97DC12E1F1333320002B455 /* TTRVideo.m in Sources */,
 				D09F07A31D944C9A00B586B9 /* ExploreBookCell.m in Sources */,
 				2DB9A5601F20B01C005E4A06 /* TTAdCanvasVC.m in Sources */,
-				B32FD2CD21A26E55007B9966 /* HouseRentDetailPageVC.m in Sources */,
 				F87695681F31D0D700D59CA5 /* TTImageInfosModel+Extention.m in Sources */,
 				6B2845B51DF5402100170DE7 /* HuoShanTalentBanner.m in Sources */,
 				0A84B7CA1FB97DC300A9F061 /* UIImageView+BDTSource.m in Sources */,
@@ -22889,7 +22725,6 @@
 				4A78DAE91F56639800474BA8 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				ABBEA75E1F33489E005DAD27 /* SSAPNsAlertManager.m in Sources */,
 				068D0C161B6B542E00F87E57 /* ExploreDetailToolbarView.m in Sources */,
-				B388CBEC2142652B00653188 /* HomeHeaderSearchView.swift in Sources */,
 				438F9E2F1F94B8DD0050F83E /* TTVCommodityEntity.m in Sources */,
 				4A8D7FA41F28360300C55747 /* TTViewControllerHierarchyHelper.m in Sources */,
 				A9AFAE641F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -23050,7 +22885,6 @@
 				760CF73F21AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
 				D5041F4F205802A400BAEE7F /* AKMinePhotoCarouselEntry.m in Sources */,
 				3DF3640021A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
-				B388CBEE2142652B00653188 /* HomeViewController.swift in Sources */,
 				70E7C2C81F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m in Sources */,
 				438F9E331F94B8DD0050F83E /* TTVCommodityFloatView.m in Sources */,
 				7E6A47CE1FD70AFC00E46510 /* TTADVideoMZTracker.m in Sources */,
@@ -23386,7 +23220,6 @@
 				A97DC0821F1333310002B455 /* NewsDetailConstant.m in Sources */,
 				3DF363F421A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
 				485782AF1EE953F900307CEF /* TTFeedCollectionHTSListCell.m in Sources */,
-				B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				2D24F7E01E5D9F7C0021AE37 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				A97DC48A1F1333640002B455 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				2DCAD01A1DDC237200EBF9CF /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -23455,7 +23288,6 @@
 				1B5B58BD1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m in Sources */,
 				48A7A8ED1FD1223700070FDD /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7A2142652B00653188 /* FPSMonitor.swift in Sources */,
-				B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				9CBCA9D51F67812B00C518C3 /* TTRNCellManager.m in Sources */,
 				A9AFABA51F0E432B00C1E28D /* TTFastCoding.m in Sources */,
 				B388CCBE2142652C00653188 /* TGPacman.swift in Sources */,
@@ -23482,7 +23314,6 @@
 				A97DBCEB1F1332E60002B455 /* TTProjectLogicManager.m in Sources */,
 				B388CC3A2142652B00653188 /* FavoriteCell.swift in Sources */,
 				0A7F5FAB1F338DF4008AB729 /* TTTrackerOpenURLTask.m in Sources */,
-				B32FD2D321A29BB4007B9966 /* FHCycleImageCell.m in Sources */,
 				F876995F1F31D6B900D59CA5 /* TTAdWebResPreloadManager.m in Sources */,
 				A9AFAE601F0E45C600C1E28D /* TTFeedMergeOperation.m in Sources */,
 				7E224DBE1F38700500922AD2 /* TTLayoutPanoramaViewCell.m in Sources */,
@@ -23502,7 +23333,6 @@
 				D5041F47205802A400BAEE7F /* AKProfileHeaderInfoView.m in Sources */,
 				325B68671F5E54E1008AC35F /* TTRDynamicPluginRegister.m in Sources */,
 				A97DB8931F1332DC0002B455 /* TTDetailNatantRewardViewModel.m in Sources */,
-				B388CBFA2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */,
 				A85E5BB21C08030700DDDE88 /* ExploreChannelListView.m in Sources */,
 				F87694641F31D0D500D59CA5 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				47A169091F9F3050004CE29E /* TTVDetailFollowRecommendView.m in Sources */,
@@ -23661,7 +23491,6 @@
 				B373C8612174587A008F9905 /* UIImageView+TTCornerRadius.m in Sources */,
 				B373C8622174587A008F9905 /* ConfigEntities.swift in Sources */,
 				B373C8632174587A008F9905 /* TTDetailNatantRelateReadView.m in Sources */,
-				B373C8642174587A008F9905 /* HomeViewTableViewDataSource.swift in Sources */,
 				B373C8652174587A008F9905 /* TTDetailNatantContainerView.m in Sources */,
 				B373C8662174587A008F9905 /* TTRHealthScore.m in Sources */,
 				B373C8682174587A008F9905 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -23709,7 +23538,6 @@
 				B373C8912174587A008F9905 /* TTInterfaceTipBaseModel.m in Sources */,
 				B373C8922174587A008F9905 /* TTVSegmentedPageViewController.m in Sources */,
 				B373C8932174587A008F9905 /* ExploreAddEntryListCell.m in Sources */,
-				B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				6124ECCA21AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D821A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				B373C8942174587A008F9905 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -23717,7 +23545,6 @@
 				B373C8962174587A008F9905 /* ConstraintArray+Extensions.swift in Sources */,
 				B373C8972174587A008F9905 /* TTWeixinOpenURLTask.m in Sources */,
 				B373C89A2174587A008F9905 /* ExploreItemActionManager.m in Sources */,
-				B373C89B2174587A008F9905 /* CountryListVC.swift in Sources */,
 				B373C89C2174587A008F9905 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				B373C89D2174587A008F9905 /* ExploreMovieLoadingView.m in Sources */,
 				B373C89E2174587A008F9905 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -23884,7 +23711,6 @@
 				B373C9342174587A008F9905 /* SSWebViewContainer.m in Sources */,
 				B373C9352174587A008F9905 /* TSVShortVideoDecoupledFetchManager.m in Sources */,
 				B373C9362174587A008F9905 /* TGAudioEqualizer.swift in Sources */,
-				B373C9372174587A008F9905 /* TabViewController.swift in Sources */,
 				B373C9382174587A008F9905 /* TTVVideoDetailToolBarViewController.m in Sources */,
 				B373C9392174587A008F9905 /* ExploreSubscribeFetchRemoteListManager.m in Sources */,
 				B373C93A2174587A008F9905 /* TTVSwipeView.m in Sources */,
@@ -24183,7 +24009,6 @@
 				B373CA602174587A008F9905 /* TTAdAnimationCell.m in Sources */,
 				B373CA612174587A008F9905 /* TGOrbit.swift in Sources */,
 				B373CA622174587A008F9905 /* TTVCommodityItemView.m in Sources */,
-				B32FD2CF21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */,
 				B373CA632174587A008F9905 /* SSFeedbackPostViewBase.m in Sources */,
 				B373CA642174587A008F9905 /* TSVCardTopInfoView.m in Sources */,
 				B373CA652174587A008F9905 /* ActionButton.m in Sources */,
@@ -24208,7 +24033,6 @@
 				B373CA772174587A008F9905 /* TTVWhiteBoardSubject.m in Sources */,
 				3DF3637B21A29D9E0097FCB6 /* NewHouseInfoCell.swift in Sources */,
 				B373CA782174587A008F9905 /* TTPersonalHomeMultiplePlatformFollowersInfoView.m in Sources */,
-				B373CA792174587A008F9905 /* HomePageSearchPanel.swift in Sources */,
 				B373CA7A2174587A008F9905 /* TSVShortVideoListFetchManager.m in Sources */,
 				3DF3642621A29D9F0097FCB6 /* HorseDetailPageVC.swift in Sources */,
 				B373CA7B2174587A008F9905 /* TTVFavoriteAction.m in Sources */,
@@ -24253,7 +24077,6 @@
 				B373CAA22174587A008F9905 /* AKUIHelper.m in Sources */,
 				B373CAA32174587A008F9905 /* TTTableViewBaseCellView.m in Sources */,
 				B373CAA42174587A008F9905 /* TSVRecUserCardCollectionViewCellViewModel.m in Sources */,
-				B373CAA52174587A008F9905 /* NIHSearchPanelViewModel.swift in Sources */,
 				B373CAA62174587A008F9905 /* ExploreBaseADCell.m in Sources */,
 				B373CAA72174587A008F9905 /* ToastAlertCenter.swift in Sources */,
 				B373CAA82174587A008F9905 /* TTLayOutCellViewBase+UFCell.m in Sources */,
@@ -24397,7 +24220,6 @@
 				B373CB282174587A008F9905 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				B373CB292174587A008F9905 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				B373CB2A2174587A008F9905 /* TTSettingMineTabManager.m in Sources */,
-				B32FD2D521A29BB4007B9966 /* FHCycleImageCell.m in Sources */,
 				B373CB2B2174587A008F9905 /* TSVFeedFollowCellContentView.m in Sources */,
 				B373CB2C2174587A008F9905 /* ArticleGetRemoteDataOperation.m in Sources */,
 				B373CB2D2174587A008F9905 /* TTNetworkStub.m in Sources */,
@@ -24630,7 +24452,6 @@
 				B373CC0B2174587A008F9905 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				B373CC0C2174587A008F9905 /* SSAPNsAlertManager.m in Sources */,
 				B373CC0D2174587A008F9905 /* ExploreDetailToolbarView.m in Sources */,
-				B373CC0E2174587A008F9905 /* HomeHeaderSearchView.swift in Sources */,
 				B373CC0F2174587A008F9905 /* TTVCommodityEntity.m in Sources */,
 				B373CC102174587A008F9905 /* TTViewControllerHierarchyHelper.m in Sources */,
 				B373CC112174587A008F9905 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -24789,7 +24610,6 @@
 				B373CCA02174587A008F9905 /* RNData.m in Sources */,
 				B373CCA12174587A008F9905 /* AKMinePhotoCarouselEntry.m in Sources */,
 				760CF74121AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
-				B373CCA22174587A008F9905 /* HomeViewController.swift in Sources */,
 				B373CCA32174587A008F9905 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640221A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
 				B373CCA42174587A008F9905 /* TTVCommodityFloatView.m in Sources */,
@@ -25125,7 +24945,6 @@
 				3DF3641721A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				B373CDE32174587A008F9905 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F621A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				B373CDE42174587A008F9905 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				B373CDE52174587A008F9905 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				B373CDE62174587A008F9905 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -25194,7 +25013,6 @@
 				B373CE242174587A008F9905 /* TSVActivityBannerOriginalData.m in Sources */,
 				B373CE252174587A008F9905 /* FPSMonitor.swift in Sources */,
 				B373CE262174587A008F9905 /* TTRNCellManager.m in Sources */,
-				B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				B373CE272174587A008F9905 /* TTFastCoding.m in Sources */,
 				B373CE282174587A008F9905 /* TGPacman.swift in Sources */,
 				B373CE292174587A008F9905 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -25236,13 +25054,11 @@
 				B32FD32721A3E0A6007B9966 /* RentCoreInfoCellRender.swift in Sources */,
 				B373CE4C2174587A008F9905 /* TSVRecUserCardModel.m in Sources */,
 				B373CE4D2174587A008F9905 /* TTAppSettingsStartupTask.m in Sources */,
-				B302205B2192B7B700400F76 /* CurrentCitySwitcher.swift in Sources */,
 				B373CE4F2174587A008F9905 /* TTEditUGCProfileViewModel.m in Sources */,
 				B373CE502174587A008F9905 /* AKImageAlertModel.m in Sources */,
 				B373CE512174587A008F9905 /* AKProfileHeaderInfoView.m in Sources */,
 				B373CE522174587A008F9905 /* TTRDynamicPluginRegister.m in Sources */,
 				B373CE532174587A008F9905 /* TTDetailNatantRewardViewModel.m in Sources */,
-				B373CE542174587A008F9905 /* CountryListHistoryDataSource.swift in Sources */,
 				B373CE552174587A008F9905 /* ExploreChannelListView.m in Sources */,
 				B373CE562174587A008F9905 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				B373CE582174587A008F9905 /* TTVDetailFollowRecommendView.m in Sources */,
@@ -25401,7 +25217,6 @@
 				D479512A21ECC94E00548965 /* UIImageView+TTCornerRadius.m in Sources */,
 				D479512B21ECC94E00548965 /* ConfigEntities.swift in Sources */,
 				D479512C21ECC94E00548965 /* TTDetailNatantRelateReadView.m in Sources */,
-				D479512D21ECC94E00548965 /* HomeViewTableViewDataSource.swift in Sources */,
 				D479512E21ECC94E00548965 /* TTDetailNatantContainerView.m in Sources */,
 				D479512F21ECC94E00548965 /* TTRHealthScore.m in Sources */,
 				D479513021ECC94E00548965 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -25449,7 +25264,6 @@
 				D479515A21ECC94E00548965 /* TTInterfaceTipBaseModel.m in Sources */,
 				D479515B21ECC94E00548965 /* TTVSegmentedPageViewController.m in Sources */,
 				D479515C21ECC94E00548965 /* ExploreAddEntryListCell.m in Sources */,
-				D479515D21ECC94E00548965 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				D479515E21ECC94E00548965 /* FHHeaderSegmentCell.swift in Sources */,
 				D479515F21ECC94E00548965 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				D479516021ECC94E00548965 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -25457,7 +25271,6 @@
 				D479516221ECC94E00548965 /* ConstraintArray+Extensions.swift in Sources */,
 				D479516321ECC94E00548965 /* TTWeixinOpenURLTask.m in Sources */,
 				D479516421ECC94E00548965 /* ExploreItemActionManager.m in Sources */,
-				D479516521ECC94E00548965 /* CountryListVC.swift in Sources */,
 				D479516621ECC94E00548965 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				D479516721ECC94E00548965 /* ExploreMovieLoadingView.m in Sources */,
 				D479516821ECC94E00548965 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -25624,7 +25437,6 @@
 				D479520921ECC94E00548965 /* SSWebViewContainer.m in Sources */,
 				D479520A21ECC94E00548965 /* TSVShortVideoDecoupledFetchManager.m in Sources */,
 				D479520B21ECC94E00548965 /* TGAudioEqualizer.swift in Sources */,
-				D479520C21ECC94E00548965 /* TabViewController.swift in Sources */,
 				D479520D21ECC94E00548965 /* TTVVideoDetailToolBarViewController.m in Sources */,
 				D479520E21ECC94E00548965 /* ExploreSubscribeFetchRemoteListManager.m in Sources */,
 				D479520F21ECC94E00548965 /* TTVSwipeView.m in Sources */,
@@ -25923,7 +25735,6 @@
 				D479533421ECC94E00548965 /* TTAdAnimationCell.m in Sources */,
 				D479533521ECC94E00548965 /* TGOrbit.swift in Sources */,
 				D479533621ECC94E00548965 /* TTVCommodityItemView.m in Sources */,
-				D479533721ECC94E00548965 /* HouseRentDetailPageVC.m in Sources */,
 				D479533821ECC94E00548965 /* SSFeedbackPostViewBase.m in Sources */,
 				D479533921ECC94E00548965 /* TSVCardTopInfoView.m in Sources */,
 				D479533A21ECC94E00548965 /* ActionButton.m in Sources */,
@@ -25948,7 +25759,6 @@
 				D479534D21ECC94E00548965 /* TTVWhiteBoardSubject.m in Sources */,
 				D479534E21ECC94E00548965 /* NewHouseInfoCell.swift in Sources */,
 				D479534F21ECC94E00548965 /* TTPersonalHomeMultiplePlatformFollowersInfoView.m in Sources */,
-				D479535021ECC94E00548965 /* HomePageSearchPanel.swift in Sources */,
 				D479535121ECC94E00548965 /* TSVShortVideoListFetchManager.m in Sources */,
 				D479535221ECC94E00548965 /* HorseDetailPageVC.swift in Sources */,
 				D479535321ECC94E00548965 /* TTVFavoriteAction.m in Sources */,
@@ -25993,7 +25803,6 @@
 				D479537A21ECC94E00548965 /* AKUIHelper.m in Sources */,
 				D479537B21ECC94E00548965 /* TTTableViewBaseCellView.m in Sources */,
 				D479537C21ECC94E00548965 /* TSVRecUserCardCollectionViewCellViewModel.m in Sources */,
-				D479537D21ECC94E00548965 /* NIHSearchPanelViewModel.swift in Sources */,
 				D479537E21ECC94E00548965 /* ExploreBaseADCell.m in Sources */,
 				D479537F21ECC94E00548965 /* ToastAlertCenter.swift in Sources */,
 				D479538021ECC94E00548965 /* TTLayOutCellViewBase+UFCell.m in Sources */,
@@ -26137,7 +25946,6 @@
 				D479540A21ECC94E00548965 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				D479540B21ECC94E00548965 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				D479540C21ECC94E00548965 /* TTSettingMineTabManager.m in Sources */,
-				D479540D21ECC94E00548965 /* FHCycleImageCell.m in Sources */,
 				D479540E21ECC94E00548965 /* TSVFeedFollowCellContentView.m in Sources */,
 				D479540F21ECC94E00548965 /* ArticleGetRemoteDataOperation.m in Sources */,
 				D479541021ECC94E00548965 /* TTNetworkStub.m in Sources */,
@@ -26370,7 +26178,6 @@
 				D47954F321ECC94E00548965 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				D47954F421ECC94E00548965 /* SSAPNsAlertManager.m in Sources */,
 				D47954F521ECC94E00548965 /* ExploreDetailToolbarView.m in Sources */,
-				D47954F621ECC94E00548965 /* HomeHeaderSearchView.swift in Sources */,
 				D47954F721ECC94E00548965 /* TTVCommodityEntity.m in Sources */,
 				D47954F821ECC94E00548965 /* TTViewControllerHierarchyHelper.m in Sources */,
 				D47954F921ECC94E00548965 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -26529,7 +26336,6 @@
 				D479559221ECC94E00548965 /* RNData.m in Sources */,
 				D479559321ECC94E00548965 /* AKMinePhotoCarouselEntry.m in Sources */,
 				D479559421ECC94E00548965 /* PriceChangeHistoryCell.swift in Sources */,
-				D479559521ECC94E00548965 /* HomeViewController.swift in Sources */,
 				D479559621ECC94E00548965 /* TTAdFullScreenVideoViewController.m in Sources */,
 				D479559721ECC94E00548965 /* ErshouHouseListViewModel.swift in Sources */,
 				D479559821ECC94E00548965 /* TTVCommodityFloatView.m in Sources */,
@@ -26865,7 +26671,6 @@
 				D47956E221ECC94E00548965 /* QuickLoginAlert.swift in Sources */,
 				D47956E321ECC94E00548965 /* TTFeedCollectionHTSListCell.m in Sources */,
 				D47956E421ECC94E00548965 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				D47956E521ECC94E00548965 /* FHHouseRentRelatedResponse.m in Sources */,
 				D47956E621ECC94E00548965 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				D47956E721ECC94E00548965 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				D47956E821ECC94E00548965 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -26934,7 +26739,6 @@
 				D479572721ECC94E00548965 /* TSVActivityBannerOriginalData.m in Sources */,
 				D479572821ECC94E00548965 /* FPSMonitor.swift in Sources */,
 				D479572921ECC94E00548965 /* TTRNCellManager.m in Sources */,
-				D479572A21ECC94E00548965 /* HouseRentAPI.m in Sources */,
 				D479572B21ECC94E00548965 /* TTFastCoding.m in Sources */,
 				D479572C21ECC94E00548965 /* TGPacman.swift in Sources */,
 				D479572D21ECC94E00548965 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -26976,13 +26780,11 @@
 				D479575121ECC94E00548965 /* RentCoreInfoCellRender.swift in Sources */,
 				D479575221ECC94E00548965 /* TSVRecUserCardModel.m in Sources */,
 				D479575321ECC94E00548965 /* TTAppSettingsStartupTask.m in Sources */,
-				D479575421ECC94E00548965 /* CurrentCitySwitcher.swift in Sources */,
 				D479575521ECC94E00548965 /* TTEditUGCProfileViewModel.m in Sources */,
 				D479575621ECC94E00548965 /* AKImageAlertModel.m in Sources */,
 				D479575721ECC94E00548965 /* AKProfileHeaderInfoView.m in Sources */,
 				D479575821ECC94E00548965 /* TTRDynamicPluginRegister.m in Sources */,
 				D479575921ECC94E00548965 /* TTDetailNatantRewardViewModel.m in Sources */,
-				D479575A21ECC94E00548965 /* CountryListHistoryDataSource.swift in Sources */,
 				D479575B21ECC94E00548965 /* ExploreChannelListView.m in Sources */,
 				D479575C21ECC94E00548965 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				D479575D21ECC94E00548965 /* TTVDetailFollowRecommendView.m in Sources */,
@@ -27141,7 +26943,6 @@
 				FEFA52CC205FB1A8001F50D8 /* UIImageView+TTCornerRadius.m in Sources */,
 				B388CC5F2142652B00653188 /* ConfigEntities.swift in Sources */,
 				FEFA52CD205FB1A8001F50D8 /* TTDetailNatantRelateReadView.m in Sources */,
-				B388CBFF2142652B00653188 /* HomeViewTableViewDataSource.swift in Sources */,
 				FEFA52D0205FB1A8001F50D8 /* TTDetailNatantContainerView.m in Sources */,
 				FEFA52D4205FB1A8001F50D8 /* TTRHealthScore.m in Sources */,
 				FEFA52D5205FB1A8001F50D8 /* ExploreArticleTitleLargePicCellView.m in Sources */,
@@ -27189,7 +26990,6 @@
 				FEFA5309205FB1A8001F50D8 /* TTInterfaceTipBaseModel.m in Sources */,
 				FEFA530A205FB1A8001F50D8 /* TTVSegmentedPageViewController.m in Sources */,
 				FEFA530B205FB1A8001F50D8 /* ExploreAddEntryListCell.m in Sources */,
-				B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				6124ECC921AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D721A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				FEFA530E205FB1A8001F50D8 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -27197,7 +26997,6 @@
 				B388CC812142652B00653188 /* ConstraintArray+Extensions.swift in Sources */,
 				FEFA5314205FB1A8001F50D8 /* TTWeixinOpenURLTask.m in Sources */,
 				FEFA5315205FB1A8001F50D8 /* ExploreItemActionManager.m in Sources */,
-				B388CBF92142652B00653188 /* CountryListVC.swift in Sources */,
 				FEFA5316205FB1A8001F50D8 /* TTEditPGCTableViewControllerImp.m in Sources */,
 				FEFA5317205FB1A8001F50D8 /* ExploreMovieLoadingView.m in Sources */,
 				FEFA5318205FB1A8001F50D8 /* TTVFeedListViewController+HeaderView.m in Sources */,
@@ -27364,7 +27163,6 @@
 				FEFA53C4205FB1A8001F50D8 /* SSWebViewContainer.m in Sources */,
 				FEFA53C5205FB1A8001F50D8 /* TSVShortVideoDecoupledFetchManager.m in Sources */,
 				B388CCC92142652C00653188 /* TGAudioEqualizer.swift in Sources */,
-				B388CB232142652A00653188 /* TabViewController.swift in Sources */,
 				FEFA53C6205FB1A8001F50D8 /* TTVVideoDetailToolBarViewController.m in Sources */,
 				FEFA53C7205FB1A8001F50D8 /* ExploreSubscribeFetchRemoteListManager.m in Sources */,
 				FEFA53C8205FB1A8001F50D8 /* TTVSwipeView.m in Sources */,
@@ -27663,7 +27461,6 @@
 				FEFA5518205FB1A8001F50D8 /* TTAdAnimationCell.m in Sources */,
 				B388CCA12142652B00653188 /* TGOrbit.swift in Sources */,
 				FEFA5519205FB1A8001F50D8 /* TTVCommodityItemView.m in Sources */,
-				B32FD2CE21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */,
 				FEFA551A205FB1A8001F50D8 /* SSFeedbackPostViewBase.m in Sources */,
 				FEFA551B205FB1A8001F50D8 /* TSVCardTopInfoView.m in Sources */,
 				FEFA551C205FB1A8001F50D8 /* ActionButton.m in Sources */,
@@ -27688,7 +27485,6 @@
 				FEFA5533205FB1A8001F50D8 /* TTVWhiteBoardSubject.m in Sources */,
 				3DF3637A21A29D9E0097FCB6 /* NewHouseInfoCell.swift in Sources */,
 				FEFA5535205FB1A8001F50D8 /* TTPersonalHomeMultiplePlatformFollowersInfoView.m in Sources */,
-				B388CBF12142652B00653188 /* HomePageSearchPanel.swift in Sources */,
 				FEFA5537205FB1A8001F50D8 /* TSVShortVideoListFetchManager.m in Sources */,
 				3DF3642521A29D9F0097FCB6 /* HorseDetailPageVC.swift in Sources */,
 				FEFA553A205FB1A8001F50D8 /* TTVFavoriteAction.m in Sources */,
@@ -27733,7 +27529,6 @@
 				FEC2AA342063A5EE00BCBAFF /* AKUIHelper.m in Sources */,
 				FEFA556B205FB1A8001F50D8 /* TTTableViewBaseCellView.m in Sources */,
 				FEFA556C205FB1A8001F50D8 /* TSVRecUserCardCollectionViewCellViewModel.m in Sources */,
-				D42F3C44214765C20097ACCB /* NIHSearchPanelViewModel.swift in Sources */,
 				FEFA556E205FB1A8001F50D8 /* ExploreBaseADCell.m in Sources */,
 				B388CCF12142652C00653188 /* ToastAlertCenter.swift in Sources */,
 				FEFA556F205FB1A8001F50D8 /* TTLayOutCellViewBase+UFCell.m in Sources */,
@@ -27877,7 +27672,6 @@
 				FEFA5601205FB1A8001F50D8 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				D50439A12079B87700DA4953 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				FEFA5602205FB1A8001F50D8 /* TTSettingMineTabManager.m in Sources */,
-				B32FD2D421A29BB4007B9966 /* FHCycleImageCell.m in Sources */,
 				FEFA5603205FB1A8001F50D8 /* TSVFeedFollowCellContentView.m in Sources */,
 				FEFA5604205FB1A8001F50D8 /* ArticleGetRemoteDataOperation.m in Sources */,
 				FEFA5605205FB1A8001F50D8 /* TTNetworkStub.m in Sources */,
@@ -28110,7 +27904,6 @@
 				FEFA56F6205FB1A8001F50D8 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				FEFA56F7205FB1A8001F50D8 /* SSAPNsAlertManager.m in Sources */,
 				FEFA56F8205FB1A8001F50D8 /* ExploreDetailToolbarView.m in Sources */,
-				B388CBED2142652B00653188 /* HomeHeaderSearchView.swift in Sources */,
 				FEFA56F9205FB1A8001F50D8 /* TTVCommodityEntity.m in Sources */,
 				FEFA56FD205FB1A8001F50D8 /* TTViewControllerHierarchyHelper.m in Sources */,
 				FEFA56FE205FB1A8001F50D8 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -28269,7 +28062,6 @@
 				FEFA579E205FB1A8001F50D8 /* RNData.m in Sources */,
 				FEFA579F205FB1A8001F50D8 /* AKMinePhotoCarouselEntry.m in Sources */,
 				760CF74021AAE0900006BE07 /* PriceChangeHistoryCell.swift in Sources */,
-				B388CBEF2142652B00653188 /* HomeViewController.swift in Sources */,
 				FEFA57A0205FB1A8001F50D8 /* TTAdFullScreenVideoViewController.m in Sources */,
 				3DF3640121A29D9F0097FCB6 /* ErshouHouseListViewModel.swift in Sources */,
 				FEFA57A2205FB1A8001F50D8 /* TTVCommodityFloatView.m in Sources */,
@@ -28605,7 +28397,6 @@
 				3DF3641621A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				FEFA590E205FB1A8001F50D8 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F521A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				FEFA5910205FB1A8001F50D8 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				FEFA5912205FB1A8001F50D8 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				FEFA5915205FB1A8001F50D8 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -28674,7 +28465,6 @@
 				FEFA595B205FB1A8001F50D8 /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7B2142652B00653188 /* FPSMonitor.swift in Sources */,
 				FEFA595C205FB1A8001F50D8 /* TTRNCellManager.m in Sources */,
-				B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				FEFA595E205FB1A8001F50D8 /* TTFastCoding.m in Sources */,
 				B388CCBF2142652C00653188 /* TGPacman.swift in Sources */,
 				FEFA595F205FB1A8001F50D8 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -28716,13 +28506,11 @@
 				B32FD32821A3E0A7007B9966 /* RentCoreInfoCellRender.swift in Sources */,
 				FEFA5984205FB1A8001F50D8 /* TSVRecUserCardModel.m in Sources */,
 				FEFA5985205FB1A8001F50D8 /* TTAppSettingsStartupTask.m in Sources */,
-				B302205A2192B7B500400F76 /* CurrentCitySwitcher.swift in Sources */,
 				FEFA5986205FB1A8001F50D8 /* TTEditUGCProfileViewModel.m in Sources */,
 				FEFA5987205FB1A8001F50D8 /* AKImageAlertModel.m in Sources */,
 				FEFA5988205FB1A8001F50D8 /* AKProfileHeaderInfoView.m in Sources */,
 				FEFA598A205FB1A8001F50D8 /* TTRDynamicPluginRegister.m in Sources */,
 				FEFA598C205FB1A8001F50D8 /* TTDetailNatantRewardViewModel.m in Sources */,
-				B388CBFB2142652B00653188 /* CountryListHistoryDataSource.swift in Sources */,
 				FEFA598D205FB1A8001F50D8 /* ExploreChannelListView.m in Sources */,
 				FEFA598F205FB1A8001F50D8 /* TTVVideoDetailNatantInfoModel.m in Sources */,
 				FEFA5990205FB1A8001F50D8 /* TTVDetailFollowRecommendView.m in Sources */,

@@ -63,7 +63,7 @@
     [window addSubview:_toastView];
     __weak typeof(self) wSelf = self;
     __weak FHToastView * wToast = _toastView;
-    [_toastView makeToast:message duration:duration position:CSToastPositionCenter title:NULL image:NULL style:_toastStyle completion:^(BOOL didTap) {
+    [_toastView makeToast:message duration:duration position:CSToastPositionCenter title:NULL image:NULL style:self.toastStyle completion:^(BOOL didTap) {
         if (wToast) {
             [wToast removeFromSuperview];
         }

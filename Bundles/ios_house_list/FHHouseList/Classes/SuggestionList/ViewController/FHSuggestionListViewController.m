@@ -37,11 +37,16 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         // 1、from_home
-        self.fromSource = [paramObj.userInfo.allInfo[@"from_home"] integerValue];
+        self.fromSource = [paramObj.allParams[@"from_home"] integerValue];
         // 2、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
-        _viewModel.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
+        if (hp >= 1 && hp <= 4) {
+            _viewModel.houseType = hp;
+        } else {
+            _viewModel.houseType = 2;// 默认二手房
+        }
         _viewModel.fromPageType = self.fromSource;
         // 3、sug_delegate 代理
         /*
@@ -49,7 +54,7 @@
          [sugDelegateTable addObject:self];
          @"sug_delegate":sugDelegateTable
          */
-        NSHashTable<FHHouseSuggestionDelegate> *sug_delegate = paramObj.userInfo.allInfo[@"sug_delegate"];
+        NSHashTable<FHHouseSuggestionDelegate> *sug_delegate = paramObj.allParams[@"sug_delegate"];
         self.suggestDelegate = sug_delegate.anyObject;
         // 4、homepage_roll_data 首页轮播词
         /*homepage_roll_data:{
@@ -59,7 +64,7 @@
          "open_url":""
          }
          */
-        id dic = paramObj.userInfo.allInfo[@"homepage_roll_data"];
+        id dic = paramObj.allParams[@"homepage_roll_data"];
         if (dic) {
             self.homePageRollDic = [NSDictionary dictionaryWithDictionary:dic];
             self.viewModel.homePageRollDic = self.homePageRollDic;
