@@ -171,27 +171,41 @@
 {
     if (self.contactPhone.phone.length < 1) {
         // 填表单
+        [self fillFormAction];
     }else {
         // 拨打电话
-        __weak typeof(self)wself = self;
-        if (![TTReachability isNetworkConnected]) {
-            
-            NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
-            [self callPhone:urlStr];
-            return;
-        }
-        [self.bottomBar startLoading];
-        [FHHouseDetailAPI requestVirtualNumber:self.contactPhone.phone houseId:self.houseId houseType:self.houseType searchId:self.searchId imprId:self.imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
-            
-            [wself.bottomBar stopLoading];
-            NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
-            if (!error && model.data.virtualNumber.length > 0) {
-                urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
-            }
-            [wself callPhone:urlStr];
-        }];
+        [self callAction];
     }
-    // add by zjing for test 关注功能
+}
+
+- (void)fillFormAction
+{
+    
+    // 静默关注功能
+    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:YES];
+}
+
+- (void)callAction
+{
+    __weak typeof(self)wself = self;
+    if (![TTReachability isNetworkConnected]) {
+        
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
+        [self callPhone:urlStr];
+        return;
+    }
+    [self.bottomBar startLoading];
+    [FHHouseDetailAPI requestVirtualNumber:self.contactPhone.phone houseId:self.houseId houseType:self.houseType searchId:self.searchId imprId:self.imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+        
+        [wself.bottomBar stopLoading];
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
+        if (!error && model.data.virtualNumber.length > 0) {
+            urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
+        }
+        [wself callPhone:urlStr];
+    }];
+    // 静默关注功能
+    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }
 
 - (void)callPhone:(NSString *)phone
