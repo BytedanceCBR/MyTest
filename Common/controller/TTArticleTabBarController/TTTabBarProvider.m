@@ -133,6 +133,7 @@ static NSString *lastTabIdentifier;
         return vc;
     } else if ([identifier isEqualToString:kFHouseMineTabKey]) {
         FHMineViewController* vc = [[FHMineViewController alloc] init];
+//        MineVC* vc = [[MineVC alloc] init];
         return vc;
     }
     
