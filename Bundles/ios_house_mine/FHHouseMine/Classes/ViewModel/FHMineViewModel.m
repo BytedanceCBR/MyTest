@@ -180,10 +180,12 @@
     }
 }
 
-- (void)goToFocusDetail:(NSInteger)type
-{
+- (void)goToFocusDetail:(NSInteger)type {
     NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"type"] = @(type);
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 #pragma mark - UITableViewDataSource
