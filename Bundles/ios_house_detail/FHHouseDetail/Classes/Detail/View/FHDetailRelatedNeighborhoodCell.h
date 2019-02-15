@@ -32,8 +32,12 @@ NS_ASSUME_NONNULL_BEGIN
 // 小区item
 @interface FHDetailNeighborhoodItemCollectionCell : FHDetailBaseCollectionCell
 
+@property (nonatomic, strong)   UIImageView       *icon;
+@property (nonatomic, strong)   UILabel       *descLabel;
+@property (nonatomic, strong)   UILabel       *priceLabel;
+@property (nonatomic, strong)   UILabel       *spaceLabel;
+
+
 @end
-
-
 
 NS_ASSUME_NONNULL_END
