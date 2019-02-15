@@ -76,6 +76,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface  FHDetailVirtualNumModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *realtorId;
+@property (nonatomic, copy , nullable) NSString *virtualNumber;
+
+@end
+
+@interface  FHDetailVirtualNumResponseModel  : JSONModel <FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHDetailVirtualNumModel *data;
+
+@end
+
 @interface  FHDetailUserFollowStatusModel  : JSONModel
 
 @property (nonatomic, assign) NSInteger followStatus;

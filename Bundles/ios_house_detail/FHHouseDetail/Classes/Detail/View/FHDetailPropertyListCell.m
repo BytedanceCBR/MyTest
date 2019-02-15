@@ -11,6 +11,7 @@
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
+#import "UILabel+House.h"
 
 @implementation FHDetailPropertyListCell
 
@@ -138,14 +139,6 @@
     return self;
 }
 
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 - (void)setupUI {
     
 }
@@ -165,23 +158,14 @@
     return self;
 }
 
-
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
-}
-
 - (void)setupUI {
     self.backgroundColor = UIColor.whiteColor;
-    _keyLabel = [self createLabel:@"" textColor:@"#8a9299" fontSize:14];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"#8a9299" fontSize:14];
     [self addSubview:_keyLabel];
     [_keyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
-    _valueLabel = [self createLabel:@"" textColor:@"#081f33" fontSize:14];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     

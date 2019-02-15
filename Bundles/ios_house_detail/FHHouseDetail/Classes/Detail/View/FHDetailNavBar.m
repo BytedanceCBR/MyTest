@@ -17,6 +17,9 @@
 @property(nonatomic , strong) UIButton *shareBtn;
 @property(nonatomic , strong) UIView *gradientView;
 
+@property(nonatomic , assign) CGFloat subAlpha;
+@property(nonatomic , assign) BOOL followStatus;
+
 @end
 
 @implementation FHDetailNavBar
@@ -85,24 +88,44 @@
 
 - (void)refreshAlpha:(CGFloat)alpha
 {
+    _subAlpha = alpha;
     _bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:alpha];
     if (alpha > 0) {
         _gradientView.alpha = 0;
-        UIImage *image = [UIImage imageNamed:@"detail_back_black"];
+        UIImage *image = [UIImage imageNamed:@"detail_collect_black"];
+        image = self.followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_backBtn setImage:[UIImage imageNamed:@"detail_back_black"] forState:UIControlStateNormal];
         [_backBtn setImage:[UIImage imageNamed:@"detail_back_black"] forState:UIControlStateHighlighted];
-        [_collectBtn setImage:[UIImage imageNamed:@"detail_collect_black"] forState:UIControlStateNormal];
-        [_collectBtn setImage:[UIImage imageNamed:@"detail_collect_black"] forState:UIControlStateHighlighted];
+        [_collectBtn setImage:image forState:UIControlStateNormal];
+        [_collectBtn setImage:image forState:UIControlStateHighlighted];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_black"] forState:UIControlStateNormal];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_black"] forState:UIControlStateHighlighted];
     }else {
         _gradientView.alpha = 1;
+        UIImage *image = [UIImage imageNamed:@"detail_collect_white"];
+        image = self.followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_backBtn setImage:[UIImage imageNamed:@"detail_back_white"] forState:UIControlStateNormal];
         [_backBtn setImage:[UIImage imageNamed:@"detail_back_white"] forState:UIControlStateHighlighted];
-        [_collectBtn setImage:[UIImage imageNamed:@"detail_collect_white"] forState:UIControlStateNormal];
-        [_collectBtn setImage:[UIImage imageNamed:@"detail_collect_white"] forState:UIControlStateHighlighted];
+        [_collectBtn setImage:image forState:UIControlStateNormal];
+        [_collectBtn setImage:image forState:UIControlStateHighlighted];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
+    }
+}
+
+- (void)setFollowStatus:(BOOL)followStatus
+{
+    _followStatus = followStatus;
+    if (self.subAlpha > 0) {
+        UIImage *image = [UIImage imageNamed:@"detail_collect_black"];
+        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        [_collectBtn setImage:image forState:UIControlStateNormal];
+        [_collectBtn setImage:image forState:UIControlStateHighlighted];
+    }else {
+        UIImage *image = [UIImage imageNamed:@"detail_collect_white"];
+        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        [_collectBtn setImage:image forState:UIControlStateNormal];
+        [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }
 }
 
@@ -116,7 +139,7 @@
 - (void)collectAction:(UIButton *)sender
 {
     if (self.collectActionBlock) {
-        self.collectActionBlock();
+        self.collectActionBlock(self.followStatus);
     }
 }
 

@@ -14,7 +14,7 @@
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel;
 @class FHHouseRentRelatedResponseModel,FHRentSameNeighborhoodResponseModel;
-@class FHDetailResponseModel,FHDetailUserFollowResponseModel;
+@class FHDetailResponseModel,FHDetailVirtualNumResponseModel,FHDetailUserFollowResponseModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -91,7 +91,7 @@ typedef enum : NSUInteger {
                           houseType:(FHHouseType)houseType
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
-                         completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注
 + (TTHttpTask*)requestFollow:(NSString*)followId

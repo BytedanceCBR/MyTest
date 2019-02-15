@@ -364,7 +364,7 @@
                             houseType:(FHHouseType)houseType
                           searchId:(NSString*)searchId
                           imprId:(NSString*)imprId
-                         completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion {
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -383,9 +383,9 @@
     }
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
-        FHDetailResponseModel *model = nil;
+        FHDetailVirtualNumResponseModel *model = nil;
         if (!error) {
-            model = [[FHDetailResponseModel alloc] initWithDictionary:jsonObj error:&error];
+            model = [[FHDetailVirtualNumResponseModel alloc] initWithDictionary:jsonObj error:&error];
         }
         if (![model.status isEqualToString:@"0"]) {
             error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
@@ -405,17 +405,16 @@
                            actionType:(FHFollowActionType)actionType
                          completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingString:@"/f100/api/user_follow"];
+    NSString* url = [host stringByAppendingString:[NSString stringWithFormat:@"/f100/api/user_follow?house_type=%ld",houseType]];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (followId.length > 0) {
-        paramDic[@"followId"] = followId;
+        paramDic[@"follow_id"] = followId;
     }
-    paramDic[@"house_type"] = @(houseType);
     paramDic[@"action_type"] = @(actionType);
 
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:POST needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
-        FHDetailResponseModel *model = nil;
+        FHDetailUserFollowResponseModel *model = nil;
         if (!error) {
             model = [[FHDetailUserFollowResponseModel alloc] initWithDictionary:jsonObj error:&error];
         }
@@ -437,17 +436,16 @@
                   actionType:(FHFollowActionType)actionType
                   completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingString:@"/f100/api/cancel_user_follow"];
+    NSString* url = [host stringByAppendingString:[NSString stringWithFormat:@"/f100/api/cancel_user_follow?house_type=%ld",houseType]];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (followId.length > 0) {
-        paramDic[@"followId"] = followId;
+        paramDic[@"follow_id"] = followId;
     }
-    paramDic[@"house_type"] = @(houseType);
     paramDic[@"action_type"] = @(actionType);
     
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:POST needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
-        FHDetailResponseModel *model = nil;
+        FHDetailUserFollowResponseModel *model = nil;
         if (!error) {
             model = [[FHDetailUserFollowResponseModel alloc] initWithDictionary:jsonObj error:&error];
         }

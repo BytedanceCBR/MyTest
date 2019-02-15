@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
+#import "UILabel+House.h"
 
 @interface FHDetailHeaderView ()
 
@@ -31,11 +32,11 @@
 
 - (void)setupUI {
     _isShowLoadMore = NO;
-    _label = [self createLabel:@"" textColor:@"#081f33" fontSize:18];
+    _label = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:18];
     _label.font = [UIFont themeFontMedium:18];
     [self addSubview:_label];
     
-    _loadMore = [self createLabel:@"查看更多" textColor:@"#8a9299" fontSize:14];
+    _loadMore = [UILabel createLabel:@"查看更多" textColor:@"#8a9299" fontSize:14];
     _loadMore.textAlignment = NSTextAlignmentRight;
     _loadMore.hidden = YES;
     [self addSubview:_loadMore];
@@ -68,14 +69,6 @@
     _isShowLoadMore = isShowLoadMore;
     _loadMore.hidden = !isShowLoadMore;
     _arrowsImg.hidden = !isShowLoadMore;
-}
-
-- (UILabel *)createLabel:(NSString *)text textColor:(NSString *)hexColor fontSize:(CGFloat)fontSize {
-    UILabel *label = [[UILabel alloc] init];
-    label.text = text;
-    label.textColor = [UIColor colorWithHexString:hexColor];
-    label.font = [UIFont themeFontRegular:fontSize];
-    return label;
 }
 
 @end

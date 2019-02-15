@@ -66,8 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailOldDataUserStatusModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *pricingSubStauts;
-@property (nonatomic, copy , nullable) NSString *houseSubStatus;
+@property (nonatomic, assign) NSInteger pricingSubStauts;
+@property (nonatomic, assign) NSInteger houseSubStatus;
 @end
 
 @protocol FHDetailOldDataHouseOverreviewListModel<NSObject>
