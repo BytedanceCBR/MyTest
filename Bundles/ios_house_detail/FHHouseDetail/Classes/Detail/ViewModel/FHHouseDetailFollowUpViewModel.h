@@ -15,6 +15,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 @interface FHHouseDetailFollowUpViewModel : NSObject
 
+- (void)silentFollowHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType showTip:(BOOL)showTip;
 - (void)followHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType;
 - (void)cancelFollowHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)followAction;
 
