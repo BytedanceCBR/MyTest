@@ -20,6 +20,7 @@
 #import "FHDetailPriceChangeHistoryCell.h"
 #import "FHDetailAgentListCell.h"
 #import "FHDetailHouseOutlineInfoCell.h"
+#import "FHDetailSuggestTipCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -42,6 +43,7 @@
     [self.tableView registerClass:[FHDetailPriceChangeHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceChangeHistoryCell class])];
     [self.tableView registerClass:[FHDetailAgentListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAgentListCell class])];
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCell class])];
+    [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -76,6 +78,10 @@
     // 房源概况
     if ([model isKindOfClass:[FHDetailHouseOutlineInfoModel class]]) {
         return [FHDetailHouseOutlineInfoCell class];
+    }
+    // 购房小建议
+    if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
+        return [FHDetailSuggestTipCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -166,6 +172,15 @@
         FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
         infoModel.houseOverreview = model.data.houseOverreview;
         infoModel.baseViewModel = self;
+        [self.items addObject:infoModel];
+    }
+    // 购房小建议
+    if (model.data.housePricingRank.buySuggestion) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
+        infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
         [self.items addObject:infoModel];
     }
     
