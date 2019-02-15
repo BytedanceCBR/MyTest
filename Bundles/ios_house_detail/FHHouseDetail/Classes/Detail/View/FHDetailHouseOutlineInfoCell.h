@@ -21,6 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailHouseOutlineInfoView : UIView
 
 @property (nonatomic, strong)   UIImageView       *iconImg;
+@property (nonatomic, strong)   UILabel       *keyLabel;
+@property (nonatomic, strong)   UILabel       *valueLabel;
+
+- (void)showIconAndTitle:(BOOL)showen;
 
 @end
 
