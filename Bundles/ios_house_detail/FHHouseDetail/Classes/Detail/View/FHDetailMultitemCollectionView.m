@@ -26,13 +26,16 @@
 
 @implementation FHDetailMultitemCollectionView
 
-- (instancetype)initWithFlowLayout:(UICollectionViewFlowLayout *)flowLayout viewHeight:(CGFloat)collectionViewHeight cellIdentifier:(NSString *)cellIdentifier datas:(NSArray *)datas
+- (instancetype)initWithFlowLayout:(UICollectionViewFlowLayout *)flowLayout viewHeight:(CGFloat)collectionViewHeight cellIdentifier:(NSString *)cellIdentifier cellCls:(Class)cls datas:(NSArray *)datas
 {
     self = [self initWithFrame:CGRectZero];
     if (self) {
-        self.cellIdentifier = cellIdentifier;
-        self.datas = datas;
         [self setupUIWithFlowLayout:flowLayout viewHeight:collectionViewHeight];
+        self.cellIdentifier = cellIdentifier;
+        [self registerCls:cls forIdentifier:cellIdentifier];
+        self.datas = datas;
+        _collectionContainer.delegate = self;
+        _collectionContainer.dataSource = self;
     }
     return self;
 }
@@ -48,10 +51,16 @@
             make.edges.mas_equalTo(self);
             make.height.mas_equalTo(collectionViewHeight);
         }];
-        _collectionContainer.delegate = self;
-        _collectionContainer.dataSource = self;
-        [_collectionContainer reloadData];
     }
+}
+
+- (void)registerCls:(Class)cls forIdentifier:(NSString *)cellIdentifier {
+    [_collectionContainer registerClass:cls forCellWithReuseIdentifier:cellIdentifier];
+    self.cellIdentifier = cellIdentifier;
+}
+
+- (void)reloadData {
+    [self.collectionContainer reloadData];
 }
 
 #pragma mark - collection
