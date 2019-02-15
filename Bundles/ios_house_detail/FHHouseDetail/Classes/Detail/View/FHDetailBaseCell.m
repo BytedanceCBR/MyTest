@@ -32,3 +32,30 @@
 }
 
 @end
+
+// FHDetailBaseCollectionCell
+@implementation FHDetailBaseCollectionCell
+
++ (Class)cellViewClass
+{
+    return [self class];
+}
+
++ (NSString *)cellIdentifier {
+    return NSStringFromClass([self cellViewClass]);
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+    }
+    return self;
+}
+
+- (void)refreshWithData:(id)data {
+    // sub implements.........
+}
+
+@end

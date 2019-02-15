@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailOldDataHousePricingRankBuySuggestionModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *type;
+@property (nonatomic, copy , nullable) NSString *type;//(1 建议,2普通,3不建议)
 @end
 
 @interface FHDetailOldDataHousePricingRankModel : JSONModel
