@@ -14,6 +14,9 @@
 #import "FHDetailHouseModelCell.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailNewHouseCoreInfoCell.h"
+#import "FHDetailNewHouseNewsCell.h"
+#import "FHDetailNewTimeLineItemCell.h"
+#import "FHDetailGrayLineCell.h"
 
 @implementation FHHouseNewDetailViewModel
 
@@ -23,9 +26,15 @@
 
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     
+    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
+
     [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoCell class])];
 
     [self.tableView registerClass:[FHDetailHouseModelCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseModelCell class])];
+    
+    [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCell class])];
+    
+      [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCell class])];
 
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
 
@@ -46,8 +55,24 @@
         return [FHDetailNewHouseCoreInfoCell class];
     }
     
+    // 灰色分割线
+    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+        return [FHDetailGrayLineCell class];
+    }
+    
+    //楼盘户型
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
         return [FHDetailHouseModelCell class];
+    }
+    
+    //楼盘动态标题
+    if ([model isKindOfClass:[FHDetailNewHouseNewsCellModel class]]) {
+        return [FHDetailNewHouseNewsCell class];
+    }
+    
+    //楼盘动态标题
+    if ([model isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
+        return [FHDetailNewTimeLineItemCell class];
     }
     
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
@@ -115,10 +140,34 @@
         [self.items addObject:model.data.floorpanList];
     }
     
+    //楼盘动态
+    if (model.data.timeline.list.count != 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        
+        FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
+        newsCellModel.hasMore = model.data.timeline.hasMore;
+        [self.items addObject:newsCellModel];
+        
+        for (NSInteger i = 0; i < model.data.timeline.list.count; i++) {
+            FHDetailNewDataTimelineListModel *itemModel = model.data.timeline.list[i];
+            FHDetailNewTimeLineItemModel *item = [[FHDetailNewTimeLineItemModel alloc] init];
+            item.desc = itemModel.desc;
+            item.title = itemModel.title;
+            item.createdTime = itemModel.createdTime;
+            item.isFirstCell = (i == 0);
+            item.isLastCell = (i == model.data.timeline.list.count - 1);
+
+            [self.items addObject:item];
+        }
+    }
+    
     if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
+//        nearbyMapModel.tableView = self.tableView;
         [self.items addObject:nearbyMapModel];
         
         __weak typeof(self) wSelf = self;
@@ -129,6 +178,19 @@
                 };
             }
         });
+        
+        if (model.data.imageGroup) {
+            FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+            NSMutableArray *arrayHouseImage = [NSMutableArray new];
+            for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
+                FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
+                for (NSInteger j = 0; j < groupModel.images.count; j++) {
+                    [arrayHouseImage addObject:groupModel.images[j]];
+                }
+            }
+            headerCellModel.houseImage = arrayHouseImage;
+            [self.items addObject:headerCellModel];
+        }
     }
     
     [self reloadData];
