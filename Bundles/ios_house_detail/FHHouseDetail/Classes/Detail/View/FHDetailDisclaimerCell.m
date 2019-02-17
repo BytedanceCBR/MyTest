@@ -16,6 +16,8 @@
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
 #import <YYText.h>
+#import <TTShareManager.h>
+#import <TTPhotoScrollViewController.h>
 
 @interface FHDetailDisclaimerCell ()
 
@@ -194,6 +196,72 @@
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(3);
         make.bottom.mas_equalTo(-14);
     }];
+    
+    [self.tapButton addTarget:self action:@selector(openPhoto:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)openPhoto:(UIButton *)button {
+    [self showImages:self.headerImages currentIndex:0];
+}
+
+-(void)showImages:(NSArray<FHDetailPhotoHeaderModelProtocol>*)images currentIndex:(NSInteger)index
+{
+    if (images.count == 0) {
+        return;
+    }
+    
+    TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
+    vc.dragToCloseDisabled = YES;
+    vc.mode = PhotosScrollViewSupportBrowse;
+    vc.startWithIndex = index;
+    
+    NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
+    for(id<FHDetailPhotoHeaderModelProtocol> imgModel in images)
+    {
+        NSMutableDictionary *dict = [[imgModel toDictionary] mutableCopy];
+        //change url_list from string array to dict array
+        NSMutableArray *dictUrlList = [[NSMutableArray alloc] initWithCapacity:imgModel.urlList.count];
+        for (NSString * url in imgModel.urlList) {
+            if ([url isKindOfClass:[NSString class]]) {
+                [dictUrlList addObject:@{@"url":url}];
+            }else{
+                [dictUrlList addObject:url];
+            }
+        }
+        // 兼容租房逻辑
+        if (dictUrlList.count == 0) {
+            NSString *url = dict[@"url"];
+            if (url.length > 0) {
+                [dictUrlList addObject:@{@"url":url}];
+            }
+        }
+        dict[@"url_list"] = dictUrlList;
+        
+        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
+        model.imageType = TTImageTypeLarge;
+        if (model) {
+            [models addObject:model];
+        }
+    }
+    vc.imageInfosModels = models;
+    
+    UIImage *placeholder = [UIImage imageNamed:@"default_image"];
+    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
+    CGRect frame = [self convertRect:self.bounds toView:window];
+    NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index+1];
+    NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
+    for (NSInteger i = 0 ; i < index ; i++) {
+        [frames addObject:[NSNull null]];
+    }
+    for (NSInteger i = 0 ; i < images.count; i++) {
+        [placeholders addObject:placeholder];
+    }
+    
+    NSValue *frameValue = [NSValue valueWithCGRect:frame];
+    [frames addObject:frameValue];
+    vc.placeholderSourceViewFrames = frames;
+    vc.placeholders = placeholders;
+    [vc presentPhotoScrollView];
 }
 
 - (void)hiddenOwnerLabel {
