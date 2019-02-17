@@ -12,12 +12,18 @@
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHDetailHouseModelCell.h"
+#import "FHDetailHouseNameCell.h"
+#import "FHDetailNewHouseCoreInfoCell.h"
 
 @implementation FHHouseNewDetailViewModel
 
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+
+    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
+    
+    [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoCell class])];
 
     [self.tableView registerClass:[FHDetailHouseModelCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseModelCell class])];
 
@@ -30,6 +36,16 @@
         return [FHDetailPhotoHeaderCell class];
     }
     
+    // 标题
+    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
+        return [FHDetailHouseNameCell class];
+    }
+    
+    // 核心信息
+    if ([model isKindOfClass:[FHDetailNewHouseCoreInfoModel class]]) {
+        return [FHDetailNewHouseCoreInfoCell class];
+    }
+    
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
         return [FHDetailHouseModelCell class];
     }
@@ -37,6 +53,7 @@
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
         return [FHDetailNearbyMapCell class];
     }
+    
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -48,7 +65,7 @@
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:@"6581052152733499652" completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNewDetail:self.houseId completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         [wSelf processDetailData:model];
     }];
 }
@@ -68,6 +85,29 @@
         }
         headerCellModel.houseImage = arrayHouseImage;
         [self.items addObject:headerCellModel];
+    }
+    
+    // 添加标题
+    if (model.data) {
+        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
+        houseName.type = 1;
+        houseName.name = model.data.coreInfo.name;
+        houseName.aliasName = model.data.coreInfo.aliasName;
+        houseName.type = 2;
+        houseName.tags = model.data.tags;
+        [self.items addObject:houseName];
+    }
+    
+    //核心信息
+    if (model.data.coreInfo) {
+        FHDetailNewHouseCoreInfoModel *houseName = [[FHDetailNewHouseCoreInfoModel alloc] init];
+        houseName.pricingPerSqm = model.data.coreInfo.pricingPerSqm;
+        houseName.constructionOpendate = model.data.coreInfo.constructionOpendate;
+        houseName.courtAddress = model.data.coreInfo.courtAddress;
+        houseName.pricingSubStauts = model.data.userStatus.pricingSubStatus;
+        houseName.gaodeLat = model.data.coreInfo.gaodeLat;
+        houseName.gaodeLng = model.data.coreInfo.gaodeLng;
+        [self.items addObject:houseName];
     }
     
     //楼盘户型
