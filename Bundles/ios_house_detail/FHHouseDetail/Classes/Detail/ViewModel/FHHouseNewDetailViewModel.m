@@ -167,7 +167,12 @@
         }
     }
     
+    //周边配套
     if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
