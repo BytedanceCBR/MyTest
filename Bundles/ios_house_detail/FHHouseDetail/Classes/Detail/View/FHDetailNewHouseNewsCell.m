@@ -6,10 +6,8 @@
 //
 
 #import "FHDetailNewHouseNewsCell.h"
-#import "FHDetailHeaderView.h"
 
 @interface FHDetailNewHouseNewsCell ()
-@property (nonatomic, strong) FHDetailHeaderView *headerView;
 @end
 
 @implementation FHDetailNewHouseNewsCell
@@ -20,8 +18,6 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         _headerView = [[FHDetailHeaderView alloc] init];
-        _headerView.label.text = @"楼盘动态";
-        _headerView.isShowLoadMore = YES;
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.right.bottom.mas_equalTo(self.contentView);
@@ -34,7 +30,11 @@
 
 - (void)refreshWithData:(id)data
 {
-    
+    if ([data isKindOfClass:[FHDetailNewHouseNewsCellModel class]]) {
+        FHDetailNewHouseNewsCellModel *model = (FHDetailNewHouseNewsCellModel *)data;
+        _headerView.label.text = model.titleText;
+        _headerView.isShowLoadMore = model.hasMore;
+    }
 }
 
 - (void)awakeFromNib {

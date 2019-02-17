@@ -18,6 +18,15 @@
 #import "FHDetailNewTimeLineItemCell.h"
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailNewMutiFloorPanCell.h"
+#import "FHDetailRelatedHouseResponseModel.h"
+#import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
+#import "FHDetailRelatedCourtModel.h"
+#import "FHNewHouseItemModel.h"
+
+@interface FHHouseNewDetailViewModel ()
+@property (nonatomic, strong , nullable) FHDetailRelatedCourtModel *relatedHouseData;
+@end
 
 @implementation FHHouseNewDetailViewModel
 
@@ -40,6 +49,8 @@
       [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCell class])];
 
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
+    
+    [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHSingleImageInfoCell class])];
 
 }
 // cell class
@@ -78,8 +89,14 @@
         return [FHDetailNewTimeLineItemCell class];
     }
     
+    //周边配套
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
         return [FHDetailNearbyMapCell class];
+    }
+    
+    //周边新盘
+    if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
+        return [FHSingleImageInfoCell class];
     }
     
     return [FHDetailBaseCell class];
@@ -95,6 +112,12 @@
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         [wSelf processDetailData:model];
+    }];
+    
+    
+    [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
+        wSelf.relatedHouseData = model;
+        [wSelf processDetailRelatedData];
     }];
 }
 
@@ -155,6 +178,7 @@
         
         FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
         newsCellModel.hasMore = model.data.timeline.hasMore;
+        newsCellModel.titleText = @"楼盘动态";
         [self.items addObject:newsCellModel];
         
         for (NSInteger i = 0; i < model.data.timeline.list.count; i++) {
@@ -190,21 +214,8 @@
                 };
             }
         });
-        
-        if (model.data.imageGroup) {
-            FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-            NSMutableArray *arrayHouseImage = [NSMutableArray new];
-            for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-                FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
-                for (NSInteger j = 0; j < groupModel.images.count; j++) {
-                    [arrayHouseImage addObject:groupModel.images[j]];
-                }
-            }
-            headerCellModel.houseImage = arrayHouseImage;
-            [self.items addObject:headerCellModel];
-        }
     }
-    
+
     // --
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
@@ -215,6 +226,29 @@
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     
     [self reloadData];
+}
+
+// 处理详情页周边新盘请求数据
+- (void)processDetailRelatedData {
+    if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
+    {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        
+        FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
+        newsCellModel.hasMore = NO;
+        newsCellModel.titleText = @"周边新盘";
+        [self.items addObject:newsCellModel];
+        
+        for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
+        {
+            FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
+            [self.items addObject:itemModel];
+        }
+        
+        [self reloadData];
+    }
 }
 
 @end

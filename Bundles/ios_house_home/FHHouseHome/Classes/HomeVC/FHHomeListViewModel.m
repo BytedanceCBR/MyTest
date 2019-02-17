@@ -12,7 +12,7 @@
 #import "FHEnvContext.h"
 #import "FHHomeRequestAPI.h"
 #import "FHHouseType.h"
-#import "FHHomeHouseModel.h"
+#import <FHHomeHouseModel.h>
 #import "TTURLUtils.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
