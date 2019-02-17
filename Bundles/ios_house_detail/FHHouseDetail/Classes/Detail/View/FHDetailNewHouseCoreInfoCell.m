@@ -29,7 +29,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
 @property (nonatomic, strong) UIButton *openNotify;
 @property (nonatomic, strong) UIImageView *locationIcon;
 @property (nonatomic, strong) UIButton *openMapBtn;
-@property (nonatomic, strong) UIView *bottomLine;
+//@property (nonatomic, strong) UIView *bottomLine;
 @property (nonatomic, strong) FHDetailNewHouseCoreInfoModel *infoModel;
 
 @end
@@ -168,13 +168,13 @@ static const CGFloat kLabelKeyRightPandding = -20;
     }];
     
     
-    _bottomLine = [UIView new];
-    _bottomLine.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
-    [self.contentView addSubview:_bottomLine];
-    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.contentView);
-        make.height.mas_equalTo(6);
-    }];
+//    _bottomLine = [UIView new];
+//    _bottomLine.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+//    [self.contentView addSubview:_bottomLine];
+//    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.bottom.equalTo(self.contentView);
+//        make.height.mas_equalTo(6);
+//    }];
 
 
     _priceChangedNotify = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -189,7 +189,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
         make.top.equalTo(self.moreBtn.mas_bottom);
         make.left.equalTo(self.contentView);
         make.right.equalTo(self.contentView.mas_centerX);
-        make.bottom.equalTo(self.bottomLine.mas_top);
+        make.bottom.equalTo(self.contentView);
         make.height.mas_equalTo(54);
     }];
 
