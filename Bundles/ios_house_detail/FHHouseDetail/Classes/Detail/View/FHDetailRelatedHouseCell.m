@@ -16,12 +16,15 @@
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
 #import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
+#import "FHDetailBottomOpenAllView.h"
 
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   UITableView       *tableView;
+@property (nonatomic, strong)   FHDetailBottomOpenAllView       *openAllView;// 查看更多
 
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
 
@@ -58,7 +61,7 @@
     self.items = model.relatedHouseData.items;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 0;
+        tv.estimatedRowHeight = 108;
         tv.estimatedSectionHeaderHeight = 0;
         tv.estimatedSectionFooterHeight = 0;
         if (@available(iOS 11.0, *)) {
@@ -82,10 +85,29 @@
     }
     if (model.relatedHouseData.hasMore) {
         // 添加查看更多
+        self.openAllView = [[FHDetailBottomOpenAllView alloc] init];
+        [self.containerView addSubview:self.openAllView];
+        // 查看更多按钮点击
+        __weak typeof(self) wSelf = self;
+        self.openAllView.didClickCellBlk = ^{
+            [wSelf loadMoreDataButtonClick];
+        };
         if (self.tableView) {
             // 查看更多相对tableView布局
+            [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.tableView.mas_bottom);
+                make.left.right.mas_equalTo(self.containerView);
+                make.height.mas_equalTo(48);
+                make.bottom.mas_equalTo(self.containerView);
+            }];
         } else {
             // 查看更多自己布局
+            [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.containerView).offset(20);
+                make.left.right.mas_equalTo(self.containerView);
+                make.height.mas_equalTo(48);
+                make.bottom.mas_equalTo(self.containerView);
+            }];
         }
     }
     [self layoutIfNeeded];
@@ -120,6 +142,11 @@
     }];
 }
 
+// 查看更多按钮点击
+- (void)loadMoreDataButtonClick {
+    
+}
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -133,12 +160,25 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row >= 0 && indexPath.row < self.items.count) {
+        FHSearchHouseDataItemsModel *item = self.items[indexPath.row];
+        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
+        if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+            FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+            [imageInfoCell updateWithHouseCellModel:cellModel];
+            [imageInfoCell refreshTopMargin:0];
+            [imageInfoCell refreshBottomMargin:20];
+        }
+        return cell;
+    }
+    
     return [[UITableViewCell alloc] init];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    NSLog(@"--------willDisplayCell------:%ld",indexPath.row);
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

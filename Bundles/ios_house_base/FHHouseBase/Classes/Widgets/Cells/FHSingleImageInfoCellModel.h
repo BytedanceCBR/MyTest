@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString *)groupId;
 -(nullable NSDictionary *)logPb;
 
++ (FHSingleImageInfoCellModel *)houseItemByModel:(id)obj;
+
 @end
 
 NS_ASSUME_NONNULL_END
