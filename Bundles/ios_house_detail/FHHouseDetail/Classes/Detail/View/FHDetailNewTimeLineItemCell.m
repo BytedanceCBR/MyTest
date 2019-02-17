@@ -71,7 +71,7 @@
         _contentLabel.font = [UIFont themeFontRegular:14];
         _contentLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
         _contentLabel.numberOfLines = 2;
-        _contentLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        _contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.contentView addSubview:_contentLabel];
         [_contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.titleLabel.mas_bottom).offset(4);
@@ -120,8 +120,12 @@
                 make.height.mas_equalTo(15);
             }];
         }
-//        re.dateFormat = "MM-dd"
-//        self.timeLabel.text
+        
+        if (model.isLastCell) {
+            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.bottom.equalTo(self.contentView).offset(-20);
+            }];
+        }
         
     }
 }
