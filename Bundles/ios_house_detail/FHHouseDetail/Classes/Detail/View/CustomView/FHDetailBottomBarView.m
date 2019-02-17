@@ -134,7 +134,7 @@
 - (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle
 {
     [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
-    [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
+    [self.contactBtn setTitle:contactTitle forState:UIControlStateHighlighted];
 
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? 160 : 0;

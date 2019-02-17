@@ -29,16 +29,24 @@
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHDetailNoticeAlertView.h"
+#import "YYCache.h"
+#import "FHURLSettings.h"
+#import "TTRoute.h"
+#import "ToastManager.h"
 
+NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
+
+extern NSString *const kFHToastCountKey;
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
-
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, strong)FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property(nonatomic , strong) YYCache *sendPhoneNumberCache;
+@property(nonatomic , weak) FHDetailNoticeAlertView *alertView;
 
 @end
 
@@ -181,9 +189,70 @@
 
 - (void)fillFormAction
 {
-    
+    NSString *title = @"询底价";
+    NSString *subtitle = @"提交后将安排专业经纪人与您联系";
+    NSString *btnTitle = @"获取底价";
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        title = @"咨询经纪人";
+        btnTitle = @"提交";
+    }
+    __weak typeof(self)wself = self;
+    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    alertView.phoneNum = [self.sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    alertView.confirmClickBlock = ^(NSString *phoneNum){
+        [wself fillFormRequest:phoneNum];
+    };
+    alertView.tipClickBlock = ^{
+        
+        NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+        NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+        [[TTRoute sharedRoute]openURLByPushViewController:url];
+    };
+    [alertView showFrom:nil];
+    self.alertView = alertView;
+}
+
+- (void)fillFormRequest:(NSString *)phoneNum
+{
+    __weak typeof(self)wself = self;
+    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:self.houseId phone:phoneNum from:[self fromStrByHouseType:self.houseType] completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+        
+        if (model.status.integerValue == 0 && !error) {
+
+            [wself.alertView dismiss];
+            [wself.sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+            NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
+            if (toastCount >= 3) {
+                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            }
+        }else {
+            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+        }
+    }];
     // 静默关注功能
     [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:YES];
+}
+
+- (NSString *)fromStrByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"app_court";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"app_oldhouse";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"app_neighbourhood";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"app_rent";
+            break;
+        default:
+            break;
+    }
+    return @"be_null";
 }
 
 - (void)callAction
@@ -335,6 +404,14 @@
         _shareManager = [[TTShareManager alloc]init];
     }
     return _shareManager;
+}
+
+- (YYCache *)sendPhoneNumberCache
+{
+    if (!_sendPhoneNumberCache) {
+        _sendPhoneNumberCache = [[YYCache alloc]initWithName:@"phonenumber"];
+    }
+    return _sendPhoneNumberCache;
 }
 
 - (void)dealloc

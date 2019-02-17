@@ -19,6 +19,7 @@
 #import "TTAccount.h"
 #import "TTInstallIDManager.h"
 #import "TTAccountUserEntity.h"
+#import "FHPostDataHTTPRequestSerializer.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -340,22 +341,34 @@
     if (from.length > 0) {
         paramDic[@"d"] = from;
     }
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+//    - (TTHttpTask *)requestForBinaryWithURL:(NSString *)URL
+//params:(id)params
+//method:(NSString *)method
+//needCommonParams:(BOOL)commonParams
+//requestSerializer:(Class<TTHTTPRequestSerializerProtocol>)requestSerializer
+//responseSerializer:(Class<TTBinaryResponseSerializerProtocol>)responseSerializer
+//autoResume:(BOOL)autoResume
+//callback:(TTNetworkObjectFinishBlock)callback
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj) {
+
+//    return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+//
+//    }];
+//    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
 
         FHDetailResponseModel *model = nil;
+        NSError *jerror = nil;
         if (!error) {
-            model = [[FHDetailResponseModel alloc] initWithDictionary:jsonObj error:&error];
+            model = [[FHDetailResponseModel alloc]initWithData:jsonObj error:&jerror];
         }
         if (![model.status isEqualToString:@"0"]) {
             error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
         }
         
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 // 中介转接电话
