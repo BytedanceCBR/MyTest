@@ -17,6 +17,7 @@
 #import "FHDetailNewHouseNewsCell.h"
 #import "FHDetailNewTimeLineItemCell.h"
 #import "FHDetailGrayLineCell.h"
+#import "FHDetailNewMutiFloorPanCell.h"
 
 @implementation FHHouseNewDetailViewModel
 
@@ -31,6 +32,8 @@
     [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoCell class])];
 
     [self.tableView registerClass:[FHDetailHouseModelCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseModelCell class])];
+    
+    [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCell class])];
     
     [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCell class])];
     
@@ -62,7 +65,7 @@
     
     //楼盘户型
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-        return [FHDetailHouseModelCell class];
+        return [FHDetailNewMutiFloorPanCell class];
     }
     
     //楼盘动态标题
@@ -201,6 +204,15 @@
             [self.items addObject:headerCellModel];
         }
     }
+    
+    // --
+    if (model.data.highlightedRealtor) {
+        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
+    }else {
+        self.contactViewModel.contactPhone = model.data.contact;
+    }
+    self.contactViewModel.shareInfo = model.data.shareInfo;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     
     [self reloadData];
 }
