@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMyFavoriteViewController : FHBaseViewController
 
+@property(nonatomic, strong) UITableView *tableView;
+
 @end
 
 NS_ASSUME_NONNULL_END

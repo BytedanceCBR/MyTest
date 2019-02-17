@@ -6,10 +6,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHMyFavoriteViewController.h"
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMyFavoriteViewModel : NSObject
+
+@property(nonatomic, strong) NSMutableArray *dataList;
+
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMyFavoriteViewController *)viewController type:(FHHouseType)type;
+
+- (void)requestData:(BOOL)isHead;
+
+- (void)viewWillAppear;
+
+- (void)viewWillDisappear;
 
 @end
 

@@ -14,11 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMineAPI : NSObject
 
++ (NSString *)host;
+
 + (void)requestFocusInfoWithCompletion:(void(^_Nullable)(NSDictionary *response , NSError *error))completion;
 
-+ (TTHttpTask *)requestFocusInfoWithType:(NSInteger)type completion:(void(^_Nullable)(NSDictionary *response , NSError *error))completion;
-
-+ (NSString *)host;
++ (TTHttpTask *)requestFocusDetailInfoWithType:(NSInteger)type offset:(NSInteger)offset searchId:(nullable NSString *)searchId limit:(NSInteger)limit className:(NSString *)className completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
 //发送短信验证码
 + (void)requestSendVerifyCode:(NSString *)phoneNumber completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion;

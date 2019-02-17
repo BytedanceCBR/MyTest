@@ -87,6 +87,52 @@
     } callbackInMainThread:NO];
 }
 
++ (TTHttpTask *)requestFocusDetailInfoWithType:(NSInteger)type completion:(void(^_Nullable)(NSDictionary *response , NSError *error))completion
+{
+    NSString *queryPath = @"/f100/api/get_user_follow";
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[@"house_type"] = @(type);
+    
+    NSString *url = QURL(queryPath);
+    
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:GET needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:nil responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        NSMutableDictionary *result = [NSMutableDictionary dictionary];
+        @try{
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+            BOOL success = ([json[@"status"] integerValue] == 0);
+            if(success){
+                NSInteger count = [json[@"data"][@"total_count"] integerValue];
+                [result setObject:@(count) forKey:@(type)];
+            }
+        }
+        @catch(NSException *e){
+            error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+        }
+        
+        if (completion) {
+            completion(result, error);
+        }
+    } callbackInMainThread:NO];
+}
+
++ (TTHttpTask *)requestFocusDetailInfoWithType:(NSInteger)type offset:(NSInteger)offset searchId:(nullable NSString *)searchId limit:(NSInteger)limit className:(NSString *)className completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
+{
+    NSString *queryPath = @"/f100/api/get_user_follow";
+    
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"house_type"] = @(type);
+    paramDic[@"limit"] = @(limit);
+    paramDic[@"offset"] = @(offset);
+    if(searchId){
+        paramDic[@"search_id"] = searchId;
+    }
+    
+    Class cls = NSClassFromString(className);
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 + (void)requestSendVerifyCode:(NSString *)phoneNumber completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion {
     [TTAccountManager startSendCodeWithPhoneNumber:phoneNumber captcha:nil type:TTASMSCodeScenarioQuickLogin unbindExist:NO completion:completion];
 }

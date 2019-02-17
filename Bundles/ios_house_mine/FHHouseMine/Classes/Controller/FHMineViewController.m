@@ -63,8 +63,10 @@
 - (void)initView
 {
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
+    _tableView.tableHeaderView = headerView;
     [self.view addSubview:_tableView];
     if (@available(iOS 11.0, *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -74,14 +76,14 @@
 - (void)initConstraints
 {
     CGFloat bottom = 49;
-    CGFloat top = 20;
+    CGFloat top = 0;
     if (@available(iOS 11.0 , *)) {
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
         top = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
     }
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(top);
+        make.top.mas_equalTo(self.view).offset(top);
         make.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
