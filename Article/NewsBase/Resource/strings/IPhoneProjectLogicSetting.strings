@@ -100,9 +100,11 @@
 //map
 "fh_map_detail"        = "FHDetailMapPageViewController";
 
-//floor pan
+//floor
 "floor_pan_list"        = "FHFloorPanListViewController";
 "floor_pan_detail"        = "FHFloorPanDetailViewController";
+"floor_coreinfo_detail"        = "FHFloorMoreCoreInfoViewController";
+"floor_timeline_detail"        = "FHFloorTimeLineViewController";
 
 
 "test_detail"           = "FHHouseDetailViewController";

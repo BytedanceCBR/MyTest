@@ -46,8 +46,10 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) MAMapView *mapView;
 @property (nonatomic , strong) NSString * searchCategory;
 @property (nonatomic , strong) NSArray * nameArray;
+@property (nonatomic , assign) BOOL isFirst;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
+@property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
 
 @end
 
@@ -58,6 +60,7 @@ static const float kSegementedPadingTop = 5;
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _isFirst = YES;
          self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
 
@@ -80,7 +83,10 @@ static const float kSegementedPadingTop = 5;
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
-    [self requestPoiInfo:self.centerPoint andKeyWord:_nameArray.firstObject];
+    if (_isFirst) {
+        [self requestPoiInfo:self.centerPoint andKeyWord:_nameArray.firstObject];
+        _isFirst = NO;
+    }
 }
 
 - (void)refreshWithData:(id)data {
@@ -90,7 +96,7 @@ static const float kSegementedPadingTop = 5;
     
     FHDetailNearbyMapModel *dataModel = (FHDetailNearbyMapModel *)data;
     dataModel.cell = self;
-    
+    _dataModel = dataModel;
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
 }
 
@@ -258,6 +264,7 @@ static const float kSegementedPadingTop = 5;
 
 - (void)changeListLayout:(NSInteger)poiCount
 {
+//    [_dataModel.tableView beginUpdates];
     [_locationList mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(_mapImageView.mas_bottom).offset(10);
         make.left.right.equalTo(self.contentView);
@@ -286,7 +293,8 @@ static const float kSegementedPadingTop = 5;
     [_mapMaskBtnLocation mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.locationList);
     }];
-    
+//    [_dataModel.tableView endUpdates];
+
     if (self.indexChangeCallBack) {
         self.indexChangeCallBack();
     }
@@ -533,7 +541,7 @@ static const float kSegementedPadingTop = 5;
             stringDistance = [NSString stringWithFormat:@"%d米",(int)distance];
         }else
         {
-            stringDistance = [NSString stringWithFormat:@"%.1f公里",((int)distance) / 1000];
+            stringDistance = [NSString stringWithFormat:@"%.1f公里",((CGFloat)distance) / 1000.0];
         }
     }
 
