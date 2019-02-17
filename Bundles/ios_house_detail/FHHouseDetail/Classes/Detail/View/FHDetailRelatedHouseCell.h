@@ -14,7 +14,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // 二手房周边房源
-@interface FHDetailRelatedHouseCell : FHDetailBaseCell
+@interface FHDetailRelatedHouseCell : FHDetailBaseCell<FHDetailScrollViewDidScrollProtocol>
 
 @end
 

@@ -25,6 +25,7 @@
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHDetailBottomOpenAllView       *openAllView;// 查看更多
+@property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
 
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
 
@@ -124,6 +125,7 @@
 }
 
 - (void)setupUI {
+    _houseShowCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"周边房源";
     [self.contentView addSubview:_headerView];
@@ -176,11 +178,6 @@
     return [[UITableViewCell alloc] init];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"--------willDisplayCell------:%ld",indexPath.row);
-}
-
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 108;
@@ -198,6 +195,31 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    if (vcParentView) {
+        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+        NSInteger index = (UIScreen.mainScreen.bounds.size.height - point.y - 70) / 108;
+        if (index >= 0 && index < self.items.count) {
+            [self addHouseShowByIndex:index];
+        }
+    }
+}
+
+// 添加house_show 埋点
+- (void)addHouseShowByIndex:(NSInteger)index {
+    if (index >= 0 && index < self.items.count) {
+        NSString *tempKey = [NSString stringWithFormat:@"%ld", index];
+        if ([self.houseShowCache valueForKey:tempKey]) {
+            return;
+        }
+        [self.houseShowCache setValue:@(YES) forKey:tempKey];
+        // 添加house_show埋点 add by zyk
+        NSLog(@"------添加house_show 埋点: %ld",index);
+    }
 }
 
 @end
