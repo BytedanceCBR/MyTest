@@ -48,4 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// FHDetailScrollViewDidScrollProtocol-详情页滑动时 house_show 埋点问题解决
+@protocol FHDetailScrollViewDidScrollProtocol <NSObject>
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView;
+
+@end
+
 NS_ASSUME_NONNULL_END

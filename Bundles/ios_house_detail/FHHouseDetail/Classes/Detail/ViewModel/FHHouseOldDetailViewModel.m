@@ -22,6 +22,8 @@
 #import "FHDetailHouseOutlineInfoCell.h"
 #import "FHDetailSuggestTipCell.h"
 #import "FHDetailRelatedNeighborhoodCell.h"
+#import "FHDetailRelatedHouseCell.h"
+#import "FHDetailSameNeighborhoodHouseCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -46,6 +48,8 @@
     [self.tableView registerClass:[FHDetailHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseOutlineInfoCell class])];
     [self.tableView registerClass:[FHDetailSuggestTipCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSuggestTipCell class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
+    [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseCell class])];
+    [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -85,9 +89,17 @@
     if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
         return [FHDetailSuggestTipCell class];
     }
+    // 同小区房源
+    if ([model isKindOfClass:[FHDetailSameNeighborhoodHouseModel class]]) {
+        return [FHDetailSameNeighborhoodHouseCell class];
+    }
     // 周边小区
     if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
         return [FHDetailRelatedNeighborhoodCell class];
+    }
+    // 周边房源
+    if ([model isKindOfClass:[FHDetailRelatedHouseModel class]]) {
+        return [FHDetailRelatedHouseCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -192,8 +204,8 @@
     
     // 小区信息
     if (model.data.neighborhoodInfo) {
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
+//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//        [self.items addObject:grayLine];
     }
     
     // --
@@ -224,7 +236,12 @@
     if (self.requestRelatedCount >= 3) {
         //  同小区房源
         if (self.sameNeighborhoodHouseData) {
-            
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailSameNeighborhoodHouseModel *infoModel = [[FHDetailSameNeighborhoodHouseModel alloc] init];
+            infoModel.sameNeighborhoodHouseData = self.sameNeighborhoodHouseData;
+            [self.items addObject:infoModel];
         }
         // 周边小区
         if (self.relatedNeighborhoodData) {
@@ -240,6 +257,9 @@
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
+            FHDetailRelatedHouseModel *infoModel = [[FHDetailRelatedHouseModel alloc] init];
+            infoModel.relatedHouseData = self.relatedHouseData;
+            [self.items addObject:infoModel];
         }
         [self reloadData];
     }
