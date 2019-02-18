@@ -59,6 +59,8 @@
             FHDetailNeighborhoodItemValueView *itemView = [[FHDetailNeighborhoodItemValueView alloc] init];
             itemView.keyLabel.text = info.value;
             itemView.valueDataLabel.valueLabel.text = info.attr;
+            itemView.tag = idx;
+            [itemView addTarget:self action:@selector(clickButton:) forControlEvents:UIControlEventTouchUpInside];
             if ([info.value isEqualToString:@"暂无"] || [info.value isEqualToString:@"0套"]) {
                 itemView.keyLabel.text = @"暂无";
                 itemView.valueDataLabel.isEnabled = NO;
@@ -73,7 +75,8 @@
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
                 make.width.mas_equalTo(itemWidth);
-                make.top.bottom.mas_equalTo(self.contentView);
+                make.top.mas_equalTo(topLine.mas_bottom);
+                make.bottom.mas_equalTo(self.contentView);
             }];
             leftOffset += (itemWidth + space);
         }];
@@ -82,9 +85,9 @@
         for (int i = 1; i < model.statsInfo.count; i++) {
             UIView *v = [[UIView alloc] init];
             v.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
-            [self.contentView addSubview:topLine];
+            [self.contentView addSubview:v];
             CGFloat leftOffset = 20.0 + i * 70 + (i - 1 + 0.5) * space;
-            [topLine mas_makeConstraints:^(MASConstraintMaker *maker) {
+            [v mas_makeConstraints:^(MASConstraintMaker *maker) {
                 maker.height.mas_equalTo(27);
                 maker.width.mas_equalTo(1);
                 maker.centerY.mas_equalTo(self.contentView);
@@ -100,13 +103,17 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setupUI];
     }
     return self;
 }
 
-- (void)setupUI {
-    
+- (void)clickButton:(UIControl *)control {
+    FHDetailNeighborhoodStatsInfoModel *model = (FHDetailNeighborhoodStatsInfoModel *)self.currentData;
+    NSInteger index = control.tag;
+    if (model && model.statsInfo.count > 0 && index >= 0 && index < model.statsInfo.count) {
+        FHDetailNeighborhoodDataStatsInfoModel *info = model.statsInfo[index];
+        NSLog(@"click：%ld",index);
+    }
 }
 
 @end
@@ -188,9 +195,9 @@
     [self addSubview:_valueDataLabel];
     
     [self.valueDataLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(self);
-        make.height.mas_equalTo(17);
-        make.bottom.mas_equalTo(self);
+        make.left.mas_equalTo(self);
+        make.top.mas_equalTo(self).offset(14.5);
+        make.right.mas_equalTo(self);
     }];
     
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {

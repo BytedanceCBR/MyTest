@@ -17,6 +17,7 @@
 #import "FHDetailNeighborPriceChartCell.h"
 #import "FHDetailNeighborhoodNameCell.h"
 #import "FHDetailGrayLineCell.h"
+#import "FHDetailNeighborhoodStatsInfoCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -35,6 +36,7 @@
     [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborPriceChartCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodNameCell class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
+     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoCell class])];
 
 }
 // cell class
@@ -49,6 +51,10 @@
     // 灰色分割线
     if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
         return [FHDetailGrayLineCell class];
+    }
+    // 在售（在租）信息
+    if ([model isKindOfClass:[FHDetailNeighborhoodStatsInfoModel class]]) {
+        return [FHDetailNeighborhoodStatsInfoCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -99,6 +105,12 @@
         houseName.name = model.data.name;
         houseName.neighborhoodInfo = model.data.neighborhoodInfo;
         [self.items addObject:houseName];
+    }
+    // 添加 在售（在租）信息
+    if (model.data.statsInfo.count > 0) {
+        FHDetailNeighborhoodStatsInfoModel *infoModel = [[FHDetailNeighborhoodStatsInfoModel alloc] init];
+        infoModel.statsInfo = model.data.statsInfo;
+        [self.items addObject:infoModel];
     }
     
     [self reloadData];
