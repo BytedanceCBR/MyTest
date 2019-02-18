@@ -52,7 +52,7 @@ class MessageEventManager: NSObject {
             .bind(onNext: { [unowned self] (_) in
                 self.requestRefreshTip()
             })
-        self.requestMessageData()
+//        self.requestMessageData()
     }
 
     func stopSyncMessage() {

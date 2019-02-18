@@ -35,6 +35,8 @@
 
 -(void)showToast:(NSString *)toast duration:(CGFloat)duration inView:(UIView *)view;
 
+- (void)setMessageTabBadgeNumber:(NSInteger)number;
+
 @end
 
 
