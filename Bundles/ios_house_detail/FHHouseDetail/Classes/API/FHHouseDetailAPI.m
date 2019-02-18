@@ -509,10 +509,8 @@
 
 // 新房-楼盘动态
 +(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId
-                                 offset:(NSString *)offset
                                   query:(NSString*)query
-                                  count:(NSInteger)count
-                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion {
+                             completion:(void(^)(FHDetailNewTimeLineResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:@"/f100/api/court/timeline=%@&%@",query];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -522,9 +520,9 @@
     
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
-        FHDetailRelatedCourtModel *model = nil;
+        FHDetailNewTimeLineResponseModel *model = nil;
         if (!error) {
-            model = [[FHDetailRelatedCourtModel alloc] initWithDictionary:jsonObj error:&error];
+            model = [[FHDetailNewTimeLineResponseModel alloc] initWithDictionary:jsonObj error:&error];
         }
         
         if (![model.status isEqualToString:@"0"]) {

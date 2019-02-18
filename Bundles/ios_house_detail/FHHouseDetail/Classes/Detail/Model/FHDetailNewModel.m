@@ -285,6 +285,31 @@
 }
 @end
 
+@implementation FHDetailNewTimeLineDataModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasMore": @"has_more",
+                           @"userStatus": @"user_status",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNewTimeLineResponseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailNewDataCoreInfoSaleStatusModel
 + (JSONKeyMapper*)keyMapper
 {
