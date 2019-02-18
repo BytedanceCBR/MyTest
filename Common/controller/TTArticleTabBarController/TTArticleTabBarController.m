@@ -200,9 +200,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(baiwanyingxiong:) name:@"kFantasyTimeCountDown" object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(clearMessageTabBarBadge:) name:kClearMessageTabBarBadgeNumberNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeMessageTabBarBadge:) name:kChangeMessageTabBarBadgeNumberNotification object:nil];
 }
 
 - (void)baiwanyingxiong:(NSNotification *)notification
@@ -1507,26 +1504,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             }
         }
     }
-}
-
-- (void)clearMessageTabBarBadge:(NSNotification*)notification
-{
-    NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kFHouseMessageTabKey];
-    TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
-    badgeView.badgeNumber = TTBadgeNumberHidden;
-}
-
-- (void)changeMessageTabBarBadge:(NSNotification*)notification
-{
-    NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kFHouseMessageTabKey];
-    TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
-    
-    NSInteger msgCount = [notification.object integerValue];
-    
-    NSInteger tabMsgCount = badgeView.badgeNumber;
-    tabMsgCount -= msgCount;
-    tabMsgCount = tabMsgCount >= 0 ? tabMsgCount : 0;
-    badgeView.badgeNumber = tabMsgCount;
 }
 
 - (void)receiveBadgeMangerChangedNotification:(NSNotification *)notification

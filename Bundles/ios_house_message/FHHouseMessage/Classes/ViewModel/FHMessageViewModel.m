@@ -94,9 +94,7 @@
     }];
 }
 
-- (void)clearBadgeNumber
-{
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"kClearMessageTabBarBadgeNumberNotification" object:nil];
+- (void)clearBadgeNumber {
     [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
 }
 
@@ -137,7 +135,6 @@
     
     if([model.unread integerValue] > 0){
         // Tab消息个数减少
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeMessageTabBarBadge" object:model.unread];
         [[self messageBridgeInstance] reduceMessageTabBarBadgeNumber:[model.unread integerValue]];
         
         model.unread = @"0";
@@ -150,7 +147,7 @@
     NSDictionary *dict = @{
                            @"typeId": model.id
                            };
-    
+
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
