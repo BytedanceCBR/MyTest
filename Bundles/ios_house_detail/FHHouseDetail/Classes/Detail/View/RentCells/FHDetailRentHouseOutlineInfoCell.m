@@ -1,10 +1,11 @@
 //
-//  FHDetailHouseOutlineInfoCell.m
+//  FHDetailRentHouseOutlineInfoCell.m
 //  FHHouseDetail
 //
-//  Created by 张元科 on 2019/2/14.
+//  Created by 张元科 on 2019/2/18.
 //
 
+#import "FHDetailRentHouseOutlineInfoCell.h"
 #import "FHDetailHouseOutlineInfoCell.h"
 #import <Masonry.h>
 #import "UIFont+House.h"
@@ -17,7 +18,7 @@
 #import "FHExtendHotAreaButton.h"
 #import "UILabel+House.h"
 
-@interface FHDetailHouseOutlineInfoCell ()
+@interface FHDetailRentHouseOutlineInfoCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
@@ -26,7 +27,7 @@
 
 @end
 
-@implementation FHDetailHouseOutlineInfoCell
+@implementation FHDetailRentHouseOutlineInfoCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -40,7 +41,7 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailHouseOutlineInfoModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailRentHouseOutlineInfoModel class]]) {
         return;
     }
     self.currentData = data;
@@ -48,11 +49,11 @@
     for (UIView *v in self.containerView.subviews) {
         [v removeFromSuperview];
     }
-    FHDetailHouseOutlineInfoModel *model = (FHDetailHouseOutlineInfoModel *)data;
+    FHDetailRentHouseOutlineInfoModel *model = (FHDetailRentHouseOutlineInfoModel *)data;
     __block UIView *lastView = self.containerView;
     if (model.houseOverreview.list.count > 0) {
         NSInteger count = model.houseOverreview.list.count;
-        [model.houseOverreview.list enumerateObjectsUsingBlock:^(FHDetailOldDataHouseOverreviewListModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [model.houseOverreview.list enumerateObjectsUsingBlock:^(FHRentDetailResponseDataHouseOverviewListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailHouseOutlineInfoView *outlineView = [[FHDetailHouseOutlineInfoView alloc] init];
             outlineView.keyLabel.text = obj.title;
             outlineView.valueLabel.text = obj.content;
@@ -125,9 +126,10 @@
 }
 
 - (void)feedBackButtonClick:(UIButton *)button {
-    FHDetailHouseOutlineInfoModel *model = (FHDetailHouseOutlineInfoModel *)self.currentData;
-    FHDetailOldModel *ershouData = (FHDetailOldModel *)model.baseViewModel.detailData;
-    NSDictionary *jsonDic = [ershouData toDictionary];
+    // 租房
+    FHDetailRentHouseOutlineInfoModel *model = (FHDetailRentHouseOutlineInfoModel *)self.currentData;
+    FHRentDetailResponseModel *rentData = (FHRentDetailResponseModel *)model.baseViewModel.detailData;
+    NSDictionary *jsonDic = [rentData toDictionary];
     if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
         // 记得添加埋点 add by zyk
         NSString *openUrl = @"sslocal://webview";
@@ -145,72 +147,12 @@
     }
 }
 
-@end
-
-// FHDetailHouseOutlineInfoView
-@interface FHDetailHouseOutlineInfoView ()
 
 @end
 
-@implementation FHDetailHouseOutlineInfoView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
-    }
-    return self;
-}
-
-- (void)setupUI {
-    _iconImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rectangle-11"]];
-    [self addSubview:_iconImg];
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
-    [self addSubview:_keyLabel];
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#737a80" fontSize:14];
-    _valueLabel.numberOfLines = 0;
-    _valueLabel.textAlignment = NSTextAlignmentLeft;
-    [self addSubview:_valueLabel];
-    
-    [self.iconImg mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.width.mas_equalTo(10);
-        make.height.mas_equalTo(8);
-        make.centerY.mas_equalTo(self.keyLabel);
-    }];
-    [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.iconImg.mas_right).offset(4);
-        make.top.mas_equalTo(4);
-        make.height.mas_equalTo(26);
-        make.right.mas_equalTo(self).offset(-20);
-    }];
-    [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.iconImg);
-        make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self).offset(32);
-        make.bottom.mas_equalTo(self).offset(-10);
-    }];
-}
-
-- (void)showIconAndTitle:(BOOL)showen {
-    self.iconImg.hidden = !showen;
-    self.keyLabel.hidden = !showen;
-    if (showen) {
-        [self.valueLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self).offset(32);
-        }];
-    } else {
-        [self.valueLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self).offset(4);
-        }];
-    }
-}
-
-@end
-
-// FHDetailHouseOutlineInfoModel
-@implementation FHDetailHouseOutlineInfoModel
+// FHDetailRentHouseOutlineInfoModel
+@implementation FHDetailRentHouseOutlineInfoModel
 
 
 @end
