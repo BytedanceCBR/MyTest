@@ -17,6 +17,7 @@
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailRentHouseCoreInfoCell.h"
 #import "FHDetailPropertyListCell.h"
+#import "FHDetailRentFacilityCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -35,6 +36,7 @@
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     [self.tableView registerClass:[FHDetailRentHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseCoreInfoCell class])];
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
+    [self.tableView registerClass:[FHDetailRentFacilityCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentFacilityCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -57,6 +59,10 @@
     // 属性列表
     if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
         return [FHDetailPropertyListCell class];
+    }
+    // 房屋设施
+    if ([model isKindOfClass:[FHDetailRentFacilityModel class]]) {
+        return [FHDetailRentFacilityCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -119,6 +125,14 @@
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
         [self.items addObject:propertyModel];
+    }
+    // 添加房屋配置
+    if (model.data.facilities.count > 0) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailRentFacilityModel *infoModel = [[FHDetailRentFacilityModel alloc] init];
+        infoModel.facilities = model.data.facilities;
+        [self.items addObject:infoModel];
     }
  
     [self reloadData];
