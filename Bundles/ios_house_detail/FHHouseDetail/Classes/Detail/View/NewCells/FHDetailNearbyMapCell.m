@@ -21,6 +21,7 @@
 #import "FHMyMAAnnotation.h"
 #import "FHDetailNearbyMapItemCell.h"
 #import "FHDetailNewModel.h"
+#import "FHDetailHeaderView.h"
 
 #import "TTRoute.h"
 
@@ -30,6 +31,7 @@ static const float kSegementedPadingTop = 5;
 
 @interface FHDetailNearbyMapCell () <AMapSearchDelegate,MAMapViewDelegate,UITableViewDelegate,UITableViewDataSource>
 
+@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic , assign) NSInteger requestIndex;
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) UIImageView *mapImageView;
@@ -68,6 +70,9 @@ static const float kSegementedPadingTop = 5;
         _countCategoryDict = [NSMutableDictionary new];
         _poiDatasDict = [NSMutableDictionary new];
         
+        //设置title
+        [self setUpHeaderView];
+        
         //初始化左右切换
         [self setUpSegmentedControl];
 
@@ -79,6 +84,17 @@ static const float kSegementedPadingTop = 5;
         [self setUpLocationListTableView];
     }
     return self;
+}
+
+- (void)setUpHeaderView
+{
+    _headerView = [[FHDetailHeaderView alloc] init];
+    _headerView.label.text = @"周边配套";
+    [self.contentView addSubview:_headerView];
+    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(46);
+    }];
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow
@@ -140,7 +156,8 @@ static const float kSegementedPadingTop = 5;
     [self.contentView addSubview:_segmentedControl];
     
     [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.equalTo(self.contentView);
+        make.top.equalTo(self.headerView.mas_bottom);
+        make.left.right.equalTo(self.contentView);
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(kSegementedHeight);
     }];

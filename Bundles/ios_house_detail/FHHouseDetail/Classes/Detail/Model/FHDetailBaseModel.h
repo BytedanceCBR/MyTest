@@ -105,4 +105,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHDetailPriceTrendModel<NSObject>
+@end
+
+@protocol FHDetailPriceTrendValuesModel<NSObject>
+@end
+
+@interface FHDetailPriceTrendValuesModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *timestamp;
+@property (nonatomic, copy , nullable) NSString *price;
+@property (nonatomic, copy , nullable) NSString *timeStr;
+@end
+
+@interface FHDetailPriceTrendModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendValuesModel> *values;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
+
 NS_ASSUME_NONNULL_END

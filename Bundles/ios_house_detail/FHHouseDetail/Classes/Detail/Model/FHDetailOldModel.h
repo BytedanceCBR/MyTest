@@ -94,25 +94,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 @end
 
-@protocol FHDetailOldDataPriceTrendModel<NSObject>
-@end
-
-@protocol FHDetailOldDataPriceTrendValuesModel<NSObject>
-@end
-
-@interface FHDetailOldDataPriceTrendValuesModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *timestamp;
-@property (nonatomic, copy , nullable) NSString *price;
-@property (nonatomic, copy , nullable) NSString *timeStr;
-@end
-
-@interface FHDetailOldDataPriceTrendModel : JSONModel
-
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataPriceTrendValuesModel> *values;
-@property (nonatomic, copy , nullable) NSString *name;
-@end
-
 @protocol FHPriceChangeHistoryPriceChangeHistoryHistoryModel<NSObject>
 @end
 
@@ -164,7 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *DataSourceId;
 @property (nonatomic, strong , nullable) FHDetailOldDataHouseOverreviewModel *houseOverreview ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataCoreInfoModel> *coreInfo;
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataPriceTrendModel> *priceTrend;
+@property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;

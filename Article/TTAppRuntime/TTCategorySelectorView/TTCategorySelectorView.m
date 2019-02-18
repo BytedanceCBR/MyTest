@@ -31,6 +31,7 @@
 #import "TTPushAlertManager.h"
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
+#import <FHLocManager.h>
 
 #import "Bubble-Swift.h"
 
@@ -993,7 +994,8 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
     //判断离开首页推荐频道
     if ([_lastSelectedButton.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse] && ![button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
-        [messageMgr startSyncCategoryBadge];
+//        [messageMgr startSyncCategoryBadge];
+        [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
     }
     
     if ([button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
@@ -1009,11 +1011,11 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     //判断当前频道是否是首页推荐
 
     
-    
-    
     NSUInteger badgeNumber = [[TTCategoryBadgeNumberManager sharedManager] badgeNumberOfCategoryID:_lastSelectedButton.categoryModel.categoryID];
     [_lastSelectedButton showPoint:showPoint badgeNumber:badgeNumber style:_style];
     [_categoryClickAutoDismissBadgeSet removeObject:_lastSelectedButton.categoryModel.categoryID];
+    
+    
 }
 
 //- (void)expandButtonClicked:(id)sender

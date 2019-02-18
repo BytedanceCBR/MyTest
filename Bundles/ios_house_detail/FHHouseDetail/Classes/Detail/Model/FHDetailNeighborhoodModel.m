@@ -21,22 +21,6 @@
 }
 @end
 
-@implementation FHDetailNeighborhoodDataPriceTrendValuesModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"timeStr": @"time_str",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailNeighborhoodDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -91,13 +75,6 @@
         return dict[keyName]?:keyName;
     }];
 }
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
-@implementation FHDetailNeighborhoodDataPriceTrendModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

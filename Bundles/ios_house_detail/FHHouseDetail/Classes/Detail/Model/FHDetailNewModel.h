@@ -181,6 +181,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewDataTimelineModel *timeline ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *floorpanList ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;

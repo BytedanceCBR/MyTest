@@ -21,6 +21,7 @@
 #import <objc/runtime.h>
 #import "TTNetworkUtilities.h"
 #import "FHMessageManager.h"
+#import "FHHouseBridgeManager.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -279,6 +280,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }];
     //更新公共参数
     [self updateRequestCommonParams];
+    
+    NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
+
+    if (![startFeedCatgegory isEqualToString:@"f_house_news"] && startFeedCatgegory != nil) {
+        //轮询红点
+        [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    }
+
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict

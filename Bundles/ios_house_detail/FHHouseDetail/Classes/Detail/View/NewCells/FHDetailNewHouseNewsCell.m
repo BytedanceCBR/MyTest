@@ -6,10 +6,9 @@
 //
 
 #import "FHDetailNewHouseNewsCell.h"
-#import "FHDetailHeaderView.h"
+#import <TTRoute.h>
 
 @interface FHDetailNewHouseNewsCell ()
-@property (nonatomic, strong) FHDetailHeaderView *headerView;
 @end
 
 @implementation FHDetailNewHouseNewsCell
@@ -20,13 +19,12 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         _headerView = [[FHDetailHeaderView alloc] init];
-        _headerView.label.text = @"楼盘动态";
-        _headerView.isShowLoadMore = YES;
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.top.right.bottom.mas_equalTo(self.contentView);
             make.height.mas_equalTo(52);// 46 + 6
         }];
+        [_headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         [_headerView setBackgroundColor:[UIColor whiteColor]];
     }
     return self;
@@ -34,7 +32,19 @@
 
 - (void)refreshWithData:(id)data
 {
-    
+    if ([data isKindOfClass:[FHDetailNewHouseNewsCellModel class]]) {
+        self.currentData = data;
+        FHDetailNewHouseNewsCellModel *model = (FHDetailNewHouseNewsCellModel *)data;
+        _headerView.label.text = model.titleText;
+        _headerView.isShowLoadMore = model.hasMore;
+    }
+}
+
+// 查看更多
+
+- (void)moreButtonClick:(UIButton *)button {
+    NSString *courtId = ((FHDetailNewHouseNewsCellModel *)self.currentData).courtId;
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:nil];
 }
 
 - (void)awakeFromNib {
