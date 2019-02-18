@@ -112,6 +112,40 @@
 }
 @end
 
+@implementation FHDisclaimerModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"richText": @"rich_text",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
+@implementation FHDisclaimerModelDisclaimerRichTextModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"highlightRange": @"highlight_range",
+                           @"linkUrl": @"link_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
 {
