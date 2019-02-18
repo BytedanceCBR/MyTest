@@ -110,10 +110,12 @@
 }
 
 -(NSDictionary *)categoryLogDict {
+    NSInteger badgeNumber = [[self.viewModel messageBridgeInstance] getMessageTabBarBadgeNumber];
+    
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"enter_type"] = @"click_tab";
     tracerDict[@"tab_name"] = @"message";
-    tracerDict[@"with_tips"] = @"0";
+    tracerDict[@"with_tips"] = badgeNumber > 0 ? @"1" : @"0";
     
     return tracerDict;
 }

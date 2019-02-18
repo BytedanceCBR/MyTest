@@ -12,30 +12,24 @@
 #import "FHMineViewModel.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
+#import "UIViewController+Track.h"
+#import "FHTracerModel.h"
+#import "FHUserTracker.h"
 
 @interface FHMineViewController ()
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) FHMineViewModel *viewModel;
-@property (nonatomic , strong) NSDate *enterDate;
+@property (nonatomic, strong) NSDate *enterDate;
+@property (nonatomic, assign) NSTimeInterval lastRequestFavoriteTime;
 
 @end
 
 @implementation FHMineViewController
 
--(instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-//        self.tracerModel = [[FHTracerModel alloc] init];
-//        self.tracerModel.originFrom = UT_OF_MINE;
-//        self.tracerModel.enterFrom = UT_OF_MINE;
-//        self.tracerModel.categoryName = [self categoryName];
-    }
-    return self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.ttTrackStayEnable = YES;
     
     [self initNavbar];
     [self initView];
@@ -44,24 +38,23 @@
     [self setupHeaderView];
 }
 
-//- (NSString *)categoryName {
-//    return UT_OF_MINE;//@"user_profile";
-//}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [self.viewModel requestData];
-    [self.viewModel updateHeaderView];
+    [self loadData];
 }
 
-- (void)initNavbar
-{
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)initNavbar {
     self.ttHideNavigationBar = YES;
 }
 
-- (void)initView
-{
+- (void)initView {
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -73,8 +66,7 @@
     }
 }
 
-- (void)initConstraints
-{
+- (void)initConstraints {
     CGFloat bottom = 49;
     CGFloat top = 0;
     if (@available(iOS 11.0 , *)) {
@@ -89,13 +81,11 @@
     }];
 }
 
-- (void)initViewModel
-{
+- (void)initViewModel {
     self.viewModel = [[FHMineViewModel alloc] initWithTableView:_tableView controller:self];
 }
 
-- (void)setupHeaderView
-{
+- (void)setupHeaderView {
     FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 136)];
     headerView.userInteractionEnabled = YES;
     _tableView.tableHeaderView = headerView;
@@ -105,43 +95,38 @@
     [headerView addGestureRecognizer:gesture];
 }
 
--(void)showInfo
-{
+- (void)loadData {
+    [self.viewModel updateHeaderView];
+    
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970] - self.lastRequestFavoriteTime;
+    if(currentTime > 2){
+        [self.viewModel requestData];
+        self.lastRequestFavoriteTime = currentTime;
+    }
+}
+
+- (void)showInfo {
     [self.viewModel showInfo];
 }
 
-//-(void)enterTab:(FHTabEnterType)tab
-//{
-    /*
-     "1. event_type：house_app2b
-     2. tab_name：tab名称：{客户：customer，消息：message，我的：mine，房源：house}
-     3. enter_type：进入tab方式：{点击tab：'click_tab，默认：default
-     4. with_tips：(是否有红点：是，否)[1，0]"
-     */
-//    NSString *enterType = tab == FHTabEnterTypeClick?@"click_tab":@"default";
-//    self.tracerModel.enterType = enterType;
-//    NSMutableDictionary *dict = [NSMutableDictionary new];//[self.tracerModel logDict];
-//    dict[@"with_tips"] = @"0";
-//    dict[@"tab_name"] = @"mine";
-//    dict[UT_ENTER_TYPE] = enterType;
-//    TRACK_EVENT(@"enter_tab", dict);
-//
-//    self.enterDate = [NSDate date];
-//}
+-(NSDictionary *)categoryLogDict {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"enter_type"] = @"click_tab";
+    tracerDict[@"tab_name"] = @"mine";
+    tracerDict[@"with_tips"] = @"0";
+    
+    return tracerDict;
+}
 
-//-(void)leaveTab
-//{
-//    NSTimeInterval duration = [[NSDate date] timeIntervalSinceDate:self.enterDate];
-//    if (duration <= 0 || duration >= 24*60*60) {
-//        return;
-//    }
-//
-//    NSMutableDictionary *dict = [NSMutableDictionary new];//[self.tracerModel logDict];
-//    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
-//    dict[UT_ENTER_TYPE]  = self.tracerModel.enterType;
-//    dict[@"with_tips"] = @"0";
-//    dict[@"tab_name"] = @"mine";
-//    TRACK_EVENT(@"stay_tab", dict);
-//}
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    TRACK_EVENT(@"stay_tab", tracerDict);
+}
 
 @end

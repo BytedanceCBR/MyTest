@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHMessageBridgeProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestData;
 
--(void)addStayCategoryLog:(NSTimeInterval)stayTime;
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime;
+
+- (id<FHMessageBridgeProtocol>)messageBridgeInstance;
 
 @end
 

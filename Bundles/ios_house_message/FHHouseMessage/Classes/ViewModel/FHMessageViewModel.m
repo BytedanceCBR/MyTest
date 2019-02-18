@@ -21,6 +21,7 @@
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMessageViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
+@property(nonatomic, strong) id<FHMessageBridgeProtocol> messageBridge;
 
 @end
 
@@ -49,7 +50,7 @@
 -(void)requestData {
     [self.requestTask cancel];
     
-    [self trackRefresh];
+//    [self trackRefresh];
     __weak typeof(self) wself = self;
     
     if(self.dataList.count == 0){
@@ -95,15 +96,16 @@
 
 - (void)clearBadgeNumber
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"kClearMessageTabBarBadgeNumberNotification" object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"kClearMessageTabBarBadgeNumberNotification" object:nil];
+    [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
 }
 
 //消息列表页刷新 埋点
-- (void)trackRefresh {
+//- (void)trackRefresh {
 //    NSMutableDictionary *dict = [self.viewController.tracerModel logDict];
 //    dict[@"refresh_type"] = @"default";
 //    TRACK_EVENT(@"category_refresh", dict);
-}
+//}
 
 #pragma mark - UITableViewDataSource
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -135,7 +137,8 @@
     
     if([model.unread integerValue] > 0){
         // Tab消息个数减少
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeMessageTabBarBadge" object:model.unread];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeMessageTabBarBadge" object:model.unread];
+        [[self messageBridgeInstance] reduceMessageTabBarBadgeNumber:[model.unread integerValue]];
         
         model.unread = @"0";
         FHMessageCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
@@ -150,6 +153,16 @@
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+- (id<FHMessageBridgeProtocol>)messageBridgeInstance {
+    if (!_messageBridge) {
+        Class classBridge = NSClassFromString(@"FHMessageBridgeImp");
+        if (classBridge) {
+            _messageBridge = [[classBridge alloc] init];
+        }
+    }
+    return _messageBridge;
 }
 
 @end
