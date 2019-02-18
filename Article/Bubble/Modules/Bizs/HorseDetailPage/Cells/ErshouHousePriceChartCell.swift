@@ -62,7 +62,7 @@ class ErshouHousePriceChartCell: BaseUITableViewCell , RefreshableTableViewCell 
     var monthFormatter = FHMonthValueFormatter()
     
     lazy var bgView: UIImageView = {
-        let re = UIImageView(image: UIImage(named: "group-7"))
+        let re = UIImageView(image: UIImage(named: "detail_chart_bg"))
         re.contentMode = .scaleAspectFill
         re.layer.masksToBounds = true
         return re
@@ -752,9 +752,9 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData,traceExtension: Trace
                 theCell.priceUpValueLabel.text = String(format: "%.2f%%", abs(priceUp))
                 theCell.monthUpTrend.isHidden = false
                 if priceUp > 0 {
-                    theCell.priceUpTrend.image = UIImage(named: "ion-arrow-up-a-ionicons")
+                    theCell.priceUpTrend.image = UIImage(named: "detail_trend_red")
                 } else {
-                    theCell.priceUpTrend.image = UIImage(named: "ion-arrow-down-a-ionicons")
+                    theCell.priceUpTrend.image = UIImage(named: "detail_trend_green")
                 }
             }
         }else {
@@ -772,9 +772,9 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData,traceExtension: Trace
                 theCell.monthUpValueLabel.text = String(format: "%.2f%%", arguments: [absValue])
                 theCell.monthUpTrend.isHidden = false
                 if monthUp > 0 {
-                    theCell.monthUpTrend.image = #imageLiteral(resourceName: "monthup_trend_up")
+                    theCell.monthUpTrend.image = UIImage(named: "detail_month_red")
                 } else {
-                    theCell.monthUpTrend.image = #imageLiteral(resourceName: "monthup_trend_down")
+                    theCell.monthUpTrend.image = UIImage(named: "detail_month_green")
                 }
             }
         }

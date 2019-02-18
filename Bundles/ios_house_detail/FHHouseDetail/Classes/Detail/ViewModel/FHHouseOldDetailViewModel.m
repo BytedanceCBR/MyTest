@@ -223,6 +223,8 @@
         if (model.data.priceTrend.count > 0) {
             FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
             priceTrendModel.priceTrends = model.data.priceTrend;
+            priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
+            priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
             [self.items addObject:priceTrendModel];
         }
     }

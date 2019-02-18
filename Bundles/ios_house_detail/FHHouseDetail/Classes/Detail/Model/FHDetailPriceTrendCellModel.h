@@ -6,14 +6,16 @@
 //
 
 #import "FHDetailBaseModel.h"
+#import "FHDetailOldModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHDetailPriceTrendModel;
+
 @interface FHDetailPriceTrendCellModel : FHDetailBaseModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel *> *priceTrends;
-
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo;
+@property (nonatomic, copy , nullable) NSString *pricingPerSqmV;
 @end
 
 NS_ASSUME_NONNULL_END
