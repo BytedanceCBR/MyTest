@@ -25,7 +25,6 @@
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
 #import "FHDetailErshouPriceChartCell.h"
-#import "FHDetailNeighborPriceChartCell.h"
 #import "FHDetailDisclaimerCell.h"
 
 @interface FHHouseOldDetailViewModel ()
@@ -54,6 +53,8 @@
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseCell class])];
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseCell class])];
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
+    [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouPriceChartCell class])];
+
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -108,6 +109,10 @@
     // 免责声明
     if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
         return [FHDetailDisclaimerCell class];
+    }
+    // 均价走势
+    if ([model isKindOfClass:[FHDetailErshouPriceTrendModel class]]) {
+        return [FHDetailErshouPriceChartCell class];
     }
     return [FHDetailBaseCell class];
 }
