@@ -24,6 +24,8 @@
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
+#import "FHDetailErshouPriceChartCell.h"
+#import "FHDetailNeighborPriceChartCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
