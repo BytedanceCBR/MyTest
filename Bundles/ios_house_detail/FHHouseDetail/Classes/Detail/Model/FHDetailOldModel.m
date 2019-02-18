@@ -175,15 +175,6 @@
 }
 @end
 
-
-
-@implementation FHDetailOldDataPriceTrendModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailDataBaseInfoModel
 
 + (JSONKeyMapper*)keyMapper
