@@ -20,6 +20,7 @@
 #import "FHDetailRentFacilityCell.h"
 #import "FHDetailRentHouseOutlineInfoCell.h"
 #import "FHDetailRentSameNeighborhoodHouseCell.h"
+#import "FHDetailRentRelatedHouseCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -41,6 +42,7 @@
     [self.tableView registerClass:[FHDetailRentFacilityCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentFacilityCell class])];
     [self.tableView registerClass:[FHDetailRentHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseOutlineInfoCell class])];
     [self.tableView registerClass:[FHDetailRentSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentSameNeighborhoodHouseCell class])];
+    [self.tableView registerClass:[FHDetailRentRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentRelatedHouseCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -75,6 +77,10 @@
     // 同小区房源
     if ([model isKindOfClass:[FHDetailRentSameNeighborhoodHouseModel class]]) {
         return [FHDetailRentSameNeighborhoodHouseCell class];
+    }
+    // 周边房源
+    if ([model isKindOfClass:[FHDetailRentRelatedHouseModel class]]) {
+        return [FHDetailRentRelatedHouseCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -184,11 +190,11 @@
         // 周边房源
         if (self.relatedHouseData) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//            [self.items addObject:grayLine];
-//            FHDetailRelatedHouseModel *infoModel = [[FHDetailRelatedHouseModel alloc] init];
-//            infoModel.relatedHouseData = self.relatedHouseData;
-//            [self.items addObject:infoModel];
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailRentRelatedHouseModel *infoModel = [[FHDetailRentRelatedHouseModel alloc] init];
+            infoModel.relatedHouseData = self.relatedHouseData;
+            [self.items addObject:infoModel];
         }
         // 免责声明
         //
