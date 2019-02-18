@@ -8,7 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHUnreadMsgModel.h"
 #import "TTBadgeNumberView.h"
-
+#import "IMConversation.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMessageCell : UITableViewCell
@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) TTBadgeNumberView *unreadView;
 
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model;
+- (void)updateWithChat:(IMConversation*)conversation;
 
 @end
 

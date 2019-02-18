@@ -116,4 +116,31 @@
     self.unreadView.badgeNumber = [model.unread integerValue] == 0 ? TTBadgeNumberHidden : [model.unread integerValue];
 }
 
+- (void)updateWithChat:(IMConversation*)conversation {
+    IMConversation* conv = conversation;
+    self.unreadView.badgeNumber = conv.unreadCount;
+    [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:@"default_image"]];
+
+    self.titleLabel.text = conv.conversationDisplayName;
+    self.subTitleLabel.text = [conv lastMessage];
+//    self.timeLabel.text = conv.updatedAt;
+}
+
+//- (NSString *)timestampToDataString:(NSString *)timestamp {
+//    // iOS 生成的时间戳是10位
+//    NSString *dateString = @"";
+//    NSTimeInterval interval = [timestamp doubleValue];
+//    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
+//
+//    if([date isToday]){
+//        dateString = [NSDate getDateDesWithDate:date dateFormatterStr:@"HH:mm"];
+//    }else if([date isThisYear]){
+//        dateString = [NSDate getDateDesWithDate:date dateFormatterStr:@"MM/dd"];
+//    }else{
+//        dateString = [NSDate getDateDesWithDate:date dateFormatterStr:@"yyyy/MM/dd"];
+//    }
+//
+//    return dateString;
+//}
+
 @end
