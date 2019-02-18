@@ -284,6 +284,7 @@ PODS:
   - FHHouseHome (0.1.1)
   - FHHouseList (0.1.0)
   - FHHouseMessage (0.1.0)
+  - FHHouseMine (0.1.0)
   - FHHouseRent (0.1.0)
   - FHMapSearch (0.1.0)
   - FLAnimatedImage (1.0.12)
@@ -1202,6 +1203,7 @@ DEPENDENCIES:
   - FHHouseHome (from `../Bundles/ios_house_home`)
   - FHHouseList (from `../Bundles/ios_house_list`)
   - FHHouseMessage (from `../Bundles/ios_house_message`)
+  - FHHouseMine (from `../Bundles/ios_house_mine`)
   - FHHouseRent (from `../Bundles/ios_house_rent`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
   - FLEX (= 2.1.1)
@@ -1370,6 +1372,8 @@ EXTERNAL SOURCES:
     :path: ../Bundles/ios_house_list
   FHHouseMessage:
     :path: ../Bundles/ios_house_message
+  FHHouseMine:
+    :path: ../Bundles/ios_house_mine
   FHHouseRent:
     :path: ../Bundles/ios_house_rent
   FHMapSearch:
@@ -1481,6 +1485,7 @@ SPEC CHECKSUMS:
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
   FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
+  FHHouseMine: c0c197cb55d97e3357427d2a1731a7ab4225d94b
   FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FLAnimatedImage: 09a3ee0b4246b03d85212884ccac54b5ffcd4945
@@ -1584,6 +1589,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: ce7830fd51982797d659146028ddc42010f8b02f
+PODFILE CHECKSUM: a1ff6a52b8d4578768bd01e6c7ff2df844171a87
 
 COCOAPODS: 1.4.0
