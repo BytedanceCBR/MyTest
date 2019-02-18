@@ -15,6 +15,9 @@
 #import "FHRentSameNeighborhoodResponse.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
 #import "FHDetailNeighborPriceChartCell.h"
+#import "FHDetailNeighborhoodNameCell.h"
+#import "FHDetailGrayLineCell.h"
+#import "FHDetailNeighborhoodStatsInfoCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -31,12 +34,27 @@
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborPriceChartCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodNameCell class])];
+    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
+     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoCell class])];
 
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
+    }
+    // 标题
+    if ([model isKindOfClass:[FHDetailNeighborhoodNameModel class]]) {
+        return [FHDetailNeighborhoodNameCell class];
+    }
+    // 灰色分割线
+    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+        return [FHDetailGrayLineCell class];
+    }
+    // 在售（在租）信息
+    if ([model isKindOfClass:[FHDetailNeighborhoodStatsInfoModel class]]) {
+        return [FHDetailNeighborhoodStatsInfoCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -81,6 +99,20 @@
         headerCellModel.houseImage = model.data.neighborhoodImage;
         [self.items addObject:headerCellModel];
     }
+    // 添加标题
+    if (model.data) {
+        FHDetailNeighborhoodNameModel *houseName = [[FHDetailNeighborhoodNameModel alloc] init];
+        houseName.name = model.data.name;
+        houseName.neighborhoodInfo = model.data.neighborhoodInfo;
+        [self.items addObject:houseName];
+    }
+    // 添加 在售（在租）信息
+    if (model.data.statsInfo.count > 0) {
+        FHDetailNeighborhoodStatsInfoModel *infoModel = [[FHDetailNeighborhoodStatsInfoModel alloc] init];
+        infoModel.statsInfo = model.data.statsInfo;
+        [self.items addObject:infoModel];
+    }
+    
     [self reloadData];
 }
 
