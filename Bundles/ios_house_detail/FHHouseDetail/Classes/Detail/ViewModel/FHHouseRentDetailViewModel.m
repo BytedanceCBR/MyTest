@@ -21,6 +21,7 @@
 #import "FHDetailRentHouseOutlineInfoCell.h"
 #import "FHDetailRentSameNeighborhoodHouseCell.h"
 #import "FHDetailRentRelatedHouseCell.h"
+#import "FHDetailDisclaimerCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -43,6 +44,7 @@
     [self.tableView registerClass:[FHDetailRentHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseOutlineInfoCell class])];
     [self.tableView registerClass:[FHDetailRentSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentSameNeighborhoodHouseCell class])];
     [self.tableView registerClass:[FHDetailRentRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentRelatedHouseCell class])];
+    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -81,6 +83,10 @@
     // 周边房源
     if ([model isKindOfClass:[FHDetailRentRelatedHouseModel class]]) {
         return [FHDetailRentRelatedHouseCell class];
+    }
+    // 免责声明
+    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
+        return [FHDetailDisclaimerCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -197,6 +203,13 @@
             [self.items addObject:infoModel];
         }
         // 免责声明
+        FHRentDetailResponseModel * model = (FHRentDetailResponseModel *)self.detailData;
+        if (model.data.contact || model.data.disclaimer) {
+            FHDetailDisclaimerModel *infoModel = [[FHDetailDisclaimerModel alloc] init];
+            infoModel.disclaimer = model.data.disclaimer;
+            infoModel.contact = model.data.contact;
+            [self.items addObject:infoModel];
+        }
         //
         [self reloadData];
     }

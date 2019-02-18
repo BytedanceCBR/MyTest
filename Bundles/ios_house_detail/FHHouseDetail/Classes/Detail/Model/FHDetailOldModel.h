@@ -128,23 +128,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *priceChangeDesc;
 @end
 
-@protocol FHDisclaimerModelDisclaimerRichTextModel<NSObject>
-@end
-
-@interface FHDisclaimerModelDisclaimerRichTextModel : JSONModel
-
-@property (nonatomic, strong , nullable) NSArray *highlightRange;
-@property (nonatomic, copy , nullable) NSString *linkUrl;
-@end
-
-
-@interface FHDisclaimerModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *text;
-@property (nonatomic, strong , nullable) NSArray<FHDisclaimerModelDisclaimerRichTextModel> *richText;
-
-@end
-
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;

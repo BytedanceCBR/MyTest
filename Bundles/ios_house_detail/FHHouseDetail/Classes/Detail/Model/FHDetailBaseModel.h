@@ -104,6 +104,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailUserFollowStatusModel *data;
 
 @end
+
+@protocol FHDisclaimerModelDisclaimerRichTextModel<NSObject>
+@end
+
+@interface FHDisclaimerModelDisclaimerRichTextModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<NSNumber*> *highlightRange;
+@property (nonatomic, copy , nullable) NSString *linkUrl;
+@end
+
+
+@interface FHDisclaimerModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, strong , nullable) NSArray<FHDisclaimerModelDisclaimerRichTextModel> *richText;
+
+@end
+
 // 二手房、租房共用 协议
 @protocol FHDetailDataBaseInfoModel<NSObject>
 @end
