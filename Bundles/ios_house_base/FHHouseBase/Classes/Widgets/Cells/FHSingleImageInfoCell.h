@@ -26,6 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)refreshBottomMargin:(CGFloat)bottom;
 
+// 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
+- (void)refreshWithData:(id)data;
+
 @end
 
 NS_ASSUME_NONNULL_END

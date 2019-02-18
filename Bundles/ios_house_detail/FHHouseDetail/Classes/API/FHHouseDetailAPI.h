@@ -12,9 +12,9 @@
 #import "FHMainApi.h"
 
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel;
-@class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel;
+@class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel;
 @class FHHouseRentRelatedResponseModel,FHRentSameNeighborhoodResponseModel;
-@class FHDetailResponseModel,FHDetailUserFollowResponseModel;
+@class FHDetailResponseModel,FHDetailVirtualNumResponseModel,FHDetailUserFollowResponseModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -91,7 +91,7 @@ typedef enum : NSUInteger {
                           houseType:(FHHouseType)houseType
                            searchId:(NSString*)searchId
                              imprId:(NSString*)imprId
-                         completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
+                         completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注
 + (TTHttpTask*)requestFollow:(NSString*)followId
@@ -104,6 +104,20 @@ typedef enum : NSUInteger {
                          houseType:(FHHouseType)houseType
                         actionType:(FHFollowActionType)actionType
                         completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 新房-周边新盘
++(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 新房-楼盘动态
++(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
 @end
 
 

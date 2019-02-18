@@ -23,15 +23,30 @@
 #import <TTWechatActivity.h>
 #import <TTQQFriendActivity.h>
 #import <TTQQZoneActivity.h>
+#import "FHHouseDetailAPI.h"
+#import "TTReachability.h"
+#import "FHHouseDetailFollowUpViewModel.h"
+#import "FHHouseDetailPhoneCallViewModel.h"
+#import "NSDictionary+TTAdditions.h"
+#import "FHDetailNoticeAlertView.h"
+#import "YYCache.h"
+#import "FHURLSettings.h"
+#import "TTRoute.h"
+#import "ToastManager.h"
 
+NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 
+extern NSString *const kFHToastCountKey;
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
-
 @property (nonatomic, strong) TTShareManager *shareManager;
+@property (nonatomic, strong)FHHouseDetailFollowUpViewModel *followUpViewModel;
+@property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property(nonatomic , strong) YYCache *sendPhoneNumberCache;
+@property(nonatomic , weak) FHDetailNoticeAlertView *alertView;
 
 @end
 
@@ -41,6 +56,10 @@
 {
     self = [super init];
     if (self) {
+        
+        _followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
+        _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]init];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
         
         _navBar = navBar;
         _bottomBar = bottomBar;
@@ -56,19 +75,47 @@
             [wself jump2RealtorDetail];
         };
  
-        _navBar.collectActionBlock = ^{
-            [wself collectAction];
+        _navBar.collectActionBlock = ^(BOOL followStatus){
+            if (!followStatus) {
+                
+                [wself followAction];
+            }else {
+                [wself cancelFollowAction];
+            }
         };
         _navBar.shareActionBlock = ^{
             [wself shareAction];
         };
+
     }
     return self;
 }
 
-- (void)collectAction
+- (void)refreshFollowStatus:(NSNotification *)noti
 {
+    NSDictionary *userInfo = noti.userInfo;
+    NSString *followId = [userInfo tt_stringValueForKey:@"followId"];
+    BOOL followStatus = [userInfo tt_boolValueForKey:@"followStatus"];
+    if (![followId isEqualToString:self.houseId]) {
+        return;
+    }
+    [self.navBar setFollowStatus:followStatus];
 
+}
+- (void)setFollowStatus:(BOOL)followStatus
+{
+    _followStatus = followStatus;
+    [self.navBar setFollowStatus:followStatus];
+}
+
+- (void)followAction
+{
+    [self.followUpViewModel followHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType];
+}
+
+- (void)cancelFollowAction
+{
+    [self.followUpViewModel cancelFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType];
 }
 
 - (void)shareAction
@@ -133,20 +180,115 @@
 {
     if (self.contactPhone.phone.length < 1) {
         // 填表单
+        [self fillFormAction];
     }else {
         // 拨打电话
-        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", self.contactPhone.phone];
-        NSURL *url = [NSURL URLWithString:urlStr];
-        if ([[UIApplication sharedApplication]canOpenURL:url]) {
-            if (@available(iOS 10.0, *)) {
-                [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
-            } else {
-                // Fallback on earlier versions
-                [[UIApplication sharedApplication]openURL:url];
+        [self callAction];
+    }
+}
+
+- (void)fillFormAction
+{
+    NSString *title = @"询底价";
+    NSString *subtitle = @"提交后将安排专业经纪人与您联系";
+    NSString *btnTitle = @"获取底价";
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        title = @"咨询经纪人";
+        btnTitle = @"提交";
+    }
+    __weak typeof(self)wself = self;
+    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    alertView.phoneNum = [self.sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    alertView.confirmClickBlock = ^(NSString *phoneNum){
+        [wself fillFormRequest:phoneNum];
+    };
+    alertView.tipClickBlock = ^{
+        
+        NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+        NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+        [[TTRoute sharedRoute]openURLByPushViewController:url];
+    };
+    [alertView showFrom:nil];
+    self.alertView = alertView;
+}
+
+- (void)fillFormRequest:(NSString *)phoneNum
+{
+    __weak typeof(self)wself = self;
+    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:self.houseId phone:phoneNum from:[self fromStrByHouseType:self.houseType] completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+        
+        if (model.status.integerValue == 0 && !error) {
+
+            [wself.alertView dismiss];
+            [wself.sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+            NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
+            if (toastCount >= 3) {
+                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
             }
+        }else {
+            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+        }
+    }];
+    // 静默关注功能
+    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:YES];
+}
+
+- (NSString *)fromStrByHouseType:(FHHouseType)houseType
+{
+    switch (houseType) {
+        case FHHouseTypeNewHouse:
+            return @"app_court";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"app_oldhouse";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"app_neighbourhood";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"app_rent";
+            break;
+        default:
+            break;
+    }
+    return @"be_null";
+}
+
+- (void)callAction
+{
+    __weak typeof(self)wself = self;
+    if (![TTReachability isNetworkConnected]) {
+        
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
+        [self callPhone:urlStr];
+        return;
+    }
+    [self.bottomBar startLoading];
+    [FHHouseDetailAPI requestVirtualNumber:self.contactPhone.phone houseId:self.houseId houseType:self.houseType searchId:self.searchId imprId:self.imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+        
+        [wself.bottomBar stopLoading];
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", wself.contactPhone.phone];
+        if (!error && model.data.virtualNumber.length > 0) {
+            urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
+        }
+        [wself callPhone:urlStr];
+    }];
+    // 静默关注功能
+    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+}
+
+- (void)callPhone:(NSString *)phone
+{
+    NSURL *url = [NSURL URLWithString:phone];
+    if ([[UIApplication sharedApplication]canOpenURL:url]) {
+        if (@available(iOS 10.0, *)) {
+            [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
+        } else {
+            // Fallback on earlier versions
+            [[UIApplication sharedApplication]openURL:url];
         }
     }
-    // 关注功能
 }
 
 - (void)licenseAction
@@ -262,5 +404,18 @@
         _shareManager = [[TTShareManager alloc]init];
     }
     return _shareManager;
+}
+
+- (YYCache *)sendPhoneNumberCache
+{
+    if (!_sendPhoneNumberCache) {
+        _sendPhoneNumberCache = [[YYCache alloc]initWithName:@"phonenumber"];
+    }
+    return _sendPhoneNumberCache;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 @end

@@ -9,6 +9,9 @@
 #import <TTRoute.h>
 #import <TTArticleCategoryManager.h>
 #import "FHEnvContext.h"
+#import <TTNetworkManager.h>
+
+#define kFHHomeHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 @interface FHHomeConfigManager()
 
@@ -125,5 +128,7 @@
     }
     return _fhHomeBridge;
 }
+
+
 
 @end

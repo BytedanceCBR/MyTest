@@ -3579,7 +3579,7 @@
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -5813,6 +5813,10 @@
 		F8893C811FCE5F4200C76EBB /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
 		F899BB6F1FA5BC6200640D94 /* TTVMidInsertADGuideCountdownView.m in Sources */ = {isa = PBXBuildFile; fileRef = F899BB6E1FA5BC6200640D94 /* TTVMidInsertADGuideCountdownView.m */; };
 		F8ACFFC61F711FED0018A89F /* Article+TTADComputedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = F8ACFFC51F711FED0018A89F /* Article+TTADComputedProperties.m */; };
+		FB3224E7221999CD008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
+		FB3224EA2219A08F008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
+		FB3224EB2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
+		FB3224EC2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
 		FE0011122041119A009D8C4E /* TTActivityTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE00111120411199009D8C4E /* TTActivityTaskManager.m */; };
 		FE006D271F1B5FA9004E6188 /* JSONModel+Monitor.m in Sources */ = {isa = PBXBuildFile; fileRef = FE006D261F1B5FA9004E6188 /* JSONModel+Monitor.m */; };
 		FE006D2D1F1B6511004E6188 /* TTFeedbackUploadImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE006D2C1F1B6511004E6188 /* TTFeedbackUploadImageManager.m */; };
@@ -10741,6 +10745,8 @@
 		F899BB731FA5FB7500640D94 /* TTVADGuideCountdownViewProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTVADGuideCountdownViewProtocol.h; sourceTree = "<group>"; };
 		F8ACFFC41F711FED0018A89F /* Article+TTADComputedProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article+TTADComputedProperties.h"; sourceTree = "<group>"; };
 		F8ACFFC51F711FED0018A89F /* Article+TTADComputedProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Article+TTADComputedProperties.m"; sourceTree = "<group>"; };
+		FB3224E5221999CD008DFB8D /* FHMessageBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMessageBridgeImp.h; sourceTree = "<group>"; };
+		FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHMessageBridgeImp.m; sourceTree = "<group>"; };
 		FE00111020411199009D8C4E /* TTActivityTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTActivityTaskManager.h; sourceTree = "<group>"; };
 		FE00111120411199009D8C4E /* TTActivityTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTActivityTaskManager.m; sourceTree = "<group>"; };
 		FE006D251F1B5FA9004E6188 /* JSONModel+Monitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSONModel+Monitor.h"; sourceTree = "<group>"; };
@@ -10957,7 +10963,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -12623,6 +12629,7 @@
 		3D2D487D21A28E590011A0EC /* House */ = {
 			isa = PBXGroup;
 			children = (
+				FB3224E4221999B7008DFB8D /* HouseMessage */,
 				D46DA52321A43B74009D50C7 /* HouseHome */,
 				3D2D487E21A28E590011A0EC /* Bridge */,
 				760CF74221ABE7A00006BE07 /* WebView */,
@@ -19322,6 +19329,15 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		FB3224E4221999B7008DFB8D /* HouseMessage */ = {
+			isa = PBXGroup;
+			children = (
+				FB3224E5221999CD008DFB8D /* FHMessageBridgeImp.h */,
+				FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */,
+			);
+			path = HouseMessage;
+			sourceTree = "<group>";
+		};
 		FE00110F20411199009D8C4E /* TTActivityTaskManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -22897,6 +22913,7 @@
 				48C8A6B81F1362D000A52D8B /* UIViewController+TabBarSnapShot.m in Sources */,
 				7B4772561CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m in Sources */,
 				B388CC042142652B00653188 /* ChatDetailListCell.swift in Sources */,
+				FB3224E7221999CD008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				F219DFA71F68178300E3FC07 /* TSVWaterfallCollectionViewCellHelper.m in Sources */,
 				06C5184F1AAC65AC00C2B2E3 /* SSDebugDNSViewController.m in Sources */,
 				ABBEA6061F333110005DAD27 /* TTInterestViewController.m in Sources */,
@@ -23827,6 +23844,7 @@
 				B373C9892174587A008F9905 /* AccountConfig.swift in Sources */,
 				B373C98A2174587A008F9905 /* TTProfileFunctionCell.m in Sources */,
 				3DF363B121A29D9F0097FCB6 /* InformationCell.swift in Sources */,
+				FB3224EB2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				B373C98B2174587A008F9905 /* ExploreArticleHotNewsCell.m in Sources */,
 				B373C98C2174587A008F9905 /* TTUnifyADPicCategoryLargePicCell.m in Sources */,
 				B373C98D2174587A008F9905 /* TTWeakPushAlertView.m in Sources */,
@@ -25554,6 +25572,7 @@
 				D479525D21ECC94E00548965 /* AccountConfig.swift in Sources */,
 				D479525E21ECC94E00548965 /* TTProfileFunctionCell.m in Sources */,
 				D479525F21ECC94E00548965 /* InformationCell.swift in Sources */,
+				FB3224EC2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				D479526021ECC94E00548965 /* ExploreArticleHotNewsCell.m in Sources */,
 				D479526121ECC94E00548965 /* TTUnifyADPicCategoryLargePicCell.m in Sources */,
 				D479526221ECC94E00548965 /* TTWeakPushAlertView.m in Sources */,
@@ -27281,6 +27300,7 @@
 				B388CB372142652A00653188 /* AccountConfig.swift in Sources */,
 				FEFA5427205FB1A8001F50D8 /* TTProfileFunctionCell.m in Sources */,
 				3DF363B021A29D9F0097FCB6 /* InformationCell.swift in Sources */,
+				FB3224EA2219A08F008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				FEFA5429205FB1A8001F50D8 /* ExploreArticleHotNewsCell.m in Sources */,
 				FEFA542A205FB1A8001F50D8 /* TTUnifyADPicCategoryLargePicCell.m in Sources */,
 				FEFA542C205FB1A8001F50D8 /* TTWeakPushAlertView.m in Sources */,

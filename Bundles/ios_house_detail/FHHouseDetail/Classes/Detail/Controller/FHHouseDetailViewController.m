@@ -24,6 +24,8 @@
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, copy)   NSString* searchId;
+@property (nonatomic, copy)   NSString* imprId;
 
 @end
 
@@ -34,7 +36,10 @@
     if (self) {
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.houseId = paramObj.allParams[@"house_id"];
-        
+        // TODO: 埋点相关字段
+        self.searchId = paramObj.allParams[@"search_id"];
+        self.imprId = paramObj.allParams[@"impr_id"];
+
     }
     return self;
 }
@@ -86,9 +91,12 @@
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
 
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc]initWithNavBar:_navBar bottomBar:_bottomBar];
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar];
     self.viewModel.contactViewModel.houseType = self.houseType;
-    
+    self.viewModel.contactViewModel.houseId = self.houseId;
+    self.viewModel.contactViewModel.searchId = self.searchId;
+    self.viewModel.contactViewModel.imprId = self.imprId;
+
     [self addDefaultEmptyViewFullScreen];
 
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -132,6 +140,16 @@
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
     }
+}
+
+- (UIView *)getNaviBar
+{
+    return self.navBar;
+}
+
+- (UIView *)getBottomBar
+{
+    return self.bottomBar;
 }
 
 @end

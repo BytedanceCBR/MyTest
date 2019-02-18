@@ -53,7 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailOldDataHousePricingRankBuySuggestionModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *type;
+@property (nonatomic, copy , nullable) NSString *type;//(1 建议,2普通,3不建议)
 @end
 
 @interface FHDetailOldDataHousePricingRankModel : JSONModel
@@ -66,8 +66,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailOldDataUserStatusModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *pricingSubStauts;
-@property (nonatomic, copy , nullable) NSString *houseSubStatus;
+@property (nonatomic, assign) NSInteger pricingSubStauts;
+@property (nonatomic, assign) NSInteger houseSubStatus;
 @end
 
 @protocol FHDetailOldDataHouseOverreviewListModel<NSObject>
@@ -129,6 +129,23 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *priceChangeDesc;
 @end
 
+@protocol FHDisclaimerModelDisclaimerRichTextModel<NSObject>
+@end
+
+@interface FHDisclaimerModelDisclaimerRichTextModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray *highlightRange;
+@property (nonatomic, copy , nullable) NSString *linkUrl;
+@end
+
+
+@interface FHDisclaimerModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, strong , nullable) NSArray<FHDisclaimerModelDisclaimerRichTextModel> *richText;
+
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
@@ -153,8 +170,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
+@property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
+@property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
 @end
 
 @interface FHDetailOldModel : JSONModel

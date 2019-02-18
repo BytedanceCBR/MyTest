@@ -285,6 +285,7 @@ PODS:
   - FHHouseHome (0.1.1)
   - FHHouseList (0.1.0)
   - FHHouseMessage (0.1.0)
+  - FHHouseMine (0.1.0)
   - FHHouseRent (0.1.0)
   - FHMapSearch (0.1.0)
   - FLAnimatedImage (1.0.12)
@@ -530,7 +531,7 @@ PODS:
   - OHHTTPStubs/NSURLSession (4.2.1):
     - OHHTTPStubs/Core
   - OHHTTPStubs/OHPathHelpers (4.2.1)
-  - OpenSSL-Universal (1.0.1.20)
+  - OpenSSL-Universal (1.0.2.13)
   - OpenUDID (0.1.0)
   - Protobuf (3.0.1-ttv)
   - React/Core (0.37.0)
@@ -1300,6 +1301,7 @@ DEPENDENCIES:
   - FHHouseHome (from `../Bundles/ios_house_home`)
   - FHHouseList (from `../Bundles/ios_house_list`)
   - FHHouseMessage (from `../Bundles/ios_house_message`)
+  - FHHouseMine (from `../Bundles/ios_house_mine`)
   - FHHouseRent (from `../Bundles/ios_house_rent`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
   - FLEX (= 2.1.1)
@@ -1473,6 +1475,8 @@ EXTERNAL SOURCES:
     :path: ../Bundles/ios_house_list
   FHHouseMessage:
     :path: ../Bundles/ios_house_message
+  FHHouseMine:
+    :path: ../Bundles/ios_house_mine
   FHHouseRent:
     :path: ../Bundles/ios_house_rent
   FHMapSearch:
@@ -1587,6 +1591,7 @@ SPEC CHECKSUMS:
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
   FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
+  FHHouseMine: c0c197cb55d97e3357427d2a1731a7ab4225d94b
   FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FLAnimatedImage: 09a3ee0b4246b03d85212884ccac54b5ffcd4945
@@ -1610,7 +1615,7 @@ SPEC CHECKSUMS:
   MJExtension: 61bcf70d30acf0a09dde48e68502da0fde8eeafa
   MJRefresh: 2657684287cf4998d98c4ec55f17bde6308d173c
   OHHTTPStubs: cad9b4341be7b8b5051ec5b16264d8607458818d
-  OpenSSL-Universal: 6f05fcf94f2c5f5114c56c5da02080c0f674419a
+  OpenSSL-Universal: 401888162f11c33ebbd46f782d9229da35c61327
   OpenUDID: ee6ece43513e675030bd04fcfa97a8c1f16b69cb
   Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
   React: aa8f585cbea131b6781c6ad7a1aee436e1ac5ddf
@@ -1700,6 +1705,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: 31f9d98b3ac1201eb056ff390c431893cd346152
+PODFILE CHECKSUM: 5b0d551155c679116ce089ce5c0e92222193aba7
 
 COCOAPODS: 1.4.0

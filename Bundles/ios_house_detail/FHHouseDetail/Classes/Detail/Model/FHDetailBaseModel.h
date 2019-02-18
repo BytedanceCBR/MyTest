@@ -48,6 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@protocol FHDetailContactModel<NSObject>
+@end
+
 @interface FHDetailContactModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *style;
@@ -70,6 +73,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
+
+@end
+
+@interface  FHDetailVirtualNumModel  : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *realtorId;
+@property (nonatomic, copy , nullable) NSString *virtualNumber;
+
+@end
+
+@interface  FHDetailVirtualNumResponseModel  : JSONModel <FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHDetailVirtualNumModel *data;
 
 @end
 
