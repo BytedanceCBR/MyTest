@@ -15,6 +15,8 @@
 #import "FHRentSameNeighborhoodResponse.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
 #import "FHDetailNeighborPriceChartCell.h"
+#import "FHDetailNeighborhoodNameCell.h"
+#import "FHDetailGrayLineCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -31,12 +33,22 @@
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborPriceChartCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodNameCell class])];
+    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
 
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
+    }
+    // 标题
+    if ([model isKindOfClass:[FHDetailNeighborhoodNameModel class]]) {
+        return [FHDetailNeighborhoodNameCell class];
+    }
+    // 灰色分割线
+    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+        return [FHDetailGrayLineCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -81,6 +93,14 @@
         headerCellModel.houseImage = model.data.neighborhoodImage;
         [self.items addObject:headerCellModel];
     }
+    // 添加标题
+    if (model.data) {
+        FHDetailNeighborhoodNameModel *houseName = [[FHDetailNeighborhoodNameModel alloc] init];
+        houseName.name = model.data.name;
+        houseName.neighborhoodInfo = model.data.neighborhoodInfo;
+        [self.items addObject:houseName];
+    }
+    
     [self reloadData];
 }
 

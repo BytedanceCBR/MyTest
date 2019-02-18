@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 //FHDetailNeighborhoodNameModel
 @interface FHDetailNeighborhoodNameModel : FHDetailBaseModel
 
+@property (nonatomic, copy)     NSString       *name;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodInfoModel *neighborhoodInfo ;
+
 @end
 
 NS_ASSUME_NONNULL_END
