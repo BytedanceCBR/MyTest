@@ -100,13 +100,13 @@
     [_segmentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).mas_offset(marginX);
         make.right.mas_equalTo(self.view).mas_offset(-marginX);
-        make.top.mas_equalTo(self.view).mas_offset(height+14);
+        make.top.mas_equalTo(self.view).mas_offset(height+6);
         make.height.mas_equalTo(40);
     }];
     [_searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(20);
         make.right.mas_equalTo(self.view).offset(-20);
-        make.top.mas_equalTo(self.segmentView.mas_bottom);
+        make.top.mas_equalTo(self.segmentView.mas_bottom).offset(14);
         make.height.mas_equalTo(44);
     }];
     
@@ -155,6 +155,14 @@
                                      [UIColor themeBlue1],NSForegroundColorAttributeName,nil];
     _segmentView.titleTextAttributes = attributeNormal;
     _segmentView.selectedTitleTextAttributes = attributeSelect;
+    _segmentView.titleFormatter = ^NSAttributedString *(HMSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) {
+        
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontSemibold:20],
+                               NSForegroundColorAttributeName:selected?[UIColor themeBlue1]:[UIColor themeGray4]
+                               };        
+        return  [[NSAttributedString alloc] initWithString:title attributes:attr];
+        
+    };
     [self.view addSubview:_segmentView];
 }
 

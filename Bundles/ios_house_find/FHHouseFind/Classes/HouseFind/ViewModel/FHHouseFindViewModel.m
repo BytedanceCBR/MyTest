@@ -555,14 +555,6 @@
     return CGSizeMake(collectionView.frame.size.width - 2*ITEM_HOR_MARGIN, height);
 }
 
-/*
- - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
- - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
- - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
- - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
- - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
- */
-
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.collectionView endEditing:YES];
@@ -583,7 +575,8 @@
     if (scrollView == self.collectionView) {
         NSInteger index = (scrollView.contentOffset.x + scrollView.frame.size.width*0.4) / scrollView.frame.size.width;
         if (self.segmentControl.selectedSegmentIndex != index) {
-            self.segmentControl.selectedSegmentIndex = index;
+//            self.segmentControl.selectedSegmentIndex = index;
+            [self.segmentControl setSelectedSegmentIndex:index animated:YES];
         }
         FHHouseFindMainCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         [self checkNeedShowSplitLine:cell.collectionView];

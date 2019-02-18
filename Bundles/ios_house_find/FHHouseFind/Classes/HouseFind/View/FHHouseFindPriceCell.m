@@ -55,8 +55,8 @@
     tf.textColor = [UIColor themeBlack];
     tf.font = [UIFont themeFontRegular:14];
     
-    tf.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 6, 1)];
-    tf.rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 6, 1)];
+    tf.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];
+    tf.rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];
     tf.leftViewMode = UITextFieldViewModeAlways;
     tf.rightViewMode = UITextFieldViewModeAlways;
     
