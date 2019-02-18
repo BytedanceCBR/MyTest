@@ -254,7 +254,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             [wSelf checkUserLocationStatus];
         }
         
-        [self sendLocationAuthorizedTrace];
+        [wSelf sendLocationAuthorizedTrace];
         
         if (error.code == AMapLocationErrorLocateFailed) {
             NSLog(@"定位错误:%@",error.localizedDescription);
@@ -289,7 +289,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         }
         
         // 存储当前定位信息
-        [self saveCurrentLocationData];
+        [wSelf saveCurrentLocationData];
         
         if (completion) {
             // 城市选择重新定位需回调
@@ -301,12 +301,12 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             }
             [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 if (!model) {
-                    self.retryConfigCount -= 1;
-                    if (self.retryConfigCount >= 0)
+                    wSelf.retryConfigCount -= 1;
+                    if (wSelf.retryConfigCount >= 0)
                     {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [self requestCurrentLocation:NO];
+                                [wSelf requestCurrentLocation:NO];
                             });
                         });
                     } else {
@@ -337,7 +337,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     [wSelf updateAllConfig:model isNeedDiff:NO];
                 }
                 
-                self.retryConfigCount = 3;
+                wSelf.retryConfigCount = 3;
             }];
         }
     }];

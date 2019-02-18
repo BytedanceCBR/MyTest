@@ -179,6 +179,8 @@
         FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
         newsCellModel.hasMore = model.data.timeline.hasMore;
         newsCellModel.titleText = @"楼盘动态";
+        newsCellModel.courtId = model.data.coreInfo.id;
+        
         [self.items addObject:newsCellModel];
         
         for (NSInteger i = 0; i < model.data.timeline.list.count; i++) {

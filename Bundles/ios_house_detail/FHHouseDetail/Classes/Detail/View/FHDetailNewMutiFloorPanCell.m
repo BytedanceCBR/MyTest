@@ -104,10 +104,12 @@
 
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
-//    FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
-//    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.hasMore) {
-//        // 点击事件处理
-//    }
+    
+    if ([self.currentData isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":((FHDetailNewDataFloorpanListModel *)self.currentData).list}];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
+    }
+
 }
 // cell 点击
 - (void)collectionCellClick:(NSInteger)index {

@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, strong) NSString * titleText;
+@property (nonatomic, strong) NSString * courtId;
 
 @end
 
