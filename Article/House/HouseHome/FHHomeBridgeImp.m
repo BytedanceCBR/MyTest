@@ -17,6 +17,8 @@
 #import "TTTabBarProvider.h"
 #import "FHUtils.h"
 
+#define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
+
 @implementation FHHomeBridgeImp
 
 - (NSString *)feedStartCategoryName
@@ -64,7 +66,7 @@
 - (void)jumpToTabbarFirst
 {
 
-    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:@"f_house_news" withShow:NO];
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
     [[EnvContext shared].client.messageManager startSyncCategoryBadge];
     
     NSString *firstTabItemIdentifier = [[TTTabBarManager sharedTTTabBarManager].tabItems firstObject].identifier;
@@ -108,6 +110,22 @@
     }
     
     return YES;
+}
+
+- (NSString *)getRefreshTipURLString
+{
+    return [ArticleURLSetting refreshTipURLString];
+}
+
+- (void)updateNotifyBadgeNumber:(NSString *)categoryId isShow:(BOOL)isShow
+{
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:categoryId withClean:YES];
+}
+
+//首页推荐红点请求时间间隔
+- (NSInteger)getCategoryBadgeTimeInterval
+{
+    return [SSCommonLogic categoryBadgeTimeInterval];
 }
 
 @end

@@ -80,6 +80,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 +(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
 
+/**
+ 频道消息红点
+ */
++(TTHttpTask *)requestHomeCategoryMessage:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

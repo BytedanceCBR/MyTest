@@ -180,7 +180,19 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     
     NSString *status = kDefaultLeftFilterStatus;
     if (self.currentTapLabel.tag != 0) {
-        status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
+       
+        if (self.currentTapLabel.tag == 1) {
+            //在售
+            status = [NSString stringWithFormat:@"%d",2];
+        }else if(self.currentTapLabel.tag == 2)
+        {
+            //待售
+            status = [NSString stringWithFormat:@"%d",1];
+        }else
+        {
+            //售磬
+            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
+        }
     }
     
     NSMutableArray *currentItemsArray = [NSMutableArray new];
