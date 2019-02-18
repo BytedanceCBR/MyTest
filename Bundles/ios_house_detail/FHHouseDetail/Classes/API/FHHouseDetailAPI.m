@@ -19,6 +19,8 @@
 #import "TTAccount.h"
 #import "TTInstallIDManager.h"
 #import "TTAccountUserEntity.h"
+#import "FHDetailRelatedCourtModel.h"
+#import "FHPostDataHTTPRequestSerializer.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -340,22 +342,34 @@
     if (from.length > 0) {
         paramDic[@"d"] = from;
     }
-    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+//    - (TTHttpTask *)requestForBinaryWithURL:(NSString *)URL
+//params:(id)params
+//method:(NSString *)method
+//needCommonParams:(BOOL)commonParams
+//requestSerializer:(Class<TTHTTPRequestSerializerProtocol>)requestSerializer
+//responseSerializer:(Class<TTBinaryResponseSerializerProtocol>)responseSerializer
+//autoResume:(BOOL)autoResume
+//callback:(TTNetworkObjectFinishBlock)callback
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj) {
+
+//    return [[TTNetworkManager shareInstance]requestForJSONWithResponse:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+//
+//    }];
+//    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
 
         FHDetailResponseModel *model = nil;
+        NSError *jerror = nil;
         if (!error) {
-            model = [[FHDetailResponseModel alloc] initWithDictionary:jsonObj error:&error];
+            model = [[FHDetailResponseModel alloc]initWithData:jsonObj error:&jerror];
         }
         if (![model.status isEqualToString:@"0"]) {
             error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
         }
         
         if (completion) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(model,error);
-            });
+            completion(model,error);
         }
-    } callbackInMainThread:NO];
+    }];
 }
 
 // 中介转接电话
@@ -449,6 +463,70 @@
         if (!error) {
             model = [[FHDetailUserFollowResponseModel alloc] initWithDictionary:jsonObj error:&error];
         }
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 新房-周边新盘
++(TTHttpTask*)requestRelatedFloorSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_court?court_id=%@&offset=%@",houseId,offset];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailRelatedCourtModel *model = nil;
+        if (!error) {
+            model = [[FHDetailRelatedCourtModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 新房-楼盘动态
++(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/court/timeline=%@&%@",query];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+    
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailRelatedCourtModel *model = nil;
+        if (!error) {
+            model = [[FHDetailRelatedCourtModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
         if (![model.status isEqualToString:@"0"]) {
             error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
         }

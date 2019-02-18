@@ -24,6 +24,10 @@
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
+#import "FHDetailErshouPriceChartCell.h"
+#import "FHDetailDisclaimerCell.h"
+#import "FHDetailPriceRankCell.h"
+#import "FHDetailPriceTrendCellModel.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -50,6 +54,9 @@
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseCell class])];
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseCell class])];
+    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
+    [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouPriceChartCell class])];
+    [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -100,6 +107,18 @@
     // 周边房源
     if ([model isKindOfClass:[FHDetailRelatedHouseModel class]]) {
         return [FHDetailRelatedHouseCell class];
+    }
+    // 免责声明
+    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
+        return [FHDetailDisclaimerCell class];
+    }
+    // 价格分析
+    if ([model isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
+        return [FHDetailErshouPriceChartCell class];
+    }
+    // 均价走势
+    if ([model isKindOfClass:[FHDetailPriceRankModel class]]) {
+        return [FHDetailPriceRankCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -192,6 +211,22 @@
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
+    if (model.data.housePricingRank || model.data.priceTrend.count > 0) {
+        
+        // 价格分析
+        if (model.data.housePricingRank.analyseDetail.length > 0) {
+            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
+            priceRankModel.priceRank = model.data.housePricingRank;
+            [self.items addObject:priceRankModel];
+        }
+        // 均价走势
+        if (model.data.priceTrend.count > 0) {
+            FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
+            priceTrendModel.priceTrends = model.data.priceTrend;
+            [self.items addObject:priceTrendModel];
+        }
+    }
+    
     // 购房小建议
     if (model.data.housePricingRank.buySuggestion) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -261,6 +296,15 @@
             infoModel.relatedHouseData = self.relatedHouseData;
             [self.items addObject:infoModel];
         }
+        // 免责声明
+        FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
+        if (model.data.contact || model.data.disclaimer) {
+            FHDetailDisclaimerModel *infoModel = [[FHDetailDisclaimerModel alloc] init];
+            infoModel.disclaimer = model.data.disclaimer;
+            infoModel.contact = model.data.contact;
+            [self.items addObject:infoModel];
+        }
+        //
         [self reloadData];
     }
 }

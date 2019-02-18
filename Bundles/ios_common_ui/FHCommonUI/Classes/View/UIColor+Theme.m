@@ -56,7 +56,7 @@
 
 +(UIColor *)themeGray6
 {
-    return RGB(0xe8, 0xee, 0xeb);
+    return RGB(0xe8, 0xea, 0xeb);
 }
 
 +(UIColor *)themeGray7

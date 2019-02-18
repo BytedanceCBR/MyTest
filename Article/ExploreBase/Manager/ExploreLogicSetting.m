@@ -53,6 +53,9 @@ NSString *const kExploreTopVCChangeNotification = @"kExploreTopVCChangeNotificat
 
 NSString *const kExploreMixedListRefreshTypeNotification = @"kExploreMixedListRefreshTypeNotification";
 
+NSString *const kClearMessageTabBarBadgeNumberNotification = @"kClearMessageTabBarBadgeNumberNotification";
+NSString *const kChangeMessageTabBarBadgeNumberNotification = @"kChangeMessageTabBarBadgeNumberNotification";
+
 BOOL isShareToPlatformEnterBackground = NO;
 
 @implementation ExploreLogicSetting

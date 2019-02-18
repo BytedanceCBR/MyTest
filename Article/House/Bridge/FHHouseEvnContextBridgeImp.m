@@ -67,4 +67,32 @@
     return [[[EnvContext shared]toast] showToast:toast duration:duration isUserInteraction:NO];
 }
 
+- (NSString *)getRefreshTipURLString
+{
+    return [ArticleURLSetting refreshTipURLString];
+}
+
+- (void)updateNotifyBadgeNumber:(NSString *)categoryId isShow:(BOOL)isShow
+{
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:categoryId withShow:YES];
+}
+
+//首页推荐红点请求时间间隔
+- (NSInteger)getCategoryBadgeTimeInterval
+{
+    return [SSCommonLogic categoryBadgeTimeInterval];
+}
+
+- (NSString *)getCurrentSelectCategoryId
+{
+    NSString * currentCategoryName = [TTArticleCategoryManager currentSelectedCategoryID];
+    return currentCategoryName;
+}
+
+- (NSString *)getFeedStartCategoryName
+{
+    NSString * categoryStartName = [SSCommonLogic feedStartCategory];
+    return categoryStartName;
+}
+
 @end
