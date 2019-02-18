@@ -225,6 +225,7 @@
             priceTrendModel.priceTrends = model.data.priceTrend;
             priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
             priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
+            priceTrendModel.tableView = self.tableView;
             [self.items addObject:priceTrendModel];
         }
     }

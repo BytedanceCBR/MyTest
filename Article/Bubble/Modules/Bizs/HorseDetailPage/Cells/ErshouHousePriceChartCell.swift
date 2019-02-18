@@ -772,9 +772,9 @@ func fillErshouHousePriceChartCell(_ data: ErshouHouseData,traceExtension: Trace
                 theCell.monthUpValueLabel.text = String(format: "%.2f%%", arguments: [absValue])
                 theCell.monthUpTrend.isHidden = false
                 if monthUp > 0 {
-                    theCell.monthUpTrend.image = UIImage(named: "detail_month_red")
+                    theCell.monthUpTrend.image = UIImage(named: "detail_trend_red")
                 } else {
-                    theCell.monthUpTrend.image = UIImage(named: "detail_month_green")
+                    theCell.monthUpTrend.image = UIImage(named: "detail_trend_green")
                 }
             }
         }

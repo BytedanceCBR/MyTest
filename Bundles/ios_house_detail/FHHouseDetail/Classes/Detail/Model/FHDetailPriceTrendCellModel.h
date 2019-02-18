@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel *> *priceTrends;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmV;
+@property (nonatomic, assign)   BOOL       isFold; // 折叠
+@property (nonatomic, weak)     UITableView       *tableView;
+
 @end
 
 NS_ASSUME_NONNULL_END

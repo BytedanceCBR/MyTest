@@ -30,7 +30,6 @@
 @property(nonatomic , strong) UIView *chartView;
 @property(nonatomic , strong) FHDetailFoldViewButton *foldButton;
 
-@property(nonatomic , assign) BOOL isPriceChartFoldState;
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel *> *priceTrends;
 
 @end
@@ -47,7 +46,6 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.isPriceChartFoldState = YES;
         [self setupUI];
     }
     return self;
@@ -165,9 +163,10 @@
 
 - (void)refreshWithData:(id)data
 {
-    if (![data isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
         return;
     }
+    self.currentData = data;
     FHDetailPriceTrendCellModel *cellModel = (FHDetailPriceTrendCellModel *)data;
     NSArray *priceTrends = cellModel.priceTrends;
 
@@ -178,7 +177,7 @@
     
     self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
     self.priceView.hidden = NO;
-    self.foldButton.isFold = self.isPriceChartFoldState;
+    self.foldButton.isFold = cellModel.isFold;
     [self updateChartConstraints];
     
     float pricingPerSqm = cellModel.neighborhoodInfo.pricingPerSqmV.floatValue;
@@ -225,8 +224,10 @@
 - (void)foldBtnDidClick:(UIButton *)btn
 {
     // add by zjing for test
-//    self refreshCell
-    self.foldButton.isFold = self.isPriceChartFoldState;
+    FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
+    model.isFold = !model.isFold;
+    self.foldButton.isFold = model.isFold;
+    [self updateChartConstraints];
     if (!self.foldButton.isFold) {
 //        recordEvent(key: TraceEventName.click_price_rank, params: traceParams <|>
 //                    EnvContext.shared.homePageParams <|>
@@ -240,7 +241,9 @@
         make.left.right.top.mas_equalTo(0);
         make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375] + 50);
     }];
-    if (self.isPriceChartFoldState) {
+    FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
+    [model.tableView beginUpdates];
+    if (model.isFold) {
         [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(58);
         }];
@@ -257,6 +260,8 @@
             make.height.mas_equalTo(58);
         }];
     }
+    [self setNeedsUpdateConstraints];
+    [model.tableView endUpdates];
 }
 
 - (void)setupChartUI
