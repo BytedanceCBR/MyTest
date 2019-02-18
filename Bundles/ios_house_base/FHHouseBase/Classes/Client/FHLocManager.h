@@ -47,6 +47,11 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 - (void)updateAllConfig:(FHConfigModel * _Nullable) model isNeedDiff:(BOOL)needDiff;
 
+//开始轮询红点
+- (void)startCategoryRedDotRefresh;
+//停止轮询红点
+- (void)stopCategoryRedDotRefresh;
+
 @end
 
 

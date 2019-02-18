@@ -41,18 +41,18 @@ class MessageEventManager: NSObject {
     
     @objc func startSyncCategoryBadge() {
         
-        if timerCategroyDisposable != nil
-        {
-            timerCategroyDisposable?.dispose()
-            timerCategroyDisposable = nil
-        }
-        
-        let timeInterval = SSCommonLogic.categoryBadgeTimeInterval()
-        timerCategroyDisposable = Observable<Int>.interval(RxTimeInterval(timeInterval), scheduler: MainScheduler.instance)
-            .bind(onNext: { [unowned self] (_) in
-                self.requestRefreshTip()
-            })
-        self.requestMessageData()
+//        if timerCategroyDisposable != nil
+//        {
+//            timerCategroyDisposable?.dispose()
+//            timerCategroyDisposable = nil
+//        }
+//
+//        let timeInterval = SSCommonLogic.categoryBadgeTimeInterval()
+//        timerCategroyDisposable = Observable<Int>.interval(RxTimeInterval(timeInterval), scheduler: MainScheduler.instance)
+//            .bind(onNext: { [unowned self] (_) in
+//                self.requestRefreshTip()
+//            })
+//        self.requestMessageData()
     }
 
     func stopSyncMessage() {
@@ -64,9 +64,9 @@ class MessageEventManager: NSObject {
     }
     
     @objc func stopSyncCategoryBadge() {
-        TTCategoryBadgeNumberManager.shared().updateNotifyBadgeNumber(ofCategoryID: kCategroyDefaulHouse, withShow: false)
-        timerCategroyDisposable?.dispose()
-        timerCategroyDisposable = nil
+//        TTCategoryBadgeNumberManager.shared().updateNotifyBadgeNumber(ofCategoryID: kCategroyDefaulHouse, withShow: false)
+//        timerCategroyDisposable?.dispose()
+//        timerCategroyDisposable = nil
     }
     
     func requestRefreshTip() {

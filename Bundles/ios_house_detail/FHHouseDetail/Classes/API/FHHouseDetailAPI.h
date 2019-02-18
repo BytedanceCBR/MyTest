@@ -111,6 +111,13 @@ typedef enum : NSUInteger {
                                   query:(NSString*)query
                                   count:(NSInteger)count
                              completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 新房-楼盘动态
++(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId
+                                 offset:(NSString *)offset
+                                  query:(NSString*)query
+                                  count:(NSInteger)count
+                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
 @end
 
 

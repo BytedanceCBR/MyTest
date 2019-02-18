@@ -17,14 +17,19 @@
 #import "FHHomeConfigManager.h"
 #import "FHUtils.h"
 #import "FHCityListViewModel.h"
+#import "FHHouseEnvContextBridge.h"
+#import "FHHouseBridgeManager.h"
+#import <NSDictionary+TTAdditions.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
+#define kFHHomeHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 @interface FHLocManager ()
 
 @property (nonatomic, strong) YYCache       *locationCache;
 @property (nonatomic, assign) BOOL isHasSendPermissionTrace;
+@property(nonatomic , strong) NSTimer *messageTimer;
 
 @end
 
@@ -412,5 +417,52 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
     return _locMgr;
 }
+
+- (void)fetchCategoryRefreshTip{
+    id<FHHouseEnvContextBridge> bridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    NSString *urlStr = [bridge getRefreshTipURLString];
+    WeakSelf;
+    [[TTNetworkManager shareInstance] requestForJSONWithURL:urlStr
+                                                     params:nil
+                                                     method:@"GET"
+                                           needCommonParams:YES
+                                                   callback:^(NSError *error, id jsonObj) {
+                                                       if (nil == error) {
+                                                           StrongSelf;
+                                                           if (![[bridge getCurrentSelectCategoryId] isEqualToString:kFHHomeHouseMixedCategoryID]) {
+                                                               
+                                                               NSDictionary *data = [jsonObj tt_dictionaryValueForKey:@"data"];
+                                                               NSInteger count = [data tt_intValueForKey:@"count"];
+                                                               if (count > 0) {
+                                                                   [bridge updateNotifyBadgeNumber:kFHHomeHouseMixedCategoryID isShow:YES];
+                                                               }
+                                                               
+                                                           }
+                                                       }
+                                                   }];
+}
+
+- (void)startCategoryRedDotRefresh
+{
+    if (self.messageTimer) {
+        [self.messageTimer invalidate];
+        self.messageTimer = nil;
+    }
+    
+    NSInteger timeInterval = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getCategoryBadgeTimeInterval];
+    
+    self.messageTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [self fetchCategoryRefreshTip];
+    }];
+}
+
+- (void)stopCategoryRedDotRefresh
+{
+    if (self.messageTimer) {
+        [self.messageTimer invalidate];
+        self.messageTimer = nil;
+    }
+}
+
 
 @end
