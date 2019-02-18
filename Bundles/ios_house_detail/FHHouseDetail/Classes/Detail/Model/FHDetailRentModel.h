@@ -190,7 +190,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataUserStatusModel* userStatus;
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, copy, nullable) NSString *camplaintUrl;
-@property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataTagModel> *tags;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 
 @end
 
