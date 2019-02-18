@@ -243,7 +243,7 @@
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
         //  同小区房源
-        if (self.sameNeighborhoodHouseData) {
+        if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
@@ -252,7 +252,7 @@
             [self.items addObject:infoModel];
         }
         // 周边小区
-        if (self.relatedNeighborhoodData) {
+        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
@@ -261,7 +261,7 @@
             [self.items addObject:infoModel];
         }
         // 周边房源
-        if (self.relatedHouseData) {
+        if (self.relatedHouseData && self.relatedHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
