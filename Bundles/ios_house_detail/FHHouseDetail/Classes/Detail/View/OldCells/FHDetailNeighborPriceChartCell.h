@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailBaseCell.h"
-#import "FHDetailBaseModel.h"
+#import "FHDetailPriceTrendCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
