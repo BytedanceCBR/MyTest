@@ -12,7 +12,7 @@
 #import "FHEnvContext.h"
 #import "FHHomeRequestAPI.h"
 #import "FHHouseType.h"
-#import "FHHomeHouseModel.h"
+#import <FHHomeHouseModel.h>
 #import "TTURLUtils.h"
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
@@ -42,6 +42,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSString *>* originSearchIdCache;
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
 @property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
+@property (nonatomic, strong) TTHttpTask * requestOriginTask;
+@property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
+
 @end
 
 @implementation FHHomeListViewModel
@@ -62,7 +65,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.delegate = self.dataSource;
         self.tableViewV.dataSource = self.dataSource;
         self.hasShowedData = NO;
-        
+        self.isHasCallBackForFirstTime = NO;
+
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
         
@@ -267,6 +271,19 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [self.dataSource resetTraceCahce];
 }
 
+//检测10秒内网络请求是否有返回，确保首页异常时可以自动恢复
+- (void)checkoutIsRequestCanCallBack:(NSNumber *)isHasCallBack
+{
+    if (!_isHasCallBackForFirstTime) {
+        if (self.requestOriginTask) {
+            [self.requestOriginTask cancel];
+        }
+        if ([FHEnvContext isNetworkConnected]) {
+            [self requestOriginData:NO];
+        }
+    }
+}
+
 //请求房源推荐数据
 - (void)requestOriginData:(BOOL)isFirstChange
 {
@@ -287,10 +304,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [requestDictonary setValue:@(20) forKey:@"count"];
     self.categoryView.segmentedControl.userInteractionEnabled = NO;
     
+    if(isFirstChange)
+    {
+        //10秒还没有请求回调则进行尝试新请求
+        [self performSelector:@selector(checkoutIsRequestCanCallBack:) withObject:nil afterDelay:10];
+    }
+
     WeakSelf;
-    [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
+   self.requestOriginTask = [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
-        
+        self.isHasCallBackForFirstTime = YES;
         if (!model || error) {
             
             if (isFirstChange) {
@@ -339,8 +362,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         if (kIsNSString(cahceKey)) {
             self.originSearchIdCache[cahceKey] = model.data.searchId;
         }
-        
-        
+       
         if (kIsNSString(cahceKey)) {
             self.itemsSearchIdCache[cahceKey] = model.data.searchId;
         }

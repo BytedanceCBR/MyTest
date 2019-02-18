@@ -14,6 +14,7 @@
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHRentSameNeighborhoodResponse.h"
 #import "FHDetailSameNeighborhoodHouseResponseModel.h"
+#import "FHDetailNeighborPriceChartCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -29,6 +30,8 @@
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborPriceChartCell class])];
+
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {

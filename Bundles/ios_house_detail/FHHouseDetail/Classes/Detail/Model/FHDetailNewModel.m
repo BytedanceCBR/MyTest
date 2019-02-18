@@ -273,11 +273,37 @@
                            @"imprId": @"impr_id",
                            @"floorpanList": @"floorpan_list",
                            @"shareInfo": @"share_info",
+                           @"highlightedRealtor": @"highlighted_realtor",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
 }
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNewTimeLineDataModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasMore": @"has_more",
+                           @"userStatus": @"user_status",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNewTimeLineResponseModel
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

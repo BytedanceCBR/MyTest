@@ -105,6 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
 @protocol FHDisclaimerModelDisclaimerRichTextModel<NSObject>
 @end
 
@@ -125,5 +126,25 @@ NS_ASSUME_NONNULL_BEGIN
 // 二手房、租房共用 协议
 @protocol FHDetailDataBaseInfoModel<NSObject>
 @end
+
+@protocol FHDetailPriceTrendModel<NSObject>
+@end
+
+@protocol FHDetailPriceTrendValuesModel<NSObject>
+@end
+
+@interface FHDetailPriceTrendValuesModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *timestamp;
+@property (nonatomic, copy , nullable) NSString *price;
+@property (nonatomic, copy , nullable) NSString *timeStr;
+@end
+
+@interface FHDetailPriceTrendModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendValuesModel> *values;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 
 NS_ASSUME_NONNULL_END

@@ -55,6 +55,8 @@ extern NSString *const kExploreTopVCChangeNotification;
 
 extern NSString *const kExploreMixedListRefreshTypeNotification;
 
+extern NSString *const kFHLogInAccountStatusChangedNotification;
+
 typedef NS_ENUM(NSUInteger, ExploreMixedListRefreshType)
 {
     ExploreMixedListRefreshTypeDefault = 0,

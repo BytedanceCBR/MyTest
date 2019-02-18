@@ -181,11 +181,27 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNewDataTimelineModel *timeline ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel> *smallImageGroup;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact ;
+@property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *floorpanList ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoModel *coreInfo ;
 @property (nonatomic, strong , nullable) FHDetailNewDataDisclaimerModel *disclaimer ;
+@end
+
+@interface FHDetailNewTimeLineDataModel : JSONModel
+
+@property (nonatomic, strong , nullable) FHDetailNewDataUserStatusModel *userStatus ;
+@property (nonatomic, assign) BOOL hasMore;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataTimelineListModel> *list;
+
+@end
+
+@interface FHDetailNewTimeLineResponseModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHDetailNewTimeLineDataModel *data ;
 @end
 
 @interface FHDetailNewModel : JSONModel
@@ -194,6 +210,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHDetailNewDataModel *data ;
 @end
+
+
 
 NS_ASSUME_NONNULL_END
 //END OF HEADER

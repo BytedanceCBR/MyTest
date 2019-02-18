@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorTimeLineViewModel : FHHouseDetailBaseViewModel
 
+-(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId;
+
 @end
 
 NS_ASSUME_NONNULL_END
