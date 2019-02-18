@@ -19,6 +19,7 @@
 #import "FHDetailPropertyListCell.h"
 #import "FHDetailRentFacilityCell.h"
 #import "FHDetailRentHouseOutlineInfoCell.h"
+#import "FHDetailRentSameNeighborhoodHouseCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -39,6 +40,7 @@
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
     [self.tableView registerClass:[FHDetailRentFacilityCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentFacilityCell class])];
     [self.tableView registerClass:[FHDetailRentHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseOutlineInfoCell class])];
+    [self.tableView registerClass:[FHDetailRentSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentSameNeighborhoodHouseCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -69,6 +71,10 @@
     // 房源概况
     if ([model isKindOfClass:[FHDetailRentHouseOutlineInfoModel class]]) {
         return [FHDetailRentHouseOutlineInfoCell class];
+    }
+    // 同小区房源
+    if ([model isKindOfClass:[FHDetailRentSameNeighborhoodHouseModel class]]) {
+        return [FHDetailRentSameNeighborhoodHouseCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -166,7 +172,27 @@
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 2) {
-        
+        //  同小区房源
+        if (self.sameNeighborhoodHouseData) {
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailRentSameNeighborhoodHouseModel *infoModel = [[FHDetailRentSameNeighborhoodHouseModel alloc] init];
+            infoModel.sameNeighborhoodHouseData = self.sameNeighborhoodHouseData;
+            [self.items addObject:infoModel];
+        }
+        // 周边房源
+        if (self.relatedHouseData) {
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//            [self.items addObject:grayLine];
+//            FHDetailRelatedHouseModel *infoModel = [[FHDetailRelatedHouseModel alloc] init];
+//            infoModel.relatedHouseData = self.relatedHouseData;
+//            [self.items addObject:infoModel];
+        }
+        // 免责声明
+        //
+        [self reloadData];
     }
 }
 
