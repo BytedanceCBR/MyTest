@@ -8,6 +8,8 @@
 #import "FHHouseEvnContextBridgeImp.h"
 #import "Bubble-Swift.h"
 #import "FHEnvContext.h"
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
 
 @implementation FHHouseEvnContextBridgeImp
 
@@ -65,6 +67,15 @@
 -(void)showToast:(NSString *)toast duration:(CGFloat)duration inView:(UIView *)view
 {
     return [[[EnvContext shared]toast] showToast:toast duration:duration isUserInteraction:NO];
+}
+
+- (void)setMessageTabBadgeNumber:(NSInteger)number {
+    TTTabBarItem *tabBarItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMessageTabKey];
+    if(number > 0){
+        tabBarItem.ttBadgeView.badgeNumber = number;
+    }else{
+        tabBarItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+    }
 }
 
 - (NSString *)getRefreshTipURLString

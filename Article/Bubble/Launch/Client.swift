@@ -86,15 +86,15 @@ extension Notification.Name {
         }
 
         
-        EnvContext.shared.client.accountConfig.userInfo
-            .bind {[weak self] user in
-                if user == nil {
-                    self?.messageManager.stopSyncMessage()
-                } else {
-                    self?.messageManager.startSyncMessage()
-                }
-            }
-            .disposed(by: disposeBag)
+//        EnvContext.shared.client.accountConfig.userInfo
+//            .bind {[weak self] user in
+//                if user == nil {
+//                    self?.messageManager.stopSyncMessage()
+//                } else {
+//                    self?.messageManager.startSyncMessage()
+//                }
+//            }
+//            .disposed(by: disposeBag)
 
     }
 

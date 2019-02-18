@@ -35,6 +35,7 @@
 
 -(void)showToast:(NSString *)toast duration:(CGFloat)duration inView:(UIView *)view;
 
+- (void)setMessageTabBadgeNumber:(NSInteger)number;
 //设置频道红点
 - (void)updateNotifyBadgeNumber:(NSString *)categoryId isShow:(BOOL)isShow;
 
