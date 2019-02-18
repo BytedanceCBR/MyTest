@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
-@property (nonatomic, assign) BOOL followStatus; 
+@property (nonatomic, assign) BOOL followStatus;
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 

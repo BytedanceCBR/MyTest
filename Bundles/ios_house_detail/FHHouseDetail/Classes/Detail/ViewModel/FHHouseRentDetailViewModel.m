@@ -13,6 +13,8 @@
 #import "FHDetailRentModel.h"
 #import "FHHouseRentRelatedResponse.h"
 #import "FHRentSameNeighborhoodResponse.h"
+#import "FHDetailGrayLineCell.h"
+#import "FHDetailHouseNameCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -27,11 +29,22 @@
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
+    [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
+    // 头部滑动图片
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
+    }
+    // 标题
+    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
+        return [FHDetailHouseNameCell class];
+    }
+    // 灰色分割线
+    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+        return [FHDetailGrayLineCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -73,6 +86,15 @@
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.houseImage;
         [self.items addObject:headerCellModel];
+    }
+    // 添加标题
+    if (model.data) {
+        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
+        houseName.type = 1;
+        houseName.name = model.data.title;
+        houseName.aliasName = nil;
+        houseName.tags = model.data.tags;
+        [self.items addObject:houseName];
     }
     [self reloadData];
 }

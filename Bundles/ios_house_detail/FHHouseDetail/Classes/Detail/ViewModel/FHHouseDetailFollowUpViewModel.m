@@ -33,7 +33,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 if (model.data.followStatus == 0) {
         
                     NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-                    if (toastCount < 83) {
+                    if (toastCount < 3) {
                         [[ToastManager manager] showToast:@"已加入关注列表"];
                         CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
                         style.cornerRadius = 12;

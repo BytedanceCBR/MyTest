@@ -24,6 +24,9 @@
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailRelatedHouseCell.h"
 #import "FHDetailSameNeighborhoodHouseCell.h"
+#import "FHDetailErshouPriceChartCell.h"
+#import "FHDetailNeighborPriceChartCell.h"
+#import "FHDetailDisclaimerCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -50,6 +53,7 @@
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
     [self.tableView registerClass:[FHDetailRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedHouseCell class])];
     [self.tableView registerClass:[FHDetailSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailSameNeighborhoodHouseCell class])];
+    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -100,6 +104,10 @@
     // 周边房源
     if ([model isKindOfClass:[FHDetailRelatedHouseModel class]]) {
         return [FHDetailRelatedHouseCell class];
+    }
+    // 免责声明
+    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
+        return [FHDetailDisclaimerCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -261,6 +269,15 @@
             infoModel.relatedHouseData = self.relatedHouseData;
             [self.items addObject:infoModel];
         }
+        // 免责声明
+        FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
+        if (model.data.contact || model.data.disclaimer) {
+            FHDetailDisclaimerModel *infoModel = [[FHDetailDisclaimerModel alloc] init];
+            infoModel.disclaimer = model.data.disclaimer;
+            infoModel.contact = model.data.contact;
+            [self.items addObject:infoModel];
+        }
+        //
         [self reloadData];
     }
 }
