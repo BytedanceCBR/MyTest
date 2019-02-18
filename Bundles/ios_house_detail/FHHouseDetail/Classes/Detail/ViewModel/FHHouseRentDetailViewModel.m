@@ -18,6 +18,7 @@
 #import "FHDetailRentHouseCoreInfoCell.h"
 #import "FHDetailPropertyListCell.h"
 #import "FHDetailRentFacilityCell.h"
+#import "FHDetailRentHouseOutlineInfoCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -37,6 +38,7 @@
     [self.tableView registerClass:[FHDetailRentHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseCoreInfoCell class])];
     [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
     [self.tableView registerClass:[FHDetailRentFacilityCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentFacilityCell class])];
+    [self.tableView registerClass:[FHDetailRentHouseOutlineInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseOutlineInfoCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -63,6 +65,10 @@
     // 房屋设施
     if ([model isKindOfClass:[FHDetailRentFacilityModel class]]) {
         return [FHDetailRentFacilityCell class];
+    }
+    // 房源概况
+    if ([model isKindOfClass:[FHDetailRentHouseOutlineInfoModel class]]) {
+        return [FHDetailRentHouseOutlineInfoCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -98,6 +104,7 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
+    self.detailData = model;
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.houseImage) {
@@ -132,6 +139,15 @@
         [self.items addObject:grayLine];
         FHDetailRentFacilityModel *infoModel = [[FHDetailRentFacilityModel alloc] init];
         infoModel.facilities = model.data.facilities;
+        [self.items addObject:infoModel];
+    }
+    // 房源概况
+    if (model.data.houseOverview) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailRentHouseOutlineInfoModel *infoModel = [[FHDetailRentHouseOutlineInfoModel alloc] init];
+        infoModel.houseOverreview = model.data.houseOverview;
+        infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
  

@@ -69,8 +69,10 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailNeighborhoodModel *)model {
+    self.detailData = model;
     // 清空数据源
     [self.items removeAllObjects];
+    // 添加头滑动图片
     if (model.data.neighborhoodImage) {
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.neighborhoodImage;
