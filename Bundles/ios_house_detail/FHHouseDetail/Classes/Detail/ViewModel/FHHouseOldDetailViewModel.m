@@ -28,6 +28,7 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailPriceRankCell.h"
 #import "FHDetailPriceTrendCellModel.h"
+#import "FHDetailPureTitleCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -57,6 +58,8 @@
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
     [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouPriceChartCell class])];
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankCell class])];
+    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
+
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -113,6 +116,9 @@
         return [FHDetailDisclaimerCell class];
     }
     // 价格分析
+    if ([model isKindOfClass:[FHDetailPureTitleModel class]]) {
+        return [FHDetailPureTitleCell class];
+    }
     if ([model isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
         return [FHDetailErshouPriceChartCell class];
     }
@@ -214,6 +220,9 @@
     if (model.data.housePricingRank || model.data.priceTrend.count > 0) {
         
         // 价格分析
+        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
+        titleModel.title = @"价格分析";
+        [self.items addObject:titleModel];
         if (model.data.housePricingRank.analyseDetail.length > 0) {
             FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
             priceRankModel.priceRank = model.data.housePricingRank;

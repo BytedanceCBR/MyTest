@@ -11,7 +11,6 @@
 
 @interface FHDetailPriceRankCell ()
 
-@property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIView *bgView;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , strong) UILabel *rankLabel;
@@ -34,18 +33,11 @@
 
 - (void)setupUI {
     
-    [self.contentView addSubview:self.titleLabel];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.top.mas_equalTo(self.contentView).mas_offset(30);
-        make.height.mas_equalTo(25);
-    }];
-    
     [self.contentView addSubview:self.bgView];
     self.bgView.layer.cornerRadius = 4;
     self.bgView.layer.masksToBounds = YES;
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(20);
+        make.top.mas_equalTo(0);
         make.left.mas_equalTo(20);
         make.right.bottom.mas_equalTo(-20);
     }];
@@ -110,17 +102,6 @@
         _bgView.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5" alpha:0.4];
     }
     return _bgView;
-}
-
-- (UILabel *)titleLabel
-{
-    if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont themeFontMedium:18];
-        _titleLabel.textColor = [UIColor themeBlack];
-        _titleLabel.text = @"价格分析";
-    }
-    return _titleLabel;
 }
 
 - (UILabel *)tipLabel
