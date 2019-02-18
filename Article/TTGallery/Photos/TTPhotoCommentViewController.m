@@ -28,7 +28,7 @@
 #import "TTDeviceHelper.h"
 #import "TTBusinessManager.h"
 #import "TTDeviceUIUtils.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchen.h>
 #import "SSUserModel.h"
 #import "SSCommentInputHeader.h"
 #import "TTCommentWriteView.h"
@@ -212,7 +212,7 @@
     // toolbar 禁表情
     if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
 
-        BOOL isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+        BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
         self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
         self.banEmojiInput = self.commentViewController.tt_banEmojiInput;
 

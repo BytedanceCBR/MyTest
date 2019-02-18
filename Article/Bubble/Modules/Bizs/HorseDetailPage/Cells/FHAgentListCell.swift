@@ -454,9 +454,10 @@ func fillAgentListCell(
                 .bind {
                     traceModel?.elementFrom = "old_detail_related"
                     let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "\(offset)")
-                    var openUrl = "fschema://realtor_detail"
-//                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
-                    let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
+                    let openUrl = "fschema://realtor_detail"
+                    let imParams = getImParams(traceModel: traceModel, targetUserId: contact.realtorId ?? "")
+                    let jumpUrl = "http://10.1.15.29:8889/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)&im_params=\(imParams)"
+//                    let jumpUrl = "\(EnvContext.networkConfig.host)/f100/client/realtor_detail?realtor_id=\(contact.realtorId ?? "")&report_params=\(reportParams)"
                     let theTraceModel = traceModel?.copy() as? HouseRentTracer
                     theTraceModel?.enterFrom = "old_detail"
                     theTraceModel?.elementFrom = "old_detail_related"
@@ -512,6 +513,21 @@ func getRealtorReportParams(traceModel: HouseRentTracer?, rank: String) -> Strin
         }
     } else {
         return ""
+    }
+}
+
+func getImParams(traceModel: HouseRentTracer?, targetUserId: String) -> String {
+    if let traceModel = traceModel {
+        var dict:[String: Any] = [:]
+        dict["target_user_id"] = targetUserId
+        dict["house_id"] = traceModel.groupId
+        if let data = try? JSONSerialization.data(withJSONObject: dict) {
+            return String(bytes: data, encoding: .utf8)?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        } else {
+            return "{}"
+        }
+    } else {
+        return "{}"
     }
 }
 

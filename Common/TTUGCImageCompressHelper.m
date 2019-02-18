@@ -8,7 +8,7 @@
 
 #import "TTUGCImageCompressHelper.h"
 #import <ImageIO/ImageIO.h>
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchen.h>
 #import <YYImage/YYImageCoder.h>
 
 //import tgmath.h as suggested by http://stackoverflow.com/questions/5352457/cgfloat-based-math-functions/5352779#5352779
@@ -40,9 +40,9 @@ __attribute__((overloadable)) NSData * TTImageAnimatedGIFRepresentation(UIImage 
         
         size_t scale = 1;
         //抽帧
-        if (maxCount >= [KitchenMgr getInt:kKCUGCImageCompressGifMaxFrameCount] && frameCount > maxCount ) {
+        if (maxCount >= [TTKitchen getInt:kTTKUGCImageCompressGifMaxFrameCount] && frameCount > maxCount ) {
             //只要开始抽帧，就会把帧数限制在100以内，为了减少抽帧时间
-            maxCount = [KitchenMgr getInt:kKCUGCImageCompressGifMaxFrameCount] ;
+            maxCount = [TTKitchen getInt:kTTKUGCImageCompressGifMaxFrameCount] ;
             //向上取整
             scale = ceil(frameCount/(double)maxCount);
         }
@@ -567,18 +567,18 @@ extern __attribute__((overloadable)) NSData * TTImageWebPRepresentation(UIImage 
 //水平图片的限定值
 + (CGFloat)longImageLongLimitValue
 {
-    return [KitchenMgr getFloat:kKCUGCImageCompressLongLongPX];
+    return [TTKitchen getFloat:kTTKUGCImageCompressLongLongPX];
 }
 
 //竖直图，限定边长, 短边若大于verticalLimitLength，则等比例压缩
 + (CGFloat)longImageShortLimitValue
 {
-    return [KitchenMgr getFloat:kKCUGCImageCompressLongShortPX];
+    return [TTKitchen getFloat:kTTKUGCImageCompressLongShortPX];
 }
 
 //普通图，限定边长,若短边大于normalLimitLength，则压缩尺寸：
 + (CGFloat)normalLimitLength
 {
-    return [KitchenMgr getFloat:kKCUGCImageCompressNormalPX];
+    return [TTKitchen getFloat:kTTKUGCImageCompressNormalPX];
 }
 @end

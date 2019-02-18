@@ -106,3 +106,5 @@
 
 
 "test_detail"           = "FHHouseDetailViewController";
+
+"open_single_chat" = "ChatRootViewController";

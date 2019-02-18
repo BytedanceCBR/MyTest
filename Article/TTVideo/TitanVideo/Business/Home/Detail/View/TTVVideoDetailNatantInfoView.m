@@ -23,7 +23,7 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTMessageCenter.h"
 #import <TTSettingsManager/TTSettingsManager.h>
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchen.h>
 #import "TTVVideoDetailNatantInfoShareView.h"
 
 #define kVerticalEdgeMargin             (([TTDeviceHelper isPadDevice]) ? 20 : 15)
@@ -412,7 +412,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
     }
 }
 

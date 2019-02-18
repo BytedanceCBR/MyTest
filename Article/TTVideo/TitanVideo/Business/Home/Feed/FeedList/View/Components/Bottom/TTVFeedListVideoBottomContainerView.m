@@ -31,7 +31,7 @@
 #import "TTWeChatShare.h"
 #import "TTQQShare.h"
 //#import "TTDingTalkShare.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchen.h>
 #import "AKUILayout.h"
 #import "TTVDiggAction.h"
 #define kLeftPadding        20
@@ -315,7 +315,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
     }
 }
 

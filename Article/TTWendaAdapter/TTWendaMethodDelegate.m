@@ -11,8 +11,7 @@
 #import "FRApiModel.h"
 #import "UIViewController+BDTAccountModalPresentor.h"
 #import "TTCommentDetailViewController.h"
-#import "TTKitchenMgr.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchen.h>
 
 #import <TTUIWidget/TTModalContainerController.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -115,7 +114,7 @@
 
 - (BOOL)adapterCommentToolBarEnable
 {
-    return [KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable];
+    return [TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable];
 }
 
 #pragma mark - WDVideoPlayerTransferSender

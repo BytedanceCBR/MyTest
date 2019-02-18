@@ -94,6 +94,10 @@
     return RGB(0xff, 0x5b, 0x4c);
 }
 
++ (UIColor *)colorWithHexStr:(NSString *)hexString {
+    [UIColor colorWithHexString:hexString];
+}
+
 + (UIColor *)colorWithHexString:(NSString *)hexString {
     if (hexString == nil || hexString.length == 0) {
         return [UIColor clearColor];

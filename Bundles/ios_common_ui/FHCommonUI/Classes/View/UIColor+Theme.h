@@ -67,6 +67,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIColor *)colorWithHexString:(NSString *)hexString;
 
++ (UIColor *)colorWithHexStr:(NSString *)hexString;
+
 + (UIColor *)colorWithRGB:(uint)rgb;
 
 + (UIColor *)colorWithRGB:(uint)rgb alpha:(uint)alpha;

@@ -60,7 +60,7 @@
 #import "TTInAppPushSettings.h"
 #import "TTAccountTestSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
-#import "TTKitchenMgr.h"
+#import <TTKitchen/TTKitchen.h>
 #import "TTSettingsManager+SaveSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebViewContainerConfig.h>
 #import <TTRexxar/TTRPackageManager.h>
@@ -1151,7 +1151,7 @@
         [SSCommonLogic setThirdTabWeitoutiaoEnabled:[dSettings tt_boolValueForKey:@"third_tab_switch"]];
     }
     
-    [KitchenMgr parseSettings:dSettings];
+    [TTKitchen parseSettings:dSettings];
     
     //头条认证展现配置
     if ([dSettings valueForKey:@"user_verify_info_conf"]) {
