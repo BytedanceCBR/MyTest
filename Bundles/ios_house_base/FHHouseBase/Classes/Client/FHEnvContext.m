@@ -20,6 +20,7 @@
 #import "TTArticleCategoryManager.h"
 #import <objc/runtime.h>
 #import "TTNetworkUtilities.h"
+#import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
@@ -28,7 +29,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
 @property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
-@property(nonatomic , strong) NSDictionary *currentConfigDictionary;
+@property (nonatomic , strong) NSDictionary *currentConfigDictionary;
 
 @end
 
@@ -146,6 +147,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return _generalBizConfig;
 }
 
+- (FHMessageManager *)messageManager
+{
+    if (!_messageManager) {
+        _messageManager = [[FHMessageManager alloc] init];
+    }
+    return _messageManager;
+}
+
 + (BOOL)isNetworkConnected
 {
     return [TTReachability isNetworkConnected];
@@ -241,6 +250,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //检测是否需要打开城市列表
     [self check2CityList];
+    
+    [self.messageManager startSyncMessage];
     
     NSString * channelName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];
     if (!channelName) {
