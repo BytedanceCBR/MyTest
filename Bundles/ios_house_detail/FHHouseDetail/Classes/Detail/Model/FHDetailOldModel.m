@@ -231,7 +231,7 @@
 }
 @end
 
-@implementation FHDetailOldDataBaseInfoModel
+@implementation FHDetailDataBaseInfoModel
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{

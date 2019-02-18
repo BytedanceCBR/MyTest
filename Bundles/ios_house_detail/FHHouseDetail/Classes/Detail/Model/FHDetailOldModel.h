@@ -10,10 +10,9 @@
 #import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@protocol FHDetailOldDataBaseInfoModel<NSObject>
-@end
 
-@interface FHDetailOldDataBaseInfoModel : JSONModel
+// 和租房共用
+@interface FHDetailDataBaseInfoModel : JSONModel
 
 @property (nonatomic, assign) BOOL isSingle;
 @property (nonatomic, copy , nullable) NSString *attr;
@@ -149,7 +148,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePriceRangeModel *housePriceRange ;

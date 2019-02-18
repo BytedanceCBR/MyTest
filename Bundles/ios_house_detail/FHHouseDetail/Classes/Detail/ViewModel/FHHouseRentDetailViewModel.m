@@ -15,6 +15,8 @@
 #import "FHRentSameNeighborhoodResponse.h"
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailHouseNameCell.h"
+#import "FHDetailRentHouseCoreInfoCell.h"
+#import "FHDetailPropertyListCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -31,6 +33,8 @@
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
+    [self.tableView registerClass:[FHDetailRentHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentHouseCoreInfoCell class])];
+    [self.tableView registerClass:[FHDetailPropertyListCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPropertyListCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -45,6 +49,14 @@
     // 灰色分割线
     if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
         return [FHDetailGrayLineCell class];
+    }
+    // coreInfo
+    if ([model isKindOfClass:[FHDetailRentHouseCoreInfoModel class]]) {
+        return [FHDetailRentHouseCoreInfoCell class];
+    }
+    // 属性列表
+    if ([model isKindOfClass:[FHDetailPropertyListModel class]]) {
+        return [FHDetailPropertyListCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -96,6 +108,19 @@
         houseName.tags = model.data.tags;
         [self.items addObject:houseName];
     }
+    // 添加core info
+    if (model.data.coreInfo) {
+        FHDetailRentHouseCoreInfoModel *coreInfoModel = [[FHDetailRentHouseCoreInfoModel alloc] init];
+        coreInfoModel.coreInfo = model.data.coreInfo;
+        [self.items addObject:coreInfoModel];
+    }
+    // 添加属性列表
+    if (model.data.baseInfo) {
+        FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
+        propertyModel.baseInfo = model.data.baseInfo;
+        [self.items addObject:propertyModel];
+    }
+ 
     [self reloadData];
 }
 

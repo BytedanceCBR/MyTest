@@ -104,5 +104,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailUserFollowStatusModel *data;
 
 @end
+// 二手房、租房共用 协议
+@protocol FHDetailDataBaseInfoModel<NSObject>
+@end
 
 NS_ASSUME_NONNULL_END
