@@ -142,6 +142,7 @@
     [self.view endEditing:YES];
     if(!self.view.acceptCheckBox.selected){
         [[ToastManager manager] showToast:@"请阅读并同意幸福里用户协议"];
+        return;
     }
     [self quickLogin:self.view.phoneInput.text smsCode:self.view.varifyCodeInput.text];
 }
