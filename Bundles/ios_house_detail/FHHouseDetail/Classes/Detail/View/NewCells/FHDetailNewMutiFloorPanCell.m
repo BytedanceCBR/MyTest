@@ -115,12 +115,14 @@
 }
 // cell 点击
 - (void)collectionCellClick:(NSInteger)index {
-//    FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
-//    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
-//        // 点击cell处理
-//        FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
-//
-//    }
+    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
+    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+        
+    }
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"" forKey:@"floorpanid"];
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
 }
 
 @end

@@ -291,14 +291,6 @@ static const CGFloat kLabelKeyRightPandding = -20;
     }
 }
 
-- (void)tapClick
-{
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:nil];
-    
-    //    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":self.allItems}];
-    //    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
-}
-
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code

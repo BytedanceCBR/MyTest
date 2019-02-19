@@ -450,10 +450,14 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
     
     NSInteger timeInterval = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getCategoryBadgeTimeInterval];
+
+    self.messageTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(timerSelecter) userInfo:nil repeats:YES];
     
-    self.messageTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval repeats:YES block:^(NSTimer * _Nonnull timer) {
-        [self fetchCategoryRefreshTip];
-    }];
+}
+
+- (void)timerSelecter
+{
+    [self fetchCategoryRefreshTip];
 }
 
 - (void)stopCategoryRedDotRefresh
