@@ -75,15 +75,15 @@
             [wself.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
         };
         
-        __block BOOL isFirstChange = YES;
-        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
+//        __block BOOL isFirstChange = YES;
+        RACDisposable *disposable = [[[FHEnvContext sharedInstance].configDataReplay skip:1] subscribeNext:^(FHConfigDataModel * _Nullable x) {
             //过滤多余刷新
-            if ([[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
-                return;
-            }
+//            if ([[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
+//                return;
+//            }
             //城市更新 重新刷新
             [wself setupHouseContent:x];
-            isFirstChange = NO;
+//            isFirstChange = NO;
             
         }];
         self.configDisposable = disposable;
@@ -185,23 +185,11 @@
     self.rentFilter = nil;
     self.neighborhoodFilter = nil;
     
-    /*
-     if (self.itemList.count < 1 || ![[[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable boolValue]) {
-     // 当前城市未开通
-     [self.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
-     return;
-     }
-     */
-    
     if (!configData) {
         //show no data
-        
         if (self.showNoDataBlock) {
             self.showNoDataBlock(YES,NO);
         }
-        
-        
-        
     }else{
         
         BOOL avaiable = configData.cityAvailability.enable;
@@ -241,6 +229,13 @@
         self.houseTypes = houseTypes;
         
         [self.collectionView reloadData];
+        
+        
+        if (self.updateSegmentWidthBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.updateSegmentWidthBlock();
+            });
+        }
         
     }
 }

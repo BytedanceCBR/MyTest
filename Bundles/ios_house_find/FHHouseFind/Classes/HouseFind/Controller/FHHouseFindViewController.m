@@ -61,7 +61,9 @@
         }
         wself.searchButton.hidden = !wself.errorMaskView.isHidden;
     };
-    
+    _viewModel.updateSegmentWidthBlock = ^ {
+        [wself.view setNeedsLayout];        
+    };
     _searchBar = [[FHHouseFindFakeSearchBar alloc]initWithFrame:CGRectZero];
     [_searchBar setPlaceholder:@"你想住在哪？"];
     _searchBar.tapBlock = ^{
@@ -97,10 +99,11 @@
 -(void)initConstraints
 {
     CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 45 : 15;
+//    CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 45 : 15;
     [_segmentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).mas_offset(marginX);
-        make.right.mas_equalTo(self.view).mas_offset(-marginX);
+//        make.left.mas_greaterThanOrEqualTo(self.view).mas_offset(marginX);
+//        make.right.mas_lessThanOrEqualTo(self.view).mas_offset(-marginX);
+        make.centerX.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view).mas_offset(height+6);
         make.height.mas_equalTo(40);
     }];
@@ -146,8 +149,8 @@
     _segmentView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentView.isNeedNetworkCheck = NO;
-//    _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
-    _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 10);
+//    _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:18],NSFontAttributeName,
                                      [UIColor themeGray],NSForegroundColorAttributeName,nil];
@@ -202,6 +205,17 @@
     
 }
 
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    CGFloat width = [self.segmentView totalSegmentedControlWidth];
+    CGFloat fitWidth = MIN(width, self.view.frame.size.width - 40);
+    [self.segmentView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(fitWidth);
+    }];
+    
+}
+
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground
@@ -216,7 +230,6 @@
     [self.viewModel resetStayTime];
     [self.viewModel startTrack];
 }
-
 
 /*
 #pragma mark - Navigation
