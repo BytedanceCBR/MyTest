@@ -29,6 +29,7 @@
 #import "FHDetailPriceRankCell.h"
 #import "FHDetailPriceTrendCellModel.h"
 #import "FHDetailPureTitleCell.h"
+#import "FHDetailNeighborhoodInfoCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -59,6 +60,7 @@
     [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouPriceChartCell class])];
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankCell class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
 
 }
 // cell class
@@ -94,6 +96,10 @@
     // 房源概况
     if ([model isKindOfClass:[FHDetailHouseOutlineInfoModel class]]) {
         return [FHDetailHouseOutlineInfoCell class];
+    }
+    // 小区信息
+    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
+        return [FHDetailNeighborhoodInfoCell class];
     }
     // 购房小建议
     if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
@@ -217,6 +223,16 @@
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
+    // 小区信息
+    if (model.data.neighborhoodInfo) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
+        infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        [self.items addObject:infoModel];
+    }
+
     if (model.data.housePricingRank || model.data.priceTrend.count > 0) {
         
         // 价格分析
