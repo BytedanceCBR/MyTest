@@ -8,8 +8,10 @@
 #import "FHLoginViewController.h"
 #import "FHLoginView.h"
 #import "FHLoginViewModel.h"
+#import "FHTracerModel.h"
+#import "FHUserTracker.h"
 
-@interface FHLoginViewController ()
+@interface FHLoginViewController ()<TTRouteInitializeProtocol>
 
 @property(nonatomic, strong) FHLoginViewModel *viewModel;
 @property(nonatomic ,strong) FHLoginView *loginView;
@@ -17,6 +19,29 @@
 @end
 
 @implementation FHLoginViewController
+
+- (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        NSDictionary *traceParam = paramObj.allParams[@"tracer"];
+        
+        self.tracerModel = [[FHTracerModel alloc] init];
+        self.tracerModel.enterFrom = traceParam[@"enter_from"];
+        self.tracerModel.enterType = traceParam[@"enter_type"];
+        self.tracerModel.originFrom = traceParam[@"originFrom"];
+
+        [self addEnterCategoryLog];
+    }
+    return self;
+}
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = [self.tracerModel logDict];
+    tracerDict[@"log_pb"] = @"be_null";
+    tracerDict[@"orign_search_id"] = @"be_null";
+    TRACK_EVENT(@"login_page", tracerDict);
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
