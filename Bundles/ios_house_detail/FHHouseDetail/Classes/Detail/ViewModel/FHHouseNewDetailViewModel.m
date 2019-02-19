@@ -188,6 +188,7 @@
         houseCore.gaodeLng = model.data.coreInfo.gaodeLng;
         houseCore.courtId = model.data.coreInfo.id;
         houseCore.houseName = houseName;
+        houseCore.contactModel = self.contactViewModel;
         
         FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
         disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
