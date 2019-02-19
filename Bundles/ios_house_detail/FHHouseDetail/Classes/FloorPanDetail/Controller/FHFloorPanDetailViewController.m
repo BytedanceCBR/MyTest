@@ -16,16 +16,7 @@
 
 
 @interface FHFloorPanDetailViewController ()
-
-@property (nonatomic, strong) FHDetailNavBar *navBar;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) UILabel *bottomStatusBar;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
-
-@property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
-@property (nonatomic, assign)   FHHouseType houseType; // 房源类型
-@property (nonatomic, copy)   NSString* houseId; // 房源id
-
+@property (nonatomic, copy)   NSString* floorPanId; // 房源id
 @end
 
 @implementation FHFloorPanDetailViewController
@@ -33,7 +24,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        _floorPanId = paramObj.allParams[@"floorpanid"];
     }
     return self;
 }

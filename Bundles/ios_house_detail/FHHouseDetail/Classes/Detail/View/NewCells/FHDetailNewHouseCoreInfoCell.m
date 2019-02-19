@@ -186,6 +186,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
     _priceChangedNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [self.contentView addSubview:_priceChangedNotify];
+    [_priceChangedNotify addTarget:self action:@selector(fillActionClick) forControlEvents:UIControlEventTouchUpInside];
     [_priceChangedNotify mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.moreBtn.mas_bottom);
         make.left.equalTo(self.contentView);
@@ -213,12 +214,23 @@ static const CGFloat kLabelKeyRightPandding = -20;
     NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
     [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
     _openNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    [_openNotify addTarget:self action:@selector(fillActionClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_openNotify];
     [_openNotify mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.equalTo(self.priceChangedNotify);
         make.left.equalTo(self.contentView.mas_centerX);
         make.right.equalTo(self.contentView);
     }];
+}
+
+- (void)fillActionClick
+{
+    FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+    if (model.contactModel) {
+        if ([model.contactModel respondsToSelector:@selector(fillFormAction)]) {
+            [model.contactModel performSelector:@selector(fillFormAction)];
+        }
+    }
 }
 
 - (void)moreInfoButClick
@@ -277,14 +289,6 @@ static const CGFloat kLabelKeyRightPandding = -20;
             [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }
     }
-}
-
-- (void)tapClick
-{
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:nil];
-    
-    //    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":self.allItems}];
-    //    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
 }
 
 - (void)awakeFromNib {

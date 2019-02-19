@@ -225,12 +225,16 @@
         return nil;
     }
     
-    if ([model conformsToProtocol:@protocol(FHBaseModelProtocol)]) {
-        if (![@"0" isEqualToString:[(id<FHBaseModelProtocol>)model status] ]) {
-            NSString *message = [(id<FHBaseModelProtocol>)model message];
-            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[[(id<FHBaseModelProtocol>)model status] integerValue] userInfo:nil];
+    if ([model respondsToSelector:@selector(status)]) {
+        NSString *status = [model performSelector:@selector(status)];
+        if (![@"0" isEqualToString:status]) {
+            NSString *message = nil;
+            if ([model respondsToSelector:@selector(message)]) {
+                message = [model performSelector:@selector(message)];
+            }
+            *error = [NSError errorWithDomain:message?:DEFULT_ERROR code:[status integerValue] userInfo:nil];
         }
-    }
+    } 
     return model;
 }
 

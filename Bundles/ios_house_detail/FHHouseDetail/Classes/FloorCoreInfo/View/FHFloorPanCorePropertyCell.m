@@ -9,14 +9,7 @@
 #import <TTRoute.h>
 
 @interface FHFloorPanCorePropertyCell ()
-@property (nonatomic, strong) UIButton *maskBtn;
-@property (nonatomic, strong) UILabel *timeLabel;
-@property (nonatomic, strong) UIView *redDotView;
-@property (nonatomic, strong) UILabel *titleLabel;
-@property (nonatomic, strong) UILabel *contentLabel;
-@property (nonatomic, strong) UIView *timeLineLeading;
-@property (nonatomic, strong) UIView *headLine;
-@property (nonatomic, strong) UIView *timeLineTailing;
+
 @end
 
 @implementation FHFloorPanCorePropertyCell
@@ -57,7 +50,6 @@
                 make.top.mas_equalTo(7);
                 make.height.mas_equalTo(21);
             }];
-            
             
             UILabel *valueLabel = [UILabel new];
             valueLabel.font = [UIFont themeFontRegular:15];
