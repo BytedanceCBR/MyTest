@@ -20,6 +20,7 @@
 #import "FHDetailNeighborhoodStatsInfoCell.h"
 #import "FHDetailNeighborhoodPropertyInfoCell.h"
 #import "FHDetailRelatedNeighborhoodCell.h"
+#import "FHDetailNeighborhoodHouseCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -41,6 +42,7 @@
     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoCell class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseCell class])];
 
 }
 // cell class
@@ -67,6 +69,10 @@
     // 周边小区
     if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
         return [FHDetailRelatedNeighborhoodCell class];
+    }
+    // 小区房源
+    if ([model isKindOfClass:[FHDetailNeighborhoodHouseModel class]]) {
+        return [FHDetailNeighborhoodHouseCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -163,7 +169,17 @@
             infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
             [self.items addObject:infoModel];
         }
-        //
+        // 小区房源
+        if (self.sameNeighborhoodErshouHouseData.items.count > 0 || self.sameNeighborhoodRentHouseData.items.count > 0) {
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailNeighborhoodHouseModel *infoModel = [[FHDetailNeighborhoodHouseModel alloc] init];
+            infoModel.tableView = self.tableView;
+            infoModel.sameNeighborhoodErshouHouseData = self.sameNeighborhoodErshouHouseData;
+            infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
+            [self.items addObject:infoModel];
+        }
         [self reloadData];
     }
 }
