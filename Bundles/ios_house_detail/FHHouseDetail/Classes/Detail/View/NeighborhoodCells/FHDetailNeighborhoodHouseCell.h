@@ -19,7 +19,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 // 小区房源-二手房 + 租房
-@interface FHDetailNeighborhoodHouseCell : FHDetailBaseCell
+@interface FHDetailNeighborhoodHouseCell : FHDetailBaseCell<FHDetailScrollViewDidScrollProtocol>
 
 @end
 

@@ -41,6 +41,8 @@
 @property (nonatomic, strong)   NSArray       *ershouItems;
 @property (nonatomic, strong)   NSArray       *rentItems;
 
+@property (nonatomic, assign)   BOOL       firstLoad;
+
 @end
 
 @implementation FHDetailNeighborhoodHouseCell
@@ -212,6 +214,11 @@
     } else {
         self.headerView.label.text = @"小区房源";
     }
+    // 埋点
+    if (!self.firstLoad) {
+        [self addHouseShowByChangeTab];
+    }
+    self.firstLoad = NO;
 }
 
 - (void)removeSubViews {
@@ -305,6 +312,7 @@
 }
 
 - (void)setupUI {
+    _firstLoad = YES;
     _leftHouseShowCache = [NSMutableDictionary new];
     _rightHouseShowCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
@@ -405,27 +413,55 @@
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
+// 滑动house_show埋点
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
     if (vcParentView) {
         CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
         NSInteger index = (UIScreen.mainScreen.bounds.size.height - point.y - 70) / 108;
-//        if (index >= 0 && index < self.items.count) {
-//            [self addHouseShowByIndex:index];
-//        }
+        if (index >= 0) {
+            for (int i = 0; i < index; i ++) {
+                [self addHouseShowByIndex:i];
+            }
+        }
     }
 }
 
 // 添加house_show 埋点：这种方式效率不高，后续可以考虑优化
 - (void)addHouseShowByIndex:(NSInteger)index {
-//    if (index >= 0 && index < self.items.count) {
-//        NSString *tempKey = [NSString stringWithFormat:@"%ld", index];
-//        if ([self.leftHouseShowCache valueForKey:tempKey]) {
-//            return;
-//        }
-//        [self.leftHouseShowCache setValue:@(YES) forKey:tempKey];
-//        // 添加house_show埋点 add by zyk
-//        NSLog(@"------添加house_show 埋点: %ld",index);
-//    }
+    FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
+    if (model.currentSelIndex == 0) {
+        // 二手房
+        if (index >= 0 && index < self.ershouItems.count) {
+            NSString *tempKey = [NSString stringWithFormat:@"%ld", index];
+            if ([self.leftHouseShowCache valueForKey:tempKey]) {
+                return;
+            }
+            [self.leftHouseShowCache setValue:@(YES) forKey:tempKey];
+            // 添加house_show埋点 add by zyk
+            NSLog(@"------添加 leftHouseShowCache house_show 埋点: %ld",index);
+        }
+    }
+    if (model.currentSelIndex == 1) {
+        // 租房
+        if (index >= 0 && index < self.rentItems.count) {
+            NSString *tempKey = [NSString stringWithFormat:@"%ld", index];
+            if ([self.rightHouseShowCache valueForKey:tempKey]) {
+                return;
+            }
+            [self.rightHouseShowCache setValue:@(YES) forKey:tempKey];
+            // 添加house_show埋点 add by zyk
+            NSLog(@"------添加 rightHouseShowCache house_show 埋点: %ld",index);
+        }
+    }
+}
+
+// 切换二手房和租房时，上报埋点
+- (void)addHouseShowByChangeTab {
+    FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
+    UIView *v = model.tableView.superview;
+    if (v) {
+        [self fhDetail_scrollViewDidScroll:v];
+    }
 }
 
 @end
