@@ -6,14 +6,26 @@
 //
 
 #import "FHFloorTimeLineViewController.h"
+#import "FHFloorTimeLineViewModel.h"
+#import "FHDetailNavBar.h"
 
-@interface FHFloorTimeLineViewController ()
+@interface FHFloorTimeLineViewController () <TTRouteInitializeProtocol>
 
 @property (nonatomic , strong) UITableView *timeLineListTable;
+@property (nonatomic , strong) FHFloorTimeLineViewModel *timeLineListViewModel;
+@property (nonatomic , strong) NSString *courtId;
 
 @end
 
 @implementation FHFloorTimeLineViewController
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        _courtId = paramObj.allParams[@"courtId"];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,8 +34,11 @@
     [self refreshContentOffset:CGPointMake(0, 500)];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     // Do any additional setup after loading the view.
-    
+
     [self setUpTimeLineListTable];
+
+    _timeLineListViewModel = [[FHFloorTimeLineViewModel alloc] initWithController:self tableView:_timeLineListTable courtId:_courtId];
+    [self setNavBarTitle:@"楼盘动态"];
 }
 
 - (void)setUpTimeLineListTable
@@ -36,12 +51,17 @@
         _timeLineListTable.estimatedSectionFooterHeight = 0;
         _timeLineListTable.estimatedSectionHeaderHeight = 0;
     }
-    [_timeLineListTable setBackgroundColor:[UIColor redColor]];
+    [_timeLineListTable setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:_timeLineListTable];
     
     [_timeLineListTable mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo([self getBottomBar].mas_top);
+        make.top.equalTo([self getNaviBar].mas_bottom);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo([self getBottomBar].mas_top);
     }];
+    
+    [_timeLineListTable setBackgroundColor:[UIColor whiteColor]];
+   
 }
 
 /*

@@ -23,9 +23,15 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
+#import "FHDetailDisclaimerCell.h"
 
 @interface FHHouseNewDetailViewModel ()
+
 @property (nonatomic, strong , nullable) FHDetailRelatedCourtModel *relatedHouseData;
+
+@property (nonatomic, strong , nullable) FHDetailNewModel *dataModel;
+//@property (nonatomic, strong , nullable) FHDetailNewModel *newDetailDataModel;
+
 @end
 
 @implementation FHHouseNewDetailViewModel
@@ -46,7 +52,9 @@
     
     [self.tableView registerClass:[FHDetailNewHouseNewsCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseNewsCell class])];
     
-      [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCell class])];
+    [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
+    
+    [self.tableView registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCell class])];
 
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
     
@@ -99,6 +107,11 @@
         return [FHSingleImageInfoCell class];
     }
     
+    //版权信息
+    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
+        return [FHDetailDisclaimerCell class];
+    }
+    
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -111,13 +124,10 @@
 {
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
-        [wSelf processDetailData:model];
-    }];
-    
-    
-    [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
-        wSelf.relatedHouseData = model;
-        [wSelf processDetailRelatedData];
+        if ([model isKindOfClass:[FHDetailNewModel class]]) {
+            wSelf.dataModel = model;
+            [wSelf processDetailData:model];
+        }
     }];
 }
 
@@ -125,6 +135,24 @@
 - (void)processDetailData:(FHDetailNewModel *)model {
     // 清空数据源
     [self.items removeAllObjects];
+//    se = model;
+    // --
+    if (model.data.highlightedRealtor) {
+        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
+    }else {
+        self.contactViewModel.contactPhone = model.data.contact;
+    }
+    self.contactViewModel.shareInfo = model.data.shareInfo;
+    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
+    
+    __weak typeof(self) wSelf = self;
+    if (model.data) {
+        [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
+            wSelf.relatedHouseData = model;
+            [wSelf processDetailRelatedData];
+        }];
+    }
+    
     if (model.data.imageGroup) {
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         NSMutableArray *arrayHouseImage = [NSMutableArray new];
@@ -158,6 +186,7 @@
         houseName.pricingSubStauts = model.data.userStatus.pricingSubStatus;
         houseName.gaodeLat = model.data.coreInfo.gaodeLat;
         houseName.gaodeLng = model.data.coreInfo.gaodeLng;
+        houseName.courtId = model.data.coreInfo.id;
         [self.items addObject:houseName];
     }
     
@@ -191,7 +220,7 @@
             item.createdTime = itemModel.createdTime;
             item.isFirstCell = (i == 0);
             item.isLastCell = (i == model.data.timeline.list.count - 1);
-
+            item.courtId = model.data.coreInfo.id;
             [self.items addObject:item];
         }
     }
@@ -217,15 +246,6 @@
             }
         });
     }
-
-    // --
-    if (model.data.highlightedRealtor) {
-        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
-    }else {
-        self.contactViewModel.contactPhone = model.data.contact;
-    }
-    self.contactViewModel.shareInfo = model.data.shareInfo;
-    self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
     
     [self reloadData];
 }
@@ -250,6 +270,13 @@
         }
         
         [self reloadData];
+    }
+    
+    //楼盘版权信息
+    if ([self.dataModel.data.disclaimer isKindOfClass:[FHDetailNewDataDisclaimerModel class]]){
+        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
+        disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
+        [self.items addObject:disclaimerModel];
     }
 }
 

@@ -6,8 +6,10 @@
 //
 
 #import "FHDetailNewTimeLineItemCell.h"
+#import <TTRoute.h>
 
 @interface FHDetailNewTimeLineItemCell ()
+@property (nonatomic, strong) UIButton *maskBtn;
 @property (nonatomic, strong) UILabel *timeLabel;
 @property (nonatomic, strong) UIView *redDotView;
 @property (nonatomic, strong) UILabel *titleLabel;
@@ -68,7 +70,7 @@
         
 
         _contentLabel = [UILabel new];
-        _contentLabel.font = [UIFont themeFontRegular:14];
+        _contentLabel.font = [UIFont themeFontRegular:16];
         _contentLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
         _contentLabel.numberOfLines = 2;
         _contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -101,35 +103,72 @@
             make.top.equalTo(self.redDotView.mas_bottom).offset(4);
             make.bottom.equalTo(self.contentView);
         }];
+        
+        
+        _maskBtn = [UIButton new];
+        [_maskBtn addTarget:self action:@selector(maskButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        _maskBtn.backgroundColor = [UIColor clearColor];
+        [self.contentView addSubview:_maskBtn];
+        [_maskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.contentView);
+        }];
 
     }
     return self;
+}
+
+- (void)maskButtonClick:(UIButton *)button {
+    NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
 }
 
 - (void)refreshWithData:(id)data
 {
     if([data isKindOfClass:[FHDetailNewTimeLineItemModel class]])
     {
+        self.currentData = data;
         FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel*)data;
-//        NSDateFormatter * dateFormater = [NSDateFormatter str
-        _timeLabel.text = @"12-21";
+        if(model.createdTime)
+        {
+            _timeLabel.text = [self getTimeFromTimestamp:[model.createdTime doubleValue]];
+        }
         self.titleLabel.text = model.title;
         self.contentLabel.text = model.desc;
+        if (model.isExpand) {
+            _contentLabel.numberOfLines = 0;
+        }
         if (model.isFirstCell) {
             [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(15);
             }];
         }
-        
         if (model.isLastCell) {
             [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.bottom.equalTo(self.contentView).offset(-20);
             }];
         }
-        
     }
 }
 
+- (NSString *)getTimeFromTimestamp:(double)timestamp{
+    //将对象类型的时间转换为NSDate类型
+    double time =timestamp;
+    NSDate * myDate=[NSDate dateWithTimeIntervalSince1970:time];
+
+    //设置时间格式
+    NSDateFormatter * formatter=[[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"MM-dd"];
+
+    //将时间转换为字符串
+    NSString *timeStr=[formatter stringFromDate:myDate];
+   
+    if (timeStr) {
+      return timeStr;
+    }else
+    {
+      return @"未知";
+    }
+}
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
