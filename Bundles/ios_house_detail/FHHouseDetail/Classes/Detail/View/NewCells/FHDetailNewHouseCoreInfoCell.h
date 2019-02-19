@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   NSString   *courtId;//楼盘id
 @property (nonatomic, strong)   FHDetailHouseNameModel *houseName;
 @property (nonatomic, strong)   FHDetailDisclaimerModel *disclaimerModel;
+@property (nonatomic, weak)   id contactModel;
 
 @end
 

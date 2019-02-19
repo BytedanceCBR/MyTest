@@ -6,10 +6,19 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import "FHDetailNewCoreDetailModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHDetailNewCoreDetailDataPermitListModel;
+
 @interface FHFloorPanCorePermitCell : FHDetailBaseCell
+
+@end
+
+@interface FHFloorPanCorePermitCellModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewCoreDetailDataPermitListModel *> *permitList;
 
 @end
 
