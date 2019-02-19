@@ -278,7 +278,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         if (self.requestOriginTask) {
             [self.requestOriginTask cancel];
         }
-        [self requestOriginData:NO];
+        if ([FHEnvContext isNetworkConnected]) {
+            [self requestOriginData:NO];
+        }
     }
 }
 

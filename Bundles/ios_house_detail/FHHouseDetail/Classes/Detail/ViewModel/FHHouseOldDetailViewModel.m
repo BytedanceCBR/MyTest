@@ -28,6 +28,7 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailPriceRankCell.h"
 #import "FHDetailPriceTrendCellModel.h"
+#import "FHDetailPureTitleCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -57,6 +58,8 @@
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
     [self.tableView registerClass:[FHDetailErshouPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouPriceChartCell class])];
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankCell class])];
+    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
+
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -113,6 +116,9 @@
         return [FHDetailDisclaimerCell class];
     }
     // 价格分析
+    if ([model isKindOfClass:[FHDetailPureTitleModel class]]) {
+        return [FHDetailPureTitleCell class];
+    }
     if ([model isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
         return [FHDetailErshouPriceChartCell class];
     }
@@ -214,6 +220,9 @@
     if (model.data.housePricingRank || model.data.priceTrend.count > 0) {
         
         // 价格分析
+        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
+        titleModel.title = @"价格分析";
+        [self.items addObject:titleModel];
         if (model.data.housePricingRank.analyseDetail.length > 0) {
             FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
             priceRankModel.priceRank = model.data.housePricingRank;
@@ -223,6 +232,9 @@
         if (model.data.priceTrend.count > 0) {
             FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
             priceTrendModel.priceTrends = model.data.priceTrend;
+            priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
+            priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
+            priceTrendModel.tableView = self.tableView;
             [self.items addObject:priceTrendModel];
         }
     }
@@ -270,7 +282,7 @@
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
         //  同小区房源
-        if (self.sameNeighborhoodHouseData) {
+        if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
@@ -279,7 +291,7 @@
             [self.items addObject:infoModel];
         }
         // 周边小区
-        if (self.relatedNeighborhoodData) {
+        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
@@ -288,7 +300,7 @@
             [self.items addObject:infoModel];
         }
         // 周边房源
-        if (self.relatedHouseData) {
+        if (self.relatedHouseData && self.relatedHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线
             FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
             [self.items addObject:grayLine];
