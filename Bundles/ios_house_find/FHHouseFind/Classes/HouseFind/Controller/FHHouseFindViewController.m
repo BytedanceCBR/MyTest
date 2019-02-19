@@ -149,8 +149,7 @@
     _segmentView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentView.isNeedNetworkCheck = NO;
-    _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 10, 0, 10);
-//    _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:18],NSFontAttributeName,
                                      [UIColor themeGray],NSForegroundColorAttributeName,nil];
