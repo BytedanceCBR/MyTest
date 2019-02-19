@@ -545,7 +545,7 @@
     }
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/detail?%@",courtId]];
+    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/detail?court_id=%@",courtId]];
     
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         

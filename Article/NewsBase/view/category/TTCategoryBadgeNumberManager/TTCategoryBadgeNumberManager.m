@@ -115,17 +115,22 @@
 {
     
     TTCategoryBadgeNumberModel * modelCategory = [self.badgeNumberModels objectForKey:categoryID];
-    if (modelCategory)
-    {
-        modelCategory.hasNotifyPoint = isShow;
-        [self.badgeNumberModels setValue:modelCategory forKey:categoryID];
+    if (isShow) {
+        if (modelCategory)
+        {
+            modelCategory.hasNotifyPoint = isShow;
+            [self.badgeNumberModels setValue:modelCategory forKey:categoryID];
+        }else
+        {
+            TTCategoryBadgeNumberModel * model = [[TTCategoryBadgeNumberModel alloc] initWithCategoryID:categoryID];
+            model.hasNotifyPoint = isShow;
+            [self.badgeNumberModels setValue:model forKey:categoryID];
+        }
     }else
     {
-        TTCategoryBadgeNumberModel * model = [[TTCategoryBadgeNumberModel alloc] initWithCategoryID:categoryID];
-        model.hasNotifyPoint = isShow;
-        [self.badgeNumberModels setValue:model forKey:categoryID];
+        [self.badgeNumberModels setValue:nil forKey:categoryID];
     }
-    
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kCategoryRefresh" object:nil userInfo:nil];
 }
 

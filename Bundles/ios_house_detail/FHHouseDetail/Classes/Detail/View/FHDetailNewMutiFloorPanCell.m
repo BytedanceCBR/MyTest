@@ -106,7 +106,9 @@
 - (void)moreButtonClick:(UIButton *)button {
     
     if ([self.currentData isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":((FHDetailNewDataFloorpanListModel *)self.currentData).list}];
+        NSMutableDictionary *infoDict = [NSMutableDictionary new];
+        [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"floorlist"];
+        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
     }
 
