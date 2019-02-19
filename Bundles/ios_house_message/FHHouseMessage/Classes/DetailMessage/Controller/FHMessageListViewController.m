@@ -146,8 +146,6 @@
 }
 
 - (void)initView {
-//    self.view.backgroundColor = [UIColor themeGrayPale];
-    
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor themeGrayPale];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
