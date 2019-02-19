@@ -80,6 +80,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     if(isHead){
         self.offset = 0;
         self.searchId = nil;
+        self.originSearchId = nil;
         [self.dataList removeAllObjects];
         [self.clientShowDict removeAllObjects];
     }
