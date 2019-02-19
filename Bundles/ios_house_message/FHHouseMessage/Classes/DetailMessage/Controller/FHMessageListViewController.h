@@ -13,6 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSDictionary *)categoryLogDict;
 
+- (NSString *)categoryName;
+
+- (NSString *)originFrom;
+
 @end
 
 NS_ASSUME_NONNULL_END

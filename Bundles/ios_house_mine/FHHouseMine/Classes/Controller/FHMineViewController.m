@@ -68,7 +68,7 @@
 
 - (void)initConstraints {
     CGFloat bottom = 49;
-    CGFloat top = 0;
+    CGFloat top = 20;
     if (@available(iOS 11.0 , *)) {
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
         top = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
