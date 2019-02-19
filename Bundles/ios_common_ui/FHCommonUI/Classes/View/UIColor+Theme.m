@@ -94,6 +94,16 @@
     return RGB(0xff, 0x5b, 0x4c);
 }
 
++(UIColor *)themeIMBubbleRed
+{
+    return RGB(0xff, 0x58, 0x69);
+}
+
++(UIColor *)themeIMOrange
+{
+    return RGB(0xff, 0x81, 0x51);
+}
+
 + (UIColor *)colorWithHexStr:(NSString *)hexString {
     [UIColor colorWithHexString:hexString];
 }

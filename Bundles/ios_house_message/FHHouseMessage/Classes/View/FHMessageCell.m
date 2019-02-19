@@ -18,6 +18,7 @@
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UILabel *timeLabel;
+@property(nonatomic, strong) UIImageView *msgStateView;
 
 @end
 
@@ -50,6 +51,12 @@
 {
     self.iconView = [[UIImageView alloc] init];
     [self.contentView addSubview:_iconView];
+    _iconView.layer.masksToBounds = YES;
+    _iconView.layer.cornerRadius = 31;
+    
+    self.msgStateView = [[UIImageView alloc] init];
+    [self.contentView addSubview:_msgStateView];
+    self.msgStateView.hidden = YES;
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeBlack]];
     [self.contentView addSubview:_titleLabel];
@@ -80,6 +87,13 @@
         make.height.mas_equalTo(22);
     }];
     
+    [self.msgStateView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.titleLabel.mas_left);
+        make.right.mas_equalTo(self.titleLabel.mas_left).offset(12);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(8);
+        make.height.mas_equalTo(12);
+    }];
+    
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel.mas_left);
         make.right.mas_equalTo(self.contentView).offset(-20);
@@ -97,6 +111,30 @@
         make.right.mas_equalTo(self.iconView.mas_right);
         make.top.mas_equalTo(self.iconView.mas_top);
     }];
+}
+
+-(void)displaySendState:(ChatMsg *)msg {
+    if (msg.state == ChatMsgStateFail) {
+        [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_fail_ic"]];
+        [self.msgStateView setHidden:NO];
+    } else if (msg.state == ChatMsgStateSending) {
+        [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_message_sending_ic"]];
+        [self.msgStateView setHidden:NO];
+    } else {
+        [self.msgStateView setHidden:YES];
+    }
+    
+    [self.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if (msg.state != ChatMsgStateSuccess) {
+            make.left.mas_equalTo(self.titleLabel.mas_left).offset(16);
+        } else {
+            make.left.mas_equalTo(self.titleLabel.mas_left);
+        }
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        make.height.mas_equalTo(20);
+    }];
+    
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
@@ -123,6 +161,8 @@
 
     self.titleLabel.text = conv.conversationDisplayName;
     self.subTitleLabel.text = [conv lastMessage];
+    ChatMsg *lastMsg = [conv lastChatMsg];
+    [self displaySendState:lastMsg];
 //    self.timeLabel.text = conv.updatedAt;
 }
 

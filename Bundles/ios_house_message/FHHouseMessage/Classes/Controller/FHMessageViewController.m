@@ -15,6 +15,9 @@
 #import "UIViewController+Track.h"
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
+#import "ChatMsg.h"
+#import "IMManager.h"
+#import <TTReachability/TTReachability.h>
 
 @interface FHMessageViewController ()<UIViewControllerErrorHandler>
 
@@ -34,6 +37,7 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -58,6 +62,13 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
+    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+    } else {
+        [_notNetHeader setHidden:NO];
+    }
+    
     _tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -66,9 +77,27 @@
     _tableView.tableHeaderView = headerView;
     
     [self.containerView addSubview:_tableView];
+    [self.containerView addSubview:_notNetHeader];
     
     [self addDefaultEmptyViewFullScreen];
 }
+
+- (void)networkStateChange:(NSNotification *)notification {
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+    } else {
+        [_notNetHeader setHidden:NO];
+    }
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if ([TTReachability isNetworkConnected]) {
+            make.top.left.right.bottom.mas_equalTo(self.containerView);
+        } else {
+            make.top.mas_equalTo(self.containerView).offset(30);
+            make.left.right.bottom.mas_equalTo(self.containerView);
+        }
+    }];
+}
+
 
 - (void)initConstraints {
     CGFloat bottom = 49;
@@ -87,7 +116,12 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.bottom.mas_equalTo(self.containerView);
+        if ([TTReachability isNetworkConnected]) {
+            make.top.left.right.bottom.mas_equalTo(self.containerView);
+        } else {
+            make.top.mas_equalTo(self.containerView).offset(30);
+            make.left.right.bottom.mas_equalTo(self.containerView);
+        }
     }];
 }
 
