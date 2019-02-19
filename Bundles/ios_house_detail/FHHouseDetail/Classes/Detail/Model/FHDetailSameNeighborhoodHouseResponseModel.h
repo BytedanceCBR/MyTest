@@ -1,5 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import "FHSearchHouseModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailSameNeighborhoodHouseResponseDataItemsModel<NSObject>
 @end
@@ -80,7 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailSameNeighborhoodHouseResponseDataModel : JSONModel 
 
 @property (nonatomic, assign) BOOL hasMore;
-@property (nonatomic, strong , nullable) NSArray<FHDetailSameNeighborhoodHouseResponseDataItemsModel> *items;
+@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *total;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @end
