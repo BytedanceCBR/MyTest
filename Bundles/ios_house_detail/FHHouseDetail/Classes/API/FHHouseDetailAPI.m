@@ -22,6 +22,7 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHPostDataHTTPRequestSerializer.h"
 #import "FHDetailNewCoreDetailModel.h"
+#import "FHDetailFloorPanDetailInfoModel.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -552,6 +553,35 @@
         FHDetailNewCoreDetailModel *model = nil;
         if (!error) {
             model = [[FHDetailNewCoreDetailModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
++(TTHttpTask*)requestFloorPanDetailCoreInfoSearch:(NSString*)floorPanId
+                                       completion:(void(^)(FHDetailFloorPanDetailInfoModel * _Nullable model , NSError * _Nullable error))completion
+{
+    if (![floorPanId isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/floorplan/info?floorplan_id=%@",floorPanId]];
+    
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailFloorPanDetailInfoModel *model = nil;
+        if (!error) {
+            model = [[FHDetailFloorPanDetailInfoModel alloc] initWithDictionary:jsonObj error:&error];
         }
         
         if (![model.status isEqualToString:@"0"]) {

@@ -114,6 +114,8 @@ static const float kSegementedPadingTop = 5;
     dataModel.cell = self;
     _dataModel = dataModel;
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
+    [self.mapView setCenterCoordinate:self.centerPoint];
+    
 }
 
 - (void)setUpSegmentedControl
