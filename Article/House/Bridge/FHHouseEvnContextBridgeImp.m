@@ -85,7 +85,7 @@
 
 - (void)updateNotifyBadgeNumber:(NSString *)categoryId isShow:(BOOL)isShow
 {
-    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:categoryId withShow:YES];
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:categoryId withShow:isShow];
 }
 
 //首页推荐红点请求时间间隔

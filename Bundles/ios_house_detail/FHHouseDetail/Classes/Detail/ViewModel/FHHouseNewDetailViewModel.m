@@ -166,9 +166,9 @@
         [self.items addObject:headerCellModel];
     }
     
+    FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
     // 添加标题
     if (model.data) {
-        FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
         houseName.type = 1;
         houseName.name = model.data.coreInfo.name;
         houseName.aliasName = model.data.coreInfo.aliasName;
@@ -176,18 +176,24 @@
         houseName.tags = model.data.tags;
         [self.items addObject:houseName];
     }
-    
+  
     //核心信息
     if (model.data.coreInfo) {
-        FHDetailNewHouseCoreInfoModel *houseName = [[FHDetailNewHouseCoreInfoModel alloc] init];
-        houseName.pricingPerSqm = model.data.coreInfo.pricingPerSqm;
-        houseName.constructionOpendate = model.data.coreInfo.constructionOpendate;
-        houseName.courtAddress = model.data.coreInfo.courtAddress;
-        houseName.pricingSubStauts = model.data.userStatus.pricingSubStatus;
-        houseName.gaodeLat = model.data.coreInfo.gaodeLat;
-        houseName.gaodeLng = model.data.coreInfo.gaodeLng;
-        houseName.courtId = model.data.coreInfo.id;
-        [self.items addObject:houseName];
+        FHDetailNewHouseCoreInfoModel *houseCore = [[FHDetailNewHouseCoreInfoModel alloc] init];
+        houseCore.pricingPerSqm = model.data.coreInfo.pricingPerSqm;
+        houseCore.constructionOpendate = model.data.coreInfo.constructionOpendate;
+        houseCore.courtAddress = model.data.coreInfo.courtAddress;
+        houseCore.pricingSubStauts = model.data.userStatus.pricingSubStatus;
+        houseCore.gaodeLat = model.data.coreInfo.gaodeLat;
+        houseCore.gaodeLng = model.data.coreInfo.gaodeLng;
+        houseCore.courtId = model.data.coreInfo.id;
+        houseCore.houseName = houseName;
+        
+        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
+        disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
+        houseCore.disclaimerModel = disclaimerModel;
+        
+        [self.items addObject:houseCore];
     }
     
     //楼盘户型

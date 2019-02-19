@@ -462,6 +462,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         [self.messageTimer invalidate];
         self.messageTimer = nil;
     }
+    
+    [[[FHHouseBridgeManager sharedInstance] envContextBridge] updateNotifyBadgeNumber:kFHHomeHouseMixedCategoryID isShow:NO];
 }
 
 
