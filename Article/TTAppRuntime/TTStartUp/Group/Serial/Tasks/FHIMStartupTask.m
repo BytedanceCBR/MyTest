@@ -14,6 +14,9 @@
 #import "TTAccount.h"
 #import "TTInstallIDManager.h"
 #import "FHIMAccountCenterImpl.h"
+#import "FHBubbleTipManager.h"
+#import "FHURLSettings.h"
+#import <TTNetworkManager.h>
 
 @interface FHIMConfigDelegateImpl : NSObject<FHIMConfigDelegate>
 
@@ -22,23 +25,23 @@
 @implementation FHIMConfigDelegateImpl
 
 - (ClientType)getClientType {
-    return ClientTypeB;
+    return ClientTypeC;
 }
 
 - (ThemeType)getThemeType {
-    return ClientBTheme;
+    return ClientCTheme;
 }
 
 - (UIColor *)getChatBubbleColor {
-    return [UIColor themeBlue];
+    return [UIColor themeIMBubbleRed];
 }
 
 - (UIColor *)getChatNewTipColor {
-    return [UIColor themeRed];
+    return [UIColor themeIMOrange];
 }
 
 - (UIColor *)getChatTipTxtColor {
-    return [UIColor themeBlue];
+    return [UIColor themeIMBubbleRed];
 }
 
 - (NSArray<NSHTTPCookie *>*)getClientCookie {
@@ -63,8 +66,40 @@
 }
 
 - (void)onMessageRecieved:(ChatMsg *)msg {
-    
+    [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
 }
+
+- (void)tryGetPhoneNumber:(nonnull NSString *)userId {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
+    NSDictionary *param = @{@"realtor_id":userId};
+    [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:param  method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
+        if (!error) {
+            NSString *number = @"";
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                BOOL success = ([json[@"status"] integerValue] == 0);
+                if(success){
+                    number = json[@"data"][@"virtual_number"];
+                }
+            }
+            @catch(NSException *e){
+                
+            }
+            NSString *phone = @"";
+            BOOL isAssociate = NO;
+            if (!error) {
+                phone = [number stringByReplacingOccurrencesOfString:@"" withString:@""];
+                isAssociate = YES;
+            }
+            //todo增加拨号埋点
+            NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",phone];
+            NSURL *url = [NSURL URLWithString:phoneUrl];
+            [[UIApplication sharedApplication]openURL:url];
+        }
+    }];
+}
+
 
 @end
 
