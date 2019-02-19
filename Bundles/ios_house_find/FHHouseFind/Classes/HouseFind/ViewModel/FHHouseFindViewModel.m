@@ -575,7 +575,6 @@
     if (scrollView == self.collectionView) {
         NSInteger index = (scrollView.contentOffset.x + scrollView.frame.size.width*0.4) / scrollView.frame.size.width;
         if (self.segmentControl.selectedSegmentIndex != index) {
-//            self.segmentControl.selectedSegmentIndex = index;
             [self.segmentControl setSelectedSegmentIndex:index animated:YES];
         }
         FHHouseFindMainCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];

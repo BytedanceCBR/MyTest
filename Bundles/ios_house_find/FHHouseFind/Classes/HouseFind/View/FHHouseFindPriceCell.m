@@ -62,7 +62,11 @@
     
     tf.delegate = self;
     
-    tf.placeholder = placeholder;
+//    tf.placeholder = placeholder;
+    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:placeholder
+                                                               attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],
+                                                                            NSForegroundColorAttributeName:[UIColor themeGray4]
+                                                                            }];
     
     return tf;
 }

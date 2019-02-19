@@ -73,6 +73,7 @@
     
     _splitLine = [[UIView alloc] initWithFrame:CGRectZero];
     _splitLine.backgroundColor = [UIColor themeGray6];
+    _splitLine.hidden = YES;
     [self.view addSubview:_splitLine];
     
     self.errorMaskView = [[FHErrorView alloc]initWithFrame:[UIScreen mainScreen].bounds];
@@ -157,7 +158,7 @@
     _segmentView.selectedTitleTextAttributes = attributeSelect;
     _segmentView.titleFormatter = ^NSAttributedString *(HMSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) {
         
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontSemibold:20],
+        NSDictionary *attr = @{NSFontAttributeName:selected?[UIFont themeFontSemibold:20]:[UIFont themeFontRegular:20],
                                NSForegroundColorAttributeName:selected?[UIColor themeBlue1]:[UIColor themeGray4]
                                };        
         return  [[NSAttributedString alloc] initWithString:title attributes:attr];
