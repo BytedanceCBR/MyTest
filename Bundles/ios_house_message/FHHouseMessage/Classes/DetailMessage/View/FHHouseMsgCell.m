@@ -208,9 +208,12 @@
     [self updateLayoutWithShowTags:text.string.length > 0];
     
     FHHouseMsgDataItemsItemsImagesModel *imageModel = [model.images firstObject];
-    if(imageModel) {
+    if(imageModel.url){
         [self.imgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
+    }else{
+        self.imgView.image = [UIImage imageNamed:@"default_image"];
     }
+
     
     if(model.houseImageTag){
         self.imageTopLeftLabel.textColor = HEXRGBA(model.houseImageTag.textColor);

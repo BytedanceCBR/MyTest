@@ -13,7 +13,6 @@
 
 @interface FHMineFavoriteItemView()
 
-@property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, strong) UIImage *image;

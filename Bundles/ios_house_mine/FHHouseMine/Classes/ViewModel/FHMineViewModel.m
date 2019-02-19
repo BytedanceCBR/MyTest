@@ -17,14 +17,14 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 
-@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource>
+@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineFocusCellDelegate>
 
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSArray *defaultList;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMineViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
-@property(nonatomic, strong) NSMutableArray<FHMineFavoriteItemView *> *focusItems;
+@property(nonatomic, strong) NSMutableArray *focusItemTitles;
 @property (nonatomic , assign) BOOL hasLogin;
 
 @end
@@ -37,7 +37,7 @@
     if (self) {
         
         _dataList = [[NSMutableArray alloc] init];
-        _focusItems = [[NSMutableArray alloc] init];
+        _focusItemTitles = [[NSMutableArray alloc] init];
         
         self.tableView = tableView;
         
@@ -112,20 +112,15 @@
         }
         
         if(response.count == 4){
-            [self.focusItems removeAllObjects];
+            [self.focusItemTitles removeAllObjects];
             NSArray *typeArray = @[@(FHHouseTypeSecondHandHouse),@(FHHouseTypeRentHouse),@(FHHouseTypeNewHouse),@(FHHouseTypeNeighborhood)];
             NSArray *nameArray = @[@"二手房",@"租房",@"新房",@"小区"];
-            NSArray *imageNameArray = @[@"icon-ershoufang",@"icon-zufang",@"icon-xinfang",@"icon-xiaoqu"];
             
             for (NSInteger i = 0; i < typeArray.count; i++) {
                 NSInteger type = [typeArray[i] integerValue];
                 NSInteger count = [response[@(type)] integerValue];
                 NSString *title = [self getFocusItemTitle:nameArray[i] count:count];
-                FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageNameArray[i]];
-                view.focusClickBlock = ^{
-                    [wself goToFocusDetail:type];
-                };
-                [self.focusItems addObject:view];
+                [self.focusItemTitles addObject:title];
             }
             
             [wself.tableView reloadData];
@@ -217,7 +212,9 @@
     }
 }
 
-- (void)goToFocusDetail:(NSInteger)type {
+#pragma mark - FHMineFocusCellDelegate
+
+- (void)goToFocusDetail:(FHHouseType)type {
     NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"type"] = @(type);
@@ -226,6 +223,7 @@
 }
 
 #pragma mark - UITableViewDataSource
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_dataList count];
 }
@@ -235,9 +233,10 @@
     FHMineBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     [cell updateCell:_dataList[indexPath.row]];
     
-    if([cell isKindOfClass:[FHMineFocusCell class]]){
+    if([cell isKindOfClass:[FHMineFocusCell class]] && self.focusItemTitles.count == 4){
         FHMineFocusCell *focusCell = (FHMineFocusCell *)cell;
-        [focusCell setItems:self.focusItems];
+        focusCell.delegate = self;
+        [focusCell setItemTitles:self.focusItemTitles];
     }
     
     return cell;

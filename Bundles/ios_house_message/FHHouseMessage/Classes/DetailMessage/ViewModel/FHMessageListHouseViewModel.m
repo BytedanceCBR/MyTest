@@ -25,6 +25,7 @@
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic, assign) NSInteger rank;
 @property(nonatomic, copy) NSString *originSearchId;
+@property(nonatomic, copy) NSString *searchId;
 
 @end
 
@@ -110,17 +111,6 @@
     tracerDict[@"refresh_type"] = @"pre_load_more";
     tracerDict[@"element_from"] = @"be_null";
     TRACK_EVENT(@"click_official_message", tracerDict);
-}
-
-- (NSString *)timestampToDataString:(NSString *)timestamp {
-    // iOS 生成的时间戳是10位
-    NSTimeInterval interval = [timestamp doubleValue];
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MM月dd日 HH:mm"];
-    NSString *dateString = [formatter stringFromDate: date];
-    return dateString;
 }
 
 - (void)viewMoreDetail:(NSString *)moreDetail model:(FHHouseMsgDataItemsModel *)model

@@ -86,7 +86,7 @@
 }
 
 - (void)setupHeaderView {
-    FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 136)];
+    FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 141)];
     headerView.userInteractionEnabled = YES;
     _tableView.tableHeaderView = headerView;
     self.headerView = headerView;

@@ -128,7 +128,11 @@
     cell.lookDetailLabel.text = model.buttonName;
     
     FHSystemMsgDataItemsImagesModel *imageModel = model.images;
-    [cell.imgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+    if(imageModel.url){
+        [cell.imgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
+    }else{
+        cell.imgView.image = [UIImage imageNamed:@"default_image"];
+    }
     
     return cell;
 }
