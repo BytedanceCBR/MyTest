@@ -112,7 +112,73 @@
     if (model) {
         NSString *headerName = [NSString stringWithFormat:@"小区 %@",model.neighborhoodInfo.name];
         self.headerView.label.text = headerName;
-        
+        NSString *areaName = model.neighborhoodInfo.areaName;
+        NSString *districtName = model.neighborhoodInfo.districtName;
+        if (areaName.length > 0 && districtName.length > 0) {
+            self.nameValue.text = [NSString stringWithFormat:@"%@-%@",districtName,areaName];
+        } else {
+            self.nameValue.text = districtName;
+        }
+        self.bgView.hidden = model.neighborhoodInfo.evaluationInfo.detailUrl.length > 0 ? NO : YES;
+        NSString *lat = model.neighborhoodInfo.gaodeLat;
+        NSString *lng = model.neighborhoodInfo.gaodeLng;
+        if (lat.length > 0 && lng.length > 0) {
+            [self setLocation:lat lng:lng];
+            FHDetailOldDataNeighborhoodInfoEvaluationInfoModel *evaluationInfo = model.neighborhoodInfo.evaluationInfo;
+            if (evaluationInfo) {
+                self.starsContainer.hidden = NO;
+                [self.starsContainer updateStarsCount:[evaluationInfo.totalScore integerValue]];
+                NSInteger scoreValue = [evaluationInfo.totalScore integerValue];
+                if (scoreValue > 0) {
+                    [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.height.mas_equalTo(50);
+                    }];
+                    self.starsContainer.hidden = NO;
+                } else {
+                    [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.height.mas_equalTo(0);
+                    }];
+                    self.starsContainer.hidden = YES;
+                }
+                if (evaluationInfo.detailUrl.length > 0) {
+                    self.bgView.hidden = NO;
+                } else {
+                    self.bgView.hidden = YES;
+                }
+            } else {
+                [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(0);
+                }];
+                self.starsContainer.hidden = YES;
+            }
+        }
+        if (model.neighborhoodInfo.schoolInfo.count > 0) {
+            FHDetailOldDataNeighborhoodInfoSchoolInfoModel *schoolInfo = model.neighborhoodInfo.schoolInfo[0];
+            self.schoolLabel.text = schoolInfo.schoolName;
+            [self.schoolLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(20);
+            }];
+            [self.schoolKey mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(20);
+            }];
+            [self.mapImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.schoolKey.mas_bottom).offset(20);
+            }];
+            self.schoolKey.hidden = NO;
+            self.schoolLabel.hidden = NO;
+        } else {
+            [self.schoolLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(0);
+            }];
+            [self.schoolKey mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(0);
+            }];
+            [self.mapImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.schoolKey.mas_bottom).offset(10);
+            }];
+            self.schoolKey.hidden = YES;
+            self.schoolLabel.hidden = YES;
+        }
     }
     [self layoutIfNeeded];
 }
@@ -166,7 +232,7 @@
     _mapViewGesture = [[UITapGestureRecognizer alloc] init];
     //
     [self.starsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
         make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(50);
     }];

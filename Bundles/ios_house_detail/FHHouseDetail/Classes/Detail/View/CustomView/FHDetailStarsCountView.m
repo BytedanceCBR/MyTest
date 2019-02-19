@@ -76,7 +76,7 @@
         }
         if (index <= startCount) {
             starImageView.image = [UIImage imageNamed:@"star_evaluation"];
-        } else {
+        } else if (index == startCount + 1 && isShowHalfStart) {
             [self createHalfStarView:starImageView ratio:scoreValue % 10];
         }
         privousView = starImageView;

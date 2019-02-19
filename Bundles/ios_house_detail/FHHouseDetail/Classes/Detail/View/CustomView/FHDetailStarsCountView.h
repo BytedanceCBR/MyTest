@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UIView       *starsCountView;
 @property (nonatomic, assign)   CGFloat       starsSize;
 
+- (void)updateStarsCount:(NSInteger)scoreValue;
+
 @end
 
 NS_ASSUME_NONNULL_END
