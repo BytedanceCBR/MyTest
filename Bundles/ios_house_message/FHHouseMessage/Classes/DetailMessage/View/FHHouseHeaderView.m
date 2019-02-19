@@ -27,7 +27,7 @@
 - (void)initViews {
     self.dateView = [[UIView alloc] init];
     _dateView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-    _dateView.layer.cornerRadius = 10;
+    _dateView.layer.cornerRadius = 4;
     _dateView.layer.masksToBounds = YES;
     [self addSubview:_dateView];
     
@@ -39,6 +39,8 @@
     [self addSubview:_contentView];
     
     self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeBlack]];
+    _contentLabel.numberOfLines = 2;
+    _contentLabel.lineBreakMode = UILineBreakModeCharacterWrap;
     [_contentView addSubview:_contentLabel];
     
     self.bottomLine = [[UIView alloc] init];
@@ -69,7 +71,8 @@
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.centerY.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).offset(10);
+        make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
     
     [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {

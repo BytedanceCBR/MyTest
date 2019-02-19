@@ -52,7 +52,7 @@
     
     self.dateView = [[UIView alloc] init];
     _dateView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
-    _dateView.layer.cornerRadius = 12;
+    _dateView.layer.cornerRadius = 4;
     _dateView.layer.masksToBounds = YES;
     [self.contentView addSubview:_dateView];
     
@@ -71,7 +71,11 @@
     
     self.imgView = [[UIImageView alloc] init];
     _imgView.backgroundColor = [UIColor themeGrayPale];
-    _imgView.contentMode = UIViewContentModeScaleAspectFit;
+    _imgView.contentMode = UIViewContentModeScaleAspectFill;
+    _imgView.layer.cornerRadius = 4;
+    _imgView.layer.masksToBounds = YES;
+    _imgView.layer.borderWidth = 0.5;
+    _imgView.layer.borderColor = [[UIColor themeGray6] CGColor];
     [_cardView addSubview:_imgView];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray2]];
@@ -96,8 +100,8 @@
 
 - (void)initConstraints {
     [self.dateView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(30);
-        make.height.mas_equalTo(24);
+        make.top.mas_equalTo(20);
+        make.height.mas_equalTo(20);
         make.centerX.equalTo(self.contentView);
     }];
     
