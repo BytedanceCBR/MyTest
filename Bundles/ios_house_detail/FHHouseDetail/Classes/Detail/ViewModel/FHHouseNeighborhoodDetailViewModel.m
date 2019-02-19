@@ -19,6 +19,7 @@
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailNeighborhoodStatsInfoCell.h"
 #import "FHDetailNeighborhoodPropertyInfoCell.h"
+#import "FHDetailRelatedNeighborhoodCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -39,6 +40,7 @@
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoCell class])];
+    [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
 
 }
 // cell class
@@ -61,6 +63,10 @@
     // 属性列表
     if ([model isKindOfClass:[FHDetailNeighborhoodPropertyInfoModel class]]) {
         return [FHDetailNeighborhoodPropertyInfoCell class];
+    }
+    // 周边小区
+    if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
+        return [FHDetailRelatedNeighborhoodCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -128,6 +134,9 @@
         infoModel.baseInfo = model.data.baseInfo;
         [self.items addObject:infoModel];
     }
+    // 周边配套
+    // 均价走势
+    // 小区成交历史
     [self reloadData];
 }
 
@@ -145,7 +154,17 @@
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
-        
+        // 周边小区
+        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
+            infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            [self.items addObject:infoModel];
+        }
+        //
+        [self reloadData];
     }
 }
 
