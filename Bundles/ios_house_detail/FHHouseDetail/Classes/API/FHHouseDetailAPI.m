@@ -21,6 +21,7 @@
 #import "TTAccountUserEntity.h"
 #import "FHDetailRelatedCourtModel.h"
 #import "FHPostDataHTTPRequestSerializer.h"
+#import "FHDetailNewCoreDetailModel.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -512,17 +513,45 @@
                                   query:(NSString*)query
                              completion:(void(^)(FHDetailNewTimeLineResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:@"/f100/api/court/timeline=%@&%@",query];
+    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/timeline?%@",query]];
+    
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    if (query.length > 0) {
-        url = [NSString stringWithFormat:@"%@&%@",url,query];
-    }
     
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
         FHDetailNewTimeLineResponseModel *model = nil;
         if (!error) {
             model = [[FHDetailNewTimeLineResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
++(TTHttpTask*)requestFloorCoreInfoSearch:(NSString*)courtId
+                              completion:(void(^)(FHDetailNewCoreDetailModel * _Nullable model , NSError * _Nullable error))completion
+{
+    
+    if (![courtId isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:[NSString stringWithFormat:@"/f100/api/court/detail?%@",courtId]];
+    
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHDetailNewCoreDetailModel *model = nil;
+        if (!error) {
+            model = [[FHDetailNewCoreDetailModel alloc] initWithDictionary:jsonObj error:&error];
         }
         
         if (![model.status isEqualToString:@"0"]) {

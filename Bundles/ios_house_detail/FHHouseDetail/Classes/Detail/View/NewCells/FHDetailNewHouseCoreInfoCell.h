@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString  *constructionOpendate;
 @property (nonatomic, strong)   NSString   *courtAddress;//楼盘地址
 @property (nonatomic, assign)   NSInteger pricingSubStauts;
+@property (nonatomic, strong)   NSString   *courtId;//楼盘id
 
 @end
 
