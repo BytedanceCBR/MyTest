@@ -229,7 +229,13 @@ static const float kSegementedPadingTop = 5;
             selectCategory = [NSString stringWithFormat:@"%@",_nameArray[_segmentedControl.selectedSegmentIndex]];
         }
     }
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"category":selectCategory,@"latitude":latitudeNum,@"longitude":longitudeNum}];
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:selectCategory forKey:@"category"];
+    [infoDict setValue:latitudeNum forKey:@"latitude"];
+    [infoDict setValue:longitudeNum forKey:@"longitude"];
+
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 

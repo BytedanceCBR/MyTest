@@ -7,8 +7,10 @@
 
 #import "FHDetailBaseCell.h"
 #import "FHDetailBaseModel.h"
-
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHDetailHouseNameModel;
+@class FHDetailDisclaimerModel;
 
 @interface FHDetailNewHouseCoreInfoCell : FHDetailBaseCell
 
@@ -23,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   NSString   *courtAddress;//楼盘地址
 @property (nonatomic, assign)   NSInteger pricingSubStauts;
 @property (nonatomic, strong)   NSString   *courtId;//楼盘id
+@property (nonatomic, strong)   FHDetailHouseNameModel *houseName;
+@property (nonatomic, strong)   FHDetailDisclaimerModel *disclaimerModel;
 
 @end
 

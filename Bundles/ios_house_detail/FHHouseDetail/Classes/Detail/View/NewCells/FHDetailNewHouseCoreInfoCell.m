@@ -224,7 +224,14 @@ static const CGFloat kLabelKeyRightPandding = -20;
 - (void)moreInfoButClick
 {
     NSString *courtId = ((FHDetailNewHouseCoreInfoModel *)self.currentData).courtId;
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+    FHDetailNewHouseCoreInfoModel *houseNameModel = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:houseNameModel.houseName forKey:@"courtInfo"];
+    [infoDict setValue:houseNameModel.disclaimerModel forKey:@"disclaimerInfo"];
+
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?courtId=%@",courtId]] userInfo:info];
 }
 
 - (void)openMapDetail
@@ -234,7 +241,13 @@ static const CGFloat kLabelKeyRightPandding = -20;
     double latitude = [_infoModel.gaodeLat doubleValue] ? [_infoModel.gaodeLat doubleValue] : 0;
     NSNumber *latitudeNum = @(latitude);
     NSNumber *longitudeNum = @(longitude);
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"category":@"公交",@"latitude":latitudeNum,@"longitude":longitudeNum}];
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"公交" forKey:@"category"];
+    [infoDict setValue:latitudeNum forKey:@"latitude"];
+    [infoDict setValue:longitudeNum forKey:@"longitude"];
+    
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 

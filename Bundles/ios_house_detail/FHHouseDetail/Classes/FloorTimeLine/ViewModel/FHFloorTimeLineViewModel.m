@@ -57,18 +57,6 @@
 - (void)registerCellClasses {
     [self.timeLineListTable registerClass:[FHDetailNewTimeLineItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewTimeLineItemCell class])];
 }
-// cell class
-- (Class)cellClassForEntity:(id)model {
-    if ([model isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
-        return [FHDetailNewTimeLineItemCell class];
-    }
-    return [FHDetailBaseCell class];
-}
-// cell identifier
-- (NSString *)cellIdentifierForEntity:(id)model {
-    Class cls = [self cellClassForEntity:model];
-    return NSStringFromClass(cls);
-}
 
 - (void)configTableView
 {
