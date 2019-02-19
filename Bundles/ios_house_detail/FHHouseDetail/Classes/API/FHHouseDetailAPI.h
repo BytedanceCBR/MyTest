@@ -12,7 +12,7 @@
 #import "FHMainApi.h"
 
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel;
-@class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel;
+@class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
 @class FHHouseRentRelatedResponseModel,FHRentSameNeighborhoodResponseModel;
 @class FHDetailResponseModel,FHDetailVirtualNumResponseModel,FHDetailUserFollowResponseModel;
 
@@ -116,6 +116,10 @@ typedef enum : NSUInteger {
 +(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId
                                   query:(NSString*)query
                              completion:(void(^)(FHDetailNewTimeLineResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 新房-楼盘信息
++(TTHttpTask*)requestFloorCoreInfoSearch:(NSString*)courtId
+                              completion:(void(^)(FHDetailNewCoreDetailModel * _Nullable model , NSError * _Nullable error))completion;
 @end
 
 

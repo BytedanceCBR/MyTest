@@ -159,6 +159,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_moreBtn setAttributedTitle:attributeString forState:UIControlStateNormal];
     _moreBtn.backgroundColor = [UIColor colorWithHexString:@"#f6f7f8"];
     _moreBtn.layer.cornerRadius = 5;
+    [_moreBtn addTarget:self action:@selector(moreInfoButClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_moreBtn];
     [_moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.courtAddressKey.mas_bottom).offset(16);
@@ -220,6 +221,12 @@ static const CGFloat kLabelKeyRightPandding = -20;
     }];
 }
 
+- (void)moreInfoButClick
+{
+    NSString *courtId = ((FHDetailNewHouseCoreInfoModel *)self.currentData).courtId;
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+}
+
 - (void)openMapDetail
 {
     //地图页调用示例
@@ -234,6 +241,8 @@ static const CGFloat kLabelKeyRightPandding = -20;
 - (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHDetailNewHouseCoreInfoModel class]]) {
+        self.currentData = data;
+        
         FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)data;
         _infoModel = model;
         self.pricingPerSqmLabel.text = model.pricingPerSqm;
