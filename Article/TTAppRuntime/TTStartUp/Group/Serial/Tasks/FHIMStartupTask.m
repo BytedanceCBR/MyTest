@@ -62,6 +62,10 @@
     return [[TTInstallIDManager sharedInstance] deviceID];
 }
 
+- (void)onMessageRecieved:(ChatMsg *)msg {
+    
+}
+
 @end
 
 @implementation FHIMStartupTask
