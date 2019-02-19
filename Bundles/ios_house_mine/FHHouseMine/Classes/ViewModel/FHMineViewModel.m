@@ -15,7 +15,7 @@
 #import "TTAccount.h"
 #import "TTAccountManager.h"
 #import "ToastManager.h"
-//#import "FHUserTracker.h"
+#import "FHUserTracker.h"
 
 @interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -60,7 +60,7 @@
                              },
                          @{
                              @"name":@"我的收藏",
-                             @"url":@"snssdk1370://favorite",
+                             @"url":@"snssdk1370://favorite?stay_id=favorite",
                              @"cellId":@"settingCellId",
                              @"cellClassName":@"FHMineSettingCell"
                              },
@@ -68,23 +68,34 @@
                              @"name":@"用户反馈",
                              @"url":@"snssdk1370://feedback",
                              @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell"
+                             @"cellClassName":@"FHMineSettingCell",
+                             @"click_minetab":@{
+                                        @"click_type":@"feedback",
+                                        @"page_type":@"minetab",
+                                     },
+                             @"go_detail":@{
+                                     @"enter_from":@"minetab",
+                                     @"page_type":@"feedback",
+                                     },
                              },
                          @{
                              @"name":@"系统设置",
                              @"url":@"snssdk1370://more",
                              @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell"
+                             @"cellClassName":@"FHMineSettingCell",
+                             @"click_minetab":@{
+                                     @"click_type":@"setting",
+                                     @"page_type":@"minetab",
+                                     },
+                             @"go_detail":@{
+                                     @"enter_from":@"minetab",
+                                     @"page_type":@"setting",
+                                     },
                              },
                          ];
     [self.dataList addObjectsFromArray:self.defaultList];
     
     for (NSDictionary *dic in self.defaultList) {
-//        FHBMineDataServiceListModel *model = [[FHBMineDataServiceListModel alloc] init];
-//        model.name = dic[@"name"];
-//        model.url = dic[@"url"];
-//        [self.dataList addObject:model];
-        
         NSString *cellId = dic[@"cellId"];
         NSString *cellClassName = dic[@"cellClassName"];
         [self.tableView registerClass:NSClassFromString(cellClassName) forCellReuseIdentifier:cellId];
@@ -130,12 +141,38 @@
         if(state == 1){
             [[ToastManager manager] showToast:@"个人资料功能升级中，敬请期待"];
         }else if(state == 2){
+            NSString *goDetailTrackDic = @{
+                                           @"enter_from":@"minetab",
+                                           @"page_type":@"personal_info"
+                                           };
+            TRACK_EVENT(@"go_detail", goDetailTrackDic);
+            NSString *clickTrackDic = @{
+                                        @"click_type":@"edit_info",
+                                        @"page_type":@"minetab"
+                                        };
+            TRACK_EVENT(@"click_minetab", clickTrackDic);
+            
             NSURL* url = [NSURL URLWithString:@"snssdk1370://editUserProfile"];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
     }else{
+        NSString *clickTrackDic = @{
+                                    @"click_type":@"login",
+                                    @"page_type":@"minetab"
+                                    };
+        TRACK_EVENT(@"click_minetab", clickTrackDic);
+        
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"originFrom"] = @"minetab";
+        traceParam[@"enter_from"] = @"minetab";
+        traceParam[@"enter_type"] = @"login";
+        NSDictionary *dict = @{
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
         NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 
@@ -229,43 +266,22 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 
     NSDictionary *dic = _dataList[indexPath.row];
+    
+    NSString *clickTrackDic = dic[@"click_minetab"];
+    if(clickTrackDic){
+        TRACK_EVENT(@"click_minetab", clickTrackDic);
+    }
+    
+    NSString *goDetailTrackDic = dic[@"go_detail"];
+    if(clickTrackDic){
+        TRACK_EVENT(@"go_detail", goDetailTrackDic);
+    }
+    
     NSString *urlStr = dic[@"url"];
     if(urlStr){
         NSURL* url = [NSURL URLWithString:urlStr];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
-
-//    [self addEnterDetailLog:model];
 }
-
-//-(void)addEnterDetailLog:(FHBMineDataServiceListModel *)model
-//{
-//    /*
-//     1. event_type：house_app2b
-//     2. page_type：(详情页类型：用户反馈：feedback，系统设置：setting，编辑资料：personal_info)
-//     3. enter_from：(详情页入口：我的tab：minetab]
-//     */
-//    
-//    
-//    NSMutableDictionary *param = [NSMutableDictionary new];
-//    
-//    param[UT_ENTER_FROM] = UT_OF_MINE;
-//    NSURL *url = [NSURL URLWithString:model.url];
-//    if(url.host){
-//        param[UT_PAGE_TYPE] = url.host;
-//    }
-//    
-//    TRACK_EVENT(UT_GO_DETAIL,param);
-//}
-//
-//-(void)addEnterUserProfileLog
-//{
-//    NSMutableDictionary *param = [NSMutableDictionary new];
-//    
-//    param[UT_ENTER_FROM] = UT_OF_MINE;
-//    param[UT_PAGE_TYPE] = @"personal_info";
-//    
-//    TRACK_EVENT(UT_GO_DETAIL,param);
-//}
 
 @end

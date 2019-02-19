@@ -13,6 +13,7 @@
 #import "FHMineAPI.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
+#import "FHUserTracker.h"
 
 @interface FHLoginViewModel()<FHLoginViewDelegate>
 
@@ -21,6 +22,8 @@
 @property(nonatomic , assign) BOOL isRequestingSMS;
 @property(nonatomic , strong) NSTimer *timer;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
+//是否重新是重新发送验证码
+@property(nonatomic , assign) BOOL isVerifyCodeRetry;
 
 @end
 
@@ -161,6 +164,9 @@
         return;
     }
     
+    [[ToastManager manager] showToast:@"正在登录中"];
+    [self traceLogin];
+    
     [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
             [[ToastManager manager] showToast:@"登录成功"];
@@ -172,45 +178,14 @@
     }];
 }
 
+- (void)traceLogin {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    TRACK_EVENT(@"click_login", tracerDict);
+}
+
 - (void)popViewController {
     [self.viewController.navigationController popViewControllerAnimated:YES];
 }
-
-//func quickLogin(mobile: String, smsCode: String) {
-//
-//    if !mobile.hasPrefix("1") || mobile.count > 11 {
-//        EnvContext.shared.toast.showToast("手机号错误")
-//        return
-//    }
-//
-//    if EnvContext.shared.client.reachability.connection == .none
-//    {
-//        EnvContext.shared.toast.showToast("网络错误")
-//        return
-//    }
-//
-//    requestQuickLogin(mobile: mobile, smsCode: smsCode)
-//    .subscribe(onNext: { [unowned self] void in
-//        EnvContext.shared.toast.dismissToast()
-//        EnvContext.shared.toast.showToast("登录成功")
-//        self.onResponse.accept(.successed)
-//        self.loginResponse.accept(.successed)
-//        EnvContext.shared.client.accountConfig.setUserPhone(phoneNumber: mobile)
-//        EnvContext.shared.client.sendPhoneNumberCache?.setObject(mobile as NSString, forKey: "phonenumber")
-//        EnvContext.shared.client.accountConfig.userInfo.accept(TTAccount.shared().user())
-//        // 去掉通讯录弹窗
-//        //                    AddressBookSync.trySyncAddressBook()
-//    }, onError: { [unowned self] error in
-//        self.loginResponse.accept(.error(error))
-//        if let theError = error as? NSError {
-//
-//            EnvContext.shared.toast.showToast(theError.errorMessageByErrorCode())
-//        }else {
-//            EnvContext.shared.toast.showToast("加载失败")
-//
-//        }                })
-//    .disposed(by: disposeBag)
-//}
 
 - (void)sendVerifyCode {
     [self.view endEditing:YES];
@@ -233,17 +208,26 @@
     }
     
     self.isRequestingSMS = YES;
+    [[ToastManager manager] showToast:@"正在获取验证码"];
+    [self traceVerifyCode];
     
     [FHMineAPI requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
         if(!error){
             [weakSelf blockRequestSendMessage:[retryTime integerValue]];
             [[ToastManager manager] showToast:@"短信验证码发送成功"];
+            weakSelf.isVerifyCodeRetry = YES;
         }else{
             NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
             [[ToastManager manager] showToast:errorMessage];
             weakSelf.isRequestingSMS = NO;
         }
     }];
+}
+
+- (void)traceVerifyCode {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"is_resent"] = @(self.isVerifyCodeRetry);
+    TRACK_EVENT(@"click_verifycode", tracerDict);
 }
 
 - (BOOL)isPureInt:(NSString *)str {
