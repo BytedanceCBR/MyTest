@@ -38,6 +38,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 刷新数据
 - (void)reloadData;
 
+
+// 埋点相关
+- (void)addGoDetailLog;
+- (void)addStayPageLog:(NSTimeInterval)stayTime;
+
 @end
 
 NS_ASSUME_NONNULL_END
