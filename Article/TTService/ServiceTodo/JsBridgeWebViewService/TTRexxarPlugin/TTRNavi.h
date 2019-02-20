@@ -17,6 +17,7 @@ TTR_EXPORT_HANDLER(openPage)
 TTR_EXPORT_HANDLER(openHotsoon)
 TTR_EXPORT_HANDLER(openApp)
 TTR_EXPORT_HANDLER(handleNavBack)
+TTR_EXPORT_HANDLER(onAccountCancellationSuccess)
 
 // 禁用滑动返回
 TTR_EXPORT_HANDLER(disableDragBack)
