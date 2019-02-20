@@ -298,7 +298,7 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
             
         }];
-        [FHEnvContext openSwitchCityURL:url completion:^(BOOL isSuccess) {
+        [FHEnvContext openLogoutSuccessURL:url completion:^(BOOL isSuccess) {
         
         }];
     }
