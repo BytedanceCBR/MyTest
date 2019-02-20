@@ -9,15 +9,17 @@
 #import <TTNetworkManager.h>
 #import "FHURLSettings.h"
 #import "FHHouseBridgeManager.h"
-
+#import "IMChatMessageUnreadCountObserver.h"
+#import "IMManager.h"
 #define API_ERROR_CODE  1000
 #define GET @"GET"
 
-@interface FHMessageManager()
+@interface FHMessageManager()<IMChatMessageUnreadCountObserver>
 
 @property(nonatomic , weak) TTHttpTask *requestTask;
 @property(nonatomic , strong) NSTimer *timer;
-
+@property(atomic, assign) NSInteger unreadSystemMsgCount;
+@property(atomic, assign) NSInteger unreadChatMsgCount;
 @end
 
 @implementation FHMessageManager
@@ -26,6 +28,8 @@
     self = [super init];
     if (self) {
         [self initNotification];
+        self.unreadSystemMsgCount = 0;
+        self.unreadChatMsgCount = 0;
     }
     return self;
 }
@@ -35,6 +39,7 @@
 }
 
 - (void)initNotification {
+    [IMManager shareInstance].chatMessageUnreadCountObv = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startSyncMessage) name:@"kFHLogInAccountStatusChangedNotification" object:nil];
 }
 
@@ -70,7 +75,9 @@
     __weak typeof(self) wself = self;
     [self getNewNumberWithCompletion:^(NSInteger number, NSError * _Nonnull error) {
         if(!error){
-            [wself setBadgeNumber:number];
+            wself.unreadSystemMsgCount = number;
+//            [wself setBadgeNumber:number];
+            [self refreshBadgeNumber];
         }
     }];
 }
@@ -80,11 +87,15 @@
     [envContextBridge setMessageTabBadgeNumber:number];
 }
 
+-(void)refreshBadgeNumber {
+    [self setBadgeNumber:_unreadChatMsgCount + _unreadSystemMsgCount];
+}
+
 - (void)getNewNumberWithCompletion:(void(^)(NSInteger number , NSError *error))completion {
     
     NSString *url = [[FHURLSettings baseURL] stringByAppendingString:@"/f100/api/msg/unread"];
     
-    self.requestTask = [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:nil method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+    self.requestTask = [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:nil method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
         
         NSInteger count = 0;
         if (!error) {
@@ -100,13 +111,30 @@
                 }
             }
             @catch(NSException *e){
-                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
             }
         }
         if (completion) {
             completion(count,error);
         }
     }];
+}
+
+#pragma -- IMChatMessageUnreadCountObserver --
+- (void)onMessageUnreadCountChanged:(NSInteger)unreadCount {
+    if (unreadCount < 0) {
+        return;
+    }
+    self.unreadChatMsgCount = unreadCount;
+    [self refreshBadgeNumber];
+}
+
+-(void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce {
+    self.unreadSystemMsgCount = self.unreadSystemMsgCount - reduce;
+    if (self.unreadSystemMsgCount < 0) {
+        self.unreadSystemMsgCount = 0;
+    }
+    [self refreshBadgeNumber];
 }
 
 @end
