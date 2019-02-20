@@ -17,6 +17,7 @@
 #import "FHDetailGrayLineCell.h"
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHDetailPhotoHeaderCell.h"
+#import "FHFloorPanTitleCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -45,6 +46,8 @@
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     
+    [self.tableView registerClass:[FHFloorPanTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanTitleCell class])];
+    
     [self.infoListTable registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     
     [self.infoListTable registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
@@ -59,8 +62,8 @@
     }
     
     // 标题
-    if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
-        return [FHDetailHouseNameCell class];
+    if ([model isKindOfClass:[FHFloorPanTitleCellModel class]]) {
+        return [FHFloorPanTitleCell class];
     }
     
     // 灰色分割线
