@@ -123,7 +123,7 @@
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:self.houseId completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]]) {
             wSelf.dataModel = model;
             [wSelf processDetailData:model];

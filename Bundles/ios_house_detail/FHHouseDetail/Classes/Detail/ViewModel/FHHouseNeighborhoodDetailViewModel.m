@@ -89,10 +89,8 @@
 // 网络数据请求
 - (void)startLoadData {
     // 详情页数据-Main
-    //    NSDictionary *logpb = @{@"abc":@"vvv",@"def":@"cccc"};
-    // add by zyk 记得logpb数据 传入
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:nil query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:self.listLogPB query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
