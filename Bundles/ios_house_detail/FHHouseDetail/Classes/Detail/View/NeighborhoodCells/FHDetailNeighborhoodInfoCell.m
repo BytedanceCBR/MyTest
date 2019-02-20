@@ -109,6 +109,72 @@
     self.currentData = data;
     //
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)data;
+    // 二手房
+    if (model.neighborhoodInfo) {
+        [self updateErshouCellData];
+    }
+    // 租房
+    if (model.rent_neighborhoodInfo) {
+        [self updateRentCellData];
+    }
+    [self layoutIfNeeded];
+}
+
+- (void)updateRentCellData {
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    if (model) {
+        NSString *headerName = [NSString stringWithFormat:@"小区 %@",model.rent_neighborhoodInfo.name];
+        self.headerView.label.text = headerName;
+        NSString *districtName = model.rent_neighborhoodInfo.districtName;
+        self.nameValue.text = districtName;
+        FHRentDetailResponseDataEvaluationInfo *evaluationInfo = model.rent_neighborhoodInfo.evaluationInfo;
+        if (evaluationInfo) {
+            self.starsContainer.hidden = NO;
+            [self.starsContainer updateStarsCount:evaluationInfo.totalScore];
+            [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(50);
+            }];
+            [self.nameKey mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.top.mas_equalTo(self.starsContainer.mas_bottom);
+                make.height.mas_equalTo(20);
+            }];
+        } else {
+            [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(0);
+            }];
+            self.starsContainer.hidden = YES;
+            [self.nameKey mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
+                make.height.mas_equalTo(20);
+            }];
+        }
+        
+        if (evaluationInfo.detailUrl.length > 0) {
+            self.bgView.hidden = NO;
+        } else {
+            self.bgView.hidden = YES;
+        }
+        
+        NSString *lat = model.rent_neighborhoodInfo.gaodeLat;
+        NSString *lng = model.rent_neighborhoodInfo.gaodeLng;
+        if (lat.length > 0 && lng.length > 0) {
+            [self setLocation:lat lng:lng];
+        }
+        NSString *schoolName = model.rent_neighborhoodInfo.schoolInfo.schoolName;
+        if (schoolName.length) {
+            self.schoolLabel.text = schoolName;
+            [self schoolLabelIsHidden:NO];
+        } else {
+            [self schoolLabelIsHidden:YES];
+        }
+    }
+}
+
+// 二手房
+- (void)updateErshouCellData {
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {
         NSString *headerName = [NSString stringWithFormat:@"小区 %@",model.neighborhoodInfo.name];
         self.headerView.label.text = headerName;
@@ -180,7 +246,6 @@
             self.schoolLabel.hidden = YES;
         }
     }
-    [self layoutIfNeeded];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
