@@ -11,6 +11,7 @@
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
+#import "FHHouseTypeManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -28,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Cell点击事件，可以不用实现
 @property (nonatomic, copy)     dispatch_block_t       didClickCellBlk;
+
+// element_show 的时候:element_type，返回为空不上报，houseType为了区分同一个cell复用的情况
+- (NSString *)elementTypeString:(FHHouseType)houseType;
 
 @end
 

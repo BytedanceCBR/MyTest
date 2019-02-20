@@ -44,6 +44,7 @@
     @"saleStatus": @"sale_status",
     @"pricingPerSqm": @"pricing_per_sqm",
     @"imprId": @"impr_id",
+    @"saleStatus": @"sale_status",
     @"searchId": @"search_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

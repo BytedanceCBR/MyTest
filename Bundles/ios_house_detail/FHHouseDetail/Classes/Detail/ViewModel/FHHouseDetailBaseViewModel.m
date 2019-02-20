@@ -16,6 +16,7 @@
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
 
 @end
 
@@ -45,8 +46,10 @@
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType {
     self = [super init];
     if (self) {
+        _detailTracerDic = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];
+        _elementShowCaches = [NSMutableDictionary new];
         self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
@@ -148,6 +151,18 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    // 添加element_show埋点
+    if (!self.elementShowCaches[tempKey]) {
+        self.elementShowCaches[tempKey] = @(YES);
+        FHDetailBaseCell *tempCell = (FHDetailBaseCell *)cell;
+        NSString *element_type = [tempCell elementTypeString:self.houseType];
+        if (element_type.length > 0) {
+            // 上报埋点
+            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+            tracerDic[@"element_type"] = element_type;
+            [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+        }
+    }
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
