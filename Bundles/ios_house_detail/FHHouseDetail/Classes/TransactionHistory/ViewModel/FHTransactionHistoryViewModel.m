@@ -14,6 +14,7 @@
 #import <UIScrollView+Refresh.h>
 #import "FHUserTracker.h"
 #import "FHTransactionHistoryModel.h"
+#import "FHRefreshCustomFooter.h"
 
 #define kCellId @"cell_id"
 
@@ -30,6 +31,7 @@
 @property(nonatomic, assign) BOOL showPlaceHolder;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 
 @end
 
@@ -53,9 +55,10 @@
         
         __weak typeof(self) weakSelf = self;
         
-        [tableView tt_addDefaultPullUpLoadMoreWithHandler:^{
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [weakSelf requestData:NO];
         }];
+        self.tableView.mj_footer = self.refreshFooter;
         
         self.viewController = viewController;
         
@@ -86,6 +89,8 @@
             [wself.viewController tt_endUpdataData];
         }
         
+        [wself.tableView.mj_footer endRefreshing];
+        
         if (!wself) {
             return;
         }
@@ -100,29 +105,39 @@
         
         if(model){
         
-            self.tableView.hasMore = model.data.hasMore;
-            self.viewController.hasValidateData = self.dataList.count > 0;
-            [self.dataList addObjectsFromArray:model.data.list];
+            wself.tableView.hasMore = model.data.hasMore;
+            wself.viewController.hasValidateData = self.dataList.count > 0;
+            [wself.dataList addObjectsFromArray:model.data.list];
             wself.page++;
+            [wself updateTableViewWithMoreData:model.data.hasMore];
             
-            if(self.dataList.count > 0){
-                [self.viewController.emptyView hideEmptyView];
-                [self.tableView reloadData];
+            if(wself.dataList.count > 0){
+                [wself.viewController.emptyView hideEmptyView];
+                [wself.tableView reloadData];
             }else{
-                [self.viewController.emptyView showEmptyWithTip:@"暂无小区成交历史" errorImageName:@"group-9" showRetry:NO];
+                [wself.viewController.emptyView showEmptyWithTip:@"暂无小区成交历史" errorImageName:@"group-9" showRetry:NO];
             }
             
-            if(self.isFirstLoad){
-                self.originSearchId = self.searchId;
-                self.isFirstLoad = NO;
-                [self addEnterCategoryLog];
+            if(wself.isFirstLoad){
+                wself.originSearchId = self.searchId;
+                wself.isFirstLoad = NO;
+                [wself addEnterCategoryLog];
             }
             
             if(!isHead){
-                [self trackRefresh];
+                [wself trackRefresh];
             }
         }
     }];
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
+    }
 }
 
 - (void)addEnterCategoryLog {

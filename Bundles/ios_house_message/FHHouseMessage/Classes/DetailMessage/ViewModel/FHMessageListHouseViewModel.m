@@ -85,7 +85,7 @@
     
     self.requestTask = [FHMessageAPI requestHouseMessageWithListId:self.listId maxCoursor:self.maxCursor searchId:self.originSearchId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
-        [self.viewController endLoading];
+        [wself.tableView.mj_footer endRefreshing];
         FHHouseMsgModel *msgModel = (FHHouseMsgModel *)model;
         
         if (!wself) {
@@ -110,7 +110,7 @@
             }
             [wself.dataList addObjectsFromArray:msgModel.data.items];
             wself.tableView.hasMore = msgModel.data.hasMore;
-            
+            [wself updateTableViewWithMoreData:msgModel.data.hasMore];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
