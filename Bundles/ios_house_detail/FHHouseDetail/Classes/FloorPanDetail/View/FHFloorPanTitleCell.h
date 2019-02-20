@@ -17,8 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanTitleCellModel : FHDetailBaseModel
 
-@property (nonatomic, copy)     NSString       *totalPrice;
-@property (nonatomic, copy)     NSString       *avgPrice;
+@property (nonatomic, copy)     NSString       *title;
+@property (nonatomic, copy)     NSString       *pricing;
+@property (nonatomic, copy)     NSString       *pricingPerSqm;
 
 @end
 NS_ASSUME_NONNULL_END
