@@ -73,6 +73,7 @@
     
     for (NSInteger index = priceTrends.count - 1; index >= 0; index--) {
         FHDetailPriceTrendModel *priceTrend = priceTrends[index];
+        
         NSString *trendName = priceTrend.name;
         if (trendName.length > 7) {
             trendName = [NSString stringWithFormat:@"%@...",[trendName substringToIndex:7]];
@@ -128,6 +129,7 @@
         NSArray *data01Array = priceTrend.values;
         PNLineChartData *data01 = [PNLineChartData new];
         data01.color = [self lineColorByIndex:index];
+        data01.highlightedImg = [self highlightImgNameByIndex:index];
         data01.alpha = 1;
         data01.showPointLabel = NO; // 是否显示坐标点的值
         data01.itemCount = data01Array.count;
@@ -170,6 +172,24 @@
             break;
         default:
             return [UIColor colorWithHexString:@"#e1e3e6"];
+            break;
+    }
+}
+
+- (NSString *)highlightImgNameByIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+            return @"detail_circle_blue";
+            break;
+        case 1:
+            return @"detail_circle_dark";
+            break;
+        case 2:
+            return @"detail_circle_gray";
+            break;
+        default:
+            return @"detail_circle_gray";
             break;
     }
 }
@@ -282,7 +302,7 @@
         make.top.mas_equalTo(20);
     }];
     [self.chartView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(8);
+        make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(10);
         make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375]);
@@ -416,6 +436,7 @@
     self.chartView.showGenYLabels = YES; // 竖轴的label值
     self.chartView.xLabelColor = [UIColor themeGray3];
     self.chartView.xLabelFont = [UIFont themeFontRegular:12];
+    self.chartView.yHighlightedColor = [UIColor themeBlue];
     // add by zjing for test
     [self.chartView setXLabels:@[@"1月", @"2月", @"3月", @"4月", @"5月", @"6月"]];
     self.chartView.axisColor = [UIColor colorWithHexString:@"#dae1e7"]; // x轴和y轴
@@ -423,17 +444,19 @@
 }
 
 #pragma mark delegate
-- (void)userClickedOnLineKeyPoint:(CGPoint)point lineIndex:(NSInteger)lineIndex pointIndex:(NSInteger)pointIndex {
-    NSLog(@"Click Key on line %f, %f line index is %d and point index is %d", point.x, point.y, (int) lineIndex, (int) pointIndex);
-    
-    // add by zjing for test
-    FHDetailPriceMarkerView *view = [self.contentView viewWithTag:1000];
-    if (view) {
-        [view removeFromSuperview];
+- (void)userClickedOnKeyPoint:(CGPoint)point lineIndex:(NSInteger)lineIndex pointIndex:(NSInteger)pointIndex pointsArray:(NSArray *)pointsArray
+{
+    CGPoint pointInView = [self.chartView convertPoint:point toView:self.contentView];
+    FHDetailPriceMarkerView *view = [self.contentView viewWithTag:200];
+    if (!view) {
+        CGRect screenFrame = [self.chartView convertRect:CGRectMake(point.x, point.y, 30, 30) toView:self.contentView];
+        view = [[FHDetailPriceMarkerView alloc]initWithFrame:screenFrame];
+        [self.contentView addSubview:view];
     }
-    CGRect screenFrame = [self.chartView convertRect:CGRectMake(point.x, point.y, 30, 30) toView:self.contentView];
-    view = [[FHDetailPriceMarkerView alloc]initWithFrame:screenFrame];
-    view.tag = 1000;
+    if (![view isKindOfClass:[FHDetailPriceMarkerView class]]) {
+        return;
+    }
+    view.tag = 200;
     FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc]init];
     NSArray *priceTrends = self.priceTrends;
     FHDetailPriceTrendModel *priceTrend = priceTrends[1];
@@ -446,35 +469,6 @@
     }
     markData.trendItems = trendItems;
     [view refreshContent:markData];
-    [self.contentView addSubview:view];
-    
-}
-
-- (void)userClickedOnLinePoint:(CGPoint)point lineIndex:(NSInteger)lineIndex {
-    NSLog(@"Click on line %f, %f, line index is %d", point.x, point.y, (int) lineIndex);
-    
-    // add by zjing for test
-    FHDetailPriceMarkerView *view = [self .contentView viewWithTag:1000];
-    if (view) {
-        [view removeFromSuperview];
-    }
-    CGRect screenFrame = [self.chartView convertRect:CGRectMake(point.x, point.y, 30, 30) toView:self.contentView];
-    view = [[FHDetailPriceMarkerView alloc]initWithFrame:screenFrame];
-    view.tag = 1000;
-    FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc]init];
-    NSArray *priceTrends = self.priceTrends;
-    FHDetailPriceTrendModel *priceTrend = priceTrends[1];
-    NSMutableArray *trendItems = @[].mutableCopy;
-    for (FHDetailPriceTrendValuesModel *priceValue in priceTrend.values) {
-        FHDetailPriceMarkerItem *item = [[FHDetailPriceMarkerItem alloc]init];
-        item.name = priceTrend.name;
-        item.priceModel = priceValue;
-        [trendItems addObject:item];
-    }
-    markData.trendItems = trendItems;
-    [view refreshContent:markData];
-    [self.contentView addSubview:view];
-    
 }
 
 
@@ -630,6 +624,7 @@
 {
     if (!_foldButton) {
         _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"更多信息" upText:@"收起" isFold:YES];
+        _foldButton.backgroundColor = [UIColor whiteColor];
     }
     return _foldButton;
 }

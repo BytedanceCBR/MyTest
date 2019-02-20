@@ -43,6 +43,7 @@ typedef PNLineChartDataItem *(^LCLineChartDataGetter)(NSUInteger item);
 
 @property (nonatomic, assign) PNLineChartPointStyle inflexionPointStyle;
 @property (nonatomic) UIColor *inflexionPointColor;
+@property (nonatomic,copy) NSString *highlightedImg;
 
 /**
  * if rangeColor is set and the lineChartData values are within any
