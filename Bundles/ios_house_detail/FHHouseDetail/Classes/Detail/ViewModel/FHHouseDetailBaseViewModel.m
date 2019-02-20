@@ -45,6 +45,7 @@
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType {
     self = [super init];
     if (self) {
+        _detailTracerDic = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];
         self.houseType = houseType;
