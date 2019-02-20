@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
+#import "FHHouseDetailBaseViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,6 +33,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // element_show 的时候:element_type，返回为空不上报，houseType为了区分同一个cell复用的情况
 - (NSString *)elementTypeString:(FHHouseType)houseType;
+
+// 详情页baseViewModel，可以从中拿到需要的数据(高效但是不美观)
+@property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;
 
 @end
 

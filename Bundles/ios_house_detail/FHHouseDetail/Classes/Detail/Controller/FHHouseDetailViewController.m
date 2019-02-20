@@ -133,6 +133,10 @@
     if (origin_from.length > 0) {
         self.tracerDict[@"origin_from"] = origin_from;
     }
+    NSString *origin_search_id = allParams[@"origin_search_id"];
+    if (origin_search_id.length > 0) {
+        self.tracerDict[@"origin_search_id"] = origin_search_id;
+    }
     NSString *report_params = allParams[@"report_params"];
     NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
     if (report_params_dic) {
