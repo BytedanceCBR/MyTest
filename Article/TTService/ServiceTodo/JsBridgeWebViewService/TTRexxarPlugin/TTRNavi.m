@@ -12,6 +12,8 @@
 #import <TTRoute/TTRoute.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
+#import <FHEnvContext.h>
+#import <TTAccountSDK.h>
 
 @implementation TTRNavi
 
@@ -63,18 +65,61 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     }
     NSString * urlStr = [param objectForKey:@"route"];
     NSNumber * closeStack = [param objectForKey:@"closeStack"];
-   
+
     if (!closeStack) {
         closeStack = @(0);
     }
     
-    urlStr = [urlStr stringByAppendingString:[NSString stringWithFormat:@"&closeStack=%ld",[closeStack integerValue]]];
+    if ([urlStr containsString:@"?"]) {
+        urlStr = [urlStr stringByAppendingString:[NSString stringWithFormat:@"&closeStack=%ld",[closeStack integerValue]]];
+    }else
+    {
+        urlStr = [urlStr stringByAppendingString:[NSString stringWithFormat:@"?&closeStack=%ld",[closeStack integerValue]]];
+    }
     
 
     if (!isEmptyString(urlStr)) {
+        
         [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:urlStr]];
+        
+        if ([closeStack isKindOfClass:[NSNumber class]] && ![closeStack isEqualToNumber:@(0)]) {
+            [self setUpVCCloseStack:[closeStack integerValue] andController:controller];
+        }
+     
         callback(TTRJSBMsgSuccess, @{@"code": @1});
         return;
+    }
+}
+
+- (void)setUpVCCloseStack:(NSInteger)closeStackCouuntResult andController:(UIViewController *)controller
+{
+    NSMutableArray *vcStack = [NSMutableArray arrayWithArray:controller.navigationController.viewControllers];
+    
+    if (closeStackCouuntResult == 0) {
+        
+    }else
+    {
+        if (vcStack.count > closeStackCouuntResult + 2) {
+            NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
+            if (retainVCs <= 0) {
+                controller.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+            }else
+            {
+                NSMutableArray *viewControllersArray = [NSMutableArray new];
+                [viewControllersArray addObject:vcStack.firstObject];
+                
+                for (int i = 0; i < retainVCs; i++) {
+                    if (vcStack.count > i) {
+                        [viewControllersArray addObject:vcStack[i + 1]];
+                    }
+                }
+                [viewControllersArray addObject:vcStack.lastObject];
+                controller.navigationController.viewControllers = viewControllersArray;
+            }
+        }else
+        {
+            controller.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+        }
     }
 }
 
@@ -240,6 +285,22 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     if(param[@"isVisible"]){
         BOOL isVisible = [param[@"isVisible"] boolValue];
         controller.ttNeedHideBottomLine = !isVisible;
+    }
+}
+
+- (void)onAccountCancellationSuccessWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    
+    if ([cityId isKindOfClass:[NSString class]] && cityId.length > 0) {
+        NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
+        // 退出登录
+        [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
+            
+        }];
+        [FHEnvContext openSwitchCityURL:url completion:^(BOOL isSuccess) {
+        
+        }];
     }
 }
 

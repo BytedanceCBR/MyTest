@@ -34,12 +34,16 @@
 @implementation FHHouseDetailAPI
 
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
+                         logPB:(NSDictionary *)logPB
                     completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion
 {
     // FIXME: 是否要改成requestForJSONWithURL，线程区别
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/court/info"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (logPB) {
+        [paramDic addEntriesFromDictionary:logPB];
+    }
     paramDic[@"court_id"] = houseId ?: @"";
     paramDic[@"house_type"] = @(FHHouseTypeNewHouse);
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {

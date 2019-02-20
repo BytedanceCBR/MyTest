@@ -22,6 +22,7 @@
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailNeighborhoodHouseCell.h"
 #import "FHDetailNeighborhoodTransationHistoryCell.h"
+#import "FHDetailNeighborhoodEvaluateCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -44,8 +45,12 @@
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoCell class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseCell class])];
+<<<<<<< HEAD
     [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryCell class])];
 
+=======
+    [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
+>>>>>>> f_alpha
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -80,6 +85,10 @@
     if ([model isKindOfClass:[FHDetailNeighborhoodHouseModel class]]) {
         return [FHDetailNeighborhoodHouseCell class];
     }
+    // 小区评测
+    if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
+        return [FHDetailNeighborhoodEvaluateCell class];
+    }
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -90,10 +99,8 @@
 // 网络数据请求
 - (void)startLoadData {
     // 详情页数据-Main
-    //    NSDictionary *logpb = @{@"abc":@"vvv",@"def":@"cccc"};
-    // add by zyk 记得logpb数据 传入
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:nil query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:self.listLogPB query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -144,6 +151,15 @@
         FHDetailNeighborhoodPropertyInfoModel *infoModel = [[FHDetailNeighborhoodPropertyInfoModel alloc] init];
         infoModel.tableView = self.tableView;
         infoModel.baseInfo = model.data.baseInfo;
+        [self.items addObject:infoModel];
+    }
+    // 小区评测
+    if (model.data.evaluationInfo) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        infoModel.evaluationInfo = model.data.evaluationInfo;
         [self.items addObject:infoModel];
     }
     // 周边配套

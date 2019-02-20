@@ -24,6 +24,7 @@
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的logPB
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
 
@@ -39,6 +40,10 @@
         // TODO: 埋点相关字段
         self.searchId = paramObj.allParams[@"search_id"];
         self.imprId = paramObj.allParams[@"impr_id"];
+        id log_pb = self.tracerDict[@"log_pb"];
+        if ([log_pb isKindOfClass:[NSDictionary class]]) {
+            self.listLogPB = log_pb;
+        }
 
     }
     return self;
@@ -68,6 +73,7 @@
     [self configTableView];
     self.viewModel = [FHHouseDetailBaseViewModel createDetailViewModelWithHouseType:self.houseType withController:self tableView:_tableView];
     self.viewModel.houseId = self.houseId;
+    self.viewModel.listLogPB = self.listLogPB;
     [self.view addSubview:_tableView];
 
     __weak typeof(self)wself = self;
