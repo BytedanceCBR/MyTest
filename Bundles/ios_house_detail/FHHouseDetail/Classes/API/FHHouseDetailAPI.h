@@ -31,6 +31,7 @@ typedef enum : NSUInteger {
 
 // 新房详情页请求
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
+                         logPB:(NSDictionary *)logPB
                      completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房详情页请求

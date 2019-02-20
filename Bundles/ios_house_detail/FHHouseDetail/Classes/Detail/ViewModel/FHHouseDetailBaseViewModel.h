@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的列表页的logPB
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseDetailViewController *detailController;
