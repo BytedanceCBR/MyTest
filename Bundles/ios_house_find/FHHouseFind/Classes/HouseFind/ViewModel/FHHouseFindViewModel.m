@@ -82,7 +82,11 @@
 //                return;
 //            }
             //城市更新 重新刷新
-            [wself setupHouseContent:x];
+            if (x) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself setupHouseContent:x];
+                });
+            }
 //            isFirstChange = NO;
             
         }];
@@ -192,14 +196,7 @@
         }
     }else{
         
-        BOOL avaiable = configData.cityAvailability.enable;
-        
-        if (self.showNoDataBlock) {
-            self.showNoDataBlock(NO,avaiable);
-        }
-        if (!avaiable) {
-            return;
-        }
+        BOOL avaiable = configData.cityAvailability.enable.boolValue;
         
         NSMutableArray *titles = [NSMutableArray new];
         NSMutableArray *houseTypes = [NSMutableArray new];
@@ -220,16 +217,31 @@
             [houseTypes addObject:@(FHHouseTypeNeighborhood)];
         }
         
+        if (avaiable && titles.count == 0) {
+            avaiable = NO;
+        }
+        
+        if (self.showNoDataBlock) {
+            self.showNoDataBlock(NO,avaiable);
+        }
+        
+        if (!avaiable) {
+            return;
+        }
+        
         self.secondFilter = configData.searchTabFilter;
         self.rentFilter = configData.searchTabRentFilter;
         self.courtFilter = configData.searchTabCourtFilter;
         self.neighborhoodFilter = configData.searchTabNeighborhoodFilter;
         
         self.segmentControl.sectionTitles = titles;
+        if (titles.count > 0) {
+            [self.segmentControl setSelectedSegmentIndex:0];
+        }
+        
         self.houseTypes = houseTypes;
         
         [self.collectionView reloadData];
-        
         
         if (self.updateSegmentWidthBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -330,8 +342,10 @@
                 if (!priceItem) {
                     priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
                     priceItem.rate = item.rate;
+                    priceItem.configOption = [item.options firstObject];
                 }else{
                     priceItem.rate = item.rate;
+                    priceItem.configOption = [item.options firstObject];
                 }
                 if (priceItem) {
                     [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];

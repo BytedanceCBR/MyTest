@@ -23,6 +23,7 @@
 @property (nonatomic , strong) UICollectionView *contentView;
 @property (nonatomic , strong) FHHouseFindViewModel *viewModel;
 @property (nonatomic , strong) UIView *splitLine;
+@property (nonatomic , assign) BOOL needLayout;
 
 @end
 
@@ -62,6 +63,7 @@
         wself.searchButton.hidden = !wself.errorMaskView.isHidden;
     };
     _viewModel.updateSegmentWidthBlock = ^ {
+        wself.needLayout = YES;
         [wself.view setNeedsLayout];        
     };
     _searchBar = [[FHHouseFindFakeSearchBar alloc]initWithFrame:CGRectZero];
@@ -195,6 +197,15 @@
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     [_viewModel viewWillAppear];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.needLayout) {
+        [self.view setNeedsLayout];
+        self.needLayout = NO;
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
