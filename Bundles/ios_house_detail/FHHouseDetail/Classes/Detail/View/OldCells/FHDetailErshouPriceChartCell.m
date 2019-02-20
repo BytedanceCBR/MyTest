@@ -48,8 +48,10 @@
     _unitPerSquare = unitPerSquare;
     if (unitPerSquare >= 100 * 10000) {
         self.priceLabel.text = @"万元/平";
+        self.chartView.yLabelFormat = @"%.2f";
     }else {
         self.priceLabel.text = @"元/平";
+        self.chartView.yLabelFormat = @"%1.f";
     }
 }
 
