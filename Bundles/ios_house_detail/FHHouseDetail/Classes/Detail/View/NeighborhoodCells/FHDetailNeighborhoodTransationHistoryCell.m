@@ -65,7 +65,7 @@
         for (NSInteger i = 0; i < list.count; i++) {
             FHDetailNeighborhoodDataTotalSalesListModel *itemModel = list[i];
             FHTransactionHistoryCell *cell = [[FHTransactionHistoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-            [cell updateWithModel:itemModel isLast:YES];
+            [cell updateWithModel:itemModel];
             [self.containerView addSubview:cell];
             
             [cell mas_makeConstraints:^(MASConstraintMaker *make) {

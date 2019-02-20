@@ -287,12 +287,13 @@
 // 二手房（小区）-小区成交历史
 +(TTHttpTask*)requestNeighborhoodTransactionHistoryByNeighborhoodId:(NSString*)neighborhoodId
                                                            searchId:(NSString*)searchId
-                                                             offset:(NSString *)offset
+                                                               page:(NSInteger)page
                                                               count:(NSInteger)count
                                                          completion:(void(^)(FHTransactionHistoryModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:@"/f100/api/neighborhood/sale?neighborhood_id=%@&offset=%@",neighborhoodId,offset];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/neighborhood/sale?neighborhood_id=%@",neighborhoodId];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"page"] = @(page);
     if (![url containsString:@"count"]) {
         paramDic[@"count"] = @(count);
     }

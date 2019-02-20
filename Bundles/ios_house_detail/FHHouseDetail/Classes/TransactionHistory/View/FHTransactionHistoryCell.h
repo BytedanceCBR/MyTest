@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHTransactionHistoryCell : UITableViewCell
 
-- (void)updateWithModel:(FHDetailNeighborhoodDataTotalSalesListModel *)model isLast:(BOOL)isLast;
+- (void)updateWithModel:(FHDetailNeighborhoodDataTotalSalesListModel *)model;
 
 @end
 

@@ -23,7 +23,7 @@
 @property(nonatomic, weak) FHTransactionHistoryController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, copy) NSString *neighborhoodId;
-@property(nonatomic, copy) NSString *offset;
+@property(nonatomic, assign) NSInteger page;
 @property(nonatomic, copy) NSString *searchId;
 @property(nonatomic, copy) NSString *originSearchId;
 @property(nonatomic, assign) NSInteger limit;
@@ -67,7 +67,7 @@
     [self.requestTask cancel];
     
     if(isHead){
-        self.offset = 0;
+        self.page = 0;
         self.searchId = nil;
         self.originSearchId = nil;
         [self.dataList removeAllObjects];
@@ -80,7 +80,7 @@
     
     __weak typeof(self) wself = self;
     
-    self.requestTask = [FHHouseDetailAPI requestNeighborhoodTransactionHistoryByNeighborhoodId:self.neighborhoodId searchId:self.searchId offset:self.offset count:15 completion:^(FHTransactionHistoryModel * _Nullable model, NSError * _Nullable error) {
+    self.requestTask = [FHHouseDetailAPI requestNeighborhoodTransactionHistoryByNeighborhoodId:self.neighborhoodId searchId:self.searchId page:self.page count:15 completion:^(FHTransactionHistoryModel * _Nullable model, NSError * _Nullable error) {
         
         if(wself.isFirstLoad){
             [wself.viewController tt_endUpdataData];
@@ -103,14 +103,7 @@
             self.tableView.hasMore = model.data.hasMore;
             self.viewController.hasValidateData = self.dataList.count > 0;
             [self.dataList addObjectsFromArray:model.data.list];
-            
-            NSInteger offset = [self.offset integerValue];
-            if(model.data.hasMore){
-                offset += self.limit;
-            }else{
-                offset += model.data.list.count;
-            }
-            self.offset = [NSString stringWithFormat:@"%li",(long)offset];
+            wself.page++;
             
             if(self.dataList.count > 0){
                 [self.viewController.emptyView hideEmptyView];
@@ -186,7 +179,7 @@
     
     if (indexPath.row < self.dataList.count) {
         FHDetailNeighborhoodDataTotalSalesListModel *model = self.dataList[indexPath.row];
-        [cell updateWithModel:model isLast:isLast];
+        [cell updateWithModel:model];
     }
     return cell;
 }
