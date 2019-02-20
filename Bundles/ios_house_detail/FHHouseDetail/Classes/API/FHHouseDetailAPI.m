@@ -23,6 +23,7 @@
 #import "FHPostDataHTTPRequestSerializer.h"
 #import "FHDetailNewCoreDetailModel.h"
 #import "FHDetailFloorPanDetailInfoModel.h"
+#import "FHTransactionHistoryModel.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -265,6 +266,40 @@
         FHDetailRelatedNeighborhoodResponseModel *model = nil;
         if (!error) {
             model = [[FHDetailRelatedNeighborhoodResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
+        
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(model,error);
+            });
+        }
+    } callbackInMainThread:NO];
+}
+
+// 二手房（小区）-小区成交历史
++(TTHttpTask*)requestNeighborhoodTransactionHistoryByNeighborhoodId:(NSString*)neighborhoodId
+                                                           searchId:(NSString*)searchId
+                                                             offset:(NSString *)offset
+                                                              count:(NSInteger)count
+                                                         completion:(void(^)(FHTransactionHistoryModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/neighborhood/sale?neighborhood_id=%@&offset=%@",neighborhoodId,offset];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (![url containsString:@"count"]) {
+        paramDic[@"count"] = @(count);
+    }
+    if (searchId.length > 0) {
+        paramDic[@"search_id"] = searchId;
+    }
+    return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        FHTransactionHistoryModel *model = nil;
+        if (!error) {
+            model = [[FHTransactionHistoryModel alloc] initWithDictionary:jsonObj error:&error];
         }
         
         if (![model.status isEqualToString:@"0"]) {

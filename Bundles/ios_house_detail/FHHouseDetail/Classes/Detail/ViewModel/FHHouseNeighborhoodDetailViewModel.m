@@ -21,6 +21,7 @@
 #import "FHDetailNeighborhoodPropertyInfoCell.h"
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailNeighborhoodHouseCell.h"
+#import "FHDetailNeighborhoodTransationHistoryCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -43,6 +44,7 @@
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoCell class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryCell class])];
 
 }
 // cell class
@@ -69,6 +71,10 @@
     // 周边小区
     if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
         return [FHDetailRelatedNeighborhoodCell class];
+    }
+    // 小区成交历史
+    if ([model isKindOfClass:[FHDetailNeighborhoodTransationHistoryModel class]]) {
+        return [FHDetailNeighborhoodTransationHistoryCell class];
     }
     // 小区房源
     if ([model isKindOfClass:[FHDetailNeighborhoodHouseModel class]]) {
@@ -143,6 +149,15 @@
     // 周边配套
     // 均价走势
     // 小区成交历史
+    if (model.data.totalSales.list.count > 0) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodTransationHistoryModel *infoModel = [[FHDetailNeighborhoodTransationHistoryModel alloc] init];
+        infoModel.totalSalesCount = model.data.totalSalesCount;
+        infoModel.totalSales = model.data.totalSales;
+        infoModel.neighborhoodId = self.houseId;
+        [self.items addObject:infoModel];
+    }
     [self reloadData];
 }
 
