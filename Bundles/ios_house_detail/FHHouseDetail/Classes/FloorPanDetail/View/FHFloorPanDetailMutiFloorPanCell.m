@@ -186,8 +186,8 @@
             
         }
         self.descLabel.attributedText = textAttrStr;
-        self.priceLabel.text = model.pricingPerSqm;
-        self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@",model.squaremeter];;
+//        self.priceLabel.text = model.pricingPerSqm;
+//        self.spaceLabel.text = [NSString stringWithFormat:@"建面 %@",model.squaremeter];;
     }
     [self layoutIfNeeded];
 }

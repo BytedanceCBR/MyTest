@@ -11,7 +11,7 @@
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailContactViewModel.h"
-
+#import <TTReachability.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailBaseViewModel : NSObject

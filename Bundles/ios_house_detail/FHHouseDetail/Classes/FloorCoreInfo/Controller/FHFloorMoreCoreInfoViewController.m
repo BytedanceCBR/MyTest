@@ -42,10 +42,18 @@
     
     [self setUpinfoListTable];
     
+    [self addDefaultEmptyViewFullScreen];
+    
     _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel housedisclaimerModel:_disclaimerModel];
     
     [self setNavBarTitle:@"楼盘信息"];
 }
+
+- (void)retryLoadData
+{
+    [self.coreInfoListViewModel startLoadData];
+}
+
 
 - (void)setUpinfoListTable
 {

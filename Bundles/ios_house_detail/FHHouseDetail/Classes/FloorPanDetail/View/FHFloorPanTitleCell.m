@@ -6,6 +6,8 @@
 //
 
 #import "FHFloorPanTitleCell.h"
+#import "FHDetailNewModel.h"
+
 @interface FHFloorPanTitleCell()
 
 @property (nonatomic, strong) UILabel *nameLabel;
@@ -58,7 +60,7 @@
         _statusBGView.layer.cornerRadius = 2;
         [self.contentView addSubview:_statusBGView];
         [_statusBGView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.nameLabel.mas_right).offset(6);
+            make.right.equalTo(self.contentView).offset(-20);
             make.centerY.equalTo(self.nameLabel.mas_centerY);
             make.height.mas_equalTo(15);
             make.width.mas_equalTo(26);
@@ -70,8 +72,6 @@
         [_statusBGView addSubview:_statusLabel];
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self.statusBGView);
-            make.height.mas_equalTo(10);
-            make.width.mas_equalTo(20);
         }];
         
     }
@@ -89,8 +89,17 @@
     if ([data isKindOfClass:[FHFloorPanTitleCellModel class]]) {
         FHFloorPanTitleCellModel *model = (FHFloorPanTitleCellModel *)data;
         self.nameLabel.text = model.title;
-        self.pricingLabel.text = model.pricing;
-        self.pricingPerSqm.text = model.pricingPerSqm;
+        self.pricingLabel.text = model.pricing ? model.pricing : @"暂无报价";
+        self.pricingPerSqm.text = model.pricingPerSqm ? model.pricingPerSqm : @"暂无报价";
+        
+        if (model.saleStatus.content) {
+            NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
+            NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
+                                          [UIFont themeFontRegular:12],NSFontAttributeName,@(2),NSBaselineOffsetAttributeName,
+                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray2],NSBackgroundColorAttributeName,nil];
+            [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
+            self.statusLabel.attributedText = tagStr;
+        }
     }
 }
 

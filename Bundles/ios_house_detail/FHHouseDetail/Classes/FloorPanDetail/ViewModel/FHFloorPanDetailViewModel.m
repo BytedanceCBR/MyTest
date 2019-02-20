@@ -34,6 +34,7 @@
 {
     self = [super init];
     if (self) {
+        self.detailController = viewController;
         _infoListTable = tableView;
         _floorPanId = floorPanId;
         _currentItems = [NSMutableArray new];
@@ -102,12 +103,23 @@
 
 - (void)startLoadData
 {
+    if (![TTReachability isNetworkConnected]) {
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
+    
     if (_floorPanId) {
+        [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
-            if(model.data)
+            if(model.data && error != nil)
             {
+                wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
+            }else
+            {
+                wSelf.detailController.hasValidateData = NO;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }];
     }
@@ -139,6 +151,7 @@
         cellModel.title = model.data.title;
         cellModel.pricing = model.data.pricing;
         cellModel.pricingPerSqm = model.data.pricingPerSqm;
+        cellModel.saleStatus = model.data.saleStatus;
         [self.currentItems addObject:cellModel];
     }
     
@@ -150,6 +163,10 @@
     
     //楼盘户型
     if (model.data.recommend) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.currentItems addObject:grayLine];
+        
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
         [self.currentItems addObject:mutiDataModel];
