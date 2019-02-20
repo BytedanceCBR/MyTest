@@ -7,10 +7,30 @@
 
 #import "FHDetailBaseCell.h"
 
+@class FHDetailFloorPanDetailInfoDataRecommendModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanDetailMutiFloorPanCell : FHDetailBaseCell
 
+@end
+
+
+#pragma mark -  CollectionCell
+
+// 楼盘item
+@interface FHFloorPanDetailMutiFloorPanCollectionCell : FHDetailBaseCollectionCell
+
+@property (nonatomic, strong)   UIImageView       *icon;
+@property (nonatomic, strong)   UILabel       *descLabel;
+@property (nonatomic, strong)   UILabel       *priceLabel;
+@property (nonatomic, strong)   UILabel       *spaceLabel;
+
+
+@end
+
+@interface FHFloorPanDetailMutiFloorPanCellModel : JSONModel
+@property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel *> *recommend;
 @end
 
 NS_ASSUME_NONNULL_END

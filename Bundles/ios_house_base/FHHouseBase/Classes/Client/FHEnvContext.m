@@ -114,6 +114,69 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
 }
 
++ (void)openLogoutSuccessURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion
+{
+    NSInteger cityId = 0;
+    
+    if (![FHEnvContext isNetworkConnected])
+    {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+    
+    if ([urlString containsString:@"city_id"]) {
+        NSArray *paramsArrary = [urlString componentsSeparatedByString:@"?"];
+        NSString *paramsStr = [paramsArrary lastObject];
+        
+        for (NSString *paramStr in [paramsStr componentsSeparatedByString:@"&"]) {
+            NSArray *elts = [paramStr componentsSeparatedByString:@"="];
+            if([elts count] < 2) continue;
+            if ([elts.lastObject respondsToSelector:@selector(integerValue)]) {
+                cityId = [elts.lastObject integerValue];
+            }
+        }
+        
+        __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
+        
+        [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
+        [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
+            if (isSuccess) {
+                [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
+                FHConfigDataModel *configModel = model.data;
+                [[FHLocManager sharedInstance] updateAllConfig:model isNeedDiff:NO];
+                
+                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed) {
+                    //首次请求频道无论成功失败都跳转
+                    if (retryGetLightCount == kGetLightRequestRetryCount) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+                        
+                        if(completion)
+                        {
+                            completion(YES);
+                        }
+                        [[TTRoute sharedRoute] openURL:[NSURL URLWithString:urlString] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                            
+                        }];
+                    }
+                    //重试3次请求频道
+                    if (!isSuccessed && (retryGetLightCount > 0)) {
+                        retryGetLightCount--;
+                        [[TTArticleCategoryManager sharedManager] startGetCategory];
+                    }
+                }];
+            }else
+            {
+                if(completion)
+                {
+                    completion(NO);
+                }
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
+        }];
+    }
+}
+
 /*
  判断找房当前城市是否开通
  */

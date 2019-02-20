@@ -207,6 +207,7 @@
     [self addSubview:_descLabel];
     
     _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
+    _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];
