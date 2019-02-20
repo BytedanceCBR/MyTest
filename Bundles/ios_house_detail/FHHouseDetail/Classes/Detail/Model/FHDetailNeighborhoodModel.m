@@ -38,6 +38,7 @@
                            @"abtestVersions": @"abtest_versions",
                            @"neighborhoodImage": @"neighborhood_image",
                            @"coreInfo": @"core_info",
+                           @"evaluationInfo": @"evaluation_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -87,6 +88,59 @@
     NSDictionary *dict = @{
                            @"hasMore": @"has_more",
                            @"userStatus": @"user_status",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"scoreLevel": @"score_level",
+                           @"scoreName": @"score_name",
+                           @"scoreValue": @"score_value",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+@implementation FHDetailNeighborhoodNeighborhoodInfoSchoolInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"schoolType": @"school_type",
+                           @"schoolId": @"school_id",
+                           @"schoolName": @"school_name",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"totalScore": @"total_score",
+                           @"detailUrl": @"detail_url",
+                           @"subScores": @"sub_scores",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
