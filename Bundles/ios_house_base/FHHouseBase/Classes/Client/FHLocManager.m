@@ -20,6 +20,7 @@
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
 #import <NSDictionary+TTAdditions.h>
+#import <NSTimer+NoRetain.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -452,7 +453,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     NSInteger timeInterval = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getCategoryBadgeTimeInterval];
 
     self.messageTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(timerSelecter) userInfo:nil repeats:YES];
-    
+
 }
 
 - (void)timerSelecter

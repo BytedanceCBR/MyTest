@@ -63,7 +63,7 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     }
     NSString * urlStr = [param objectForKey:@"route"];
     NSNumber * closeStack = [param objectForKey:@"closeStack"];
-   
+
     if (!closeStack) {
         closeStack = @(0);
     }
@@ -72,9 +72,47 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     
 
     if (!isEmptyString(urlStr)) {
+        
         [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:urlStr]];
+        
+        if ([closeStack isKindOfClass:[NSNumber class]] && ![closeStack isEqualToNumber:@(0)]) {
+            [self setUpVCCloseStack:[closeStack integerValue] andController:controller];
+        }
+     
         callback(TTRJSBMsgSuccess, @{@"code": @1});
         return;
+    }
+}
+
+- (void)setUpVCCloseStack:(NSInteger)closeStackCouuntResult andController:(UIViewController *)controller
+{
+    NSMutableArray *vcStack = [NSMutableArray arrayWithArray:controller.navigationController.viewControllers];
+    
+    if (closeStackCouuntResult == 0) {
+        
+    }else
+    {
+        if (vcStack.count > closeStackCouuntResult + 2) {
+            NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
+            if (retainVCs <= 0) {
+                controller.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+            }else
+            {
+                NSMutableArray *viewControllersArray = [NSMutableArray new];
+                [viewControllersArray addObject:vcStack.firstObject];
+                
+                for (int i = 0; i < retainVCs; i++) {
+                    if (vcStack.count > i) {
+                        [viewControllersArray addObject:vcStack[i + 1]];
+                    }
+                }
+                [viewControllersArray addObject:vcStack.lastObject];
+                controller.navigationController.viewControllers = viewControllersArray;
+            }
+        }else
+        {
+            controller.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+        }
     }
 }
 

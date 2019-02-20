@@ -15,51 +15,49 @@
 #import "FHDetailHouseNameCell.h"
 #import "FHFloorPanCorePropertyCell.h"
 #import "FHDetailGrayLineCell.h"
-#import "FHDetailDisclaimerCell.h"
-#import "FHFloorPanCorePermitCell.h"
+#import "FHDetailFloorPanDetailInfoModel.h"
+#import "FHDetailPhotoHeaderCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic , weak) UITableView *infoListTable;
 @property (nonatomic , strong) NSMutableArray *currentItems;
-@property (nonatomic , strong) NSString *courtId;
-@property(nonatomic , strong) FHDetailHouseNameModel *houseNameModel;
-@property(nonatomic , strong) FHDetailDisclaimerModel *disclaimerModel;
-
+@property (nonatomic , strong) NSString *floorPanId;
+@property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
 @end
 @implementation FHFloorPanDetailViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel
+-(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
 {
     self = [super init];
     if (self) {
         _infoListTable = tableView;
-        _courtId = courtId;
+        _floorPanId = floorPanId;
         _currentItems = [NSMutableArray new];
-        _houseNameModel = model;
-        _disclaimerModel = disClaimerModel;
         [self configTableView];
         
         [self startLoadData];
-        
     }
     return self;
 }
 
 // 注册cell类型
 - (void)registerCellClasses {
+    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    
     [self.infoListTable registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     
     [self.infoListTable registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     
     [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
-    
-    [self.infoListTable registerClass:[FHFloorPanCorePermitCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePermitCell class])];
-    
-    [self.infoListTable registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
+    
+    if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+        return [FHDetailPhotoHeaderCell class];
+    }
+    
     // 标题
     if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
         return [FHDetailHouseNameCell class];
@@ -73,16 +71,6 @@
     // 属性信息
     if ([model isKindOfClass:[FHFloorPanCorePropertyCellModel class]]) {
         return [FHFloorPanCorePropertyCell class];
-    }
-    
-    // 准字信息
-    if ([model isKindOfClass:[FHFloorPanCorePermitCellModel class]]) {
-        return [FHFloorPanCorePermitCell class];
-    }
-    
-    // 版权信息
-    if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
-        return [FHDetailDisclaimerCell class];
     }
     
     return [FHDetailBaseCell class];
@@ -102,9 +90,9 @@
 
 - (void)startLoadData
 {
-    if (_courtId) {
+    if (_floorPanId) {
         __weak typeof(self) wSelf = self;
-        [FHHouseDetailAPI requestFloorCoreInfoSearch:_courtId completion:^(FHDetailNewCoreDetailModel * _Nullable model, NSError * _Nullable error) {
+        [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data)
             {
                 [wSelf processDetailData:model];
@@ -123,262 +111,26 @@
     }
 }
 
-- (void)processDetailData:(FHDetailNewCoreDetailModel *)model {
+- (void)processDetailData:(FHDetailFloorPanDetailInfoModel *)model {
     NSMutableArray *itemsArray = [NSMutableArray new];
     
-    // 添加标题
-    if (_houseNameModel) {
-        [self.currentItems addObject:_houseNameModel];
+    self.currentModel = model;
+    
+    if (model.data.images) {
+        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        headerCellModel.houseImage = model.data.images;
+        [self.currentItems addObject:headerCellModel];
     }
-    
-    FHFloorPanCorePropertyCellModel *companyModel = [self createCompanyInfoModel:model];
-    // 添加分割线--当存在某个数据的时候在顶部添加分割线
-    FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-    [self.currentItems addObject:grayLine];
-    [self.currentItems addObject:companyModel];
-    
-    
-    FHFloorPanCorePropertyCellModel *addressModel = [self createAddressInfoModel:model];
-    [self.currentItems addObject:grayLine];
-    [self.currentItems addObject:addressModel];
-    
-    
-    FHFloorPanCorePropertyCellModel *historyModel = [self createHistoryInfoModel:model];
-    [self.currentItems addObject:grayLine];
-    [self.currentItems addObject:historyModel];
-    
-    
-    FHFloorPanCorePropertyCellModel *waterModel = [self createWaterInfoModel:model];
-    [self.currentItems addObject:grayLine];
-    [self.currentItems addObject:waterModel];
-    
-    
-    if (model.data.permitList) {
-        [self.currentItems addObject:grayLine];
-        
-        FHFloorPanCorePermitCellModel *permitModel = [[FHFloorPanCorePermitCellModel alloc] init];
-        permitModel.permitList = model.data.permitList;
-        [self.currentItems addObject:permitModel];
-    }
-    
-    if (_disclaimerModel) {
-        [self.currentItems addObject:_disclaimerModel];
-    }
-    
-    //楼盘版权信息
-    //    if ([self.dataModel.data.disclaimer isKindOfClass:[FHDetailNewDataDisclaimerModel class]]){
-    //        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
-    //        disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
-    //        [self.items addObject:disclaimerModel];
-    //    }
-    //
-    //    return [("开发商", propertyValue(developerName)),
-    //                ("楼盘状态", propertyValue(saleStatus)),
-    //                ("参考价格", propertyValue(pricingPerSqm)),
-    //                ("开盘时间", propertyValue(openDate)),
-    //                ("交房时间", propertyValue(deliveryDate))]
-    //    }
-    //
-    //    fileprivate func parseSecondNode(_ detail: CourtMoreDetail) -> [(String, String)] {
-    //        return [("环线", propertyValue(circuitDesc)),
-    //                ("楼盘地址", propertyValue(generalAddress)),
-    //                ("售楼地址", propertyValue(saleAddress))]
-    //    }
-    //
-    //    fileprivate func parseThirdNode(_ detail: CourtMoreDetail) -> [(String, String)] {
-    //        return [("物业类型", propertyValue(properyType)),
-    //                ("项目特色", propertyValue(featureDesc)),
-    //                ("建筑类别", propertyValue(buildingCategory)),
-    //                ("装修状况", propertyValue(decoration)),
-    //                ("建筑类型", propertyValue(buildingType)),
-    //                ("产权年限", propertyValue(propertyRight))]
-    //    }
-    //
-    //    fileprivate func parseFourthNode(_ detail: CourtMoreDetail) -> [(String, String)] {
-    //        return [("物业公司", propertyValue(propertyName)),
-    //                ("物业费用", propertyValue(propertyPrice)),
-    //                ("水电燃气", propertyValue(powerWaterGasDesc)),
-    //                ("供暖方式", propertyValue(heating)),
-    //                ("绿化率", propertyValue(greenRatio)),
-    //                ("车位情况", propertyValue(parkingNum)),
-    //                ("容积率", propertyValue(plotRatio)),
-    //                ("楼栋信息", propertyValue(buildingDesc))]
-    //    }
-    //
-    //    for (NSInteger i = 0; i < model.data.list.count; i++) {
-    //        FHDetailNewDataTimelineListModel *itemModel = model.data.list[i];
-    //        FHDetailNewTimeLineItemModel *item = [[FHDetailNewTimeLineItemModel alloc] init];
-    //        item.desc = itemModel.desc;
-    //        item.title = itemModel.title;
-    //        item.createdTime = itemModel.createdTime;
-    //        item.isFirstCell = (i == 0);
-    //        item.isLastCell = (i == self.currentItems.count - 1);
-    //        item.isExpand = YES;
-    //        [itemsArray addObject:item];
-    //    }
-    //
-    //    [self updateTableViewWithMoreData:model.data.hasMore];
-    //
-    //    [self.currentItems addObjectsFromArray:itemsArray];
     
     [_infoListTable reloadData];
 }
 
-- (FHFloorPanCorePropertyCellModel *)createWaterInfoModel:(FHDetailNewCoreDetailModel *)model
-{
-    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
-    
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业公司",@"物业费用",@"水电燃气",@"供暖方式",@"绿化率",@"车位情况",@"容积率",@"楼栋信息", nil];
-    
-    NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < pNameArray.count; i++) {
-        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
-        pItemModel.propertyName = pNameArray[i];
-        switch (i) {
-            case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.propertyName];
-                break;
-            case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.propertyPrice];
-                break;
-            case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.powerWaterGasDesc];
-                break;
-            case 3:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.heating];
-                break;
-            case 4:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.greenRatio];
-                break;
-            case 5:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.parkingNum];
-                break;
-            case 6:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.plotRatio];
-                break;
-            case 7:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.buildingDesc];
-                break;
-            default:
-                break;
-        }
-        [pItemsArray addObject:pItemModel];
-    }
-    companyInfoModel.list = pItemsArray;
-    
-    return companyInfoModel;
-}
-
-- (FHFloorPanCorePropertyCellModel *)createHistoryInfoModel:(FHDetailNewCoreDetailModel *)model
-{
-    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
-    
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"物业类型",@"项目特色",@"建筑类别",@"装修状况",@"建筑类型",@"产权年限", nil];
-    
-    NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < pNameArray.count; i++) {
-        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
-        pItemModel.propertyName = pNameArray[i];
-        switch (i) {
-            case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.propertyType];
-                break;
-            case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.featureDesc];
-                break;
-            case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.buildingCategory];
-                break;
-            case 3:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.decoration];
-                break;
-            case 4:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.buildingType];
-                break;
-            case 5:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.propertyRight];
-                break;
-                
-            default:
-                break;
-        }
-        [pItemsArray addObject:pItemModel];
-    }
-    companyInfoModel.list = pItemsArray;
-    
-    return companyInfoModel;
-}
-
-- (FHFloorPanCorePropertyCellModel *)createAddressInfoModel:(FHDetailNewCoreDetailModel *)model
-{
-    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
-    
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"环线",@"楼盘地址",@"售楼地址", nil];
-    NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < pNameArray.count; i++) {
-        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
-        pItemModel.propertyName = pNameArray[i];
-        switch (i) {
-            case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.circuitDesc];
-                break;
-            case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.generalAddress];
-                break;
-            case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.saleAddress];
-                break;
-                
-            default:
-                break;
-        }
-        [pItemsArray addObject:pItemModel];
-    }
-    companyInfoModel.list = pItemsArray;
-    
-    return companyInfoModel;
-}
-
-- (FHFloorPanCorePropertyCellModel *)createCompanyInfoModel:(FHDetailNewCoreDetailModel *)model
-{
-    FHFloorPanCorePropertyCellModel *companyInfoModel = [[FHFloorPanCorePropertyCellModel alloc] init];
-    
-    NSArray *pNameArray = [NSArray arrayWithObjects:@"开发商",@"楼盘状态",@"参考价格",@"开盘时间",@"交房时间", nil];
-    NSMutableArray *pItemsArray = [[NSMutableArray alloc] init];
-    for (NSInteger i = 0; i < pNameArray.count; i++) {
-        FHFloorPanCorePropertyCellItemModel *pItemModel = [[FHFloorPanCorePropertyCellItemModel alloc] init];
-        pItemModel.propertyName = pNameArray[i];
-        switch (i) {
-            case 0:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.developerName];
-                break;
-            case 1:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.saleStatus];
-                break;
-            case 2:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.pricingPerSqm];
-                break;
-            case 3:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.openDate];
-                break;
-            case 4:
-                pItemModel.propertyValue = [self checkPValueStr:model.data.deliveryDate];
-                break;
-            default:
-                break;
-        }
-        [pItemsArray addObject:pItemModel];
-    }
-    companyInfoModel.list = pItemsArray;
-    
-    return companyInfoModel;
-}
 
 #pragma UITableViewDelegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.currentItems count];
+    return [_currentItems count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -399,6 +151,9 @@
         NSString *identifier = [self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if (!cell) {
+                cell = [[NSClassFromString(identifier) alloc] init];
+            }
             [cell refreshWithData:data];
             return cell;
         }

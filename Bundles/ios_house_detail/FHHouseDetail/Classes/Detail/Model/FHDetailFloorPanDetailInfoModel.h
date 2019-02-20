@@ -1,5 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import "FHDetailBaseModel.h"
+
 NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailFloorPanDetailInfoDataUserStatusModel : JSONModel 
 
@@ -27,18 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailFloorPanDetailInfoDataRecommendModel<NSObject>
 @end
 
-@protocol FHDetailFloorPanDetailInfoDataRecommendImagesModel<NSObject>
-@end
-
-@interface FHDetailFloorPanDetailInfoDataRecommendImagesModel : JSONModel 
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-@end
-
 @interface FHDetailFloorPanDetailInfoDataRecommendModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
@@ -48,21 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *images;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @end
 
-@protocol FHDetailFloorPanDetailInfoDataImagesModel<NSObject>
-@end
-
-@interface FHDetailFloorPanDetailInfoDataImagesModel : JSONModel 
-
-@property (nonatomic, copy , nullable) NSString *url;
-@property (nonatomic, copy , nullable) NSString *width;
-@property (nonatomic, strong , nullable) NSArray *urlList;
-@property (nonatomic, copy , nullable) NSString *uri;
-@property (nonatomic, copy , nullable) NSString *height;
-@end
 
 @interface FHDetailFloorPanDetailInfoDataModel : JSONModel 
 
@@ -78,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailFloorPanDetailInfoDataContactModel *contact ;  
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel> *recommend;
-@property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataImagesModel> *images;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *districtName;
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;

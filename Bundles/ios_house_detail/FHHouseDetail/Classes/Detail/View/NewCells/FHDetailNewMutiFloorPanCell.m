@@ -117,12 +117,17 @@
 - (void)collectionCellClick:(NSInteger)index {
     FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
     if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-        
+        if (model.list.count > index) {
+            FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
+            if ([floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
+                NSMutableDictionary *infoDict = [NSMutableDictionary new];
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+            }
+        }
     }
-    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-    [infoDict setValue:@"" forKey:@"floorpanid"];
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+
 }
 
 @end
