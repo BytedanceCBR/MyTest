@@ -122,11 +122,22 @@
 
 - (void)startLoadData
 {
+    if (![TTReachability isNetworkConnected]) {
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
+    
+    [self.detailController startLoading];
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
-        if ([model isKindOfClass:[FHDetailNewModel class]]) {
+        if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             wSelf.dataModel = model;
+            wSelf.detailController.hasValidateData = YES;
             [wSelf processDetailData:model];
+        }else
+        {
+            wSelf.detailController.hasValidateData = NO;
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -284,6 +295,15 @@
         FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
         disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
         [self.items addObject:disclaimerModel];
+    }
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    FHDetailBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell.didClickCellBlk) {
+        cell.didClickCellBlk();
     }
 }
 
