@@ -16,9 +16,10 @@
 #import "FHConversationDataCombiner.h"
 #import "ChatRootViewController.h"
 #import "IMManager.h"
+#import "IMChatStateObserver.h"
 #define kCellId @"FHMessageCell_id"
 
-@interface FHMessageViewModel()
+@interface FHMessageViewModel()<IMChatStateObserver>
 @property(nonatomic, strong) FHConversationDataCombiner *combiner;
 
 @property(nonatomic, strong) UITableView *tableView;
@@ -45,7 +46,7 @@
         tableView.dataSource = self;
         
         self.viewController = viewController;
-        
+        [[IMManager shareInstance] addChatStateObverver:self];
     }
     return self;
 }
@@ -185,6 +186,13 @@
     ChatRootViewController* vc = [[ChatRootViewController alloc] initWithConversation:conv];
     vc.automaticallyAdjustsScrollViewInsets = NO;
     [self.viewController.navigationController pushViewController:vc animated:YES];
+}
+
+
+-(void)conversationUpdated:(NSString *)conversationIdentifier {
+    NSArray<IMConversation*>* allConversations = [[IMManager shareInstance].chatService allConversations];
+    [_combiner resetConversations:allConversations];
+    [self.tableView reloadData];
 }
 
 @end

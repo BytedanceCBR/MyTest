@@ -28996,6 +28996,7 @@
 					"$(inherited)",
 					"DEBUG=1",
 					"SD_WEBP=1",
+					"SDK_DEBUG=1",
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (
