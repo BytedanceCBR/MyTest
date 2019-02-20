@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <TTHttpTask.h>
 #import "FHMessageListViewController.h"
+#import "FHRefreshCustomFooter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,10 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong ,nullable) NSString *maxCursor;
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageListViewController *)viewController;
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore;
 
 - (NSDictionary *)categoryLogDict;
 
