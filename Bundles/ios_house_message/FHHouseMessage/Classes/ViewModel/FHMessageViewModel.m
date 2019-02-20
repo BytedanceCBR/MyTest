@@ -28,6 +28,7 @@
 @property(nonatomic, weak) FHMessageViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) id<FHMessageBridgeProtocol> messageBridge;
+@property(nonatomic, assign) BOOL isFirstLoad;
 
 @end
 
@@ -59,7 +60,7 @@
 //    [self trackRefresh];
     __weak typeof(self) wself = self;
     
-    if(self.dataList.count == 0){
+    if(self.isFirstLoad){
         [self.viewController startLoading];
     }
     NSArray<IMConversation*>* allConversations = [[IMManager shareInstance].chatService allConversations];
@@ -68,13 +69,15 @@
         
         FHUnreadMsgModel *msgModel = (FHUnreadMsgModel *)model;
         
-        if(self.dataList.count == 0){
+        if(self.isFirstLoad){
             [self.viewController endLoading];
         }
         
         if (!wself) {
             return;
         }
+        
+        wself.isFirstLoad = NO;
         
         if (error && wself.dataList.count == 0) {
             //TODO: show handle error
@@ -102,9 +105,7 @@
     }];
 }
 
-- (void)clearBadgeNumber
-{
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"kClearMessageTabBarBadgeNumberNotification" object:nil];
+- (void)clearBadgeNumber {
     [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
 }
 
@@ -158,7 +159,6 @@
                 FHMessageCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
                 cell.unreadView.badgeNumber = TTBadgeNumberHidden;
             }
-
             NSURL *url = [NSURL URLWithString:[theModel.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
             NSDictionary *dict = @{

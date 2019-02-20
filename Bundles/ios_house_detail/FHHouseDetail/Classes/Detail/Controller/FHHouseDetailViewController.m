@@ -77,6 +77,11 @@
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
     };
+    _navBar.messageActionBlock = ^{
+        NSString *messageSchema = @"sslocal://message_conversation_list";
+        NSURL *openUrl = [NSURL URLWithString:messageSchema];
+        [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
+    };
     [self.view addSubview:_navBar];
     
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
@@ -116,6 +121,23 @@
         make.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
         make.height.mas_equalTo(0);
+    }];
+}
+
+- (void)setNavBarTitle:(NSString *)navTitle
+{
+    UILabel *titleLabel = [UILabel new];
+    FHDetailNavBar *navbar = (FHDetailNavBar *)[self getNaviBar];
+    titleLabel.text = navTitle;
+    titleLabel.textColor = [UIColor themeBlue1];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [navbar addSubview:titleLabel];
+    
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.bottom.equalTo(navbar);
+        make.width.mas_equalTo(100);
+        make.height.mas_equalTo(44);
     }];
 }
 

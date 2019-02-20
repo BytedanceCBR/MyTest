@@ -93,6 +93,7 @@
     self.layer.cornerRadius = 4.0;
     
     _keyLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:16];
+    _keyLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:12];

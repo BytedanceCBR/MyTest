@@ -116,6 +116,7 @@ TTAccountMulticastProtocol
 
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHLogInAccountStatusChangedNotification object:@(reasonType)];
     // 只清理收藏和历史，清理所有orderedData可能会很慢
     [ExploreLogicSetting clearFavoriteCoreData];
     [ExploreLogicSetting clearReadHistoryCoreData];

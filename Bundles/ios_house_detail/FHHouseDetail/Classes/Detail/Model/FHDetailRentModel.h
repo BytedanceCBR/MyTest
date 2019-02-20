@@ -173,7 +173,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHRentDetailResponseDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
-@property (nonatomic, strong , nullable) NSArray<FHRentDetailResponseDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, copy , nullable) NSString *title;
@@ -183,7 +183,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricing;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataHouseOverviewModel *houseOverview;
 @property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, strong , nullable) FHRentDetailResponseDataDisclaimerModel *disclaimer;
+@property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer;
 @property (nonatomic, copy, nullable) NSString *reportUrl;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo;

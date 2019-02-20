@@ -40,15 +40,8 @@
     [self.requestTask cancel];
 }
 
-//下级消息列表页刷新 埋点
-- (void)trackRefresh:(BOOL)isHead first:(BOOL)isFirst{
-    NSMutableDictionary *dict = [self.viewController.tracerModel logDict];
-    if(isFirst){
-        dict[@"refresh_type"] = @"default";
-    }else{
-        dict[@"refresh_type"] = isHead ? @"pull" : @"load_more";
-    }
-    TRACK_EVENT(@"category_refresh", dict);
+- (NSDictionary *)categoryLogDict {
+    return nil;
 }
 
 

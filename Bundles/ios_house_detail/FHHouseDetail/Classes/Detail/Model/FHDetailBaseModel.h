@@ -63,9 +63,25 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *phone;
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *realtorName;
+@property (nonatomic, copy , nullable) NSString *imOpenUrl;
+@property (nonatomic, copy , nullable) NSString *imLabel;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
+
+- (nonnull id)copyWithZone:(nullable NSZone *)zone;
+
+- (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder;
+
+- (instancetype)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err;
+
+- (NSDictionary *)toDictionary;
+
+- (NSDictionary *)toDictionaryWithKeys:(NSArray *)propertyNames;
 
 @end
 
@@ -104,5 +120,47 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailUserFollowStatusModel *data;
 
 @end
+
+
+@protocol FHDisclaimerModelDisclaimerRichTextModel<NSObject>
+@end
+
+@interface FHDisclaimerModelDisclaimerRichTextModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<NSNumber*> *highlightRange;
+@property (nonatomic, copy , nullable) NSString *linkUrl;
+@end
+
+
+@interface FHDisclaimerModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, strong , nullable) NSArray<FHDisclaimerModelDisclaimerRichTextModel> *richText;
+
+@end
+
+// 二手房、租房共用 协议
+@protocol FHDetailDataBaseInfoModel<NSObject>
+@end
+
+@protocol FHDetailPriceTrendModel<NSObject>
+@end
+
+@protocol FHDetailPriceTrendValuesModel<NSObject>
+@end
+
+@interface FHDetailPriceTrendValuesModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *timestamp;
+@property (nonatomic, copy , nullable) NSString *price;
+@property (nonatomic, copy , nullable) NSString *timeStr;
+@end
+
+@interface FHDetailPriceTrendModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendValuesModel> *values;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 
 NS_ASSUME_NONNULL_END

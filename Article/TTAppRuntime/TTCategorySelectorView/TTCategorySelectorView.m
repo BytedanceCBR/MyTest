@@ -32,9 +32,7 @@
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
 #import <FHLocManager.h>
-
-#import "Bubble-Swift.h"
-
+#import <UIFont+House.h>
 
 #define kFirstLeftMargin    15
 #define kLastRightMargin    68
@@ -990,7 +988,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
             [self setButtonNormalColor:btn];
         }
     }
-    MessageEventManager * messageMgr = [[[EnvContext shared] client] messageManager];
 
     //判断离开首页推荐频道
     if ([_lastSelectedButton.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse] && ![button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
@@ -999,7 +996,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     }
     
     if ([button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
-        [messageMgr stopSyncCategoryBadge];
+        [[FHLocManager sharedInstance] stopCategoryRedDotRefresh];
     }
     
     self.lastSelectedButton = button;

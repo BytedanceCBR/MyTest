@@ -5,11 +5,12 @@
 //  Created by 张静 on 2019/2/18.
 //
 
-#import <UIKit/UIKit.h>
+#import "FHDetailBaseCell.h"
+#import "FHDetailPriceTrendCellModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHDetailNeighborPriceChartCell : UITableViewCell
+@interface FHDetailNeighborPriceChartCell : FHDetailBaseCell
 
 @end
 

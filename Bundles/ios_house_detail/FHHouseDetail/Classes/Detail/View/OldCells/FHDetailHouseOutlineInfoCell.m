@@ -195,7 +195,7 @@
 
 - (void)showIconAndTitle:(BOOL)showen {
     self.iconImg.hidden = !showen;
-    self.valueLabel.hidden = !showen;
+    self.keyLabel.hidden = !showen;
     if (showen) {
         [self.valueLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self).offset(32);

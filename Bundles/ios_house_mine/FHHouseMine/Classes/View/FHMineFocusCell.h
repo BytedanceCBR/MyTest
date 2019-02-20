@@ -7,12 +7,21 @@
 
 #import "FHMineBaseCell.h"
 #import "FHMineFavoriteItemView.h"
+#import "FHHouseType.h"
+
+@protocol FHMineFocusCellDelegate <NSObject>
+
+- (void)goToFocusDetail:(FHHouseType)type;
+
+@end
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMineFocusCell : FHMineBaseCell
 
-- (void)setItems:(NSArray<FHMineFavoriteItemView *> *)items;
+- (void)setItemTitles:(NSArray *)itemTitles;
+
+@property(nonatomic , weak) id<FHMineFocusCellDelegate> delegate;
 
 @end
 
