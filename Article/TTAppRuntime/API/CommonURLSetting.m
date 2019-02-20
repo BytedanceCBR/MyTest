@@ -856,7 +856,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)userInfoURLString
 {
-    return [NSString stringWithFormat:@"%@/2/user/info/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/passport/user/info/", [self baseURL]];
 }
 
 + (NSString*)loginURLString

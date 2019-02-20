@@ -20,7 +20,7 @@
 #import "ArticleListNotifyBarView.h"
 #import <UIScrollView+Refresh.h>
 #import <MJRefresh.h>
-#import "FHRefreshCustomFooter.h"
+#import <FHRefreshCustomFooter.h>
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新

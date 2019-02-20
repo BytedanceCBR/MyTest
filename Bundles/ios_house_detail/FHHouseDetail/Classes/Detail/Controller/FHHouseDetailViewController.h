@@ -11,11 +11,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailViewController : FHBaseViewController
 
+//设置状态栏
 - (void)refreshContentOffset:(CGPoint)contentOffset;
 
+//获取导航bar
 - (UIView *)getNaviBar;
 
+//获取底部bar
 - (UIView *)getBottomBar;
+
+//设置navibar title
+- (void)setNavBarTitle:(NSString *)navTitle;
 
 @end
 

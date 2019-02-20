@@ -22,6 +22,7 @@
 #import "FHDetailRentSameNeighborhoodHouseCell.h"
 #import "FHDetailRentRelatedHouseCell.h"
 #import "FHDetailDisclaimerCell.h"
+#import "FHDetailNeighborhoodInfoCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -45,6 +46,7 @@
     [self.tableView registerClass:[FHDetailRentSameNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentSameNeighborhoodHouseCell class])];
     [self.tableView registerClass:[FHDetailRentRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentRelatedHouseCell class])];
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -75,6 +77,10 @@
     // 房源概况
     if ([model isKindOfClass:[FHDetailRentHouseOutlineInfoModel class]]) {
         return [FHDetailRentHouseOutlineInfoCell class];
+    }
+    // 小区信息
+    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
+        return [FHDetailNeighborhoodInfoCell class];
     }
     // 同小区房源
     if ([model isKindOfClass:[FHDetailRentSameNeighborhoodHouseModel class]]) {
@@ -166,6 +172,15 @@
         FHDetailRentHouseOutlineInfoModel *infoModel = [[FHDetailRentHouseOutlineInfoModel alloc] init];
         infoModel.houseOverreview = model.data.houseOverview;
         infoModel.baseViewModel = self;
+        [self.items addObject:infoModel];
+    }
+    // 小区信息
+    if (model.data.neighborhoodInfo) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
+        infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
         [self.items addObject:infoModel];
     }
  

@@ -14,8 +14,6 @@
 
 @interface FHMineHeaderView ()
 
-@property (nonatomic, strong) UIView *seperatorLineView;
-
 @end
 
 
@@ -36,10 +34,6 @@
 }
 
 - (void)initView {
-    self.seperatorLineView = [[UIView alloc] init];
-    [self addSubview:_seperatorLineView];
-    _seperatorLineView.backgroundColor = [UIColor whiteColor];
-    
     self.icon = [[UIImageView alloc] init];
     self.icon.clipsToBounds = YES;
     self.icon.contentMode = UIViewContentModeScaleAspectFit;
@@ -61,20 +55,15 @@
 }
 
 - (void)initConstaints {
-    [_seperatorLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(10);
-        make.left.right.bottom.mas_equalTo(self);
-    }];
-    
     [_icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-14);
-        make.top.mas_equalTo(49);
+        make.top.mas_equalTo(39);
         make.width.height.mas_equalTo(62);
     }];
 
     [_userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(34);
-        make.top.mas_equalTo(48);
+        make.top.mas_equalTo(43);
         make.left.mas_equalTo(self).offset(20);
         make.right.mas_lessThanOrEqualTo(self.icon.mas_left).offset(-10).priorityHigh();
     }];
@@ -134,7 +123,7 @@
         
         [_userNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(34);
-            make.top.mas_equalTo(48);
+            make.top.mas_equalTo(43);
             make.left.mas_equalTo(self).offset(20);
             make.right.mas_lessThanOrEqualTo(self.icon.mas_left).offset(-10).priorityHigh();
         }];

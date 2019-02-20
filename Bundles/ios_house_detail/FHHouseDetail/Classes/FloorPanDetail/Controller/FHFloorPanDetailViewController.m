@@ -13,18 +13,13 @@
 #import "TTDeviceHelper.h"
 #import "UIFont+House.h"
 #import "FHHouseDetailContactViewModel.h"
-
+#import "FHFloorPanDetailViewModel.h"
 
 @interface FHFloorPanDetailViewController ()
 
-@property (nonatomic, strong) FHDetailNavBar *navBar;
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) UILabel *bottomStatusBar;
-@property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
-
-@property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
-@property (nonatomic, assign)   FHHouseType houseType; // 房源类型
-@property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, copy)   NSString* floorPanId; // 房源id
+@property (nonatomic , strong) UITableView *infoListTable;
+@property (nonatomic , strong) FHFloorPanDetailViewModel *coreInfoListViewModel;
 
 @end
 
@@ -33,14 +28,48 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        
+        _floorPanId = paramObj.allParams[@"floorpanid"];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //设置导航条为黑色
+    [self refreshContentOffset:CGPointMake(0, 500)];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     // Do any additional setup after loading the view.
+    
+    [self setUpinfoListTable];
+    
+    _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId];
+    
+    // Do any additional setup after loading the view.
+}
+
+
+- (void)setUpinfoListTable
+{
+    _infoListTable = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _infoListTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    if (@available(iOS 11.0 , *)) {
+        _infoListTable.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _infoListTable.estimatedRowHeight = UITableViewAutomaticDimension;
+        _infoListTable.estimatedSectionFooterHeight = 0;
+        _infoListTable.estimatedSectionHeaderHeight = 0;
+    }
+    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
+    [self.view addSubview:_infoListTable];
+    
+    [_infoListTable mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo([self getNaviBar].mas_bottom);
+        make.left.right.equalTo(self.view);
+        make.bottom.equalTo([self getBottomBar].mas_top);
+    }];
+    
+    [_infoListTable setBackgroundColor:[UIColor whiteColor]];
+    
 }
 
 /*

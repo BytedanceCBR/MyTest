@@ -41,6 +41,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.hidesBottomBarWhenPushed = YES;
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
     
@@ -62,8 +63,8 @@ extern NSString *const kFHDetailFollowUpNotification;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.tableView setEditing:NO animated:YES];
-//    [self addStayCategoryLog:self.ttTrackStayTime];
-//    [self tt_resetStayTime];
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
     
 }
 
@@ -114,11 +115,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        if (@available(iOS 11.0, *)) {
-//            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
-//        } else {
-            make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-//        }
+        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.view);
     }];
 }
@@ -150,24 +147,26 @@ extern NSString *const kFHDetailFollowUpNotification;
     [self startLoadData];
 }
 
--(NSDictionary *)categoryLogDict {
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"enter_type"] = @"click_tab";
-    tracerDict[@"tab_name"] = @"message";
-    tracerDict[@"with_tips"] = @"0";
-    
-    return tracerDict;
-}
-
--(void)addStayCategoryLog:(NSTimeInterval)stayTime {
-    
-    NSTimeInterval duration = stayTime * 1000.0;
-    if (duration == 0) {//当前页面没有在展示过
-        return;
+- (NSString *)categoryName {
+    NSString *categoryName = @"be_null";
+    switch (self.type) {
+        case FHHouseTypeNewHouse:
+            categoryName = @"new_follow_list";
+            break;
+        case FHHouseTypeRentHouse:
+            categoryName = @"rent_follow_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            categoryName = @"old_follow_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            categoryName = @"neighborhood_follow_list";
+            break;
+            
+        default:
+            break;
     }
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    TRACK_EVENT(@"stay_tab", tracerDict);
+    return categoryName;
 }
 
 #pragma mark - UIViewControllerErrorHandler
@@ -179,7 +178,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
-    [self addStayCategoryLog:self.ttTrackStayTime];
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 }
 

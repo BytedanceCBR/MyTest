@@ -106,19 +106,28 @@
 - (void)moreButtonClick:(UIButton *)button {
     
     if ([self.currentData isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
-        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":((FHDetailNewDataFloorpanListModel *)self.currentData).list}];
+        NSMutableDictionary *infoDict = [NSMutableDictionary new];
+        [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"floorlist"];
+        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
     }
 
 }
 // cell 点击
 - (void)collectionCellClick:(NSInteger)index {
-//    FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
-//    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
-//        // 点击cell处理
-//        FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
-//
-//    }
+    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
+    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+        if (model.list.count > index) {
+            FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
+            if ([floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
+                NSMutableDictionary *infoDict = [NSMutableDictionary new];
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+            }
+        }
+    }
+
 }
 
 @end

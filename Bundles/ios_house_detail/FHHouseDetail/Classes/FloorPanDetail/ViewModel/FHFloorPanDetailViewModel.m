@@ -1,25 +1,81 @@
 //
-//  FHFloorPanDetailViewModel.m
+//  FHFloorTimeLineViewModel.m
 //  AFgzipRequestSerializer
 //
-//  Created by 谢飞 on 2019/2/13.
+//  Created by 谢飞 on 2019/2/17.
 //
 
 #import "FHFloorPanDetailViewModel.h"
 #import "FHHouseDetailAPI.h"
+#import "FHDetailNewTimeLineItemCell.h"
+#import "FHDetailNewModel.h"
+#import <FHRefreshCustomFooter.h>
+#import <FHEnvContext.h>
+#import "FHDetailNewCoreDetailModel.h"
+#import "FHDetailHouseNameCell.h"
+#import "FHFloorPanCorePropertyCell.h"
+#import "FHDetailGrayLineCell.h"
+#import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHDetailPhotoHeaderCell.h"
+#import "FHFloorPanTitleCell.h"
 
+@interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
+
+@property (nonatomic , weak) UITableView *infoListTable;
+@property (nonatomic , strong) NSMutableArray *currentItems;
+@property (nonatomic , strong) NSString *floorPanId;
+@property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
+@end
 @implementation FHFloorPanDetailViewModel
+
+-(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
+{
+    self = [super init];
+    if (self) {
+        _infoListTable = tableView;
+        _floorPanId = floorPanId;
+        _currentItems = [NSMutableArray new];
+        [self configTableView];
+        
+        [self startLoadData];
+    }
+    return self;
+}
+
 // 注册cell类型
 - (void)registerCellClasses {
-
+    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     
+    [self.tableView registerClass:[FHFloorPanTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanTitleCell class])];
+    
+    [self.infoListTable registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
+    
+    [self.infoListTable registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
+    
+    [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
+    
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
     }
+    
+    // 标题
+    if ([model isKindOfClass:[FHFloorPanTitleCellModel class]]) {
+        return [FHFloorPanTitleCell class];
+    }
+    
+    // 灰色分割线
+    if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
+        return [FHDetailGrayLineCell class];
+    }
+    
+    // 属性信息
+    if ([model isKindOfClass:[FHFloorPanCorePropertyCellModel class]]) {
+        return [FHFloorPanCorePropertyCell class];
+    }
+    
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -28,52 +84,99 @@
     return NSStringFromClass(cls);
 }
 
+- (void)configTableView
+{
+    [self registerCellClasses];
+    _infoListTable.delegate = self;
+    _infoListTable.dataSource = self;
+}
+
 - (void)startLoadData
 {
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:@"6581052152733499652" completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
-        [wSelf processDetailData:model];
-    }];
+    if (_floorPanId) {
+        __weak typeof(self) wSelf = self;
+        [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
+            if(model.data)
+            {
+                [wSelf processDetailData:model];
+            }
+        }];
+    }
+}
+
+- (NSString *)checkPValueStr:(NSString *)str
+{
+    if ([str isKindOfClass:[NSString class]]) {
+        return str;
+    }else
+    {
+        return @"-";
+    }
+}
+
+- (void)processDetailData:(FHDetailFloorPanDetailInfoModel *)model {
+    NSMutableArray *itemsArray = [NSMutableArray new];
+    
+    self.currentModel = model;
+    
+    if (model.data.images) {
+        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        headerCellModel.houseImage = model.data.images;
+        [self.currentItems addObject:headerCellModel];
+    }
+    
+    [_infoListTable reloadData];
 }
 
 
-- (void)processDetailData:(FHDetailNewModel *)model {
-    // 清空数据源
-    [self.items removeAllObjects];
-//    if (model.data.imageGroup) {
-//        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-//        NSMutableArray *arrayHouseImage = [NSMutableArray new];
-//        for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
-//            FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
-//            for (NSInteger j = 0; j < groupModel.images.count; j++) {
-//                [arrayHouseImage addObject:groupModel.images[j]];
-//            }
-//        }
-//        headerCellModel.houseImage = arrayHouseImage;
-//        [self.items addObject:headerCellModel];
-//    }
-//
-//    //楼盘户型
-//    if (model.data.floorpanList) {
-//        [self.items addObject:model.data.floorpanList];
-//    }
-//
-//    if (model.data.coreInfo.gaodeLat && model.data.coreInfo.gaodeLng) {
-//        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
-//        nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
-//        nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
-//        [self.items addObject:nearbyMapModel];
-//
-//        __weak typeof(self) wSelf = self;
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
-//                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
-//                    [self reloadData];
-//                };
-//            }
-//        });
-//    }
-//
-    [self reloadData];
+#pragma UITableViewDelegate
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [_currentItems count];
 }
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewAutomaticDimension;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row = indexPath.row;
+    if (row >= 0 && row < self.currentItems.count) {
+        id data = self.currentItems[row];
+        NSString *identifier = [self cellIdentifierForEntity:data];
+        if (identifier.length > 0) {
+            FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if (!cell) {
+                cell = [[NSClassFromString(identifier) alloc] init];
+            }
+            [cell refreshWithData:data];
+            return cell;
+        }
+    }
+    return [[UITableViewCell alloc] init];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return CGFLOAT_MIN;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return CGFLOAT_MIN;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
 @end
