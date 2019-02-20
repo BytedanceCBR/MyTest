@@ -80,6 +80,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     if(isHead){
         self.offset = 0;
         self.searchId = nil;
+        self.originSearchId = nil;
         [self.dataList removeAllObjects];
         [self.clientShowDict removeAllObjects];
     }
@@ -422,9 +423,12 @@ extern NSString *const kFHDetailFollowUpNotification;
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [self.dataList removeObjectAtIndex:indexPath.row];
-                    [UIView performWithoutAnimation:^{
+                    if(self.dataList.count > 0){
+                        [self.viewController.emptyView hideEmptyView];
                         [self.tableView reloadData];
-                    }];
+                    }else{
+                        [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+                    }
                     
                     [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"已取消关注"];
@@ -451,9 +455,12 @@ extern NSString *const kFHDetailFollowUpNotification;
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [wself.dataList removeObjectAtIndex:indexPath.row];
-                    [UIView performWithoutAnimation:^{
+                    if(wself.dataList.count > 0){
+                        [wself.viewController.emptyView hideEmptyView];
                         [wself.tableView reloadData];
-                    }];
+                    }else{
+                        [wself.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+                    }
 
                     [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"已取消关注"];

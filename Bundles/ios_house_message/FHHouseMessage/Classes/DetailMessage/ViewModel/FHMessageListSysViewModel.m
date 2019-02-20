@@ -30,8 +30,28 @@
         [tableView registerClass:[FHSystemMsgCell class] forCellReuseIdentifier:kCellId];
         tableView.delegate = self;
         tableView.dataSource = self;
+        
+        [self addEnterCategoryLog];
     }
     return self;
+}
+
+- (NSDictionary *)categoryLogDict {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"category_name"] = [self.viewController categoryName];
+    tracerDict[@"enter_from"] = @"messagetab";
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"search_id"] = @"be_null";
+    tracerDict[@"origin_from"] = @"be_null";
+    tracerDict[@"origin_search_id"] = @"be_null";
+    tracerDict[@"element_from"] = @"be_null";
+    
+    return tracerDict;
+}
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    TRACK_EVENT(@"enter_category", tracerDict);
 }
 
 -(void)requestData:(BOOL)isHead first:(BOOL)isFirst
@@ -93,9 +113,8 @@
 - (void)addRefreshLog
 {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"category_name"] = [self.viewController categoryName];
     tracerDict[@"refresh_type"] = @"pre_load_more";
-    TRACK_EVENT(@"click_official_message", tracerDict);
+    TRACK_EVENT(@"category_refresh", tracerDict);
 }
 
 - (NSString *)timestampToDataString:(NSString *)timestamp {
