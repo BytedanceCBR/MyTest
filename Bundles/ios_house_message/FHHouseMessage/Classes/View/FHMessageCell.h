@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model;
 - (void)updateWithChat:(IMConversation*)conversation;
+-(void)displaySendState:(ChatMsg *)msg;
 
 @end
 

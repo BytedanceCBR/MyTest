@@ -16,6 +16,10 @@
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
 #import "TTRoute.h"
+#import "ChatMsg.h"
+#import "IMManager.h"
+#import <TTReachability/TTReachability.h>
+
 @interface FHMessageViewController ()<UIViewControllerErrorHandler>
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
@@ -38,6 +42,7 @@
 //        NSURL *url = [NSURL URLWithString:[@"sslocal://open_single_chat?target_user_id=50264240862&chat_title=谷春晖&house_cover=https://p3.pstatp.com/large/f100-image/R41qHUI3GYuu6B_1Xia0z1&house_type=1&house_title=4室2厅 刘湾小区刘湾小区…&house_dec=70平/南北/高层/刘湾小区&house_price=170万&house_avg_price=5000/平&house_id=1231231&house_des=aaaaaaaajkii" stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 //        [[TTRoute sharedRoute] openURLByPushViewController:url];
 //    });
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -62,6 +67,13 @@
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
+    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+    } else {
+        [_notNetHeader setHidden:NO];
+    }
+    
     _tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -70,9 +82,27 @@
     _tableView.tableHeaderView = headerView;
     
     [self.containerView addSubview:_tableView];
+    [self.containerView addSubview:_notNetHeader];
     
     [self addDefaultEmptyViewFullScreen];
 }
+
+- (void)networkStateChange:(NSNotification *)notification {
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+    } else {
+        [_notNetHeader setHidden:NO];
+    }
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if ([TTReachability isNetworkConnected]) {
+            make.top.left.right.bottom.mas_equalTo(self.containerView);
+        } else {
+            make.top.mas_equalTo(self.containerView).offset(30);
+            make.left.right.bottom.mas_equalTo(self.containerView);
+        }
+    }];
+}
+
 
 - (void)initConstraints {
     CGFloat bottom = 49;
@@ -91,7 +121,12 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.bottom.mas_equalTo(self.containerView);
+        if ([TTReachability isNetworkConnected]) {
+            make.top.left.right.bottom.mas_equalTo(self.containerView);
+        } else {
+            make.top.mas_equalTo(self.containerView).offset(30);
+            make.left.right.bottom.mas_equalTo(self.containerView);
+        }
     }];
 }
 

@@ -1327,7 +1327,7 @@ DEPENDENCIES:
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESVideoPlayer (= 0.1.16)
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, tag `0.5.2`)
-  - ios_house_im (from `../../lab/ios_house_im`)
+  - ios_house_im (from `../../../f_pods/ios_house_im`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0)
   - libextobjc (= 0.4.1)
@@ -1487,7 +1487,7 @@ EXTERNAL SOURCES:
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.2
   ios_house_im:
-    :path: ../../lab/ios_house_im
+    :path: ../../../f_pods/ios_house_im
   React:
     :git: https://github.com/facebook/react-native.git
     :tag: v0.37.0
@@ -1705,6 +1705,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: 5b0d551155c679116ce089ce5c0e92222193aba7
+PODFILE CHECKSUM: f5de2dc9ef83e87b98240683fe9f9b82d9c0bb2b
 
 COCOAPODS: 1.4.0

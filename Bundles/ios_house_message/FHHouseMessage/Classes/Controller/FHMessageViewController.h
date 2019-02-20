@@ -1,4 +1,5 @@
 //
+
 //  FHMessageViewController.h
 //  FHHouseMessage
 //
@@ -6,6 +7,7 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHNoNetHeaderView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -13,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic , strong) UIView *containerView;
+@property(nonatomic, strong) FHNoNetHeaderView *notNetHeader;
 
 @end
 

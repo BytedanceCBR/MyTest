@@ -17,6 +17,8 @@
 #import "ChatRootViewController.h"
 #import "IMManager.h"
 #import "IMChatStateObserver.h"
+#import "TTURLUtils.h"
+
 #define kCellId @"FHMessageCell_id"
 
 @interface FHMessageViewModel()<IMChatStateObserver>
@@ -183,9 +185,12 @@
 }
 
 -(void)openConversation:(IMConversation*)conv {
-    ChatRootViewController* vc = [[ChatRootViewController alloc] initWithConversation:conv];
-    vc.automaticallyAdjustsScrollViewInsets = NO;
-    [self.viewController.navigationController pushViewController:vc animated:YES];
+    NSString *title = conv.conversationDisplayName;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
+    [params setObject:title  forKey:KSCHEMA_CHAT_TITLE];
+    NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
+    [[TTRoute sharedRoute] openURLByPushViewController: openUrl];
 }
 
 
