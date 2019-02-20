@@ -133,6 +133,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     FHDetailBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.baseViewModel = self;
     if (cell.didClickCellBlk) {
         cell.didClickCellBlk();
     }
