@@ -11,7 +11,7 @@
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailContactViewModel.h"
-
+#import <TTReachability.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailBaseViewModel : NSObject
@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)   NSString* houseId; // 房源id
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的列表页的logPB
+@property(nonatomic , strong) NSMutableDictionary *detailTracerDic; // 详情页基础埋点数据
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseDetailViewController *detailController;

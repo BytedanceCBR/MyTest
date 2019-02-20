@@ -21,6 +21,8 @@
 #import "FHHouseDetailAPI.h"
 #import "FHPlaceHolderCell.h"
 #import "FHUserTracker.h"
+#import "FHRefreshCustomFooter.h"
+
 
 #define kCellId @"cell_id"
 #define kFHFavoriteListPlaceholderCellId @"FHFavoriteListPlaceholderCellId"
@@ -40,6 +42,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 @property(nonatomic, assign) BOOL showPlaceHolder;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 
 @end
 
@@ -64,9 +67,10 @@ extern NSString *const kFHDetailFollowUpNotification;
         
         __weak typeof(self) weakSelf = self;
         
-        [tableView tt_addDefaultPullUpLoadMoreWithHandler:^{
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [weakSelf requestData:NO];
         }];
+        self.tableView.mj_footer = self.refreshFooter;
         
         self.viewController = viewController;
         
@@ -88,6 +92,8 @@ extern NSString *const kFHDetailFollowUpNotification;
     __weak typeof(self) wself = self;
     
     self.requestTask = [FHMineAPI requestFocusDetailInfoWithType:self.type offset:self.offset searchId:self.searchId limit:self.limit className:@"FHFollowModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        
+        [wself.tableView.mj_footer endRefreshing];
         
         if (!wself) {
             return;
@@ -136,6 +142,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     self.searchId = followModel.data.searchId;
     self.viewController.hasValidateData = self.dataList.count > 0;
     self.showPlaceHolder = NO;
+    [self updateTableViewWithMoreData:followModel.data.hasMore];
     
     if(followModel.data.hasMore){
         self.offset += self.limit;
@@ -158,6 +165,15 @@ extern NSString *const kFHDetailFollowUpNotification;
     
     if(!isHead){
         [self trackRefresh];
+    }
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
     }
 }
 

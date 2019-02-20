@@ -21,7 +21,10 @@
 #import "FHDetailNeighborhoodPropertyInfoCell.h"
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailNeighborhoodHouseCell.h"
+#import "FHDetailNeighborhoodTransationHistoryCell.h"
 #import "FHDetailNeighborhoodEvaluateCell.h"
+#import "FHDetailNearbyMapCell.h"
+#import "FHDetailNewModel.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -39,11 +42,13 @@
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborPriceChartCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodNameCell class])];
+    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoCell class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
 }
 // cell class
@@ -59,6 +64,10 @@
     if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
         return [FHDetailGrayLineCell class];
     }
+    // 周边配套
+    if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
+        return [FHDetailNearbyMapCell class];
+    }
     // 在售（在租）信息
     if ([model isKindOfClass:[FHDetailNeighborhoodStatsInfoModel class]]) {
         return [FHDetailNeighborhoodStatsInfoCell class];
@@ -70,6 +79,10 @@
     // 周边小区
     if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
         return [FHDetailRelatedNeighborhoodCell class];
+    }
+    // 小区成交历史
+    if ([model isKindOfClass:[FHDetailNeighborhoodTransationHistoryModel class]]) {
+        return [FHDetailNeighborhoodTransationHistoryCell class];
     }
     // 小区房源
     if ([model isKindOfClass:[FHDetailNeighborhoodHouseModel class]]) {
@@ -153,8 +166,39 @@
         [self.items addObject:infoModel];
     }
     // 周边配套
+    if (model.data.neighborhoodInfo.gaodeLat && model.data.neighborhoodInfo.gaodeLng) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        
+        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
+        nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        //        nearbyMapModel.tableView = self.tableView;
+        [self.items addObject:nearbyMapModel];
+        
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
+                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
+                    [self reloadData];
+                };
+            }
+        });
+    }
+    
+    
     // 均价走势
     // 小区成交历史
+    if (model.data.totalSales.list.count > 0) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodTransationHistoryModel *infoModel = [[FHDetailNeighborhoodTransationHistoryModel alloc] init];
+        infoModel.totalSalesCount = model.data.totalSalesCount;
+        infoModel.totalSales = model.data.totalSales;
+        infoModel.neighborhoodId = self.houseId;
+        [self.items addObject:infoModel];
+    }
     [self reloadData];
 }
 

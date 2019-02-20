@@ -18,6 +18,8 @@
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHDetailPhotoHeaderCell.h"
 #import "FHFloorPanTitleCell.h"
+#import "FHFloorPanDetailPropertyCell.h"
+#import "FHFloorPanDetailMutiFloorPanCell.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -32,6 +34,7 @@
 {
     self = [super init];
     if (self) {
+        self.detailController = viewController;
         _infoListTable = tableView;
         _floorPanId = floorPanId;
         _currentItems = [NSMutableArray new];
@@ -44,19 +47,21 @@
 
 // 注册cell类型
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    [self.infoListTable registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     
-    [self.tableView registerClass:[FHFloorPanTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanTitleCell class])];
+    [self.infoListTable registerClass:[FHFloorPanTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanTitleCell class])];
     
+    [self.infoListTable registerClass:[FHFloorPanDetailPropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailPropertyCell class])];
+
     [self.infoListTable registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     
     [self.infoListTable registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     
-    [self.infoListTable registerClass:[FHFloorPanCorePropertyCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanCorePropertyCell class])];
+    [self.infoListTable registerClass:[FHFloorPanDetailMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanDetailMutiFloorPanCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
-    
+    // 图片头部
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
     }
@@ -70,10 +75,15 @@
     if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
         return [FHDetailGrayLineCell class];
     }
-    
+
     // 属性信息
-    if ([model isKindOfClass:[FHFloorPanCorePropertyCellModel class]]) {
-        return [FHFloorPanCorePropertyCell class];
+    if ([model isKindOfClass:[FHFloorPanDetailPropertyCellModel class]]) {
+        return [FHFloorPanDetailPropertyCell class];
+    }
+    
+    //楼盘推荐
+    if ([model isKindOfClass:[FHFloorPanDetailMutiFloorPanCellModel class]]) {
+        return [FHFloorPanDetailMutiFloorPanCell class];
     }
     
     return [FHDetailBaseCell class];
@@ -93,12 +103,23 @@
 
 - (void)startLoadData
 {
+    if (![TTReachability isNetworkConnected]) {
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
+    
     if (_floorPanId) {
+        [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
-            if(model.data)
+            if(model.data && error != nil)
             {
+                wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
+            }else
+            {
+                wSelf.detailController.hasValidateData = NO;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }];
     }
@@ -123,6 +144,32 @@
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.images;
         [self.currentItems addObject:headerCellModel];
+    }
+    
+    if (model.data) {
+        FHFloorPanTitleCellModel *cellModel = [[FHFloorPanTitleCellModel alloc] init];
+        cellModel.title = model.data.title;
+        cellModel.pricing = model.data.pricing;
+        cellModel.pricingPerSqm = model.data.pricingPerSqm;
+        cellModel.saleStatus = model.data.saleStatus;
+        [self.currentItems addObject:cellModel];
+    }
+    
+    if (model.data.baseInfo) {
+        FHFloorPanDetailPropertyCellModel *cellModel = [[FHFloorPanDetailPropertyCellModel alloc] init];
+        cellModel.baseInfo = model.data.baseInfo;
+        [self.currentItems addObject:cellModel];
+    }
+    
+    //楼盘户型
+    if (model.data.recommend) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.currentItems addObject:grayLine];
+        
+        FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
+        mutiDataModel.recommend = model.data.recommend;
+        [self.currentItems addObject:mutiDataModel];
     }
     
     [_infoListTable reloadData];

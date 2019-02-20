@@ -120,6 +120,10 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"neighborhood_nearby"; // 周边小区
+}
+
 @end
 
 // FHDetailNeighborhoodItemCollectionCell

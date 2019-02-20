@@ -37,6 +37,8 @@
 
     [self setUpTimeLineListTable];
 
+    [self addDefaultEmptyViewFullScreen];
+
     _timeLineListViewModel = [[FHFloorTimeLineViewModel alloc] initWithController:self tableView:_timeLineListTable courtId:_courtId];
     [self setNavBarTitle:@"楼盘动态"];
 }
@@ -62,6 +64,11 @@
     
     [_timeLineListTable setBackgroundColor:[UIColor whiteColor]];
    
+}
+
+- (void)retryLoadData
+{
+    [self.timeLineListViewModel startLoadData];
 }
 
 /*

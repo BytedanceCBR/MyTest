@@ -35,7 +35,8 @@
 
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.login" for:@"login"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.isLogin" for:@"is_login"];
-    
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.logoutApp" for:@"logoutApp"];
+
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.close" for:@"close"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.open" for:@"open"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openPage" for:@"openPage"];

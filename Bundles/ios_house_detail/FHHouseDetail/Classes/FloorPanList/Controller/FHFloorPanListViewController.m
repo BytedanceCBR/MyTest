@@ -48,6 +48,8 @@
     [self setUpFloorListTable];
     
     _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList];
+    
+    [self setNavBarTitle:@"楼盘户型"];
     // Do any additional setup after loading the view.
 }
 
