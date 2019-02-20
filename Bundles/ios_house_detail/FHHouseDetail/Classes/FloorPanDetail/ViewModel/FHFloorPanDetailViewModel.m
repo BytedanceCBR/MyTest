@@ -125,6 +125,14 @@
         [self.currentItems addObject:headerCellModel];
     }
     
+    if (model.data) {
+        FHFloorPanTitleCellModel *cellModel = [[FHFloorPanTitleCellModel alloc] init];
+        cellModel.title = model.data.title;
+        cellModel.pricing = model.data.pricing;
+        cellModel.pricingPerSqm = model.data.pricingPerSqm;
+        [self.currentItems addObject:cellModel];
+    }
+    
     [_infoListTable reloadData];
 }
 
