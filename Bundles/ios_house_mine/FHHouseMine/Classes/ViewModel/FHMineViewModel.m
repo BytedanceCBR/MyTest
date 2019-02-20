@@ -16,6 +16,7 @@
 #import "TTAccountManager.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
+#import "TTReachability.h"
 
 @interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineFocusCellDelegate>
 
@@ -215,11 +216,15 @@
 #pragma mark - FHMineFocusCellDelegate
 
 - (void)goToFocusDetail:(FHHouseType)type {
-    NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"type"] = @(type);
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    if ([TTReachability isNetworkConnected]) {
+        NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"type"] = @(type);
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -233,10 +238,12 @@
     FHMineBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     [cell updateCell:_dataList[indexPath.row]];
     
-    if([cell isKindOfClass:[FHMineFocusCell class]] && self.focusItemTitles.count == 4){
+    if([cell isKindOfClass:[FHMineFocusCell class]]){
         FHMineFocusCell *focusCell = (FHMineFocusCell *)cell;
         focusCell.delegate = self;
-        [focusCell setItemTitles:self.focusItemTitles];
+        if(self.focusItemTitles.count == 4){
+            [focusCell setItemTitles:self.focusItemTitles];
+        }
     }
     
     return cell;
