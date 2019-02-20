@@ -238,10 +238,13 @@
         if (titles.count > 0) {
             [self.segmentControl setSelectedSegmentIndex:0];
         }
-        
         self.houseTypes = houseTypes;
         
         [self.collectionView reloadData];
+        
+        if (houseTypes.count > 0) {
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        }
         
         if (self.updateSegmentWidthBlock) {
             dispatch_async(dispatch_get_main_queue(), ^{
