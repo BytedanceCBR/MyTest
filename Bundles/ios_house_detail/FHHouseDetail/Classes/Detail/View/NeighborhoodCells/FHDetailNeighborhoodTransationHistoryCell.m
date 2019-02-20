@@ -112,7 +112,7 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
 }
 
