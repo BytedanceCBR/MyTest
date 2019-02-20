@@ -167,6 +167,9 @@
         [self requestHistory:ht];
     }
     [self startTrack];
+    if (!_networkConnected) {
+        self.searchButton.hidden = YES;
+    }
 }
 
 -(void)viewWillDisappear
@@ -229,6 +232,10 @@
             return;
         }
         
+        if (!_networkConnected) {
+            self.searchButton.hidden = YES;
+        }
+        
         self.secondFilter = configData.searchTabFilter;
         self.rentFilter = configData.searchTabRentFilter;
         self.courtFilter = configData.searchTabCourtFilter;
@@ -243,7 +250,9 @@
         [self.collectionView reloadData];
         
         if (houseTypes.count > 0) {
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            if (self.collectionView.contentOffset.x >= self.collectionView.frame.size.width/2) {
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            }
         }
         
         if (self.updateSegmentWidthBlock) {
@@ -429,7 +438,7 @@
     if (collectionView == self.collectionView) {
         FHHouseFindMainCell *fcell = (FHHouseFindMainCell *)cell;
         if (!fcell.collectionView.dataSource) {
-            fcell.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 90, 0);
+            fcell.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 130, 0);
             [self registerCell:fcell.collectionView];
             fcell.collectionView.delegate = self;
             fcell.collectionView.dataSource = self;
@@ -443,6 +452,9 @@
         }
         
         [fcell.collectionView reloadData];
+        //切换时滑动到顶部
+        fcell.collectionView.contentOffset = CGPointZero;
+        self.splitLine.hidden = YES;
     }
 }
 
@@ -809,8 +821,7 @@
 
 #pragma mark - request
 -(void)requestHistory:(FHHouseType)housetype
-{
-    
+{    
     __weak typeof(self) wself = self;
     [FHMainApi requestHFHistoryByHouseType:[@(housetype) description] completion:^(FHHFHistoryModel * _Nonnull model, NSError * _Nonnull error) {
         
@@ -874,6 +885,7 @@
         FHHouseFindMainCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         if (cell) {
             [cell.collectionView reloadData];
+            [cell.collectionView setContentOffset:CGPointZero animated:YES];
         }
     }
 }

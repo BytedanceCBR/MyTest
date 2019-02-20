@@ -49,6 +49,10 @@
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
     _contentView.pagingEnabled = YES;
+    _contentView.scrollsToTop = NO;
+    if (@available(iOS 11.0, *)) {
+        _contentView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     
     [self.view addSubview:_contentView];
     _viewModel = [[FHHouseFindViewModel alloc] initWithCollectionView:_contentView segmentControl:self.segmentView];
