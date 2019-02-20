@@ -119,6 +119,23 @@
     }];
 }
 
+- (void)setNavBarTitle:(NSString *)navTitle
+{
+    UILabel *titleLabel = [UILabel new];
+    FHDetailNavBar *navbar = (FHDetailNavBar *)[self getNaviBar];
+    titleLabel.text = navTitle;
+    titleLabel.textColor = [UIColor themeBlue1];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [navbar addSubview:titleLabel];
+    
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.bottom.equalTo(navbar);
+        make.width.mas_equalTo(100);
+        make.height.mas_equalTo(44);
+    }];
+}
+
 - (void)refreshContentOffset:(CGPoint)contentOffset
 {
     CGFloat alpha = contentOffset.y / 139 * 2;

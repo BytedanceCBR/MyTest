@@ -19,9 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)requestData:(BOOL)isHead;
 
-- (void)viewWillAppear;
-
-- (void)viewWillDisappear;
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime;
 
 @end
 

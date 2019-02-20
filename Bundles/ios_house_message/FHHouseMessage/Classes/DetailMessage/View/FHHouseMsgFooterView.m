@@ -46,11 +46,11 @@
     [self addSubview:_settingArrowImageView];
     
     self.topLine = [[UIView alloc] init];
-    _topLine.backgroundColor = [UIColor themeGray7];
+    _topLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:_topLine];
     
     self.bottomLine = [[UIView alloc] init];
-    _bottomLine.backgroundColor = [UIColor themeGray7];
+    _bottomLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:_bottomLine];
 }
 
@@ -73,8 +73,8 @@
     }];
     
     [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(self);
-        make.height.mas_equalTo(1);
+        make.top.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
     
     [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {

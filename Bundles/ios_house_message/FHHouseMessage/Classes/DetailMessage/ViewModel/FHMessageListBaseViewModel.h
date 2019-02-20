@@ -19,9 +19,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong ,nullable) NSString *maxCursor;
 @property(nonatomic, strong) NSMutableArray *dataList;
 
--(instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageListViewController *)viewController;
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageListViewController *)viewController;
 
--(void)requestData:(BOOL)isHead first:(BOOL)isFirst;
+- (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
+
+- (NSDictionary *)categoryLogDict;
 
 @end
 

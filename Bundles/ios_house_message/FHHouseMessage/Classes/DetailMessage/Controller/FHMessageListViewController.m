@@ -41,11 +41,6 @@
             self.typeId = paramObj.userInfo.allInfo[@"typeId"];
         }
         self.title = paramObj.allParams[@"title"];
-        
-        self.tracerModel = [[FHTracerModel alloc] init];
-        self.tracerModel.enterFrom = @"messagetab";
-        self.tracerModel.categoryName = [self categoryName];
-        [self addEnterCategoryLog];
     }
     return self;
 }
@@ -121,6 +116,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.ttTrackStayEnable = YES;
+    
     [self initNavbar];
     [self initView];
     [self initConstraints];
@@ -129,13 +126,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if ([[NSDate date]timeIntervalSince1970] - _enterTabTimestamp > 24*60*60) {
-        //超过一天
-        _enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 }
@@ -146,8 +140,6 @@
 }
 
 - (void)initView {
-//    self.view.backgroundColor = [UIColor themeGrayPale];
-    
     _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     _tableView.backgroundColor = [UIColor themeGrayPale];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -212,37 +204,14 @@
     [self startLoadData];
 }
 
-- (NSDictionary *)categoryLogDict
-{
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"category_name"] = [self categoryName];
-    tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
-    tracerDict[@"enter_type"] = @"click";
-    tracerDict[@"search_id"] = @"be_null";
-    tracerDict[@"origin_from"] = [self originFrom];
-    tracerDict[@"origin_search_id"] = @"be_null";
-    tracerDict[@"log_pb"] = @"be_null";
-    tracerDict[@"element_from"] = @"be_null";
-    
-    return tracerDict;
-}
-
-- (void)addEnterCategoryLog
-{
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    TRACK_EVENT(@"enter_category", tracerDict);
-}
-
-- (void)addStayCategoryLog:(NSTimeInterval)stayTime
-{
-    
+- (void)addStayCategoryLog:(NSTimeInterval)stayTime {
     NSTimeInterval duration = stayTime * 1000.0;
     if (duration == 0) {//当前页面没有在展示过
         return;
     }
-    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    NSMutableDictionary *tracerDict = [self.viewModel categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    TRACK_EVENT(@"stay_tab", tracerDict);
+    TRACK_EVENT(@"stay_category", tracerDict);
 }
 
 #pragma mark - UIViewControllerErrorHandler

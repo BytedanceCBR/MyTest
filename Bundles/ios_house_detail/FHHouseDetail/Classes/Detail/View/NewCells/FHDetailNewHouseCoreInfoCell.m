@@ -159,6 +159,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_moreBtn setAttributedTitle:attributeString forState:UIControlStateNormal];
     _moreBtn.backgroundColor = [UIColor colorWithHexString:@"#f6f7f8"];
     _moreBtn.layer.cornerRadius = 5;
+    [_moreBtn addTarget:self action:@selector(moreInfoButClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_moreBtn];
     [_moreBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.courtAddressKey.mas_bottom).offset(16);
@@ -185,6 +186,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
     _priceChangedNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [self.contentView addSubview:_priceChangedNotify];
+    [_priceChangedNotify addTarget:self action:@selector(fillActionClick) forControlEvents:UIControlEventTouchUpInside];
     [_priceChangedNotify mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.moreBtn.mas_bottom);
         make.left.equalTo(self.contentView);
@@ -212,12 +214,36 @@ static const CGFloat kLabelKeyRightPandding = -20;
     NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
     [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
     _openNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    [_openNotify addTarget:self action:@selector(fillActionClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_openNotify];
     [_openNotify mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.equalTo(self.priceChangedNotify);
         make.left.equalTo(self.contentView.mas_centerX);
         make.right.equalTo(self.contentView);
     }];
+}
+
+- (void)fillActionClick
+{
+    FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+    if (model.contactModel) {
+        if ([model.contactModel respondsToSelector:@selector(fillFormAction)]) {
+            [model.contactModel performSelector:@selector(fillFormAction)];
+        }
+    }
+}
+
+- (void)moreInfoButClick
+{
+    NSString *courtId = ((FHDetailNewHouseCoreInfoModel *)self.currentData).courtId;
+    FHDetailNewHouseCoreInfoModel *houseNameModel = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:houseNameModel.houseName forKey:@"courtInfo"];
+    [infoDict setValue:houseNameModel.disclaimerModel forKey:@"disclaimerInfo"];
+
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?courtId=%@",courtId]] userInfo:info];
 }
 
 - (void)openMapDetail
@@ -227,13 +253,21 @@ static const CGFloat kLabelKeyRightPandding = -20;
     double latitude = [_infoModel.gaodeLat doubleValue] ? [_infoModel.gaodeLat doubleValue] : 0;
     NSNumber *latitudeNum = @(latitude);
     NSNumber *longitudeNum = @(longitude);
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"category":@"公交",@"latitude":latitudeNum,@"longitude":longitudeNum}];
+    
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"公交" forKey:@"category"];
+    [infoDict setValue:latitudeNum forKey:@"latitude"];
+    [infoDict setValue:longitudeNum forKey:@"longitude"];
+    
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 - (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHDetailNewHouseCoreInfoModel class]]) {
+        self.currentData = data;
+        
         FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)data;
         _infoModel = model;
         self.pricingPerSqmLabel.text = model.pricingPerSqm;
@@ -255,14 +289,6 @@ static const CGFloat kLabelKeyRightPandding = -20;
             [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }
     }
-}
-
-- (void)tapClick
-{
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:nil];
-    
-    //    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"floorlist":self.allItems}];
-    //    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
 }
 
 - (void)awakeFromNib {

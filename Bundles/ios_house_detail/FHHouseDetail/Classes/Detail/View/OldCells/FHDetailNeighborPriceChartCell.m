@@ -7,7 +7,32 @@
 
 #import "FHDetailNeighborPriceChartCell.h"
 
+@interface FHDetailNeighborPriceChartCell ()
+
+@end
+
 @implementation FHDetailNeighborPriceChartCell
+
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    
+    
+}
+
+- (void)refreshWithData:(id)data
+{
+//    if ([data isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+//        _allItems = [NSArray arrayWithArray:((FHDetailNewDataFloorpanListModel *)data).list];
+//    }
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];

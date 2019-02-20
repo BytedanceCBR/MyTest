@@ -10,24 +10,6 @@
 #import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@protocol FHDetailNeighborhoodDataPriceTrendModel<NSObject>
-@end
-
-@protocol FHDetailNeighborhoodDataPriceTrendValuesModel<NSObject>
-@end
-
-@interface FHDetailNeighborhoodDataPriceTrendValuesModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *timestamp;
-@property (nonatomic, copy , nullable) NSString *price;
-@property (nonatomic, copy , nullable) NSString *timeStr;
-@end
-
-@interface FHDetailNeighborhoodDataPriceTrendModel : JSONModel
-
-@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataPriceTrendValuesModel> *values;
-@property (nonatomic, copy , nullable) NSString *name;
-@end
 
 @protocol FHDetailNeighborhoodDataStatsInfoModel<NSObject>
 @end
@@ -109,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNeighborhoodDataModel : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataPriceTrendModel> *priceTrend;
+@property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStatsInfoModel> *statsInfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataBaseInfoModel> *baseInfo;

@@ -68,7 +68,7 @@
 
 - (void)initConstraints {
     CGFloat bottom = 49;
-    CGFloat top = 0;
+    CGFloat top = 20;
     if (@available(iOS 11.0 , *)) {
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
         top = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
@@ -86,7 +86,7 @@
 }
 
 - (void)setupHeaderView {
-    FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 136)];
+    FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 141)];
     headerView.userInteractionEnabled = YES;
     _tableView.tableHeaderView = headerView;
     self.headerView = headerView;

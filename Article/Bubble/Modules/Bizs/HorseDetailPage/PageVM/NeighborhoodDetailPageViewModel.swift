@@ -325,7 +325,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams <|> traceExtension, disposeBag: self.disposeBag)
-                <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
+//                <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
                     if let openUrl = info.openUrl {
                         var traceExtension = theParams
