@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHMessageViewController : FHBaseViewController
+@interface FHMessageViewController<UIViewControllerErrorHandler> : FHBaseViewController 
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic , strong) UIView *containerView;

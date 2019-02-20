@@ -33,6 +33,7 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
+#import "IMManager.h"
 
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 
@@ -90,7 +91,16 @@ extern NSString *const kFHToastCountKey;
         _navBar.shareActionBlock = ^{
             [wself shareAction];
         };
-
+        _navBar.messageActionBlock = ^{
+            NSString *messageSchema = @"sslocal://message_conversation_list";
+            NSURL *openUrl = [NSURL URLWithString:messageSchema];
+            [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
+        };
+        if ([[IMManager shareInstance] getChatMessageUnreadTotalCount] > 0) {
+            [_navBar displayMessageDot:YES];
+        } else {
+            [_navBar displayMessageDot:NO];
+        }
     }
     return self;
 }

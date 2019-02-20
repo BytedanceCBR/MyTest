@@ -75,6 +75,7 @@
     [self addSubview:_shareBtn];
     
     _messageDot = [[UIImageView alloc] init];
+    _messageDot.hidden = YES;
     [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
     [self addSubview:_messageDot];
 

@@ -116,4 +116,7 @@
 
 "test_detail"           = "FHHouseDetailViewController";
 
+//im 单聊
 "open_single_chat" = "ChatRootViewController";
+//会话列表
+"message_conversation_list" = "FHTempMessageViewController";

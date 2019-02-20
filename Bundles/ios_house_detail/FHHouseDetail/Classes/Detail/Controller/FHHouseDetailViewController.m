@@ -77,11 +77,6 @@
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
     };
-    _navBar.messageActionBlock = ^{
-        NSString *messageSchema = @"sslocal://message_conversation_list";
-        NSURL *openUrl = [NSURL URLWithString:messageSchema];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
-    };
     [self.view addSubview:_navBar];
     
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];

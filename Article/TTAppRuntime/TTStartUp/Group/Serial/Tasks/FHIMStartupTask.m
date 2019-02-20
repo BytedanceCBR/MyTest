@@ -76,16 +76,21 @@
     [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:param  method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         if (!error) {
             NSString *number = @"";
-            @try{
-                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
-                BOOL success = ([json[@"status"] integerValue] == 0);
-                if(success){
-                    number = json[@"data"][@"virtual_number"];
-                }
+            if ([obj isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *jsonObj = (NSDictionary *)obj;
+                NSDictionary *data = [jsonObj objectForKey:@"data"];
+                number = data[@"virtual_number"];
             }
-            @catch(NSException *e){
-                
-            }
+//            @try{
+//                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+//                BOOL success = ([json[@"status"] integerValue] == 0);
+//                if(success){
+//                    number = json[@"data"][@"virtual_number"];
+//                }
+//            }
+//            @catch(NSException *e){
+//                
+//            }
             NSString *phone = @"";
             BOOL isAssociate = NO;
             if (!error) {
@@ -95,7 +100,7 @@
             //todo增加拨号埋点
             NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",phone];
             NSURL *url = [NSURL URLWithString:phoneUrl];
-            [[UIApplication sharedApplication]openURL:url];
+            [[UIApplication sharedApplication] openURL:url];
         }
     }];
 }
