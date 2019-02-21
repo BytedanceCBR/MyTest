@@ -111,7 +111,7 @@
     [self.navBar setFollowStatus:followStatus];
 
 }
-- (void)setFollowStatus:(BOOL)followStatus
+- (void)setFollowStatus:(NSInteger)followStatus
 {
     _followStatus = followStatus;
     [self.navBar setFollowStatus:followStatus];
