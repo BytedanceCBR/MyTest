@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id<FHMessageBridgeProtocol>)messageBridgeInstance;
 
+- (void)setPageType:(NSString *)pageType;
+
 @end
 
 NS_ASSUME_NONNULL_END

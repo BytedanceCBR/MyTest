@@ -18,6 +18,8 @@
 #import "IMManager.h"
 #import "IMChatStateObserver.h"
 #import "TTURLUtils.h"
+#import "FHUserTracker.h"
+#import "TTAccount.h"
 
 #define kCellId @"FHMessageCell_id"
 
@@ -29,6 +31,7 @@
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) id<FHMessageBridgeProtocol> messageBridge;
 @property(nonatomic, assign) BOOL isFirstLoad;
+@property(nonatomic, strong) NSString *pageType;
 
 @end
 
@@ -52,6 +55,10 @@
         [[IMManager shareInstance] addChatStateObverver:self];
     }
     return self;
+}
+
+- (void)setPageType:(NSString *)pageType {
+    _pageType = pageType;
 }
 
 -(void)requestData {
@@ -190,7 +197,20 @@
     [params setObject:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
     [params setObject:title  forKey:KSCHEMA_CHAT_TITLE];
     NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
+    [self clickImMessageEvent:conv];
     [[TTRoute sharedRoute] openURLByPushViewController: openUrl];
+}
+
+- (void)clickImMessageEvent:(IMConversation*)conv {
+    NSString *conversationId = conv.identifier;
+    NSString *targetUserId = [conv getTargetUserId: [[TTAccount sharedAccount] userIdString]];
+    NSDictionary *params = @{
+                             @"event_type": @"house_app2c_v2",
+                             @"page_type": _pageType,
+                             @"conversation_id" : conversationId,
+                             @"realtor_id" : targetUserId,
+                             };
+    [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
 
 

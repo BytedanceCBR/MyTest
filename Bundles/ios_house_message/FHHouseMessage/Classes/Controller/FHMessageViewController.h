@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UIView *containerView;
 @property(nonatomic, strong) FHNoNetHeaderView *notNetHeader;
 
+- (NSString *)getPageType;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -132,6 +132,11 @@
 
 - (void)initViewModel {
     _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView controller:self];
+    [_viewModel setPageType:[self getPageType]];
+}
+
+- (NSString *)getPageType {
+    return @"message_list";
 }
 
 - (void)startLoadData {

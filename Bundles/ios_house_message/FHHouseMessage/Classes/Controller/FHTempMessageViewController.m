@@ -9,4 +9,8 @@
 
 @implementation FHTempMessageViewController
 
+- (NSString *)getPageType {
+    return @"im_message_list";
+}
+
 @end
