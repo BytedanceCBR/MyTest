@@ -12,6 +12,7 @@
 #import "FHCommonDefines.h"
 #import <TTShareManager.h>
 #import <TTPhotoScrollViewController.h>
+#import "FHUserTracker.h"
 
 #define K_PhotoHeader_HEIGHT 300
 #define K_CELLID @"cell_id"
@@ -28,6 +29,7 @@
 @property(nonatomic , strong) UILabel *infoLabel;
 @property(nonatomic , strong) UIImage *placeHolder;
 @property(nonatomic , strong) UIImageView *noDataImageView;
+@property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
 @end
 
 @implementation FHDetailPhotoHeaderCell
@@ -58,6 +60,8 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        
+        _pictureShowDict = [NSMutableDictionary dictionary];
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         //        layout.estimatedItemSize = CGSizeMake(SCREEN_WIDTH, HEIGHT);
@@ -145,6 +149,15 @@
     }
 }
 
+//埋点
+- (void)trackPictureShowWithUrl:(NSString *)url showType:(NSString *)showType {
+    
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    dict[@"picture_id"] = url;
+    dict[@"show_type"] = showType;
+    TRACK_EVENT(@"picture_show", dict);
+}
+
 -(NSInteger)indexForIndexPath:(NSIndexPath *)indexPath
 {
     if (_images.count <= 1) {
@@ -174,6 +187,17 @@
     return [_images count]+2;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[indexPath.row];
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    if (_pictureShowDict[img.url]) {
+        return;
+    }
+    
+    _pictureShowDict[img.url] = row;
+    [self trackPictureShowWithUrl:img.url showType:@"small"];
+}
+
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     FHPhotoHeaderCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:K_CELLID forIndexPath:indexPath];
@@ -181,9 +205,17 @@
     NSInteger index = [self indexForIndexPath:indexPath];
     
     id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
-    
+
     NSURL *url = [NSURL URLWithString:img.url];
     [cell.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
+    
+//    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+//    if (_pictureShowDict[img.url]) {
+//        return cell;
+//    }
+//
+//    _pictureShowDict[img.url] = row;
+//    [self trackPictureShowWithUrl:img.url showType:@"small"];
     
     return cell;
 }
