@@ -1068,6 +1068,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (_configModel.originSearchId) {
         [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
+    [strUrl appendFormat:@"&house_type=2"];
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
@@ -1098,6 +1099,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (_configModel.originSearchId) {
         [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
+    
+    [strUrl appendFormat:@"&house_type=4"]; // 小区
 
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
@@ -1142,6 +1145,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if (_configModel.originSearchId) {
         [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
+    [strUrl appendFormat:@"&house_type=3"];
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
