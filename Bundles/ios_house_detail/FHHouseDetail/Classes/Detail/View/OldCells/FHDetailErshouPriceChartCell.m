@@ -459,9 +459,15 @@
     view.tag = 200;
     FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc]init];
     NSArray *priceTrends = self.priceTrends;
-    FHDetailPriceTrendModel *priceTrend = priceTrends[1];
+    if (priceTrends.count < 1) {
+        return;
+    }
     NSMutableArray *trendItems = @[].mutableCopy;
-    for (FHDetailPriceTrendValuesModel *priceValue in priceTrend.values) {
+    for (FHDetailPriceTrendModel *priceTrend in priceTrends) {
+        if (priceTrend.values.count < 1 || pointIndex >= priceTrend.values.count) {
+            continue;
+        }
+        FHDetailPriceTrendValuesModel *priceValue = priceTrend.values[pointIndex];
         FHDetailPriceMarkerItem *item = [[FHDetailPriceMarkerItem alloc]init];
         item.name = priceTrend.name;
         item.priceModel = priceValue;

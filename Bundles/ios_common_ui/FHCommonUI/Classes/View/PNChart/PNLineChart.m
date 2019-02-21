@@ -785,23 +785,6 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 
 - (void)drawRect:(CGRect)rect {
     
-    CGFloat bottom = _chartCavanHeight + _chartMarginBottom;
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    if (self.yHighlightedColor) {
-        CGContextSetStrokeColorWithColor(ctx, self.yHighlightedColor.CGColor);
-    } else {
-        CGContextSetStrokeColorWithColor(ctx, [UIColor lightGrayColor].CGColor);
-    }
-    CGContextMoveToPoint(ctx, self.selectPoint.x, self.selectPoint.y);
-    // add dotted style grid
-    CGFloat dash[] = {3, 2};
-    // dot diameter is 20 points
-    CGContextSetLineWidth(ctx, 0.5);
-    CGContextSetLineCap(ctx, kCGLineCapRound);
-    CGContextSetLineDash(ctx, 0.0, dash, 2);
-    CGContextAddLineToPoint(ctx, self.selectPoint.x, bottom);
-    CGContextStrokePath(ctx);
-    
     if (self.isShowCoordinateAxis) {
 
         CGFloat yAxisOffset =  self.yAxisOffset;
@@ -870,7 +853,24 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             CGContextStrokePath(ctx);
         }
     }
-
+    
+    CGFloat bottom = _chartCavanHeight + _chartMarginBottom;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    if (self.yHighlightedColor) {
+        CGContextSetStrokeColorWithColor(ctx, self.yHighlightedColor.CGColor);
+    } else {
+        CGContextSetStrokeColorWithColor(ctx, [UIColor lightGrayColor].CGColor);
+    }
+    CGContextMoveToPoint(ctx, self.selectPoint.x, self.selectPoint.y);
+    // add dotted style grid
+    CGFloat dash[] = {3, 2};
+    // dot diameter is 20 points
+    CGContextSetLineWidth(ctx, 1);
+    CGContextSetLineCap(ctx, kCGLineCapRound);
+    CGContextSetLineDash(ctx, 0.0, dash, 2);
+    CGContextAddLineToPoint(ctx, self.selectPoint.x, bottom);
+    CGContextStrokePath(ctx);
+    
     [super drawRect:rect];
 }
 
