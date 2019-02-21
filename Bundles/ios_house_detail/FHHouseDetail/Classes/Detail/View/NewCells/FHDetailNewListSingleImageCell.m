@@ -285,106 +285,16 @@
 
 -(void)updateHomeHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
-    self.majorTitle.text = commonModel.displayTitle;
-    self.extendTitle.text = commonModel.displayDescription;
-    NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:commonModel.tags];
-    self.areaLabel.attributedText =  attributeString;
     
-    self.priceLabel.text = commonModel.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
-    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-    
-    if (houseType == FHHouseTypeSecondHandHouse) {
-        FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
-        [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-        self.extendTitle.text = commonModel.displaySubtitle;
-        self.priceLabel.text = commonModel.displayPrice;
-        self.roomSpaceLabel.text = commonModel.displayPricePerSqm;
-        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-            
-            self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
-            self.imageTopLeftLabel.text = commonModel.houseImageTag.text;
-            self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
-            self.imageTopLeftLabelBgView.hidden = NO;
-        }else {
-            
-            self.imageTopLeftLabelBgView.hidden = YES;
-        }
-        
-        [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
-    }else if(houseType == FHHouseTypeRentHouse)
-    {
-        self.majorTitle.text = commonModel.title;
-        self.extendTitle.text = commonModel.subtitle;
-        self.priceLabel.text = commonModel.pricing;
-        self.roomSpaceLabel.text = nil;
-        FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
-        [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-        
-        if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-            
-            self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
-            self.imageTopLeftLabel.text = commonModel.houseImageTag.text;
-            self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
-            self.imageTopLeftLabelBgView.hidden = NO;
-        }else {
-            
-            self.imageTopLeftLabelBgView.hidden = YES;
-        }
-        
-        [self updateOriginPriceLabelConstraints:nil];
-    }
-    else
-    {
-        self.roomSpaceLabel.text = @"";
-        [self updateOriginPriceLabelConstraints:nil];
-    }
-    
-    [self updateLayoutComponents:attributeString.string.length > 0];
 }
 
 #pragma mark 二手房
 - (void)updateWithModel:(FHSearchHouseDataItemsModel *)model isLastCell:(BOOL)isLastCell {
     
-    self.majorTitle.text = model.displayTitle;
-    self.extendTitle.text = model.displaySubtitle;
-    
-    self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
-    
-    self.priceLabel.text = model.displayPrice;
-    self.roomSpaceLabel.text = model.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
-    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-    
-    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-        
-        self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-        self.imageTopLeftLabel.text = model.houseImageTag.text;
-        self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-        self.imageTopLeftLabelBgView.hidden = NO;
-    }else {
-        
-        self.imageTopLeftLabelBgView.hidden = YES;
-    }
-    
-    [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
-    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
-    
 }
 
 #pragma mark 新房
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
-    
-    self.majorTitle.text = model.displayTitle;
-    self.extendTitle.text = model.displayDescription;
-    self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
-    
-    self.priceLabel.text = model.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-    
-    [self updateOriginPriceLabelConstraints:nil];
-    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
     
 }
 
@@ -415,74 +325,16 @@
 #pragma mark 二手房
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model {
     
-    self.majorTitle.text = model.displayTitle;
-    self.extendTitle.text = model.displaySubtitle;
-    self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
-    
-    self.priceLabel.text = model.displayPrice;
-    self.roomSpaceLabel.text = model.displayPricePerSqm;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
-    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-    
-    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-        
-        self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-        self.imageTopLeftLabel.text = model.houseImageTag.text;
-        self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-        self.imageTopLeftLabelBgView.hidden = NO;
-    }else {
-        
-        self.imageTopLeftLabelBgView.hidden = YES;
-    }
-    
-    [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
-    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
-    
 }
 
 #pragma mark 租房
 -(void)updateWithRentHouseModel:(FHHouseRentDataItemsModel *)model {
-    
-    self.majorTitle.text = model.title;
-    self.extendTitle.text = model.subtitle;
-    self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
-    self.priceLabel.text = model.pricing;
-    self.roomSpaceLabel.text = nil;
-    FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
-    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-    
-    if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
-        
-        self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
-        self.imageTopLeftLabel.text = model.houseImageTag.text;
-        self.imageTopLeftLabelBgView.backgroundColor = [UIColor colorWithHexString:model.houseImageTag.backgroundColor];
-        self.imageTopLeftLabelBgView.hidden = NO;
-    }else {
-        
-        self.imageTopLeftLabelBgView.hidden = YES;
-    }
-    
-    [self updateOriginPriceLabelConstraints:nil];
-    [self updateLayoutComponents:self.cellModel.tagsAttrStr.string.length > 0];
-    
+  
 }
 
 #pragma mark 小区
 - (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model {
-    
-    self.majorTitle.text = model.displayTitle;
-    self.extendTitle.text = model.displaySubtitle;
-    self.areaLabel.text = model.displayStatsInfo;
-    self.priceLabel.text = model.displayPrice;
-    
-    [self.areaLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoPanel);
-    }];
-    FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-    [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-    
-    self.imageTopLeftLabelBgView.hidden = YES;
-    [self updateOriginPriceLabelConstraints:nil];
+  
 }
 
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel {
