@@ -150,7 +150,56 @@
 
 // 查看更多按钮点击
 - (void)loadMoreDataButtonClick {
+    FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+    NSString *group_id = @"be_null";
+    if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
+        group_id = oldDetail.data.neighborhoodInfo.id;
+    }
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"group_id"] = group_id;
+    tracerDic[@"enter_type"] = @"click";
+    tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
+    tracerDic[@"category_name"] = @"related_list";
+    tracerDic[@"element_type"] = @"related";
+    tracerDic[@"element_from"] = @"related";
     
+    NSMutableDictionary *userInfo = [NSMutableDictionary new];
+    userInfo[@"tracer"] = tracerDic;
+    userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    userInfo[@"title"] = @"周边房源";
+    if (oldDetail.data.neighborhoodInfo.id.length > 0) {
+        userInfo[@"neighborhoodId"] = oldDetail.data.neighborhoodInfo.id;
+    }
+    if (self.baseViewModel.houseId.length > 0) {
+        userInfo[@"houseId"] = self.baseViewModel.houseId;
+    }
+    userInfo[@"list_vc_type"] = @(2);
+    
+    TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+    NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+    if (urlStr.length > 0) {
+        NSURL *url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+    }
+}
+
+// 单个cell点击
+- (void)cellDidSeleccted:(NSInteger)index {
+    if (index >= 0 && index < self.items.count) {
+        FHSearchHouseDataItemsModel *dataItem = self.items[index];
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"left_pic";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_type"] = @"related";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.hid];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -199,6 +248,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self cellDidSeleccted:indexPath.row];
 }
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
@@ -221,8 +271,15 @@
             return;
         }
         [self.houseShowCache setValue:@(YES) forKey:tempKey];
-        // 添加house_show埋点 add by zyk
-        NSLog(@"------添加house_show 埋点: %ld",index);
+        FHSearchHouseDataItemsModel *dataItem = self.items[index];
+        // house_show
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"left_pic";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_type"] = @"related";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
 

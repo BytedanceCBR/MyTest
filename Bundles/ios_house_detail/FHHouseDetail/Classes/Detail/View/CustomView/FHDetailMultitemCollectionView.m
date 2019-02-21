@@ -97,7 +97,10 @@
         return;
     }
     [self.houseShowCache setValue:@(YES) forKey:tempKey];
-    // 添加house_show埋点
+    // 添加埋点
+    if (self.displayCellBlk) {
+        self.displayCellBlk(indexPath.row);
+    }
 }
 
 @end
