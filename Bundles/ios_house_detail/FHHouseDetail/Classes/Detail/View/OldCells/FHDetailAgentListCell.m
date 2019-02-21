@@ -23,6 +23,7 @@
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
+@property (nonatomic, strong)   NSMutableDictionary       *tracerDicCache;
 
 @end
 
@@ -125,6 +126,7 @@
 }
 
 - (void)setupUI {
+    _tracerDicCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"推荐经纪人";
     [self.contentView addSubview:_headerView];
@@ -146,16 +148,20 @@
 
 - (void)updateItems {
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    NSInteger realtorShowCount = 0;
     if (model.recommendedRealtors.count > 3) {
         [model.tableView beginUpdates];
         if (model.isFold) {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(66 * 3);
             }];
+            realtorShowCount = 3;
         } else {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(66 * model.recommendedRealtors.count);
             }];
+            realtorShowCount = model.recommendedRealtors.count;
+            [self addRealtorClickMore];
         }
         [self setNeedsUpdateConstraints];
         [model.tableView endUpdates];
@@ -163,11 +169,48 @@
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(66 * model.recommendedRealtors.count);
         }];
+        realtorShowCount = model.recommendedRealtors.count;
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
+        realtorShowCount = 0;
     }
+    // realtor_show埋点
+    [self tracerRealtorShowToIndex:realtorShowCount];
+}
+
+- (void)tracerRealtorShowToIndex:(NSInteger)index {
+    for (int i = 0; i< index; i++) {
+        NSString *cahceKey = [NSString stringWithFormat:@"%d",i];
+        if (self.tracerDicCache[cahceKey]) {
+            continue;
+        }
+        self.tracerDicCache[cahceKey] = @(YES);
+        FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+        if (i < model.recommendedRealtors.count) {
+            FHDetailContactModel *contact = model.recommendedRealtors[i];
+            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+            tracerDic[@"element_type"] = @"old_detail_related";
+            tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
+            tracerDic[@"realtor_rank"] = @(i);
+            tracerDic[@"realtor_position"] = @"detail_related";
+            // 移除字段
+            [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
+            [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
+        }
+    }
+}
+
+- (void)addRealtorClickMore {
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    // 移除字段
+    [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id",@"enter_from"]];
+    [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"old_detail_related";
 }
 
 @end

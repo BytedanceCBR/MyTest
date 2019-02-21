@@ -40,7 +40,7 @@
 
     _labelRight = [UILabel new];
     _labelRight.textAlignment = NSTextAlignmentRight;
-    _labelRight.font = [UIFont themeFontMedium:14];
+    _labelRight.font = [UIFont themeFontRegular:14];
     _labelRight.textColor = [UIColor colorWithHexString:@"#a1aab3"];
     [self.contentView addSubview:_labelRight];
     

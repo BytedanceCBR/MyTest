@@ -41,18 +41,18 @@
         [self.contentView addSubview:_pricingLabel];
         [_pricingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
-            make.top.equalTo(self.nameLabel.mas_bottom);
+            make.top.equalTo(self.nameLabel.mas_bottom).offset(5);
             make.bottom.mas_equalTo(-15);
             make.height.mas_equalTo(22);
         }];
         
         _pricingPerSqm = [UILabel new];
         _pricingPerSqm.textColor = [UIColor themeGray2];
-        _pricingPerSqm.font = [UIFont themeFontMedium:14];
+        _pricingPerSqm.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_pricingPerSqm];
         [_pricingPerSqm mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.pricingLabel.mas_right).offset(10);
-            make.top.equalTo(self.nameLabel.mas_bottom).offset(2);
+            make.top.equalTo(self.nameLabel.mas_bottom).offset(7);
             make.height.mas_equalTo(20);
         }];
         

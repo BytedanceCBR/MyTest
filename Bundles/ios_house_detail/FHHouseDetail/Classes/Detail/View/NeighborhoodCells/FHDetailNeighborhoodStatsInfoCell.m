@@ -89,7 +89,7 @@
             CGFloat leftOffset = 20.0 + i * 70 + (i - 1 + 0.5) * space;
             [v mas_makeConstraints:^(MASConstraintMaker *maker) {
                 maker.height.mas_equalTo(27);
-                maker.width.mas_equalTo(1);
+                maker.width.mas_equalTo(0.5);
                 maker.centerY.mas_equalTo(self.contentView);
                 maker.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
