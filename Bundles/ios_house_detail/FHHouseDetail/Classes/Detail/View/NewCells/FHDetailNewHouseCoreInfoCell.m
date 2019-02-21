@@ -232,6 +232,16 @@ static const CGFloat kLabelKeyRightPandding = -20;
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"house_info";
+}
+
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    return @[@"price_notice",@"openning_notice"];
+}
+
 - (void)moreInfoButClick
 {
     NSString *courtId = ((FHDetailNewHouseCoreInfoModel *)self.currentData).courtId;
