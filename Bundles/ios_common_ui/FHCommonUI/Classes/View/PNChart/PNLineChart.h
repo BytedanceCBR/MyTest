@@ -62,6 +62,7 @@
 @property (nonatomic, getter = isShowCoordinateAxis) BOOL showCoordinateAxis;
 @property (nonatomic) UIColor *axisColor;
 @property (nonatomic) CGFloat axisWidth;
+@property (nonatomic) UIColor *yHighlightedColor;
 
 @property (nonatomic, strong) NSString *xUnit;
 @property (nonatomic, strong) NSString *yUnit;

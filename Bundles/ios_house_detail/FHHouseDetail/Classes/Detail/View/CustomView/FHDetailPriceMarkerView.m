@@ -76,6 +76,11 @@
     self.secondLabel.width = self.width - 20;
     self.thirdLabel.width = self.width - 20;
     self.height = self.thirdLabel.bottom + 20;
+    
+    if (self.left > [UIScreen mainScreen].bounds.size.width / 2) {
+        self.left = self.left - self.width;
+    }
+    
 }
 
 - (void)refreshContent:(FHDetailPriceMarkerData *)markData
