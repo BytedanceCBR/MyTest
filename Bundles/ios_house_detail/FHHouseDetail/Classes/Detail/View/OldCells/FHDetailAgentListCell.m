@@ -198,8 +198,16 @@
     [self addSubview:_licenceIcon];
     
     _callBtn = [[FHExtendHotAreaButton alloc] init];
-    [_callBtn setImage:[UIImage imageNamed:@"icon-phone"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateSelected];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateHighlighted];
     [self addSubview:_callBtn];
+    
+    _imBtn = [[FHExtendHotAreaButton alloc] init];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal"] forState:UIControlStateNormal];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
+    [self addSubview:_imBtn];
     
     self.name = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
     _name.font = [UIFont themeFontMedium:16];
@@ -225,17 +233,22 @@
         make.top.mas_equalTo(self.name.mas_bottom);
         make.height.mas_equalTo(20);
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
-        make.right.mas_lessThanOrEqualTo(self.callBtn.mas_left);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.name.mas_right).offset(4);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.callBtn.mas_left).offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(40);
         make.right.mas_equalTo(-20);
+        make.centerY.mas_equalTo(self.avator);
+    }];
+    [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(40);
+        make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avator);
     }];
 }
