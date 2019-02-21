@@ -161,6 +161,7 @@
                 make.height.mas_equalTo(66 * model.recommendedRealtors.count);
             }];
             realtorShowCount = model.recommendedRealtors.count;
+            [self addRealtorClickMore];
         }
         [self setNeedsUpdateConstraints];
         [model.tableView endUpdates];
@@ -183,7 +184,7 @@
     for (int i = 0; i< index; i++) {
         NSString *cahceKey = [NSString stringWithFormat:@"%d",i];
         if (self.tracerDicCache[cahceKey]) {
-            return;
+            continue;
         }
         self.tracerDicCache[cahceKey] = @(YES);
         FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
@@ -194,9 +195,22 @@
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
+            // 移除字段
+            [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
             [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
         }
     }
+}
+
+- (void)addRealtorClickMore {
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    // 移除字段
+    [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id",@"enter_from"]];
+    [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"old_detail_related";
 }
 
 @end

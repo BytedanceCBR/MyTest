@@ -167,6 +167,10 @@
     [self.chartView setXLabels:Xlabels];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"price_trend";
+}
+
 - (UIColor *)lineColorByIndex:(NSInteger)index
 {
     switch (index) {
