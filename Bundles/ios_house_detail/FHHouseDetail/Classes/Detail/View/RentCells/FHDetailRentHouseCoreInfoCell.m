@@ -80,21 +80,22 @@
     self.backgroundColor = [UIColor colorWithHexString:@"#f7f8f9"];
     self.layer.cornerRadius = 4.0;
     
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:16];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:15];
+    _keyLabel.font = [UIFont themeFontMedium:15];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:12];
     [self addSubview:_valueLabel];
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(14);
+        make.left.mas_equalTo(10);
         make.top.mas_equalTo(12);
         make.height.mas_equalTo(25);
         make.right.mas_equalTo(self).offset(-10);
     }];
     
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(16);
+        make.left.mas_equalTo(10);
         make.top.mas_equalTo(self.keyLabel.mas_bottom);
         make.height.mas_equalTo(17);
         make.right.mas_equalTo(self).offset(-10);
