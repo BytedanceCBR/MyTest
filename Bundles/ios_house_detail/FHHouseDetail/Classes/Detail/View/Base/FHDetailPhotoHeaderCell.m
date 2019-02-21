@@ -30,6 +30,8 @@
 @property(nonatomic , strong) UIImage *placeHolder;
 @property(nonatomic , strong) UIImageView *noDataImageView;
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
+@property(nonatomic, assign) BOOL isLarge;
+@property(nonatomic, assign) NSInteger currentIndex;
 @end
 
 @implementation FHDetailPhotoHeaderCell
@@ -150,10 +152,20 @@
 }
 
 //埋点
-- (void)trackPictureShowWithUrl:(NSString *)url showType:(NSString *)showType {
+- (void)trackPictureShowWithIndex:(NSInteger)index {
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
+    NSString *showType = self.isLarge ? @"large" : @"small";
+    NSString *row = [NSString stringWithFormat:@"%@_%i",showType,index];
+    self.isLarge = NO;
+    if (_pictureShowDict[row]) {
+        return;
+    }
+    
+    _pictureShowDict[row] = row;
     
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
-    dict[@"picture_id"] = url;
+    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    dict[@"picture_id"] = img.url;
     dict[@"show_type"] = showType;
     TRACK_EVENT(@"picture_show", dict);
 }
@@ -189,14 +201,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger index = [self indexForIndexPath:indexPath];
-    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-    if (_pictureShowDict[img.url]) {
-        return;
-    }
-
-    _pictureShowDict[img.url] = row;
-    [self trackPictureShowWithUrl:img.url showType:@"small"];
+    [self trackPictureShowWithIndex:index];
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -314,11 +319,19 @@
     __weak typeof(self) weakSelf = self;
     vc.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.images.count) {
+            weakSelf.currentIndex = currentIndex;
+            weakSelf.isLarge = YES;
             NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
             [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
     };
-    [vc presentPhotoScrollView];
+    [vc presentPhotoScrollViewWithDismissBlock:^{
+        weakSelf.isLarge = NO;
+        [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
+    }];
+    
+    self.isLarge = YES;
+    [self trackPictureShowWithIndex:index];
 }
 
 @end
