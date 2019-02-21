@@ -336,13 +336,7 @@
     }
     self.currentData = data;
     FHDetailPriceTrendCellModel *cellModel = (FHDetailPriceTrendCellModel *)data;
-    NSArray *priceTrends = cellModel.priceTrends;
-
-    // add by zjing for test
-//    theCell.clickCallBack = callBack
-    
-//    theCell.traceParams = traceExtension
-    
+    NSArray *priceTrends = cellModel.priceTrends; 
     self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
     self.priceView.hidden = NO;
     self.foldButton.isFold = cellModel.isFold;

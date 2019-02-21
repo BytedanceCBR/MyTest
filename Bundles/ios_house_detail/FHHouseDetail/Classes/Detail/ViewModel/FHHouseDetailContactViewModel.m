@@ -54,23 +54,12 @@
         
         _houseType = houseType;
         _houseId = houseId;
-    }
-    return self;
-}
-
--(instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar
-{
-    self = [super init];
-    if (self) {
-        
-        _navBar = navBar;
-        _bottomBar = bottomBar;
         
         _followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
-        _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]init];
+        _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
         _phoneCallViewModel.bottomBar = _bottomBar;
         _phoneCallViewModel.followUpViewModel = _followUpViewModel;
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
         
         __weak typeof(self)wself = self;
@@ -83,7 +72,7 @@
         _bottomBar.bottomBarRealtorBlock = ^{
             [wself jump2RealtorDetail];
         };
- 
+        
         _navBar.collectActionBlock = ^(BOOL followStatus){
             if (!followStatus) {
                 
@@ -95,6 +84,17 @@
         _navBar.shareActionBlock = ^{
             [wself shareAction];
         };
+    }
+    return self;
+}
+
+-(instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar
+{
+    self = [super init];
+    if (self) {
+        
+        _navBar = navBar;
+        _bottomBar = bottomBar;
 
     }
     return self;
@@ -115,6 +115,12 @@
 {
     _followStatus = followStatus;
     [self.navBar setFollowStatus:followStatus];
+}
+
+- (void)setTracerDict:(NSDictionary *)tracerDict
+{
+    _tracerDict = tracerDict;
+    _phoneCallViewModel.tracerDict = tracerDict;
 }
 
 - (void)followAction

@@ -15,11 +15,12 @@
 #import <TTReachability.h>
 #import <TTPhotoScrollVC/TTPhotoScrollViewController.h>
 #import "FHDetailBottomBarView.h"
+#import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
 
 extern NSString *const kFHToastCountKey;
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 
-@interface FHHouseDetailPhoneCallViewModel ()
+@interface FHHouseDetailPhoneCallViewModel () <FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
@@ -66,26 +67,53 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     self.alertView = alertView;
 }
 
-- (void)callWithPhone:(FHDetailContactModel *)contactPhone searchId:(NSString *)searchId imprId:(NSString *)imprId
+- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId
 {
-//    _contactPhone = contactPhone;
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
         
-        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", contactPhone.phone];
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
         return;
     }
     [self.bottomBar startLoading];
-    [FHHouseDetailAPI requestVirtualNumber:contactPhone.phone houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestVirtualNumber:phone houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         [wself.bottomBar stopLoading];
-        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", contactPhone.phone];
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
         }
         [wself callPhone:urlStr];
     }];
+}
+
+- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock
+{
+    __weak typeof(self)wself = self;
+    if (![TTReachability isNetworkConnected]) {
+        
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
+        [self callPhone:urlStr];
+        // add by zjing for test 返回什么错误呢？
+        NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
+        failBlock(error);
+        return;
+    }
+    [self.bottomBar startLoading];
+    [FHHouseDetailAPI requestVirtualNumber:phone houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+        
+        [wself.bottomBar stopLoading];
+        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
+        if (!error && model.data.virtualNumber.length > 0) {
+            urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
+        }else {
+            failBlock(error);
+        }
+        [wself callPhone:urlStr];
+        successBlock(YES);
+    }];
+    
 }
 
 - (void)fillFormRequest:(NSString *)phoneNum
@@ -187,31 +215,41 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     }
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
-    // add by zjing for test 埋点参数
-    NSString *reportParams;
-    NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,contactPhone.realtorId,reportParams];
+    
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    dict[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    dict[@"log_pb"] = self.tracerDict[@"log_pb"];
+    dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
+    dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
+    dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
+        dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
+        dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
+        dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
+    }
+    NSError *parseError = nil;
+    NSString *reportParams = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&parseError];
+    if (!parseError) {
+        
+        reportParams = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    }
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,contactPhone.realtorId,reportParams ? : @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人详情页";
     info[@"realtorId"] = contactPhone.realtorId;
     info[@"delegate"] = self;
-    //    info[@"trace"] = theTraceModel;
-    
+    info[@"trace"] = self.tracerDict;
+    info[@"house_id"] = _houseId;
+    info[@"house_type"] = @(_houseType);
+
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
     [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
-    
-    //        let traceModel = self.detailPageViewModel?.tracerModel {
-    //            traceModel.elementFrom = "old_detail_button"
-    //            let reportParams = getRealtorReportParams(traceModel: traceModel, rank: "0")
-    //            let theTraceModel = traceModel.copy() as? HouseRentTracer
-    //            theTraceModel?.elementFrom = "old_detail_button"
-    //            theTraceModel?.enterFrom = "old_detal"
-    //            let info: [String: Any] = ["url": jumpUrl,
-    //                                       "title": "经纪人详情页",
-    //                                       "realtorId": realtorId,
-    //                                       "delegate": delegate,
-    //                                       "trace": theTraceModel]
-    
 }
 
 
@@ -226,6 +264,12 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
             [[UIApplication sharedApplication]openURL:url];
         }
     }
+}
+
+#pragma mark delegate
+- (void)followUpActionByFollowId:(NSString *)followId houseType:(FHHouseType)houseType
+{
+    [self.followUpViewModel followHouseByFollowId:followId houseType:houseType actionType:houseType];
 }
 
 - (YYCache *)sendPhoneNumberCache

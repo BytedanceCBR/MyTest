@@ -146,6 +146,7 @@
     self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.viewModel.contactViewModel.searchId = self.searchId;
     self.viewModel.contactViewModel.imprId = self.imprId;
+    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
 
     [self addDefaultEmptyViewFullScreen];
 
