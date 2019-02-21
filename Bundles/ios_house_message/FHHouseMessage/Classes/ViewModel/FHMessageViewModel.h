@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id<FHMessageBridgeProtocol>)messageBridgeInstance;
 
+- (void)viewWillAppear;
+
 @end
 
 NS_ASSUME_NONNULL_END

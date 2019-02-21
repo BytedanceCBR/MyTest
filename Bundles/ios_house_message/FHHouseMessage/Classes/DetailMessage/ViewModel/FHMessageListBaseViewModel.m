@@ -29,6 +29,7 @@
         self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [weakSelf requestData:NO first:NO];
         }];
+        self.refreshFooter.hidden = YES;
         self.tableView.mj_footer = self.refreshFooter;
         
     }
