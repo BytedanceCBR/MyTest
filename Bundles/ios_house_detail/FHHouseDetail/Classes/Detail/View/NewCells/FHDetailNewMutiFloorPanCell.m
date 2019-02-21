@@ -102,6 +102,11 @@
     }];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"house_model";
+}
+
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
     
