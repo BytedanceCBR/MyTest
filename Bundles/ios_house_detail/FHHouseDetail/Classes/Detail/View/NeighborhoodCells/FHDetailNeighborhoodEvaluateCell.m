@@ -131,6 +131,10 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"neighborhood_evaluation";
+}
+
 @end
 
 
