@@ -72,6 +72,10 @@
     return self;
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"trade_tips";
+}
+
 - (void)setupUI {
     
     _bgView = [[UIView alloc] init];

@@ -87,6 +87,10 @@
     return self;
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"house_info";
+}
+
 - (void)setupUI {
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"房源概况";

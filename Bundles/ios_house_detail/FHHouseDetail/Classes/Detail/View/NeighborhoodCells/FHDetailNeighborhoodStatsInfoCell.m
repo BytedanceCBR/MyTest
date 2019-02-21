@@ -18,6 +18,12 @@
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 
+@interface FHDetailNeighborhoodStatsInfoCell ()
+
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowTraceDic;
+
+@end
+
 @implementation FHDetailNeighborhoodStatsInfoCell
 
 - (void)awakeFromNib {
@@ -70,6 +76,8 @@
                 itemView.valueDataLabel.isEnabled = YES;
                 itemView.isDataEnabled = YES;
                 itemView.enabled = YES;
+                // element_show 埋点
+                [self sendElementShowTrace:idx];
             }
             [self.contentView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -97,12 +105,37 @@
     }
     [self layoutIfNeeded];
 }
+// element_show 单独埋吧： '在售房源': 'house_onsale', '成交房源': 'house_deal',在租房源：'house_rent'
+- (void)sendElementShowTrace:(NSInteger)index {
+    NSString *element_type = @"be_null";
+    switch (index) {
+        case 0:
+            element_type = @"house_onsale";
+            break;
+        case 1:
+            element_type = @"house_deal";
+            break;
+        case 2:
+            element_type = @"house_rent";
+            break;
+        default:
+            break;
+    }
+    if (self.elementShowTraceDic[element_type]) {
+        return;
+    }
+    self.elementShowTraceDic[element_type] = @(YES);
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"element_type"] = element_type;
+    [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _elementShowTraceDic = [NSMutableDictionary new];
     }
     return self;
 }

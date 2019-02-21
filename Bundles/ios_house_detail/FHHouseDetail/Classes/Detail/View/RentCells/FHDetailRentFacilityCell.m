@@ -83,6 +83,10 @@
     [self layoutIfNeeded];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"house_facility";
+}
+
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
