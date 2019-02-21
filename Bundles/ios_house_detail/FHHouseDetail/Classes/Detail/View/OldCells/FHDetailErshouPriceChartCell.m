@@ -143,12 +143,14 @@
         data01.pointLabelFormat = @"%.2f";
         __weak typeof(self)wself = self;
         data01.getData = ^(NSUInteger index) {
-            
-            FHDetailPriceTrendValuesModel *trendValue = data01Array[index];
-            CGFloat yValue = trendValue.price.floatValue / wself.unitPerSquare;
-            return [PNLineChartDataItem dataItemWithY:yValue andRawY:yValue];
-            
-            return [PNLineChartDataItem dataItemWithY:yValue];
+
+            if (index < data01Array.count) {
+
+                FHDetailPriceTrendValuesModel *trendValue = data01Array[index];
+                CGFloat yValue = trendValue.price.floatValue / wself.unitPerSquare;
+                return [PNLineChartDataItem dataItemWithY:yValue andRawY:yValue];
+            }
+            return [PNLineChartDataItem dataItemWithY:0];
         };
         [mutable addObject:data01];
     }
@@ -323,7 +325,7 @@
     }];
 
     [self setupChartUI];
-    [self updateChartConstraints];
+    [self updateChartConstraints:NO];
     [self.foldButton addTarget:self action:@selector(foldBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -344,7 +346,7 @@
     self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
     self.priceView.hidden = NO;
     self.foldButton.isFold = cellModel.isFold;
-    [self updateChartConstraints];
+    [self updateChartConstraints:NO];
     
     float pricingPerSqm = cellModel.neighborhoodInfo.pricingPerSqmV.floatValue;
     if (pricingPerSqm > 0) {
@@ -392,20 +394,22 @@
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
-    [self updateChartConstraints];
+    [self updateChartConstraints:YES];
     if (!self.foldButton.isFold) {
         [self addClickPriceRankLog];
     }
 }
 
-- (void)updateChartConstraints
+- (void)updateChartConstraints:(BOOL)animated
 {
     [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
         make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375] + 50);
     }];
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
-    [model.tableView beginUpdates];
+    if (animated) {
+        [model.tableView beginUpdates];
+    }
     if (model.isFold) {
         [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(58);
@@ -424,7 +428,9 @@
         }];
     }
     [self setNeedsUpdateConstraints];
-    [model.tableView endUpdates];
+    if (animated) {
+        [model.tableView endUpdates];
+    }    
 }
 
 - (void)setupChartUI
