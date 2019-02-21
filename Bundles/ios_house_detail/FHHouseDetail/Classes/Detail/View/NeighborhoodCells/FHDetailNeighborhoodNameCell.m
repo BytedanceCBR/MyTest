@@ -64,9 +64,9 @@
                 self.monthUpLabel.text = [NSString stringWithFormat:@"%.2f%%",fabsf(value)];
                 self.monthUpTrend.hidden = NO;
                 if (value > 0) {
-                    self.monthUpTrend.image = [UIImage imageNamed:@"monthup_trend_up"];
+                    self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_red"];
                 } else {
-                    self.monthUpTrend.image = [UIImage imageNamed:@"monthup_trend_down"];
+                    self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_green"];
                 }
             }
         }
