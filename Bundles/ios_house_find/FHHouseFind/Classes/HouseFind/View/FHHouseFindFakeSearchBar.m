@@ -42,6 +42,9 @@
         UITapGestureRecognizer *tapGesteure = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap:)];
         [self addGestureRecognizer:tapGesteure];
         
+        self.layer.cornerRadius = 4;
+        self.layer.masksToBounds = YES;
+        
     }
     return self;
 }

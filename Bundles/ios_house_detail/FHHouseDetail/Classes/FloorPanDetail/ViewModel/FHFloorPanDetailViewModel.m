@@ -112,7 +112,7 @@
         [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
-            if(model.data && error != nil)
+            if(model.data && !error)
             {
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];

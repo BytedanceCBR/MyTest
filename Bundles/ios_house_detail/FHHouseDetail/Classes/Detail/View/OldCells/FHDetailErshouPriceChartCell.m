@@ -38,6 +38,7 @@
 @property(nonatomic, assign) double unitPerSquare;
 @property(nonatomic, assign) double maxValue;
 @property(nonatomic, assign) double minValue;
+@property(nonatomic, strong)NSDateFormatter *monthFormatter;
 
 @end
 
@@ -66,14 +67,16 @@
     for (UIView *subview in self.titleView.subviews) {
         [subview removeFromSuperview];
     }
-    FHDetailPriceTrendModel *priceTrend = priceTrends.firstObject;
-    FHDetailPriceTrendValuesModel *value = priceTrend.values.firstObject;
+    FHDetailPriceTrendModel *maxPriceTrend = priceTrends.firstObject;
+    FHDetailPriceTrendValuesModel *value = maxPriceTrend.values.firstObject;
     double maxValue = value.price.length > 0 ? value.price.doubleValue : 0;
     double minValue = maxValue;
-    
+
     for (NSInteger index = priceTrends.count - 1; index >= 0; index--) {
         FHDetailPriceTrendModel *priceTrend = priceTrends[index];
-        
+        if (priceTrend.values.count > maxPriceTrend.values.count) {
+            maxPriceTrend = priceTrend;
+        }
         NSString *trendName = priceTrend.name;
         if (trendName.length > 7) {
             trendName = [NSString stringWithFormat:@"%@...",[trendName substringToIndex:7]];
@@ -156,6 +159,12 @@
     self.chartView.chartData = mutable;
     [self.chartView strokeChart];
 
+    NSMutableArray *Xlabels = @[].mutableCopy;
+    for (FHDetailPriceTrendValuesModel *trendValue in maxPriceTrend.values) {
+        NSString *monthStr = [self.monthFormatter stringFromDate:[NSDate dateWithTimeIntervalSince1970:trendValue.timestamp.doubleValue]];
+        [Xlabels addObject:monthStr];
+    }
+    [self.chartView setXLabels:Xlabels];
 }
 
 - (UIColor *)lineColorByIndex:(NSInteger)index
@@ -437,31 +446,39 @@
     self.chartView.xLabelColor = [UIColor themeGray3];
     self.chartView.xLabelFont = [UIFont themeFontRegular:12];
     self.chartView.yHighlightedColor = [UIColor themeBlue];
-    // add by zjing for test
-    [self.chartView setXLabels:@[@"1月", @"2月", @"3月", @"4月", @"5月", @"6月"]];
     self.chartView.axisColor = [UIColor colorWithHexString:@"#dae1e7"]; // x轴和y轴
+    [self.chartView setXLabels:@[@"", @"", @"", @"", @"", @""]];
+
     self.chartView.delegate = self;
 }
 
 #pragma mark delegate
-- (void)userClickedOnKeyPoint:(CGPoint)point lineIndex:(NSInteger)lineIndex pointIndex:(NSInteger)pointIndex pointsArray:(NSArray *)pointsArray
+- (void)userClickedOnKeyPoint:(CGPoint)point
+                    lineIndex:(NSInteger)lineIndex
+                   pointIndex:(NSInteger)pointIndex
+                  selectPoint:(CGPoint)selectPoint
 {
-    CGPoint pointInView = [self.chartView convertPoint:point toView:self.contentView];
-    FHDetailPriceMarkerView *view = [self.contentView viewWithTag:200];
+    FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
     if (!view) {
-        CGRect screenFrame = [self.chartView convertRect:CGRectMake(point.x, point.y, 30, 30) toView:self.contentView];
-        view = [[FHDetailPriceMarkerView alloc]initWithFrame:screenFrame];
-        [self.contentView addSubview:view];
+        view = [[FHDetailPriceMarkerView alloc]init];
+        [self.chartView addSubview:view];
     }
     if (![view isKindOfClass:[FHDetailPriceMarkerView class]]) {
         return;
     }
     view.tag = 200;
     FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc]init];
+    markData.selectPoint = [self.chartView convertPoint:selectPoint toView:self.chartView];
     NSArray *priceTrends = self.priceTrends;
-    FHDetailPriceTrendModel *priceTrend = priceTrends[1];
+    if (priceTrends.count < 1) {
+        return;
+    }
     NSMutableArray *trendItems = @[].mutableCopy;
-    for (FHDetailPriceTrendValuesModel *priceValue in priceTrend.values) {
+    for (FHDetailPriceTrendModel *priceTrend in priceTrends) {
+        if (priceTrend.values.count < 1 || pointIndex >= priceTrend.values.count) {
+            continue;
+        }
+        FHDetailPriceTrendValuesModel *priceValue = priceTrend.values[pointIndex];
         FHDetailPriceMarkerItem *item = [[FHDetailPriceMarkerItem alloc]init];
         item.name = priceTrend.name;
         item.priceModel = priceValue;
@@ -627,6 +644,14 @@
         _foldButton.backgroundColor = [UIColor whiteColor];
     }
     return _foldButton;
+}
+- (NSDateFormatter *)monthFormatter
+{
+    if (!_monthFormatter) {
+        _monthFormatter = [[NSDateFormatter alloc]init];
+        _monthFormatter.dateFormat = @"M月";
+    }
+    return _monthFormatter;
 }
 
 - (void)awakeFromNib {

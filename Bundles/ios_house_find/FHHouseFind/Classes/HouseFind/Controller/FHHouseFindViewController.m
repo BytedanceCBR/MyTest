@@ -23,6 +23,7 @@
 @property (nonatomic , strong) UICollectionView *contentView;
 @property (nonatomic , strong) FHHouseFindViewModel *viewModel;
 @property (nonatomic , strong) UIView *splitLine;
+@property (nonatomic , assign) BOOL needLayout;
 
 @end
 
@@ -48,6 +49,10 @@
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
     _contentView.pagingEnabled = YES;
+    _contentView.scrollsToTop = NO;
+    if (@available(iOS 11.0, *)) {
+        _contentView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
     
     [self.view addSubview:_contentView];
     _viewModel = [[FHHouseFindViewModel alloc] initWithCollectionView:_contentView segmentControl:self.segmentView];
@@ -61,7 +66,10 @@
         }
         wself.searchButton.hidden = !wself.errorMaskView.isHidden;
     };
-    
+    _viewModel.updateSegmentWidthBlock = ^ {
+        wself.needLayout = YES;
+        [wself.view setNeedsLayout];        
+    };
     _searchBar = [[FHHouseFindFakeSearchBar alloc]initWithFrame:CGRectZero];
     [_searchBar setPlaceholder:@"你想住在哪？"];
     _searchBar.tapBlock = ^{
@@ -73,6 +81,7 @@
     
     _splitLine = [[UIView alloc] initWithFrame:CGRectZero];
     _splitLine.backgroundColor = [UIColor themeGray6];
+    _splitLine.hidden = YES;
     [self.view addSubview:_splitLine];
     
     self.errorMaskView = [[FHErrorView alloc]initWithFrame:[UIScreen mainScreen].bounds];
@@ -96,17 +105,18 @@
 -(void)initConstraints
 {
     CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 45 : 15;
+//    CGFloat marginX = [TTDeviceHelper isScreenWidthLarge320] ? 45 : 15;
     [_segmentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.view).mas_offset(marginX);
-        make.right.mas_equalTo(self.view).mas_offset(-marginX);
-        make.top.mas_equalTo(self.view).mas_offset(height+14);
+//        make.left.mas_greaterThanOrEqualTo(self.view).mas_offset(marginX);
+//        make.right.mas_lessThanOrEqualTo(self.view).mas_offset(-marginX);
+        make.centerX.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.view).mas_offset(height+6);
         make.height.mas_equalTo(40);
     }];
     [_searchBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.view).offset(20);
         make.right.mas_equalTo(self.view).offset(-20);
-        make.top.mas_equalTo(self.segmentView.mas_bottom);
+        make.top.mas_equalTo(self.segmentView.mas_bottom).offset(14);
         make.height.mas_equalTo(44);
     }];
     
@@ -155,6 +165,14 @@
                                      [UIColor themeBlue1],NSForegroundColorAttributeName,nil];
     _segmentView.titleTextAttributes = attributeNormal;
     _segmentView.selectedTitleTextAttributes = attributeSelect;
+    _segmentView.titleFormatter = ^NSAttributedString *(HMSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) {
+        
+        NSDictionary *attr = @{NSFontAttributeName:selected?[UIFont themeFontSemibold:20]:[UIFont themeFontRegular:20],
+                               NSForegroundColorAttributeName:selected?[UIColor themeBlue1]:[UIColor themeGray4]
+                               };        
+        return  [[NSAttributedString alloc] initWithString:title attributes:attr];
+        
+    };
     [self.view addSubview:_segmentView];
 }
 
@@ -185,10 +203,30 @@
     [_viewModel viewWillAppear];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (self.needLayout) {
+        [self.view setNeedsLayout];
+        self.needLayout = NO;
+    }
+}
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [_viewModel viewWillDisappear];
+    
+}
+
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    CGFloat width = [self.segmentView totalSegmentedControlWidth];
+    CGFloat fitWidth = MIN(width, self.view.frame.size.width - 40);
+    [self.segmentView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(fitWidth);
+    }];
     
 }
 
@@ -206,7 +244,6 @@
     [self.viewModel resetStayTime];
     [self.viewModel startTrack];
 }
-
 
 /*
 #pragma mark - Navigation

@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) double unitPerSquare;
 @property(nonatomic, strong, nullable) NSArray<FHDetailPriceMarkerItem *> *trendItems;
-
+@property(nonatomic, assign) CGPoint selectPoint;
 @end
 
 @interface FHDetailPriceMarkerItem : NSObject

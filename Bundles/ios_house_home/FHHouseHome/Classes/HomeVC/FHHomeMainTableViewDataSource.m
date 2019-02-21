@@ -173,8 +173,8 @@
 #pragma mark - 详情页跳转
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
     
-    FHHomeHouseDataItemsModel *theModelJump = self.modelsArray[indexPath.row];
-
+//    FHHomeHouseDataItemsModel *theModelJump = self.modelsArray[indexPath.row];
+//
 //    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"house_type":@(self.currentHouseType),@"house_id":theModelJump.idx}];
 //    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://test_detail"] userInfo:info];
 //
@@ -192,7 +192,8 @@
         traceParam[@"element_from"] = @"maintab_list";
         traceParam[@"enter_from"] = @"maintab";
         
-        NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
+        NSDictionary *dict = @{@"house_type":@(self.currentHouseType),
+                               @"house_id":theModel.idx,
                                @"tracer": traceParam
                                };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -213,8 +214,8 @@
 //            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
 //        }
         
-        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"house_type":@(self.currentHouseType),@"house_id":theModelJump.idx}];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://test_detail"] userInfo:info];
+//        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"house_type":@(self.currentHouseType),@"house_id":theModel.idx,@"tracer":traceParam}];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://test_detail"] userInfo:userInfo];
     }
     
 }

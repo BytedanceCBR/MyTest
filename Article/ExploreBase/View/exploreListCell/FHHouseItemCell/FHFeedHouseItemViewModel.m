@@ -175,7 +175,7 @@
     NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",houseModel.hid];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&house_type=%@",houseModel.hid,houseModel.houseType];
     
     TTRouteUserInfo *userInfo = nil;
     NSMutableDictionary *param = @{}.mutableCopy;
