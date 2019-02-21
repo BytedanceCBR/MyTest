@@ -188,12 +188,13 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    id<FHDetailPhotoHeaderModelProtocol> img = _images[indexPath.row];
+    NSInteger index = [self indexForIndexPath:indexPath];
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
     NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     if (_pictureShowDict[img.url]) {
         return;
     }
-    
+
     _pictureShowDict[img.url] = row;
     [self trackPictureShowWithUrl:img.url showType:@"small"];
 }
@@ -208,14 +209,6 @@
 
     NSURL *url = [NSURL URLWithString:img.url];
     [cell.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
-    
-//    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-//    if (_pictureShowDict[img.url]) {
-//        return cell;
-//    }
-//
-//    _pictureShowDict[img.url] = row;
-//    [self trackPictureShowWithUrl:img.url showType:@"small"];
     
     return cell;
 }

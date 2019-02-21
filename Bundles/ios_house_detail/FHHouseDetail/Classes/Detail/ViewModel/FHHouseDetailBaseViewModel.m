@@ -113,6 +113,7 @@
         NSString *identifier = [self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            cell.baseViewModel = self;
             [cell refreshWithData:data];
             return cell;
         }
@@ -133,7 +134,6 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     FHDetailBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.baseViewModel = self;
     if (cell.didClickCellBlk) {
         cell.didClickCellBlk();
     }
