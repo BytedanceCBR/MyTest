@@ -128,6 +128,10 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"neighborhood_trade";
+}
+
 @end
 
 @implementation FHDetailNeighborhoodTransationHistoryModel

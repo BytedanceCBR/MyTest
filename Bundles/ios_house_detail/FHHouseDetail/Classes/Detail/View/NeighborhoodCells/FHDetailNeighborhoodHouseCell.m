@@ -342,6 +342,10 @@
     
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"same_neighborhood";
+}
+
 #pragma mark - UITableViewDelegate UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
