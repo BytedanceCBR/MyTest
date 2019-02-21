@@ -178,62 +178,6 @@
         [self.currentItems addObject:_disclaimerModel];
     }
     
-    //楼盘版权信息
-//    if ([self.dataModel.data.disclaimer isKindOfClass:[FHDetailNewDataDisclaimerModel class]]){
-//        FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
-//        disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
-//        [self.items addObject:disclaimerModel];
-//    }
-//
-//    return [("开发商", propertyValue(developerName)),
-//                ("楼盘状态", propertyValue(saleStatus)),
-//                ("参考价格", propertyValue(pricingPerSqm)),
-//                ("开盘时间", propertyValue(openDate)),
-//                ("交房时间", propertyValue(deliveryDate))]
-//    }
-//
-//    fileprivate func parseSecondNode(_ detail: CourtMoreDetail) -> [(String, String)] {
-//        return [("环线", propertyValue(circuitDesc)),
-//                ("楼盘地址", propertyValue(generalAddress)),
-//                ("售楼地址", propertyValue(saleAddress))]
-//    }
-//
-//    fileprivate func parseThirdNode(_ detail: CourtMoreDetail) -> [(String, String)] {
-//        return [("物业类型", propertyValue(properyType)),
-//                ("项目特色", propertyValue(featureDesc)),
-//                ("建筑类别", propertyValue(buildingCategory)),
-//                ("装修状况", propertyValue(decoration)),
-//                ("建筑类型", propertyValue(buildingType)),
-//                ("产权年限", propertyValue(propertyRight))]
-//    }
-//
-//    fileprivate func parseFourthNode(_ detail: CourtMoreDetail) -> [(String, String)] {
-//        return [("物业公司", propertyValue(propertyName)),
-//                ("物业费用", propertyValue(propertyPrice)),
-//                ("水电燃气", propertyValue(powerWaterGasDesc)),
-//                ("供暖方式", propertyValue(heating)),
-//                ("绿化率", propertyValue(greenRatio)),
-//                ("车位情况", propertyValue(parkingNum)),
-//                ("容积率", propertyValue(plotRatio)),
-//                ("楼栋信息", propertyValue(buildingDesc))]
-//    }
-//
-//    for (NSInteger i = 0; i < model.data.list.count; i++) {
-//        FHDetailNewDataTimelineListModel *itemModel = model.data.list[i];
-//        FHDetailNewTimeLineItemModel *item = [[FHDetailNewTimeLineItemModel alloc] init];
-//        item.desc = itemModel.desc;
-//        item.title = itemModel.title;
-//        item.createdTime = itemModel.createdTime;
-//        item.isFirstCell = (i == 0);
-//        item.isLastCell = (i == self.currentItems.count - 1);
-//        item.isExpand = YES;
-//        [itemsArray addObject:item];
-//    }
-//
-//    [self updateTableViewWithMoreData:model.data.hasMore];
-//
-//    [self.currentItems addObjectsFromArray:itemsArray];
-    
     [_infoListTable reloadData];
 }
 
