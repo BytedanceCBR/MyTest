@@ -131,7 +131,7 @@
     NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?court_id=%@",houseModel.houseId];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?court_id=%@&house_type=%@",houseModel.houseId,[houseModel.houseType isKindOfClass:[NSString class]] ? houseModel.houseType: @"1"];
     
     TTRouteUserInfo *userInfo = nil;
     NSMutableDictionary *param = @{}.mutableCopy;
@@ -175,7 +175,7 @@
     NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&house_type=%@",houseModel.hid,houseModel.houseType];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&house_type=%@",houseModel.hid,[houseModel.houseType isKindOfClass:[NSString class]] ? houseModel.houseType: @"2"];
     
     TTRouteUserInfo *userInfo = nil;
     NSMutableDictionary *param = @{}.mutableCopy;
@@ -218,7 +218,7 @@
     NSString *searchId = self.houseItemsData.searchId ? : self.houseItemsData.logPb[@"search_id"];
     [contextBridge setTraceValue:(searchId ? : @"be_null") forKey:@"origin_search_id"];
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@",houseModel.id];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@&house_type=%@",houseModel.id,[houseModel.houseType isKindOfClass:[NSString class]] ? houseModel.houseType: @"3"];
     
     TTRouteUserInfo *userInfo = nil;
     NSMutableDictionary *param = @{}.mutableCopy;
