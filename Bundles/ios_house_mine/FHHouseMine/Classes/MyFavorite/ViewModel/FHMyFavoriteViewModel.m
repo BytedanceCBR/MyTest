@@ -58,6 +58,7 @@ extern NSString *const kFHDetailFollowUpNotification;
         _type = type;
         _tableView = tableView;
         _showPlaceHolder = YES;
+        _isFirstLoad = YES;
         
         [tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kCellId];
         [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];

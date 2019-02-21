@@ -150,7 +150,7 @@
         [_assetsLbr tt_saveImage:self.imageData];
     }
 
-    [TTTracker event:@"image" label:@"download"];
+//    [TTTracker event:@"image" label:@"download"];
 }
 
 - (void)destructSaveImageAlert
