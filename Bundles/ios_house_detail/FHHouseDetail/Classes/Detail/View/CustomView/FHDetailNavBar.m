@@ -16,6 +16,7 @@
 @property(nonatomic , strong) UIButton *collectBtn;
 @property(nonatomic , strong) UIButton *shareBtn;
 @property(nonatomic , strong) UIView *gradientView;
+@property(nonatomic , strong) UIView *bottomLine;
 
 @property(nonatomic , assign) CGFloat subAlpha;
 @property(nonatomic , assign) BOOL followStatus;
@@ -39,6 +40,11 @@
     _bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
     [self addSubview:_bgView];
     
+    _bottomLine = [[UIView alloc]init];
+    _bottomLine.backgroundColor = [UIColor themeGray6];
+    [_bgView addSubview:_bottomLine];
+    _bottomLine.hidden = YES;
+
     _gradientView = [[UIView alloc]initWithFrame:self.bounds];
     [self addSubview:_gradientView];
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
@@ -84,6 +90,11 @@
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
     }];
+    
+    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(0.5);
+    }];
 }
 
 - (void)refreshAlpha:(CGFloat)alpha
@@ -110,6 +121,11 @@
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
+    }
+    if (alpha >= 1) {
+        _bottomLine.hidden = NO;
+    }else {
+        _bottomLine.hidden = YES;
     }
 }
 
