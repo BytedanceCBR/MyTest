@@ -100,7 +100,7 @@
     [self addSubview:_valueLabel];
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(14);
+        make.left.mas_equalTo(16);
         make.top.mas_equalTo(12);
         make.height.mas_equalTo(25);
         make.right.mas_equalTo(self).offset(-10);
