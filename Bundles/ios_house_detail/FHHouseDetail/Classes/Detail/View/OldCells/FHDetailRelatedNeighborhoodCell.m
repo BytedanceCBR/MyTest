@@ -62,6 +62,9 @@
         colView.clickBlk = ^(NSInteger index) {
             [wSelf collectionCellClick:index];
         };
+        colView.displayCellBlk = ^(NSInteger index) {
+            [wSelf collectionDisplayCell:index];
+        };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
             make.left.right.mas_equalTo(self.containerView);
@@ -117,6 +120,24 @@
         // 点击cell处理
         FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
         
+    }
+}
+
+// 不重复调用
+- (void)collectionDisplayCell:(NSInteger)index
+{
+    FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
+    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
+        // 点击cell处理
+        FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
+        // house_show
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"slide";
+        tracerDic[@"log_pb"] = itemModel.logPb ? itemModel.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
+        tracerDic[@"element_type"] = @"neighborhood_nearby";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
 
@@ -179,7 +200,8 @@
     _descLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
     [self addSubview:_descLabel];
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
+    _priceLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:16];
+    _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];

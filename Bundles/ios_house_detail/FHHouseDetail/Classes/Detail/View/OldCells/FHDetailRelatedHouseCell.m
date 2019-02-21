@@ -221,8 +221,15 @@
             return;
         }
         [self.houseShowCache setValue:@(YES) forKey:tempKey];
-        // 添加house_show埋点 add by zyk
-        NSLog(@"------添加house_show 埋点: %ld",index);
+        FHSearchHouseDataItemsModel *dataItem = self.items[index];
+        // house_show
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"left_pic";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_type"] = @"related";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
 
