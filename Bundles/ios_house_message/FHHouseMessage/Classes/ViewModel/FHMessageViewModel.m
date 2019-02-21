@@ -34,7 +34,7 @@
     if (self) {
         
         _dataList = [[NSMutableArray alloc] init];
-        
+        _isFirstLoad = YES;
         self.tableView = tableView;
         
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -61,6 +61,7 @@
     if(notification.object){
         FHUnreadMsgModel *model = [[FHUnreadMsgModel alloc] initWithData:notification.object error:&error];
         if(!error && model){
+            [self.requestTask cancel];
             [self.viewController.emptyView hideEmptyView];
             self.dataList = model.data.unread;
             self.viewController.hasValidateData = self.dataList.count > 0;

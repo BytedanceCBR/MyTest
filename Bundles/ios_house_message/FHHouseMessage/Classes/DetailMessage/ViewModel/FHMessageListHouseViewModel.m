@@ -26,7 +26,6 @@
 @property(nonatomic, assign) NSInteger rank;
 @property(nonatomic, copy) NSString *originSearchId;
 @property(nonatomic, copy) NSString *searchId;
-@property(nonatomic, assign) BOOL isFirstLoad;
 
 @end
 
@@ -121,9 +120,8 @@
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
             }
             
-            if(self.isFirstLoad){
+            if(isFirst){
                 self.originSearchId = self.searchId;
-                self.isFirstLoad = NO;
                 [self addEnterCategoryLog];
             }
             
@@ -287,16 +285,16 @@
     NSString *urlStr = @"";
     switch (houseType) {
         case FHHouseTypeNewHouse:
-            urlStr = [NSString stringWithFormat:@"snssdk1370://new_house_detail?court_id=%@",houseId];
+            urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",houseId];
             break;
         case FHHouseTypeSecondHandHouse:
-            urlStr = [NSString stringWithFormat:@"snssdk1370://old_house_detail?house_id=%@",houseId];
+            urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",houseId];
             break;
         case FHHouseTypeRentHouse:
-            urlStr = [NSString stringWithFormat:@"snssdk1370://rent_detail?house_id=%@",houseId];
+            urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",houseId];
             break;
         case FHHouseTypeNeighborhood:
-            urlStr = [NSString stringWithFormat:@"snssdk1370://neighborhood_detail?neighborhood_id=%@",houseId];
+            urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",houseId];
             break;
             
         default:
@@ -315,7 +313,10 @@
     tracerDict[@"search_id"] = itemsModel.searchId ? itemsModel.searchId : @"be_null";
     tracerDict[@"rank"] = @(index);
    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracerDict}];
+    NSDictionary *dict = @{@"house_type":@(houseType),
+                           @"tracer": tracerDict
+                           };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL* url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
