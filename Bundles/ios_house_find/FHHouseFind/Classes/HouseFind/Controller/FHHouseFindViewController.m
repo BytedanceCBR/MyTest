@@ -56,10 +56,8 @@
     
     [self.view addSubview:_contentView];
     _viewModel = [[FHHouseFindViewModel alloc] initWithCollectionView:_contentView segmentControl:self.segmentView];
-    _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available , BOOL netconnected) {
-        if (!netconnected) {
-            [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-        }else if (noData) {
+    _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
+        if (noData) {
             [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }else if(!available){
             [wself.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];

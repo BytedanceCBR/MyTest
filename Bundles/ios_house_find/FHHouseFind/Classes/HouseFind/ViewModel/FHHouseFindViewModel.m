@@ -49,6 +49,7 @@
 @property (nonatomic , strong) RACDisposable *configDisposable;
 @property (nonatomic , assign) BOOL networkConnected;
 @property (nonatomic , assign) BOOL available ;
+@property (nonatomic , assign) BOOL showNotworkConnected;
 
 @end
 
@@ -102,6 +103,7 @@
         [collectionView addGestureRecognizer:tapGesture];
         
         self.available = YES;
+        _showNotworkConnected = !_networkConnected;
         
     }
     return self;
@@ -170,9 +172,9 @@
         [self requestHistory:ht];
     }
     [self startTrack];
-//    if (!_networkConnected) {
-//        self.searchButton.hidden = YES;
-//    }
+    if (!_networkConnected) {
+        self.searchButton.hidden = YES;
+    }
 }
 
 -(void)viewWillDisappear
@@ -198,7 +200,7 @@
     if (!configData) {
         //show no data
         if (self.showNoDataBlock) {
-            self.showNoDataBlock(YES,NO,self.networkConnected);
+            self.showNoDataBlock(YES,NO);
         }
     }else{
         
@@ -228,12 +230,16 @@
         }
         
         if (self.showNoDataBlock) {
-            self.showNoDataBlock(NO,avaiable,self.networkConnected);
+            self.showNoDataBlock(NO,avaiable);
         }
         self.available = avaiable;
         
         if (!avaiable) {
             return;
+        }
+        
+        if (!_networkConnected) {
+            self.searchButton.hidden = YES;
         }
         
         self.secondFilter = configData.searchTabFilter;
@@ -317,7 +323,7 @@
             cell.delegate = self;
         }
         
-//        [cell showErrorView:!_networkConnected];
+        [cell showErrorView:_showNotworkConnected];
         
         return cell;
         
@@ -811,7 +817,10 @@
 //    self.searchButton.hidden = !_networkConnected;
     _networkConnected = (status != NotReachable);
     if (status != NotReachable && _houseTypes.count > 0) {
-        self.showNoDataBlock(NO, self.available, YES);
+        self.showNotworkConnected = NO;
+        [self.collectionView reloadData];
+        self.searchButton.hidden = NO;
+        
     }
 
 }
