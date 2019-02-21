@@ -13,6 +13,7 @@
 #import "TTDeviceHelper.h"
 #import "UIFont+House.h"
 #import "FHHouseDetailContactViewModel.h"
+#import "UIViewController+Track.h"
 
 @interface FHHouseDetailViewController ()
 
@@ -35,6 +36,8 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        
+        self.ttTrackStayEnable = YES;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         self.houseId = paramObj.allParams[@"house_id"];
         self.searchId = paramObj.allParams[@"search_id"];
@@ -52,6 +55,29 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self startLoadData];
+    
+    [self.viewModel addGoDetailLog];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.viewModel addStayPageLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+    
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+    [self.viewModel addStayPageLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)startLoadData {
@@ -187,28 +213,14 @@
 // 构建详情页基础埋点数据
 - (NSMutableDictionary *)makeDetailTracerData {
     NSMutableDictionary *detailTracerDic = [NSMutableDictionary new];
-    if (self.tracerDict[@"card_type"]) {
-        detailTracerDic[@"card_type"] = self.tracerDict[@"card_type"];
-    }
-    if (self.tracerDict[@"element_from"]) {
-        detailTracerDic[@"element_from"] = self.tracerDict[@"element_from"];
-    }
-    if (self.tracerDict[@"enter_from"]) {
-        detailTracerDic[@"enter_from"] = self.tracerDict[@"enter_from"];
-    }
-    if (self.tracerDict[@"log_pb"]) {
-        detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"];
-    }
-    if (self.tracerDict[@"origin_from"]) {
-        detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"];
-    }
-    if (self.tracerDict[@"origin_search_id"]) {
-        detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"];
-    }
     detailTracerDic[@"page_type"] = [self pageTypeString];
-    if (self.tracerDict[@"rank"]) {
-        detailTracerDic[@"rank"] = self.tracerDict[@"rank"];
-    }
+    detailTracerDic[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
+    detailTracerDic[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    detailTracerDic[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    detailTracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    detailTracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    detailTracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    detailTracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
     // 以下3个参数都在:log_pb中
     // group_id
     // impr_id

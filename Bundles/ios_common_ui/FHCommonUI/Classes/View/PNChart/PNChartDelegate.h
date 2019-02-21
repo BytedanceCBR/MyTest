@@ -22,6 +22,11 @@
                         lineIndex:(NSInteger)lineIndex
                        pointIndex:(NSInteger)pointIndex;
 
+- (void)userClickedOnKeyPoint:(CGPoint)point
+                        lineIndex:(NSInteger)lineIndex
+                       pointIndex:(NSInteger)pointIndex
+                   pointsArray:(NSArray *)pointsArray;
+
 /**
  * Callback method that gets invoked when the user taps on a chart bar.
  */

@@ -23,16 +23,16 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
 
-        _topLineView = [UIView new];
-        _topLineView.backgroundColor = [UIColor themeGray];
-        [self.contentView addSubview:_topLineView];
-        _topLineView.alpha = 0.7;
-        [_topLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(0);
-            make.left.equalTo(self.contentView).offset(20);
-            make.right.equalTo(self.contentView).offset(-20);
-            make.height.mas_equalTo(0.4);
-        }];
+//        _topLineView = [UIView new];
+//        _topLineView.backgroundColor = [UIColor themeGray];
+//        [self.contentView addSubview:_topLineView];
+//        _topLineView.alpha = 0.7;
+//        [_topLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(0);
+//            make.left.equalTo(self.contentView).offset(20);
+//            make.right.equalTo(self.contentView).offset(-20);
+//            make.height.mas_equalTo(0.4);
+//        }];
         
         _wrapperView = [UIView new];
         [self.contentView addSubview:_wrapperView];
@@ -87,7 +87,7 @@
             [itemContenView addSubview:valueLabel];
             
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(nameLabel.mas_right).offset(10);
+                make.left.equalTo(nameLabel.mas_right).offset(0);
                 make.top.equalTo(nameLabel);
                 make.right.equalTo(itemContenView).offset(-15);
                 make.bottom.equalTo(itemContenView).offset(-7);

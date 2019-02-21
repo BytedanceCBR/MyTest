@@ -11,7 +11,7 @@
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailContactViewModel.h"
-
+#import <TTReachability.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailBaseViewModel : NSObject
@@ -37,6 +37,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 刷新数据
 - (void)reloadData;
+
+
+// 埋点相关
+- (void)addGoDetailLog;
+- (void)addStayPageLog:(NSTimeInterval)stayTime;
 
 @end
 

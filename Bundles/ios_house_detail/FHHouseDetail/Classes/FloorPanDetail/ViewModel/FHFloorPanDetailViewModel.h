@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId;
 
+- (void)startLoadData;
+
 @end
 
 NS_ASSUME_NONNULL_END
