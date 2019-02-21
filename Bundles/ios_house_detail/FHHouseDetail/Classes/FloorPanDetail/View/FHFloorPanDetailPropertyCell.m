@@ -98,11 +98,11 @@
                         make.top.equalTo(previouseView);
                     }else
                     {
-                        make.top.equalTo(previouseView.mas_bottom).offset(7);
+                        make.top.equalTo(previouseView.mas_bottom).offset(3);
                     }
                 }else
                 {
-                    make.top.equalTo(self.contentView).offset(7);
+                    make.top.equalTo(self.contentView).offset(3);
                 }
                 if (i == [model.baseInfo count] - 1) {
                     make.bottom.equalTo(self.contentView).offset(-10);
