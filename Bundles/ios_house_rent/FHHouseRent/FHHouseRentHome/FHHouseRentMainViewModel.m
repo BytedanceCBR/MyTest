@@ -562,7 +562,7 @@
     tracer[@"origin_search_id"] = self.originSearchId ? : @"be_null";
 
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://rent_detail?house_id=%@", model.id]];
-    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
+    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer,@"house_type":@(3)}];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
 }
 
