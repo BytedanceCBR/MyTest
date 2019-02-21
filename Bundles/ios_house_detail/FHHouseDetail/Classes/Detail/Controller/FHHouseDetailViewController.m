@@ -176,25 +176,32 @@
     // 原始数据放入：self.tracerDict
     // 取其他非"tracer"字段数据
     NSString *origin_from = allParams[@"origin_from"];
-    if (origin_from.length > 0) {
+    if ([origin_from isKindOfClass:[NSString class]] && origin_from.length > 0) {
         self.tracerDict[@"origin_from"] = origin_from;
     }
     NSString *origin_search_id = allParams[@"origin_search_id"];
-    if (origin_search_id.length > 0) {
+    if ([origin_search_id isKindOfClass:[NSString class]] && origin_search_id.length > 0) {
         self.tracerDict[@"origin_search_id"] = origin_search_id;
     }
     NSString *report_params = allParams[@"report_params"];
-    NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
-    if (report_params_dic) {
-        [self.tracerDict addEntriesFromDictionary:report_params_dic];
-    }
-    NSString *log_pb_str = allParams[@"log_pb"];
-    if (log_pb_str.length > 0) {
-        NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
-        if (log_pb_dic) {
-            self.tracerDict[@"log_pb"] = log_pb_dic;
+    if ([report_params isKindOfClass:[NSString class]]) {
+        NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+        if (report_params_dic) {
+            [self.tracerDict addEntriesFromDictionary:report_params_dic];
         }
     }
+    NSString *log_pb_str = allParams[@"log_pb"];
+    if ([log_pb_str isKindOfClass:[NSDictionary class]]) {
+        self.tracerDict[@"log_pb"] = log_pb_str;
+    } else {
+        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+            NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
+            if (log_pb_dic) {
+                
+            }
+        }
+    }
+    
     // rank字段特殊处理：外部可能传入字段为rank和index不同类型的数据
     id index = self.tracerDict[@"index"];
     id rank = self.tracerDict[@"rank"];
