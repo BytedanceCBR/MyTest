@@ -24,6 +24,7 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
+#import "FHDetailNewListSingleImageCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -58,7 +59,7 @@
 
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
     
-    [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHSingleImageInfoCell class])];
+    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewListSingleImageCell class])];
 
 }
 // cell class
@@ -104,7 +105,7 @@
     
     //周边新盘
     if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
-        return [FHSingleImageInfoCell class];
+        return [FHDetailNewListSingleImageCell class];
     }
     
     //版权信息
