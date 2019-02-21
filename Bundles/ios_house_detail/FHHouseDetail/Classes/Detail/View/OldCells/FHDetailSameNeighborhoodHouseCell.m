@@ -114,7 +114,7 @@
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.items.count > 0 && index >= 0 && index < model.sameNeighborhoodHouseData.items.count) {
         // 点击cell处理
-        FHDetailSameNeighborhoodHouseResponseDataItemsModel *itemModel = model.sameNeighborhoodHouseData.items[index];
+        FHSearchHouseDataItemsModel *itemModel = model.sameNeighborhoodHouseData.items[index];
         
     }
 }
@@ -144,14 +144,14 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailSameNeighborhoodHouseResponseDataItemsModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
         return;
     }
     self.currentData = data;
-    FHDetailSameNeighborhoodHouseResponseDataItemsModel *model = (FHDetailSameNeighborhoodHouseResponseDataItemsModel *)data;
+    FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)data;
     if (model) {
         if (model.houseImage.count > 0) {
-            FHDetailSameNeighborhoodHouseResponseDataItemsHouseImageModel *imageModel = model.houseImage[0];
+            FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage[0];
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
                 [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];
