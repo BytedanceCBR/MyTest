@@ -389,15 +389,12 @@
 
 - (void)foldBtnDidClick:(UIButton *)btn
 {
-    // add by zjing for test
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
     [self updateChartConstraints];
     if (!self.foldButton.isFold) {
-//        recordEvent(key: TraceEventName.click_price_rank, params: traceParams <|>
-//                    EnvContext.shared.homePageParams <|>
-//                    toTracerParams("old_detail", key: "page_type"))
+        [self addClickPriceRankLog];
     }
 }
 
@@ -476,6 +473,19 @@
     params[@"log_pb"] = traceDict[@"log_pb"] ? : @"be_null";
     [FHUserTracker writeEvent:@"click_price_trend" params:params];
 }
+
+- (void)addClickPriceRankLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *traceDict = [self.baseViewModel detailTracerDic];
+    params[@"page_type"] = traceDict[@"page_type"] ? : @"be_null";
+    params[@"rank"] = traceDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = traceDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = traceDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = traceDict[@"log_pb"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"click_price_rank" params:params];
+}
+
 - (void)userClickedOnKeyPoint:(CGPoint)point
                     lineIndex:(NSInteger)lineIndex
                    pointIndex:(NSInteger)pointIndex
