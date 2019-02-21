@@ -75,15 +75,19 @@
             [wself.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:YES];
         };
         
-        __block BOOL isFirstChange = YES;
-        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
+//        __block BOOL isFirstChange = YES;
+        RACDisposable *disposable = [[[FHEnvContext sharedInstance].configDataReplay skip:1] subscribeNext:^(FHConfigDataModel * _Nullable x) {
             //过滤多余刷新
-            if ([[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
-                return;
-            }
+//            if ([[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
+//                return;
+//            }
             //城市更新 重新刷新
-            [wself setupHouseContent:x];
-            isFirstChange = NO;
+            if (x) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [wself setupHouseContent:x];
+                });
+            }
+//            isFirstChange = NO;
             
         }];
         self.configDisposable = disposable;
@@ -163,6 +167,9 @@
         [self requestHistory:ht];
     }
     [self startTrack];
+    if (!_networkConnected) {
+        self.searchButton.hidden = YES;
+    }
 }
 
 -(void)viewWillDisappear
@@ -185,33 +192,14 @@
     self.rentFilter = nil;
     self.neighborhoodFilter = nil;
     
-    /*
-     if (self.itemList.count < 1 || ![[[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable boolValue]) {
-     // 当前城市未开通
-     [self.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
-     return;
-     }
-     */
-    
     if (!configData) {
         //show no data
-        
         if (self.showNoDataBlock) {
             self.showNoDataBlock(YES,NO);
         }
-        
-        
-        
     }else{
         
-        BOOL avaiable = configData.cityAvailability.enable;
-        
-        if (self.showNoDataBlock) {
-            self.showNoDataBlock(NO,avaiable);
-        }
-        if (!avaiable) {
-            return;
-        }
+        BOOL avaiable = configData.cityAvailability.enable.boolValue;
         
         NSMutableArray *titles = [NSMutableArray new];
         NSMutableArray *houseTypes = [NSMutableArray new];
@@ -232,15 +220,46 @@
             [houseTypes addObject:@(FHHouseTypeNeighborhood)];
         }
         
+        if (avaiable && titles.count == 0) {
+            avaiable = NO;
+        }
+        
+        if (self.showNoDataBlock) {
+            self.showNoDataBlock(NO,avaiable);
+        }
+        
+        if (!avaiable) {
+            return;
+        }
+        
+        if (!_networkConnected) {
+            self.searchButton.hidden = YES;
+        }
+        
         self.secondFilter = configData.searchTabFilter;
         self.rentFilter = configData.searchTabRentFilter;
         self.courtFilter = configData.searchTabCourtFilter;
         self.neighborhoodFilter = configData.searchTabNeighborhoodFilter;
         
         self.segmentControl.sectionTitles = titles;
+        if (titles.count > 0) {
+            [self.segmentControl setSelectedSegmentIndex:0];
+        }
         self.houseTypes = houseTypes;
         
         [self.collectionView reloadData];
+        
+        if (houseTypes.count > 0) {
+            if (self.collectionView.contentOffset.x >= self.collectionView.frame.size.width/2) {
+                [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            }
+        }
+        
+        if (self.updateSegmentWidthBlock) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.updateSegmentWidthBlock();
+            });
+        }
         
     }
 }
@@ -335,8 +354,10 @@
                 if (!priceItem) {
                     priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
                     priceItem.rate = item.rate;
+                    priceItem.configOption = [item.options firstObject];
                 }else{
                     priceItem.rate = item.rate;
+                    priceItem.configOption = [item.options firstObject];
                 }
                 if (priceItem) {
                     [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];
@@ -417,7 +438,7 @@
     if (collectionView == self.collectionView) {
         FHHouseFindMainCell *fcell = (FHHouseFindMainCell *)cell;
         if (!fcell.collectionView.dataSource) {
-            fcell.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 90, 0);
+            fcell.collectionView.contentInset = UIEdgeInsetsMake(0, 0, 130, 0);
             [self registerCell:fcell.collectionView];
             fcell.collectionView.delegate = self;
             fcell.collectionView.dataSource = self;
@@ -431,6 +452,9 @@
         }
         
         [fcell.collectionView reloadData];
+        //切换时滑动到顶部
+        fcell.collectionView.contentOffset = CGPointZero;
+        self.splitLine.hidden = YES;
     }
 }
 
@@ -555,14 +579,6 @@
     return CGSizeMake(collectionView.frame.size.width - 2*ITEM_HOR_MARGIN, height);
 }
 
-/*
- - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
- - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
- - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
- - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
- - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
- */
-
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     [self.collectionView endEditing:YES];
@@ -583,7 +599,7 @@
     if (scrollView == self.collectionView) {
         NSInteger index = (scrollView.contentOffset.x + scrollView.frame.size.width*0.4) / scrollView.frame.size.width;
         if (self.segmentControl.selectedSegmentIndex != index) {
-            self.segmentControl.selectedSegmentIndex = index;
+            [self.segmentControl setSelectedSegmentIndex:index animated:YES];
         }
         FHHouseFindMainCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         [self checkNeedShowSplitLine:cell.collectionView];
@@ -805,8 +821,7 @@
 
 #pragma mark - request
 -(void)requestHistory:(FHHouseType)housetype
-{
-    
+{    
     __weak typeof(self) wself = self;
     [FHMainApi requestHFHistoryByHouseType:[@(housetype) description] completion:^(FHHFHistoryModel * _Nonnull model, NSError * _Nonnull error) {
         
@@ -870,6 +885,7 @@
         FHHouseFindMainCell *cell = [self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:index inSection:0]];
         if (cell) {
             [cell.collectionView reloadData];
+            [cell.collectionView setContentOffset:CGPointZero animated:YES];
         }
     }
 }
