@@ -31,6 +31,35 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *value;
 @end
 
+@protocol FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel<NSObject>
+@end
+
+@interface FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *scoreName;
+@property (nonatomic, copy , nullable) NSString *scoreLevel;
+@property (nonatomic, copy , nullable) NSString *scoreValue;
+@end
+
+@interface FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *totalScore;
+@property (nonatomic, copy , nullable) NSString *detailUrl;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel> *subScores;
+@end
+
+@protocol FHDetailNeighborhoodNeighborhoodInfoSchoolInfoModel<NSObject>
+@end
+
+@interface FHDetailNeighborhoodNeighborhoodInfoSchoolInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *schoolType;
+@property (nonatomic, copy , nullable) NSString *schoolId;
+@property (nonatomic, copy , nullable) NSString *schoolName;
+@end
+
 @interface FHDetailNeighborhoodDataNeighborhoodInfoModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
@@ -106,6 +135,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *neighborhoodImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
 @end
 
 @interface FHDetailNeighborhoodModel : JSONModel

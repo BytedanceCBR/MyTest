@@ -12,6 +12,8 @@
 #import <TTRoute/TTRoute.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
+#import <FHEnvContext.h>
+#import <TTAccountSDK.h>
 
 @implementation TTRNavi
 
@@ -68,7 +70,12 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         closeStack = @(0);
     }
     
-    urlStr = [urlStr stringByAppendingString:[NSString stringWithFormat:@"&closeStack=%ld",[closeStack integerValue]]];
+    if ([urlStr containsString:@"?"]) {
+        urlStr = [urlStr stringByAppendingString:[NSString stringWithFormat:@"&closeStack=%ld",[closeStack integerValue]]];
+    }else
+    {
+        urlStr = [urlStr stringByAppendingString:[NSString stringWithFormat:@"?&closeStack=%ld",[closeStack integerValue]]];
+    }
     
 
     if (!isEmptyString(urlStr)) {
@@ -278,6 +285,22 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     if(param[@"isVisible"]){
         BOOL isVisible = [param[@"isVisible"] boolValue];
         controller.ttNeedHideBottomLine = !isVisible;
+    }
+}
+
+- (void)onAccountCancellationSuccessWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    
+    if ([cityId isKindOfClass:[NSString class]] && cityId.length > 0) {
+        NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
+        // 退出登录
+        [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
+            callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
+        }];
+        [FHEnvContext openLogoutSuccessURL:url completion:^(BOOL isSuccess) {
+        
+        }];
     }
 }
 

@@ -33,6 +33,7 @@
 {
     self = [super init];
     if (self) {
+        self.detailController = viewController;
         _infoListTable = tableView;
         _courtId = courtId;
         _currentItems = [NSMutableArray new];
@@ -102,12 +103,24 @@
 
 - (void)startLoadData
 {
+    
+    if (![TTReachability isNetworkConnected]) {
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
+    
     if (_courtId) {
+        [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
         [FHHouseDetailAPI requestFloorCoreInfoSearch:_courtId completion:^(FHDetailNewCoreDetailModel * _Nullable model, NSError * _Nullable error) {
-            if(model.data)
+            if(model.data && !error)
             {
+                wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
+            }else
+            {
+                wSelf.detailController.hasValidateData = NO;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }];
     }

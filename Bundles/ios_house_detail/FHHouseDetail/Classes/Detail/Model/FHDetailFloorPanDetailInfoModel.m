@@ -44,6 +44,7 @@
     @"saleStatus": @"sale_status",
     @"pricingPerSqm": @"pricing_per_sqm",
     @"imprId": @"impr_id",
+    @"saleStatus": @"sale_status",
     @"searchId": @"search_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -93,6 +94,7 @@
     @"pricingPerSqm": @"pricing_per_sqm",
     @"districtName": @"district_name",
     @"courtId": @"court_id",
+    @"saleStatus": @"sale_status"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

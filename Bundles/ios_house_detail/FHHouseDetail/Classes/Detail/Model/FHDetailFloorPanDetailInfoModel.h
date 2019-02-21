@@ -1,6 +1,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import "FHDetailBaseModel.h"
+#import "FHDetailNewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailFloorPanDetailInfoDataUserStatusModel : JSONModel 
@@ -39,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *images;
+@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @end
 
@@ -62,6 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
 @end
 
 @interface FHDetailFloorPanDetailInfoModel : JSONModel 

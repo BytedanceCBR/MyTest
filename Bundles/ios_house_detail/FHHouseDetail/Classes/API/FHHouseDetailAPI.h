@@ -15,6 +15,7 @@
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
 @class FHHouseRentRelatedResponseModel,FHRentSameNeighborhoodResponseModel;
 @class FHDetailResponseModel,FHDetailVirtualNumResponseModel,FHDetailUserFollowResponseModel;
+@class FHTransactionHistoryModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,7 @@ typedef enum : NSUInteger {
 
 // 新房详情页请求
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
+                         logPB:(NSDictionary *)logPB
                      completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房详情页请求
@@ -70,6 +72,13 @@ typedef enum : NSUInteger {
                                                          query:(NSString*)query
                                                          count:(NSInteger)count
                                                     completion:(void(^)(FHDetailRelatedNeighborhoodResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 二手房（小区）-小区成交历史
++(TTHttpTask*)requestNeighborhoodTransactionHistoryByNeighborhoodId:(NSString*)neighborhoodId
+                                                      searchId:(NSString*)searchId
+                                                        page:(NSInteger)page
+                                                         count:(NSInteger)count
+                                                    completion:(void(^)(FHTransactionHistoryModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房（小区）-同小区房源
 +(TTHttpTask*)requestHouseInSameNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId

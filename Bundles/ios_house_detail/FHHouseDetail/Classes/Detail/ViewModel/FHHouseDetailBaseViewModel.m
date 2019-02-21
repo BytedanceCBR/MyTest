@@ -16,6 +16,7 @@
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
 
 @end
 
@@ -45,8 +46,10 @@
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType {
     self = [super init];
     if (self) {
+        _detailTracerDic = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];
+        _elementShowCaches = [NSMutableDictionary new];
         self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
@@ -130,6 +133,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     FHDetailBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.baseViewModel = self;
     if (cell.didClickCellBlk) {
         cell.didClickCellBlk();
     }
@@ -148,6 +152,18 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    // 添加element_show埋点
+    if (!self.elementShowCaches[tempKey]) {
+        self.elementShowCaches[tempKey] = @(YES);
+        FHDetailBaseCell *tempCell = (FHDetailBaseCell *)cell;
+        NSString *element_type = [tempCell elementTypeString:self.houseType];
+        if (element_type.length > 0) {
+            // 上报埋点
+            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+            tracerDic[@"element_type"] = element_type;
+            [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+        }
+    }
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -166,5 +182,45 @@
     }];
     [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
+
+#pragma mark - 埋点
+- (void)addGoDetailLog
+{
+//    1. event_type ：house_app2c_v2
+//    2. page_type（详情页类型）：rent_detail（租房详情页），old_detail（二手房详情页）
+//    3. card_type（房源展现时的卡片样式）：left_pic（左图）
+//    4. enter_from（详情页入口）：search_related_list（搜索结果推荐）
+//    5. element_from ：search_related
+//    6. rank
+//    7. origin_from
+//    8. origin_search_id
+//    9.log_pb
+    [FHUserTracker writeEvent:@"go_detail" params:self.detailTracerDic];
+
+}
+
+- (void)addStayPageLog:(NSTimeInterval)stayTime
+{
+    //    1. event_type ：house_app2c_v2
+    //    2. page_type（详情页类型）：rent_detail（租房详情页），old_detail（二手房详情页）
+    //    3. card_type（房源展现时的卡片样式）：left_pic（左图）
+    //    4. enter_from（详情页入口）：search_related_list（搜索结果推荐）
+    //    5. element_from ：search_related
+    //    6. rank
+    //    7. origin_from
+    //    8. origin_search_id
+    //    9.log_pb
+    //    10.stay_time
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.detailTracerDic];
+    params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_page" params:params];
+    
+}
+
 
 @end

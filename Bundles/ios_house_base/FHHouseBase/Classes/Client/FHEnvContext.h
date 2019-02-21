@@ -63,6 +63,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)openSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion;
 
++ (void)openLogoutSuccessURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion;
+
 /*
   判断是否联网
  */

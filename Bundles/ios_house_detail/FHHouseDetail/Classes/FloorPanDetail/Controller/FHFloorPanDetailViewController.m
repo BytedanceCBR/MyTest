@@ -43,11 +43,17 @@
     
     [self setUpinfoListTable];
     
+    [self addDefaultEmptyViewFullScreen];
+
     _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId];
     
     // Do any additional setup after loading the view.
 }
 
+- (void)retryLoadData
+{
+    [self.coreInfoListViewModel startLoadData];
+}
 
 - (void)setUpinfoListTable
 {

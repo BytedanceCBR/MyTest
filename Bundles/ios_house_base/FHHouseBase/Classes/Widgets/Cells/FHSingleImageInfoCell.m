@@ -647,6 +647,9 @@
     return _imageTopLeftLabelBgView;
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @""; // 周边小区
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];
