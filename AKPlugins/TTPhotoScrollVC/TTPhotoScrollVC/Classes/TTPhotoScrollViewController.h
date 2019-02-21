@@ -35,6 +35,8 @@ typedef NS_ENUM(NSInteger, TTPhotoScrollViewMoveDirection) {
 @property(nonatomic, assign, readonly)NSInteger photoCount;
 /** 滚动引起index改变的时候调用 */
 @property(nonatomic, copy) void (^indexUpdatedBlock)(NSInteger lastIndex, NSInteger currentIndex);
+/** 图片保存的时候调用 */
+@property(nonatomic, copy) void (^saveImageBlock)(NSInteger currentIndex);
 
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
@@ -49,6 +51,9 @@ typedef NS_ENUM(NSInteger, TTPhotoScrollViewMoveDirection) {
 @property (nonatomic, strong)NSMutableArray * isSelecteds;
 @property (nonatomic, assign)NSUInteger selectLimit;
 @property (nonatomic, assign)BOOL autoSelectImageWhenClickDone;
+
+/** 是否支持长按保存，默认YES */
+@property (nonatomic, assign)BOOL longPressToSave;
 
 // Extended by lizhuoli to support drag down and drag up to close
 
