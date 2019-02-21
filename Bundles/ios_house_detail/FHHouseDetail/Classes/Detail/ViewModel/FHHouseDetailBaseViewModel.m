@@ -163,6 +163,18 @@
             tracerDic[@"element_type"] = element_type;
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
         }
+        
+        NSArray *element_array = [tempCell elementTypeStringArray:self.houseType];
+        if (element_array.count > 0) {
+            for (NSString * element_name in element_array) {
+                if ([element_name isKindOfClass:[NSString class]]) {
+                    // 上报埋点
+                    NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+                    tracerDic[@"element_type"] = element_name;
+                    [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+                }
+            }
+        }
     }
 }
 

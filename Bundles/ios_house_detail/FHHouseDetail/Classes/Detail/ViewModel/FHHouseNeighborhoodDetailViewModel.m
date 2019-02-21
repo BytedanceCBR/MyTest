@@ -25,6 +25,7 @@
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailNewModel.h"
+#import "FHDetailPureTitleCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -50,6 +51,7 @@
     [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
+    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -91,6 +93,12 @@
     // 小区评测
     if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
         return [FHDetailNeighborhoodEvaluateCell class];
+    }
+    if ([model isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
+        return [FHDetailNeighborPriceChartCell class];
+    }
+    if ([model isKindOfClass:[FHDetailPureTitleModel class]]) {
+        return [FHDetailPureTitleCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -186,9 +194,21 @@
             }
         });
     }
-    
-    
     // 均价走势
+    if (model.data.priceTrend.count > 0) {
+        
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
+        titleModel.title = @"均价走势";
+        [self.items addObject:titleModel];
+        FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
+        priceTrendModel.priceTrends = model.data.priceTrend;
+        priceTrendModel.tableView = self.tableView;
+        [self.items addObject:priceTrendModel];
+    }
+    
     // 小区成交历史
     if (model.data.totalSales.list.count > 0) {
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];

@@ -41,6 +41,15 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    if ([_headerView.label.text isEqualToString:@"楼盘动态"]) {
+        return @"house_history";
+    }
+    return @"related";
+}
+
+
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
     NSString *courtId = ((FHDetailNewHouseNewsCellModel *)self.currentData).courtId;

@@ -73,6 +73,10 @@
     [self layoutIfNeeded];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"same_neighborhood";// 同小区房源
+}
+
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
