@@ -39,9 +39,29 @@
         
         self.ttTrackStayEnable = YES;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
-        self.houseId = paramObj.allParams[@"house_id"];
-        self.searchId = paramObj.allParams[@"search_id"];
-        self.imprId = paramObj.allParams[@"impr_id"];
+        switch (_houseType) {
+            case FHHouseTypeNewHouse:
+                self.houseId = paramObj.allParams[@"court_id"];
+                break;
+            case FHHouseTypeSecondHandHouse:
+                self.houseId = paramObj.allParams[@"house_id"];
+                break;
+            case FHHouseTypeRentHouse:
+                self.houseId = paramObj.allParams[@"house_id"];
+                break;
+            case FHHouseTypeNeighborhood:
+                self.houseId = paramObj.allParams[@"neighborhood_id"];
+                break;
+            default:
+                self.houseId = paramObj.allParams[@"house_id"];
+                break;
+        }
+        NSDictionary *tracer = paramObj.allParams[@"tracer"];
+        if ([tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *logPbDict = tracer[@"log_pb"];
+            self.searchId = logPbDict[@"search_id"];
+            self.imprId = logPbDict[@"impr_id"];
+        }
         // 埋点数据处理
         [self processTracerData:paramObj.allParams];
         // 非埋点数据处理
