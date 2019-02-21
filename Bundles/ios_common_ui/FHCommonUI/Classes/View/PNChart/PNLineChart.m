@@ -712,10 +712,13 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         // create as many chart line layers as there are data-lines
 
         for (NSUInteger i = 0; i < chartData.itemCount; i++) {
-            CGFloat yValue = chartData.getData(i).y;
-            [yLabelsArray addObject:[NSString stringWithFormat:@"%2f", yValue]];
-            yMax = fmaxf(yMax, yValue);
-            yMin = fminf(yMin, yValue);
+            if (chartData.getData) {
+                
+                CGFloat yValue = chartData.getData(i).y;
+                [yLabelsArray addObject:[NSString stringWithFormat:@"%.2f", yValue]];
+                yMax = fmaxf(yMax, yValue);
+                yMin = fminf(yMin, yValue);
+            }
         }
     }
 
@@ -783,8 +786,13 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 
 #define IOS7_OR_LATER [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self setNeedsDisplay];
+}
+
 - (void)drawRect:(CGRect)rect {
-    
     if (self.isShowCoordinateAxis) {
 
         CGFloat yAxisOffset =  self.yAxisOffset;

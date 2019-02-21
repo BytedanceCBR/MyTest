@@ -143,12 +143,14 @@
         data01.pointLabelFormat = @"%.2f";
         __weak typeof(self)wself = self;
         data01.getData = ^(NSUInteger index) {
-            
-            FHDetailPriceTrendValuesModel *trendValue = data01Array[index];
-            CGFloat yValue = trendValue.price.floatValue / wself.unitPerSquare;
-            return [PNLineChartDataItem dataItemWithY:yValue andRawY:yValue];
-            
-            return [PNLineChartDataItem dataItemWithY:yValue];
+
+            if (index < data01Array.count) {
+
+                FHDetailPriceTrendValuesModel *trendValue = data01Array[index];
+                CGFloat yValue = trendValue.price.floatValue / wself.unitPerSquare;
+                return [PNLineChartDataItem dataItemWithY:yValue andRawY:yValue];
+            }
+            return [PNLineChartDataItem dataItemWithY:0];
         };
         [mutable addObject:data01];
     }
@@ -323,7 +325,7 @@
     }];
 
     [self setupChartUI];
-    [self updateChartConstraints];
+    [self updateChartConstraints:NO];
     [self.foldButton addTarget:self action:@selector(foldBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -344,7 +346,7 @@
     self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
     self.priceView.hidden = NO;
     self.foldButton.isFold = cellModel.isFold;
-    [self updateChartConstraints];
+    [self updateChartConstraints:NO];
     
     float pricingPerSqm = cellModel.neighborhoodInfo.pricingPerSqmV.floatValue;
     if (pricingPerSqm > 0) {
@@ -389,26 +391,25 @@
 
 - (void)foldBtnDidClick:(UIButton *)btn
 {
-    // add by zjing for test
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
-    [self updateChartConstraints];
+    [self updateChartConstraints:YES];
     if (!self.foldButton.isFold) {
-//        recordEvent(key: TraceEventName.click_price_rank, params: traceParams <|>
-//                    EnvContext.shared.homePageParams <|>
-//                    toTracerParams("old_detail", key: "page_type"))
+        [self addClickPriceRankLog];
     }
 }
 
-- (void)updateChartConstraints
+- (void)updateChartConstraints:(BOOL)animated
 {
     [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
         make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375] + 50);
     }];
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
-    [model.tableView beginUpdates];
+    if (animated) {
+        [model.tableView beginUpdates];
+    }
     if (model.isFold) {
         [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(58);
@@ -427,7 +428,9 @@
         }];
     }
     [self setNeedsUpdateConstraints];
-    [model.tableView endUpdates];
+    if (animated) {
+        [model.tableView endUpdates];
+    }    
 }
 
 - (void)setupChartUI
@@ -457,11 +460,45 @@
 }
 
 #pragma mark delegate
+- (void)addClickPriceTrendLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *traceDict = [self.baseViewModel detailTracerDic];
+    
+    //    1. event_type：house_app2c_v2
+    //    2. page_type：页面类型,{'新房详情页': 'new_detail', '二手房详情页': 'old_detail', '小区详情页': 'neighborhood_detail'}
+    //    3. rank
+    //    4. origin_from
+    //    5. origin_search_id
+    //    6.log_pb
+    
+    params[@"page_type"] = traceDict[@"page_type"] ? : @"be_null";
+    params[@"rank"] = traceDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = traceDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = traceDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = traceDict[@"log_pb"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"click_price_trend" params:params];
+}
+
+- (void)addClickPriceRankLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *traceDict = [self.baseViewModel detailTracerDic];
+    params[@"page_type"] = traceDict[@"page_type"] ? : @"be_null";
+    params[@"rank"] = traceDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = traceDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = traceDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = traceDict[@"log_pb"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"click_price_rank" params:params];
+}
+
 - (void)userClickedOnKeyPoint:(CGPoint)point
                     lineIndex:(NSInteger)lineIndex
                    pointIndex:(NSInteger)pointIndex
                   selectPoint:(CGPoint)selectPoint
 {
+    [self addClickPriceTrendLog];
+
     FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
     if (!view) {
         view = [[FHDetailPriceMarkerView alloc]init];
