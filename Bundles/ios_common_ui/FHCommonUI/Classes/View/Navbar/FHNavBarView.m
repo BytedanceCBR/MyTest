@@ -62,6 +62,7 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
     _title = [[UILabel alloc] init];
     _title.textAlignment = NSTextAlignmentCenter;
     _title.textColor = [UIColor colorWithHexString:@"#081f33"];
+    _title.font = [UIFont themeFontMedium:18];
     [self addSubview:_title];
     [_title mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(_leftBtn.mas_centerY);

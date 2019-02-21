@@ -13,6 +13,7 @@
 @interface FHMineFocusCell()
 
 @property(nonatomic, strong) UILabel* titleLabel;
+@property(nonatomic, strong) NSMutableArray<FHMineFavoriteItemView *> *focusItems;
 
 @end
 
@@ -24,8 +25,11 @@
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.contentView.backgroundColor = [UIColor whiteColor];
+        self.focusItems = [NSMutableArray array];
+        
         [self initViews];
         [self initConstraints];
+        [self initDefaultItems];
     }
     return self;
 }
@@ -58,6 +62,25 @@
     self.titleLabel.text = dic[@"name"];
 }
 
+- (void)initDefaultItems {
+    __weak typeof(self) wself = self;
+    [self.focusItems removeAllObjects];
+    NSArray *typeArray = @[@(FHHouseTypeSecondHandHouse),@(FHHouseTypeRentHouse),@(FHHouseTypeNewHouse),@(FHHouseTypeNeighborhood)];
+    NSArray *nameArray = @[@"二手房",@"租房",@"新房",@"小区"];
+    NSArray *imageNameArray = @[@"icon-ershoufang",@"icon-zufang",@"icon-xinfang",@"icon-xiaoqu"];
+    
+    for (NSInteger i = 0; i < typeArray.count; i++) {
+        NSInteger type = [typeArray[i] integerValue];
+        NSString *title = [NSString stringWithFormat:@"%@ (*)",nameArray[i]];
+        FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageNameArray[i]];
+        view.focusClickBlock = ^{
+            [wself goToFocusDetail:type];
+        };
+        [self.focusItems addObject:view];
+    }
+    [self setItems:self.focusItems];
+}
+
 - (void)setItems:(NSArray<FHMineFavoriteItemView *> *)items
 {
     for (UIView *view in self.contentView.subviews) {
@@ -77,9 +100,22 @@
                 make.top.mas_equalTo(self.titleLabel.mas_bottom);
                 make.left.mas_equalTo(self.contentView).offset(width * i);
                 make.width.mas_equalTo(width);
-                make.bottom.mas_equalTo(self.contentView);
+                make.bottom.mas_equalTo(self.contentView).offset(-5);
             }];
         }
+    }
+}
+
+- (void)setItemTitles:(NSArray *)itemTitles {
+    for (NSInteger i = 0; i < self.focusItems.count; i++) {
+        FHMineFavoriteItemView *view = self.focusItems[i];
+        view.nameLabel.text = itemTitles[i];
+    }
+}
+
+- (void)goToFocusDetail:(FHHouseType)type {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(goToFocusDetail:)]) {
+        [self.delegate goToFocusDetail:type];
     }
 }
 

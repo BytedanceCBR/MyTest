@@ -48,6 +48,60 @@
 }
 @end
 
+@implementation FHDetailOldDataNeighborhoodInfoEvaluationInfoSubScoresModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"scoreLevel": @"score_level",
+                           @"scoreName": @"score_name",
+                           @"scoreValue": @"score_value",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailOldDataNeighborhoodInfoSchoolInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"schoolType": @"school_type",
+                           @"schoolId": @"school_id",
+                           @"schoolName": @"school_name",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailOldDataNeighborhoodInfoEvaluationInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"totalScore": @"total_score",
+                           @"detailUrl": @"detail_url",
+                           @"subScores": @"sub_scores",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailOldDataNeighborhoodInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -67,6 +121,8 @@
                            @"gaodeLng": @"gaode_lng",
                            @"searchId": @"search_id",
                            @"gaodeImageUrl": @"gaode_image_url",
+                           @"evaluationInfo": @"evaluation_info",
+                           @"schoolInfo": @"school_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -97,39 +153,6 @@
 @end
 
 
-@implementation FHDisclaimerModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"richText": @"rich_text",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
-
-@implementation FHDisclaimerModelDisclaimerRichTextModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"highlightRange": @"highlight_range",
-                           @"linkUrl": @"link_url",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
@@ -208,8 +231,8 @@
 }
 @end
 
+@implementation FHDetailDataBaseInfoModel
 
-@implementation FHDetailOldDataBaseInfoModel
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{

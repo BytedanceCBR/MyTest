@@ -22,6 +22,7 @@
 @property(nonatomic, weak) FHMessageViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) id<FHMessageBridgeProtocol> messageBridge;
+@property(nonatomic, assign) BOOL isFirstLoad;
 
 @end
 
@@ -53,7 +54,7 @@
 //    [self trackRefresh];
     __weak typeof(self) wself = self;
     
-    if(self.dataList.count == 0){
+    if(self.isFirstLoad){
         [self.viewController startLoading];
     }
     
@@ -61,13 +62,15 @@
         
         FHUnreadMsgModel *msgModel = (FHUnreadMsgModel *)model;
         
-        if(self.dataList.count == 0){
+        if(self.isFirstLoad){
             [self.viewController endLoading];
         }
         
         if (!wself) {
             return;
         }
+        
+        wself.isFirstLoad = NO;
         
         if (error && wself.dataList.count == 0) {
             //TODO: show handle error
@@ -94,9 +97,7 @@
     }];
 }
 
-- (void)clearBadgeNumber
-{
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"kClearMessageTabBarBadgeNumberNotification" object:nil];
+- (void)clearBadgeNumber {
     [[self messageBridgeInstance] clearMessageTabBarBadgeNumber];
 }
 
@@ -137,7 +138,6 @@
     
     if([model.unread integerValue] > 0){
         // Tab消息个数减少
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeMessageTabBarBadge" object:model.unread];
         [[self messageBridgeInstance] reduceMessageTabBarBadgeNumber:[model.unread integerValue]];
         
         model.unread = @"0";
@@ -150,7 +150,7 @@
     NSDictionary *dict = @{
                            @"typeId": model.id
                            };
-    
+
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }

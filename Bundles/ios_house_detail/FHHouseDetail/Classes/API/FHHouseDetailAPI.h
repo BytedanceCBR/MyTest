@@ -11,10 +11,11 @@
 #import "FHHouseType.h"
 #import "FHMainApi.h"
 
-@class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel;
-@class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel;
+@class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel,FHDetailFloorPanDetailInfoModel;
+@class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
 @class FHHouseRentRelatedResponseModel,FHRentSameNeighborhoodResponseModel;
 @class FHDetailResponseModel,FHDetailVirtualNumResponseModel,FHDetailUserFollowResponseModel;
+@class FHTransactionHistoryModel;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -31,6 +32,7 @@ typedef enum : NSUInteger {
 
 // 新房详情页请求
 +(TTHttpTask*)requestNewDetail:(NSString*)houseId
+                         logPB:(NSDictionary *)logPB
                      completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房详情页请求
@@ -70,6 +72,13 @@ typedef enum : NSUInteger {
                                                          query:(NSString*)query
                                                          count:(NSInteger)count
                                                     completion:(void(^)(FHDetailRelatedNeighborhoodResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 二手房（小区）-小区成交历史
++(TTHttpTask*)requestNeighborhoodTransactionHistoryByNeighborhoodId:(NSString*)neighborhoodId
+                                                      searchId:(NSString*)searchId
+                                                        page:(NSInteger)page
+                                                         count:(NSInteger)count
+                                                    completion:(void(^)(FHTransactionHistoryModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房（小区）-同小区房源
 +(TTHttpTask*)requestHouseInSameNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId
@@ -114,10 +123,16 @@ typedef enum : NSUInteger {
 
 // 新房-楼盘动态
 +(TTHttpTask*)requestFloorTimeLineSearch:(NSString*)houseId
-                                 offset:(NSString *)offset
                                   query:(NSString*)query
-                                  count:(NSInteger)count
-                             completion:(void(^)(FHDetailRelatedCourtModel * _Nullable model , NSError * _Nullable error))completion;
+                             completion:(void(^)(FHDetailNewTimeLineResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 新房-楼盘信息
++(TTHttpTask*)requestFloorCoreInfoSearch:(NSString*)courtId
+                              completion:(void(^)(FHDetailNewCoreDetailModel * _Nullable model , NSError * _Nullable error))completion;
+
+// 新房-楼盘户型详情信息
++(TTHttpTask*)requestFloorPanDetailCoreInfoSearch:(NSString*)floorPanId
+                              completion:(void(^)(FHDetailFloorPanDetailInfoModel * _Nullable model , NSError * _Nullable error))completion;
 @end
 
 

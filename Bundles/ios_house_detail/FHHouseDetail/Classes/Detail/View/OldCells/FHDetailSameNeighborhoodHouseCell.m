@@ -119,6 +119,9 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"same_neighborhood";// 同小区房源
+}
 
 @end
 

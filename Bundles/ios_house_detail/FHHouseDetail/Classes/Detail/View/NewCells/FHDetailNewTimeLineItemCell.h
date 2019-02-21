@@ -20,7 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, assign) BOOL isFirstCell;
 @property (nonatomic, assign) BOOL isLastCell;
+@property (nonatomic, assign) BOOL isExpand;
 @property (nonatomic, assign) CGFloat offsetY;
+@property (nonatomic, strong) NSString * courtId;
+
 
 @end
 

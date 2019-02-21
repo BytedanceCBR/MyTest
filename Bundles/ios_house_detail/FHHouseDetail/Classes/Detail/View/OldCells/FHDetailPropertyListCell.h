@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 // FHDetailPropertyListModel
 @interface FHDetailPropertyListModel : FHDetailBaseModel
 
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
 
 @end
 

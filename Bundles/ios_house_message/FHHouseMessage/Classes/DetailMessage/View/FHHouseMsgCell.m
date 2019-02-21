@@ -65,7 +65,7 @@
     _imgView.backgroundColor = [UIColor whiteColor];
     _imgView.layer.borderWidth = 0.5;
     _imgView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _imgView.contentMode = UIViewContentModeScaleAspectFit;
+    _imgView.contentMode = UIViewContentModeScaleAspectFill;
     _imgView.layer.cornerRadius = 4;
     _imgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_imgView];
@@ -73,8 +73,8 @@
     self.imageTopLeftLabelBgView = [[UIView alloc] init];
     _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed];
     _imageTopLeftLabelBgView.hidden = YES;
-    _imageTopLeftLabelBgView.layer.cornerRadius = 4;
-    _imageTopLeftLabelBgView.layer.masksToBounds = YES;
+//    _imageTopLeftLabelBgView.layer.cornerRadius = 4;
+//    _imageTopLeftLabelBgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_imageTopLeftLabelBgView];
     
     self.imageTopLeftLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
@@ -118,7 +118,7 @@
     
     [self.imageTopLeftLabelBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.imgView.mas_left);
-        make.top.mas_equalTo(self.imgView.mas_top).offset(0.5);
+        make.top.mas_equalTo(self.imgView.mas_top);
         make.width.mas_equalTo(48);
         make.height.mas_equalTo(17);
     }];
@@ -164,6 +164,13 @@
         make.bottom.mas_equalTo(self.priceLabel.mas_bottom).offset(-2);
         make.height.mas_equalTo(19);
     }];
+    
+    [self layoutIfNeeded];
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.imageTopLeftLabelBgView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(4, 4)];
+    CAShapeLayer *layer = [[CAShapeLayer alloc] init];
+    layer.frame = self.imageTopLeftLabelBgView.bounds;
+    layer.path = path.CGPath;
+    self.imageTopLeftLabelBgView.layer.mask = layer;
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor
@@ -201,9 +208,12 @@
     [self updateLayoutWithShowTags:text.string.length > 0];
     
     FHHouseMsgDataItemsItemsImagesModel *imageModel = [model.images firstObject];
-    if(imageModel) {
+    if(imageModel.url){
         [self.imgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
+    }else{
+        self.imgView.image = [UIImage imageNamed:@"default_image"];
     }
+
     
     if(model.houseImageTag){
         self.imageTopLeftLabel.textColor = HEXRGBA(model.houseImageTag.textColor);

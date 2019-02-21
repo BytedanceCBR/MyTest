@@ -15,16 +15,17 @@
 #import "TTAccount.h"
 #import "TTAccountManager.h"
 #import "ToastManager.h"
-//#import "FHUserTracker.h"
+#import "FHUserTracker.h"
+#import "TTReachability.h"
 
-@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource>
+@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineFocusCellDelegate>
 
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSArray *defaultList;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMineViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
-@property(nonatomic, strong) NSMutableArray<FHMineFavoriteItemView *> *focusItems;
+@property(nonatomic, strong) NSMutableArray *focusItemTitles;
 @property (nonatomic , assign) BOOL hasLogin;
 
 @end
@@ -37,7 +38,7 @@
     if (self) {
         
         _dataList = [[NSMutableArray alloc] init];
-        _focusItems = [[NSMutableArray alloc] init];
+        _focusItemTitles = [[NSMutableArray alloc] init];
         
         self.tableView = tableView;
         
@@ -60,7 +61,7 @@
                              },
                          @{
                              @"name":@"我的收藏",
-                             @"url":@"snssdk1370://favorite",
+                             @"url":@"snssdk1370://favorite?stay_id=favorite",
                              @"cellId":@"settingCellId",
                              @"cellClassName":@"FHMineSettingCell"
                              },
@@ -68,23 +69,34 @@
                              @"name":@"用户反馈",
                              @"url":@"snssdk1370://feedback",
                              @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell"
+                             @"cellClassName":@"FHMineSettingCell",
+                             @"click_minetab":@{
+                                        @"click_type":@"feedback",
+                                        @"page_type":@"minetab",
+                                     },
+                             @"go_detail":@{
+                                     @"enter_from":@"minetab",
+                                     @"page_type":@"feedback",
+                                     },
                              },
                          @{
                              @"name":@"系统设置",
                              @"url":@"snssdk1370://more",
                              @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell"
+                             @"cellClassName":@"FHMineSettingCell",
+                             @"click_minetab":@{
+                                     @"click_type":@"setting",
+                                     @"page_type":@"minetab",
+                                     },
+                             @"go_detail":@{
+                                     @"enter_from":@"minetab",
+                                     @"page_type":@"setting",
+                                     },
                              },
                          ];
     [self.dataList addObjectsFromArray:self.defaultList];
     
     for (NSDictionary *dic in self.defaultList) {
-//        FHBMineDataServiceListModel *model = [[FHBMineDataServiceListModel alloc] init];
-//        model.name = dic[@"name"];
-//        model.url = dic[@"url"];
-//        [self.dataList addObject:model];
-        
         NSString *cellId = dic[@"cellId"];
         NSString *cellClassName = dic[@"cellClassName"];
         [self.tableView registerClass:NSClassFromString(cellClassName) forCellReuseIdentifier:cellId];
@@ -101,20 +113,15 @@
         }
         
         if(response.count == 4){
-            [self.focusItems removeAllObjects];
+            [self.focusItemTitles removeAllObjects];
             NSArray *typeArray = @[@(FHHouseTypeSecondHandHouse),@(FHHouseTypeRentHouse),@(FHHouseTypeNewHouse),@(FHHouseTypeNeighborhood)];
             NSArray *nameArray = @[@"二手房",@"租房",@"新房",@"小区"];
-            NSArray *imageNameArray = @[@"icon-ershoufang",@"icon-zufang",@"icon-xinfang",@"icon-xiaoqu"];
             
             for (NSInteger i = 0; i < typeArray.count; i++) {
                 NSInteger type = [typeArray[i] integerValue];
                 NSInteger count = [response[@(type)] integerValue];
                 NSString *title = [self getFocusItemTitle:nameArray[i] count:count];
-                FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageNameArray[i]];
-                view.focusClickBlock = ^{
-                    [wself goToFocusDetail:type];
-                };
-                [self.focusItems addObject:view];
+                [self.focusItemTitles addObject:title];
             }
             
             [wself.tableView reloadData];
@@ -130,12 +137,38 @@
         if(state == 1){
             [[ToastManager manager] showToast:@"个人资料功能升级中，敬请期待"];
         }else if(state == 2){
+            NSString *goDetailTrackDic = @{
+                                           @"enter_from":@"minetab",
+                                           @"page_type":@"personal_info"
+                                           };
+            TRACK_EVENT(@"go_detail", goDetailTrackDic);
+            NSString *clickTrackDic = @{
+                                        @"click_type":@"edit_info",
+                                        @"page_type":@"minetab"
+                                        };
+            TRACK_EVENT(@"click_minetab", clickTrackDic);
+            
             NSURL* url = [NSURL URLWithString:@"snssdk1370://editUserProfile"];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
     }else{
+        NSString *clickTrackDic = @{
+                                    @"click_type":@"login",
+                                    @"page_type":@"minetab"
+                                    };
+        TRACK_EVENT(@"click_minetab", clickTrackDic);
+        
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"originFrom"] = @"minetab";
+        traceParam[@"enter_from"] = @"minetab";
+        traceParam[@"enter_type"] = @"login";
+        NSDictionary *dict = @{
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
         NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 
@@ -180,15 +213,22 @@
     }
 }
 
-- (void)goToFocusDetail:(NSInteger)type {
-    NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"type"] = @(type);
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+#pragma mark - FHMineFocusCellDelegate
+
+- (void)goToFocusDetail:(FHHouseType)type {
+    if ([TTReachability isNetworkConnected]) {
+        NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+        dict[@"type"] = @(type);
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    } else {
+        [[ToastManager manager] showToast:@"网络异常"];
+    }
 }
 
 #pragma mark - UITableViewDataSource
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [_dataList count];
 }
@@ -200,7 +240,10 @@
     
     if([cell isKindOfClass:[FHMineFocusCell class]]){
         FHMineFocusCell *focusCell = (FHMineFocusCell *)cell;
-        [focusCell setItems:self.focusItems];
+        focusCell.delegate = self;
+        if(self.focusItemTitles.count == 4){
+            [focusCell setItemTitles:self.focusItemTitles];
+        }
     }
     
     return cell;
@@ -229,43 +272,22 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 
     NSDictionary *dic = _dataList[indexPath.row];
+    
+    NSString *clickTrackDic = dic[@"click_minetab"];
+    if(clickTrackDic){
+        TRACK_EVENT(@"click_minetab", clickTrackDic);
+    }
+    
+    NSString *goDetailTrackDic = dic[@"go_detail"];
+    if(clickTrackDic){
+        TRACK_EVENT(@"go_detail", goDetailTrackDic);
+    }
+    
     NSString *urlStr = dic[@"url"];
     if(urlStr){
         NSURL* url = [NSURL URLWithString:urlStr];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
-
-//    [self addEnterDetailLog:model];
 }
-
-//-(void)addEnterDetailLog:(FHBMineDataServiceListModel *)model
-//{
-//    /*
-//     1. event_type：house_app2b
-//     2. page_type：(详情页类型：用户反馈：feedback，系统设置：setting，编辑资料：personal_info)
-//     3. enter_from：(详情页入口：我的tab：minetab]
-//     */
-//    
-//    
-//    NSMutableDictionary *param = [NSMutableDictionary new];
-//    
-//    param[UT_ENTER_FROM] = UT_OF_MINE;
-//    NSURL *url = [NSURL URLWithString:model.url];
-//    if(url.host){
-//        param[UT_PAGE_TYPE] = url.host;
-//    }
-//    
-//    TRACK_EVENT(UT_GO_DETAIL,param);
-//}
-//
-//-(void)addEnterUserProfileLog
-//{
-//    NSMutableDictionary *param = [NSMutableDictionary new];
-//    
-//    param[UT_ENTER_FROM] = UT_OF_MINE;
-//    param[UT_PAGE_TYPE] = @"personal_info";
-//    
-//    TRACK_EVENT(UT_GO_DETAIL,param);
-//}
 
 @end

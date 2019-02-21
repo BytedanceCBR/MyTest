@@ -214,4 +214,13 @@ TTAccountMulticastProtocol
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"notification_share_one_dismiss" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:TTAccountPlatformDidAuthorizeCompletionNotification object:nil];
 }
+
+- (void)logoutAppWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    // 退出登录
+    [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
+        callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
+    }];
+}
+
 @end

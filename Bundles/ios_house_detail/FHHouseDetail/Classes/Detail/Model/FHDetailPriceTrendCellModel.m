@@ -9,4 +9,13 @@
 
 @implementation FHDetailPriceTrendCellModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _isFold = YES;
+    }
+    return self;
+}
+
 @end

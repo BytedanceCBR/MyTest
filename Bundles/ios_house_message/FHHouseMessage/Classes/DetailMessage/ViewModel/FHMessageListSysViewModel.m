@@ -30,8 +30,28 @@
         [tableView registerClass:[FHSystemMsgCell class] forCellReuseIdentifier:kCellId];
         tableView.delegate = self;
         tableView.dataSource = self;
+        
+        [self addEnterCategoryLog];
     }
     return self;
+}
+
+- (NSDictionary *)categoryLogDict {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"category_name"] = [self.viewController categoryName];
+    tracerDict[@"enter_from"] = @"messagetab";
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"search_id"] = @"be_null";
+    tracerDict[@"origin_from"] = @"be_null";
+    tracerDict[@"origin_search_id"] = @"be_null";
+    tracerDict[@"element_from"] = @"be_null";
+    
+    return tracerDict;
+}
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    TRACK_EVENT(@"enter_category", tracerDict);
 }
 
 -(void)requestData:(BOOL)isHead first:(BOOL)isFirst
@@ -52,7 +72,7 @@
     
     self.requestTask = [FHMessageAPI requestSysMessageWithListId:FHMessageTypeSystem maxCoursor:self.maxCursor completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
-        [self.viewController endLoading];
+        [wself.tableView.mj_footer endRefreshing];
         FHSystemMsgModel *msgModel = (FHSystemMsgModel *)model;
         
         if (!wself) {
@@ -76,7 +96,7 @@
             }
             [wself.dataList addObjectsFromArray:msgModel.data.items];
             wself.tableView.hasMore = msgModel.data.hasMore;
-            
+            [wself updateTableViewWithMoreData:msgModel.data.hasMore];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
@@ -93,9 +113,8 @@
 - (void)addRefreshLog
 {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"category_name"] = [self.viewController categoryName];
     tracerDict[@"refresh_type"] = @"pre_load_more";
-    TRACK_EVENT(@"click_official_message", tracerDict);
+    TRACK_EVENT(@"category_refresh", tracerDict);
 }
 
 - (NSString *)timestampToDataString:(NSString *)timestamp {
@@ -128,7 +147,11 @@
     cell.lookDetailLabel.text = model.buttonName;
     
     FHSystemMsgDataItemsImagesModel *imageModel = model.images;
-    [cell.imgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+    if(imageModel.url){
+        [cell.imgView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
+    }else{
+        cell.imgView.image = [UIImage imageNamed:@"default_image"];
+    }
     
     return cell;
 }

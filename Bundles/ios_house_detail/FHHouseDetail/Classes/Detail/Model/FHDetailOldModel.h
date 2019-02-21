@@ -10,14 +10,42 @@
 #import "FHDetailBaseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@protocol FHDetailOldDataBaseInfoModel<NSObject>
-@end
 
-@interface FHDetailOldDataBaseInfoModel : JSONModel
+// 和租房共用
+@interface FHDetailDataBaseInfoModel : JSONModel
 
 @property (nonatomic, assign) BOOL isSingle;
 @property (nonatomic, copy , nullable) NSString *attr;
 @property (nonatomic, copy , nullable) NSString *value;
+@end
+
+@protocol FHDetailOldDataNeighborhoodInfoEvaluationInfoSubScoresModel<NSObject>
+@end
+
+@interface FHDetailOldDataNeighborhoodInfoEvaluationInfoSubScoresModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *scoreName;
+@property (nonatomic, copy , nullable) NSString *scoreLevel;
+@property (nonatomic, copy , nullable) NSString *scoreValue;
+@end
+
+@interface FHDetailOldDataNeighborhoodInfoEvaluationInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *totalScore;
+@property (nonatomic, copy , nullable) NSString *detailUrl;
+@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataNeighborhoodInfoEvaluationInfoSubScoresModel> *subScores;
+@end
+
+@protocol FHDetailOldDataNeighborhoodInfoSchoolInfoModel<NSObject>
+@end
+
+@interface FHDetailOldDataNeighborhoodInfoSchoolInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *schoolType;
+@property (nonatomic, copy , nullable) NSString *schoolId;
+@property (nonatomic, copy , nullable) NSString *schoolName;
 @end
 
 @interface FHDetailOldDataNeighborhoodInfoModel : JSONModel
@@ -41,6 +69,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
+@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataNeighborhoodInfoSchoolInfoModel> *schoolInfo;
 @end
 
 @interface FHDetailOldDataHousePriceRangeModel : JSONModel
@@ -110,27 +140,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *priceChangeDesc;
 @end
 
-@protocol FHDisclaimerModelDisclaimerRichTextModel<NSObject>
-@end
-
-@interface FHDisclaimerModelDisclaimerRichTextModel : JSONModel
-
-@property (nonatomic, strong , nullable) NSArray *highlightRange;
-@property (nonatomic, copy , nullable) NSString *linkUrl;
-@end
-
-
-@interface FHDisclaimerModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *text;
-@property (nonatomic, strong , nullable) NSArray<FHDisclaimerModelDisclaimerRichTextModel> *richText;
-
-@end
-
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) FHDetailOldDataHousePriceRangeModel *housePriceRange ;

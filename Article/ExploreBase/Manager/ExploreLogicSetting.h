@@ -55,8 +55,7 @@ extern NSString *const kExploreTopVCChangeNotification;
 
 extern NSString *const kExploreMixedListRefreshTypeNotification;
 
-extern NSString *const kClearMessageTabBarBadgeNumberNotification;
-extern NSString *const kChangeMessageTabBarBadgeNumberNotification;
+extern NSString *const kFHLogInAccountStatusChangedNotification;
 
 typedef NS_ENUM(NSUInteger, ExploreMixedListRefreshType)
 {

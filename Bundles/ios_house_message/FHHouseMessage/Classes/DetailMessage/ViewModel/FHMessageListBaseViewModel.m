@@ -26,9 +26,10 @@
         
         __weak typeof(self) weakSelf = self;
         
-        [_tableView tt_addDefaultPullUpLoadMoreWithHandler:^{
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [weakSelf requestData:NO first:NO];
         }];
+        self.tableView.mj_footer = self.refreshFooter;
         
     }
     return self;
@@ -36,19 +37,20 @@
 
 -(void)requestData:(BOOL)isHead first:(BOOL)isFirst
 {
-//    [self trackRefresh:isHead first:isFirst];
     [self.requestTask cancel];
 }
 
-//下级消息列表页刷新 埋点
-- (void)trackRefresh:(BOOL)isHead first:(BOOL)isFirst{
-    NSMutableDictionary *dict = [self.viewController.tracerModel logDict];
-    if(isFirst){
-        dict[@"refresh_type"] = @"default";
-    }else{
-        dict[@"refresh_type"] = isHead ? @"pull" : @"load_more";
+- (NSDictionary *)categoryLogDict {
+    return nil;
+}
+
+- (void)updateTableViewWithMoreData:(BOOL)hasMore {
+    self.tableView.mj_footer.hidden = NO;
+    if (hasMore == NO) {
+        [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    }else {
+        [self.tableView.mj_footer endRefreshing];
     }
-    TRACK_EVENT(@"category_refresh", dict);
 }
 
 

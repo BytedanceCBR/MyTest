@@ -25,6 +25,8 @@
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic, assign) NSInteger rank;
 @property(nonatomic, copy) NSString *originSearchId;
+@property(nonatomic, copy) NSString *searchId;
+@property(nonatomic, assign) BOOL isFirstLoad;
 
 @end
 
@@ -43,6 +45,24 @@
     return self;
 }
 
+- (NSDictionary *)categoryLogDict {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"category_name"] = [self.viewController categoryName];
+    tracerDict[@"enter_from"] = @"messagetab";
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"element_from"] = @"be_null";
+    tracerDict[@"origin_from"] = [self.viewController originFrom];
+    tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
+    tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
+    
+    return tracerDict;
+}
+
+- (void)addEnterCategoryLog {
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    TRACK_EVENT(@"enter_category", tracerDict);
+}
+
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst
 {
     [super requestData:isHead first:isFirst];
@@ -53,6 +73,7 @@
     
     if(isHead){
         self.maxCursor = nil;
+        self.searchId = nil;
         self.originSearchId = nil;
         [self.clientShowDict removeAllObjects];
         self.rank = 0;
@@ -64,7 +85,7 @@
     
     self.requestTask = [FHMessageAPI requestHouseMessageWithListId:self.listId maxCoursor:self.maxCursor searchId:self.originSearchId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
-        [self.viewController endLoading];
+        [wself.tableView.mj_footer endRefreshing];
         FHHouseMsgModel *msgModel = (FHHouseMsgModel *)model;
         
         if (!wself) {
@@ -89,7 +110,7 @@
             }
             [wself.dataList addObjectsFromArray:msgModel.data.items];
             wself.tableView.hasMore = msgModel.data.hasMore;
-            
+            [wself updateTableViewWithMoreData:msgModel.data.hasMore];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
@@ -98,34 +119,30 @@
             }else{
                 [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
             }
+            
+            if(self.isFirstLoad){
+                self.originSearchId = self.searchId;
+                self.isFirstLoad = NO;
+                [self addEnterCategoryLog];
+            }
+            
+            if(!isHead){
+                [self addRefreshLog];
+            }
         }
         
     }];
 }
 
-- (void)addRefreshLog
-{
+- (void)addRefreshLog {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"category_name"] = [self.viewController categoryName];
     tracerDict[@"refresh_type"] = @"pre_load_more";
     tracerDict[@"element_from"] = @"be_null";
-    TRACK_EVENT(@"click_official_message", tracerDict);
+    TRACK_EVENT(@"category_refresh", tracerDict);
 }
 
-- (NSString *)timestampToDataString:(NSString *)timestamp {
-    // iOS 生成的时间戳是10位
-    NSTimeInterval interval = [timestamp doubleValue];
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MM月dd日 HH:mm"];
-    NSString *dateString = [formatter stringFromDate: date];
-    return dateString;
-}
-
-- (void)viewMoreDetail:(NSString *)moreDetail model:(FHHouseMsgDataItemsModel *)model
-{
-    NSMutableDictionary *tracerDict = [self.viewController categoryLogDict];
+- (void)viewMoreDetail:(NSString *)moreDetail model:(FHHouseMsgDataItemsModel *)model {
+    NSMutableDictionary *tracerDict = [self categoryLogDict];
     tracerDict[@"element_from"] = @"messagetab";
     tracerDict[@"enter_from"] = @"messagetab";
     TRACK_EVENT(@"click_recommend_loadmore", tracerDict);
@@ -141,8 +158,7 @@
 
 //埋点
 - (void)trackOperationWithModel:(FHHouseMsgDataItemsItemsModel *)model index:(NSInteger)index trackName:(NSString *)trackName {
-    
-    NSMutableDictionary *tracerDict = [self.viewController categoryLogDict];
+    NSMutableDictionary *tracerDict = [self categoryLogDict];
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"group_id"] = model.id;
@@ -151,6 +167,7 @@
     tracerDict[@"log_pb"] = model.logPb ? model.logPb : @"be_null";
     tracerDict[@"rank"] = @(index);
     tracerDict[@"page_type"] = [self.viewController categoryName];
+    tracerDict[@"search_id"] = model.searchId;
 
     TRACK_EVENT(trackName, tracerDict);
 }
@@ -188,7 +205,7 @@
     }
     
     _clientShowDict[section_row] = @(_rank);
-    [self trackOperationWithModel:itemsModel index:_rank trackName:@"client_show"];
+    [self trackOperationWithModel:itemsModel index:_rank trackName:@"house_show"];
     _rank++;
     
     return cell;
@@ -197,6 +214,11 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return UITableViewAutomaticDimension;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForHeaderInSection:(NSInteger)section
 {
     return 90.0f;
 }
@@ -284,7 +306,7 @@
     NSInteger index = [_clientShowDict[section_row] integerValue];
     
     NSDictionary *logPb = itemsModel.logPb;
-    NSMutableDictionary *tracerDict = [self.viewController categoryLogDict];
+    NSMutableDictionary *tracerDict = [self categoryLogDict];
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"element_from"] = @"be_null";
     tracerDict[@"enter_from"] = [self.viewController categoryName];

@@ -240,10 +240,6 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 - (void)startLoadData
 {
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:@"6581052152733499652" completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
-        [wSelf processDetailData:model];
-    }];
 }
 
 - (void)processDetailData:(FHDetailNewModel *)model {
@@ -291,7 +287,15 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if (_currentItems.count > indexPath.row) {
+        FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)_currentItems[indexPath.row];
+        if ([model isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
+                NSMutableDictionary *infoDict = [NSMutableDictionary new];
+                [infoDict setValue:model.id forKey:@"floorpanid"];
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+        }
+    }
 }
 
 @end

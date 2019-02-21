@@ -250,7 +250,8 @@ import RxCocoa
     func test(houseId:Int64) {
         let openUrl = "snssdk1370://test_detail"
         let info: [String: Any] = ["house_type": 2,
-                                   "house_id":"\(houseId)"]
+                                   "house_id":"\(houseId)",
+            "tracer":self.traceParams.paramsGetter([:])]
         let userInfo = TTRouteUserInfo(info: info)
         TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
     }
