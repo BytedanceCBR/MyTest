@@ -57,6 +57,8 @@ extern NSString *const kExploreMixedListRefreshTypeNotification;
 
 extern NSString *const kFHLogInAccountStatusChangedNotification;
 
+extern NSString *const kFHMessageUnreadChangedNotification;
+
 typedef NS_ENUM(NSUInteger, ExploreMixedListRefreshType)
 {
     ExploreMixedListRefreshTypeDefault = 0,
