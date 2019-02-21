@@ -21,6 +21,8 @@
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
+#import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -171,6 +173,13 @@
 #pragma mark - 详情页跳转
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
     
+//    FHHomeHouseDataItemsModel *theModelJump = self.modelsArray[indexPath.row];
+//
+//    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"house_type":@(self.currentHouseType),@"house_id":theModelJump.idx}];
+//    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://test_detail"] userInfo:info];
+//
+//    return;
+    
     if (self.modelsArray.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
@@ -183,26 +192,30 @@
         traceParam[@"element_from"] = @"maintab_list";
         traceParam[@"enter_from"] = @"maintab";
         
-        NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
+        NSDictionary *dict = @{@"house_type":@(self.currentHouseType),
+                               @"house_id":theModel.idx,
                                @"tracer": traceParam
                                };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL *jumpUrl = nil;
         
-        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
-            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
-        }else if(self.currentHouseType == FHHouseTypeNewHouse)
-        {
-            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.idx]];
-        }else if(self.currentHouseType == FHHouseTypeRentHouse)
-        {
-            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
-        }
+//        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+//            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
+//        }else if(self.currentHouseType == FHHouseTypeNewHouse)
+//        {
+//            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.idx]];
+//        }else if(self.currentHouseType == FHHouseTypeRentHouse)
+//        {
+//            jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
+//        }
+//
+//        if (jumpUrl != nil) {
+//            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+//        }
         
-        if (jumpUrl != nil) {
-            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
-        }
+//        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"house_type":@(self.currentHouseType),@"house_id":theModel.idx,@"tracer":traceParam}];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://test_detail"] userInfo:userInfo];
     }
     
 }

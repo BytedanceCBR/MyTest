@@ -114,6 +114,7 @@
             wself.viewController.hasValidateData = wself.dataList.count > 0;
             
             if(wself.dataList.count > 0){
+                wself.refreshFooter.hidden = NO;
                 [wself.viewController.emptyView hideEmptyView];
                 [wself.tableView reloadData];
             }else{

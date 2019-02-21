@@ -48,7 +48,28 @@
     return self;
 }
 
--(void)requestData {
+- (void)viewWillAppear {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:@"kFHMessageUnreadChangedNotification" object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)refreshData:(NSNotification *)notification {
+    NSError *error = nil;
+    if(notification.object){
+        FHUnreadMsgModel *model = [[FHUnreadMsgModel alloc] initWithData:notification.object error:&error];
+        if(!error && model){
+            [self.viewController.emptyView hideEmptyView];
+            self.dataList = model.data.unread;
+            self.viewController.hasValidateData = self.dataList.count > 0;
+            [self.tableView reloadData];
+        }
+    }
+}
+
+- (void)requestData {
     [self.requestTask cancel];
     
 //    [self trackRefresh];
@@ -84,6 +105,13 @@
         if(model){
             wself.dataList = msgModel.data.unread;
             wself.viewController.hasValidateData = wself.dataList.count > 0;
+            
+            NSInteger unreadCount = 0;
+            for (FHUnreadMsgDataUnreadModel *unreadModel in self.dataList) {
+                unreadCount += [unreadModel.unread integerValue];
+            }
+            
+            [[wself messageBridgeInstance] setMessageTabBadgeNumber:unreadCount];
             
             if(wself.dataList.count > 0){
                 [wself.viewController.emptyView hideEmptyView];

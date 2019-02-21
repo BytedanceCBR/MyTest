@@ -55,14 +55,18 @@
     tf.textColor = [UIColor themeBlack];
     tf.font = [UIFont themeFontRegular:14];
     
-    tf.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 6, 1)];
-    tf.rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 6, 1)];
+    tf.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];
+    tf.rightView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];
     tf.leftViewMode = UITextFieldViewModeAlways;
     tf.rightViewMode = UITextFieldViewModeAlways;
     
     tf.delegate = self;
     
-    tf.placeholder = placeholder;
+//    tf.placeholder = placeholder;
+    tf.attributedPlaceholder = [[NSAttributedString alloc] initWithString:placeholder
+                                                               attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],
+                                                                            NSForegroundColorAttributeName:[UIColor themeGray4]
+                                                                            }];
     
     return tf;
 }

@@ -172,13 +172,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 
     }
 
-    func test(houseId:Int64) {
-        let openUrl = "snssdk1370://test_detail"
-        let info: [String: Any] = ["house_type": 4,
-                                   "house_id":"\(houseId)"]
-        let userInfo = TTRouteUserInfo(info: info)
-        TTRoute.shared()?.openURL(byViewController: URL(string: openUrl), userInfo: userInfo)
-    }
     
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
         self.houseId = houseId
@@ -189,9 +182,6 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
         }
         if showLoading {
             self.showMessageAlert?("正在加载")
-        }
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3.0) {
-            self.test(houseId: houseId)
         }
 
         requestNeighborhoodDetail(neighborhoodId: "\(houseId)", logPB: logPB)

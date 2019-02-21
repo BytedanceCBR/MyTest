@@ -68,9 +68,10 @@
 
 - (void)getNewNumberForTimer {
     __weak typeof(self) wself = self;
-    [self getNewNumberWithCompletion:^(NSInteger number, NSError * _Nonnull error) {
+    [self getNewNumberWithCompletion:^(NSInteger number,id obj ,NSError * _Nonnull error) {
         if(!error){
             [wself setBadgeNumber:number];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHMessageUnreadChangedNotification" object:obj];
         }
     }];
 }
@@ -80,7 +81,7 @@
     [envContextBridge setMessageTabBadgeNumber:number];
 }
 
-- (void)getNewNumberWithCompletion:(void(^)(NSInteger number , NSError *error))completion {
+- (void)getNewNumberWithCompletion:(void(^)(NSInteger number ,id obj ,NSError *error))completion {
     
     NSString *url = [[FHURLSettings baseURL] stringByAppendingString:@"/f100/api/msg/unread"];
     
@@ -104,7 +105,7 @@
             }
         }
         if (completion) {
-            completion(count,error);
+            completion(count,obj,error);
         }
     }];
 }

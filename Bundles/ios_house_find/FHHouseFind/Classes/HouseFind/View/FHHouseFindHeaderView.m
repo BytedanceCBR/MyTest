@@ -42,9 +42,9 @@
             make.right.mas_lessThanOrEqualTo(self.deleteButton.mas_left).offset(-10);
         }];
         [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(20, 20));
+            make.size.mas_equalTo(CGSizeMake(40, 40));
             make.centerY.mas_equalTo(self.titleLabel);
-            make.right.mas_equalTo(self).offset(-20);
+            make.right.mas_equalTo(self).offset(-10);
         }];
         
     }
