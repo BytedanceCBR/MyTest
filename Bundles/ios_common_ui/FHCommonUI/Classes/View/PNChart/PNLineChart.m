@@ -335,7 +335,7 @@
     self.selectPoint = CGPointMake(lineX, minY);
     [self setNeedsDisplay];
     
-    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex pointsArray:selectPointsArray];
+    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:self.selectPoint];
 }
 
 #pragma mark - Draw Chart
