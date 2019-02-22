@@ -163,7 +163,6 @@
         tracerDic[@"enter_type"] = @"click";
         tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
         tracerDic[@"category_name"] = @"related_list";
-        tracerDic[@"element_type"] = @"related";
         tracerDic[@"element_from"] = @"related";
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
