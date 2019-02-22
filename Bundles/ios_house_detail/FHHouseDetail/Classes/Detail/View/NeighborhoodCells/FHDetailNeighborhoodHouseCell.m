@@ -172,19 +172,20 @@
         self.ershouBtn.selected = NO;
         self.rentBtn.selected = YES;
     }
-    [self reloadDataByIndex:model.currentSelIndex];
+    [self reloadDataByIndex:model.currentSelIndex animated:NO];
     [self layoutIfNeeded];
 }
 
-- (void)reloadDataByIndex:(NSInteger)index {
+- (void)reloadDataByIndex:(NSInteger)index animated:(BOOL)animated {
     if (index != 0 && index != 1) {
         return;
     }
     FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
     BOOL hasMore = NO;
     NSString * total = @"";
-    
-    [model.tableView beginUpdates];
+    if (animated) {
+        [model.tableView beginUpdates];
+    }
     if (index == 0) {
         hasMore = model.sameNeighborhoodErshouHouseData.hasMore;
         total = model.sameNeighborhoodErshouHouseData.total;
@@ -207,7 +208,9 @@
         }];
     }
     [self setNeedsUpdateConstraints];
-    [model.tableView endUpdates];
+    if (animated) {
+        [model.tableView endUpdates];
+    }
     // 更新标题
     if (total.length > 0) {
         self.headerView.label.text = [NSString stringWithFormat:@"小区房源(%@)",total];
@@ -250,7 +253,7 @@
         self.ershouBtn.selected = NO;
         self.rentBtn.selected = YES;
     }
-    [self reloadDataByIndex:tag];
+    [self reloadDataByIndex:tag animated:YES];
 }
 
 - (void)addRightButtons {
