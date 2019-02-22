@@ -159,7 +159,7 @@
         [self.items addObject:houseName];
     }
     // 添加 在售（在租）信息
-    if (model.data.statsInfo.count > 0) {
+    if (model.data.statsInfo.count == 3) {
         FHDetailNeighborhoodStatsInfoModel *infoModel = [[FHDetailNeighborhoodStatsInfoModel alloc] init];
         infoModel.statsInfo = model.data.statsInfo;
         [self.items addObject:infoModel];
