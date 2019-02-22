@@ -34,7 +34,6 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
         
                     NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
                     if (toastCount < 3) {
-                        [[ToastManager manager] showToast:@"已加入关注列表"];
                         CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
                         style.cornerRadius = 12;
                         style.messageAlignment = NSTextAlignmentCenter;
