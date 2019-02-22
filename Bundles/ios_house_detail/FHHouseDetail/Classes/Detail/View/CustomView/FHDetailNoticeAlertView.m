@@ -105,7 +105,8 @@
     
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(34);
-        make.right.top.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView).mas_offset(-5);
+        make.top.mas_equalTo(self.contentView).mas_offset(5);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(32);
@@ -295,7 +296,7 @@
 {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont themeFontRegular:16];
+        _titleLabel.font = [UIFont themeFontRegular:24];
         _titleLabel.textColor = [UIColor themeBlack];
         _titleLabel.numberOfLines = 0;
     }

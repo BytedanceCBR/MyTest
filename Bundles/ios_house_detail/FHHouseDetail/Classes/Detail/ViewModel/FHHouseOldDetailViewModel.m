@@ -148,22 +148,54 @@
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
+                wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
                 wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         } else {
             wSelf.detailController.hasValidateData = NO;
+            wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         }
     }];
 }
 
+- (void)handleBottomBarStatus:(NSInteger)status
+{
+    if (status == 1) {
+        self.bottomStatusBar.hidden = NO;
+        [self.navBar showRightItems:NO];
+        //        self.
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(30);
+        }];
+    }else if (status == -1) {
+        self.bottomStatusBar.hidden = YES;
+        [self.navBar showRightItems:YES];
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+        [self.detailController.emptyView showEmptyWithTip:@"该房源已下架" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+    }else {
+        self.bottomStatusBar.hidden = YES;
+        [self.navBar showRightItems:YES];
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
+}
+
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
+    
+    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
+    [self handleBottomBarStatus:model.data.status];
+    
     self.detailData = model;
     self.logPB = model.data.logPb;
     // 清空数据源

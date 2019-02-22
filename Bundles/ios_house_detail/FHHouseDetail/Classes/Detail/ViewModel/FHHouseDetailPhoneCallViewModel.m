@@ -160,8 +160,9 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone
 {
-    // add by zjing for test 缺少title
     NSMutableArray *images = @[].mutableCopy;
+    NSMutableArray *imageTitles = @[].mutableCopy;
+
     // "营业执照"
     if (contactPhone.businessLicense.length > 0) {
         TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithURL:contactPhone.businessLicense];
@@ -169,6 +170,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         if (model) {
             [images addObject:model];
         }
+        [imageTitles addObject:@"营业执照"];
     }
     // "从业人员信息卡"
     if (contactPhone.certificate.length > 0) {
@@ -177,6 +179,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         if (model) {
             [images addObject:model];
         }
+        [imageTitles addObject:@"从业人员信息卡"];
     }
     if (images.count == 0) {
         return;
@@ -187,7 +190,8 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     vc.mode = PhotosScrollViewSupportBrowse;
     vc.startWithIndex = 0;
     vc.imageInfosModels = images;
-    
+    vc.imageTitles = imageTitles;
+
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self.bottomBar convertRect:self.bottomBar.bounds toView:window];
