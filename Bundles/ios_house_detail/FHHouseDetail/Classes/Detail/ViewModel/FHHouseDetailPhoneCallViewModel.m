@@ -63,7 +63,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
         [[TTRoute sharedRoute]openURLByPushViewController:url];
     };
-    [alertView showFrom:nil];
+    [alertView showFrom:self.belongsVC.view];
     self.alertView = alertView;
 }
 

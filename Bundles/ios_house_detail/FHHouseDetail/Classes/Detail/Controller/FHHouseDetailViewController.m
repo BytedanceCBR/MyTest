@@ -190,6 +190,7 @@
     self.viewModel.contactViewModel.searchId = self.searchId;
     self.viewModel.contactViewModel.imprId = self.imprId;
     self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
+    self.viewModel.contactViewModel.belongsVC = self;
 
     [self addDefaultEmptyViewFullScreen];
 

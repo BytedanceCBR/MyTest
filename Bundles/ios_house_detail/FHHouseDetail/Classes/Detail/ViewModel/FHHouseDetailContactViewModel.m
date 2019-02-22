@@ -59,7 +59,7 @@
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
         _phoneCallViewModel.bottomBar = _bottomBar;
         _phoneCallViewModel.followUpViewModel = _followUpViewModel;
-        
+
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
         
         __weak typeof(self)wself = self;
@@ -121,6 +121,12 @@
 {
     _tracerDict = tracerDict;
     _phoneCallViewModel.tracerDict = tracerDict;
+}
+
+- (void)setBelongsVC:(UIViewController *)belongsVC
+{
+    _belongsVC = belongsVC;
+    _phoneCallViewModel.belongsVC = belongsVC;
 }
 
 - (void)followAction
