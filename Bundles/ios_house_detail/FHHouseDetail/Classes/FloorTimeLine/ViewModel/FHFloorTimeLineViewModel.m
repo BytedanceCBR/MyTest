@@ -80,6 +80,7 @@
         [FHHouseDetailAPI requestFloorTimeLineSearch:_courtId query:stringQuery completion:^(FHDetailNewTimeLineResponseModel * _Nullable model, NSError * _Nullable error) {
             if(model.data.list.count != 0 && !error)
             {
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 wSelf.refreshFooter.hidden = NO;
                 wSelf.currentPage ++;
