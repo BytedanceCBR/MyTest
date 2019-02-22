@@ -113,13 +113,11 @@
         make.top.mas_equalTo(self.contentView).mas_offset(5);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(32);
         make.top.mas_equalTo(self.contentView).mas_offset(40);
         make.left.mas_equalTo(self.contentView).mas_offset(20);
         make.right.mas_equalTo(-20);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(20);
         make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(10);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(-20);
@@ -303,6 +301,7 @@
         _titleLabel.font = [UIFont themeFontRegular:24];
         _titleLabel.textColor = [UIColor themeBlack];
         _titleLabel.numberOfLines = 0;
+        _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _titleLabel;
 }
@@ -314,6 +313,7 @@
         _subtitleLabel.font = [UIFont themeFontRegular:16];
         _subtitleLabel.textColor = [UIColor themeGray3];
         _subtitleLabel.numberOfLines = 0;
+        _subtitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _subtitleLabel;
 }

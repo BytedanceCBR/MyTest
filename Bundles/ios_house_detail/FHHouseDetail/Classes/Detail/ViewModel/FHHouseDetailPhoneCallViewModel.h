@@ -25,6 +25,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
 - (void)fillFormAction;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone;

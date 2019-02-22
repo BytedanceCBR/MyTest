@@ -322,7 +322,7 @@
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(10);
-        make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375]);
+        make.height.mas_equalTo(207);
         make.bottom.mas_equalTo(0);
     }];
 
@@ -400,7 +400,7 @@
 {
     [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
-        make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375] + 50);
+        make.height.mas_equalTo(207 + 50);
     }];
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
     if (animated) {
@@ -416,7 +416,7 @@
         }];
     }else {
         [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(315 - 207 + 207 * [TTDeviceHelper scaleToScreen375]);
+            make.height.mas_equalTo(315);
         }];
         [self.foldButton mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.mas_equalTo(self.bottomBgView);
