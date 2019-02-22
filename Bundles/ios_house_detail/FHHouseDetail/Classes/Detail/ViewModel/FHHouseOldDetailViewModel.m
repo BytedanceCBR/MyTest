@@ -165,6 +165,7 @@
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
     self.detailData = model;
+    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
