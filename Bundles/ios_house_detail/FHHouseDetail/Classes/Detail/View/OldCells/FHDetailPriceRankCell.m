@@ -71,7 +71,7 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"price_reference";
+    return @"price_rank";
 }
 
 - (void)refreshWithData:(id)data

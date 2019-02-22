@@ -132,6 +132,10 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailNeighborhoodModel *)model {
+    
+    self.contactViewModel.shareInfo = model.data.shareInfo;
+    self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
+
     self.detailData = model;
     // 清空数据源
     [self.items removeAllObjects];

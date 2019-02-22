@@ -32,6 +32,7 @@
 @property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
 @property(nonatomic, assign) BOOL isLarge;
 @property(nonatomic, assign) NSInteger currentIndex;
+@property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @end
 
 @implementation FHDetailPhotoHeaderCell
@@ -164,11 +165,56 @@
     _pictureShowDict[row] = row;
     
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
     [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
     dict[@"picture_id"] = img.url;
     dict[@"show_type"] = showType;
     TRACK_EVENT(@"picture_show", dict);
 }
+
+//埋点
+- (void)trackPictureLargeStayWithIndex:(NSInteger)index {
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    dict[@"picture_id"] = img.url;
+    dict[@"show_type"] = @"large";
+    
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+    if (duration <= 0) {
+        return;
+    }
+    
+    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+    TRACK_EVENT(@"picture_large_stay", dict);
+}
+
+//埋点
+- (void)trackSavePictureWithIndex:(NSInteger)index {
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    dict[@"picture_id"] = img.url;
+    dict[@"show_type"] = @"large";
+    
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+    if (duration <= 0) {
+        return;
+    }
+    
+    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+    TRACK_EVENT(@"picture_save", dict);
+}
+
 
 -(NSInteger)indexForIndexPath:(NSIndexPath *)indexPath
 {
@@ -325,13 +371,20 @@
             [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
     };
+    
     [vc presentPhotoScrollViewWithDismissBlock:^{
         weakSelf.isLarge = NO;
         [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
+        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
+    
+    vc.saveImageBlock = ^(NSInteger currentIndex) {
+        [weakSelf trackSavePictureWithIndex:currentIndex];
+    };
     
     self.isLarge = YES;
     [self trackPictureShowWithIndex:index];
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

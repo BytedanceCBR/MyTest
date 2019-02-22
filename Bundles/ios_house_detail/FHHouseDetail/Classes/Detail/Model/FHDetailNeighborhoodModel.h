@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNeighborhoodDataNeighbordhoodStatusModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *neighborhoodSubStatus;
+@property (nonatomic, assign) NSInteger neighborhoodSubStatus;
 @end
 
 @protocol FHDetailNeighborhoodDataCoreInfoModel<NSObject>

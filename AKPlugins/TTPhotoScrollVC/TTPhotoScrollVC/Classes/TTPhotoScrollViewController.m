@@ -75,6 +75,7 @@
 @property(nonatomic, strong)UIButton * saveButton;
 
 @property(nonatomic, strong)UIPanGestureRecognizer * panGestureRecognizer;
+@property(nonatomic, strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 //统计extra
 @property (nonatomic, strong) NSDictionary *trackerDic;
@@ -109,7 +110,7 @@
         _photoCount = 0;
         _mode = PhotosScrollViewSupportDownloadMode;
         _autoSelectImageWhenClickDone = NO;
-        
+        _longPressToSave = YES;
         
         self.ttHideNavigationBar = YES;
         
@@ -298,6 +299,10 @@
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
     self.panGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:_panGestureRecognizer];
+    
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    self.longPressGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:_longPressGestureRecognizer];
     
     if ([TTImagePreviewAnimateManager interativeExitEnable]){
         self.animateManager.panDelegate = self;
@@ -934,6 +939,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
 {
     TTShowImageView * currentImageView = [self showImageViewAtIndex:_currentIndex];
     [currentImageView saveImage];
+    if(self.saveImageBlock){
+        self.saveImageBlock(self.currentIndex);
+    }
 }
 
 
@@ -957,6 +965,22 @@ static BOOL staticPhotoBrowserAtTop = NO;
             [self animatePhotoViewWhenGestureEnd];
             break;
         }
+        default:
+            break;
+    }
+}
+
+- (void)longPress:(UILongPressGestureRecognizer *)recognizer
+{
+    if (!_longPressToSave || self.interfaceOrientation != UIInterfaceOrientationPortrait) {
+        return;
+    }
+
+    switch (recognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            NSLog(@"longpress");
+            [self saveButtonClicked:self.saveButton];
+            break;
         default:
             break;
     }
@@ -1412,6 +1436,10 @@ static BOOL staticPhotoBrowserAtTop = NO;
     if (gestureRecognizer == self.panGestureRecognizer){
         return ![self newGestureEnable];
     }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 

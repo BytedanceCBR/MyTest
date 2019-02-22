@@ -182,11 +182,10 @@
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
 
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar];
-    self.viewModel.contactViewModel.houseType = self.houseType;
-    self.viewModel.contactViewModel.houseId = self.houseId;
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.viewModel.contactViewModel.searchId = self.searchId;
     self.viewModel.contactViewModel.imprId = self.imprId;
+    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
 
     [self addDefaultEmptyViewFullScreen];
 

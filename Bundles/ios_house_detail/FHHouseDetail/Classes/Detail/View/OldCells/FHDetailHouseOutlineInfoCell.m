@@ -145,6 +145,10 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"house_info";
+}
+
 @end
 
 // FHDetailHouseOutlineInfoView
