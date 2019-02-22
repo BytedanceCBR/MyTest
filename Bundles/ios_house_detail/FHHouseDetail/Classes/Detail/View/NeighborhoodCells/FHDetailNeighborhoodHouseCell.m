@@ -151,7 +151,7 @@
             };
             // 查看更多相对tableView布局
             [self.rightOpenAllView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.leftTableView.mas_bottom);
+                make.top.mas_equalTo(self.rightTableView.mas_bottom);
                 make.left.right.mas_equalTo(self.containerView);
                 make.height.mas_equalTo(48);
                 make.bottom.mas_equalTo(self.containerView);
