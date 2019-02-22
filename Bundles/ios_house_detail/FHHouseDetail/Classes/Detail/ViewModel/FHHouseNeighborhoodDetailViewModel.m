@@ -138,7 +138,8 @@
     
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
-
+    self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
+    
     self.detailData = model;
     self.logPB = model.data.logPb;
     // 清空数据源
