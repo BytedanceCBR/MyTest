@@ -241,12 +241,27 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        // add by zyk后续需要再确认 searchId 取的是否正确
+        NSString *searchId = self.logPB[@"search_id"];
+        NSString *imprId = self.logPB[@"impr_id"];
+        if (searchId == nil) {
+            searchId = self.listLogPB[@"search_id"];
+        }
+        if (imprId == nil) {
+            imprId = self.listLogPB[@"impr_id"];
+        }
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
+        agentListModel.searchId = searchId;
+        agentListModel.imprId = imprId;
+        agentListModel.houseId = self.houseId;
+        agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
     }
     // 房源概况
-    if (model.data.houseOverreview) {
+    if (model.data.houseOverreview.list.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];

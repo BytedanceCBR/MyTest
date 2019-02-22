@@ -145,7 +145,74 @@
     NSInteger index = control.tag;
     if (model && model.statsInfo.count > 0 && index >= 0 && index < model.statsInfo.count) {
         FHDetailNeighborhoodDataStatsInfoModel *info = model.statsInfo[index];
-        NSLog(@"click：%ld",index);
+        NSString *openUrl = [info.openUrl stringByRemovingPercentEncoding];
+        if (openUrl.length > 0) {
+            openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+            NSURL *theUrl = [NSURL URLWithString:openUrl];
+            if (theUrl) {
+                FHDetailNeighborhoodModel *detailModel = self.baseViewModel.detailData;
+                NSString *neighborhood_id = @"";
+                if (detailModel && detailModel.data.id.length > 0) {
+                    neighborhood_id = detailModel.data.id;
+                }
+                NSString *house_id = @"";
+                if (self.baseViewModel.houseId.length > 0) {
+                    house_id = self.baseViewModel.houseId;
+                }
+                NSMutableDictionary *userInfo = [NSMutableDictionary new];
+                if (neighborhood_id.length > 0) {
+                    userInfo[@"neighborhoodId"] = neighborhood_id;
+                }
+                NSString *element_from = @"be_null";
+                NSString *category_name = @"be_null";
+                NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+                tracerDic[@"enter_type"] = @"click";
+                tracerDic[@"log_pb"] = detailModel.data.logPb ? detailModel.data.logPb : @"be_null";
+                switch (index) {
+                    case 0:
+                        // 在售房源
+                        element_from = @"house_onsale";
+                        category_name = @"same_neighborhood_list";
+                        userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+                        userInfo[@"list_vc_type"] = @(3);
+                        if (detailModel.data.name.length > 0) {
+                            NSString *name = @"0套";
+                            if (info.value.length > 0) {
+                                name  = info.value;
+                            }
+                            userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.name,name];
+                        }
+                        break;
+                    case 1:
+                        // 成交历史
+                        element_from = @"house_deal";
+                        category_name = @"neighborhood_trade_list";
+                        break;
+                    case 2:
+                        // 在租房源
+                        element_from = @"house_renting";
+                        category_name = @"same_neighborhood_list";
+                        userInfo[@"house_type"] = @(FHHouseTypeRentHouse);
+                        userInfo[@"list_vc_type"] = @(4);
+                        if (detailModel.data.name.length > 0) {
+                            NSString *name = @"0套";
+                            if (info.value.length > 0) {
+                                name  = info.value;
+                            }
+                            userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.name,name];
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                tracerDic[@"category_name"] = category_name;
+                tracerDic[@"element_from"] = element_from;
+                tracerDic[@"enter_from"] = @"neighborhood_detail";
+                userInfo[@"tracer"] = tracerDic;
+                TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+                [[TTRoute sharedRoute] openURLByPushViewController:theUrl userInfo:userInf];
+            }
+        }
     }
 }
 
