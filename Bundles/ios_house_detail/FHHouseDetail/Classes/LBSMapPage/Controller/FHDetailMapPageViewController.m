@@ -271,11 +271,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _mapView.showsUserLocation = NO;
     _mapView.zoomLevel  = 15;
     [_mapContainer addSubview:_mapView];
-    [_mapView setBackgroundColor:[UIColor blueColor]];
+    [_mapView setBackgroundColor:[UIColor whiteColor]];
     [_mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.equalTo(self.mapContainer);
     }];
-    [_mapView setBackgroundColor:[UIColor blueColor]];
+    [_mapView setBackgroundColor:[UIColor whiteColor]];
     [_mapView setCenterCoordinate:self.centerPoint];
     
     

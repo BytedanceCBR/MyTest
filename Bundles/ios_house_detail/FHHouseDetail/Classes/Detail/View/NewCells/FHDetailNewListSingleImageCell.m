@@ -168,14 +168,13 @@
     self.didClickCellBlk = ^{
         FHNewHouseItemModel *theModel = self.itemModel;
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        traceParam[@"enter_from"] = @"related";
+        traceParam[@"enter_from"] = @"new_detail";
         traceParam[@"log_pb"] = theModel.logPb;
-//        traceParam[@"origin_from"] = [self pageTypeString];
+        traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = @(theModel.index);
-//        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-        traceParam[@"element_from"] = @"maintab_list";
-        traceParam[@"enter_from"] = @"maintab";
+        traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+        traceParam[@"element_from"] = @"related";
         
         NSDictionary *dict = @{@"house_type":@(1),
                                @"tracer": traceParam
@@ -229,6 +228,7 @@
             make.height.mas_equalTo(@17);
             make.centerY.mas_equalTo(self.priceLabel);
         }];
+        
         [self.roomSpaceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.originPriceLabel.mas_right).mas_offset(offset);
             make.centerY.mas_equalTo(self.priceLabel);
