@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 //设置navibar title
 - (void)setNavBarTitle:(NSString *)navTitle;
 
+//移除导航条底部line
+- (void)removeBottomLine;
+
 @end
 
 NS_ASSUME_NONNULL_END

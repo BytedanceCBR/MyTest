@@ -141,6 +141,7 @@
     
     // 添加标题
     if (_houseNameModel) {
+        _houseNameModel.isHiddenLine = YES;
         [self.currentItems addObject:_houseNameModel];
     }
     

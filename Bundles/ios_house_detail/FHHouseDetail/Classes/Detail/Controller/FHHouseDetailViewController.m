@@ -28,6 +28,7 @@
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的logPB
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
+@property (nonatomic, assign)   BOOL isDisableGoDetail;
 
 @end
 
@@ -37,8 +38,28 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
-        self.ttTrackStayEnable = YES;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+
+        if (!self.houseType) {
+            if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
+                self.houseType = FHHouseTypeNeighborhood;
+            }
+            
+            if ([paramObj.sourceURL.absoluteString containsString:@"old_house_detail"]) {
+                self.houseType = FHHouseTypeSecondHandHouse;
+            }
+            
+            if ([paramObj.sourceURL.absoluteString containsString:@"new_house_detail"]) {
+                self.houseType = FHHouseTypeNewHouse;
+            }
+            
+            if ([paramObj.sourceURL.absoluteString containsString:@"rent_detail"]) {
+                self.houseType = FHHouseTypeRentHouse;
+            }
+        }
+
+        
+        self.ttTrackStayEnable = YES;
         switch (_houseType) {
             case FHHouseTypeNewHouse:
                 self.houseId = paramObj.allParams[@"court_id"];
@@ -53,9 +74,18 @@
                 self.houseId = paramObj.allParams[@"neighborhood_id"];
                 break;
             default:
-                self.houseId = paramObj.allParams[@"house_id"];
+                if (!self.houseId) {
+                    self.houseId = paramObj.allParams[@"house_id"];
+                }
                 break;
         }
+        
+        if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
+            self.houseId = paramObj.allParams[@"neighborhood_id"];
+        }
+        
+        self.isDisableGoDetail = paramObj.allParams[@"disable_go_detail"] ? paramObj.allParams[@"disable_go_detail"] : NO;
+        
         NSDictionary *tracer = paramObj.allParams[@"tracer"];
         if ([tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *logPbDict = tracer[@"log_pb"];
@@ -76,7 +106,10 @@
     [self setupUI];
     [self startLoadData];
     
-    [self.viewModel addGoDetailLog];
+    
+    if (!self.isDisableGoDetail) {
+        [self.viewModel addGoDetailLog];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -111,6 +144,12 @@
 // 重新加载
 - (void)retryLoadData {
     [self startLoadData];
+}
+
+//移除导航条底部line
+- (void)removeBottomLine
+{
+    [self.navBar removeBottomLine];
 }
 
 - (void)setupUI {

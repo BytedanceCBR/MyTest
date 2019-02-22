@@ -304,4 +304,28 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     }
 }
 
+- (void)showBackBtnWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    
+    NSNumber *numberShowClose = param[@"show"];
+    BOOL isShowCloseBtn = YES;
+    
+    if ([numberShowClose isKindOfClass:[NSNumber class]]) {
+        isShowCloseBtn = [numberShowClose boolValue];
+    }
+    
+    if ([numberShowClose isKindOfClass:[NSString class]]) {
+        if ([((NSString *)numberShowClose) isEqualToString:@"true"]) {
+            isShowCloseBtn = YES;
+        }
+        if ([((NSString *)numberShowClose) isEqualToString:@"false"]) {
+            isShowCloseBtn = NO;
+        }
+    }
+    
+    if ([controller respondsToSelector:@selector(setUpCloseBtnControlForWeb:)]) {
+        [controller performSelector:@selector(setUpCloseBtnControlForWeb:) withObject:@(isShowCloseBtn)];
+    }
+}
+
 @end

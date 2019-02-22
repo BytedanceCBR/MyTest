@@ -116,6 +116,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListImagesModel> *images;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, assign) NSInteger index;
 @end
 
 @interface FHDetailNewDataFloorpanListModel : JSONModel
@@ -131,6 +132,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *backgroundColor;
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, assign) NSInteger index;
+
 @end
 
 @interface FHDetailNewDataCoreInfoModel : JSONModel

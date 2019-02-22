@@ -20,6 +20,7 @@
 @interface FHDetailNewListSingleImageCell () <FHHouseSingleImageInfoCellBridgeDelegate>
 
 @property(nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
+@property(nonatomic, strong) FHNewHouseItemModel *itemModel;
 
 @property(nonatomic, strong) UIImageView *majorImageView;
 @property(nonatomic, strong) UILabel *majorTitle;
@@ -162,6 +163,31 @@
     }];
     
     _lastShowTag = YES;
+    
+    __weak typeof(self) wSelf = self;
+    self.didClickCellBlk = ^{
+        FHNewHouseItemModel *theModel = self.itemModel;
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
+        traceParam[@"enter_from"] = @"related";
+        traceParam[@"log_pb"] = theModel.logPb;
+//        traceParam[@"origin_from"] = [self pageTypeString];
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(theModel.index);
+//        traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+        traceParam[@"element_from"] = @"maintab_list";
+        traceParam[@"enter_from"] = @"maintab";
+        
+        NSDictionary *dict = @{@"house_type":@(1),
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
+
+        if (jumpUrl != nil) {
+            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        }
+    };
     
 }
 
