@@ -150,36 +150,40 @@
 
 // 查看更多按钮点击
 - (void)loadMoreDataButtonClick {
-    FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
-    NSString *group_id = @"be_null";
-    if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
-        group_id = oldDetail.data.neighborhoodInfo.id;
-    }
-    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-    tracerDic[@"group_id"] = group_id;
-    tracerDic[@"enter_type"] = @"click";
-    tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
-    tracerDic[@"category_name"] = @"related_list";
-    tracerDic[@"element_type"] = @"related";
-    tracerDic[@"element_from"] = @"related";
-    
-    NSMutableDictionary *userInfo = [NSMutableDictionary new];
-    userInfo[@"tracer"] = tracerDic;
-    userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-    userInfo[@"title"] = @"周边房源";
-    if (oldDetail.data.neighborhoodInfo.id.length > 0) {
-        userInfo[@"neighborhoodId"] = oldDetail.data.neighborhoodInfo.id;
-    }
-    if (self.baseViewModel.houseId.length > 0) {
-        userInfo[@"houseId"] = self.baseViewModel.houseId;
-    }
-    userInfo[@"list_vc_type"] = @(2);
-    
-    TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
-    NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
-    if (urlStr.length > 0) {
-        NSURL *url = [NSURL URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+    FHDetailRelatedHouseModel *model = (FHDetailRelatedHouseModel *)self.currentData;
+    if (model.relatedHouseData.hasMore)
+    {
+        FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+        NSString *group_id = @"be_null";
+        if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
+            group_id = oldDetail.data.neighborhoodInfo.id;
+        }
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"group_id"] = group_id;
+        tracerDic[@"enter_type"] = @"click";
+        tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
+        tracerDic[@"category_name"] = @"related_list";
+        tracerDic[@"element_type"] = @"related";
+        tracerDic[@"element_from"] = @"related";
+        
+        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        userInfo[@"tracer"] = tracerDic;
+        userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+        userInfo[@"title"] = @"周边房源";
+        if (oldDetail.data.neighborhoodInfo.id.length > 0) {
+            userInfo[@"neighborhoodId"] = oldDetail.data.neighborhoodInfo.id;
+        }
+        if (self.baseViewModel.houseId.length > 0) {
+            userInfo[@"houseId"] = self.baseViewModel.houseId;
+        }
+        userInfo[@"list_vc_type"] = @(2);
+        
+        TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+        }
     }
 }
 

@@ -118,7 +118,7 @@
 - (void)moreButtonClick:(UIButton *)button {
     FHDetailNeighborhoodEvaluateModel *model = (FHDetailNeighborhoodEvaluateModel *)self.currentData;
     if (model.evaluationInfo.detailUrl.length > 0) {
-        // 点击事件处理
+        [self gotoDetail];
     }
 }
 // cell 点击
@@ -127,7 +127,40 @@
     if (model.evaluationInfo && model.evaluationInfo.subScores.count > 0 && index >= 0 && index < model.evaluationInfo.subScores.count) {
         // 点击cell处理
         FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel *itemModel = model.evaluationInfo.subScores[index];
-        
+        [self gotoDetail];
+    }
+}
+
+- (NSString *)getEvaluateWebParams:(NSDictionary *)dic {
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+    if (data && !error) {
+        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        return temp;
+    }
+    return nil;
+}
+
+- (void)gotoDetail {
+    FHDetailNeighborhoodEvaluateModel *model = (FHDetailNeighborhoodEvaluateModel *)self.currentData;
+    if (model.evaluationInfo.detailUrl.length > 0) {
+        NSString *enter_from = @"neighborhood_detail";
+        NSString *urlStr = model.evaluationInfo.detailUrl;
+        if (urlStr.length > 0) {
+            NSMutableDictionary *tracerDic = [NSMutableDictionary new];
+            NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
+            [tracerDic addEntriesFromDictionary:temp];
+            tracerDic[@"enter_from"] = enter_from;
+            [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
+            //
+            NSString *reportParams = [self getEvaluateWebParams:tracerDic];
+            NSString *jumpUrl = @"sslocal://webview";
+            NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",urlStr,reportParams];
+            
+            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"title":@"小区评测",@"url":openUrl}];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
+        }
     }
 }
 

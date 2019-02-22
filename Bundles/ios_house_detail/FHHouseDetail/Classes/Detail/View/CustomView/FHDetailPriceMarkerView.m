@@ -76,13 +76,6 @@
     self.secondLabel.width = self.width - 20;
     self.thirdLabel.width = self.width - 20;
     self.height = self.thirdLabel.bottom + 20;
-    
-    if (self.markData.selectPoint.x + self.width > [UIScreen mainScreen].bounds.size.width / 2) {
-        self.left = self.markData.selectPoint.x - self.width - 10;
-    }else {
-        self.left = self.markData.selectPoint.x + 10;
-    }
-    self.centerY = self.superview.height / 2;
 }
 
 - (void)refreshContent:(FHDetailPriceMarkerData *)markData

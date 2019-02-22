@@ -28772,7 +28772,7 @@
 					"\"${PODS_ROOT}/TTPushManager/include\"",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -28882,7 +28882,7 @@
 					"\"${PODS_ROOT}/TTPushManager/include\"",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -28986,7 +28986,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29095,7 +29095,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29198,7 +29198,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29307,7 +29307,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29411,7 +29411,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "NewsInHouse/NewsInHouse-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29523,7 +29523,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "NewsInHouse/NewsInHouse-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

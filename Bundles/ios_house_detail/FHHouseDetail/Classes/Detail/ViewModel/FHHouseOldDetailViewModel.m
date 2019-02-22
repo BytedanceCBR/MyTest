@@ -148,6 +148,7 @@
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
+                [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求

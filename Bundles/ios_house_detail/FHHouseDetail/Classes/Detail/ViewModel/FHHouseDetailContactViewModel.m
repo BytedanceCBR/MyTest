@@ -59,7 +59,7 @@
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
         _phoneCallViewModel.bottomBar = _bottomBar;
         _phoneCallViewModel.followUpViewModel = _followUpViewModel;
-        
+
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
         
         __weak typeof(self)wself = self;
@@ -121,6 +121,12 @@
 {
     _tracerDict = tracerDict;
     _phoneCallViewModel.tracerDict = tracerDict;
+}
+
+- (void)setBelongsVC:(UIViewController *)belongsVC
+{
+    _belongsVC = belongsVC;
+    _phoneCallViewModel.belongsVC = belongsVC;
 }
 
 - (void)followAction
@@ -200,9 +206,14 @@
     [self.phoneCallViewModel fillFormAction];
 }
 
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+{
+    [self.phoneCallViewModel fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+}
+
 - (void)callAction
 {
-    [self.phoneCallViewModel callWithPhone:self.contactPhone searchId:self.searchId imprId:self.imprId];
+    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone searchId:self.searchId imprId:self.imprId];
     // 静默关注功能
     [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }

@@ -120,17 +120,12 @@
 
 - (void)startLoadData
 {
-    if (![TTReachability isNetworkConnected]) {
-        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        return;
-    }
-    
-    [self.detailController startLoading];
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             wSelf.dataModel = model;
             wSelf.detailController.hasValidateData = YES;
+            [self.detailController.emptyView hideEmptyView];
             wSelf.bottomBar.hidden = NO;
             [wSelf processDetailData:model];
         }else

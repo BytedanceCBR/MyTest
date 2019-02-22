@@ -116,6 +116,7 @@
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
+                [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求
@@ -138,7 +139,8 @@
     
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
-
+    self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
+    
     self.detailData = model;
     self.logPB = model.data.logPb;
     // 清空数据源
