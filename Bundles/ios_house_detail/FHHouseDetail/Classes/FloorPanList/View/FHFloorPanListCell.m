@@ -73,7 +73,7 @@
 
 
         _priceLabel = [UILabel new];
-        _priceLabel.font = [UIFont themeFontRegular:14];
+        _priceLabel.font = [UIFont themeFontMedium:14];
         _priceLabel.textColor = [UIColor colorWithHexString:@"#f85959"];
         _priceLabel.textAlignment = NSTextAlignmentLeft;
 

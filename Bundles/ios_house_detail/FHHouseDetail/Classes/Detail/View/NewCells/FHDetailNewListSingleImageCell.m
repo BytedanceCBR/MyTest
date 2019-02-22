@@ -330,6 +330,9 @@
 {
     if([data isKindOfClass:[FHNewHouseItemModel class]])
     {
+        
+        self.itemModel = data;
+        
         FHNewHouseItemModel *model = (FHNewHouseItemModel *)data;
         self.majorTitle.text = model.displayTitle;
         self.extendTitle.text = model.displayDescription;

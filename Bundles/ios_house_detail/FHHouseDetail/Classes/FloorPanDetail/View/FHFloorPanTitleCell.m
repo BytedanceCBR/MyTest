@@ -52,7 +52,7 @@
         [self.contentView addSubview:_pricingPerSqm];
         [_pricingPerSqm mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.pricingLabel.mas_right).offset(10);
-            make.top.equalTo(self.nameLabel.mas_bottom).offset(7);
+            make.top.equalTo(self.nameLabel.mas_bottom).offset(5);
             make.height.mas_equalTo(20);
         }];
         
