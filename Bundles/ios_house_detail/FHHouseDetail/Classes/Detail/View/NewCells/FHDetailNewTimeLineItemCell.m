@@ -119,8 +119,13 @@
 }
 
 - (void)maskButtonClick:(UIButton *)button {
-    NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+    if ([self.currentData isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
+        FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel *)self.currentData;
+        if (!model.isExpand) {
+            NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+        }
+    }
 }
 
 

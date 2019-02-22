@@ -163,7 +163,7 @@
     }
     
     //楼盘户型
-    if (model.data.recommend) {
+    if (model.data.recommend && model.data.recommend.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.currentItems addObject:grayLine];
@@ -181,6 +181,7 @@
     
     [_infoListTable reloadData];
 }
+
 
 
 #pragma UITableViewDelegate
