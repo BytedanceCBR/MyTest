@@ -52,12 +52,13 @@
         [self.contentView addSubview:_pricingPerSqm];
         [_pricingPerSqm mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.pricingLabel.mas_right).offset(10);
-            make.top.equalTo(self.nameLabel.mas_bottom).offset(7);
+            make.top.equalTo(self.nameLabel.mas_bottom).offset(5);
             make.height.mas_equalTo(20);
         }];
         
         _statusBGView = [UIView new];
         _statusBGView.layer.cornerRadius = 2;
+        _statusBGView.layer.masksToBounds = YES;
         [self.contentView addSubview:_statusBGView];
         [_statusBGView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.contentView).offset(-20);
@@ -69,9 +70,13 @@
         
         _statusLabel = [UILabel new];
         _statusLabel.font = [UIFont themeFontRegular:10];
+        _statusLabel.textColor = [UIColor themeBlue1];
+        _statusLabel.textAlignment = NSTextAlignmentCenter;
         [_statusBGView addSubview:_statusLabel];
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self.statusBGView);
+            make.height.mas_equalTo(11);
+            make.width.mas_equalTo(20);
         }];
         
     }
@@ -99,6 +104,27 @@
                                           model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray2],NSBackgroundColorAttributeName,nil];
             [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
             self.statusLabel.attributedText = tagStr;
+        }else
+        {
+            self.statusLabel.text = @"";
+            self.statusBGView.backgroundColor = [UIColor clearColor];
+        }
+        
+        self.statusLabel.text = model.saleStatus.content;
+        if ([model.saleStatus.textColor isKindOfClass:[NSString class]]) {
+            self.statusLabel.textColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.textColor]];
+        }else
+        {
+            self.statusLabel.textColor = [UIColor whiteColor];
+        }
+        
+        if ([model.saleStatus.backgroundColor isKindOfClass:[NSString class]]) {
+            self.statusLabel.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+            _statusBGView.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+        }else
+        {
+            self.statusLabel.backgroundColor = [UIColor whiteColor];
+            _statusBGView.backgroundColor = [UIColor whiteColor];
         }
     }
 }

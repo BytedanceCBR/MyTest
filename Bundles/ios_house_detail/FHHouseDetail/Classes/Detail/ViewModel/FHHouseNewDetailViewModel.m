@@ -282,6 +282,7 @@
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
         {
             FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
+            itemModel.index = i;
             [self.items addObject:itemModel];
         }
         

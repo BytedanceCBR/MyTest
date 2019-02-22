@@ -44,7 +44,7 @@
         }];
         
         _nameLabel = [UILabel new];
-        _nameLabel.font = [UIFont themeFontRegular:16];
+        _nameLabel.font = [UIFont themeFontMedium:16];
         _nameLabel.textColor = [UIColor themeBlue1];
         _nameLabel.textAlignment = NSTextAlignmentLeft;
 
@@ -73,7 +73,7 @@
 
 
         _priceLabel = [UILabel new];
-        _priceLabel.font = [UIFont themeFontRegular:14];
+        _priceLabel.font = [UIFont themeFontMedium:14];
         _priceLabel.textColor = [UIColor colorWithHexString:@"#f85959"];
         _priceLabel.textAlignment = NSTextAlignmentLeft;
 
@@ -89,6 +89,7 @@
 
         _statusBGView = [UIView new];
         _statusBGView.layer.cornerRadius = 2;
+        _statusBGView.layer.masksToBounds = YES;
 
         [self.contentView addSubview:_statusBGView];
         [_statusBGView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -102,8 +103,7 @@
         _statusLabel = [UILabel new];
         _statusLabel.font = [UIFont themeFontRegular:10];
         _statusLabel.textColor = [UIColor themeBlue1];
-        _statusLabel.textAlignment = NSTextAlignmentLeft;
-
+        _statusLabel.textAlignment = NSTextAlignmentCenter;
         [_statusBGView addSubview:_statusLabel];
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self.statusBGView);
@@ -158,10 +158,31 @@
 
         if ([model.saleStatus.backgroundColor isKindOfClass:[NSString class]]) {
             self.statusLabel.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+            _statusBGView.backgroundColor = [UIColor colorWithHexString:[NSString stringWithFormat:@"%@",model.saleStatus.backgroundColor]];
+
         }else
         {
             self.statusLabel.backgroundColor = [UIColor whiteColor];
+            _statusBGView.backgroundColor = [UIColor whiteColor];
         }
+        
+        if (model.index == 0) {
+            [_iconView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.bottom.equalTo(self.contentView).offset(-10);
+                make.top.equalTo(self.contentView).offset(20);
+                make.width.mas_equalTo(100);
+                make.height.mas_equalTo(75);
+            }];
+            
+            [_nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(self.iconView.mas_right).offset(12);
+                make.top.mas_equalTo(20);
+                make.right.mas_equalTo(22);
+                make.width.mas_equalTo(100);
+                make.height.mas_equalTo(22);
+            }];
+       }
     }
 }
 

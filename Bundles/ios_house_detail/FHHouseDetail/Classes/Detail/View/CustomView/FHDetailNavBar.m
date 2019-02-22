@@ -34,6 +34,12 @@
     return self;
 }
 
+- (void)removeBottomLine
+{
+    _bottomLine.hidden = YES;
+    [_bottomLine removeFromSuperview];
+}
+
 - (void)setupUI
 {
     _bgView = [[UIView alloc]initWithFrame:self.bounds];
