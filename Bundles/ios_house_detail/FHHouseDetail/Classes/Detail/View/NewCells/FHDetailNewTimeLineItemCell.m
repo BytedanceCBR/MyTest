@@ -83,15 +83,15 @@
         }];
 
 
-//        _timeLineLeading = [UIView new];
-//        _timeLineLeading.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
-//        [self.contentView addSubview:_timeLineLeading];
-//        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(24);
-//            make.width.mas_equalTo(1);
-//            make.top.equalTo(self.contentView);
-//            make.bottom.equalTo(self.redDotView.mas_top).offset(-4);
-//        }];
+        _timeLineLeading = [UIView new];
+        _timeLineLeading.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+        [self.contentView addSubview:_timeLineLeading];
+        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(24);
+            make.width.mas_equalTo(1);
+            make.top.equalTo(self.contentView);
+            make.bottom.equalTo(self.redDotView.mas_top);
+        }];
         
 
 
@@ -140,11 +140,16 @@
         if (model.isExpand) {
             _contentLabel.numberOfLines = 0;
         }
-//        if (model.isFirstCell) {
-//            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.height.mas_equalTo(15);
-//            }];
-//        }
+        if (model.isFirstCell) {
+            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(10);
+            }];
+            
+            _timeLineLeading.hidden = YES;
+        }else
+        {
+            _timeLineLeading.hidden = NO;
+        }
         if (model.isLastCell) {
             [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.bottom.equalTo(self.contentView).offset(-20);
