@@ -211,6 +211,39 @@
 
 }
 
+- (NSDictionary *)subPageParams
+{
+    NSMutableDictionary *info = @{}.mutableCopy;
+    if (self.contactViewModel) {
+        info[@"follow_status"] = @(self.contactViewModel.followStatus);
+    }
+    if (self.contactViewModel.contactPhone) {
+        info[@"contact_phone"] = self.contactViewModel.contactPhone;
+    }
+    info[@"house_type"] = @(self.houseType);
+    switch (_houseType) {
+        case FHHouseTypeNewHouse:
+            info[@"court_id"] = self.houseId;
+            break;
+        case FHHouseTypeSecondHandHouse:
+            info[@"house_id"] = self.houseId;
+            break;
+        case FHHouseTypeRentHouse:
+            info[@"house_id"] = self.houseId;
+            break;
+        case FHHouseTypeNeighborhood:
+            info[@"neighborhood_id"] = self.houseId;
+            break;
+        default:
+            info[@"house_id"] = self.houseId;
+            break;
+    }
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    [tracerDict addEntriesFromDictionary:self.detailTracerDic];
+    info[@"tracer"] = tracerDict;
+    return info;
+}
+
 - (void)addStayPageLog:(NSTimeInterval)stayTime
 {
     //    1. event_type ：house_app2c_v2

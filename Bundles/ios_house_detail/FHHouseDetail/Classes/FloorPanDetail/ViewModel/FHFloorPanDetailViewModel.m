@@ -30,7 +30,7 @@
 @end
 @implementation FHFloorPanDetailViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
 {
     self = [super init];
     if (self) {
@@ -248,7 +248,6 @@
             }
         }
     }];
-    [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
 
 @end

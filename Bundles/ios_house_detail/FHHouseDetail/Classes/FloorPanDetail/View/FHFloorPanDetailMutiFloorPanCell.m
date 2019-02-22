@@ -132,11 +132,11 @@
                 traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
                 traceParam[@"element_from"] = @"related";
                 
+                // add by zjing for test
                 NSDictionary *dict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        };
-                [traceParam setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                //                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                [traceParam addEntriesFromDictionary:[self.baseViewModel subPageParams]];
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }

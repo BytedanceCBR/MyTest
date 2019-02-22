@@ -259,12 +259,13 @@ static const CGFloat kLabelKeyRightPandding = -20;
     NSString *courtId = ((FHDetailNewHouseCoreInfoModel *)self.currentData).courtId;
     FHDetailNewHouseCoreInfoModel *houseNameModel = (FHDetailNewHouseCoreInfoModel *)self.currentData;
     NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
     [infoDict setValue:houseNameModel.houseName forKey:@"courtInfo"];
     [infoDict setValue:houseNameModel.disclaimerModel forKey:@"disclaimerInfo"];
 
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?courtId=%@",courtId]] userInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?court_id=%@",courtId]] userInfo:info];
 }
 
 - (void)openMapDetail

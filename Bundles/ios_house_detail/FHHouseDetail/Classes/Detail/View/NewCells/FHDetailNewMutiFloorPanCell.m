@@ -119,6 +119,7 @@
     if ([self.currentData isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"floorlist"];
+        [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
     }
@@ -143,11 +144,13 @@
                 NSDictionary *dict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        };
-//                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
                 
+                // add by zjing for test follow 埋点
+                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
                 [traceParam setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-//                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
+                [traceParam addEntriesFromDictionary:[self.baseViewModel subPageParams]];
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }
         }

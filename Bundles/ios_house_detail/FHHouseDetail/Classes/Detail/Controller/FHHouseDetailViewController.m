@@ -29,6 +29,7 @@
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
+@property (nonatomic, strong) FHDetailContactModel *contactPhone;
 
 @end
 
@@ -165,7 +166,7 @@
     __weak typeof(self)wself = self;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    _navBar = [[FHDetailNavBar alloc]initWithFrame:CGRectMake(0, 0, screenBounds.size.width, navBarHeight + 44)];
+    _navBar = [[FHDetailNavBar alloc]initWithType:FHDetailNavBarTypeDefault];
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
     };

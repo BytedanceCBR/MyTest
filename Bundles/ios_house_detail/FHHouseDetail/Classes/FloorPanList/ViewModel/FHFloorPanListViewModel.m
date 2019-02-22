@@ -9,6 +9,7 @@
 #import "FHHouseDetailAPI.h"
 #import "FHFloorPanListCell.h"
 #import <FHEnvContext.h>
+#import "FHHouseDetailSubPageViewController.h"
 
 static const NSString *kDefaultLeftFilterStatus = @"0";
 static const NSString *kDefaultTopFilterStatus = @"-1";
@@ -17,7 +18,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 @property (nonatomic , weak) UITableView *floorListTable;
 @property (nonatomic , weak) UIScrollView *leftFilterView;
 @property (nonatomic , strong) UILabel *currentTapLabel;
-@property (nonatomic , weak) UIViewController *floorListVC;
+@property (nonatomic , weak) FHHouseDetailSubPageViewController *floorListVC;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *allItems;
 @property (nonatomic , strong) NSMutableArray <FHDetailNewDataFloorpanListListModel *> *currentItems;
 @property (nonatomic , assign) NSInteger leftFilterIndex;
@@ -29,7 +30,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 @implementation FHFloorPanListViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems {
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems {
     self = [super init];
     if (self) {
         _nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
@@ -305,9 +306,14 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             NSDictionary *dict = @{@"house_type":@(1),
                                    @"tracer": traceParam
                                    };
-            [traceParam setValue:model.id forKey:@"floorpanid"];
-            //                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
+
+            NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+            [infoDict setValue:model.id forKey:@"floorpanid"];
+            traceParam[@"house_type"] = @(1);
+            traceParam[@"tracer"] = traceParam;
+            [infoDict addEntriesFromDictionary: [_floorListVC subPageParams]];
+            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
         } 
     }
