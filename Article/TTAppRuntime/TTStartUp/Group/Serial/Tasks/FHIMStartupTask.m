@@ -17,6 +17,7 @@
 #import "FHBubbleTipManager.h"
 #import "FHURLSettings.h"
 #import <TTNetworkManager.h>
+#import <FHEnvContext.h>
 
 @interface FHIMConfigDelegateImpl : NSObject<FHIMConfigDelegate>
 
@@ -105,6 +106,9 @@
     }];
 }
 
+- (NSString *)cityId {
+    return [FHEnvContext getCurrentSelectCityIdFromLocal];
+}
 
 @end
 

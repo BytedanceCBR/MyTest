@@ -18,6 +18,7 @@
 @property(nonatomic , strong) UIButton *messageBtn;
 @property(nonatomic , strong) UIImageView *messageDot;
 @property(nonatomic , strong) UIView *gradientView;
+@property(nonatomic , strong) UIView *bottomLine;
 
 @property(nonatomic , assign) CGFloat subAlpha;
 @property(nonatomic , assign) BOOL followStatus;
@@ -41,6 +42,11 @@
     _bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
     [self addSubview:_bgView];
     
+    _bottomLine = [[UIView alloc]init];
+    _bottomLine.backgroundColor = [UIColor themeGray6];
+    [_bgView addSubview:_bottomLine];
+    _bottomLine.hidden = YES;
+
     _gradientView = [[UIView alloc]initWithFrame:self.bounds];
     [self addSubview:_gradientView];
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
@@ -109,6 +115,11 @@
         make.width.mas_equalTo(10);
         make.top.mas_equalTo(self.messageBtn).offset(10);
     }];
+    
+    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(0.5);
+    }];
 }
 
 - (void)refreshAlpha:(CGFloat)alpha
@@ -140,19 +151,24 @@
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
     }
+    if (alpha >= 1) {
+        _bottomLine.hidden = NO;
+    }else {
+        _bottomLine.hidden = YES;
+    }
 }
 
-- (void)setFollowStatus:(BOOL)followStatus
+- (void)setFollowStatus:(NSInteger)followStatus
 {
     _followStatus = followStatus;
     if (self.subAlpha > 0) {
         UIImage *image = [UIImage imageNamed:@"detail_collect_black"];
-        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        image = followStatus != 0 ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }else {
         UIImage *image = [UIImage imageNamed:@"detail_collect_white"];
-        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        image = followStatus != 0 ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }

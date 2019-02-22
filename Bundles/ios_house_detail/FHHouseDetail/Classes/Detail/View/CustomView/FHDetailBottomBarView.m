@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import "Masonry.h"
 #import <BDWebImage.h>
+#import "UIColor+Theme.h"
 
 @interface FHDetailBottomBarView ()
 
@@ -190,6 +191,7 @@
     [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(leftWidth);
     }];
+
     if (!isEmptyString(contactPhone.imOpenUrl)) {
         if (contactPhone.showRealtorinfo == 1) {
             if ([TTDeviceHelper is568Screen]) {
@@ -282,7 +284,7 @@
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         _contactBtn.layer.cornerRadius = 4;
-        _contactBtn.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
+        _contactBtn.backgroundColor = [UIColor themeIMBubbleRed];
     }
     return _contactBtn;
 }

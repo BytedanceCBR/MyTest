@@ -43,7 +43,7 @@
     if (self) {
         self.combiner = [[FHConversationDataCombiner alloc] init];
         _dataList = [[NSMutableArray alloc] init];
-        
+        _isFirstLoad = YES;
         self.tableView = tableView;
         
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];

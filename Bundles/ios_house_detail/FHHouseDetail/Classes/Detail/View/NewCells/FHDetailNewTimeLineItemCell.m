@@ -122,6 +122,8 @@
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
 }
 
+
+
 - (void)refreshWithData:(id)data
 {
     if([data isKindOfClass:[FHDetailNewTimeLineItemModel class]])

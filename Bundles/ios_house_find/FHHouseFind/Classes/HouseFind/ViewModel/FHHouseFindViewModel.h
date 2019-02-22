@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UIView *splitLine;
 @property(nonatomic , strong) UIButton *searchButton;
 @property(nonatomic , copy)   void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
+@property(nonatomic , copy)   void (^updateSegmentWidthBlock)();
 @property (nonatomic , assign) NSTimeInterval trackStartTime;
 @property (nonatomic , assign) NSTimeInterval trackStayTime;
 

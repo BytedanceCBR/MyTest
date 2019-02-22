@@ -11,7 +11,6 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
-#import "FHDetailHouseModelCell.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailNewHouseCoreInfoCell.h"
 #import "FHDetailNewHouseNewsCell.h"
@@ -24,6 +23,7 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
+#import "FHDetailNewListSingleImageCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -45,8 +45,6 @@
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
 
     [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoCell class])];
-
-    [self.tableView registerClass:[FHDetailHouseModelCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseModelCell class])];
     
     [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCell class])];
     
@@ -58,7 +56,7 @@
 
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
     
-    [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHSingleImageInfoCell class])];
+    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewListSingleImageCell class])];
 
 }
 // cell class
@@ -104,7 +102,7 @@
     
     //周边新盘
     if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
-        return [FHSingleImageInfoCell class];
+        return [FHDetailNewListSingleImageCell class];
     }
     
     //版权信息
@@ -209,7 +207,7 @@
     }
     
     //楼盘户型
-    if (model.data.floorpanList) {
+    if ([model.data.floorpanList.list isKindOfClass:[NSArray class]] && model.data.floorpanList.list.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];

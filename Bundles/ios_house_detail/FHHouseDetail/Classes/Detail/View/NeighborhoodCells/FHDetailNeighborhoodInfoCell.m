@@ -120,6 +120,11 @@
     [self layoutIfNeeded];
 }
 
+// 小区信息
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"neighborhood_detail";
+}
+
 - (void)updateRentCellData {
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {

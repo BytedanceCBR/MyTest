@@ -7,10 +7,13 @@
 
 #ifndef FHRealtorDetailWebViewControllerDelegate_h
 #define FHRealtorDetailWebViewControllerDelegate_h
-
+#import "FHHouseType.h"
 @protocol FHRealtorDetailWebViewControllerDelegate <NSObject>
 
--(void)followUpAction;
+@optional;
+- (void)followUpAction;
+@optional;
+- (void)followUpActionByFollowId:(NSString *)followId houseType:(FHHouseType)houseType;
 
 @end
 

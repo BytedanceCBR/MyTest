@@ -1,5 +1,4 @@
 //
-//  FHDetailHouseModelCell.m
 //  AFgzipRequestSerializer
 //
 //  Created by 谢飞 on 2019/2/13.
@@ -231,6 +230,16 @@ static const CGFloat kLabelKeyRightPandding = -20;
             [model.contactModel performSelector:@selector(fillFormAction)];
         }
     }
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"house_info";
+}
+
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    return @[@"price_notice",@"openning_notice"];
 }
 
 - (void)moreInfoButClick

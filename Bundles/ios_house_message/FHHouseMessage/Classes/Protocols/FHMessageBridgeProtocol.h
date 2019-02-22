@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)reduceMessageTabBarBadgeNumber:(NSInteger)number;
 
+- (void)setMessageTabBadgeNumber:(NSInteger)number;
+
 @end
 
 NS_ASSUME_NONNULL_END

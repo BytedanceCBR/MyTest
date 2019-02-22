@@ -97,6 +97,11 @@ static const float kSegementedPadingTop = 5;
     }];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"map";
+}
+
 - (void)willMoveToWindow:(UIWindow *)newWindow
 {
     if (_isFirst) {

@@ -54,6 +54,7 @@ NSString *const kExploreTopVCChangeNotification = @"kExploreTopVCChangeNotificat
 NSString *const kExploreMixedListRefreshTypeNotification = @"kExploreMixedListRefreshTypeNotification";
 //用户登录状态改变通知
 NSString *const kFHLogInAccountStatusChangedNotification = @"kFHLogInAccountStatusChangedNotification";
+NSString *const kFHMessageUnreadChangedNotification = @"kFHMessageUnreadChangedNotification";
 
 BOOL isShareToPlatformEnterBackground = NO;
 

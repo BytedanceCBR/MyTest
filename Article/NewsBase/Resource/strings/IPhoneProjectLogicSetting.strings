@@ -15,10 +15,10 @@
 
 //"aboutUs"               = "_TtC6Bubble19AboutViewController";
 "aboutUs"               = "FHAboutUsViewController";
-"old_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
-"neighborhood_detail"   = "_TtC6Bubble17HorseDetailPageVC";
-"new_house_detail"      = "_TtC6Bubble17HorseDetailPageVC";
-"rent_detail"           = "_TtC6Bubble17HouseRentDetailVC";
+"old_house_detail"      = "FHHouseDetailViewController";
+"neighborhood_detail"   = "FHHouseDetailViewController";
+"new_house_detail"      = "FHHouseDetailViewController";
+"rent_detail"           = "FHHouseDetailViewController";
 "sug_list"              = "FHSuggestionListViewController";
 
 "floor_plan_detail"     = "_TtC6Bubble28FloorPanCategoryDetailPageVC";

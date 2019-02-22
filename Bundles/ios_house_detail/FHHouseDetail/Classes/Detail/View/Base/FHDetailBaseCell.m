@@ -36,6 +36,11 @@
     return @"";
 }
 
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    return @[];
+}
+
 @end
 
 // FHDetailBaseCollectionCell

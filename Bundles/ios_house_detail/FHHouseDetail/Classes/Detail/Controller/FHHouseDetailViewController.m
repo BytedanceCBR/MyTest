@@ -39,9 +39,29 @@
         
         self.ttTrackStayEnable = YES;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
-        self.houseId = paramObj.allParams[@"house_id"];
-        self.searchId = paramObj.allParams[@"search_id"];
-        self.imprId = paramObj.allParams[@"impr_id"];
+        switch (_houseType) {
+            case FHHouseTypeNewHouse:
+                self.houseId = paramObj.allParams[@"court_id"];
+                break;
+            case FHHouseTypeSecondHandHouse:
+                self.houseId = paramObj.allParams[@"house_id"];
+                break;
+            case FHHouseTypeRentHouse:
+                self.houseId = paramObj.allParams[@"house_id"];
+                break;
+            case FHHouseTypeNeighborhood:
+                self.houseId = paramObj.allParams[@"neighborhood_id"];
+                break;
+            default:
+                self.houseId = paramObj.allParams[@"house_id"];
+                break;
+        }
+        NSDictionary *tracer = paramObj.allParams[@"tracer"];
+        if ([tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *logPbDict = tracer[@"log_pb"];
+            self.searchId = logPbDict[@"search_id"];
+            self.imprId = logPbDict[@"impr_id"];
+        }
         // 埋点数据处理
         [self processTracerData:paramObj.allParams];
         // 非埋点数据处理
@@ -123,11 +143,10 @@
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
 
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar];
-    self.viewModel.contactViewModel.houseType = self.houseType;
-    self.viewModel.contactViewModel.houseId = self.houseId;
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.viewModel.contactViewModel.searchId = self.searchId;
     self.viewModel.contactViewModel.imprId = self.imprId;
+    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
 
     [self addDefaultEmptyViewFullScreen];
 
@@ -156,25 +175,32 @@
     // 原始数据放入：self.tracerDict
     // 取其他非"tracer"字段数据
     NSString *origin_from = allParams[@"origin_from"];
-    if (origin_from.length > 0) {
+    if ([origin_from isKindOfClass:[NSString class]] && origin_from.length > 0) {
         self.tracerDict[@"origin_from"] = origin_from;
     }
     NSString *origin_search_id = allParams[@"origin_search_id"];
-    if (origin_search_id.length > 0) {
+    if ([origin_search_id isKindOfClass:[NSString class]] && origin_search_id.length > 0) {
         self.tracerDict[@"origin_search_id"] = origin_search_id;
     }
     NSString *report_params = allParams[@"report_params"];
-    NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
-    if (report_params_dic) {
-        [self.tracerDict addEntriesFromDictionary:report_params_dic];
-    }
-    NSString *log_pb_str = allParams[@"log_pb"];
-    if (log_pb_str.length > 0) {
-        NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
-        if (log_pb_dic) {
-            self.tracerDict[@"log_pb"] = log_pb_dic;
+    if ([report_params isKindOfClass:[NSString class]]) {
+        NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+        if (report_params_dic) {
+            [self.tracerDict addEntriesFromDictionary:report_params_dic];
         }
     }
+    NSString *log_pb_str = allParams[@"log_pb"];
+    if ([log_pb_str isKindOfClass:[NSDictionary class]]) {
+        self.tracerDict[@"log_pb"] = log_pb_str;
+    } else {
+        if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
+            NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
+            if (log_pb_dic) {
+                
+            }
+        }
+    }
+    
     // rank字段特殊处理：外部可能传入字段为rank和index不同类型的数据
     id index = self.tracerDict[@"index"];
     id rank = self.tracerDict[@"rank"];

@@ -11,6 +11,7 @@
 #import "FHHouseDetailBaseViewModel.h"
 
 typedef void(^kFHMultitemCollectionCellClickBlk)(NSInteger index);
+typedef void(^kFHMultitemCollectionDisplayCellBlk)(NSInteger index);
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)reloadData;
 
 @property (nonatomic, copy)     kFHMultitemCollectionCellClickBlk       clickBlk;
+@property (nonatomic, copy)     kFHMultitemCollectionDisplayCellBlk       displayCellBlk;
 
 @end
 

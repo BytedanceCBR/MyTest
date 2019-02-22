@@ -27,6 +27,9 @@
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.allowsMultipleSelection = YES;
+        if (@available(iOS 11.0, *)) {
+            _collectionView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
         [self.contentView addSubview:_collectionView];
                 
         [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {

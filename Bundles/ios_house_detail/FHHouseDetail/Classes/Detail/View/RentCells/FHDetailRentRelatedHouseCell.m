@@ -145,6 +145,10 @@
     }];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"related";// 周边房源
+}
+
 // 查看更多按钮点击
 - (void)loadMoreDataButtonClick {
     

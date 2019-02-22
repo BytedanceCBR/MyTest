@@ -73,6 +73,10 @@
     [self layoutIfNeeded];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"same_neighborhood";// 同小区房源
+}
+
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
@@ -115,7 +119,7 @@
     FHDetailRentSameNeighborhoodHouseModel *model = (FHDetailRentSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.items.count > 0 && index >= 0 && index < model.sameNeighborhoodHouseData.items.count) {
         // 点击cell处理
-        FHRentSameNeighborhoodResponseDataItemsModel *itemModel = model.sameNeighborhoodHouseData.items[index];
+        FHHouseRentDataItemsModel *itemModel = model.sameNeighborhoodHouseData.items[index];
         
     }
 }
@@ -142,14 +146,14 @@
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHRentSameNeighborhoodResponseDataItemsModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHHouseRentDataItemsModel class]]) {
         return;
     }
     self.currentData = data;
-    FHRentSameNeighborhoodResponseDataItemsModel *model = (FHRentSameNeighborhoodResponseDataItemsModel *)data;
+    FHHouseRentDataItemsModel *model = (FHHouseRentDataItemsModel *)data;
     if (model) {
         if (model.houseImage.count > 0) {
-            FHRentSameNeighborhoodResponseDataItemsHouseImageModel *imageModel = model.houseImage[0];
+            FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage[0];
             NSString *urlStr = imageModel.url;
             if ([urlStr length] > 0) {
                 [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];

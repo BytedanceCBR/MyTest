@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *courtOpenSubStatus;
 @property (nonatomic, copy , nullable) NSString *pricingSubStatus;
-@property (nonatomic, copy , nullable) NSString *courtSubStatus;
+@property (nonatomic, assign) NSInteger courtSubStatus;
 @end
 
 @protocol FHDetailNewDataGlobalPricingListModel<NSObject>

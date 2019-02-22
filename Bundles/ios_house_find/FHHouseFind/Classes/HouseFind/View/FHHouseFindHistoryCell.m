@@ -47,6 +47,10 @@
 {
     self.historyItems = items;
     [self.collectionView reloadData];
+    if (items.count > 0) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
+        [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+    }
     
 }
 

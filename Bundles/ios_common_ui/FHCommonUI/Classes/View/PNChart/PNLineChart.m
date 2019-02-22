@@ -31,6 +31,8 @@
 @property(nonatomic, assign) CGFloat yAxisLeftOffset;
 @property(nonatomic, assign) CGFloat yAxisRightOffset;
 
+@property(nonatomic, assign) CGPoint selectPoint;
+
 @end
 
 @implementation PNLineChart
@@ -290,50 +292,6 @@
             }
         }
     }
-    
-    UIView *line = [self viewWithTag:2001];
-    if (!line) {
-        line = [[UIView alloc]init];
-        line.tag = 2001;
-        line.backgroundColor = self.yHighlightedColor;
-        [self addSubview:line];
-        
-        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-        shapeLayer.name = @"dash";
-        [shapeLayer setBounds:line.bounds];
-        
-//        if (isHorizonal) {
-//
-//            [shapeLayer setPosition:CGPointMake(CGRectGetWidth(lineView.frame) / 2, CGRectGetHeight(lineView.frame))];
-//
-//        } else{
-//            [shapeLayer setPosition:CGPointMake(CGRectGetWidth(lineView.frame) / 2, CGRectGetHeight(lineView.frame)/2)];
-//        }
-        
-        [shapeLayer setFillColor:[UIColor clearColor].CGColor];
-        //  设置虚线颜色为blackColor
-        [shapeLayer setStrokeColor:self.yHighlightedColor.CGColor];
-        //  设置虚线宽度
-        [shapeLayer setLineWidth:1];
-
-        [shapeLayer setLineJoin:kCALineJoinRound];
-        //  设置线宽，线间距
-        [shapeLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:2], [NSNumber numberWithInt:1], nil]];
-        //  设置路径
-        CGMutablePathRef path = CGPathCreateMutable();
-        CGPathMoveToPoint(path, NULL, 0, 0);
-        
-//        if (isHorizonal) {
-//            CGPathAddLineToPoint(path, NULL,CGRectGetWidth(lineView.frame), 0);
-//        } else {
-//            CGPathAddLineToPoint(path, NULL, 0, CGRectGetHeight(lineView.frame));
-//        }
-        
-        [shapeLayer setPath:path];
-        CGPathRelease(path);
-        //  把绘制好的虚线添加上来
-        [line.layer addSublayer:shapeLayer];
-    }
 
     CGFloat lineX = 0;
     for (NSUInteger p = 0; p < _pathPoints.count; p++) {
@@ -359,8 +317,7 @@
 
         }
     }
-    CGFloat bottom = _chartCavanHeight + _chartMarginTop;
-    CGFloat minY = 0;
+    CGFloat minY = INT_MAX;
     CGFloat maxY = 0;
     if (selectPointsArray.count > 0) {
         maxY = [selectPointsArray[0] CGPointValue].y;
@@ -374,11 +331,11 @@
             minY = point.y;
         }
     }
-    // add by zjing for test 坐标问题
 
-    line.frame = CGRectMake(lineX - 0.5, bottom - maxY, 1, bottom);
+    self.selectPoint = CGPointMake(lineX, minY);
+    [self setNeedsDisplay];
     
-    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex pointsArray:selectPointsArray];
+    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:self.selectPoint];
 }
 
 #pragma mark - Draw Chart
@@ -755,10 +712,13 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         // create as many chart line layers as there are data-lines
 
         for (NSUInteger i = 0; i < chartData.itemCount; i++) {
-            CGFloat yValue = chartData.getData(i).y;
-            [yLabelsArray addObject:[NSString stringWithFormat:@"%2f", yValue]];
-            yMax = fmaxf(yMax, yValue);
-            yMin = fminf(yMin, yValue);
+            if (chartData.getData) {
+                
+                CGFloat yValue = chartData.getData(i).y;
+                [yLabelsArray addObject:[NSString stringWithFormat:@"%.2f", yValue]];
+                yMax = fmaxf(yMax, yValue);
+                yMin = fminf(yMin, yValue);
+            }
         }
     }
 
@@ -826,8 +786,13 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 
 #define IOS7_OR_LATER [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self setNeedsDisplay];
+}
+
 - (void)drawRect:(CGRect)rect {
-    
     if (self.isShowCoordinateAxis) {
 
         CGFloat yAxisOffset =  self.yAxisOffset;
@@ -896,7 +861,24 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             CGContextStrokePath(ctx);
         }
     }
-
+    
+    CGFloat bottom = _chartCavanHeight + _chartMarginBottom;
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    if (self.yHighlightedColor) {
+        CGContextSetStrokeColorWithColor(ctx, self.yHighlightedColor.CGColor);
+    } else {
+        CGContextSetStrokeColorWithColor(ctx, [UIColor lightGrayColor].CGColor);
+    }
+    CGContextMoveToPoint(ctx, self.selectPoint.x, self.selectPoint.y);
+    // add dotted style grid
+    CGFloat dash[] = {3, 2};
+    // dot diameter is 20 points
+    CGContextSetLineWidth(ctx, 1);
+    CGContextSetLineCap(ctx, kCGLineCapRound);
+    CGContextSetLineDash(ctx, 0.0, dash, 2);
+    CGContextAddLineToPoint(ctx, self.selectPoint.x, bottom);
+    CGContextStrokePath(ctx);
+    
     [super drawRect:rect];
 }
 

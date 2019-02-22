@@ -73,9 +73,7 @@
             
             [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
-                make.width.mas_equalTo(60);
-                make.top.mas_equalTo(7);
-                make.height.mas_equalTo(21);
+                make.top.mas_equalTo(0);
             }];
             
             UILabel *valueLabel = [UILabel new];
@@ -87,7 +85,7 @@
             [itemContenView addSubview:valueLabel];
             
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(nameLabel.mas_right).offset(0);
+                make.left.equalTo(nameLabel.mas_right).offset(10);
                 make.top.equalTo(nameLabel);
                 make.right.equalTo(itemContenView).offset(-15);
                 make.bottom.equalTo(itemContenView).offset(-7);
@@ -100,11 +98,11 @@
                         make.top.equalTo(previouseView);
                     }else
                     {
-                        make.top.equalTo(previouseView.mas_bottom).offset(10);
+                        make.top.equalTo(previouseView.mas_bottom).offset(3);
                     }
                 }else
                 {
-                    make.top.equalTo(self.contentView).offset(10);
+                    make.top.equalTo(self.contentView).offset(3);
                 }
                 if (i == [model.baseInfo count] - 1) {
                     make.bottom.equalTo(self.contentView).offset(-10);
