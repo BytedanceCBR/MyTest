@@ -150,46 +150,6 @@
     if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
         // 点击cell处理
         FHDetailRelatedNeighborhoodResponseDataItemsModel *dataItem = model.relatedNeighborhoodData.items[index];
-//        NSString *searchId = itemModel.searchId;
-//        NSString *group_id = @"be_null";
-//        if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
-//            group_id = oldDetail.data.neighborhoodInfo.id;
-//        }
-//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//        tracerDic[@"group_id"] = group_id;
-//        tracerDic[@"enter_type"] = @"click";
-//        tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
-//        tracerDic[@"category_name"] = @"related_list";
-//        tracerDic[@"element_type"] = @"related";
-//        tracerDic[@"element_from"] = @"related";
-//
-//        NSMutableDictionary *userInfo = [NSMutableDictionary new];
-//        userInfo[@"tracer"] = tracerDic;
-//        userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-//        userInfo[@"title"] = @"周边房源";
-//        if (oldDetail.data.neighborhoodInfo.id.length > 0) {
-//            userInfo[@"neighborhoodId"] = oldDetail.data.neighborhoodInfo.id;
-//        }
-//        if (self.baseViewModel.houseId.length > 0) {
-//            userInfo[@"houseId"] = self.baseViewModel.houseId;
-//        }
-//        userInfo[@"list_vc_type"] = @(2);
-//
-//        TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
-//        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
-//        if (urlStr.length > 0) {
-//            NSURL *url = [NSURL URLWithString:urlStr];
-//            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
-//        }
-        
-//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//        tracerDic[@"rank"] = @(index);
-//        tracerDic[@"card_type"] = @"slide";
-//        tracerDic[@"log_pb"] = itemModel.logPb ? itemModel.logPb : @"be_null";
-//        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
-//        tracerDic[@"element_type"] = @"neighborhood_nearby";
-//        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
-        
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"slide";
