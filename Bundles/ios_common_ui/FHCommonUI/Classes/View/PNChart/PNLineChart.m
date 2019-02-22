@@ -277,7 +277,9 @@
     NSArray *linePointsArray = _pathPoints[0];
     if (linePointsArray.count > 0) {
         CGPoint p1 = [linePointsArray[0] CGPointValue];
-        minDistance = (float) fabs(hypot(touchPoint.x - p1.x, touchPoint.y - p1.y));
+//        minDistance = (float) fabs(hypot(touchPoint.x - p1.x, touchPoint.y - p1.y));
+        minDistance = (float) fabs(touchPoint.x - p1.x);
+
     }
 
     for (NSUInteger p = 0; p < _pathPoints.count; p++) {
@@ -285,7 +287,9 @@
         
         for (NSUInteger i = 0; i < linePointsArray.count; i++) {
             CGPoint p1 = [linePointsArray[i] CGPointValue];
-            float distanceToP1 = (float) fabs(hypot(touchPoint.x - p1.x, touchPoint.y - p1.y));
+//            float distanceToP1 = (float) fabs(hypot(touchPoint.x - p1.x, touchPoint.y - p1.y));
+            float distanceToP1 = (float) fabs(touchPoint.x - p1.x);
+
             if (distanceToP1 < minDistance) {
                 minDistance = distanceToP1;
                 selectIndex = i;
@@ -316,6 +320,10 @@
             icon.frame = CGRectMake(p1.x - icon.frame.size.width / 2, p1.y - icon.frame.size.height / 2, icon.frame.size.width, icon.frame.size.height);
             lineX = p1.x;
 
+        }else {
+            UIImageView *icon = [self viewWithTag:1000 + p];
+            [icon removeFromSuperview];
+            icon = nil;
         }
     }
     CGFloat minY = INT_MAX;
