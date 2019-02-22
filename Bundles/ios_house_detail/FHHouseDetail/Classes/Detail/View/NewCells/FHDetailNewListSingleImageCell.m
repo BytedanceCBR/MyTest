@@ -83,7 +83,6 @@
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.top.mas_equalTo(self.majorImageView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.contentView);
         make.height.mas_equalTo(@(self.bottomMargin));
@@ -330,7 +329,6 @@
 {
     if([data isKindOfClass:[FHNewHouseItemModel class]])
     {
-        
         self.itemModel = data;
         
         FHNewHouseItemModel *model = (FHNewHouseItemModel *)data;
@@ -348,6 +346,7 @@
         
         [self updateOriginPriceLabelConstraints:nil];
         [self updateLayoutComponents:self.areaLabel.attributedText.string.length > 0];
+        [self refreshTopMargin:10];
     }
 }
 

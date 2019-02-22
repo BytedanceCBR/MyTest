@@ -117,7 +117,19 @@
         if (model.recommend.count > index) {
             FHDetailFloorPanDetailInfoDataRecommendModel *floorPanInfoModel = model.recommend[index];
             if ([floorPanInfoModel isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
-                NSMutableDictionary *infoDict = [NSMutableDictionary new];
+                NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                traceParam[@"enter_from"] = @"new_detail";
+                traceParam[@"log_pb"] = self.baseViewModel.logPB;
+                traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+                traceParam[@"card_type"] = @"left_pic";
+                traceParam[@"rank"] = @(floorPanInfoModel.index);
+                traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+                traceParam[@"element_from"] = @"related";
+                
+                NSDictionary *dict = @{@"house_type":@(1),
+                                       @"tracer": traceParam
+                                       };
+                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];

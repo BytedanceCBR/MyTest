@@ -293,11 +293,24 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     if (_currentItems.count > indexPath.row) {
         FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)_currentItems[indexPath.row];
         if ([model isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
-                NSMutableDictionary *infoDict = [NSMutableDictionary new];
-                [infoDict setValue:model.id forKey:@"floorpanid"];
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
-        }
+            NSMutableDictionary *traceParam = [NSMutableDictionary new];
+            traceParam[@"enter_from"] = @"new_detail";
+//            traceParam[@"log_pb"] = self.baseViewModel.logPB;
+//            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+            traceParam[@"card_type"] = @"left_pic";
+            traceParam[@"rank"] = @(indexPath.row);
+//            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+            traceParam[@"element_from"] = @"related";
+            
+            NSDictionary *dict = @{@"house_type":@(1),
+                                   @"tracer": traceParam
+                                   };
+            NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+            [infoDict setValue:model.id forKey:@"floorpanid"];
+            
+            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+        } 
     }
 }
 

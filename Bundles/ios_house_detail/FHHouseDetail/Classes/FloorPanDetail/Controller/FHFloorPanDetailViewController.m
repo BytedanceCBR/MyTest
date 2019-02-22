@@ -29,6 +29,8 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         _floorPanId = paramObj.allParams[@"floorpanid"];
+        
+//        [self processTracerData:paramObj.allParams];
     }
     return self;
 }
@@ -39,13 +41,15 @@
     //设置导航条为黑色
 //    [self refreshContentOffset:CGPointMake(0, 500)];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    // Do any additional setup after loading the view.
+// Do any additional setup after loading the view.
     
     [self setUpinfoListTable];
     
     [self addDefaultEmptyViewFullScreen];
 
     _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId];
+    
+//    [_coreInfoListViewModel addGoDetailLog];
     
     // Do any additional setup after loading the view.
 }
