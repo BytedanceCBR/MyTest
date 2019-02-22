@@ -32,6 +32,7 @@
 @property(nonatomic, assign) CGFloat yAxisRightOffset;
 
 @property(nonatomic, assign) CGPoint selectPoint;
+@property(nonatomic, assign) BOOL hideMarker;
 
 @end
 
@@ -332,10 +333,18 @@
         }
     }
 
+    if (self.selectPoint.x == lineX && self.selectPoint.y == minY) {
+        self.hideMarker = !self.hideMarker;
+    }else {
+        self.hideMarker = NO;
+    }
+    for (NSUInteger p = 0; p < _pathPoints.count; p++) {
+        UIImageView *icon = [self viewWithTag:1000 + p];
+        icon.hidden = self.hideMarker;
+    }
     self.selectPoint = CGPointMake(lineX, minY);
     [self setNeedsDisplay];
-    
-    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:self.selectPoint];
+    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
 }
 
 #pragma mark - Draw Chart
@@ -861,24 +870,24 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             CGContextStrokePath(ctx);
         }
     }
-    
-    CGFloat bottom = _chartCavanHeight + _chartMarginBottom;
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    if (self.yHighlightedColor) {
-        CGContextSetStrokeColorWithColor(ctx, self.yHighlightedColor.CGColor);
-    } else {
-        CGContextSetStrokeColorWithColor(ctx, [UIColor lightGrayColor].CGColor);
+    if (!self.hideMarker) {
+        CGFloat bottom = _chartCavanHeight + _chartMarginBottom;
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        if (self.yHighlightedColor) {
+            CGContextSetStrokeColorWithColor(ctx, self.yHighlightedColor.CGColor);
+        } else {
+            CGContextSetStrokeColorWithColor(ctx, [UIColor lightGrayColor].CGColor);
+        }
+        CGContextMoveToPoint(ctx, self.selectPoint.x, self.selectPoint.y);
+        // add dotted style grid
+        CGFloat dash[] = {3, 2};
+        // dot diameter is 20 points
+        CGContextSetLineWidth(ctx, 1);
+        CGContextSetLineCap(ctx, kCGLineCapRound);
+        CGContextSetLineDash(ctx, 0.0, dash, 2);
+        CGContextAddLineToPoint(ctx, self.selectPoint.x, bottom);
+        CGContextStrokePath(ctx);
     }
-    CGContextMoveToPoint(ctx, self.selectPoint.x, self.selectPoint.y);
-    // add dotted style grid
-    CGFloat dash[] = {3, 2};
-    // dot diameter is 20 points
-    CGContextSetLineWidth(ctx, 1);
-    CGContextSetLineCap(ctx, kCGLineCapRound);
-    CGContextSetLineDash(ctx, 0.0, dash, 2);
-    CGContextAddLineToPoint(ctx, self.selectPoint.x, bottom);
-    CGContextStrokePath(ctx);
-    
     [super drawRect:rect];
 }
 

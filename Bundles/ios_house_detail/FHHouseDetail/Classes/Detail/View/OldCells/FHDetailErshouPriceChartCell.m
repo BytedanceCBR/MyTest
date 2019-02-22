@@ -39,6 +39,8 @@
 @property(nonatomic, assign) double maxValue;
 @property(nonatomic, assign) double minValue;
 @property(nonatomic, strong)NSDateFormatter *monthFormatter;
+@property(nonatomic, assign) NSInteger selectIndex;
+@property(nonatomic, assign) BOOL hideMarker;
 
 @end
 
@@ -492,16 +494,25 @@
                   selectPoint:(CGPoint)selectPoint
 {
     [self addClickPriceTrendLog];
-
+    
     FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
+    if (pointIndex == self.selectIndex && self.hideMarker) {
+        [view removeFromSuperview];
+        view = nil;
+        self.hideMarker = NO;
+        return;
+    }
+    self.selectIndex = pointIndex;
+    self.hideMarker = YES;
+
     if (!view) {
         view = [[FHDetailPriceMarkerView alloc]init];
+        view.tag = 200;
         [self.chartView addSubview:view];
     }
     if (![view isKindOfClass:[FHDetailPriceMarkerView class]]) {
         return;
     }
-    view.tag = 200;
     FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc]init];
     NSArray *priceTrends = self.priceTrends;
     if (priceTrends.count < 1) {
@@ -530,7 +541,7 @@
     if (view.left < 0) {
         view.left = 0;
     }
-    view.centerY = self.chartView.height/2;
+    view.centerY = (self.chartView.height - 40) /2;
 }
 
 
