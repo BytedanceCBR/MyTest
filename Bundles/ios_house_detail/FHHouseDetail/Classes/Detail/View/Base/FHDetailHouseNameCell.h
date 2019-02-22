@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString       *name;
 @property (nonatomic, copy)     NSString       *aliasName;
 @property (nonatomic, strong)   NSArray       *tags;// FHSearchHouseDataItemsTagsModel item类型
+@property (nonatomic, assign)   BOOL         isHiddenLine;// 是否显示线
 
 @end
 

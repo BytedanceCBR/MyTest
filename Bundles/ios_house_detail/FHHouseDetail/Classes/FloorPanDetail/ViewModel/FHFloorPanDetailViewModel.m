@@ -226,4 +226,21 @@
     
 }
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView != self.infoListTable) {
+        return;
+    }
+    // 解决类似周边房源列表页的house_show问题
+    NSArray *visableCells = [self.infoListTable visibleCells];
+    [visableCells enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+            if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
+                [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
+            }
+        }
+    }];
+    [self.detailController refreshContentOffset:scrollView.contentOffset];
+}
+
 @end

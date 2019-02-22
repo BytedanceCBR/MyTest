@@ -21,6 +21,7 @@
 - (void)setDismissType:(SSWebViewDismissType)type;
 - (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl;
 - (void)setUpCloseBtnControlForWeb:(NSNumber *)isShow;
+- (void)setUpCloseBtnControlForNaviBackBtn:(NSNumber *)isShow;
 - (void)setupCloseCallBackPreviousVC:(NSDictionary *)params;
 - (void)setupCloseStackVCCount:(NSNumber *)count;
 - (void)setupOpenPageTagStr:(NSString *)tagStr;

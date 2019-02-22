@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setFollowStatus:(NSInteger)followStatus;
 - (void)showRightItems:(BOOL)showItem;
 
+- (void)removeBottomLine;
+
 @end
 
 NS_ASSUME_NONNULL_END

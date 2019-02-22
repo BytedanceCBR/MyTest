@@ -144,10 +144,10 @@
 
 
 - (void)processDetailData:(FHDetailNewModel *)model {
+    self.detailData = model;
+    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
-//    se = model;
-    // --
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
@@ -284,6 +284,7 @@
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
         {
             FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
+            itemModel.index = i;
             [self.items addObject:itemModel];
         }
         
