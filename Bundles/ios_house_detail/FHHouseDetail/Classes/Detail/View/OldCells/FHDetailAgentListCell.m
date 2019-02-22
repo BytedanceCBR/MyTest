@@ -53,9 +53,16 @@
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 66.0;
-        // add by zyk -- 点击事件添加
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] init];
+            // 添加事件
+            itemView.tag = idx;
+            itemView.licenceIcon.tag = idx;
+            itemView.callBtn.tag = idx;
+            [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
+            
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(itemsCount * vHeight);
@@ -95,6 +102,38 @@
         }];
     }
     [self updateItems];
+}
+
+// cell点击
+- (void)cellClick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact];
+    }
+}
+
+// 证书点击
+- (void)licenseClick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel licenseActionWithPhone:contact];
+    }
+}
+
+// 电话点击
+- (void)phoneClick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel callWithPhone:contact.phone searchId:model.searchId imprId:model.imprId];
+        // 静默关注功能
+        [model.followUpViewModel silentFollowHouseByFollowId:model.houseId houseType:model.houseType actionType:model.houseType showTip:NO];
+    }
 }
 
 - (void)foldButtonClick:(UIButton *)button {

@@ -202,7 +202,7 @@
         [self.items addObject:infoModel];
     }
     // 房源概况
-    if (model.data.houseOverview) {
+    if (model.data.houseOverview.list.count > 0) {
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailRentHouseOutlineInfoModel *infoModel = [[FHDetailRentHouseOutlineInfoModel alloc] init];
