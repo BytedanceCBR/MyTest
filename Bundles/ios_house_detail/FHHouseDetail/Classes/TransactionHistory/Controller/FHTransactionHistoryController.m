@@ -38,6 +38,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.automaticallyAdjustsScrollViewInsets = NO;
     self.hidesBottomBarWhenPushed = YES;
     self.showenRetryButton = YES;
     self.ttTrackStayEnable = YES;
