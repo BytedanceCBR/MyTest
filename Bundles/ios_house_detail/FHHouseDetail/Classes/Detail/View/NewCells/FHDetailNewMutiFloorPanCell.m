@@ -113,6 +113,7 @@
     if ([self.currentData isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"floorlist"];
+        [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
     }
@@ -139,6 +140,7 @@
                                        };
                 NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }

@@ -37,12 +37,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //设置导航条为黑色
-//    [self refreshContentOffset:CGPointMake(0, 500)];
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-// Do any additional setup after loading the view.
-    
+ 
     [self setUpinfoListTable];
     
     [self addDefaultEmptyViewFullScreen];

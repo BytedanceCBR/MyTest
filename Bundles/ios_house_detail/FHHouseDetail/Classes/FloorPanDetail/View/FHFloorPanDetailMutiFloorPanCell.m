@@ -131,6 +131,7 @@
                                        };
                 NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }

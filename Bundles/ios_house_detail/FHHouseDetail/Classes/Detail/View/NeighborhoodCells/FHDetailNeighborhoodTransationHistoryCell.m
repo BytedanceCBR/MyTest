@@ -122,7 +122,8 @@
     if (model && model.totalSales.hasMore) {
         NSURL* url = [NSURL URLWithString:@"snssdk1370://transaction_history"];
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"neighborhoodId"] = model.neighborhoodId;
+        [dict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
+        dict[@"neighborhood_id"] = model.neighborhoodId;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }

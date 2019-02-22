@@ -30,7 +30,7 @@
 @end
 @implementation FHFloorPanDetailViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
 {
     self = [super init];
     if (self) {
@@ -169,6 +169,7 @@
         [self.currentItems addObject:grayLine];
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
+        mutiDataModel.
         mutiDataModel.recommend = model.data.recommend;
         for (NSInteger i = 0; i < mutiDataModel.recommend.count; i++) {
             FHDetailFloorPanDetailInfoDataRecommendModel *modelItem = mutiDataModel.recommend[i];
@@ -247,7 +248,6 @@
             }
         }
     }];
-    [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
 
 @end

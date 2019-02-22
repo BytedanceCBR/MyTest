@@ -52,8 +52,12 @@
 
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
+
     NSString *courtId = ((FHDetailNewHouseNewsCellModel *)self.currentData).courtId;
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+
+    NSDictionary *dict = [self.baseViewModel subPageParams];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
 }
 
 - (void)awakeFromNib {

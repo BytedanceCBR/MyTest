@@ -120,7 +120,9 @@
 
 - (void)maskButtonClick:(UIButton *)button {
     NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+    NSDictionary *dict = [self.baseViewModel subPageParams];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
 }
 
 

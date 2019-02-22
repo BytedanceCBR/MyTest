@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 刷新数据
 - (void)reloadData;
 
+// 二级页所需数据
+- (NSDictionary *)subPageParams;
 
 // 埋点相关
 - (void)addGoDetailLog;

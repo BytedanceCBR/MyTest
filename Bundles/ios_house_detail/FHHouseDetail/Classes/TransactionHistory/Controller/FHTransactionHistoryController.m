@@ -30,7 +30,7 @@
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        self.neighborhoodId = paramObj.allParams[@"neighborhoodId"];
+        self.neighborhoodId = paramObj.allParams[@"neighborhood_id"];
     }
     return self;
 }
