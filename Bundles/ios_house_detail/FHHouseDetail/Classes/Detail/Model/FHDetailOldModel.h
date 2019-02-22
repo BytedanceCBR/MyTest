@@ -142,7 +142,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailOldDataModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, assign) NSInteger status;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;

@@ -12,6 +12,8 @@
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailContactViewModel.h"
 #import <TTReachability.h>
+#import "FHDetailNavBar.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseDetailBaseViewModel : NSObject
@@ -23,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的列表页的logPB
 @property(nonatomic , strong) NSMutableDictionary *detailTracerDic; // 详情页基础埋点数据
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, weak) FHDetailNavBar *navBar;
+@property (nonatomic, weak) UILabel *bottomStatusBar;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseDetailViewController *detailController;
 @property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源

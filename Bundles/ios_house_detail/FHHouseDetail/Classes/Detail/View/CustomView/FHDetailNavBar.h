@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshAlpha:(CGFloat)alpha;
 - (void)setFollowStatus:(NSInteger)followStatus;
+- (void)showRightItems:(BOOL)showItem;
 
 @end
 

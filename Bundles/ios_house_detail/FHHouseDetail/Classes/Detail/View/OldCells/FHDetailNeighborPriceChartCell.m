@@ -115,7 +115,7 @@
     }
     NSMutableArray *mutable = @[].mutableCopy;
     
-    for (NSInteger index = 0; index < priceTrends.count; index++) {
+    for (NSInteger index = priceTrends.count - 1; index >= 0; index--) {
         
         FHDetailPriceTrendModel *priceTrend = priceTrends[index];
         NSArray *data01Array = priceTrend.values;
