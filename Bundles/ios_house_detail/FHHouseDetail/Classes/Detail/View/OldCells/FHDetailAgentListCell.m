@@ -101,7 +101,7 @@
             make.bottom.mas_equalTo(self.contentView).offset(-20);
         }];
     }
-    [self updateItems];
+    [self updateItems:NO];
 }
 
 // cell点击
@@ -140,7 +140,7 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
-    [self updateItems];
+    [self updateItems:YES];
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel* )contact {
@@ -185,11 +185,13 @@
     }];
 }
 
-- (void)updateItems {
+- (void)updateItems:(BOOL)animated {
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     NSInteger realtorShowCount = 0;
     if (model.recommendedRealtors.count > 3) {
-        [model.tableView beginUpdates];
+        if (animated) {
+            [model.tableView beginUpdates];
+        }
         if (model.isFold) {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(66 * 3);
@@ -203,7 +205,9 @@
             [self addRealtorClickMore];
         }
         [self setNeedsUpdateConstraints];
-        [model.tableView endUpdates];
+        if (animated) {
+            [model.tableView endUpdates];
+        }
     } else if (model.recommendedRealtors.count > 0) {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(66 * model.recommendedRealtors.count);
