@@ -24,8 +24,8 @@
 +(CGFloat)widthForTitle:(NSString *)title subtitle:(NSString *)subtitle
 {
     
-    CGFloat twidth = [title sizeWithAttributes:@{NSFontAttributeName:[UIFont themeFontMedium:14]}].width;
-    CGFloat swidth = [subtitle sizeWithAttributes:@{NSFontAttributeName:[UIFont themeFontRegular:12]}].width;
+    NSInteger twidth = ceil([title sizeWithAttributes:@{NSFontAttributeName:[UIFont themeFontMedium:14]}].width);
+    NSInteger swidth = ceil([subtitle sizeWithAttributes:@{NSFontAttributeName:[UIFont themeFontRegular:12]}].width);
     
     return MIN(137, MAX(twidth, swidth)+2*ITEM_HOR_MARIN);
 }

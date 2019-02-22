@@ -164,7 +164,6 @@
     [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(leftWidth);
     }];
-    // add by zjing for test 缺少点击跳转经纪人详情页，埋点以及营业执照和从业人员信息卡展示
 }
 
 - (void)startLoading

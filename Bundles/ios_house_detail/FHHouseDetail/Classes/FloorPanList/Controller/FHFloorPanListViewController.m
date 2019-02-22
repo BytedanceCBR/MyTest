@@ -50,6 +50,9 @@
     _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList];
     
     [self setNavBarTitle:@"楼盘户型"];
+    
+    [self removeBottomLine];
+
     // Do any additional setup after loading the view.
 }
 
@@ -93,7 +96,7 @@
         make.bottom.equalTo(_segmentedControl);
         make.left.right.equalTo(_segmentedControl);
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
     }];
     
 }

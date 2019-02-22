@@ -48,6 +48,8 @@
 @property (nonatomic , strong) NSMutableDictionary *historyTracerMap; // housetype : [history record]
 @property (nonatomic , strong) RACDisposable *configDisposable;
 @property (nonatomic , assign) BOOL networkConnected;
+@property (nonatomic , assign) BOOL available ;
+@property (nonatomic , assign) BOOL showNotworkConnected;
 
 @end
 
@@ -99,6 +101,9 @@
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
         tapGesture.cancelsTouchesInView = NO;
         [collectionView addGestureRecognizer:tapGesture];
+        
+        self.available = YES;
+        _showNotworkConnected = !_networkConnected;
         
     }
     return self;
@@ -227,6 +232,7 @@
         if (self.showNoDataBlock) {
             self.showNoDataBlock(NO,avaiable);
         }
+        self.available = avaiable;
         
         if (!avaiable) {
             return;
@@ -317,7 +323,7 @@
             cell.delegate = self;
         }
         
-        [cell showErrorView:!_networkConnected];
+        [cell showErrorView:_showNotworkConnected];
         
         return cell;
         
@@ -446,7 +452,8 @@
         }
         
         FHHouseType ht = [self.houseTypes[indexPath.item] integerValue];
-        if (!self.historyMap[@(ht)]) {
+        NSArray *histories = self.historyMap[@(ht)];
+        if (histories.count == 0) {
             //因为cell 可能会复用，每次请求时再次判断一下
             [self requestHistory:ht];
         }
@@ -802,12 +809,20 @@
 {
     TTReachability *reachability = (TTReachability *)notification.object;
     NetworkStatus status = [reachability currentReachabilityStatus];
-    if ((status != NotReachable) != _networkConnected) {
-        //网络发生变化
-        _networkConnected = !_networkConnected;
+//    if ((status != NotReachable) != _networkConnected) {
+//        //网络发生变化
+//        _networkConnected = !_networkConnected;
+//        [self.collectionView reloadData];
+//    }
+//    self.searchButton.hidden = !_networkConnected;
+    _networkConnected = (status != NotReachable);
+    if (status != NotReachable && _houseTypes.count > 0) {
+        self.showNotworkConnected = NO;
         [self.collectionView reloadData];
+        self.searchButton.hidden = NO;
+        
     }
-    self.searchButton.hidden = !_networkConnected;
+
 }
 
 -(void)refreshInErrorView:(FHHouseFindMainCell *)cell

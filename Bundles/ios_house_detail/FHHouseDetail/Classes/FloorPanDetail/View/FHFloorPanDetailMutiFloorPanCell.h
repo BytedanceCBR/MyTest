@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong)   UIImageView       *icon;
 @property (nonatomic, strong)   UILabel       *descLabel;
+@property (nonatomic, strong)   UILabel       *statusLabel;
 @property (nonatomic, strong)   UILabel       *priceLabel;
 @property (nonatomic, strong)   UILabel       *spaceLabel;
 

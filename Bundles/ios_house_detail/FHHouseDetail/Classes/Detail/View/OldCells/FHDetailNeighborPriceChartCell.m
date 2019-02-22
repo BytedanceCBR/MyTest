@@ -241,12 +241,6 @@
     self.currentData = data;
     FHDetailPriceTrendCellModel *cellModel = (FHDetailPriceTrendCellModel *)data;
     NSArray *priceTrends = cellModel.priceTrends;
-    
-    // add by zjing for test
-    //    theCell.clickCallBack = callBack
-    
-    //    theCell.traceParams = traceExtension
-
     self.priceTrends = priceTrends;
 }
 

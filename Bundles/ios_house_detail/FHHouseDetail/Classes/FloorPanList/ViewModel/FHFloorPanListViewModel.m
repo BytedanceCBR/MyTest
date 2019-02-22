@@ -269,6 +269,9 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass([FHFloorPanListCell class])];
     }
     if ([cell isKindOfClass:[FHFloorPanListCell class]] && _currentItems.count > indexPath.row) {
+        if (indexPath.row == 0) {
+            ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
+        }
         [cell refreshWithData:_currentItems[indexPath.row]];
     }
     cell.backgroundColor = [UIColor whiteColor];

@@ -34,6 +34,12 @@
     return self;
 }
 
+- (void)removeBottomLine
+{
+    _bottomLine.hidden = YES;
+    [_bottomLine removeFromSuperview];
+}
+
 - (void)setupUI
 {
     _bgView = [[UIView alloc]initWithFrame:self.bounds];
@@ -129,17 +135,17 @@
     }
 }
 
-- (void)setFollowStatus:(BOOL)followStatus
+- (void)setFollowStatus:(NSInteger)followStatus
 {
     _followStatus = followStatus;
     if (self.subAlpha > 0) {
         UIImage *image = [UIImage imageNamed:@"detail_collect_black"];
-        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        image = followStatus != 0 ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }else {
         UIImage *image = [UIImage imageNamed:@"detail_collect_white"];
-        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        image = followStatus != 0 ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }

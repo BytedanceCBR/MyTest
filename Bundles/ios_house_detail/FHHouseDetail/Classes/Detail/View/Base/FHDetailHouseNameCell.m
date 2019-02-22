@@ -55,6 +55,9 @@
         // 新房
         self.bottomLine.hidden = NO;
     }
+    if (model.isHiddenLine) {
+        self.bottomLine.hidden = YES;
+    }
     self.nameLabel.text = model.name;
     [self setAlias:model.aliasName];
     [self setTags:model.tags];
