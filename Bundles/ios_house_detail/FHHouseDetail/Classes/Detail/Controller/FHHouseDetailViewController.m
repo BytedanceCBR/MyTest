@@ -135,6 +135,7 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
+        [self startLoading];
         [self.viewModel startLoadData];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -211,6 +212,7 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
         make.height.mas_equalTo(0);
     }];
+    [self.view bringSubviewToFront:_navBar];
 }
 
 // 埋点数据处理:1、paramObj.allParams中的"tracer"字段，2、allParams中的origin_from、report_params等字段
