@@ -273,6 +273,7 @@
         make.left.top.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(46);
     }];
+    [self.headerView addTarget:self  action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
     //
     self.mapView = [[MAMapView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200)];
     self.mapView.runLoopMode = NSDefaultRunLoopMode;
@@ -372,39 +373,92 @@
     self.mapImageView.userInteractionEnabled = YES;
 }
 
+- (NSString *)getEvaluateWebParams:(NSDictionary *)dic {
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+    if (data && !error) {
+        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        return temp;
+    }
+    return nil;
+}
+
 // 小区测评
 - (void)evaluateTapEvent {
-//    if let urlStr = self.detailUrl {
-//        openEvaluateWebPage(urlStr: urlStr, title: "小区评测", traceParams: self.tracerParams, disposeBag: self.disposeBag)(TracerParams.momoid())
-//    }
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    if (model) {
+        NSString *enter_from = @"old_detail";
+        NSString *neighborhood_id = @"0";
+        NSString *urlStr = @"";
+        if (model.neighborhoodInfo) {
+            // 二手房
+            enter_from = @"old_detail";
+            neighborhood_id = model.neighborhoodInfo.id;
+            urlStr = model.neighborhoodInfo.evaluationInfo.detailUrl;
+        }
+        if (model.rent_neighborhoodInfo) {
+            // 租房
+            enter_from = @"rent_detail";
+            neighborhood_id = model.rent_neighborhoodInfo.id;
+            urlStr = model.rent_neighborhoodInfo.evaluationInfo.detailUrl;
+        }
+        if (urlStr.length > 0) {
+            NSMutableDictionary *tracerDic = [NSMutableDictionary new];
+            NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
+            [tracerDic addEntriesFromDictionary:temp];
+            tracerDic[@"enter_from"] = enter_from;
+            [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
+            //
+            NSString *reportParams = [self getEvaluateWebParams:tracerDic];
+            NSString *jumpUrl = @"sslocal://webview";
+            NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",urlStr,reportParams];
+            
+            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"title":@"小区评测",@"url":openUrl}];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
+        }
+    }
 }
 
 - (void)mapViewClick {
-    // 跳转地图
-    /* let selector = { [unowned self] in
-     if let lat = self.lat,
-     let lng = self.lng {
-     let theParams = TracerParams.momoid() <|>
-     toTracerParams("map", key: "click_type") <|>
-     toTracerParams("map", key: "element_from") <|>
-     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
-     toTracerParams(self.data?.logPB ?? "be_null", key: "log_pb") <|>
-     self.tracerParams
-     
-     let clickParams = theParams <|>
-     toTracerParams("map", key: "click_type")
-     
-     let userInfo = TTRouteUserInfo(info: ["tracer": theParams.paramsGetter([:])])
-     //fschema://fh_house_detail_map
-     recordEvent(key: "click_map", params: clickParams)
-     let jumpUrl = "fschema://fh_house_detail_map?lat=\(lat)&lng=\(lng)&title=\(self.name ?? "")"
-     if let thrUrl = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-     TTRoute.shared()?.openURL(byViewController: URL(string: thrUrl),
-     userInfo: userInfo)
-     }
-     }
-     }
-     */
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"公交" forKey:@"category"];
+    [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
+    [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
+    
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+}
+
+// 跳转小区
+- (void)gotoNeighborhood {
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    if (model) {
+        NSString *enter_from = @"be_null";
+        NSString *neighborhood_id = @"0";
+        if (model.neighborhoodInfo) {
+            // 二手房
+            enter_from = @"old_detail";
+            neighborhood_id = model.neighborhoodInfo.id;
+        }
+        if (model.rent_neighborhoodInfo) {
+            // 租房
+            enter_from = @"rent_detail";
+            neighborhood_id = model.rent_neighborhoodInfo.id;
+        }
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"card_type"] = @"no_pic";
+        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_from"] = @"neighborhood_detail";
+        tracerDic[@"enter_from"] = enter_from;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood)}];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",neighborhood_id];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
 }
 
 - (void)schoolLabelIsHidden:(BOOL)isHidden {

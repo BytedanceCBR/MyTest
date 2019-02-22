@@ -28,6 +28,7 @@
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的logPB
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
+@property (nonatomic, assign)   BOOL isDisableGoDetail;
 
 @end
 
@@ -37,8 +38,28 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
-        self.ttTrackStayEnable = YES;
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+
+        if (!self.houseType) {
+            if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
+                self.houseType = FHHouseTypeNeighborhood;
+            }
+            
+            if ([paramObj.sourceURL.absoluteString containsString:@"old_house_detail"]) {
+                self.houseType = FHHouseTypeSecondHandHouse;
+            }
+            
+            if ([paramObj.sourceURL.absoluteString containsString:@"new_house_detail"]) {
+                self.houseType = FHHouseTypeNewHouse;
+            }
+            
+            if ([paramObj.sourceURL.absoluteString containsString:@"rent_detail"]) {
+                self.houseType = FHHouseTypeRentHouse;
+            }
+        }
+
+        
+        self.ttTrackStayEnable = YES;
         switch (_houseType) {
             case FHHouseTypeNewHouse:
                 self.houseId = paramObj.allParams[@"court_id"];
@@ -53,9 +74,18 @@
                 self.houseId = paramObj.allParams[@"neighborhood_id"];
                 break;
             default:
-                self.houseId = paramObj.allParams[@"house_id"];
+                if (!self.houseId) {
+                    self.houseId = paramObj.allParams[@"house_id"];
+                }
                 break;
         }
+        
+        if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
+            self.houseId = paramObj.allParams[@"neighborhood_id"];
+        }
+        
+        self.isDisableGoDetail = paramObj.allParams[@"disable_go_detail"] ? paramObj.allParams[@"disable_go_detail"] : NO;
+        
         NSDictionary *tracer = paramObj.allParams[@"tracer"];
         if ([tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *logPbDict = tracer[@"log_pb"];
@@ -76,7 +106,10 @@
     [self setupUI];
     [self startLoadData];
     
-    [self.viewModel addGoDetailLog];
+    
+    if (!self.isDisableGoDetail) {
+        [self.viewModel addGoDetailLog];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -102,6 +135,7 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
+        [self startLoading];
         [self.viewModel startLoadData];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -111,6 +145,12 @@
 // 重新加载
 - (void)retryLoadData {
     [self startLoadData];
+}
+
+//移除导航条底部line
+- (void)removeBottomLine
+{
+    [self.navBar removeBottomLine];
 }
 
 - (void)setupUI {
@@ -130,10 +170,13 @@
         [wself.navigationController popViewControllerAnimated:YES];
     };
     [self.view addSubview:_navBar];
-    
+    self.viewModel.navBar = _navBar;
+
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
-    
+    self.viewModel.bottomBar = _bottomBar;
+    _bottomBar.hidden = YES;
+
     _bottomStatusBar = [[UILabel alloc]init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
     _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
@@ -142,11 +185,13 @@
     _bottomStatusBar.textColor = [UIColor whiteColor];
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
+    self.viewModel.bottomStatusBar = _bottomStatusBar;
 
     self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.viewModel.contactViewModel.searchId = self.searchId;
     self.viewModel.contactViewModel.imprId = self.imprId;
     self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
+    self.viewModel.contactViewModel.belongsVC = self;
 
     [self addDefaultEmptyViewFullScreen];
 
@@ -168,6 +213,7 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
         make.height.mas_equalTo(0);
     }];
+    [self.view bringSubviewToFront:_navBar];
 }
 
 // 埋点数据处理:1、paramObj.allParams中的"tracer"字段，2、allParams中的origin_from、report_params等字段

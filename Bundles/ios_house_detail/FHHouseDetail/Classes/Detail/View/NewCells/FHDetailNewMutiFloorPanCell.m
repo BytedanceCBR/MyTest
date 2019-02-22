@@ -47,6 +47,12 @@
     //
     FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)data;
     if (model.list) {
+        
+        for (NSInteger i = 0; i < model.list.count; i++) {
+            FHDetailNewDataFloorpanListListModel *listItemModel = model.list[i];
+            listItemModel.index = i;
+        }
+        
         self.headerView.label.text = @"楼盘户型";
         self.headerView.isShowLoadMore = model.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -125,9 +131,23 @@
         if (model.list.count > index) {
             FHDetailNewDataFloorpanListListModel *floorPanInfoModel = model.list[index];
             if ([floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
-                NSMutableDictionary *infoDict = [NSMutableDictionary new];
-                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+                NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                traceParam[@"enter_from"] = @"new_detail";
+                traceParam[@"log_pb"] = self.baseViewModel.logPB;
+                traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+                traceParam[@"card_type"] = @"left_pic";
+                traceParam[@"rank"] = @(floorPanInfoModel.index);
+                traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+                traceParam[@"element_from"] = @"related";
+                
+                NSDictionary *dict = @{@"house_type":@(1),
+                                       @"tracer": traceParam
+                                       };
+//                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+                
+                [traceParam setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+//                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }
         }
@@ -182,15 +202,17 @@
         [textAttrStr appendAttributedString:titleAttrStr];
         
         if (model.saleStatus) {
-            
+            //@(-1),NSBaselineOffsetAttributeName
             NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
                 NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
-                                                 [UIFont themeFontRegular:12],NSFontAttributeName,@(2),NSBaselineOffsetAttributeName,
+                                                 [UIFont themeFontRegular:10],NSFontAttributeName,
                                                  model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray2],NSBackgroundColorAttributeName,nil];
        
             [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
           
-            [textAttrStr appendAttributedString:tagStr];
+//            [textAttrStr appendAttributedString:tagStr];
+            
+            self.statusLabel.attributedText = tagStr;
             
         }
         self.descLabel.attributedText = textAttrStr;
@@ -211,6 +233,12 @@
     _descLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
     [self addSubview:_descLabel];
     
+    
+    _statusLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
+    _statusLabel.layer.masksToBounds = YES;
+    _statusLabel.layer.cornerRadius = 2;
+    [self addSubview:_statusLabel];
+    
     _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
@@ -226,23 +254,28 @@
         make.top.mas_equalTo(self);
     }];
     
-    UIColor *topColor = RGBA(255, 255, 255, 0);
-    UIColor *bottomColor = RGBA(0, 0, 0, 0.5);
-    NSArray *gradientColors = [NSArray arrayWithObjects:(id)(topColor.CGColor), (id)(bottomColor.CGColor), nil];
-    NSArray *gradientLocations = @[@(0),@(1)];
-    CAGradientLayer *gradientlayer = [[CAGradientLayer alloc] init];
-    gradientlayer.colors = gradientColors;
-    gradientlayer.locations = gradientLocations;
-    gradientlayer.frame = CGRectMake(0, 0, 156, 120);
-    gradientlayer.cornerRadius = 4.0;
-    [self.icon.layer addSublayer:gradientlayer];
+//    UIColor *topColor = RGBA(255, 255, 255, 0);
+//    UIColor *bottomColor = RGBA(0, 0, 0, 0.5);
+//    NSArray *gradientColors = [NSArray arrayWithObjects:(id)(topColor.CGColor), (id)(bottomColor.CGColor), nil];
+//    NSArray *gradientLocations = @[@(0),@(1)];
+//    CAGradientLayer *gradientlayer = [[CAGradientLayer alloc] init];
+//    gradientlayer.colors = gradientColors;
+//    gradientlayer.locations = gradientLocations;
+//    gradientlayer.frame = CGRectMake(0, 0, 156, 120);
+//    gradientlayer.cornerRadius = 4.0;
+//    [self.icon.layer addSublayer:gradientlayer];
     
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self);
+        make.left.mas_equalTo(self);
+        make.width.mas_greaterThanOrEqualTo(80);
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
     }];
     
+    [self.statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.descLabel.mas_right);
+        make.centerY.equalTo(self.descLabel);
+    }];
     
     [self.priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];

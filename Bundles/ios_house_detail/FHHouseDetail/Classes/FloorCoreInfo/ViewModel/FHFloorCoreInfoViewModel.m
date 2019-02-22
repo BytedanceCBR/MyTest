@@ -115,6 +115,7 @@
         [FHHouseDetailAPI requestFloorCoreInfoSearch:_courtId completion:^(FHDetailNewCoreDetailModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
             }else
@@ -141,6 +142,7 @@
     
     // 添加标题
     if (_houseNameModel) {
+        _houseNameModel.isHiddenLine = YES;
         [self.currentItems addObject:_houseNameModel];
     }
     

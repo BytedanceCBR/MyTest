@@ -47,6 +47,7 @@
         _neighborhoodId = neighborhoodId;
         _tableView = tableView;
         _showPlaceHolder = YES;
+        _isFirstLoad = YES;
         
         [tableView registerClass:[FHTransactionHistoryCell class] forCellReuseIdentifier:kCellId];
         

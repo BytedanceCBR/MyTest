@@ -68,9 +68,13 @@
     if (self.originPhoneNumber.length < 1) {
         
         //需要在下一个loop唤醒键盘
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.phoneTextField becomeFirstResponder];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.phoneTextField becomeFirstResponder];
+            });
         });
+        
     }
 }
 
@@ -105,16 +109,15 @@
     
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(34);
-        make.right.top.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView).mas_offset(-5);
+        make.top.mas_equalTo(self.contentView).mas_offset(5);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(32);
         make.top.mas_equalTo(self.contentView).mas_offset(40);
         make.left.mas_equalTo(self.contentView).mas_offset(20);
         make.right.mas_equalTo(-20);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(20);
         make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(10);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(-20);
@@ -295,9 +298,10 @@
 {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont themeFontRegular:16];
+        _titleLabel.font = [UIFont themeFontRegular:24];
         _titleLabel.textColor = [UIColor themeBlack];
         _titleLabel.numberOfLines = 0;
+        _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _titleLabel;
 }
@@ -309,6 +313,7 @@
         _subtitleLabel.font = [UIFont themeFontRegular:16];
         _subtitleLabel.textColor = [UIColor themeGray3];
         _subtitleLabel.numberOfLines = 0;
+        _subtitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _subtitleLabel;
 }

@@ -41,6 +41,9 @@ typedef NS_ENUM(NSInteger, TTPhotoScrollViewMoveDirection) {
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
 
+/** 图片title数组*/
+@property(nonatomic, strong)NSArray * imageTitles;
+
 /** TTImageInfosModel数组*/
 @property(nonatomic, strong)NSArray * imageInfosModels;
 

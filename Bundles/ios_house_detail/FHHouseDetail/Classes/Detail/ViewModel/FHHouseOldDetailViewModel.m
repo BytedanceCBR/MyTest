@@ -148,23 +148,57 @@
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
+                [self.detailController.emptyView hideEmptyView];
+                wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
                 wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         } else {
             wSelf.detailController.hasValidateData = NO;
+            wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         }
     }];
 }
 
+- (void)handleBottomBarStatus:(NSInteger)status
+{
+    if (status == 1) {
+        self.bottomStatusBar.hidden = NO;
+        [self.navBar showRightItems:NO];
+        //        self.
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(30);
+        }];
+    }else if (status == -1) {
+        self.bottomStatusBar.hidden = YES;
+        [self.navBar showRightItems:YES];
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+        [self.detailController.emptyView showEmptyWithTip:@"该房源已下架" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+    }else {
+        self.bottomStatusBar.hidden = YES;
+        [self.navBar showRightItems:YES];
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
+}
+
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
+    
+    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
+    [self handleBottomBarStatus:model.data.status];
+    
     self.detailData = model;
+    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -207,12 +241,27 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        // add by zyk后续需要再确认 searchId 取的是否正确
+        NSString *searchId = self.logPB[@"search_id"];
+        NSString *imprId = self.logPB[@"impr_id"];
+        if (searchId == nil) {
+            searchId = self.listLogPB[@"search_id"];
+        }
+        if (imprId == nil) {
+            imprId = self.listLogPB[@"impr_id"];
+        }
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
+        agentListModel.searchId = searchId;
+        agentListModel.imprId = imprId;
+        agentListModel.houseId = self.houseId;
+        agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
     }
     // 房源概况
-    if (model.data.houseOverreview) {
+    if (model.data.houseOverreview.list.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];

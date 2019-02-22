@@ -20,6 +20,7 @@
 @interface FHDetailNewListSingleImageCell () <FHHouseSingleImageInfoCellBridgeDelegate>
 
 @property(nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
+@property(nonatomic, strong) FHNewHouseItemModel *itemModel;
 
 @property(nonatomic, strong) UIImageView *majorImageView;
 @property(nonatomic, strong) UILabel *majorTitle;
@@ -82,7 +83,6 @@
     }];
     
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
         make.top.mas_equalTo(self.majorImageView.mas_bottom);
         make.left.right.bottom.mas_equalTo(self.contentView);
         make.height.mas_equalTo(@(self.bottomMargin));
@@ -163,6 +163,30 @@
     
     _lastShowTag = YES;
     
+    __weak typeof(self) wSelf = self;
+    self.didClickCellBlk = ^{
+        FHNewHouseItemModel *theModel = self.itemModel;
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
+        traceParam[@"enter_from"] = @"new_detail";
+        traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(theModel.index);
+        traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+        traceParam[@"element_from"] = @"related";
+        
+        NSDictionary *dict = @{@"house_type":@(1),
+                               @"tracer": traceParam
+                               };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        
+        NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.houseId]];
+
+        if (jumpUrl != nil) {
+            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        }
+    };
+    
 }
 
 -(void)refreshTopMargin:(CGFloat)top {
@@ -203,6 +227,7 @@
             make.height.mas_equalTo(@17);
             make.centerY.mas_equalTo(self.priceLabel);
         }];
+        
         [self.roomSpaceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.originPriceLabel.mas_right).mas_offset(offset);
             make.centerY.mas_equalTo(self.priceLabel);
@@ -304,6 +329,8 @@
 {
     if([data isKindOfClass:[FHNewHouseItemModel class]])
     {
+        self.itemModel = data;
+        
         FHNewHouseItemModel *model = (FHNewHouseItemModel *)data;
         self.majorTitle.text = model.displayTitle;
         self.extendTitle.text = model.displayDescription;
@@ -319,6 +346,7 @@
         
         [self updateOriginPriceLabelConstraints:nil];
         [self updateLayoutComponents:self.areaLabel.attributedText.string.length > 0];
+        [self refreshTopMargin:10];
     }
 }
 

@@ -21,7 +21,7 @@
 @property(nonatomic , strong) UIView *bottomLine;
 
 @property(nonatomic , assign) CGFloat subAlpha;
-@property(nonatomic , assign) BOOL followStatus;
+@property(nonatomic , assign) NSInteger followStatus;
 
 @end
 
@@ -34,6 +34,12 @@
         [self setupUI];
     }
     return self;
+}
+
+- (void)removeBottomLine
+{
+    _bottomLine.hidden = YES;
+    [_bottomLine removeFromSuperview];
 }
 
 - (void)setupUI
@@ -172,6 +178,12 @@
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }
+}
+
+- (void)showRightItems:(BOOL)showItem
+{
+    self.shareBtn.hidden = !showItem;
+    self.collectBtn.hidden = !showItem;
 }
 
 - (void)backAction:(UIButton *)sender

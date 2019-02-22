@@ -120,21 +120,18 @@
 
 - (void)startLoadData
 {
-    if (![TTReachability isNetworkConnected]) {
-        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        return;
-    }
-    
-    [self.detailController startLoading];
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             wSelf.dataModel = model;
             wSelf.detailController.hasValidateData = YES;
+            [self.detailController.emptyView hideEmptyView];
+            wSelf.bottomBar.hidden = NO;
             [wSelf processDetailData:model];
         }else
         {
             wSelf.detailController.hasValidateData = NO;
+            wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
@@ -142,10 +139,10 @@
 
 
 - (void)processDetailData:(FHDetailNewModel *)model {
+    self.detailData = model;
+    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
-//    se = model;
-    // --
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
@@ -153,7 +150,7 @@
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
-    
+
     __weak typeof(self) wSelf = self;
     if (model.data) {
         [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
@@ -282,10 +279,9 @@
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
         {
             FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
+            itemModel.index = i;
             [self.items addObject:itemModel];
         }
-        
-        [self reloadData];
     }
     
     //楼盘版权信息
@@ -294,6 +290,8 @@
         disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
         [self.items addObject:disclaimerModel];
     }
+    
+    [self reloadData];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

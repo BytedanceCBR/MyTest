@@ -39,6 +39,8 @@
 @property(nonatomic, assign) double maxValue;
 @property(nonatomic, assign) double minValue;
 @property(nonatomic, strong)NSDateFormatter *monthFormatter;
+@property(nonatomic, assign) NSInteger selectIndex;
+@property(nonatomic, assign) BOOL hideMarker;
 
 @end
 
@@ -126,8 +128,8 @@
     }
     NSMutableArray *mutable = @[].mutableCopy;
 
-    for (NSInteger index = 0; index < priceTrends.count; index++) {
-        
+    for (NSInteger index = priceTrends.count - 1; index >= 0; index--) {
+
         FHDetailPriceTrendModel *priceTrend = priceTrends[index];
         NSArray *data01Array = priceTrend.values;
         PNLineChartData *data01 = [PNLineChartData new];
@@ -320,7 +322,7 @@
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(10);
-        make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375]);
+        make.height.mas_equalTo(207);
         make.bottom.mas_equalTo(0);
     }];
 
@@ -398,7 +400,7 @@
 {
     [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
-        make.height.mas_equalTo(207 * [TTDeviceHelper scaleToScreen375] + 50);
+        make.height.mas_equalTo(207 + 50);
     }];
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
     if (animated) {
@@ -414,7 +416,7 @@
         }];
     }else {
         [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(315 - 207 + 207 * [TTDeviceHelper scaleToScreen375]);
+            make.height.mas_equalTo(315);
         }];
         [self.foldButton mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.mas_equalTo(self.bottomBgView);
@@ -492,18 +494,26 @@
                   selectPoint:(CGPoint)selectPoint
 {
     [self addClickPriceTrendLog];
-
+    
     FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
+    if (pointIndex == self.selectIndex && self.hideMarker) {
+        [view removeFromSuperview];
+        view = nil;
+        self.hideMarker = NO;
+        return;
+    }
+    self.selectIndex = pointIndex;
+    self.hideMarker = YES;
+
     if (!view) {
         view = [[FHDetailPriceMarkerView alloc]init];
+        view.tag = 200;
         [self.chartView addSubview:view];
     }
     if (![view isKindOfClass:[FHDetailPriceMarkerView class]]) {
         return;
     }
-    view.tag = 200;
     FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc]init];
-    markData.selectPoint = [self.chartView convertPoint:selectPoint toView:self.chartView];
     NSArray *priceTrends = self.priceTrends;
     if (priceTrends.count < 1) {
         return;
@@ -521,6 +531,17 @@
     }
     markData.trendItems = trendItems;
     [view refreshContent:markData];
+    //calculate markerview position
+    CGFloat padding = 10;
+    if (selectPoint.x + view.width + padding > self.chartView.width) {
+        view.right = selectPoint.x - padding;
+    }else{
+        view.left = selectPoint.x + padding;
+    }
+    if (view.left < 0) {
+        view.left = 0;
+    }
+    view.centerY = (self.chartView.height - 40) /2;
 }
 
 

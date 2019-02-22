@@ -114,6 +114,7 @@
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
             }else
@@ -162,18 +163,25 @@
     }
     
     //楼盘户型
-    if (model.data.recommend) {
+    if (model.data.recommend && model.data.recommend.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.currentItems addObject:grayLine];
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
+        for (NSInteger i = 0; i < mutiDataModel.recommend.count; i++) {
+            FHDetailFloorPanDetailInfoDataRecommendModel *modelItem = mutiDataModel.recommend[i];
+            if ([modelItem isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
+                modelItem.index = i;
+            }
+        }
         [self.currentItems addObject:mutiDataModel];
     }
     
     [_infoListTable reloadData];
 }
+
 
 
 #pragma UITableViewDelegate
@@ -224,6 +232,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView != self.infoListTable) {
+        return;
+    }
+    // 解决类似周边房源列表页的house_show问题
+    NSArray *visableCells = [self.infoListTable visibleCells];
+    [visableCells enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+            if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
+                [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
+            }
+        }
+    }];
+    [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
 
 @end

@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshAlpha:(CGFloat)alpha;
 - (void)displayMessageDot:(BOOL)show;
 - (void)setFollowStatus:(NSInteger)followStatus;
+- (void)showRightItems:(BOOL)showItem;
+
+- (void)removeBottomLine;
 
 @end
 
