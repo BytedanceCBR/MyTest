@@ -203,16 +203,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didAppear
 {
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
-    
-    
-    //地图页调用示例
-//    double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;
-//    double latitude = [FHLocManager sharedInstance].currentLocaton.coordinate.latitude;
-//    NSNumber *latitudeNum = @(latitude);
-//    NSNumber *longitudeNum = @(longitude);
-//    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"category":@"公交",@"latitude":latitudeNum,@"longitude":longitudeNum}];
-//    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
-    
 }
 
 - (void)willDisappear

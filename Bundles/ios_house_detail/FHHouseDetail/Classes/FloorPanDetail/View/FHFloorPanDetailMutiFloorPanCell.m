@@ -48,6 +48,12 @@
     //
     FHFloorPanDetailMutiFloorPanCellModel *model = (FHFloorPanDetailMutiFloorPanCellModel *)data;
     if (model.recommend) {
+        
+        for (NSInteger i = 0; i < model.recommend.count; i++) {
+            FHDetailFloorPanDetailInfoDataRecommendModel *listItemModel = model.recommend[i];
+            listItemModel.index = i;
+        }
+        
         self.headerView.label.text = @"推荐居室户型";
         self.headerView.label.font = [UIFont themeFontMedium:18];
         self.headerView.isShowLoadMore = NO;
@@ -129,9 +135,9 @@
                 NSDictionary *dict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        };
-                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+                [traceParam setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                //                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }
         }

@@ -305,10 +305,9 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             NSDictionary *dict = @{@"house_type":@(1),
                                    @"tracer": traceParam
                                    };
-            NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-            [infoDict setValue:model.id forKey:@"floorpanid"];
-            
-            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+            [traceParam setValue:model.id forKey:@"floorpanid"];
+            //                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
         } 
     }

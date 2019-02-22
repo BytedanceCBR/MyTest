@@ -47,6 +47,12 @@
     //
     FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)data;
     if (model.list) {
+        
+        for (NSInteger i = 0; i < model.list.count; i++) {
+            FHDetailNewDataFloorpanListListModel *listItemModel = model.list[i];
+            listItemModel.index = i;
+        }
+        
         self.headerView.label.text = @"楼盘户型";
         self.headerView.isShowLoadMore = model.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -137,9 +143,11 @@
                 NSDictionary *dict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        };
-                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+//                NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
+                
+                [traceParam setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+//                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }
         }
