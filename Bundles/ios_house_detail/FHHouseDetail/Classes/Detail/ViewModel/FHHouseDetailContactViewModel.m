@@ -187,9 +187,9 @@ extern NSString *const kFHToastCountKey;
             contactTitle = @"询底价";
         }
     }
-    contactPhone.imOpenUrl = @"sslocal://open_single_chat?target_user_id=67597534620&chat_title=谷春晖&house_cover=https://p3.pstatp.com/large/f100-image/R41qHUI3GYuu6B_1Xia0z1&house_type=1&house_title=4室2厅 刘湾小区刘湾小区…&house_des=70平/南北/高层/刘湾小区&house_price=170万&house_avg_price=5000/平&house_id=1231231";
-    contactPhone.agencyName = @"北京我爱我家";
-    contactPhone.showRealtorinfo = 1;
+//    contactPhone.imOpenUrl = @"sslocal://open_single_chat?target_user_id=67597534620&chat_title=谷春晖&house_cover=https://p3.pstatp.com/large/f100-image/R41qHUI3GYuu6B_1Xia0z1&house_type=1&house_title=4室2厅 刘湾小区刘湾小区…&house_des=70平/南北/高层/刘湾小区&house_price=170万&house_avg_price=5000/平&house_id=1231231";
+//    contactPhone.agencyName = @"北京我爱我家";
+//    contactPhone.showRealtorinfo = 1;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle];
 }
 
