@@ -169,10 +169,13 @@
         [wself.navigationController popViewControllerAnimated:YES];
     };
     [self.view addSubview:_navBar];
-    
+    self.viewModel.navBar = _navBar;
+
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
-    
+    self.viewModel.bottomBar = _bottomBar;
+    _bottomBar.hidden = YES;
+
     _bottomStatusBar = [[UILabel alloc]init];
     _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
     _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
@@ -181,6 +184,7 @@
     _bottomStatusBar.textColor = [UIColor whiteColor];
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
+    self.viewModel.bottomStatusBar = _bottomStatusBar;
 
     self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.viewModel.contactViewModel.searchId = self.searchId;

@@ -116,15 +116,18 @@
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
+                wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
                 wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         } else {
             wSelf.detailController.hasValidateData = NO;
+            wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         }
     }];

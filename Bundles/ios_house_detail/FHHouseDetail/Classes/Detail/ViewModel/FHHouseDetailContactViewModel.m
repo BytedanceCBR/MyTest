@@ -202,7 +202,7 @@
 
 - (void)callAction
 {
-    [self.phoneCallViewModel callWithPhone:self.contactPhone searchId:self.searchId imprId:self.imprId];
+    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone searchId:self.searchId imprId:self.imprId];
     // 静默关注功能
     [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }

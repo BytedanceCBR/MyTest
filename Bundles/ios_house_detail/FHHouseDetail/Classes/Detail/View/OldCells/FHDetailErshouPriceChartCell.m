@@ -126,8 +126,8 @@
     }
     NSMutableArray *mutable = @[].mutableCopy;
 
-    for (NSInteger index = 0; index < priceTrends.count; index++) {
-        
+    for (NSInteger index = priceTrends.count - 1; index >= 0; index--) {
+
         FHDetailPriceTrendModel *priceTrend = priceTrends[index];
         NSArray *data01Array = priceTrend.values;
         PNLineChartData *data01 = [PNLineChartData new];
@@ -503,7 +503,6 @@
     }
     view.tag = 200;
     FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc]init];
-    markData.selectPoint = [self.chartView convertPoint:selectPoint toView:self.chartView];
     NSArray *priceTrends = self.priceTrends;
     if (priceTrends.count < 1) {
         return;
@@ -521,6 +520,17 @@
     }
     markData.trendItems = trendItems;
     [view refreshContent:markData];
+    //calculate markerview position
+    CGFloat padding = 10;
+    if (selectPoint.x + view.width + padding > self.chartView.width) {
+        view.right = selectPoint.x - padding;
+    }else{
+        view.left = selectPoint.x + padding;
+    }
+    if (view.left < 0) {
+        view.left = 0;
+    }
+    view.centerY = self.chartView.height/2;
 }
 
 

@@ -160,7 +160,17 @@
 
 // 打开地图
 - (void)openMapButtonClick:(UIButton *)button {
-    // add by zyk
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"银行" forKey:@"category"];
+    FHDetailNeighborhoodNameModel *model = (FHDetailNeighborhoodNameModel *)self.currentData;
+    if (model) {
+        double lng = [model.neighborhoodInfo.gaodeLng doubleValue];
+        double lat = [model.neighborhoodInfo.gaodeLat doubleValue];
+        [infoDict setValue:@(lat) forKey:@"latitude"];
+        [infoDict setValue:@(lng) forKey:@"longitude"];
+    }
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 @end

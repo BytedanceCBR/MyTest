@@ -380,31 +380,13 @@
 }
 
 - (void)mapViewClick {
-    // 跳转地图
-    /* let selector = { [unowned self] in
-     if let lat = self.lat,
-     let lng = self.lng {
-     let theParams = TracerParams.momoid() <|>
-     toTracerParams("map", key: "click_type") <|>
-     toTracerParams("map", key: "element_from") <|>
-     toTracerParams(self.neighborhoodId ?? "be_null", key: "group_id") <|>
-     toTracerParams(self.data?.logPB ?? "be_null", key: "log_pb") <|>
-     self.tracerParams
-     
-     let clickParams = theParams <|>
-     toTracerParams("map", key: "click_type")
-     
-     let userInfo = TTRouteUserInfo(info: ["tracer": theParams.paramsGetter([:])])
-     //fschema://fh_house_detail_map
-     recordEvent(key: "click_map", params: clickParams)
-     let jumpUrl = "fschema://fh_house_detail_map?lat=\(lat)&lng=\(lng)&title=\(self.name ?? "")"
-     if let thrUrl = jumpUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-     TTRoute.shared()?.openURL(byViewController: URL(string: thrUrl),
-     userInfo: userInfo)
-     }
-     }
-     }
-     */
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"公交" forKey:@"category"];
+    [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
+    [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
+    
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 - (void)schoolLabelIsHidden:(BOOL)isHidden {

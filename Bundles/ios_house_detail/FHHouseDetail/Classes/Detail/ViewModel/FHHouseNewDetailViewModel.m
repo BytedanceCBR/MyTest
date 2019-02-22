@@ -131,10 +131,12 @@
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             wSelf.dataModel = model;
             wSelf.detailController.hasValidateData = YES;
+            wSelf.bottomBar.hidden = NO;
             [wSelf processDetailData:model];
         }else
         {
             wSelf.detailController.hasValidateData = NO;
+            wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
@@ -153,7 +155,7 @@
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
-    
+
     __weak typeof(self) wSelf = self;
     if (model.data) {
         [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
