@@ -104,8 +104,6 @@
 // 网络数据请求
 - (void)startLoadData {
     // 详情页数据-Main
-    //    NSDictionary *logpb = @{@"abc":@"vvv",@"def":@"cccc"};
-    // add by zyk 记得logpb数据 传入
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestRentDetail:self.houseId completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
@@ -134,6 +132,7 @@
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
+    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.houseImage) {
