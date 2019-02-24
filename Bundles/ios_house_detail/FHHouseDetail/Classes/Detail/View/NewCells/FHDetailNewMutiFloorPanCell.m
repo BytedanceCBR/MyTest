@@ -147,8 +147,12 @@
                 
                 // add by zjing for test follow 埋点
                 NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-                [traceParam setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                [traceParam addEntriesFromDictionary:[self.baseViewModel subPageParams]];
+                infoDict[@"house_type"] = @(1);
+                infoDict[@"tracer"] = traceParam;
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
+                subPageParams[@"tracer"] = nil;
+                [infoDict addEntriesFromDictionary:subPageParams];
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];

@@ -122,10 +122,14 @@
 
     if ([self.currentData isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
 
-        NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
-        NSDictionary *dict = [self.baseViewModel subPageParams];
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
+        FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel *)self.currentData;
+        if (!model.isExpand) {
+
+            NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
+            NSDictionary *dict = [self.baseViewModel subPageParams];
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
+        }
     }
 }
 
