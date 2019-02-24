@@ -601,8 +601,15 @@
                 return;
             }
             [self.leftHouseShowCache setValue:@(YES) forKey:tempKey];
-            // 添加house_show埋点 add by zyk
-            NSLog(@"------添加 leftHouseShowCache house_show 埋点: %ld",index);
+            FHSearchHouseDataItemsModel *dataItem = self.ershouItems[index];
+            // house_show
+            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+            tracerDic[@"rank"] = @(index);
+            tracerDic[@"card_type"] = @"left_pic";
+            tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+            tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
+            tracerDic[@"element_type"] = @"same_neighborhood";
+            [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
     if (model.currentSelIndex == 1) {
@@ -613,8 +620,15 @@
                 return;
             }
             [self.rightHouseShowCache setValue:@(YES) forKey:tempKey];
-            // 添加house_show埋点 add by zyk
-            NSLog(@"------添加 rightHouseShowCache house_show 埋点: %ld",index);
+            FHHouseRentDataItemsModel *dataItem = self.rentItems[index];
+            // house_show
+            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+            tracerDic[@"rank"] = @(index);
+            tracerDic[@"card_type"] = @"left_pic";
+            tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+            tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
+            tracerDic[@"element_type"] = @"same_neighborhood";
+            [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
 }
