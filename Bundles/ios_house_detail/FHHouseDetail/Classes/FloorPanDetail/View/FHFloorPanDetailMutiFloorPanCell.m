@@ -133,11 +133,16 @@
                 traceParam[@"element_from"] = @"related";
                 
                 // add by zjing for test
-                NSDictionary *dict = @{@"house_type":@(1),
+                NSMutableDictionary *infoDict = @{@"house_type":@(1),
                                        @"tracer": traceParam
-                                       };
-                [traceParam addEntriesFromDictionary:[self.baseViewModel subPageParams]];
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
+                                       }.mutableCopy;
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                NSMutableDictionary *subPageParams = model.subPageParams;
+                subPageParams[@"tracer"] = nil;
+                if (subPageParams) {
+                    [infoDict addEntriesFromDictionary:subPageParams];
+                }
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }
         }

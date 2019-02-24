@@ -120,6 +120,7 @@
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"floorlist"];
         [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
+        infoDict[@"house_type"] = @(1);
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_list"] userInfo:info];
     }

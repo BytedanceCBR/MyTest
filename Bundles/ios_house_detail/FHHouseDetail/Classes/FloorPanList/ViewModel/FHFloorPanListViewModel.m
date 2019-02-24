@@ -309,9 +309,9 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
             NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
             [infoDict setValue:model.id forKey:@"floorpanid"];
-            traceParam[@"house_type"] = @(1);
-            traceParam[@"tracer"] = traceParam;
             [infoDict addEntriesFromDictionary: [_floorListVC subPageParams]];
+            infoDict[@"house_type"] = @(1);
+            infoDict[@"tracer"] = traceParam;
             TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];

@@ -109,7 +109,6 @@
     
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
-    _bottomBar.hidden = YES;
     [_bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(64);

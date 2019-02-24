@@ -20,6 +20,7 @@
 #import "FHFloorPanTitleCell.h"
 #import "FHFloorPanDetailPropertyCell.h"
 #import "FHFloorPanDetailMutiFloorPanCell.h"
+#import "FHHouseDetailSubPageViewController.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -27,6 +28,7 @@
 @property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *floorPanId;
 @property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
+@property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
 @end
 @implementation FHFloorPanDetailViewModel
 
@@ -35,6 +37,7 @@
     self = [super init];
     if (self) {
         self.detailController = viewController;
+        _subPageVC = viewController;
         _infoListTable = tableView;
         _floorPanId = floorPanId;
         _currentItems = [NSMutableArray new];
@@ -170,6 +173,7 @@
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
+        mutiDataModel.subPageParams = [self.subPageVC subPageParams];
         for (NSInteger i = 0; i < mutiDataModel.recommend.count; i++) {
             FHDetailFloorPanDetailInfoDataRecommendModel *modelItem = mutiDataModel.recommend[i];
             if ([modelItem isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
