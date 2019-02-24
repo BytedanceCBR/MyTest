@@ -24,6 +24,7 @@
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
+@property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, copy)   NSString* houseId; // 房源id
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的logPB
 @property (nonatomic, copy)   NSString* searchId;
@@ -83,19 +84,15 @@
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
             self.houseId = paramObj.allParams[@"neighborhood_id"];
         }
-        
-        self.isDisableGoDetail = paramObj.allParams[@"disable_go_detail"] ? paramObj.allParams[@"disable_go_detail"] : NO;
-        
-        NSDictionary *tracer = paramObj.allParams[@"tracer"];
-        if ([tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *logPbDict = tracer[@"log_pb"];
-            self.searchId = logPbDict[@"search_id"];
-            self.imprId = logPbDict[@"impr_id"];
-        }
         // 埋点数据处理
         [self processTracerData:paramObj.allParams];
         // 非埋点数据处理
         // disable_go_detail
+        self.isDisableGoDetail = paramObj.allParams[@"disable_go_detail"] ? paramObj.allParams[@"disable_go_detail"] : NO;
+        // source
+        if ([paramObj.allParams[@"source"] isKindOfClass:[NSString class]]) {
+            self.source = paramObj.allParams[@"source"];
+        }
     }
     return self;
 }
@@ -160,6 +157,7 @@
     self.viewModel.listLogPB = self.listLogPB;
     // 构建详情页需要的埋点数据，放入baseViewModel中
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
+    self.viewModel.source = self.source;
     [self.view addSubview:_tableView];
 
     __weak typeof(self)wself = self;
@@ -258,6 +256,8 @@
     id log_pb = self.tracerDict[@"log_pb"];
     if ([log_pb isKindOfClass:[NSDictionary class]]) {
         self.listLogPB = log_pb;
+        self.searchId = log_pb[@"search_id"];
+        self.imprId = log_pb[@"impr_id"];
     }
 }
 

@@ -264,6 +264,13 @@
             infoModel.tableView = self.tableView;
             infoModel.sameNeighborhoodErshouHouseData = self.sameNeighborhoodErshouHouseData;
             infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
+            // 租房详情页，或者地图租房半屏列表，进入小区详情
+            if ([self.source isEqualToString:@"rent_detail"]) {
+                if (self.sameNeighborhoodErshouHouseData.items.count > 0 && self.sameNeighborhoodRentHouseData.items.count > 0) {
+                    // 既有二手房，同时有租房数据
+                    infoModel.firstSelIndex = 1;
+                }
+            }
             [self.items addObject:infoModel];
         }
         [self reloadData];

@@ -302,6 +302,9 @@
         // 默认选中
         model.currentSelIndex = 1;
     }
+    if (model.firstSelIndex >= 0 && model.firstSelIndex <= 1) {
+        model.currentSelIndex = model.firstSelIndex;
+    }
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -652,6 +655,7 @@
     self = [super init];
     if (self) {
         _currentSelIndex = 0;
+        _firstSelIndex = -1;
     }
     return self;
 }

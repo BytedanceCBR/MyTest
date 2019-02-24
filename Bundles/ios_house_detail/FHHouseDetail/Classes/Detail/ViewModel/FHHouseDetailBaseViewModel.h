@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的列表页的logPB
 @property (nonatomic, strong)   NSDictionary       *logPB; // 当前详情页的logPB，详情页请求后data中的log_pb
 @property(nonatomic , strong) NSMutableDictionary *detailTracerDic; // 详情页基础埋点数据

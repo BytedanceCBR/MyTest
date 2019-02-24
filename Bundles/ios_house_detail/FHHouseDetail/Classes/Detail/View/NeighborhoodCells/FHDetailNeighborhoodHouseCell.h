@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak)     UITableView       *tableView;
 @property (nonatomic, assign)   NSInteger       currentSelIndex; // 0二手房，1租房
+@property (nonatomic, assign)   NSInteger       firstSelIndex;// -1，第一次选中
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
 
