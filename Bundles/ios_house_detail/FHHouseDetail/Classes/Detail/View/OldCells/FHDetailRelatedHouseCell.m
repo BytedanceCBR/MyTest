@@ -170,10 +170,10 @@
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
         userInfo[@"title"] = @"周边房源";
         if (oldDetail.data.neighborhoodInfo.id.length > 0) {
-            userInfo[@"neighborhoodId"] = oldDetail.data.neighborhoodInfo.id;
+            userInfo[@"neighborhood_id"] = oldDetail.data.neighborhoodInfo.id;
         }
         if (self.baseViewModel.houseId.length > 0) {
-            userInfo[@"houseId"] = self.baseViewModel.houseId;
+            userInfo[@"house_id"] = self.baseViewModel.houseId;
         }
         userInfo[@"list_vc_type"] = @(2);
         

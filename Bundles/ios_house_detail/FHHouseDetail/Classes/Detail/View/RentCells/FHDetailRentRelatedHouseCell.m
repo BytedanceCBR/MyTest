@@ -177,10 +177,10 @@
             userInfo[@"title"] = [NSString stringWithFormat:@"周边房源"];
         }
         if (neighborhood_id.length > 0) {
-            userInfo[@"neighborhoodId"] = neighborhood_id;
+            userInfo[@"neighborhood_id"] = neighborhood_id;
         }
         if (house_id.length > 0) {
-            userInfo[@"houseId"] = house_id;
+            userInfo[@"house_id"] = house_id;
         }
         userInfo[@"list_vc_type"] = @(8);
         
