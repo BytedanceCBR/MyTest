@@ -19,6 +19,9 @@
 #import <FHEnvContext.h>
 #import <ToastManager.h>
 #import <AMapSearchKit/AMapSearchKit.h>
+#import <FHEnvContext.h>
+#import "UIViewController+Track.h"
+#import <FHEnvContext.h>
 
 #import "FHMyMAAnnotation.h"
 
@@ -42,7 +45,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
-
+@property (nonatomic, strong) NSMutableDictionary *traceDict;
 
 @end
 
@@ -55,6 +58,8 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         self.searchApi = [[AMapSearchAPI alloc] init];
         self.searchApi.delegate = self;
         self.selectedIndex = 0;
+        self.ttTrackStayEnable = YES;
+        _traceDict =[NSMutableDictionary dictionaryWithDictionary:paramObj.allParams[@"tracer"]];
         
         if ([userInfo.allInfo objectForKey:@"latitude"] && [userInfo.allInfo objectForKey:@"longitude"]) {
             self.centerPoint = CLLocationCoordinate2DMake([[userInfo.allInfo objectForKey:@"latitude"] floatValue], [[userInfo.allInfo objectForKey:@"longitude"] floatValue]);
@@ -63,7 +68,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
             self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
         }
-//      NSLog(@"userinfo = %@",userInfo.allInfo);
     }
     return self;
 }
@@ -86,7 +90,44 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     [self setUpMapView];
     
     [self setUpBottomBarView];
+    
+    [_traceDict removeObjectForKey:@"page_type"];
+    [_traceDict removeObjectForKey:@"card_type"];
+    [_traceDict removeObjectForKey:@"rank"];
+
+    [FHEnvContext recordEvent:_traceDict andEventKey:@"enter_map"];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self addStayPageLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    [self addStayPageLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)addStayPageLog:(NSTimeInterval)stayTime
+{
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.traceDict];
+    params[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHEnvContext recordEvent:params andEventKey:@"stay_map"];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)setUpNaviBar

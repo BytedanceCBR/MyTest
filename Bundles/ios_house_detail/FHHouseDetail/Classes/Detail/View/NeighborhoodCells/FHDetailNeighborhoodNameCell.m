@@ -168,9 +168,17 @@
         double lat = [model.neighborhoodInfo.gaodeLat doubleValue];
         [infoDict setValue:@(lat) forKey:@"latitude"];
         [infoDict setValue:@(lng) forKey:@"longitude"];
+        
+        NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+        [tracer setValue:@"address" forKey:@"click_type"];
+        [tracer setValue:@"house_info" forKey:@"element_from"];
+        [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+        [infoDict setValue:tracer forKey:@"tracer"];
+        
+        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
     }
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+
 }
 
 @end
