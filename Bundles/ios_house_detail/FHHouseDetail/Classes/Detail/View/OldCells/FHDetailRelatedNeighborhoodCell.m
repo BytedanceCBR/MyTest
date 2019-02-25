@@ -119,7 +119,6 @@
 //        recordEvent(key: "neighborhood_nearby", params: loadMoreParams)
         
         NSString *searchId = model.relatedNeighborhoodData.searchId;
-//        NSString *neighborhoodId = ((FHDetailOldModel *)self.baseViewModel).data.neighborhoodInfo.id;
         
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
@@ -130,7 +129,7 @@
         
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         infoDict[@"tracer"] = tracerDic;
-        infoDict[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+        infoDict[@"house_type"] = @(FHHouseTypeNeighborhood);
         infoDict[@"title"] = @"周边小区";
         // 周边小区跳转
         if (model.neighborhoodId.length > 0) {
