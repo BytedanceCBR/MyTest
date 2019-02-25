@@ -106,9 +106,19 @@
     }];
 }
 
+- (NSString *)hostStr {
+    NSString *host = [FHURLSettings baseURL];
+    return host;
+}
+
 - (NSString *)cityId {
     return [FHEnvContext getCurrentSelectCityIdFromLocal];
 }
+
+- (void)gotoSelectHouse:(nonnull NSString *)covid {
+    
+}
+
 
 @end
 

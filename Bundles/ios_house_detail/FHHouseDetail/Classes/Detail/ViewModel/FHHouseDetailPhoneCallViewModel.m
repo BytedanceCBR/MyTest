@@ -150,7 +150,8 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     [TTTracker eventV3:@"click_im" params:dict];
     
     NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)fillFormRequest:(NSString *)phoneNum
