@@ -175,6 +175,14 @@
                 }
             }
         }
+        
+        NSDictionary * houseShowDict = [tempCell elementHouseShowUpload];
+        if (houseShowDict.allKeys.count > 0) {
+            // 上报埋点
+            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+            [tracerDic addEntriesFromDictionary:houseShowDict];
+            [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+        }
     }
 }
 
