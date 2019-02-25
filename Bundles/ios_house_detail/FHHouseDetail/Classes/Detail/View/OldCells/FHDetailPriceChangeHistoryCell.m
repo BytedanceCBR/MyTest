@@ -108,15 +108,14 @@
         NSArray *historyData = model.priceChangeHistory.history;
         NSString *houseId = model.baseViewModel.houseId;
         if (pushUrl.length > 0 && historyData && houseId.length > 0) {
-            // add by zyk 埋点记得添加
-            /*
-             // 埋点
-             let params = EnvContext.shared.homePageParams <|>
-             toTracerParams("old_detail", key: "page_type") <|>
-             tracerParams <|>
-             theTracerParams
-             recordEvent(key: "click_price_variation", params: params)
-             */
+
+            // 点击埋点
+            FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+            tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
+            [tracerDic removeObjectsForKeys:@[@"card_type",@"enter_from",@"element_from"]];
+            [FHUserTracker writeEvent:@"click_price_variation" params:tracerDic];
+            
             NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
             NSString* url = [[NSString stringWithFormat:@"%@%@",host,pushUrl] stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
             NSDictionary *history = @{@"history":historyData};

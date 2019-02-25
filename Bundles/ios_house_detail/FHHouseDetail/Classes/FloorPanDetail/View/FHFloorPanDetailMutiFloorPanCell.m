@@ -37,6 +37,11 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"related";
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHFloorPanDetailMutiFloorPanCellModel class]]) {
         return;
@@ -132,7 +137,6 @@
                 traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
                 traceParam[@"element_from"] = @"related";
                 
-                // add by zjing for test
                 NSMutableDictionary *infoDict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        }.mutableCopy;

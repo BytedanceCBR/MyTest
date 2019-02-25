@@ -161,7 +161,7 @@
                 }
                 NSMutableDictionary *userInfo = [NSMutableDictionary new];
                 if (neighborhood_id.length > 0) {
-                    userInfo[@"neighborhoodId"] = neighborhood_id;
+                    userInfo[@"neighborhood_id"] = neighborhood_id;
                 }
                 NSString *element_from = @"be_null";
                 NSString *category_name = @"be_null";

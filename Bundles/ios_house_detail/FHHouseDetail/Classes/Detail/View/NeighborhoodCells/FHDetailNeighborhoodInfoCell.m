@@ -408,6 +408,9 @@
             NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
             [tracerDic addEntriesFromDictionary:temp];
             tracerDic[@"enter_from"] = enter_from;
+            if (self.baseViewModel.logPB) {
+                tracerDic[@"log_pb"] = self.baseViewModel.logPB;
+            }
             [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
             //
             NSString *reportParams = [self getEvaluateWebParams:tracerDic];
@@ -425,6 +428,12 @@
     [infoDict setValue:@"公交" forKey:@"category"];
     [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
     [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+    [tracer setValue:@"map" forKey:@"click_type"];
+    [tracer setValue:@"house_info" forKey:@"element_from"];
+    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [infoDict setValue:tracer forKey:@"tracer"];
     
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];

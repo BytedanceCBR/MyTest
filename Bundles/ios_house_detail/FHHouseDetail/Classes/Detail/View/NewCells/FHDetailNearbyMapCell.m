@@ -214,7 +214,7 @@ static const float kSegementedPadingTop = 5;
     }];
     [_mapMaskBtn setBackgroundColor:[UIColor clearColor]];
     
-    [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
     WeakSelf;
     [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
@@ -223,7 +223,7 @@ static const float kSegementedPadingTop = 5;
     }];
 }
 
-- (void)mapMaskBtnClick
+- (void)mapMaskBtnClick:(UIButton *)sender
 {
     //地图页调用示例
     double longitude = self.centerPoint.longitude;
@@ -242,6 +242,20 @@ static const float kSegementedPadingTop = 5;
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
 
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+    
+    if (sender == _mapMaskBtnLocation) {
+        [tracer setValue:@"map_list" forKey:@"click_type"];
+    }
+    
+    if (sender == _mapMaskBtn) {
+        [tracer setValue:@"map" forKey:@"click_type"];
+    }
+    
+    [tracer setValue:@"map" forKey:@"element_from"];
+    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [infoDict setValue:tracer forKey:@"tracer"];
+    
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
@@ -289,7 +303,7 @@ static const float kSegementedPadingTop = 5;
         make.edges.equalTo(self.locationList);
     }];
     [_mapMaskBtnLocation setBackgroundColor:[UIColor clearColor]];
-    [_mapMaskBtnLocation addTarget:self action:@selector(mapMaskBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_mapMaskBtnLocation addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)changeListLayout:(NSInteger)poiCount

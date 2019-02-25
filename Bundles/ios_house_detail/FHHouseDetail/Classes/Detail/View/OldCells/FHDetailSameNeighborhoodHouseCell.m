@@ -109,19 +109,9 @@
 - (void)moreButtonClick:(UIButton *)button {
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.hasMore) {
-        
-        /* add by zyk 是否要加埋点
-         let loadMoreParams = EnvContext.shared.homePageParams <|>
-         toTracerParams("same_neighborhood", key: "element_type") <|>
-         toTracerParams(id, key: "group_id") <|>
-         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-         toTracerParams("old_detail", key: "page_type") <|>
-         toTracerParams("click", key: "enter_type")
-         recordEvent(key: "click_loadmore", params: loadMoreParams)
-         */
-        
-        // 点击事件处理
+        // click_loadmore 埋点不再需要
         FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+        // 同小区房源
         NSString *group_id = @"be_null";
         if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
             group_id = oldDetail.data.neighborhoodInfo.id;
@@ -131,7 +121,8 @@
         tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
-        
+        tracerDic[@"enter_from"] = @"old_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);

@@ -343,14 +343,6 @@
 - (void)loadMoreDataButtonClick {
     FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
     if (model && model.sameNeighborhoodErshouHouseData) {
-        /*
-         let loadMoreParams = EnvContext.shared.homePageParams <|>
-         toTracerParams("same_neighborhood", key: "element_type") <|>
-         toTracerParams(id, key: "group_id") <|>
-         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-         toTracerParams("neighborhood_detail", key: "page_type")
-         recordEvent(key: "click_loadmore", params: loadMoreParams)
-         */
         FHDetailNeighborhoodModel *detailModel = self.baseViewModel.detailData;
         NSString *neighborhood_id = @"be_null";
         if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
@@ -362,6 +354,7 @@
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
@@ -398,15 +391,6 @@
 - (void)loadMoreDataButtonClick_rent {
     FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
     if (model && model.sameNeighborhoodRentHouseData) {
-        /* add by zyk 是否要加埋点
-         let loadMoreParams = EnvContext.shared.homePageParams <|>
-         toTracerParams("same_neighborhood", key: "element_type") <|>
-         toTracerParams(id, key: "group_id") <|>
-         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-         toTracerParams("old_detail", key: "page_type") <|>
-         toTracerParams("click", key: "enter_type")
-         recordEvent(key: "click_loadmore", params: loadMoreParams)
-         */
         
         // 点击事件处理
         FHDetailNeighborhoodModel *detailModel = self.baseViewModel.detailData;
@@ -424,6 +408,7 @@
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
@@ -466,7 +451,8 @@
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
-        tracerDic[@"element_from"] = @"related";
+        tracerDic[@"element_from"] = @"same_neighborhood";
+        tracerDic[@"enter_from"] = @"neighborhood_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.hid];
         if (urlStr.length > 0) {
@@ -485,7 +471,8 @@
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
-        tracerDic[@"element_from"] = @"related";
+        tracerDic[@"element_from"] = @"same_neighborhood";
+        tracerDic[@"enter_from"] = @"neighborhood_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeRentHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",dataItem.id];
         if (urlStr.length > 0) {
@@ -612,6 +599,7 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
+            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
@@ -631,6 +619,7 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
+            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
