@@ -254,6 +254,7 @@
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
@@ -272,7 +273,7 @@
         [self.items addObject:infoModel];
     }
     // 小区信息
-    if (model.data.neighborhoodInfo) {
+    if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
@@ -311,12 +312,6 @@
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
         [self.items addObject:infoModel];
-    }
-    
-    // 小区信息
-    if (model.data.neighborhoodInfo) {
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
     }
     
     // --

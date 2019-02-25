@@ -110,18 +110,17 @@
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.hasMore) {
         
-        /* add by zyk 是否要加埋点
-         let loadMoreParams = EnvContext.shared.homePageParams <|>
-         toTracerParams("same_neighborhood", key: "element_type") <|>
-         toTracerParams(id, key: "group_id") <|>
-         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-         toTracerParams("old_detail", key: "page_type") <|>
-         toTracerParams("click", key: "enter_type")
-         recordEvent(key: "click_loadmore", params: loadMoreParams)
-         */
-        
         // 点击事件处理
         FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+        // click_loadmore
+        NSMutableDictionary *loadMoreTracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        loadMoreTracerDic[@"enter_type"] = @"click";
+        loadMoreTracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
+        loadMoreTracerDic[@"category_name"] = @"same_neighborhood_list";
+        loadMoreTracerDic[@"element_from"] = @"same_neighborhood";
+        [FHUserTracker writeEvent:@"click_loadmore" params:loadMoreTracerDic];
+        
+        // 同小区房源
         NSString *group_id = @"be_null";
         if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
             group_id = oldDetail.data.neighborhoodInfo.id;

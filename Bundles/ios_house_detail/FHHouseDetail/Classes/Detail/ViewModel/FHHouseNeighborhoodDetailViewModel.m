@@ -148,13 +148,13 @@
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
-    if (model.data.neighborhoodImage) {
+    if (model.data.neighborhoodImage.count > 0) {
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.neighborhoodImage;
         [self.items addObject:headerCellModel];
     }
     // 添加标题
-    if (model.data) {
+    if (model.data && model.data.neighborhoodInfo.id.length > 0) {
         FHDetailNeighborhoodNameModel *houseName = [[FHDetailNeighborhoodNameModel alloc] init];
         houseName.name = model.data.name;
         houseName.neighborhoodInfo = model.data.neighborhoodInfo;

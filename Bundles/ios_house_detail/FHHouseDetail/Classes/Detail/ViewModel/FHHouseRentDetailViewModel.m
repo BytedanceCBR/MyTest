@@ -213,7 +213,7 @@
         [self.items addObject:infoModel];
     }
     // 小区信息
-    if (model.data.neighborhoodInfo) {
+    if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
