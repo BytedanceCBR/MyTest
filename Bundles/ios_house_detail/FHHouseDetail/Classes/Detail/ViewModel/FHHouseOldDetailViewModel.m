@@ -243,7 +243,6 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
-        // add by zyk后续需要再确认 searchId 取的是否正确
         NSString *searchId = self.logPB[@"search_id"];
         NSString *imprId = self.logPB[@"impr_id"];
         if (searchId == nil) {
