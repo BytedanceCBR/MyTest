@@ -18,6 +18,9 @@
 
 @interface FHMessageListSysViewModel()<UITableViewDelegate,UITableViewDataSource>
 
+@property(nonatomic, copy) NSString *originSearchId;
+@property(nonatomic, copy) NSString *searchId;
+
 @end
 
 @implementation FHMessageListSysViewModel
@@ -41,9 +44,9 @@
     tracerDict[@"category_name"] = [self.viewController categoryName];
     tracerDict[@"enter_from"] = @"messagetab";
     tracerDict[@"enter_type"] = @"click";
-    tracerDict[@"search_id"] = @"be_null";
+    tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     tracerDict[@"origin_from"] = @"be_null";
-    tracerDict[@"origin_search_id"] = @"be_null";
+    tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
     tracerDict[@"element_from"] = @"be_null";
     
     return tracerDict;
@@ -93,6 +96,8 @@
             
             if (isHead) {
                 [wself.dataList removeAllObjects];
+                wself.searchId = msgModel.data.searchId;
+                wself.originSearchId = wself.searchId;
             }
             [wself.dataList addObjectsFromArray:msgModel.data.items];
             wself.tableView.hasMore = msgModel.data.hasMore;

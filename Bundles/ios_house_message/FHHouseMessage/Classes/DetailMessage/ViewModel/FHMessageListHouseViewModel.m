@@ -102,9 +102,9 @@
         if(model){
             
             wself.maxCursor = msgModel.data.minCursor;
-            wself.searchId = msgModel.data.searchId;
             
             if (isHead) {
+                wself.searchId = msgModel.data.searchId;
                 wself.originSearchId = wself.searchId;
                 [wself.dataList removeAllObjects];
             }
