@@ -17,6 +17,8 @@
 #import "FHHouseBridgeManager.h"
 #import "FHHouseRentModel.h"
 #import "FHFeedHouseCellHelper.h"
+#import <FHSingleImageInfoCell.h>
+#import <FHSingleImageInfoCellModel.h>
 
 #define kFHFeedHouseCellId @"kFHFeedHouseCellId"
 
@@ -429,8 +431,15 @@
             BOOL isFirstCell = (indexPath.row == 0);
             BOOL isLastCell = (indexPath.row == self.houseItemsData.houseList.count - 1);
             SEL sel = @selector(updateWithNewHouseModel:isFirstCell:isLastCell:);
-            if ([cell respondsToSelector:sel]) {
-                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
+//            if ([cell respondsToSelector:sel]) {
+//                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
+//            }
+            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+                FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
+                infoCellModel.houseModel = model;
+                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel];
+                [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
+                [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
             }
         }
         
@@ -441,7 +450,14 @@
             FHSearchHouseDataItemsModel *item = self.houseItemsData.secondHouseList[indexPath.row];
             BOOL isFirstCell = (indexPath.row == 0);
             BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
-            [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithSecondHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
+            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+                FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
+                infoCellModel.secondModel = item;
+                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel];
+                [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
+                [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
+            }
+//            [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithSecondHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
             
         }
     }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
@@ -449,7 +465,14 @@
         FHHouseRentDataItemsModel *item = self.houseItemsData.rentHouseList[indexPath.row];
         BOOL isFirstCell = (indexPath.row == 0);
         BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
-        [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithRentHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
+//        [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithRentHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
+        if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+            FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
+            infoCellModel.rentModel = item;
+            [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel];
+            [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
+            [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
+        }
     }
     return cell;
 }

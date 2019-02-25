@@ -443,7 +443,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     if (response.count == 0) {
         [[ToastManager manager] showToast:@"暂无相关信息"];
-        
+        [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
     
