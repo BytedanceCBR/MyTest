@@ -146,7 +146,6 @@
                                        @"tracer": traceParam
                                        };
                 
-                // add by zjing for test follow 埋点
                 NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
                 infoDict[@"house_type"] = @(1);
                 infoDict[@"tracer"] = traceParam;

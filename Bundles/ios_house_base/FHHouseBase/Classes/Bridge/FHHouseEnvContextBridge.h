@@ -12,8 +12,6 @@
 
 @protocol FHHouseEnvContextBridge <NSObject>
 
--(NSString *)currentMapSelect;
-
 -(void)setTraceValue:(NSString *)value forKey:(NSString *)key;
 
 -(NSDictionary *)homePageParamsMap;

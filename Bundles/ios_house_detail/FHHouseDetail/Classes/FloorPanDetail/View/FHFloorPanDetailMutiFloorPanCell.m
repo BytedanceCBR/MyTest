@@ -132,7 +132,6 @@
                 traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
                 traceParam[@"element_from"] = @"related";
                 
-                // add by zjing for test
                 NSMutableDictionary *infoDict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        }.mutableCopy;

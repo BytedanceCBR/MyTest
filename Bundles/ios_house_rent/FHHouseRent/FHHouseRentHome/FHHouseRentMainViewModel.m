@@ -881,10 +881,14 @@
      4. origin_search_id
      5. hot_word（搜索框轮播词，无轮播词记为be_null）
      */
+//
+//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+//    NSDictionary *houseParams = [envBridge homePageParamsMap];
+    [[FHEnvContext sharedInstance] getCommonParams];
+    NSMutableDictionary *homeParams = [NSMutableDictionary new];
     
-    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-    NSDictionary *houseParams = [envBridge homePageParamsMap];
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:houseParams];
+    
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:[self.viewController.tracerModel logDict]];
     params[@"page_type"] = @"renting";
     params[@"origin_search_id"] = self.viewController.tracerModel.originSearchId?:@"be_null";
     params[@"hot_word"] = @"be_null";
