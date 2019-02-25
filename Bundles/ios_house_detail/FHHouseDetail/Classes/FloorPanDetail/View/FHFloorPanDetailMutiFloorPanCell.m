@@ -37,6 +37,11 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"related";
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHFloorPanDetailMutiFloorPanCellModel class]]) {
         return;

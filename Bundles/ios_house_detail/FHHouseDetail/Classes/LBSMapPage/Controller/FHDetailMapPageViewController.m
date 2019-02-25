@@ -391,18 +391,20 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
         [self.mapView addAnnotation:self.poiAnnotations[i]];
     }
+    _mapView.zoomLevel  = 15;
     [self.mapView setCenterCoordinate:self.centerPoint];
 }
 
 #pragma poi Delegate
 - (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response
 {
+    [self cleanAllAnnotations];
+    
     if (response.count == 0) {
         [[ToastManager manager] showToast:@"暂无相关信息"];
+        
         return;
     }
-    
-    [self cleanAllAnnotations];
     
     NSInteger poiCount = response.pois.count > 50 ? 50 :  response.pois.count;
     NSMutableArray *poiArray = [NSMutableArray new];
