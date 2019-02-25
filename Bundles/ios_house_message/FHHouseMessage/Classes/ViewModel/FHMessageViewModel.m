@@ -205,7 +205,7 @@
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId: [[TTAccount sharedAccount] userIdString]];
     NSDictionary *params = @{
-                             @"event_type": @"house_app2c_v2",
+                             @"event_type": @"house_app2b",
                              @"page_type": _pageType,
                              @"conversation_id" : conversationId,
                              @"realtor_id" : targetUserId,
