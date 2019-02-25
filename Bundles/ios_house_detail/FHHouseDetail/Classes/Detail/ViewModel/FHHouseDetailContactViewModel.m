@@ -194,6 +194,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:@"house_app2c_v2" forKey:@"event_type"];
     [params setValue:[_tracerDict objectForKey:@"page_type"]  forKey:@"page_type"];
+    [params setValue:[_tracerDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
     [params setValue:[_tracerDict objectForKey:@"rank"] forKey:@"rank"];
     [params setValue:@"left_pic" forKey:@"card_type"];
     [params setValue:[_tracerDict objectForKey:@"element_from"] forKey:@"element_from"];
@@ -292,7 +293,7 @@
 }
 
 - (void)imAction {
-    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone];
+    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:@"detail_button"];
 }
 
 #pragma mark TTShareManagerDelegate

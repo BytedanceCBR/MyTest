@@ -144,7 +144,7 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
-        [model.phoneCallViewModel imchatActionWithPhone:contact];
+        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] position:@"detail_related"];
     }
 }
 
@@ -250,6 +250,16 @@
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
+            if (contact.phone.length < 1) {
+                [tracerDic setValue:@"0" forKey:@"phone_show"];
+            } else {
+                [tracerDic setValue:@"1" forKey:@"phone_show"];
+            }
+            if (![@"" isEqualToString:contact.imOpenUrl] && contact.imOpenUrl != nil) {
+                [tracerDic setValue:@"1" forKey:@"im_show"];
+            } else {
+                [tracerDic setValue:@"0" forKey:@"im_show"];
+            }
             // 移除字段
             [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
             [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
