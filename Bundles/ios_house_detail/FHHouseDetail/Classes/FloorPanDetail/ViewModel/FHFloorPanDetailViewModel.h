@@ -9,9 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseDetailSubPageViewController;
 @interface FHFloorPanDetailViewModel : FHHouseDetailBaseViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId;
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId;
 
 - (void)startLoadData;
 

@@ -120,9 +120,10 @@
     FHDetailNeighborhoodTransationHistoryModel *model = (FHDetailNeighborhoodTransationHistoryModel *)self.currentData;
     
     if (model && model.totalSales.hasMore) {
-        NSURL* url = [NSURL URLWithString:@"snssdk1370://transaction_history"];
+        NSURL* url = [NSURL URLWithString:@"snssdk1370://neighborhood_sales_list"];
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"neighborhoodId"] = model.neighborhoodId;
+        [dict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
+        dict[@"neighborhood_id"] = model.neighborhoodId;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }

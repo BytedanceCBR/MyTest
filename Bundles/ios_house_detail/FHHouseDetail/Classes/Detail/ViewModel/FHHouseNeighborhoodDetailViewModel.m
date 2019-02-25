@@ -33,6 +33,7 @@
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
+@property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
 
@@ -119,6 +120,7 @@
                 [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
@@ -159,7 +161,7 @@
         [self.items addObject:houseName];
     }
     // 添加 在售（在租）信息
-    if (model.data.statsInfo.count > 0) {
+    if (model.data.statsInfo.count == 3) {
         FHDetailNeighborhoodStatsInfoModel *infoModel = [[FHDetailNeighborhoodStatsInfoModel alloc] init];
         infoModel.statsInfo = model.data.statsInfo;
         [self.items addObject:infoModel];
@@ -253,6 +255,7 @@
             [self.items addObject:grayLine];
             FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
             infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            infoModel.neighborhoodId = self.neighborhoodId;
             [self.items addObject:infoModel];
         }
         // 小区房源
@@ -264,6 +267,13 @@
             infoModel.tableView = self.tableView;
             infoModel.sameNeighborhoodErshouHouseData = self.sameNeighborhoodErshouHouseData;
             infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
+            // 租房详情页，或者地图租房半屏列表，进入小区详情
+            if ([self.source isEqualToString:@"rent_detail"]) {
+                if (self.sameNeighborhoodErshouHouseData.items.count > 0 && self.sameNeighborhoodRentHouseData.items.count > 0) {
+                    // 既有二手房，同时有租房数据
+                    infoModel.firstSelIndex = 1;
+                }
+            }
             [self.items addObject:infoModel];
         }
         [self reloadData];

@@ -228,7 +228,12 @@
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(10);
-        make.height.mas_equalTo(187 * [TTDeviceHelper scaleToScreen375]);
+        if ([TTDeviceHelper isScreenWidthLarge320]) {
+            make.height.mas_equalTo(207);
+        }else {
+            
+            make.height.mas_equalTo(207);
+        }
         make.bottom.mas_equalTo(0);
     }];
     

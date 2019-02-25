@@ -282,8 +282,6 @@
             itemModel.index = i;
             [self.items addObject:itemModel];
         }
-        
-        [self reloadData];
     }
     
     //楼盘版权信息
@@ -292,6 +290,8 @@
         disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
         [self.items addObject:disclaimerModel];
     }
+    
+    [self reloadData];
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

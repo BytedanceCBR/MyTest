@@ -104,12 +104,11 @@
 {
     NSDictionary *userInfo = noti.userInfo;
     NSString *followId = [userInfo tt_stringValueForKey:@"followId"];
-    BOOL followStatus = [userInfo tt_boolValueForKey:@"followStatus"];
+    NSInteger followStatus = [userInfo tt_integerValueForKey:@"followStatus"];
     if (![followId isEqualToString:self.houseId]) {
         return;
     }
-    [self.navBar setFollowStatus:followStatus];
-
+    self.followStatus = followStatus;
 }
 - (void)setFollowStatus:(NSInteger)followStatus
 {
@@ -204,6 +203,11 @@
 - (void)fillFormAction
 {
     [self.phoneCallViewModel fillFormAction];
+}
+
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+{
+    [self.phoneCallViewModel fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle];
 }
 
 - (void)callAction

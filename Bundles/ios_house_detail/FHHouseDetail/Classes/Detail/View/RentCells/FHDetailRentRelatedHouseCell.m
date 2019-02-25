@@ -151,7 +151,65 @@
 
 // 查看更多按钮点击
 - (void)loadMoreDataButtonClick {
-    
+    FHDetailRentRelatedHouseModel *model = (FHDetailRentRelatedHouseModel *)self.currentData;
+    if (model.relatedHouseData.hasMore) {
+        FHRentDetailResponseModel *detailData = self.baseViewModel.detailData;
+        NSString *neighborhood_id = @"";
+        NSString *house_id = @"";
+        if (detailData && detailData.data.neighborhoodInfo.id.length > 0) {
+            neighborhood_id = detailData.data.neighborhoodInfo.id;
+        }
+        if (self.baseViewModel.houseId.length > 0) {
+            house_id = self.baseViewModel.houseId;
+        }
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"enter_type"] = @"click";
+        tracerDic[@"log_pb"] = detailData.data.logPb ? detailData.data.logPb : @"be_null";
+        tracerDic[@"category_name"] = @"related_list";
+        tracerDic[@"element_from"] = @"related";
+        
+        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+        userInfo[@"tracer"] = tracerDic;
+        userInfo[@"house_type"] = @(FHHouseTypeRentHouse);
+        if (model.relatedHouseData.total.length > 0) {
+            userInfo[@"title"] = [NSString stringWithFormat:@"周边房源(%@)",model.relatedHouseData.total];
+        } else {
+            userInfo[@"title"] = [NSString stringWithFormat:@"周边房源"];
+        }
+        if (neighborhood_id.length > 0) {
+            userInfo[@"neighborhood_id"] = neighborhood_id;
+        }
+        if (house_id.length > 0) {
+            userInfo[@"house_id"] = house_id;
+        }
+        userInfo[@"list_vc_type"] = @(8);
+        
+        TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+        }
+    }
+}
+
+// 单个cell点击
+- (void)cellDidSeleccted:(NSInteger)index {
+    if (index >= 0 && index < self.items.count) {
+        FHHouseRentDataItemsModel *dataItem = self.items[index];
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"left_pic";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_from"] = @"related";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeRentHouse)}];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",dataItem.id];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -200,6 +258,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self cellDidSeleccted:indexPath.row];
 }
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
@@ -222,8 +281,15 @@
             return;
         }
         [self.houseShowCache setValue:@(YES) forKey:tempKey];
-        // 添加house_show埋点 add by zyk
-        NSLog(@"------添加house_show 埋点: %ld",index);
+        FHHouseRentDataItemsModel *dataItem = self.items[index];
+        // house_show
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"left_pic";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_type"] = @"related";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
 

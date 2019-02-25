@@ -48,6 +48,12 @@
     //
     FHFloorPanDetailMutiFloorPanCellModel *model = (FHFloorPanDetailMutiFloorPanCellModel *)data;
     if (model.recommend) {
+        
+        for (NSInteger i = 0; i < model.recommend.count; i++) {
+            FHDetailFloorPanDetailInfoDataRecommendModel *listItemModel = model.recommend[i];
+            listItemModel.index = i;
+        }
+        
         self.headerView.label.text = @"推荐居室户型";
         self.headerView.label.font = [UIFont themeFontMedium:18];
         self.headerView.isShowLoadMore = NO;
@@ -117,8 +123,25 @@
         if (model.recommend.count > index) {
             FHDetailFloorPanDetailInfoDataRecommendModel *floorPanInfoModel = model.recommend[index];
             if ([floorPanInfoModel isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
-                NSMutableDictionary *infoDict = [NSMutableDictionary new];
+                NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                traceParam[@"enter_from"] = @"new_detail";
+                traceParam[@"log_pb"] = self.baseViewModel.logPB;
+                traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+                traceParam[@"card_type"] = @"left_pic";
+                traceParam[@"rank"] = @(floorPanInfoModel.index);
+                traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+                traceParam[@"element_from"] = @"related";
+                
+                // add by zjing for test
+                NSMutableDictionary *infoDict = @{@"house_type":@(1),
+                                       @"tracer": traceParam
+                                       }.mutableCopy;
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                NSMutableDictionary *subPageParams = model.subPageParams;
+                subPageParams[@"tracer"] = nil;
+                if (subPageParams) {
+                    [infoDict addEntriesFromDictionary:subPageParams];
+                }
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }

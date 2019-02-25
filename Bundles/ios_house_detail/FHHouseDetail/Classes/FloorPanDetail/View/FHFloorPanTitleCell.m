@@ -34,7 +34,6 @@
             make.height.mas_equalTo(34);
         }];
         
-        
         _pricingLabel = [UILabel new];
         _pricingLabel.textColor = [UIColor colorWithHexString:@"#f85959"];
         _pricingLabel.font = [UIFont themeFontMedium:16];

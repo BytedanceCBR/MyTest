@@ -50,6 +50,11 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         title = @"咨询经纪人";
         btnTitle = @"提交";
     }
+    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+}
+
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+{
     __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
     alertView.phoneNum = [self.sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];

@@ -59,7 +59,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(YES);
+                userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
             }
         }
@@ -85,7 +85,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(YES);
+                userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
             }
         }
@@ -103,10 +103,10 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
             [[ToastManager manager] showToast:@"取消关注失败"];
         }else {
             if (model.status.integerValue == 0) {
-                [[ToastManager manager] showToast:@"取关成功"];
+                [[ToastManager manager] showToast:@"取消关注"];
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(NO);
+                userInfo[@"followStatus"] = @(0);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
             }
         }

@@ -145,13 +145,13 @@
             userInfo[@"title"] = @"同小区房源";// 默认值
         }
         if (oldDetail.data.neighborhoodInfo.id.length > 0) {
-            userInfo[@"neighborhoodId"] = oldDetail.data.neighborhoodInfo.id;
+            userInfo[@"neighborhood_id"] = oldDetail.data.neighborhoodInfo.id;
         }
         if (self.baseViewModel.houseId.length > 0) {
-            userInfo[@"houseId"] = self.baseViewModel.houseId;
+            userInfo[@"house_id"] = self.baseViewModel.houseId;
         }
         if (model.sameNeighborhoodHouseData.searchId.length > 0) {
-            userInfo[@"searchId"] = model.sameNeighborhoodHouseData.searchId;
+            userInfo[@"search_id"] = model.sameNeighborhoodHouseData.searchId;
         }
         userInfo[@"list_vc_type"] = @(1);
         

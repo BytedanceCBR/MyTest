@@ -7,6 +7,7 @@
 #import "FHDetailNewHouseCoreInfoCell.h"
 #import "TTRoute.h"
 #import "FHDetailNewModel.h"
+#import "FHHouseDetailContactViewModel.h"
 
 static const CGFloat kLabelKeyFontSize = 12;
 
@@ -185,7 +186,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
     _priceChangedNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [self.contentView addSubview:_priceChangedNotify];
-    [_priceChangedNotify addTarget:self action:@selector(fillActionClick) forControlEvents:UIControlEventTouchUpInside];
+    [_priceChangedNotify addTarget:self action:@selector(priceChangedNotifyActionClick) forControlEvents:UIControlEventTouchUpInside];
     [_priceChangedNotify mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.moreBtn.mas_bottom);
         make.left.equalTo(self.contentView);
@@ -213,7 +214,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
     [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
     _openNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
-    [_openNotify addTarget:self action:@selector(fillActionClick) forControlEvents:UIControlEventTouchUpInside];
+    [_openNotify addTarget:self action:@selector(openNotifyActionClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_openNotify];
     [_openNotify mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.equalTo(self.priceChangedNotify);
@@ -222,12 +223,23 @@ static const CGFloat kLabelKeyRightPandding = -20;
     }];
 }
 
-- (void)fillActionClick
+- (void)openNotifyActionClick
 {
     FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
-    if (model.contactModel) {
-        if ([model.contactModel respondsToSelector:@selector(fillFormAction)]) {
-            [model.contactModel performSelector:@selector(fillFormAction)];
+    if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
+        FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
+        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithTitle:subtitle:btnTitle:)]) {
+            [contactViewModel fillFormActionWithTitle:@"开盘通知" subtitle:@"订阅开盘通知，楼盘开盘信息会及时发送到您的手机" btnTitle:@"提交"];
+        }
+    }
+}
+- (void)priceChangedNotifyActionClick
+{
+    FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+    if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
+        FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
+        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithTitle:subtitle:btnTitle:)]) {
+            [contactViewModel fillFormActionWithTitle:@"变价通知" subtitle:@"订阅变价通知，楼盘变价信息会及时发送到您的手机" btnTitle:@"提交"];
         }
     }
 }
@@ -247,12 +259,13 @@ static const CGFloat kLabelKeyRightPandding = -20;
     NSString *courtId = ((FHDetailNewHouseCoreInfoModel *)self.currentData).courtId;
     FHDetailNewHouseCoreInfoModel *houseNameModel = (FHDetailNewHouseCoreInfoModel *)self.currentData;
     NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
     [infoDict setValue:houseNameModel.houseName forKey:@"courtInfo"];
     [infoDict setValue:houseNameModel.disclaimerModel forKey:@"disclaimerInfo"];
 
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?courtId=%@",courtId]] userInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?court_id=%@",courtId]] userInfo:info];
 }
 
 - (void)openMapDetail

@@ -1101,6 +1101,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     [strUrl appendFormat:@"&house_type=4"]; // 小区
+    [strUrl appendFormat:@"&source=rent_detail"]; // 租房半屏列表进入小区
 
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];

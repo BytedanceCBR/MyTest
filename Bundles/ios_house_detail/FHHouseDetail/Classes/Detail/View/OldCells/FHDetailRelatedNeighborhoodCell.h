@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailRelatedNeighborhoodModel : FHDetailBaseModel
 
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
+@property (nonatomic, copy , nullable) NSString *neighborhoodId;
 
 @end
 

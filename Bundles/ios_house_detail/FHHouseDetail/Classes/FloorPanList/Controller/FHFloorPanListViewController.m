@@ -37,10 +37,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    //设置导航条为黑色
-    [self refreshContentOffset:CGPointMake(0, 500)];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    
+
     [self setUpSegmentedControl];
     
     [self setUpLeftView];
@@ -51,7 +48,7 @@
     
     [self setNavBarTitle:@"楼盘户型"];
     
-    [self removeBottomLine];
+    [(FHDetailNavBar *)[self getNaviBar] removeBottomLine];
 
     // Do any additional setup after loading the view.
 }
