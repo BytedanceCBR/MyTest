@@ -130,7 +130,11 @@
     FHDetailOldModel *ershouData = (FHDetailOldModel *)model.baseViewModel.detailData;
     NSDictionary *jsonDic = [ershouData toDictionary];
     if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
-        // 记得添加埋点 add by zyk
+
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
+        
         NSString *openUrl = @"sslocal://webview";
         NSDictionary *pageData = @{@"data":jsonDic};
         NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
