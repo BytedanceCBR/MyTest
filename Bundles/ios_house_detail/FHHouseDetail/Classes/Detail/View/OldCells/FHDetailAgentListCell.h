@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UIButton       *imBtn;
 @property (nonatomic, strong)   UILabel       *name;
 @property (nonatomic, strong)   UILabel       *agency;
-@property (nonatomic, strong)   NSString      *imUrl;
+
 
 @end
 

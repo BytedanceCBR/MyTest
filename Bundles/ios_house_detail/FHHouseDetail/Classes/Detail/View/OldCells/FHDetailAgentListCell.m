@@ -59,9 +59,11 @@
             itemView.tag = idx;
             itemView.licenceIcon.tag = idx;
             itemView.callBtn.tag = idx;
+            itemView.imBtn.tag = idx;
             [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
             
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -76,7 +78,6 @@
             }
             itemView.licenceIcon.hidden = ![self shouldShowContact:obj];
             itemsCount += 1;
-            itemView.imUrl = obj.imOpenUrl;
         }];
 
     }
@@ -134,6 +135,16 @@
         [model.phoneCallViewModel callWithPhone:contact.phone searchId:model.searchId imprId:model.imprId];
         // 静默关注功能
         [model.followUpViewModel silentFollowHouseByFollowId:model.houseId houseType:model.houseType actionType:model.houseType showTip:NO];
+    }
+}
+
+// 点击会话
+- (void)imclick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel imchatActionWithPhone:contact];
     }
 }
 
@@ -294,7 +305,6 @@
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal"] forState:UIControlStateNormal];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
-    [_imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchDown];
     [self addSubview:_imBtn];
     
     self.name = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
@@ -339,12 +349,6 @@
         make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avator);
     }];
-}
-
-- (void)imclick:(UIButton *)btn {
-    NSString *url = [_imUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL *URL = [NSURL URLWithString:url];
-    [[TTRoute sharedRoute] openURLByPushViewController:URL];
 }
 
 @end

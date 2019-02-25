@@ -149,9 +149,11 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     
     [TTTracker eventV3:@"click_im" params:dict];
     
-    NSString *utfUrl = [contactPhone.imOpenUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSURL *openUrl = [NSURL URLWithString:utfUrl];
+    NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:nil];
+//    NSString *ts = @"sslocal://open_single_chat?target_user_id=109969843762&chat_title=%E5%BC%A0%E5%AD%9F%E5%9C%B0&house_id=6642624036117413896&house_type=2&house_cover=https%3A%2F%2Fp3.pstatp.com%2Forigin%2Ftos-cn-i-0000%2F7aa1fdb053b14347b40ede60800a5a23&house_title=2%E5%AE%A41%E5%8E%85+%E4%B8%87%E7%A7%91%E9%87%91%E8%89%B2%E5%9F%8E%E5%B8%823%E6%9C%9F&house_des=100%E5%B9%B3%E5%8D%97%E7%99%BD%E6%B2%99%E6%B4%B2&house_price=100%E4%B8%87&house_avg_price=10000%E5%85%83%2F%E5%B9%B3";
+//    NSURL *xx = [NSURL URLWithString:ts];
+//    [[TTRoute sharedRoute] openURLByPushViewController:xx userInfo:nil];
 }
 
 - (void)fillFormRequest:(NSString *)phoneNum

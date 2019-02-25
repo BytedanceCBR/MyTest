@@ -253,6 +253,7 @@
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic;
         agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
