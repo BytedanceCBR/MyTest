@@ -552,7 +552,8 @@
     [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
     [envBridge setTraceValue:self.originSearchId forKey:@"origin_search_id"];
 
-    NSMutableDictionary* tracer = [[self.viewController.tracerModel neatLogDict] mutableCopy];
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    [tracer addEntriesFromDictionary:[self.viewController.tracerModel neatLogDict]];
     tracer[@"card_type"] = @"left_pic";
     tracer[@"element_from"] = @"be_null";
     tracer[@"enter_from"] = @"renting";
@@ -784,7 +785,9 @@
        
         SETTRACERKV(UT_ORIGIN_FROM, originFrom);
         
-        NSMutableDictionary *params = [[self.viewController.tracerModel neatLogDict] mutableCopy];
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params addEntriesFromDictionary:[self.viewController.tracerModel neatLogDict] ];
+
         params[@"enter_from"] = @"renting";
         params[@"origin_from"] = originFrom;
         params[@"origin_search_id"] = nil;//remove origin_search_id
@@ -888,7 +891,8 @@
     NSMutableDictionary *homeParams = [NSMutableDictionary new];
     
     
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:[self.viewController.tracerModel logDict]];
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
     params[@"page_type"] = @"renting";
     params[@"origin_search_id"] = self.viewController.tracerModel.originSearchId?:@"be_null";
     params[@"hot_word"] = @"be_null";
