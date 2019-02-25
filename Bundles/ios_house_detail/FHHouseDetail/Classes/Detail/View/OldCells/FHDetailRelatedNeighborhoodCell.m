@@ -62,6 +62,9 @@
         colView.clickBlk = ^(NSInteger index) {
             [wSelf collectionCellClick:index];
         };
+        colView.displayCellBlk = ^(NSInteger index) {
+            [wSelf collectionDisplayCell:index];
+        };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
             make.left.right.mas_equalTo(self.containerView);
@@ -107,7 +110,38 @@
 - (void)moreButtonClick:(UIButton *)button {
     FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
     if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.hasMore) {
-        // 点击事件处理
+        // 点击 查看更多 事件处理
+//        let loadMoreParams = EnvContext.shared.homePageParams <|>
+//        toTracerParams("neighborhood_nearby", key: "element_type") <|>
+//        toTracerParams(id, key: "group_id") <|>
+//        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
+//        toTracerParams("old_detail", key: "page_type")
+//        recordEvent(key: "neighborhood_nearby", params: loadMoreParams)
+        
+        NSString *searchId = model.relatedNeighborhoodData.searchId;
+//        NSString *neighborhoodId = ((FHDetailOldModel *)self.baseViewModel).data.neighborhoodInfo.id;
+        
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"enter_type"] = @"click";
+        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"category_name"] = @"neighborhood_nearby_list";
+        tracerDic[@"element_type"] = @"be_null";
+        tracerDic[@"element_from"] = @"neighborhood_nearby";
+        
+//        NSMutableDictionary *userInfo = [NSMutableDictionary new];
+//        userInfo[@"tracer"] = tracerDic;
+//        userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+//        userInfo[@"title"] = @"周边小区---";
+//        if (neighborhoodId.length > 0) {
+//            userInfo[@"neighborhoodId"] = neighborhoodId;
+//        }
+//
+//        TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+//        NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+//        if (urlStr.length > 0) {
+//            NSURL *url = [NSURL URLWithString:urlStr];
+//            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+//        }
     }
 }
 // cell 点击
@@ -115,9 +149,42 @@
     FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
     if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
         // 点击cell处理
-        FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
-        
+        FHDetailRelatedNeighborhoodResponseDataItemsModel *dataItem = model.relatedNeighborhoodData.items[index];
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"slide";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
+        tracerDic[@"element_from"] = @"neighborhood_nearby";
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood)}];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",dataItem.id];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
     }
+}
+
+// 不重复调用
+- (void)collectionDisplayCell:(NSInteger)index
+{
+    FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
+    if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.items.count > 0 && index >= 0 && index < model.relatedNeighborhoodData.items.count) {
+        // 点击cell处理
+        FHDetailRelatedNeighborhoodResponseDataItemsModel *itemModel = model.relatedNeighborhoodData.items[index];
+        // house_show
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"slide";
+        tracerDic[@"log_pb"] = itemModel.logPb ? itemModel.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
+        tracerDic[@"element_type"] = @"neighborhood_nearby";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+    }
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"neighborhood_nearby"; // 周边小区
 }
 
 @end
@@ -175,7 +242,8 @@
     _descLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
     [self addSubview:_descLabel];
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
+    _priceLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:16];
+    _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     
     _spaceLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];

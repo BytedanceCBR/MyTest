@@ -47,7 +47,7 @@
             [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
                 make.width.mas_equalTo(60);
-                make.top.mas_equalTo(7);
+                make.top.mas_equalTo(0);
                 make.height.mas_equalTo(21);
             }];
             
@@ -72,7 +72,7 @@
                     make.top.equalTo(previouseView.mas_bottom).offset(10);
                 }else
                 {
-                    make.top.equalTo(self.contentView).offset(10);
+                    make.top.equalTo(self.contentView).offset(18);
                 }
                 if (i == [model.list count] - 1) {
                     make.bottom.equalTo(self.contentView).offset(-10);

@@ -21,6 +21,11 @@
 #import "FHDetailNeighborhoodPropertyInfoCell.h"
 #import "FHDetailRelatedNeighborhoodCell.h"
 #import "FHDetailNeighborhoodHouseCell.h"
+#import "FHDetailNeighborhoodTransationHistoryCell.h"
+#import "FHDetailNeighborhoodEvaluateCell.h"
+#import "FHDetailNearbyMapCell.h"
+#import "FHDetailNewModel.h"
+#import "FHDetailPureTitleCell.h"
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -38,12 +43,15 @@
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     [self.tableView registerClass:[FHDetailNeighborPriceChartCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborPriceChartCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodNameCell class])];
+    [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodStatsInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodStatsInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodPropertyInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodPropertyInfoCell class])];
     [self.tableView registerClass:[FHDetailRelatedNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRelatedNeighborhoodCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodHouseCell class])];
-
+    [self.tableView registerClass:[FHDetailNeighborhoodTransationHistoryCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodTransationHistoryCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
+    [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -58,6 +66,10 @@
     if ([model isKindOfClass:[FHDetailGrayLineModel class]]) {
         return [FHDetailGrayLineCell class];
     }
+    // 周边配套
+    if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
+        return [FHDetailNearbyMapCell class];
+    }
     // 在售（在租）信息
     if ([model isKindOfClass:[FHDetailNeighborhoodStatsInfoModel class]]) {
         return [FHDetailNeighborhoodStatsInfoCell class];
@@ -70,9 +82,23 @@
     if ([model isKindOfClass:[FHDetailRelatedNeighborhoodModel class]]) {
         return [FHDetailRelatedNeighborhoodCell class];
     }
+    // 小区成交历史
+    if ([model isKindOfClass:[FHDetailNeighborhoodTransationHistoryModel class]]) {
+        return [FHDetailNeighborhoodTransationHistoryCell class];
+    }
     // 小区房源
     if ([model isKindOfClass:[FHDetailNeighborhoodHouseModel class]]) {
         return [FHDetailNeighborhoodHouseCell class];
+    }
+    // 小区评测
+    if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
+        return [FHDetailNeighborhoodEvaluateCell class];
+    }
+    if ([model isKindOfClass:[FHDetailPriceTrendCellModel class]]) {
+        return [FHDetailNeighborPriceChartCell class];
+    }
+    if ([model isKindOfClass:[FHDetailPureTitleModel class]]) {
+        return [FHDetailPureTitleCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -84,23 +110,25 @@
 // 网络数据请求
 - (void)startLoadData {
     // 详情页数据-Main
-    //    NSDictionary *logpb = @{@"abc":@"vvv",@"def":@"cccc"};
-    // add by zyk 记得logpb数据 传入
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:nil query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId logPB:self.listLogPB query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
+                [self.detailController.emptyView hideEmptyView];
+                wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
                 wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         } else {
             wSelf.detailController.hasValidateData = NO;
+            wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
         }
     }];
@@ -108,7 +136,13 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailNeighborhoodModel *)model {
+    
+    self.contactViewModel.shareInfo = model.data.shareInfo;
+    self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
+    self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
+    
     self.detailData = model;
+    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -125,7 +159,7 @@
         [self.items addObject:houseName];
     }
     // 添加 在售（在租）信息
-    if (model.data.statsInfo.count > 0) {
+    if (model.data.statsInfo.count == 3) {
         FHDetailNeighborhoodStatsInfoModel *infoModel = [[FHDetailNeighborhoodStatsInfoModel alloc] init];
         infoModel.statsInfo = model.data.statsInfo;
         [self.items addObject:infoModel];
@@ -140,9 +174,61 @@
         infoModel.baseInfo = model.data.baseInfo;
         [self.items addObject:infoModel];
     }
+    // 小区评测
+    if (model.data.evaluationInfo) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        infoModel.evaluationInfo = model.data.evaluationInfo;
+        [self.items addObject:infoModel];
+    }
     // 周边配套
+    if (model.data.neighborhoodInfo.gaodeLat && model.data.neighborhoodInfo.gaodeLng) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        
+        FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
+        nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        //        nearbyMapModel.tableView = self.tableView;
+        [self.items addObject:nearbyMapModel];
+        
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ((FHDetailNearbyMapCell *)nearbyMapModel.cell) {
+                ((FHDetailNearbyMapCell *)nearbyMapModel.cell).indexChangeCallBack = ^{
+                    [self reloadData];
+                };
+            }
+        });
+    }
     // 均价走势
+    if (model.data.priceTrend.count > 0) {
+        
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
+        titleModel.title = @"均价走势";
+        [self.items addObject:titleModel];
+        FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
+        priceTrendModel.priceTrends = model.data.priceTrend;
+        priceTrendModel.tableView = self.tableView;
+        [self.items addObject:priceTrendModel];
+    }
+    
     // 小区成交历史
+    if (model.data.totalSales.list.count > 0) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodTransationHistoryModel *infoModel = [[FHDetailNeighborhoodTransationHistoryModel alloc] init];
+        infoModel.totalSalesCount = model.data.totalSalesCount;
+        infoModel.totalSales = model.data.totalSales;
+        infoModel.neighborhoodId = self.houseId;
+        [self.items addObject:infoModel];
+    }
     [self reloadData];
 }
 

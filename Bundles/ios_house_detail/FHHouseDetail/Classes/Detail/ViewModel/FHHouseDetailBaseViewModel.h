@@ -11,6 +11,8 @@
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
 #import "FHHouseDetailContactViewModel.h"
+#import <TTReachability.h>
+#import "FHDetailNavBar.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,7 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的列表页的logPB
+@property (nonatomic, strong)   NSDictionary       *logPB; // 当前详情页的logPB，详情页请求后data中的log_pb
+@property(nonatomic , strong) NSMutableDictionary *detailTracerDic; // 详情页基础埋点数据
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
+@property (nonatomic, weak) FHDetailNavBar *navBar;
+@property (nonatomic, weak) UILabel *bottomStatusBar;
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseDetailViewController *detailController;
 @property (nonatomic, strong) NSMutableArray *items;// 子类维护的数据源
@@ -35,6 +42,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 刷新数据
 - (void)reloadData;
+
+
+// 埋点相关
+- (void)addGoDetailLog;
+- (void)addStayPageLog:(NSTimeInterval)stayTime;
 
 @end
 

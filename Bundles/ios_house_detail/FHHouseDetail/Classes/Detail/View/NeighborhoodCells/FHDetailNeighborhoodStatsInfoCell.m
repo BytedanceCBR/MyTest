@@ -18,6 +18,12 @@
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 
+@interface FHDetailNeighborhoodStatsInfoCell ()
+
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowTraceDic;
+
+@end
+
 @implementation FHDetailNeighborhoodStatsInfoCell
 
 - (void)awakeFromNib {
@@ -70,6 +76,8 @@
                 itemView.valueDataLabel.isEnabled = YES;
                 itemView.isDataEnabled = YES;
                 itemView.enabled = YES;
+                // element_show 埋点
+                [self sendElementShowTrace:idx];
             }
             [self.contentView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -89,7 +97,7 @@
             CGFloat leftOffset = 20.0 + i * 70 + (i - 1 + 0.5) * space;
             [v mas_makeConstraints:^(MASConstraintMaker *maker) {
                 maker.height.mas_equalTo(27);
-                maker.width.mas_equalTo(1);
+                maker.width.mas_equalTo(0.5);
                 maker.centerY.mas_equalTo(self.contentView);
                 maker.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
@@ -97,12 +105,37 @@
     }
     [self layoutIfNeeded];
 }
+// element_show 单独埋吧： '在售房源': 'house_onsale', '成交房源': 'house_deal',在租房源：'house_rent'
+- (void)sendElementShowTrace:(NSInteger)index {
+    NSString *element_type = @"be_null";
+    switch (index) {
+        case 0:
+            element_type = @"house_onsale";
+            break;
+        case 1:
+            element_type = @"house_deal";
+            break;
+        case 2:
+            element_type = @"house_rent";
+            break;
+        default:
+            break;
+    }
+    if (self.elementShowTraceDic[element_type]) {
+        return;
+    }
+    self.elementShowTraceDic[element_type] = @(YES);
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"element_type"] = element_type;
+    [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _elementShowTraceDic = [NSMutableDictionary new];
     }
     return self;
 }
@@ -112,7 +145,74 @@
     NSInteger index = control.tag;
     if (model && model.statsInfo.count > 0 && index >= 0 && index < model.statsInfo.count) {
         FHDetailNeighborhoodDataStatsInfoModel *info = model.statsInfo[index];
-        NSLog(@"click：%ld",index);
+        NSString *openUrl = [info.openUrl stringByRemovingPercentEncoding];
+        if (openUrl.length > 0) {
+            openUrl = [openUrl stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+            NSURL *theUrl = [NSURL URLWithString:openUrl];
+            if (theUrl) {
+                FHDetailNeighborhoodModel *detailModel = self.baseViewModel.detailData;
+                NSString *neighborhood_id = @"";
+                if (detailModel && detailModel.data.id.length > 0) {
+                    neighborhood_id = detailModel.data.id;
+                }
+                NSString *house_id = @"";
+                if (self.baseViewModel.houseId.length > 0) {
+                    house_id = self.baseViewModel.houseId;
+                }
+                NSMutableDictionary *userInfo = [NSMutableDictionary new];
+                if (neighborhood_id.length > 0) {
+                    userInfo[@"neighborhoodId"] = neighborhood_id;
+                }
+                NSString *element_from = @"be_null";
+                NSString *category_name = @"be_null";
+                NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+                tracerDic[@"enter_type"] = @"click";
+                tracerDic[@"log_pb"] = detailModel.data.logPb ? detailModel.data.logPb : @"be_null";
+                switch (index) {
+                    case 0:
+                        // 在售房源
+                        element_from = @"house_onsale";
+                        category_name = @"same_neighborhood_list";
+                        userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+                        userInfo[@"list_vc_type"] = @(3);
+                        if (detailModel.data.name.length > 0) {
+                            NSString *name = @"0套";
+                            if (info.value.length > 0) {
+                                name  = info.value;
+                            }
+                            userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.name,name];
+                        }
+                        break;
+                    case 1:
+                        // 成交历史
+                        element_from = @"house_deal";
+                        category_name = @"neighborhood_trade_list";
+                        break;
+                    case 2:
+                        // 在租房源
+                        element_from = @"house_renting";
+                        category_name = @"same_neighborhood_list";
+                        userInfo[@"house_type"] = @(FHHouseTypeRentHouse);
+                        userInfo[@"list_vc_type"] = @(4);
+                        if (detailModel.data.name.length > 0) {
+                            NSString *name = @"0套";
+                            if (info.value.length > 0) {
+                                name  = info.value;
+                            }
+                            userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.name,name];
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                tracerDic[@"category_name"] = category_name;
+                tracerDic[@"element_from"] = element_from;
+                tracerDic[@"enter_from"] = @"neighborhood_detail";
+                userInfo[@"tracer"] = tracerDic;
+                TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+                [[TTRoute sharedRoute] openURLByPushViewController:theUrl userInfo:userInf];
+            }
+        }
     }
 }
 

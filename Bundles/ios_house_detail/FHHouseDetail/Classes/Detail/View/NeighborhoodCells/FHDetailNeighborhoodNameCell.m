@@ -64,9 +64,9 @@
                 self.monthUpLabel.text = [NSString stringWithFormat:@"%.2f%%",fabsf(value)];
                 self.monthUpTrend.hidden = NO;
                 if (value > 0) {
-                    self.monthUpTrend.image = [UIImage imageNamed:@"monthup_trend_up"];
+                    self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_red"];
                 } else {
-                    self.monthUpTrend.image = [UIImage imageNamed:@"monthup_trend_down"];
+                    self.monthUpTrend.image = [UIImage imageNamed:@"detail_trend_green"];
                 }
             }
         }
@@ -160,7 +160,17 @@
 
 // 打开地图
 - (void)openMapButtonClick:(UIButton *)button {
-    // add by zyk
+    NSMutableDictionary *infoDict = [NSMutableDictionary new];
+    [infoDict setValue:@"银行" forKey:@"category"];
+    FHDetailNeighborhoodNameModel *model = (FHDetailNeighborhoodNameModel *)self.currentData;
+    if (model) {
+        double lng = [model.neighborhoodInfo.gaodeLng doubleValue];
+        double lat = [model.neighborhoodInfo.gaodeLat doubleValue];
+        [infoDict setValue:@(lat) forKey:@"latitude"];
+        [infoDict setValue:@(lng) forKey:@"longitude"];
+    }
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 @end

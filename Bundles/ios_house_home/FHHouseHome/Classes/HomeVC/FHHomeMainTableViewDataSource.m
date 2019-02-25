@@ -21,6 +21,8 @@
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
+#import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -170,7 +172,6 @@
 
 #pragma mark - 详情页跳转
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
-    
     if (self.modelsArray.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
@@ -183,7 +184,7 @@
         traceParam[@"element_from"] = @"maintab_list";
         traceParam[@"enter_from"] = @"maintab";
         
-        NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
+        NSDictionary *dict = @{@"house_type":@(self.currentHouseType),
                                @"tracer": traceParam
                                };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
@@ -199,7 +200,7 @@
         {
             jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
         }
-        
+
         if (jumpUrl != nil) {
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }

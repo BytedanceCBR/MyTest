@@ -28,9 +28,9 @@ def appPods
     #pod 'ios_house_filter' , :path => '../../lab/ios_house_filter' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
 #	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
 	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :branch => 'feature/develop'
+#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :branch => 'feature/develop'
 #    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
-#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
+    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
     pod 'SecGuard', '0.8.10.1'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'

@@ -17,6 +17,7 @@
 #import "FHDetailHeaderView.h"
 #import "FHExtendHotAreaButton.h"
 #import "UILabel+House.h"
+#import "FHEnvContext.h"
 
 @interface FHDetailRentHouseOutlineInfoCell ()
 
@@ -87,6 +88,10 @@
     return self;
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"house_info";
+}
+
 - (void)setupUI {
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"房源概况";
@@ -134,7 +139,10 @@
         // 记得添加埋点 add by zyk
         NSString *openUrl = @"sslocal://webview";
         NSDictionary *pageData = @{@"data":jsonDic};
-        NSDictionary *commonParams = @{};// 记得修改此处的数据 add by zyk
+        NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        if (commonParams == nil) {
+            commonParams = @{};
+        }
         NSDictionary *commonParamsData = @{@"data":commonParams};
         NSDictionary *jsParams = @{@"requestPageData":pageData,
                                    @"getNetCommonParams":commonParamsData

@@ -12,6 +12,7 @@
 #import "FHCommonDefines.h"
 #import <TTShareManager.h>
 #import <TTPhotoScrollViewController.h>
+#import "FHUserTracker.h"
 
 #define K_PhotoHeader_HEIGHT 300
 #define K_CELLID @"cell_id"
@@ -28,6 +29,10 @@
 @property(nonatomic , strong) UILabel *infoLabel;
 @property(nonatomic , strong) UIImage *placeHolder;
 @property(nonatomic , strong) UIImageView *noDataImageView;
+@property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
+@property(nonatomic, assign) BOOL isLarge;
+@property(nonatomic, assign) NSInteger currentIndex;
+@property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @end
 
 @implementation FHDetailPhotoHeaderCell
@@ -58,6 +63,8 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        
+        _pictureShowDict = [NSMutableDictionary dictionary];
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         //        layout.estimatedItemSize = CGSizeMake(SCREEN_WIDTH, HEIGHT);
@@ -145,6 +152,70 @@
     }
 }
 
+//埋点
+- (void)trackPictureShowWithIndex:(NSInteger)index {
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
+    NSString *showType = self.isLarge ? @"large" : @"small";
+    NSString *row = [NSString stringWithFormat:@"%@_%i",showType,index];
+    self.isLarge = NO;
+    if (_pictureShowDict[row]) {
+        return;
+    }
+    
+    _pictureShowDict[row] = row;
+    
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    dict[@"picture_id"] = img.url;
+    dict[@"show_type"] = showType;
+    TRACK_EVENT(@"picture_show", dict);
+}
+
+//埋点
+- (void)trackPictureLargeStayWithIndex:(NSInteger)index {
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    dict[@"picture_id"] = img.url;
+    dict[@"show_type"] = @"large";
+    
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+    if (duration <= 0) {
+        return;
+    }
+    
+    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+    TRACK_EVENT(@"picture_large_stay", dict);
+}
+
+//埋点
+- (void)trackSavePictureWithIndex:(NSInteger)index {
+    id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    dict[@"picture_id"] = img.url;
+    dict[@"show_type"] = @"large";
+    
+    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+    if (duration <= 0) {
+        return;
+    }
+    
+    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+    TRACK_EVENT(@"picture_save", dict);
+}
+
+
 -(NSInteger)indexForIndexPath:(NSIndexPath *)indexPath
 {
     if (_images.count <= 1) {
@@ -174,6 +245,11 @@
     return [_images count]+2;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger index = [self indexForIndexPath:indexPath];
+    [self trackPictureShowWithIndex:index];
+}
+
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     FHPhotoHeaderCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:K_CELLID forIndexPath:indexPath];
@@ -181,7 +257,7 @@
     NSInteger index = [self indexForIndexPath:indexPath];
     
     id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
-    
+
     NSURL *url = [NSURL URLWithString:img.url];
     [cell.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
     
@@ -289,11 +365,26 @@
     __weak typeof(self) weakSelf = self;
     vc.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.images.count) {
+            weakSelf.currentIndex = currentIndex;
+            weakSelf.isLarge = YES;
             NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
             [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
     };
-    [vc presentPhotoScrollView];
+    
+    [vc presentPhotoScrollViewWithDismissBlock:^{
+        weakSelf.isLarge = NO;
+        [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
+        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+    }];
+    
+    vc.saveImageBlock = ^(NSInteger currentIndex) {
+        [weakSelf trackSavePictureWithIndex:currentIndex];
+    };
+    
+    self.isLarge = YES;
+    [self trackPictureShowWithIndex:index];
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
 }
 
 @end

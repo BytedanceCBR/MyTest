@@ -1,20 +1,5 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHDetailFloorPanDetailInfoModel.h"
-@implementation FHDetailFloorPanDetailInfoDataImagesModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"urlList": @"url_list",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailFloorPanDetailInfoDataContactModel
 + (JSONKeyMapper*)keyMapper
@@ -59,6 +44,7 @@
     @"saleStatus": @"sale_status",
     @"pricingPerSqm": @"pricing_per_sqm",
     @"imprId": @"impr_id",
+    @"saleStatus": @"sale_status",
     @"searchId": @"search_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -108,22 +94,7 @@
     @"pricingPerSqm": @"pricing_per_sqm",
     @"districtName": @"district_name",
     @"courtId": @"court_id",
-  };
-  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-     return dict[keyName]?:keyName;
-  }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
-@implementation FHDetailFloorPanDetailInfoDataRecommendImagesModel
-+ (JSONKeyMapper*)keyMapper
-{
-  NSDictionary *dict = @{
-    @"urlList": @"url_list",
+    @"saleStatus": @"sale_status"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

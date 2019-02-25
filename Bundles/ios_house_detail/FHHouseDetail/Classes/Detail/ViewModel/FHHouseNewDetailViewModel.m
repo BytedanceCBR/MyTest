@@ -11,7 +11,6 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailPhotoHeaderCell.h"
-#import "FHDetailHouseModelCell.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailNewHouseCoreInfoCell.h"
 #import "FHDetailNewHouseNewsCell.h"
@@ -24,6 +23,7 @@
 #import "FHDetailRelatedCourtModel.h"
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
+#import "FHDetailNewListSingleImageCell.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -45,8 +45,6 @@
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
 
     [self.tableView registerClass:[FHDetailNewHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewHouseCoreInfoCell class])];
-
-    [self.tableView registerClass:[FHDetailHouseModelCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseModelCell class])];
     
     [self.tableView registerClass:[FHDetailNewMutiFloorPanCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewMutiFloorPanCell class])];
     
@@ -58,7 +56,7 @@
 
     [self.tableView registerClass:[FHDetailNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapCell class])];
     
-    [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHSingleImageInfoCell class])];
+    [self.tableView registerClass:[FHDetailNewListSingleImageCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNewListSingleImageCell class])];
 
 }
 // cell class
@@ -104,7 +102,7 @@
     
     //周边新盘
     if ([model isKindOfClass:[FHNewHouseItemModel class]]) {
-        return [FHSingleImageInfoCell class];
+        return [FHDetailNewListSingleImageCell class];
     }
     
     //版权信息
@@ -123,20 +121,28 @@
 - (void)startLoadData
 {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNewDetail:self.houseId completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
-        if ([model isKindOfClass:[FHDetailNewModel class]]) {
+    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+        if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             wSelf.dataModel = model;
+            wSelf.detailController.hasValidateData = YES;
+            [self.detailController.emptyView hideEmptyView];
+            wSelf.bottomBar.hidden = NO;
             [wSelf processDetailData:model];
+        }else
+        {
+            wSelf.detailController.hasValidateData = NO;
+            wSelf.bottomBar.hidden = YES;
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
 
 
 - (void)processDetailData:(FHDetailNewModel *)model {
+    self.detailData = model;
+    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
-//    se = model;
-    // --
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
@@ -144,7 +150,7 @@
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
-    
+
     __weak typeof(self) wSelf = self;
     if (model.data) {
         [FHHouseDetailAPI requestRelatedFloorSearch:self.houseId offset:@"0" query:nil count:0 completion:^(FHDetailRelatedCourtModel * _Nullable model, NSError * _Nullable error) {
@@ -198,7 +204,7 @@
     }
     
     //楼盘户型
-    if (model.data.floorpanList) {
+    if ([model.data.floorpanList.list isKindOfClass:[NSArray class]] && model.data.floorpanList.list.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
@@ -273,10 +279,9 @@
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
         {
             FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
+            itemModel.index = i;
             [self.items addObject:itemModel];
         }
-        
-        [self reloadData];
     }
     
     //楼盘版权信息
@@ -284,6 +289,17 @@
         FHDetailDisclaimerModel *disclaimerModel = [[FHDetailDisclaimerModel alloc] init];
         disclaimerModel.disclaimer = [[FHDisclaimerModel alloc] initWithData:[self.dataModel.data.disclaimer toJSONData] error:nil];
         [self.items addObject:disclaimerModel];
+    }
+    
+    [self reloadData];
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    FHDetailBaseCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell.didClickCellBlk) {
+        cell.didClickCellBlk();
     }
 }
 

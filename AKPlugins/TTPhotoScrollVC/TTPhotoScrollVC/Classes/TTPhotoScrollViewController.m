@@ -17,12 +17,16 @@
 #import "TTTracker.h"
 #import "TTImagePreviewAnimateManager.h"
 #import "ALAssetsLibrary+TTImagePicker.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 
-#define indexPromptLabelTextSize 14.f
+#define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
 #define indexPormptLabelLeftPadding 5.f
 #define indexPormptLabelWidth 50.f
 #define indexPormptLabelHeight 28.f
+
+#define indexTitleLabelTextSize 17.f
 
 #define saveButtonTextSize 14.f
 #define saveButtonBottomPadding 5.f
@@ -55,7 +59,7 @@
 @property(nonatomic, assign, readwrite)NSInteger photoCount;
 
 @property(nonatomic, strong)NSMutableSet * photoViewPools;
-
+@property(nonatomic, strong)UILabel * titleLabel;
 @property(nonatomic, strong)UILabel * indexPromptLabel;
 @property(nonatomic, strong)UIButton * closeButton;
 
@@ -75,6 +79,7 @@
 @property(nonatomic, strong)UIButton * saveButton;
 
 @property(nonatomic, strong)UIPanGestureRecognizer * panGestureRecognizer;
+@property(nonatomic, strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 //统计extra
 @property (nonatomic, strong) NSDictionary *trackerDic;
@@ -109,7 +114,7 @@
         _photoCount = 0;
         _mode = PhotosScrollViewSupportDownloadMode;
         _autoSelectImageWhenClickDone = NO;
-        
+        _longPressToSave = YES;
         
         self.ttHideNavigationBar = YES;
         
@@ -199,7 +204,7 @@
         _indexPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding, indexPormptLabelWidth, indexPormptLabelHeight)];
         _indexPromptLabel.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
         [_indexPromptLabel setTextColor:[UIColor tt_defaultColorForKey:kColorBackground4]];
-        [_indexPromptLabel setFont:[UIFont systemFontOfSize:indexPromptLabelTextSize]];
+        [_indexPromptLabel setFont:[UIFont themeFontRegular:indexPromptLabelTextSize]];
         _indexPromptLabel.layer.cornerRadius = 6.f;
         _indexPromptLabel.textAlignment = NSTextAlignmentCenter;
         _indexPromptLabel.clipsToBounds = YES;
@@ -224,6 +229,21 @@
             _saveButton.hidden = YES;
             _indexPromptLabel.centerX = self.view.width/2;
             _indexPromptLabel.autoresizingMask  = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+        }
+        
+        if(_imageTitles){
+            _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, topBarHeight)];
+            _topBar.backgroundColor = [UIColor clearColor];
+            [self.view addSubview:_topBar];
+            // titleLabel
+            _titleLabel = [[UILabel alloc] initWithFrame:_topBar.bounds];
+            _titleLabel.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
+            [_titleLabel setTextColor:[UIColor tt_defaultColorForKey:kColorBackground4]];
+            [_titleLabel setFont:[UIFont themeFontRegular:indexTitleLabelTextSize]];
+            _titleLabel.textAlignment = NSTextAlignmentCenter;
+            _titleLabel.clipsToBounds = YES;
+            _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
+            [self.topBar addSubview:_titleLabel];
         }
     }
     
@@ -298,6 +318,10 @@
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
     self.panGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:_panGestureRecognizer];
+    
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    self.longPressGestureRecognizer.delegate = self;
+    [self.view addGestureRecognizer:_longPressGestureRecognizer];
     
     if ([TTImagePreviewAnimateManager interativeExitEnable]){
         self.animateManager.panDelegate = self;
@@ -385,6 +409,9 @@
     
     [self scrollToIndex:_currentIndex];
     [self refreshIndexPromptLabel];
+    if(self.imageTitles){
+        [self refreshIndexTitleLabel];
+    }
 }
 
 
@@ -548,6 +575,22 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }
 }
 
+- (void)refreshIndexTitleLabel
+{
+    if (_currentIndex < 0 || _photoCount < 0) {
+        _titleLabel.hidden = YES;
+        return;
+    }
+    
+    if(_currentIndex < self.imageTitles.count){
+         _titleLabel.hidden = NO;
+        [_titleLabel setText:self.imageTitles[_currentIndex]];
+    }else{
+        _titleLabel.hidden = YES;
+        [_titleLabel setText:@""];
+    }
+}
+
 - (void)refreshIndexPromptLabel
 {
     if (_indexPromptLabel.hidden)
@@ -604,6 +647,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
     
     _currentIndex = newIndex;
     
+    if(self.imageTitles){
+        [self refreshIndexTitleLabel];
+    }
     [self refreshIndexPromptLabel];
     [self setSelectedAtIndex:_currentIndex];
     
@@ -934,6 +980,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
 {
     TTShowImageView * currentImageView = [self showImageViewAtIndex:_currentIndex];
     [currentImageView saveImage];
+    if(self.saveImageBlock){
+        self.saveImageBlock(self.currentIndex);
+    }
 }
 
 
@@ -957,6 +1006,22 @@ static BOOL staticPhotoBrowserAtTop = NO;
             [self animatePhotoViewWhenGestureEnd];
             break;
         }
+        default:
+            break;
+    }
+}
+
+- (void)longPress:(UILongPressGestureRecognizer *)recognizer
+{
+    if (!_longPressToSave || self.interfaceOrientation != UIInterfaceOrientationPortrait) {
+        return;
+    }
+
+    switch (recognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            NSLog(@"longpress");
+            [self saveButtonClicked:self.saveButton];
+            break;
         default:
             break;
     }
@@ -1412,6 +1477,10 @@ static BOOL staticPhotoBrowserAtTop = NO;
     if (gestureRecognizer == self.panGestureRecognizer){
         return ![self newGestureEnable];
     }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 

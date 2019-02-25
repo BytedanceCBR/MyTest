@@ -73,11 +73,13 @@
 
 - (void)getNewNumberForTimer {
     __weak typeof(self) wself = self;
-    [self getNewNumberWithCompletion:^(NSInteger number, NSError * _Nonnull error) {
+    [self getNewNumberWithCompletion:^(NSInteger number,id obj ,NSError * _Nonnull error) {
         if(!error){
             wself.unreadSystemMsgCount = number;
 //            [wself setBadgeNumber:number];
             [self refreshBadgeNumber];
+//            [wself setBadgeNumber:number];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHMessageUnreadChangedNotification" object:obj];
         }
     }];
 }
@@ -91,7 +93,10 @@
     [self setBadgeNumber:_unreadChatMsgCount + _unreadSystemMsgCount];
 }
 
-- (void)getNewNumberWithCompletion:(void(^)(NSInteger number , NSError *error))completion {
+//- (void)getNewNumberWithCompletion:(void(^)(NSInteger number , NSError *error))completion {
+////=======
+- (void)getNewNumberWithCompletion:(void(^)(NSInteger number ,id obj ,NSError *error))completion {
+//>>>>>>> a48c522ed4c88b587f9c054c46beab41a8871ff2
     
     NSString *url = [[FHURLSettings baseURL] stringByAppendingString:@"/f100/api/msg/unread"];
     
@@ -115,7 +120,7 @@
             }
         }
         if (completion) {
-            completion(count,error);
+            completion(count,obj,error);
         }
     }];
 }

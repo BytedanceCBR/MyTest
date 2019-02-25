@@ -31,6 +31,16 @@
     // sub implements.........
 }
 
+// element_show 的时候 element_type，返回为空不上报
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"";
+}
+
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    return @[];
+}
+
 @end
 
 // FHDetailBaseCollectionCell

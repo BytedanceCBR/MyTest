@@ -34,6 +34,13 @@
 //    badgeView.badgeNumber = tabMsgCount;
 }
 
-
+- (void)setMessageTabBadgeNumber:(NSInteger)number {
+    TTTabBarItem *tabBarItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMessageTabKey];
+    if(number > 0){
+        tabBarItem.ttBadgeView.badgeNumber = number;
+    }else{
+        tabBarItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+    }
+}
 
 @end

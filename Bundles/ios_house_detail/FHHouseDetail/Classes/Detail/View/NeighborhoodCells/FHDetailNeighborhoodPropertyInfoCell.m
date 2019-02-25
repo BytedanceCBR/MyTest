@@ -88,14 +88,14 @@
             make.bottom.mas_equalTo(self.contentView).offset(-20);
         }];
     }
-    [self updateItems];
+    [self updateItems:NO];
 }
 
 - (void)foldButtonClick:(UIButton *)button {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
-    [self updateItems];
+    [self updateItems:YES];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -128,10 +128,12 @@
     }];
 }
 
-- (void)updateItems {
+- (void)updateItems:(BOOL)animated {
     FHDetailNeighborhoodPropertyInfoModel *model = (FHDetailNeighborhoodPropertyInfoModel *)self.currentData;
     if (model.baseInfo.count > 4) {
-        [model.tableView beginUpdates];
+        if (animated) {
+            [model.tableView beginUpdates];
+        }
         if (model.isFold) {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(30 * 4);
@@ -142,7 +144,9 @@
             }];
         }
         [self setNeedsUpdateConstraints];
-        [model.tableView endUpdates];
+        if (animated) {
+            [model.tableView endUpdates];
+        }
     } else if (model.baseInfo.count > 0) {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30 * model.baseInfo.count);
@@ -154,6 +158,9 @@
     }
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"neighborhood_info";
+}
 
 @end
 

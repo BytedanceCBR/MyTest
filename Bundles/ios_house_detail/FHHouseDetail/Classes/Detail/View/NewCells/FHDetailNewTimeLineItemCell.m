@@ -90,15 +90,16 @@
             make.left.mas_equalTo(24);
             make.width.mas_equalTo(1);
             make.top.equalTo(self.contentView);
-            make.bottom.equalTo(self.redDotView.mas_top).offset(-4);
+            make.bottom.equalTo(self.redDotView.mas_top);
         }];
+        
 
 
         _timeLineTailing = [UIView new];
         _timeLineTailing.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
         [self.contentView addSubview:_timeLineTailing];
         [_timeLineTailing mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.timeLineLeading.mas_left);
+            make.left.mas_equalTo(24);
             make.width.mas_equalTo(0.5);
             make.top.equalTo(self.redDotView.mas_bottom).offset(4);
             make.bottom.equalTo(self.contentView);
@@ -118,9 +119,16 @@
 }
 
 - (void)maskButtonClick:(UIButton *)button {
-    NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+    if ([self.currentData isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
+        FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel *)self.currentData;
+        if (!model.isExpand) {
+            NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+        }
+    }
 }
+
+
 
 - (void)refreshWithData:(id)data
 {
@@ -139,8 +147,13 @@
         }
         if (model.isFirstCell) {
             [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(15);
+                make.height.mas_equalTo(10);
             }];
+            
+            _timeLineLeading.hidden = YES;
+        }else
+        {
+            _timeLineLeading.hidden = NO;
         }
         if (model.isLastCell) {
             [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {

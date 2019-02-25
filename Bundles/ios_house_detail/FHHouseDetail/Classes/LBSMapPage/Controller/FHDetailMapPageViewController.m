@@ -83,10 +83,9 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     [self setUpNaviBar];
     
-    [self setUpBottomBarView];
-    
     [self setUpMapView];
     
+    [self setUpBottomBarView];
     // Do any additional setup after loading the view.
 }
 
@@ -129,6 +128,8 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _bottomBarView = [UIView new];
     [self.view addSubview:_bottomBarView];
     CGFloat bottomBarHeight = 43;
+    [_bottomBarView setBackgroundColor:[UIColor whiteColor]];
+    
     [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([TTDeviceHelper isIPhoneXDevice]) {
             make.bottom.equalTo(self.view).offset(-40);
@@ -259,7 +260,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         make.top.equalTo(self.naviBar.mas_bottom);
         make.left.right.equalTo(self.view);
     }];
-    [_mapContainer setBackgroundColor:[UIColor redColor]];
+    [_mapContainer setBackgroundColor:[UIColor whiteColor]];
     
     
     _mapView = [[MAMapView alloc] init];
@@ -271,11 +272,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _mapView.showsUserLocation = NO;
     _mapView.zoomLevel  = 15;
     [_mapContainer addSubview:_mapView];
-    [_mapView setBackgroundColor:[UIColor blueColor]];
+    [_mapView setBackgroundColor:[UIColor whiteColor]];
     [_mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.equalTo(self.mapContainer);
     }];
-    [_mapView setBackgroundColor:[UIColor blueColor]];
+    [_mapView setBackgroundColor:[UIColor whiteColor]];
     [_mapView setCenterCoordinate:self.centerPoint];
     
     

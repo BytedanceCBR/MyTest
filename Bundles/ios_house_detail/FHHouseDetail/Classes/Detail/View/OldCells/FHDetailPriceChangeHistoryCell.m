@@ -60,6 +60,10 @@
     return self;
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"price_variation";
+}
+
 - (void)setupUI {
     _leftIconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ershou_price_tips_22"]];
     [self.contentView addSubview:_leftIconImageView];

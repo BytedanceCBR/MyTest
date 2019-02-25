@@ -27,6 +27,7 @@
 {
     self = [super init];
     if (self) {
+        self.detailController = viewController;
         _timeLineListTable = tableView;
         _courtId = courtId;
         _currentItems = [NSMutableArray new];
@@ -67,17 +68,27 @@
 
 - (void)startLoadData
 {
+    if (![TTReachability isNetworkConnected]) {
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
     if (_courtId) {
-        
+        [self.detailController startLoading];
         NSString *stringQuery = [NSString stringWithFormat:@"court_id=%@&count=%@&page=%@",_courtId,@"10",[NSString stringWithFormat:@"%ld",_currentPage]];
         
         __weak typeof(self) wSelf = self;
         [FHHouseDetailAPI requestFloorTimeLineSearch:_courtId query:stringQuery completion:^(FHDetailNewTimeLineResponseModel * _Nullable model, NSError * _Nullable error) {
-            if(model.data.list.count != 0)
+            if(model.data.list.count != 0 && !error)
             {
-                self.refreshFooter.hidden = NO;
+                [wSelf.detailController.emptyView hideEmptyView];
+                wSelf.detailController.hasValidateData = YES;
+                wSelf.refreshFooter.hidden = NO;
                 wSelf.currentPage ++;
                 [wSelf processDetailData:model];
+            }else
+            {
+                wSelf.detailController.hasValidateData = NO;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }];
     }

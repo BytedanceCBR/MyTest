@@ -19,6 +19,8 @@
 #import "IMChatStateObserver.h"
 #import "TTURLUtils.h"
 #import <libextobjc/extobjc.h>
+#import "FHUserTracker.h"
+#import "TTAccount.h"
 
 #define kCellId @"FHMessageCell_id"
 @interface DeleteAlertDelegate : NSObject<UIAlertViewDelegate>
@@ -42,6 +44,7 @@
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) id<FHMessageBridgeProtocol> messageBridge;
 @property(nonatomic, assign) BOOL isFirstLoad;
+@property(nonatomic, strong) NSString *pageType;
 
 @property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
@@ -55,7 +58,7 @@
     if (self) {
         self.combiner = [[FHConversationDataCombiner alloc] init];
         _dataList = [[NSMutableArray alloc] init];
-        
+        _isFirstLoad = YES;
         self.tableView = tableView;
         
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -67,6 +70,10 @@
         [[IMManager shareInstance] addChatStateObverver:self];
     }
     return self;
+}
+
+- (void)setPageType:(NSString *)pageType {
+    _pageType = pageType;
 }
 
 -(void)requestData {
@@ -266,6 +273,7 @@
     [params setObject:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
     [params setObject:title  forKey:KSCHEMA_CHAT_TITLE];
     NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
+    [self clickImMessageEvent:conv];
     [[TTRoute sharedRoute] openURLByPushViewController: openUrl];
 }
 
@@ -286,6 +294,18 @@
     [conv markLocalDeleted:^(NSError * _Nullable error) {
 
     }];
+}
+
+- (void)clickImMessageEvent:(IMConversation*)conv {
+    NSString *conversationId = conv.identifier;
+    NSString *targetUserId = [conv getTargetUserId: [[TTAccount sharedAccount] userIdString]];
+    NSDictionary *params = @{
+                             @"event_type": @"house_app2c_v2",
+                             @"page_type": _pageType,
+                             @"conversation_id" : conversationId,
+                             @"realtor_id" : targetUserId,
+                             };
+    [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
 
 -(void)conversationUpdated:(NSString *)conversationIdentifier {

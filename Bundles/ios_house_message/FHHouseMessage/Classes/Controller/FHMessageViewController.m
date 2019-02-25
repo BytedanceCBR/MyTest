@@ -20,7 +20,7 @@
 #import "IMManager.h"
 #import <TTReachability/TTReachability.h>
 
-@interface FHMessageViewController ()<UIViewControllerErrorHandler>
+@interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 
@@ -47,6 +47,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+//    [self.viewModel viewWillAppear];
     [self startLoadData];
 }
 
@@ -132,6 +133,11 @@
 
 - (void)initViewModel {
     _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView controller:self];
+    [_viewModel setPageType:[self getPageType]];
+}
+
+- (NSString *)getPageType {
+    return @"message_list";
 }
 
 - (void)startLoadData {

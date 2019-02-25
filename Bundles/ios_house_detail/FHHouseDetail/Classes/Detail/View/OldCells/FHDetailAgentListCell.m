@@ -23,6 +23,7 @@
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
 @property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
+@property (nonatomic, strong)   NSMutableDictionary       *tracerDicCache;
 
 @end
 
@@ -52,9 +53,18 @@
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 66.0;
-        // add by zyk -- 点击事件添加
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] init];
+            // 添加事件
+            itemView.tag = idx;
+            itemView.licenceIcon.tag = idx;
+            itemView.callBtn.tag = idx;
+            itemView.imBtn.tag = idx;
+            [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
+            
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(itemsCount * vHeight);
@@ -93,14 +103,56 @@
             make.bottom.mas_equalTo(self.contentView).offset(-20);
         }];
     }
-    [self updateItems];
+    [self updateItems:NO];
+}
+
+// cell点击
+- (void)cellClick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact];
+    }
+}
+
+// 证书点击
+- (void)licenseClick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel licenseActionWithPhone:contact];
+    }
+}
+
+// 电话点击
+- (void)phoneClick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel callWithPhone:contact.phone searchId:model.searchId imprId:model.imprId];
+        // 静默关注功能
+        [model.followUpViewModel silentFollowHouseByFollowId:model.houseId houseType:model.houseType actionType:model.houseType showTip:NO];
+    }
+}
+
+// 点击会话
+- (void)imclick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] position:@"detail_related"];
+    }
 }
 
 - (void)foldButtonClick:(UIButton *)button {
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     model.isFold = !model.isFold;
     self.foldButton.isFold = model.isFold;
-    [self updateItems];
+    [self updateItems:YES];
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel* )contact {
@@ -125,6 +177,7 @@
 }
 
 - (void)setupUI {
+    _tracerDicCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"推荐经纪人";
     [self.contentView addSubview:_headerView];
@@ -144,30 +197,85 @@
     }];
 }
 
-- (void)updateItems {
+- (void)updateItems:(BOOL)animated {
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    NSInteger realtorShowCount = 0;
     if (model.recommendedRealtors.count > 3) {
-        [model.tableView beginUpdates];
+        if (animated) {
+            [model.tableView beginUpdates];
+        }
         if (model.isFold) {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(66 * 3);
             }];
+            realtorShowCount = 3;
         } else {
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(66 * model.recommendedRealtors.count);
             }];
+            realtorShowCount = model.recommendedRealtors.count;
+            [self addRealtorClickMore];
         }
         [self setNeedsUpdateConstraints];
-        [model.tableView endUpdates];
+        if (animated) {
+            [model.tableView endUpdates];
+        }
     } else if (model.recommendedRealtors.count > 0) {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(66 * model.recommendedRealtors.count);
         }];
+        realtorShowCount = model.recommendedRealtors.count;
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
+        realtorShowCount = 0;
     }
+    // realtor_show埋点
+    [self tracerRealtorShowToIndex:realtorShowCount];
+}
+
+- (void)tracerRealtorShowToIndex:(NSInteger)index {
+    for (int i = 0; i< index; i++) {
+        NSString *cahceKey = [NSString stringWithFormat:@"%d",i];
+        if (self.tracerDicCache[cahceKey]) {
+            continue;
+        }
+        self.tracerDicCache[cahceKey] = @(YES);
+        FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+        if (i < model.recommendedRealtors.count) {
+            FHDetailContactModel *contact = model.recommendedRealtors[i];
+            NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+            tracerDic[@"element_type"] = @"old_detail_related";
+            tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
+            tracerDic[@"realtor_rank"] = @(i);
+            tracerDic[@"realtor_position"] = @"detail_related";
+            if (contact.phone.length < 1) {
+                [tracerDic setValue:@"0" forKey:@"phone_show"];
+            } else {
+                [tracerDic setValue:@"1" forKey:@"phone_show"];
+            }
+            if (![@"" isEqualToString:contact.imOpenUrl] && contact.imOpenUrl != nil) {
+                [tracerDic setValue:@"1" forKey:@"im_show"];
+            } else {
+                [tracerDic setValue:@"0" forKey:@"im_show"];
+            }
+            // 移除字段
+            [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
+            [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
+        }
+    }
+}
+
+- (void)addRealtorClickMore {
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    // 移除字段
+    [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id",@"enter_from"]];
+    [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"old_detail_related";
 }
 
 @end
@@ -198,8 +306,16 @@
     [self addSubview:_licenceIcon];
     
     _callBtn = [[FHExtendHotAreaButton alloc] init];
-    [_callBtn setImage:[UIImage imageNamed:@"icon-phone"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateSelected];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateHighlighted];
     [self addSubview:_callBtn];
+    
+    _imBtn = [[FHExtendHotAreaButton alloc] init];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal"] forState:UIControlStateNormal];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
+    [self addSubview:_imBtn];
     
     self.name = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
     _name.font = [UIFont themeFontMedium:16];
@@ -225,17 +341,22 @@
         make.top.mas_equalTo(self.name.mas_bottom);
         make.height.mas_equalTo(20);
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
-        make.right.mas_lessThanOrEqualTo(self.callBtn.mas_left);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.name.mas_right).offset(4);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.callBtn.mas_left).offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(40);
         make.right.mas_equalTo(-20);
+        make.centerY.mas_equalTo(self.avator);
+    }];
+    [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(40);
+        make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avator);
     }];
 }

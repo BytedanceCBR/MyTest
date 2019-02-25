@@ -70,6 +70,10 @@
     }];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"price_rank";
+}
+
 - (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHDetailPriceRankModel class]]) {

@@ -16,15 +16,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, strong) FHDetailShareInfoModel *shareInfo;
-@property (nonatomic, assign) FHHouseType houseType; // 房源类型
-@property (nonatomic, copy) NSString *houseId;
+
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
-@property (nonatomic, assign) BOOL followStatus;
+@property (nonatomic, assign) NSInteger followStatus;
+@property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
+@property (nonatomic, weak) UIViewController *belongsVC;
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
+- (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 
 - (void)fillFormAction;
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
 
 @end
 

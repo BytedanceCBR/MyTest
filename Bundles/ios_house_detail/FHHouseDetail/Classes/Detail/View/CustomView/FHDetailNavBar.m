@@ -15,10 +15,13 @@
 @property(nonatomic , strong) UIButton *backBtn;
 @property(nonatomic , strong) UIButton *collectBtn;
 @property(nonatomic , strong) UIButton *shareBtn;
+@property(nonatomic , strong) UIButton *messageBtn;
+@property(nonatomic , strong) UIImageView *messageDot;
 @property(nonatomic , strong) UIView *gradientView;
+@property(nonatomic , strong) UIView *bottomLine;
 
 @property(nonatomic , assign) CGFloat subAlpha;
-@property(nonatomic , assign) BOOL followStatus;
+@property(nonatomic , assign) NSInteger followStatus;
 
 @end
 
@@ -33,12 +36,23 @@
     return self;
 }
 
+- (void)removeBottomLine
+{
+    _bottomLine.hidden = YES;
+    [_bottomLine removeFromSuperview];
+}
+
 - (void)setupUI
 {
     _bgView = [[UIView alloc]initWithFrame:self.bounds];
     _bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
     [self addSubview:_bgView];
     
+    _bottomLine = [[UIView alloc]init];
+    _bottomLine.backgroundColor = [UIColor themeGray6];
+    [_bgView addSubview:_bottomLine];
+    _bottomLine.hidden = YES;
+
     _gradientView = [[UIView alloc]initWithFrame:self.bounds];
     [self addSubview:_gradientView];
     CAGradientLayer *gradientLayer = [CAGradientLayer layer];
@@ -59,12 +73,23 @@
     [_collectBtn setImage:[UIImage imageNamed:@"detail_collect_white"] forState:UIControlStateHighlighted];
     [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_collectBtn];
+    
+    _messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateNormal];
+    [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateHighlighted];
+    [_messageBtn addTarget:self action:@selector(messageAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_messageBtn];
 
     _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
     [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
     [_shareBtn addTarget:self action:@selector(shareAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_shareBtn];
+    
+    _messageDot = [[UIImageView alloc] init];
+    _messageDot.hidden = YES;
+    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
+    [self addSubview:_messageDot];
 
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
@@ -78,11 +103,28 @@
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
     }];
-    [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.shareBtn.mas_left).mas_offset(-14);
+    [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.shareBtn.mas_left).mas_offset(-12);
         make.height.mas_equalTo(44);
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
+    }];
+    [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.messageBtn.mas_left).mas_offset(-12);
+        make.height.mas_equalTo(44);
+        make.width.mas_equalTo(40);
+        make.bottom.mas_equalTo(self);
+    }];
+    [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.messageBtn).offset(-5);
+        make.height.mas_equalTo(10);
+        make.width.mas_equalTo(10);
+        make.top.mas_equalTo(self.messageBtn).offset(10);
+    }];
+    
+    [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(0.5);
     }];
 }
 
@@ -98,6 +140,8 @@
         [_backBtn setImage:[UIImage imageNamed:@"detail_back_black"] forState:UIControlStateHighlighted];
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
+        [_messageBtn setImage:[UIImage imageNamed:@"detail_message_black"] forState:UIControlStateNormal];
+        [_messageBtn setImage:[UIImage imageNamed:@"detail_message_black"] forState:UIControlStateHighlighted];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_black"] forState:UIControlStateNormal];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_black"] forState:UIControlStateHighlighted];
     }else {
@@ -108,25 +152,38 @@
         [_backBtn setImage:[UIImage imageNamed:@"detail_back_white"] forState:UIControlStateHighlighted];
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
+        [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateNormal];
+        [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateHighlighted];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
         [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
     }
+    if (alpha >= 1) {
+        _bottomLine.hidden = NO;
+    }else {
+        _bottomLine.hidden = YES;
+    }
 }
 
-- (void)setFollowStatus:(BOOL)followStatus
+- (void)setFollowStatus:(NSInteger)followStatus
 {
     _followStatus = followStatus;
     if (self.subAlpha > 0) {
         UIImage *image = [UIImage imageNamed:@"detail_collect_black"];
-        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        image = followStatus != 0 ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }else {
         UIImage *image = [UIImage imageNamed:@"detail_collect_white"];
-        image = followStatus ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
+        image = followStatus != 0 ? [UIImage imageNamed:@"detail_collect_yellow"] : image;
         [_collectBtn setImage:image forState:UIControlStateNormal];
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
     }
+}
+
+- (void)showRightItems:(BOOL)showItem
+{
+    self.shareBtn.hidden = !showItem;
+    self.collectBtn.hidden = !showItem;
 }
 
 - (void)backAction:(UIButton *)sender
@@ -143,11 +200,22 @@
     }
 }
 
+- (void)messageAction:(UIButton *)sender
+{
+    if (self.messageActionBlock) {
+        self.messageActionBlock();
+    }
+}
+
 - (void)shareAction:(UIButton *)sender
 {
     if (self.shareActionBlock) {
         self.shareActionBlock();
     }
+}
+
+- (void)displayMessageDot:(BOOL)show {
+    self.messageDot.hidden = !show;
 }
 
 @end

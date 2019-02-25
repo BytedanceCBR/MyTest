@@ -269,6 +269,9 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:NSStringFromClass([FHFloorPanListCell class])];
     }
     if ([cell isKindOfClass:[FHFloorPanListCell class]] && _currentItems.count > indexPath.row) {
+        if (indexPath.row == 0) {
+            ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
+        }
         [cell refreshWithData:_currentItems[indexPath.row]];
     }
     cell.backgroundColor = [UIColor whiteColor];
@@ -287,7 +290,27 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if (_currentItems.count > indexPath.row) {
+        FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)_currentItems[indexPath.row];
+        if ([model isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
+            NSMutableDictionary *traceParam = [NSMutableDictionary new];
+            traceParam[@"enter_from"] = @"new_detail";
+//            traceParam[@"log_pb"] = self.baseViewModel.logPB;
+//            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
+            traceParam[@"card_type"] = @"left_pic";
+            traceParam[@"rank"] = @(indexPath.row);
+//            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
+            traceParam[@"element_from"] = @"related";
+            
+            NSDictionary *dict = @{@"house_type":@(1),
+                                   @"tracer": traceParam
+                                   };
+            [traceParam setValue:model.id forKey:@"floorpanid"];
+            //                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+        } 
+    }
 }
 
 @end

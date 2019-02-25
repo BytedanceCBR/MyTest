@@ -1085,4 +1085,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
 }
 
+- (void)setUpCloseBtnControlForNaviBackBtn:(NSNumber *)isShow
+{
+    if ([isShow respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isShowNaviBack = [isShow boolValue];
+        [self.ssWebView hiddeNaviBack:[isShow boolValue]];
+    }
+}
+
 @end
