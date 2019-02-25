@@ -1192,15 +1192,16 @@
     tracerDict[@"category_name"] = @"rent_list";
     tracerDict[UT_ELEMENT_FROM] = @"renting_search";
     tracerDict[@"page_type"] = @"renting";
-    
+    tracerDict[@"origin_from"] = allInfo[@"tracer"][@"origin_from"] ? allInfo[@"tracer"][@"origin_from"] : @"be_null";
+
     NSMutableDictionary *houseSearchDict = [[NSMutableDictionary alloc] initWithDictionary:allInfo[@"houseSearch"]];
     houseSearchDict[@"page_type"] = @"renting";
     allInfo[@"houseSearch"] = houseSearchDict;
     allInfo[@"tracer"] = tracerDict;
-    
+
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:allInfo];
-    
-    routeObject.paramObj.userInfo = userInfo;        
+
+    routeObject.paramObj.userInfo = userInfo;
     [[TTRoute sharedRoute] openURLByPushViewController:routeObject.paramObj.sourceURL userInfo:routeObject.paramObj.userInfo];
 
 }
