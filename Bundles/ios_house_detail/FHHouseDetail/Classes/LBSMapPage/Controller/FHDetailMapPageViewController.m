@@ -243,10 +243,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)typeButtonClick:(UIButton *)button
 {
-    if (button == self.previouseIconButton) {
-        return;
-    }
-    
+//    if (button == self.previouseIconButton) {
+//
+//        return;
+//    }
+//
     UILabel *buttonLabel = [self getLabelFromTag:button.tag];
     
     if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
