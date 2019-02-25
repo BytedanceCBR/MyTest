@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
 @property (nonatomic, assign) BOOL isSameToLocCity;
 @property (nonatomic, assign) BOOL isSendConfigFromFirstRemote;
+@property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
 @property (nonatomic, copy) void (^homeConfigCallBack)(FHConfigDataModel *configModel);
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
