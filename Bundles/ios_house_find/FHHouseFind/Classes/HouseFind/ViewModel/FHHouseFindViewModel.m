@@ -167,7 +167,7 @@
 
 -(void)viewWillAppear
 {
-    if (self.houseTypes.count > self.segmentControl.selectedSegmentIndex ) {
+    if (self.houseTypes.count > self.segmentControl.selectedSegmentIndex && self.segmentControl.selectedSegmentIndex >= 0 ) {
         FHHouseType ht =  [self.houseTypes[self.segmentControl.selectedSegmentIndex] integerValue];
         [self requestHistory:ht];
     }
