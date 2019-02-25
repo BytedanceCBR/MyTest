@@ -477,12 +477,6 @@
 		3DF363DC21A29D9F0097FCB6 /* FloorPanCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633021A29D9E0097FCB6 /* FloorPanCategoryVC.swift */; };
 		3DF363DD21A29D9F0097FCB6 /* FloorPanCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633021A29D9E0097FCB6 /* FloorPanCategoryVC.swift */; };
 		3DF363DE21A29D9F0097FCB6 /* FloorPanCategoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633021A29D9E0097FCB6 /* FloorPanCategoryVC.swift */; };
-		3DF363DF21A29D9F0097FCB6 /* FloorPanListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633221A29D9E0097FCB6 /* FloorPanListVC.swift */; };
-		3DF363E021A29D9F0097FCB6 /* FloorPanListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633221A29D9E0097FCB6 /* FloorPanListVC.swift */; };
-		3DF363E121A29D9F0097FCB6 /* FloorPanListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633221A29D9E0097FCB6 /* FloorPanListVC.swift */; };
-		3DF363E221A29D9F0097FCB6 /* FloorPanListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633321A29D9E0097FCB6 /* FloorPanListViewModel.swift */; };
-		3DF363E321A29D9F0097FCB6 /* FloorPanListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633321A29D9E0097FCB6 /* FloorPanListViewModel.swift */; };
-		3DF363E421A29D9F0097FCB6 /* FloorPanListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633321A29D9E0097FCB6 /* FloorPanListViewModel.swift */; };
 		3DF363E521A29D9F0097FCB6 /* BaseSubPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633421A29D9E0097FCB6 /* BaseSubPageViewController.swift */; };
 		3DF363E621A29D9F0097FCB6 /* BaseSubPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633421A29D9E0097FCB6 /* BaseSubPageViewController.swift */; };
 		3DF363E721A29D9F0097FCB6 /* BaseSubPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633421A29D9E0097FCB6 /* BaseSubPageViewController.swift */; };
@@ -4245,7 +4239,6 @@
 		D479534421ECC94E00548965 /* TTVideoAlbumView.m in Sources */ = {isa = PBXBuildFile; fileRef = F87693031F31D0D300D59CA5 /* TTVideoAlbumView.m */; };
 		D479534521ECC94E00548965 /* TTVLivePlayVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9D921F94B8DC0050F83E /* TTVLivePlayVideo.m */; };
 		D479534621ECC94E00548965 /* TTGetDomainTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7711F1332DA0002B455 /* TTGetDomainTask.m */; };
-		D479534721ECC94E00548965 /* FloorPanListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633321A29D9E0097FCB6 /* FloorPanListViewModel.swift */; };
 		D479534821ECC94E00548965 /* ExploreArticleCellCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE020101B215BE400F9E484 /* ExploreArticleCellCommentView.m */; };
 		D479534921ECC94E00548965 /* TTProfileEntryStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7791F1332DA0002B455 /* TTProfileEntryStartupTask.m */; };
 		D479534A21ECC94E00548965 /* TTVPlayVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DD81F94B8DC0050F83E /* TTVPlayVideo.m */; };
@@ -4856,7 +4849,6 @@
 		D47955AC21ECC94E00548965 /* AKProfileHeaderViewLogined.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F1A205802A400BAEE7F /* AKProfileHeaderViewLogined.m */; };
 		D47955AD21ECC94E00548965 /* TTVPGCAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F876921C1F31D0D200D59CA5 /* TTVPGCAction.m */; };
 		D47955AE21ECC94E00548965 /* ExploreOrderedADModel+TTVSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692E71F31D0D300D59CA5 /* ExploreOrderedADModel+TTVSupport.m */; };
-		D47955AF21ECC94E00548965 /* FloorPanListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633221A29D9E0097FCB6 /* FloorPanListVC.swift */; };
 		D47955B021ECC94E00548965 /* TTStartupGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB80A1F1332DB0002B455 /* TTStartupGroup.m */; };
 		D47955B121ECC94E00548965 /* TTMessageNotificationBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D50168442089EC4A00B8F1C7 /* TTMessageNotificationBaseCell.m */; };
 		D47955B221ECC94E00548965 /* NewsLogicSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D27EB1F17472B005EDC4A /* NewsLogicSetting.m */; };
@@ -8139,8 +8131,6 @@
 		3DF3632E21A29D9E0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanCategoryDetailPageViewModel.swift; sourceTree = "<group>"; };
 		3DF3632F21A29D9E0097FCB6 /* FloorPanCategoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanCategoryViewModel.swift; sourceTree = "<group>"; };
 		3DF3633021A29D9E0097FCB6 /* FloorPanCategoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanCategoryVC.swift; sourceTree = "<group>"; };
-		3DF3633221A29D9E0097FCB6 /* FloorPanListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanListVC.swift; sourceTree = "<group>"; };
-		3DF3633321A29D9E0097FCB6 /* FloorPanListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanListViewModel.swift; sourceTree = "<group>"; };
 		3DF3633421A29D9E0097FCB6 /* BaseSubPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseSubPageViewController.swift; sourceTree = "<group>"; };
 		3DF3633621A29D9E0097FCB6 /* PermitListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermitListCell.swift; sourceTree = "<group>"; };
 		3DF3633721A29D9E0097FCB6 /* FloorPanInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloorPanInfoVC.swift; sourceTree = "<group>"; };
@@ -12724,7 +12714,6 @@
 				3DF3632421A29D9E0097FCB6 /* GlobalPricing */,
 				3DF3632721A29D9E0097FCB6 /* BaseSubPageViewModel.swift */,
 				3DF3632821A29D9E0097FCB6 /* FloorPanCategory */,
-				3DF3633121A29D9E0097FCB6 /* FloorPanList */,
 				3DF3633421A29D9E0097FCB6 /* BaseSubPageViewController.swift */,
 				3DF3633521A29D9E0097FCB6 /* FloorPanInfo */,
 				3DF3633A21A29D9E0097FCB6 /* RelatedNeighborhoodList */,
@@ -12765,15 +12754,6 @@
 				3DF3632D21A29D9E0097FCB6 /* FloorPlanRecommendHeaderCell.swift */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		3DF3633121A29D9E0097FCB6 /* FloorPanList */ = {
-			isa = PBXGroup;
-			children = (
-				3DF3633221A29D9E0097FCB6 /* FloorPanListVC.swift */,
-				3DF3633321A29D9E0097FCB6 /* FloorPanListViewModel.swift */,
-			);
-			path = FloorPanList;
 			sourceTree = "<group>";
 		};
 		3DF3633521A29D9E0097FCB6 /* FloorPanInfo */ = {
@@ -22312,7 +22292,6 @@
 				A9AFAE5C1F0E45C600C1E28D /* TTFeedInsertDataOperation.m in Sources */,
 				A97DB96B1F1332DE0002B455 /* SSFeedbackModel.m in Sources */,
 				F87696901F31D0D900D59CA5 /* TTVideoAlbumView.m in Sources */,
-				3DF363E221A29D9F0097FCB6 /* FloorPanListViewModel.swift in Sources */,
 				438F9E1B1F94B8DD0050F83E /* TTVLivePlayVideo.m in Sources */,
 				A97DBBA71F1332E30002B455 /* TTGetDomainTask.m in Sources */,
 				6BE020BD1B215BE600F9E484 /* ExploreArticleCellCommentView.m in Sources */,
@@ -22924,7 +22903,6 @@
 				F87694B41F31D0D600D59CA5 /* TTVFeedCellAction.m in Sources */,
 				D5041F43205802A400BAEE7F /* AKProfileHeaderViewLogined.m in Sources */,
 				F87695281F31D0D600D59CA5 /* TTVPGCAction.m in Sources */,
-				3DF363DF21A29D9F0097FCB6 /* FloorPanListVC.swift in Sources */,
 				F87696641F31D0D900D59CA5 /* ExploreOrderedADModel+TTVSupport.m in Sources */,
 				A97DBCC31F1332E50002B455 /* TTStartupGroup.m in Sources */,
 				D50168662089EC4B00B8F1C7 /* TTMessageNotificationBaseCell.m in Sources */,
@@ -24042,7 +24020,6 @@
 				B373CA6F2174587A008F9905 /* TTVideoAlbumView.m in Sources */,
 				B373CA702174587A008F9905 /* TTVLivePlayVideo.m in Sources */,
 				B373CA712174587A008F9905 /* TTGetDomainTask.m in Sources */,
-				3DF363E421A29D9F0097FCB6 /* FloorPanListViewModel.swift in Sources */,
 				B373CA722174587A008F9905 /* ExploreArticleCellCommentView.m in Sources */,
 				B373CA732174587A008F9905 /* TTProfileEntryStartupTask.m in Sources */,
 				B373CA742174587A008F9905 /* TTVPlayVideo.m in Sources */,
@@ -24653,7 +24630,6 @@
 				B373CCB72174587A008F9905 /* AKProfileHeaderViewLogined.m in Sources */,
 				B373CCB82174587A008F9905 /* TTVPGCAction.m in Sources */,
 				B373CCB92174587A008F9905 /* ExploreOrderedADModel+TTVSupport.m in Sources */,
-				3DF363E121A29D9F0097FCB6 /* FloorPanListVC.swift in Sources */,
 				B373CCBA2174587A008F9905 /* TTStartupGroup.m in Sources */,
 				B373CCBB2174587A008F9905 /* TTMessageNotificationBaseCell.m in Sources */,
 				B373CCBC2174587A008F9905 /* NewsLogicSetting.m in Sources */,
@@ -25769,7 +25745,6 @@
 				D479534421ECC94E00548965 /* TTVideoAlbumView.m in Sources */,
 				D479534521ECC94E00548965 /* TTVLivePlayVideo.m in Sources */,
 				D479534621ECC94E00548965 /* TTGetDomainTask.m in Sources */,
-				D479534721ECC94E00548965 /* FloorPanListViewModel.swift in Sources */,
 				D479534821ECC94E00548965 /* ExploreArticleCellCommentView.m in Sources */,
 				D479534921ECC94E00548965 /* TTProfileEntryStartupTask.m in Sources */,
 				D479534A21ECC94E00548965 /* TTVPlayVideo.m in Sources */,
@@ -26380,7 +26355,6 @@
 				D47955AC21ECC94E00548965 /* AKProfileHeaderViewLogined.m in Sources */,
 				D47955AD21ECC94E00548965 /* TTVPGCAction.m in Sources */,
 				D47955AE21ECC94E00548965 /* ExploreOrderedADModel+TTVSupport.m in Sources */,
-				D47955AF21ECC94E00548965 /* FloorPanListVC.swift in Sources */,
 				D47955B021ECC94E00548965 /* TTStartupGroup.m in Sources */,
 				D47955B121ECC94E00548965 /* TTMessageNotificationBaseCell.m in Sources */,
 				D47955B221ECC94E00548965 /* NewsLogicSetting.m in Sources */,
@@ -27496,7 +27470,6 @@
 				FEFA5526205FB1A8001F50D8 /* TTVideoAlbumView.m in Sources */,
 				FEFA5527205FB1A8001F50D8 /* TTVLivePlayVideo.m in Sources */,
 				FEFA5528205FB1A8001F50D8 /* TTGetDomainTask.m in Sources */,
-				3DF363E321A29D9F0097FCB6 /* FloorPanListViewModel.swift in Sources */,
 				FEFA5529205FB1A8001F50D8 /* ExploreArticleCellCommentView.m in Sources */,
 				FEFA552A205FB1A8001F50D8 /* TTProfileEntryStartupTask.m in Sources */,
 				FEFA552E205FB1A8001F50D8 /* TTVPlayVideo.m in Sources */,
@@ -28107,7 +28080,6 @@
 				FEFA57B5205FB1A8001F50D8 /* AKProfileHeaderViewLogined.m in Sources */,
 				FEFA57B6205FB1A8001F50D8 /* TTVPGCAction.m in Sources */,
 				FEFA57B8205FB1A8001F50D8 /* ExploreOrderedADModel+TTVSupport.m in Sources */,
-				3DF363E021A29D9F0097FCB6 /* FloorPanListVC.swift in Sources */,
 				FEFA57B9205FB1A8001F50D8 /* TTStartupGroup.m in Sources */,
 				D50168672089EC4B00B8F1C7 /* TTMessageNotificationBaseCell.m in Sources */,
 				FEFA57BA205FB1A8001F50D8 /* NewsLogicSetting.m in Sources */,

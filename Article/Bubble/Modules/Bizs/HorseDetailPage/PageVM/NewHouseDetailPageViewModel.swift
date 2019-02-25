@@ -500,20 +500,20 @@ class NewHouseDetailPageViewModel: NSObject, DetailPageViewModel, TableViewTrace
         self.followTraceParams = self.followTraceParams <|>
             toTracerParams("house_history_detail", key: "enter_from")
         
-        let detailPage = FloorPanListVC(
-            courtId: courtId,
-            isHiddenBottomBar: isHiddenBottomBtn ?? true ,
-            bottomBarBinder: bottomBarBinder)
-
-        detailPage.tracerParams = followTraceParams <|>
-            toTracerParams("new_detail", key: "enter_from") <|>
-            toTracerParams(logPB ?? "be_null", key: "log_pb")
-        detailPage.navBar.backBtn.rx.tap
-                .subscribe(onNext: {[weak self] void in
-                    self?.navVC?.popViewController(animated: true)
-                })
-                .disposed(by: disposeBag)
-        navVC?.pushViewController(detailPage, animated: true)
+//        let detailPage = FloorPanListVC(
+//            courtId: courtId,
+//            isHiddenBottomBar: isHiddenBottomBtn ?? true ,
+//            bottomBarBinder: bottomBarBinder)
+//
+//        detailPage.tracerParams = followTraceParams <|>
+//            toTracerParams("new_detail", key: "enter_from") <|>
+//            toTracerParams(logPB ?? "be_null", key: "log_pb")
+//        detailPage.navBar.backBtn.rx.tap
+//                .subscribe(onNext: {[weak self] void in
+//                    self?.navVC?.popViewController(animated: true)
+//                })
+//                .disposed(by: disposeBag)
+//        navVC?.pushViewController(detailPage, animated: true)
     }
     
 //    deinit {
