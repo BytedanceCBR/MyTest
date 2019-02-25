@@ -436,15 +436,18 @@
     if (model) {
         NSString *enter_from = @"be_null";
         NSString *neighborhood_id = @"0";
+        NSString *source = @"";
         if (model.neighborhoodInfo) {
             // 二手房
             enter_from = @"old_detail";
             neighborhood_id = model.neighborhoodInfo.id;
+            source = @"";
         }
         if (model.rent_neighborhoodInfo) {
             // 租房
             enter_from = @"rent_detail";
             neighborhood_id = model.rent_neighborhoodInfo.id;
+            source = @"rent_detail";
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"card_type"] = @"no_pic";
@@ -452,7 +455,7 @@
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_from"] = @"neighborhood_detail";
         tracerDic[@"enter_from"] = enter_from;
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood)}];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood),@"source":source}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",neighborhood_id];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
