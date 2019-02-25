@@ -130,6 +130,7 @@
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
         [dict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
         dict[@"neighborhood_id"] = model.neighborhoodId;
+        dict[@"tracer"] = tracerDic;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
