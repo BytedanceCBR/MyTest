@@ -47,10 +47,12 @@
 #import "TTTabBarProvider.h"
 #import "ExploreExtenstionDataHelper.h"
 #import <TTAppUpdateHelper.h>
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import "FHEnvContext.h"
 #import "TTLaunchTracer.h"
+#import "TTCategoryStayTrackManager.h"
+#import <FHEnvContext.h>
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -532,7 +534,8 @@
     [dict setValue:label forKey:@"refresh_type"];
 
     if (![category.categoryID isEqualToString:@"f_find_house"]) {
-        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+        [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
+//        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
     }
 
 //    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];

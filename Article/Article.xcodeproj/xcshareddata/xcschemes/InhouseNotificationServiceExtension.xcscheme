@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "61787F442201AE9C003CB249"
-               BuildableName = "InhouseNotificationServiceExtension.appex"
+               BuildableName = "InhouseNotificationServiceExtension"
                BlueprintName = "InhouseNotificationServiceExtension"
                ReferencedContainer = "container:Article.xcodeproj">
             </BuildableReference>
@@ -48,7 +48,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "61787F442201AE9C003CB249"
-            BuildableName = "InhouseNotificationServiceExtension.appex"
+            BuildableName = "InhouseNotificationServiceExtension"
             BlueprintName = "InhouseNotificationServiceExtension"
             ReferencedContainer = "container:Article.xcodeproj">
          </BuildableReference>

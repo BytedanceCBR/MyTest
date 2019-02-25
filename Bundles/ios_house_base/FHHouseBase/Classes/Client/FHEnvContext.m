@@ -510,6 +510,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
 }
 
+- (NSDictionary *)getGetOriginFromAndOriginId
+{
+    NSMutableDictionary *homePageCommonMap = [NSMutableDictionary new];
+    [homePageCommonMap setValue:self.commonPageModel.originFrom forKey:@"origin_from"];
+    [homePageCommonMap setValue:self.commonPageModel.originSearchId forKey:@"origin_search_id"];
+    return homePageCommonMap;
+}
+
 @end
 
 // 升级TTRoute后需要验当前场景

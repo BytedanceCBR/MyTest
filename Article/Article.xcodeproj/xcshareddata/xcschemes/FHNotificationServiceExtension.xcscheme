@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "61627A7622238DCE00EAC771"
-               BuildableName = "FHNotificationServiceExtension.appex"
+               BuildableName = "FHNotificationServiceExtension"
                BlueprintName = "FHNotificationServiceExtension"
                ReferencedContainer = "container:Article.xcodeproj">
             </BuildableReference>
@@ -48,7 +48,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "61627A7622238DCE00EAC771"
-            BuildableName = "FHNotificationServiceExtension.appex"
+            BuildableName = "FHNotificationServiceExtension"
             BlueprintName = "FHNotificationServiceExtension"
             ReferencedContainer = "container:Article.xcodeproj">
          </BuildableReference>
