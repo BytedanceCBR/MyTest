@@ -21,10 +21,11 @@
 #import "FHMainManager+Toast.h"
 #import "FHMapSearchBubbleModel.h"
 #import "FHHouseBridgeManager.h"
-#import "FHHouseSingleImageInfoCellBridgeDelegate.h"
 #import "FHMapSearchBubbleModel.h"
 #import "FHMainApi.h"
 #import "TTReachability.h"
+#import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
 
 #define kCellId @"singleCellId"
 
@@ -78,9 +79,7 @@
     }];
     self.tableView.mj_footer = _refreshFooter;
     
-    id<FHHouseCellsBridge> bridge =  [[FHHouseBridgeManager sharedInstance] cellsBridge];
-    Class cellClass = [bridge singleImageCellClass];//NSClassFromString(@"Bubble.SingleImageInfoCell");
-    [_tableView registerClass:cellClass forCellReuseIdentifier:kCellId];
+    [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kCellId];
 }
 
 -(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
@@ -171,12 +170,23 @@
     id model = _houseList[indexPath.row];
     if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
         FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
-        [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell  updateWithRentHouseModel:rentModel isFirstCell:NO isLastCell:isLastCell];
+        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:rentModel];
+        if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+            FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+            [imageInfoCell updateWithHouseCellModel:cellModel];
+            [imageInfoCell refreshTopMargin:20];
+            [imageInfoCell refreshBottomMargin:0];
+        }
     }else{
-        SEL sel = @selector(updateWithModel:isLastCell:);
-        if ([cell respondsToSelector:sel]) {
-            FHSearchHouseDataItemsModel *item = _houseList[indexPath.row];
-            [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithModel:item isLastCell:isLastCell];
+        if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
+            FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
+            FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:oldModel];
+            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+                FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+                [imageInfoCell updateWithHouseCellModel:cellModel];
+                [imageInfoCell refreshTopMargin:20];
+                [imageInfoCell refreshBottomMargin:0];
+            }
         }
     }
     return cell;
@@ -189,9 +199,6 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == self.houseList.count -1) {
-        return 125;
-    }
     return 105;
 }
 

@@ -11,7 +11,6 @@
 #import "FHHouseListAPI.h"
 #import "FHNeighborListModel.h"
 #import "FHHouseBridgeManager.h"
-#import "FHHouseSingleImageInfoCellBridgeDelegate.h"
 #import "FHRefreshCustomFooter.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"

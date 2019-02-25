@@ -16,6 +16,7 @@
 #import <TTPhotoScrollVC/TTPhotoScrollViewController.h>
 #import "FHDetailBottomBarView.h"
 #import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
+#import <FHHouseBase/FHUserTracker.h>
 
 extern NSString *const kFHToastCountKey;
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
@@ -51,6 +52,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         btnTitle = @"提交";
     }
     [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    [self addInformShowLog];
 }
 
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
@@ -60,6 +62,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     alertView.phoneNum = [self.sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     alertView.confirmClickBlock = ^(NSString *phoneNum){
         [wself fillFormRequest:phoneNum];
+        [wself addClickConfirmLog];
     };
     alertView.tipClickBlock = ^{
         
@@ -74,6 +77,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 
 - (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId
 {
+    [self addClickCallLog];
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
         
@@ -288,5 +292,75 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     }
     return _sendPhoneNumberCache;
 }
+
+#pragma mark 埋点相关
+- (NSDictionary *)baseParams
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    params[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    params[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    return params;
+}
+
+// 拨打电话
+- (void)addClickCallLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    params[@"has_auth"] = @(1);
+    [FHUserTracker writeEvent:@"click_call" params:params];
+}
+
+// 经纪人展位拨打电话
+- (void)addClickCallLogWithExtra:(NSDictionary *)extraDict
+{
+    //    11.realtor_id
+    //    12.realtor_rank:经纪人推荐位置，从0开始，底部button的默认为0
+    //    13.realtor_position ：detail_button，detail_related
+    //    14.has_associate：是否为虚拟号码：是：1，否：0
+    //    15.is_dial ：是否为为拨号键盘：是：1，否：0
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    params[@"has_auth"] = @(1);
+    params[@"realtor_id"] = extraDict[@"realtor_id"] ? : @"be_null";
+    params[@"realtor_rank"] = extraDict[@"realtor_rank"] ? : @"be_null";
+    params[@"realtor_position"] = extraDict[@"realtor_position"] ? : @"be_null";
+    params[@"has_associate"] = @(1); // add by zjing for test
+    params[@"is_dial"] = @(1);
+    [FHUserTracker writeEvent:@"click_call" params:params];
+}
+
+// 表单展示
+- (void)addInformShowLog
+{
+//    1. event_type：house_app2c_v2
+//    2. page_type（页面类型）：old_detail（二手房详情页），rent_detail（租房详情页）
+//    3. card_type ：left_pic（左图）
+//    4. enter_from ：search_related_list（搜索结果推荐）
+//    5. element_from ：search_related
+//    6. rank
+//    7. origin_from
+//    8. origin_search_id
+//    9.log_pb
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    [FHUserTracker writeEvent:@"inform_show" params:params];
+}
+
+// 表单提交
+- (void)addClickConfirmLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    [FHUserTracker writeEvent:@"click_confirm" params:params];
+}
+
+
 
 @end
