@@ -32,7 +32,7 @@
         self.ttTrackStayEnable = YES;
         _floorPanId = paramObj.allParams[@"floorpanid"];
         
-        [self processTracerData:paramObj.allParams];
+        [self processTracerData:paramObj.allParams[@"tracer"]];
     }
     return self;
 }
@@ -172,6 +172,7 @@
             self.tracerDict[@"rank"] = rank;
         }
     }
+    self.coreInfoListViewModel.detailTracerDic = self.tracerDict;
 }
 
 
