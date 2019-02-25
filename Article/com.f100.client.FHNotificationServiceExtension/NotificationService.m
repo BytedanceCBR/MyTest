@@ -1,8 +1,8 @@
 //
 //  NotificationService.m
-//  InhouseNotificationServiceExtension
+//  com.f100.client.FHNotificationServiceExtension
 //
-//  Created by 张静 on 2019/1/30.
+//  Created by 张静 on 2019/2/25.
 //
 
 #import "NotificationService.h"
@@ -17,13 +17,12 @@
 @implementation NotificationService
 
 //- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
-//    
 //    self.contentHandler = contentHandler;
 //    self.bestAttemptContent = [request.content mutableCopy];
-//    
+//
 //    // Modify the notification content here...
 //    self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
-//    
+//
 //    self.contentHandler(self.bestAttemptContent);
 //}
 //

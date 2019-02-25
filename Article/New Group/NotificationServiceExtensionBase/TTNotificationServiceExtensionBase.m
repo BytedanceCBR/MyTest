@@ -19,6 +19,12 @@
 @end
 
 @implementation TTNotificationServiceExtensionBase
+//
+//- (instancetype)init
+//{
+//    self = [super init];
+//    return self;
+//}
 
 - (void)downloadAttatchmentWithURL:(NSURL *)url
                         completion:(void (^)(NSURL *localURL))completion {

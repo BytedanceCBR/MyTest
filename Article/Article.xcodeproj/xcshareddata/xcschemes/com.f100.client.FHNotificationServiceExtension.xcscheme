@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "61787F442201AE9C003CB249"
-               BuildableName = "InhouseNotificationServiceExtension"
-               BlueprintName = "InhouseNotificationServiceExtension"
+               BlueprintIdentifier = "6198678A2223E9A70056B2EF"
+               BuildableName = "com.f100.client.FHNotificationServiceExtension.appex"
+               BlueprintName = "com.f100.client.FHNotificationServiceExtension"
                ReferencedContainer = "container:Article.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,9 +29,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FEFA5259205FB1A8001F50D8"
-               BuildableName = "NewsLiteInHouse.app"
-               BlueprintName = "NewsLiteInHouse"
+               BlueprintIdentifier = "B373C7F92174587A008F9905"
+               BuildableName = "f100.app"
+               BlueprintName = "f100"
                ReferencedContainer = "container:Article.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "61787F442201AE9C003CB249"
-            BuildableName = "InhouseNotificationServiceExtension"
-            BlueprintName = "InhouseNotificationServiceExtension"
+            BlueprintIdentifier = "6198678A2223E9A70056B2EF"
+            BuildableName = "com.f100.client.FHNotificationServiceExtension.appex"
+            BlueprintName = "com.f100.client.FHNotificationServiceExtension"
             ReferencedContainer = "container:Article.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -67,20 +67,16 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <RemoteRunnable
-         runnableDebuggingMode = "0"
-         BundleIdentifier = "com.bytedance.fp1"
-         RemotePath = "/var/containers/Bundle/Application/2D0FCDB2-B4B1-4AE0-93D9-4AB7CDA4EAC8/NewsLiteInHouse.app">
-      </RemoteRunnable>
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FEFA5259205FB1A8001F50D8"
-            BuildableName = "NewsLiteInHouse.app"
-            BlueprintName = "NewsLiteInHouse"
+            BlueprintIdentifier = "B373C7F92174587A008F9905"
+            BuildableName = "f100.app"
+            BlueprintName = "f100"
             ReferencedContainer = "container:Article.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -95,9 +91,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FEFA5259205FB1A8001F50D8"
-            BuildableName = "NewsLiteInHouse.app"
-            BlueprintName = "NewsLiteInHouse"
+            BlueprintIdentifier = "B373C7F92174587A008F9905"
+            BuildableName = "f100.app"
+            BlueprintName = "f100"
             ReferencedContainer = "container:Article.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
