@@ -6,42 +6,48 @@
 //
 
 #import "FHHouseEvnContextBridgeImp.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import "TTTabBarManager.h"
 #import "TTTabBarItem.h"
+#import <FHHomeConfigManager.h>
+#import <FHEnvContext.h>
+#import <FHLocManager.h>
+#import <ToastManager.h>
+#import "ArticleURLSetting.h"
+#import "TTArticleCategoryManager.h"
+#import "TTCategoryBadgeNumberManager.h"
 
 @implementation FHHouseEvnContextBridgeImp
 
--(NSString *)currentMapSelect
-{
-    return [[EnvContext shared] currentMapSelect];
-}
-
 -(void)setTraceValue:(NSString *)value forKey:(NSString *)key
 {
-    [[EnvContext shared] setTraceValueWithValue:value key:key];
+//    [[EnvContext shared] setTraceValueWithValue:value key:key];
 }
 
 -(NSDictionary *)homePageParamsMap
 {
-    return [[EnvContext shared]homePageParamsMap];
+    return [[FHEnvContext sharedInstance] getGetOriginFromAndOriginId];
 }
 
 -(void)recordEvent:(NSString *)key params:(NSDictionary *)params
 {
-    [[EnvContext shared]recordEventWithKey:key params:params];
+    [FHEnvContext recordEvent:params andEventKey:key];
+//    [[EnvContext shared]recordEventWithKey:key params:params];
 }
 
 
 -(NSString *)currentCityName
 {
-    return [[[EnvContext shared] client] currentCityName];
+    return [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+//    return [[[EnvContext shared] client] currentCityName];
 }
 
 -(NSString *)currentProvince
 {
-    return [[[EnvContext shared] client] currentProvince];
+    NSString *province = [FHLocManager sharedInstance].currentReGeocode.province;
+    return province;
+//    return [[[EnvContext shared] client] currentProvince];
 }
 
 -(BOOL)locationSameAsChooseCity
@@ -51,7 +57,8 @@
 
 -(CLLocationCoordinate2D)currentLocation
 {
-    return [[[EnvContext shared] client] currentLocation];
+    return [FHLocManager sharedInstance].currentLocaton.coordinate;
+//    return [[[EnvContext shared] client] currentLocation];
 }
 
 -(NSDictionary *_Nullable)appConfig
@@ -66,7 +73,8 @@
 
 -(void)showToast:(NSString *)toast duration:(CGFloat)duration inView:(UIView *)view
 {
-    return [[[EnvContext shared]toast] showToast:toast duration:duration isUserInteraction:NO];
+    return [[ToastManager manager] showToast:toast duration:duration isUserInteraction:NO];
+//    return [[[EnvContext shared]toast] showToast:toast duration:duration isUserInteraction:NO];
 }
 
 - (void)setMessageTabBadgeNumber:(NSInteger)number {

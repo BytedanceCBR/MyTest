@@ -121,6 +121,8 @@ NS_ASSUME_NONNULL_BEGIN
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
 
+//返回origin_search id
+
 //接受config数据
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel;
 
@@ -133,6 +135,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (FHClientHomeParamsModel *)getCommonParams;
 
 - (void)updateOriginFrom:(NSString *)originFrom originSearchId:(NSString *)originSearchid;
+
+
+- (NSDictionary *)getGetOriginFromAndOriginId;
 
 @end
 
