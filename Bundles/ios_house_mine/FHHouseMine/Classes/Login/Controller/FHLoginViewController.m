@@ -38,8 +38,7 @@
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self.tracerModel logDict];
-    tracerDict[@"log_pb"] = @"be_null";
-    tracerDict[@"orign_search_id"] = @"be_null";
+    [tracerDict removeObjectsForKeys:@[@"origin_from"]];
     TRACK_EVENT(@"login_page", tracerDict);
 }
 

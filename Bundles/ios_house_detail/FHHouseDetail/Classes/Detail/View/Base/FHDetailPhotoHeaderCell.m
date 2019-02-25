@@ -168,7 +168,10 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    dict[@"group_id"] = dict[@"log_pb"][@"group_id"];
+    dict[@"impr_id"] = dict[@"log_pb"][@"impr_id"];
+    dict[@"search_id"] = dict[@"log_pb"][@"search_id"];
+    [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from",@"log_pb"]];
     dict[@"picture_id"] = img.url;
     dict[@"show_type"] = showType;
     TRACK_EVENT(@"picture_show", dict);
@@ -181,7 +184,7 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
     dict[@"picture_id"] = img.url;
     dict[@"show_type"] = @"large";
     
@@ -202,7 +205,7 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
     dict[@"picture_id"] = img.url;
     dict[@"show_type"] = @"large";
     
