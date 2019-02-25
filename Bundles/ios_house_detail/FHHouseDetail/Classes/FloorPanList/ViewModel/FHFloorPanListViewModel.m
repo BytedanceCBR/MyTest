@@ -294,7 +294,13 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     if (_currentItems.count > indexPath.row) {
         FHDetailNewDataFloorpanListListModel *model = (FHDetailNewDataFloorpanListListModel *)_currentItems[indexPath.row];
         if ([model isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
+            
+            NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
+            NSDictionary *tracer = subPageParams[@"tracer"];
             NSMutableDictionary *traceParam = [NSMutableDictionary new];
+            if (tracer) {
+                [traceParam addEntriesFromDictionary:tracer];
+            }
             traceParam[@"enter_from"] = @"new_detail";
 //            traceParam[@"log_pb"] = self.baseViewModel.logPB;
 //            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
@@ -309,7 +315,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
             NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
             [infoDict setValue:model.id forKey:@"floorpanid"];
-            [infoDict addEntriesFromDictionary: [_floorListVC subPageParams]];
+            [infoDict addEntriesFromDictionary:subPageParams];
             infoDict[@"house_type"] = @(1);
             infoDict[@"tracer"] = traceParam;
             TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
