@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (UIView *)getBottomBar;
 
 - (NSDictionary *)subPageParams;
+- (NSString *)pageTypeString;
+
 @end
 
 NS_ASSUME_NONNULL_END
