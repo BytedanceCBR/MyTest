@@ -82,7 +82,7 @@
     
     __weak typeof(self) wself = self;
     
-    self.requestTask = [FHMessageAPI requestHouseMessageWithListId:self.listId maxCoursor:self.maxCursor searchId:self.originSearchId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask = [FHMessageAPI requestHouseMessageWithListId:self.listId maxCoursor:self.maxCursor searchId:self.searchId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         [wself.tableView.mj_footer endRefreshing];
         FHHouseMsgModel *msgModel = (FHHouseMsgModel *)model;
@@ -102,9 +102,10 @@
         if(model){
             
             wself.maxCursor = msgModel.data.minCursor;
-            wself.originSearchId = msgModel.data.searchId;
+            wself.searchId = msgModel.data.searchId;
             
             if (isHead) {
+                wself.originSearchId = wself.searchId;
                 [wself.dataList removeAllObjects];
             }
             [wself.dataList addObjectsFromArray:msgModel.data.items];
@@ -310,7 +311,7 @@
     tracerDict[@"element_from"] = @"be_null";
     tracerDict[@"enter_from"] = [self.viewController categoryName];
     tracerDict[@"log_pb"] = logPb ? logPb : @"be_null";
-    tracerDict[@"search_id"] = itemsModel.searchId ? itemsModel.searchId : @"be_null";
+    tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
     tracerDict[@"rank"] = @(index);
    
     NSDictionary *dict = @{@"house_type":@(houseType),

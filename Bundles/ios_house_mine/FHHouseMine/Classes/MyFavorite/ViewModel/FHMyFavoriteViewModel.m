@@ -498,7 +498,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     
     NSMutableDictionary *traceParam = [self categoryLogDict];
     traceParam[@"card_type"] = @"left_pic";
-    traceParam[@"enter_from"] = [self pageTypeString];
+    traceParam[@"enter_from"] = [self categoryName];
     traceParam[@"log_pb"] = [cellModel logPb];
     traceParam[@"rank"] = @(rank);
     NSDictionary *dict = @{

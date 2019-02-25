@@ -114,17 +114,7 @@
 - (void)moreButtonClick:(UIButton *)button {
     FHDetailRentSameNeighborhoodHouseModel *model = (FHDetailRentSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.hasMore) {
-        // 点击事件处理
-        /* add by zyk 是否要加埋点
-         let loadMoreParams = EnvContext.shared.homePageParams <|>
-         toTracerParams("same_neighborhood", key: "element_type") <|>
-         toTracerParams(id, key: "group_id") <|>
-         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-         toTracerParams("old_detail", key: "page_type") <|>
-         toTracerParams("click", key: "enter_type")
-         recordEvent(key: "click_loadmore", params: loadMoreParams)
-         */
-        
+
         // 点击事件处理
         FHRentDetailResponseModel *detailData = self.baseViewModel.detailData;
         NSString *neighborhood_id = @"";
