@@ -201,6 +201,11 @@
     }];
 }
 
+- (NSDictionary *)elementHouseShowUpload
+{
+    return @{@"element_type":@"related",@"search_id":self.itemModel.searchId ? self.itemModel.searchId : @"be_null",@"house_type":@"new",@"rank":@(self.itemModel.index)};
+}
+
 -(void)refreshBottomMargin:(CGFloat)bottom {
     
     if (bottom == self.bottomMargin) {
@@ -208,7 +213,6 @@
     }
     self.bottomMargin = bottom;
     [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-        
         make.height.mas_equalTo(@(self.bottomMargin));
     }];
     

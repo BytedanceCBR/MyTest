@@ -13,6 +13,7 @@
 #import "TTDeviceHelper.h"
 #import "FHSuggestionListNavBar.h"
 #import "FHExtendHotAreaButton.h"
+#import <TTDeviceHelper.h>
 
 @interface FHDetailMapPageNaviBarView ()
 
@@ -37,6 +38,12 @@
 - (void)setupViews
 {
     // backBtn
+    
+    CGFloat iphoneXPading = 5;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        iphoneXPading = 0;
+    }
+    
     _backBtn = [[FHExtendHotAreaButton alloc] init];
     [_backBtn setImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
     [_backBtn setImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
@@ -44,7 +51,7 @@
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(24);
         make.left.mas_equalTo(self).offset(18);
-        make.bottom.mas_equalTo(self).offset(-16);
+        make.bottom.mas_equalTo(self).offset(-16 + iphoneXPading);
     }];
     
     [_backBtn addTarget:self action:@selector(backBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -58,7 +65,7 @@
     [_rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(36);
         make.right.mas_equalTo(self).offset(-12);
-        make.bottom.mas_equalTo(self).offset(-12);
+        make.bottom.mas_equalTo(self).offset(-12 + iphoneXPading);
     }];
     [_rightBtn addTarget:self action:@selector(naviMapBtnClick) forControlEvents:UIControlEventTouchUpInside];
 

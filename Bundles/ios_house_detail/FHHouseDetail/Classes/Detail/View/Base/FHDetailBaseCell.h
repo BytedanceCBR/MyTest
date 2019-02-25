@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 适用于一个cell多个elementshow的情况
 - (NSArray *)elementTypeStringArray:(FHHouseType)houseType;
 
+// 是否上报house_show
+- (NSDictionary *)elementHouseShowUpload;
 
 // 详情页baseViewModel，可以从中拿到需要的数据(高效但是不美观)
 @property (nonatomic, weak)     FHHouseDetailBaseViewModel       *baseViewModel;

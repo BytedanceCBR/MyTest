@@ -29,6 +29,8 @@
 @property (nonatomic , strong) NSString *floorPanId;
 @property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
 @property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
+
 @end
 @implementation FHFloorPanDetailViewModel
 
@@ -36,6 +38,7 @@
 {
     self = [super init];
     if (self) {
+        _elementShowCaches = [NSMutableDictionary new];
         self.detailController = viewController;
         _subPageVC = viewController;
         _infoListTable = tableView;
@@ -222,6 +225,25 @@
         }
     }
     return [[UITableViewCell alloc] init];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    // 添加element_show埋点
+    if (!self.elementShowCaches[tempKey]) {
+        self.elementShowCaches[tempKey] = @(YES);
+        FHDetailBaseCell *tempCell = (FHDetailBaseCell *)cell;
+        NSString *element_type = [tempCell elementTypeString:self.houseType];
+        if (element_type.length > 0) {
+            // 上报埋点
+            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+            tracerDic[@"element_type"] = element_type;
+            [tracerDic removeObjectForKey:@"card_type"];
+            [tracerDic removeObjectForKey:@"enter_from"];
+            [tracerDic removeObjectForKey:@"element_from"];
+            [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+        }
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

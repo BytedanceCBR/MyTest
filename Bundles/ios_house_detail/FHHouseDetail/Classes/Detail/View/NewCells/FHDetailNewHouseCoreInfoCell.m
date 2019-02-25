@@ -8,6 +8,7 @@
 #import "TTRoute.h"
 #import "FHDetailNewModel.h"
 #import "FHHouseDetailContactViewModel.h"
+#import <FHEnvContext.h>
 
 static const CGFloat kLabelKeyFontSize = 12;
 
@@ -257,15 +258,28 @@ static const CGFloat kLabelKeyRightPandding = -20;
 - (void)moreInfoButClick
 {
     NSString *courtId = ((FHDetailNewHouseCoreInfoModel *)self.currentData).courtId;
-    FHDetailNewHouseCoreInfoModel *houseNameModel = (FHDetailNewHouseCoreInfoModel *)self.currentData;
-    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-    [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
-    [infoDict setValue:houseNameModel.houseName forKey:@"courtInfo"];
-    [infoDict setValue:houseNameModel.disclaimerModel forKey:@"disclaimerInfo"];
-
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?court_id=%@",courtId]] userInfo:info];
+    if (courtId) {
+        NSDictionary *dictTrace = self.baseViewModel.detailTracerDic;
+        
+        NSMutableDictionary *mutableDict = [NSMutableDictionary new];
+        [mutableDict setValue:dictTrace[@"page_type"] forKey:@"page_type"];
+        [mutableDict setValue:dictTrace[@"rank"] forKey:@"rank"];
+        [mutableDict setValue:dictTrace[@"origin_from"] forKey:@"origin_from"];
+        [mutableDict setValue:dictTrace[@"origin_search_id"] forKey:@"origin_search_id"];
+        [mutableDict setValue:dictTrace[@"log_pb"] forKey:@"log_pb"];
+        
+        [FHEnvContext recordEvent:mutableDict andEventKey:@"click_house_info"];
+        
+        FHDetailNewHouseCoreInfoModel *houseNameModel = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+        NSMutableDictionary *infoDict = [NSMutableDictionary new];
+        [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
+        [infoDict setValue:houseNameModel.houseName forKey:@"courtInfo"];
+        [infoDict setValue:houseNameModel.disclaimerModel forKey:@"disclaimerInfo"];
+        
+        TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+        
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_coreinfo_detail?court_id=%@",courtId]] userInfo:info];
+    }
 }
 
 - (void)openMapDetail
