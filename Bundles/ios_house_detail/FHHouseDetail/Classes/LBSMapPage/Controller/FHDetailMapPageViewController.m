@@ -255,7 +255,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
             make.bottom.equalTo(self.view).offset(-83);
         }else
         {
-            make.bottom.equalTo(self.view);
+            make.bottom.equalTo(self.view).offset(-43);
         }
         make.top.equalTo(self.naviBar.mas_bottom);
         make.left.right.equalTo(self.view);
