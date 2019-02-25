@@ -75,14 +75,14 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     self.alertView = alertView;
 }
 
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId
+- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
 {
-    [self addClickCallLog];
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
         
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
+        [self addClickCallLogWithExtra:extraDict isVirtual:NO];
         return;
     }
     [self.bottomBar startLoading];
@@ -90,11 +90,26 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
+        BOOL isVirtual = NO;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
+            isVirtual = YES;
         }
+        NSMutableDictionary *extra = @{}.mutableCopy;
+        if (extraDict) {
+            [extra addEntriesFromDictionary:extraDict];
+        }
+        if (model.data.realtorId.length > 0) {
+            extra[@"realtor_id"] = model.data.realtorId;
+        }
+        [wself addClickCallLogWithExtra:extra isVirtual:isVirtual];
         [wself callPhone:urlStr];
     }];
+}
+
+- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId
+{
+    [self callWithPhone:phone searchId:searchId imprId:imprId extraDict:nil];
 }
 
 - (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock
@@ -104,6 +119,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
+        [self addClickCallLogWithExtra:nil isVirtual:NO];
         // add by zjing for test 返回什么错误呢？
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         failBlock(error);
@@ -114,8 +130,14 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
+        BOOL isVirtual = NO;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
+            NSMutableDictionary *extra = @{}.mutableCopy;
+            if (model.data.realtorId.length > 0) {
+                extra[@"realtor_id"] = model.data.realtorId;
+            }
+            [wself addClickCallLogWithExtra:extra isVirtual:isVirtual];
         }else {
             failBlock(error);
         }
@@ -308,17 +330,8 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     return params;
 }
 
-// 拨打电话
-- (void)addClickCallLog
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:[self baseParams]];
-    params[@"has_auth"] = @(1);
-    [FHUserTracker writeEvent:@"click_call" params:params];
-}
-
-// 经纪人展位拨打电话
-- (void)addClickCallLogWithExtra:(NSDictionary *)extraDict
+// 拨打电话和经纪人展位拨打电话
+- (void)addClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(BOOL)isVirtual
 {
     //    11.realtor_id
     //    12.realtor_rank:经纪人推荐位置，从0开始，底部button的默认为0
@@ -329,9 +342,9 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     [params addEntriesFromDictionary:[self baseParams]];
     params[@"has_auth"] = @(1);
     params[@"realtor_id"] = extraDict[@"realtor_id"] ? : @"be_null";
-    params[@"realtor_rank"] = extraDict[@"realtor_rank"] ? : @"be_null";
-    params[@"realtor_position"] = extraDict[@"realtor_position"] ? : @"be_null";
-    params[@"has_associate"] = @(1); // add by zjing for test
+    params[@"realtor_rank"] = extraDict[@"realtor_rank"] ? : @(0);
+    params[@"realtor_position"] = extraDict[@"realtor_position"] ? : @"detail_button";
+    params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
     params[@"is_dial"] = @(1);
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
