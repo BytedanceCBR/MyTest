@@ -19,7 +19,7 @@
 #import "ToastManager.h"
 #import "TTArticleCategoryManager.h"
 #import <objc/runtime.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
 

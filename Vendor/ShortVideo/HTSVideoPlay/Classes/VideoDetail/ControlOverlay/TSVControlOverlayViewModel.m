@@ -41,7 +41,7 @@
 #import "TTCustomAnimationNavigationController.h"
 #import "TSVRecommendCardViewModel.h"
 #import "TTTracker.h"
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 

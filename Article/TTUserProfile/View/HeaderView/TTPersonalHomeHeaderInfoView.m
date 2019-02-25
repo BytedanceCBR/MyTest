@@ -8,11 +8,11 @@
 
 #import "TTPersonalHomeHeaderInfoView.h"
 #import "NSStringAdditions.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTTrackerWrapper.h"
 #import "TTRoute.h"
 #import "SSCommonLogic.h"
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTPersonalHomeMultiplePlatformFollowersInfoView.h"

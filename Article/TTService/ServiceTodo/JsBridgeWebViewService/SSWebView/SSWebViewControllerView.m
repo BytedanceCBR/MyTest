@@ -9,7 +9,7 @@
 #import "SSWebViewControllerView.h"
 #import "TTActivityShareManager.h"
 #import "SSWebViewUtil.h"
-#import <TTNetworkUtilities.h>
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTAdManager.h"
 
 #import "ArticleShareManager.h"
@@ -38,7 +38,7 @@
 #import "TTActivityShareSequenceManager.h"
 #import "TTVSettingsConfiguration.h"
 #import "SSCommonLogic.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 #define toolBarHeight 40.f
 

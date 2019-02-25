@@ -10,7 +10,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTUIWidget/TTAlphaThemedButton.h>
 #import <TTUGCAttributedLabel.h>
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 #define kTTCommentToolbarButtonSize 24
 

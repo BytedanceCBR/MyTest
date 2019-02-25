@@ -11,7 +11,7 @@
 #import "ExploreOrderedData+TTAd.h"
 #import "TTAdFeedModel.h"
 #import "TTUGCEmojiParser.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 
 @implementation TTLayOutPlainCellBaseModel
 

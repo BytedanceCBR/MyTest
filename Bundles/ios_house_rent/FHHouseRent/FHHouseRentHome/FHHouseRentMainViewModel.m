@@ -552,7 +552,7 @@
     [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
     [envBridge setTraceValue:self.originSearchId forKey:@"origin_search_id"];
 
-    NSMutableDictionary* tracer = [[self.viewController.tracerModel neatLogDict] mutableCopy];
+    NSMutableDictionary* tracer = [[self.viewController.tracerModel neatLogDict] mutableCopy]?:[NSMutableDictionary new];
     tracer[@"card_type"] = @"left_pic";
     tracer[@"element_from"] = @"be_null";
     tracer[@"enter_from"] = @"renting";

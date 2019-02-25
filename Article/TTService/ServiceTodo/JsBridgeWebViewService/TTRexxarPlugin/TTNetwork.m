@@ -7,7 +7,7 @@
 //
 
 #import "TTNetwork.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTBridgeDefines.h"
 #import "FHEnvContext.h"

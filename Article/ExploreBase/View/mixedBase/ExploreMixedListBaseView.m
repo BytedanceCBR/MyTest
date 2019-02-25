@@ -154,7 +154,7 @@
 #import <TTDialogDirector/TTDialogDirector+ClientAB.h>
 //#import "RecommendRedpacketData.h"
 //#import "FRThreadSmartDetailManager.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTVOwnPlayerPreloaderWrapper.h"
 #import "TTVSettingsConfiguration.h"
 //#import "TTFollowCategoryFetchExtraManager.h"

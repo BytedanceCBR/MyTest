@@ -7,21 +7,21 @@
 //
 
 #import "CommonURLSetting.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTNetworkUtil.h"
 #import "ExploreExtenstionDataHelper.h"
-#import "DNSManager.h"
+#import <TTNetBusiness/DNSManager.h>
 
 #import "TTLocationManager.h"
  
 #import "SSCommonLogic.h"
 #import "TTBaseMacro.h"
-#import "TTHttpsControlManager.h"
+#import <TTNetBusiness/TTHttpsControlManager.h>
 
 #import "TTLCSServerConfig.h"
-#import "TTRouteSelectionServerConfig.h"
-#import "TTRouteSelectionManager.h"
-#import "TTGetDomainsResponseModel.h"
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>
+#import <TTNetBusiness/TTRouteSelectionManager.h>
+#import <TTNetBusiness/TTGetDomainsResponseModel.h>
 
 
 #define NormalBaseURLDomain  @"i.haoduofangs.com"
