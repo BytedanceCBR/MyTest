@@ -23,7 +23,7 @@
 @implementation FHAboutUsViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
-    self = [super init];
+    self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
     }
