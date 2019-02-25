@@ -122,17 +122,6 @@
     TRACK_EVENT(@"category_refresh", tracerDict);
 }
 
-- (NSString *)timestampToDataString:(NSString *)timestamp {
-    // iOS 生成的时间戳是10位
-    NSTimeInterval interval = [timestamp doubleValue];
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MM月dd日 HH:mm"];
-    NSString *dateString = [formatter stringFromDate: date];
-    return dateString;
-}
-
 #pragma mark - UITableViewDataSource
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -146,7 +135,7 @@
     
     FHSystemMsgDataItemsModel *model = self.dataList[indexPath.row];
     
-    cell.dateLabel.text = [self timestampToDataString:model.timestamp];
+    cell.dateLabel.text = model.dateStr;
     cell.titleLabel.text = model.title;
     cell.descLabel.text = model.content;
     cell.lookDetailLabel.text = model.buttonName;
