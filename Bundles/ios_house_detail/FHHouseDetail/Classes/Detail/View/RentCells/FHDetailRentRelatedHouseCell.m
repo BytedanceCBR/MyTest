@@ -164,7 +164,7 @@
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = detailData.data.logPb ? detailData.data.logPb : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
         tracerDic[@"category_name"] = @"related_list";
         tracerDic[@"element_from"] = @"related";
         tracerDic[@"enter_from"] = @"rent_detail";
