@@ -110,13 +110,6 @@
 - (void)moreButtonClick:(UIButton *)button {
     FHDetailRelatedNeighborhoodModel *model = (FHDetailRelatedNeighborhoodModel *)self.currentData;
     if (model.relatedNeighborhoodData && model.relatedNeighborhoodData.hasMore) {
-        // 点击 查看更多 事件处理
-//        let loadMoreParams = EnvContext.shared.homePageParams <|>
-//        toTracerParams("neighborhood_nearby", key: "element_type") <|>
-//        toTracerParams(id, key: "group_id") <|>
-//        toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-//        toTracerParams("old_detail", key: "page_type")
-//        recordEvent(key: "neighborhood_nearby", params: loadMoreParams)
         
         NSString *searchId = model.relatedNeighborhoodData.searchId;
         

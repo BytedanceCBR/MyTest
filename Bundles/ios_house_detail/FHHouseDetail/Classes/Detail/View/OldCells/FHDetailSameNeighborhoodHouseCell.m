@@ -109,17 +109,8 @@
 - (void)moreButtonClick:(UIButton *)button {
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.hasMore) {
-        
-        // 点击事件处理
+        // click_loadmore 埋点不再需要
         FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
-        // click_loadmore
-        NSMutableDictionary *loadMoreTracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-        loadMoreTracerDic[@"enter_type"] = @"click";
-        loadMoreTracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
-        loadMoreTracerDic[@"category_name"] = @"same_neighborhood_list";
-        loadMoreTracerDic[@"element_from"] = @"same_neighborhood";
-        [FHUserTracker writeEvent:@"click_loadmore" params:loadMoreTracerDic];
-        
         // 同小区房源
         NSString *group_id = @"be_null";
         if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
