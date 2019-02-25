@@ -255,10 +255,10 @@
 //    return @"group.todayExtenstionShareDefaults";
 //
     if ([self isInHouseApp]) {
-        return @"group.com.f100.client.extension";
+        return @"group.com.fp1.extension";
     }
     
-    return @"group.com.f100.client.store.extension";
+    return @"group.com.f100.client.extension";
 }
 
 + (void)saveObj:(NSObject<NSCoding> *)obj forKey:(NSString *)key

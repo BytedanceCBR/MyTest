@@ -4,8 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.f100.client.extension</string>
-		<string>group.com.f100.client.store.extension</string>
+		<string>group.com.fp1.extension</string>
 	</array>
 </dict>
 </plist>

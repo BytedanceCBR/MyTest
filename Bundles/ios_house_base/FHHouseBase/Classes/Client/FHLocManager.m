@@ -17,14 +17,20 @@
 #import "FHHomeConfigManager.h"
 #import "FHUtils.h"
 #import "FHCityListViewModel.h"
+#import "FHHouseEnvContextBridge.h"
+#import "FHHouseBridgeManager.h"
+#import <NSDictionary+TTAdditions.h>
+#import <NSTimer+NoRetain.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
+#define kFHHomeHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 @interface FHLocManager ()
 
 @property (nonatomic, strong) YYCache       *locationCache;
 @property (nonatomic, assign) BOOL isHasSendPermissionTrace;
+@property(nonatomic , strong) NSTimer *messageTimer;
 
 @end
 
@@ -249,7 +255,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             [wSelf checkUserLocationStatus];
         }
         
-        [self sendLocationAuthorizedTrace];
+        [wSelf sendLocationAuthorizedTrace];
         
         if (error.code == AMapLocationErrorLocateFailed) {
             NSLog(@"定位错误:%@",error.localizedDescription);
@@ -284,7 +290,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         }
         
         // 存储当前定位信息
-        [self saveCurrentLocationData];
+        [wSelf saveCurrentLocationData];
         
         if (completion) {
             // 城市选择重新定位需回调
@@ -296,12 +302,12 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             }
             [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
                 if (!model) {
-                    self.retryConfigCount -= 1;
-                    if (self.retryConfigCount >= 0)
+                    wSelf.retryConfigCount -= 1;
+                    if (wSelf.retryConfigCount >= 0)
                     {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [self requestCurrentLocation:NO];
+                                [wSelf requestCurrentLocation:NO];
                             });
                         });
                     } else {
@@ -321,7 +327,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     if ([currentCityid isEqualToString:model.data.currentCityId] || !currentCityid) {
                         //更新config
                         [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                        [wSelf updateAllConfig:model isNeedDiff:NO];
+                        [wSelf updateAllConfig:model isNeedDiff:YES];
                     }
                 }
                 
@@ -332,7 +338,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     [wSelf updateAllConfig:model isNeedDiff:NO];
                 }
                 
-                self.retryConfigCount = 3;
+                wSelf.retryConfigCount = 3;
             }];
         }
     }];
@@ -412,5 +418,58 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
     return _locMgr;
 }
+
+- (void)fetchCategoryRefreshTip{
+    id<FHHouseEnvContextBridge> bridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    NSString *urlStr = [bridge getRefreshTipURLString];
+    WeakSelf;
+    [[TTNetworkManager shareInstance] requestForJSONWithURL:urlStr
+                                                     params:nil
+                                                     method:@"GET"
+                                           needCommonParams:YES
+                                                   callback:^(NSError *error, id jsonObj) {
+                                                       if (nil == error) {
+                                                           StrongSelf;
+                                                           if (![[bridge getCurrentSelectCategoryId] isEqualToString:kFHHomeHouseMixedCategoryID]) {
+                                                               
+                                                               NSDictionary *data = [jsonObj tt_dictionaryValueForKey:@"data"];
+                                                               NSInteger count = [data tt_intValueForKey:@"count"];
+                                                               if (count > 0) {
+                                                                   [bridge updateNotifyBadgeNumber:kFHHomeHouseMixedCategoryID isShow:YES];
+                                                               }
+                                                               
+                                                           }
+                                                       }
+                                                   }];
+}
+
+- (void)startCategoryRedDotRefresh
+{
+    if (self.messageTimer) {
+        [self.messageTimer invalidate];
+        self.messageTimer = nil;
+    }
+    
+    NSInteger timeInterval = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getCategoryBadgeTimeInterval];
+
+    self.messageTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(timerSelecter) userInfo:nil repeats:YES];
+
+}
+
+- (void)timerSelecter
+{
+    [self fetchCategoryRefreshTip];
+}
+
+- (void)stopCategoryRedDotRefresh
+{
+    if (self.messageTimer) {
+        [self.messageTimer invalidate];
+        self.messageTimer = nil;
+    }
+    
+    [[[FHHouseBridgeManager sharedInstance] envContextBridge] updateNotifyBadgeNumber:kFHHomeHouseMixedCategoryID isShow:NO];
+}
+
 
 @end

@@ -163,7 +163,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
                         self?.houseInSameNeighborhood.accept(response)
                     })
                     .disposed(by: disposeBag)
-            let task1 = HouseRentAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: neighborhoodId) { [weak self] (model, error) in
+            let task1 = FHHouseDetailAPI.requestHouseRentSameNeighborhood("\(self.houseId)", withNeighborhoodId: neighborhoodId) { [weak self] (model, error) in
 
                 self?.rentHouseInSameNeighborhood.accept(model)
             }
@@ -172,6 +172,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
 
     }
 
+    
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
         self.houseId = houseId
         if EnvContext.shared.client.reachability.connection == .none {
@@ -314,7 +315,7 @@ class NeighborhoodDetailPageViewModel: DetailPageViewModel, TableViewTracer {
             
             let dataParser = DetailDataParser.monoid()
                 <- parseCycleImageNode(data.neighborhoodImage,traceParams: pictureParams <|> traceExtension, disposeBag: self.disposeBag)
-                <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
+//                <- parseNeighborhoodNameNode(data, traceExtension: traceExtension, navVC: self.navVC, disposeBag: theDisposeBag)
                 <- parseNeighborhoodStatsInfo(data, traceExtension: traceExtension, disposeBag: self.disposeBag) {[weak self] (info) in
                     if let openUrl = info.openUrl {
                         var traceExtension = theParams

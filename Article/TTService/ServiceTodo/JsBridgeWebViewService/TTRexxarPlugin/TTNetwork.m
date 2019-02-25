@@ -45,6 +45,24 @@
         return;
     }
     
+    if (![params isKindOfClass:[NSDictionary class]]) {
+        if ([params isKindOfClass:[NSString class]]) {
+            NSString *stringJson = (NSString *)params;
+            //json字符串
+            NSData *jsonData = [stringJson dataUsingEncoding:NSUTF8StringEncoding];
+            NSError *err;
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                options:NSJSONReadingMutableContainers
+                                                                  error:&err];
+            if(!err){
+                params = dic;
+            }
+        }else
+        {
+            return;
+        }
+    }
+    
     /*
      if (callback) {
      callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",

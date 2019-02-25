@@ -62,11 +62,11 @@
 //        suiteName = @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";;
 //    }
 
-    NSString *suiteName = @"group.com.f100.client.store.extension";
+    NSString *suiteName = @"group.com.f100.client.extension";
     NSString *bundleInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
     NSRange resRange = [bundleInfo rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
     if (resRange.location != NSNotFound) {
-        suiteName = @"group.com.f100.client.extension";;
+        suiteName = @"group.com.fp1.extension";;
     }
     return suiteName;
 }

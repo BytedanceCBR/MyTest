@@ -242,5 +242,31 @@
     return _majorTitle;
 }
 
++ (FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
+    FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+    
+    if ([obj isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        
+        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)obj;
+        cellModel.secondModel = obj;
+        
+    }else if ([obj isKindOfClass:[FHNewHouseItemModel class]]) {
+        
+        FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)obj;
+        cellModel.houseModel = obj;
+        
+    }else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]) {
+        
+        FHHouseRentDataItemsModel *item = (FHHouseRentDataItemsModel *)obj;
+        cellModel.rentModel = obj;
+        
+    } else if ([obj isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
+        
+        FHHouseNeighborDataItemsModel *item = (FHHouseNeighborDataItemsModel *)obj;
+        cellModel.neighborModel = obj;
+        
+    }
+    return cellModel;
+}
 
 @end

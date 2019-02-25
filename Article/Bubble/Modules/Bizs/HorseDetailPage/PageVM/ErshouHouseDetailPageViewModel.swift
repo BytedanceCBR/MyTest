@@ -246,7 +246,7 @@ import RxCocoa
                       width: intersectionFrame.width,
                       height: intersectionFrame.height - buttomBarHeight)
     }
-
+    
     func requestData(houseId: Int64, logPB: [String: Any]?, showLoading: Bool) {
         self.houseId = houseId
         self.tracerModel?.houseId = houseId

@@ -797,6 +797,8 @@
 		61501BAF2148BC1100870420 /* UITableView+FHExts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BA92148BC1100870420 /* UITableView+FHExts.swift */; };
 		61501BB32148C8B600870420 /* FHListDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */; };
 		61501BB42148C8B600870420 /* FHListDataSourceDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */; };
+		61627A7B22238DCE00EAC771 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 61627A7A22238DCE00EAC771 /* NotificationService.m */; };
+		61627A7F22238DCE00EAC771 /* FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 61627A7722238DCE00EAC771 /* FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		61787F492201AE9C003CB249 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 61787F482201AE9C003CB249 /* NotificationService.m */; };
 		61787F4D2201AE9C003CB249 /* InhouseNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 61787F452201AE9C003CB249 /* InhouseNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		61787F552201B534003CB249 /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 61787F542201B533003CB249 /* TTNotificationServiceExtensionBase.m */; };
@@ -1397,12 +1399,6 @@
 		B30912C521E4D40100E530C3 /* LicenceBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */; };
 		B30912C721E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */; };
 		B30912C821E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */; };
-		B32FD2CD21A26E55007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
-		B32FD2CE21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
-		B32FD2CF21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
-		B32FD2D321A29BB4007B9966 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
-		B32FD2D421A29BB4007B9966 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
-		B32FD2D521A29BB4007B9966 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
 		B32FD30221A3B479007B9966 /* RentCycleImageCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */; };
 		B32FD30321A3B479007B9966 /* RentCoreInfoCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */; };
 		B32FD30421A3B479007B9966 /* RentPropertyListNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2FD21A3B479007B9966 /* RentPropertyListNode.swift */; };
@@ -1445,15 +1441,6 @@
 		B32FD34121A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
 		B32FD34221A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
 		B32FD34321A6652A007B9966 /* FHRentReleatedHouseCellRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */; };
-		B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
-		B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
-		B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
-		B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
-		B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
 		B32FD35521A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35621A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
 		B32FD35721A6BC47007B9966 /* FHHouseContactBottomBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */; };
@@ -2466,7 +2453,6 @@
 		B373CC0B2174587A008F9905 /* TTArticleDetailMemoryMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78DAE81F56639800474BA8 /* TTArticleDetailMemoryMonitor.m */; };
 		B373CC0C2174587A008F9905 /* SSAPNsAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA75D1F33489E005DAD27 /* SSAPNsAlertManager.m */; };
 		B373CC0D2174587A008F9905 /* ExploreDetailToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 068D0C151B6B542E00F87E57 /* ExploreDetailToolbarView.m */; };
-		B373CC0E2174587A008F9905 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		B373CC0F2174587A008F9905 /* TTVCommodityEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA11F94B8DC0050F83E /* TTVCommodityEntity.m */; };
 		B373CC102174587A008F9905 /* TTViewControllerHierarchyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D7FA31F28360300C55747 /* TTViewControllerHierarchyHelper.m */; };
 		B373CC112174587A008F9905 /* TTFeedSaveRemoteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFAE3D1F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m */; };
@@ -3256,8 +3242,6 @@
 		B388CBE92142652B00653188 /* MultiImageInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA5F2142652900653188 /* MultiImageInfoCell.swift */; };
 		B388CBEA2142652B00653188 /* SearchUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA602142652900653188 /* SearchUITextField.swift */; };
 		B388CBEB2142652B00653188 /* SearchUITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA602142652900653188 /* SearchUITextField.swift */; };
-		B388CBEC2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
-		B388CBED2142652B00653188 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		B388CBF22142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF32142652B00653188 /* SearchTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA652142652900653188 /* SearchTextField.swift */; };
 		B388CBF42142652B00653188 /* HomeSpringBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA672142652900653188 /* HomeSpringBoard.swift */; };
@@ -3780,7 +3764,6 @@
 		D479515A21ECC94E00548965 /* TTInterfaceTipBaseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF8A59F1FCE9C7900FCE0EC /* TTInterfaceTipBaseModel.m */; };
 		D479515B21ECC94E00548965 /* TTVSegmentedPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692D11F31D0D300D59CA5 /* TTVSegmentedPageViewController.m */; };
 		D479515C21ECC94E00548965 /* ExploreAddEntryListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 486F87381A21BBC200F5AE99 /* ExploreAddEntryListCell.m */; };
-		D479515D21ECC94E00548965 /* FHRentSameNeighborhoodResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */; };
 		D479515E21ECC94E00548965 /* FHHeaderSegmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6124ECC721AFF89F0009359A /* FHHeaderSegmentCell.swift */; };
 		D479515F21ECC94E00548965 /* FloorPanCategoryDetailPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3632E21A29D9E0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift */; };
 		D479516021ECC94E00548965 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B2846351DF5407000170DE7 /* TTLayOutUnifyADGroupPicCellModel.m */; };
@@ -4252,7 +4235,6 @@
 		D479533421ECC94E00548965 /* TTAdAnimationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A4931F20B01C005E4A06 /* TTAdAnimationCell.m */; };
 		D479533521ECC94E00548965 /* TGOrbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAD72142652900653188 /* TGOrbit.swift */; };
 		D479533621ECC94E00548965 /* TTVCommodityItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA51F94B8DC0050F83E /* TTVCommodityItemView.m */; };
-		D479533721ECC94E00548965 /* HouseRentDetailPageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */; };
 		D479533821ECC94E00548965 /* SSFeedbackPostViewBase.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB6281F1332D90002B455 /* SSFeedbackPostViewBase.m */; };
 		D479533921ECC94E00548965 /* TSVCardTopInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB9288C1FD027D9004ADDB0 /* TSVCardTopInfoView.m */; };
 		D479533A21ECC94E00548965 /* ActionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A88BDD001C02CB47005C1B7A /* ActionButton.m */; };
@@ -4464,7 +4446,6 @@
 		D479540A21ECC94E00548965 /* AKAwardCoinVideoMonitorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041EF12058029000BAEE7F /* AKAwardCoinVideoMonitorManager.m */; };
 		D479540B21ECC94E00548965 /* TTArticleMomentDigUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D504399F2079B87700DA4953 /* TTArticleMomentDigUsersViewController.m */; };
 		D479540C21ECC94E00548965 /* TTSettingMineTabManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6841F333FDE005DAD27 /* TTSettingMineTabManager.m */; };
-		D479540D21ECC94E00548965 /* FHCycleImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */; };
 		D479540E21ECC94E00548965 /* TSVFeedFollowCellContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B050C631FDAD1F80058498E /* TSVFeedFollowCellContentView.m */; };
 		D479540F21ECC94E00548965 /* ArticleGetRemoteDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765AC916DB563F0037C3E3 /* ArticleGetRemoteDataOperation.m */; };
 		D479541021ECC94E00548965 /* TTNetworkStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B47725B1CFC416B00D3F8DC /* TTNetworkStub.m */; };
@@ -4697,7 +4678,6 @@
 		D47954F321ECC94E00548965 /* TTArticleDetailMemoryMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A78DAE81F56639800474BA8 /* TTArticleDetailMemoryMonitor.m */; };
 		D47954F421ECC94E00548965 /* SSAPNsAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA75D1F33489E005DAD27 /* SSAPNsAlertManager.m */; };
 		D47954F521ECC94E00548965 /* ExploreDetailToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 068D0C151B6B542E00F87E57 /* ExploreDetailToolbarView.m */; };
-		D47954F621ECC94E00548965 /* HomeHeaderSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CA612142652900653188 /* HomeHeaderSearchView.swift */; };
 		D47954F721ECC94E00548965 /* TTVCommodityEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DA11F94B8DC0050F83E /* TTVCommodityEntity.m */; };
 		D47954F821ECC94E00548965 /* TTViewControllerHierarchyHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D7FA31F28360300C55747 /* TTViewControllerHierarchyHelper.m */; };
 		D47954F921ECC94E00548965 /* TTFeedSaveRemoteOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFAE3D1F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m */; };
@@ -5191,7 +5171,6 @@
 		D47956E221ECC94E00548965 /* QuickLoginAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3634A21A29D9E0097FCB6 /* QuickLoginAlert.swift */; };
 		D47956E321ECC94E00548965 /* TTFeedCollectionHTSListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 485782AE1EE953F900307CEF /* TTFeedCollectionHTSListCell.m */; };
 		D47956E421ECC94E00548965 /* RelatedNeighborhoodListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF3633B21A29D9E0097FCB6 /* RelatedNeighborhoodListViewModel.swift */; };
-		D47956E521ECC94E00548965 /* FHHouseRentRelatedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */; };
 		D47956E621ECC94E00548965 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D24F7DF1E5D9F7C0021AE37 /* ExploreVideoDetailUnUnifyLargePicADView.m */; };
 		D47956E721ECC94E00548965 /* TTPersonalHomeHeaderOperationView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2F71F1333610002B455 /* TTPersonalHomeHeaderOperationView.m */; };
 		D47956E821ECC94E00548965 /* ExploreVideoDetailAppLeftPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCACFFF1DDC237200EBF9CF /* ExploreVideoDetailAppLeftPicADView.m */; };
@@ -5260,7 +5239,6 @@
 		D479572721ECC94E00548965 /* TSVActivityBannerOriginalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A7A8EC1FD1223700070FDD /* TSVActivityBannerOriginalData.m */; };
 		D479572821ECC94E00548965 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CABD2142652900653188 /* FPSMonitor.swift */; };
 		D479572921ECC94E00548965 /* TTRNCellManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBCA9D31F67812B00C518C3 /* TTRNCellManager.m */; };
-		D479572A21ECC94E00548965 /* HouseRentAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = B32FD34621A67A51007B9966 /* HouseRentAPI.m */; };
 		D479572B21ECC94E00548965 /* TTFastCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFABA01F0E432B00C1E28D /* TTFastCoding.m */; };
 		D479572C21ECC94E00548965 /* TGPacman.swift in Sources */ = {isa = PBXBuildFile; fileRef = B388CAE62142652900653188 /* TGPacman.swift */; };
 		D479572D21ECC94E00548965 /* TTDetailNatantRelateReadPlainView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB57E1F1332D90002B455 /* TTDetailNatantRelateReadPlainView.m */; };
@@ -5836,6 +5814,10 @@
 		F8893C811FCE5F4200C76EBB /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
 		F899BB6F1FA5BC6200640D94 /* TTVMidInsertADGuideCountdownView.m in Sources */ = {isa = PBXBuildFile; fileRef = F899BB6E1FA5BC6200640D94 /* TTVMidInsertADGuideCountdownView.m */; };
 		F8ACFFC61F711FED0018A89F /* Article+TTADComputedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = F8ACFFC51F711FED0018A89F /* Article+TTADComputedProperties.m */; };
+		FB3224E7221999CD008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
+		FB3224EA2219A08F008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
+		FB3224EB2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
+		FB3224EC2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
 		FE0011122041119A009D8C4E /* TTActivityTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE00111120411199009D8C4E /* TTActivityTaskManager.m */; };
 		FE006D271F1B5FA9004E6188 /* JSONModel+Monitor.m in Sources */ = {isa = PBXBuildFile; fileRef = FE006D261F1B5FA9004E6188 /* JSONModel+Monitor.m */; };
 		FE006D2D1F1B6511004E6188 /* TTFeedbackUploadImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FE006D2C1F1B6511004E6188 /* TTFeedbackUploadImageManager.m */; };
@@ -7403,6 +7385,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		61627A7D22238DCE00EAC771 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 61627A7622238DCE00EAC771;
+			remoteInfo = FHNotificationServiceExtension;
+		};
 		61787F4B2201AE9C003CB249 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
@@ -7439,6 +7428,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				61627A7F22238DCE00EAC771 /* FHNotificationServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8606,6 +8596,11 @@
 		61501BA72148BC0F00870420 /* FHCellModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHCellModel.swift; sourceTree = "<group>"; };
 		61501BA92148BC1100870420 /* UITableView+FHExts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+FHExts.swift"; sourceTree = "<group>"; };
 		61501BB22148C8B600870420 /* FHListDataSourceDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHListDataSourceDelegate.swift; sourceTree = "<group>"; };
+		61627A7722238DCE00EAC771 /* FHNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FHNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		61627A7922238DCE00EAC771 /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
+		61627A7A22238DCE00EAC771 /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
+		61627A7C22238DCE00EAC771 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61627A8322238FEA00EAC771 /* FHNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FHNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		61787F452201AE9C003CB249 /* InhouseNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = InhouseNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		61787F472201AE9C003CB249 /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
 		61787F482201AE9C003CB249 /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
@@ -9761,10 +9756,6 @@
 		B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRealtorDetailWebViewController.m; sourceTree = "<group>"; };
 		B30912C321E4D40100E530C3 /* LicenceBrowserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenceBrowserViewModel.swift; sourceTree = "<group>"; };
 		B30912C621E5C46000E530C3 /* FHRealtorDetailWebViewControllerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRealtorDetailWebViewControllerImpl.swift; sourceTree = "<group>"; };
-		B32FD2CB21A26E55007B9966 /* HouseRentDetailPageVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentDetailPageVC.h; sourceTree = "<group>"; };
-		B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentDetailPageVC.m; sourceTree = "<group>"; };
-		B32FD2D121A29BB4007B9966 /* FHCycleImageCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHCycleImageCell.h; sourceTree = "<group>"; };
-		B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHCycleImageCell.m; sourceTree = "<group>"; };
 		B32FD2FB21A3B479007B9966 /* RentCycleImageCellRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentCycleImageCellRender.swift; sourceTree = "<group>"; };
 		B32FD2FC21A3B479007B9966 /* RentCoreInfoCellRender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentCoreInfoCellRender.swift; sourceTree = "<group>"; };
 		B32FD2FD21A3B479007B9966 /* RentPropertyListNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RentPropertyListNode.swift; sourceTree = "<group>"; };
@@ -9779,12 +9770,6 @@
 		B32FD33821A57423007B9966 /* BaseHouseDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseHouseDetailPage.swift; sourceTree = "<group>"; };
 		B32FD33C21A65A71007B9966 /* FHRentSearchInNeighborhoodCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentSearchInNeighborhoodCellRender.swift; sourceTree = "<group>"; };
 		B32FD34021A6652A007B9966 /* FHRentReleatedHouseCellRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHRentReleatedHouseCellRender.swift; sourceTree = "<group>"; };
-		B32FD34521A67A51007B9966 /* HouseRentAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HouseRentAPI.h; sourceTree = "<group>"; };
-		B32FD34621A67A51007B9966 /* HouseRentAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HouseRentAPI.m; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 1; };
-		B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseRentRelatedResponse.h; sourceTree = "<group>"; };
-		B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseRentRelatedResponse.m; sourceTree = "<group>"; };
-		B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRentSameNeighborhoodResponse.h; sourceTree = "<group>"; };
-		B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRentSameNeighborhoodResponse.m; sourceTree = "<group>"; };
 		B32FD35421A6B856007B9966 /* FHHouseContactBottomBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHHouseContactBottomBarViewModel.swift; sourceTree = "<group>"; };
 		B32FD35C21A6E4C7007B9966 /* FHFilterRedDotManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FHFilterRedDotManager.swift; sourceTree = "<group>"; };
 		B32FD36021AA84A3007B9966 /* HouseFindPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HouseFindPageControl.swift; sourceTree = "<group>"; };
@@ -9832,7 +9817,6 @@
 		B388CA5E2142652900653188 /* NeighborhoodItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeighborhoodItemCell.swift; sourceTree = "<group>"; };
 		B388CA5F2142652900653188 /* MultiImageInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiImageInfoCell.swift; sourceTree = "<group>"; };
 		B388CA602142652900653188 /* SearchUITextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchUITextField.swift; sourceTree = "<group>"; };
-		B388CA612142652900653188 /* HomeHeaderSearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeHeaderSearchView.swift; sourceTree = "<group>"; };
 		B388CA652142652900653188 /* SearchTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTextField.swift; sourceTree = "<group>"; };
 		B388CA672142652900653188 /* HomeSpringBoard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoard.swift; sourceTree = "<group>"; };
 		B388CA682142652900653188 /* HomeSpringBoardItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeSpringBoardItemView.swift; sourceTree = "<group>"; };
@@ -10109,9 +10093,6 @@
 		D0FEF3351D4759A6006F031C /* ExploreLastReadCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExploreLastReadCellView.m; sourceTree = "<group>"; };
 		D40CAEFF21BFF3250018E256 /* FHHomeBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBridgeImp.h; sourceTree = "<group>"; };
 		D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBridgeImp.m; sourceTree = "<group>"; };
-		D42F3C42214765C20097ACCB /* NIHSearchPanelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIHSearchPanelViewModel.swift; sourceTree = "<group>"; };
-		D479494B21ECC93600548965 /* f100 copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy-Info.plist"; sourceTree = "<absolute>"; };
-		D47950BF21ECC94300548965 /* f100 copy2-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "f100 copy2-Info.plist"; path = "/Users/xiefei/Desktop/WorkSpace/ios_bubble/Article/f100 copy2-Info.plist"; sourceTree = "<absolute>"; };
 		D479581521ECC94E00548965 /* NewsLiteChannel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsLiteChannel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D500CFA0205AABCF00FBDAF5 /* AKLoginTrafficViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKLoginTrafficViewController.m; sourceTree = "<group>"; };
 		D500CFA1205AABCF00FBDAF5 /* AKLoginTrafficViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKLoginTrafficViewController.h; sourceTree = "<group>"; };
@@ -10794,6 +10775,8 @@
 		F899BB731FA5FB7500640D94 /* TTVADGuideCountdownViewProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTVADGuideCountdownViewProtocol.h; sourceTree = "<group>"; };
 		F8ACFFC41F711FED0018A89F /* Article+TTADComputedProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article+TTADComputedProperties.h"; sourceTree = "<group>"; };
 		F8ACFFC51F711FED0018A89F /* Article+TTADComputedProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Article+TTADComputedProperties.m"; sourceTree = "<group>"; };
+		FB3224E5221999CD008DFB8D /* FHMessageBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMessageBridgeImp.h; sourceTree = "<group>"; };
+		FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHMessageBridgeImp.m; sourceTree = "<group>"; };
 		FE00111020411199009D8C4E /* TTActivityTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTActivityTaskManager.h; sourceTree = "<group>"; };
 		FE00111120411199009D8C4E /* TTActivityTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTActivityTaskManager.m; sourceTree = "<group>"; };
 		FE006D251F1B5FA9004E6188 /* JSONModel+Monitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSONModel+Monitor.h"; sourceTree = "<group>"; };
@@ -11013,6 +10996,13 @@
 				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61627A7422238DCE00EAC771 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12361,6 +12351,7 @@
 				A8323FED1B81B59600DD5533 /* Targets-Config */,
 				A8A57F531B16F44D00783AA9 /* Resource */,
 				61787F462201AE9C003CB249 /* InhouseNotificationServiceExtension */,
+				61627A7822238DCE00EAC771 /* FHNotificationServiceExtension */,
 				3AA5028315876A1F00EB27FA /* Frameworks */,
 				3AA5028115876A1F00EB27FA /* Products */,
 				FEE188E21FFCB587005310BB /* Recovered References */,
@@ -12376,6 +12367,7 @@
 				B373CF102174587A008F9905 /* f100.app */,
 				D479581521ECC94E00548965 /* NewsLiteChannel.app */,
 				61787F452201AE9C003CB249 /* InhouseNotificationServiceExtension.appex */,
+				61627A7722238DCE00EAC771 /* FHNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -12686,8 +12678,8 @@
 		3D2D487D21A28E590011A0EC /* House */ = {
 			isa = PBXGroup;
 			children = (
+				FB3224E4221999B7008DFB8D /* HouseMessage */,
 				D46DA52321A43B74009D50C7 /* HouseHome */,
-				B32FD2C921A26E2D007B9966 /* HouseRent */,
 				3D2D487E21A28E590011A0EC /* Bridge */,
 				760CF74221ABE7A00006BE07 /* WebView */,
 			);
@@ -14008,6 +14000,17 @@
 			);
 			name = listViewContainer;
 			path = "New Group";
+			sourceTree = "<group>";
+		};
+		61627A7822238DCE00EAC771 /* FHNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				61627A8322238FEA00EAC771 /* FHNotificationServiceExtension.entitlements */,
+				61627A7922238DCE00EAC771 /* NotificationService.h */,
+				61627A7A22238DCE00EAC771 /* NotificationService.m */,
+				61627A7C22238DCE00EAC771 /* Info.plist */,
+			);
+			path = FHNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 		61787F402201AE44003CB249 /* Extensions */ = {
@@ -16802,34 +16805,6 @@
 			path = TTDislikeView;
 			sourceTree = "<group>";
 		};
-		B32FD2C921A26E2D007B9966 /* HouseRent */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD34421A67A33007B9966 /* API */,
-				B32FD2CA21A26E37007B9966 /* Detail */,
-			);
-			path = HouseRent;
-			sourceTree = "<group>";
-		};
-		B32FD2CA21A26E37007B9966 /* Detail */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD2D021A29B85007B9966 /* Cell */,
-				B32FD2CB21A26E55007B9966 /* HouseRentDetailPageVC.h */,
-				B32FD2CC21A26E55007B9966 /* HouseRentDetailPageVC.m */,
-			);
-			path = Detail;
-			sourceTree = "<group>";
-		};
-		B32FD2D021A29B85007B9966 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD2D121A29BB4007B9966 /* FHCycleImageCell.h */,
-				B32FD2D221A29BB4007B9966 /* FHCycleImageCell.m */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
 		B32FD2F921A3B479007B9966 /* Rent */ = {
 			isa = PBXGroup;
 			children = (
@@ -16870,19 +16845,6 @@
 				B32FD33321A570EA007B9966 /* HouseRentTracer.swift */,
 			);
 			path = Tracer;
-			sourceTree = "<group>";
-		};
-		B32FD34421A67A33007B9966 /* API */ = {
-			isa = PBXGroup;
-			children = (
-				B32FD34521A67A51007B9966 /* HouseRentAPI.h */,
-				B32FD34621A67A51007B9966 /* HouseRentAPI.m */,
-				B32FD34A21A68460007B9966 /* FHHouseRentRelatedResponse.h */,
-				B32FD34B21A68460007B9966 /* FHHouseRentRelatedResponse.m */,
-				B32FD34F21A69F30007B9966 /* FHRentSameNeighborhoodResponse.h */,
-				B32FD35021A69F30007B9966 /* FHRentSameNeighborhoodResponse.m */,
-			);
-			path = API;
 			sourceTree = "<group>";
 		};
 		B388C9D82142652800653188 /* Bubble */ = {
@@ -17010,7 +16972,6 @@
 			children = (
 				B388CA572142652900653188 /* Cells */,
 				B388CA602142652900653188 /* SearchUITextField.swift */,
-				B388CA612142652900653188 /* HomeHeaderSearchView.swift */,
 				B388CA652142652900653188 /* SearchTextField.swift */,
 				B388CA662142652900653188 /* SpringBoard */,
 				B388CA6C2142652900653188 /* BaseTextField.swift */,
@@ -19455,6 +19416,15 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		FB3224E4221999B7008DFB8D /* HouseMessage */ = {
+			isa = PBXGroup;
+			children = (
+				FB3224E5221999CD008DFB8D /* FHMessageBridgeImp.h */,
+				FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */,
+			);
+			path = HouseMessage;
+			sourceTree = "<group>";
+		};
 		FE00110F20411199009D8C4E /* TTActivityTaskManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -19950,6 +19920,23 @@
 			productReference = 3AA5028015876A1F00EB27FA /* NewsLite.app */;
 			productType = "com.apple.product-type.application";
 		};
+		61627A7622238DCE00EAC771 /* FHNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 61627A8222238DCF00EAC771 /* Build configuration list for PBXNativeTarget "FHNotificationServiceExtension" */;
+			buildPhases = (
+				61627A7322238DCE00EAC771 /* Sources */,
+				61627A7422238DCE00EAC771 /* Frameworks */,
+				61627A7522238DCE00EAC771 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FHNotificationServiceExtension;
+			productName = FHNotificationServiceExtension;
+			productReference = 61627A7722238DCE00EAC771 /* FHNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		61787F442201AE9C003CB249 /* InhouseNotificationServiceExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61787F4E2201AE9D003CB249 /* Build configuration list for PBXNativeTarget "InhouseNotificationServiceExtension" */;
@@ -19990,6 +19977,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				61627A7E22238DCE00EAC771 /* PBXTargetDependency */,
 			);
 			name = f100;
 			productName = Article;
@@ -20070,7 +20058,7 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -20098,10 +20086,20 @@
 							};
 						};
 					};
+					61627A7622238DCE00EAC771 = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = J3249442BT;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					61787F442201AE9C003CB249 = {
 						CreatedOnToolsVersion = 10.1;
 						DevelopmentTeam = X46375UBYG;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -20128,7 +20126,7 @@
 					};
 					FEFA5259205FB1A8001F50D8 = {
 						DevelopmentTeam = X46375UBYG;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -20169,6 +20167,7 @@
 				B373C7F92174587A008F9905 /* f100 */,
 				D47950C221ECC94E00548965 /* NewsLiteChannel */,
 				61787F442201AE9C003CB249 /* InhouseNotificationServiceExtension */,
+				61627A7622238DCE00EAC771 /* FHNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -20256,6 +20255,13 @@
 				B388CB262142652A00653188 /* Assets.xcassets in Resources */,
 				B362E6F721539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */,
 				D97EB6B01E1CA04200EE4473 /* VideoResource.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61627A7522238DCE00EAC771 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -20529,13 +20535,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20707,6 +20709,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -20793,6 +20796,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -20900,13 +20904,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP-User] sgmpreaction";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20918,8 +20918,6 @@
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel-resources.sh",
@@ -20973,6 +20971,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -21008,8 +21007,6 @@
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_ali@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pay_logo_weixin@2x.png",
@@ -21061,6 +21058,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -21157,6 +21155,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -21242,6 +21241,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -21473,15 +21473,11 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-NewsLiteChannel-checkManifestLockResult.txt",
 			);
@@ -21679,6 +21675,7 @@
 				"${PODS_ROOT}/BDTBasePlayer/BDTBasePlayer/Assets/video_loading@3x.png",
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
@@ -21764,6 +21761,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/video_loading@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
@@ -22017,7 +22015,6 @@
 				A97DB9A71F1332DE0002B455 /* TTHistoryViewController.m in Sources */,
 				FEF8A5A51FCE9C7B00FCE0EC /* TTInterfaceTipBaseModel.m in Sources */,
 				F87696401F31D0D900D59CA5 /* TTVSegmentedPageViewController.m in Sources */,
-				B32FD35121A69F30007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				3DF363D621A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				486F87391A21BBC200F5AE99 /* ExploreAddEntryListCell.m in Sources */,
 				6B28469A1DF5407100170DE7 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -22669,7 +22666,6 @@
 				A97DC12E1F1333320002B455 /* TTRVideo.m in Sources */,
 				D09F07A31D944C9A00B586B9 /* ExploreBookCell.m in Sources */,
 				2DB9A5601F20B01C005E4A06 /* TTAdCanvasVC.m in Sources */,
-				B32FD2CD21A26E55007B9966 /* HouseRentDetailPageVC.m in Sources */,
 				F87695681F31D0D700D59CA5 /* TTImageInfosModel+Extention.m in Sources */,
 				6B2845B51DF5402100170DE7 /* HuoShanTalentBanner.m in Sources */,
 				0A84B7CA1FB97DC300A9F061 /* UIImageView+BDTSource.m in Sources */,
@@ -22926,7 +22922,6 @@
 				4A78DAE91F56639800474BA8 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				ABBEA75E1F33489E005DAD27 /* SSAPNsAlertManager.m in Sources */,
 				068D0C161B6B542E00F87E57 /* ExploreDetailToolbarView.m in Sources */,
-				B388CBEC2142652B00653188 /* HomeHeaderSearchView.swift in Sources */,
 				438F9E2F1F94B8DD0050F83E /* TTVCommodityEntity.m in Sources */,
 				4A8D7FA41F28360300C55747 /* TTViewControllerHierarchyHelper.m in Sources */,
 				A9AFAE641F0E45C600C1E28D /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -23066,6 +23061,7 @@
 				48C8A6B81F1362D000A52D8B /* UIViewController+TabBarSnapShot.m in Sources */,
 				7B4772561CFC412200D3F8DC /* TTMagicSwitchTableViewCell.m in Sources */,
 				B388CC042142652B00653188 /* ChatDetailListCell.swift in Sources */,
+				FB3224E7221999CD008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				F219DFA71F68178300E3FC07 /* TSVWaterfallCollectionViewCellHelper.m in Sources */,
 				06C5184F1AAC65AC00C2B2E3 /* SSDebugDNSViewController.m in Sources */,
 				ABBEA6061F333110005DAD27 /* TTInterestViewController.m in Sources */,
@@ -23422,7 +23418,6 @@
 				A97DC0821F1333310002B455 /* NewsDetailConstant.m in Sources */,
 				3DF363F421A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
 				485782AF1EE953F900307CEF /* TTFeedCollectionHTSListCell.m in Sources */,
-				B32FD34C21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				2D24F7E01E5D9F7C0021AE37 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				A97DC48A1F1333640002B455 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				2DCAD01A1DDC237200EBF9CF /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -23491,7 +23486,6 @@
 				1B5B58BD1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m in Sources */,
 				48A7A8ED1FD1223700070FDD /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7A2142652B00653188 /* FPSMonitor.swift in Sources */,
-				B32FD34721A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				9CBCA9D51F67812B00C518C3 /* TTRNCellManager.m in Sources */,
 				A9AFABA51F0E432B00C1E28D /* TTFastCoding.m in Sources */,
 				B388CCBE2142652C00653188 /* TGPacman.swift in Sources */,
@@ -23518,7 +23512,6 @@
 				A97DBCEB1F1332E60002B455 /* TTProjectLogicManager.m in Sources */,
 				B388CC3A2142652B00653188 /* FavoriteCell.swift in Sources */,
 				0A7F5FAB1F338DF4008AB729 /* TTTrackerOpenURLTask.m in Sources */,
-				B32FD2D321A29BB4007B9966 /* FHCycleImageCell.m in Sources */,
 				F876995F1F31D6B900D59CA5 /* TTAdWebResPreloadManager.m in Sources */,
 				A9AFAE601F0E45C600C1E28D /* TTFeedMergeOperation.m in Sources */,
 				7E224DBE1F38700500922AD2 /* TTLayoutPanoramaViewCell.m in Sources */,
@@ -23587,6 +23580,14 @@
 				D5041F5C205802B600BAEE7F /* AKRedPacketOptionalLoginView.m in Sources */,
 				438F9E531F94B8DE0050F83E /* TTVMidInsertADService.m in Sources */,
 				52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		61627A7322238DCE00EAC771 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				61627A7B22238DCE00EAC771 /* NotificationService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23752,7 +23753,6 @@
 				B373C8912174587A008F9905 /* TTInterfaceTipBaseModel.m in Sources */,
 				B373C8922174587A008F9905 /* TTVSegmentedPageViewController.m in Sources */,
 				B373C8932174587A008F9905 /* ExploreAddEntryListCell.m in Sources */,
-				B32FD35321A69F93007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				6124ECCA21AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D821A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				B373C8942174587A008F9905 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -24009,6 +24009,7 @@
 				B373C9892174587A008F9905 /* AccountConfig.swift in Sources */,
 				B373C98A2174587A008F9905 /* TTProfileFunctionCell.m in Sources */,
 				3DF363B121A29D9F0097FCB6 /* InformationCell.swift in Sources */,
+				FB3224EB2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				B373C98B2174587A008F9905 /* ExploreArticleHotNewsCell.m in Sources */,
 				B373C98C2174587A008F9905 /* TTUnifyADPicCategoryLargePicCell.m in Sources */,
 				B373C98D2174587A008F9905 /* TTWeakPushAlertView.m in Sources */,
@@ -24224,7 +24225,6 @@
 				B373CA602174587A008F9905 /* TTAdAnimationCell.m in Sources */,
 				B373CA612174587A008F9905 /* TGOrbit.swift in Sources */,
 				B373CA622174587A008F9905 /* TTVCommodityItemView.m in Sources */,
-				B32FD2CF21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */,
 				B373CA632174587A008F9905 /* SSFeedbackPostViewBase.m in Sources */,
 				B373CA642174587A008F9905 /* TSVCardTopInfoView.m in Sources */,
 				B373CA652174587A008F9905 /* ActionButton.m in Sources */,
@@ -24436,7 +24436,6 @@
 				B373CB282174587A008F9905 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				B373CB292174587A008F9905 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				B373CB2A2174587A008F9905 /* TTSettingMineTabManager.m in Sources */,
-				B32FD2D521A29BB4007B9966 /* FHCycleImageCell.m in Sources */,
 				B373CB2B2174587A008F9905 /* TSVFeedFollowCellContentView.m in Sources */,
 				B373CB2C2174587A008F9905 /* ArticleGetRemoteDataOperation.m in Sources */,
 				B373CB2D2174587A008F9905 /* TTNetworkStub.m in Sources */,
@@ -24669,7 +24668,6 @@
 				B373CC0B2174587A008F9905 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				B373CC0C2174587A008F9905 /* SSAPNsAlertManager.m in Sources */,
 				B373CC0D2174587A008F9905 /* ExploreDetailToolbarView.m in Sources */,
-				B373CC0E2174587A008F9905 /* HomeHeaderSearchView.swift in Sources */,
 				B373CC0F2174587A008F9905 /* TTVCommodityEntity.m in Sources */,
 				B373CC102174587A008F9905 /* TTViewControllerHierarchyHelper.m in Sources */,
 				B373CC112174587A008F9905 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -25163,7 +25161,6 @@
 				3DF3641721A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				B373CDE32174587A008F9905 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F621A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				B32FD34E21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				B373CDE42174587A008F9905 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				B373CDE52174587A008F9905 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				B373CDE62174587A008F9905 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -25232,7 +25229,6 @@
 				B373CE242174587A008F9905 /* TSVActivityBannerOriginalData.m in Sources */,
 				B373CE252174587A008F9905 /* FPSMonitor.swift in Sources */,
 				B373CE262174587A008F9905 /* TTRNCellManager.m in Sources */,
-				B32FD34921A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				B373CE272174587A008F9905 /* TTFastCoding.m in Sources */,
 				B373CE282174587A008F9905 /* TGPacman.swift in Sources */,
 				B373CE292174587A008F9905 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -25484,7 +25480,6 @@
 				D479515A21ECC94E00548965 /* TTInterfaceTipBaseModel.m in Sources */,
 				D479515B21ECC94E00548965 /* TTVSegmentedPageViewController.m in Sources */,
 				D479515C21ECC94E00548965 /* ExploreAddEntryListCell.m in Sources */,
-				D479515D21ECC94E00548965 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				D479515E21ECC94E00548965 /* FHHeaderSegmentCell.swift in Sources */,
 				D479515F21ECC94E00548965 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				D479516021ECC94E00548965 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -25741,6 +25736,7 @@
 				D479525D21ECC94E00548965 /* AccountConfig.swift in Sources */,
 				D479525E21ECC94E00548965 /* TTProfileFunctionCell.m in Sources */,
 				D479525F21ECC94E00548965 /* InformationCell.swift in Sources */,
+				FB3224EC2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				D479526021ECC94E00548965 /* ExploreArticleHotNewsCell.m in Sources */,
 				D479526121ECC94E00548965 /* TTUnifyADPicCategoryLargePicCell.m in Sources */,
 				D479526221ECC94E00548965 /* TTWeakPushAlertView.m in Sources */,
@@ -25956,7 +25952,6 @@
 				D479533421ECC94E00548965 /* TTAdAnimationCell.m in Sources */,
 				D479533521ECC94E00548965 /* TGOrbit.swift in Sources */,
 				D479533621ECC94E00548965 /* TTVCommodityItemView.m in Sources */,
-				D479533721ECC94E00548965 /* HouseRentDetailPageVC.m in Sources */,
 				D479533821ECC94E00548965 /* SSFeedbackPostViewBase.m in Sources */,
 				D479533921ECC94E00548965 /* TSVCardTopInfoView.m in Sources */,
 				D479533A21ECC94E00548965 /* ActionButton.m in Sources */,
@@ -26168,7 +26163,6 @@
 				D479540A21ECC94E00548965 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				D479540B21ECC94E00548965 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				D479540C21ECC94E00548965 /* TTSettingMineTabManager.m in Sources */,
-				D479540D21ECC94E00548965 /* FHCycleImageCell.m in Sources */,
 				D479540E21ECC94E00548965 /* TSVFeedFollowCellContentView.m in Sources */,
 				D479540F21ECC94E00548965 /* ArticleGetRemoteDataOperation.m in Sources */,
 				D479541021ECC94E00548965 /* TTNetworkStub.m in Sources */,
@@ -26401,7 +26395,6 @@
 				D47954F321ECC94E00548965 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				D47954F421ECC94E00548965 /* SSAPNsAlertManager.m in Sources */,
 				D47954F521ECC94E00548965 /* ExploreDetailToolbarView.m in Sources */,
-				D47954F621ECC94E00548965 /* HomeHeaderSearchView.swift in Sources */,
 				D47954F721ECC94E00548965 /* TTVCommodityEntity.m in Sources */,
 				D47954F821ECC94E00548965 /* TTViewControllerHierarchyHelper.m in Sources */,
 				D47954F921ECC94E00548965 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -26895,7 +26888,6 @@
 				D47956E221ECC94E00548965 /* QuickLoginAlert.swift in Sources */,
 				D47956E321ECC94E00548965 /* TTFeedCollectionHTSListCell.m in Sources */,
 				D47956E421ECC94E00548965 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				D47956E521ECC94E00548965 /* FHHouseRentRelatedResponse.m in Sources */,
 				D47956E621ECC94E00548965 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				D47956E721ECC94E00548965 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				D47956E821ECC94E00548965 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -26964,7 +26956,6 @@
 				D479572721ECC94E00548965 /* TSVActivityBannerOriginalData.m in Sources */,
 				D479572821ECC94E00548965 /* FPSMonitor.swift in Sources */,
 				D479572921ECC94E00548965 /* TTRNCellManager.m in Sources */,
-				D479572A21ECC94E00548965 /* HouseRentAPI.m in Sources */,
 				D479572B21ECC94E00548965 /* TTFastCoding.m in Sources */,
 				D479572C21ECC94E00548965 /* TGPacman.swift in Sources */,
 				D479572D21ECC94E00548965 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -27216,7 +27207,6 @@
 				FEFA5309205FB1A8001F50D8 /* TTInterfaceTipBaseModel.m in Sources */,
 				FEFA530A205FB1A8001F50D8 /* TTVSegmentedPageViewController.m in Sources */,
 				FEFA530B205FB1A8001F50D8 /* ExploreAddEntryListCell.m in Sources */,
-				B32FD35221A69F92007B9966 /* FHRentSameNeighborhoodResponse.m in Sources */,
 				6124ECC921AFF89F0009359A /* FHHeaderSegmentCell.swift in Sources */,
 				3DF363D721A29D9F0097FCB6 /* FloorPanCategoryDetailPageViewModel.swift in Sources */,
 				FEFA530E205FB1A8001F50D8 /* TTLayOutUnifyADGroupPicCellModel.m in Sources */,
@@ -27473,6 +27463,7 @@
 				B388CB372142652A00653188 /* AccountConfig.swift in Sources */,
 				FEFA5427205FB1A8001F50D8 /* TTProfileFunctionCell.m in Sources */,
 				3DF363B021A29D9F0097FCB6 /* InformationCell.swift in Sources */,
+				FB3224EA2219A08F008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				FEFA5429205FB1A8001F50D8 /* ExploreArticleHotNewsCell.m in Sources */,
 				FEFA542A205FB1A8001F50D8 /* TTUnifyADPicCategoryLargePicCell.m in Sources */,
 				FEFA542C205FB1A8001F50D8 /* TTWeakPushAlertView.m in Sources */,
@@ -27688,7 +27679,6 @@
 				FEFA5518205FB1A8001F50D8 /* TTAdAnimationCell.m in Sources */,
 				B388CCA12142652B00653188 /* TGOrbit.swift in Sources */,
 				FEFA5519205FB1A8001F50D8 /* TTVCommodityItemView.m in Sources */,
-				B32FD2CE21A283E4007B9966 /* HouseRentDetailPageVC.m in Sources */,
 				FEFA551A205FB1A8001F50D8 /* SSFeedbackPostViewBase.m in Sources */,
 				FEFA551B205FB1A8001F50D8 /* TSVCardTopInfoView.m in Sources */,
 				FEFA551C205FB1A8001F50D8 /* ActionButton.m in Sources */,
@@ -27900,7 +27890,6 @@
 				FEFA5601205FB1A8001F50D8 /* AKAwardCoinVideoMonitorManager.m in Sources */,
 				D50439A12079B87700DA4953 /* TTArticleMomentDigUsersViewController.m in Sources */,
 				FEFA5602205FB1A8001F50D8 /* TTSettingMineTabManager.m in Sources */,
-				B32FD2D421A29BB4007B9966 /* FHCycleImageCell.m in Sources */,
 				FEFA5603205FB1A8001F50D8 /* TSVFeedFollowCellContentView.m in Sources */,
 				FEFA5604205FB1A8001F50D8 /* ArticleGetRemoteDataOperation.m in Sources */,
 				FEFA5605205FB1A8001F50D8 /* TTNetworkStub.m in Sources */,
@@ -28133,7 +28122,6 @@
 				FEFA56F6205FB1A8001F50D8 /* TTArticleDetailMemoryMonitor.m in Sources */,
 				FEFA56F7205FB1A8001F50D8 /* SSAPNsAlertManager.m in Sources */,
 				FEFA56F8205FB1A8001F50D8 /* ExploreDetailToolbarView.m in Sources */,
-				B388CBED2142652B00653188 /* HomeHeaderSearchView.swift in Sources */,
 				FEFA56F9205FB1A8001F50D8 /* TTVCommodityEntity.m in Sources */,
 				FEFA56FD205FB1A8001F50D8 /* TTViewControllerHierarchyHelper.m in Sources */,
 				FEFA56FE205FB1A8001F50D8 /* TTFeedSaveRemoteOperation.m in Sources */,
@@ -28627,7 +28615,6 @@
 				3DF3641621A29D9F0097FCB6 /* QuickLoginAlert.swift in Sources */,
 				FEFA590E205FB1A8001F50D8 /* TTFeedCollectionHTSListCell.m in Sources */,
 				3DF363F521A29D9F0097FCB6 /* RelatedNeighborhoodListViewModel.swift in Sources */,
-				B32FD34D21A68460007B9966 /* FHHouseRentRelatedResponse.m in Sources */,
 				FEFA5910205FB1A8001F50D8 /* ExploreVideoDetailUnUnifyLargePicADView.m in Sources */,
 				FEFA5912205FB1A8001F50D8 /* TTPersonalHomeHeaderOperationView.m in Sources */,
 				FEFA5915205FB1A8001F50D8 /* ExploreVideoDetailAppLeftPicADView.m in Sources */,
@@ -28696,7 +28683,6 @@
 				FEFA595B205FB1A8001F50D8 /* TSVActivityBannerOriginalData.m in Sources */,
 				B388CC7B2142652B00653188 /* FPSMonitor.swift in Sources */,
 				FEFA595C205FB1A8001F50D8 /* TTRNCellManager.m in Sources */,
-				B32FD34821A67A51007B9966 /* HouseRentAPI.m in Sources */,
 				FEFA595E205FB1A8001F50D8 /* TTFastCoding.m in Sources */,
 				B388CCBF2142652C00653188 /* TGPacman.swift in Sources */,
 				FEFA595F205FB1A8001F50D8 /* TTDetailNatantRelateReadPlainView.m in Sources */,
@@ -28798,6 +28784,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		61627A7E22238DCE00EAC771 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 61627A7622238DCE00EAC771 /* FHNotificationServiceExtension */;
+			targetProxy = 61627A7D22238DCE00EAC771 /* PBXContainerItemProxy */;
+		};
 		61787F4C2201AE9C003CB249 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 61787F442201AE9C003CB249 /* InhouseNotificationServiceExtension */;
@@ -28992,7 +28983,7 @@
 					"\"${PODS_ROOT}/TTPushManager/include\"",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29102,7 +29093,7 @@
 					"\"${PODS_ROOT}/TTPushManager/include\"",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29144,6 +29135,101 @@
 			};
 			name = Release;
 		};
+		61627A8022238DCF00EAC771 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = FHNotificationServiceExtension/FHNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = J3249442BT;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = FHNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client.FHNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = f100ServiceNofExtension;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		61627A8122238DCF00EAC771 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = FHNotificationServiceExtension/FHNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = J3249442BT;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = FHNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client.FHNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = f100ServiceNofExtension;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		61787F4F2201AE9D003CB249 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -29169,9 +29255,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = InhouseNotificationServiceExtension/InhouseNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_TESTABILITY = YES;
@@ -29185,7 +29271,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = f100ServiceNofExtension_dev;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -29216,9 +29302,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = InhouseNotificationServiceExtension/InhouseNotificationServiceExtension.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -29233,7 +29319,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = fp1ServiceNofExtension;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -29301,7 +29387,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29410,7 +29496,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29513,7 +29599,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29622,7 +29708,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "News/News-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29674,7 +29760,7 @@
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -29726,7 +29812,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "NewsInHouse/NewsInHouse-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29753,7 +29839,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse_dev;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -29777,9 +29863,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -29838,7 +29924,7 @@
 					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
 				);
 				INFOPLIST_FILE = "NewsInHouse/NewsInHouse-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_GENERATE_MAP_FILE = YES;
 				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -29866,7 +29952,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -29897,6 +29983,15 @@
 			buildConfigurations = (
 				3AA5029915876A1F00EB27FA /* Debug */,
 				3AA5029A15876A1F00EB27FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		61627A8222238DCF00EAC771 /* Build configuration list for PBXNativeTarget "FHNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				61627A8022238DCF00EAC771 /* Debug */,
+				61627A8122238DCF00EAC771 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

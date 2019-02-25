@@ -8,6 +8,8 @@
 #import "FHHouseEvnContextBridgeImp.h"
 #import "Bubble-Swift.h"
 #import "FHEnvContext.h"
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
 
 @implementation FHHouseEvnContextBridgeImp
 
@@ -65,6 +67,43 @@
 -(void)showToast:(NSString *)toast duration:(CGFloat)duration inView:(UIView *)view
 {
     return [[[EnvContext shared]toast] showToast:toast duration:duration isUserInteraction:NO];
+}
+
+- (void)setMessageTabBadgeNumber:(NSInteger)number {
+    TTTabBarItem *tabBarItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMessageTabKey];
+    if(number > 0){
+        tabBarItem.ttBadgeView.badgeNumber = number;
+    }else{
+        tabBarItem.ttBadgeView.badgeNumber = TTBadgeNumberHidden;
+    }
+}
+
+- (NSString *)getRefreshTipURLString
+{
+    return [ArticleURLSetting refreshTipURLString];
+}
+
+- (void)updateNotifyBadgeNumber:(NSString *)categoryId isShow:(BOOL)isShow
+{
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:categoryId withShow:isShow];
+}
+
+//首页推荐红点请求时间间隔
+- (NSInteger)getCategoryBadgeTimeInterval
+{
+    return [SSCommonLogic categoryBadgeTimeInterval];
+}
+
+- (NSString *)getCurrentSelectCategoryId
+{
+    NSString * currentCategoryName = [TTArticleCategoryManager currentSelectedCategoryID];
+    return currentCategoryName;
+}
+
+- (NSString *)getFeedStartCategoryName
+{
+    NSString * categoryStartName = [SSCommonLogic feedStartCategory];
+    return categoryStartName;
 }
 
 @end

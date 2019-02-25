@@ -67,8 +67,12 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "0"
+         BundleIdentifier = "com.bytedance.fp1"
+         RemotePath = "/var/containers/Bundle/Application/5385004E-BB1D-4D0A-996D-C32E34921A96/NewsLiteInHouse.app">
+      </RemoteRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FEFA5259205FB1A8001F50D8"
@@ -76,7 +80,7 @@
             BlueprintName = "NewsLiteInHouse"
             ReferencedContainer = "container:Article.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

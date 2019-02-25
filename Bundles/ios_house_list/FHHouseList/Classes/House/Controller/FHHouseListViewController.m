@@ -8,6 +8,7 @@
 #import "FHHouseListViewController.h"
 #import <TTRoute.h>
 #import <Masonry.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
 #import <UIViewAdditions.h>
@@ -359,7 +360,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    self.ttNeedIgnoreZoomAnimation = YES;
+    
     [self initNavbar];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];

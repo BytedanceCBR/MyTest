@@ -191,7 +191,7 @@ class FHHouseContactBottomBarViewModel {
         self.bottomBar?.isHidden = false
 //        if let contact = model.data?.contact {
 //            self.bottomBar?.leftView.isHidden = contact.showRealtorinfo == 1 ? false : true
-//            self.bottomBar?.avatarView.bd_setImage(with: URL(string: contact.avatarUrl ?? ""), placeholder: UIImage(named: "defaultAvatar"))
+//            self.bottomBar?.avatarView.bd_setImage(with: URL(string: contact.avatarUrl ?? ""), placeholder: UIImage(named: "detail_default_avatar"))
 //            let leftWidth = contact.showRealtorinfo == 1 ? 140 : 0
 //
 //            if var realtorName = contact.realtorName, realtorName.count > 0 {

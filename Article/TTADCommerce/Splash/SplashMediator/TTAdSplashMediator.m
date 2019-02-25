@@ -182,6 +182,10 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     return [[TTInstallIDManager sharedInstance] installID];
 }
 
+- (NSString *)splashSkipBtnName
+{
+    return @"跳过";
+}
 
 - (NSNumber *)ntType
 {

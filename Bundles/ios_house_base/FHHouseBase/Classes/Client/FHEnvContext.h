@@ -34,6 +34,7 @@ static NSString *const kFHBaseColorBlue = @"#299cff";
 
 static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_finish";
 
+@class FHMessageManager;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -47,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
 @property (nonatomic, copy) void (^homeConfigCallBack)(FHConfigDataModel *configModel);
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
+@property (nonatomic , strong) FHMessageManager *messageManager;
 
 
 + (instancetype)sharedInstance;
@@ -60,6 +62,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (void)openSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion;
+
++ (void)openLogoutSuccessURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion;
 
 /*
   判断是否联网
