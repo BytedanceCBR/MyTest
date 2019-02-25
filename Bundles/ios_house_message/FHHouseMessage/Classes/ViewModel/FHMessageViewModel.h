@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHMessageViewController;
-
+@class IMConversation;
 @interface FHMessageViewModel : NSObject
 
 @property(nonatomic, strong) NSMutableArray *dataList;
@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (id<FHMessageBridgeProtocol>)messageBridgeInstance;
 
+-(void)deleteConversation:(IMConversation*)conv;
 @end
 
 NS_ASSUME_NONNULL_END
