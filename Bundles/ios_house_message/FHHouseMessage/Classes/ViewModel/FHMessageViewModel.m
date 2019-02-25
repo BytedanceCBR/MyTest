@@ -291,8 +291,17 @@
 };
 
 -(void)deleteConversation:(IMConversation*)conv {
+    NSString *conversationId = conv.identifier;
+    NSString *targetUserId = [conv getTargetUserId: [[TTAccount sharedAccount] userIdString]];
     [conv markLocalDeleted:^(NSError * _Nullable error) {
-
+        if (error == nil) {
+            NSDictionary *params = @{@"event_type": @"house_app2c_v2",
+                                     @"page_type": _pageType,
+                                     @"conversation_id" : conversationId,
+                                     @"realtor_id" : targetUserId,
+                                    };
+            [FHUserTracker writeEvent:@"delete_conversation" params:params];
+        }
     }];
 }
 
