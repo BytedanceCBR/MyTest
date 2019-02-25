@@ -451,7 +451,8 @@
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
-        tracerDic[@"element_from"] = @"related";
+        tracerDic[@"element_from"] = @"same_neighborhood";
+        tracerDic[@"enter_from"] = @"neighborhood_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",dataItem.hid];
         if (urlStr.length > 0) {
@@ -470,7 +471,8 @@
         tracerDic[@"card_type"] = @"left_pic";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
-        tracerDic[@"element_from"] = @"related";
+        tracerDic[@"element_from"] = @"same_neighborhood";
+        tracerDic[@"enter_from"] = @"neighborhood_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeRentHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",dataItem.id];
         if (urlStr.length > 0) {
@@ -597,6 +599,7 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
+            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
@@ -616,6 +619,7 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
+            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
