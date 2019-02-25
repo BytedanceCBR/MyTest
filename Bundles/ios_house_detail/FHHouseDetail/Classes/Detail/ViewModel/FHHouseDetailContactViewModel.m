@@ -30,6 +30,7 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
@@ -120,6 +121,8 @@
 {
     _tracerDict = tracerDict;
     _phoneCallViewModel.tracerDict = tracerDict;
+    _followUpViewModel.tracerDict = tracerDict;
+
 }
 
 - (void)setBelongsVC:(UIViewController *)belongsVC
@@ -150,6 +153,8 @@
 
 - (void)shareAction
 {
+    [self addClickShareLog];
+    
     if (!self.shareInfo) {
         return;
     }
@@ -217,6 +222,37 @@
     [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }
 
+#pragma mark 埋点相关
+- (NSDictionary *)baseParams
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    params[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    params[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    return params;
+}
+
+- (void)addClickShareLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    [FHUserTracker writeEvent:@"click_share" params:params];
+}
+
+- (void)addShareFormLog:(NSString *)platform
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    params[@"platform"] = platform ? : @"be_null";
+    [FHUserTracker writeEvent:@"share_platform" params:params];
+}
+
+
 #pragma mark TTShareManagerDelegate
 - (void)shareManager:(TTShareManager *)shareManager clickedWith:(id<TTActivityProtocol>)activity sharePanel:(id<TTActivityPanelControllerProtocol>)panelController
 {
@@ -230,9 +266,7 @@
     }else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
         platform = @"qzone";
     }
-//    if let shareParams = shareParams {
-//        recordEvent(key: "share_platform", params: shareParams <|> toTracerParams(platform, key: "platform"))
-//    }
+    [self addShareFormLog:platform];
 }
 
 - (void)shareManager:(TTShareManager *)shareManager completedWith:(id<TTActivityProtocol>)activity sharePanel:(id<TTActivityPanelControllerProtocol>)panelController error:(NSError *)error desc:(NSString *)desc
@@ -244,6 +278,7 @@
 {
     if (!_shareManager) {
         _shareManager = [[TTShareManager alloc]init];
+        _shareManager.delegate = self;
     }
     return _shareManager;
 }
@@ -253,4 +288,6 @@
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
+
+
 @end
