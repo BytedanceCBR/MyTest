@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHMessageViewController;
-
+@class IMConversation;
 @interface FHMessageViewModel : NSObject
 
 @property(nonatomic, strong) NSMutableArray *dataList;
@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addStayCategoryLog:(NSTimeInterval)stayTime;
 
 - (id<FHMessageBridgeProtocol>)messageBridgeInstance;
+
+-(void)deleteConversation:(IMConversation*)conv;
 
 - (void)setPageType:(NSString *)pageType;
 

@@ -18,10 +18,23 @@
 #import "IMManager.h"
 #import "IMChatStateObserver.h"
 #import "TTURLUtils.h"
+#import <libextobjc/extobjc.h>
 #import "FHUserTracker.h"
 #import "TTAccount.h"
 
 #define kCellId @"FHMessageCell_id"
+@interface DeleteAlertDelegate : NSObject<UIAlertViewDelegate>
+@property (nonatomic, strong) IMConversation* conv;
+@property (nonatomic, weak) FHMessageViewModel* viewModel;
+@end
+
+@implementation DeleteAlertDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    [_viewModel deleteConversation:_conv];
+}
+
+@end
 
 @interface FHMessageViewModel()<IMChatStateObserver>
 @property(nonatomic, strong) FHConversationDataCombiner *combiner;
@@ -32,6 +45,8 @@
 @property(nonatomic, strong) id<FHMessageBridgeProtocol> messageBridge;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
+
+@property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
 
 @end
 
@@ -181,6 +196,67 @@
     }
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"删除";
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([[_combiner allItems] count] > indexPath.row) {
+        id item = [_combiner allItems][indexPath.row];
+        if ([item isKindOfClass:[IMConversation class]]) {
+            return YES;
+        } else {
+            return NO;
+        }
+    } else {
+        return NO;
+    }
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([[_combiner allItems] count] > indexPath.row) {
+        id item = [_combiner allItems][indexPath.row];
+        if ([item isKindOfClass:[IMConversation class]]) {
+            return UITableViewCellEditingStyleDelete;
+        } else {
+            return UITableViewCellEditingStyleNone;
+        }
+    } else {
+        return UITableViewCellEditingStyleNone;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.combiner allItems].count > indexPath.row) {
+        id conv = [self.combiner allItems][indexPath.row];
+        if ([conv isKindOfClass:[IMConversation class]]){
+            [self displayDeleteConversationConfirm:conv];
+        }
+    }
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return nil;
+}
+
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    @weakify(self);
+    UIContextualAction* action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"删除" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        @strongify(self);
+        completionHandler(YES);
+        if ([self.combiner allItems].count > indexPath.row) {
+            id conv = [self.combiner allItems][indexPath.row];
+            if ([conv isKindOfClass:[IMConversation class]]){
+                [self displayDeleteConversationConfirm:conv];
+            }
+        }
+    }];
+    action.backgroundColor = [UIColor colorWithRed:236/255.0 green:77/255.0 blue:61/255.0 alpha:1];
+    UISwipeActionsConfiguration* config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
+    config.performsFirstActionWithFullSwipe = NO;
+    return config;
+}
+
 - (id<FHMessageBridgeProtocol>)messageBridgeInstance {
     if (!_messageBridge) {
         Class classBridge = NSClassFromString(@"FHMessageBridgeImp");
@@ -201,6 +277,25 @@
     [[TTRoute sharedRoute] openURLByPushViewController: openUrl];
 }
 
+-(void)displayDeleteConversationConfirm:(IMConversation*) conversation{
+    self.deleteAlertDelegate = [[DeleteAlertDelegate alloc] init];
+    self.deleteAlertDelegate.viewModel = self;
+    self.deleteAlertDelegate.conv = conversation;
+    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"删除会话"
+                                                        message:@"确定要删除当前会话记录？"
+                                                       delegate:self.deleteAlertDelegate
+                                              cancelButtonTitle:@"取消"
+                                              otherButtonTitles:@"删除", nil];
+
+    [alertView show];
+};
+
+-(void)deleteConversation:(IMConversation*)conv {
+    [conv markLocalDeleted:^(NSError * _Nullable error) {
+
+    }];
+}
+
 - (void)clickImMessageEvent:(IMConversation*)conv {
     NSString *conversationId = conv.identifier;
     NSString *targetUserId = [conv getTargetUserId: [[TTAccount sharedAccount] userIdString]];
@@ -212,7 +307,6 @@
                              };
     [FHUserTracker writeEvent:@"click_conversation" params:params];
 }
-
 
 -(void)conversationUpdated:(NSString *)conversationIdentifier {
     NSArray<IMConversation*>* allConversations = [[IMManager shareInstance].chatService allConversations];
