@@ -216,6 +216,7 @@
             if (!cell) {
                 cell = [[NSClassFromString(identifier) alloc] init];
             }
+            cell.baseViewModel = self;
             [cell refreshWithData:data];
             return cell;
         }
