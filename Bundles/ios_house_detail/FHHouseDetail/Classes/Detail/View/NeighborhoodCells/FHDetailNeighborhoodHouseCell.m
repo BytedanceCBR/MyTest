@@ -343,14 +343,6 @@
 - (void)loadMoreDataButtonClick {
     FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
     if (model && model.sameNeighborhoodErshouHouseData) {
-        /*
-         let loadMoreParams = EnvContext.shared.homePageParams <|>
-         toTracerParams("same_neighborhood", key: "element_type") <|>
-         toTracerParams(id, key: "group_id") <|>
-         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-         toTracerParams("neighborhood_detail", key: "page_type")
-         recordEvent(key: "click_loadmore", params: loadMoreParams)
-         */
         FHDetailNeighborhoodModel *detailModel = self.baseViewModel.detailData;
         NSString *neighborhood_id = @"be_null";
         if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
@@ -362,6 +354,7 @@
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
@@ -415,6 +408,7 @@
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;

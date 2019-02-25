@@ -167,6 +167,8 @@
         tracerDic[@"log_pb"] = detailData.data.logPb ? detailData.data.logPb : @"be_null";
         tracerDic[@"category_name"] = @"related_list";
         tracerDic[@"element_from"] = @"related";
+        tracerDic[@"enter_from"] = @"rent_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;

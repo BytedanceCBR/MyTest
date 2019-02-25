@@ -121,7 +121,8 @@
         tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
-        
+        tracerDic[@"enter_from"] = @"old_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
