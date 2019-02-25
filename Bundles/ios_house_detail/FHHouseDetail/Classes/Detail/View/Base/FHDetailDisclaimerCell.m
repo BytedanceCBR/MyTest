@@ -28,6 +28,7 @@
 @property (nonatomic, assign)   CGFloat       lineHeight;
 
 @property (nonatomic, strong)   NSMutableArray       *headerImages;
+@property (nonatomic, strong)   NSMutableArray       *imageTitles;
 
 @end
 
@@ -87,21 +88,22 @@
             }
             self.ownerLabel.text = [NSString stringWithFormat:@"房源维护方：%@",tempName];
             NSMutableArray *headerImages = [NSMutableArray new];
+            NSMutableArray *imageTitles = [NSMutableArray new];
             if (model.contact.businessLicense.length > 0) {
                 FHDetailHouseDataItemsHouseImageModel *imageModel = [[FHDetailHouseDataItemsHouseImageModel alloc] init];
                 imageModel.url = model.contact.businessLicense;
-                // add by zyk 需要修改 name信息
-                //                imageModel.name = @"营业执照"；
+                [imageTitles addObject:@"营业执照"];
                 [headerImages addObject:imageModel];
             }
             if (model.contact.certificate.length > 0) {
                 FHDetailHouseDataItemsHouseImageModel *imageModel = [[FHDetailHouseDataItemsHouseImageModel alloc] init];
                 imageModel.url = model.contact.certificate;
-//                imageModel.name = @"从业人员信息卡"；
+                [imageTitles addObject:@"从业人员信息卡"];
                 [headerImages addObject:imageModel];
             }
             if (headerImages.count > 0) {
                 self.headerImages = headerImages;
+                self.imageTitles = imageTitles;
                 self.contactIcon.hidden = NO;
                 [self.contactIcon mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_lessThanOrEqualTo(-20);
@@ -209,11 +211,15 @@
     if (images.count == 0) {
         return;
     }
+    if (images.count != self.imageTitles.count) {
+        return;
+    }
     
     TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
     vc.dragToCloseDisabled = YES;
     vc.mode = PhotosScrollViewSupportBrowse;
     vc.startWithIndex = index;
+    vc.imageTitles = self.imageTitles;
     
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
     for(id<FHDetailPhotoHeaderModelProtocol> imgModel in images)

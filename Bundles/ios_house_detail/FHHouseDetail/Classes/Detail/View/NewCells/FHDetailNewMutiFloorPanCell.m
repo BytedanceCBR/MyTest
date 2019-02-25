@@ -140,7 +140,7 @@
                 traceParam[@"card_type"] = @"left_pic";
                 traceParam[@"rank"] = @(floorPanInfoModel.index);
                 traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-                traceParam[@"element_from"] = @"related";
+                traceParam[@"element_from"] = @"house_model";
                 
                 NSDictionary *dict = @{@"house_type":@(1),
                                        @"tracer": traceParam
