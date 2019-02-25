@@ -410,9 +410,24 @@
     
     if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse || self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
         if (indexPath.row == 0) {
-            
+
             return 91;
         }
+        
+        if (self.houseItemsData.houseType.integerValue == FHHouseTypeNewHouse) {
+            
+            return indexPath.row == self.houseItemsData.houseList.count - 1 ? 125 : 105;
+            
+        }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+            
+            return indexPath.row == self.houseItemsData.secondHouseList.count - 1 ? 125 : 105;
+            
+        }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
+            
+            return indexPath.row == self.houseItemsData.rentHouseList.count - 1 ? 125 : 105;
+            
+        }
+        
         return 105;
         
     }
@@ -430,16 +445,14 @@
             FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
             BOOL isFirstCell = (indexPath.row == 0);
             BOOL isLastCell = (indexPath.row == self.houseItemsData.houseList.count - 1);
-            SEL sel = @selector(updateWithNewHouseModel:isFirstCell:isLastCell:);
+//            SEL sel = @selector(updateWithNewHouseModel:isFirstCell:isLastCell:);
 //            if ([cell respondsToSelector:sel]) {
 //                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
 //            }
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
                 FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
                 infoCellModel.houseModel = model;
-                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel];
-                [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
-                [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
+                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel andIsFirst:isFirstCell andIsLast:isLastCell];
             }
         }
         
@@ -453,9 +466,9 @@
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
                 FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
                 infoCellModel.secondModel = item;
-                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel];
-                [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
-                [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
+                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel andIsFirst:isFirstCell andIsLast:isLastCell];
+//                [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
+//                [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
             }
 //            [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithSecondHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
             
@@ -469,9 +482,7 @@
         if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
             FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
             infoCellModel.rentModel = item;
-            [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel];
-            [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
-            [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
+            [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel andIsFirst:isFirstCell andIsLast:isLastCell];
         }
     }
     return cell;
