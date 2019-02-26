@@ -46,6 +46,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
 @property (nonatomic, strong) NSMutableDictionary *traceDict;
+@property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
 
 @end
 
@@ -266,6 +267,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)cleanAllAnnotations
 {
+    [self.mapView removeAnnotation:self.pointCenterAnnotation];
     [self.mapView removeAnnotations:self.poiAnnotations];
     [self.poiAnnotations removeAllObjects];
 }
@@ -415,9 +417,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"baidumap://"]]) {
         UIAlertAction *baiduAction = [UIAlertAction actionWithTitle:@"百度地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSURL *baiduMapUrlString = [NSURL URLWithString:[googleMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            if ([baiduMapUrlString isKindOfClass:[NSURL class]]) {
-                [application openURL:baiduMapUrlString];
+            NSString *stringEncode = [baiduMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            NSURL *baiduMapUrl = [NSURL URLWithString:stringEncode];
+            if ([baiduMapUrl isKindOfClass:[NSURL class]]) {
+                [application openURL:baiduMapUrl];
             }
         }];
         
@@ -428,10 +431,8 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         
     }];
     [optionMenu addAction:cancelAction];
-
     
     [self presentViewController:optionMenu animated:YES completion:nil];
-
 }
 
 - (void)setUpAnnotations
@@ -440,6 +441,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     userAnna.type = @"user";
     userAnna.coordinate = self.centerPoint;
     [self.mapView addAnnotation:userAnna];
+    self.pointCenterAnnotation = userAnna;
     
     for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
         [self.mapView addAnnotation:self.poiAnnotations[i]];

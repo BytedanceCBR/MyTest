@@ -2,7 +2,7 @@
 //  FHHomeListViewModel.m
 //  AFgzipRequestSerializer
 //
-//  Created by 谢飞 on 2018/12/22.
+//  Created by 谢飞 on 2018/10/22.
 //
 
 #import "FHHomeListViewModel.h"
