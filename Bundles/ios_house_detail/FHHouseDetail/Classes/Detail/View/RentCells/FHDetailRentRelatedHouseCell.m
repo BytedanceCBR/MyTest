@@ -205,6 +205,7 @@
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_from"] = @"related";
+        tracerDic[@"enter_from"] = @"rent_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeRentHouse)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",dataItem.id];
         if (urlStr.length > 0) {
