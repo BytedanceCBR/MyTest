@@ -42,6 +42,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
         manager.configDataReplay = [RACReplaySubject subject];
+        manager.isRefreshFromAlertCitySwitch = NO;
     });
     
     return manager;
@@ -508,6 +509,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if (kIsNSString(originSearchid)) {
         self.commonPageModel.originSearchId = originSearchid;
     }
+}
+
+- (NSDictionary *)getGetOriginFromAndOriginId
+{
+    NSMutableDictionary *homePageCommonMap = [NSMutableDictionary new];
+    [homePageCommonMap setValue:self.commonPageModel.originFrom forKey:@"origin_from"];
+    [homePageCommonMap setValue:self.commonPageModel.originSearchId forKey:@"origin_search_id"];
+    return homePageCommonMap;
 }
 
 @end

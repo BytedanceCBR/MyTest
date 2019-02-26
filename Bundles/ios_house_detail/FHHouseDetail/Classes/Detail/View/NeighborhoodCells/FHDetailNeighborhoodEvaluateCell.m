@@ -52,6 +52,8 @@
     if (model.evaluationInfo) {
         // starsContainer
         self.starsContainer = [[FHDetailStarsCountView alloc] init];
+        UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoDetail)];
+        [self.starsContainer addGestureRecognizer:tapGes];
         [self.containerView addSubview:_starsContainer];
         [_starsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.containerView);
@@ -146,12 +148,15 @@
     FHDetailNeighborhoodEvaluateModel *model = (FHDetailNeighborhoodEvaluateModel *)self.currentData;
     if (model.evaluationInfo.detailUrl.length > 0) {
         NSString *enter_from = @"neighborhood_detail";
-        NSString *urlStr = model.evaluationInfo.detailUrl;
+        NSString *urlStr = model.evaluationInfo.detailUrl;// @"http://10.1.15.29:8889/f100/client/xiaoqu/evaluate?neighborhood_id=6581420533487763726";
         if (urlStr.length > 0) {
             NSMutableDictionary *tracerDic = [NSMutableDictionary new];
             NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
             [tracerDic addEntriesFromDictionary:temp];
             tracerDic[@"enter_from"] = enter_from;
+            if (self.baseViewModel.logPB) {
+                tracerDic[@"log_pb"] = self.baseViewModel.logPB;
+            }
             [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
             //
             NSString *reportParams = [self getEvaluateWebParams:tracerDic];

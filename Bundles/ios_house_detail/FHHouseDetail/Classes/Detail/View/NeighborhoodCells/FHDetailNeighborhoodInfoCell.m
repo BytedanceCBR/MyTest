@@ -408,6 +408,9 @@
             NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
             [tracerDic addEntriesFromDictionary:temp];
             tracerDic[@"enter_from"] = enter_from;
+            if (self.baseViewModel.logPB) {
+                tracerDic[@"log_pb"] = self.baseViewModel.logPB;
+            }
             [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
             //
             NSString *reportParams = [self getEvaluateWebParams:tracerDic];
@@ -426,6 +429,12 @@
     [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
     [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
     
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
+    [tracer setValue:@"map" forKey:@"click_type"];
+    [tracer setValue:@"house_info" forKey:@"element_from"];
+    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [infoDict setValue:tracer forKey:@"tracer"];
+    
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
@@ -436,15 +445,18 @@
     if (model) {
         NSString *enter_from = @"be_null";
         NSString *neighborhood_id = @"0";
+        NSString *source = @"";
         if (model.neighborhoodInfo) {
             // 二手房
             enter_from = @"old_detail";
             neighborhood_id = model.neighborhoodInfo.id;
+            source = @"";
         }
         if (model.rent_neighborhoodInfo) {
             // 租房
             enter_from = @"rent_detail";
             neighborhood_id = model.rent_neighborhoodInfo.id;
+            source = @"rent_detail";
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"card_type"] = @"no_pic";
@@ -452,7 +464,7 @@
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_from"] = @"neighborhood_detail";
         tracerDic[@"enter_from"] = enter_from;
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood)}];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood),@"source":source}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",neighborhood_id];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];

@@ -41,6 +41,11 @@
     return @[];
 }
 
+- (NSDictionary *)elementHouseShowUpload
+{
+    return @{};
+}
+
 @end
 
 // FHDetailBaseCollectionCell

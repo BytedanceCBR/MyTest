@@ -18,6 +18,9 @@
 
 @interface FHMessageListSysViewModel()<UITableViewDelegate,UITableViewDataSource>
 
+@property(nonatomic, copy) NSString *originSearchId;
+@property(nonatomic, copy) NSString *searchId;
+
 @end
 
 @implementation FHMessageListSysViewModel
@@ -41,9 +44,9 @@
     tracerDict[@"category_name"] = [self.viewController categoryName];
     tracerDict[@"enter_from"] = @"messagetab";
     tracerDict[@"enter_type"] = @"click";
-    tracerDict[@"search_id"] = @"be_null";
+    tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     tracerDict[@"origin_from"] = @"be_null";
-    tracerDict[@"origin_search_id"] = @"be_null";
+    tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
     tracerDict[@"element_from"] = @"be_null";
     
     return tracerDict;
@@ -93,6 +96,8 @@
             
             if (isHead) {
                 [wself.dataList removeAllObjects];
+                wself.searchId = msgModel.data.searchId;
+                wself.originSearchId = wself.searchId;
             }
             [wself.dataList addObjectsFromArray:msgModel.data.items];
             wself.tableView.hasMore = msgModel.data.hasMore;
@@ -117,17 +122,6 @@
     TRACK_EVENT(@"category_refresh", tracerDict);
 }
 
-- (NSString *)timestampToDataString:(NSString *)timestamp {
-    // iOS 生成的时间戳是10位
-    NSTimeInterval interval = [timestamp doubleValue];
-    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MM月dd日 HH:mm"];
-    NSString *dateString = [formatter stringFromDate: date];
-    return dateString;
-}
-
 #pragma mark - UITableViewDataSource
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -141,7 +135,7 @@
     
     FHSystemMsgDataItemsModel *model = self.dataList[indexPath.row];
     
-    cell.dateLabel.text = [self timestampToDataString:model.timestamp];
+    cell.dateLabel.text = model.dateStr;
     cell.titleLabel.text = model.title;
     cell.descLabel.text = model.content;
     cell.lookDetailLabel.text = model.buttonName;

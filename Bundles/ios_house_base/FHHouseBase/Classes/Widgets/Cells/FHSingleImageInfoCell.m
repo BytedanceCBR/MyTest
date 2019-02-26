@@ -187,7 +187,15 @@
         
         make.height.mas_equalTo(@(self.bottomMargin));
     }];
-
+    
+//    if (bottom == 0) {
+//        [self.majorImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(@20);
+//            make.top.mas_equalTo(self.headView.mas_bottom);
+//            make.bottom.mas_equalTo(self.contentView);
+//            make.width.mas_equalTo(@114);
+//        }];
+//    }
 }
 
 
@@ -508,6 +516,43 @@
             break;
     }
     
+    
+}
+-(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel andIsFirst:(BOOL)isFirst andIsLast:(BOOL)isLast
+{
+    _cellModel = cellModel;
+    
+    switch (cellModel.houseType) {
+        case FHHouseTypeNewHouse:
+            [self updateWithNewHouseModel:cellModel.houseModel];
+            self.roomSpaceLabel.text = @"";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            [self updateWithSecondHouseModel:cellModel.secondModel];
+            break;
+        case FHHouseTypeRentHouse:
+            [self updateWithRentHouseModel:cellModel.rentModel];
+            break;
+        case FHHouseTypeNeighborhood:
+            [self updateWithNeighborModel:cellModel.neighborModel];
+            break;
+        default:
+            break;
+    }
+    
+    if (isFirst) {
+        [self refreshTopMargin:5];
+    }else
+    {
+        [self refreshTopMargin:20];
+    }
+    
+    if (isLast) {
+        [self refreshBottomMargin:20];
+    }else
+    {
+        [self refreshBottomMargin:0];
+    }
     
 }
 

@@ -6,12 +6,13 @@
 //
 
 #import "FHHouseDetailBaseViewModel.h"
+#import "FHHouseDetailSubPageViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorCoreInfoViewModel : FHHouseDetailBaseViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel;
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel;
 
 - (void)startLoadData;
 

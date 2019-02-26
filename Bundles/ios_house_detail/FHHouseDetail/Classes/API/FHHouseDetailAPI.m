@@ -108,7 +108,7 @@
         url = [NSString stringWithFormat:@"%@&%@",url,query];
     }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    if (logPB) {
+    if ([logPB isKindOfClass:[NSDictionary class]]) {
         [paramDic addEntriesFromDictionary:logPB];
     }
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
@@ -137,7 +137,9 @@
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/rental/info"];
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
-    paramDic[@"rental_f_code"] = rentCode;
+    if (rentCode.length > 0) {
+        paramDic[@"rental_f_code"] = rentCode;
+    }
     
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
@@ -163,9 +165,14 @@
                             completion:(void(^)(FHHouseRentRelatedResponseModel* model , NSError *error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/related_rent"];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (rentId.length > 0) {
+        paramDic[@"rent_id"] = rentId;
+    }
+    paramDic[@"count"] = @(5);
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
-            params:@{@"rent_id": rentId, @"count": @(5)}
+            params:paramDic
             method:@"GET"
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
@@ -189,12 +196,17 @@
                                      completion:(void(^)(FHRentSameNeighborhoodResponseModel* model , NSError *error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/same_neighborhood_rent"];
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (rentId.length > 0) {
+        paramDic[@"rent_id"] = rentId;
+    }
+    if (neighborhoodId.length > 0) {
+        paramDic[@"neighborhood_id"] = neighborhoodId;
+    }
+    paramDic[@"count"] = @(5);
     return [[TTNetworkManager shareInstance]
             requestForBinaryWithURL:url
-            params:@{@"rent_id": rentId,
-                     @"neighborhood_id": neighborhoodId,
-                     @"count": @(5),
-                     }
+            params:paramDic
             method:@"GET"
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
@@ -343,7 +355,11 @@
         paramDic[@"search_id"] = searchId;
     }
     paramDic[@"count"] = @(count);
-    paramDic[@"offset"] = offset;
+    if (offset.length > 0) {
+        paramDic[@"offset"] = offset;
+    } else {
+        paramDic[@"offset"] = @"0";
+    }
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
         FHDetailSameNeighborhoodHouseResponseModel *model = nil;

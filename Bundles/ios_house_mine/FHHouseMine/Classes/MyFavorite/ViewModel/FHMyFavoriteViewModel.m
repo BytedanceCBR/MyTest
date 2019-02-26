@@ -140,7 +140,6 @@ extern NSString *const kFHDetailFollowUpNotification;
     }];
     
     self.tableView.hasMore = followModel.data.hasMore;
-    self.searchId = followModel.data.searchId;
     self.viewController.hasValidateData = self.dataList.count > 0;
     self.showPlaceHolder = NO;
     [self updateTableViewWithMoreData:followModel.data.hasMore];
@@ -159,6 +158,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     }
     
     if(self.isFirstLoad){
+        self.searchId = followModel.data.searchId;
         self.originSearchId = self.searchId;
         self.isFirstLoad = NO;
         [self addEnterCategoryLog];
@@ -200,7 +200,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     tracerDict[@"enter_type"] = @"click";
     tracerDict[@"element_from"] = @"be_null";
     tracerDict[@"origin_from"] = [self originFrom];
-    tracerDict[@"search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
+    tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
     
     return tracerDict;
@@ -498,7 +498,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     
     NSMutableDictionary *traceParam = [self categoryLogDict];
     traceParam[@"card_type"] = @"left_pic";
-    traceParam[@"enter_from"] = [self pageTypeString];
+    traceParam[@"enter_from"] = [self categoryName];
     traceParam[@"log_pb"] = [cellModel logPb];
     traceParam[@"rank"] = @(rank);
     NSDictionary *dict = @{

@@ -28,9 +28,9 @@
 
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
 {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.neighborhoodId = paramObj.allParams[@"neighborhoodId"];
+        self.neighborhoodId = paramObj.allParams[@"neighborhood_id"];
     }
     return self;
 }

@@ -8,7 +8,8 @@
 
 #import "ArticleURLSetting.h"
 #import "SSCommonLogic.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import <FHURLSettings.h>
 
 @implementation ArticleURLSetting
 
@@ -348,15 +349,15 @@
 
 + (NSString*)userProtocolURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=幸福里用户协议",EnvContext.networkConfig.host];
+    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=幸福里用户协议",[FHURLSettings baseURL]];
 }
 
 + (NSString*)userPrivateProtocolURLString {
-    return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私协议",EnvContext.networkConfig.host];
+    return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私协议",[FHURLSettings baseURL]];
 }
 
 + (NSString*)protectedProtocolURLString {
-    return [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明",EnvContext.networkConfig.host];
+    return [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明",[FHURLSettings baseURL]];
 }
 
 #pragma mark -- 删除

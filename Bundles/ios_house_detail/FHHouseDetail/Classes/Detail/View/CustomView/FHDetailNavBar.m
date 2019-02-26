@@ -8,6 +8,7 @@
 #import "FHDetailNavBar.h"
 #import "UIColor+Theme.h"
 #import "Masonry.h"
+#import "TTDeviceHelper.h"
 
 @interface FHDetailNavBar ()
 
@@ -22,10 +23,19 @@
 
 @property(nonatomic , assign) CGFloat subAlpha;
 @property(nonatomic , assign) NSInteger followStatus;
-
 @end
 
 @implementation FHDetailNavBar
+
+- (instancetype)initWithType:(FHDetailNavBarType)type
+{
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    CGRect frame = CGRectMake(0, 0, screenBounds.size.width, navBarHeight + 44);
+    _type = type;
+    self = [self initWithFrame:frame];
+    return self;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -34,6 +44,34 @@
         [self setupUI];
     }
     return self;
+}
+
+- (void)setType:(FHDetailNavBarType)type
+{
+    _type = type;
+    if (_type == FHDetailNavBarTypeDefault) {
+        [_shareBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_collectBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.shareBtn.mas_left).mas_offset(-14);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        _shareBtn.hidden = NO;
+    }else {
+        [_collectBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        _shareBtn.hidden = YES;
+    }
 }
 
 - (void)removeBottomLine
@@ -97,31 +135,54 @@
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
     }];
-    [_shareBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-12);
-        make.height.mas_equalTo(44);
-        make.width.mas_equalTo(40);
-        make.bottom.mas_equalTo(self);
-    }];
-    [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.shareBtn.mas_left).mas_offset(-12);
-        make.height.mas_equalTo(44);
-        make.width.mas_equalTo(40);
-        make.bottom.mas_equalTo(self);
-    }];
-    [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.messageBtn.mas_left).mas_offset(-12);
-        make.height.mas_equalTo(44);
-        make.width.mas_equalTo(40);
-        make.bottom.mas_equalTo(self);
-    }];
-    [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.messageBtn).offset(-5);
-        make.height.mas_equalTo(10);
-        make.width.mas_equalTo(10);
-        make.top.mas_equalTo(self.messageBtn).offset(10);
-    }];
-    
+
+    if (_type == FHDetailNavBarTypeDefault) {
+        [self addSubview:self.shareBtn];
+        [_shareBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.shareBtn.mas_left).mas_offset(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn.mas_left).mas_offset(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn).offset(-5);
+            make.height.mas_equalTo(10);
+            make.width.mas_equalTo(10);
+            make.top.mas_equalTo(self.messageBtn).offset(10);
+        }];
+    }else {
+        [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn.mas_left).mas_offset(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn).offset(-5);
+            make.height.mas_equalTo(10);
+            make.width.mas_equalTo(10);
+            make.top.mas_equalTo(self.messageBtn).offset(10);
+        }];
+    }
+
     [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(0);
         make.height.mas_equalTo(0.5);
@@ -214,8 +275,20 @@
     }
 }
 
+
 - (void)displayMessageDot:(BOOL)show {
     self.messageDot.hidden = !show;
+}
+
+- (UIButton *)shareBtn
+{
+    if (!_shareBtn) {
+        _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
+        [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
+        [_shareBtn addTarget:self action:@selector(shareAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _shareBtn;
 }
 
 @end

@@ -158,13 +158,9 @@
                                     };
         TRACK_EVENT(@"click_minetab", clickTrackDic);
         
-        NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[@"originFrom"] = @"minetab";
-        traceParam[@"enter_from"] = @"minetab";
-        traceParam[@"enter_type"] = @"login";
-        NSDictionary *dict = @{
-                               @"tracer": traceParam
-                               };
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"enter_from"] = @"minetab";
+        dict[@"enter_type"] = @"login";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL* url = [NSURL URLWithString:@"snssdk1370://flogin"];
