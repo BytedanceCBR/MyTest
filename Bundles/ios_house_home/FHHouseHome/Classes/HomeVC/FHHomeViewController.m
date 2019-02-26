@@ -153,6 +153,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     //无网点击重试逻辑
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
+        [self.homeListViewModel updateCategoryViewSegmented:NO];
         [self.homeListViewModel requestOriginData:YES];
     }
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
@@ -172,7 +173,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
-
     //
 }
 

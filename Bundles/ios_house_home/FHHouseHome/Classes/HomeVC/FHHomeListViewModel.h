@@ -31,6 +31,8 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType;
 
+- (void)updateCategoryViewSegmented:(BOOL)isFirstChange;
+
 @end
 
 NS_ASSUME_NONNULL_END
