@@ -277,6 +277,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         return;
     }
     
+    if ([categoryName isEqualToString:@"交通"]) {
+        categoryName = @"公交";
+    }
+    
     AMapPOIKeywordsSearchRequest *requestPoi = [AMapPOIKeywordsSearchRequest new];
     requestPoi.keywords = categoryName;
     requestPoi.location = [AMapGeoPoint locationWithLatitude:self.centerPoint.latitude longitude:self.centerPoint.longitude];
