@@ -25,6 +25,8 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 @property (nonatomic , strong) NSMutableArray *topRoomCountArray;
 @property (nonatomic , weak) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) NSArray * nameLeftArray;
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
+
 @end
 
 
@@ -36,6 +38,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         _nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
         _floorListTable = tableView;
         _leftFilterView = leftScrollView;
+        _elementShowCaches = [NSMutableDictionary new];
         _allItems = allItems;
         _floorListVC = viewController;
         _currentItems = _allItems;
@@ -274,16 +277,18 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
         }
         [cell refreshWithData:_currentItems[indexPath.row]];
+        cell.baseViewModel = self;
     }
     cell.backgroundColor = [UIColor whiteColor];
     return cell;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
 }
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
 }
@@ -322,6 +327,28 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
         } 
+    }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    // 添加element_show埋点
+    if (!self.elementShowCaches[tempKey]) {
+        self.elementShowCaches[tempKey] = @(YES);
+        NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
+        NSDictionary *tracer = subPageParams[@"tracer"];
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
+        if (tracer) {
+            [traceParam addEntriesFromDictionary:tracer];
+        }
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"element_type"] = @"house_model";
+        traceParam[@"page_type"] = @"house_model_list";
+        [traceParam removeObjectForKey:@"enter_from"];
+        [traceParam removeObjectForKey:@"element_from"];
+        [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
+        [FHEnvContext recordEvent:traceParam andEventKey:@"house_show"];
     }
 }
 

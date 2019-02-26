@@ -49,9 +49,7 @@
     self.coreInfoListViewModel.detailTracerDic = [self makeDetailTracerData];
     
     [_coreInfoListViewModel addGoDetailLog];
-    
-
-    // Do any additional setup after loading the view.
+    [self.view bringSubviewToFront:[self getNaviBar]];
 }
 
 - (void)retryLoadData
@@ -156,7 +154,7 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                
+                self.tracerDict[@"log_pb"] = log_pb_str;
             }
         }
     }
@@ -172,6 +170,9 @@
             self.tracerDict[@"rank"] = rank;
         }
     }
+    
+    self.coreInfoListViewModel.logPB = self.tracerDict[@"log_pb"];
+    
     self.coreInfoListViewModel.detailTracerDic = self.tracerDict;
 }
 
