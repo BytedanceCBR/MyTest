@@ -61,7 +61,7 @@
         make.bottom.mas_equalTo(self.view);
     }];
     [self addDefaultEmptyViewFullScreen];
-
+    [self.viewModel setMaskView:self.emptyView];
 }
 
 - (void)configTableView {
@@ -86,9 +86,9 @@
     }
 }
 
-- (void)retryLoadData {
-    [self startLoadData];
-}
+//- (void)retryLoadData {
+//    [self startLoadData];
+//}
 
 #pragma mark - TTUIViewControllerTrackProtocol
 

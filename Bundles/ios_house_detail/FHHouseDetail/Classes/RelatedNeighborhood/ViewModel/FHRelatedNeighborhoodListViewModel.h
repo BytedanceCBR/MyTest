@@ -9,12 +9,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHRelatedNeighborhoodListViewController;
+@class FHRelatedNeighborhoodListViewController,FHErrorView;
 @interface FHRelatedNeighborhoodListViewModel : NSObject
 
 @property (nonatomic , copy) NSString *neighborhoodId;
 
 -(instancetype)initWithController:(FHRelatedNeighborhoodListViewController *)viewController tableView:(UITableView *)tableView;
+-(void)setMaskView:(FHErrorView *)maskView;
 -(void)viewWillAppear:(BOOL)animated;
 -(void)viewWillDisappear:(BOOL)animated;
 // 周边小区
