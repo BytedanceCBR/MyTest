@@ -797,6 +797,8 @@ PODS:
     - TTIMSDK/IMKit (= 0.7.2)
   - TTIMSDK/Bridges (0.7.2):
     - TTIMSDK/Foundation
+  - TTIMSDK/Feature_ApplicationStatus (0.7.2):
+    - TTIMSDK/Feature_Essential
   - TTIMSDK/Feature_Core (0.7.2):
     - TTIMSDK/Feature_Core_Config
     - TTIMSDK/Feature_Core_ConversationInfo
@@ -1386,6 +1388,7 @@ DEPENDENCIES:
   - TTImagePicker (from `../AKPlugins/AKImagePicker`)
   - TTImagePreviewAnimateManager (= 1.0.13)
   - TTImpression (= 0.0.26)
+  - TTIMSDK/Feature_ApplicationStatus (= 0.7.2)
   - TTIMSDK/IMKit (= 0.7.2)
   - TTIMSDK/IMKit_WebSocket (= 0.7.2)
   - TTInstallService (= 1.0.0.6)
@@ -1545,7 +1548,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.2
   ios_house_im:
-    :commit: 5151b1dd3f63f638afb0f2eb53d27f31f83a2b8c
+    :commit: c3e6c386ed9c0ab60b86c153e21ce78b62fb267a
     :git: git@code.byted.org:fproject/ios_house_im.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1709,6 +1712,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: 0431ed108e104527669b86f75efd58958425cca2
 
-PODFILE CHECKSUM: f256a74f07280e734748f00d33048eae8b4a7fdc
+PODFILE CHECKSUM: 0d2f5773dc1755dd3f652cf4e8420a70223a8f57
 
 COCOAPODS: 1.4.0
