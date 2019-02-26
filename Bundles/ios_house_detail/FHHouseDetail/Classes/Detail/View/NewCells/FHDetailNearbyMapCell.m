@@ -172,11 +172,16 @@ static const float kSegementedPadingTop = 5;
     }];
 }
 
-- (void)setUpMapViewSetting
+- (void)setUpMapViewSetting:(BOOL)isRetry
 {
-    if (self.centerPoint.latitude && self.centerPoint.longitude) {
-        [self.mapView setCenterCoordinate:self.centerPoint];
-    }
+    _mapView.runLoopMode = NSDefaultRunLoopMode;
+    _mapView.showsCompass = NO;
+    _mapView.showsScale = NO;
+    _mapView.zoomEnabled = NO;
+    _mapView.scrollEnabled = NO;
+    _mapView.zoomLevel = 14;
+    _mapView.delegate = self;
+    [_mapView forceRefresh];
     
     CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
     WeakSelf;
@@ -187,14 +192,12 @@ static const float kSegementedPadingTop = 5;
         }
     }];
     
-    _mapView.runLoopMode = NSDefaultRunLoopMode;
-    _mapView.showsCompass = NO;
-    _mapView.showsScale = NO;
-    _mapView.zoomEnabled = NO;
-    _mapView.scrollEnabled = NO;
-    _mapView.zoomLevel = 14;
-    _mapView.delegate = self;
-    [_mapView reloadMap];
+    if (self.centerPoint.latitude && self.centerPoint.longitude) {
+        [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
+    }
+    if (isRetry) {
+        [self.mapImageView addSubview:_mapView];
+    }
 }
 
 - (void)setUpMapImageView
@@ -204,19 +207,21 @@ static const float kSegementedPadingTop = 5;
     _mapView = [[MAMapView alloc] initWithFrame:mapRect];
     
     //3秒如果截图失败则重试一次
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.mapImageView.image == nil) {
-                _mapView = nil;
+                if (_mapView) {
+                    [_mapView removeFromSuperview];
+                    _mapView = nil;
+                }
                 _mapView = [[MAMapView alloc] initWithFrame:mapRect];
-                [self setUpMapViewSetting];
+                [self setUpMapViewSetting:YES];
             }
         });
     });
     
-    [self setUpMapViewSetting];
+    [self setUpMapViewSetting:NO];
 
-    
     _mapImageView = [[UIImageView alloc] initWithFrame:mapRect];
     _mapImageView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
     [self.contentView addSubview:_mapImageView];
@@ -374,6 +379,7 @@ static const float kSegementedPadingTop = 5;
 
 - (void)cleanAllAnnotations
 {
+    [self.mapView removeAnnotation:self.pointCenterAnnotation];
     [self.mapView removeAnnotations:self.poiAnnotations];
     [self.poiAnnotations removeAllObjects];
 }

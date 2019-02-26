@@ -36,6 +36,7 @@
         make.left.equalTo(self.contentView).offset(20);
         make.top.bottom.equalTo(self.contentView);
         make.height.mas_equalTo(35);
+        make.right.equalTo(self.contentView).offset(-80);
     }];
 
     _labelRight = [UILabel new];
