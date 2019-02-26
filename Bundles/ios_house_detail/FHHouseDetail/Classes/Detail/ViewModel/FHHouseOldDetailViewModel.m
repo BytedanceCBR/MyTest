@@ -374,7 +374,12 @@
         if (model.data.contact || model.data.disclaimer) {
             FHDetailDisclaimerModel *infoModel = [[FHDetailDisclaimerModel alloc] init];
             infoModel.disclaimer = model.data.disclaimer;
-            infoModel.contact = model.data.contact;
+            if (!model.data.highlightedRealtor) {
+                 // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
+                infoModel.contact = model.data.contact;
+            } else {
+                infoModel.contact = nil;
+            }
             [self.items addObject:infoModel];
         }
         //
