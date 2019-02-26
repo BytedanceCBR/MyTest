@@ -24,11 +24,13 @@
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
+@property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
 @property (nonatomic, copy)   NSString* houseId; // 房源id
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的logPB
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
+@property (nonatomic, strong) FHDetailContactModel *contactPhone;
 
 @end
 
@@ -83,19 +85,15 @@
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
             self.houseId = paramObj.allParams[@"neighborhood_id"];
         }
-        
-        self.isDisableGoDetail = paramObj.allParams[@"disable_go_detail"] ? paramObj.allParams[@"disable_go_detail"] : NO;
-        
-        NSDictionary *tracer = paramObj.allParams[@"tracer"];
-        if ([tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *logPbDict = tracer[@"log_pb"];
-            self.searchId = logPbDict[@"search_id"];
-            self.imprId = logPbDict[@"impr_id"];
-        }
         // 埋点数据处理
         [self processTracerData:paramObj.allParams];
         // 非埋点数据处理
         // disable_go_detail
+        self.isDisableGoDetail = paramObj.allParams[@"disable_go_detail"] ? paramObj.allParams[@"disable_go_detail"] : NO;
+        // source
+        if ([paramObj.allParams[@"source"] isKindOfClass:[NSString class]]) {
+            self.source = paramObj.allParams[@"source"];
+        }
     }
     return self;
 }
@@ -160,12 +158,13 @@
     self.viewModel.listLogPB = self.listLogPB;
     // 构建详情页需要的埋点数据，放入baseViewModel中
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
+    self.viewModel.source = self.source;
     [self.view addSubview:_tableView];
 
     __weak typeof(self)wself = self;
     CGRect screenBounds = [UIScreen mainScreen].bounds;
     CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    _navBar = [[FHDetailNavBar alloc]initWithFrame:CGRectMake(0, 0, screenBounds.size.width, navBarHeight + 44)];
+    _navBar = [[FHDetailNavBar alloc]initWithType:FHDetailNavBarTypeDefault];
     _navBar.backActionBlock = ^{
         [wself.navigationController popViewControllerAnimated:YES];
     };
@@ -242,7 +241,18 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                
+                self.tracerDict[@"log_pb"] = log_pb_str;
+            }
+        }else
+        {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                if (report_params_dic[@"log_pb"]) {
+                    NSDictionary *logPb = [self getDictionaryFromJSONString:report_params_dic[@"log_pb"]];
+                    if (logPb) {
+                        self.tracerDict[@"log_pb"] = logPb;
+                    }
+                }
             }
         }
     }
@@ -258,6 +268,8 @@
     id log_pb = self.tracerDict[@"log_pb"];
     if ([log_pb isKindOfClass:[NSDictionary class]]) {
         self.listLogPB = log_pb;
+        self.searchId = log_pb[@"search_id"];
+        self.imprId = log_pb[@"impr_id"];
     }
 }
 

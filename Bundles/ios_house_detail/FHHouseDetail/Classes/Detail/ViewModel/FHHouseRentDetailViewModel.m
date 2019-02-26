@@ -29,6 +29,7 @@
 @property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodHouseData;
 @property (nonatomic, strong , nullable) FHHouseRentRelatedResponseDataModel *relatedHouseData;
+@property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
 
@@ -109,10 +110,14 @@
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
+                
                 wSelf.detailController.hasValidateData = YES;
                 [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
+                // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
+                [wSelf handleBottomBarStatus:model.data.status];
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
@@ -123,7 +128,7 @@
         } else {
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -132,14 +137,14 @@
 {
     if (status == 1) {
         self.bottomStatusBar.hidden = NO;
-        [self.navBar showRightItems:NO];
+        [self.navBar showRightItems:YES];
         //        self.
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
-        [self.navBar showRightItems:YES];
+        [self.navBar showRightItems:NO];
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
@@ -155,10 +160,7 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
-    
-    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
-    [self handleBottomBarStatus:model.data.status];
-    
+
     self.contactViewModel.contactPhone = model.data.contact;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
@@ -211,7 +213,7 @@
         [self.items addObject:infoModel];
     }
     // 小区信息
-    if (model.data.neighborhoodInfo) {
+    if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
@@ -221,6 +223,7 @@
     }
  
     [self reloadData];
+ 
 }
 
 // 周边数据请求，当网络请求都返回后刷新数据

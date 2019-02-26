@@ -23,7 +23,7 @@
 @end
 @implementation FHFloorTimeLineViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId
 {
     self = [super init];
     if (self) {
@@ -44,6 +44,7 @@
                 [self startLoadData];
             }else
             {
+                [self.timeLineListTable.mj_footer endRefreshing];
                 [[ToastManager manager] showToast:@"网络异常"];
             }
         }];

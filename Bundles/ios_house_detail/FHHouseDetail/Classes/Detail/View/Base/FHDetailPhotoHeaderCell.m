@@ -168,10 +168,14 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
-    dict[@"picture_id"] = img.url;
-    dict[@"show_type"] = showType;
-    TRACK_EVENT(@"picture_show", dict);
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = img.url;
+        dict[@"show_type"] = showType;
+        TRACK_EVENT(@"picture_show", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
+    }
 }
 
 //埋点
@@ -181,18 +185,23 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
-    dict[@"picture_id"] = img.url;
-    dict[@"show_type"] = @"large";
     
-    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
-    if (duration <= 0) {
-        return;
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = img.url;
+        dict[@"show_type"] = @"large";
+        
+        NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+        if (duration <= 0) {
+            return;
+        }
+        
+        dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+        self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+        TRACK_EVENT(@"picture_large_stay", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
     }
-    
-    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
-    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
-    TRACK_EVENT(@"picture_large_stay", dict);
 }
 
 //埋点
@@ -202,17 +211,22 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
-    dict[@"picture_id"] = img.url;
-    dict[@"show_type"] = @"large";
     
-    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
-    if (duration <= 0) {
-        return;
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = img.url;
+        dict[@"show_type"] = @"large";
+        
+        NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+        if (duration <= 0) {
+            return;
+        }
+        
+        dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+        TRACK_EVENT(@"picture_save", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
     }
-    
-    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
-    TRACK_EVENT(@"picture_save", dict);
 }
 
 

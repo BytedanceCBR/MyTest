@@ -37,6 +37,11 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
+    return @"related";
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHFloorPanDetailMutiFloorPanCellModel class]]) {
         return;
@@ -123,6 +128,8 @@
         if (model.recommend.count > index) {
             FHDetailFloorPanDetailInfoDataRecommendModel *floorPanInfoModel = model.recommend[index];
             if ([floorPanInfoModel isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
+                
+            
                 NSMutableDictionary *traceParam = [NSMutableDictionary new];
                 traceParam[@"enter_from"] = @"new_detail";
                 traceParam[@"log_pb"] = self.baseViewModel.logPB;
@@ -132,12 +139,17 @@
                 traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
                 traceParam[@"element_from"] = @"related";
                 
-                NSDictionary *dict = @{@"house_type":@(1),
+                NSMutableDictionary *infoDict = @{@"house_type":@(1),
                                        @"tracer": traceParam
-                                       };
-                [traceParam setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                //                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:traceParam];
+                                       }.mutableCopy;
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                NSMutableDictionary *subPageParams = model.subPageParams;
+               
+//                subPageParams[@"tracer"] = nil;
+                if (subPageParams) {
+                    [infoDict addEntriesFromDictionary:subPageParams];
+                }
+                TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
             }
         }

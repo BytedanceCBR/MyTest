@@ -62,6 +62,9 @@
         colView.clickBlk = ^(NSInteger index) {
             [wSelf collectionCellClick:index];
         };
+        colView.displayCellBlk = ^(NSInteger index) {
+            [wSelf collectionDisplayCell:index];
+        };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
             make.left.right.mas_equalTo(self.containerView);
@@ -111,17 +114,7 @@
 - (void)moreButtonClick:(UIButton *)button {
     FHDetailRentSameNeighborhoodHouseModel *model = (FHDetailRentSameNeighborhoodHouseModel *)self.currentData;
     if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.hasMore) {
-        // 点击事件处理
-        /* add by zyk 是否要加埋点
-         let loadMoreParams = EnvContext.shared.homePageParams <|>
-         toTracerParams("same_neighborhood", key: "element_type") <|>
-         toTracerParams(id, key: "group_id") <|>
-         toTracerParams(data.logPB ?? "be_null", key: "log_pb") <|>
-         toTracerParams("old_detail", key: "page_type") <|>
-         toTracerParams("click", key: "enter_type")
-         recordEvent(key: "click_loadmore", params: loadMoreParams)
-         */
-        
+
         // 点击事件处理
         FHRentDetailResponseModel *detailData = self.baseViewModel.detailData;
         NSString *neighborhood_id = @"";
@@ -134,10 +127,11 @@
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = detailData.data.logPb ? detailData.data.logPb : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"rent_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
@@ -152,13 +146,13 @@
             userInfo[@"title"] = @"同小区房源";// 默认值
         }
         if (neighborhood_id.length > 0) {
-            userInfo[@"neighborhoodId"] = neighborhood_id;
+            userInfo[@"neighborhood_id"] = neighborhood_id;
         }
         if (house_id.length > 0) {
-            userInfo[@"houseId"] = house_id;
+            userInfo[@"house_id"] = house_id;
         }
         if (model.sameNeighborhoodHouseData.searchId.length > 0) {
-            userInfo[@"searchId"] = model.sameNeighborhoodHouseData.searchId;
+            userInfo[@"search_id"] = model.sameNeighborhoodHouseData.searchId;
         }
         userInfo[@"list_vc_type"] = @(7);
         
@@ -191,6 +185,23 @@
     }
 }
 
+// 不重复调用
+- (void)collectionDisplayCell:(NSInteger)index
+{
+    FHDetailRentSameNeighborhoodHouseModel *model = (FHDetailRentSameNeighborhoodHouseModel *)self.currentData;
+    if (model.sameNeighborhoodHouseData && model.sameNeighborhoodHouseData.items.count > 0 && index >= 0 && index < model.sameNeighborhoodHouseData.items.count) {
+        // cell 显示 处理
+        FHHouseRentDataItemsModel *dataItem = model.sameNeighborhoodHouseData.items[index];
+        // house_show
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"rank"] = @(index);
+        tracerDic[@"card_type"] = @"slide";
+        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
+        tracerDic[@"element_type"] = @"same_neighborhood";
+        [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+    }
+}
 
 @end
 

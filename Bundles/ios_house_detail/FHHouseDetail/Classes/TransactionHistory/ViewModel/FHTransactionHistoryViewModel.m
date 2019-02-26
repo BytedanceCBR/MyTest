@@ -26,7 +26,6 @@
 @property(nonatomic, copy) NSString *neighborhoodId;
 @property(nonatomic, assign) NSInteger page;
 @property(nonatomic, copy) NSString *searchId;
-@property(nonatomic, copy) NSString *originSearchId;
 @property(nonatomic, assign) NSInteger limit;
 @property(nonatomic, assign) BOOL showPlaceHolder;
 @property(nonatomic, assign) BOOL isFirstLoad;
@@ -73,7 +72,6 @@
     if(isHead){
         self.page = 0;
         self.searchId = nil;
-        self.originSearchId = nil;
         [self.dataList removeAllObjects];
         [self.clientShowDict removeAllObjects];
     }
@@ -120,7 +118,6 @@
             }
             
             if(wself.isFirstLoad){
-                wself.originSearchId = self.searchId;
                 wself.isFirstLoad = NO;
                 [wself addEnterCategoryLog];
             }
@@ -157,15 +154,8 @@
 }
 
 - (NSDictionary *)categoryLogDict {
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"category_name"] = [self categoryName];
-    tracerDict[@"enter_from"] = @"minetab";
-    tracerDict[@"enter_type"] = @"click";
-    tracerDict[@"element_from"] = @"be_null";
-    tracerDict[@"origin_from"] = @"be_null";
-    tracerDict[@"search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
-    tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
-    
+    NSMutableDictionary *tracerDict = self.viewController.tracerDict.mutableCopy;
+    tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     return tracerDict;
 }
 
@@ -178,7 +168,7 @@
 - (void)trackRefresh {
     NSMutableDictionary *dict = [[self categoryLogDict] mutableCopy];
     dict[@"refresh_type"] = @"pre_load_more";
-    dict[@"search_id"] = self.searchId;
+    dict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     TRACK_EVENT(@"category_refresh", dict);
 }
 

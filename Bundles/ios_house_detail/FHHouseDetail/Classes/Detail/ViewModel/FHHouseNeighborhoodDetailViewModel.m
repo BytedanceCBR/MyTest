@@ -33,6 +33,7 @@
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
 @property (nonatomic, strong , nullable) FHRentSameNeighborhoodResponseDataModel *sameNeighborhoodRentHouseData;// 同小区房源，租房
+@property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
 
@@ -119,6 +120,7 @@
                 [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
@@ -129,7 +131,7 @@
         } else {
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -146,13 +148,13 @@
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
-    if (model.data.neighborhoodImage) {
+    if (model.data.neighborhoodImage.count > 0) {
         FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.neighborhoodImage;
         [self.items addObject:headerCellModel];
     }
     // 添加标题
-    if (model.data) {
+    if (model.data && model.data.neighborhoodInfo.id.length > 0) {
         FHDetailNeighborhoodNameModel *houseName = [[FHDetailNeighborhoodNameModel alloc] init];
         houseName.name = model.data.name;
         houseName.neighborhoodInfo = model.data.neighborhoodInfo;
@@ -253,6 +255,7 @@
             [self.items addObject:grayLine];
             FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
             infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            infoModel.neighborhoodId = self.neighborhoodId;
             [self.items addObject:infoModel];
         }
         // 小区房源
@@ -264,6 +267,13 @@
             infoModel.tableView = self.tableView;
             infoModel.sameNeighborhoodErshouHouseData = self.sameNeighborhoodErshouHouseData;
             infoModel.sameNeighborhoodRentHouseData = self.sameNeighborhoodRentHouseData;
+            // 租房详情页，或者地图租房半屏列表，进入小区详情
+            if ([self.source isEqualToString:@"rent_detail"]) {
+                if (self.sameNeighborhoodErshouHouseData.items.count > 0 && self.sameNeighborhoodRentHouseData.items.count > 0) {
+                    // 既有二手房，同时有租房数据
+                    infoModel.firstSelIndex = 1;
+                }
+            }
             [self.items addObject:infoModel];
         }
         [self reloadData];

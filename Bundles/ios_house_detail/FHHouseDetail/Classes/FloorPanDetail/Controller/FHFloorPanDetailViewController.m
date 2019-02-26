@@ -32,7 +32,7 @@
         self.ttTrackStayEnable = YES;
         _floorPanId = paramObj.allParams[@"floorpanid"];
         
-        [self processTracerData:paramObj.allParams];
+        [self processTracerData:paramObj.allParams[@"tracer"]];
     }
     return self;
 }
@@ -40,11 +40,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //设置导航条为黑色
-//    [self refreshContentOffset:CGPointMake(0, 500)];
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-// Do any additional setup after loading the view.
-
     [self setUpinfoListTable];
     
     [self addDefaultEmptyViewFullScreen];
@@ -54,9 +49,7 @@
     self.coreInfoListViewModel.detailTracerDic = [self makeDetailTracerData];
     
     [_coreInfoListViewModel addGoDetailLog];
-    
-
-    // Do any additional setup after loading the view.
+    [self.view bringSubviewToFront:[self getNaviBar]];
 }
 
 - (void)retryLoadData
@@ -161,7 +154,7 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                
+                self.tracerDict[@"log_pb"] = log_pb_str;
             }
         }
     }
@@ -177,6 +170,10 @@
             self.tracerDict[@"rank"] = rank;
         }
     }
+    
+    self.coreInfoListViewModel.logPB = self.tracerDict[@"log_pb"];
+    
+    self.coreInfoListViewModel.detailTracerDic = self.tracerDict;
 }
 
 
@@ -203,15 +200,10 @@
     
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (NSString *)pageTypeString
+{
+    return @"house_model_detail";
 }
-*/
 
 - (void)dealloc
 {

@@ -33,7 +33,7 @@
 
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
 {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.typeId = [paramObj.allParams[@"list_id"] description];
         

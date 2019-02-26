@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
 @property (nonatomic, assign) BOOL isSameToLocCity;
 @property (nonatomic, assign) BOOL isSendConfigFromFirstRemote;
+@property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;
 @property (nonatomic, copy) void (^homeConfigCallBack)(FHConfigDataModel *configModel);
 @property(nonatomic , strong) RACReplaySubject *configDataReplay;
@@ -121,6 +122,8 @@ NS_ASSUME_NONNULL_BEGIN
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
 
+//返回origin_search id
+
 //接受config数据
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel;
 
@@ -133,6 +136,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (FHClientHomeParamsModel *)getCommonParams;
 
 - (void)updateOriginFrom:(NSString *)originFrom originSearchId:(NSString *)originSearchid;
+
+
+- (NSDictionary *)getGetOriginFromAndOriginId;
 
 @end
 

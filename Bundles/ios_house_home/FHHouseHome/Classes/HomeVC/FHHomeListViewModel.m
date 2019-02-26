@@ -133,12 +133,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //切换城市先隐藏error页
             [self.homeViewController.emptyView hideEmptyView];
             
+            //更新切换
+            [self updateCategoryViewSegmented:isFirstChange];
+            
             //过滤多余刷新
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
                 return;
             }
-            //更新切换
-            [self updateCategoryViewSegmented:isFirstChange];
 
             //非首次只刷新头部
             if (!isFirstChange && [configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
@@ -388,10 +389,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
         //过滤多余tip提示
-        if ((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
-            
+        if ((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
             [self.homeViewController showNotify:model.data.refreshTip];
-            
+            [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
         

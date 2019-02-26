@@ -11,11 +11,14 @@
 #import "TTTabBarItem.h"
 #import "TTLocationManager.h"
 #import "CommonURLSetting.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "TTTabBarManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTTabBarProvider.h"
 #import "FHUtils.h"
+#import <TTRoute.h>
+#import <FHLocManager.h>
+#import "ArticleURLSetting.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -67,7 +70,8 @@
 {
 
     [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
-    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+//    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
     
     NSString *firstTabItemIdentifier = [[TTTabBarManager sharedTTTabBarManager].tabItems firstObject].identifier;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({

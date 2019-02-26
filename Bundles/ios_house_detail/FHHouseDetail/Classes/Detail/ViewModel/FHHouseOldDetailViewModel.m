@@ -37,6 +37,7 @@
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
 @property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData;
+@property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
 
@@ -147,10 +148,13 @@
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
+                // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
                 wSelf.detailController.hasValidateData = YES;
                 [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
+                [wSelf handleBottomBarStatus:model.data.status];
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
@@ -161,7 +165,7 @@
         } else {
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -170,14 +174,14 @@
 {
     if (status == 1) {
         self.bottomStatusBar.hidden = NO;
-        [self.navBar showRightItems:NO];
+        [self.navBar showRightItems:YES];
         //        self.
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
-        [self.navBar showRightItems:YES];
+        [self.navBar showRightItems:NO];
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
@@ -193,9 +197,6 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
-    
-    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
-    [self handleBottomBarStatus:model.data.status];
     
     self.detailData = model;
     self.logPB = model.data.logPb;
@@ -241,7 +242,6 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
-        // add by zyk后续需要再确认 searchId 取的是否正确
         NSString *searchId = self.logPB[@"search_id"];
         NSString *imprId = self.logPB[@"impr_id"];
         if (searchId == nil) {
@@ -253,8 +253,9 @@
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
-        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic;
+        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
+        agentListModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
@@ -272,7 +273,7 @@
         [self.items addObject:infoModel];
     }
     // 小区信息
-    if (model.data.neighborhoodInfo) {
+    if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
@@ -311,12 +312,6 @@
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
         [self.items addObject:infoModel];
-    }
-    
-    // 小区信息
-    if (model.data.neighborhoodInfo) {
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
     }
     
     // --
@@ -361,6 +356,7 @@
             [self.items addObject:grayLine];
             FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
             infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            infoModel.neighborhoodId = self.neighborhoodId;
             [self.items addObject:infoModel];
         }
         // 周边房源
@@ -377,7 +373,12 @@
         if (model.data.contact || model.data.disclaimer) {
             FHDetailDisclaimerModel *infoModel = [[FHDetailDisclaimerModel alloc] init];
             infoModel.disclaimer = model.data.disclaimer;
-            infoModel.contact = model.data.contact;
+            if (!model.data.highlightedRealtor) {
+                 // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
+                infoModel.contact = model.data.contact;
+            } else {
+                infoModel.contact = nil;
+            }
             [self.items addObject:infoModel];
         }
         //

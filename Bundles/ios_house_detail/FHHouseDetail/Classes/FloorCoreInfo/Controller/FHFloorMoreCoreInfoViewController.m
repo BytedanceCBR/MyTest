@@ -25,7 +25,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        _courtId = paramObj.allParams[@"courtId"];
+        _courtId = paramObj.allParams[@"court_id"];
         _houseNameModel = paramObj.userInfo.allInfo[@"courtInfo"];
         _disclaimerModel = paramObj.userInfo.allInfo[@"disclaimerInfo"];
     }
@@ -34,12 +34,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //设置导航条为黑色
-    [self refreshContentOffset:CGPointMake(0, 500)];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    // Do any additional setup after loading the view.
-    
+
     [self setUpinfoListTable];
     
     [self addDefaultEmptyViewFullScreen];
@@ -47,6 +42,7 @@
     _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel housedisclaimerModel:_disclaimerModel];
     
     [self setNavBarTitle:@"楼盘信息"];
+    [self.view bringSubviewToFront:[self getNaviBar]];
 }
 
 - (void)retryLoadData
