@@ -133,12 +133,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //切换城市先隐藏error页
             [self.homeViewController.emptyView hideEmptyView];
             
+            //更新切换
+            [self updateCategoryViewSegmented:isFirstChange];
+            
             //过滤多余刷新
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
                 return;
             }
-            //更新切换
-            [self updateCategoryViewSegmented:isFirstChange];
 
             //非首次只刷新头部
             if (!isFirstChange && [configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {

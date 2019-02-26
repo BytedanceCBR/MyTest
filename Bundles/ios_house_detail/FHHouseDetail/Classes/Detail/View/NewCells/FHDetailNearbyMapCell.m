@@ -131,7 +131,7 @@ static const float kSegementedPadingTop = 5;
     _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#299cff"];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
-    _segmentedControl.isNeedNetworkCheck = YES;
+    _segmentedControl.isNeedNetworkCheck = NO;
 //    _segmentedControl.selec
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
