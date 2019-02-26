@@ -11,7 +11,9 @@
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.bytedance.fp1</key>
-		<string>com.bytedance.fp1_InHouse</string>
+		<string>com.bytedance.fp1.inhouse</string>
+		<key>com.bytedance.fp1.serviceNofExtension</key>
+		<string>fp1ServiceNofExtension</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>iPhone Distribution</string>
