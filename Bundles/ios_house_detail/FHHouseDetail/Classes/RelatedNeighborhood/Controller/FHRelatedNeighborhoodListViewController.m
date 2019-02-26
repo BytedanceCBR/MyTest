@@ -60,8 +60,7 @@
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
         make.bottom.mas_equalTo(self.view);
     }];
-    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(44, 0, 0, 0)];
-
+    [self addDefaultEmptyViewFullScreen];
 
 }
 
