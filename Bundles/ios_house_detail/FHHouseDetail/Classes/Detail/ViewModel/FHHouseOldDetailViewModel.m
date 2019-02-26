@@ -148,9 +148,11 @@
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
+                // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
                 wSelf.detailController.hasValidateData = YES;
                 [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
+                [wSelf handleBottomBarStatus:model.data.status];
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
@@ -163,7 +165,7 @@
         } else {
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -172,14 +174,14 @@
 {
     if (status == 1) {
         self.bottomStatusBar.hidden = NO;
-        [self.navBar showRightItems:NO];
+        [self.navBar showRightItems:YES];
         //        self.
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
-        [self.navBar showRightItems:YES];
+        [self.navBar showRightItems:NO];
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
@@ -195,9 +197,6 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
-    
-    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
-    [self handleBottomBarStatus:model.data.status];
     
     self.detailData = model;
     self.logPB = model.data.logPb;
@@ -374,7 +373,12 @@
         if (model.data.contact || model.data.disclaimer) {
             FHDetailDisclaimerModel *infoModel = [[FHDetailDisclaimerModel alloc] init];
             infoModel.disclaimer = model.data.disclaimer;
-            infoModel.contact = model.data.contact;
+            if (!model.data.highlightedRealtor) {
+                 // 当且仅当没有合作经纪人时，才在disclaimer中显示 经纪人 信息
+                infoModel.contact = model.data.contact;
+            } else {
+                infoModel.contact = nil;
+            }
             [self.items addObject:infoModel];
         }
         //

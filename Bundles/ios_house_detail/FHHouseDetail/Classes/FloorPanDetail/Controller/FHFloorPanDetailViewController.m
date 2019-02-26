@@ -49,9 +49,7 @@
     self.coreInfoListViewModel.detailTracerDic = [self makeDetailTracerData];
     
     [_coreInfoListViewModel addGoDetailLog];
-    
-
-    // Do any additional setup after loading the view.
+    [self.view bringSubviewToFront:[self getNaviBar]];
 }
 
 - (void)retryLoadData

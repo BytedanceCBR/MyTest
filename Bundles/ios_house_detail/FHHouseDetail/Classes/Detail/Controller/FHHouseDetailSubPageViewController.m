@@ -20,7 +20,7 @@
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId; // 房源id
-@property (nonatomic, strong) NSDictionary *tracerDict;
+//@property (nonatomic, strong) NSDictionary *tracerDict;
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;

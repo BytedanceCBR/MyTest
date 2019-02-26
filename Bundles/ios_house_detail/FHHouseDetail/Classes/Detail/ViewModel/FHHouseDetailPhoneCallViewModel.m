@@ -150,6 +150,11 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 - (void)fillFormRequest:(NSString *)phoneNum
 {
     __weak typeof(self)wself = self;
+    if (![TTReachability isNetworkConnected]) {
+        
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
     [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:self.houseId phone:phoneNum from:[self fromStrByHouseType:self.houseType] completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
