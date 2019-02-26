@@ -393,8 +393,15 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         UIAlertAction *appleAction = [UIAlertAction actionWithTitle:@"苹果地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
             MKMapItem *mapItemCurrent = [MKMapItem mapItemForCurrentLocation];
+            MKPlacemark *placeMark = nil;
+            if (@available(iOS 10.0 , *)) {
+                placeMark = [[MKPlacemark alloc] initWithCoordinate:self.centerPoint postalAddress:nil];
+            }else
+            {
+                placeMark = [[MKPlacemark alloc] initWithCoordinate:self.centerPoint addressDictionary:nil];
+            }
             
-            MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:[[MKPlacemark alloc] initWithCoordinate:self.centerPoint postalAddress:nil]];
+            MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placeMark];
             NSDictionary *dictOptions = [NSDictionary dictionaryWithObjectsAndKeys:MKLaunchOptionsDirectionsModeDriving, MKLaunchOptionsDirectionsModeKey,@(YES),MKLaunchOptionsShowsTrafficKey,nil];
             
             [MKMapItem openMapsWithItems:@[mapItemCurrent,toLocation] launchOptions:dictOptions];
