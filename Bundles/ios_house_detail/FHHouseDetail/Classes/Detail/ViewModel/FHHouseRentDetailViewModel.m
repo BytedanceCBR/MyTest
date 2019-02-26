@@ -112,7 +112,7 @@
                 [wSelf processDetailData:model];
                 
                 wSelf.detailController.hasValidateData = YES;
-                [self.detailController.emptyView hideEmptyView];
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
                 [wSelf handleBottomBarStatus:model.data.status];
@@ -121,11 +121,13 @@
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
+                wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         } else {
+            wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
@@ -247,6 +249,7 @@
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 2) {
+         self.detailController.isLoadingData = NO;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线

@@ -150,6 +150,7 @@
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
         [self startLoading];
+        self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -158,7 +159,9 @@
 
 // 重新加载
 - (void)retryLoadData {
-    [self startLoadData];
+    if (!self.isLoadingData) {
+        [self startLoadData];
+    }
 }
 
 //移除导航条底部line
