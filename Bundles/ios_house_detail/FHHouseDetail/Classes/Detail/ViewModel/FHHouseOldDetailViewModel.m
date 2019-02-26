@@ -174,14 +174,14 @@
 {
     if (status == 1) {
         self.bottomStatusBar.hidden = NO;
-        [self.navBar showRightItems:NO];
+        [self.navBar showRightItems:YES];
         //        self.
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
-        [self.navBar showRightItems:YES];
+        [self.navBar showRightItems:NO];
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
