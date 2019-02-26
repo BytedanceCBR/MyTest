@@ -17,16 +17,17 @@
 #import "FHDetailBottomBarView.h"
 #import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
 #import <FHHouseBase/FHUserTracker.h>
+#import <FHHouseBase/FHGeneralBizConfig.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 extern NSString *const kFHToastCountKey;
-NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
+extern NSString *const kFHPhoneNumberCacheKey;
 
 @interface FHHouseDetailPhoneCallViewModel () <FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
 @property(nonatomic , weak) FHDetailNoticeAlertView *alertView;
-@property(nonatomic , strong) YYCache *sendPhoneNumberCache;
 
 @end
 
@@ -59,7 +60,8 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     [self addInformShowLog];
     __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
-    alertView.phoneNum = [self.sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     alertView.confirmClickBlock = ^(NSString *phoneNum){
         [wself fillFormRequest:phoneNum];
         [wself addClickConfirmLog];
@@ -160,7 +162,8 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         if (model.status.integerValue == 0 && !error) {
             
             [wself.alertView dismiss];
-            [wself.sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
             NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
             if (toastCount >= 3) {
                 [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -312,13 +315,6 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
     [self.followUpViewModel followHouseByFollowId:followId houseType:houseType actionType:houseType];
 }
 
-- (YYCache *)sendPhoneNumberCache
-{
-    if (!_sendPhoneNumberCache) {
-        _sendPhoneNumberCache = [[YYCache alloc]initWithName:@"phonenumber"];
-    }
-    return _sendPhoneNumberCache;
-}
 
 #pragma mark 埋点相关
 - (NSDictionary *)baseParams
