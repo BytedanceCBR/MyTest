@@ -76,6 +76,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 
 @property (nonatomic, assign) BOOL shouldDisableHash;
 @property (nonatomic, strong)   NSDictionary       *fhJSParams;
+/** 键盘谈起屏幕偏移量 */
+@property (nonatomic, assign) CGPoint keyBoardPoint;
 
 @end
 
@@ -494,6 +496,25 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     
     self.ssWebView.closeStackCounts = self.closeStackCount;
     
+    // iOS12 - 使用WKWebView出现input键盘将页面上顶 不下移问题 兼容
+    [self registerKeybordObserver];
+}
+
+// iOS12 - 使用WKWebView出现input键盘将页面上顶 不下移问题 兼容
+- (void)registerKeybordObserver {
+    // 监听将要弹起
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardShow:) name:UIKeyboardWillShowNotification object:nil];
+    // 监听将要隐藏
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardHidden:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)keyBoardShow:(NSNotification *)noti {
+    CGPoint point = self.ssWebView.ssWebContainer.ssWebView.scrollView.contentOffset;
+    self.keyBoardPoint = point;
+}
+
+- (void)keyBoardHidden:(NSNotification *)noti {
+    self.ssWebView.ssWebContainer.ssWebView.scrollView.contentOffset = self.keyBoardPoint;
 }
 
 // 注册全局通知监听器
