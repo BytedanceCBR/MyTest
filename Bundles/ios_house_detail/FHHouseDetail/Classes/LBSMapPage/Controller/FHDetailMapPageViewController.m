@@ -415,9 +415,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"baidumap://"]]) {
         UIAlertAction *baiduAction = [UIAlertAction actionWithTitle:@"百度地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSURL *baiduMapUrlString = [NSURL URLWithString:[googleMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            if ([baiduMapUrlString isKindOfClass:[NSURL class]]) {
-                [application openURL:baiduMapUrlString];
+            NSString *stringEncode = [baiduMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            NSURL *baiduMapUrl = [NSURL URLWithString:stringEncode];
+            if ([baiduMapUrl isKindOfClass:[NSURL class]]) {
+                [application openURL:baiduMapUrl];
             }
         }];
         

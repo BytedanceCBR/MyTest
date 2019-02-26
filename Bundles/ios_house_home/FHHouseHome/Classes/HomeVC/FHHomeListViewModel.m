@@ -272,7 +272,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [self.dataSource resetTraceCahce];
 }
 
-//检测10秒内网络请求是否有返回，确保首页异常时可以自动恢复
+//检测12秒内网络请求是否有返回，确保首页异常时可以自动恢复
 - (void)checkoutIsRequestCanCallBack:(NSNumber *)isHasCallBack
 {
     if (!_isHasCallBackForFirstTime) {
@@ -307,8 +307,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     
     if(isFirstChange)
     {
-        //10秒还没有请求回调则进行尝试新请求
-        [self performSelector:@selector(checkoutIsRequestCanCallBack:) withObject:nil afterDelay:10];
+        //12秒还没有请求回调则进行尝试新请求
+        [self performSelector:@selector(checkoutIsRequestCanCallBack:) withObject:nil afterDelay:12];
     }
 
     WeakSelf;
