@@ -274,6 +274,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
         }
         [cell refreshWithData:_currentItems[indexPath.row]];
+        cell.baseViewModel = self;
     }
     cell.backgroundColor = [UIColor whiteColor];
     return cell;
