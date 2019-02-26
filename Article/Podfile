@@ -424,6 +424,7 @@ def appPods
     pod 'TTIMSDK', '0.7.2', :subspecs => [
     'IMKit',
     'IMKit_WebSocket',
+    'Feature_ApplicationStatus',
     ]
     pod 'TTFileUploadClient', '1.7.6.3'
     pod 'RXCollections'
