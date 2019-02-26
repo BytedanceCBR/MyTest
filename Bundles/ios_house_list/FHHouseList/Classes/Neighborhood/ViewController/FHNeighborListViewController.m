@@ -179,6 +179,10 @@
 
 // 第一次或者过滤器变化之后重新加载
 - (void)firstRequestDataWithLoading:(BOOL)needLoading {
+    if (![TTReachability isNetworkConnected]) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
     [self.viewModel.houseList removeAllObjects];
     [self.viewModel.houseShowTracerDic removeAllObjects];
     self.hasValidateData = NO;
