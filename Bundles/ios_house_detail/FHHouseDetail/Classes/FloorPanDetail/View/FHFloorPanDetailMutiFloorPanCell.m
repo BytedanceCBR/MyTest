@@ -16,6 +16,7 @@
 #import "FHDetailHeaderView.h"
 #import "FHDetailMultitemCollectionView.h"
 #import "FHDetailFloorPanDetailInfoModel.h"
+#import "FHHouseDetailSubPageViewController.h"
 
 @interface FHFloorPanDetailMutiFloorPanCell ()
 
@@ -143,7 +144,7 @@
                                        @"tracer": traceParam
                                        }.mutableCopy;
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                NSMutableDictionary *subPageParams = model.subPageParams;
+                NSMutableDictionary *subPageParams = model.subPageVC.subPageParams;
                
 //                subPageParams[@"tracer"] = nil;
                 if (subPageParams) {

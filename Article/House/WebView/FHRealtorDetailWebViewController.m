@@ -67,7 +67,6 @@ static NSString *s_oldAgent = nil;
                 completion(TTRJSBMsgFailed, @{});
 
             }];
-            // add by zjing for test 应用silent
             if ([self.delegate respondsToSelector:@selector(followHouseByFollowId:houseType:actionType:)]) {
                 [self.delegate followUpActionByFollowId:self.houseId houseType:self.houseType];
             }
