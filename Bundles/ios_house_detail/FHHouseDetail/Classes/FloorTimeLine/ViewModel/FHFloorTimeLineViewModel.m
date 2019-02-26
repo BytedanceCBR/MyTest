@@ -44,6 +44,7 @@
                 [self startLoadData];
             }else
             {
+                [self.timeLineListTable.mj_footer endRefreshing];
                 [[ToastManager manager] showToast:@"网络异常"];
             }
         }];
