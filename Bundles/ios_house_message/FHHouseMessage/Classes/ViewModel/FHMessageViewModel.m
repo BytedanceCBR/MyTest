@@ -101,7 +101,7 @@
         
         wself.isFirstLoad = NO;
         
-        if (error && wself.dataList.count == 0) {
+        if (error && [wself.combiner allItems].count == 0) {
             //TODO: show handle error
             [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
             [wself clearBadgeNumber];
@@ -114,17 +114,20 @@
             wself.dataList = msgModel.data.unread;
             [wself.combiner resetSystemChannels:msgModel.data.unread];
             wself.viewController.hasValidateData = wself.dataList.count > 0;
-            
-            if(wself.dataList.count > 0){
-                [wself.viewController.emptyView hideEmptyView];
-                [wself.tableView reloadData];
-            }else{
-                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
-                [wself clearBadgeNumber];
-            }
+            [wself checkShouldShowEmptyMaskView];
         }
 
     }];
+}
+
+-(void)checkShouldShowEmptyMaskView {
+    if([self.combiner allItems].count > 0){
+        [self.viewController.emptyView hideEmptyView];
+        [self.tableView reloadData];
+    }else{
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyMessage];
+        [self clearBadgeNumber];
+    }
 }
 
 - (void)clearBadgeNumber {
@@ -320,7 +323,8 @@
 -(void)conversationUpdated:(NSString *)conversationIdentifier {
     NSArray<IMConversation*>* allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
+    [self checkShouldShowEmptyMaskView];
 }
 
 @end
