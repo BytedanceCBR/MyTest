@@ -525,6 +525,7 @@
     switch (cellModel.houseType) {
         case FHHouseTypeNewHouse:
             [self updateWithNewHouseModel:cellModel.houseModel];
+            self.roomSpaceLabel.text = @"";
             break;
         case FHHouseTypeSecondHandHouse:
             [self updateWithSecondHouseModel:cellModel.secondModel];
