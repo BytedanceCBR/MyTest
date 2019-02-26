@@ -130,7 +130,11 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
-        [model.phoneCallViewModel callWithPhone:contact.phone searchId:model.searchId imprId:model.imprId];
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        extraDict[@"realtor_id"] = contact.realtorId;
+        extraDict[@"realtor_rank"] = @(index);
+        extraDict[@"realtor_position"] = @"detail_related";
+        [model.phoneCallViewModel callWithPhone:contact.phone searchId:model.searchId imprId:model.imprId extraDict:extraDict];
         // 静默关注功能
         [model.followUpViewModel silentFollowHouseByFollowId:model.houseId houseType:model.houseType actionType:model.houseType showTip:NO];
     }

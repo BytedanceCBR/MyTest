@@ -161,13 +161,13 @@
                 }
                 NSMutableDictionary *userInfo = [NSMutableDictionary new];
                 if (neighborhood_id.length > 0) {
-                    userInfo[@"neighborhoodId"] = neighborhood_id;
+                    userInfo[@"neighborhood_id"] = neighborhood_id;
                 }
                 NSString *element_from = @"be_null";
                 NSString *category_name = @"be_null";
                 NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
                 tracerDic[@"enter_type"] = @"click";
-                tracerDic[@"log_pb"] = detailModel.data.logPb ? detailModel.data.logPb : @"be_null";
+                tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
                 switch (index) {
                     case 0:
                         // 在售房源

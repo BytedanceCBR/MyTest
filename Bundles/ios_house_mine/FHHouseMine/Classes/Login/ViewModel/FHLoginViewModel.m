@@ -181,7 +181,6 @@
 
 - (void)traceLogin {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    [tracerDict removeObjectsForKeys:@[@"origin_from"]];
     TRACK_EVENT(@"click_login", tracerDict);
 }
 

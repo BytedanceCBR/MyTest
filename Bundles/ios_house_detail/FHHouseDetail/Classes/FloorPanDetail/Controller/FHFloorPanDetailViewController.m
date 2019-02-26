@@ -156,7 +156,7 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                
+                self.tracerDict[@"log_pb"] = log_pb_str;
             }
         }
     }
@@ -172,6 +172,9 @@
             self.tracerDict[@"rank"] = rank;
         }
     }
+    
+    self.coreInfoListViewModel.logPB = self.tracerDict[@"log_pb"];
+    
     self.coreInfoListViewModel.detailTracerDic = self.tracerDict;
 }
 
@@ -199,15 +202,10 @@
     
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (NSString *)pageTypeString
+{
+    return @"house_model_detail";
 }
-*/
 
 - (void)dealloc
 {

@@ -122,7 +122,12 @@
     self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.contactViewModel.searchId = self.searchId;
     self.contactViewModel.imprId = self.imprId;
-    self.contactViewModel.tracerDict = self.tracerDict;
+    NSMutableDictionary *tracer = @{}.mutableCopy;
+    if (self.tracerDict) {
+        [tracer addEntriesFromDictionary:self.tracerDict];
+        tracer[@"page_type"] = [self pageTypeString];
+    }
+    self.contactViewModel.tracerDict = tracer;
     self.contactViewModel.belongsVC = self;
     self.contactViewModel.contactPhone = self.contactPhone;
     self.contactViewModel.followStatus = self.followStatus;
@@ -189,9 +194,19 @@
             break;
     }
     info[@"contact_phone"] = self.contactViewModel.contactPhone;
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    [tracerDict addEntriesFromDictionary:self.tracerDict];
+    info[@"page_type"] = [self pageTypeString];
+    if (self.tracerDict) {
+        
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        [tracerDict addEntriesFromDictionary:self.tracerDict];
+        info[@"tracer"] = tracerDict;
+    }
     return info;
+}
+
+- (NSString *)pageTypeString
+{
+    return self.tracerDict[@"page_type"];
 }
 
 @end

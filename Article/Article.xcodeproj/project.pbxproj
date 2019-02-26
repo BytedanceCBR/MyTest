@@ -671,12 +671,6 @@
 		70E7C2C81F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BB1F551B7B006CFB6F /* TTAdFullScreenVideoViewController.m */; };
 		70E7C2CC1F551B7C006CFB6F /* TTAdFullScreenVideoViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BD1F551B7B006CFB6F /* TTAdFullScreenVideoViewModel.m */; };
 		70E7C2D01F551B7C006CFB6F /* TTCollectionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */; };
-		760CF74521ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */; };
-		760CF74621ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */; };
-		760CF74721ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */; };
-		760CF74A21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */; };
-		760CF74B21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */; };
-		760CF74C21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */; };
 		764A56D021A53B0900C0A8B2 /* TTRefreshView+HomePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */; };
 		764A56D121A53B0900C0A8B2 /* TTRefreshView+HomePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */; };
 		764A56D221A53B0900C0A8B2 /* TTRefreshView+HomePage.m in Sources */ = {isa = PBXBuildFile; fileRef = 764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */; };
@@ -3588,7 +3582,6 @@
 		D47954B521ECC94E00548965 /* TTCrashAttemptFixTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7BD1F1332DA0002B455 /* TTCrashAttemptFixTask.m */; };
 		D47954B621ECC94E00548965 /* TTRGallery.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBE4C1F13332C0002B455 /* TTRGallery.m */; };
 		D47954B821ECC94E00548965 /* STStringTokenizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E69A4E1B0ADD7C00A3EDCA /* STStringTokenizer.m */; };
-		D47954B921ECC94E00548965 /* FHWebviewViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */; };
 		D47954BA21ECC94E00548965 /* ExploreCollectionCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D09F07A81D944D5000B586B9 /* ExploreCollectionCellView.m */; };
 		D47954BB21ECC94E00548965 /* TTPersonalHomeHeaderInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2F51F1333610002B455 /* TTPersonalHomeHeaderInfoView.m */; };
 		D47954BD21ECC94E00548965 /* TTVCommentListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691001F31D0D200D59CA5 /* TTVCommentListItem.m */; };
@@ -4119,7 +4112,6 @@
 		D479573921ECC94E00548965 /* TTVLabelSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692CA1F31D0D300D59CA5 /* TTVLabelSegmentedControl.m */; };
 		D479573A21ECC94E00548965 /* TTSearchSugModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D0EAC22E1E0ADD26007EB2AA /* TTSearchSugModel.m */; };
 		D479573B21ECC94E00548965 /* TTNewFollowingResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2971F1333600002B455 /* TTNewFollowingResponseModel.m */; };
-		D479573C21ECC94E00548965 /* FHWebviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */; };
 		D479573D21ECC94E00548965 /* HuoShan.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B28455C1DF5402100170DE7 /* HuoShan.m */; };
 		D479573E21ECC94E00548965 /* SSCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D6DF6B1A691C5100375035 /* SSCheckbox.m */; };
 		D479573F21ECC94E00548965 /* TTDetailNatantVideoInfoViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5951F1332D90002B455 /* TTDetailNatantVideoInfoViewModel.m */; };
@@ -7589,10 +7581,6 @@
 		70E7C2BE1F551B7B006CFB6F /* TTCollectionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTCollectionButton.h; sourceTree = "<group>"; };
 		70E7C2BF1F551B7B006CFB6F /* TTCollectionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTCollectionButton.m; sourceTree = "<group>"; };
 		75FE9F321DE80D7E59EC4567 /* Pods-NewsLiteChannel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteChannel.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel.release.xcconfig"; sourceTree = "<group>"; };
-		760CF74321ABE7DE0006BE07 /* FHWebviewViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHWebviewViewController.h; sourceTree = "<group>"; };
-		760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHWebviewViewController.m; sourceTree = "<group>"; };
-		760CF74821ABE82E0006BE07 /* FHWebviewViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHWebviewViewModel.h; sourceTree = "<group>"; };
-		760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHWebviewViewModel.m; sourceTree = "<group>"; };
 		764A56CE21A53B0900C0A8B2 /* TTRefreshView+HomePage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TTRefreshView+HomePage.h"; sourceTree = "<group>"; };
 		764A56CF21A53B0900C0A8B2 /* TTRefreshView+HomePage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "TTRefreshView+HomePage.m"; sourceTree = "<group>"; };
 		7B036C331F9DC94D009AA77A /* TTWendaMethodDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTWendaMethodDelegate.h; sourceTree = "<group>"; };
@@ -12755,10 +12743,6 @@
 		760CF74221ABE7A00006BE07 /* WebView */ = {
 			isa = PBXGroup;
 			children = (
-				760CF74321ABE7DE0006BE07 /* FHWebviewViewController.h */,
-				760CF74421ABE7DE0006BE07 /* FHWebviewViewController.m */,
-				760CF74821ABE82E0006BE07 /* FHWebviewViewModel.h */,
-				760CF74921ABE82E0006BE07 /* FHWebviewViewModel.m */,
 				B30912BE21E3865500E530C3 /* FHRealtorDetailWebViewController.h */,
 				B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */,
 			);
@@ -20385,7 +20369,6 @@
 				486CB7F91ED574C20045D657 /* TTHorizontalCardCell.m in Sources */,
 				A97DBC2F1F1332E40002B455 /* TTCrashAttemptFixTask.m in Sources */,
 				A97DC10E1F1333320002B455 /* TTRGallery.m in Sources */,
-				760CF74A21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				06E69A541B0ADD7C00A3EDCA /* STStringTokenizer.m in Sources */,
 				D09F07A91D944D5000B586B9 /* ExploreCollectionCellView.m in Sources */,
 				A97DC4861F1333640002B455 /* TTPersonalHomeHeaderInfoView.m in Sources */,
@@ -20918,7 +20901,6 @@
 				2D1454A320207FF7006143F8 /* TTAdSplashMediator.m in Sources */,
 				F87696341F31D0D900D59CA5 /* TTVLabelSegmentedControl.m in Sources */,
 				D0EAC2331E0ADD26007EB2AA /* TTSearchSugModel.m in Sources */,
-				760CF74521ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */,
 				A97DC3E21F1333620002B455 /* TTNewFollowingResponseModel.m in Sources */,
 				6B2845B11DF5402100170DE7 /* HuoShan.m in Sources */,
 				06D6DF6C1A691C5100375035 /* SSCheckbox.m in Sources */,
@@ -21851,7 +21833,6 @@
 				B373CBD02174587A008F9905 /* TTCrashAttemptFixTask.m in Sources */,
 				B373CBD12174587A008F9905 /* TTRGallery.m in Sources */,
 				B373CBD32174587A008F9905 /* STStringTokenizer.m in Sources */,
-				760CF74C21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				B373CBD42174587A008F9905 /* ExploreCollectionCellView.m in Sources */,
 				B373CBD52174587A008F9905 /* TTPersonalHomeHeaderInfoView.m in Sources */,
 				B373CBD62174587A008F9905 /* TTVCommentListItem.m in Sources */,
@@ -22382,7 +22363,6 @@
 				B373CE362174587A008F9905 /* TTVLabelSegmentedControl.m in Sources */,
 				B373CE372174587A008F9905 /* TTSearchSugModel.m in Sources */,
 				B373CE382174587A008F9905 /* TTNewFollowingResponseModel.m in Sources */,
-				760CF74721ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */,
 				B373CE392174587A008F9905 /* HuoShan.m in Sources */,
 				B373CE3A2174587A008F9905 /* SSCheckbox.m in Sources */,
 				B373CE3B2174587A008F9905 /* TTDetailNatantVideoInfoViewModel.m in Sources */,
@@ -23297,7 +23277,6 @@
 				D47954B521ECC94E00548965 /* TTCrashAttemptFixTask.m in Sources */,
 				D47954B621ECC94E00548965 /* TTRGallery.m in Sources */,
 				D47954B821ECC94E00548965 /* STStringTokenizer.m in Sources */,
-				D47954B921ECC94E00548965 /* FHWebviewViewModel.m in Sources */,
 				D47954BA21ECC94E00548965 /* ExploreCollectionCellView.m in Sources */,
 				D47954BB21ECC94E00548965 /* TTPersonalHomeHeaderInfoView.m in Sources */,
 				D47954BD21ECC94E00548965 /* TTVCommentListItem.m in Sources */,
@@ -23828,7 +23807,6 @@
 				D479573921ECC94E00548965 /* TTVLabelSegmentedControl.m in Sources */,
 				D479573A21ECC94E00548965 /* TTSearchSugModel.m in Sources */,
 				D479573B21ECC94E00548965 /* TTNewFollowingResponseModel.m in Sources */,
-				D479573C21ECC94E00548965 /* FHWebviewViewController.m in Sources */,
 				D479573D21ECC94E00548965 /* HuoShan.m in Sources */,
 				D479573E21ECC94E00548965 /* SSCheckbox.m in Sources */,
 				D479573F21ECC94E00548965 /* TTDetailNatantVideoInfoViewModel.m in Sources */,
@@ -24743,7 +24721,6 @@
 				FEFA56B2205FB1A8001F50D8 /* TTCrashAttemptFixTask.m in Sources */,
 				FEFA56B6205FB1A8001F50D8 /* TTRGallery.m in Sources */,
 				FEFA56B8205FB1A8001F50D8 /* STStringTokenizer.m in Sources */,
-				760CF74B21ABE82E0006BE07 /* FHWebviewViewModel.m in Sources */,
 				FEFA56BA205FB1A8001F50D8 /* ExploreCollectionCellView.m in Sources */,
 				FEFA56BB205FB1A8001F50D8 /* TTPersonalHomeHeaderInfoView.m in Sources */,
 				FEFA56BC205FB1A8001F50D8 /* TTVCommentListItem.m in Sources */,
@@ -25274,7 +25251,6 @@
 				FEFA596E205FB1A8001F50D8 /* TTVLabelSegmentedControl.m in Sources */,
 				FEFA5970205FB1A8001F50D8 /* TTSearchSugModel.m in Sources */,
 				FEFA5971205FB1A8001F50D8 /* TTNewFollowingResponseModel.m in Sources */,
-				760CF74621ABE7DE0006BE07 /* FHWebviewViewController.m in Sources */,
 				FEFA5972205FB1A8001F50D8 /* HuoShan.m in Sources */,
 				FEFA5973205FB1A8001F50D8 /* SSCheckbox.m in Sources */,
 				FEFA5974205FB1A8001F50D8 /* TTDetailNatantVideoInfoViewModel.m in Sources */,

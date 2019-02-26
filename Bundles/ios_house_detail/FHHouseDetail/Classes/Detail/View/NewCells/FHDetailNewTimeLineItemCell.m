@@ -7,6 +7,7 @@
 
 #import "FHDetailNewTimeLineItemCell.h"
 #import <TTRoute.h>
+#import <FHEnvContext.h>
 
 @interface FHDetailNewTimeLineItemCell ()
 @property (nonatomic, strong) UIButton *maskBtn;
@@ -124,11 +125,23 @@
 
         FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel *)self.currentData;
         if (!model.isExpand) {
+            NSDictionary *dictTrace = self.baseViewModel.detailTracerDic;
+            
+            NSMutableDictionary *mutableDict = [NSMutableDictionary new];
+            [mutableDict setValue:dictTrace[@"page_type"] forKey:@"page_type"];
+            [mutableDict setValue:dictTrace[@"rank"] forKey:@"rank"];
+            [mutableDict setValue:dictTrace[@"origin_from"] forKey:@"origin_from"];
+            [mutableDict setValue:dictTrace[@"origin_search_id"] forKey:@"origin_search_id"];
+            [mutableDict setValue:dictTrace[@"log_pb"] forKey:@"log_pb"];
 
+            [FHEnvContext recordEvent:mutableDict andEventKey:@"click_house_history"];
+            
             NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
             NSDictionary *dict = [self.baseViewModel subPageParams];
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
+            
+            
         }
     }
 }

@@ -1043,30 +1043,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)showHoseDetailPage:(FHSearchHouseDataItemsModel *)model rank:(NSInteger)rank
 {
     //fschema://old_house_detail?house_id=xxx
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.hid,rank];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",model.hid];
     TTRouteUserInfo *userInfo = nil;
+    NSMutableDictionary *tracerDic = [NSMutableDictionary new];
+    [tracerDic addEntriesFromDictionary:self.logBaseParams];
+    tracerDic[@"card_type"] = @"left_pic";
+    tracerDic[@"enter_from"] = @"mapfind";
+    tracerDic[@"element_from"] = @"half_category";
+    tracerDic[@"rank"] = @(rank);
     if (model.logPb) {
-        NSString *groupId = model.hid;
-        NSString *imprId = model.imprId;
-        NSString *searchId = model.searchId;
-        if (groupId) {
-            [strUrl appendFormat:@"&group_id=%@",groupId];
-        }
-        if (imprId) {
-            [strUrl appendFormat:@"&impr_id=%@",imprId];
-        }
-        if (searchId) {
-            [strUrl appendFormat:@"&search_id=%@",searchId];
-        }
-        
-        NSDictionary *dict = @{@"log_pb":model.logPb};
+        tracerDic[@"log_pb"] = model.logPb;
+    }
+    if (tracerDic) {
+        NSDictionary *dict = @{@"tracer":tracerDic};
         userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-    }
-    if (self.configModel.originFrom) {
-        [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
-    }
-    if (_configModel.originSearchId) {
-        [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
     [strUrl appendFormat:@"&house_type=2"];
     NSURL *url =[NSURL URLWithString:strUrl];
@@ -1075,34 +1065,25 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)showNeighborhoodDetailPage:(FHMapSearchDataListModel *)neighborModel
 {
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@&card_type=no_pic&enter_from=mapfind&element_from=half_category&rank=0",neighborModel.nid];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
+    NSMutableDictionary *tracerDic = [NSMutableDictionary new];
+    [tracerDic addEntriesFromDictionary:self.logBaseParams];
+    tracerDic[@"card_type"] = @"no_pic";
+    tracerDic[@"enter_from"] = @"mapfind";
+    tracerDic[@"element_from"] = @"half_category";
+    tracerDic[@"rank"] = @"0";
     TTRouteUserInfo *userInfo = nil;
     if (neighborModel.logPb) {
-        NSString *groupId = neighborModel.logPb.groupId;
-        NSString *imprId = neighborModel.logPb.imprId;
-        NSString *searchId = neighborModel.logPb.searchId;
-        if (groupId) {
-            [strUrl appendFormat:@"&group_id=%@",groupId];
-        }
-        if (imprId) {
-            [strUrl appendFormat:@"&impr_id=%@",imprId];
-        }
-        if (searchId) {
-            [strUrl appendFormat:@"&search_id=%@",searchId];
-        }
-        NSDictionary *dict = @{@"log_pb":[neighborModel.logPb toDictionary]};
+        tracerDic[@"log_pb"] = [neighborModel.logPb toDictionary];
+    }
+    if (tracerDic) {
+        NSDictionary *dict = @{@"tracer":tracerDic};
         userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-    }
-    if (self.configModel.originFrom) {
-        [strUrl appendFormat:@"&origin_from=%@",_configModel.originFrom];
-    }
-    if (_configModel.originSearchId) {
-        [strUrl appendFormat:@"&origin_search_id=%@",_configModel.originSearchId];
     }
     
     [strUrl appendFormat:@"&house_type=4"]; // 小区
     [strUrl appendFormat:@"&source=rent_detail"]; // 租房半屏列表进入小区
-
+    
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
