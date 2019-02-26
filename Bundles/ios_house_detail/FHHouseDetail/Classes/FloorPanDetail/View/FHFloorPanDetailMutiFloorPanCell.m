@@ -128,6 +128,8 @@
         if (model.recommend.count > index) {
             FHDetailFloorPanDetailInfoDataRecommendModel *floorPanInfoModel = model.recommend[index];
             if ([floorPanInfoModel isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
+                
+            
                 NSMutableDictionary *traceParam = [NSMutableDictionary new];
                 traceParam[@"enter_from"] = @"new_detail";
                 traceParam[@"log_pb"] = self.baseViewModel.logPB;
@@ -142,7 +144,8 @@
                                        }.mutableCopy;
                 [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
                 NSMutableDictionary *subPageParams = model.subPageParams;
-                subPageParams[@"tracer"] = nil;
+               
+//                subPageParams[@"tracer"] = nil;
                 if (subPageParams) {
                     [infoDict addEntriesFromDictionary:subPageParams];
                 }
