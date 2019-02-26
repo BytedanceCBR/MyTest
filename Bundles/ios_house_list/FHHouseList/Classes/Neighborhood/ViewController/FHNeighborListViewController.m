@@ -188,6 +188,7 @@
     self.hasValidateData = NO;
     self.viewModel.searchId = NULL;
     [self.tableView reloadData];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
     [self realRequestWithOffset:0];
 }
