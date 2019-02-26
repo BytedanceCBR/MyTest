@@ -19,6 +19,7 @@
 #import "ChatMsg.h"
 #import "IMManager.h"
 #import <TTReachability/TTReachability.h>
+#import "FHBubbleTipManager.h"
 
 @interface FHMessageViewController ()
 
@@ -48,6 +49,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 //    [self.viewModel viewWillAppear];
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];
 }
 
@@ -55,13 +57,17 @@
     [super viewWillDisappear:animated];
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
-
+    [FHBubbleTipManager shareInstance].canShowTip = YES;
 }
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.leftBtn.hidden = YES;
+    self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
     self.customNavBarView.title.text = @"消息";
+}
+
+- (BOOL)leftActionHidden {
+    return YES;
 }
 
 - (void)initView {
@@ -106,7 +112,7 @@
 
 
 - (void)initConstraints {
-    CGFloat bottom = 49;
+    CGFloat bottom = [self getBottomMargin];
     if (@available(iOS 11.0 , *)) {
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
     }
@@ -129,6 +135,10 @@
             make.left.right.bottom.mas_equalTo(self.containerView);
         }
     }];
+}
+
+- (CGFloat)getBottomMargin {
+    return 49;
 }
 
 - (void)initViewModel {

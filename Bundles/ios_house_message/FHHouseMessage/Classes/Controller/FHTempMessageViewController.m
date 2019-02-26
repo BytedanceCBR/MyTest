@@ -13,4 +13,12 @@
     return @"im_message_list";
 }
 
+- (CGFloat)getBottomMargin {
+    return 0;
+}
+
+- (BOOL)leftActionHidden {
+    return NO;
+}
+
 @end

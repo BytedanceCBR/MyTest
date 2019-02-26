@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHNoNetHeaderView *notNetHeader;
 
 - (NSString *)getPageType;
+- (CGFloat) getBottomMargin;
+- (BOOL) leftActionHidden;
 
 @end
 
