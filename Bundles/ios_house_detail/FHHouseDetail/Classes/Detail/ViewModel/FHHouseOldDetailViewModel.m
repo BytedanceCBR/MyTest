@@ -148,9 +148,11 @@
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
+                // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
                 wSelf.detailController.hasValidateData = YES;
                 [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
+                [wSelf handleBottomBarStatus:model.data.status];
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
@@ -195,9 +197,6 @@
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
-    
-    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
-    [self handleBottomBarStatus:model.data.status];
     
     self.detailData = model;
     self.logPB = model.data.logPb;
