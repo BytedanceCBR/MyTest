@@ -31,7 +31,9 @@
 @implementation DeleteAlertDelegate
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    [_viewModel deleteConversation:_conv];
+    if (buttonIndex == 1) {
+        [_viewModel deleteConversation:_conv];
+    }
 }
 
 @end
