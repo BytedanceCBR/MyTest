@@ -241,7 +241,18 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                
+                self.tracerDict[@"log_pb"] = log_pb_str;
+            }
+        }else
+        {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                if (report_params_dic[@"log_pb"]) {
+                    NSDictionary *logPb = [self getDictionaryFromJSONString:report_params_dic[@"log_pb"]];
+                    if (logPb) {
+                        self.tracerDict[@"log_pb"] = logPb;
+                    }
+                }
             }
         }
     }

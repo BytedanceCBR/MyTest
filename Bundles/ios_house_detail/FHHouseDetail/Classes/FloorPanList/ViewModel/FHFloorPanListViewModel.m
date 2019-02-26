@@ -341,24 +341,13 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         if (tracer) {
             [traceParam addEntriesFromDictionary:tracer];
         }
-        traceParam[@"enter_from"] = @"new_detail";
-        //            traceParam[@"log_pb"] = self.baseViewModel.logPB;
-        //            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = @(indexPath.row);
-        //            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-        traceParam[@"element_from"] = @"related";
-        
-//        NSDictionary *dict = @{@"house_type":@(1),
-//                               @"tracer": traceParam
-//                               };
-//
-//        NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-//        [infoDict setValue:model.id forKey:@"floorpanid"];
-//        [infoDict addEntriesFromDictionary:subPageParams];
-//        infoDict[@"house_type"] = @(1);
-//        infoDict[@"tracer"] = traceParam;
-        
+        traceParam[@"element_type"] = @"house_model";
+        traceParam[@"page_type"] = @"house_model_list";
+        [traceParam removeObjectForKey:@"enter_from"];
+        [traceParam removeObjectForKey:@"element_from"];
+        [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
         [FHEnvContext recordEvent:traceParam andEventKey:@"house_show"];
     }
 }
