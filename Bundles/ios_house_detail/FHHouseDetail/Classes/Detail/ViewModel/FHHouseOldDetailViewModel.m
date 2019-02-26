@@ -165,7 +165,7 @@
         } else {
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
