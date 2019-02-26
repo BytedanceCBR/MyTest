@@ -168,10 +168,14 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
-    dict[@"picture_id"] = img.url;
-    dict[@"show_type"] = showType;
-    TRACK_EVENT(@"picture_show", dict);
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = img.url;
+        dict[@"show_type"] = showType;
+        TRACK_EVENT(@"picture_show", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
+    }
 }
 
 //埋点
@@ -181,7 +185,7 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
     dict[@"picture_id"] = img.url;
     dict[@"show_type"] = @"large";
     
@@ -202,7 +206,7 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank"]];
+    [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
     dict[@"picture_id"] = img.url;
     dict[@"show_type"] = @"large";
     

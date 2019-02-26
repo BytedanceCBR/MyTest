@@ -175,6 +175,14 @@
                 }
             }
         }
+        
+        NSDictionary * houseShowDict = [tempCell elementHouseShowUpload];
+        if (houseShowDict.allKeys.count > 0) {
+            // 上报埋点
+            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+            [tracerDic addEntriesFromDictionary:houseShowDict];
+            [FHUserTracker writeEvent:@"house_show" params:tracerDic];
+        }
     }
 }
 
@@ -209,6 +217,39 @@
 //    9.log_pb
     [FHUserTracker writeEvent:@"go_detail" params:self.detailTracerDic];
 
+}
+
+- (NSDictionary *)subPageParams
+{
+    NSMutableDictionary *info = @{}.mutableCopy;
+    if (self.contactViewModel) {
+        info[@"follow_status"] = @(self.contactViewModel.followStatus);
+    }
+    if (self.contactViewModel.contactPhone) {
+        info[@"contact_phone"] = self.contactViewModel.contactPhone;
+    }
+    info[@"house_type"] = @(self.houseType);
+    switch (_houseType) {
+        case FHHouseTypeNewHouse:
+            info[@"court_id"] = self.houseId;
+            break;
+        case FHHouseTypeSecondHandHouse:
+            info[@"house_id"] = self.houseId;
+            break;
+        case FHHouseTypeRentHouse:
+            info[@"house_id"] = self.houseId;
+            break;
+        case FHHouseTypeNeighborhood:
+            info[@"neighborhood_id"] = self.houseId;
+            break;
+        default:
+            info[@"house_id"] = self.houseId;
+            break;
+    }
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    [tracerDict addEntriesFromDictionary:self.detailTracerDic];
+    info[@"tracer"] = tracerDict;
+    return info;
 }
 
 - (void)addStayPageLog:(NSTimeInterval)stayTime

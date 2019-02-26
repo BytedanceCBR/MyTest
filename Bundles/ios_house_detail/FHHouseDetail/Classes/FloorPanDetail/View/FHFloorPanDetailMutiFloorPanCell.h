@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanDetailMutiFloorPanCellModel : JSONModel
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel *> *recommend;
+@property (nonatomic, strong , nullable) NSDictionary *subPageParams;
 @end
 
 NS_ASSUME_NONNULL_END

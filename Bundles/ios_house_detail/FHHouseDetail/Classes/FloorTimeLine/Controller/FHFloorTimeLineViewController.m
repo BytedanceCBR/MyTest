@@ -8,12 +8,15 @@
 #import "FHFloorTimeLineViewController.h"
 #import "FHFloorTimeLineViewModel.h"
 #import "FHDetailNavBar.h"
+#import "FHHouseDetailContactViewModel.h"
+#import "FHDetailBottomBarView.h"
 
 @interface FHFloorTimeLineViewController () <TTRouteInitializeProtocol>
 
 @property (nonatomic , strong) UITableView *timeLineListTable;
 @property (nonatomic , strong) FHFloorTimeLineViewModel *timeLineListViewModel;
 @property (nonatomic , strong) NSString *courtId;
+@property (nonatomic , strong) FHHouseDetailContactViewModel *contactViewModel;
 
 @end
 
@@ -22,18 +25,13 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        _courtId = paramObj.allParams[@"courtId"];
+        _courtId = paramObj.allParams[@"court_id"];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    //设置导航条为黑色
-    [self refreshContentOffset:CGPointMake(0, 500)];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    // Do any additional setup after loading the view.
 
     [self setUpTimeLineListTable];
 
@@ -41,6 +39,7 @@
 
     _timeLineListViewModel = [[FHFloorTimeLineViewModel alloc] initWithController:self tableView:_timeLineListTable courtId:_courtId];
     [self setNavBarTitle:@"楼盘动态"];
+    
 }
 
 - (void)setUpTimeLineListTable

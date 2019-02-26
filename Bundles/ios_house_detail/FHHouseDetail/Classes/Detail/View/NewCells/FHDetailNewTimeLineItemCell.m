@@ -7,6 +7,7 @@
 
 #import "FHDetailNewTimeLineItemCell.h"
 #import <TTRoute.h>
+#import <FHEnvContext.h>
 
 @interface FHDetailNewTimeLineItemCell ()
 @property (nonatomic, strong) UIButton *maskBtn;
@@ -83,15 +84,15 @@
         }];
 
 
-//        _timeLineLeading = [UIView new];
-//        _timeLineLeading.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
-//        [self.contentView addSubview:_timeLineLeading];
-//        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.left.mas_equalTo(24);
-//            make.width.mas_equalTo(1);
-//            make.top.equalTo(self.contentView);
-//            make.bottom.equalTo(self.redDotView.mas_top).offset(-4);
-//        }];
+        _timeLineLeading = [UIView new];
+        _timeLineLeading.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+        [self.contentView addSubview:_timeLineLeading];
+        [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(24);
+            make.width.mas_equalTo(1);
+            make.top.equalTo(self.contentView);
+            make.bottom.equalTo(self.redDotView.mas_top);
+        }];
         
 
 
@@ -119,8 +120,30 @@
 }
 
 - (void)maskButtonClick:(UIButton *)button {
-    NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?courtId=%@",courtId]] userInfo:nil];
+
+    if ([self.currentData isKindOfClass:[FHDetailNewTimeLineItemModel class]]) {
+
+        FHDetailNewTimeLineItemModel *model = (FHDetailNewTimeLineItemModel *)self.currentData;
+        if (!model.isExpand) {
+            NSDictionary *dictTrace = self.baseViewModel.detailTracerDic;
+            
+            NSMutableDictionary *mutableDict = [NSMutableDictionary new];
+            [mutableDict setValue:dictTrace[@"page_type"] forKey:@"page_type"];
+            [mutableDict setValue:dictTrace[@"rank"] forKey:@"rank"];
+            [mutableDict setValue:dictTrace[@"origin_from"] forKey:@"origin_from"];
+            [mutableDict setValue:dictTrace[@"origin_search_id"] forKey:@"origin_search_id"];
+            [mutableDict setValue:dictTrace[@"log_pb"] forKey:@"log_pb"];
+
+            [FHEnvContext recordEvent:mutableDict andEventKey:@"click_house_history"];
+            
+            NSString *courtId = ((FHDetailNewTimeLineItemModel *)self.currentData).courtId;
+            NSDictionary *dict = [self.baseViewModel subPageParams];
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
+            
+            
+        }
+    }
 }
 
 
@@ -140,11 +163,16 @@
         if (model.isExpand) {
             _contentLabel.numberOfLines = 0;
         }
-//        if (model.isFirstCell) {
-//            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.height.mas_equalTo(15);
-//            }];
-//        }
+        if (model.isFirstCell) {
+            [_headLine mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(10);
+            }];
+            
+            _timeLineLeading.hidden = YES;
+        }else
+        {
+            _timeLineLeading.hidden = NO;
+        }
         if (model.isLastCell) {
             [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.bottom.equalTo(self.contentView).offset(-20);

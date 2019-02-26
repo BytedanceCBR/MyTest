@@ -14,6 +14,7 @@
 #import "UIFont+House.h"
 #import "TTUIResponderHelper.h"
 #import "TTDeviceHelper.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
@@ -59,7 +60,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(YES);
+                userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
             }
         }
@@ -68,6 +69,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 
 - (void)followHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType
 {
+    [self addClickFollowLog];
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
@@ -85,7 +87,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(YES);
+                userInfo[@"followStatus"] = @(1);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
             }
         }
@@ -103,15 +105,39 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
             [[ToastManager manager] showToast:@"取消关注失败"];
         }else {
             if (model.status.integerValue == 0) {
-                [[ToastManager manager] showToast:@"取关成功"];
+                [[ToastManager manager] showToast:@"取消关注"];
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(NO);
+                userInfo[@"followStatus"] = @(0);
                 [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
             }
         }
         
     }];
 }
+
+#pragma mark 埋点相关
+- (NSDictionary *)baseParams
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    params[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    params[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    return params;
+}
+
+- (void)addClickFollowLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    [FHUserTracker writeEvent:@"click_follow" params:params];
+}
+
+
 
 @end

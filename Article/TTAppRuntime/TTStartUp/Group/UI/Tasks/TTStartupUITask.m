@@ -26,7 +26,7 @@
 //#import "TTFantasyTimeCountDownManager.h"
 #import "AKActivityTabManager.h"
 #import "AKTaskSettingHelper.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 
 @implementation TTStartupUITask
@@ -68,7 +68,7 @@
     }
 //    [[TTFantasyTimeCountDownManager sharedManager] fetchFantasyActivityTimes];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[[EnvContext shared] client] onStart];
+//        [[[EnvContext shared] client] onStart];
     });
 
     [SharedAppDelegate.window makeKeyAndVisible];

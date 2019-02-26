@@ -20,6 +20,7 @@
 #import "FHFloorPanTitleCell.h"
 #import "FHFloorPanDetailPropertyCell.h"
 #import "FHFloorPanDetailMutiFloorPanCell.h"
+#import "FHHouseDetailSubPageViewController.h"
 
 @interface FHFloorPanDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -27,14 +28,19 @@
 @property (nonatomic , strong) NSMutableArray *currentItems;
 @property (nonatomic , strong) NSString *floorPanId;
 @property (nonatomic , strong) FHDetailFloorPanDetailInfoModel *currentModel;
+@property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
+
 @end
 @implementation FHFloorPanDetailViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
 {
     self = [super init];
     if (self) {
+        _elementShowCaches = [NSMutableDictionary new];
         self.detailController = viewController;
+        _subPageVC = viewController;
         _infoListTable = tableView;
         _floorPanId = floorPanId;
         _currentItems = [NSMutableArray new];
@@ -114,6 +120,7 @@
         [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
             }else
@@ -162,18 +169,26 @@
     }
     
     //楼盘户型
-    if (model.data.recommend) {
+    if (model.data.recommend && model.data.recommend.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.currentItems addObject:grayLine];
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
+        mutiDataModel.subPageParams = [self.subPageVC subPageParams];
+        for (NSInteger i = 0; i < mutiDataModel.recommend.count; i++) {
+            FHDetailFloorPanDetailInfoDataRecommendModel *modelItem = mutiDataModel.recommend[i];
+            if ([modelItem isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {
+                modelItem.index = i;
+            }
+        }
         [self.currentItems addObject:mutiDataModel];
     }
     
     [_infoListTable reloadData];
 }
+
 
 
 #pragma UITableViewDelegate
@@ -204,11 +219,31 @@
             if (!cell) {
                 cell = [[NSClassFromString(identifier) alloc] init];
             }
+            cell.baseViewModel = self;
             [cell refreshWithData:data];
             return cell;
         }
     }
     return [[UITableViewCell alloc] init];
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    // 添加element_show埋点
+    if (!self.elementShowCaches[tempKey]) {
+        self.elementShowCaches[tempKey] = @(YES);
+        FHDetailBaseCell *tempCell = (FHDetailBaseCell *)cell;
+        NSString *element_type = [tempCell elementTypeString:self.houseType];
+        if (element_type.length > 0) {
+            // 上报埋点
+            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+            tracerDic[@"element_type"] = element_type;
+            [tracerDic removeObjectForKey:@"card_type"];
+            [tracerDic removeObjectForKey:@"enter_from"];
+            [tracerDic removeObjectForKey:@"element_from"];
+            [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+        }
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -240,7 +275,6 @@
             }
         }
     }];
-    [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
 
 @end

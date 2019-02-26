@@ -8,7 +8,8 @@
 #import "UIApplication+UserPrivacyPolicy.h"
 #import "SSWebViewController.h"
 #import "AKHelper.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import <FHURLSettings.h>
 
 #define TT_USER_PRIVACY_PROTECTION_ADDRESS  @"https://www.toutiao.com/privacy_protection/"
 
@@ -23,7 +24,7 @@
 + (void)openUserAgreementFromViewController:(UINavigationController *)navVC
                                useBarHeight:(BOOL)useBarHeight
 {
-    [self __upp_openWebViewWithUrl:[NSString stringWithFormat:@"%@/f100/download/user_agreement.html&hide_more=1",EnvContext.networkConfig.host]
+    [self __upp_openWebViewWithUrl:[NSString stringWithFormat:@"%@/f100/download/user_agreement.html&hide_more=1",[FHURLSettings baseURL]]
                              title:NSLocalizedString(@"幸福里用户协议", nil)
                 fromViewController:navVC
                    useNavBarHeight:useBarHeight];

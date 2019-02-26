@@ -30,6 +30,7 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
@@ -104,12 +105,11 @@
 {
     NSDictionary *userInfo = noti.userInfo;
     NSString *followId = [userInfo tt_stringValueForKey:@"followId"];
-    BOOL followStatus = [userInfo tt_boolValueForKey:@"followStatus"];
+    NSInteger followStatus = [userInfo tt_integerValueForKey:@"followStatus"];
     if (![followId isEqualToString:self.houseId]) {
         return;
     }
-    [self.navBar setFollowStatus:followStatus];
-
+    self.followStatus = followStatus;
 }
 - (void)setFollowStatus:(NSInteger)followStatus
 {
@@ -121,6 +121,8 @@
 {
     _tracerDict = tracerDict;
     _phoneCallViewModel.tracerDict = tracerDict;
+    _followUpViewModel.tracerDict = tracerDict;
+
 }
 
 - (void)setBelongsVC:(UIViewController *)belongsVC
@@ -151,6 +153,8 @@
 
 - (void)shareAction
 {
+    [self addClickShareLog];
+    
     if (!self.shareInfo) {
         return;
     }
@@ -188,6 +192,9 @@
         }
     }
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle];
+    if (contactPhone.showRealtorinfo) {
+        [self addRealtorShowLog:contactPhone];
+    }
 }
 
 - (void)contactAction
@@ -218,6 +225,61 @@
     [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }
 
+#pragma mark 埋点相关
+- (NSDictionary *)baseParams
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    params[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
+    params[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    params[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    return params;
+}
+
+- (void)addClickShareLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    [FHUserTracker writeEvent:@"click_share" params:params];
+}
+
+- (void)addShareFormLog:(NSString *)platform
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    params[@"platform"] = platform ? : @"be_null";
+    [FHUserTracker writeEvent:@"share_platform" params:params];
+}
+
+- (void)addRealtorShowLog:(FHDetailContactModel *)contactPhone
+{
+    //    1. event_type ：house_app2c_v2
+    //    2. page_type（页面类型）：old_detail（二手房详情页）
+    //    3. element_type（组件类型）：底部button：old_detail_button，详情页推荐经纪人：old_detail_related
+    //    4. rank
+    //    5. origin_from
+    //    6. origin_search_id
+    //    7.log_pb
+    //    8.realtor_id
+    //    9.realtor_rank:经纪人推荐位置，从0开始，在底部button的为0
+    //    10.realtor_position ：detail_button，detail_related
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDic[@"element_type"] = @"old_detail_button";
+    tracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    tracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    tracerDic[@"realtor_id"] = contactPhone.realtorId ?: @"be_null";
+    tracerDic[@"realtor_rank"] = @(0);
+    tracerDic[@"realtor_position"] = @"detail_button";
+    [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
+}
+
 #pragma mark TTShareManagerDelegate
 - (void)shareManager:(TTShareManager *)shareManager clickedWith:(id<TTActivityProtocol>)activity sharePanel:(id<TTActivityPanelControllerProtocol>)panelController
 {
@@ -231,9 +293,7 @@
     }else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
         platform = @"qzone";
     }
-//    if let shareParams = shareParams {
-//        recordEvent(key: "share_platform", params: shareParams <|> toTracerParams(platform, key: "platform"))
-//    }
+    [self addShareFormLog:platform];
 }
 
 - (void)shareManager:(TTShareManager *)shareManager completedWith:(id<TTActivityProtocol>)activity sharePanel:(id<TTActivityPanelControllerProtocol>)panelController error:(NSError *)error desc:(NSString *)desc
@@ -245,6 +305,7 @@
 {
     if (!_shareManager) {
         _shareManager = [[TTShareManager alloc]init];
+        _shareManager.delegate = self;
     }
     return _shareManager;
 }
@@ -254,4 +315,6 @@
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
+
+
 @end

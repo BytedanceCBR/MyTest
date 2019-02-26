@@ -37,6 +37,7 @@
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodHouseData;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;
 @property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData;
+@property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
 
@@ -151,6 +152,7 @@
                 [self.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
@@ -241,12 +243,28 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
+        NSString *searchId = self.logPB[@"search_id"];
+        NSString *imprId = self.logPB[@"impr_id"];
+        if (searchId == nil) {
+            searchId = self.listLogPB[@"search_id"];
+        }
+        if (imprId == nil) {
+            imprId = self.listLogPB[@"impr_id"];
+        }
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
+        agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
+        agentListModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        agentListModel.searchId = searchId;
+        agentListModel.imprId = imprId;
+        agentListModel.houseId = self.houseId;
+        agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
     }
     // 房源概况
-    if (model.data.houseOverreview) {
+    if (model.data.houseOverreview.list.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
@@ -256,7 +274,7 @@
         [self.items addObject:infoModel];
     }
     // 小区信息
-    if (model.data.neighborhoodInfo) {
+    if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
@@ -295,12 +313,6 @@
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
         [self.items addObject:infoModel];
-    }
-    
-    // 小区信息
-    if (model.data.neighborhoodInfo) {
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
     }
     
     // --
@@ -345,6 +357,7 @@
             [self.items addObject:grayLine];
             FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
             infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
+            infoModel.neighborhoodId = self.neighborhoodId;
             [self.items addObject:infoModel];
         }
         // 周边房源

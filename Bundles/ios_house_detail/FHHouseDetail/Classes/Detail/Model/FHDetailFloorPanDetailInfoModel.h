@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *images;
 @property (nonatomic, strong , nullable) FHDetailNewDataCoreInfoSaleStatusModel *saleStatus ;
 @property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, assign) NSInteger index;
 @end
 
 

@@ -29,7 +29,7 @@
 @end
 @implementation FHFloorCoreInfoViewModel
 
--(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView courtId:(NSString *)courtId houseNameModel:(JSONModel *)model housedisclaimerModel:(JSONModel *)disClaimerModel
 {
     self = [super init];
     if (self) {
@@ -115,6 +115,7 @@
         [FHHouseDetailAPI requestFloorCoreInfoSearch:_courtId completion:^(FHDetailNewCoreDetailModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.detailController.hasValidateData = YES;
                 [wSelf processDetailData:model];
             }else

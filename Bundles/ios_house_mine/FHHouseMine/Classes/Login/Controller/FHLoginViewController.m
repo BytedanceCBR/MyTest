@@ -22,14 +22,13 @@
 
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
 {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        NSDictionary *traceParam = paramObj.allParams[@"tracer"];
+        NSDictionary *params = paramObj.allParams;
         
         self.tracerModel = [[FHTracerModel alloc] init];
-        self.tracerModel.enterFrom = traceParam[@"enter_from"];
-        self.tracerModel.enterType = traceParam[@"enter_type"];
-        self.tracerModel.originFrom = traceParam[@"originFrom"];
+        self.tracerModel.enterFrom = params[@"enter_from"];
+        self.tracerModel.enterType = params[@"enter_type"];
 
         [self addEnterCategoryLog];
     }
@@ -38,8 +37,6 @@
 
 - (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self.tracerModel logDict];
-    tracerDict[@"log_pb"] = @"be_null";
-    tracerDict[@"orign_search_id"] = @"be_null";
     TRACK_EVENT(@"login_page", tracerDict);
 }
 

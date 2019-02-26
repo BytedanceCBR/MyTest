@@ -161,20 +161,21 @@
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"group_id"] = group_id;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = oldDetail.data.logPb ? oldDetail.data.logPb : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
         tracerDic[@"category_name"] = @"related_list";
-        tracerDic[@"element_type"] = @"related";
         tracerDic[@"element_from"] = @"related";
+        tracerDic[@"enter_from"] = @"old_detail";
+        [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
         userInfo[@"title"] = @"周边房源";
         if (oldDetail.data.neighborhoodInfo.id.length > 0) {
-            userInfo[@"neighborhoodId"] = oldDetail.data.neighborhoodInfo.id;
+            userInfo[@"neighborhood_id"] = oldDetail.data.neighborhoodInfo.id;
         }
         if (self.baseViewModel.houseId.length > 0) {
-            userInfo[@"houseId"] = self.baseViewModel.houseId;
+            userInfo[@"house_id"] = self.baseViewModel.houseId;
         }
         userInfo[@"list_vc_type"] = @(2);
         

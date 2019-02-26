@@ -30,7 +30,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
 {
-    self = [super initWithNibName:nil bundle:nil];
+    self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.type = [paramObj.allParams[@"type"] integerValue];
     }

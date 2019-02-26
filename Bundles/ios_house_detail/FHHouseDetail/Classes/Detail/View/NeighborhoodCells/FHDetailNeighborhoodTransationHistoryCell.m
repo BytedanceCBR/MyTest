@@ -118,11 +118,19 @@
 
 - (void)loadMoreButtonClick:(UIButton *)btn {
     FHDetailNeighborhoodTransationHistoryModel *model = (FHDetailNeighborhoodTransationHistoryModel *)self.currentData;
-    
     if (model && model.totalSales.hasMore) {
-        NSURL* url = [NSURL URLWithString:@"snssdk1370://transaction_history"];
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"enter_type"] = @"click";
+        tracerDic[@"category_name"] = @"neighborhood_trade_list";
+        tracerDic[@"element_from"] = @"neighborhood_trade";
+        [FHUserTracker writeEvent:@"click_house_deal" params:tracerDic];
+        
+        NSURL* url = [NSURL URLWithString:@"snssdk1370://neighborhood_sales_list"];
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"neighborhoodId"] = model.neighborhoodId;
+        [dict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
+        dict[@"neighborhood_id"] = model.neighborhoodId;
+        dict[@"tracer"] = tracerDic;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
