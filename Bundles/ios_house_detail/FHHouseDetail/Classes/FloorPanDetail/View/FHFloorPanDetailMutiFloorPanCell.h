@@ -7,7 +7,7 @@
 
 #import "FHDetailBaseCell.h"
 
-@class FHDetailFloorPanDetailInfoDataRecommendModel;
+@class FHDetailFloorPanDetailInfoDataRecommendModel,FHHouseDetailSubPageViewController;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanDetailMutiFloorPanCellModel : JSONModel
 @property (nonatomic, strong , nullable) NSArray<FHDetailFloorPanDetailInfoDataRecommendModel *> *recommend;
-@property (nonatomic, strong , nullable) NSDictionary *subPageParams;
+@property(nonatomic , weak) FHHouseDetailSubPageViewController *subPageVC;
 @end
 
 NS_ASSUME_NONNULL_END

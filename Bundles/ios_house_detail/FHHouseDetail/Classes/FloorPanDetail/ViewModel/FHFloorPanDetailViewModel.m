@@ -176,7 +176,7 @@
         
         FHFloorPanDetailMutiFloorPanCellModel *mutiDataModel = [[FHFloorPanDetailMutiFloorPanCellModel alloc] init];
         mutiDataModel.recommend = model.data.recommend;
-        mutiDataModel.subPageParams = [self.subPageVC subPageParams];
+        mutiDataModel.subPageVC = self.subPageVC;
         for (NSInteger i = 0; i < mutiDataModel.recommend.count; i++) {
             FHDetailFloorPanDetailInfoDataRecommendModel *modelItem = mutiDataModel.recommend[i];
             if ([modelItem isKindOfClass:[FHDetailFloorPanDetailInfoDataRecommendModel class]]) {

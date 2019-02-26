@@ -122,7 +122,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
         [self addClickCallLogWithExtra:nil isVirtual:NO];
-        // add by zjing for test 返回什么错误呢？
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         failBlock(error);
         return;
@@ -302,7 +301,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 #pragma mark delegate
 - (void)followUpActionByFollowId:(NSString *)followId houseType:(FHHouseType)houseType
 {
-    [self.followUpViewModel followHouseByFollowId:followId houseType:houseType actionType:houseType];
+    [self.followUpViewModel silentFollowHouseByFollowId:followId houseType:houseType actionType:houseType showTip:NO];
 }
 
 
