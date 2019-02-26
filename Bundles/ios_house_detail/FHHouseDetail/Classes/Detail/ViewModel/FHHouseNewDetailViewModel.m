@@ -125,7 +125,7 @@
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             wSelf.dataModel = model;
             wSelf.detailController.hasValidateData = YES;
-            [self.detailController.emptyView hideEmptyView];
+            [wSelf.detailController.emptyView hideEmptyView];
             wSelf.bottomBar.hidden = NO;
             [wSelf processDetailData:model];
         }else
