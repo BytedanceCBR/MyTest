@@ -110,12 +110,28 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    
+}
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
-    
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+
+}
+
+#pragma mark - for keyboard show
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        [self.view endEditing:YES];
+    }
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
