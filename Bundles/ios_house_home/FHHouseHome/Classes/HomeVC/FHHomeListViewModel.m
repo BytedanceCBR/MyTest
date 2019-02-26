@@ -44,6 +44,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property (nonatomic, strong) TTHttpTask * requestOriginTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
+@property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 
 @end
 
@@ -122,6 +123,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             [self resetCurrentHouseCacheData];
+            self.isRetryedPullDownRefresh = YES;
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
         
@@ -452,10 +454,26 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             if (model.data.items.count == 0 && self.dataSource.modelsArray.count != 0) {
-                [self.tableViewV finishPullDownWithSuccess:YES];
+                if (self.isRetryedPullDownRefresh) {
+                    self.isRetryedPullDownRefresh = NO;
+                    [self.tableViewV finishPullDownWithSuccess:YES];
+                    [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
+                }else
+                {
+                    [self.tableViewV finishPullDownWithSuccess:YES];
+//
+//                    if (self.dataSource.modelsArray.count != 0) {
+//                        [self.tableViewV finishPullDownWithSuccess:YES];
+//                    }else
+//                    {
+//                        [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
+//                    }
+                }
                 return;
             }
         }
+        
+        self.isRetryedPullDownRefresh = NO;
         
         if (kIsNSString(cahceKey) && pullType == FHHomePullTriggerTypePullDown) {
             self.originSearchIdCache[cahceKey] = model.data.searchId;
