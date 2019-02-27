@@ -274,7 +274,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人详情页";
-    info[@"realtorId"] = contactPhone.realtorId;
+    info[@"realtor_id"] = contactPhone.realtorId;
     info[@"delegate"] = self;
     info[@"trace"] = self.tracerDict;
     info[@"house_id"] = _houseId;
