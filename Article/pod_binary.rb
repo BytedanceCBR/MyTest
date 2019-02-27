@@ -60,7 +60,8 @@ BEGIN {
   end
 }
 def startSpeed()
-  load 'speed.rb'
+    #load 'speed.rb'
+    require_relative 'speed.rb'
 end
 
 def target_patch(name,options = nil)
