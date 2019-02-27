@@ -12,6 +12,7 @@
 #import "FHSuggestionListNavBar.h"
 
 typedef enum : NSUInteger {
+    FHEnterSuggestionTypeDefault       =   0,
     FHEnterSuggestionTypeHome       =   1,
     FHEnterSuggestionTypeFindTab       =   2,
     FHEnterSuggestionTypeList       =   3,
