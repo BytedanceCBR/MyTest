@@ -294,8 +294,8 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     
     if ([cityId isKindOfClass:[NSString class]] && cityId.length > 0) {
         NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
-        // 退出登录
-        [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
+        // 注销登录
+        [TTAccount logoutAndClearCookie:^(BOOL success, NSError * _Nullable error) {
             callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
         }];
         [FHEnvContext openLogoutSuccessURL:url completion:^(BOOL isSuccess) {
