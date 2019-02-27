@@ -138,10 +138,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //更新切换
             [self updateCategoryViewSegmented:isFirstChange];
             
+
             //过滤多余刷新
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
                 return;
             }
+            
+            //清除缓存数据
+            [self resetAllCacheData];
             
             //非首次只刷新头部
             if (!isFirstChange && [configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
@@ -162,9 +166,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             //刷新头部
             [self reloadHomeTableHeaderSection];
-            
-            //清除缓存数据
-            [self resetAllCacheData];
             
             //请求推荐房源
             [self requestOriginData:isFirstChange];
