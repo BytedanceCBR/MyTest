@@ -203,8 +203,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 
                 //判断是否已有缓存数据，如有则直接使用缓存
                 if (modelsCache != nil && kIsNSArray(modelsCache) && modelsCache.count !=0) {
+                    [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
                     [self reloadHomeTableForSwitchFromCache:modelsCache];
                     self.stayTime = [self getCurrentTime];
+                    //更新切换
                     [[FHEnvContext sharedInstance] updateOriginFrom:[self pageTypeString] originSearchId:self.itemsSearchIdCache[cacheKey]];
                     self.dataSource.originSearchId = self.originSearchIdCache[cacheKey];
                 }else
