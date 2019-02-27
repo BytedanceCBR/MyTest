@@ -129,6 +129,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+//       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         __block BOOL isFirstChange = YES;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
@@ -146,7 +147,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             //非首次只刷新头部
-            if (!isFirstChange && [configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
+            if (!isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
                     if ([self.tableViewV numberOfRowsInSection:0] > 0) {
@@ -160,7 +161,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             //防止二次刷新
-            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && configDataModel.cityAvailability.enable == YES) {
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && (configDataModel.cityAvailability.enable == YES || isFirstChange)) {
                 return;
             }
             //刷新头部
@@ -338,6 +339,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             return;
         }
         
+        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
+        
         if (model.data.items.count == 0) {
             self.tableViewV.hidden = YES;
             
@@ -381,7 +384,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.categoryView.segmentedControl.userInteractionEnabled = YES;
         [self.tableViewV finishPullDownWithSuccess:YES];
         [self reloadHomeTableHouseSection:model.data.items];
-        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         
         
         self.tableViewV.hasMore = model.data.hasMore;
@@ -447,6 +449,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
         }
         
+        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
+        
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable) {
@@ -489,7 +493,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
         
         
-        [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         self.tableViewV.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
         
