@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)   NSString* houseId; // 房源id
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
-@property (nonatomic, strong)FHHouseDetailFollowUpViewModel *followUpViewModel;
+//@property (nonatomic, strong)FHHouseDetailFollowUpViewModel *followUpViewModel;
 
 @end
 

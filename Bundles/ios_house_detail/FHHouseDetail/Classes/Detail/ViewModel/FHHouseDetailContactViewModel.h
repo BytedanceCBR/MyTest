@@ -12,11 +12,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseDetailFollowUpViewModel;
 @interface FHHouseDetailContactViewModel : NSObject
 
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, strong) FHDetailShareInfoModel *shareInfo;
-
+@property (nonatomic, strong, readonly)FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
 @property (nonatomic, assign) NSInteger followStatus;

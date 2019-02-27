@@ -249,8 +249,8 @@
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-        agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
-        agentListModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
