@@ -163,7 +163,7 @@
             if ([floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
                 NSMutableDictionary *traceParam = [NSMutableDictionary new];
                 traceParam[@"enter_from"] = @"new_detail";
-                traceParam[@"log_pb"] = self.baseViewModel.listLogPB;
+                traceParam[@"log_pb"] = floorPanInfoModel.logPb;
                 traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
                 traceParam[@"card_type"] = @"left_pic";
                 traceParam[@"rank"] = @(floorPanInfoModel.index);
