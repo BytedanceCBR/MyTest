@@ -144,11 +144,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
-            //清除缓存数据
-            [self resetAllCacheData];
-            
             //非首次只刷新头部
             if (!isFirstChange && [configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
+                [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
                     if ([self.tableViewV numberOfRowsInSection:0] > 0) {
                         [self.tableViewV beginUpdates];
@@ -166,6 +164,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             //刷新头部
             [self reloadHomeTableHeaderSection];
+            
+            //清除缓存数据
+            [self resetAllCacheData];
             
             //请求推荐房源
             [self requestOriginData:isFirstChange];
@@ -510,6 +511,34 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     [self.itemsSearchIdCache removeAllObjects];
     [self.originSearchIdCache removeAllObjects];
     [self.isItemsHasMoreCache removeAllObjects];
+}
+
+//清除所有缓存数据
+- (void)resetAllOthersCacheData
+{
+    for (NSString *key in self.itemsDataCache.allKeys) {
+        if (![key isEqualToString:[self getCurrentHouseTypeChacheKey]]) {
+            [self.itemsDataCache removeObjectForKey:key];
+        }
+    }
+    
+    for (NSString *key in self.itemsSearchIdCache.allKeys) {
+        if (![key isEqualToString:[self getCurrentHouseTypeChacheKey]]) {
+            [self.itemsSearchIdCache removeObjectForKey:key];
+        }
+    }
+    
+    for (NSString *key in self.originSearchIdCache.allKeys) {
+        if (![key isEqualToString:[self getCurrentHouseTypeChacheKey]]) {
+            [self.originSearchIdCache removeObjectForKey:key];
+        }
+    }
+    
+    for (NSString *key in self.isItemsHasMoreCache.allKeys) {
+        if (![key isEqualToString:[self getCurrentHouseTypeChacheKey]]) {
+            [self.isItemsHasMoreCache removeObjectForKey:key];
+        }
+    }
 }
 
 //清除当前选中的缓存数据
