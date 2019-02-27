@@ -190,6 +190,9 @@
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_type"] = @"same_neighborhood";
+        tracerDic[@"search_id"] = dataItem.searchId ? dataItem.searchId : @"be_null";
+        tracerDic[@"group_id"] = dataItem.groupId ? dataItem.groupId : (dataItem.hid ? dataItem.hid : @"be_null");
+        tracerDic[@"impr_id"] = dataItem.imprId ? dataItem.imprId : @"be_null";
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }
