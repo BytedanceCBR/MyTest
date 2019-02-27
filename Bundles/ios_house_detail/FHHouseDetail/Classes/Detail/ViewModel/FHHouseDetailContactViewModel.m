@@ -41,7 +41,7 @@
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
-@property (nonatomic, strong)FHHouseDetailFollowUpViewModel *followUpViewModel;
+@property (nonatomic, strong, readwrite)FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
 @end
