@@ -307,7 +307,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
                 [traceParam addEntriesFromDictionary:tracer];
             }
             traceParam[@"enter_from"] = @"new_detail";
-//            traceParam[@"log_pb"] = self.baseViewModel.logPB;
+//            traceParam[@"log_pb"] = self.baseViewModel.listLogPB;
 //            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
             traceParam[@"card_type"] = @"left_pic";
             traceParam[@"rank"] = @(indexPath.row);

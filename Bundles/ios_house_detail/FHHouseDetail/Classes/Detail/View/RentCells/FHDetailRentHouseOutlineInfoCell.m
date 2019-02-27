@@ -138,7 +138,7 @@
     if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
         // click_feedback
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
         
         NSString *openUrl = @"sslocal://webview";

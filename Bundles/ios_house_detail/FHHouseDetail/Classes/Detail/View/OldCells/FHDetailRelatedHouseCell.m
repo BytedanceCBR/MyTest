@@ -161,7 +161,7 @@
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"group_id"] = group_id;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"category_name"] = @"related_list";
         tracerDic[@"element_from"] = @"related";
         tracerDic[@"enter_from"] = @"old_detail";

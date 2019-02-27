@@ -146,7 +146,6 @@
     self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
     
     self.detailData = model;
-    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片

@@ -201,7 +201,6 @@
 - (void)processDetailData:(FHDetailOldModel *)model {
     
     self.detailData = model;
-    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -244,14 +243,8 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailAgentListModel *agentListModel = [[FHDetailAgentListModel alloc] init];
-        NSString *searchId = self.logPB[@"search_id"];
-        NSString *imprId = self.logPB[@"impr_id"];
-        if (searchId == nil) {
-            searchId = self.listLogPB[@"search_id"];
-        }
-        if (imprId == nil) {
-            imprId = self.listLogPB[@"impr_id"];
-        }
+        NSString *searchId = self.listLogPB[@"search_id"];
+        NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];

@@ -167,7 +167,7 @@
                 NSString *category_name = @"be_null";
                 NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
                 tracerDic[@"enter_type"] = @"click";
-                tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+                tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
                 switch (index) {
                     case 0:
                         // 在售房源
