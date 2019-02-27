@@ -246,7 +246,11 @@
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
-        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
+        NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:model.data.recommendedRealtors];
+        if (tempArray.count > 5) {
+            tempArray = [tempArray subarrayWithRange:NSMakeRange(0, 5)];
+        }
+        agentListModel.recommendedRealtors = tempArray;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
