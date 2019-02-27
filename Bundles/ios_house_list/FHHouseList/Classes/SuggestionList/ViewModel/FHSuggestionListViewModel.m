@@ -262,6 +262,9 @@
 - (NSString *)pageTypeString {
     NSString *retPageTypeStr = @"";
     switch (self.fromPageType) {
+        case FHEnterSuggestionTypeDefault:
+            retPageTypeStr = self.pageTypeStr.length > 0 ? self.pageTypeStr : @"be_null";
+            break;
         case FHEnterSuggestionTypeHome:
             retPageTypeStr = @"maintab";
             break;
