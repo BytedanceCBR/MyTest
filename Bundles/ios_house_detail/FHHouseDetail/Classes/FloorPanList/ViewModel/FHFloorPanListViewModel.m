@@ -335,6 +335,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     // 添加element_show埋点
     if (!self.elementShowCaches[tempKey]) {
         self.elementShowCaches[tempKey] = @(YES);
+        
         NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
         NSDictionary *tracer = subPageParams[@"tracer"];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
@@ -348,6 +349,29 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         [traceParam removeObjectForKey:@"enter_from"];
         [traceParam removeObjectForKey:@"element_from"];
         [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
+        if (_currentItems.count > indexPath.row) {
+            FHDetailNewDataFloorpanListListModel *itemModel = (FHDetailNewDataFloorpanListListModel *)_currentItems[indexPath.row];
+            
+            if (itemModel.logPb) {
+                [traceParam setValue:itemModel.logPb forKey:@"log_pb"];
+            }
+            
+            if (itemModel.searchId) {
+                [traceParam setValue:itemModel.searchId forKey:@"search_id"];
+            }
+            
+            if (itemModel.groupId) {
+                [traceParam setValue:itemModel.groupId forKey:@"group_id"];
+            }else
+            {
+                [traceParam setValue:itemModel.id forKey:@"group_id"];
+            }
+            
+            if (itemModel.imprId) {
+                [traceParam setValue:itemModel.imprId forKey:@"impr_id"];
+            }
+        }
+        
         [FHEnvContext recordEvent:traceParam andEventKey:@"house_show"];
     }
 }

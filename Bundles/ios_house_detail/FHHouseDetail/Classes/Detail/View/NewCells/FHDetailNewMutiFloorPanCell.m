@@ -108,6 +108,22 @@
         if (itemModel.logPb) {
             [tracerDic addEntriesFromDictionary:itemModel.logPb];
         }
+        
+        if (itemModel.searchId) {
+            [tracerDic setValue:itemModel.searchId forKey:@"search_id"];
+        }
+        
+        if (itemModel.groupId) {
+            [tracerDic setValue:itemModel.groupId forKey:@"group_id"];
+        }else
+        {
+            [tracerDic setValue:itemModel.id forKey:@"group_id"];
+        }
+        
+        if (itemModel.imprId) {
+            [tracerDic setValue:itemModel.imprId forKey:@"impr_id"];
+        }
+        
         [tracerDic removeObjectForKey:@"enter_from"];
         [tracerDic removeObjectForKey:@"element_from"];
         [tracerDic removeObjectForKey:@"house_type"];
