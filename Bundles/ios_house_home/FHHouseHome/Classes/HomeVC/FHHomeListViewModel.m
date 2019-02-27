@@ -83,6 +83,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                         [self.tableViewV finishPullUpWithSuccess:YES];
                     });
                 });
+                [self.tableViewV.mj_footer endRefreshing];
                 [[ToastManager manager] showToast:@"网络异常"];
             }
         }];
