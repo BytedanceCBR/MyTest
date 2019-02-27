@@ -117,6 +117,11 @@
     [self.navBar setFollowStatus:followStatus];
 }
 
+- (void)hideFollowBtn
+{
+    [self.navBar hideFollowBtn];
+}
+
 - (void)setTracerDict:(NSDictionary *)tracerDict
 {
     _tracerDict = tracerDict;
