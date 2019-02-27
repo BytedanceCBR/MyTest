@@ -319,13 +319,13 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
                                    };
 
             NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-            [infoDict setValue:model.id forKey:@"floorpanid"];
+            [infoDict setValue:model.id forKey:@"floor_plan_id"];
             [infoDict addEntriesFromDictionary:subPageParams];
             infoDict[@"house_type"] = @(1);
             infoDict[@"tracer"] = traceParam;
             TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_plan_detail"] userInfo:info];
         } 
     }
 }
