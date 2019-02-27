@@ -1548,7 +1548,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.2
   ios_house_im:
-    :commit: 8ab0cb68df0e777a5ae901b19bf732159d9bdf30
+    :commit: 852a8df010553b957fb8de86f0a31663c698dd6e
     :git: git@code.byted.org:fproject/ios_house_im.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1603,7 +1603,7 @@ SPEC CHECKSUMS:
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FLAnimatedImage: 09a3ee0b4246b03d85212884ccac54b5ffcd4945
   FLEX: b30872f2be292005f4f6cec85b045940f35f8026
-  FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
+  FMDB: 7ece7a550d5f674b1496761ef828e8bd2021b9ae
   Godzippa: 4e77a46fd45c66faa0a9afabfc374f4d7b2e6ba4
   Heimdallr: e7dc47caa98c26fda49617dbbb882ed2783828d2
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
