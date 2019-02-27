@@ -33,6 +33,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 - (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId;
 - (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock;
 - (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict;
+- (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice;
 @end
 
 NS_ASSUME_NONNULL_END

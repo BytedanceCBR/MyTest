@@ -236,6 +236,37 @@
         propertyModel.baseInfo = model.data.baseInfo;
         [self.items addObject:propertyModel];
     }
+    
+    //生成IM卡片的schema用 个人认为server应该加接口
+    NSString *imgUrl = @"";
+    if (model.data.houseImage.count > 0) {
+        FHDetailHouseDataItemsHouseImageModel *imageInfo = model.data.houseImage[0];
+        imgUrl = imageInfo.url ?: @"";
+    }
+    NSString *area = @"";
+    NSString *price = @"";
+    if (model.data.coreInfo.count >= 3) {
+        FHDetailOldDataCoreInfoModel *areaInfo = model.data.coreInfo[2];
+        area = areaInfo.value ?: @"";
+        FHDetailOldDataCoreInfoModel *priceInfo = model.data.coreInfo[0];
+        price = priceInfo.value ?: @"";
+    }
+    NSString *face = @"";
+    NSString *avgPrice = @"";
+    if (model.data.baseInfo.count >= 3) {
+        FHDetailOldDataCoreInfoModel *baseInfo = model.data.baseInfo[2];
+        face = baseInfo.value ?: @"";
+        FHDetailOldDataCoreInfoModel *avgPriceInfo = model.data.baseInfo[0];
+        avgPrice = avgPriceInfo.value ?: @"";
+    }
+    NSString *tag = @"";
+    if (model.data.tags > 0) {
+        FHSearchHouseDataItemsTagsModel *tagInfo = model.data.tags[0];
+        tag = tagInfo.content ?: @"";
+    }
+    NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
+    NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
+    
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -253,6 +284,7 @@
         agentListModel.tableView = self.tableView;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         agentListModel.followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
         agentListModel.followUpViewModel.tracerDict = self.detailTracerDic;
@@ -315,6 +347,7 @@
     }
     
     // --
+    [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {

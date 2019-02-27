@@ -277,7 +277,9 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setObject:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
     [params setObject:title  forKey:KSCHEMA_CHAT_TITLE];
-    [params setObject:@"message_list" forKey:@"origin_from"];
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    [tracer setObject:@"message_list" forKey:@"origin_from"];
+    [params setObject:tracer forKey:@"tracer"];
     NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
     [self clickImMessageEvent:conv];
     [[TTRoute sharedRoute] openURLByPushViewController: openUrl];
