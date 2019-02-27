@@ -313,7 +313,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             traceParam[@"rank"] = @(indexPath.row);
 //            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
             traceParam[@"element_from"] = @"related";
-            
+            traceParam[@"log_pb"] = model.logPb;
             NSDictionary *dict = @{@"house_type":@(1),
                                    @"tracer": traceParam
                                    };
