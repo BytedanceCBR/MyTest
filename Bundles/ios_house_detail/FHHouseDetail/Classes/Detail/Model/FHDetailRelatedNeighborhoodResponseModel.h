@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeLng;
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
 @property (nonatomic, strong , nullable) NSArray<FHDetailRelatedNeighborhoodResponseDataItemsImagesModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
