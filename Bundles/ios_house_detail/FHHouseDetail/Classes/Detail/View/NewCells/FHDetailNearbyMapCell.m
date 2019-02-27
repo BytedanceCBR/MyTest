@@ -197,6 +197,7 @@ static const float kSegementedPadingTop = 5;
     }
     if (isRetry) {
         [self.mapImageView addSubview:_mapView];
+        _mapView.hidden = YES;
     }
 }
 
@@ -370,7 +371,6 @@ static const float kSegementedPadingTop = 5;
     [_mapMaskBtnLocation mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.locationList);
     }];
-//    [_dataModel.tableView endUpdates];
 
     if (self.indexChangeCallBack) {
         self.indexChangeCallBack();
