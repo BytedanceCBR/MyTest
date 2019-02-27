@@ -56,7 +56,7 @@
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#a1aab3"]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:10],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#a1aab3"]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
@@ -153,7 +153,7 @@
     _lineHeight = 0;
     self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
     
-    _ownerLabel = [UILabel createLabel:@"" textColor:@"#3d6e99" fontSize:14];
+    _ownerLabel = [UILabel createLabel:@"" textColor:@"#3d6e99" fontSize:10];
     [self.contentView addSubview:_ownerLabel];
     
     _tapButton = [[UIButton alloc] init];
@@ -166,22 +166,22 @@
     _disclaimerContent = [[YYLabel alloc] init];
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor colorWithHexString:@"#a1aab3"];
-    _disclaimerContent.font = [UIFont themeFontRegular:12];
+    _disclaimerContent.font = [UIFont themeFontRegular:10];
     _disclaimerContent.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
     [self.contentView addSubview:_disclaimerContent];
     
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(14);
-        make.height.mas_equalTo(20);
-        make.right.mas_equalTo(self.contactIcon.mas_left).offset(-10);
+        make.top.mas_equalTo(5);
+        make.height.mas_equalTo(14);
+        make.right.mas_equalTo(self.contactIcon.mas_left).offset(-6);
     }];
     
     [self.contactIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_lessThanOrEqualTo(-20);
         make.centerY.mas_equalTo(self.ownerLabel);
         make.width.mas_equalTo(20);
-        make.height.mas_equalTo(13);
+        make.height.mas_equalTo(14);
     }];
     
     self.contactIcon.userInteractionEnabled = NO;
@@ -195,8 +195,8 @@
     [self.disclaimerContent mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(3);
-        make.bottom.mas_equalTo(-14);
+        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
+        make.bottom.mas_equalTo(-5);
     }];
     
     [self.tapButton addTarget:self action:@selector(openPhoto:) forControlEvents:UIControlEventTouchUpInside];
@@ -266,9 +266,9 @@
     [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(14);
+        make.top.mas_equalTo(5);
         make.height.mas_equalTo(self.lineHeight);
-        make.bottom.mas_equalTo(-14);
+        make.bottom.mas_equalTo(-5);
     }];
 }
 
@@ -278,9 +278,9 @@
     [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(3);
+        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
         make.height.mas_equalTo(self.lineHeight);
-        make.bottom.mas_equalTo(-14);
+        make.bottom.mas_equalTo(-5);
     }];
 }
 
@@ -297,8 +297,8 @@
         [self.disclaimerContent mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(20);
             make.right.mas_equalTo(-20);
-            make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(3);
-            make.bottom.mas_equalTo(-14);
+            make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
+            make.bottom.mas_equalTo(-5);
             make.height.mas_equalTo(self.lineHeight);
         }];
         [self.contentView setNeedsLayout];
