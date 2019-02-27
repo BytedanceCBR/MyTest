@@ -323,8 +323,8 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         }
     }
     
-    if ([controller respondsToSelector:@selector(setUpCloseBtnControlForWeb:)]) {
-        [controller performSelector:@selector(setUpCloseBtnControlForWeb:) withObject:@(isShowCloseBtn)];
+    if ([controller respondsToSelector:@selector(setUpCloseBtnControlForNaviBackBtn:)]) {
+        [controller performSelector:@selector(setUpCloseBtnControlForNaviBackBtn:) withObject:@(isShowCloseBtn)];
     }
 }
 
