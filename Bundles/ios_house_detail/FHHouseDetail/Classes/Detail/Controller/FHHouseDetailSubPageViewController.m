@@ -11,6 +11,7 @@
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
 #import <TTUIWidget/UIViewController+Track.h>
+#import <FHEnvContext.h>
 
 @interface FHHouseDetailSubPageViewController ()
 
@@ -94,6 +95,15 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setupUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (![FHEnvContext isNetworkConnected]) {
+        [self.contactViewModel hideFollowBtn];
+    }
 }
 
 - (void)setupUI

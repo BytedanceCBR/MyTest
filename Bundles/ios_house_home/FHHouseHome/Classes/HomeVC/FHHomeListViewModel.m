@@ -67,7 +67,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.dataSource = self.dataSource;
         self.hasShowedData = NO;
         self.isHasCallBackForFirstTime = NO;
-
+        
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
         
@@ -89,20 +89,20 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.mj_footer = self.refreshFooter;
         
         // 上拉刷新，修改tabbar条和请求数据
-//        [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
-//            StrongSelf;
-//            if ([FHEnvContext isNetworkConnected]) {
-//                [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
-//            }else
-//            {
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [self.tableViewV finishPullUpWithSuccess:YES];
-//                    });
-//                });
-//                [[ToastManager manager] showToast:@"网络异常"];
-//            }
-//        }];
+        //        [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
+        //            StrongSelf;
+        //            if ([FHEnvContext isNetworkConnected]) {
+        //                [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
+        //            }else
+        //            {
+        //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        //                    dispatch_async(dispatch_get_main_queue(), ^{
+        //                        [self.tableViewV finishPullUpWithSuccess:YES];
+        //                    });
+        //                });
+        //                [[ToastManager manager] showToast:@"网络异常"];
+        //            }
+        //        }];
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
@@ -142,14 +142,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
                 return;
             }
-
+            
             //非首次只刷新头部
             if (!isFirstChange && [configDataModel.currentCityId isEqualToString:[[FHEnvContext sharedInstance] getConfigFromCache].currentCityId] && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
                 [UIView performWithoutAnimation:^{
                     if ([self.tableViewV numberOfRowsInSection:0] > 0) {
                         [self.tableViewV beginUpdates];
-                            NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
-                            [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                        NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
+                        [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
                         [self.tableViewV endUpdates];
                     }
                 }];
@@ -186,12 +186,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     self.currentHouseType = [numberType integerValue];
                 }
             }
-        
+            
             NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
             
             self.tableViewV.hasMore = [self.isItemsHasMoreCache[cacheKey] boolValue];
             [self updateTableViewWithMoreData:[self.isItemsHasMoreCache[cacheKey] boolValue]];
-
+            
             if (kIsNSString(cacheKey)) {
                 NSArray *modelsCache = self.itemsDataCache[cacheKey];
                 
@@ -312,9 +312,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         //10秒还没有请求回调则进行尝试新请求
         [self performSelector:@selector(checkoutIsRequestCanCallBack:) withObject:nil afterDelay:10];
     }
-
+    
     WeakSelf;
-   self.requestOriginTask = [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
+    self.requestOriginTask = [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         self.isHasCallBackForFirstTime = YES;
         if (!model || error) {
@@ -365,7 +365,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         if (kIsNSString(cahceKey)) {
             self.originSearchIdCache[cahceKey] = model.data.searchId;
         }
-       
+        
         if (kIsNSString(cahceKey)) {
             self.itemsSearchIdCache[cahceKey] = model.data.searchId;
         }
@@ -461,13 +461,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 }else
                 {
                     [self.tableViewV finishPullDownWithSuccess:YES];
-//
-//                    if (self.dataSource.modelsArray.count != 0) {
-//                        [self.tableViewV finishPullDownWithSuccess:YES];
-//                    }else
-//                    {
-//                        [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
-//                    }
                 }
                 return;
             }
@@ -496,7 +489,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         self.tableViewV.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
-
+        
         [self checkLoadingAndEmpty];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];

@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fillFormAction;
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
 
+- (void)hideFollowBtn;
+
 @end
 
 NS_ASSUME_NONNULL_END
