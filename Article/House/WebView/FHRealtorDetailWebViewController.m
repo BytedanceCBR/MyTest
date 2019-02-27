@@ -67,7 +67,7 @@ static NSString *s_oldAgent = nil;
                 completion(TTRJSBMsgFailed, @{});
 
             }];
-            if ([self.delegate respondsToSelector:@selector(followHouseByFollowId:houseType:actionType:)]) {
+            if ([self.delegate respondsToSelector:@selector(followUpActionByFollowId:houseType:)]) {
                 [self.delegate followUpActionByFollowId:self.houseId houseType:self.houseType];
             }
         }
