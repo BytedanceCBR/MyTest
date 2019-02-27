@@ -56,10 +56,10 @@
          element_from:same_neighborhood（同小区房源），related（周边房源），house_renting（在租房源）,）'在售房源': 'house_onsale',
          $$ search_id:外部的searchId无用，每次使用网络返回的searchId
          */
-        self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhood_id"];
-        self.houseId = paramObj.userInfo.allInfo[@"house_id"];
-        self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
-        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
+        self.neighborhoodId = paramObj.allParams[@"neighborhood_id"];
+        self.houseId = paramObj.allParams[@"house_id"];
+        self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+        self.neighborListVCType = [paramObj.allParams[@"list_vc_type"] integerValue];
         self.ttTrackStayEnable = YES;
     }
     return self;
