@@ -222,6 +222,32 @@
         [self.items addObject:infoModel];
     }
  
+    //生成IM卡片的schema用 个人认为server应该加接口
+    NSString *imgUrl = @"";
+    if (model.data.houseImage.count > 0) {
+        FHDetailHouseDataItemsHouseImageModel *imageInfo = model.data.houseImage[0];
+        imgUrl = imageInfo.url ?: @"";
+    }
+    NSString *area = @"";
+    NSString *area2 = @"";
+    if (model.data.coreInfo.count >= 3) {
+        FHDetailOldDataCoreInfoModel *areaInfo = model.data.coreInfo[1];
+        area = areaInfo.value ?: @"";
+        FHDetailOldDataCoreInfoModel *areaInfo2 = model.data.coreInfo[2];
+        area2 = areaInfo2.value ?: @"";
+    }
+    
+    NSString *face = @"";
+    if (model.data.baseInfo.count >= 2) {
+        FHDetailOldDataCoreInfoModel *baseInfo = model.data.baseInfo[1];
+        face = baseInfo.value ?: @"";
+    }
+    NSString *tag = model.data.neighborhoodInfo.name ?: @"";
+    NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
+    NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@/%@", area, area2, face, tag];
+    NSString *price = model.data.pricing ?: @"";
+    [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:@""];
+    
     [self reloadData];
  
 }

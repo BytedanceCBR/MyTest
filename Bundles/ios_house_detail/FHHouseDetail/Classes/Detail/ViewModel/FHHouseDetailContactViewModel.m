@@ -231,6 +231,10 @@
     }
 }
 
+- (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
+    [self.phoneCallViewModel generateImParams:houseId houseTitle:houseTitle houseCover:houseCover houseType:houseType houseDes:houseDes housePrice:housePrice houseAvgPrice:houseAvgPrice];
+}
+
 - (void)tryTraceImElementShow {
     if (!isEmptyString(_contactPhone.imOpenUrl)) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];

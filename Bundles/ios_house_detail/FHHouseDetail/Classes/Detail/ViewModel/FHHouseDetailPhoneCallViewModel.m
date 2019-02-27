@@ -21,6 +21,7 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHGeneralBizConfig.h>
 #import <FHHouseBase/FHEnvContext.h>
+#import "IMManager.h"
 
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
@@ -29,7 +30,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
-@property(nonatomic , weak) FHDetailNoticeAlertView *alertView;
+@property (nonatomic, weak) FHDetailNoticeAlertView *alertView;
+@property (nonatomic, strong) NSMutableDictionary *imParams; //用于IM跟前端交互的字段
 
 @end
 
@@ -163,6 +165,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
     dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    dict[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
     if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
         dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
@@ -174,12 +177,30 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"realtor_id"] = contactPhone.realtorId;
     dict[@"realtor_rank"] = rank ?: @"0";
     dict[@"realtor_position"] = position ?: @"detail_button";
+  
     
     [TTTracker eventV3:@"click_im" params:dict];
     
     NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict}];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+}
+
+- (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
+    if (houseTitle.length > 20) {
+        houseTitle = [houseTitle substringToIndex:20];
+    }
+    if (houseDes.length > 20) {
+        houseDes = [houseDes substringToIndex:20];
+    }
+    _imParams = [NSMutableDictionary dictionary];
+    [_imParams setObject:houseId forKey:@"house_id"];
+    [_imParams setObject:houseTitle forKey:@"house_title"];
+    [_imParams setObject:houseDes forKey:@"house_des"];
+    [_imParams setObject:houseCover forKey:@"house_cover"];
+    [_imParams setObject:housePrice forKey:@"house_price"];
+    [_imParams setObject:houseAvgPrice forKey:@"house_avg_price"];
+    [_imParams setObject:houseType forKey:@"house_type"];
 }
 
 - (void)fillFormRequest:(NSString *)phoneNum
@@ -289,7 +310,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (contactPhone.realtorId.length < 1) {
         return;
     }
-    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+//    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString *host = @"http://10.1.15.29:8889";
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
     
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -301,20 +323,37 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
     dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    dict[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
     if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
         NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
         dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
         dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
         dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
+    dict[@"realtor_rank"] = @"be_null";
+    dict[@"realtor_position"] = @"be_null";
+    dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
+    IMConversation* conv = [[[IMManager shareInstance] chatService] conversationWithUserId:contactPhone.realtorId];
+    dict[@"conversation_id"] = conv.identifier ?: @"be_null";
+    
     NSError *parseError = nil;
     NSString *reportParams = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&parseError];
     if (!parseError) {
-        
         reportParams = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
-    NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@",host,contactPhone.realtorId,reportParams ? : @""];
+    
+    NSMutableDictionary *imdic = [NSMutableDictionary dictionaryWithDictionary:_imParams];
+    [imdic setObject:contactPhone.realtorId forKey:@"target_user_id"];
+    [imdic setObject:contactPhone.realtorName forKey:@"chat_title"];
+    NSString *imParams = nil;
+    NSError *imParseError = nil;
+    NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];
+    if (!imParseError) {
+        imParams = [[NSString alloc] initWithData:imJsonData encoding:NSUTF8StringEncoding];
+    }
+    
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人详情页";
