@@ -114,6 +114,7 @@
 }
 
 -(void)displaySendState:(ChatMsg *)msg {
+
     if (msg.state == ChatMsgStateFail) {
         [self.msgStateView setImage:[UIImage imageNamed:@"chat_state_fail_ic"]];
         [self.msgStateView setHidden:NO];
@@ -160,11 +161,32 @@
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:@"default_image"]];
 
     self.titleLabel.text = conv.conversationDisplayName;
-    self.subTitleLabel.text = [conv lastMessage];
+    if (!isEmptyString([conv getDraft])) {
+        self.subTitleLabel.attributedText = [self getDraftAttributeString:[conv getDraft]];
+    } else {
+        self.subTitleLabel.text = [conv lastMessage];
+    }
     ChatMsg *lastMsg = [conv lastChatMsg];
+
     [self displaySendState:lastMsg];
 //    self.timeLabel.text = conv.updatedAt;
 }
+
+-(NSAttributedString*)getDraftAttributeString:(NSString*)draft {
+
+    NSMutableAttributedString* attrStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"[草稿] %@", draft]];
+    NSRange theRange = NSMakeRange(0, 4);
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 0;
+    paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+
+    NSDictionary<NSString *, id> *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14],
+                                                 NSForegroundColorAttributeName : [UIColor redColor] ,
+                                                 NSParagraphStyleAttributeName : paragraphStyle};
+    [attrStr addAttributes:attributes range:theRange];
+    return attrStr;
+}
+
 
 //- (NSString *)timestampToDataString:(NSString *)timestamp {
 //    // iOS 生成的时间戳是10位
