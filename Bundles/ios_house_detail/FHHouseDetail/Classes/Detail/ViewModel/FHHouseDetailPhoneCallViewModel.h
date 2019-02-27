@@ -30,7 +30,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone;
 - (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId;
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock;
+- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId reportParams:(NSDictionary *)reportParams successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock;
 - (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict;
 @end
 
