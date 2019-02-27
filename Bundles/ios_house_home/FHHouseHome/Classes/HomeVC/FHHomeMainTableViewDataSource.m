@@ -141,7 +141,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self jumpToDetailPage:indexPath];
+    if (!self.showPlaceHolder) {
+        [self jumpToDetailPage:indexPath];
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
