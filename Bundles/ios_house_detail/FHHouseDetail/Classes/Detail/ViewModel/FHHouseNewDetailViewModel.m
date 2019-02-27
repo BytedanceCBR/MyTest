@@ -141,7 +141,6 @@
 
 - (void)processDetailData:(FHDetailNewModel *)model {
     self.detailData = model;
-    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.highlightedRealtor) {

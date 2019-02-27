@@ -177,7 +177,6 @@
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
-    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.houseImage) {

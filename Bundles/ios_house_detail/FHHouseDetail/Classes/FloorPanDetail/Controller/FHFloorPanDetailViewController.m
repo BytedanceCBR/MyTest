@@ -15,6 +15,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import "FHFloorPanDetailViewModel.h"
 #import "UIViewController+Track.h"
+#import "FHFloorCoreInfoViewModel.h"
 
 @interface FHFloorPanDetailViewController ()
 
@@ -170,7 +171,7 @@
             self.tracerDict[@"rank"] = rank;
         }
     }
-    
+    // add by zyk 谢飞看下是否有问题
     self.coreInfoListViewModel.logPB = self.tracerDict[@"log_pb"];
     
     self.coreInfoListViewModel.detailTracerDic = self.tracerDict;

@@ -120,7 +120,7 @@
     FHDetailNeighborhoodTransationHistoryModel *model = (FHDetailNeighborhoodTransationHistoryModel *)self.currentData;
     if (model && model.totalSales.hasMore) {
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"enter_type"] = @"click";
         tracerDic[@"category_name"] = @"neighborhood_trade_list";
         tracerDic[@"element_from"] = @"neighborhood_trade";
