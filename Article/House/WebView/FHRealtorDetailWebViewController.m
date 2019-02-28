@@ -62,7 +62,7 @@ static NSString *s_oldAgent = nil;
 
         NSDictionary *reportParams = params[@"reportParams"];
         if (self->_realtorId != nil && phone != nil) {
-            [self.phoneCallViewModel callWithPhone:self->_realtorId realtorId:self->_realtorId searchId:searchId imprId:imprId reportParams:reportParams successBlock:^(BOOL isSuccess) {
+            [self.phoneCallViewModel callWithPhone:phone realtorId:self->_realtorId searchId:searchId imprId:imprId reportParams:reportParams successBlock:^(BOOL isSuccess) {
                 completion(TTRJSBMsgSuccess, @{});
             } failBlock:^(NSError * _Nonnull error) {
                 completion(TTRJSBMsgFailed, @{});
