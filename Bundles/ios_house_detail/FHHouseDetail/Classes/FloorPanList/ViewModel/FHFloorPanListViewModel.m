@@ -322,7 +322,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             traceParam[@"card_type"] = @"left_pic";
             traceParam[@"rank"] = @(indexPath.row);
 //            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-            traceParam[@"element_from"] = @"house_model";
+            traceParam[@"element_from"] = @"be_null";
             traceParam[@"log_pb"] = model.logPb;
             NSDictionary *dict = @{@"house_type":@(1),
                                    @"tracer": traceParam
