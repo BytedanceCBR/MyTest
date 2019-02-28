@@ -185,6 +185,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
+            self.isFirstChange = NO;
+
             //防止二次刷新
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && (configDataModel.cityAvailability.enable == YES || self.isFirstChange)&& ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 return;
@@ -198,7 +200,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //请求推荐房源
             [self requestOriginData:self.isFirstChange];
                         
-            self.isFirstChange = NO;
         }];
         
         //切换推荐房源类型
@@ -702,7 +703,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)reloadHomeTableForSwitchFromCache:(NSArray <JSONModel *> *)models
 {
     if (kIsNSArray(models)) {
-        self.dataSource.modelsArray = models;
         self.dataSource.currentHouseType = self.currentHouseType;
         self.dataSource.modelsArray = models;
         [self.tableViewV reloadData];
