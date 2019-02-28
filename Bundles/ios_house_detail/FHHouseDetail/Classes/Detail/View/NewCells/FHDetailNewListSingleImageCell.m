@@ -209,7 +209,7 @@
     }
     NSDictionary *logpb = self.itemModel.logPb;
     
-    return @{@"element_type":@"related",@"search_id":self.itemModel.searchId ? self.itemModel.searchId : @"be_null",@"group_id":groupId ? groupId : @"be_null",@"impr_id":self.itemModel.imprId ? self.itemModel.imprId : @"be_null",@"house_type":@"new",@"log_pb": logpb ? logpb : @"be_null" ,@"rank":@(self.itemModel.index)};
+    return @{@"element_type":@"related",@"search_id":self.itemModel.searchId ? self.itemModel.searchId : @"be_null",@"group_id": groupId.length > 0 ? groupId : @"be_null",@"impr_id":self.itemModel.imprId ? self.itemModel.imprId : @"be_null",@"house_type":@"new",@"log_pb": logpb ? logpb : @"be_null" ,@"rank":@(self.itemModel.index)};
 }
 
 -(void)refreshBottomMargin:(CGFloat)bottom {

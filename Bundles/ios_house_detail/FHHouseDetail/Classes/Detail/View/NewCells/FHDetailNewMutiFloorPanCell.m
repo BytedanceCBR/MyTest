@@ -113,7 +113,7 @@
             [tracerDic setValue:itemModel.searchId forKey:@"search_id"];
         }
         
-        if (itemModel.groupId) {
+        if ([itemModel.groupId isKindOfClass:[NSString class]] && itemModel.groupId.length > 0) {
             [tracerDic setValue:itemModel.groupId forKey:@"group_id"];
         }else
         {
