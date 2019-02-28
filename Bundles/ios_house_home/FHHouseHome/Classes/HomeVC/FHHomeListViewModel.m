@@ -703,7 +703,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)reloadHomeTableForSwitchFromCache:(NSArray <JSONModel *> *)models
 {
     if (kIsNSArray(models)) {
-        self.dataSource.modelsArray = models;
         self.dataSource.currentHouseType = self.currentHouseType;
         self.dataSource.modelsArray = models;
         [self.tableViewV reloadData];

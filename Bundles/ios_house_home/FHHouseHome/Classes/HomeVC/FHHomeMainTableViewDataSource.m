@@ -186,19 +186,34 @@
         traceParam[@"element_from"] = @"maintab_list";
         traceParam[@"enter_from"] = @"maintab";
         
-        NSDictionary *dict = @{@"house_type":@(self.currentHouseType),
+        NSInteger houseType = 0;
+        if ([theModel.houseType isKindOfClass:[NSString class]]) {
+            houseType = [theModel.houseType integerValue];
+        }
+        
+        if (houseType != 0) {
+            if (houseType != self.currentHouseType) {
+                return;
+            }
+        }else
+        {
+            houseType = self.currentHouseType;
+        }
+        
+        
+        NSDictionary *dict = @{@"house_type":@(houseType),
                                @"tracer": traceParam
                                };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL *jumpUrl = nil;
         
-        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        if (houseType == FHHouseTypeSecondHandHouse) {
             jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
-        }else if(self.currentHouseType == FHHouseTypeNewHouse)
+        }else if(houseType == FHHouseTypeNewHouse)
         {
             jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.idx]];
-        }else if(self.currentHouseType == FHHouseTypeRentHouse)
+        }else if(houseType == FHHouseTypeRentHouse)
         {
             jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
         }
