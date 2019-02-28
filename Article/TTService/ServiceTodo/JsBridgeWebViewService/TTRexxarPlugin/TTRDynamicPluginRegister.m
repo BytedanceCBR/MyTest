@@ -35,7 +35,8 @@
 
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.login" for:@"login"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.isLogin" for:@"is_login"];
-    
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.logoutApp" for:@"logoutApp"];
+
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.close" for:@"close"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.open" for:@"open"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openPage" for:@"openPage"];
@@ -43,7 +44,11 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openHotsoon" for:@"openHotsoon"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openApp" for:@"openApp"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.disableDragBack" for:@"disableDragBack"];
-    
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setNativeTitle" for:@"setNativeTitle"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setNativeDividerVisible" for:@"setNativeDividerVisible"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.onAccountCancellationSuccess" for:@"onAccountCancellationSuccess"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.showBackBtn" for:@"showBackBtn"];
+
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShare.share" for:@"share"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShare.sharePGC" for:@"share_pgc"];

@@ -77,12 +77,12 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 
 - (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration position:(id)position style:(CSToastStyle *)style {
     UIView *toast = [self toastViewForMessage:message title:nil image:nil style:style];
-    [self showToast:toast duration:duration position:position completion:nil];
+    [self showToast:toast duration:duration position:position style:style completion:nil];
 }
 
 - (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration position:(id)position title:(NSString *)title image:(UIImage *)image style:(CSToastStyle *)style completion:(void(^)(BOOL didTap))completion {
     UIView *toast = [self toastViewForMessage:message title:title image:image style:style];
-    [self showToast:toast duration:duration position:position completion:completion];
+    [self showToast:toast duration:duration position:position style:style completion:completion];
 }
 
 #pragma mark - Show Toast Methods
@@ -92,6 +92,10 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 }
 
 - (void)showToast:(UIView *)toast duration:(NSTimeInterval)duration position:(id)position completion:(void(^)(BOOL didTap))completion {
+    
+    [self showToast:toast duration:duration position:position style:[CSToastManager sharedStyle] completion:completion];
+}
+- (void)showToast:(UIView *)toast duration:(NSTimeInterval)duration position:(id)position style:(CSToastStyle *)style completion:(void(^)(BOOL didTap))completion {
     // sanity
     if (toast == nil) return;
     
@@ -107,7 +111,7 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
         [self.cs_toastQueue addObject:toast];
     } else {
         // present
-        [self cs_showToast:toast duration:duration position:position];
+        [self cs_showToast:toast duration:duration position:position style:style];
     }
 }
 
@@ -148,8 +152,8 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 
 #pragma mark - Private Show/Hide Methods
 
-- (void)cs_showToast:(UIView *)toast duration:(NSTimeInterval)duration position:(id)position {
-    toast.center = [self cs_centerPointForPosition:position withToast:toast];
+- (void)cs_showToast:(UIView *)toast duration:(NSTimeInterval)duration position:(id)position style:(CSToastStyle *)style {
+    toast.center = [self cs_centerPointForPosition:position withToast:toast style:style];
     toast.alpha = 0.0;
     
     if ([CSToastManager isTapToDismissEnabled]) {
@@ -432,7 +436,11 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 
 - (CGPoint)cs_centerPointForPosition:(id)point withToast:(UIView *)toast {
     CSToastStyle *style = [CSToastManager sharedStyle];
-    
+    [self cs_centerPointForPosition:point withToast:toast style:style];
+}
+
+- (CGPoint)cs_centerPointForPosition:(id)point withToast:(UIView *)toast style:(CSToastStyle *)style {
+
     UIEdgeInsets safeInsets = UIEdgeInsetsZero;
     if (@available(iOS 11.0, *)) {
         safeInsets = self.safeAreaInsets;
@@ -440,9 +448,13 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
     
     CGFloat topPadding = style.verticalPadding + safeInsets.top;
     CGFloat bottomPadding = style.verticalPadding + safeInsets.bottom;
+    CGFloat customTopPadding = style.verticalPadding;
     
     if([point isKindOfClass:[NSString class]]) {
         if([point caseInsensitiveCompare:CSToastPositionTop] == NSOrderedSame) {
+            if (style.isCustomPosition) {
+                return CGPointMake(style.customX - toast.frame.size.width / 2.0, (toast.frame.size.height / 2.0) + customTopPadding + style.verticalOffset);
+            }
             return CGPointMake(self.bounds.size.width / 2.0, (toast.frame.size.height / 2.0) + topPadding);
         } else if([point caseInsensitiveCompare:CSToastPositionCenter] == NSOrderedSame) {
             return CGPointMake(self.bounds.size.width / 2.0, self.bounds.size.height / 2.0);

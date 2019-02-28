@@ -9,5 +9,9 @@
 		<string>applinks:i.haoduofangs.com</string>
 		<string>applinks:mon.haoduofangs.com</string>
 	</array>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.f100.client.extension</string>
+	</array>
 </dict>
 </plist>

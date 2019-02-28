@@ -91,7 +91,8 @@
 #import "AKActivityTabManager.h"
 #import "AKProfileBenefitManager.h"
 #import "AKLoginTrafficViewController.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import <FHEnvContext.h>
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -105,22 +106,22 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     TTTabbarTipViewTypeRefresh,     //针对的是新用户刷新引导的tip
 };
 
-@interface QuickLoginDelegate () <QuickLoginVCDelegate>
-
-@property (nonatomic, copy) void (^DidSelectItem)();
-
-@end
-
-
-@implementation QuickLoginDelegate
-
-- (void)loginSuccessed {
-    if (_DidSelectItem != nil) {
-        _DidSelectItem();
-    }
-}
-
-@end
+//@interface QuickLoginDelegate () <QuickLoginVCDelegate>
+//
+//@property (nonatomic, copy) void (^DidSelectItem)();
+//
+//@end
+//
+//
+//@implementation QuickLoginDelegate
+//
+//- (void)loginSuccessed {
+//    if (_DidSelectItem != nil) {
+//        _DidSelectItem();
+//    }
+//}
+//
+//@end
 
 @interface TTArticleTabBarController () <UITabBarControllerDelegate, UINavigationControllerDelegate, TTUIViewControllerTrackProtocol, TTAccountMulticastProtocol,TTInterfaceTabBarControllerProtocol>
 {
@@ -1883,7 +1884,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     tab_name = [[self class] tabStayStringForIndex:index] ? : @"be_null";
     
     NSMutableDictionary *params = @{@"with_tips": with_tips, @"enter_type": enter_type, @"tab_name": tab_name}.mutableCopy;
-    [[EnvContext shared].tracer writeEvent:TraceEventName.enter_tab params:params];
+//    FHEnvContext recordEvent:<#(nonnull NSDictionary *)#> andEventKey:<#(nonnull NSString *)#>
+//    [[EnvContext shared].tracer writeEvent:TraceEventName.enter_tab params:params];
     
 }
 

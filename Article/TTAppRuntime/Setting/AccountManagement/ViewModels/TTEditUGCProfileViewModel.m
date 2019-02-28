@@ -17,7 +17,7 @@
 #import "TTEditUGCProfileViewModel+Notification.h"
 #import "NSString+TTLength.h"
 #import "TTEditUserProfileViewModel+Network.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 
 
@@ -125,7 +125,7 @@
             user.screenName = userEntity.screenName;
             user.userDescription = userEntity.userDescription;
             [[BDAccount sharedAccount] setUser:user];
-            [[[EnvContext shared] client] setUserInfoWithUser:user];
+//            [[[EnvContext shared] client] setUserInfoWithUser:user];
         }
 
         // update flags
@@ -276,7 +276,7 @@
                             if (user != nil) {
                                 user.avatarURL = imageURL;
                                 [[BDAccount sharedAccount] setUser:user];
-                                [[[EnvContext shared] client] setUserInfoWithUser:user];
+//                                [[[EnvContext shared] client] setUserInfoWithUser:user];
                             }
                             sself2.editableAuditInfo.avatarURL = imageURL;
                         } else {

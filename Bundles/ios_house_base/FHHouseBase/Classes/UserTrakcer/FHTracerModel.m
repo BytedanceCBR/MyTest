@@ -115,4 +115,20 @@
     return model;
 }
 
+-(void)setLogPbWithNSString:(NSString *)logpb
+{
+    if ([logpb isKindOfClass:[NSString class]]) {
+        @try {
+            NSData *data = [logpb dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            self.logPb = dict;
+        } @catch (NSException *exception) {
+#if DEBUG
+            NSLog(@"exception is: %@",exception);
+#endif
+        }
+    }
+}
+
+
 @end

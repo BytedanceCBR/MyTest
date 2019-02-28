@@ -21,6 +21,8 @@
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
+#import "FHSingleImageInfoCell.h"
+#import "FHSingleImageInfoCellModel.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -127,7 +129,7 @@
              tracerDict[@"origin_from"] = [self pageTypeString];
              tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
              tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
-             
+             [tracerDict removeObjectForKey:@"element_from"];
              [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
          }
      }
@@ -139,7 +141,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self jumpToDetailPage:indexPath];
+    if (!self.showPlaceHolder) {
+        [self jumpToDetailPage:indexPath];
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -170,7 +174,6 @@
 
 #pragma mark - 详情页跳转
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
-    
     if (self.modelsArray.count > indexPath.row) {
         FHHomeHouseDataItemsModel *theModel = self.modelsArray[indexPath.row];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
@@ -183,23 +186,38 @@
         traceParam[@"element_from"] = @"maintab_list";
         traceParam[@"enter_from"] = @"maintab";
         
-        NSDictionary *dict = @{@"house_type":@(self.currentHouseType) ,
+        NSInteger houseType = 0;
+        if ([theModel.houseType isKindOfClass:[NSString class]]) {
+            houseType = [theModel.houseType integerValue];
+        }
+        
+        if (houseType != 0) {
+            if (houseType != self.currentHouseType) {
+                return;
+            }
+        }else
+        {
+            houseType = self.currentHouseType;
+        }
+        
+        
+        NSDictionary *dict = @{@"house_type":@(houseType),
                                @"tracer": traceParam
                                };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         
         NSURL *jumpUrl = nil;
         
-        if (self.currentHouseType == FHHouseTypeSecondHandHouse) {
+        if (houseType == FHHouseTypeSecondHandHouse) {
             jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",theModel.idx]];
-        }else if(self.currentHouseType == FHHouseTypeNewHouse)
+        }else if(houseType == FHHouseTypeNewHouse)
         {
             jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",theModel.idx]];
-        }else if(self.currentHouseType == FHHouseTypeRentHouse)
+        }else if(houseType == FHHouseTypeRentHouse)
         {
             jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.idx]];
         }
-        
+
         if (jumpUrl != nil) {
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }

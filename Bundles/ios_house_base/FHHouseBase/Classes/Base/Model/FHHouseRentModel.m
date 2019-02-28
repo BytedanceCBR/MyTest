@@ -14,6 +14,7 @@
     NSDictionary *dict = @{
                            @"logPb": @"log_pb",
                            @"houseType": @"house_type",
+                           @"groupId": @"group_id",
                            @"imprId": @"impr_id",
                            @"searchId": @"search_id",
                            @"houseImageTag": @"house_image_tag",

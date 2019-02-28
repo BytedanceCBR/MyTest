@@ -6,11 +6,13 @@
 //
 
 #import "FHHouseFilterBridgeImp.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "FHConditionFilterFactory.h"
 #import "FHSearchConfigModel.h"
 #import "FHFilterModelParser.h"
 #import "FHEnvContext.h"
+#import <FHHouseType.h>
+
 @interface FHHouseFilterBridgeImp()
 
 @property(nonatomic , strong) FHConditionFilterViewModel* houseFilterViewModel;
@@ -24,21 +26,21 @@
                     showSort:(BOOL)showSort
           safeBottomPandding:(CGFloat)safeBottomPandding
 {
-    HouseType ht = HouseTypeSecondHandHouse;
-    switch (houseType) {
-        case FHHouseTypeNewHouse:
-            ht = HouseTypeNewHouse;
-            break;
-        case FHHouseTypeRentHouse:
-            ht = HouseTypeRentHouse;
-            break;
-        case FHHouseTypeNeighborhood:
-            ht = HouseTypeNeighborhood;
-            break;
-        default:
-            ht = HouseTypeSecondHandHouse;
-            break;
-    }
+//    FHHouseType ht = HouseTypeSecondHandHouse;
+//    switch (houseType) {
+//        case FHHouseTypeNewHouse:
+//            ht = HouseTypeNewHouse;
+//            break;
+//        case FHHouseTypeRentHouse:
+//            ht = HouseTypeRentHouse;
+//            break;
+//        case FHHouseTypeNeighborhood:
+//            ht = HouseTypeNeighborhood;
+//            break;
+//        default:
+//            ht = HouseTypeSecondHandHouse;
+//            break;
+//    }
 
 
     FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
@@ -49,7 +51,7 @@
     if (showSort) {
         sortConfig = [FHFilterModelParser getSortConfigByHouseType:houseType].firstObject.children.firstObject.children;
     }
-    _houseFilterViewModel = [factory createFilterPanelViewModel:ht
+    _houseFilterViewModel = [factory createFilterPanelViewModel:houseType
                                                    allCondition:showAllCondition
                                                      sortConfig:sortConfig
                                                          config:configs];

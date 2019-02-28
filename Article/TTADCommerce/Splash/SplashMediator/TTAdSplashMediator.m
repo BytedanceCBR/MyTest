@@ -35,10 +35,13 @@
 #import "TTAdCanvasPreloader.h"
 #import "FHLocManager.h"
 #import "FHEnvContext.h"
+#import "TTAdSplashManager+request.h"
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms
 
 @interface TTAdSplashMediator()<TTAdSplashDelegate>
+
+@property (nonatomic, assign) BOOL isNotFirst;
 
 @end
 
@@ -58,6 +61,13 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     static dispatch_once_t once_t;
     dispatch_once(&once_t, ^{
         [TTAdSplashMediator registerParamas];
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+            if (_isNotFirst) {
+                [TTAdSplashManager clearResouceCache];
+                [[TTAdSplashManager shareInstance] fetchADControlInfo];
+            }
+            _isNotFirst = YES;
+        }];
     });
     
     [TTAdSplashManager shareInstance].ignoreFirstLaunch = NO;
@@ -182,6 +192,10 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     return [[TTInstallIDManager sharedInstance] installID];
 }
 
+- (NSString *)splashSkipBtnName
+{
+    return @"跳过";
+}
 
 - (NSNumber *)ntType
 {

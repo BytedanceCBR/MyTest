@@ -336,7 +336,7 @@ static NSString *kTTAccountNetworkHttpInterfaceDebugKey = @"com.account.http_int
 
 + (NSString *)TTAGetUserInfoURLPathString
 {
-    return (@"/2/user/info/");
+    return (@"/passport/user/info/");
 }
 
 + (NSString *)TTAValidateSMSCodeURLPathString

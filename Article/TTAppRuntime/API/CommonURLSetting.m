@@ -131,7 +131,7 @@ static inline NSString* baseURLForKey(NSString *key) {
     NSString *domain = baseURLDomainForKey(key);
     
     //FIXME: 因为返回了is.snssdk.com 会使某些api 404 故先注释掉该部分
-//    if ([key isEqualToString:kNormalBaseURLDomainKey] || [domain isEqualToString:NormalBaseURLDomain]) {
+//    if s([key isEqualToString:kNormalBaseURLDomainKey] || [domain isEqualToString:NormalBaseURLDomain]) {
 //        if ([TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isEnabled) {
 //
 //            NSString *bestHost = [[TTRouteSelectionManager sharedTTRouteSelectionManager] bestHost];
@@ -144,7 +144,7 @@ static inline NSString* baseURLForKey(NSString *key) {
     
 #if DEBUG
 
-    return [NSString stringWithFormat:@"http://%@", domain];
+    return [NSString stringWithFormat:@"https://%@", domain];
 
 #else
     
@@ -856,7 +856,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)userInfoURLString
 {
-    return [NSString stringWithFormat:@"%@/2/user/info/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/passport/user/info/", [self baseURL]];
 }
 
 + (NSString*)loginURLString

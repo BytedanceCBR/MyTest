@@ -11,6 +11,7 @@
 @interface FHRefreshCustomFooter ()
 
 @property (weak, nonatomic) UILabel *label;
+@property (copy, nonatomic) NSString *customNoMoreDataStr;
 @property (weak, nonatomic) UIImageView *loadingIndicator;
 
 @end
@@ -39,6 +40,11 @@
     [self addSubview:loadingIndicator];
     self.loadingIndicator = loadingIndicator;
     
+}
+
+- (void)setUpNoMoreDataText:(NSString *)text
+{
+    self.customNoMoreDataStr = text;
 }
 
 #pragma mark 在这里设置子控件的位置和尺寸
@@ -116,7 +122,12 @@
         }
             
         case MJRefreshStateNoMoreData:
-            self.label.text = @" -- END -- ";
+            if ([self.customNoMoreDataStr isKindOfClass:[NSString class]]) {
+                self.label.text = self.customNoMoreDataStr;
+            }else
+            {
+                self.label.text = @" -- END -- ";
+            }
             self.loadingIndicator.hidden = YES;
             [self.loadingIndicator.layer removeAllAnimations];
             
