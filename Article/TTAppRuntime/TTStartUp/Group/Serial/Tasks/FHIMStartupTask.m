@@ -91,14 +91,14 @@
             }
             NSString *phone = @"";
             BOOL isAssociate = NO;
-            if (!error) {
-                phone = [number stringByReplacingOccurrencesOfString:@"" withString:@""];
-                isAssociate = YES;
-            }
+            phone = [number stringByReplacingOccurrencesOfString:@"" withString:@""];
+            isAssociate = YES;
             finishBlock(@"click_call");
             NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",phone];
             NSURL *url = [NSURL URLWithString:phoneUrl];
             [[UIApplication sharedApplication] openURL:url];
+        } else {
+            finishBlock(@"click_call");
         }
     }];
 }
