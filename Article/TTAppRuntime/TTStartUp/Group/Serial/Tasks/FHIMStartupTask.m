@@ -45,6 +45,10 @@
     return [UIColor themeIMBubbleRed];
 }
 
+- (UIColor *)getDefaultTxtColor {
+   return [UIColor colorWithHexStr:@"999999"];
+}
+
 - (NSArray<NSHTTPCookie *>*)getClientCookie {
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
     return cookies;
@@ -111,6 +115,7 @@
 - (void)gotoSelectHouse:(nonnull NSString *)covid {
     
 }
+
 
 
 @end
