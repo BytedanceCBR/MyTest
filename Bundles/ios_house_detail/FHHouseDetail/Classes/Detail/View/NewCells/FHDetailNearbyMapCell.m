@@ -315,7 +315,7 @@ static const float kSegementedPadingTop = 5;
     
     
     _emptyInfoLabel = [UILabel new];
-    _emptyInfoLabel.text = @"加载中...";
+    _emptyInfoLabel.text = @"附近没有交通信息";
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
 //    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
     _emptyInfoLabel.hidden = NO;
