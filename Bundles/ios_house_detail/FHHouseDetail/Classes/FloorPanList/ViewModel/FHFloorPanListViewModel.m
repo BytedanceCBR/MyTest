@@ -316,13 +316,13 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             if (tracer) {
                 [traceParam addEntriesFromDictionary:tracer];
             }
-            traceParam[@"enter_from"] = @"new_detail";
+            traceParam[@"enter_from"] = @"house_model_list";
 //            traceParam[@"log_pb"] = self.baseViewModel.listLogPB;
 //            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
             traceParam[@"card_type"] = @"left_pic";
             traceParam[@"rank"] = @(indexPath.row);
 //            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-            traceParam[@"element_from"] = @"related";
+            traceParam[@"element_from"] = @"house_model";
             traceParam[@"log_pb"] = model.logPb;
             NSDictionary *dict = @{@"house_type":@(1),
                                    @"tracer": traceParam

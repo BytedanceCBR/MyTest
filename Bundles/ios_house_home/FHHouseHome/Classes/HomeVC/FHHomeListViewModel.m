@@ -424,9 +424,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
         //过滤多余tip提示
-        if ((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
+        if ((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
             [self.homeViewController showNotify:model.data.refreshTip];
-            [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
         
@@ -530,6 +529,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
         
         if (model.data.refreshTip && pullType == FHHomePullTriggerTypePullDown) {
+            [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
             [self.homeViewController showNotify:model.data.refreshTip];
             self.tableViewV.contentOffset = CGPointMake(0, 0);
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
