@@ -205,11 +205,8 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (NSDictionary *)categoryLogDict {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    [tracerDict addEntriesFromDictionary:self.viewController.tracerDict];
     tracerDict[@"category_name"] = [self categoryName];
-    tracerDict[@"enter_from"] = @"minetab";
-    tracerDict[@"enter_type"] = @"click";
-    tracerDict[@"element_from"] = @"be_null";
-    tracerDict[@"origin_from"] = [self originFrom];
     tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
     
@@ -236,28 +233,6 @@ extern NSString *const kFHDetailFollowUpNotification;
             break;
     }
     return categoryName;
-}
-
-- (NSString *)originFrom {
-    NSString *originFrom = @"be_null";
-    switch (self.type) {
-        case FHHouseTypeNewHouse:
-            originFrom = @"minetab_new";
-            break;
-        case FHHouseTypeRentHouse:
-            originFrom = @"minetab_rent";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            originFrom = @"minetab_old";
-            break;
-        case FHHouseTypeNeighborhood:
-            originFrom = @"minetab_neighborhood";
-            break;
-            
-        default:
-            break;
-    }
-    return originFrom;
 }
 
 - (NSString *)houseType {
