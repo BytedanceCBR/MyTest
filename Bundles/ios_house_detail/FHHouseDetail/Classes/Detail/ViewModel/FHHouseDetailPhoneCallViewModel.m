@@ -77,7 +77,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     self.alertView = alertView;
 }
 
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
+- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
 {
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
@@ -88,7 +88,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         return;
     }
     [self.bottomBar startLoading];
-    [FHHouseDetailAPI requestVirtualNumber:phone houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
@@ -109,12 +109,12 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }];
 }
 
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId
+- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId
 {
-    [self callWithPhone:phone searchId:searchId imprId:imprId extraDict:nil];
+    [self callWithPhone:phone realtorId:realtorId searchId:searchId imprId:imprId extraDict:nil];
 }
 
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId reportParams:(NSDictionary *)reportParams successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock
+- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId reportParams:(NSDictionary *)reportParams successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock
 {
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
@@ -127,7 +127,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         return;
     }
     [self.bottomBar startLoading];
-    [FHHouseDetailAPI requestVirtualNumber:phone houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
