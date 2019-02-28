@@ -352,7 +352,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
     params[@"page_type"] = @"realtor_detail";
-    params[@"page_type"] = @"left_pic";
+    params[@"card_type"] = @"left_pic";
     if (extraDict[@"card_type"]) {
         params[@"card_type"] = extraDict[@"card_type"];
     }
