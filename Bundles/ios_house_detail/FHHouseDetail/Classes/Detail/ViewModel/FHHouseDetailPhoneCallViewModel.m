@@ -84,7 +84,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
-        [self addClickCallLogWithExtra:extraDict isVirtual:NO];
+        [self addClickCallLogWithExtra:extraDict isVirtual:0];
         return;
     }
     [self.bottomBar startLoading];
@@ -92,7 +92,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-        BOOL isVirtual = model.data.isVirtual == 1 ? YES : NO;
+        NSInteger isVirtual = model.data.isVirtual;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
         }
@@ -121,7 +121,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
-        [self addRealtorClickCallLogWithExtra:reportParams isVirtual:NO];
+        [self addRealtorClickCallLogWithExtra:reportParams isVirtual:0];
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         failBlock(error);
         return;
@@ -131,7 +131,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-        BOOL isVirtual = model.data.isVirtual == 1 ? YES : NO;
+        NSInteger isVirtual = model.data.isVirtual;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
             NSMutableDictionary *extra = @{}.mutableCopy;
@@ -324,7 +324,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 // 拨打电话和经纪人展位拨打电话
-- (void)addClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(BOOL)isVirtual
+- (void)addClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(NSInteger)isVirtual
 {
     //    11.realtor_id
     //    12.realtor_rank:经纪人推荐位置，从0开始，底部button的默认为0
@@ -342,7 +342,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
 
-- (void)addRealtorClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(BOOL)isVirtual
+- (void)addRealtorClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(NSInteger)isVirtual
 {
     //    11.realtor_id
     //    12.realtor_rank:经纪人推荐位置，从0开始，底部button的默认为0
