@@ -460,21 +460,24 @@
         NSString *enter_from = @"be_null";
         NSString *neighborhood_id = @"0";
         NSString *source = @"";
+        NSDictionary *log_pb = nil;
         if (model.neighborhoodInfo) {
             // 二手房
             enter_from = @"old_detail";
             neighborhood_id = model.neighborhoodInfo.id;
             source = @"";
+            log_pb = model.neighborhoodInfo.logPb;
         }
         if (model.rent_neighborhoodInfo) {
             // 租房
             enter_from = @"rent_detail";
             neighborhood_id = model.rent_neighborhoodInfo.id;
             source = @"rent_detail";
+            log_pb = model.rent_neighborhoodInfo.logPb;
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"card_type"] = @"no_pic";
-        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
+        tracerDic[@"log_pb"] = log_pb ? log_pb : @"be_null";// 特殊，传入当前小区的logpb
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_from"] = @"neighborhood_detail";
         tracerDic[@"enter_from"] = enter_from;
