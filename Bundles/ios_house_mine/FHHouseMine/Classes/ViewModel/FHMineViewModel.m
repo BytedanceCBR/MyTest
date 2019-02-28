@@ -215,7 +215,7 @@
     if ([TTReachability isNetworkConnected]) {
         NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"type"] = @(type);
+        dict[@"house_type"] = @(type);
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     } else {
