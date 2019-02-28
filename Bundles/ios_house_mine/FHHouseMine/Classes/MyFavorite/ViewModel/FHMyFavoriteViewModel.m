@@ -343,20 +343,25 @@ extern NSString *const kFHDetailFollowUpNotification;
             }
             return NO;
         }];
-        [self deleteFocusCell:index];
+        //找不到index时会返回一个大数
+        if(index < self.dataList.count && index >= 0){
+            [self deleteFocusCell:index];
+        }
     }
 }
 
 - (void)deleteFocusCell:(NSInteger)index {
-    [self.dataList removeObjectAtIndex:index];
-    if(self.offset > 0){
-        self.offset--;
-    }
-    if(self.dataList.count > 0){
-        [self.viewController.emptyView hideEmptyView];
-        [self.tableView reloadData];
-    }else{
-        [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+    if(index < self.dataList.count && index >= 0){
+        [self.dataList removeObjectAtIndex:index];
+        if(self.offset > 0){
+            self.offset--;
+        }
+        if(self.dataList.count > 0){
+            [self.viewController.emptyView hideEmptyView];
+            [self.tableView reloadData];
+        }else{
+            [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+        }
     }
 }
 
@@ -408,12 +413,14 @@ extern NSString *const kFHDetailFollowUpNotification;
         
         NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
         NSString *followId = [self getFollowId:cellModel];
-        if (_clientShowDict[followId]) {
-            return;
+        if(followId){
+            if (_clientShowDict[followId]) {
+                return;
+            }
+    
+            _clientShowDict[followId] = @(indexPath.row);
+            [self trackHouseShow:cellModel rank:indexPath.row];
         }
-        
-        _clientShowDict[followId] = @(indexPath.row);
-        [self trackHouseShow:cellModel rank:indexPath.row];
     }
 }
 
