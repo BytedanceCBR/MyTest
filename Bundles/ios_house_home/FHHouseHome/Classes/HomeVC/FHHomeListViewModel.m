@@ -429,7 +429,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         //过滤多余tip提示
-        if (((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) || (!isFirstChange && [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && self.isFromLocalTestChange)) {
+        if (((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) || (!isFirstChange && [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])) {
             [self.homeViewController showNotify:model.data.refreshTip];
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
