@@ -129,7 +129,7 @@
              tracerDict[@"origin_from"] = [self pageTypeString];
              tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
              tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
-             
+             [tracerDict removeObjectForKey:@"element_from"];
              [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
          }
      }

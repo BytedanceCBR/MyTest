@@ -160,7 +160,17 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         [titlesArray addObject:[NSString stringWithFormat:@"全部(%d)",_allItems.count]];
         
         for (NSInteger i = 0; i < _topRoomCountArray.count; i++) {
-            [titlesArray addObject:[NSString stringWithFormat:@"%@室(%d)",_topRoomCountArray[i],_allItems.count]];
+            NSInteger total = 0;
+
+            for (NSInteger j = 0; j < self.allItems.count ; j++) {
+                if ([self.allItems[i].roomCount isKindOfClass:[NSString class]] && [_topRoomCountArray[i] isKindOfClass:[NSString class]]) {
+                        if ([self.allItems[j].roomCount integerValue] == [_topRoomCountArray[i] integerValue]) {
+                            total++;
+                    }
+                }
+            }
+            
+            [titlesArray addObject:[NSString stringWithFormat:@"%@室(%d)",_topRoomCountArray[i],total]];
         }
     }
     return titlesArray;
@@ -208,7 +218,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         }
         else if([status isEqualToString:kDefaultLeftFilterStatus])
         {
-            if ([model.roomCount isEqualToString:roomCuntKey] && ![roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
+            if ([model.roomCount isEqualToString:roomCuntKey]) {
                 [currentItemsArray addObject:model];
             }
         }else if ([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
