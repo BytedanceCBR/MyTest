@@ -90,6 +90,7 @@
     NSDictionary *dict = @{
                            @"realtorId": @"realtor_id",
                            @"virtualNumber": @"virtual_number",
+                           @"isVirtual": @"is_virtual",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

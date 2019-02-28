@@ -92,10 +92,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-        BOOL isVirtual = NO;
+        BOOL isVirtual = model.data.isVirtual == 1 ? YES : NO;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
-            isVirtual = YES;
         }
         NSMutableDictionary *extra = @{}.mutableCopy;
         if (extraDict) {
@@ -106,6 +105,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
         [wself addClickCallLogWithExtra:extra isVirtual:isVirtual];
         [wself callPhone:urlStr];
+
     }];
 }
 
@@ -131,7 +131,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-        BOOL isVirtual = NO;
+        BOOL isVirtual = model.data.isVirtual == 1 ? YES : NO;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
             NSMutableDictionary *extra = @{}.mutableCopy;
