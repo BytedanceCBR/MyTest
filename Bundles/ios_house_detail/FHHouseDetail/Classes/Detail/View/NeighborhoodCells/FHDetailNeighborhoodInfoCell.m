@@ -124,7 +124,21 @@
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     return @"neighborhood_detail";
 }
-
+// 小区评测
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType {
+    NSMutableArray *elementTypes = [NSMutableArray new];
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    // 二手房
+    if (model.neighborhoodInfo.evaluationInfo) {
+        [elementTypes addObject:@"neighborhood_evaluation"];
+    }
+    // 租房
+    if (model.rent_neighborhoodInfo.evaluationInfo) {
+        [elementTypes addObject:@"neighborhood_evaluation"];
+    }
+    // 二手房和租房只会存在一个
+    return elementTypes;
+}
 - (void)updateRentCellData {
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {

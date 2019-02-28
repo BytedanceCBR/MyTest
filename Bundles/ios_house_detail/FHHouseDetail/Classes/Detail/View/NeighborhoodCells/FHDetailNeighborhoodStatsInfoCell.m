@@ -127,6 +127,7 @@
     self.elementShowTraceDic[element_type] = @(YES);
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"element_type"] = element_type;
+    [tracerDic removeObjectForKey:@"element_from"];
     [FHUserTracker writeEvent:@"element_show" params:tracerDic];
 }
 
