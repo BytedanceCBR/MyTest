@@ -45,6 +45,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) TTHttpTask * requestOriginTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
+@property (nonatomic, assign) BOOL isFirstChange;
 
 @end
 
@@ -68,7 +69,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.tableViewV.dataSource = self.dataSource;
         self.hasShowedData = NO;
         self.isHasCallBackForFirstTime = NO;
-        
+        self.isFirstChange = YES;
+
         
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
@@ -141,7 +143,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         __block BOOL isShowLocalTest = NO;
-        __block BOOL isFirstChange = YES;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
     
@@ -149,16 +150,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             [self.homeViewController.emptyView hideEmptyView];
             
             //更新切换
-            [self updateCategoryViewSegmented:isFirstChange];
+            [self updateCategoryViewSegmented:self.isFirstChange];
             
 
             //过滤多余刷新
-            if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !isFirstChange) {
+            if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !self.isFirstChange) {
                 return;
             }
             
             //非首次只刷新头部
-            if ((!isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
+            if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
         
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
@@ -185,7 +186,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             //防止二次刷新
-            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && (configDataModel.cityAvailability.enable == YES || isFirstChange)&& ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
+            if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && (configDataModel.cityAvailability.enable == YES || self.isFirstChange)&& ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 return;
             }
             //刷新头部
@@ -195,9 +196,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             [self resetAllCacheData];
             
             //请求推荐房源
-            [self requestOriginData:isFirstChange];
+            [self requestOriginData:self.isFirstChange];
                         
-            isFirstChange = NO;
+            self.isFirstChange = NO;
         }];
         
         //切换推荐房源类型
