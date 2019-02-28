@@ -46,6 +46,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
+@property (nonatomic, assign) BOOL isFromLocalTestChange;
 
 @end
 
@@ -137,6 +138,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.tableViewV.hidden = YES;
             [self.homeViewController.view sendSubviewToBack:self.tableViewV];
             [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+        }else
+        {
+            self.isFromLocalTestChange = NO;
         }
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -177,9 +181,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     [self.homeViewController.view sendSubviewToBack:self.tableViewV];
                     [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
                     isShowLocalTest = YES;
+                    self.isFromLocalTestChange = YES;
                 }else
                 {
                     isShowLocalTest = NO;
+                    self.isFromLocalTestChange = NO;
                 }
                 
                 return;
@@ -422,9 +428,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[FHEnvContext sharedInstance] updateOriginFrom:[self pageTypeString] originSearchId:model.data.searchId];
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
-        
         //过滤多余tip提示
-        if ((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
+        if (((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) || (!isFirstChange && [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && self.isFromLocalTestChange)) {
             [self.homeViewController showNotify:model.data.refreshTip];
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
