@@ -203,6 +203,7 @@
         tracerDic[@"search_id"] = dataItem.searchId ? dataItem.searchId : @"be_null";
         tracerDic[@"group_id"] = dataItem.groupId ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null");
         tracerDic[@"impr_id"] = dataItem.imprId ? dataItem.imprId : @"be_null";
+        [tracerDic removeObjectsForKeys:@[@"element_from"]];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }

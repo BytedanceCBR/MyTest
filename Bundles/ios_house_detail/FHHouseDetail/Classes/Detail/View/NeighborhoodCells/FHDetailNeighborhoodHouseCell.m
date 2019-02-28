@@ -599,7 +599,7 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
-            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
+            [tracerDic removeObjectsForKeys:@[@"element_from"]];
             tracerDic[@"search_id"] = dataItem.searchId ? dataItem.searchId : @"be_null";
             tracerDic[@"group_id"] = dataItem.groupId ? dataItem.groupId : (dataItem.hid ? dataItem.hid : @"be_null");
             tracerDic[@"impr_id"] = dataItem.imprId ? dataItem.imprId : @"be_null";
@@ -622,7 +622,7 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
-            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
+            [tracerDic removeObjectsForKeys:@[@"element_from"]];
             tracerDic[@"search_id"] = dataItem.searchId ? dataItem.searchId : @"be_null";
             tracerDic[@"group_id"] = dataItem.groupId ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null") ;
             tracerDic[@"impr_id"] = dataItem.imprId ? dataItem.imprId : @"be_null";
