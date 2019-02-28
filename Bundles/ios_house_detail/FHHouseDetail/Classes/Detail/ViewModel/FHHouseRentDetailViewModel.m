@@ -106,6 +106,7 @@
 - (void)startLoadData {
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
+
     [FHHouseDetailAPI requestRentDetail:self.houseId completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
