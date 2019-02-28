@@ -133,7 +133,7 @@
             
                 NSMutableDictionary *traceParam = [NSMutableDictionary new];
                 traceParam[@"enter_from"] = @"new_detail";
-                traceParam[@"log_pb"] = floorPanInfoModel.logPb; // add by zyk 谢飞看下是否有问题
+                traceParam[@"log_pb"] = floorPanInfoModel.logPb; 
                 traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
                 traceParam[@"card_type"] = @"left_pic";
                 traceParam[@"rank"] = @(floorPanInfoModel.index);
