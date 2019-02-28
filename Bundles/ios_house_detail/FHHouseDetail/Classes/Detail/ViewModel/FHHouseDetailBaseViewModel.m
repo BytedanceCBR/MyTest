@@ -161,6 +161,7 @@
             // 上报埋点
             NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
             tracerDic[@"element_type"] = element_type;
+            [tracerDic removeObjectForKey:@"element_from"];
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
         }
         
@@ -171,6 +172,7 @@
                     // 上报埋点
                     NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
                     tracerDic[@"element_type"] = element_name;
+                    [tracerDic removeObjectForKey:@"element_from"];
                     [FHUserTracker writeEvent:@"element_show" params:tracerDic];
                 }
             }
