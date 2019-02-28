@@ -183,7 +183,7 @@
             // 上报埋点
             NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
             [tracerDic addEntriesFromDictionary:houseShowDict];
-            [tracerDic removeObjectsForKeys:@[@"element_from"]];
+            [tracerDic removeObjectForKey:@"element_from"];
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
