@@ -38,7 +38,7 @@
 
 @end
 
-@interface FHMessageViewModel()<IMChatStateObserver>
+@interface FHMessageViewModel()<IMChatStateObserver, UITableViewDelegate>
 @property(nonatomic, strong) FHConversationDataCombiner *combiner;
 
 @property(nonatomic, strong) UITableView *tableView;
@@ -201,8 +201,16 @@
     }
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return @"删除";
+//- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return @"删除";
+//}
+
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewRowAction *rowAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"删除" handler:^(UITableViewRowAction * _Nonnull action, NSIndexPath * _Nonnull indexPath) {
+    }];
+    rowAction.backgroundColor = [UIColor colorWithHexStr:@"ff5869"];
+    NSArray *arr = @[rowAction];
+    return arr;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
