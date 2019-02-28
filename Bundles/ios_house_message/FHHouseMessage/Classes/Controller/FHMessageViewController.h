@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)getPageType;
 - (CGFloat) getBottomMargin;
 - (BOOL) leftActionHidden;
-
+- (BOOL) isAlignToSafeBottom;
 @end
 
 NS_ASSUME_NONNULL_END

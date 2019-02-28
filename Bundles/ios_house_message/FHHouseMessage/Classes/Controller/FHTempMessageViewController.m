@@ -21,4 +21,7 @@
     return NO;
 }
 
+- (BOOL) isAlignToSafeBottom {
+    return NO;
+}
 @end

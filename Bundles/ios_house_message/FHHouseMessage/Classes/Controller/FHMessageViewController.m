@@ -83,7 +83,7 @@
     
 //    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 //    _tableView.tableHeaderView = headerView;
-    
+
     [self.containerView addSubview:_tableView];
     [self.containerView addSubview:_notNetHeader];
     
@@ -110,7 +110,9 @@
 - (void)initConstraints {
     CGFloat bottom = [self getBottomMargin];
     if (@available(iOS 11.0 , *)) {
-        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        if([self isAlignToSafeBottom]){
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
     }
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -200,4 +202,7 @@
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
+- (BOOL) isAlignToSafeBottom {
+    return YES;
+}
 @end
