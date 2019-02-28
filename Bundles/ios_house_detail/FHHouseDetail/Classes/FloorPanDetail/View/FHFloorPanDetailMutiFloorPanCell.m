@@ -143,7 +143,7 @@
                 NSMutableDictionary *infoDict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        }.mutableCopy;
-                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
                 NSMutableDictionary *subPageParams = model.subPageVC.subPageParams;
                
 //                subPageParams[@"tracer"] = nil;
@@ -151,7 +151,7 @@
                     [infoDict addEntriesFromDictionary:subPageParams];
                 }
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_plan_detail"] userInfo:info];
             }
         }
     }

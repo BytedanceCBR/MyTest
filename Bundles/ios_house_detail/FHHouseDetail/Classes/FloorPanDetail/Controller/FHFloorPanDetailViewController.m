@@ -31,7 +31,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.ttTrackStayEnable = YES;
-        _floorPanId = paramObj.allParams[@"floorpanid"];
+        _floorPanId = paramObj.allParams[@"floor_plan_id"];
         
         [self processTracerData:paramObj.allParams[@"tracer"]];
     }

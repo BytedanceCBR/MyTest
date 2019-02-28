@@ -77,7 +77,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     self.alertView = alertView;
 }
 
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
+- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
 {
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
@@ -88,7 +88,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         return;
     }
     [self.bottomBar startLoading];
-    [FHHouseDetailAPI requestVirtualNumber:phone houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
@@ -109,25 +109,25 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }];
 }
 
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId
+- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId
 {
-    [self callWithPhone:phone searchId:searchId imprId:imprId extraDict:nil];
+    [self callWithPhone:phone realtorId:realtorId searchId:searchId imprId:imprId extraDict:nil];
 }
 
-- (void)callWithPhone:(NSString *)phone searchId:(NSString *)searchId imprId:(NSString *)imprId successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock
+- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId reportParams:(NSDictionary *)reportParams successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock
 {
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
         
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
-        [self addClickCallLogWithExtra:nil isVirtual:NO];
+        [self addRealtorClickCallLogWithExtra:reportParams isVirtual:NO];
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         failBlock(error);
         return;
     }
     [self.bottomBar startLoading];
-    [FHHouseDetailAPI requestVirtualNumber:phone houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         [wself.bottomBar stopLoading];
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
@@ -135,10 +135,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
             NSMutableDictionary *extra = @{}.mutableCopy;
+            if (reportParams) {
+                [extra addEntriesFromDictionary:reportParams];
+            }
             if (model.data.realtorId.length > 0) {
                 extra[@"realtor_id"] = model.data.realtorId;
             }
-            [wself addClickCallLogWithExtra:extra isVirtual:isVirtual];
+            [wself addRealtorClickCallLogWithExtra:extra isVirtual:isVirtual];
         }else {
             failBlock(error);
         }
@@ -246,7 +249,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         return;
     }
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
+    NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
     
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
@@ -330,6 +333,47 @@ extern NSString *const kFHPhoneNumberCacheKey;
     //    15.is_dial ：是否为为拨号键盘：是：1，否：0
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
+    params[@"has_auth"] = @(1);
+    params[@"realtor_id"] = extraDict[@"realtor_id"] ? : @"be_null";
+    params[@"realtor_rank"] = extraDict[@"realtor_rank"] ? : @(0);
+    params[@"realtor_position"] = extraDict[@"realtor_position"] ? : @"detail_button";
+    params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
+    params[@"is_dial"] = @(1);
+    [FHUserTracker writeEvent:@"click_call" params:params];
+}
+
+- (void)addRealtorClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(BOOL)isVirtual
+{
+    //    11.realtor_id
+    //    12.realtor_rank:经纪人推荐位置，从0开始，底部button的默认为0
+    //    13.realtor_position ：detail_button，detail_related
+    //    14.has_associate：是否为虚拟号码：是：1，否：0
+    //    15.is_dial ：是否为为拨号键盘：是：1，否：0
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    params[@"page_type"] = @"realtor_detail";
+    params[@"page_type"] = @"left_pic";
+    if (extraDict[@"card_type"]) {
+        params[@"card_type"] = extraDict[@"card_type"];
+    }
+    if (extraDict[@"enter_from"]) {
+        params[@"enter_from"] = extraDict[@"enter_from"];
+    }
+    if (extraDict[@"element_from"]) {
+        params[@"element_from"] = extraDict[@"element_from"];
+    }
+    if (extraDict[@"rank"]) {
+        params[@"rank"] = extraDict[@"rank"];
+    }
+    if (extraDict[@"origin_from"]) {
+        params[@"origin_from"] = extraDict[@"origin_from"];
+    }
+    if (extraDict[@"origin_search_id"]) {
+        params[@"origin_search_id"] = extraDict[@"origin_search_id"];
+    }
+    if (extraDict[@"log_pb"]) {
+        params[@"log_pb"] = extraDict[@"log_pb"];
+    }
     params[@"has_auth"] = @(1);
     params[@"realtor_id"] = extraDict[@"realtor_id"] ? : @"be_null";
     params[@"realtor_rank"] = extraDict[@"realtor_rank"] ? : @(0);
