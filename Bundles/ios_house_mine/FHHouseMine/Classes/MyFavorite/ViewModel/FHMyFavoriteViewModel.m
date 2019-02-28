@@ -54,6 +54,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     if (self) {
         
         _dataList = [[NSMutableArray alloc] init];
+        _removedDataList = [NSMutableArray new];
         _limit = 10;
         _type = type;
         _tableView = tableView;
@@ -310,6 +311,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 - (void)cancelFocusItem:(NSNotification *)notification {
     NSInteger followStatus = [notification.userInfo[@"followStatus"] integerValue];
     if(followStatus == 0){
+        // 取消收藏
         NSString *followId = notification.userInfo[@"followId"];
         NSInteger index = [self.dataList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
@@ -322,11 +324,42 @@ extern NSString *const kFHDetailFollowUpNotification;
         if(index < self.dataList.count && index >= 0){
             [self deleteFocusCell:index];
         }
+    } else if (followStatus == 1) {
+        // 收藏
+        NSString *followId = notification.userInfo[@"followId"];
+        NSInteger index = [self.removedDataList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
+            if([followId isEqualToString:[self getFollowId:cellModel]]){
+                return YES;
+            }
+            return NO;
+        }];
+        //找不到index时会返回一个大数
+        if(index < self.removedDataList.count && index >= 0){
+            [self addFirstFocusCell:index];
+        }
+    }
+}
+
+- (void)addFirstFocusCell:(NSInteger)index {
+    if(index < self.removedDataList.count && index >= 0){
+        id data = self.removedDataList[index];
+        [self.dataList insertObject:data atIndex:0];
+        [self.removedDataList removeObjectAtIndex:index];
+        self.offset++;
+        if(self.dataList.count > 0){
+            [self.viewController.emptyView hideEmptyView];
+            [self.tableView reloadData];
+        }else{
+            [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+        }
     }
 }
 
 - (void)deleteFocusCell:(NSInteger)index {
     if(index < self.dataList.count && index >= 0){
+        id data = self.dataList[index];
+        [self.removedDataList addObject:data];
         [self.dataList removeObjectAtIndex:index];
         if(self.offset > 0){
             self.offset--;
