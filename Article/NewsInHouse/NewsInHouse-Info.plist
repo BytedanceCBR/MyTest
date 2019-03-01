@@ -25,7 +25,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.5.0</string>
+	<string>0.5.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -54,30 +54,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>sinaweibo</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>sinaweibosso.com.ss.iphone.article.news</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
 			<string>own</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fschema</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>renren</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>rm2080814com.ss.iphone.article.News</string>
 			</array>
 		</dict>
 		<dict>
@@ -90,99 +70,9 @@
 				<string>tencent1107515843</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.taobao.taesdk</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>tbopen23178686</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.ss.iphone.article.News</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>tbopen23261993</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>alipayShare</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>ap2015090200249164</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>kepler</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>jdf9a9dd25be324eaa980edc530c7a3266</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>jdmobile</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>jda40966f7a51ee8f7d</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>dingtalk</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>dingoamfoom0wrwiyexx2z</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>hotsoon</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bdefc41a8703eae8ce</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>aweme</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bd3ffc36cf30e111d0</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>mqqapi</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>1107515843</string>
-			</array>
-		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.6.2.6</string>
+	<string>6.6.3.1</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
@@ -336,6 +226,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>65002</string>
+	<string>65300</string>
 </dict>
 </plist>

@@ -37,7 +37,7 @@
                 NSMutableDictionary *extra = [NSMutableDictionary dictionary];
                 [extra setValue:error.description forKey:@"error_description"];
                 [extra setValue:@(error.code) forKey:@"error_code"];
-                
+
                 NSString *msg = [self.class suggestExipredWifiString:error];
                 if (isEmptyString(msg)) {
                     msg = [[error userInfo] objectForKey:TTAccountErrMsgKey];
@@ -48,7 +48,7 @@
                 }
             }
         }];
-        
+
         [TTAccount getUserAuditInfoWithCompletion:^(TTAccountUserEntity *userEntity, NSError *error) {
             
         }];

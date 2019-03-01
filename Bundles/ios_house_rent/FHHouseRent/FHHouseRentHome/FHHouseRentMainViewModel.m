@@ -552,7 +552,8 @@
     [envBridge setTraceValue:@"renting_list" forKey:@"origin_from"];
     [envBridge setTraceValue:self.originSearchId forKey:@"origin_search_id"];
 
-    NSMutableDictionary* tracer = [[self.viewController.tracerModel neatLogDict] mutableCopy];
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    [tracer addEntriesFromDictionary:[self.viewController.tracerModel neatLogDict]];
     tracer[@"card_type"] = @"left_pic";
     tracer[@"element_from"] = @"be_null";
     tracer[@"enter_from"] = @"renting";
@@ -562,7 +563,7 @@
     tracer[@"origin_search_id"] = self.originSearchId ? : @"be_null";
 
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://rent_detail?house_id=%@", model.id]];
-    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
+    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer,@"house_type":@(3)}];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
 }
 
@@ -784,7 +785,9 @@
        
         SETTRACERKV(UT_ORIGIN_FROM, originFrom);
         
-        NSMutableDictionary *params = [[self.viewController.tracerModel neatLogDict] mutableCopy];
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params addEntriesFromDictionary:[self.viewController.tracerModel neatLogDict] ];
+
         params[@"enter_from"] = @"renting";
         params[@"origin_from"] = originFrom;
         params[@"origin_search_id"] = nil;//remove origin_search_id
@@ -881,10 +884,15 @@
      4. origin_search_id
      5. hot_word（搜索框轮播词，无轮播词记为be_null）
      */
+//
+//    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+//    NSDictionary *houseParams = [envBridge homePageParamsMap];
+    [[FHEnvContext sharedInstance] getCommonParams];
+    NSMutableDictionary *homeParams = [NSMutableDictionary new];
     
-    id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-    NSDictionary *houseParams = [envBridge homePageParamsMap];
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithDictionary:houseParams];
+    
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+    [params addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
     params[@"page_type"] = @"renting";
     params[@"origin_search_id"] = self.viewController.tracerModel.originSearchId?:@"be_null";
     params[@"hot_word"] = @"be_null";
@@ -1188,15 +1196,16 @@
     tracerDict[@"category_name"] = @"rent_list";
     tracerDict[UT_ELEMENT_FROM] = @"renting_search";
     tracerDict[@"page_type"] = @"renting";
-    
+    tracerDict[@"origin_from"] = allInfo[@"tracer"][@"origin_from"] ? allInfo[@"tracer"][@"origin_from"] : @"be_null";
+
     NSMutableDictionary *houseSearchDict = [[NSMutableDictionary alloc] initWithDictionary:allInfo[@"houseSearch"]];
     houseSearchDict[@"page_type"] = @"renting";
     allInfo[@"houseSearch"] = houseSearchDict;
     allInfo[@"tracer"] = tracerDict;
-    
+
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:allInfo];
-    
-    routeObject.paramObj.userInfo = userInfo;        
+
+    routeObject.paramObj.userInfo = userInfo;
     [[TTRoute sharedRoute] openURLByPushViewController:routeObject.paramObj.sourceURL userInfo:routeObject.paramObj.userInfo];
 
 }

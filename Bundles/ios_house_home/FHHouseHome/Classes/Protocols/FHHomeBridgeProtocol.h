@@ -10,6 +10,8 @@
 
 @protocol FHHomeBridgeProtocol <NSObject>
 
+- (NSString *)getRefreshTipURLString;
+
 - (NSString *)feedStartCategoryName;
 
 - (NSString *)currentSelectCategoryName;
@@ -27,6 +29,11 @@
 - (BOOL)isCurrentTabFirst;
 
 - (BOOL)isNeedSwitchCityCompare;
+
+- (void)updateNotifyBadgeNumber:(NSString *)categoryId isShow:(BOOL)isShow;
+
+//首页推荐红点请求时间间隔
+- (NSInteger)getCategoryBadgeTimeInterval;
 
 @end
 

@@ -31,9 +31,8 @@
 #import "TTPushAlertManager.h"
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
-
-#import "Bubble-Swift.h"
-
+#import <FHLocManager.h>
+#import <UIFont+House.h>
 
 #define kFirstLeftMargin    15
 #define kLastRightMargin    68
@@ -989,15 +988,15 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
             [self setButtonNormalColor:btn];
         }
     }
-    MessageEventManager * messageMgr = [[[EnvContext shared] client] messageManager];
 
     //判断离开首页推荐频道
     if ([_lastSelectedButton.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse] && ![button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
-        [messageMgr startSyncCategoryBadge];
+//        [messageMgr startSyncCategoryBadge];
+        [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
     }
     
     if ([button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
-        [messageMgr stopSyncCategoryBadge];
+        [[FHLocManager sharedInstance] stopCategoryRedDotRefresh];
     }
     
     self.lastSelectedButton = button;
@@ -1009,11 +1008,11 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     //判断当前频道是否是首页推荐
 
     
-    
-    
     NSUInteger badgeNumber = [[TTCategoryBadgeNumberManager sharedManager] badgeNumberOfCategoryID:_lastSelectedButton.categoryModel.categoryID];
     [_lastSelectedButton showPoint:showPoint badgeNumber:badgeNumber style:_style];
     [_categoryClickAutoDismissBadgeSet removeObject:_lastSelectedButton.categoryModel.categoryID];
+    
+    
 }
 
 //- (void)expandButtonClicked:(id)sender

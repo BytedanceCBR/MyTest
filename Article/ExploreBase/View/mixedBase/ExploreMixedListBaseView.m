@@ -165,7 +165,10 @@
 #import "FHHomeConfigManager.h"
 #import "FHFeedHouseCellHelper.h"
 #import "FHFeedHouseItemCell.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import <FHEnvContext.h>
+#import <FHLocManager.h>
+#import <FHHomeCellHelper.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
@@ -691,9 +694,10 @@ TTRefreshViewDelegate
                              [wself fetchFromLocal:![wself tt_hasValidateData] fromRemote:YES getMore:NO];
                              if (![FHHomeConfigManager sharedInstance].currentDataModel)
                              {
-                                 if ([[EnvContext shared] respondsToSelector:@selector(client)] && [[[EnvContext shared] client] respondsToSelector:@selector(onStart)]) {
-                                     [[[EnvContext shared] client] onStart];
-                                 }
+                                 [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+//                                 if ([[EnvContext shared] respondsToSelector:@selector(client)] && [[[EnvContext shared] client] respondsToSelector:@selector(onStart)]) {
+//                                     [[[EnvContext shared] client] onStart];
+//                                 }
                              }
                          }];
     CGFloat barH = [SSCommonLogic articleNotifyBarHeight];

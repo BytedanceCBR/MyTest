@@ -47,10 +47,12 @@
 #import "TTTabBarProvider.h"
 #import "ExploreExtenstionDataHelper.h"
 #import <TTAppUpdateHelper.h>
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "FHHomeSearchPanelViewModel.h"
 #import "FHEnvContext.h"
 #import "TTLaunchTracer.h"
+#import "TTCategoryStayTrackManager.h"
+#import <FHEnvContext.h>
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -140,11 +142,11 @@
     [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
         [self.view addSubview:view];
     } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
-        if (!downloadUrl) {
-            return;
-        }
-        NSURL *url = [NSURL URLWithString:downloadUrl];
-        [[UIApplication sharedApplication] openURL:url];
+//        if (!downloadUrl) {
+//            return;
+//        }
+//        NSURL *url = [NSURL URLWithString:downloadUrl];
+//        [[UIApplication sharedApplication] openURL:url];
     } closeBlock:^{
         
     }];
@@ -532,7 +534,8 @@
     [dict setValue:label forKey:@"refresh_type"];
 
     if (![category.categoryID isEqualToString:@"f_find_house"]) {
-        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+        [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
+//        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
     }
 
 //    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];

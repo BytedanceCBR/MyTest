@@ -6,7 +6,7 @@ source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
 source 'git@code.byted.org:ugc/UGCSpecs.git'
 
 
-platform :ios, '8.0'
+platform :ios, '8.0' 
 
 inhibit_all_warnings!
 def appPods
@@ -22,6 +22,8 @@ def appPods
     pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message' # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
     pod 'FHHouseList' , :path => '../Bundles/ios_house_list' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
     pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
+    pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
+    
     #pod 'ios_house_filter' , :path => '../../lab/ios_house_filter' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
 #	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
 	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
@@ -302,7 +304,7 @@ def appPods
     ]
 
     #----内测升级弹窗----
-    pod 'TTAppUpdateHelper', :subspecs => [
+    pod 'TTAppUpdateHelper', '1.0.9', :subspecs => [
     'TTUpdateHelper',
     'TTUpdateView'
     ]

@@ -156,7 +156,7 @@ typedef enum SSFeedbackSegmentType {
 
 @property (nonatomic, retain) SSViewBase * currentView;
 @property (nonatomic, retain) SSMyFeedbackView * myFeedbackView;
-@property (nonatomic, retain) SSFeedbackFAQView * FAQView;
+//@property (nonatomic, retain) SSFeedbackFAQView * FAQView;
 @property (nonatomic, retain) SSFeedbackInputButton * inputButton;
 
 @end
@@ -167,7 +167,7 @@ typedef enum SSFeedbackSegmentType {
 {
     self.inputButton = nil;
     self.myFeedbackView = nil;
-    self.FAQView = nil;
+//    self.FAQView = nil;
     self.currentView = nil;
 }
 
@@ -222,7 +222,7 @@ typedef enum SSFeedbackSegmentType {
 - (void)buildListView
 {
     self.myFeedbackView = [[SSMyFeedbackView alloc] initWithFrame:[self frameForListView]];
-    self.FAQView = [[SSFeedbackFAQView alloc] initWithFrame:[self frameForListView]];
+//    self.FAQView = [[SSFeedbackFAQView alloc] initWithFrame:[self frameForListView]];
     self.currentView = _myFeedbackView;
 }
 
@@ -278,7 +278,7 @@ typedef enum SSFeedbackSegmentType {
 {
     [super layoutSubviews];
     self.myFeedbackView.frame = [self frameForListView];
-    self.FAQView.frame = [self frameForListView];
+//    self.FAQView.frame = [self frameForListView];
     self.inputButton.frame = [self frameForInputButton];
     
 }
@@ -290,7 +290,7 @@ typedef enum SSFeedbackSegmentType {
             self.currentView = _myFeedbackView;
             break;
         case 1:
-            self.currentView = _FAQView;
+//            self.currentView = _FAQView;
             break;
         default:
             break;

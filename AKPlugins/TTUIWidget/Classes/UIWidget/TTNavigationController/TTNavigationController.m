@@ -164,7 +164,7 @@ static inline CGFloat navigationBarTop() {
     }
     
     // 处理iOS11上私信消息中心的会话左滑删除手势失效的问题
-    if (([otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTIMChatCenterViewController")] || [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"_TtC6Bubble16MyFavoriteListVC")]) &&
+    if (([otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"TTIMChatCenterViewController")] || [otherGestureRecognizer.view.viewController isKindOfClass:NSClassFromString(@"FHMyFavoriteViewController")]) &&
         [otherGestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] &&
         [otherGestureRecognizer.view isKindOfClass:[UITableView class]]) {
         CGPoint velocity = [(UIPanGestureRecognizer *)otherGestureRecognizer velocityInView:otherGestureRecognizer.view];

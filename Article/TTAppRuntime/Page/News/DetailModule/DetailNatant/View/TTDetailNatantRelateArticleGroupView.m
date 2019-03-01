@@ -118,9 +118,7 @@
     if (![[self.traceIdDict objectForKey:index] isEqualToString:@""]) {
         NSInteger indexV = [index integerValue];
         if (self.viewModel.relatedItems.count > indexV) {
-            TTDetailNatantRelatedItemModel *itemModel = self.viewModel.relatedItems[indexV];
-            NSLog(@"self.viewModel.relatedItems=%@",self.viewModel.relatedItems);
-            
+            TTDetailNatantRelatedItemModel *itemModel = self.viewModel.relatedItems[indexV];            
             [self sendArticleRelateClientShow:itemModel];
             
             [self.traceIdDict setValue:@"" forKey:index];

@@ -183,6 +183,11 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     }
 }
 
+- (void)hiddeNaviBack:(BOOL)isShowBtn
+{
+    self.navigationBar.leftBarView.hidden = !isShowBtn;
+}
+
 - (void)shareBtnClick
 {
     [self.ssWebContainer.ssWebView ttr_fireEvent:@"clickShare" data:nil];
