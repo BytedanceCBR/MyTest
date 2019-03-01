@@ -11,6 +11,8 @@
 #import <Masonry.h>
 #import "TTDeviceHelper.h"
 #import "UIImageView+BDWebImage.h"
+#import "TTAccount.h"
+#import "FHChatUserInfoManager.h"
 
 @interface FHMessageCell()
 
@@ -158,9 +160,13 @@
 - (void)updateWithChat:(IMConversation*)conversation {
     IMConversation* conv = conversation;
     self.unreadView.badgeNumber = conv.unreadCount;
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:@"default_image"]];
+    [self.iconView bd_setImageWithURL:[NSURL URLWithString:conv.icon] placeholder:[UIImage imageNamed:@"chat_business_icon_c"]];
 
     self.titleLabel.text = conv.conversationDisplayName;
+    if (isEmptyString(conv.conversationDisplayName)) {
+        NSString *targetUserId = [conv getTargetUserId:[[TTAccount sharedAccount] userIdString]];
+        self.titleLabel.text = [[FHChatUserInfoManager shareInstance] getUserInfo:targetUserId].username;
+    }
     if (!isEmptyString([conv getDraft])) {
         self.subTitleLabel.attributedText = [self getDraftAttributeString:[conv getDraft]];
     } else {

@@ -40,6 +40,7 @@
     [self initConstraints];
     [self initViewModel];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -54,6 +55,10 @@
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [FHBubbleTipManager shareInstance].canShowTip = YES;
+}
+
+- (void)userInfoReload {
+    [_tableView reloadData];
 }
 
 - (void)initNavbar {

@@ -46,7 +46,7 @@
 }
 
 - (UIColor *)getDefaultTxtColor {
-   return [UIColor colorWithHexStr:@"999999"];
+   return [UIColor colorWithHexString:@"999999"];
 }
 
 - (NSArray<NSHTTPCookie *>*)getClientCookie {
@@ -84,21 +84,24 @@
     [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:param  method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         if (!error) {
             NSString *number = @"";
+            NSString *serverImprId = imprId;
             if ([obj isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *jsonObj = (NSDictionary *)obj;
                 NSDictionary *data = [jsonObj objectForKey:@"data"];
                 number = data[@"virtual_number"];
+                serverImprId = data[@"impr_id"] ?: @"be_null";
             }
             NSString *phone = @"";
             BOOL isAssociate = NO;
             phone = [number stringByReplacingOccurrencesOfString:@"" withString:@""];
             isAssociate = YES;
-            finishBlock(@"click_call");
+            
+            finishBlock(@"click_call", serverImprId);
             NSString *phoneUrl = [NSString stringWithFormat:@"telprompt://%@",phone];
             NSURL *url = [NSURL URLWithString:phoneUrl];
             [[UIApplication sharedApplication] openURL:url];
         } else {
-            finishBlock(@"click_call");
+            finishBlock(@"click_call", imprId);
         }
     }];
 }
