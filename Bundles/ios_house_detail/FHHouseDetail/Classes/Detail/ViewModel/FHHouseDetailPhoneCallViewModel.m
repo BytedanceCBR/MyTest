@@ -310,8 +310,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (contactPhone.realtorId.length < 1) {
         return;
     }
-//    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString *host = @"http://10.1.15.29:8889";
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+//    NSString *host = @"http://10.1.15.29:8889";
     NSURL *openUrl = [NSURL URLWithString:@"sslocal://realtor_detail"];
     
     NSMutableDictionary *dict = @{}.mutableCopy;
@@ -352,8 +352,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (!imParseError) {
         imParams = [[NSString alloc] initWithData:imJsonData encoding:NSUTF8StringEncoding];
     }
-    
-    NSString *jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
+    NSString *realtorDeUrl = contactPhone.realtorDetailUrl;
+    NSString *jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人详情页";

@@ -65,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *realtorName;
 @property (nonatomic, copy , nullable) NSString *imOpenUrl;
 @property (nonatomic, copy , nullable) NSString *imLabel;
+@property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
