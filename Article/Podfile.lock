@@ -197,7 +197,7 @@ PODS:
   - BDAccount/WeChat (0.1.0):
     - BDAccount/PlatformCore
     - TTThirdPartySDKs/WeChatSDK
-  - BDALog (0.1.15)
+  - BDALog (0.1.16)
   - BDTArticle (0.2.3):
     - Crashlytics
     - TTAdModule
@@ -1152,7 +1152,7 @@ PODS:
   - TTVTLIndexPathTools (0.4.4)
   - UITableView+FDTemplateLayoutCell (1.6)
   - UMengAnalytics (4.1.4)
-  - YYCache (1.0.4)
+  - YYCache (1.0.4.1)
   - YYImage (1.0.4):
     - YYImage/Core (= 1.0.4)
   - YYImage/Core (1.0.4)
@@ -1466,7 +1466,7 @@ SPEC CHECKSUMS:
   Aspects: cbfcf8eeef30f3a7126367c453fdb7c446877e6c
   AWEVideoPlayer: 941e50a0e2ce830791680f8c400de5bea3e14af3
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 638bb95fe04cc64c02c29981610a6616e53bf50a
+  BDALog: c9e3dcbfa28b33b8b6992c194adcad2b5d0eb839
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: 2556db5b8358fe78dcb8f793793bf693e2a76adb
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -1490,7 +1490,7 @@ SPEC CHECKSUMS:
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FLAnimatedImage: 09a3ee0b4246b03d85212884ccac54b5ffcd4945
   FLEX: b30872f2be292005f4f6cec85b045940f35f8026
-  FMDB: b8c2b93e89989c5d61b5e8b0f737136e3f423762
+  FMDB: 7ece7a550d5f674b1496761ef828e8bd2021b9ae
   Godzippa: 4e77a46fd45c66faa0a9afabfc374f4d7b2e6ba4
   Heimdallr: e7dc47caa98c26fda49617dbbb882ed2783828d2
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
@@ -1583,7 +1583,7 @@ SPEC CHECKSUMS:
   TTVTLIndexPathTools: 997b28f180f2847b2da6b1bd340b87623f1429d3
   UITableView+FDTemplateLayoutCell: 3b65a6822f52d2e3cf6c442220307cb1ac192dc6
   UMengAnalytics: d318ff10358c323f18bd1cf4b2d8ac99e76bdefc
-  YYCache: 7e176e4a8882e98b59da1a0108d1b4c189af4eef
+  YYCache: 670ea71c9d20945defa5edd23380a547636a66e7
   YYImage: 53144c062bb98bc2ea5a2551e29cf1afb97ad5df
   YYModel: b671b05b2a2d24cb8ad6ddceaa61b1daec459be9
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714

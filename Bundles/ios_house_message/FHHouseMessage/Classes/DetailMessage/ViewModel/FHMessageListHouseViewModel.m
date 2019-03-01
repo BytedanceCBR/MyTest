@@ -145,7 +145,31 @@
     NSMutableDictionary *tracerDict = [self categoryLogDict];
     tracerDict[@"element_from"] = @"messagetab";
     tracerDict[@"enter_from"] = @"messagetab";
+    tracerDict[@"category_name"] = @"be_null";
+    FHHouseMsgDataItemsItemsModel *itemModel = [model.items firstObject];
+    if(itemModel){
+        NSInteger houseType = [itemModel.houseType integerValue];
+        switch (houseType) {
+            case FHHouseTypeNewHouse:
+                tracerDict[@"category_name"] = @"new_list";
+                break;
+            case FHHouseTypeSecondHandHouse:
+                tracerDict[@"category_name"] = @"old_list";
+                break;
+            case FHHouseTypeRentHouse:
+                tracerDict[@"category_name"] = @"rent_list";
+                break;
+                
+            default:
+                break;
+        }
+    }
+    
     TRACK_EVENT(@"click_recommend_loadmore", tracerDict);
+    
+    NSMutableDictionary *userDict = [NSMutableDictionary dictionary];
+    userDict[@"tracer"] = tracerDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:userDict];
     
     NSURL* url = [NSURL URLWithString:moreDetail];
     if ([url.scheme isEqualToString:@"fschema"]) {
@@ -153,7 +177,7 @@
         url = [NSURL URLWithString:newModelUrl];
     }
     
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
 //埋点
