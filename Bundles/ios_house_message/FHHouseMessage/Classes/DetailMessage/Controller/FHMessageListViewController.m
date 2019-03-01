@@ -80,41 +80,6 @@
     return categoryName;
 }
 
-- (NSString *)clickMoreCategoryName
-{
-    FHMessageType type = [self.typeId integerValue];
-    NSString *categoryName = @"be_null";
-    if(self.typeId){
-        switch (type) {
-            case FHMessageTypeNew:
-                categoryName = @"new_message_list";
-                break;
-            case FHMessageTypeOld:
-                categoryName = @"old_message_list";
-                break;
-            case FHMessageTypeRent:
-                categoryName = @"rent_message_list";
-                break;
-            case FHMessageTypeNeighborhood:
-                categoryName = @"neighborhood_message_list";
-                break;
-            case FHMessageTypeHouseOld:
-                categoryName = @"recommend_message_list";
-                break;
-            case FHMessageTypeHouseRent:
-                categoryName = @"recommend_message_list";
-                break;
-            case FHMessageTypeSystem:
-                categoryName = @"official_message_list";
-                break;
-                
-            default:
-                break;
-        }
-    }
-    return categoryName;
-}
-
 - (NSString *)originFrom
 {
     FHMessageType type = [self.typeId integerValue];

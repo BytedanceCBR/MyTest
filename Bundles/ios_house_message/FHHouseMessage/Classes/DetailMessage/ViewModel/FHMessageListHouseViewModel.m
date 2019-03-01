@@ -159,6 +159,9 @@
             case FHHouseTypeRentHouse:
                 tracerDict[@"category_name"] = @"rent_list";
                 break;
+            case FHHouseTypeNeighborhood:
+                tracerDict[@"category_name"] = @"neighborhood_list";
+                break;
                 
             default:
                 break;
