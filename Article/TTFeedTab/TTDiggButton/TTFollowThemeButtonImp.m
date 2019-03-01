@@ -12,8 +12,8 @@
 #import "TTFollowNotifyServer.h"
 #import "TTIconFontChatroomDefine.h"
 #import "UIButton+TTAdditions.h"
-#import "TTKitchenMgr.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenMgr.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 #define kFollowText NSLocalizedString(@"关注", nil)
 #define kHasFollowText NSLocalizedString(@"已关注", nil)

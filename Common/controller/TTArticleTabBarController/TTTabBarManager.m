@@ -26,7 +26,7 @@
 #import "TTNetworkManager.h"
 #import "Singleton.h"
 
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTTabBarProvider.h"
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"

@@ -17,7 +17,7 @@
 #import "SSUserSettingManager.h"
 #import "TTArticleCellConst.h"
 #import "TTLayOutCellDataHelper.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import <TTAccountBusiness.h>
 //#import "TTThreadCellHelper.h"
 

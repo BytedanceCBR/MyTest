@@ -34,7 +34,7 @@
 //#import "TTCertificationConst.h"
 #import <UIView+CustomTimingFunction.h>
 #import "TTPersonalHomeSinglePlatformFollowersInfoModel.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import <ExploreMomentDefine_Enums.h>
 #import "FriendModel.h"
 

@@ -23,7 +23,7 @@
 //#import "TTRepostOriginModels.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
 //#import "TTShareToRepostManager.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTAsyncCornerImageView+VerifyIcon.h"
 #import "TTRelevantDurationTracker.h"
 #import "TTUGCTrackerHelper.h"

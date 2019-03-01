@@ -15,9 +15,9 @@
 #import "TTExtensions.h"
 #import "UIDevice+TTAdditions.h"
 #import "NSDictionary+TTAdditions.h"
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 #import "TTLocationManager.h"
-#import "TTABManagerUtil.h"
+#import <TTABManager/TTABManagerUtil.h>
 #import "TTURLUtils.h"
 #import "TTAdTrackManager.h"
 #import "TTAppLinkManager.h"
