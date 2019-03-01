@@ -338,6 +338,12 @@
         NSDictionary *infos = @{
                                 @"houseSearch":houseSearchParams
                                 };
+        if (self.tracerDict.count > 0) {
+            infos = @{
+                      @"houseSearch":houseSearchParams,
+                      @"tracer": self.tracerDict
+                      };
+        }
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
     } else {
         self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
