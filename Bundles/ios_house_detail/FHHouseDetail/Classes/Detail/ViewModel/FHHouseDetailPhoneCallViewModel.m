@@ -194,13 +194,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
         houseDes = [houseDes substringToIndex:20];
     }
     _imParams = [NSMutableDictionary dictionary];
-    [_imParams setObject:houseId forKey:@"house_id"];
-    [_imParams setObject:houseTitle forKey:@"house_title"];
-    [_imParams setObject:houseDes forKey:@"house_des"];
-    [_imParams setObject:houseCover forKey:@"house_cover"];
-    [_imParams setObject:housePrice forKey:@"house_price"];
-    [_imParams setObject:houseAvgPrice forKey:@"house_avg_price"];
-    [_imParams setObject:houseType forKey:@"house_type"];
+    [_imParams setValue:houseId forKey:@"house_id"];
+    [_imParams setValue:houseTitle forKey:@"house_title"];
+    [_imParams setValue:houseDes forKey:@"house_des"];
+    [_imParams setValue:houseCover forKey:@"house_cover"];
+    [_imParams setValue:housePrice forKey:@"house_price"];
+    [_imParams setValue:houseAvgPrice forKey:@"house_avg_price"];
+    [_imParams setValue:houseType forKey:@"house_type"];
 }
 
 - (void)fillFormRequest:(NSString *)phoneNum
@@ -344,8 +344,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     
     NSMutableDictionary *imdic = [NSMutableDictionary dictionaryWithDictionary:_imParams];
-    [imdic setObject:contactPhone.realtorId forKey:@"target_user_id"];
-    [imdic setObject:contactPhone.realtorName forKey:@"chat_title"];
+    [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
+    [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];
@@ -353,7 +353,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
         imParams = [[NSString alloc] initWithData:imJsonData encoding:NSUTF8StringEncoding];
     }
     NSString *realtorDeUrl = contactPhone.realtorDetailUrl;
-    NSString *jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
+    NSString *jumpUrl =@"";
+    if (isEmptyString(realtorDeUrl)) {
+        jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
+    } else {
+        jumpUrl = [NSString stringWithFormat:@"%@&realtor_id=%@",realtorDeUrl,reportParams ? : @""];
+    }
+//    jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人详情页";

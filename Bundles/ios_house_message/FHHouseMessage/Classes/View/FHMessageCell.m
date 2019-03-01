@@ -77,30 +77,29 @@
 - (void)initConstraints
 {
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.top.mas_equalTo(10);
-        make.width.height.mas_equalTo(62);
+        make.left.mas_equalTo(23);
+        make.bottom.mas_equalTo(-14);
+        make.width.height.mas_equalTo(54);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.iconView.mas_right).offset(11);
-        make.right.mas_equalTo(self.timeLabel.mas_left).offset(-4);
-        make.top.mas_equalTo(18);
+        make.left.mas_equalTo(self.iconView.mas_right).offset(19);
+        make.right.mas_equalTo(-100);
+        make.top.mas_equalTo(self.iconView.mas_top).offset(3);
         make.height.mas_equalTo(22);
     }];
     
     [self.msgStateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel.mas_left);
-        make.right.mas_equalTo(self.titleLabel.mas_left).offset(12);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(8);
-        make.height.mas_equalTo(12);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(10);
+        make.width.height.mas_equalTo(12);
     }];
     
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.titleLabel.mas_left);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
-        make.height.mas_equalTo(17);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        make.height.mas_equalTo(20);
     }];
     
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
