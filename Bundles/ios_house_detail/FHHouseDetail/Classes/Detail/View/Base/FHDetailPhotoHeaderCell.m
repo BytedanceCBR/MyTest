@@ -185,18 +185,23 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
-    dict[@"picture_id"] = img.url;
-    dict[@"show_type"] = @"large";
     
-    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
-    if (duration <= 0) {
-        return;
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = img.url;
+        dict[@"show_type"] = @"large";
+        
+        NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+        if (duration <= 0) {
+            return;
+        }
+        
+        dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+        self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+        TRACK_EVENT(@"picture_large_stay", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
     }
-    
-    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
-    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
-    TRACK_EVENT(@"picture_large_stay", dict);
 }
 
 //埋点
@@ -206,17 +211,22 @@
     if(!dict){
         dict = [NSMutableDictionary dictionary];
     }
-    [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
-    dict[@"picture_id"] = img.url;
-    dict[@"show_type"] = @"large";
     
-    NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
-    if (duration <= 0) {
-        return;
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = img.url;
+        dict[@"show_type"] = @"large";
+        
+        NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+        if (duration <= 0) {
+            return;
+        }
+        
+        dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+        TRACK_EVENT(@"picture_save", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
     }
-    
-    dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
-    TRACK_EVENT(@"picture_save", dict);
 }
 
 
@@ -355,15 +365,11 @@
     CGRect frame = [self convertRect:self.bounds toView:window];
     NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index+1];
     NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-    for (NSInteger i = 0 ; i < index ; i++) {
-        [frames addObject:[NSNull null]];
-    }
     for (NSInteger i = 0 ; i < images.count; i++) {
         [placeholders addObject:placeholder];
+        NSValue *frameValue = [NSValue valueWithCGRect:frame];
+        [frames addObject:frameValue];
     }
-    
-    NSValue *frameValue = [NSValue valueWithCGRect:frame];
-    [frames addObject:frameValue];
     vc.placeholderSourceViewFrames = frames;
     vc.placeholders = placeholders;
     __weak typeof(self) weakSelf = self;

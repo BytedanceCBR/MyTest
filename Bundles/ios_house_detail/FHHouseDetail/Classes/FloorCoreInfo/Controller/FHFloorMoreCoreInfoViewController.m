@@ -9,6 +9,7 @@
 #import "FHFloorCoreInfoViewModel.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailDisclaimerCell.h"
+#import "FHFloorCoreInfoViewModel.h"
 
 @interface FHFloorMoreCoreInfoViewController () <TTRouteInitializeProtocol>
 
@@ -42,6 +43,7 @@
     _coreInfoListViewModel = [[FHFloorCoreInfoViewModel alloc] initWithController:self tableView:_infoListTable courtId:_courtId houseNameModel:_houseNameModel housedisclaimerModel:_disclaimerModel];
     
     [self setNavBarTitle:@"楼盘信息"];
+    [self.view bringSubviewToFront:[self getNaviBar]];
 }
 
 - (void)retryLoadData

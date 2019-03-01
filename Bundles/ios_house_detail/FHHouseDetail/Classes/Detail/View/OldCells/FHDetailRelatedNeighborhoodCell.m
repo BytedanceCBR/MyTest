@@ -115,7 +115,7 @@
         
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"category_name"] = @"neighborhood_nearby_list";
         tracerDic[@"element_type"] = @"be_null";
         tracerDic[@"element_from"] = @"neighborhood_nearby";
@@ -149,6 +149,7 @@
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
         tracerDic[@"element_from"] = @"neighborhood_nearby";
+        tracerDic[@"enter_from"] = @"old_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",dataItem.id];
         if (urlStr.length > 0) {
@@ -172,6 +173,10 @@
         tracerDic[@"log_pb"] = itemModel.logPb ? itemModel.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
         tracerDic[@"element_type"] = @"neighborhood_nearby";
+        tracerDic[@"search_id"] = itemModel.searchId.length > 0 ? itemModel.searchId : @"be_null";
+        tracerDic[@"group_id"] = itemModel.groupId.length > 0 ? itemModel.groupId : (itemModel.id ? itemModel.id : @"be_null");
+        tracerDic[@"impr_id"] = itemModel.imprId.length > 0 ? itemModel.imprId : @"be_null";
+        [tracerDic removeObjectsForKeys:@[@"element_from"]];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];
     }
 }

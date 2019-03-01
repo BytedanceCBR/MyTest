@@ -15,6 +15,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import "FHFloorPanDetailViewModel.h"
 #import "UIViewController+Track.h"
+#import "FHFloorCoreInfoViewModel.h"
 
 @interface FHFloorPanDetailViewController ()
 
@@ -30,7 +31,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.ttTrackStayEnable = YES;
-        _floorPanId = paramObj.allParams[@"floorpanid"];
+        _floorPanId = paramObj.allParams[@"floor_plan_id"];
         
         [self processTracerData:paramObj.allParams[@"tracer"]];
     }
@@ -49,9 +50,7 @@
     self.coreInfoListViewModel.detailTracerDic = [self makeDetailTracerData];
     
     [_coreInfoListViewModel addGoDetailLog];
-    
-
-    // Do any additional setup after loading the view.
+    [self.view bringSubviewToFront:[self getNaviBar]];
 }
 
 - (void)retryLoadData
@@ -156,7 +155,7 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                
+                self.tracerDict[@"log_pb"] = log_pb_str;
             }
         }
     }
@@ -172,6 +171,9 @@
             self.tracerDict[@"rank"] = rank;
         }
     }
+
+    self.coreInfoListViewModel.logPB = self.tracerDict[@"log_pb"];
+    
     self.coreInfoListViewModel.detailTracerDic = self.tracerDict;
 }
 

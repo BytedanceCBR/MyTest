@@ -105,7 +105,7 @@
 {
     
     if (![TTReachability isNetworkConnected]) {
-        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
         return;
     }
     

@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMyFavoriteViewModel : NSObject
 
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, strong) NSMutableArray *removedDataList;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMyFavoriteViewController *)viewController type:(FHHouseType)type;
 

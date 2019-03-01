@@ -543,6 +543,12 @@
 		6114DDEA21A432960060EBB8 /* FHFeedHouseItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */; };
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
+		6198677D2223E8EE0056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198677C2223E8EE0056B2EF /* NotificationService.m */; };
+		619867812223E8EE0056B2EF /* serviceNofExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 619867792223E8EE0056B2EF /* serviceNofExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		619867862223E9650056B2EF /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 619867562223E22B0056B2EF /* TTNotificationServiceExtensionBase.m */; };
+		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
+		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		619867972223E9D60056B2EF /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 619867562223E22B0056B2EF /* TTNotificationServiceExtensionBase.m */; };
 		61A446F02152906C0072B46E /* FHDemanderTrackerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */; };
 		61A446F12152906C0072B46E /* FHDemanderTrackerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */; };
 		61A446F4215293C20072B46E /* FHDataPlayerTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446F3215293C20072B46E /* FHDataPlayerTracker.m */; };
@@ -6207,6 +6213,23 @@
 		FEFB7DE81D33450900627ABC /* ExploreDetailPhoneGroupPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = FEFB7DE71D33450900627ABC /* ExploreDetailPhoneGroupPicADView.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		6198677F2223E8EE0056B2EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 619867782223E8EE0056B2EF;
+			remoteInfo = serviceNofExtension;
+		};
+		619867912223E9A70056B2EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6198678A2223E9A70056B2EF;
+			remoteInfo = com.f100.client.FHNotificationServiceExtension;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		48AE54AE19E4F209005B68B1 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -6234,6 +6257,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6274,6 +6298,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				619867812223E8EE0056B2EF /* serviceNofExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6915,6 +6940,7 @@
 		3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHouseEvnContextBridgeImp.m; sourceTree = "<group>"; };
 		3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHMDMonitorStartupTask.h; sourceTree = "<group>"; };
 		3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHMDMonitorStartupTask.m; sourceTree = "<group>"; };
+		3D5BD565222440EB0037E8E3 /* NewsInHouse.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = NewsInHouse.entitlements; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseCellsBridgeImp.h; sourceTree = "<group>"; };
 		3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseCellsBridgeImp.m; sourceTree = "<group>"; };
@@ -7315,6 +7341,18 @@
 		6114DDE721A432960060EBB8 /* FHFeedHouseItemCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemCell.m; sourceTree = "<group>"; };
 		617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NIHFeedCollectionHouseCell.m; sourceTree = "<group>"; };
 		617C25B52143E28A0007E2C4 /* NIHFeedCollectionHouseCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NIHFeedCollectionHouseCell.h; sourceTree = "<group>"; };
+		619867552223E22B0056B2EF /* TTNotificationServiceExtensionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNotificationServiceExtensionBase.h; sourceTree = "<group>"; };
+		619867562223E22B0056B2EF /* TTNotificationServiceExtensionBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNotificationServiceExtensionBase.m; sourceTree = "<group>"; };
+		619867792223E8EE0056B2EF /* serviceNofExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = serviceNofExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6198677B2223E8EE0056B2EF /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
+		6198677C2223E8EE0056B2EF /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
+		6198677E2223E8EE0056B2EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		619867852223E9450056B2EF /* serviceNofExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = serviceNofExtension.entitlements; sourceTree = "<group>"; };
+		6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = com.f100.client.FHNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6198678D2223E9A70056B2EF /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
+		6198678E2223E9A70056B2EF /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
+		619867902223E9A70056B2EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		619867982223EF910056B2EF /* com.f100.client.FHNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = com.f100.client.FHNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		61A446EE2152906C0072B46E /* FHDemanderTrackerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHDemanderTrackerManager.h; sourceTree = "<group>"; };
 		61A446EF2152906C0072B46E /* FHDemanderTrackerManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHDemanderTrackerManager.m; sourceTree = "<group>"; };
 		61A446F2215293C20072B46E /* FHDataPlayerTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHDataPlayerTracker.h; sourceTree = "<group>"; };
@@ -9482,6 +9520,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		619867762223E8EE0056B2EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		619867882223E9A70056B2EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B373CED22174587A008F9905 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -10770,6 +10822,7 @@
 		3AA5027515876A1F00EB27FA = {
 			isa = PBXGroup;
 			children = (
+				61787F402201AE44003CB249 /* Extensions */,
 				D47950BE21ECC94200548965 /* Resources-iPad */,
 				B388CB152142652900653188 /* Article-Bridging-Header.h */,
 				3D2D487D21A28E590011A0EC /* House */,
@@ -10791,6 +10844,8 @@
 				A8323FEE1B81B87300DD5533 /* Source */,
 				A8323FED1B81B59600DD5533 /* Targets-Config */,
 				A8A57F531B16F44D00783AA9 /* Resource */,
+				6198677A2223E8EE0056B2EF /* serviceNofExtension */,
+				6198678C2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */,
 				3AA5028315876A1F00EB27FA /* Frameworks */,
 				3AA5028115876A1F00EB27FA /* Products */,
 				FEE188E21FFCB587005310BB /* Recovered References */,
@@ -10805,6 +10860,8 @@
 				FEFA5A5D205FB1A8001F50D8 /* NewsLiteInHouse.app */,
 				B373CF102174587A008F9905 /* f100.app */,
 				D479581521ECC94E00548965 /* NewsLiteChannel.app */,
+				619867792223E8EE0056B2EF /* serviceNofExtension.appex */,
+				6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -12008,6 +12065,7 @@
 				48F76D0D16649433002FB812 /* controller */,
 				48F76D3516649433002FB812 /* manager */,
 				48F76D7116649433002FB812 /* News.entitlements */,
+				3D5BD565222440EB0037E8E3 /* NewsInHouse.entitlements */,
 				48F76D7716649433002FB812 /* Resource */,
 				48F7701316649434002FB812 /* view */,
 				48EC8E7A17928B0C004C88B3 /* ArticleExportPrefixBase.h */,
@@ -12212,6 +12270,46 @@
 				61FAA1F421AE7FE4007ED05F /* FHFeedHouseCellHelper.m */,
 			);
 			path = FHHouseItemCell;
+			sourceTree = "<group>";
+		};
+		61787F402201AE44003CB249 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				61787F522201B533003CB249 /* NotificationServiceExtensionBase */,
+			);
+			name = Extensions;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		61787F522201B533003CB249 /* NotificationServiceExtensionBase */ = {
+			isa = PBXGroup;
+			children = (
+				619867552223E22B0056B2EF /* TTNotificationServiceExtensionBase.h */,
+				619867562223E22B0056B2EF /* TTNotificationServiceExtensionBase.m */,
+			);
+			path = NotificationServiceExtensionBase;
+			sourceTree = "<group>";
+		};
+		6198677A2223E8EE0056B2EF /* serviceNofExtension */ = {
+			isa = PBXGroup;
+			children = (
+				619867852223E9450056B2EF /* serviceNofExtension.entitlements */,
+				6198677B2223E8EE0056B2EF /* NotificationService.h */,
+				6198677C2223E8EE0056B2EF /* NotificationService.m */,
+				6198677E2223E8EE0056B2EF /* Info.plist */,
+			);
+			path = serviceNofExtension;
+			sourceTree = "<group>";
+		};
+		6198678C2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */ = {
+			isa = PBXGroup;
+			children = (
+				619867982223EF910056B2EF /* com.f100.client.FHNotificationServiceExtension.entitlements */,
+				6198678D2223E9A70056B2EF /* NotificationService.h */,
+				6198678E2223E9A70056B2EF /* NotificationService.m */,
+				619867902223E9A70056B2EF /* Info.plist */,
+			);
+			path = com.f100.client.FHNotificationServiceExtension;
 			sourceTree = "<group>";
 		};
 		61A446ED2152904A0072B46E /* Tracker */ = {
@@ -17528,6 +17626,40 @@
 			productReference = 3AA5028015876A1F00EB27FA /* NewsLite.app */;
 			productType = "com.apple.product-type.application";
 		};
+		619867782223E8EE0056B2EF /* serviceNofExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 619867822223E8EF0056B2EF /* Build configuration list for PBXNativeTarget "serviceNofExtension" */;
+			buildPhases = (
+				619867752223E8EE0056B2EF /* Sources */,
+				619867762223E8EE0056B2EF /* Frameworks */,
+				619867772223E8EE0056B2EF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = serviceNofExtension;
+			productName = serviceNofExtension;
+			productReference = 619867792223E8EE0056B2EF /* serviceNofExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		6198678A2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 619867942223E9A70056B2EF /* Build configuration list for PBXNativeTarget "com.f100.client.FHNotificationServiceExtension" */;
+			buildPhases = (
+				619867872223E9A70056B2EF /* Sources */,
+				619867882223E9A70056B2EF /* Frameworks */,
+				619867892223E9A70056B2EF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = com.f100.client.FHNotificationServiceExtension;
+			productName = com.f100.client.FHNotificationServiceExtension;
+			productReference = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B373C7F92174587A008F9905 /* f100 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B373CF0D2174587A008F9905 /* Build configuration list for PBXNativeTarget "f100" */;
@@ -17551,6 +17683,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				619867922223E9A70056B2EF /* PBXTargetDependency */,
 			);
 			name = f100;
 			productName = Article;
@@ -17609,6 +17742,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				619867802223E8EE0056B2EF /* PBXTargetDependency */,
 			);
 			name = NewsLiteInHouse;
 			productName = Article;
@@ -17621,6 +17755,7 @@
 		3AA5027715876A1F00EB27FA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 0640;
 				TargetAttributes = {
 					3AA5027F15876A1F00EB27FA = {
@@ -17629,7 +17764,7 @@
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -17657,18 +17792,51 @@
 							};
 						};
 					};
+					619867782223E8EE0056B2EF = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = X46375UBYG;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
+					6198678A2223E9A70056B2EF = {
+						CreatedOnToolsVersion = 10.1;
+						DevelopmentTeam = J3249442BT;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
+					};
 					B373C7F92174587A008F9905 = {
 						DevelopmentTeam = J3249442BT;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					D47950C221ECC94E00548965 = {
 						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					FEFA5259205FB1A8001F50D8 = {
 						DevelopmentTeam = X46375UBYG;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
@@ -17704,6 +17872,8 @@
 				FEFA5259205FB1A8001F50D8 /* NewsLiteInHouse */,
 				B373C7F92174587A008F9905 /* f100 */,
 				D47950C221ECC94E00548965 /* NewsLiteChannel */,
+				619867782223E8EE0056B2EF /* serviceNofExtension */,
+				6198678A2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -17789,6 +17959,20 @@
 				B388CB262142652A00653188 /* Assets.xcassets in Resources */,
 				B362E6F721539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */,
 				D97EB6B01E1CA04200EE4473 /* VideoResource.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		619867772223E8EE0056B2EF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		619867892223E9A70056B2EF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -20755,6 +20939,24 @@
 				D5041F5C205802B600BAEE7F /* AKRedPacketOptionalLoginView.m in Sources */,
 				438F9E531F94B8DE0050F83E /* TTVMidInsertADService.m in Sources */,
 				52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		619867752223E8EE0056B2EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6198677D2223E8EE0056B2EF /* NotificationService.m in Sources */,
+				619867862223E9650056B2EF /* TTNotificationServiceExtensionBase.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		619867872223E9A70056B2EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6198678F2223E9A70056B2EF /* NotificationService.m in Sources */,
+				619867972223E9D60056B2EF /* TTNotificationServiceExtensionBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -25092,6 +25294,19 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		619867802223E8EE0056B2EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 619867782223E8EE0056B2EF /* serviceNofExtension */;
+			targetProxy = 6198677F2223E8EE0056B2EF /* PBXContainerItemProxy */;
+		};
+		619867922223E9A70056B2EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6198678A2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */;
+			targetProxy = 619867912223E9A70056B2EF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		48F775FA166494DC002FB812 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
@@ -25431,6 +25646,196 @@
 			};
 			name = Release;
 		};
+		619867832223E8EF0056B2EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = serviceNofExtension/serviceNofExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: dachui Wang (5P84245CTM)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: dachui Wang (5P84245CTM)";
+				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = serviceNofExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = f100ServiceNofExtension_dev;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		619867842223E8EF0056B2EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = serviceNofExtension/serviceNofExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = X46375UBYG;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = serviceNofExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1.serviceNofExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = fp1ServiceNofExtension;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		619867952223E9A70056B2EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer: dachui Wang (JJ26XQCNZ6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: dachui Wang (JJ26XQCNZ6)";
+				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = J3249442BT;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = com.f100.client.FHNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client.FHNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = f100ServiceNofExtension_dev;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		619867962223E9A70056B2EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = com.f100.client.FHNotificationServiceExtension/com.f100.client.FHNotificationServiceExtension.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = J3249442BT;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = com.f100.client.FHNotificationServiceExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.f100.client.FHNotificationServiceExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = f100ServiceNofExtension;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B373CF0E2174587A008F9905 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7E63708B6103B01655BC0894 /* Pods-f100.debug.xcconfig */;
@@ -25440,8 +25845,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: dachui Wang (J3249442BT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: dachui Wang (J3249442BT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -25520,7 +25925,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = f100_distribution;
+				PROVISIONING_PROFILE_SPECIFIER = f100_client;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -25968,9 +26373,9 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_ENTITLEMENTS = NewsBase/NewsInHouse.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
@@ -26058,7 +26463,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse;
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1.inhouse;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
@@ -26089,6 +26494,24 @@
 			buildConfigurations = (
 				3AA5029915876A1F00EB27FA /* Debug */,
 				3AA5029A15876A1F00EB27FA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		619867822223E8EF0056B2EF /* Build configuration list for PBXNativeTarget "serviceNofExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				619867832223E8EF0056B2EF /* Debug */,
+				619867842223E8EF0056B2EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		619867942223E9A70056B2EF /* Build configuration list for PBXNativeTarget "com.f100.client.FHNotificationServiceExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				619867952223E9A70056B2EF /* Debug */,
+				619867962223E9A70056B2EF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

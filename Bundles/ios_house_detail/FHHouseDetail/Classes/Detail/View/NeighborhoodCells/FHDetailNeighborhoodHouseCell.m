@@ -350,7 +350,7 @@
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
@@ -404,7 +404,7 @@
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
@@ -599,7 +599,10 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
-            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
+            [tracerDic removeObjectsForKeys:@[@"element_from"]];
+            tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
+            tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.hid ? dataItem.hid : @"be_null");
+            tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }
@@ -619,7 +622,10 @@
             tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
             tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeRentHouse];
             tracerDic[@"element_type"] = @"same_neighborhood";
-            [tracerDic removeObjectsForKeys:@[@"element_from",@"enter_from"]];
+            [tracerDic removeObjectsForKeys:@[@"element_from"]];
+            tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
+            tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.id ? dataItem.id : @"be_null") ;
+            tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
             [FHUserTracker writeEvent:@"house_show" params:tracerDic];
         }
     }

@@ -125,11 +125,12 @@
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             wSelf.dataModel = model;
             wSelf.detailController.hasValidateData = YES;
-            [self.detailController.emptyView hideEmptyView];
+            [wSelf.detailController.emptyView hideEmptyView];
             wSelf.bottomBar.hidden = NO;
             [wSelf processDetailData:model];
         }else
         {
+            wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
@@ -140,7 +141,6 @@
 
 - (void)processDetailData:(FHDetailNewModel *)model {
     self.detailData = model;
-    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.highlightedRealtor) {
@@ -265,6 +265,7 @@
 
 // 处理详情页周边新盘请求数据
 - (void)processDetailRelatedData {
+    self.detailController.isLoadingData = NO;
     if(_relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
     {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线

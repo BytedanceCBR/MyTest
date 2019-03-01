@@ -14,6 +14,7 @@ static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
+NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 
 
 @interface FHGeneralBizConfig ()
@@ -21,6 +22,7 @@ static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.
 @property (nonatomic, strong) YYCache *searchConfigCache;
 @property (nonatomic, strong) YYCache *userSelectCache;
 @property (nonatomic, strong) YYCache *userDefaultSelectCityCache;
+@property(nonatomic , strong) YYCache *sendPhoneNumberCache;
 
 @end
 
@@ -154,25 +156,13 @@ static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.
     return nil;
 }
 
-//临时方案,弃用
-//- (FHSearchConfigModel *)getSearchConfigFromLocal
-//{
-//    NSString *configJsonStr = [self.searchConfigCache objectForKey:@"search_config"];
-//    NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
-//
-//    if ([configDict isKindOfClass:[NSDictionary class]]) {
-//        FHSearchConfigModel *configModel = [[FHSearchConfigModel alloc] initWithDictionary:configDict error:nil];
-//        if ([configModel isKindOfClass:[FHSearchConfigModel class]]) {
-//            self.configCache.filter = configModel;
-//            return configModel;
-//        }else
-//        {
-//            return nil;
-//        }
-//    }else
-//    {
-//        return nil;
-//    }
-//}
+
+- (YYCache *)sendPhoneNumberCache
+{
+    if (!_sendPhoneNumberCache) {
+        _sendPhoneNumberCache = [YYCache cacheWithName:kFHPhoneNumberCacheKey];
+    }
+    return _sendPhoneNumberCache;
+}
 
 @end

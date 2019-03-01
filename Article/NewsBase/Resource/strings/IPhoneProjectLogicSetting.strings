@@ -21,7 +21,6 @@
 "rent_detail"           = "FHHouseDetailViewController";
 "sug_list"              = "FHSuggestionListViewController";
 
-"floor_plan_detail"     = "_TtC6Bubble28FloorPanCategoryDetailPageVC";
 //"message_detail_list"   = "_TtC6Bubble13MessageListVC";
 //"message_system_list"   = "_TtC6Bubble19SystemMessageListVC";
 "message_detail_list"   = "FHMessageListViewController";
@@ -109,7 +108,7 @@
 
 //floor
 "floor_pan_list"        = "FHFloorPanListViewController";
-"floor_pan_detail"        = "FHFloorPanDetailViewController";
+"floor_plan_detail"        = "FHFloorPanDetailViewController";
 "floor_coreinfo_detail"        = "FHFloorMoreCoreInfoViewController";
 "floor_timeline_detail"        = "FHFloorTimeLineViewController";
 "neighborhood_sales_list"        = "FHTransactionHistoryController";

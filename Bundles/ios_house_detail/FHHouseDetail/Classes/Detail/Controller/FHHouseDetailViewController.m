@@ -110,12 +110,28 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    
+}
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
-    
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+
+}
+
+#pragma mark - for keyboard show
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        [self.view endEditing:YES];
+    }
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
@@ -134,6 +150,7 @@
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
         [self startLoading];
+        self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -142,7 +159,9 @@
 
 // 重新加载
 - (void)retryLoadData {
-    [self startLoadData];
+    if (!self.isLoadingData) {
+        [self startLoadData];
+    }
 }
 
 //移除导航条底部line
@@ -241,7 +260,18 @@
         if ([log_pb_str isKindOfClass:[NSString class]] && log_pb_str.length > 0) {
             NSDictionary *log_pb_dic = [self getDictionaryFromJSONString:log_pb_str];
             if (log_pb_dic) {
-                
+                self.tracerDict[@"log_pb"] = log_pb_str;
+            }
+        }else
+        {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                if (report_params_dic[@"log_pb"]) {
+                    NSDictionary *logPb = [self getDictionaryFromJSONString:report_params_dic[@"log_pb"]];
+                    if (logPb) {
+                        self.tracerDict[@"log_pb"] = logPb;
+                    }
+                }
             }
         }
     }

@@ -112,7 +112,7 @@
             // 点击埋点
             FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
             NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-            tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+            tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
             [tracerDic removeObjectsForKeys:@[@"card_type",@"enter_from",@"element_from"]];
             [FHUserTracker writeEvent:@"click_price_variation" params:tracerDic];
             

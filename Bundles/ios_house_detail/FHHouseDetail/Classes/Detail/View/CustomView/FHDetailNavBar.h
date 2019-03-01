@@ -25,7 +25,7 @@ typedef enum : NSUInteger {
 - (void)refreshAlpha:(CGFloat)alpha;
 - (void)setFollowStatus:(NSInteger)followStatus;
 - (void)showRightItems:(BOOL)showItem;
-
+- (void)hideFollowBtn;
 - (void)removeBottomLine;
 
 @end

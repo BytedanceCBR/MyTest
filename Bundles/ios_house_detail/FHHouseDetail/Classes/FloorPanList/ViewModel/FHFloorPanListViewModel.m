@@ -25,6 +25,8 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 @property (nonatomic , strong) NSMutableArray *topRoomCountArray;
 @property (nonatomic , weak) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) NSArray * nameLeftArray;
+@property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
+
 @end
 
 
@@ -36,6 +38,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         _nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
         _floorListTable = tableView;
         _leftFilterView = leftScrollView;
+        _elementShowCaches = [NSMutableDictionary new];
         _allItems = allItems;
         _floorListVC = viewController;
         _currentItems = _allItems;
@@ -157,7 +160,17 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         [titlesArray addObject:[NSString stringWithFormat:@"全部(%d)",_allItems.count]];
         
         for (NSInteger i = 0; i < _topRoomCountArray.count; i++) {
-            [titlesArray addObject:[NSString stringWithFormat:@"%@室(%d)",_topRoomCountArray[i],_allItems.count]];
+            NSInteger total = 0;
+
+            for (NSInteger j = 0; j < self.allItems.count ; j++) {
+                if ([self.allItems[i].roomCount isKindOfClass:[NSString class]] && [_topRoomCountArray[i] isKindOfClass:[NSString class]]) {
+                        if ([self.allItems[j].roomCount integerValue] == [_topRoomCountArray[i] integerValue]) {
+                            total++;
+                    }
+                }
+            }
+            
+            [titlesArray addObject:[NSString stringWithFormat:@"%@室(%d)",_topRoomCountArray[i],total]];
         }
     }
     return titlesArray;
@@ -205,7 +218,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         }
         else if([status isEqualToString:kDefaultLeftFilterStatus])
         {
-            if ([model.roomCount isEqualToString:roomCuntKey] && ![roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
+            if ([model.roomCount isEqualToString:roomCuntKey]) {
                 [currentItemsArray addObject:model];
             }
         }else if ([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
@@ -274,16 +287,18 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             ((FHDetailNewDataFloorpanListListModel *)self.currentItems[indexPath.row]).index = indexPath.row;
         }
         [cell refreshWithData:_currentItems[indexPath.row]];
+        cell.baseViewModel = self;
     }
     cell.backgroundColor = [UIColor whiteColor];
     return cell;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
 }
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
 }
@@ -301,27 +316,73 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
             if (tracer) {
                 [traceParam addEntriesFromDictionary:tracer];
             }
-            traceParam[@"enter_from"] = @"new_detail";
-//            traceParam[@"log_pb"] = self.baseViewModel.logPB;
+            traceParam[@"enter_from"] = @"house_model_list";
+//            traceParam[@"log_pb"] = self.baseViewModel.listLogPB;
 //            traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
             traceParam[@"card_type"] = @"left_pic";
             traceParam[@"rank"] = @(indexPath.row);
 //            traceParam[@"origin_search_id"] = self.baseViewModel.detailTracerDic[@"origin_search_id"];
-            traceParam[@"element_from"] = @"related";
-            
+            traceParam[@"element_from"] = @"be_null";
+            traceParam[@"log_pb"] = model.logPb;
             NSDictionary *dict = @{@"house_type":@(1),
                                    @"tracer": traceParam
                                    };
 
             NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
-            [infoDict setValue:model.id forKey:@"floorpanid"];
+            [infoDict setValue:model.id forKey:@"floor_plan_id"];
             [infoDict addEntriesFromDictionary:subPageParams];
             infoDict[@"house_type"] = @(1);
             infoDict[@"tracer"] = traceParam;
             TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_plan_detail"] userInfo:info];
         } 
+    }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    // 添加element_show埋点
+    if (!self.elementShowCaches[tempKey]) {
+        self.elementShowCaches[tempKey] = @(YES);
+        
+        NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
+        NSDictionary *tracer = subPageParams[@"tracer"];
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
+        if (tracer) {
+            [traceParam addEntriesFromDictionary:tracer];
+        }
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"rank"] = @(indexPath.row);
+        traceParam[@"element_type"] = @"house_model";
+        traceParam[@"page_type"] = @"house_model_list";
+        [traceParam removeObjectForKey:@"enter_from"];
+        [traceParam removeObjectForKey:@"element_from"];
+        [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
+        if (_currentItems.count > indexPath.row) {
+            FHDetailNewDataFloorpanListListModel *itemModel = (FHDetailNewDataFloorpanListListModel *)_currentItems[indexPath.row];
+            
+            if (itemModel.logPb) {
+                [traceParam setValue:itemModel.logPb forKey:@"log_pb"];
+            }
+            
+            if (itemModel.searchId) {
+                [traceParam setValue:itemModel.searchId forKey:@"search_id"];
+            }
+            
+            if (itemModel.groupId) {
+                [traceParam setValue:itemModel.groupId forKey:@"group_id"];
+            }else
+            {
+                [traceParam setValue:itemModel.id forKey:@"group_id"];
+            }
+            
+            if (itemModel.imprId) {
+                [traceParam setValue:itemModel.imprId forKey:@"impr_id"];
+            }
+        }
+        
+        [FHEnvContext recordEvent:traceParam andEventKey:@"house_show"];
     }
 }
 

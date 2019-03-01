@@ -185,9 +185,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (void)hiddeNaviBack:(BOOL)isShowBtn
 {
-    if (isShowBtn) {
-        self.navigationBar.leftBarView.hidden = !isShowBtn;
-    }
+    self.navigationBar.leftBarView.hidden = !isShowBtn;
 }
 
 - (void)shareBtnClick

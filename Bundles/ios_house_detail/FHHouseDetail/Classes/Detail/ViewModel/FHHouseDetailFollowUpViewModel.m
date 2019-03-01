@@ -96,7 +96,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 - (void)cancelFollowHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType
 {
     if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"取消关注失败"];
+        [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
     [FHHouseDetailAPI requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {

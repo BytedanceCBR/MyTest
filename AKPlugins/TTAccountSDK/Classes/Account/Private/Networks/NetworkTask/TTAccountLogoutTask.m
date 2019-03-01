@@ -56,6 +56,35 @@
     }];
 }
 
++ (id<TTAccountSessionTask>)requestLogoutClearCookie:(void (^)(BOOL success, NSError *error))completedBlock
+{
+    // 退出成功，清空用户信息
+    [TTAccountCookie clearAccountCookie];
+    
+    return [TTAccountNetworkManager getRequestForJSONWithURL:[TTAccountURLSetting TTALogoutURLString] params:nil needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+        
+        if (error) {
+            if (completedBlock) {
+                completedBlock(NO, error);
+            }
+                    
+            return;
+        }
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+        if ([[TTAccount sharedAccount] respondsToSelector:@selector(setIsLogin:)]) {
+            [[TTAccount sharedAccount] setIsLogin:NO];
+        }
+#pragma clang diagnostic pop
+        // 回调
+        if (completedBlock) {
+            completedBlock(YES, nil);
+        }
+        // logger
+    }];
+}
+
 
 #pragma mark - 解绑第三方账号
 

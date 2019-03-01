@@ -60,15 +60,15 @@ static NSString *s_oldAgent = nil;
         NSString *searchId = self.tracerDict[@"search_id"];
         NSString *imprId = self.tracerDict[@"impr_id"];
 
+        NSDictionary *reportParams = params[@"reportParams"];
         if (self->_realtorId != nil && phone != nil) {
-            [self.phoneCallViewModel callWithPhone:phone searchId:searchId imprId:imprId successBlock:^(BOOL isSuccess) {
+            [self.phoneCallViewModel callWithPhone:phone realtorId:self->_realtorId searchId:searchId imprId:imprId reportParams:reportParams successBlock:^(BOOL isSuccess) {
                 completion(TTRJSBMsgSuccess, @{});
             } failBlock:^(NSError * _Nonnull error) {
                 completion(TTRJSBMsgFailed, @{});
 
             }];
-            // add by zjing for test 应用silent
-            if ([self.delegate respondsToSelector:@selector(followHouseByFollowId:houseType:actionType:)]) {
+            if ([self.delegate respondsToSelector:@selector(followUpActionByFollowId:houseType:)]) {
                 [self.delegate followUpActionByFollowId:self.houseId houseType:self.houseType];
             }
         }

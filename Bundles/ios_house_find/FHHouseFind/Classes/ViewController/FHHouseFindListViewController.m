@@ -42,14 +42,21 @@
     [self setupUI];
     [self startLoading];
     [self setupViewModel];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        [self.view endEditing:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear:animated];
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     
 }
 
@@ -57,8 +64,6 @@
 {
     [super viewWillDisappear:animated];
     [self.viewModel viewWillDisappear:animated];
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
-
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol
@@ -193,4 +198,8 @@
 
 }
 
+- (void)dealloc
+{
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+}
 @end
