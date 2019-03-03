@@ -13,6 +13,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "TTAccount.h"
 #import "FHChatUserInfoManager.h"
+#define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
 @interface FHMessageCell()
 
@@ -151,7 +152,8 @@
 {
     self.titleLabel.text = model.title;
     self.subTitleLabel.text = model.content;
-    self.timeLabel.text = model.dateStr;
+    NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:[model.timestamp doubleValue]];
+    self.timeLabel.text = [self timeLabelByDate:date];
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.icon] placeholder:[UIImage imageNamed:@"default_image"]];
     self.unreadView.badgeNumber = [model.unread integerValue] == 0 ? TTBadgeNumberHidden : [model.unread integerValue];
 }
@@ -174,7 +176,7 @@
     ChatMsg *lastMsg = [conv lastChatMsg];
 
     [self displaySendState:lastMsg];
-//    self.timeLabel.text = conv.updatedAt;
+    self.timeLabel.text = [self timeLabelByDate:conv.updatedAt];
 }
 
 -(NSAttributedString*)getDraftAttributeString:(NSString*)draft {
@@ -193,21 +195,60 @@
 }
 
 
-//- (NSString *)timestampToDataString:(NSString *)timestamp {
-//    // iOS 生成的时间戳是10位
-//    NSString *dateString = @"";
-//    NSTimeInterval interval = [timestamp doubleValue];
-//    NSDate *date = [NSDate dateWithTimeIntervalSince1970:interval];
-//
-//    if([date isToday]){
-//        dateString = [NSDate getDateDesWithDate:date dateFormatterStr:@"HH:mm"];
-//    }else if([date isThisYear]){
-//        dateString = [NSDate getDateDesWithDate:date dateFormatterStr:@"MM/dd"];
-//    }else{
-//        dateString = [NSDate getDateDesWithDate:date dateFormatterStr:@"yyyy/MM/dd"];
-//    }
-//
-//    return dateString;
-//}
+-(NSString*)timeLabelByDate:(NSDate*)date {
+    NSDateComponents* components = [CURRENT_CALENDAR components:NSCalendarUnitCalendar fromDate:[NSDate new]];
+    components.day = components.day - 7;
+    NSDate* dayTimeInOneWeek = [CURRENT_CALENDAR dateFromComponents:components];
+    if ([CURRENT_CALENDAR isDateInToday:date]) {
+        return [self shortTimeLabel:date];
+    } else if([CURRENT_CALENDAR isDateInYesterday:date]) {
+        return [self timeWithYesterdayTime:date];
+    } else if([self isThisYear:date]) {
+        return [self shortDayLabel:date];
+    } else {
+        return [self longTimeLabel:date];
+    }
+}
+
+-(NSString*)shortTimeLabel:(NSDate*)date {
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"HH:mm";
+    return [formatter stringFromDate:date];
+}
+
+-(NSString*)shortDayLabel:(NSDate*)date {
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"MM/dd";
+    return [formatter stringFromDate:date];
+}
+
+-(NSString*)timeWithYesterdayTime:(NSDate*)date {
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"HH:mm";
+
+    return [NSString stringWithFormat:@"昨天 %@", [formatter stringFromDate:date]];
+}
+
+-(NSString*)longTimeLabel:(NSDate*)date {
+    NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"zh_CN"];
+    formatter.dateFormat = @"yyyy/MM/dd";
+    return [formatter stringFromDate:date];
+}
+
+- (BOOL)isSameYearAsDate:(NSDate *)aDate ofDate:(NSDate*)date
+{
+    NSDateComponents *components1 = [CURRENT_CALENDAR components:NSCalendarUnitYear fromDate:date];
+    NSDateComponents *components2 = [CURRENT_CALENDAR components:NSCalendarUnitYear fromDate:aDate];
+    return (components1.year == components2.year);
+}
+
+
+- (BOOL)isThisYear:(NSDate*)date
+{
+    // Thanks, baspellis
+    return [self isSameYearAsDate:[NSDate date] ofDate:date];
+}
+
 
 @end
