@@ -55,7 +55,7 @@
     self.iconView = [[UIImageView alloc] init];
     [self.contentView addSubview:_iconView];
     _iconView.layer.masksToBounds = YES;
-    _iconView.layer.cornerRadius = 31;
+    _iconView.layer.cornerRadius = 27;
     
     self.msgStateView = [[UIImageView alloc] init];
     [self.contentView addSubview:_msgStateView];
