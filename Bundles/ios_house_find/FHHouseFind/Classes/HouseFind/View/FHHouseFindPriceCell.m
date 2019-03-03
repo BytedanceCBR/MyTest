@@ -52,7 +52,7 @@
     
     tf.keyboardType = UIKeyboardTypeNumberPad;
     tf.textAlignment = NSTextAlignmentLeft;
-    tf.textColor = [UIColor themeBlack];
+    tf.textColor = [UIColor themeGray1];
     tf.font = [UIFont themeFontRegular:14];
     
     tf.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];

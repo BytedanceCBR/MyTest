@@ -36,7 +36,7 @@
 
 - (void)initViews
 {
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self.contentView addSubview:_titleLabel];
 }
 

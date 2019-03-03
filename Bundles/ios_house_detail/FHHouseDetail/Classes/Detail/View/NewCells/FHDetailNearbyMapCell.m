@@ -319,7 +319,7 @@ static const float kSegementedPadingTop = 5;
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
 //    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
     _emptyInfoLabel.hidden = NO;
-    _emptyInfoLabel.textColor = [UIColor themeBlue1];
+    _emptyInfoLabel.textColor = [UIColor themeGray1];
     
     [_locationList addSubview:_emptyInfoLabel];
     

@@ -44,7 +44,7 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewClicked)];
     [self addGestureRecognizer:tapGesture];
     
-    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
+    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     _nameLabel.text = self.name;
     [self addSubview:_nameLabel];
     

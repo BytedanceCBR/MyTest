@@ -200,7 +200,7 @@
     if (!_nameLabel) {
         _nameLabel = [[UILabel alloc]init];
         _nameLabel.font = [UIFont themeFontRegular:16];
-        _nameLabel.textColor = [UIColor themeBlack];
+        _nameLabel.textColor = [UIColor themeGray1];
     }
     return _nameLabel;
 }
@@ -210,7 +210,7 @@
     if (!_agencyLabel) {
         _agencyLabel = [[UILabel alloc]init];
         _agencyLabel.font = [UIFont themeFontRegular:12];
-        _agencyLabel.textColor = [UIColor themeGray];
+        _agencyLabel.textColor = [UIColor themeGray1];
     }
     return _agencyLabel;
 }

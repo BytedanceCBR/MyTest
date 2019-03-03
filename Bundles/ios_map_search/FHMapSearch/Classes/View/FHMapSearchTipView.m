@@ -33,7 +33,7 @@
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.font = [UIFont systemFontOfSize:12];
         _tipLabel.textAlignment = NSTextAlignmentCenter;
-        _tipLabel.textColor = RGBA(0x08, 0x1f, 0x33, 1);
+        _tipLabel.textColor = [UIColor themeGray1];
         [self addSubview:_tipLabel];
         
         self.backgroundColor = [UIColor clearColor];

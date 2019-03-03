@@ -261,7 +261,7 @@
     if (!_topLine) {
         
         _topLine = [[UIView alloc]init];
-        _topLine.backgroundColor = [UIColor themeGray7];
+        _topLine.backgroundColor = [UIColor themeGray6];
     }
     return _topLine;
 }
@@ -288,7 +288,7 @@
     if (!_bottomLine) {
         
         _bottomLine = [[UIView alloc]init];
-        _bottomLine.backgroundColor = [UIColor themeGray7];
+        _bottomLine.backgroundColor = [UIColor themeGray6];
     }
     return _bottomLine;
 }

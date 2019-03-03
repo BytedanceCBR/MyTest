@@ -34,7 +34,7 @@
         _arrowView = [[UIImageView alloc] initWithImage:arrowImage];
         
         _contentLabel = [[UILabel alloc] init];
-        _contentLabel.textColor = [UIColor themeBlack];
+        _contentLabel.textColor = [UIColor themeGray1];
         _contentLabel.font = [UIFont systemFontOfSize:12];
         _contentLabel.textAlignment = NSTextAlignmentCenter;
 
@@ -87,8 +87,8 @@
         switch (houseAnnotation.type) {
             case FHHouseAnnotationTypeSelected:
             {
-                bgImageName = @"mapsearch_annotation_bg_blue";
-                arrowImageName = @"mapsearch_annotation_arrow_blue";
+                bgImageName = @"mapsearch_annotation_bg_red";
+                arrowImageName = @"mapsearch_annotation_arrow_red";
                 textColor = [UIColor whiteColor];
             }
                 break;
@@ -104,7 +104,7 @@
             {
                 bgImageName = @"mapsearch_annotation_bg";
                 arrowImageName = @"mapsearch_annotation_arrow";
-                textColor = [UIColor themeBlack];
+                textColor = [UIColor themeGray1];
             }
                 break;
         }

@@ -29,7 +29,7 @@
 - (void)setupUI {
 
     self.seperateLineView = [[UIView alloc] init];
-    _seperateLineView.backgroundColor = [UIColor themeGrayPale];
+    _seperateLineView.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_seperateLineView];
     [_seperateLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0.5);
@@ -59,7 +59,7 @@
 }
 
 - (void)setLabelStyle:(UILabel*) label {
-    label.textColor = [UIColor themeBlack];
+    label.textColor = [UIColor themeGray1];
     label.font = [UIFont themeFontRegular:16];
 }
 

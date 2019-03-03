@@ -42,9 +42,9 @@
         _topTipView.layer.cornerRadius = 1.5;
         _topTipView.layer.masksToBounds = YES;
         
-        _nameLabel = [self labelColor:[UIColor themeBlack] fontSize:20];
-        _locationLabel = [self labelColor:[UIColor themeGray] fontSize:12 ];
-        _priceLabel = [self labelColor:[UIColor themeRed] fontSize:16];
+        _nameLabel = [self labelColor:[UIColor themeGray1] fontSize:20];
+        _locationLabel = [self labelColor:[UIColor themeGray1] fontSize:12 ];
+        _priceLabel = [self labelColor:[UIColor themeRed1] fontSize:16];
         
         _nameLabel.adjustsFontSizeToFitWidth = YES;
 

@@ -155,7 +155,7 @@
 {
     UILabel *titleLabel = [UILabel new];
     titleLabel.text = navTitle;
-    titleLabel.textColor = [UIColor themeBlue1];
+    titleLabel.textColor = [UIColor themeGray1];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [self.navBar addSubview:titleLabel];

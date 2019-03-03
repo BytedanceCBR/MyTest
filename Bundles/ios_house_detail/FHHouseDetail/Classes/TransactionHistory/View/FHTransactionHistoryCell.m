@@ -17,7 +17,6 @@
 @property(nonatomic, strong) UILabel *descLabel;
 @property(nonatomic, strong) UILabel *totalPriceLabel;
 @property(nonatomic, strong) UILabel *pricePreSqmLabel;
-//@property(nonatomic, strong) UIView *bottomLine;
 
 @end
 
@@ -45,23 +44,19 @@
 }
 
 - (void)initViews {
-    self.namelabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeBlack]];
+    self.namelabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_namelabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
     [self addSubview:_descLabel];
     
     self.totalPriceLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:RGB(0xf8, 0x59, 0x59)];
     _totalPriceLabel.textAlignment = NSTextAlignmentRight;
     [self addSubview:_totalPriceLabel];
     
-    self.pricePreSqmLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray]];
+    self.pricePreSqmLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
     _pricePreSqmLabel.textAlignment = NSTextAlignmentRight;
     [self addSubview:_pricePreSqmLabel];
-    
-//    self.bottomLine = [[UIView alloc] init];
-//    _bottomLine.backgroundColor = [UIColor themeGray7];
-//    [self addSubview:_bottomLine];
 }
 
 - (void)initConstraints {
@@ -91,11 +86,6 @@
         make.top.mas_equalTo(self.namelabel.mas_bottom).offset(5);
         make.height.mas_equalTo(17);
     }];
-    
-//    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.left.right.mas_equalTo(self);
-//        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-//    }];
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -110,7 +100,6 @@
     self.descLabel.text = [NSString stringWithFormat:@"%@，%@",model.dealDate,model.dataSource];
     self.totalPriceLabel.text = model.pricing;
     self.pricePreSqmLabel.text = model.pricingPerSqm;
-//    self.bottomLine.hidden = isLast;
 }
 
 @end
