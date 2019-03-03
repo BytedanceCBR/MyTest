@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   NSMutableDictionary       *historyShowTracerDic; // 埋点key记录
 @property (nonatomic, assign)   NSInteger       associatedCount;
 @property (nonatomic, assign)   FHEnterSuggestionType       fromPageType;
+@property (nonatomic, copy)     NSString       *pageTypeStr;
 
 - (NSString *)pageTypeString;
 - (NSString *)categoryNameByHouseType;

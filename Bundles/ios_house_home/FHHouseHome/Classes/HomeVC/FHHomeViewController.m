@@ -107,13 +107,18 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
-            
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
             self.mainTableView.contentInset = inset;
             [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-
+     
+//            [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }];
+//        [UIView animateWithDuration:0.3 animations:^{
+//
+//        } completion:^(BOOL finished) {
+//        }];
+        
     });
     
 }
@@ -153,6 +158,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     //无网点击重试逻辑
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configDataModel) {
+        [self.homeListViewModel updateCategoryViewSegmented:NO];
         [self.homeListViewModel requestOriginData:YES];
     }
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
@@ -172,6 +178,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
+    //
 }
 
 

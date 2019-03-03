@@ -8,18 +8,23 @@
 #import "FHRealtorDetailWebViewController.h"
 #import <TTRJSBForwarding.h>
 #import <TTRStaticPlugin.h>
-#import "Bubble-Swift.h"
+#import <FHHouseDetail/FHHouseDetailPhoneCallViewModel.h>
 #import "TTRoute.h"
 #import <TTTracker/TTTracker.h>
 #import "FHUserTracker.h"
+#import "NetworkUtilities.h"
+
 @interface FHRealtorDetailWebViewController ()
 {
-    FHPhoneCallViewModel* _phoneCallViewModel;
-    HouseRentTracer* _tracerModel;
     NSTimeInterval _startTime;
     NSString* _realtorId;
 }
 @property (nonatomic, strong) TTRouteUserInfo *realtorUserInfo;
+@property (nonatomic, strong) NSMutableDictionary *tracerDict;
+@property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property (nonatomic, copy) NSString *houseId;
+@property (nonatomic, assign) FHHouseType houseType; // 房源类型
+
 @end
 
 @implementation FHRealtorDetailWebViewController
@@ -28,7 +33,13 @@ static NSString *s_oldAgent = nil;
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        _tracerDict = @{}.mutableCopy;
         self.realtorUserInfo = paramObj.userInfo;
+        _realtorId = paramObj.allParams[@"realtor_id"];
+        [_tracerDict addEntriesFromDictionary:[self.realtorUserInfo allInfo][@"trace"]];
+        _houseId = paramObj.userInfo.allInfo[@"house_id"];
+        _houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
     }
     return self;
 }
@@ -37,43 +48,43 @@ static NSString *s_oldAgent = nil;
     [[self class] registerUserAgentV2:YES];
     [super viewDidLoad];
     _startTime = [NSDate new].timeIntervalSince1970;
-    _phoneCallViewModel = [[FHPhoneCallViewModel alloc] init];
-    _tracerModel = [self.realtorUserInfo allInfo][@"trace"];
     _delegate = [self.realtorUserInfo allInfo][@"delegate"];
-    _realtorId = [self.realtorUserInfo allInfo][@"realtorId"];
 
     @weakify(self);
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
         @strongify(self);
         self->_realtorId = params[@"realtor_id"];
-        NSString* phone = params[@"phone"];
-        HouseRentTracer* theTracerModel = [self->_tracerModel copy];
-        theTracerModel.pageType = @"realtor_detail";
+        NSString *phone = params[@"phone"];
+
+        self.tracerDict[@"pageType"] = @"realtor_detail";
+        NSString *searchId = self.tracerDict[@"search_id"];
+        NSString *imprId = self.tracerDict[@"impr_id"];
+
+        NSDictionary *reportParams = params[@"reportParams"];
         if (self->_realtorId != nil && phone != nil) {
-            [self->_phoneCallViewModel requestVirtualNumberAndCallWithRealtorId:self->_realtorId
-                                                                     traceModel:theTracerModel
-                                                                          phone:phone
-                                                                        houseId:theTracerModel.groupId
-                                                                       searchId:theTracerModel.searchId
-                                                                         imprId:theTracerModel.imprId
-                                                                    onSuccessed:^{
-                                                                        completion(TTRJSBMsgSuccess, @{});
-                                                                    }];
-            [self->_delegate followUpAction];
+            [self.phoneCallViewModel callWithPhone:phone realtorId:self->_realtorId searchId:searchId imprId:imprId reportParams:reportParams successBlock:^(BOOL isSuccess) {
+                completion(TTRJSBMsgSuccess, @{});
+            } failBlock:^(NSError * _Nonnull error) {
+                completion(TTRJSBMsgFailed, @{});
+
+            }];
+            if ([self.delegate respondsToSelector:@selector(followUpActionByFollowId:houseType:)]) {
+                [self.delegate followUpActionByFollowId:self.houseId houseType:self.houseType];
+            }
         }
     } forMethodName:@"phoneSwitch"];
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
 }
 
 -(NSMutableDictionary*)goDetailParams {
-    NSParameterAssert(_tracerModel);
+  
     NSDictionary* params = @{@"page_type": @"realtor_detail",
-                             @"enter_from": _tracerModel.enterFrom ? : @"be_null",
-                             @"element_from": _tracerModel.elementFrom ? : @"be_null",
-                             @"rank": _tracerModel.rank ? : @"be_null",
-                             @"origin_from": _tracerModel.originFrom ? : @"be_null",
-                             @"origin_search_id": _tracerModel.originSearchId ? : @"be_null",
-                             @"log_pb": _tracerModel.logPb ? : @"be_null",
+                             @"enter_from": _tracerDict[@"enter_from"] ? : @"be_null",
+                             @"element_from": _tracerDict[@"element_from"] ? : @"be_null",
+                             @"rank": _tracerDict[@"rank"] ? : @"be_null",
+                             @"origin_from": _tracerDict[@"origin_from"] ? : @"be_null",
+                             @"origin_search_id": _tracerDict[@"origin_search_id"] ? : @"be_null",
+                             @"log_pb": _tracerDict[@"log_pb"] ? : @"be_null",
                              @"realtor_id": _realtorId ? : @"be_null",
                              };
     return [params mutableCopy];

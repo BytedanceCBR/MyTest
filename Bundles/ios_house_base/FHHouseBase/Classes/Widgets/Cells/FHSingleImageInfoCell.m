@@ -187,7 +187,15 @@
         
         make.height.mas_equalTo(@(self.bottomMargin));
     }];
-
+    
+//    if (bottom == 0) {
+//        [self.majorImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(@20);
+//            make.top.mas_equalTo(self.headView.mas_bottom);
+//            make.bottom.mas_equalTo(self.contentView);
+//            make.width.mas_equalTo(@114);
+//        }];
+//    }
 }
 
 
@@ -388,6 +396,28 @@
     
 }
 
+//新房周边新房
+// 子类需要重写的方法，根据数据源刷新当前Cell，以及布局
+- (void)refreshWithData:(id)data
+{
+    if([data isKindOfClass:[FHNewHouseItemModel class]])
+    {
+        FHNewHouseItemModel *model = (FHNewHouseItemModel *)data;
+        self.majorTitle.text = model.displayTitle;
+        self.extendTitle.text = model.displayDescription;
+        self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
+        NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:model.tags];
+        self.areaLabel.attributedText =  attributeString;
+        
+        self.priceLabel.text = model.displayPricePerSqm;
+        FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
+        [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+        
+        [self updateOriginPriceLabelConstraints:nil];
+        [self updateLayoutComponents:self.areaLabel.attributedText.string.length > 0];
+    }
+}
+
 #pragma mark 二手房
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model {
     
@@ -486,6 +516,43 @@
             break;
     }
     
+    
+}
+-(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel andIsFirst:(BOOL)isFirst andIsLast:(BOOL)isLast
+{
+    _cellModel = cellModel;
+    
+    switch (cellModel.houseType) {
+        case FHHouseTypeNewHouse:
+            [self updateWithNewHouseModel:cellModel.houseModel];
+            self.roomSpaceLabel.text = @"";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            [self updateWithSecondHouseModel:cellModel.secondModel];
+            break;
+        case FHHouseTypeRentHouse:
+            [self updateWithRentHouseModel:cellModel.rentModel];
+            break;
+        case FHHouseTypeNeighborhood:
+            [self updateWithNeighborModel:cellModel.neighborModel];
+            break;
+        default:
+            break;
+    }
+    
+    if (isFirst) {
+        [self refreshTopMargin:5];
+    }else
+    {
+        [self refreshTopMargin:20];
+    }
+    
+    if (isLast) {
+        [self refreshBottomMargin:20];
+    }else
+    {
+        [self refreshBottomMargin:0];
+    }
     
 }
 
@@ -625,6 +692,9 @@
     return _imageTopLeftLabelBgView;
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @""; // 周边小区
+}
 
 - (void)awakeFromNib {
     [super awakeFromNib];

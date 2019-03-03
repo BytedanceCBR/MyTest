@@ -261,6 +261,13 @@ extern const NSString * CSToastPositionBottom;
  */
 @property (assign, nonatomic) CGFloat verticalPadding;
 
+// add by zjing custom UI
+@property (assign, nonatomic) CGFloat verticalOffset;
+
+@property (assign, nonatomic) BOOL isCustomPosition;
+
+@property (assign, nonatomic) CGFloat customX;
+
 /**
  The corner radius. Default is 10.0.
  */

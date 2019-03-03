@@ -41,6 +41,9 @@
             self.tracerDict = [NSMutableDictionary new];
             [self.tracerDict addEntriesFromDictionary:tracer];
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:self.tracerDict];
+        } else {
+            self.tracerDict = [NSMutableDictionary new];
+            self.tracerModel = [[FHTracerModel alloc] init];
         }
     }
     return self;
@@ -65,6 +68,7 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     self.view.backgroundColor = UIColor.whiteColor;
     self.ttHideNavigationBar = YES;
+    self.isLoadingData = NO;
     self.navigationController.navigationBar.hidden = YES;
     [self _setupData];
 }

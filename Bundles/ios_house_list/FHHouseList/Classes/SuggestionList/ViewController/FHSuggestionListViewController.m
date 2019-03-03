@@ -36,12 +36,21 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        // 1、from_home
-        self.fromSource = [paramObj.userInfo.allInfo[@"from_home"] integerValue];
+        // 1、from_home(native参数)
+        if (paramObj.allParams[@"from_home"]) {
+            self.fromSource = [paramObj.allParams[@"from_home"] integerValue];
+        } else {
+            self.fromSource = FHEnterSuggestionTypeDefault; // h5 不需要此参数，但是需要其他一些参数：origin_from enter_from element_from house_type page_type
+        }
         // 2、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
-        _viewModel.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
+        NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
+        if (hp >= 1 && hp <= 4) {
+            _viewModel.houseType = hp;
+        } else {
+            _viewModel.houseType = 2;// 默认二手房
+        }
         _viewModel.fromPageType = self.fromSource;
         // 3、sug_delegate 代理
         /*
@@ -49,7 +58,7 @@
          [sugDelegateTable addObject:self];
          @"sug_delegate":sugDelegateTable
          */
-        NSHashTable<FHHouseSuggestionDelegate> *sug_delegate = paramObj.userInfo.allInfo[@"sug_delegate"];
+        NSHashTable<FHHouseSuggestionDelegate> *sug_delegate = paramObj.allParams[@"sug_delegate"];
         self.suggestDelegate = sug_delegate.anyObject;
         // 4、homepage_roll_data 首页轮播词
         /*homepage_roll_data:{
@@ -59,12 +68,31 @@
          "open_url":""
          }
          */
-        id dic = paramObj.userInfo.allInfo[@"homepage_roll_data"];
+        id dic = paramObj.allParams[@"homepage_roll_data"];
         if (dic) {
             self.homePageRollDic = [NSDictionary dictionaryWithDictionary:dic];
             self.viewModel.homePageRollDic = self.homePageRollDic;
         }
         // 5、tracer（TRACER_KEY）: self.tracerDict 字典
+        // 6、H5页面传入的其他字段 3.18号上
+        /*
+        if (paramObj.allParams[@"page_type"]) {
+            self.viewModel.pageTypeStr = paramObj.allParams[@"page_type"];
+        }
+        //
+        if (paramObj.allParams[@"origin_from"]) {
+            NSString *origin_from = paramObj.allParams[@"origin_from"];
+            self.tracerDict[@"origin_from"] = origin_from;
+        }
+        if (paramObj.allParams[@"enter_from"]) {
+            NSString *enter_from = paramObj.allParams[@"enter_from"];
+            self.tracerDict[@"enter_from"] = enter_from;
+        }
+        if (paramObj.allParams[@"element_from"]) {
+            NSString *element_from = paramObj.allParams[@"element_from"];
+            self.tracerDict[@"element_from"] = element_from;
+        }
+        */
     }
     return self;
 }
@@ -310,6 +338,12 @@
         NSDictionary *infos = @{
                                 @"houseSearch":houseSearchParams
                                 };
+        if (self.tracerDict.count > 0) {
+            infos = @{
+                      @"houseSearch":houseSearchParams,
+                      @"tracer": self.tracerDict
+                      };
+        }
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
     } else {
         self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];

@@ -11,11 +11,16 @@
 #import "TTTabBarItem.h"
 #import "TTLocationManager.h"
 #import "CommonURLSetting.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 #import "TTTabBarManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTTabBarProvider.h"
 #import "FHUtils.h"
+#import <TTRoute.h>
+#import <FHLocManager.h>
+#import "ArticleURLSetting.h"
+
+#define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 @implementation FHHomeBridgeImp
 
@@ -64,8 +69,9 @@
 - (void)jumpToTabbarFirst
 {
 
-    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:@"f_house_news" withShow:NO];
-    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyBadgeNumberOfCategoryID:kFHHouseMixedCategoryID withShow:NO];
+    [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+//    [[EnvContext shared].client.messageManager startSyncCategoryBadge];
     
     NSString *firstTabItemIdentifier = [[TTTabBarManager sharedTTTabBarManager].tabItems firstObject].identifier;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TTArticleTabBarControllerChangeSelectedIndexNotification" object:nil userInfo:({
@@ -108,6 +114,22 @@
     }
     
     return YES;
+}
+
+- (NSString *)getRefreshTipURLString
+{
+    return [ArticleURLSetting refreshTipURLString];
+}
+
+- (void)updateNotifyBadgeNumber:(NSString *)categoryId isShow:(BOOL)isShow
+{
+    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:categoryId withClean:YES];
+}
+
+//首页推荐红点请求时间间隔
+- (NSInteger)getCategoryBadgeTimeInterval
+{
+    return [SSCommonLogic categoryBadgeTimeInterval];
 }
 
 @end

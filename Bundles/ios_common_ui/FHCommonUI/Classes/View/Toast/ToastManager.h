@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define SHOW_TOAST(toast) [[ToastManager manager] showToast:toast]
+
 @interface ToastManager : NSObject
 
 + (instancetype)manager;

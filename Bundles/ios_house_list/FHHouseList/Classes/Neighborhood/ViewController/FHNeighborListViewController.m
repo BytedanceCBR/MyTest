@@ -56,10 +56,10 @@
          element_from:same_neighborhood（同小区房源），related（周边房源），house_renting（在租房源）,）'在售房源': 'house_onsale',
          $$ search_id:外部的searchId无用，每次使用网络返回的searchId
          */
-        self.neighborhoodId = paramObj.userInfo.allInfo[@"neighborhoodId"];
-        self.houseId = paramObj.userInfo.allInfo[@"houseId"];
-        self.houseType = [paramObj.userInfo.allInfo[@"house_type"] integerValue];
-        self.neighborListVCType = [paramObj.userInfo.allInfo[@"list_vc_type"] integerValue];
+        self.neighborhoodId = paramObj.allParams[@"neighborhood_id"];
+        self.houseId = paramObj.allParams[@"house_id"];
+        self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+        self.neighborListVCType = [paramObj.allParams[@"list_vc_type"] integerValue];
         self.ttTrackStayEnable = YES;
     }
     return self;
@@ -179,11 +179,16 @@
 
 // 第一次或者过滤器变化之后重新加载
 - (void)firstRequestDataWithLoading:(BOOL)needLoading {
+    if (![TTReachability isNetworkConnected]) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
     [self.viewModel.houseList removeAllObjects];
     [self.viewModel.houseShowTracerDic removeAllObjects];
     self.hasValidateData = NO;
     self.viewModel.searchId = NULL;
     [self.tableView reloadData];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
     [self realRequestWithOffset:0];
 }

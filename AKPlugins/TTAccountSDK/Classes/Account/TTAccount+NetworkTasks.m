@@ -202,6 +202,15 @@
     }];
 }
 
++ (nullable id<TTAccountSessionTask>)logoutAndClearCookie:(void(^)(BOOL success, NSError * _Nullable error))completedBlock
+{
+    return [TTAccountLogoutTask requestLogoutClearCookie:^(BOOL success, NSError *error) {
+        if (completedBlock) {
+            completedBlock(success, error);
+        }
+    }];
+}
+
 #pragma mark - 解绑第三方账号
 
 + (id<TTAccountSessionTask>)logoutPlatform:(NSString *)platformName
