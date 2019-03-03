@@ -633,7 +633,6 @@
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    
     priceItem.lowerPrice = price;
 }
 
@@ -641,7 +640,6 @@
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    
     priceItem.higherPrice = price;
 }
 

@@ -35,9 +35,6 @@
                 NSInteger temp = lowPrice;
                 lowPrice = highPrice;
                 highPrice = temp;
-                NSString *ptemp = self.lowerPrice;
-                self.lowerPrice = self.higherPrice;
-                self.higherPrice = ptemp;
             }
             [query appendFormat:@"%@[]=[%ld,%ld]",self.configOption.type?:@"price",lowPrice*r,highPrice*r];
             

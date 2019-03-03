@@ -94,12 +94,8 @@
 
     if (!(lowPrice && highPrice)) {
         //至少有一个为nil
-        if (!lowPrice) {
-            self.lowerTextField.text = nil;
-        }
-        if (!highPrice) {
-            self.higherTextField.text = nil;
-        }
+        self.lowerTextField.text = lowPrice;
+        self.higherTextField.text = highPrice;
         return;
     }
     
