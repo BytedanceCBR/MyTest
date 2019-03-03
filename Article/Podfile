@@ -69,7 +69,7 @@ def appPods
     pod 'BDTBasePlayer',:git=>'git@code.byted.org:TTIOS/BDTBasePlayer',:branch=>'0.3.48-bugfix'
     pod 'BDTSharedHeaders', :path => '../Vendor/BDTSharedHeaders'
     #-----支付封装库-----  modified 6.2.1 alipay加回来
-    pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
+#    pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
     #-----三方服务封装库-----  modified 6.2.1 alipay加回来
     pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
     pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
