@@ -128,7 +128,7 @@
         
         NSNumber *number = nil;
         if (textField.text.length > 0) {
-            number = @([textField.text integerValue]);
+            number = textField.text;//@(textField.text integerValue]);
         }
         
         if (textField == self.lowerTextField) {            
@@ -144,6 +144,11 @@
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    NSInteger inputInt = [string integerValue];
+    if (inputInt < 0 || inputInt > 9) {
+        return NO;
+    }
+    
     NSString *result =  [textField.text stringByReplacingCharactersInRange:range withString:string];
     if (result.length >= 9) {
         return NO;
@@ -153,11 +158,11 @@
         return YES;
     }
     
-    if ([result isEqualToString:[NSString stringWithFormat:@"%d",result.intValue]]) {
-        return YES;
-    }
+//    if ([result isEqualToString:[NSString stringWithFormat:@"%d",result.intValue]]) {
+//        return YES;
+//    }
     
-    return NO;
+    return YES;
     
 }
 

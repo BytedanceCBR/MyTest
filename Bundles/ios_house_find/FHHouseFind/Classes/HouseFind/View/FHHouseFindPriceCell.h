@@ -22,9 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @required
 
--(void)updateLowerPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell;
+-(void)updateLowerPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell;
 
--(void)updateHigherPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell;
+-(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell;
 
 @end
 
