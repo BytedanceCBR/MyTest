@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger followStatus;
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 @property (nonatomic, weak) UIViewController *belongsVC;
+@property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
+@property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;

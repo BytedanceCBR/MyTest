@@ -1179,7 +1179,6 @@
 		B373C83D2174587A008F9905 /* TSVShortVideoDetailFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C8A69C1F1362D000A52D8B /* TSVShortVideoDetailFetchManager.m */; };
 		B373C83E2174587A008F9905 /* TTRequestShareADTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7551F1332DA0002B455 /* TTRequestShareADTask.m */; };
 		B373C83F2174587A008F9905 /* NewsBaseDelegate+OpenURL.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7441F1332DA0002B455 /* NewsBaseDelegate+OpenURL.m */; };
-		B373C8402174587A008F9905 /* TTRNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902391DB873970072138C /* TTRNViewController.m */; };
 		B373C8432174587A008F9905 /* TTRAd.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBE461F13332C0002B455 /* TTRAd.m */; };
 		B373C8442174587A008F9905 /* SSTrashManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D27EE1F17472B005EDC4A /* SSTrashManager.m */; };
 		B373C8452174587A008F9905 /* TTFollowingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC28F1F1333600002B455 /* TTFollowingModel.m */; };
@@ -1190,7 +1189,6 @@
 		B373C84B2174587A008F9905 /* TTVFeedListNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = F876922B1F31D0D200D59CA5 /* TTVFeedListNotificationCenter.m */; };
 		B373C84E2174587A008F9905 /* TTTrackInitTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFABAA1F0E439400C1E28D /* TTTrackInitTime.m */; };
 		B373C84F2174587A008F9905 /* ArticleMomentDiggManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D50439C62079B8FB00DA4953 /* ArticleMomentDiggManager.m */; };
-		B373C8502174587A008F9905 /* TTRNVideoViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D91E82716100FF96A7 /* TTRNVideoViewManager.m */; };
 		B373C8522174587A008F9905 /* TTActivityShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621BE1F500EF900B4CC0C /* TTActivityShareManager.m */; };
 		B373C8532174587A008F9905 /* TTDynamicRNCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBCA9D11F67812B00C518C3 /* TTDynamicRNCellView.m */; };
 		B373C8542174587A008F9905 /* TTVisitorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6661F333623005DAD27 /* TTVisitorViewController.m */; };
@@ -1364,7 +1362,6 @@
 		B373C9192174587A008F9905 /* TTVideoFontSizeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692FD1F31D0D300D59CA5 /* TTVideoFontSizeManager.m */; };
 		B373C91A2174587A008F9905 /* ExploreDetailAppVideoADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460FAB11D0FD29800BC4778 /* ExploreDetailAppVideoADView.m */; };
 		B373C91B2174587A008F9905 /* SubscribeEntryGetLocalDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B7E70521A1DE5AC00DB9541 /* SubscribeEntryGetLocalDataOperation.m */; };
-		B373C91C2174587A008F9905 /* TTRNBundleInfoBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB6D3FB1EB31D9C0093B209 /* TTRNBundleInfoBuilder.m */; };
 		B373C91D2174587A008F9905 /* TTAdCanvasFullPicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A49D1F20B01C005E4A06 /* TTAdCanvasFullPicCell.m */; };
 		B373C91E2174587A008F9905 /* ExploreArticleCardCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0202C1B215BE500F9E484 /* ExploreArticleCardCellView.m */; };
 		B373C91F2174587A008F9905 /* AKTaskSettingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F0F2058029600BAEE7F /* AKTaskSettingHelper.m */; };
@@ -1394,7 +1391,6 @@
 		B373C93D2174587A008F9905 /* TTLocalResourceDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A49DD381F67D3CF007D0221 /* TTLocalResourceDownloader.m */; };
 		B373C93E2174587A008F9905 /* TTInterestResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2951F1333600002B455 /* TTInterestResponseModel.m */; };
 		B373C93F2174587A008F9905 /* TTEditUserProfileItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5E01F1332D90002B455 /* TTEditUserProfileItemCell.m */; };
-		B373C9402174587A008F9905 /* TTRNVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D71E82716100FF96A7 /* TTRNVideoView.m */; };
 		B373C9412174587A008F9905 /* TTVReplyListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692601F31D0D300D59CA5 /* TTVReplyListItem.m */; };
 		B373C9422174587A008F9905 /* TTNewFollowingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2A21F1333600002B455 /* TTNewFollowingManager.m */; };
 		B373C9432174587A008F9905 /* TTVCommentListReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691091F31D0D200D59CA5 /* TTVCommentListReplyTableViewCell.m */; };
@@ -1598,7 +1594,6 @@
 		B373CA2F2174587A008F9905 /* TTGetInstallIDTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7731F1332DA0002B455 /* TTGetInstallIDTask.m */; };
 		B373CA312174587A008F9905 /* TTHTSWaterfallCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48BBF1A41F39E9F700B87A26 /* TTHTSWaterfallCollectionViewCell.m */; };
 		B373CA322174587A008F9905 /* TTVDetailNatantADPlayerTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF257BF1FA8AC5F000A3688 /* TTVDetailNatantADPlayerTracker.m */; };
-		B373CA332174587A008F9905 /* TTRNBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD9022F1DB873960072138C /* TTRNBridge.m */; };
 		B373CA362174587A008F9905 /* UITableView+Block.m in Sources */ = {isa = PBXBuildFile; fileRef = FE02C80E20844F0A004DE769 /* UITableView+Block.m */; };
 		B373CA372174587A008F9905 /* TTPersonalHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2521F1333600002B455 /* TTPersonalHomeViewController.m */; };
 		B373CA382174587A008F9905 /* TSVRecUserCardOriginalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 480330491F78EC9600EA4E8F /* TSVRecUserCardOriginalData.m */; };
@@ -1671,7 +1666,6 @@
 		B373CA862174587A008F9905 /* TTPGCUserFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5EA1F1332D90002B455 /* TTPGCUserFooterView.m */; };
 		B373CA872174587A008F9905 /* TTPhotoDetailCellManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A6141F20B23E005E4A06 /* TTPhotoDetailCellManager.m */; };
 		B373CA892174587A008F9905 /* TTTableViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692A61F31D0D300D59CA5 /* TTTableViewModel.m */; };
-		B373CA8B2174587A008F9905 /* DiffMatchPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADF31FA5AC0B00E7765A /* DiffMatchPatch.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B373CA8C2174587A008F9905 /* TTVRelatedItem+TTVConvertToArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691351F31D0D200D59CA5 /* TTVRelatedItem+TTVConvertToArticle.m */; };
 		B373CA8D2174587A008F9905 /* TTVPartnerVideo+TTVComputedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = F876912F1F31D0D200D59CA5 /* TTVPartnerVideo+TTVComputedProperties.m */; };
 		B373CA8E2174587A008F9905 /* Article+TTAdDetailInnerArticleProtocolSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F849808B1F25F34600C4A693 /* Article+TTAdDetailInnerArticleProtocolSupport.m */; };
@@ -1756,10 +1750,8 @@
 		B373CAE82174587A008F9905 /* TTVFeedListVideoBottomContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691F41F31D0D200D59CA5 /* TTVFeedListVideoBottomContainerView.m */; };
 		B373CAE92174587A008F9905 /* TTSettingGeneralEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE08A351DC98BBE00DBFA53 /* TTSettingGeneralEntry.m */; };
 		B373CAEA2174587A008F9905 /* TTBuryContentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4737F21B1F4EB873007BB1C2 /* TTBuryContentItem.m */; };
-		B373CAEB2174587A008F9905 /* TTRNWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD9023B1DB873970072138C /* TTRNWebView.m */; };
 		B373CAEC2174587A008F9905 /* NewsDetailFunctionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EF7A904118D93FA000190EA2 /* NewsDetailFunctionView.m */; };
 		B373CAED2174587A008F9905 /* SSIntroduceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9CA76E16B64B1B00A9992B /* SSIntroduceViewController.m */; };
-		B373CAF02174587A008F9905 /* TTRNImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B78B8EF1DBF53FF00034A45 /* TTRNImageViewManager.m */; };
 		B373CAF12174587A008F9905 /* TTArticleMomentDigUsersView.m in Sources */ = {isa = PBXBuildFile; fileRef = D50439B42079B8DB00DA4953 /* TTArticleMomentDigUsersView.m */; };
 		B373CAF22174587A008F9905 /* SSPingServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 06C5186A1AAD90F000C2B2E3 /* SSPingServices.m */; };
 		B373CAF32174587A008F9905 /* ArticleAddressManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3317181F305308009D2936 /* ArticleAddressManager.m */; };
@@ -1769,7 +1761,6 @@
 		B373CAF72174587A008F9905 /* TTVVideoDetailNatantPGCAuthorView.m in Sources */ = {isa = PBXBuildFile; fileRef = F876916A1F31D0D200D59CA5 /* TTVVideoDetailNatantPGCAuthorView.m */; };
 		B373CAF82174587A008F9905 /* TTFavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB60D1F1332D90002B455 /* TTFavoriteViewController.m */; };
 		B373CAFA2174587A008F9905 /* TTVHTTPProcesserMessageHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691B61F31D0D200D59CA5 /* TTVHTTPProcesserMessageHandle.m */; };
-		B373CAFB2174587A008F9905 /* TTRNImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B78B8E91DBF4ACE00034A45 /* TTRNImageView.m */; };
 		B373CAFC2174587A008F9905 /* ExploreCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5516621C7AADB70012D452 /* ExploreCellHelper.m */; };
 		B373CAFE2174587A008F9905 /* TTLayOutWenDaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F48C351EE01D2000687EA7 /* TTLayOutWenDaCell.m */; };
 		B373CAFF2174587A008F9905 /* ArticleMobilePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3317061F305308009D2936 /* ArticleMobilePasswordViewController.m */; };
@@ -1819,7 +1810,6 @@
 		B373CB2F2174587A008F9905 /* TTTopBarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5AA1F1332D90002B455 /* TTTopBarManager.m */; };
 		B373CB302174587A008F9905 /* TTHotNewsCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3090690F2015B5E500764DE7 /* TTHotNewsCellView.m */; };
 		B373CB322174587A008F9905 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
-		B373CB332174587A008F9905 /* NSMutableDictionary+DMPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADF81FA5AC0B00E7765A /* NSMutableDictionary+DMPExtensions.m */; };
 		B373CB352174587A008F9905 /* TTVFeedListVideoAdItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691C81F31D0D200D59CA5 /* TTVFeedListVideoAdItem.m */; };
 		B373CB362174587A008F9905 /* TTBackgroundModeTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7E71F1332DB0002B455 /* TTBackgroundModeTask.m */; };
 		B373CB372174587A008F9905 /* TTCellBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB148A01C75CEBA0028DA64 /* TTCellBridge.m */; };
@@ -1886,7 +1876,6 @@
 		B373CB7E2174587A008F9905 /* TTVVideoDetailHeaderPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691881F31D0D200D59CA5 /* TTVVideoDetailHeaderPosterViewController.m */; };
 		B373CB802174587A008F9905 /* TTImageView+TrafficSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55457919D7BD4B006B8E98 /* TTImageView+TrafficSave.m */; };
 		B373CB812174587A008F9905 /* TTVPasterADViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DC81F94B8DC0050F83E /* TTVPasterADViewController.m */; };
-		B373CB832174587A008F9905 /* TTRNScrollViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB95911F3C5DD200934846 /* TTRNScrollViewManager.m */; };
 		B373CB842174587A008F9905 /* UIControl+BlocksKit.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692B31F31D0D300D59CA5 /* UIControl+BlocksKit.m */; };
 		B373CB852174587A008F9905 /* ExploreExtenstionDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB56A1F1332D90002B455 /* ExploreExtenstionDataHelper.m */; };
 		B373CB862174587A008F9905 /* TTWendaMethodDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */; };
@@ -1895,7 +1884,6 @@
 		B373CB8A2174587A008F9905 /* TTFavoriteSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB60B1F1332D90002B455 /* TTFavoriteSearchViewController.m */; };
 		B373CB8E2174587A008F9905 /* TTHistoryEntryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A50A02C1DDC2AA000BB7E87 /* TTHistoryEntryGroup.m */; };
 		B373CB8F2174587A008F9905 /* ExploreOrderedADModel+TTVADSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691A91F31D0D200D59CA5 /* ExploreOrderedADModel+TTVADSupport.m */; };
-		B373CB902174587A008F9905 /* TTRNScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB958F1F3C5DD200934846 /* TTRNScrollView.m */; };
 		B373CB912174587A008F9905 /* ExploreMixedListBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE1FC313206922D800664B00 /* ExploreMixedListBaseView.m */; };
 		B373CB922174587A008F9905 /* TTVVideoDetailAlbumCellViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F876919A1F31D0D200D59CA5 /* TTVVideoDetailAlbumCellViewModel.m */; };
 		B373CB932174587A008F9905 /* AKProfilePhotoCarouselViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F40205802A400BAEE7F /* AKProfilePhotoCarouselViewCell.m */; };
@@ -1910,11 +1898,8 @@
 		B373CB9D2174587A008F9905 /* TTSettingMineTabEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE08A3B1DC98E2A00DBFA53 /* TTSettingMineTabEntry.m */; };
 		B373CB9E2174587A008F9905 /* TTVideoTabBaseCellNewPlayControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DFE1F94B8DC0050F83E /* TTVideoTabBaseCellNewPlayControl.m */; };
 		B373CB9F2174587A008F9905 /* TTPhotoDetailViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC5191F134C010002B455 /* TTPhotoDetailViewModel.m */; };
-		B373CBA02174587A008F9905 /* TTRNWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD9023D1DB873970072138C /* TTRNWebViewManager.m */; };
 		B373CBA12174587A008F9905 /* TTAdCanvasVideoBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA875D1F9F4FFE004C1CAE /* TTAdCanvasVideoBottomView.m */; };
-		B373CBA22174587A008F9905 /* TTRNPanoramaViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D51E82716100FF96A7 /* TTRNPanoramaViewManager.m */; };
 		B373CBA32174587A008F9905 /* TSVDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92650CDD1FCC3A98000E0D03 /* TSVDebugViewController.m */; };
-		B373CBA42174587A008F9905 /* DiffMatchPatchCFUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADF41FA5AC0B00E7765A /* DiffMatchPatchCFUtilities.c */; };
 		B373CBA52174587A008F9905 /* TTHotNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 309069092015B55800764DE7 /* TTHotNewsCell.m */; };
 		B373CBA62174587A008F9905 /* TTNewPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFA4091F0E3B9000C1E28D /* TTNewPanelController.m */; };
 		B373CBA72174587A008F9905 /* TTNotificationActionSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB59B1F1332D90002B455 /* TTNotificationActionSyncManager.m */; };
@@ -1952,7 +1937,6 @@
 		B373CBC92174587A008F9905 /* TTVMidInsertADPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DB31F94B8DC0050F83E /* TTVMidInsertADPlayer.m */; };
 		B373CBCA2174587A008F9905 /* TTVVideoDetailTextlinkADView.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691771F31D0D200D59CA5 /* TTVVideoDetailTextlinkADView.m */; };
 		B373CBCB2174587A008F9905 /* TTVideoExtendLinkHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D507C72B206B36430072A03E /* TTVideoExtendLinkHelper.m */; };
-		B373CBCC2174587A008F9905 /* TTRNPanoramaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D31E82716100FF96A7 /* TTRNPanoramaView.m */; };
 		B373CBCD2174587A008F9905 /* TTQQSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = C2036D7D1F288E5300ECFA51 /* TTQQSDKRegister.m */; };
 		B373CBCE2174587A008F9905 /* TTActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621D71F500EFA00B4CC0C /* TTActivity.m */; };
 		B373CBCF2174587A008F9905 /* TTHorizontalCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 486CB7F61ED574C20045D657 /* TTHorizontalCardCell.m */; };
@@ -2057,7 +2041,6 @@
 		B373CC412174587A008F9905 /* AKProfileHeaderBeneficialView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F20205802A400BAEE7F /* AKProfileHeaderBeneficialView.m */; };
 		B373CC422174587A008F9905 /* ArticleTitleImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = EFF3E8C616AE5C0500B05B3A /* ArticleTitleImageView.m */; };
 		B373CC432174587A008F9905 /* SSWebViewControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBE3D1F13332C0002B455 /* SSWebViewControllerView.m */; };
-		B373CC442174587A008F9905 /* NSString+UnicharUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADFC1FA5AC0B00E7765A /* NSString+UnicharUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B373CC452174587A008F9905 /* TTAdVideoRelateLeftImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A5131F20B01C005E4A06 /* TTAdVideoRelateLeftImageView.m */; };
 		B373CC462174587A008F9905 /* TTASettingConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCB5E292016FC4C00A6FCB3 /* TTASettingConfiguration.m */; };
 		B373CC472174587A008F9905 /* TTVAdActionButtonCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691E81F31D0D200D59CA5 /* TTVAdActionButtonCreation.m */; };
@@ -2090,7 +2073,6 @@
 		B373CC682174587A008F9905 /* SettingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88EDBFA51F3076CF00911931 /* SettingView.m */; };
 		B373CC692174587A008F9905 /* TTHorizontalHuoShanLoadingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F2820EF91F3031BB00354708 /* TTHorizontalHuoShanLoadingCell.m */; };
 		B373CC6A2174587A008F9905 /* AKRedPacketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5CEE0A20510A9E0011B4D7 /* AKRedPacketViewController.m */; };
-		B373CC6B2174587A008F9905 /* TTRNBundleDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB6D4011EB3218B0093B209 /* TTRNBundleDownloader.m */; };
 		B373CC6C2174587A008F9905 /* SSPublishProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48EC03E9173BCACA000B55A8 /* SSPublishProgressView.m */; };
 		B373CC6D2174587A008F9905 /* ExploreCellViewBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE020271B215BE400F9E484 /* ExploreCellViewBase.m */; };
 		B373CC6E2174587A008F9905 /* ExploreDetailAppLeftPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460FAAF1D0FD29800BC4778 /* ExploreDetailAppLeftPicADView.m */; };
@@ -2121,7 +2103,6 @@
 		B373CC902174587A008F9905 /* SSDebugDNSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06C5184E1AAC65AC00C2B2E3 /* SSDebugDNSViewController.m */; };
 		B373CC912174587A008F9905 /* TTInterestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6051F333110005DAD27 /* TTInterestViewController.m */; };
 		B373CC922174587A008F9905 /* TTSectionViewEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692831F31D0D300D59CA5 /* TTSectionViewEntity.m */; };
-		B373CC932174587A008F9905 /* TTRNRreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C58A3BE1F1DA1C9006A71BE /* TTRNRreshView.m */; };
 		B373CC942174587A008F9905 /* SSURLTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621DE1F500EFA00B4CC0C /* SSURLTracker.m */; };
 		B373CC952174587A008F9905 /* TTCrashRepotTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7F11F1332DB0002B455 /* TTCrashRepotTask.m */; };
 		B373CC962174587A008F9905 /* TTRShortVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB262CC1FDCDFB800A1A356 /* TTRShortVideo.m */; };
@@ -2165,7 +2146,6 @@
 		B373CCC32174587A008F9905 /* TTVVideoDetailNatantPGCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691701F31D0D200D59CA5 /* TTVVideoDetailNatantPGCViewController.m */; };
 		B373CCC52174587A008F9905 /* TTTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AADC2441D36AA1F008FD8C1 /* TTTabBarItem.m */; };
 		B373CCC62174587A008F9905 /* TTArticlePanoramaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E224DBA1F38700500922AD2 /* TTArticlePanoramaView.m */; };
-		B373CCC72174587A008F9905 /* TTRNBridge+Call.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902311DB873960072138C /* TTRNBridge+Call.m */; };
 		B373CCC82174587A008F9905 /* AKRedPacketDetailBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5CEE1020510AC50011B4D7 /* AKRedPacketDetailBaseView.m */; };
 		B373CCC92174587A008F9905 /* TTTableFacility.m in Sources */ = {isa = PBXBuildFile; fileRef = F876928F1F31D0D300D59CA5 /* TTTableFacility.m */; };
 		B373CCCA2174587A008F9905 /* TTActivityShareSequenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 47870EFA1F593B5D00803326 /* TTActivityShareSequenceManager.m */; };
@@ -2218,7 +2198,6 @@
 		B373CCFB2174587A008F9905 /* AKTaskSettingFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F052058029600BAEE7F /* AKTaskSettingFooterView.m */; };
 		B373CCFD2174587A008F9905 /* ArticleBaseListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA235A9174CA71C00F30E23 /* ArticleBaseListView.m */; };
 		B373CCFE2174587A008F9905 /* SSDebugViewControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 038D9AE41F41A1C900E90F73 /* SSDebugViewControllerBase.m */; };
-		B373CCFF2174587A008F9905 /* TTRNView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902371DB873970072138C /* TTRNView.m */; };
 		B373CD002174587A008F9905 /* STLinkLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E69A4C1B0ADD7C00A3EDCA /* STLinkLabel.m */; };
 		B373CD012174587A008F9905 /* TTLocalAssetMovieControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = A8B769261E1CF60900F22A0C /* TTLocalAssetMovieControlView.m */; };
 		B373CD022174587A008F9905 /* TTMomentEnterView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2E91F1333610002B455 /* TTMomentEnterView.m */; };
@@ -2270,9 +2249,7 @@
 		B373CD392174587A008F9905 /* TTVADPlayVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9D901F94B8DC0050F83E /* TTVADPlayVideo.m */; };
 		B373CD3A2174587A008F9905 /* ExploreDetailAppointLargePicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCAD0751DDC27FC00EBF9CF /* ExploreDetailAppointLargePicADView.m */; };
 		B373CD3B2174587A008F9905 /* TSVShortVideoFeedFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C33DCA0A1FE24F7C00C66B01 /* TSVShortVideoFeedFetchManager.m */; };
-		B373CD3C2174587A008F9905 /* TTRNBridge+Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902331DB873970072138C /* TTRNBridge+Cell.m */; };
 		B373CD3D2174587A008F9905 /* ExploreVideoDetailAppointLeftPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB4429E1F711843008E8951 /* ExploreVideoDetailAppointLeftPicADView.m */; };
-		B373CD3F2174587A008F9905 /* NSString+JavaSubstring.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADFA1FA5AC0B00E7765A /* NSString+JavaSubstring.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B373CD402174587A008F9905 /* SSCommonLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB56D1F1332D90002B455 /* SSCommonLogic.m */; };
 		B373CD412174587A008F9905 /* TSVCardCellQuadraViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB3B59B1FD2F4DA00586FE7 /* TSVCardCellQuadraViewFlowLayout.m */; };
 		B373CD432174587A008F9905 /* ExploreLogicSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA7391F334781005DAD27 /* ExploreLogicSetting.m */; };
@@ -2421,7 +2398,6 @@
 		B373CDEA2174587A008F9905 /* SSWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6481F33350B005DAD27 /* SSWebViewController.m */; };
 		B373CDEB2174587A008F9905 /* TTStartupNotificationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB78D1F1332DA0002B455 /* TTStartupNotificationGroup.m */; };
 		B373CDEC2174587A008F9905 /* TTArticleCellConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C4136711D65C104003E29F8 /* TTArticleCellConst.m */; };
-		B373CDEE2174587A008F9905 /* TTRNDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB6D4071EBACF760093B209 /* TTRNDeviceInfo.m */; };
 		B373CDEF2174587A008F9905 /* NewsFetchListRefreshTipManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4813D9EA198F904000AE12FD /* NewsFetchListRefreshTipManager.m */; };
 		B373CDF02174587A008F9905 /* NewsBaseDelegate+SDKs.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7461F1332DA0002B455 /* NewsBaseDelegate+SDKs.m */; };
 		B373CDF12174587A008F9905 /* TTVideoPasterADTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2557531E8271CD00FF96A7 /* TTVideoPasterADTracker.m */; };
@@ -2473,7 +2449,6 @@
 		B373CE262174587A008F9905 /* TTRNCellManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBCA9D31F67812B00C518C3 /* TTRNCellManager.m */; };
 		B373CE272174587A008F9905 /* TTFastCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFABA01F0E432B00C1E28D /* TTFastCoding.m */; };
 		B373CE292174587A008F9905 /* TTDetailNatantRelateReadPlainView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB57E1F1332D90002B455 /* TTDetailNatantRelateReadPlainView.m */; };
-		B373CE2A2174587A008F9905 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADFE1FA5AC0B00E7765A /* NSString+UriCompatibility.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B373CE2B2174587A008F9905 /* FHDataPlayerTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 61A446F3215293C20072B46E /* FHDataPlayerTracker.m */; };
 		B373CE2D2174587A008F9905 /* TTVVideoDetailNatantInfoShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47D314461F94BCC500FC3D8D /* TTVVideoDetailNatantInfoShareView.m */; };
 		B373CE2E2174587A008F9905 /* TTDislikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = ACECFAC61E84D4A10080679E /* TTDislikeView.m */; };
@@ -2534,7 +2509,6 @@
 		B373CE752174587A008F9905 /* TTVFeedCellMoreActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692151F31D0D200D59CA5 /* TTVFeedCellMoreActionManager.m */; };
 		B373CE762174587A008F9905 /* ExploreArticleLianZaiCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E988E41D36247D00D98671 /* ExploreArticleLianZaiCell.m */; };
 		B373CE772174587A008F9905 /* TTAppLinkOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7931F1332DA0002B455 /* TTAppLinkOpenURLTask.m */; };
-		B373CE782174587A008F9905 /* TTRNBundleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902351DB873970072138C /* TTRNBundleManager.m */; };
 		B373CE792174587A008F9905 /* BDTAccountNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDA765A1F72165C00209EEF /* BDTAccountNavigationController.m */; };
 		B373CE7A2174587A008F9905 /* TSVCategorySelectorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F838CA1FA2D4E5002E040C /* TSVCategorySelectorButton.m */; };
 		B373CE7B2174587A008F9905 /* TTRelationshipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2B21F1333600002B455 /* TTRelationshipViewController.m */; };
@@ -2550,7 +2524,6 @@
 		B373CE882174587A008F9905 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F92206F4217000F18C6 /* Icon-72@2x.png */; };
 		B373CE892174587A008F9905 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
-		B373CE8B2174587A008F9905 /* index.ios.canvas.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2556CD1E82716100FF96A7 /* index.ios.canvas.bundle */; };
 		B373CE8D2174587A008F9905 /* recommend_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF2E77D3185AC868001C8536 /* recommend_button@2x.png */; };
 		B373CE8E2174587A008F9905 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		B373CE8F2174587A008F9905 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
@@ -2566,7 +2539,6 @@
 		B373CE992174587A008F9905 /* sound4.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEA1FE007C10093E05D /* sound4.caf */; };
 		B373CE9A2174587A008F9905 /* Photo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5AC1F1332D90002B455 /* Photo.storyboard */; };
 		B373CE9B2174587A008F9905 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
-		B373CE9C2174587A008F9905 /* index.ios.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6BD9022D1DB873960072138C /* index.ios.bundle */; };
 		B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943B1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig */; };
 		B373CE9F2174587A008F9905 /* transparent_1px@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5B11F1332D90002B455 /* transparent_1px@2x.png */; };
 		B373CEA02174587A008F9905 /* Video.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F87693001F31D0D300D59CA5 /* Video.storyboard */; };
@@ -2592,7 +2564,6 @@
 		B373CEB42174587A008F9905 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
 		B373CEB62174587A008F9905 /* ProjectNightModeThemeUISetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295F51BA14541000B7F10 /* ProjectNightModeThemeUISetting.strings */; };
 		B373CEB72174587A008F9905 /* TTVTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F87692501F31D0D200D59CA5 /* TTVTab.storyboard */; };
-		B373CEB82174587A008F9905 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 6BDDD2731D479A0F006079E7 /* assets */; };
 		B373CEB92174587A008F9905 /* recommend_cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = EF2E77D6185AC868001C8536 /* recommend_cancel.png */; };
 		B373CEBA2174587A008F9905 /* Stub_Article_Information.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7B4772761CFC438A00D3F8DC /* Stub_Article_Information.txt */; };
 		B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
@@ -4807,7 +4778,6 @@
 		FEFA52A2205FB1A8001F50D8 /* TSVShortVideoDetailFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48C8A69C1F1362D000A52D8B /* TSVShortVideoDetailFetchManager.m */; };
 		FEFA52A3205FB1A8001F50D8 /* TTRequestShareADTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7551F1332DA0002B455 /* TTRequestShareADTask.m */; };
 		FEFA52A4205FB1A8001F50D8 /* NewsBaseDelegate+OpenURL.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7441F1332DA0002B455 /* NewsBaseDelegate+OpenURL.m */; };
-		FEFA52A7205FB1A8001F50D8 /* TTRNViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902391DB873970072138C /* TTRNViewController.m */; };
 		FEFA52A8205FB1A8001F50D8 /* TTRAd.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBE461F13332C0002B455 /* TTRAd.m */; };
 		FEFA52A9205FB1A8001F50D8 /* SSTrashManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A92D27EE1F17472B005EDC4A /* SSTrashManager.m */; };
 		FEFA52AA205FB1A8001F50D8 /* TTFollowingModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC28F1F1333600002B455 /* TTFollowingModel.m */; };
@@ -4817,7 +4787,6 @@
 		FEFA52B2205FB1A8001F50D8 /* TTDetailModel+videoArticleProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691261F31D0D200D59CA5 /* TTDetailModel+videoArticleProtocol.m */; };
 		FEFA52B3205FB1A8001F50D8 /* TTVFeedListNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = F876922B1F31D0D200D59CA5 /* TTVFeedListNotificationCenter.m */; };
 		FEFA52B4205FB1A8001F50D8 /* TTTrackInitTime.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFABAA1F0E439400C1E28D /* TTTrackInitTime.m */; };
-		FEFA52B5205FB1A8001F50D8 /* TTRNVideoViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D91E82716100FF96A7 /* TTRNVideoViewManager.m */; };
 		FEFA52B7205FB1A8001F50D8 /* TTActivityShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621BE1F500EF900B4CC0C /* TTActivityShareManager.m */; };
 		FEFA52B8205FB1A8001F50D8 /* TTDynamicRNCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBCA9D11F67812B00C518C3 /* TTDynamicRNCellView.m */; };
 		FEFA52BB205FB1A8001F50D8 /* TTVisitorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6661F333623005DAD27 /* TTVisitorViewController.m */; };
@@ -4985,7 +4954,6 @@
 		FEFA53A3205FB1A8001F50D8 /* TTVideoFontSizeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692FD1F31D0D300D59CA5 /* TTVideoFontSizeManager.m */; };
 		FEFA53A4205FB1A8001F50D8 /* ExploreDetailAppVideoADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460FAB11D0FD29800BC4778 /* ExploreDetailAppVideoADView.m */; };
 		FEFA53A5205FB1A8001F50D8 /* SubscribeEntryGetLocalDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B7E70521A1DE5AC00DB9541 /* SubscribeEntryGetLocalDataOperation.m */; };
-		FEFA53A8205FB1A8001F50D8 /* TTRNBundleInfoBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB6D3FB1EB31D9C0093B209 /* TTRNBundleInfoBuilder.m */; };
 		FEFA53A9205FB1A8001F50D8 /* TTAdCanvasFullPicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A49D1F20B01C005E4A06 /* TTAdCanvasFullPicCell.m */; };
 		FEFA53AA205FB1A8001F50D8 /* ExploreArticleCardCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE0202C1B215BE500F9E484 /* ExploreArticleCardCellView.m */; };
 		FEFA53AB205FB1A8001F50D8 /* AKTaskSettingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F0F2058029600BAEE7F /* AKTaskSettingHelper.m */; };
@@ -5014,7 +4982,6 @@
 		FEFA53CA205FB1A8001F50D8 /* TTLocalResourceDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A49DD381F67D3CF007D0221 /* TTLocalResourceDownloader.m */; };
 		FEFA53CB205FB1A8001F50D8 /* TTInterestResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2951F1333600002B455 /* TTInterestResponseModel.m */; };
 		FEFA53CC205FB1A8001F50D8 /* TTEditUserProfileItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5E01F1332D90002B455 /* TTEditUserProfileItemCell.m */; };
-		FEFA53CD205FB1A8001F50D8 /* TTRNVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D71E82716100FF96A7 /* TTRNVideoView.m */; };
 		FEFA53CE205FB1A8001F50D8 /* TTVReplyListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692601F31D0D300D59CA5 /* TTVReplyListItem.m */; };
 		FEFA53CF205FB1A8001F50D8 /* TTNewFollowingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2A21F1333600002B455 /* TTNewFollowingManager.m */; };
 		FEFA53D2205FB1A8001F50D8 /* TTVCommentListReplyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691091F31D0D200D59CA5 /* TTVCommentListReplyTableViewCell.m */; };
@@ -5211,7 +5178,6 @@
 		FEFA54EB205FB1A8001F50D8 /* TTGetInstallIDTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7731F1332DA0002B455 /* TTGetInstallIDTask.m */; };
 		FEFA54ED205FB1A8001F50D8 /* TTHTSWaterfallCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48BBF1A41F39E9F700B87A26 /* TTHTSWaterfallCollectionViewCell.m */; };
 		FEFA54F0205FB1A8001F50D8 /* TTVDetailNatantADPlayerTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EF257BF1FA8AC5F000A3688 /* TTVDetailNatantADPlayerTracker.m */; };
-		FEFA54F1205FB1A8001F50D8 /* TTRNBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD9022F1DB873960072138C /* TTRNBridge.m */; };
 		FEFA54F2205FB1A8001F50D8 /* TTPersonalHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2521F1333600002B455 /* TTPersonalHomeViewController.m */; };
 		FEFA54F3205FB1A8001F50D8 /* TSVRecUserCardOriginalData.m in Sources */ = {isa = PBXBuildFile; fileRef = 480330491F78EC9600EA4E8F /* TSVRecUserCardOriginalData.m */; };
 		FEFA54F4205FB1A8001F50D8 /* TTDislikeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D056BB831E163A0700FBF753 /* TTDislikeManager.m */; };
@@ -5278,7 +5244,6 @@
 		FEFA5547205FB1A8001F50D8 /* TTPGCUserFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5EA1F1332D90002B455 /* TTPGCUserFooterView.m */; };
 		FEFA554A205FB1A8001F50D8 /* TTPhotoDetailCellManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A6141F20B23E005E4A06 /* TTPhotoDetailCellManager.m */; };
 		FEFA554C205FB1A8001F50D8 /* TTTableViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692A61F31D0D300D59CA5 /* TTTableViewModel.m */; };
-		FEFA554D205FB1A8001F50D8 /* DiffMatchPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADF31FA5AC0B00E7765A /* DiffMatchPatch.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FEFA554E205FB1A8001F50D8 /* TTVRelatedItem+TTVConvertToArticle.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691351F31D0D200D59CA5 /* TTVRelatedItem+TTVConvertToArticle.m */; };
 		FEFA554F205FB1A8001F50D8 /* TTVPartnerVideo+TTVComputedProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = F876912F1F31D0D200D59CA5 /* TTVPartnerVideo+TTVComputedProperties.m */; };
 		FEFA5551205FB1A8001F50D8 /* Article+TTAdDetailInnerArticleProtocolSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F849808B1F25F34600C4A693 /* Article+TTAdDetailInnerArticleProtocolSupport.m */; };
@@ -5355,10 +5320,8 @@
 		FEFA55B7205FB1A8001F50D8 /* TTVFeedListVideoBottomContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691F41F31D0D200D59CA5 /* TTVFeedListVideoBottomContainerView.m */; };
 		FEFA55B8205FB1A8001F50D8 /* TTSettingGeneralEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE08A351DC98BBE00DBFA53 /* TTSettingGeneralEntry.m */; };
 		FEFA55BB205FB1A8001F50D8 /* TTBuryContentItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 4737F21B1F4EB873007BB1C2 /* TTBuryContentItem.m */; };
-		FEFA55BC205FB1A8001F50D8 /* TTRNWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD9023B1DB873970072138C /* TTRNWebView.m */; };
 		FEFA55BD205FB1A8001F50D8 /* NewsDetailFunctionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EF7A904118D93FA000190EA2 /* NewsDetailFunctionView.m */; };
 		FEFA55BE205FB1A8001F50D8 /* SSIntroduceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EF9CA76E16B64B1B00A9992B /* SSIntroduceViewController.m */; };
-		FEFA55BF205FB1A8001F50D8 /* TTRNImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B78B8EF1DBF53FF00034A45 /* TTRNImageViewManager.m */; };
 		FEFA55C0205FB1A8001F50D8 /* SSPingServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 06C5186A1AAD90F000C2B2E3 /* SSPingServices.m */; };
 		FEFA55C1205FB1A8001F50D8 /* ArticleAddressManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3317181F305308009D2936 /* ArticleAddressManager.m */; };
 		FEFA55C3205FB1A8001F50D8 /* TTVideoRecommendModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F87693531F31D0D300D59CA5 /* TTVideoRecommendModel.m */; };
@@ -5367,7 +5330,6 @@
 		FEFA55C7205FB1A8001F50D8 /* TTVVideoDetailNatantPGCAuthorView.m in Sources */ = {isa = PBXBuildFile; fileRef = F876916A1F31D0D200D59CA5 /* TTVVideoDetailNatantPGCAuthorView.m */; };
 		FEFA55C8205FB1A8001F50D8 /* TTFavoriteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB60D1F1332D90002B455 /* TTFavoriteViewController.m */; };
 		FEFA55C9205FB1A8001F50D8 /* TTVHTTPProcesserMessageHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691B61F31D0D200D59CA5 /* TTVHTTPProcesserMessageHandle.m */; };
-		FEFA55CA205FB1A8001F50D8 /* TTRNImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B78B8E91DBF4ACE00034A45 /* TTRNImageView.m */; };
 		FEFA55CD205FB1A8001F50D8 /* ExploreCellHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5516621C7AADB70012D452 /* ExploreCellHelper.m */; };
 		FEFA55CE205FB1A8001F50D8 /* TTLayOutWenDaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F48C351EE01D2000687EA7 /* TTLayOutWenDaCell.m */; };
 		FEFA55CF205FB1A8001F50D8 /* ArticleMobilePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3317061F305308009D2936 /* ArticleMobilePasswordViewController.m */; };
@@ -5415,7 +5377,6 @@
 		FEFA5608205FB1A8001F50D8 /* TTTopBarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB5AA1F1332D90002B455 /* TTTopBarManager.m */; };
 		FEFA5609205FB1A8001F50D8 /* TTHotNewsCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3090690F2015B5E500764DE7 /* TTHotNewsCellView.m */; };
 		FEFA560A205FB1A8001F50D8 /* ArticleInsertDataOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F765ACB16DB563F0037C3E3 /* ArticleInsertDataOperation.m */; };
-		FEFA560B205FB1A8001F50D8 /* NSMutableDictionary+DMPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADF81FA5AC0B00E7765A /* NSMutableDictionary+DMPExtensions.m */; };
 		FEFA560C205FB1A8001F50D8 /* TTVFeedListVideoAdItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691C81F31D0D200D59CA5 /* TTVFeedListVideoAdItem.m */; };
 		FEFA560F205FB1A8001F50D8 /* TTBackgroundModeTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7E71F1332DB0002B455 /* TTBackgroundModeTask.m */; };
 		FEFA5610205FB1A8001F50D8 /* TTCellBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BB148A01C75CEBA0028DA64 /* TTCellBridge.m */; };
@@ -5482,7 +5443,6 @@
 		FEFA565D205FB1A8001F50D8 /* TTVVideoDetailHeaderPosterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691881F31D0D200D59CA5 /* TTVVideoDetailHeaderPosterViewController.m */; };
 		FEFA565E205FB1A8001F50D8 /* TTImageView+TrafficSave.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B55457919D7BD4B006B8E98 /* TTImageView+TrafficSave.m */; };
 		FEFA565F205FB1A8001F50D8 /* TTVPasterADViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DC81F94B8DC0050F83E /* TTVPasterADViewController.m */; };
-		FEFA5660205FB1A8001F50D8 /* TTRNScrollViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB95911F3C5DD200934846 /* TTRNScrollViewManager.m */; };
 		FEFA5662205FB1A8001F50D8 /* UIControl+BlocksKit.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692B31F31D0D300D59CA5 /* UIControl+BlocksKit.m */; };
 		FEFA5664205FB1A8001F50D8 /* ExploreExtenstionDataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB56A1F1332D90002B455 /* ExploreExtenstionDataHelper.m */; };
 		FEFA5665205FB1A8001F50D8 /* TTWendaMethodDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B036C341F9DC94D009AA77A /* TTWendaMethodDelegate.m */; };
@@ -5491,7 +5451,6 @@
 		FEFA5668205FB1A8001F50D8 /* TTFavoriteSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB60B1F1332D90002B455 /* TTFavoriteSearchViewController.m */; };
 		FEFA5669205FB1A8001F50D8 /* TTHistoryEntryGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A50A02C1DDC2AA000BB7E87 /* TTHistoryEntryGroup.m */; };
 		FEFA566A205FB1A8001F50D8 /* ExploreOrderedADModel+TTVADSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691A91F31D0D200D59CA5 /* ExploreOrderedADModel+TTVADSupport.m */; };
-		FEFA566B205FB1A8001F50D8 /* TTRNScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EDB958F1F3C5DD200934846 /* TTRNScrollView.m */; };
 		FEFA566C205FB1A8001F50D8 /* TTVVideoDetailAlbumCellViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F876919A1F31D0D200D59CA5 /* TTVVideoDetailAlbumCellViewModel.m */; };
 		FEFA566D205FB1A8001F50D8 /* AKProfilePhotoCarouselViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F40205802A400BAEE7F /* AKProfilePhotoCarouselViewCell.m */; };
 		FEFA566E205FB1A8001F50D8 /* TTVDeleteAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F876920C1F31D0D200D59CA5 /* TTVDeleteAction.m */; };
@@ -5504,11 +5463,8 @@
 		FEFA5679205FB1A8001F50D8 /* TTSettingMineTabEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE08A3B1DC98E2A00DBFA53 /* TTSettingMineTabEntry.m */; };
 		FEFA567A205FB1A8001F50D8 /* TTVideoTabBaseCellNewPlayControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DFE1F94B8DC0050F83E /* TTVideoTabBaseCellNewPlayControl.m */; };
 		FEFA567B205FB1A8001F50D8 /* TTPhotoDetailViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC5191F134C010002B455 /* TTPhotoDetailViewModel.m */; };
-		FEFA567D205FB1A8001F50D8 /* TTRNWebViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD9023D1DB873970072138C /* TTRNWebViewManager.m */; };
 		FEFA567E205FB1A8001F50D8 /* TTAdCanvasVideoBottomView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA875D1F9F4FFE004C1CAE /* TTAdCanvasVideoBottomView.m */; };
-		FEFA567F205FB1A8001F50D8 /* TTRNPanoramaViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D51E82716100FF96A7 /* TTRNPanoramaViewManager.m */; };
 		FEFA5680205FB1A8001F50D8 /* TSVDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92650CDD1FCC3A98000E0D03 /* TSVDebugViewController.m */; };
-		FEFA5681205FB1A8001F50D8 /* DiffMatchPatchCFUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADF41FA5AC0B00E7765A /* DiffMatchPatchCFUtilities.c */; };
 		FEFA5682205FB1A8001F50D8 /* TTHotNewsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 309069092015B55800764DE7 /* TTHotNewsCell.m */; };
 		FEFA5683205FB1A8001F50D8 /* TTNewPanelController.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFA4091F0E3B9000C1E28D /* TTNewPanelController.m */; };
 		FEFA5684205FB1A8001F50D8 /* TTNotificationActionSyncManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB59B1F1332D90002B455 /* TTNotificationActionSyncManager.m */; };
@@ -5542,7 +5498,6 @@
 		FEFA56A6205FB1A8001F50D8 /* TTIntroduceViewTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB8101F1332DB0002B455 /* TTIntroduceViewTask.m */; };
 		FEFA56A7205FB1A8001F50D8 /* TTVMidInsertADPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DB31F94B8DC0050F83E /* TTVMidInsertADPlayer.m */; };
 		FEFA56AA205FB1A8001F50D8 /* TTVVideoDetailTextlinkADView.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691771F31D0D200D59CA5 /* TTVVideoDetailTextlinkADView.m */; };
-		FEFA56AB205FB1A8001F50D8 /* TTRNPanoramaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2556D31E82716100FF96A7 /* TTRNPanoramaView.m */; };
 		FEFA56AD205FB1A8001F50D8 /* TTQQSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = C2036D7D1F288E5300ECFA51 /* TTQQSDKRegister.m */; };
 		FEFA56AF205FB1A8001F50D8 /* TTActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621D71F500EFA00B4CC0C /* TTActivity.m */; };
 		FEFA56B1205FB1A8001F50D8 /* TTHorizontalCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 486CB7F61ED574C20045D657 /* TTHorizontalCardCell.m */; };
@@ -5641,7 +5596,6 @@
 		FEFA5737205FB1A8001F50D8 /* AKProfileHeaderBeneficialView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F20205802A400BAEE7F /* AKProfileHeaderBeneficialView.m */; };
 		FEFA5738205FB1A8001F50D8 /* ArticleTitleImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = EFF3E8C616AE5C0500B05B3A /* ArticleTitleImageView.m */; };
 		FEFA5739205FB1A8001F50D8 /* SSWebViewControllerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DBE3D1F13332C0002B455 /* SSWebViewControllerView.m */; };
-		FEFA573A205FB1A8001F50D8 /* NSString+UnicharUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADFC1FA5AC0B00E7765A /* NSString+UnicharUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FEFA5740205FB1A8001F50D8 /* TTAdVideoRelateLeftImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A5131F20B01C005E4A06 /* TTAdVideoRelateLeftImageView.m */; };
 		FEFA5741205FB1A8001F50D8 /* TTASettingConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCB5E292016FC4C00A6FCB3 /* TTASettingConfiguration.m */; };
 		FEFA5742205FB1A8001F50D8 /* TTVAdActionButtonCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691E81F31D0D200D59CA5 /* TTVAdActionButtonCreation.m */; };
@@ -5671,7 +5625,6 @@
 		FEFA5764205FB1A8001F50D8 /* SettingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 88EDBFA51F3076CF00911931 /* SettingView.m */; };
 		FEFA5766205FB1A8001F50D8 /* TTHorizontalHuoShanLoadingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F2820EF91F3031BB00354708 /* TTHorizontalHuoShanLoadingCell.m */; };
 		FEFA5768205FB1A8001F50D8 /* AKRedPacketViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5CEE0A20510A9E0011B4D7 /* AKRedPacketViewController.m */; };
-		FEFA5769205FB1A8001F50D8 /* TTRNBundleDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB6D4011EB3218B0093B209 /* TTRNBundleDownloader.m */; };
 		FEFA576A205FB1A8001F50D8 /* SSPublishProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 48EC03E9173BCACA000B55A8 /* SSPublishProgressView.m */; };
 		FEFA576D205FB1A8001F50D8 /* ExploreCellViewBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BE020271B215BE400F9E484 /* ExploreCellViewBase.m */; };
 		FEFA576E205FB1A8001F50D8 /* ExploreDetailAppLeftPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8460FAAF1D0FD29800BC4778 /* ExploreDetailAppLeftPicADView.m */; };
@@ -5700,7 +5653,6 @@
 		FEFA5789205FB1A8001F50D8 /* SSDebugDNSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06C5184E1AAC65AC00C2B2E3 /* SSDebugDNSViewController.m */; };
 		FEFA578A205FB1A8001F50D8 /* TTInterestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6051F333110005DAD27 /* TTInterestViewController.m */; };
 		FEFA578C205FB1A8001F50D8 /* TTSectionViewEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692831F31D0D300D59CA5 /* TTSectionViewEntity.m */; };
-		FEFA578D205FB1A8001F50D8 /* TTRNRreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C58A3BE1F1DA1C9006A71BE /* TTRNRreshView.m */; };
 		FEFA578E205FB1A8001F50D8 /* SSURLTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = AB1621DE1F500EFA00B4CC0C /* SSURLTracker.m */; };
 		FEFA578F205FB1A8001F50D8 /* TTCrashRepotTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7F11F1332DB0002B455 /* TTCrashRepotTask.m */; };
 		FEFA5790205FB1A8001F50D8 /* TTRShortVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AB262CC1FDCDFB800A1A356 /* TTRShortVideo.m */; };
@@ -5741,7 +5693,6 @@
 		FEFA57C3205FB1A8001F50D8 /* TTVVideoDetailNatantPGCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F87691701F31D0D200D59CA5 /* TTVVideoDetailNatantPGCViewController.m */; };
 		FEFA57C4205FB1A8001F50D8 /* TTTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AADC2441D36AA1F008FD8C1 /* TTTabBarItem.m */; };
 		FEFA57C5205FB1A8001F50D8 /* TTArticlePanoramaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E224DBA1F38700500922AD2 /* TTArticlePanoramaView.m */; };
-		FEFA57C6205FB1A8001F50D8 /* TTRNBridge+Call.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902311DB873960072138C /* TTRNBridge+Call.m */; };
 		FEFA57C7205FB1A8001F50D8 /* AKRedPacketDetailBaseView.m in Sources */ = {isa = PBXBuildFile; fileRef = FE5CEE1020510AC50011B4D7 /* AKRedPacketDetailBaseView.m */; };
 		FEFA57C8205FB1A8001F50D8 /* TTTableFacility.m in Sources */ = {isa = PBXBuildFile; fileRef = F876928F1F31D0D300D59CA5 /* TTTableFacility.m */; };
 		FEFA57C9205FB1A8001F50D8 /* TTActivityShareSequenceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 47870EFA1F593B5D00803326 /* TTActivityShareSequenceManager.m */; };
@@ -5793,7 +5744,6 @@
 		FEFA5806205FB1A8001F50D8 /* AKTaskSettingFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5041F052058029600BAEE7F /* AKTaskSettingFooterView.m */; };
 		FEFA5807205FB1A8001F50D8 /* ArticleBaseListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA235A9174CA71C00F30E23 /* ArticleBaseListView.m */; };
 		FEFA5808205FB1A8001F50D8 /* SSDebugViewControllerBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 038D9AE41F41A1C900E90F73 /* SSDebugViewControllerBase.m */; };
-		FEFA580A205FB1A8001F50D8 /* TTRNView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902371DB873970072138C /* TTRNView.m */; };
 		FEFA580B205FB1A8001F50D8 /* STLinkLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 06E69A4C1B0ADD7C00A3EDCA /* STLinkLabel.m */; };
 		FEFA580C205FB1A8001F50D8 /* TTLocalAssetMovieControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = A8B769261E1CF60900F22A0C /* TTLocalAssetMovieControlView.m */; };
 		FEFA580E205FB1A8001F50D8 /* TTMomentEnterView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2E91F1333610002B455 /* TTMomentEnterView.m */; };
@@ -5844,9 +5794,7 @@
 		FEFA584C205FB1A8001F50D8 /* TTVADPlayVideo.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9D901F94B8DC0050F83E /* TTVADPlayVideo.m */; };
 		FEFA584E205FB1A8001F50D8 /* ExploreDetailAppointLargePicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DCAD0751DDC27FC00EBF9CF /* ExploreDetailAppointLargePicADView.m */; };
 		FEFA584F205FB1A8001F50D8 /* TSVShortVideoFeedFetchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C33DCA0A1FE24F7C00C66B01 /* TSVShortVideoFeedFetchManager.m */; };
-		FEFA5851205FB1A8001F50D8 /* TTRNBridge+Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902331DB873970072138C /* TTRNBridge+Cell.m */; };
 		FEFA5852205FB1A8001F50D8 /* ExploreVideoDetailAppointLeftPicADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB4429E1F711843008E8951 /* ExploreVideoDetailAppointLeftPicADView.m */; };
-		FEFA5853205FB1A8001F50D8 /* NSString+JavaSubstring.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADFA1FA5AC0B00E7765A /* NSString+JavaSubstring.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FEFA5854205FB1A8001F50D8 /* SSCommonLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB56D1F1332D90002B455 /* SSCommonLogic.m */; };
 		FEFA5855205FB1A8001F50D8 /* TSVCardCellQuadraViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BB3B59B1FD2F4DA00586FE7 /* TSVCardCellQuadraViewFlowLayout.m */; };
 		FEFA5857205FB1A8001F50D8 /* ExploreLogicSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA7391F334781005DAD27 /* ExploreLogicSetting.m */; };
@@ -5990,7 +5938,6 @@
 		FEFA591A205FB1A8001F50D8 /* SSWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6481F33350B005DAD27 /* SSWebViewController.m */; };
 		FEFA591D205FB1A8001F50D8 /* TTStartupNotificationGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB78D1F1332DA0002B455 /* TTStartupNotificationGroup.m */; };
 		FEFA591F205FB1A8001F50D8 /* TTArticleCellConst.m in Sources */ = {isa = PBXBuildFile; fileRef = 9C4136711D65C104003E29F8 /* TTArticleCellConst.m */; };
-		FEFA5920205FB1A8001F50D8 /* TTRNDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CB6D4071EBACF760093B209 /* TTRNDeviceInfo.m */; };
 		FEFA5921205FB1A8001F50D8 /* NewsFetchListRefreshTipManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4813D9EA198F904000AE12FD /* NewsFetchListRefreshTipManager.m */; };
 		FEFA5923205FB1A8001F50D8 /* NewsBaseDelegate+SDKs.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7461F1332DA0002B455 /* NewsBaseDelegate+SDKs.m */; };
 		FEFA5924205FB1A8001F50D8 /* TTVideoPasterADTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D2557531E8271CD00FF96A7 /* TTVideoPasterADTracker.m */; };
@@ -6041,7 +5988,6 @@
 		FEFA595C205FB1A8001F50D8 /* TTRNCellManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CBCA9D31F67812B00C518C3 /* TTRNCellManager.m */; };
 		FEFA595E205FB1A8001F50D8 /* TTFastCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A9AFABA01F0E432B00C1E28D /* TTFastCoding.m */; };
 		FEFA595F205FB1A8001F50D8 /* TTDetailNatantRelateReadPlainView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB57E1F1332D90002B455 /* TTDetailNatantRelateReadPlainView.m */; };
-		FEFA5960205FB1A8001F50D8 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFBADFE1FA5AC0B00E7765A /* NSString+UriCompatibility.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FEFA5962205FB1A8001F50D8 /* TTVVideoDetailNatantInfoShareView.m in Sources */ = {isa = PBXBuildFile; fileRef = 47D314461F94BCC500FC3D8D /* TTVVideoDetailNatantInfoShareView.m */; };
 		FEFA5964205FB1A8001F50D8 /* TTDislikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = ACECFAC61E84D4A10080679E /* TTDislikeView.m */; };
 		FEFA5965205FB1A8001F50D8 /* TTAdManagerProtocol_IMP.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A4EC1F20B01C005E4A06 /* TTAdManagerProtocol_IMP.m */; };
@@ -6099,7 +6045,6 @@
 		FEFA59A8205FB1A8001F50D8 /* TTVFeedCellMoreActionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F87692151F31D0D200D59CA5 /* TTVFeedCellMoreActionManager.m */; };
 		FEFA59A9205FB1A8001F50D8 /* ExploreArticleLianZaiCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 41E988E41D36247D00D98671 /* ExploreArticleLianZaiCell.m */; };
 		FEFA59AD205FB1A8001F50D8 /* TTAppLinkOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7931F1332DA0002B455 /* TTAppLinkOpenURLTask.m */; };
-		FEFA59AE205FB1A8001F50D8 /* TTRNBundleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD902351DB873970072138C /* TTRNBundleManager.m */; };
 		FEFA59AF205FB1A8001F50D8 /* BDTAccountNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DDA765A1F72165C00209EEF /* BDTAccountNavigationController.m */; };
 		FEFA59B0205FB1A8001F50D8 /* TSVCategorySelectorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 48F838CA1FA2D4E5002E040C /* TSVCategorySelectorButton.m */; };
 		FEFA59B1205FB1A8001F50D8 /* TTRelationshipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2B21F1333600002B455 /* TTRelationshipViewController.m */; };
@@ -6112,7 +6057,6 @@
 		FEFA59BC205FB1A8001F50D8 /* TTVMidInsertADService.m in Sources */ = {isa = PBXBuildFile; fileRef = 438F9DB51F94B8DC0050F83E /* TTVMidInsertADService.m */; };
 		FEFA59BD205FB1A8001F50D8 /* TTVideoEmbededAdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */; };
 		FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
-		FEFA59C5205FB1A8001F50D8 /* index.ios.canvas.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2D2556CD1E82716100FF96A7 /* index.ios.canvas.bundle */; };
 		FEFA59C6205FB1A8001F50D8 /* recommend_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EF2E77D3185AC868001C8536 /* recommend_button@2x.png */; };
 		FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
@@ -6126,7 +6070,6 @@
 		FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEA1FE007C10093E05D /* sound4.caf */; };
 		FEFA59D7205FB1A8001F50D8 /* Photo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5AC1F1332D90002B455 /* Photo.storyboard */; };
 		FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
-		FEFA59DC205FB1A8001F50D8 /* index.ios.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6BD9022D1DB873960072138C /* index.ios.bundle */; };
 		FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943B1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig */; };
 		FEFA59E4205FB1A8001F50D8 /* transparent_1px@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A97DB5B11F1332D90002B455 /* transparent_1px@2x.png */; };
 		FEFA59E6205FB1A8001F50D8 /* Video.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F87693001F31D0D300D59CA5 /* Video.storyboard */; };
@@ -6151,7 +6094,6 @@
 		FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
 		FEFA5A09205FB1A8001F50D8 /* ProjectNightModeThemeUISetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295F51BA14541000B7F10 /* ProjectNightModeThemeUISetting.strings */; };
 		FEFA5A0B205FB1A8001F50D8 /* TTVTab.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F87692501F31D0D200D59CA5 /* TTVTab.storyboard */; };
-		FEFA5A0C205FB1A8001F50D8 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = 6BDDD2731D479A0F006079E7 /* assets */; };
 		FEFA5A0E205FB1A8001F50D8 /* recommend_cancel.png in Resources */ = {isa = PBXBuildFile; fileRef = EF2E77D6185AC868001C8536 /* recommend_cancel.png */; };
 		FEFA5A11205FB1A8001F50D8 /* Stub_Article_Information.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7B4772761CFC438A00D3F8DC /* Stub_Article_Information.txt */; };
 		FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
@@ -17983,8 +17925,6 @@
 				B373CE882174587A008F9905 /* Icon-72@2x.png in Resources */,
 				B373CE892174587A008F9905 /* area.plist in Resources */,
 				B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */,
-				B373CE8B2174587A008F9905 /* index.ios.canvas.bundle in Resources */,
-				B373CE8B2174587A008F9905 /* index.ios.canvas.bundle in Resources */,
 				B373CE8D2174587A008F9905 /* recommend_button@2x.png in Resources */,
 				B373CE8E2174587A008F9905 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
 				B373CE8F2174587A008F9905 /* sound6.caf in Resources */,
@@ -18002,7 +17942,6 @@
 				B373CE9A2174587A008F9905 /* Photo.storyboard in Resources */,
 				B373CE9B2174587A008F9905 /* sound1.caf in Resources */,
 				6114B09F21B3E78C00331D12 /* house_refresh.json in Resources */,
-				B373CE9C2174587A008F9905 /* index.ios.bundle in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				B373CE9F2174587A008F9905 /* transparent_1px@2x.png in Resources */,
 				B373CEA02174587A008F9905 /* Video.storyboard in Resources */,
@@ -18031,7 +17970,6 @@
 				B373CEB62174587A008F9905 /* ProjectNightModeThemeUISetting.strings in Resources */,
 				B373CEB72174587A008F9905 /* TTVTab.storyboard in Resources */,
 				3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */,
-				B373CEB82174587A008F9905 /* assets in Resources */,
 				B373CEB92174587A008F9905 /* recommend_cancel.png in Resources */,
 				B373CEBA2174587A008F9905 /* Stub_Article_Information.txt in Resources */,
 				B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
@@ -18149,8 +18087,6 @@
 				D5E21F97206F421A000F18C6 /* Icon-72@2x.png in Resources */,
 				FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */,
 				B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */,
-				FEFA59C5205FB1A8001F50D8 /* index.ios.canvas.bundle in Resources */,
-				FEFA59C5205FB1A8001F50D8 /* index.ios.canvas.bundle in Resources */,
 				FEFA59C6205FB1A8001F50D8 /* recommend_button@2x.png in Resources */,
 				FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
 				FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */,
@@ -18168,7 +18104,6 @@
 				FEFA59D7205FB1A8001F50D8 /* Photo.storyboard in Resources */,
 				FEFA59DB205FB1A8001F50D8 /* sound1.caf in Resources */,
 				6114B09E21B3E78C00331D12 /* house_refresh.json in Resources */,
-				FEFA59DC205FB1A8001F50D8 /* index.ios.bundle in Resources */,
 				FEFA59E3205FB1A8001F50D8 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				FEFA59E4205FB1A8001F50D8 /* transparent_1px@2x.png in Resources */,
 				FEFA59E6205FB1A8001F50D8 /* Video.storyboard in Resources */,
@@ -18197,7 +18132,6 @@
 				FEFA5A09205FB1A8001F50D8 /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A0B205FB1A8001F50D8 /* TTVTab.storyboard in Resources */,
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
-				FEFA5A0C205FB1A8001F50D8 /* assets in Resources */,
 				FEFA5A0E205FB1A8001F50D8 /* recommend_cancel.png in Resources */,
 				FEFA5A11205FB1A8001F50D8 /* Stub_Article_Information.txt in Resources */,
 				FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
@@ -21045,7 +20979,6 @@
 				B373C83D2174587A008F9905 /* TSVShortVideoDetailFetchManager.m in Sources */,
 				B373C83E2174587A008F9905 /* TTRequestShareADTask.m in Sources */,
 				B373C83F2174587A008F9905 /* NewsBaseDelegate+OpenURL.m in Sources */,
-				B373C8402174587A008F9905 /* TTRNViewController.m in Sources */,
 				B373C8432174587A008F9905 /* TTRAd.m in Sources */,
 				B373C8442174587A008F9905 /* SSTrashManager.m in Sources */,
 				B373C8452174587A008F9905 /* TTFollowingModel.m in Sources */,
@@ -21056,7 +20989,6 @@
 				B373C84B2174587A008F9905 /* TTVFeedListNotificationCenter.m in Sources */,
 				B373C84E2174587A008F9905 /* TTTrackInitTime.m in Sources */,
 				B373C84F2174587A008F9905 /* ArticleMomentDiggManager.m in Sources */,
-				B373C8502174587A008F9905 /* TTRNVideoViewManager.m in Sources */,
 				B373C8522174587A008F9905 /* TTActivityShareManager.m in Sources */,
 				B373C8532174587A008F9905 /* TTDynamicRNCellView.m in Sources */,
 				B373C8542174587A008F9905 /* TTVisitorViewController.m in Sources */,
@@ -21231,7 +21163,6 @@
 				B373C9192174587A008F9905 /* TTVideoFontSizeManager.m in Sources */,
 				B373C91A2174587A008F9905 /* ExploreDetailAppVideoADView.m in Sources */,
 				B373C91B2174587A008F9905 /* SubscribeEntryGetLocalDataOperation.m in Sources */,
-				B373C91C2174587A008F9905 /* TTRNBundleInfoBuilder.m in Sources */,
 				B373C91D2174587A008F9905 /* TTAdCanvasFullPicCell.m in Sources */,
 				B373C91E2174587A008F9905 /* ExploreArticleCardCellView.m in Sources */,
 				B373C91F2174587A008F9905 /* AKTaskSettingHelper.m in Sources */,
@@ -21262,7 +21193,6 @@
 				B373C93D2174587A008F9905 /* TTLocalResourceDownloader.m in Sources */,
 				B373C93E2174587A008F9905 /* TTInterestResponseModel.m in Sources */,
 				B373C93F2174587A008F9905 /* TTEditUserProfileItemCell.m in Sources */,
-				B373C9402174587A008F9905 /* TTRNVideoView.m in Sources */,
 				B373C9412174587A008F9905 /* TTVReplyListItem.m in Sources */,
 				B373C9422174587A008F9905 /* TTNewFollowingManager.m in Sources */,
 				B373C9432174587A008F9905 /* TTVCommentListReplyTableViewCell.m in Sources */,
@@ -21469,7 +21399,6 @@
 				B373CA2F2174587A008F9905 /* TTGetInstallIDTask.m in Sources */,
 				B373CA312174587A008F9905 /* TTHTSWaterfallCollectionViewCell.m in Sources */,
 				B373CA322174587A008F9905 /* TTVDetailNatantADPlayerTracker.m in Sources */,
-				B373CA332174587A008F9905 /* TTRNBridge.m in Sources */,
 				B373CA362174587A008F9905 /* UITableView+Block.m in Sources */,
 				B373CA372174587A008F9905 /* TTPersonalHomeViewController.m in Sources */,
 				B373CA382174587A008F9905 /* TSVRecUserCardOriginalData.m in Sources */,
@@ -21542,7 +21471,6 @@
 				B373CA862174587A008F9905 /* TTPGCUserFooterView.m in Sources */,
 				B373CA872174587A008F9905 /* TTPhotoDetailCellManager.m in Sources */,
 				B373CA892174587A008F9905 /* TTTableViewModel.m in Sources */,
-				B373CA8B2174587A008F9905 /* DiffMatchPatch.m in Sources */,
 				B373CA8C2174587A008F9905 /* TTVRelatedItem+TTVConvertToArticle.m in Sources */,
 				B373CA8D2174587A008F9905 /* TTVPartnerVideo+TTVComputedProperties.m in Sources */,
 				B373CA8E2174587A008F9905 /* Article+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
@@ -21629,10 +21557,8 @@
 				B373CAE82174587A008F9905 /* TTVFeedListVideoBottomContainerView.m in Sources */,
 				B373CAE92174587A008F9905 /* TTSettingGeneralEntry.m in Sources */,
 				B373CAEA2174587A008F9905 /* TTBuryContentItem.m in Sources */,
-				B373CAEB2174587A008F9905 /* TTRNWebView.m in Sources */,
 				B373CAEC2174587A008F9905 /* NewsDetailFunctionView.m in Sources */,
 				B373CAED2174587A008F9905 /* SSIntroduceViewController.m in Sources */,
-				B373CAF02174587A008F9905 /* TTRNImageViewManager.m in Sources */,
 				B373CAF12174587A008F9905 /* TTArticleMomentDigUsersView.m in Sources */,
 				B373CAF22174587A008F9905 /* SSPingServices.m in Sources */,
 				B373CAF32174587A008F9905 /* ArticleAddressManager.m in Sources */,
@@ -21642,7 +21568,6 @@
 				B373CAF72174587A008F9905 /* TTVVideoDetailNatantPGCAuthorView.m in Sources */,
 				B373CAF82174587A008F9905 /* TTFavoriteViewController.m in Sources */,
 				B373CAFA2174587A008F9905 /* TTVHTTPProcesserMessageHandle.m in Sources */,
-				B373CAFB2174587A008F9905 /* TTRNImageView.m in Sources */,
 				B373CAFC2174587A008F9905 /* ExploreCellHelper.m in Sources */,
 				B373CAFE2174587A008F9905 /* TTLayOutWenDaCell.m in Sources */,
 				B373CAFF2174587A008F9905 /* ArticleMobilePasswordViewController.m in Sources */,
@@ -21693,7 +21618,6 @@
 				B373CB2F2174587A008F9905 /* TTTopBarManager.m in Sources */,
 				B373CB302174587A008F9905 /* TTHotNewsCellView.m in Sources */,
 				B373CB322174587A008F9905 /* ArticleInsertDataOperation.m in Sources */,
-				B373CB332174587A008F9905 /* NSMutableDictionary+DMPExtensions.m in Sources */,
 				B373CB352174587A008F9905 /* TTVFeedListVideoAdItem.m in Sources */,
 				B373CB362174587A008F9905 /* TTBackgroundModeTask.m in Sources */,
 				B373CB372174587A008F9905 /* TTCellBridge.m in Sources */,
@@ -21760,7 +21684,6 @@
 				B373CB7E2174587A008F9905 /* TTVVideoDetailHeaderPosterViewController.m in Sources */,
 				B373CB802174587A008F9905 /* TTImageView+TrafficSave.m in Sources */,
 				B373CB812174587A008F9905 /* TTVPasterADViewController.m in Sources */,
-				B373CB832174587A008F9905 /* TTRNScrollViewManager.m in Sources */,
 				B373CB842174587A008F9905 /* UIControl+BlocksKit.m in Sources */,
 				B373CB852174587A008F9905 /* ExploreExtenstionDataHelper.m in Sources */,
 				B373CB862174587A008F9905 /* TTWendaMethodDelegate.m in Sources */,
@@ -21769,7 +21692,6 @@
 				B373CB8A2174587A008F9905 /* TTFavoriteSearchViewController.m in Sources */,
 				B373CB8E2174587A008F9905 /* TTHistoryEntryGroup.m in Sources */,
 				B373CB8F2174587A008F9905 /* ExploreOrderedADModel+TTVADSupport.m in Sources */,
-				B373CB902174587A008F9905 /* TTRNScrollView.m in Sources */,
 				B373CB912174587A008F9905 /* ExploreMixedListBaseView.m in Sources */,
 				B373CB922174587A008F9905 /* TTVVideoDetailAlbumCellViewModel.m in Sources */,
 				B373CB932174587A008F9905 /* AKProfilePhotoCarouselViewCell.m in Sources */,
@@ -21784,11 +21706,8 @@
 				B373CB9D2174587A008F9905 /* TTSettingMineTabEntry.m in Sources */,
 				B373CB9E2174587A008F9905 /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				B373CB9F2174587A008F9905 /* TTPhotoDetailViewModel.m in Sources */,
-				B373CBA02174587A008F9905 /* TTRNWebViewManager.m in Sources */,
 				B373CBA12174587A008F9905 /* TTAdCanvasVideoBottomView.m in Sources */,
-				B373CBA22174587A008F9905 /* TTRNPanoramaViewManager.m in Sources */,
 				B373CBA32174587A008F9905 /* TSVDebugViewController.m in Sources */,
-				B373CBA42174587A008F9905 /* DiffMatchPatchCFUtilities.c in Sources */,
 				B373CBA52174587A008F9905 /* TTHotNewsCell.m in Sources */,
 				B373CBA62174587A008F9905 /* TTNewPanelController.m in Sources */,
 				B373CBA72174587A008F9905 /* TTNotificationActionSyncManager.m in Sources */,
@@ -21826,7 +21745,6 @@
 				B373CBC92174587A008F9905 /* TTVMidInsertADPlayer.m in Sources */,
 				B373CBCA2174587A008F9905 /* TTVVideoDetailTextlinkADView.m in Sources */,
 				B373CBCB2174587A008F9905 /* TTVideoExtendLinkHelper.m in Sources */,
-				B373CBCC2174587A008F9905 /* TTRNPanoramaView.m in Sources */,
 				B373CBCD2174587A008F9905 /* TTQQSDKRegister.m in Sources */,
 				B373CBCE2174587A008F9905 /* TTActivity.m in Sources */,
 				B373CBCF2174587A008F9905 /* TTHorizontalCardCell.m in Sources */,
@@ -21932,7 +21850,6 @@
 				B373CC412174587A008F9905 /* AKProfileHeaderBeneficialView.m in Sources */,
 				B373CC422174587A008F9905 /* ArticleTitleImageView.m in Sources */,
 				B373CC432174587A008F9905 /* SSWebViewControllerView.m in Sources */,
-				B373CC442174587A008F9905 /* NSString+UnicharUtilities.m in Sources */,
 				B373CC452174587A008F9905 /* TTAdVideoRelateLeftImageView.m in Sources */,
 				B373CC462174587A008F9905 /* TTASettingConfiguration.m in Sources */,
 				B373CC472174587A008F9905 /* TTVAdActionButtonCreation.m in Sources */,
@@ -21965,7 +21882,6 @@
 				B373CC682174587A008F9905 /* SettingView.m in Sources */,
 				B373CC692174587A008F9905 /* TTHorizontalHuoShanLoadingCell.m in Sources */,
 				B373CC6A2174587A008F9905 /* AKRedPacketViewController.m in Sources */,
-				B373CC6B2174587A008F9905 /* TTRNBundleDownloader.m in Sources */,
 				B373CC6C2174587A008F9905 /* SSPublishProgressView.m in Sources */,
 				B373CC6D2174587A008F9905 /* ExploreCellViewBase.m in Sources */,
 				B373CC6E2174587A008F9905 /* ExploreDetailAppLeftPicADView.m in Sources */,
@@ -21996,7 +21912,6 @@
 				B373CC902174587A008F9905 /* SSDebugDNSViewController.m in Sources */,
 				B373CC912174587A008F9905 /* TTInterestViewController.m in Sources */,
 				B373CC922174587A008F9905 /* TTSectionViewEntity.m in Sources */,
-				B373CC932174587A008F9905 /* TTRNRreshView.m in Sources */,
 				B373CC942174587A008F9905 /* SSURLTracker.m in Sources */,
 				B373CC952174587A008F9905 /* TTCrashRepotTask.m in Sources */,
 				B373CC962174587A008F9905 /* TTRShortVideo.m in Sources */,
@@ -22040,7 +21955,6 @@
 				B373CCC32174587A008F9905 /* TTVVideoDetailNatantPGCViewController.m in Sources */,
 				B373CCC52174587A008F9905 /* TTTabBarItem.m in Sources */,
 				B373CCC62174587A008F9905 /* TTArticlePanoramaView.m in Sources */,
-				B373CCC72174587A008F9905 /* TTRNBridge+Call.m in Sources */,
 				B373CCC82174587A008F9905 /* AKRedPacketDetailBaseView.m in Sources */,
 				B373CCC92174587A008F9905 /* TTTableFacility.m in Sources */,
 				B373CCCA2174587A008F9905 /* TTActivityShareSequenceManager.m in Sources */,
@@ -22093,7 +22007,6 @@
 				B373CCFB2174587A008F9905 /* AKTaskSettingFooterView.m in Sources */,
 				B373CCFD2174587A008F9905 /* ArticleBaseListView.m in Sources */,
 				B373CCFE2174587A008F9905 /* SSDebugViewControllerBase.m in Sources */,
-				B373CCFF2174587A008F9905 /* TTRNView.m in Sources */,
 				B373CD002174587A008F9905 /* STLinkLabel.m in Sources */,
 				B373CD012174587A008F9905 /* TTLocalAssetMovieControlView.m in Sources */,
 				B373CD022174587A008F9905 /* TTMomentEnterView.m in Sources */,
@@ -22145,9 +22058,7 @@
 				B373CD392174587A008F9905 /* TTVADPlayVideo.m in Sources */,
 				B373CD3A2174587A008F9905 /* ExploreDetailAppointLargePicADView.m in Sources */,
 				B373CD3B2174587A008F9905 /* TSVShortVideoFeedFetchManager.m in Sources */,
-				B373CD3C2174587A008F9905 /* TTRNBridge+Cell.m in Sources */,
 				B373CD3D2174587A008F9905 /* ExploreVideoDetailAppointLeftPicADView.m in Sources */,
-				B373CD3F2174587A008F9905 /* NSString+JavaSubstring.m in Sources */,
 				B373CD402174587A008F9905 /* SSCommonLogic.m in Sources */,
 				B373CD412174587A008F9905 /* TSVCardCellQuadraViewFlowLayout.m in Sources */,
 				B373CD432174587A008F9905 /* ExploreLogicSetting.m in Sources */,
@@ -22298,7 +22209,6 @@
 				B373CDEA2174587A008F9905 /* SSWebViewController.m in Sources */,
 				B373CDEB2174587A008F9905 /* TTStartupNotificationGroup.m in Sources */,
 				B373CDEC2174587A008F9905 /* TTArticleCellConst.m in Sources */,
-				B373CDEE2174587A008F9905 /* TTRNDeviceInfo.m in Sources */,
 				B373CDEF2174587A008F9905 /* NewsFetchListRefreshTipManager.m in Sources */,
 				B373CDF02174587A008F9905 /* NewsBaseDelegate+SDKs.m in Sources */,
 				B373CDF12174587A008F9905 /* TTVideoPasterADTracker.m in Sources */,
@@ -22350,7 +22260,6 @@
 				B373CE262174587A008F9905 /* TTRNCellManager.m in Sources */,
 				B373CE272174587A008F9905 /* TTFastCoding.m in Sources */,
 				B373CE292174587A008F9905 /* TTDetailNatantRelateReadPlainView.m in Sources */,
-				B373CE2A2174587A008F9905 /* NSString+UriCompatibility.m in Sources */,
 				B373CE2B2174587A008F9905 /* FHDataPlayerTracker.m in Sources */,
 				B373CE2D2174587A008F9905 /* TTVVideoDetailNatantInfoShareView.m in Sources */,
 				B373CE2E2174587A008F9905 /* TTDislikeView.m in Sources */,
@@ -22412,7 +22321,6 @@
 				B373CE752174587A008F9905 /* TTVFeedCellMoreActionManager.m in Sources */,
 				B373CE762174587A008F9905 /* ExploreArticleLianZaiCell.m in Sources */,
 				B373CE772174587A008F9905 /* TTAppLinkOpenURLTask.m in Sources */,
-				B373CE782174587A008F9905 /* TTRNBundleManager.m in Sources */,
 				B373CE792174587A008F9905 /* BDTAccountNavigationController.m in Sources */,
 				B373CE7A2174587A008F9905 /* TSVCategorySelectorButton.m in Sources */,
 				B373CE7B2174587A008F9905 /* TTRelationshipViewController.m in Sources */,
@@ -23933,7 +23841,6 @@
 				FEFA52A2205FB1A8001F50D8 /* TSVShortVideoDetailFetchManager.m in Sources */,
 				FEFA52A3205FB1A8001F50D8 /* TTRequestShareADTask.m in Sources */,
 				FEFA52A4205FB1A8001F50D8 /* NewsBaseDelegate+OpenURL.m in Sources */,
-				FEFA52A7205FB1A8001F50D8 /* TTRNViewController.m in Sources */,
 				FEFA52A8205FB1A8001F50D8 /* TTRAd.m in Sources */,
 				FEFA52A9205FB1A8001F50D8 /* SSTrashManager.m in Sources */,
 				FEFA52AA205FB1A8001F50D8 /* TTFollowingModel.m in Sources */,
@@ -23944,7 +23851,6 @@
 				FEFA52B3205FB1A8001F50D8 /* TTVFeedListNotificationCenter.m in Sources */,
 				FEFA52B4205FB1A8001F50D8 /* TTTrackInitTime.m in Sources */,
 				D50439D52079B8FC00DA4953 /* ArticleMomentDiggManager.m in Sources */,
-				FEFA52B5205FB1A8001F50D8 /* TTRNVideoViewManager.m in Sources */,
 				FEFA52B7205FB1A8001F50D8 /* TTActivityShareManager.m in Sources */,
 				FEFA52B8205FB1A8001F50D8 /* TTDynamicRNCellView.m in Sources */,
 				FEFA52BB205FB1A8001F50D8 /* TTVisitorViewController.m in Sources */,
@@ -24119,7 +24025,6 @@
 				FEFA53A3205FB1A8001F50D8 /* TTVideoFontSizeManager.m in Sources */,
 				FEFA53A4205FB1A8001F50D8 /* ExploreDetailAppVideoADView.m in Sources */,
 				FEFA53A5205FB1A8001F50D8 /* SubscribeEntryGetLocalDataOperation.m in Sources */,
-				FEFA53A8205FB1A8001F50D8 /* TTRNBundleInfoBuilder.m in Sources */,
 				FEFA53A9205FB1A8001F50D8 /* TTAdCanvasFullPicCell.m in Sources */,
 				FEFA53AA205FB1A8001F50D8 /* ExploreArticleCardCellView.m in Sources */,
 				FEFA53AB205FB1A8001F50D8 /* AKTaskSettingHelper.m in Sources */,
@@ -24150,7 +24055,6 @@
 				FEFA53CA205FB1A8001F50D8 /* TTLocalResourceDownloader.m in Sources */,
 				FEFA53CB205FB1A8001F50D8 /* TTInterestResponseModel.m in Sources */,
 				FEFA53CC205FB1A8001F50D8 /* TTEditUserProfileItemCell.m in Sources */,
-				FEFA53CD205FB1A8001F50D8 /* TTRNVideoView.m in Sources */,
 				FEFA53CE205FB1A8001F50D8 /* TTVReplyListItem.m in Sources */,
 				FEFA53CF205FB1A8001F50D8 /* TTNewFollowingManager.m in Sources */,
 				FEFA53D2205FB1A8001F50D8 /* TTVCommentListReplyTableViewCell.m in Sources */,
@@ -24357,7 +24261,6 @@
 				FEFA54EB205FB1A8001F50D8 /* TTGetInstallIDTask.m in Sources */,
 				FEFA54ED205FB1A8001F50D8 /* TTHTSWaterfallCollectionViewCell.m in Sources */,
 				FEFA54F0205FB1A8001F50D8 /* TTVDetailNatantADPlayerTracker.m in Sources */,
-				FEFA54F1205FB1A8001F50D8 /* TTRNBridge.m in Sources */,
 				FE02C81020844F0A004DE769 /* UITableView+Block.m in Sources */,
 				FEFA54F2205FB1A8001F50D8 /* TTPersonalHomeViewController.m in Sources */,
 				FEFA54F3205FB1A8001F50D8 /* TSVRecUserCardOriginalData.m in Sources */,
@@ -24430,7 +24333,6 @@
 				FEFA5547205FB1A8001F50D8 /* TTPGCUserFooterView.m in Sources */,
 				FEFA554A205FB1A8001F50D8 /* TTPhotoDetailCellManager.m in Sources */,
 				FEFA554C205FB1A8001F50D8 /* TTTableViewModel.m in Sources */,
-				FEFA554D205FB1A8001F50D8 /* DiffMatchPatch.m in Sources */,
 				FEFA554E205FB1A8001F50D8 /* TTVRelatedItem+TTVConvertToArticle.m in Sources */,
 				FEFA554F205FB1A8001F50D8 /* TTVPartnerVideo+TTVComputedProperties.m in Sources */,
 				FEFA5551205FB1A8001F50D8 /* Article+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
@@ -24517,10 +24419,8 @@
 				FEFA55B7205FB1A8001F50D8 /* TTVFeedListVideoBottomContainerView.m in Sources */,
 				FEFA55B8205FB1A8001F50D8 /* TTSettingGeneralEntry.m in Sources */,
 				FEFA55BB205FB1A8001F50D8 /* TTBuryContentItem.m in Sources */,
-				FEFA55BC205FB1A8001F50D8 /* TTRNWebView.m in Sources */,
 				FEFA55BD205FB1A8001F50D8 /* NewsDetailFunctionView.m in Sources */,
 				FEFA55BE205FB1A8001F50D8 /* SSIntroduceViewController.m in Sources */,
-				FEFA55BF205FB1A8001F50D8 /* TTRNImageViewManager.m in Sources */,
 				D50439B62079B8DC00DA4953 /* TTArticleMomentDigUsersView.m in Sources */,
 				FEFA55C0205FB1A8001F50D8 /* SSPingServices.m in Sources */,
 				FEFA55C1205FB1A8001F50D8 /* ArticleAddressManager.m in Sources */,
@@ -24530,7 +24430,6 @@
 				FEFA55C7205FB1A8001F50D8 /* TTVVideoDetailNatantPGCAuthorView.m in Sources */,
 				FEFA55C8205FB1A8001F50D8 /* TTFavoriteViewController.m in Sources */,
 				FEFA55C9205FB1A8001F50D8 /* TTVHTTPProcesserMessageHandle.m in Sources */,
-				FEFA55CA205FB1A8001F50D8 /* TTRNImageView.m in Sources */,
 				FEFA55CD205FB1A8001F50D8 /* ExploreCellHelper.m in Sources */,
 				FEFA55CE205FB1A8001F50D8 /* TTLayOutWenDaCell.m in Sources */,
 				FEFA55CF205FB1A8001F50D8 /* ArticleMobilePasswordViewController.m in Sources */,
@@ -24581,7 +24480,6 @@
 				FEFA5608205FB1A8001F50D8 /* TTTopBarManager.m in Sources */,
 				FEFA5609205FB1A8001F50D8 /* TTHotNewsCellView.m in Sources */,
 				FEFA560A205FB1A8001F50D8 /* ArticleInsertDataOperation.m in Sources */,
-				FEFA560B205FB1A8001F50D8 /* NSMutableDictionary+DMPExtensions.m in Sources */,
 				FEFA560C205FB1A8001F50D8 /* TTVFeedListVideoAdItem.m in Sources */,
 				FEFA560F205FB1A8001F50D8 /* TTBackgroundModeTask.m in Sources */,
 				FEFA5610205FB1A8001F50D8 /* TTCellBridge.m in Sources */,
@@ -24648,7 +24546,6 @@
 				FEFA565D205FB1A8001F50D8 /* TTVVideoDetailHeaderPosterViewController.m in Sources */,
 				FEFA565E205FB1A8001F50D8 /* TTImageView+TrafficSave.m in Sources */,
 				FEFA565F205FB1A8001F50D8 /* TTVPasterADViewController.m in Sources */,
-				FEFA5660205FB1A8001F50D8 /* TTRNScrollViewManager.m in Sources */,
 				FEFA5662205FB1A8001F50D8 /* UIControl+BlocksKit.m in Sources */,
 				FEFA5664205FB1A8001F50D8 /* ExploreExtenstionDataHelper.m in Sources */,
 				FEFA5665205FB1A8001F50D8 /* TTWendaMethodDelegate.m in Sources */,
@@ -24657,7 +24554,6 @@
 				FEFA5668205FB1A8001F50D8 /* TTFavoriteSearchViewController.m in Sources */,
 				FEFA5669205FB1A8001F50D8 /* TTHistoryEntryGroup.m in Sources */,
 				FEFA566A205FB1A8001F50D8 /* ExploreOrderedADModel+TTVADSupport.m in Sources */,
-				FEFA566B205FB1A8001F50D8 /* TTRNScrollView.m in Sources */,
 				FE1FC323206922D800664B00 /* ExploreMixedListBaseView.m in Sources */,
 				FEFA566C205FB1A8001F50D8 /* TTVVideoDetailAlbumCellViewModel.m in Sources */,
 				FEFA566D205FB1A8001F50D8 /* AKProfilePhotoCarouselViewCell.m in Sources */,
@@ -24672,11 +24568,8 @@
 				FEFA5679205FB1A8001F50D8 /* TTSettingMineTabEntry.m in Sources */,
 				FEFA567A205FB1A8001F50D8 /* TTVideoTabBaseCellNewPlayControl.m in Sources */,
 				FEFA567B205FB1A8001F50D8 /* TTPhotoDetailViewModel.m in Sources */,
-				FEFA567D205FB1A8001F50D8 /* TTRNWebViewManager.m in Sources */,
 				FEFA567E205FB1A8001F50D8 /* TTAdCanvasVideoBottomView.m in Sources */,
-				FEFA567F205FB1A8001F50D8 /* TTRNPanoramaViewManager.m in Sources */,
 				FEFA5680205FB1A8001F50D8 /* TSVDebugViewController.m in Sources */,
-				FEFA5681205FB1A8001F50D8 /* DiffMatchPatchCFUtilities.c in Sources */,
 				FEFA5682205FB1A8001F50D8 /* TTHotNewsCell.m in Sources */,
 				FEFA5683205FB1A8001F50D8 /* TTNewPanelController.m in Sources */,
 				FEFA5684205FB1A8001F50D8 /* TTNotificationActionSyncManager.m in Sources */,
@@ -24714,7 +24607,6 @@
 				FEFA56A7205FB1A8001F50D8 /* TTVMidInsertADPlayer.m in Sources */,
 				FEFA56AA205FB1A8001F50D8 /* TTVVideoDetailTextlinkADView.m in Sources */,
 				D507C72D206B36440072A03E /* TTVideoExtendLinkHelper.m in Sources */,
-				FEFA56AB205FB1A8001F50D8 /* TTRNPanoramaView.m in Sources */,
 				FEFA56AD205FB1A8001F50D8 /* TTQQSDKRegister.m in Sources */,
 				FEFA56AF205FB1A8001F50D8 /* TTActivity.m in Sources */,
 				FEFA56B1205FB1A8001F50D8 /* TTHorizontalCardCell.m in Sources */,
@@ -24820,7 +24712,6 @@
 				FEFA5737205FB1A8001F50D8 /* AKProfileHeaderBeneficialView.m in Sources */,
 				FEFA5738205FB1A8001F50D8 /* ArticleTitleImageView.m in Sources */,
 				FEFA5739205FB1A8001F50D8 /* SSWebViewControllerView.m in Sources */,
-				FEFA573A205FB1A8001F50D8 /* NSString+UnicharUtilities.m in Sources */,
 				FEFA5740205FB1A8001F50D8 /* TTAdVideoRelateLeftImageView.m in Sources */,
 				FEFA5741205FB1A8001F50D8 /* TTASettingConfiguration.m in Sources */,
 				FEFA5742205FB1A8001F50D8 /* TTVAdActionButtonCreation.m in Sources */,
@@ -24853,7 +24744,6 @@
 				FEFA5764205FB1A8001F50D8 /* SettingView.m in Sources */,
 				FEFA5766205FB1A8001F50D8 /* TTHorizontalHuoShanLoadingCell.m in Sources */,
 				FEFA5768205FB1A8001F50D8 /* AKRedPacketViewController.m in Sources */,
-				FEFA5769205FB1A8001F50D8 /* TTRNBundleDownloader.m in Sources */,
 				FEFA576A205FB1A8001F50D8 /* SSPublishProgressView.m in Sources */,
 				FEFA576D205FB1A8001F50D8 /* ExploreCellViewBase.m in Sources */,
 				FEFA576E205FB1A8001F50D8 /* ExploreDetailAppLeftPicADView.m in Sources */,
@@ -24884,7 +24774,6 @@
 				FEFA5789205FB1A8001F50D8 /* SSDebugDNSViewController.m in Sources */,
 				FEFA578A205FB1A8001F50D8 /* TTInterestViewController.m in Sources */,
 				FEFA578C205FB1A8001F50D8 /* TTSectionViewEntity.m in Sources */,
-				FEFA578D205FB1A8001F50D8 /* TTRNRreshView.m in Sources */,
 				FEFA578E205FB1A8001F50D8 /* SSURLTracker.m in Sources */,
 				FEFA578F205FB1A8001F50D8 /* TTCrashRepotTask.m in Sources */,
 				FEFA5790205FB1A8001F50D8 /* TTRShortVideo.m in Sources */,
@@ -24928,7 +24817,6 @@
 				FEFA57C3205FB1A8001F50D8 /* TTVVideoDetailNatantPGCViewController.m in Sources */,
 				FEFA57C4205FB1A8001F50D8 /* TTTabBarItem.m in Sources */,
 				FEFA57C5205FB1A8001F50D8 /* TTArticlePanoramaView.m in Sources */,
-				FEFA57C6205FB1A8001F50D8 /* TTRNBridge+Call.m in Sources */,
 				FEFA57C7205FB1A8001F50D8 /* AKRedPacketDetailBaseView.m in Sources */,
 				FEFA57C8205FB1A8001F50D8 /* TTTableFacility.m in Sources */,
 				FEFA57C9205FB1A8001F50D8 /* TTActivityShareSequenceManager.m in Sources */,
@@ -24981,7 +24869,6 @@
 				FEFA5806205FB1A8001F50D8 /* AKTaskSettingFooterView.m in Sources */,
 				FEFA5807205FB1A8001F50D8 /* ArticleBaseListView.m in Sources */,
 				FEFA5808205FB1A8001F50D8 /* SSDebugViewControllerBase.m in Sources */,
-				FEFA580A205FB1A8001F50D8 /* TTRNView.m in Sources */,
 				FEFA580B205FB1A8001F50D8 /* STLinkLabel.m in Sources */,
 				FEFA580C205FB1A8001F50D8 /* TTLocalAssetMovieControlView.m in Sources */,
 				FEFA580E205FB1A8001F50D8 /* TTMomentEnterView.m in Sources */,
@@ -25033,9 +24920,7 @@
 				FEFA584C205FB1A8001F50D8 /* TTVADPlayVideo.m in Sources */,
 				FEFA584E205FB1A8001F50D8 /* ExploreDetailAppointLargePicADView.m in Sources */,
 				FEFA584F205FB1A8001F50D8 /* TSVShortVideoFeedFetchManager.m in Sources */,
-				FEFA5851205FB1A8001F50D8 /* TTRNBridge+Cell.m in Sources */,
 				FEFA5852205FB1A8001F50D8 /* ExploreVideoDetailAppointLeftPicADView.m in Sources */,
-				FEFA5853205FB1A8001F50D8 /* NSString+JavaSubstring.m in Sources */,
 				FEFA5854205FB1A8001F50D8 /* SSCommonLogic.m in Sources */,
 				FEFA5855205FB1A8001F50D8 /* TSVCardCellQuadraViewFlowLayout.m in Sources */,
 				FEFA5857205FB1A8001F50D8 /* ExploreLogicSetting.m in Sources */,
@@ -25186,7 +25071,6 @@
 				FEFA591A205FB1A8001F50D8 /* SSWebViewController.m in Sources */,
 				FEFA591D205FB1A8001F50D8 /* TTStartupNotificationGroup.m in Sources */,
 				FEFA591F205FB1A8001F50D8 /* TTArticleCellConst.m in Sources */,
-				FEFA5920205FB1A8001F50D8 /* TTRNDeviceInfo.m in Sources */,
 				FEFA5921205FB1A8001F50D8 /* NewsFetchListRefreshTipManager.m in Sources */,
 				FEFA5923205FB1A8001F50D8 /* NewsBaseDelegate+SDKs.m in Sources */,
 				FEFA5924205FB1A8001F50D8 /* TTVideoPasterADTracker.m in Sources */,
@@ -25238,7 +25122,6 @@
 				FEFA595C205FB1A8001F50D8 /* TTRNCellManager.m in Sources */,
 				FEFA595E205FB1A8001F50D8 /* TTFastCoding.m in Sources */,
 				FEFA595F205FB1A8001F50D8 /* TTDetailNatantRelateReadPlainView.m in Sources */,
-				FEFA5960205FB1A8001F50D8 /* NSString+UriCompatibility.m in Sources */,
 				61A446F5215293C20072B46E /* FHDataPlayerTracker.m in Sources */,
 				FEFA5962205FB1A8001F50D8 /* TTVVideoDetailNatantInfoShareView.m in Sources */,
 				FEFA5964205FB1A8001F50D8 /* TTDislikeView.m in Sources */,
@@ -25300,7 +25183,6 @@
 				FEFA59A8205FB1A8001F50D8 /* TTVFeedCellMoreActionManager.m in Sources */,
 				FEFA59A9205FB1A8001F50D8 /* ExploreArticleLianZaiCell.m in Sources */,
 				FEFA59AD205FB1A8001F50D8 /* TTAppLinkOpenURLTask.m in Sources */,
-				FEFA59AE205FB1A8001F50D8 /* TTRNBundleManager.m in Sources */,
 				FEFA59AF205FB1A8001F50D8 /* BDTAccountNavigationController.m in Sources */,
 				FEFA59B0205FB1A8001F50D8 /* TSVCategorySelectorButton.m in Sources */,
 				FEFA59B1205FB1A8001F50D8 /* TTRelationshipViewController.m in Sources */,

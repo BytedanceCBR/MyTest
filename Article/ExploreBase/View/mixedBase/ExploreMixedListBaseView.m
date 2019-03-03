@@ -92,7 +92,7 @@
 
 #import "NSObject+MultiDelegates.h"
 #import "TTURLUtils.h"
-#import "TTRNBridge.h"
+//#import "TTRNBridge.h"
 
 #import "TTStringHelper.h"
 #import "NSObject+TTAdditions.h"
@@ -102,7 +102,7 @@
 #import "ExploreEntryManager.h"
 #import "UIImage+TTThemeExtension.h"
 
-#import "TTRNView.h"
+//#import "TTRNView.h"
 #import "NSObject+FBKVOController.h"
 #import "TTLayOutCellViewBase.h"
 #import <Crashlytics/Crashlytics.h>
@@ -3460,7 +3460,7 @@ TTRefreshViewDelegate
     [TTFeedDislikeView dismissIfVisible];
     
     //按住RNCell滑动列表时需要主动调用RCTRootView的cancelTouches方法，否则松手后仍会触发点击事件
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate

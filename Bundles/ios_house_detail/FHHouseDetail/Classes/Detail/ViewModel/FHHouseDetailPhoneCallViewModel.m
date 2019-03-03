@@ -43,7 +43,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     return self;
 }
 
-- (void)fillFormAction
+- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr
 {
     NSString *title = @"询底价";
     NSString *subtitle = @"提交后将安排专业经纪人与您联系";
@@ -52,10 +52,15 @@ extern NSString *const kFHPhoneNumberCacheKey;
         title = @"咨询经纪人";
         btnTitle = @"提交";
     }
-    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:customHouseId fromStr:fromStr];
 }
 
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+{
+    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:nil fromStr:nil];
+}
+
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr
 {
     [self addInformShowLog];
     __weak typeof(self)wself = self;
@@ -63,7 +68,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     alertView.confirmClickBlock = ^(NSString *phoneNum){
-        [wself fillFormRequest:phoneNum];
+        [wself fillFormRequest:phoneNum customHouseId:customHouseId fromStr:fromStr];
         [wself addClickConfirmLog];
     };
     alertView.tipClickBlock = ^{
@@ -76,6 +81,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [alertView showFrom:self.belongsVC.view];
     self.alertView = alertView;
 }
+
 
 - (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
 {
@@ -151,7 +157,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     
 }
 
-- (void)fillFormRequest:(NSString *)phoneNum
+- (void)fillFormRequest:(NSString *)phoneNum customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr
 {
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
@@ -159,7 +165,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:self.houseId phone:phoneNum from:[self fromStrByHouseType:self.houseType] completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    NSString *houseId = customHouseId.length > 0 ? customHouseId : self.houseId;
+    NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:self.houseType];
+    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             
