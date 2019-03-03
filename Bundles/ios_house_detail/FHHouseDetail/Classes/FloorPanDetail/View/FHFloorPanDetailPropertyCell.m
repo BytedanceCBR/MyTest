@@ -71,10 +71,12 @@
             nameLabel.text = itemModel.attr;
             [itemContenView addSubview:nameLabel];
             
+            
             [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
                 make.top.mas_equalTo(0);
             }];
+            
             
             UILabel *valueLabel = [UILabel new];
             valueLabel.font = [UIFont themeFontRegular:15];
@@ -87,7 +89,6 @@
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(nameLabel.mas_right).offset(10);
                 make.top.equalTo(nameLabel);
-                make.right.equalTo(itemContenView).offset(-15);
                 make.bottom.equalTo(itemContenView).offset(-7);
             }];
             
