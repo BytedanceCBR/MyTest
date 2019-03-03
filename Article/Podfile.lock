@@ -531,7 +531,7 @@ PODS:
   - OHHTTPStubs/NSURLSession (4.2.1):
     - OHHTTPStubs/Core
   - OHHTTPStubs/OHPathHelpers (4.2.1)
-  - OpenSSL-Universal (1.0.1.20)
+  - OpenSSL-Universal (1.0.2.13)
   - OpenUDID (0.1.0)
   - Protobuf (3.0.1-ttv)
   - React/Core (0.37.0)
@@ -1622,7 +1622,7 @@ SPEC CHECKSUMS:
   MJExtension: 61bcf70d30acf0a09dde48e68502da0fde8eeafa
   MJRefresh: 2657684287cf4998d98c4ec55f17bde6308d173c
   OHHTTPStubs: cad9b4341be7b8b5051ec5b16264d8607458818d
-  OpenSSL-Universal: 6f05fcf94f2c5f5114c56c5da02080c0f674419a
+  OpenSSL-Universal: 401888162f11c33ebbd46f782d9229da35c61327
   OpenUDID: ee6ece43513e675030bd04fcfa97a8c1f16b69cb
   Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
   React: aa8f585cbea131b6781c6ad7a1aee436e1ac5ddf
