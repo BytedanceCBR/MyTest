@@ -152,7 +152,8 @@
 {
     self.titleLabel.text = model.title;
     self.subTitleLabel.text = model.content;
-    self.timeLabel.text = model.dateStr;
+    NSDate* date = [[NSDate alloc] initWithTimeIntervalSince1970:[model.timestamp doubleValue]];
+    self.timeLabel.text = [self timeLabelByDate:date];
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.icon] placeholder:[UIImage imageNamed:@"default_image"]];
     self.unreadView.badgeNumber = [model.unread integerValue] == 0 ? TTBadgeNumberHidden : [model.unread integerValue];
 }
