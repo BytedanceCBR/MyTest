@@ -299,7 +299,7 @@
 }
 
 - (void)setupUI {
-    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default-avatar-icons"]];
+    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
     _avator.layer.cornerRadius = 23;
     _avator.contentMode = UIViewContentModeScaleAspectFill;
     _avator.clipsToBounds = YES;

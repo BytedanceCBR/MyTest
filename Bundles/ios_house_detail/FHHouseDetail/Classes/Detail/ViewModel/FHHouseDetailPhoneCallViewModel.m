@@ -357,9 +357,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (isEmptyString(realtorDeUrl)) {
         jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     } else {
-        jumpUrl = [NSString stringWithFormat:@"%@&realtor_id=%@",realtorDeUrl,reportParams ? : @""];
+        jumpUrl = [NSString stringWithFormat:@"%@&report_params=%@",realtorDeUrl,reportParams ? : @""];
     }
-//    jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
+//    jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人详情页";
