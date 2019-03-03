@@ -47,6 +47,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
 @property (nonatomic, strong) NSMutableDictionary *traceDict;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
+@property (nonatomic , strong) NSString *titleStr;
 
 @end
 
@@ -69,6 +70,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
             self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
         }
+        
+        if ([[userInfo.allInfo objectForKey:@"title"] isKindOfClass:[NSString class]]) {
+            self.titleStr = [userInfo.allInfo objectForKey:@"title"];
+        }
+        
     }
     return self;
 }
@@ -437,16 +443,20 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)setUpAnnotations
 {
-    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
-    userAnna.type = @"user";
-    userAnna.coordinate = self.centerPoint;
-    [self.mapView addAnnotation:userAnna];
-    self.pointCenterAnnotation = userAnna;
-    
     for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
         [self.mapView addAnnotation:self.poiAnnotations[i]];
     }
     _mapView.zoomLevel  = 15;
+    
+    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
+    userAnna.type = @"user";
+    userAnna.coordinate = self.centerPoint;
+    
+    userAnna.title = self.titleStr;
+    
+    [self.mapView addAnnotation:userAnna];
+    self.pointCenterAnnotation = userAnna;
+    
     [self.mapView setCenterCoordinate:self.centerPoint];
 }
 

@@ -275,6 +275,7 @@ static const float kSegementedPadingTop = 5;
     [infoDict setValue:selectCategory forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
+    [infoDict setValue:self.dataModel.title forKey:@"title"];
 
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     
