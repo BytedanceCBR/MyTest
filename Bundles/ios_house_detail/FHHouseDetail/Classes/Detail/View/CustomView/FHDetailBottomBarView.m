@@ -162,7 +162,7 @@
     [self.contactBtn setTitle:contactTitle forState:UIControlStateHighlighted];
 
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
-    self.imChatBtn.hidden = contactPhone.showRealtorinfo == 1 && !isEmptyString(contactPhone.imOpenUrl) ? NO : YES;
+    self.imChatBtn.hidden = !isEmptyString(contactPhone.imOpenUrl) ? NO : YES;
     
     CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? [UIScreen mainScreen].bounds.size.width - 228 : 0;
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
@@ -193,19 +193,26 @@
     }];
 
     if (!isEmptyString(contactPhone.imOpenUrl)) {
+        CGFloat leftMargin = 10;
         if (contactPhone.showRealtorinfo == 1) {
             if ([TTDeviceHelper is568Screen]) {
                 _imBtnWidth = 74;
             } else {
                 _imBtnWidth = 94;
             }
+            [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(_imBtnWidth);
+                make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
+            }];
         } else {
             _imBtnWidth = ([UIScreen mainScreen].bounds.size.width - 50) / 2;
+            [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(20);
+                make.width.mas_equalTo(_imBtnWidth);
+                make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
+            }];
         }
-        [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(_imBtnWidth);
-            make.right.mas_equalTo(self.leftView.mas_right).offset(10 + _imBtnWidth);
-        }];
+        
     } else {
         if (contactPhone.showRealtorinfo == 1) {
             [self.contactBtn mas_updateConstraints:^(MASConstraintMaker *make) {
