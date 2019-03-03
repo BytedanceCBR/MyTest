@@ -10,7 +10,7 @@
 #import <TTAccountBusiness.h>
 #import <TTAccountLoginConfLogic.h>
 #import <TTSandBoxHelper.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "SSCookieManager.h"
 #import "TTInstallIDManager.h"
 #import "TTProjectLogicManager.h"

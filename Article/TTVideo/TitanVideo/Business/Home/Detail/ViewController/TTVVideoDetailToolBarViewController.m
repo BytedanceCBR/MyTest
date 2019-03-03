@@ -67,7 +67,7 @@
 #import "TTShareMethodUtil.h"
 //#import "TTThreadDeleteContentItem.h"
 #import "ExploreOrderedData.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "BDPlayerObjManager.h"
 #import "TTDirectForwardWeitoutiaoContentItem.h"
 #import <TTDirectForwardWeitoutiaoActivity.h>

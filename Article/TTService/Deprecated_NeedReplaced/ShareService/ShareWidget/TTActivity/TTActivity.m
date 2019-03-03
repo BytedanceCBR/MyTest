@@ -19,7 +19,7 @@
 #import <TTURLUtils.h>
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTAdPromotionManager.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 
 #pragma mark - Class Cluster

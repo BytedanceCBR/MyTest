@@ -8,7 +8,7 @@
 
 #import "TTFollowingDetailCell.h"
 #import "TTProfileThemeConstants.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 @implementation TTFollowingDetailCell
 

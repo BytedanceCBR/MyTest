@@ -11,8 +11,8 @@
 #import "FRApiModel.h"
 #import "UIViewController+BDTAccountModalPresentor.h"
 #import "TTCommentDetailViewController.h"
-#import "TTKitchenMgr.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenMgr.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 #import <TTUIWidget/TTModalContainerController.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>

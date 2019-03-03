@@ -13,7 +13,7 @@
 #import "TTFollowThemeButton.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <ReactiveObjC/ReactiveObjC.h>
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 
 @interface TSVRecUserSinglePersonCollectionViewCell()
 

@@ -10,7 +10,7 @@
 #import "TTMonitor.h"
 #import "TTInstallIDManager.h"
 #import "TTDebugRealMonitorManager.h"
-#import "TTHttpsControlManager.h"
+#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "NewsBaseDelegate.h"
 #import "BSBacktraceLogger.h"
 #import "TTWatchdogMonitorRecorder.h"

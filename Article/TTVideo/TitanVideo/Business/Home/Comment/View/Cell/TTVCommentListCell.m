@@ -16,7 +16,8 @@
 #import "TTVCommentListReplyView.h"
 #import "TTActionSheetController.h"
 #import "TTDiggButton.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
+//#import "TTVerifyIconHelper.h"
 #import "TTReportManager.h"
 #import "TTIndicatorView.h"
 #import "SSIndicatorTipsManager.h"

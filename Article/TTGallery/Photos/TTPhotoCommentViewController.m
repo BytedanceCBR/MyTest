@@ -28,7 +28,7 @@
 #import "TTDeviceHelper.h"
 #import "TTBusinessManager.h"
 #import "TTDeviceUIUtils.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "SSUserModel.h"
 #import "SSCommentInputHeader.h"
 #import "TTCommentWriteView.h"
