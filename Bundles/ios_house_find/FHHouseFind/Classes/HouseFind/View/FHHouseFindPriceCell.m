@@ -149,8 +149,7 @@
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    NSInteger inputInt = [string integerValue];
-    if (inputInt < 0 || inputInt > 9) {
+    if (![string isEqualToString:[@(string.integerValue) description]]) {
         return NO;
     }
     
