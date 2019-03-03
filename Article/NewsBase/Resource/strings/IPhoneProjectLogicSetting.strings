@@ -114,3 +114,4 @@
 "neighborhood_sales_list"        = "FHTransactionHistoryController";
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
+"second_house_main"   = "FHHouseOldHomeViewController";

@@ -138,6 +138,7 @@
                            @"opData2": @"op_data_2",
                            @"opData": @"op_data",
                            @"rentOpData": @"rent_op_data",
+                           @"houseOpData": @"house_op_data",
                            @"entryInfo": @"entry_info",
                            @"currentCityId": @"current_city_id",
                            @"mapSearch": @"map_search",
