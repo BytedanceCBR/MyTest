@@ -89,7 +89,7 @@
     }];
 }
 
--(void)updateWithLowerPrice:(NSNumber *)lowPrice higherPrice:(NSNumber *)highPrice
+-(void) updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice
 {
 
     if (!(lowPrice && highPrice)) {
@@ -104,21 +104,26 @@
     }
     
     if (lowPrice.integerValue > highPrice.integerValue ) {
-        NSNumber *tempNum = lowPrice;
+        NSString *tempNum = lowPrice;
         lowPrice = highPrice;
         highPrice = tempNum;
         
-        if (lowPrice.integerValue > 0) {
-            self.lowerTextField.text = [NSString stringWithFormat:@"%d",lowPrice.intValue];
-        }else{
-            self.lowerTextField.text = nil;
-        }
-        if (highPrice.integerValue > 0) {
-            self.higherTextField.text = [NSString stringWithFormat:@"%d",highPrice.intValue];
-        }else{
-            self.higherTextField.text = nil;
-        }
     }
+    if (lowPrice.integerValue > 0) {
+        self.lowerTextField.text = [NSString stringWithFormat:@"%d",lowPrice.intValue];
+    }else if (lowPrice.length > 0){
+        self.lowerTextField.text = lowPrice;
+    }else{
+        self.lowerTextField.text = nil;
+    }
+    if (highPrice.integerValue > 0) {
+        self.higherTextField.text = [NSString stringWithFormat:@"%d",highPrice.intValue];
+    }else if (highPrice.length > 0){
+        self.higherTextField.text = highPrice;
+    }else{
+        self.higherTextField.text = nil;
+    }
+    
 }
 
 
@@ -126,7 +131,7 @@
 {
     if (self.delegate) {
         
-        NSNumber *number = nil;
+        NSString *number = nil;
         if (textField.text.length > 0) {
             number = textField.text;//@(textField.text integerValue]);
         }
