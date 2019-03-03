@@ -10,11 +10,13 @@
 #import "FHLoginViewModel.h"
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
+#import "TTAccountLoginManager.h"
 
 @interface FHLoginViewController ()<TTRouteInitializeProtocol>
 
 @property(nonatomic, strong) FHLoginViewModel *viewModel;
 @property(nonatomic ,strong) FHLoginView *loginView;
+@property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 
 @end
 
@@ -29,7 +31,10 @@
         self.tracerModel = [[FHTracerModel alloc] init];
         self.tracerModel.enterFrom = params[@"enter_from"];
         self.tracerModel.enterType = params[@"enter_type"];
-
+        if (params[@"delegate"]) {
+            NSHashTable *delegate = params[@"delegate"];
+            self.loginDelegate = delegate.anyObject;
+        }
         [self addEnterCategoryLog];
     }
     return self;
@@ -87,6 +92,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHLoginViewModel alloc] initWithView:self.loginView controller:self];
+    self.viewModel.loginDelegate = self.loginDelegate;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
