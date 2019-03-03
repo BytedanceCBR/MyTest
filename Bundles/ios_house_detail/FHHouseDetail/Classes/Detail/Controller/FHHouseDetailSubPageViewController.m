@@ -26,6 +26,8 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, assign) NSInteger followStatus;
+@property (nonatomic, copy) NSString *customHouseId; //
+@property (nonatomic, copy) NSString *fromStr; //
 
 @end
 
@@ -58,6 +60,10 @@
                     self.houseId = paramObj.allParams[@"court_id"];
                 }
                 break;
+        }
+        if ([paramObj.sourceURL.absoluteString containsString:@"floor_plan_detail"]) {
+            self.customHouseId = paramObj.allParams[@"floor_plan_id"];
+            self.fromStr = @"app_floorplan";
         }
         
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
@@ -133,8 +139,9 @@
             make.bottom.mas_equalTo(self.view);
         }
     }];
-    
     self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
+    self.contactViewModel.customHouseId = self.customHouseId;
+    self.contactViewModel.fromStr = self.fromStr;
     self.contactViewModel.searchId = self.searchId;
     self.contactViewModel.imprId = self.imprId;
     NSMutableDictionary *tracer = @{}.mutableCopy;
