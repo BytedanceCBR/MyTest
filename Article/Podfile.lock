@@ -1548,7 +1548,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.2
   ios_house_im:
-    :commit: 658c3a098b7fe3d15676e24ec70215d1335dda3a
+    :commit: e1fa0d6a2ac37db3cdffc51ca37581f54fb16c14
     :git: git@code.byted.org:fproject/ios_house_im.git
   React:
     :git: https://github.com/facebook/react-native.git
@@ -1654,7 +1654,7 @@ SPEC CHECKSUMS:
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
   TTEntityBase: bb3ef3988e1bb86be42de379f040658dc498b6d7
   TTEntry: 2c9d04c401b8f74ad078e570b1bf206c0bd78393
-  TTFFmpeg: 2f37fd999e494d0eb943e2848dfde3d971cb493d
+  TTFFmpeg: 1a5b5e93f8868aee3df04ca762db8ef77aea6095
   TTFileUploadClient: cd4d5bc086e7d23316cfd065e7ad114ecf054083
   TTFlowStatisticsManager: ac76a85b82cba6da6011af5814ed3e9e1e47e995
   TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
@@ -1694,7 +1694,7 @@ SPEC CHECKSUMS:
   TTUGCFoundation: 38878721f4ea5eecaa985eda71e933a8dded1fe5
   TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
   TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
-  TTVContainerScrollView: 1394e59f3b600cbf764a0f7697f3282f494a6fa1
+  TTVContainerScrollView: 1e0fa9ce29bc92b62dc9fe663c8d82a4cea9e628
   TTVerifyKit: cc38d6605f2cc02585c6632e711310ef828ce569
   TTVideo: dae14d8b5c4426ee458257eae45b0cd13b4cb02c
   TTVideoEngine: 3ec46606abf9bac1135332cf1986ce5b04092e90
