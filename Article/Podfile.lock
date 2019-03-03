@@ -66,8 +66,6 @@ PODS:
     - TTVerifyKit
     - YYCache
     - YYWebImage
-  - AKPay (0.1.0):
-    - TTThirdPartySDKs/WeChatSDK
   - AKShareServicePlugin (0.1.0):
     - Aspects (>= 1.4)
     - TTBaseLib
@@ -1152,7 +1150,6 @@ PODS:
 
 DEPENDENCIES:
   - AKCommentPlugin (from `../AKPlugins/AKCommentPlugin`)
-  - AKPay (from `../AKPlugins/AKPay`)
   - AKShareServicePlugin (from `../AKPlugins/AKShareServicePlugin`)
   - AKWDPlugin (from `../AKPlugins/AKWDPlugin`)
   - AKWebViewBundlePlugin (from `../AKPlugins/AKWebViewBundlePlugin`)
@@ -1324,8 +1321,6 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   AKCommentPlugin:
     :path: ../AKPlugins/AKCommentPlugin
-  AKPay:
-    :path: ../AKPlugins/AKPay
   AKShareServicePlugin:
     :path: ../AKPlugins/AKShareServicePlugin
   AKWDPlugin:
@@ -1431,7 +1426,6 @@ SPEC CHECKSUMS:
   AFgzipRequestSerializer: d4be5fd65c22ca23bde3a8feb9fe4b5b285a35e1
   AFNetworking: 2960888b0253924f773cc95d1fffdc363335be4f
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
-  AKPay: b251cdc64c45f51f809e7b8318820aa96524f27f
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
   AKWebViewBundlePlugin: 684255bc41391dae352b786c0ef7b7e8cc4b794a
@@ -1564,6 +1558,6 @@ SPEC CHECKSUMS:
   YYText: 8cc77b6be18dfdeb52b617be7cf32de34fb75714
   YYWebImage: eaf653146411f8f844e109d3f67a57d3cb522a09
 
-PODFILE CHECKSUM: 7fff82a403011dc230d3f9d8723ef2ffc57656fd
+PODFILE CHECKSUM: e1b7dd2c844686d522fb627814daf523bbf6e4c2
 
 COCOAPODS: 1.4.0
