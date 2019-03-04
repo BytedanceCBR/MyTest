@@ -56,8 +56,8 @@
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(kFHIndexViewBgWidth - kFHIndexViewWidth, i*labelH, kFHIndexViewWidth, _kIndexRowHeight)];
         label.text = self.titleArray[i];
         label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [UIColor colorWithHexString:@"#081f33"];
-        label.font = [UIFont themeFontMedium:12];
+        label.textColor = [UIColor themeGray1];
+        label.font = [UIFont themeFontSemibold:12];
         [self addSubview:label];
     }
 }
@@ -144,7 +144,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.hidden = YES;
-        self.backgroundColor = RGBA(0x08, 0x1f, 0x33,0.4);
+        self.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.4];
         self.layer.cornerRadius = 4.0;
     }
     return self;

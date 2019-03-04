@@ -17,53 +17,36 @@ NS_ASSUME_NONNULL_BEGIN
 
 // #ffffff
 +(UIColor *)themeWhite;
-
-// #081f33
-+(UIColor *)themeBlack;
-
-// #a1aab3
-+(UIColor *)themeGray;
-// #f2f4f5
-+(UIColor *)themeGrayPale;
-
-// #45494d
+// #333333
 +(UIColor *)themeGray1;
 
-// #737a80
+// #666666
 +(UIColor *)themeGray2;
 
-// #8a9299
+// #999999
 +(UIColor *)themeGray3;
 
-// #a1aab3
+// #bbbbbb
 +(UIColor *)themeGray4;
 
-// #e1e3e6
+// #dddddd(浅色背景色)
 +(UIColor *)themeGray5;
 
-// #e8eaeb
+// #e8e8e8(分割线)
 +(UIColor *)themeGray6;
 
-// #f2f4f5
+// #f5f5f5(背景色)
 +(UIColor *)themeGray7;
-
-// #299cff
-+(UIColor *)themeBlue;
-
-// #081f33
-+(UIColor *)themeBlue1;
-
-// #299cff
-+(UIColor *)themeBlue2;
-
-// #3d6e99
-+(UIColor *)themeBlue3;
-
-// #e6f3ff
-+(UIColor *)themeBlue4;
-
 // #ff5b4c
 +(UIColor *)themeRed;
+// #ff5869
++(UIColor *)themeRed1;
+// #fff2ed
++(UIColor *)themeRed2;
+// #ff8151
++(UIColor *)themeRed3;
+// #0cce6b
++(UIColor *)themeGreen1;
 
 + (UIColor *)colorWithHexString:(NSString *)hexString;
 

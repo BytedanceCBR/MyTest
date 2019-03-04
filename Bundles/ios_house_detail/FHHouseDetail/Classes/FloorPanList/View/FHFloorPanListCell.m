@@ -45,7 +45,7 @@
         
         _nameLabel = [UILabel new];
         _nameLabel.font = [UIFont themeFontMedium:16];
-        _nameLabel.textColor = [UIColor themeBlue1];
+        _nameLabel.textColor = [UIColor themeGray1];
         _nameLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_nameLabel];
@@ -102,7 +102,7 @@
 
         _statusLabel = [UILabel new];
         _statusLabel.font = [UIFont themeFontRegular:10];
-        _statusLabel.textColor = [UIColor themeBlue1];
+        _statusLabel.textColor = [UIColor themeGray1];
         _statusLabel.textAlignment = NSTextAlignmentCenter;
         [_statusBGView addSubview:_statusLabel];
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {

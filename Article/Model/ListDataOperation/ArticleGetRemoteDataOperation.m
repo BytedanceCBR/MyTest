@@ -34,7 +34,7 @@
 //#import "TTNetworkManagerAFNetworking.h"
 //#import "TTCommonwealManager.h"
 #import "ExploreListHelper.h"
-#import "TTRNBundleManager.h"
+//#import "TTRNBundleManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "ExploreFetchListManager.h"
 
@@ -343,12 +343,12 @@
             }
 
             // 本地支持的widget React Native bundle
-            if (![[TTRNBundleManager sharedManager] localBundleDirtyForModuleName:TTRNWidgetBundleName]) {
-                NSString *supportRNBundle = [[TTRNBundleManager sharedManager] bitMaskStringForModuleName:TTRNWidgetBundleName];
-                if (!isEmptyString(supportRNBundle)) {
-                    [param setValue:supportRNBundle forKey:@"support_rn"];
-                }
-            }
+//            if (![[TTRNBundleManager sharedManager] localBundleDirtyForModuleName:TTRNWidgetBundleName]) {
+//                NSString *supportRNBundle = [[TTRNBundleManager sharedManager] bitMaskStringForModuleName:TTRNWidgetBundleName];
+//                if (!isEmptyString(supportRNBundle)) {
+//                    [param setValue:supportRNBundle forKey:@"support_rn"];
+//                }
+//            }
             
             // extra
             NSString *extra = [condition objectForKey:kExploreFetchListConditionExtraKey];

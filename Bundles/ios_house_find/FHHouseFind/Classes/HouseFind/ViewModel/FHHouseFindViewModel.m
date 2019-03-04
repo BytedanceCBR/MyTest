@@ -629,19 +629,17 @@
 }
 
 #pragma mark - price cell delegate
--(void)updateLowerPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell
+-(void)updateLowerPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    
     priceItem.lowerPrice = price;
 }
 
--(void)updateHigherPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell
+-(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    
     priceItem.higherPrice = price;
 }
 

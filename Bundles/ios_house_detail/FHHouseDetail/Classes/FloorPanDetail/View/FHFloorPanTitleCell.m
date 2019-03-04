@@ -25,7 +25,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         _nameLabel = [UILabel new];
-        _nameLabel.textColor = [UIColor themeBlue1];
+        _nameLabel.textColor = [UIColor themeGray1];
         _nameLabel.font = [UIFont themeFontMedium:24];
         [self.contentView addSubview:_nameLabel];
         [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -69,7 +69,7 @@
         
         _statusLabel = [UILabel new];
         _statusLabel.font = [UIFont themeFontRegular:10];
-        _statusLabel.textColor = [UIColor themeBlue1];
+        _statusLabel.textColor = [UIColor themeGray1];
         _statusLabel.textAlignment = NSTextAlignmentCenter;
         [_statusBGView addSubview:_statusLabel];
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -37,7 +37,7 @@
 
 #import <DTShareKit/DTOpenKit.h>
 #import "TTShareConstants.h"
-#import "SSPayManager.h"
+//#import "SSPayManager.h"
 
 #import <TTABManager/TTABHelper.h>
 #import "TTVersionHelper.h"
@@ -691,7 +691,7 @@ static NSTimeInterval lastTime;
 #pragma mark - TTWeChatSharePayDelegate
 
 - (void)weChatShare:(TTWeChatShare *)weChatShare payResponse:(PayResp *)payResponse {
-    [[SSPayManager sharedPayManager] handleWXPayResponse:payResponse];
+//    [[SSPayManager sharedPayManager] handleWXPayResponse:payResponse];
 }
 
 #pragma mark - TTWeChatShareRequestDelegate

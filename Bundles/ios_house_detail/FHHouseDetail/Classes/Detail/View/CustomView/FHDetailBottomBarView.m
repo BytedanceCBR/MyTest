@@ -200,7 +200,7 @@
     if (!_nameLabel) {
         _nameLabel = [[UILabel alloc]init];
         _nameLabel.font = [UIFont themeFontRegular:16];
-        _nameLabel.textColor = [UIColor themeBlack];
+        _nameLabel.textColor = [UIColor themeGray1];
     }
     return _nameLabel;
 }
@@ -210,7 +210,7 @@
     if (!_agencyLabel) {
         _agencyLabel = [[UILabel alloc]init];
         _agencyLabel.font = [UIFont themeFontRegular:12];
-        _agencyLabel.textColor = [UIColor themeGray];
+        _agencyLabel.textColor = [UIColor themeGray1];
     }
     return _agencyLabel;
 }
@@ -225,7 +225,7 @@
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         _contactBtn.layer.cornerRadius = 4;
-        _contactBtn.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
+        _contactBtn.backgroundColor = [UIColor themeRed1];
     }
     return _contactBtn;
 }

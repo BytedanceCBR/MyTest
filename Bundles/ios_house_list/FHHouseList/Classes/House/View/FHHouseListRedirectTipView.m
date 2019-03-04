@@ -114,8 +114,8 @@
 {
     if (!_rightBtn) {
         _rightBtn = [[UIButton alloc]init];
-        [_rightBtn setTitleColor:[UIColor themeBlue2] forState:UIControlStateNormal];
-        [_rightBtn setTitleColor:[UIColor themeBlue2] forState:UIControlStateHighlighted];
+        [_rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
         _rightBtn.titleLabel.font = [UIFont themeFontRegular:14];
     }
     return _rightBtn;

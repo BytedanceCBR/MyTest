@@ -84,7 +84,7 @@
 
 -(void)setNameLabelStyle: (UILabel*) nameLabel {
     nameLabel.font = [UIFont themeFontMedium:24];
-    nameLabel.textColor = [UIColor themeBlack];
+    nameLabel.textColor = [UIColor themeGray1];
 }
 
 -(void)setDesclabelStyle: (UILabel*) descLabel {

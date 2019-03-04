@@ -160,12 +160,14 @@
 
 - (void)setupUI {
     self.backgroundColor = UIColor.whiteColor;
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#8a9299" fontSize:14];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _keyLabel.textColor = [UIColor themeGray3];
     [self addSubview:_keyLabel];
     [_keyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _valueLabel.textColor = [UIColor themeGray1];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     

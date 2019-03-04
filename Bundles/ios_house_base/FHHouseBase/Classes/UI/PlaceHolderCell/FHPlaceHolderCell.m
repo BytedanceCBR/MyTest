@@ -97,7 +97,7 @@
     
     if (!_view1) {
         _view1 = [[UIView alloc]init];
-        _view1.backgroundColor = [UIColor themeGrayPale];
+        _view1.backgroundColor = [UIColor themeGray7];
     }
     return _view1;
 }
@@ -106,7 +106,7 @@
     
     if (!_view2) {
         _view2 = [[UIView alloc]init];
-        _view2.backgroundColor = [UIColor themeGrayPale];
+        _view2.backgroundColor = [UIColor themeGray7];
     }
     return _view2;
 }
@@ -115,7 +115,7 @@
     
     if (!_view3) {
         _view3 = [[UIView alloc]init];
-        _view3.backgroundColor = [UIColor themeGrayPale];
+        _view3.backgroundColor = [UIColor themeGray7];
     }
     return _view3;
 }
@@ -124,7 +124,7 @@
     
     if (!_view4) {
         _view4 = [[UIView alloc]init];
-        _view4.backgroundColor = [UIColor themeGrayPale];
+        _view4.backgroundColor = [UIColor themeGray7];
     }
     return _view4;
 }

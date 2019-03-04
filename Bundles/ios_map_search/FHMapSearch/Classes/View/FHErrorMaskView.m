@@ -31,16 +31,16 @@
         
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.font = [UIFont themeFontRegular:14];
-        _tipLabel.textColor = [UIColor themeGray];
+        _tipLabel.textColor = [UIColor themeGray1];
         _tipLabel.text = @"网络异常，请检查网络连接";//@"网络异常";
         [_tipLabel sizeToFit];
         
         _retryButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_retryButton setTitleColor:[UIColor themeBlue] forState:UIControlStateNormal];
+        [_retryButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         [_retryButton setTitle:@"刷新" forState:UIControlStateNormal];
         _retryButton.layer.cornerRadius  = 15;
         _retryButton.titleLabel.font = [UIFont themeFontRegular:14];
-        _retryButton.layer.borderColor = [[UIColor themeBlue]CGColor];
+        _retryButton.layer.borderColor = [[UIColor themeRed1]CGColor];
         _retryButton.layer.borderWidth = 1;
         _retryButton.layer.masksToBounds = YES;
         [_retryButton addTarget:self action:@selector(retryAction:) forControlEvents:UIControlEventTouchUpInside];

@@ -113,7 +113,7 @@
     if (!_tipLabel) {
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.font = [UIFont themeFontRegular:16];
-        _tipLabel.textColor = [UIColor themeBlack];
+        _tipLabel.textColor = [UIColor themeGray1];
         _tipLabel.text = @"同小区同户型挂牌价排名";
     }
     return _tipLabel;
@@ -124,7 +124,7 @@
     if (!_rankLabel) {
         _rankLabel = [[UILabel alloc]init];
         _rankLabel.font = [UIFont themeFontRegular:12];
-        _rankLabel.textColor = [UIColor themeBlack];
+        _rankLabel.textColor = [UIColor themeGray1];
     }
     return _rankLabel;
 }
