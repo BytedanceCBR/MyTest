@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
+#import "UIColor+Theme.h"
 
 @interface FHDetailGrayLineCell ()
 
@@ -52,7 +53,7 @@
 
 - (void)setupUI {
     _bottomMaskView = [[UIView alloc] init];
-    _bottomMaskView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _bottomMaskView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_bottomMaskView];
     [self.bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.mas_equalTo(self.contentView);

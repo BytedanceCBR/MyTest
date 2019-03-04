@@ -7,6 +7,7 @@
 
 #import "FHDistrictAreaAnnotationView.h"
 #import <UIViewAdditions.h>
+#import "UIColor+Theme.h"
 
 #define RGBA(r, g, b, a)    [UIColor colorWithRed:(r)/255.f green:(g)/255.f blue:(b)/255.f alpha:(a) * 1.f]
 
@@ -34,7 +35,7 @@
         self.frame = CGRectMake(0, 0, width, width);
         self.layer.cornerRadius = width/2;
         self.layer.masksToBounds = YES;
-        self.backgroundColor = RGBA(41,156,255,0.9);
+        self.backgroundColor = [[UIColor themeRed1] colorWithAlphaComponent:0.9];
         
         UIFont *font = [UIFont systemFontOfSize:12];
         UIColor *textColor = [UIColor whiteColor];

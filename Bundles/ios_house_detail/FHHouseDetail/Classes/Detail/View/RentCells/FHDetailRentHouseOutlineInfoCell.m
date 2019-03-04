@@ -18,6 +18,8 @@
 #import "FHExtendHotAreaButton.h"
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
+#import "TTAccountManager.h"
+#import "UIColor+Theme.h"
 
 @interface FHDetailRentHouseOutlineInfoCell ()
 
@@ -106,7 +108,7 @@
     [_infoButton setTitle:@"举报" forState:UIControlStateNormal];
     NSAttributedString *attriStr = [[NSAttributedString alloc] initWithString:@"举报" attributes:@{
                                                                                                  NSFontAttributeName:[UIFont themeFontRegular:12],
-                                                                                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#299cff"]
+                                                                                                 NSForegroundColorAttributeName:[UIColor themeRed1]
                                                                                                  }];
     [_infoButton setAttributedTitle:attriStr forState:UIControlStateNormal];
     _infoButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
@@ -131,6 +133,33 @@
 }
 
 - (void)feedBackButtonClick:(UIButton *)button {
+    if ([TTAccountManager isLogin]) {
+        [self gotoReportVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 确认是否要加登录时的埋点
+    [params setObject:@"enterFrom" forKey:@"enter_from"];
+    [params setObject:@"comment" forKey:@"enter_type"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([TTAccountManager isLogin]) {
+                    [wSelf gotoReportVC];
+                }
+            });
+        }
+    }];
+}
+
+// 租房-房源问题反馈
+- (void)gotoReportVC {
     // 租房
     FHDetailRentHouseOutlineInfoModel *model = (FHDetailRentHouseOutlineInfoModel *)self.currentData;
     FHRentDetailResponseModel *rentData = (FHRentDetailResponseModel *)model.baseViewModel.detailData;
@@ -158,7 +187,6 @@
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
     }
 }
-
 
 @end
 

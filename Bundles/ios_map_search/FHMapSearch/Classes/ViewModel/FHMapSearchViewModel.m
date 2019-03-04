@@ -187,7 +187,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //        r.strokeColor = r.fillColor;
 //        r.lineWidth = 1;///精度圈 边线宽度，默认0
 //        r.locationDotBgColor = [UIColor clearColor];///定位点背景色，不设置默认白色
-//        r.locationDotFillColor = [UIColor themeBlue];///定位点蓝色圆点颜色，不设置默认蓝色
+//        r.locationDotFillColor = [UIColor themeRed1];///定位点蓝色圆点颜色，不设置默认蓝色
 //        UIImage *image = [UIImage imageNamed:@"mapsearch_location_center"];
 //        r.image = image;
 //        [_mapView updateUserLocationRepresentation:r];
@@ -215,7 +215,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     r.strokeColor = r.fillColor;
     r.lineWidth = 1;///精度圈 边线宽度，默认0
     r.locationDotBgColor = [UIColor clearColor];///定位点背景色，不设置默认白色
-    r.locationDotFillColor = [UIColor themeBlue];///定位点蓝色圆点颜色，不设置默认蓝色
+    r.locationDotFillColor = [UIColor themeRed1];///定位点蓝色圆点颜色，不设置默认蓝色
     UIImage *image = [UIImage imageNamed:@"mapsearch_location_center"];
     r.image = image;
     [self.mapView updateUserLocationRepresentation:r];

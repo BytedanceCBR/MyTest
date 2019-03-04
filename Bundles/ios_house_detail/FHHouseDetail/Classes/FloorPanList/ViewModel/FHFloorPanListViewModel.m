@@ -94,12 +94,12 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         labelClick.text = self.nameLeftArray[i];
         if (i == 0) {
             _currentTapLabel = labelClick;
-            labelClick.textColor = [UIColor themeBlue2];
+            labelClick.textColor = [UIColor themeRed1];
             labelClick.backgroundColor = [UIColor whiteColor];
             _leftFilterIndex = 0;
         }else
         {
-            labelClick.textColor = [UIColor themeBlue1];
+            labelClick.textColor = [UIColor themeGray1];
             labelClick.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
         }
         labelClick.font = [UIFont themeFontRegular:15];
@@ -126,12 +126,12 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     _leftFilterIndex = tapView.tag;
 
     if (_currentTapLabel) {
-        _currentTapLabel.textColor = [UIColor themeBlue1];
+        _currentTapLabel.textColor = [UIColor themeGray1];
         _currentTapLabel.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
     }
     
     if ([tapView isKindOfClass:[UILabel class]]) {
-          ((UILabel *)tapView).textColor = [UIColor themeBlue2];
+          ((UILabel *)tapView).textColor = [UIColor themeRed1];
           ((UILabel *)tapView).backgroundColor = [UIColor whiteColor];
           _currentTapLabel = tapView;
     }

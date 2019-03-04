@@ -301,7 +301,7 @@ static NSMutableArray  * _Nullable identifierArr;
         }
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
-            itemView.nameLabel.textColor = [UIColor themeBlue1];
+            itemView.nameLabel.textColor = [UIColor themeGray1];
             UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
             if (!font) {
                 font = [UIFont systemFontOfSize:14];
@@ -443,7 +443,7 @@ static NSMutableArray  * _Nullable identifierArr;
         BOOL isFindHouse = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse;
 
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
-            itemView.titleLabel.textColor = [UIColor themeBlue1];
+            itemView.titleLabel.textColor = [UIColor themeGray1];
             
             UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:isFindHouse ? ([TTDeviceHelper isScreenWidthLarge320] ? 16 : 14) : 15];
             if (!font) {

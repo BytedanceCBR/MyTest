@@ -279,7 +279,7 @@
     }
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
-    self.tableView.sectionIndexColor = [UIColor themeBlue1];
+    self.tableView.sectionIndexColor = [UIColor themeGray1];
 }
 
 - (void)addSectionIndexs:(NSArray *)indexDatas {

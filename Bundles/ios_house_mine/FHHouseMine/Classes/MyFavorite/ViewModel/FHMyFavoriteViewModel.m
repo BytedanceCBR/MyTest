@@ -532,7 +532,7 @@ extern NSString *const kFHDetailFollowUpNotification;
         }
     }];
 
-    action.backgroundColor = [UIColor colorWithRed:236/255.0 green:77/255.0 blue:61/255.0 alpha:1];
+    action.backgroundColor = [UIColor themeRed1];
     UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
     config.performsFirstActionWithFullSwipe = NO;
 

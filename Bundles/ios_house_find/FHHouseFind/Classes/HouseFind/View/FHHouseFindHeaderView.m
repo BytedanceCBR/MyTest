@@ -25,7 +25,7 @@
     if (self) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont themeFontMedium:18];
-        _titleLabel.textColor = [UIColor themeBlue1];
+        _titleLabel.textColor = [UIColor themeGray1];
         
         [self addSubview:_titleLabel];
         

@@ -35,7 +35,7 @@
 
     self.label = [[UILabel alloc] init];
     _label.font = [UIFont themeFontRegular:14];
-    _label.textColor = [UIColor themeGray2];
+    _label.textColor = [UIColor themeGray3];
     [self addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.iconView.mas_bottom).offset(6);

@@ -51,7 +51,7 @@
 }
 
 - (void)setLabelStyle:(UILabel*) label {
-    label.textColor = [UIColor themeBlack];
+    label.textColor = [UIColor themeGray1];
     label.font = [UIFont themeFontRegular:16];
 }
 

@@ -29,6 +29,7 @@
 #import <MAMapKit/MAAnnotationView.h>
 #import <AMapSearchKit/AMapSearchKit.h>
 #import "UILabel+House.h"
+#import "UIColor+Theme.h"
 
 @interface FHDetailNeighborhoodInfoCell ()<MAMapViewDelegate, AMapSearchDelegate >
 
@@ -303,12 +304,20 @@
     _starsContainer = [[FHDetailStarsCountView alloc] init];
     [self.contentView addSubview:_starsContainer];
     
-    _nameKey = [UILabel createLabel:@"所属区域" textColor:@"#a1aab3" fontSize:15];
-    _nameValue = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
-    _schoolKey = [UILabel createLabel:@"教育资源" textColor:@"#a1aab3" fontSize:15];
-    _schoolLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
+    _nameKey = [UILabel createLabel:@"所属区域" textColor:@"" fontSize:15];
+    _nameKey.textColor = [UIColor themeGray3];
+    
+    _nameValue = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _nameValue.textColor = [UIColor themeGray1];
+    
+    _schoolKey = [UILabel createLabel:@"教育资源" textColor:@"" fontSize:15];
+    _schoolKey.textColor = [UIColor themeGray3];
+    
+    _schoolLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _schoolLabel.textColor = [UIColor themeGray1];
+    
     _mapImageView = [[UIImageView alloc] init];
-    _mapImageView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _mapImageView.backgroundColor = [UIColor themeGray7];
     _mapAnnotionImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200)];
     _bgView = [[UIView alloc] init];
     _bgView.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.5];

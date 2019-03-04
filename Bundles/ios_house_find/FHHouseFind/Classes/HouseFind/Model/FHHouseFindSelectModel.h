@@ -23,8 +23,8 @@ typedef NS_ENUM(NSInteger , FHSearchTabIdType) {
 
 @property(nonatomic , assign) NSInteger tabId;
 @property(nonatomic , strong) NSMutableSet *selectIndexes;
-@property(nonatomic , copy)   NSNumber *lowerPrice;
-@property(nonatomic , copy)   NSNumber *higherPrice;
+@property(nonatomic , copy)   NSString *lowerPrice; //输入要允许输入 0000000
+@property(nonatomic , copy)   NSString *higherPrice;
 @property(nonatomic , copy)   NSNumber *rate;
 @property(nonatomic , strong) FHSearchFilterConfigOption *configOption;
 
