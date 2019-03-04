@@ -53,8 +53,6 @@
     [self setupDefaultNavBar:NO];
     self.customNavBarView.leftBtn.hidden = YES;
     self.customNavBarView.title.text = @"消息";
-    self.navigationController.navigationBar.hidden = YES;
-    [self.view bringSubviewToFront:self.customNavBarView];
 }
 
 - (void)initView {
