@@ -24,7 +24,7 @@
 #import "TTCommentDataManager.h"
 #import "TTCommentDefines.h"
 #import "TTCommentWriteView.h"
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import "FHTraceEventUtils.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]

@@ -20,7 +20,7 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTNewsAccountBusiness/TTAccountBusiness.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import <TTUGCAttributedLabel.h>
 #import <TTShare/TTShareManager.h>
 #import <TTShare/TTWechatTimelineContentItem.h>

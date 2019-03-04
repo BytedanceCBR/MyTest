@@ -7,7 +7,7 @@
 //
 
 #import "TTGetDomainTask.h"
-#import "TTRouteSelectionServerConfig.h" //add by songlu
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>//add by songlu
 
 @implementation TTGetDomainTask
 

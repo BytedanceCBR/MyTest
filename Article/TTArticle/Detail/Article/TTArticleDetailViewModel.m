@@ -30,7 +30,7 @@
 #import <TTBaseLib/UIDevice+TTAdditions.h>
 #import <TTBaseLib/JSONAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
-#import <TTABManagerUtil.h>
+#import <TTABManager/TTABManagerUtil.h>
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
 
 @interface TTArticleDetailViewModel ()

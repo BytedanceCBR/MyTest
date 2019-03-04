@@ -16,7 +16,7 @@
 #import "TTURLDomainHelper.h"
 #import "TTInstallIDManager.h"
 #import <TTAccountBusiness.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTNetworkManager.h"
 #import "ExploreEntryManager.h"
 

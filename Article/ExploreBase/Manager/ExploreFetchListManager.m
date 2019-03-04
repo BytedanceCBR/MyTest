@@ -35,7 +35,7 @@
 #import "HorizontalCard.h"
 
 #import "TSVRecUserCardOriginalData.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 //#import "TTFollowCategoryFetchExtraManager.h"
 
 

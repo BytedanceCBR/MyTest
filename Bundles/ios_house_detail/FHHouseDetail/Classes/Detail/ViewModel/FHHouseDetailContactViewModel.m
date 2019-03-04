@@ -216,7 +216,7 @@
 
 - (void)fillFormAction
 {
-    [self.phoneCallViewModel fillFormAction];
+    [self.phoneCallViewModel fillFormActionWithCustomHouseId:self.customHouseId fromStr:self.fromStr];
 }
 
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle

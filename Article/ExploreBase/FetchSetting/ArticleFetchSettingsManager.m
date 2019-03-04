@@ -25,7 +25,7 @@
 #import "WDSettingHelper.h"
 #import "ExploreCellHelper.h"
 #import "ArticleWebViewToAppStoreManager.h"
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 #import "TTUISettingHelper.h"
 #import "TTLCSServerConfig.h"
 #import "TTTabBarManager.h"
@@ -35,7 +35,7 @@
 //#import "TTContactsUserDefaults.h"
 //#import "TTTelecomLogicSettings.h"
 #import "WDCommonLogic.h"
-#import "TTRNBundleManager.h"
+//#import "TTRNBundleManager.h"
 #import "TTDeviceHelper.h"
 //#import "TTFantasy.h"
 #import "TTRNCommonABTest.h"
@@ -60,7 +60,7 @@
 #import "TTInAppPushSettings.h"
 #import "TTAccountTestSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
-#import "TTKitchenMgr.h"
+#import <TTKitchen/TTKitchenMgr.h>
 #import "TTSettingsManager+SaveSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebViewContainerConfig.h>
 #import <TTRexxar/TTRPackageManager.h>
@@ -343,14 +343,14 @@
             NSString *version = [NSString stringWithFormat:@"%@",[reactSettings objectForKey:@"version"]];
             NSString *md5 = [reactSettings objectForKey:@"md5"];
             NSString *url = [reactSettings objectForKey:@"url"];
-            [[TTRNBundleManager sharedManager] updateBundleForModuleName:@"Profile"
-                                                              bundleInfo:^(TTRNBundleInfoBuilder * _Nonnull builder) {
-                                                                  builder.bundleUrl = url;
-                                                                  builder.version = version;
-                                                                  builder.md5 = md5;
-                                                              }
-                                                            updatePolicy:TTRNBundleUseBundleInAppIfVersionLow
-                                                              completion:NULL];
+//            [[TTRNBundleManager sharedManager] updateBundleForModuleName:@"Profile"
+//                                                              bundleInfo:^(TTRNBundleInfoBuilder * _Nonnull builder) {
+//                                                                  builder.bundleUrl = url;
+//                                                                  builder.version = version;
+//                                                                  builder.md5 = md5;
+//                                                              }
+//                                                            updatePolicy:TTRNBundleUseBundleInAppIfVersionLow
+//                                                              completion:NULL];
         }
         
         // pgc work library rn entry
@@ -396,17 +396,17 @@
                 if ([[widgetRNWidgetSettings allKeys] containsObject:@"patch_md5"]) {
                     patch_MD5 = [widgetRNWidgetSettings objectForKey:@"patch_md5"];
                 }
-                [[TTRNBundleManager sharedManager] updateBundleForModuleName:TTRNWidgetBundleName
-                                                                  bundleInfo:^(TTRNBundleInfoBuilder * _Nonnull builder) {
-                                                                      builder.bundleUrl = url;
-                                                                      builder.version = version;
-                                                                      builder.md5 = md5;
-                                                                      builder.bitmask = bitmask;
-                                                                      builder.patchUrl = patch_url;
-                                                                      builder.patchMD5 = patch_MD5;
-                                                                  }
-                                                                updatePolicy:TTRNBundleUseBundleInAppIfVersionLow
-                                                                  completion:NULL];
+//                [[TTRNBundleManager sharedManager] updateBundleForModuleName:TTRNWidgetBundleName
+//                                                                  bundleInfo:^(TTRNBundleInfoBuilder * _Nonnull builder) {
+//                                                                      builder.bundleUrl = url;
+//                                                                      builder.version = version;
+//                                                                      builder.md5 = md5;
+//                                                                      builder.bitmask = bitmask;
+//                                                                      builder.patchUrl = patch_url;
+//                                                                      builder.patchMD5 = patch_MD5;
+//                                                                  }
+//                                                                updatePolicy:TTRNBundleUseBundleInAppIfVersionLow
+//                                                                  completion:NULL];
             }
         }
     };
@@ -421,16 +421,16 @@
             NSString *version = [NSString stringWithFormat:@"%@",[commonRNSettings objectForKey:@"version"]];
             NSString *md5 = [commonRNSettings objectForKey:@"md5"];
             NSString *url = [commonRNSettings objectForKey:@"url"];
-            [[TTRNBundleManager sharedManager] updateBundleForModuleName:TTRNCommonBundleName
-                                                              bundleInfo:^(TTRNBundleInfoBuilder * _Nonnull builder) {
-                                                                  builder.bundleUrl = url;
-                                                                  builder.version = version;
-                                                                  builder.md5 = md5;
-                                                              }
-                                                            updatePolicy:TTRNBundleUpdateDefaultPolicy
-                                                              completion:^(NSURL * _Nullable localBundleURL, BOOL update, NSError * _Nullable error) {
-                                                                  widgetHandle();
-                                                              }];
+//            [[TTRNBundleManager sharedManager] updateBundleForModuleName:TTRNCommonBundleName
+//                                                              bundleInfo:^(TTRNBundleInfoBuilder * _Nonnull builder) {
+//                                                                  builder.bundleUrl = url;
+//                                                                  builder.version = version;
+//                                                                  builder.md5 = md5;
+//                                                              }
+//                                                            updatePolicy:TTRNBundleUpdateDefaultPolicy
+//                                                              completion:^(NSURL * _Nullable localBundleURL, BOOL update, NSError * _Nullable error) {
+//                                                                  widgetHandle();
+//                                                              }];
         }
     }else{
         widgetHandle();

@@ -9,7 +9,7 @@
 #import "TTVFeedListVideoBottomContainerView.h"
 #import <TTVideoService/VideoFeed.pbobjc.h>
 #import <TTVideoService/Common.pbobjc.h>
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTIconLabel+VerifyIcon.h"
 #import "TTVFeedItem+Extension.h"
 #import "TTVFeedCellMoreActionManager.h"
@@ -31,7 +31,7 @@
 #import "TTWeChatShare.h"
 #import "TTQQShare.h"
 //#import "TTDingTalkShare.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "AKUILayout.h"
 #import "TTVDiggAction.h"
 #define kLeftPadding        20
