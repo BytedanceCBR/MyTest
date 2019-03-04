@@ -17,12 +17,15 @@
 #import <FHCommonUI/UIView+House.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
+#import "FHHouseListBannerView.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import "FHHouseOldMainViewModel.h"
 
 
 @interface FHHouseOldHomeViewController ()<TTRouteInitializeProtocol>
 
 @property (nonatomic , strong) FHFakeInputNavbar *navbar;
-//@property (nonatomic,strong) FHHomeBannerView *bannerView;
+@property (nonatomic,strong) FHHouseListBannerView *bannerView;
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UITableView* tableView;
 
@@ -38,10 +41,11 @@
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 
-@property (nonatomic , strong) FHHouseListViewModel *viewModel;
+@property (nonatomic , strong) FHHouseOldMainViewModel *viewModel;
 
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
+@property (nonatomic , strong) NSArray<FHHouseListBannerItem *> *bannerItems;
 
 @property (nonatomic , copy) NSString *associationalWord;// 联想词
 @property (nonatomic , copy) NSString *suggestionParams; // sug
@@ -58,8 +62,10 @@
     if (self) {
         
         self.houseType = FHHouseTypeSecondHandHouse;
+        NSMutableDictionary *queryParams = paramObj.queryParams.mutableCopy;
+        queryParams[@"house_type"] = @"2";
+        paramObj.queryParams = queryParams;
         self.paramObj = paramObj;
-        self.houseType = FHHouseTypeSecondHandHouse;
         self.hidesBottomBarWhenPushed = YES;
         self.tracerModel.categoryName = [self categoryName];
         self.tracerDict = paramObj.userInfo.allInfo[@"tracer"];
@@ -107,7 +113,7 @@
     
     [self initNavbar];
     
-    self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    self.viewModel = [[FHHouseOldMainViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
     [self initFilter];
     [self setupViewModelBlock];
     
@@ -116,12 +122,34 @@
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
     [self.viewModel setRedirectTipView:self.redirectTipView];
-    
+
+    [self setupBannerView];
     [self.houseFilterViewModel trigerConditionChanged];
     
 }
 
--(void)initFilter
+- (void)setupBannerView
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (dataModel.houseOpData) {
+        NSMutableArray *items = @[].mutableCopy;
+        for (NSInteger index = 0; index < dataModel.houseOpData.items.count; index++) {
+            FHConfigDataOpData2ItemsModel *obj = dataModel.houseOpData.items[index];
+            FHHouseListBannerItem *item = [[FHHouseListBannerItem alloc]init];
+            item.title = obj.title;
+            item.subtitle = obj.descriptionStr;
+            item.openUrl = obj.openUrl;
+            FHConfigDataOpData2ItemsImageModel *imageModel = obj.image.firstObject;
+            if (imageModel) {
+                item.iconName = imageModel.url;
+            }
+            [items addObject:item];
+        }
+        [self.bannerView addBannerItems:items];
+    }
+}
+
+- (void)initFilter
 {
     id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
     self.houseFilterBridge = bridge;
@@ -132,7 +160,7 @@
     
     [self.houseFilterViewModel setFilterConditions:self.paramObj.queryParams];
     
-    self.viewModel.viewModelDelegate = self;
+//    self.viewModel.viewModelDelegate = self;
     [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
     
     [bridge showBottomLine:NO];
@@ -211,7 +239,7 @@
     
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.top.mas_equalTo(self.bannerView.mas_bottom);
     }];
     
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -276,14 +304,12 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.viewModel viewWillDisappear:animated];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
     [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
@@ -306,9 +332,15 @@
         make.height.mas_equalTo(height);
     }];
     
+    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.navbar.mas_bottom);
+        make.height.mas_equalTo(78);
+    }];
+    
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.top.mas_equalTo(self.bannerView.mas_bottom);
     }];
     
     [self.errorMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -317,11 +349,12 @@
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.bottom.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.navbar.mas_bottom);
+        make.top.mas_equalTo(self.bannerView.mas_bottom);
     }];
     
     [self.filterContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(self.containerView);
+        make.left.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.bannerView.mas_bottom);
         make.height.mas_equalTo(@44);
     }];
     
@@ -377,6 +410,15 @@
     [self.view addSubview:self.redirectTipView];
     
     [self.view addSubview:self.navbar];
+    self.bannerView = [[FHHouseListBannerView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.bannerView];
+    __weak typeof(self)wself = self;
+    self.bannerView.clickedItemCallBack = ^(NSInteger index) {
+        if (index > wself.bannerItems.count) {
+            return;
+        }
+    };
+
     [self.view addSubview:self.filterBgControl];
     
     _filterContainerView = [[UIView alloc]init];

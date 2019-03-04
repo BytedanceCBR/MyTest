@@ -216,6 +216,25 @@
 
 @end
 
+@implementation  FHConfigDataHouseOpDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"opStyle": @"op_style",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation  FHConfigDataOpDataModel
 
@@ -310,6 +329,30 @@
     NSDictionary *dict = @{
                            @"logPb": @"log_pb",
                            @"openUrl": @"open_url",
+                           @"descriptionStr": @"description",
+                           @"backgroundColor": @"background_color",
+                           @"textColor": @"text_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation  FHConfigDataHouseOpDataItemsModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logPb": @"log_pb",
+                           @"openUrl": @"open_url",
+                           @"descriptionStr": @"description",
                            @"backgroundColor": @"background_color",
                            @"textColor": @"text_color",
                            };
