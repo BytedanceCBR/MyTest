@@ -182,3 +182,35 @@
     return YES;
 }
 @end
+
+@implementation FHDetailDataCertificateLabelsModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"fontColor": @"font_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataCertificateModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"bgColor": @"bg_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end

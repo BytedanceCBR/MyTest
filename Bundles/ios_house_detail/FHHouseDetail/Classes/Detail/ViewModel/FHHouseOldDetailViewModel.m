@@ -244,9 +244,10 @@
         [self.items addObject:priceChangeHistoryModel];
     }
     // 添加属性列表
-    if (model.data.baseInfo) {
+    if (model.data.baseInfo || model.data.certificate) {
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.certificate = model.data.certificate;
         [self.items addObject:propertyModel];
     }
     // 推荐经纪人
