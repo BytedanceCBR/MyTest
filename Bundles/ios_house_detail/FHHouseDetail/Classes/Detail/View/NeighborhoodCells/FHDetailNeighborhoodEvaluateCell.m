@@ -154,9 +154,7 @@
             NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
             [tracerDic addEntriesFromDictionary:temp];
             tracerDic[@"enter_from"] = enter_from;
-            if (self.baseViewModel.listLogPB) {
-                tracerDic[@"log_pb"] = self.baseViewModel.listLogPB;
-            }
+            tracerDic[@"log_pb"] = model.log_pb ? model.log_pb : @"be_null";// 特殊，传入当前小区的logpb
             [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
             //
             NSString *reportParams = [self getEvaluateWebParams:tracerDic];
@@ -294,5 +292,14 @@
 
 // FHDetailNeighborhoodEvaluateModel
 @implementation FHDetailNeighborhoodEvaluateModel
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _log_pb = nil;
+    }
+    return self;
+}
 
 @end
