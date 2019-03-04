@@ -183,6 +183,7 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
         infoModel.evaluationInfo = model.data.evaluationInfo;
         [self.items addObject:infoModel];
     }
