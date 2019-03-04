@@ -21,6 +21,7 @@
 #import "FHHouseBridgeManager.h"
 #import <NSDictionary+TTAdditions.h>
 #import <NSTimer+NoRetain.h>
+#import <TTUIResponderHelper.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -123,6 +124,17 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         return;
     }
     
+//   NSLog(@"[TTUIResponderHelper topmostViewController] = %@",NSStringFromClass([[TTUIResponderHelper topmostViewController] class]));
+    
+    id<FHHouseEnvContextBridge> bridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    //如果不在第一个tab
+    if (![bridge isCurrentTabFirst]) {
+        return;
+    }
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:NSStringFromClass([[TTUIResponderHelper topmostViewController] class]) delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil];
+    [alert show];
+    
     NSDictionary *params = @{@"page_type":@"city_switch",
                              @"enter_from":@"default"};
     [FHEnvContext recordEvent:params andEventKey:@"city_switch_show"];
@@ -136,6 +148,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                                  @"enter_from":@"default"};
         [FHEnvContext recordEvent:params andEventKey:@"city_click"];
     }];
+    
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (openUrl) {
@@ -319,6 +332,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 }
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+                [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
 
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
