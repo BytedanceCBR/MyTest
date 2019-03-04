@@ -173,15 +173,23 @@ extern NSString *const kFHPhoneNumberCacheKey;
     
     [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
+            __strong typeof(self) strongSelf = weakSelf;
             [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-            [weakSelf popViewController];
+            [strongSelf popViewController];
+            [strongSelf loginSuccessedWithPhoneNum:phoneNumber];
         }else{
             NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
             [[ToastManager manager] showToast:errorMessage];
         }
     }];
+}
+
+- (void)loginSuccessedWithPhoneNum:(NSString *)phoneNumber {
+    if (self.loginDelegate.completeAlert) {
+        self.loginDelegate.completeAlert(TTAccountAlertCompletionEventTypeDone, phoneNumber);
+    }
 }
 
 - (void)traceLogin {

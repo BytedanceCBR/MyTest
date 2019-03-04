@@ -420,8 +420,10 @@ static BOOL s_loginAlertShowing = NO;
 + (void)showAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete {
     TTAcountFLoginDelegate *delegate = [[TTAcountFLoginDelegate alloc] init];
     delegate.completeAlert = complete;
+    NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [delegateTable addObject:delegate];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    [dict setObject:delegate forKey:@"delegate"];
+    [dict setObject:delegateTable forKey:@"delegate"];
 
     if (params.count > 0) {
         if ([params tta_stringForKey:@"enter_from"] != nil) {
@@ -434,7 +436,6 @@ static BOOL s_loginAlertShowing = NO;
         }
     }
 
-//    NSDictionary *dict = [NSDictionary dictionaryWithObject:delegate forKey:@"delegate"];
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:userInfo];
 }
