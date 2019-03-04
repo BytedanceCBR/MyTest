@@ -168,6 +168,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
+@property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
 @end
 
 @interface FHDetailOldModel : JSONModel
