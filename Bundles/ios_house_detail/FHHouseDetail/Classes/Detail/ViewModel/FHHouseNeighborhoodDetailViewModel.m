@@ -195,6 +195,7 @@
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        nearbyMapModel.title = model.data.neighborhoodInfo.name;
         //        nearbyMapModel.tableView = self.tableView;
         [self.items addObject:nearbyMapModel];
         

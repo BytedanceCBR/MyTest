@@ -453,6 +453,17 @@
     [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
     [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
     
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    
+    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
+        if (model.neighborhoodInfo.name.length > 0) {
+            [infoDict setValue:model.neighborhoodInfo.name forKey:@"title"];
+        }
+        if (model.rent_neighborhoodInfo.name.length > 0) {
+            [infoDict setValue:model.rent_neighborhoodInfo.name forKey:@"title"];
+        }
+    }
+
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     [tracer setValue:@"map" forKey:@"click_type"];
     [tracer setValue:@"house_info" forKey:@"element_from"];
