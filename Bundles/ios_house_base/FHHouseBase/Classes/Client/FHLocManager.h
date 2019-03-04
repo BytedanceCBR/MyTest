@@ -28,6 +28,7 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 @property (nonatomic, assign) NSInteger retryConfigCount;
 @property (nonatomic, assign) BOOL isShowSwitch;
 @property (nonatomic, assign) BOOL isShowSplashAdView;
+@property (nonatomic, assign) BOOL isShowHomeViewController;
 
 +(instancetype)sharedInstance;
 

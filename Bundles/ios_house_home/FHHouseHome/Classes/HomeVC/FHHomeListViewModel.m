@@ -43,6 +43,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, strong) NSMutableDictionary <NSString *, NSNumber *>* isItemsHasMoreCache;
 @property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property (nonatomic, strong) TTHttpTask * requestOriginTask;
+@property (nonatomic, strong) TTHttpTask * requestRefreshTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
@@ -137,8 +138,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         {
             self.tableViewV.hidden = YES;
             self.isFromLocalTestChange = YES;
-            [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-            [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+            [self checkCityStatus];
         }else
         {
             self.isFromLocalTestChange = NO;
@@ -191,8 +191,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
-                    [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-                    [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                    [self checkCityStatus];
                     isShowLocalTest = YES;
                     self.isFromLocalTestChange = YES;
                 }else
@@ -224,6 +223,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         //切换推荐房源类型
         self.categoryView.clickIndexCallBack = ^(NSInteger indexValue) {
             StrongSelf;
+            
+            if (self.requestRefreshTask != nil || self.requestOriginTask != nil) {
+                return ;
+            }
+            
             //上报stay埋点
             [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
             
@@ -329,9 +333,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)checkoutIsRequestCanCallBack:(NSNumber *)isHasCallBack
 {
     if (!_isHasCallBackForFirstTime) {
-        if (self.requestOriginTask) {
+        if ([self.requestOriginTask isKindOfClass:[TTHttpTask class]]) {
             [self.requestOriginTask cancel];
+            self.requestOriginTask = nil;
         }
+        
         if ([FHEnvContext isNetworkConnected]) {
             [self requestOriginData:NO];
         }
@@ -356,6 +362,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [requestDictonary setValue:@(houseType) forKey:@"house_type"];
     }
     [requestDictonary setValue:@(20) forKey:@"count"];
+    
+    if ([self.requestOriginTask isKindOfClass:[TTHttpTask class]]) {
+        [self.requestOriginTask cancel];
+        self.requestOriginTask = nil;
+    }
+    
     self.categoryView.segmentedControl.userInteractionEnabled = NO;
     
     if(isFirstChange)
@@ -367,6 +379,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     WeakSelf;
     self.requestOriginTask = [FHHomeRequestAPI requestRecommendFirstTime:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        
+        self.requestOriginTask = nil;
+        
         self.isHasCallBackForFirstTime = YES;
         if (!model || error) {
             
@@ -394,9 +409,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])
             {
                 self.isFromLocalTestChange = YES;
-                [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-                [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
-                
+                [self checkCityStatus];
                 return;
             }
             
@@ -404,8 +417,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     dispatch_async(dispatch_get_main_queue(), ^{
                         self.isFromLocalTestChange = YES;
-                        [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-                        [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                        [self checkCityStatus];
                     });
                 });
                 return;
@@ -495,10 +507,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
     }
     
+    if ([self.requestRefreshTask isKindOfClass:[TTHttpTask class]]) {
+        [self.requestRefreshTask cancel];
+        self.requestRefreshTask = nil;
+    }
+    
     self.categoryView.segmentedControl.userInteractionEnabled = NO;
     WeakSelf;
-    [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
+    self.requestRefreshTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
+        
+        self.requestRefreshTask = nil;
         
         [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
 
@@ -522,8 +541,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0 && !error) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                 self.tableViewV.hidden = YES;
                 self.isFromLocalTestChange = YES;
-                [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-                [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                [self checkCityStatus];
+
                 return;
             }
             
@@ -707,6 +726,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.homeViewController.mainTableView.hidden = YES;
         }
         [self.homeViewController tt_endUpdataData];
+    }
+}
+
+- (void)checkCityStatus
+{
+    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+        [self.homeViewController.view sendSubviewToBack:self.tableViewV];
+        [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
 }
 
