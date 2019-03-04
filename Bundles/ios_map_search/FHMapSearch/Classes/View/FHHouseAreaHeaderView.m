@@ -10,6 +10,7 @@
 #import <Masonry/Masonry.h>
 #import "FHMapSearchModel.h"
 #import <UIViewAdditions.h>
+#import "UIFont+House.h"
 
 
 @interface FHHouseAreaHeaderView ()
@@ -25,11 +26,11 @@
 
 @implementation FHHouseAreaHeaderView
 
--(UILabel *)labelColor:(UIColor *)color fontSize:(CGFloat)fontSize
+-(UILabel *)labelColor:(UIColor *)color font:(UIFont *)font
 {
     UILabel *label = [[UILabel alloc] init];
     label.textColor = color;
-    label.font = [UIFont systemFontOfSize:fontSize];
+    label.font = font;
     return label;
 }
 
@@ -38,13 +39,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         _topTipView = [[UIView alloc] init];
-        _topTipView.backgroundColor = RGB(0xe8, 0xea, 0xeb);
+        _topTipView.backgroundColor = [UIColor themeGray6];
         _topTipView.layer.cornerRadius = 1.5;
         _topTipView.layer.masksToBounds = YES;
         
-        _nameLabel = [self labelColor:[UIColor themeGray1] fontSize:20];
-        _locationLabel = [self labelColor:[UIColor themeGray1] fontSize:12 ];
-        _priceLabel = [self labelColor:[UIColor themeRed1] fontSize:16];
+        _nameLabel = [self labelColor:[UIColor themeGray1] font:[UIFont themeFontMedium:20]];
+        _locationLabel = [self labelColor:[UIColor themeGray3] font:[UIFont themeFontRegular:12]];
+        _priceLabel = [self labelColor:[UIColor themeRed1] font:[UIFont themeFontMedium:16]];
         
         _nameLabel.adjustsFontSizeToFitWidth = YES;
 
@@ -52,7 +53,7 @@
         _indicatorImgView = [[UIImageView alloc] initWithImage:img];
         
         _bottomLine = [[UIView alloc] init];
-        _bottomLine.backgroundColor = RGB(0xe8, 0xea, 0xeb);
+        _bottomLine.backgroundColor = [UIColor themeGray6];
         
         [self addSubview:_topTipView];
         [self addSubview:_nameLabel];

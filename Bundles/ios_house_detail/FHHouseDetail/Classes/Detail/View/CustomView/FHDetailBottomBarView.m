@@ -225,7 +225,7 @@
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         _contactBtn.layer.cornerRadius = 4;
-        _contactBtn.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
+        _contactBtn.backgroundColor = [UIColor themeRed1];
     }
     return _contactBtn;
 }

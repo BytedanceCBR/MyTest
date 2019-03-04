@@ -47,14 +47,14 @@
     self.namelabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self addSubview:_namelabel];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self addSubview:_descLabel];
     
-    self.totalPriceLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:RGB(0xf8, 0x59, 0x59)];
+    self.totalPriceLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:[UIColor themeRed1]];
     _totalPriceLabel.textAlignment = NSTextAlignmentRight;
     [self addSubview:_totalPriceLabel];
     
-    self.pricePreSqmLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    self.pricePreSqmLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     _pricePreSqmLabel.textAlignment = NSTextAlignmentRight;
     [self addSubview:_pricePreSqmLabel];
 }

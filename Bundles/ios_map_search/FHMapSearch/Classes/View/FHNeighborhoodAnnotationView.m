@@ -94,8 +94,8 @@
                 break;
             case FHHouseAnnotationTypeOverSelected:
             {
-                bgImageName = @"mapsearch_annotation_bg_grayblue";
-                arrowImageName = @"mapsearch_annotation_arrow_grayblue";
+                bgImageName = @"mapsearch_annotation_bg_grayRed";
+                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
                 textColor = [UIColor whiteColor];
             }
                 break;
@@ -122,7 +122,7 @@
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
     self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 29-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(15, 7, self.width-30, 17);
+    self.contentLabel.frame = CGRectMake(15, 8, self.width-30, 17);
 }
 
 //-(void)willMoveToSuperview:(UIView *)newSuperview

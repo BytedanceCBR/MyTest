@@ -18,6 +18,7 @@
 #import "FHExtendHotAreaButton.h"
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
+#import "UIColor+Theme.h"
 
 @interface FHDetailRentHouseOutlineInfoCell ()
 
@@ -106,7 +107,7 @@
     [_infoButton setTitle:@"举报" forState:UIControlStateNormal];
     NSAttributedString *attriStr = [[NSAttributedString alloc] initWithString:@"举报" attributes:@{
                                                                                                  NSFontAttributeName:[UIFont themeFontRegular:12],
-                                                                                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#299cff"]
+                                                                                                 NSForegroundColorAttributeName:[UIColor themeRed1]
                                                                                                  }];
     [_infoButton setAttributedTitle:attriStr forState:UIControlStateNormal];
     _infoButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);

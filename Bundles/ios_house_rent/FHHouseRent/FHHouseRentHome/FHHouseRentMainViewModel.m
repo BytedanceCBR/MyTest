@@ -164,7 +164,7 @@
     [_iconsHeaderView addItems:items];
     
     UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.viewController.view.frame), TABLE_HEADER_HEIGHT)];
-    header.backgroundColor  = [UIColor themeGray5];
+    header.backgroundColor  = [UIColor themeGray7];
     [header addSubview:_iconsHeaderView];
     
     self.iconHeaderView = header;
