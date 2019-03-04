@@ -136,7 +136,7 @@
         itemView.titleLabel.text = item.title;
         itemView.subtitleLabel.text = item.subtitle;
         NSURL *imgUrl = [NSURL URLWithString:item.iconName];
-        [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]];
+        [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]]; // add by zjing for test placeholder
         [self.containerView addSubview:itemView];
         itemView.tag = 100 + index;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];

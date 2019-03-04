@@ -12,7 +12,6 @@ PODS:
   - AFNetworking/Security (2.5.1.1-binary)
   - AFNetworking/Serialization (2.5.1.1-binary)
   - AKCommentPlugin (0.1.0)
-  - AKPay (0.1.0)
   - AKShareServicePlugin (0.1.0)
   - AKWDPlugin (0.1.0)
   - AKWebViewBundlePlugin (0.1.0)
@@ -171,12 +170,6 @@ PODS:
   - OpenSSL-Universal (1.0.1.20)
   - OpenUDID (0.1.0.1-binary)
   - Protobuf (3.0.1-ttv)
-  - React/Core (0.37.0)
-  - React/RCTActionSheet (0.37.0)
-  - React/RCTImage (0.37.0)
-  - React/RCTNetwork (0.37.0)
-  - React/RCTText (0.37.0)
-  - React/RCTWebSocket (0.37.0)
   - ReactiveObjC (3.0.0.1-binary)
   - RNCryptor-objc (3.0.5.1-binary)
   - RSSwizzle (0.1.1.1-binary)
@@ -401,7 +394,6 @@ DEPENDENCIES:
   - AFgzipRequestSerializer (= 0.0.2.1-binary)
   - AFNetworking (= 2.5.1.1-binary)
   - AKCommentPlugin (from `../AKPlugins/AKCommentPlugin`)
-  - AKPay (from `../AKPlugins/AKPay`)
   - AKShareServicePlugin (from `../AKPlugins/AKShareServicePlugin`)
   - AKWDPlugin (from `../AKPlugins/AKWDPlugin`)
   - AKWebViewBundlePlugin (from `../AKPlugins/AKWebViewBundlePlugin`)
@@ -489,12 +481,6 @@ DEPENDENCIES:
   - OpenSSL-Universal (= 1.0.1.20)
   - OpenUDID (= 0.1.0.1-binary)
   - Protobuf (= 3.0.1-ttv)
-  - React/Core (from `https://github.com/facebook/react-native.git`, tag `v0.37.0`)
-  - React/RCTActionSheet (from `https://github.com/facebook/react-native.git`, tag `v0.37.0`)
-  - React/RCTImage (from `https://github.com/facebook/react-native.git`, tag `v0.37.0`)
-  - React/RCTNetwork (from `https://github.com/facebook/react-native.git`, tag `v0.37.0`)
-  - React/RCTText (from `https://github.com/facebook/react-native.git`, tag `v0.37.0`)
-  - React/RCTWebSocket (from `https://github.com/facebook/react-native.git`, tag `v0.37.0`)
   - ReactiveObjC (= 3.0.0.1-binary)
   - RNCryptor-objc (= 3.0.5.1-binary)
   - RSSwizzle (= 0.1.1.1-binary)
@@ -601,8 +587,6 @@ DEPENDENCIES:
 EXTERNAL SOURCES:
   AKCommentPlugin:
     :path: ../AKPlugins/AKCommentPlugin
-  AKPay:
-    :path: ../AKPlugins/AKPay
   AKShareServicePlugin:
     :path: ../AKPlugins/AKShareServicePlugin
   AKWDPlugin:
@@ -641,9 +625,6 @@ EXTERNAL SOURCES:
   ios_house_filter:
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.2
-  React:
-    :git: https://github.com/facebook/react-native.git
-    :tag: v0.37.0
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAccountSDK:
@@ -695,9 +676,6 @@ CHECKOUT OPTIONS:
   ios_house_filter:
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.2
-  React:
-    :git: https://github.com/facebook/react-native.git
-    :tag: v0.37.0
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
@@ -712,7 +690,6 @@ SPEC CHECKSUMS:
   AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
   AFNetworking: fac3e1b64a9a165c0c7ac9de2d62660b3e875c7e
   AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
-  AKPay: b251cdc64c45f51f809e7b8318820aa96524f27f
   AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
   AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
   AKWebViewBundlePlugin: 684255bc41391dae352b786c0ef7b7e8cc4b794a
@@ -767,7 +744,6 @@ SPEC CHECKSUMS:
   OpenSSL-Universal: 6f05fcf94f2c5f5114c56c5da02080c0f674419a
   OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
   Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
-  React: aa8f585cbea131b6781c6ad7a1aee436e1ac5ddf
   ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
   RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
   RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
@@ -846,6 +822,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 8a65afc80b659e88a8f8431b44792eaf7c8a6ea1
+PODFILE CHECKSUM: a8e7dbc1720219badc2dec4c1463cfb58e0898b5
 
 COCOAPODS: 1.4.0

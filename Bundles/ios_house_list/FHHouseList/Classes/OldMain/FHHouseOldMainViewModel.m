@@ -417,10 +417,9 @@
         [self.tableView reloadData];
         [self updateTableViewWithMoreData:hasMore];
         
-        // add by zjing for test
-//        if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0) {
-//            [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
-//        }
+        if (self.isRefresh && itemArray.count > 0 && self.showNotify) {
+            self.showNotify(refreshTip);
+        }
         
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
             [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];

@@ -218,11 +218,10 @@
             [wself.houseFilterViewModel trigerConditionChanged];
         }
     };
-    
+
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
-        //        [wself showNotify:message];
+        [wself showNotify:message];
     };
-    
 }
 
 -(void)resetFilter:(TTRouteParamObj *)paramObj {
@@ -239,7 +238,7 @@
     
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.bannerView.mas_bottom);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -340,7 +339,7 @@
     
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.bannerView.mas_bottom);
+        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
     }];
     
     [self.errorMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -354,7 +353,7 @@
     
     [self.filterContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.bannerView.mas_bottom);
+        make.top.mas_equalTo(self.containerView);
         make.height.mas_equalTo(@44);
     }];
     
@@ -431,7 +430,7 @@
 
 #pragma mark - show notify
 
-- (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
+- (void)showNotify:(NSString *)message
 {
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
