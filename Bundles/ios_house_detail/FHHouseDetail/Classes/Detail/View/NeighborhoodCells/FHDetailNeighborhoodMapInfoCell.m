@@ -32,7 +32,7 @@
 #import "UIColor+Theme.h"
 #import <FHEnvContext.h>
 
-@interface FHDetailNeighborhoodMapInfoCell ()
+@interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate>
 
 @property (nonatomic, strong)   UIImageView       *mapImageView;
 @property (nonatomic, strong)   UIImageView       *mapAnnotionImageView;
@@ -156,6 +156,9 @@
     [self layoutIfNeeded];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"map";
+}
 
 - (void)setLocation:(NSString *)lat lng:(NSString *)lng
 {
