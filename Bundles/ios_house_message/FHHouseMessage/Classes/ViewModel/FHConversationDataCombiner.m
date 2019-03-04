@@ -52,7 +52,7 @@
     NSArray* result = [theItems sortedArrayUsingComparator:^NSComparisonResult(id<ConversationComparable>  _Nonnull obj1, id<ConversationComparable>  _Nonnull obj2) {
         return [FHConversationDataCombiner conversationComparison:obj1 toOther:obj2];
     }];
-    self.items = theItems;
+    self.items = result;
 }
 
 -(NSInteger)numberOfItems {
