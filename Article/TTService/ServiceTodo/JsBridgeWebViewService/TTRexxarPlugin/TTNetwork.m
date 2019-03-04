@@ -36,7 +36,9 @@
     method = [method.uppercaseString isEqualToString:@"POST"]? @"POST": @"GET";
     
     NSDictionary *header = [param tt_dictionaryValueForKey:@"header"];
-    NSDictionary *params = [param tt_dictionaryValueForKey:[method isEqualToString:@"GET"]? @"params": @"data"];
+    NSString *stringKey = [method isEqualToString:@"GET"] ? @"params" : @"data";
+    
+    NSDictionary *params = [param tt_objectForKey:stringKey];
     
     BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
     
@@ -76,7 +78,8 @@
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
     [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
         NSString *result = @"";
-        
+        result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+
         if([obj isKindOfClass:[NSData class]]){
             result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
         }
