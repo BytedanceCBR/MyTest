@@ -199,7 +199,7 @@
         NSMutableAttributedString *titleAttrStr = [[NSMutableAttributedString alloc] initWithString:model.title ? [NSString stringWithFormat:@"%@ ",model.title] : @""];
         NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [UIFont themeFontRegular:16],NSFontAttributeName,
-                                         [UIColor themeBlue1],NSForegroundColorAttributeName,nil];
+                                         [UIColor themeGray1],NSForegroundColorAttributeName,nil];
         [titleAttrStr addAttributes:attributeSelect range:NSMakeRange(0, titleAttrStr.length)];
         
         [textAttrStr appendAttributedString:titleAttrStr];

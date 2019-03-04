@@ -30,7 +30,7 @@ static const float kSegementedPadingTop = 5;
     if (self) {
         self.categoryLabel = [UILabel new];
         self.categoryLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
-        self.categoryLabel.textColor = [UIColor themeBlack];
+        self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.categoryLabel];
@@ -46,7 +46,7 @@ static const float kSegementedPadingTop = 5;
     if (self) {
         self.categoryLabel = [UILabel new];
         self.categoryLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
-        self.categoryLabel.textColor = [UIColor themeBlack];
+        self.categoryLabel.textColor = [UIColor themeGray1];
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.categoryLabel];

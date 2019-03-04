@@ -246,7 +246,7 @@
     if (!_line) {
         
         _line = [[UIView alloc]init];
-        _line.backgroundColor = [UIColor themeGrayPale];
+        _line.backgroundColor = [UIColor themeGray6];
     }
     return _line;
 }

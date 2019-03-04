@@ -60,7 +60,7 @@
     _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_rightBtn setTitle:@"导航" forState:UIControlStateNormal];
     [_rightBtn.titleLabel setFont:[UIFont themeFontRegular:16]];
-    [_rightBtn setTitleColor:[UIColor themeBlue] forState:UIControlStateNormal];
+    [_rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [self addSubview:_rightBtn];
     [_rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(36);

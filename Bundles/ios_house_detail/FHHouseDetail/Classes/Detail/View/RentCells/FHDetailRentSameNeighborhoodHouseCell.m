@@ -16,6 +16,7 @@
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
 #import "FHDetailMultitemCollectionView.h"
+#import "UIColor+Theme.h"
 
 @interface FHDetailRentSameNeighborhoodHouseCell ()
 
@@ -252,7 +253,7 @@
         }
         NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc] initWithString:str];
         attributeText.yy_font = [UIFont themeFontRegular:16];
-        attributeText.yy_color = [UIColor colorWithHexString:@"#081f33"];
+        attributeText.yy_color = [UIColor themeGray1];
         self.descLabel.attributedText = attributeText;
         self.priceLabel.text = model.pricing;
     }
@@ -264,18 +265,20 @@
     _icon.layer.cornerRadius = 4.0;
     _icon.layer.masksToBounds = YES;
     _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor colorWithHexString:@"#e8eaeb"] CGColor];
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     _icon.image = [UIImage imageNamed:@"default_image"];
     [self addSubview:_icon];
     
     _descLabel = [[YYLabel alloc] init];
     [self addSubview:_descLabel];
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
+    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _priceLabel.textColor = [UIColor themeRed1];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     
-    _spaceLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:12];
+    _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _spaceLabel.textColor = [UIColor themeGray3];
     [self addSubview:_spaceLabel];
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {

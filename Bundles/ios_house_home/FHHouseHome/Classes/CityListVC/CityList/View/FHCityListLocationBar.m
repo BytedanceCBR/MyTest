@@ -38,8 +38,8 @@
     [_cityNameBtn setTitle:@"" forState:UIControlStateNormal];
     [_cityNameBtn setTitle:@"" forState:UIControlStateHighlighted];
     _cityNameBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    [_cityNameBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateNormal];
-    [_cityNameBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateHighlighted];
+    [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
     [self addSubview:_cityNameBtn];
     [_cityNameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(22);
@@ -61,8 +61,8 @@
     [_reLocationBtn setTitle:@"重新定位" forState:UIControlStateNormal];
     [_reLocationBtn setTitle:@"重新定位" forState:UIControlStateHighlighted];
     _reLocationBtn.titleLabel.font = [UIFont themeFontRegular:14];
-    [_reLocationBtn setTitleColor:[UIColor colorWithHexString:@"#299cff"] forState:UIControlStateNormal];
-    [_reLocationBtn setTitleColor:[UIColor colorWithHexString:@"#299cff"] forState:UIControlStateHighlighted];
+    [_reLocationBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [_reLocationBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
     [self addSubview:_reLocationBtn];
     [_reLocationBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(-20);
@@ -81,8 +81,8 @@
     _isLocationSuccess = isLocationSuccess;
     _cityNameBtn.enabled = isLocationSuccess;
     if (isLocationSuccess) {
-        [_cityNameBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateNormal];
-        [_cityNameBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateHighlighted];
+        [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
         [self.cityNameBtn setTitle:_cityName forState:UIControlStateNormal];
         [self.cityNameBtn setTitle:_cityName forState:UIControlStateHighlighted];
     } else {
