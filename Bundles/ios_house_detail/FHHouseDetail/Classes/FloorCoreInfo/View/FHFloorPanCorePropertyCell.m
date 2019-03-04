@@ -53,7 +53,7 @@
             
             UILabel *valueLabel = [UILabel new];
             valueLabel.font = [UIFont themeFontRegular:15];
-            valueLabel.textColor = [UIColor themeBlue1];
+            valueLabel.textColor = [UIColor themeGray1];
             valueLabel.textAlignment = NSTextAlignmentLeft;
             valueLabel.numberOfLines = 0;
             valueLabel.text = itemModel.propertyValue;

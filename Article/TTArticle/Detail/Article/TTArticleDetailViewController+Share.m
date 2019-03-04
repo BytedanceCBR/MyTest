@@ -16,7 +16,8 @@
 #import <objc/runtime.h>
 //#import "TTShareToRepostManager.h"
 #import "TTActivityShareSequenceManager.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
+//#import "TTKitchenHeader.h"
 #import "TTWebImageManager.h"
 #import "TTShareConstants.h"
 

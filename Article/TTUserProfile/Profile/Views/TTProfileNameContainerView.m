@@ -17,7 +17,7 @@
 //#import "TTCertificationConst.h"
 #import "TTPersonalHomeManager.h"
 #import "TTPersonalHomeUserInfoResponseModel.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "SSCommonLogic.h"
 #import <TTAccountBusiness.h>
 

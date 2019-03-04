@@ -23,7 +23,7 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTMessageCenter.h"
 #import <TTSettingsManager/TTSettingsManager.h>
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTVVideoDetailNatantInfoShareView.h"
 
 #define kVerticalEdgeMargin             (([TTDeviceHelper isPadDevice]) ? 20 : 15)

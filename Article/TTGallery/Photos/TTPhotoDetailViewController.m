@@ -43,7 +43,7 @@
 #import "TTURLTracker.h"
 #import <TTTracker/TTTrackerProxy.h>
 #import "TTServiceCenter.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 //爱看
 #import "AKHelper.h"

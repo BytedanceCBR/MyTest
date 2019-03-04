@@ -42,7 +42,7 @@
 #import "TTActivityShareSequenceManager.h"
 #import "TTMessageCenter.h"
 #import "NSDictionary+TTGeneratedContent.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 #define kVerticalEdgeMargin             (([TTDeviceHelper isPadDevice]) ? 20 : 15)
 #define kTitleLabelLineHeight             [SSUserSettingManager detailVideoTitleLineHeight]

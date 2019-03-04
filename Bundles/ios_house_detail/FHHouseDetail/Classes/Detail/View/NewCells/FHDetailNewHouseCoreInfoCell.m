@@ -183,7 +183,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateNormal];
     [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateHighlighted];
     [_priceChangedNotify setTitle:@"变价通知" forState:UIControlStateNormal];
-    NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+    NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
     [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
     _priceChangedNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [self.contentView addSubview:_priceChangedNotify];
@@ -324,10 +324,10 @@ static const CGFloat kLabelKeyRightPandding = -20;
 //            [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }else
 //        {
-            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
             [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
             
-            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
             [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }
     }

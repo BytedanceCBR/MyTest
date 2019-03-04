@@ -39,7 +39,7 @@
 #import "TSVShortVideoOriginalData.h"
 #import "ExploreMomentDefine.h"
 #import "TTCommentDataManager.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 
 

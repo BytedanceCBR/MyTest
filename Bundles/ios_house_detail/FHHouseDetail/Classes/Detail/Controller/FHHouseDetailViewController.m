@@ -353,7 +353,7 @@
     UILabel *titleLabel = [UILabel new];
     FHDetailNavBar *navbar = (FHDetailNavBar *)[self getNaviBar];
     titleLabel.text = navTitle;
-    titleLabel.textColor = [UIColor themeBlue1];
+    titleLabel.textColor = [UIColor themeGray1];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [navbar addSubview:titleLabel];

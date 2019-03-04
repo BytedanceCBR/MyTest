@@ -14,7 +14,7 @@
 #import "TTDeviceUIUtils.h"
 #import "DetailActionRequestManager.h"
 #import "TTActionSheetController.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTUGCAttributedLabel.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Emoji.h"

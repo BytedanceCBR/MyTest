@@ -158,17 +158,17 @@
     _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:18],NSFontAttributeName,
-                                     [UIColor themeGray],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontMedium:18],NSFontAttributeName,
-                                     [UIColor themeBlue1],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     _segmentView.titleTextAttributes = attributeNormal;
     _segmentView.selectedTitleTextAttributes = attributeSelect;
     _segmentView.titleFormatter = ^NSAttributedString *(HMSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) {
         
         NSDictionary *attr = @{NSFontAttributeName:selected?[UIFont themeFontSemibold:20]:[UIFont themeFontRegular:20],
-                               NSForegroundColorAttributeName:selected?[UIColor themeBlue1]:[UIColor themeGray4]
+                               NSForegroundColorAttributeName:selected?[UIColor themeGray1]:[UIColor themeGray4]
                                };        
         return  [[NSAttributedString alloc] initWithString:title attributes:attr];
         

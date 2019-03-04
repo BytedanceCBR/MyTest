@@ -26,6 +26,7 @@
 #import "UIView+Toast.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
+#import "UIColor+Theme.h"
 
 // Positions
 NSString * CSToastPositionTop                       = @"CSToastPositionTop";
@@ -476,7 +477,7 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 - (instancetype)initWithDefaultStyle {
     self = [super init];
     if (self) {
-        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
+        self.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.8];
         self.titleColor = [UIColor whiteColor];
         self.messageColor = [UIColor whiteColor];
         self.maxWidthPercentage = 0.8;

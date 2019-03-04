@@ -70,7 +70,7 @@
             if ([modelItem isKindOfClass:[FHDetailNewCoreDetailDataPermitListModel class]]) {
                 UILabel *labelName = [UILabel new];
                 labelName.font = [UIFont themeFontRegular:15];
-                labelName.textColor = [UIColor themeBlue1];
+                labelName.textColor = [UIColor themeGray1];
                 labelName.numberOfLines = 0;
                 labelName.textAlignment = NSTextAlignmentCenter;
                 switch (i) {

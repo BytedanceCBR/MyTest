@@ -31,7 +31,7 @@
     // label
     _label = [[UILabel alloc] init];
     _label.font = [UIFont themeFontRegular:15];
-    _label.textColor = [UIColor themeBlue1];
+    _label.textColor = [UIColor themeGray1];
     _label.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -43,7 +43,7 @@
     // secondaryLabel
     _secondaryLabel = [[UILabel alloc] init];
     _secondaryLabel.font = [UIFont themeFontRegular:13];
-    _secondaryLabel.textColor = [UIColor themeGray4];
+    _secondaryLabel.textColor = [UIColor themeGray3];
     _secondaryLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_secondaryLabel];
     [_secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -80,7 +80,7 @@
     // label
     _label = [[UILabel alloc] init];
     _label.font = [UIFont themeFontRegular:15];
-    _label.textColor = [UIColor themeBlue1];
+    _label.textColor = [UIColor themeGray1];
     _label.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,7 +91,7 @@
     // secondaryLabel
     _secondaryLabel = [[UILabel alloc] init];
     _secondaryLabel.font = [UIFont themeFontRegular:13];
-    _secondaryLabel.textColor = [UIColor themeGray4];
+    _secondaryLabel.textColor = [UIColor themeGray3];
     _secondaryLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_secondaryLabel];
     [_secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -106,7 +106,7 @@
     // subLabel
     _subLabel = [[UILabel alloc] init];
     _subLabel.font = [UIFont themeFontRegular:12];
-    _subLabel.textColor = [UIColor themeGray4];
+    _subLabel.textColor = [UIColor themeGray3];
     _subLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_subLabel];
     [_subLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -122,7 +122,7 @@
     // _secondarySubLabel
     _secondarySubLabel = [[UILabel alloc] init];
     _secondarySubLabel.font = [UIFont themeFontRegular:13];
-    _secondarySubLabel.textColor = [UIColor themeGray4];
+    _secondarySubLabel.textColor = [UIColor themeGray3];
     _secondarySubLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_secondarySubLabel];
     [_secondarySubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -161,7 +161,7 @@
     _label = [[UILabel alloc] init];
     _label.text = @"历史记录";
     _label.font = [UIFont themeFontMedium:14];
-    _label.textColor = [UIColor themeBlue1];
+    _label.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.mas_equalTo(20);

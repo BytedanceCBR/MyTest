@@ -15,7 +15,7 @@
 #import "TTBaseMacro.h"
 #import <TTAccountManager.h>
 #import <FRApiModel.h>
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import <TTNetworkManager.h>
 
 @interface TTAvatarDecoratorManager()

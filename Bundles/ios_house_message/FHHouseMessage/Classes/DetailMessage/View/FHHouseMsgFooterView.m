@@ -38,7 +38,7 @@
     [_openAllBtn addTarget:self action:@selector(openAll) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_openAllBtn];
     
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeBlack]];
+    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     [self addSubview:_contentLabel];
     
     self.settingArrowImageView = [[UIImageView alloc] init];

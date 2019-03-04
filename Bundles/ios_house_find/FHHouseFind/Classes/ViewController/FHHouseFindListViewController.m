@@ -160,12 +160,12 @@
     _segmentView.isNeedNetworkCheck = NO;
     _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontRegular:18],NSFontAttributeName,
-                                     [UIColor themeGray],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontRegular:20],NSFontAttributeName,
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:18],NSFontAttributeName,
-                                     [UIColor themeBlue1],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontMedium:20],NSFontAttributeName,
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     _segmentView.titleTextAttributes = attributeNormal;
     _segmentView.selectedTitleTextAttributes = attributeSelect;
     [self.view addSubview:_segmentView];

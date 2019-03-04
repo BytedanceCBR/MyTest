@@ -9,7 +9,7 @@
 #import "TTCommentImageHelper.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <TTThemeManager.h>
-#import <UIImage+Masking.h>
+#import <TTVerifyKit/UIImage+Masking.h>
 #import <TTImageInfosModel.h>
 #import <TTImageView.h>
 #import <objc/runtime.h>

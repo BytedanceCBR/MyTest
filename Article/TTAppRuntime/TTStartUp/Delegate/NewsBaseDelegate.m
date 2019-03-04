@@ -32,14 +32,14 @@
 #import <UserNotifications/UserNotifications.h>
 #import "TTNotificationCenterDelegate.h"
 
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTPostDataHttpRequestSerializer.h"
 
 #import <DTShareKit/DTOpenKit.h>
 #import "TTShareConstants.h"
-#import "SSPayManager.h"
+//#import "SSPayManager.h"
 
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 #import "TTVersionHelper.h"
 #import "TTDeviceHelper.h"
 #import "TTURLUtils.h"
@@ -58,7 +58,7 @@
 #import "TTAuthorizeManager.h"
 
 #import "revision.h"
-#import "TTRouteSelectionServerConfig.h"
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>
 #import "TTOpenInSafariWindow.h"
 #import "TTLauchProcessManager.h"
 #import "TTStartupTask.h"
@@ -691,7 +691,7 @@ static NSTimeInterval lastTime;
 #pragma mark - TTWeChatSharePayDelegate
 
 - (void)weChatShare:(TTWeChatShare *)weChatShare payResponse:(PayResp *)payResponse {
-    [[SSPayManager sharedPayManager] handleWXPayResponse:payResponse];
+//    [[SSPayManager sharedPayManager] handleWXPayResponse:payResponse];
 }
 
 #pragma mark - TTWeChatShareRequestDelegate

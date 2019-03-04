@@ -16,7 +16,7 @@
 #import "ArticleURLSetting.h"
 #import "NewsUserSettingManager.h"
 #import <TTBaseLib/JSONAdditions.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTThemeManager.h"
 #import "TTStringHelper.h"
 #import "TTDeviceHelper.h"
@@ -29,7 +29,7 @@
 #import "TTPersonalHomeViewController.h"
 #import "FriendDataManager.h"
 #import "NSString+URLEncoding.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 @interface ArticleMomentProfileViewController ()
 

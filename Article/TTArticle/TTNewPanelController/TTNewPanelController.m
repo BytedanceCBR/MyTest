@@ -24,7 +24,7 @@
 #import "TTVPlayVideo.h"
 #import <Aspects/Aspects.h>
 #import "TTVSettingsConfiguration.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 //#ifndef TTModule
 //#import "TTSmallVideoManager.h"

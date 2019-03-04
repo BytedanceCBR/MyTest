@@ -15,8 +15,8 @@
 #import "ExploreOrderedData+TTAd.h"
 
 #import "SSImpressionModel.h"
-#import "TTVerifyIconHelper.h"
-#import "TTKitchenHeader.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 @implementation TTLayOutCellDataHelper
 
