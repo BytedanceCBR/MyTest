@@ -1,11 +1,11 @@
 //
-//  FHDetailOldMapInfoCell.m
+//  FHDetailNeighborhoodMapInfoCell.m
 //  FHHouseDetail
 //
-//  Created by 张元科 on 2019/3/4.
+//  Created by 谢飞 on 2019/3/4.
 //
 
-#import "FHDetailOldMapInfoCell.h"
+#import "FHDetailNeighborhoodMapInfoCell.h"
 #import <Masonry.h>
 #import "UIFont+House.h"
 #import <UIImageView+BDWebImage.h>
@@ -31,7 +31,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 
-@implementation FHDetailOldMapInfoCell
+@implementation FHDetailNeighborhoodMapInfoCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -43,5 +43,11 @@
 
     // Configure the view for the selected state
 }
+
+@end
+
+// FHDetailNeighborhoodMapInfoModel
+@implementation FHDetailNeighborhoodMapInfoModel
+
 
 @end

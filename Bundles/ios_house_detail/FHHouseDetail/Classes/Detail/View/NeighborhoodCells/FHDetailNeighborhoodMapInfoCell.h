@@ -1,8 +1,8 @@
 //
-//  FHDetailOldNeighborhoodInfoCell.h
+//  FHDetailNeighborhoodMapInfoCell.h
 //  FHHouseDetail
 //
-//  Created by 张元科 on 2019/3/4.
+//  Created by 谢飞 on 2019/3/4.
 //
 
 #import "FHDetailBaseCell.h"
@@ -14,9 +14,16 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-// 二手房小区信息
-@interface FHDetailOldNeighborhoodInfoCell : FHDetailBaseCell
+// 小区地图cell
+@interface FHDetailNeighborhoodMapInfoCell : FHDetailBaseCell
 
 @end
+
+
+// 地图所需数据
+@interface FHDetailNeighborhoodMapInfoModel : FHDetailBaseModel
+
+@end
+
 
 NS_ASSUME_NONNULL_END

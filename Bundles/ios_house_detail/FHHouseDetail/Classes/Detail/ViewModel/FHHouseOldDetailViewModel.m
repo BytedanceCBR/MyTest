@@ -30,6 +30,8 @@
 #import "FHDetailPriceTrendCellModel.h"
 #import "FHDetailPureTitleCell.h"
 #import "FHDetailNeighborhoodInfoCell.h"
+#import "FHDetailNeighborhoodMapInfoCell.h"
+#import "FHDetailNeighborhoodEvaluateCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -62,6 +64,8 @@
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankCell class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
 
 }
 // cell class
@@ -101,6 +105,14 @@
     // 小区信息
     if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
         return [FHDetailNeighborhoodInfoCell class];
+    }
+    // 小区评测
+    if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
+        return [FHDetailNeighborhoodEvaluateCell class];
+    }
+    // 小区地图
+    if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
+        return [FHDetailNeighborhoodMapInfoCell class];
     }
     // 购房小建议
     if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
@@ -278,6 +290,15 @@
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        [self.items addObject:infoModel];
+    }
+    // 小区评测
+    if (model.data.neighborhoodInfo.evaluationInfo) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
         [self.items addObject:infoModel];
     }
 
