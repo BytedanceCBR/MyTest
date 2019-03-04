@@ -300,6 +300,7 @@
         [self.items addObject:grayLine];
         FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
         infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
+        infoModel.log_pb = model.data.neighborhoodInfo.logPb;
         [self.items addObject:infoModel];
     }
 

@@ -21,37 +21,17 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHDetailBottomOpenAllView.h"
 #import "FHDetailStarsCountView.h"
-#import <MAMapKit/MAMapKit.h>
-#import <AMapLocationKit/AMapLocationKit.h>
-#import <AMapFoundationKit/AMapFoundationKit.h>
-#import <AMapFoundationKit/AMapFoundationKit.h>
-#import <MAMapKit/MAMapKit.h>
-#import <MAMapKit/MAAnnotationView.h>
-#import <AMapSearchKit/AMapSearchKit.h>
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 
-@interface FHDetailNeighborhoodInfoCell ()<MAMapViewDelegate, AMapSearchDelegate >
+@interface FHDetailNeighborhoodInfoCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
-@property (nonatomic, strong)   UIView       *containerView;
-@property (nonatomic, assign)   CGFloat       mapHightScale;
 
 @property (nonatomic, strong)   UILabel       *nameKey;
 @property (nonatomic, strong)   UILabel       *nameValue;
-@property (nonatomic, strong)   MAPointAnnotation       *pointAnnotation;
 @property (nonatomic, strong)   UILabel       *schoolKey;
 @property (nonatomic, strong)   UILabel       *schoolLabel;
-@property (nonatomic, strong)   UIImageView       *mapImageView;
-@property (nonatomic, strong)   UIImageView       *mapAnnotionImageView;
-@property (nonatomic, strong)   MAMapView       *mapView;
-@property (nonatomic, strong)   UIView       *bgView;
-@property (nonatomic, strong)   UILabel       *evaluateLabel;
-@property (nonatomic, strong)   UIImageView       *rightArrow;
-@property (nonatomic, strong)   FHDetailStarsCountView       *starsContainer;
-@property (nonatomic, strong)   UITapGestureRecognizer       *mapViewGesture;
-
-@property (nonatomic, assign)   CLLocationCoordinate2D       centerPoint;
 
 @end
 
@@ -59,48 +39,10 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    // Initialization code
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
-- (void)setLocation:(NSString *)lat lng:(NSString *)lng
-{
-    double theLat = [lat doubleValue];
-    double theLng = [lng doubleValue];
-    self.centerPoint = CLLocationCoordinate2DMake(theLat, theLng);
-    [self.mapView setCenterCoordinate:self.centerPoint animated:false];
-    [self addUserAnnotation];
-}
-- (void)addUserAnnotation {
-    MAPointAnnotation *pointAnnotation = [[MAPointAnnotation alloc] init];
-    pointAnnotation.coordinate = self.centerPoint;
-    [self.mapView addAnnotation:pointAnnotation];
-    self.pointAnnotation = pointAnnotation;
-    [self snapshotMap];
-}
-
-- (void)snapshotMap {
-    UIView *annotionView = [self.mapView viewForAnnotation:self.pointAnnotation];
-    UIView *superAnnotionView = annotionView.superview;
-    if (superAnnotionView) {
-        self.mapAnnotionImageView.image = [self getImageFromView:superAnnotionView];
-    } else {
-        self.mapAnnotionImageView.image = nil;
-    }
-}
-
-- (UIImage *)getImageFromView:(UIView *)view
-{
-    UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return imageResult;
 }
 
 - (void)refreshWithData:(id)data {
@@ -125,21 +67,8 @@
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     return @"neighborhood_detail";
 }
-// 小区评测
-- (NSArray *)elementTypeStringArray:(FHHouseType)houseType {
-    NSMutableArray *elementTypes = [NSMutableArray new];
-    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
-    // 二手房
-    if (model.neighborhoodInfo.evaluationInfo) {
-        [elementTypes addObject:@"neighborhood_evaluation"];
-    }
-    // 租房
-    if (model.rent_neighborhoodInfo.evaluationInfo) {
-        [elementTypes addObject:@"neighborhood_evaluation"];
-    }
-    // 二手房和租房只会存在一个
-    return elementTypes;
-}
+
+// 租房
 - (void)updateRentCellData {
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {
@@ -147,48 +76,8 @@
         self.headerView.label.text = headerName;
         NSString *districtName = model.rent_neighborhoodInfo.districtName;
         self.nameValue.text = districtName;
-        FHRentDetailResponseDataEvaluationInfo *evaluationInfo = model.rent_neighborhoodInfo.evaluationInfo;
-        if (evaluationInfo) {
-            self.starsContainer.hidden = NO;
-            [self.starsContainer updateStarsCount:evaluationInfo.totalScore];
-            [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(50);
-            }];
-            [self.nameKey mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.top.mas_equalTo(self.starsContainer.mas_bottom);
-                make.height.mas_equalTo(20);
-            }];
-        } else {
-            [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(0);
-            }];
-            self.starsContainer.hidden = YES;
-            [self.nameKey mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(20);
-                make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
-                make.height.mas_equalTo(20);
-            }];
-        }
-        
-        if (evaluationInfo.detailUrl.length > 0) {
-            self.bgView.hidden = NO;
-        } else {
-            self.bgView.hidden = YES;
-        }
-        
-        NSString *lat = model.rent_neighborhoodInfo.gaodeLat;
-        NSString *lng = model.rent_neighborhoodInfo.gaodeLng;
-        if (lat.length > 0 && lng.length > 0) {
-            [self setLocation:lat lng:lng];
-        }
         NSString *schoolName = model.rent_neighborhoodInfo.schoolInfo.schoolName;
-        if (schoolName.length) {
-            self.schoolLabel.text = schoolName;
-            [self schoolLabelIsHidden:NO];
-        } else {
-            [self schoolLabelIsHidden:YES];
-        }
+        [self updateSchoolName:schoolName];
     }
 }
 
@@ -205,66 +94,29 @@
         } else {
             self.nameValue.text = districtName;
         }
-        self.bgView.hidden = model.neighborhoodInfo.evaluationInfo.detailUrl.length > 0 ? NO : YES;
-        NSString *lat = model.neighborhoodInfo.gaodeLat;
-        NSString *lng = model.neighborhoodInfo.gaodeLng;
-        if (lat.length > 0 && lng.length > 0) {
-            [self setLocation:lat lng:lng];
-            FHDetailOldDataNeighborhoodInfoEvaluationInfoModel *evaluationInfo = model.neighborhoodInfo.evaluationInfo;
-            if (evaluationInfo) {
-                self.starsContainer.hidden = NO;
-                [self.starsContainer updateStarsCount:[evaluationInfo.totalScore integerValue]];
-                NSInteger scoreValue = [evaluationInfo.totalScore integerValue];
-                if (scoreValue > 0) {
-                    [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.height.mas_equalTo(50);
-                    }];
-                    self.starsContainer.hidden = NO;
-                } else {
-                    [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.height.mas_equalTo(0);
-                    }];
-                    self.starsContainer.hidden = YES;
-                }
-                if (evaluationInfo.detailUrl.length > 0) {
-                    self.bgView.hidden = NO;
-                } else {
-                    self.bgView.hidden = YES;
-                }
-            } else {
-                [self.starsContainer mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(0);
-                }];
-                self.starsContainer.hidden = YES;
-            }
-        }
+        NSString *schoolName = @"";
         if (model.neighborhoodInfo.schoolInfo.count > 0) {
             FHDetailOldDataNeighborhoodInfoSchoolInfoModel *schoolInfo = model.neighborhoodInfo.schoolInfo[0];
-            self.schoolLabel.text = schoolInfo.schoolName;
-            [self.schoolLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(20);
-            }];
-            [self.schoolKey mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(20);
-            }];
-            [self.mapImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.schoolKey.mas_bottom).offset(20);
-            }];
-            self.schoolKey.hidden = NO;
-            self.schoolLabel.hidden = NO;
-        } else {
-            [self.schoolLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(0);
-            }];
-            [self.schoolKey mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(0);
-            }];
-            [self.mapImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.schoolKey.mas_bottom).offset(10);
-            }];
-            self.schoolKey.hidden = YES;
-            self.schoolLabel.hidden = YES;
+            schoolName = schoolInfo.schoolName;
         }
+        [self updateSchoolName:schoolName];
+    }
+}
+
+- (void)updateSchoolName:(NSString *)schoolName {
+    self.schoolLabel.text = schoolName;
+    if (schoolName.length > 0) {
+        [self.nameKey mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(-51);
+        }];
+        self.schoolKey.hidden = NO;
+        self.schoolLabel.hidden = NO;
+    } else {
+        [self.nameKey mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(-20);
+        }];
+        self.schoolKey.hidden = YES;
+        self.schoolLabel.hidden = YES;
     }
 }
 
@@ -279,7 +131,6 @@
 }
 
 - (void)setupUI {
-    _mapHightScale = 0.36;
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"小区 ";
     _headerView.isShowLoadMore = YES; // 点击可以跳转小区详情
@@ -289,20 +140,6 @@
         make.height.mas_equalTo(46);
     }];
     [self.headerView addTarget:self  action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
-    //
-    self.mapView = [[MAMapView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200)];
-    self.mapView.runLoopMode = NSDefaultRunLoopMode;
-    self.mapView.showsCompass = NO;
-    self.mapView.showsScale = NO;
-    self.mapView.zoomEnabled = NO;
-    self.mapView.scrollEnabled = NO;
-    self.mapView.zoomLevel = 14;
-    self.mapView.showsUserLocation = NO;
-    self.mapView.delegate = self;
-    
-    // starsContainer
-    _starsContainer = [[FHDetailStarsCountView alloc] init];
-    [self.contentView addSubview:_starsContainer];
     
     _nameKey = [UILabel createLabel:@"所属区域" textColor:@"" fontSize:15];
     _nameKey.textColor = [UIColor themeGray3];
@@ -316,25 +153,12 @@
     _schoolLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _schoolLabel.textColor = [UIColor themeGray1];
     
-    _mapImageView = [[UIImageView alloc] init];
-    _mapImageView.backgroundColor = [UIColor themeGray7];
-    _mapAnnotionImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200)];
-    _bgView = [[UIView alloc] init];
-    _bgView.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.5];
-    _evaluateLabel = [UILabel createLabel:@"小区测评" textColor:@"#ffffff" fontSize:14];
-    _rightArrow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-white"]];
-    _mapViewGesture = [[UITapGestureRecognizer alloc] init];
-    //
-    [self.starsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(50);
-    }];
     [self.contentView addSubview:_nameKey];
     [self.nameKey mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(self.starsContainer.mas_bottom);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(20);
         make.height.mas_equalTo(20);
+        make.bottom.mas_equalTo(-51);// 一定有区域名称
     }];
     [self.contentView addSubview:self.nameValue];
     [self.nameValue mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -354,124 +178,6 @@
         make.top.mas_equalTo(self.schoolKey);
         make.height.mas_equalTo(20);
     }];
-    self.mapImageView.contentMode = UIViewContentModeScaleAspectFill;
-    [self.contentView addSubview:self.mapImageView];
-    [self.mapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(SCREEN_WIDTH * self.mapHightScale);
-        make.top.mas_equalTo(self.schoolKey.mas_bottom).offset(20);
-    }];
-    self.mapAnnotionImageView.backgroundColor = UIColor.clearColor;
-    [self.mapImageView addSubview:self.mapAnnotionImageView];
-    
-    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * self.mapHightScale);
-    __weak typeof(self) weakSelf = self;
-    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        weakSelf.mapImageView.image = resultImage;
-    }];
-    
-    [self.contentView addSubview:self.bgView];
-    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self.mapImageView);
-        make.height.mas_equalTo(40);
-    }];
-    
-    [self.bgView addSubview:self.evaluateLabel];
-    [self.evaluateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.mas_equalTo(self.bgView);
-        make.left.mas_equalTo(20);
-    }];
-    [self.bgView addSubview:self.rightArrow];
-    [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-13);
-        make.centerY.mas_equalTo(self.evaluateLabel);
-    }];
-    
-    UITapGestureRecognizer *evaluateGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(evaluateTapEvent)];
-    [self.bgView addGestureRecognizer:evaluateGest];
-    self.bgView.userInteractionEnabled = YES;
-    
-    self.mapViewGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(mapViewClick)];
-    [self.mapImageView addGestureRecognizer:self.mapViewGesture];
-    self.mapImageView.userInteractionEnabled = YES;
-}
-
-- (NSString *)getEvaluateWebParams:(NSDictionary *)dic {
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
-    if (data && !error) {
-        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-        return temp;
-    }
-    return nil;
-}
-
-// 小区测评
-- (void)evaluateTapEvent {
-    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
-    if (model) {
-        NSString *enter_from = @"old_detail";
-        NSString *neighborhood_id = @"0";
-        NSString *urlStr = @"";
-        NSDictionary *log_pb = nil;
-        if (model.neighborhoodInfo) {
-            // 二手房
-            enter_from = @"old_detail";
-            neighborhood_id = model.neighborhoodInfo.id;
-            urlStr = model.neighborhoodInfo.evaluationInfo.detailUrl;
-            log_pb = model.neighborhoodInfo.logPb;
-        }
-        if (model.rent_neighborhoodInfo) {
-            // 租房
-            enter_from = @"rent_detail";
-            neighborhood_id = model.rent_neighborhoodInfo.id;
-            urlStr = model.rent_neighborhoodInfo.evaluationInfo.detailUrl;
-            log_pb = model.rent_neighborhoodInfo.logPb;
-        }
-        if (urlStr.length > 0) {
-            NSMutableDictionary *tracerDic = [NSMutableDictionary new];
-            NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
-            [tracerDic addEntriesFromDictionary:temp];
-            tracerDic[@"enter_from"] = enter_from;
-            tracerDic[@"log_pb"] = log_pb ? log_pb : @"be_null";// 特殊，传入当前小区的logpb
-            [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
-            //
-            NSString *reportParams = [self getEvaluateWebParams:tracerDic];
-            NSString *jumpUrl = @"sslocal://webview";
-            NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",urlStr,reportParams];
-            
-            TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:@{@"title":@"小区评测",@"url":openUrl}];
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
-        }
-    }
-}
-
-- (void)mapViewClick {
-    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-    [infoDict setValue:@"公交" forKey:@"category"];
-    [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
-    [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
-    
-    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
-    
-    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
-        if (model.neighborhoodInfo.name.length > 0) {
-            [infoDict setValue:model.neighborhoodInfo.name forKey:@"title"];
-        }
-        if (model.rent_neighborhoodInfo.name.length > 0) {
-            [infoDict setValue:model.rent_neighborhoodInfo.name forKey:@"title"];
-        }
-    }
-
-    NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
-    [tracer setValue:@"map" forKey:@"click_type"];
-    [tracer setValue:@"house_info" forKey:@"element_from"];
-    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
-    [infoDict setValue:tracer forKey:@"tracer"];
-    
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
 // 跳转小区
@@ -509,39 +215,6 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
     }
-}
-
-- (void)schoolLabelIsHidden:(BOOL)isHidden {
-    self.schoolKey.hidden = isHidden;
-    self.schoolLabel.hidden = isHidden;
-    if (isHidden) {
-        [self.mapImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.mas_equalTo(self.contentView);
-            make.height.mas_equalTo(SCREEN_WIDTH * self.mapHightScale);
-            make.top.mas_equalTo(self.nameKey.mas_bottom).offset(20);
-        }];
-    } else {
-        [self.mapImageView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.mas_equalTo(self.contentView);
-            make.height.mas_equalTo(SCREEN_WIDTH * self.mapHightScale);
-            make.top.mas_equalTo(self.schoolKey.mas_bottom).offset(20);
-        }];
-    }
-}
-
-#pragma MapViewDelegata
-
-- (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id<MAAnnotation>)annotation
-{
-    NSString *pointResueseIdetifier = @"pointReuseIndetifier";
-    MAAnnotationView *annotationView = (MAAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:pointResueseIdetifier];
-    if (annotationView == nil) {
-        annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:pointResueseIdetifier];
-    }
-    annotationView.image = [UIImage imageNamed:@"icon-location"];
-    //设置中心点偏移，使得标注底部中间点成为经纬度对应点
-    annotationView.centerOffset = CGPointMake(0, -18);
-    return annotationView;
 }
 
 @end
