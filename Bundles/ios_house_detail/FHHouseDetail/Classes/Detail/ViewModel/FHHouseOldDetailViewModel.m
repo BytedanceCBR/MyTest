@@ -283,6 +283,18 @@
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
+    
+    //地图
+    if (model.data.neighborhoodInfo.gaodeLat && model.data.neighborhoodInfo.gaodeLng) {
+        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        infoModel.title = model.data.neighborhoodInfo.name;
+        infoModel.category = @"公交";
+        
+        [self.items addObject:infoModel];
+    }
+    
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线

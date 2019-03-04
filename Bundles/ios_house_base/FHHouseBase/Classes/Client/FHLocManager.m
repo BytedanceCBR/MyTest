@@ -72,6 +72,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.retryConfigCount = 3;
     self.isShowSwitch = YES;
     self.isShowSplashAdView = NO;
+    self.isShowHomeViewController = YES;
 }
 
 - (void)saveCurrentLocationData {
@@ -124,16 +125,16 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         return;
     }
     
-//   NSLog(@"[TTUIResponderHelper topmostViewController] = %@",NSStringFromClass([[TTUIResponderHelper topmostViewController] class]));
-    
     id<FHHouseEnvContextBridge> bridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
     //如果不在第一个tab
     if (![bridge isCurrentTabFirst]) {
         return;
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:NSStringFromClass([[TTUIResponderHelper topmostViewController] class]) delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil];
-    [alert show];
+    //如果不在首页
+    if (!self.isShowHomeViewController) {
+        return;
+    }
     
     NSDictionary *params = @{@"page_type":@"city_switch",
                              @"enter_from":@"default"};
@@ -332,7 +333,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 }
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-                [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
 
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
