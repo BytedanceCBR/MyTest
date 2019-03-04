@@ -12,7 +12,7 @@
 #import "NetworkUtilities.h"
 #import "TTIndicatorView.h"
 #import "SSCommonLogic.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTIndicatorView.h"
 #import "UIImage+TTThemeExtension.h"
 #import "ArticleProfileFollowConst.h"

@@ -65,12 +65,12 @@
     _cardView.layer.masksToBounds = YES;
     [self.contentView addSubview:_cardView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     self.titleLabel.textAlignment = NSTextAlignmentLeft;
     [_cardView addSubview:_titleLabel];
     
     self.imgView = [[UIImageView alloc] init];
-    _imgView.backgroundColor = [UIColor themeGrayPale];
+    _imgView.backgroundColor = [UIColor themeGray5];
     _imgView.contentMode = UIViewContentModeScaleAspectFill;
     _imgView.layer.cornerRadius = 4;
     _imgView.layer.masksToBounds = YES;
@@ -90,7 +90,7 @@
     _topLineView.backgroundColor = [UIColor themeGray6];
     [_lookDetailView addSubview:_topLineView];
     
-    self.lookDetailLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeBlack]];
+    self.lookDetailLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     [_lookDetailView addSubview:_lookDetailLabel];
     
     self.rightArror = [[UIImageView alloc] init];

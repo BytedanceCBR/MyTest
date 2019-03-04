@@ -32,7 +32,7 @@
 #import "UIView+CustomTimingFunction.h"
 #import "TTUIResponderHelper.h"
 #import <TTNewsAccountBusiness/TTAccountManager.h>
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "SSCommentInputHeader.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "AKHelper.h"

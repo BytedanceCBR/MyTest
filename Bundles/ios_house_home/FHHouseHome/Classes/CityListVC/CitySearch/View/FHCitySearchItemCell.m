@@ -26,7 +26,7 @@
 - (void)setupUI {
     // cityNameLabel
     self.cityNameLabel = [[UILabel alloc] init];
-    self.cityNameLabel.textColor = [UIColor themeBlue1];
+    self.cityNameLabel.textColor = [UIColor themeGray1];
     self.cityNameLabel.font = [UIFont themeFontRegular:15];
     [self.contentView addSubview:self.cityNameLabel];
     [self.cityNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {

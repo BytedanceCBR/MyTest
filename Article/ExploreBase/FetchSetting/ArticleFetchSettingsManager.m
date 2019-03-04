@@ -25,7 +25,7 @@
 #import "WDSettingHelper.h"
 #import "ExploreCellHelper.h"
 #import "ArticleWebViewToAppStoreManager.h"
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 #import "TTUISettingHelper.h"
 #import "TTLCSServerConfig.h"
 #import "TTTabBarManager.h"
@@ -60,7 +60,7 @@
 #import "TTInAppPushSettings.h"
 #import "TTAccountTestSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
-#import "TTKitchenMgr.h"
+#import <TTKitchen/TTKitchenMgr.h>
 #import "TTSettingsManager+SaveSettings.h"
 #import <AKWebViewBundlePlugin/TTDetailWebViewContainerConfig.h>
 #import <TTRexxar/TTRPackageManager.h>

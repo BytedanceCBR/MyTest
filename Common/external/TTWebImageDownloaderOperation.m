@@ -16,7 +16,7 @@
 #import <objc/runtime.h>
 #import "TTNetworkManager.h"
 #import "KVOController.h"
-#import "TTRouteSelectionServerConfig.h"
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>
 #import "SSCommonLogic.h"
 #import "SDWebImageDownloaderOperationBugFix.h"
 #import "TTStopWatch.h"

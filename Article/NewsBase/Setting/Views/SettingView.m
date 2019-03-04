@@ -42,7 +42,7 @@
 #import "SettingNormalCell.h"
 #import "SettingSwitch.h"
 
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 //#import "revision.h"
 
 #import "TTAuthorizeHintView.h"

@@ -16,7 +16,7 @@
 #import "TSVShortVideoPostTaskProtocol.h"
 //#import "TSVPublishManager.h"
 #import <TTBaseLib/NSStringAdditions.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "UIViewController+NavigationBarStyle.h"
 #import <TTAlphaThemedButton.h>
 #import <TTThemeManager.h>

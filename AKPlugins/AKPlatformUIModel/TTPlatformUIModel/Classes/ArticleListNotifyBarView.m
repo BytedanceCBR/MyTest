@@ -11,7 +11,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIView+CustomTimingFunction.h"
 #import "TTUIResponderHelper.h"
-
+#import "UIColor+Theme.h"
 
 #define kNotifyLabelFontSize 14.f
 
@@ -43,7 +43,7 @@
         self.backgroundColor = [UIColor clearColor];
         
         self.bgButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _bgButton.backgroundColors = @[@"e6f3ff",@"788289"]; // @[@"d5e9f7",@"788289"];
+        _bgButton.backgroundColors = @[[UIColor themeRed2],[UIColor themeRed2]]; // @[@"d5e9f7",@"788289"];
         [_bgButton addTarget:self action:@selector(bgButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_bgButton];
         
@@ -55,7 +55,7 @@
         _notifyLabel.font = [UIFont systemFontOfSize:kNotifyLabelFontSize];
         _notifyLabel.backgroundColor = [UIColor clearColor];
         _notifyLabel.textAlignment = NSTextAlignmentCenter;
-        _notifyLabel.textColors = @[@"299cff",@"23618e"]; //@[@"2a90d7",@"23618e"];
+        _notifyLabel.textColors = @[[UIColor themeRed3],[UIColor themeRed3]]; //@[@"2a90d7",@"23618e"];
         [self addSubview:_notifyLabel];
         
         [_notifyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -66,14 +66,12 @@
         _rightActionButton.hidden = YES;
         [_rightActionButton setBackgroundImage:[UIImage themedImageNamed:@"refresh_close"] forState:UIControlStateNormal];
         [_rightActionButton.titleLabel setFont:[UIFont systemFontOfSize:kNotifyLabelFontSize]];
-        _notifyLabel.textColors = @[@"299cff",@"23618e"];
-        
         [_rightActionButton addTarget:self action:@selector(rightActionButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [_bgButton addSubview:_rightActionButton];
         
         [_rightActionButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(_bgButton);
-            make.right.equalTo(_bgButton).offset(-14);
+            make.centerY.equalTo(self.bgButton);
+            make.right.equalTo(self.bgButton).offset(-14);
             make.height.width.equalTo(@50);
         }];
         

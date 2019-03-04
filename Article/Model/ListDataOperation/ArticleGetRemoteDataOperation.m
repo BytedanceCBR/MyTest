@@ -20,7 +20,7 @@
 
 #import "TTNetworkDefine.h"
 #import "TTNetworkManager.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTNetworkTouTiaoDefine.h"
 #import "NetworkUtilities.h"
 

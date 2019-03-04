@@ -275,6 +275,7 @@ static const float kSegementedPadingTop = 5;
     [infoDict setValue:selectCategory forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
+    [infoDict setValue:self.dataModel.title forKey:@"title"];
 
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     
@@ -319,7 +320,7 @@ static const float kSegementedPadingTop = 5;
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
 //    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
     _emptyInfoLabel.hidden = NO;
-    _emptyInfoLabel.textColor = [UIColor themeBlue1];
+    _emptyInfoLabel.textColor = [UIColor themeGray1];
     
     [_locationList addSubview:_emptyInfoLabel];
     

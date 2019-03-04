@@ -12,7 +12,7 @@
 #import "SSCommonLogic.h"
 #import "ArticleFetchSettingsManager.h"
 #import "SSWebViewController.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTThemeManager.h"
 #import "PGCAccountManager.h"
 #import "TTMessageNotificationTipsManager.h"

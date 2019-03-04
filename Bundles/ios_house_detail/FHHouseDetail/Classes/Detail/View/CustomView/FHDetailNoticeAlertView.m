@@ -277,7 +277,7 @@
 - (void)showErrorText
 {
     self.errorTextLabel.hidden = NO;
-    self.seperateLine.backgroundColor = [UIColor themeRed];
+    self.seperateLine.backgroundColor = [UIColor themeRed1];
 }
 
 - (void)tipBtnDidClick
@@ -325,7 +325,7 @@
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
         _titleLabel.font = [UIFont themeFontRegular:24];
-        _titleLabel.textColor = [UIColor themeBlack];
+        _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.numberOfLines = 0;
         _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
@@ -380,7 +380,7 @@
     if (!_errorTextLabel) {
         _errorTextLabel = [[UILabel alloc]init];
         _errorTextLabel.font = [UIFont themeFontRegular:12];
-        _errorTextLabel.textColor = [UIColor themeRed];
+        _errorTextLabel.textColor = [UIColor themeRed1];
         _errorTextLabel.text = @"手机格式错误";
         _errorTextLabel.hidden = YES;
     }

@@ -13,7 +13,7 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTActivityShareSequenceManager.h"
 #import "TTMessageCenter.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 static const CGFloat kPrePlayBtnBottom = 11.5;
 

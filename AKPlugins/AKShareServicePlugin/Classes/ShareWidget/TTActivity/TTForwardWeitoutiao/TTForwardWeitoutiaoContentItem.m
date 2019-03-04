@@ -6,7 +6,7 @@
 //
 //
 #import "TTForwardWeitoutiaoContentItem.h"
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 NSString * const TTActivityContentItemTypeForwardWeitoutiao = @"com.toutiao.ActivityContentItem.ForwardWeitoutiao";
 @implementation TTForwardWeitoutiaoContentItem

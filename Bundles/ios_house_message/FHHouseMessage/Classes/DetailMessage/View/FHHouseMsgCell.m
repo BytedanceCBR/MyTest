@@ -71,7 +71,7 @@
     [self.contentView addSubview:_imgView];
     
     self.imageTopLeftLabelBgView = [[UIView alloc] init];
-    _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed];
+    _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed1];
     _imageTopLeftLabelBgView.hidden = YES;
 //    _imageTopLeftLabelBgView.layer.cornerRadius = 4;
 //    _imageTopLeftLabelBgView.layer.masksToBounds = YES;
@@ -85,7 +85,7 @@
     self.infoPanel = [[UIView alloc] init];
     [self.contentView addSubview:_infoPanel];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
     [self.infoPanel addSubview:_titleLabel];
     
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
@@ -94,14 +94,14 @@
     self.areaLabel = [[YYLabel alloc] init];
     _areaLabel.numberOfLines = 0;
     _areaLabel.font = [UIFont themeFontRegular:12];
-    _areaLabel.textColor = [UIColor themeGray];
+    _areaLabel.textColor = [UIColor themeGray1];
     _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self.infoPanel addSubview:_areaLabel];
     
-    self.priceLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor themeRed]];
+    self.priceLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor themeRed1]];
     [self.contentView addSubview:_priceLabel];
     
-    self.roomSpaceLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray]];
+    self.roomSpaceLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
     [_roomSpaceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_roomSpaceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.contentView addSubview:_roomSpaceLabel];
@@ -225,9 +225,9 @@
     }
     
     if([model.status integerValue] == 1){ // 已下架
-        self.priceLabel.textColor = [UIColor themeGray];
+        self.priceLabel.textColor = [UIColor themeGray1];
     }else{
-        self.priceLabel.textColor = [UIColor themeRed];
+        self.priceLabel.textColor = [UIColor themeRed1];
     }
 }
 

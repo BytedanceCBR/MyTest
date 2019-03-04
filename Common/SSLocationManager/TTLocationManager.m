@@ -8,7 +8,7 @@
 
 #import "TTLocationManager.h"
 #import "TTNetworkManager.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "SSCommonLogic.h"
 #import "TTThemedAlertController.h"
 

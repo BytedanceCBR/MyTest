@@ -10,7 +10,7 @@
 #import "TTFeedContainerViewModel.h"
 #import "ExploreOrderedData+TTBusiness.h"
 #import "TTNetworkManager.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTLocationManager.h"
 #import "TTArticleCategoryManager.h"
 #import "NSStringAdditions.h"
