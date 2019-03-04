@@ -156,6 +156,9 @@
     [self layoutIfNeeded];
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"map";
+}
 
 - (void)setLocation:(NSString *)lat lng:(NSString *)lng
 {
