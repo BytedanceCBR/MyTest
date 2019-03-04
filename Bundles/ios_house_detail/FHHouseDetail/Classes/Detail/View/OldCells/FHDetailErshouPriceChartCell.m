@@ -93,7 +93,7 @@
 
         UILabel *label = [[UILabel alloc]init];
         label.font = [UIFont themeFontRegular:fontSize];
-        label.textColor = [UIColor themeBlack];
+        label.textColor = [UIColor themeGray1];
         label.text = trendName;
         [self.titleView addSubview:label];
 
@@ -179,7 +179,7 @@
 {
     switch (index) {
         case 0:
-            return [UIColor themeBlue];
+            return [UIColor themeRed1];
             break;
         case 1:
             return [UIColor colorWithHexString:@"#9eaab4"];
@@ -448,7 +448,7 @@
     self.chartView.showGenYLabels = YES; // 竖轴的label值
     self.chartView.xLabelColor = [UIColor themeGray3];
     self.chartView.xLabelFont = [UIFont themeFontRegular:12];
-    self.chartView.yHighlightedColor = [UIColor themeBlue];
+    self.chartView.yHighlightedColor = [UIColor themeRed1];
     self.chartView.axisColor = [UIColor colorWithHexString:@"#dae1e7"]; // x轴和y轴
     [self.chartView setXLabels:@[@"", @"", @"", @"", @"", @""]];
 
@@ -559,7 +559,7 @@
 {
     if (!_line) {
         _line = [[UIView alloc]init];
-        _line.backgroundColor = [UIColor themeGrayPale];
+        _line.backgroundColor = [UIColor themeGray6];
     }
     return _line;
 }
@@ -569,7 +569,7 @@
     if (!_priceUpValueLabel) {
         _priceUpValueLabel = [[UILabel alloc]init];
         _priceUpValueLabel.font = [UIFont themeFontSemibold:18];
-        _priceUpValueLabel.textColor = [UIColor themeBlack];
+        _priceUpValueLabel.textColor = [UIColor themeGray1];
     }
     return _priceUpValueLabel;
 }
@@ -609,7 +609,7 @@
     if (!_priceValueLabel) {
         _priceValueLabel = [[UILabel alloc]init];
         _priceValueLabel.font = [UIFont themeFontMedium:24];
-        _priceValueLabel.textColor = [UIColor themeBlack];
+        _priceValueLabel.textColor = [UIColor themeGray1];
     }
     return _priceValueLabel;
 }
@@ -630,7 +630,7 @@
     if (!_monthUpValueLabel) {
         _monthUpValueLabel = [[UILabel alloc]init];
         _monthUpValueLabel.font = [UIFont themeFontMedium:18];
-        _monthUpValueLabel.textColor = [UIColor themeBlack];
+        _monthUpValueLabel.textColor = [UIColor themeGray1];
     }
     return _monthUpValueLabel;
 }

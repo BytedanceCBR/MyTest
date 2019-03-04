@@ -48,8 +48,8 @@
     [_backBtn setTitle:@"取消" forState:UIControlStateNormal];
     [_backBtn setTitle:@"取消" forState:UIControlStateHighlighted];
     _backBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    [_backBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateNormal];
-    [_backBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateHighlighted];
+    [_backBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_backBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
     [self addSubview:_backBtn];
     [_searchAreaPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);

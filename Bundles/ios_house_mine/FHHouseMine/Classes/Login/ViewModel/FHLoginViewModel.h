@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHLoginViewController.h"
 #import "FHLoginView.h"
+#import "TTAccountLoginManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //屏蔽TTNavigationViewController带来的键盘变化
 @property(nonatomic , assign) BOOL isHideKeyBoard;
+@property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
 
 - (instancetype)initWithView:(FHLoginView *)tableView controller:(FHLoginViewController *)viewController;
 

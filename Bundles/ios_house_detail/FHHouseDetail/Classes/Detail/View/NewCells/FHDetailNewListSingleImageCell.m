@@ -424,7 +424,7 @@
         
         _majorTitle = [[UILabel alloc]init];
         _majorTitle.font = [UIFont themeFontRegular:16];
-        _majorTitle.textColor = [UIColor themeBlack];
+        _majorTitle.textColor = [UIColor themeGray1];
     }
     return _majorTitle;
 }
@@ -459,7 +459,7 @@
         
         _priceLabel = [[UILabel alloc]init];
         _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor themeRed];
+        _priceLabel.textColor = [UIColor themeRed1];
     }
     return _priceLabel;
 }
@@ -475,7 +475,7 @@
         }else {
             _originPriceLabel.font = [UIFont themeFontRegular:10];
         }
-        _originPriceLabel.textColor = [UIColor themeGray];
+        _originPriceLabel.textColor = [UIColor themeGray1];
         _originPriceLabel.hidden = YES;
     }
     return _originPriceLabel;
@@ -492,7 +492,7 @@
         }else {
             _roomSpaceLabel.font = [UIFont themeFontRegular:10];
         }
-        _roomSpaceLabel.textColor = [UIColor themeGray];
+        _roomSpaceLabel.textColor = [UIColor themeGray1];
     }
     return _roomSpaceLabel;
 }
@@ -533,7 +533,7 @@
     if (!_imageTopLeftLabelBgView) {
         
         _imageTopLeftLabelBgView = [[FHCornerView alloc]init];
-        _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed];
+        _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed1];
         _imageTopLeftLabelBgView.hidden = YES;
     }
     return _imageTopLeftLabelBgView;

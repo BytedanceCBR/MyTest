@@ -51,7 +51,7 @@
     self.iconView = [[UIImageView alloc] init];
     [self.contentView addSubview:_iconView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self.contentView addSubview:_titleLabel];
     
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];

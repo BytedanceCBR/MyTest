@@ -9,6 +9,7 @@
 #import "FHDetailNewModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import <FHEnvContext.h>
+#import "FHDetailHouseNameCell.h"
 
 static const CGFloat kLabelKeyFontSize = 12;
 
@@ -183,7 +184,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateNormal];
     [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateHighlighted];
     [_priceChangedNotify setTitle:@"变价通知" forState:UIControlStateNormal];
-    NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+    NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
     [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
     _priceChangedNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [self.contentView addSubview:_priceChangedNotify];
@@ -294,7 +295,11 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [infoDict setValue:@"公交" forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
-    
+    FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+    if ([model isKindOfClass:[FHDetailNewHouseCoreInfoModel class]]) {
+        FHDetailHouseNameModel * houseName = (FHDetailHouseNameModel *)model.houseName;
+        [infoDict setValue:houseName.name forKey:@"title"];
+    }
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     [tracer setValue:@"address" forKey:@"click_type"];
     [tracer setValue:@"house_info" forKey:@"element_from"];
@@ -324,10 +329,10 @@ static const CGFloat kLabelKeyRightPandding = -20;
 //            [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }else
 //        {
-            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
             [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
             
-            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
             [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }
     }

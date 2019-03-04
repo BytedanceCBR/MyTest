@@ -393,10 +393,10 @@
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
                 NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
-                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColorHex:@"#a1aab3" fontSize:12.0];
+                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColorHex:@"#bbbbbb" fontSize:12.0];
                 
-                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColorHex:@"#299cff" fontSize:15.0];
-                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColorHex:@"#299cff" fontSize:12.0];
+                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColorHex:@"#ff5869" fontSize:15.0];
+                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColorHex:@"#ff5869" fontSize:12.0];
                 
                 cell.secondaryLabel.text = model.tips;
                 cell.secondarySubLabel.text = model.tips2;
@@ -415,7 +415,7 @@
                     NSAttributedString *text2 = [self processHighlightedGray:model.text2];
                     [resultText appendAttributedString:text2];
                 }
-                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColorHex:@"#299cff" fontSize:15.0];
+                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColorHex:@"#ff5869" fontSize:15.0];
                 cell.secondaryLabel.text = [NSString stringWithFormat:@"约%@套", model.count];
                 if (indexPath.row == self.sugListData.count - 1) {
                     // 末尾

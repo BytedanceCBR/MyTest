@@ -7,7 +7,7 @@
 //
 
 #import "TTPayManagerOpenURLTask.h"
-#import "SSPayManager.h"
+//#import "SSPayManager.h"
 #import "TTRoute.h"
 #import "NewsBaseDelegate.h"
 //#import "SSADManager.h"
@@ -26,17 +26,18 @@
 #pragma mark - UIApplicationDelegate Method
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    BOOL ret = [[SSPayManager sharedPayManager] canHandleOpenURL:url];
-    if (!ret) {
-        ret = [[TTRoute sharedRoute] canOpenURL:url];
-        if (ret && [SharedAppDelegate appTopNavigationController]) {
-//            [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;
-            [TTAdSplashManager shareInstance].splashADShowType = TTAdSplashShowTypeHide;
-            [[self class] sendLaunchTrackIfNeededWithUrl:url];
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
-        }
-    }
-    return ret;
+//    BOOL ret = [[SSPayManager sharedPayManager] canHandleOpenURL:url];
+//    if (!ret) {
+//        ret = [[TTRoute sharedRoute] canOpenURL:url];
+//        if (ret && [SharedAppDelegate appTopNavigationController]) {
+////            [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;
+//            [TTAdSplashManager shareInstance].splashADShowType = TTAdSplashShowTypeHide;
+//            [[self class] sendLaunchTrackIfNeededWithUrl:url];
+//            [[TTRoute sharedRoute] openURLByPushViewController:url];
+//        }
+//    }
+//    return ret;
+    return NO;
 }
 
 + (void)sendLaunchTrackIfNeededWithUrl:(NSURL *)openURL {

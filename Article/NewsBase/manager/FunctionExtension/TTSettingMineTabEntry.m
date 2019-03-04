@@ -25,7 +25,7 @@
 //#import "TTCommonwealManager.h"
 #import "TTURLUtils.h"
 #import "NSDictionary+TTAdditions.h"
-#import "TTRNBundleManager.h"
+//#import "TTRNBundleManager.h"
 #import "NSString+URLEncoding.h"
 #import "AKLoginTrafficViewController.h"
 #define kTTSettingEntryCommonwealDidClicKey @"kTTSettingEntryCommonwealDidClicKey"

@@ -47,7 +47,7 @@
 
     self.nameLabel = [[UILabel alloc] init];
     _nameLabel.font = [UIFont themeFontRegular:14];
-    _nameLabel.textColor = [UIColor themeBlack];
+    _nameLabel.textColor = [UIColor themeGray1];
     _nameLabel.textAlignment = NSTextAlignmentCenter;
     
     [self addSubview:_nameLabel];

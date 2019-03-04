@@ -8,6 +8,7 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
 #import "FHDetailBaseModel.h"
+#import "FHDetailNeighborhoodModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -69,7 +70,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataNeighborhoodInfoSchoolInfoModel> *schoolInfo;
 @end
 
@@ -168,6 +169,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
+@property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
 @end
 
 @interface FHDetailOldModel : JSONModel

@@ -38,7 +38,7 @@
     _label = [[UILabel alloc] init];
     _label.text = @"猜你想搜";
     _label.font = [UIFont themeFontMedium:14];
-    _label.textColor = [UIColor themeBlue1];
+    _label.textColor = [UIColor themeGray1];
     [self addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.mas_equalTo(20);
@@ -275,12 +275,12 @@
 - (void)setupUI {
     
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    self.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+    self.backgroundColor = [UIColor themeGray7];
     self.layer.cornerRadius = 4.0;
     _label = [[UILabel alloc] init];
     _label.numberOfLines = 1;
     _label.font = [UIFont themeFontRegular:12];
-    _label.textColor = [UIColor themeBlue1];
+    _label.textColor = [UIColor themeGray1];
     [self addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.mas_equalTo(self).offset(6);
