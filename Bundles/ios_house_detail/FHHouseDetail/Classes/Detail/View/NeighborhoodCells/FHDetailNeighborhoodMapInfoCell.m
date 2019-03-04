@@ -32,7 +32,7 @@
 #import "UIColor+Theme.h"
 #import <FHEnvContext.h>
 
-@interface FHDetailNeighborhoodMapInfoCell ()
+@interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate>
 
 @property (nonatomic, strong)   UIImageView       *mapImageView;
 @property (nonatomic, strong)   UIImageView       *mapAnnotionImageView;
