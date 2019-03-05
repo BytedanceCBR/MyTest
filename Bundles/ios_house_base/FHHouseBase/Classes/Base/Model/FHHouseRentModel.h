@@ -68,4 +68,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHouseRentDataItemsModel (RecommendReason)
+
+-(BOOL)showRecommendReason;
+
+@end
+
 NS_ASSUME_NONNULL_END

@@ -161,9 +161,10 @@
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         id model = _houseList[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
         [cell updateWithHouseCellModel:cellModel];
         [cell refreshTopMargin: 20];
-        [cell refreshBottomMargin:isLastCell ? 20 : 0];
+        [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
         return cell;
     } else {
         // PlaceholderCell
@@ -196,10 +197,11 @@
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
             CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
             if (height < 1) {
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 height = [tableView fd_heightForCellWithIdentifier:kSingleImageCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
                 }];
             }
             return height;

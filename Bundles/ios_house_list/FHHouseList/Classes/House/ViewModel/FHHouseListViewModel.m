@@ -831,11 +831,11 @@
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
                 
                 if (indexPath.row < self.houseList.count) {
-                    
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];                    
                 }
                 return cell;
             } else {
@@ -896,8 +896,12 @@
             return height;
         } else {
             if (indexPath.section == 0) {
+                
+                FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+                
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                return isLastCell ? 125 : 105;
+                return (isLastCell ? 125 : 105)+reasonHeight;
 //                if (indexPath.row < self.houseList.count) {
 //
 //                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];

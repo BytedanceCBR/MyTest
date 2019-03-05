@@ -16,6 +16,7 @@
 #import "FHCornerView.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHHomeHouseModel.h"
+#import "FHHouseRecommendReasonView.h"
 
 @interface FHSingleImageInfoCell () <FHHouseSingleImageInfoCellBridgeDelegate>
 
@@ -28,6 +29,7 @@
 @property(nonatomic, strong) UILabel *priceLabel;
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *roomSpaceLabel;
+@property(nonatomic, strong) FHHouseRecommendReasonView *recommendReasonView;
 
 @property(nonatomic, weak) UIView *infoPanel;
 
@@ -160,6 +162,15 @@
         make.right.mas_equalTo(@0);
         make.center.mas_equalTo(self.imageTopLeftLabelBgView);
     }];
+    
+    [self.infoPanel addSubview:self.recommendReasonView];
+    [self.recommendReasonView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(infoPanel);
+        make.right.mas_equalTo(infoPanel);
+        make.top.mas_equalTo(self.priceLabel.mas_bottom).offset(2);
+        make.height.mas_equalTo(16);
+    }];
+    self.recommendReasonView.hidden = YES;
     
     _lastShowTag = YES;
 
@@ -430,6 +441,13 @@
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
+    if (model.recommendReasons.count > 0) {
+        self.recommendReasonView.hidden = NO;
+        [self.recommendReasonView setReasons:model.recommendReasons];
+    }else{
+        self.recommendReasonView.hidden = YES;
+    }
+    
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
         
         self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
@@ -521,6 +539,7 @@
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel andIsFirst:(BOOL)isFirst andIsLast:(BOOL)isLast
 {
     _cellModel = cellModel;
+    CGFloat recommendHeight = 0;
     
     switch (cellModel.houseType) {
         case FHHouseTypeNewHouse:
@@ -529,6 +548,7 @@
             break;
         case FHHouseTypeSecondHandHouse:
             [self updateWithSecondHouseModel:cellModel.secondModel];
+            recommendHeight = [cellModel.secondModel showRecommendReason]?[FHSingleImageInfoCell recommendReasonHeight]:0;
             break;
         case FHHouseTypeRentHouse:
             [self updateWithRentHouseModel:cellModel.rentModel];
@@ -548,10 +568,10 @@
     }
     
     if (isLast) {
-        [self refreshBottomMargin:20];
+        [self refreshBottomMargin:20+recommendHeight];
     }else
     {
-        [self refreshBottomMargin:0];
+        [self refreshBottomMargin:recommendHeight];
     }
     
 }
@@ -650,6 +670,14 @@
     return _roomSpaceLabel;
 }
 
+-(UILabel *)recommendReasonView {
+    
+    if (!_recommendReasonView) {
+        _recommendReasonView = [[FHHouseRecommendReasonView alloc] init];
+    }
+    return _recommendReasonView;
+}
+
 -(UIView *)headView {
     
     if (!_headView) {
@@ -705,6 +733,11 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
++(CGFloat)recommendReasonHeight
+{
+    return 22;
 }
 
 @end

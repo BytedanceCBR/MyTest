@@ -183,9 +183,10 @@
             FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:oldModel];
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
                 FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 [imageInfoCell updateWithHouseCellModel:cellModel];
                 [imageInfoCell refreshTopMargin:20];
-                [imageInfoCell refreshBottomMargin:0];
+                [imageInfoCell refreshBottomMargin:reasonHeight];
             }
         }
     }
@@ -199,6 +200,13 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    id model = _houseList[indexPath.row];
+    if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
+        if ([oldModel showRecommendReason]) {
+            return 105+[FHSingleImageInfoCell recommendReasonHeight];
+        }
+    }
     return 105;
 }
 
