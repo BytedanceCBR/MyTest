@@ -23,6 +23,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 地图所需数据
 @interface FHDetailNeighborhoodMapInfoModel : FHDetailBaseModel
 
+@property (nonatomic, copy , nullable) NSString *gaodeLng;
+@property (nonatomic, copy , nullable) NSString *gaodeLat;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *category;
+
 @end
 
 

@@ -21,6 +21,7 @@
 #import "FHHouseBridgeManager.h"
 #import <NSDictionary+TTAdditions.h>
 #import <NSTimer+NoRetain.h>
+#import <TTUIResponderHelper.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -71,6 +72,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.retryConfigCount = 3;
     self.isShowSwitch = YES;
     self.isShowSplashAdView = NO;
+    self.isShowHomeViewController = YES;
 }
 
 - (void)saveCurrentLocationData {
@@ -123,6 +125,17 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         return;
     }
     
+    id<FHHouseEnvContextBridge> bridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+    //如果不在第一个tab
+    if (![bridge isCurrentTabFirst]) {
+        return;
+    }
+    
+    //如果不在首页
+    if (!self.isShowHomeViewController) {
+        return;
+    }
+    
     NSDictionary *params = @{@"page_type":@"city_switch",
                              @"enter_from":@"default"};
     [FHEnvContext recordEvent:params andEventKey:@"city_switch_show"];
@@ -136,6 +149,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                                  @"enter_from":@"default"};
         [FHEnvContext recordEvent:params andEventKey:@"city_click"];
     }];
+    
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (openUrl) {
