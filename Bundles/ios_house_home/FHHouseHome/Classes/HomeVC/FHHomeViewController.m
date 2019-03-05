@@ -112,7 +112,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             self.mainTableView.contentInset = inset;
             [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
      
-//            [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+//    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }];
 //        [UIView animateWithDuration:0.3 animations:^{
 //
@@ -214,11 +214,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)willDisappear
 {
-//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"disappear" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//    [alertView show];
-    
     [FHLocManager sharedInstance].isShowHomeViewController = NO;
 }
+
 
 - (void)didDisappear
 {
