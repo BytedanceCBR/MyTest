@@ -346,7 +346,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 //        }
 //    }
     
-    [self requestPoiInfo:self.centerPoint andKeyWord:@"交通"];
+    [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
 }
 
 - (void)createMenu
