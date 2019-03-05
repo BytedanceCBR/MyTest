@@ -1548,7 +1548,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:fproject/ios_house_filter.git
     :tag: 0.5.2
   ios_house_im:
-    :commit: da62ca89fd4d07985ac632df504e13861b3c674f
+    :commit: f3c5cb09458d56868a0d0f7f1a6fde6aba21d492
     :git: git@code.byted.org:fproject/ios_house_im.git
   React:
     :git: https://github.com/facebook/react-native.git
