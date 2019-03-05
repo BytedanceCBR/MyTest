@@ -7,6 +7,8 @@
 
 #import "FHRefreshCustomFooter.h"
 #import <UIViewAdditions.h>
+#import <UIColor+Theme.h>
+#import <UIFont+House.h>
 
 @interface FHRefreshCustomFooter ()
 
@@ -29,8 +31,8 @@
     
     // 添加label
     UILabel *label = [[UILabel alloc] init];
-    label.textColor = [UIColor colorWithRed: 34.f/ 255.f green: 34.f/ 255.f blue: 34.f/ 255.f alpha:1];
-    label.font = [UIFont systemFontOfSize:12];
+    label.textColor = [UIColor themeGray3];
+    label.font = [UIFont themeFontRegular:12];
     label.textAlignment = NSTextAlignmentCenter;
     [self addSubview:label];
     self.label = label;
@@ -67,8 +69,8 @@
         self.loadingIndicator.left = self.label.right + 5;
     }
     
-    self.loadingIndicator.centerY = self.mj_h / 2;
-    self.label.centerY = self.loadingIndicator.centerY;
+    self.loadingIndicator.centerY = self.mj_h / 2 + 3;
+    self.label.centerY = self.loadingIndicator.centerY + 3;
     
 }
 
