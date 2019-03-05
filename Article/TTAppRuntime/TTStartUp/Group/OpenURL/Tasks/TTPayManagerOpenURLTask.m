@@ -40,18 +40,18 @@
     return NO;
 }
 
-+ (void)sendLaunchTrackIfNeededWithUrl:(NSURL *)openURL {
-    NSString *openURLString = [openURL absoluteString];
-    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:openURLString]];
-
-    NSString *page = paramObj.host;
-    NSDictionary *params = paramObj.queryParams;
-    if ([page isEqualToString:@"home"] && params[@"growth_from"]) {
-        wrapperTrackEvent(@"launch", params[@"growth_from"]);
-        SSLog(@">>>> Launch: growth_from : %@",params);
-    }
-    
-    SSLog(@">>>> Launch : openURL: %@",openURLString);
-}
+//+ (void)sendLaunchTrackIfNeededWithUrl:(NSURL *)openURL {
+//    NSString *openURLString = [openURL absoluteString];
+//    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:openURLString]];
+//
+//    NSString *page = paramObj.host;
+//    NSDictionary *params = paramObj.queryParams;
+//    if ([page isEqualToString:@"home"] && params[@"growth_from"]) {
+//        wrapperTrackEvent(@"launch", params[@"growth_from"]);
+//        SSLog(@">>>> Launch: growth_from : %@",params);
+//    }
+//    
+//    SSLog(@">>>> Launch : openURL: %@",openURLString);
+//}
 
 @end
