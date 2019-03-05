@@ -50,7 +50,7 @@
     [self addSubview:_settingArrowImageView];
     
     _topBorderView = [[UIView alloc] init];
-    _topBorderView.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _topBorderView.backgroundColor = [UIColor themeGray6];
     [self addSubview:_topBorderView];
     CGFloat topBorderHeight = 0.5;
     if (UIScreen.mainScreen.scale > 2) {

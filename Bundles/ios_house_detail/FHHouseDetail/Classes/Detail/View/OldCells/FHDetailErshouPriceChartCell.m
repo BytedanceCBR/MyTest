@@ -182,13 +182,13 @@
             return [UIColor themeRed1];
             break;
         case 1:
-            return [UIColor colorWithHexString:@"#9eaab4"];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         case 2:
-            return [UIColor colorWithHexString:@"#e1e3e6"];
+            return [UIColor themeGray5];
             break;
         default:
-            return [UIColor colorWithHexString:@"#e1e3e6"];
+            return [UIColor themeGray5];
             break;
     }
 }
@@ -197,7 +197,7 @@
 {
     switch (index) {
         case 0:
-            return @"detail_circle_blue";
+            return @"detail_circle_red";
             break;
         case 1:
             return @"detail_circle_dark";
@@ -435,7 +435,7 @@
     self.chartView.chartMarginLeft = 20;
     self.chartView.chartMarginRight = 20;
     self.chartView.backgroundColor = [UIColor whiteColor];
-    self.chartView.yGridLinesColor = [UIColor colorWithHexString:@"#ebeff2"];
+    self.chartView.yGridLinesColor = [UIColor themeGray6];
     self.chartView.showYGridLines = YES; // 横着的虚线
     [self.chartView.chartData enumerateObjectsUsingBlock:^(PNLineChartData *obj, NSUInteger idx, BOOL *stop) {
         obj.pointLabelColor = [UIColor blackColor];
@@ -449,7 +449,7 @@
     self.chartView.xLabelColor = [UIColor themeGray3];
     self.chartView.xLabelFont = [UIFont themeFontRegular:12];
     self.chartView.yHighlightedColor = [UIColor themeRed1];
-    self.chartView.axisColor = [UIColor colorWithHexString:@"#dae1e7"]; // x轴和y轴
+    self.chartView.axisColor = [UIColor themeGray6]; // x轴和y轴
     [self.chartView setXLabels:@[@"", @"", @"", @"", @"", @""]];
 
     self.chartView.delegate = self;

@@ -277,7 +277,7 @@
     _icon.layer.cornerRadius = 4.0;
     _icon.layer.masksToBounds = YES;
     _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor colorWithHexString:@"#e8eaeb"] CGColor];
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self addSubview:_icon];
     
     _descLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];

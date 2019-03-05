@@ -83,7 +83,7 @@
     
     
     _seperatorLine = [[UIView alloc] init];
-    _seperatorLine.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _seperatorLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:_seperatorLine];
     [_seperatorLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
