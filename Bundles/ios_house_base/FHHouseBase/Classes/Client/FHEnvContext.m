@@ -22,6 +22,7 @@
 #import "TTNetworkUtilities.h"
 #import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
+#import "FHMessageManager.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 

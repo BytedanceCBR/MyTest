@@ -125,6 +125,10 @@
     }];
 }
 
+- (NSInteger)getTotalUnreadMessageCount {
+    return _unreadSystemMsgCount + _unreadChatMsgCount;
+}
+
 #pragma -- IMChatMessageUnreadCountObserver --
 - (void)onMessageUnreadCountChanged:(NSInteger)unreadCount {
     if (unreadCount < 0) {
