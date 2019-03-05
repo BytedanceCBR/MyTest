@@ -347,7 +347,7 @@
     traceParam[@"origin_from"] = @"renting_search";
     traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
 
-    //sug_list
+    //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(FHHouseTypeRentHouse) ,
@@ -357,7 +357,7 @@
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         
 }
