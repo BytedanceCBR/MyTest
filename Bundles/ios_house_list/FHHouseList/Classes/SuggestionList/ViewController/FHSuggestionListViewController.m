@@ -75,7 +75,6 @@
         }
         // 5、tracer（TRACER_KEY）: self.tracerDict 字典
         // 6、H5页面传入的其他字段 3.18号上
-        /*
         if (paramObj.allParams[@"page_type"]) {
             self.viewModel.pageTypeStr = paramObj.allParams[@"page_type"];
         }
@@ -92,7 +91,6 @@
             NSString *element_from = paramObj.allParams[@"element_from"];
             self.tracerDict[@"element_from"] = element_from;
         }
-        */
     }
     return self;
 }
