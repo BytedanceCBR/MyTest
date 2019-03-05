@@ -17,6 +17,7 @@
 @property(nonatomic, strong) FHLoginViewModel *viewModel;
 @property(nonatomic ,strong) FHLoginView *loginView;
 @property (nonatomic, strong)     TTAcountFLoginDelegate       *loginDelegate;
+@property (nonatomic, assign)   BOOL       needPopVC;
 
 @end
 
@@ -27,13 +28,17 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         NSDictionary *params = paramObj.allParams;
-        
+        self.needPopVC = YES;
         self.tracerModel = [[FHTracerModel alloc] init];
         self.tracerModel.enterFrom = params[@"enter_from"];
         self.tracerModel.enterType = params[@"enter_type"];
         if (params[@"delegate"]) {
             NSHashTable *delegate = params[@"delegate"];
             self.loginDelegate = delegate.anyObject;
+        }
+        // 有部分需求是登录成功之后要跳转其他页面，so，不需要pop当前登录页面，可以延时0.7s之后移除当前页面
+        if (params[@"need_pop_vc"]) {
+            self.needPopVC = [params[@"need_pop_vc"] boolValue];
         }
         [self addEnterCategoryLog];
     }
@@ -92,6 +97,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHLoginViewModel alloc] initWithView:self.loginView controller:self];
+    self.viewModel.needPopVC = self.needPopVC;
     self.viewModel.loginDelegate = self.loginDelegate;
 }
 
