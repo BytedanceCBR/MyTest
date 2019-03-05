@@ -227,7 +227,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
 {
     self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
-    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
+//    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
 }
 
 - (BOOL)tt_hasValidateData

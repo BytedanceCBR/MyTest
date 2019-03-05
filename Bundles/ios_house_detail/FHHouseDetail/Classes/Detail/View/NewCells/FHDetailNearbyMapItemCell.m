@@ -28,8 +28,8 @@
 {
     _labelLeft = [UILabel new];
     _labelLeft.textAlignment = NSTextAlignmentLeft;
-    _labelLeft.font = [UIFont themeFontMedium:14];
-    _labelLeft.textColor = [UIColor colorWithHexString:@"#081f33"];
+    _labelLeft.font = [UIFont themeFontRegular:14];
+    _labelLeft.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_labelLeft];
     
     [_labelLeft mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -42,7 +42,7 @@
     _labelRight = [UILabel new];
     _labelRight.textAlignment = NSTextAlignmentRight;
     _labelRight.font = [UIFont themeFontRegular:14];
-    _labelRight.textColor = [UIColor colorWithHexString:@"#a1aab3"];
+    _labelRight.textColor = [UIColor themeGray3];
     [self.contentView addSubview:_labelRight];
     
     

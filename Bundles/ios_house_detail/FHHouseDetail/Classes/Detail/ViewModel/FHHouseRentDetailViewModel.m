@@ -238,6 +238,16 @@
         infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
         [self.items addObject:infoModel];
     }
+    // 地图
+    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
+        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        infoModel.title = model.data.neighborhoodInfo.name;
+        infoModel.category = @"公交";
+        
+        [self.items addObject:infoModel];
+    }
  
     [self reloadData];
  

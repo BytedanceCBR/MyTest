@@ -31,6 +31,7 @@
 #import "TTCrashRepotTask.h"
 #import "TTABHelperTask.h"
 #import "TTSetUseBDWebImageTask.h"
+#import "TTOpenURLTask.h"
 
 @implementation TTStartupSerialGroup
 
@@ -65,6 +66,7 @@
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeHandleFirstLaunch]];
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeSetHook]];
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypePermissionSettingsReport]];
+    [group.tasks addObject:[[self class] serialStartupForType:TTServiceStartupTypeOpenURL]];
     return group;
     
 }
@@ -142,6 +144,9 @@
             break;
         case TTServiceStartupTypeUseBDWebImage:
             return [[TTSetUseBDWebImageTask alloc] init];
+            break;
+        case TTServiceStartupTypeOpenURL:
+            return [[TTOpenURLTask alloc] init];
             break;
         default:
             return [[TTStartupTask alloc] init];
