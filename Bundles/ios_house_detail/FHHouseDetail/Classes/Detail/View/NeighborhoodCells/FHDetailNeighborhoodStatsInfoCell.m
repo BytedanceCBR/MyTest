@@ -49,7 +49,7 @@
     FHDetailNeighborhoodStatsInfoModel *model = (FHDetailNeighborhoodStatsInfoModel *)data;
     if (model && model.statsInfo.count > 0) {
         UIView *topLine = [[UIView alloc] init];
-        topLine.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+        topLine.backgroundColor = [UIColor themeGray6];
         [self.contentView addSubview:topLine];
         [topLine mas_makeConstraints:^(MASConstraintMaker *maker) {
             maker.height.mas_equalTo(0.5);
@@ -92,7 +92,7 @@
         // 添加中间 分割线
         for (int i = 1; i < model.statsInfo.count; i++) {
             UIView *v = [[UIView alloc] init];
-            v.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+            v.backgroundColor = [UIColor themeGray6];
             [self.contentView addSubview:v];
             CGFloat leftOffset = 20.0 + i * 70 + (i - 1 + 0.5) * space;
             [v mas_makeConstraints:^(MASConstraintMaker *maker) {
@@ -243,7 +243,8 @@
 }
 
 - (void)setupUI {
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#8a9299" fontSize:12];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _valueLabel.textColor = [UIColor themeGray3];
     [self addSubview:_valueLabel];
     
     _rightArrowImageView = [[UIImageView alloc] init];
@@ -288,7 +289,8 @@
 
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#517b9f" fontSize:14];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _keyLabel.textColor = [UIColor themeGray1];
     [self addSubview:_keyLabel];
     
     _valueDataLabel = [[FHDetailNeighborhoodItemButtonControl alloc] init];
@@ -313,11 +315,11 @@
 
 - (void)setIsDataEnabled:(BOOL)isDataEnabled {
     _isDataEnabled = isDataEnabled;
-    if (isDataEnabled) {
-        self.keyLabel.textColor = [UIColor colorWithHexString:@"#517b9f"];
-    } else {
-        self.keyLabel.textColor = [UIColor colorWithHexString:@"#a1aab3"];
-    }
+//    if (isDataEnabled) {
+//        self.keyLabel.textColor = [UIColor colorWithHexString:@"#517b9f"];
+//    } else {
+//        self.keyLabel.textColor = [UIColor colorWithHexString:@"#a1aab3"];
+//    }
 }
 
 @end

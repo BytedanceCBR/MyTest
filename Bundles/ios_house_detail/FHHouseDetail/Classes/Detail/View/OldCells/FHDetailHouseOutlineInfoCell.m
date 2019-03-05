@@ -102,7 +102,7 @@
     [_infoButton setTitle:@"举报" forState:UIControlStateNormal];
     NSAttributedString *attriStr = [[NSAttributedString alloc] initWithString:@"举报" attributes:@{
                                                                                                  NSFontAttributeName:[UIFont themeFontRegular:12],
-                                                                                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#299cff"]
+                                                                                                 NSForegroundColorAttributeName:[UIColor themeRed1]
                                                                                                  }];
     [_infoButton setAttributedTitle:attriStr forState:UIControlStateNormal];
     _infoButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
@@ -206,9 +206,11 @@
 - (void)setupUI {
     _iconImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rectangle-11"]];
     [self addSubview:_iconImg];
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _keyLabel.textColor = [UIColor themeGray1];
     [self addSubview:_keyLabel];
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#737a80" fontSize:14];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _valueLabel.textColor = [UIColor themeGray2];
     _valueLabel.numberOfLines = 0;
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_valueLabel];
