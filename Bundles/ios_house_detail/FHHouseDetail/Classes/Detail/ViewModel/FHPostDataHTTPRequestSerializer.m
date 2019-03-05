@@ -26,8 +26,11 @@
     [request setValue:@"application/json; encoding=utf-8" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
-    NSData * postDate = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
-    [request setHTTPBody:postDate];
+    if ([@"POST" isEqualToString: method] && [parameters isKindOfClass:[NSDictionary class]]) {
+        NSData * postDate = [NSJSONSerialization dataWithJSONObject:parameters options:NSJSONWritingPrettyPrinted error:nil];
+        [request setHTTPBody:postDate];
+    }
+
     
     return request;
     
