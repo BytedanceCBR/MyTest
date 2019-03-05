@@ -26,7 +26,7 @@
 
 @property (nonatomic, weak)     id<FHHouseSuggestionDelegate>    suggestDelegate;
 
-@property (nonatomic, strong)   NSDictionary       *homePageRollDic;
+@property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;
 @property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 
 @end
@@ -70,7 +70,7 @@
          */
         id dic = paramObj.allParams[@"homepage_roll_data"];
         if (dic) {
-            self.homePageRollDic = [NSDictionary dictionaryWithDictionary:dic];
+            self.homePageRollDic = [NSMutableDictionary dictionaryWithDictionary:dic];
             self.viewModel.homePageRollDic = self.homePageRollDic;
         }
         // 5、tracer（TRACER_KEY）: self.tracerDict 字典
@@ -90,6 +90,26 @@
         if (paramObj.allParams[@"element_from"]) {
             NSString *element_from = paramObj.allParams[@"element_from"];
             self.tracerDict[@"element_from"] = element_from;
+        }
+        if (paramObj.allParams[@"origin_search_id"]) {
+            NSString *origin_search_id = paramObj.allParams[@"origin_search_id"];
+            self.tracerDict[@"origin_search_id"] = origin_search_id;
+        }
+        // 7、hint_text：text guess_search_id house_type
+        NSString *hint_text = paramObj.allParams[@"hint_text"];
+        NSString *guess_search_id = paramObj.allParams[@"guess_search_id"];
+        if (!self.homePageRollDic) {
+            self.homePageRollDic = [NSMutableDictionary new];
+        }
+        if (hint_text.length > 0) {
+            self.homePageRollDic[@"text"] = hint_text;
+        }
+        if (guess_search_id.length > 0) {
+            self.homePageRollDic[@"guess_search_id"] = guess_search_id;
+        }
+        if (self.homePageRollDic.count > 0) {
+            self.homePageRollDic[@"house_type"] = @(self.viewModel.houseType);
+            self.viewModel.homePageRollDic = self.homePageRollDic;
         }
     }
     return self;
@@ -378,7 +398,7 @@
 
 // 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
 - (void)dismissSelfVCIfNeeded {
-    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab) {
+    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault) {
         [self removeFromParentViewController];
     }
 }
