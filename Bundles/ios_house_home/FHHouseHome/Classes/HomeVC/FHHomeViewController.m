@@ -214,8 +214,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)willDisappear
 {
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"disappear" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-    [alertView show];
+//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"disappear" message:@"" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//    [alertView show];
     
     [FHLocManager sharedInstance].isShowHomeViewController = NO;
 }
