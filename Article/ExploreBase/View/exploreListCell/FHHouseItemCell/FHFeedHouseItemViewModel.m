@@ -420,7 +420,10 @@
             
         }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             
-            return indexPath.row == self.houseItemsData.secondHouseList.count - 1 ? 125 : 105;
+            FHSearchHouseDataItemsModel *item = self.houseItemsData.secondHouseList[indexPath.row];
+            CGFloat reasonHeight = [item showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+            
+            return (indexPath.row == self.houseItemsData.secondHouseList.count - 1 ? 125 : 105)+reasonHeight;
             
         }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeRentHouse) {
             
