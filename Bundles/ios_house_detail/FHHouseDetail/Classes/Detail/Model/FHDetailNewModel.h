@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak , nullable) UITableViewCell *cell;
 @property (nonatomic, copy , nullable) NSString *gaodeLng;
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
+@property (nonatomic, copy , nullable) NSString *title;
 
 @end
 

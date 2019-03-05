@@ -17,6 +17,7 @@
 #import "FHExtendHotAreaButton.h"
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
+#import "TTAccountManager.h"
 
 @interface FHDetailHouseOutlineInfoCell ()
 
@@ -126,11 +127,38 @@
 }
 
 - (void)feedBackButtonClick:(UIButton *)button {
+    if ([TTAccountManager isLogin]) {
+        [self gotoReportVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    // add by zyk 确认是否要加登录时的埋点
+    [params setObject:@"enterFrom" forKey:@"enter_from"];
+    [params setObject:@"comment" forKey:@"enter_type"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([TTAccountManager isLogin]) {
+                    [wSelf gotoReportVC];
+                }
+            });
+        }
+    }];
+}
+
+// 二手房-房源问题反馈
+- (void)gotoReportVC {
     FHDetailHouseOutlineInfoModel *model = (FHDetailHouseOutlineInfoModel *)self.currentData;
     FHDetailOldModel *ershouData = (FHDetailOldModel *)model.baseViewModel.detailData;
     NSDictionary *jsonDic = [ershouData toDictionary];
     if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
-
+        
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
         [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];

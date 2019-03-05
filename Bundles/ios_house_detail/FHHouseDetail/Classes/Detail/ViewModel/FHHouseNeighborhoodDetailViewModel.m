@@ -183,6 +183,7 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
         infoModel.evaluationInfo = model.data.evaluationInfo;
         [self.items addObject:infoModel];
     }
@@ -195,6 +196,7 @@
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        nearbyMapModel.title = model.data.neighborhoodInfo.name;
         //        nearbyMapModel.tableView = self.tableView;
         [self.items addObject:nearbyMapModel];
         

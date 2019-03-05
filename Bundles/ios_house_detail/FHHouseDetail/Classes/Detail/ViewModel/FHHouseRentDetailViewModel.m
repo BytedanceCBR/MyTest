@@ -23,6 +23,7 @@
 #import "FHDetailRentRelatedHouseCell.h"
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNeighborhoodInfoCell.h"
+#import "FHDetailNeighborhoodMapInfoCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -48,6 +49,7 @@
     [self.tableView registerClass:[FHDetailRentRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentRelatedHouseCell class])];
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -82,6 +84,10 @@
     // 小区信息
     if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
         return [FHDetailNeighborhoodInfoCell class];
+    }
+    // 小区地图
+    if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
+        return [FHDetailNeighborhoodMapInfoCell class];
     }
     // 同小区房源
     if ([model isKindOfClass:[FHDetailRentSameNeighborhoodHouseModel class]]) {
@@ -230,6 +236,16 @@
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
+        [self.items addObject:infoModel];
+    }
+    // 地图
+    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
+        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        infoModel.title = model.data.neighborhoodInfo.name;
+        infoModel.category = @"公交";
+        
         [self.items addObject:infoModel];
     }
  

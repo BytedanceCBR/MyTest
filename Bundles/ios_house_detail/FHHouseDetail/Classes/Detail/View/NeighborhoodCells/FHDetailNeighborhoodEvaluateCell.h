@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNeighborhoodEvaluateModel : FHDetailBaseModel
 
+@property (nonatomic, strong)   NSDictionary *log_pb;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
 
 @end
