@@ -65,6 +65,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // push过来的页面默认状态栏是隐藏的
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     self.view.backgroundColor = UIColor.whiteColor;
     self.ttHideNavigationBar = YES;
