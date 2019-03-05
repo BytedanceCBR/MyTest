@@ -34,7 +34,7 @@
             NSString *stringName = nameArray[i];
             UILabel *labelName = [UILabel new];
             labelName.font = [UIFont themeFontRegular:15];
-            labelName.textColor = [UIColor themeGray2];
+            labelName.textColor = [UIColor themeGray3];
             labelName.textAlignment = NSTextAlignmentCenter;
             labelName.text = stringName;
             [_headerView addSubview:labelName];

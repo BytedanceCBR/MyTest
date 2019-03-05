@@ -98,7 +98,7 @@
     [self.contentView addSubview:_tagsView];
     
     _bottomLine = [[UIView alloc] init];
-    _bottomLine.backgroundColor = [UIColor colorWithHexString:[UIColor themeGray6]];
+    _bottomLine.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_bottomLine];
     
     // 布局

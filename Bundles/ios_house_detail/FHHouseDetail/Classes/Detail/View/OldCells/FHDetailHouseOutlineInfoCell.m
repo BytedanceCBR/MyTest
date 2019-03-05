@@ -210,7 +210,7 @@
     _keyLabel.textColor = [UIColor themeGray1];
     [self addSubview:_keyLabel];
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _valueLabel.textColor = [UIColor themeGray2];
+    _valueLabel.textColor = [UIColor themeGray3];
     _valueLabel.numberOfLines = 0;
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_valueLabel];

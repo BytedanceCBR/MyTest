@@ -49,6 +49,11 @@
     return RGB(0xf5, 0xf5, 0xf5);
 }
 
++(UIColor *)themeGray8
+{
+    return RGB(0xf7, 0xf7, 0xf7);
+}
+
 +(UIColor *)themeRed
 {
     return RGB(0xff, 0x5b, 0x4c);

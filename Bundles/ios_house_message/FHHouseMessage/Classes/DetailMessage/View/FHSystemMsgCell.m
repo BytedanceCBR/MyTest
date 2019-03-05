@@ -78,7 +78,7 @@
     _imgView.layer.borderColor = [[UIColor themeGray6] CGColor];
     [_cardView addSubview:_imgView];
     
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray2]];
+    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     self.descLabel.textAlignment = NSTextAlignmentLeft;
     self.descLabel.numberOfLines = 0;
     [_cardView addSubview:_descLabel];

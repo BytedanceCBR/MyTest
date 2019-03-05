@@ -324,7 +324,7 @@
 {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont themeFontRegular:24];
+        _titleLabel.font = [UIFont themeFontMedium:24];
         _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.numberOfLines = 0;
         _titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -336,7 +336,7 @@
 {
     if (!_subtitleLabel) {
         _subtitleLabel = [[UILabel alloc]init];
-        _subtitleLabel.font = [UIFont themeFontRegular:16];
+        _subtitleLabel.font = [UIFont themeFontRegular:14];
         _subtitleLabel.textColor = [UIColor themeGray3];
         _subtitleLabel.numberOfLines = 0;
         _subtitleLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -360,6 +360,7 @@
         _phoneTextField = [[UITextField alloc]init];
         _phoneTextField.keyboardType = UIKeyboardTypePhonePad;
         _phoneTextField.font = [UIFont themeFontRegular:14];
+        _phoneTextField.textColor = [UIColor themeGray1];
         _phoneTextField.placeholder = @"请输入手机号";
         _phoneTextField.delegate = self;
     }
@@ -396,8 +397,8 @@
         _submitBtn.titleLabel.font = [UIFont themeFontRegular:16];
         [_submitBtn setTitle:@"提交" forState:UIControlStateNormal];
         [_submitBtn setTitle:@"提交" forState:UIControlStateHighlighted];
-        _submitBtn.layer.cornerRadius = 20;
-        _submitBtn.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
+        _submitBtn.layer.cornerRadius = 4;
+        _submitBtn.backgroundColor = [UIColor themeRed1];
         _submitBtn.alpha = 0.6;
         _submitBtn.enabled = NO;
     }
@@ -409,7 +410,7 @@
     if (!_tipLabel) {
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.font = [UIFont themeFontRegular:10];
-        _tipLabel.textColor = [UIColor colorWithHexString:@"#a1aab3"];
+        _tipLabel.textColor = [UIColor themeGray4];
         _tipLabel.text = @"提交即视为同意《个人信息保护声明》";
     }
     return _tipLabel;

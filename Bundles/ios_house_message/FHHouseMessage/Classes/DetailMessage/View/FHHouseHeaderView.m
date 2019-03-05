@@ -17,7 +17,7 @@
     self = [super initWithFrame:frame];
     
     if(self){
-        self.backgroundColor = [UIColor themeGray5];
+        self.backgroundColor = [UIColor themeGray7];
         [self initViews];
         [self initConstraints];
     }
