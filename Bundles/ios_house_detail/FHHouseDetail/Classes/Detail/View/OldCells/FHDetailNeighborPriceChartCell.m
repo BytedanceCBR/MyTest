@@ -165,13 +165,13 @@
             return [UIColor themeRed1];
             break;
         case 1:
-            return [UIColor colorWithHexString:@"#9eaab4"];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         case 2:
-            return [UIColor colorWithHexString:@"#e1e3e6"];
+            return [UIColor themeGray5];
             break;
         default:
-            return [UIColor colorWithHexString:@"#e1e3e6"];
+            return [UIColor themeGray5];
             break;
     }
 }
@@ -180,7 +180,7 @@
 {
     switch (index) {
         case 0:
-            return @"detail_circle_blue";
+            return @"detail_circle_red";
             break;
         case 1:
             return @"detail_circle_dark";

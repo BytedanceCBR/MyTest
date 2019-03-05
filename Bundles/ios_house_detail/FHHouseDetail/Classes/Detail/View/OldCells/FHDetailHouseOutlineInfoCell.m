@@ -102,7 +102,7 @@
     [_infoButton setTitle:@"举报" forState:UIControlStateNormal];
     NSAttributedString *attriStr = [[NSAttributedString alloc] initWithString:@"举报" attributes:@{
                                                                                                  NSFontAttributeName:[UIFont themeFontRegular:12],
-                                                                                                 NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#299cff"]
+                                                                                                 NSForegroundColorAttributeName:[UIColor themeRed1]
                                                                                                  }];
     [_infoButton setAttributedTitle:attriStr forState:UIControlStateNormal];
     _infoButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
@@ -127,6 +127,9 @@
 }
 
 - (void)feedBackButtonClick:(UIButton *)button {
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
+    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
     if ([TTAccountManager isLogin]) {
         [self gotoReportVC];
     } else {
@@ -136,9 +139,8 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    // add by zyk 确认是否要加登录时的埋点
-    [params setObject:@"enterFrom" forKey:@"enter_from"];
-    [params setObject:@"comment" forKey:@"enter_type"];
+    [params setObject:@"old_feedback" forKey:@"enter_from"];
+    [params setObject:@"feedback" forKey:@"enter_type"];
     __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
@@ -158,10 +160,6 @@
     FHDetailOldModel *ershouData = (FHDetailOldModel *)model.baseViewModel.detailData;
     NSDictionary *jsonDic = [ershouData toDictionary];
     if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
-        
-        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-        [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
         
         NSString *openUrl = @"sslocal://webview";
         NSDictionary *pageData = @{@"data":jsonDic};
@@ -206,9 +204,11 @@
 - (void)setupUI {
     _iconImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"rectangle-11"]];
     [self addSubview:_iconImg];
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _keyLabel.textColor = [UIColor themeGray1];
     [self addSubview:_keyLabel];
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#737a80" fontSize:14];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _valueLabel.textColor = [UIColor themeGray2];
     _valueLabel.numberOfLines = 0;
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_valueLabel];

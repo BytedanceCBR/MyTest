@@ -259,7 +259,7 @@
     _icon.layer.cornerRadius = 4.0;
     _icon.layer.masksToBounds = YES;
     _icon.layer.borderWidth = 0.5;
-    _icon.layer.borderColor = [[UIColor colorWithHexString:@"#e8eaeb"] CGColor];
+    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     _icon.image = [UIImage imageNamed:@"default_image"];
     [self addSubview:_icon];
     

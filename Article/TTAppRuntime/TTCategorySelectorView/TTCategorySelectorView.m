@@ -119,9 +119,8 @@
             _titleLabel.textColorThemeKey = kColorText12;
             _maskTitleLabel.textColorThemeKey = kColorText12;
         }else if (self.style == TTCategorySelectorViewLightStyle || self.style == TTCategorySelectorViewNewVideoStyle) {
-            _titleLabel.textColorThemeKey = kColorText3;
-            _maskTitleLabel.textColorThemeKey = kFHColorDarkBlue;
-            self.bottomSelectView.backgroundColorThemeKey = kFHColorCoralPink;
+            _titleLabel.textColorThemeKey = kFHColorCoolGrey3;
+            _maskTitleLabel.textColorThemeKey = kFHColorCharcoalGrey;
         }else if (self.style == TTCategorySelectorViewVideoStyle) {
             _titleLabel.textColorThemeKey = kColorText1;
             _maskTitleLabel.textColorThemeKey = kColorText4;
@@ -391,7 +390,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 @property (nonatomic, strong) SSThemedImageView *rightBorderIndicatorView;
 @property (nonatomic, strong) TTBadgeNumberView *hasNewCategoryBadgeView;
 @property (nonatomic, strong) NSString *cacheNewCategoryID;
-@property (nonatomic, strong) SSThemedView *bottomLineView;
 @property (nonatomic, assign) CGFloat lastContentOffset;
 //@property (nonatomic, strong) SSThemedView * padMaskView;
 // 保存所有带红点并且点击后自动消失的category的Id
@@ -415,8 +413,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     self.delegate = nil;
     self.expandButton = nil;
     self.categoryViews = nil;
-//    self.manageButton = nil;
-    self.bottomLineView = nil;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -482,36 +478,14 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         self.rightBorderIndicatorView.backgroundColor = [UIColor clearColor];
         
         if (style == TTCategorySelectorViewBlackStyle) {
-            
-            self.bottomLineView = [[SSThemedView alloc] init];
-            self.bottomLineView.backgroundColors = @[@"dddddd", @"464646"];
-            
-            [self addSubview:self.bottomLineView];
-            
-            [self setBottomLineFrame];
-            
             self.backgroundColorThemeKey = kColorBackground3;
         } else if (style == TTCategorySelectorViewVideoStyle) {
             if ([TTDeviceHelper isPadDevice]) {
-                self.bottomLineView = [[SSThemedView alloc] init];
-                self.bottomLineView.backgroundColors = @[@"dddddd", @"464646"];
-                
-                [self addSubview:self.bottomLineView];
-                
-                [self setBottomLineFrame];
-
                 self.backgroundColorThemeKey = kColorBackground3;
             } else {
                 self.backgroundColorThemeKey = kColorBackground4;
             }
         } else if (style == TTCategorySelectorViewLightStyle || style == TTCategorySelectorViewNewVideoStyle) {
-            self.bottomLineView = [[SSThemedView alloc] init];
-            self.bottomLineView.backgroundColorThemeKey = kColorLine1;
-            
-            [self addSubview:self.bottomLineView];
-            
-            [self setBottomLineFrame];
-
             self.backgroundColorThemeKey = kColorBackground4;
         }
         
@@ -523,8 +497,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         [self reloadThemeUI];
         
         [self changeHasNewCategoryBadge:nil];
-        
-        [self bringSubviewToFront:self.bottomLineView];
         
         if (self.tabType == TTCategorySelectorViewNewsTab) {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeHasNewCategoryBadge:) name:kArticleCategoryTipNewChangedNotification object:nil];
@@ -553,16 +525,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     return self;
 }
 
-- (void)setBottomLineFrame
-{
-    if (![SSCommonLogic isNewLaunchOptimizeEnabled]) {
-        [self.bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.equalTo(self);
-            make.height.mas_equalTo(0.5);
-        }];
-    }
-}
-
 - (void)layoutSubviews
 {
     if ([NSThread isMainThread]) {
@@ -576,9 +538,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
 - (void)didDoLayoutSubViews
 {
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
-        self.bottomLineView.frame = CGRectMake(0, CGRectGetHeight(self.bounds) - [TTDeviceHelper ssOnePixel], CGRectGetWidth(self.bounds), [TTDeviceHelper ssOnePixel]);
-    }
     if ([TTDeviceHelper isPadDevice]) {
         self.scrollView.frame = CGRectInset(self.bounds, [TTUIResponderHelper paddingForViewWidth:0], 0);
         self.scrollView.center = CGPointMake(CGRectGetWidth(self.bounds)/2, self.scrollView.center.y);

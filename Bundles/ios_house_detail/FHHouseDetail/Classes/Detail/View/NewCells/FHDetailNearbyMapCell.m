@@ -22,7 +22,7 @@
 #import "FHDetailNearbyMapItemCell.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailHeaderView.h"
-
+#import "UIColor+Theme.h"
 #import "TTRoute.h"
 
 static const float kSegementedOneWidth = 50;
@@ -130,18 +130,18 @@ static const float kSegementedPadingTop = 5;
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.sectionTitles = @[@"交通(0)",@"购物(0)",@"医院(0)",@"教育(0)"];
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#299cff"];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentedControl.isNeedNetworkCheck = NO;
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#8a9299"],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#299cff"],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontRegular:16],NSFontAttributeName,
+                                     [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
 //    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(-10, 5, 0, 5);
@@ -224,7 +224,7 @@ static const float kSegementedPadingTop = 5;
     [self setUpMapViewSetting:NO];
 
     _mapImageView = [[UIImageView alloc] initWithFrame:mapRect];
-    _mapImageView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _mapImageView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_mapImageView];
     
     [_mapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -534,7 +534,7 @@ static const float kSegementedPadingTop = 5;
             titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
             backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 35);
             
-            UIImage *imageAnna = [UIImage imageNamed:@"mapcell_annotation_bg"];
+            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_annotation_bg"];
             
             CGFloat width = imageAnna.size.width > 0 ? imageAnna.size.width : 10;
             CGFloat height = imageAnna.size.height > 0 ? imageAnna.size.height : 10;
@@ -547,16 +547,16 @@ static const float kSegementedPadingTop = 5;
             
             [annotationV addSubview:titleLabel];
             titleLabel.font = [UIFont themeFontRegular:12];
-            titleLabel.textColor = [UIColor colorWithHexString:@"#081f33"];
+            titleLabel.textColor = [UIColor themeGray1];
             titleLabel.layer.masksToBounds = YES;
             
             titleLabel.numberOfLines = 1;
             titleLabel.textAlignment = NSTextAlignmentCenter;
             titleLabel.backgroundColor = [UIColor clearColor];
             [titleLabel sizeToFit];
-            titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y);
+            titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
             
-            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapcell_annotation_arrow"]];
+            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
             [backImageView addSubview:bottomArrowView];
             bottomArrowView.backgroundColor = [UIColor clearColor];
             bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);

@@ -133,6 +133,10 @@
 }
 
 - (void)feedBackButtonClick:(UIButton *)button {
+    // click_feedback
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
+    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
     if ([TTAccountManager isLogin]) {
         [self gotoReportVC];
     } else {
@@ -142,9 +146,8 @@
 
 - (void)gotoLogin {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    // add by zyk 确认是否要加登录时的埋点
-    [params setObject:@"enterFrom" forKey:@"enter_from"];
-    [params setObject:@"comment" forKey:@"enter_type"];
+    [params setObject:@"rent_feedback" forKey:@"enter_from"];
+    [params setObject:@"feedback" forKey:@"enter_type"];
     __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
@@ -165,10 +168,6 @@
     FHRentDetailResponseModel *rentData = (FHRentDetailResponseModel *)model.baseViewModel.detailData;
     NSDictionary *jsonDic = [rentData toDictionary];
     if (model && model.houseOverreview.reportUrl.length > 0 && jsonDic) {
-        // click_feedback
-        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-        [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
         
         NSString *openUrl = @"sslocal://webview";
         NSDictionary *pageData = @{@"data":jsonDic};
