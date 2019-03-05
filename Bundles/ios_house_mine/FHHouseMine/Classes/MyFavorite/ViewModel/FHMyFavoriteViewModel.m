@@ -509,7 +509,7 @@ extern NSString *const kFHDetailFollowUpNotification;
                 }else{
                     [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
-                    [[ToastManager manager] showToast:@"已取消关注"];
+                    [[ToastManager manager] showToast:@"取消关注"];
                 }
             }];
         }
@@ -534,7 +534,7 @@ extern NSString *const kFHDetailFollowUpNotification;
                 }else{
                     [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
-                    [[ToastManager manager] showToast:@"已取消关注"];
+                    [[ToastManager manager] showToast:@"取消关注"];
                 }
             }];
         }
