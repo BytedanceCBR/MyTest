@@ -428,11 +428,12 @@ static BOOL s_loginAlertShowing = NO;
     if (params.count > 0) {
         if ([params tta_stringForKey:@"enter_from"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_from"] forKey:@"enter_from"];
-            
         }
         if ([params tta_stringForKey:@"enter_type"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
-            
+        }
+        if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
+            [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
         }
     }
 
