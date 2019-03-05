@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stopSyncMessage;
 
 -(void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce;
+
+-(NSInteger)getTotalUnreadMessageCount;
 @end
 
 NS_ASSUME_NONNULL_END

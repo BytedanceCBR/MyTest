@@ -33,6 +33,8 @@
 #import "IMManager.h"
 #import "TTTracker.h"
 #import <FHHouseBase/FHUserTracker.h>
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
@@ -94,7 +96,7 @@
         _navBar.messageActionBlock = ^{
             [wself messageAction];
         };
-        if ([[IMManager shareInstance] getChatMessageUnreadTotalCount] > 0) {
+        if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
             [_navBar displayMessageDot:YES];
         } else {
             [_navBar displayMessageDot:NO];
