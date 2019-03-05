@@ -695,7 +695,7 @@
           @"from_home":@"2"
           };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
