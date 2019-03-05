@@ -165,9 +165,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 }
 
 - (void)willAppear
-{
-    [FHLocManager sharedInstance].isShowHomeViewController = YES;
-    
+{    
     if (![FHEnvContext isNetworkConnected]) {
         if (self.homeListViewModel.hasShowedData) {
             [[ToastManager manager] showToast:@"网络异常"];
@@ -214,7 +212,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)willDisappear
 {
-    [FHLocManager sharedInstance].isShowHomeViewController = NO;
+    
 }
 
 
