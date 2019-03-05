@@ -79,6 +79,11 @@
     return RGB(0x0c, 0xce, 0x6b);
 }
 
++(UIColor *)themeBlue1
+{
+    return RGB(0x29, 0x9c, 0xff);
+}
+
 + (UIColor *)colorWithHexString:(NSString *)hexString {
     if (hexString == nil || hexString.length == 0) {
         return [UIColor clearColor];

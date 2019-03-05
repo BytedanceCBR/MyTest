@@ -234,15 +234,18 @@
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self addSubview:_icon];
     
-    _descLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
+    _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     
-    _statusLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
+    _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _statusLabel.textColor = [UIColor themeGray1];
     _statusLabel.layer.masksToBounds = YES;
     _statusLabel.layer.cornerRadius = 2;
     [self addSubview:_statusLabel];
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
+    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _priceLabel.textColor = [UIColor themeRed1];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     

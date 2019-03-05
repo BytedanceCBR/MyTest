@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 +(UIColor *)themeRed3;
 // #0cce6b
 +(UIColor *)themeGreen1;
+// #299cff
++(UIColor *)themeBlue1;
 
 + (UIColor *)colorWithHexString:(NSString *)hexString;
 
