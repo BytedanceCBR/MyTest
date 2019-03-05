@@ -301,7 +301,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableViewV.mj_footer.hidden = NO;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:3];
         [self.tableViewV.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableViewV.mj_footer endRefreshing];

@@ -15,6 +15,7 @@
 @property (weak, nonatomic) UILabel *label;
 @property (copy, nonatomic) NSString *customNoMoreDataStr;
 @property (weak, nonatomic) UIImageView *loadingIndicator;
+@property (assign, nonatomic) CGFloat offsetY;
 
 @end
 
@@ -27,6 +28,7 @@
     
     // 设置控件的高度
     self.mj_h = 40;
+    self.offsetY = 0;
     self.onlyRefreshPerDrag = YES;
     
     // 添加label
@@ -41,13 +43,20 @@
     loadingIndicator.image = [UIImage imageNamed: @"refresh_loading_icon"];
     [self addSubview:loadingIndicator];
     self.loadingIndicator = loadingIndicator;
-    
 }
 
 - (void)setUpNoMoreDataText:(NSString *)text
 {
     self.customNoMoreDataStr = text;
 }
+
+- (void)setUpNoMoreDataText:(NSString *)text offsetY:(CGFloat)offsetY
+{
+    self.customNoMoreDataStr = text;
+    self.offsetY = offsetY;
+    [self placeSubviews];
+}
+
 
 #pragma mark 在这里设置子控件的位置和尺寸
 - (void)placeSubviews
@@ -69,8 +78,8 @@
         self.loadingIndicator.left = self.label.right + 5;
     }
     
-    self.loadingIndicator.centerY = self.mj_h / 2 + 3;
-    self.label.centerY = self.loadingIndicator.centerY + 3;
+    self.loadingIndicator.centerY = self.mj_h / 2 + self.offsetY;
+    self.label.centerY = self.loadingIndicator.centerY + self.offsetY;
     
 }
 
