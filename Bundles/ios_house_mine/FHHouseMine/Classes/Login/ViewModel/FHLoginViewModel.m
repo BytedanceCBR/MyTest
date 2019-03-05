@@ -38,7 +38,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (self) {
         
         view.delegate = self;
-        
+        _needPopVC = YES;
         _view = view;
         _viewController = viewController;
     }
@@ -177,7 +177,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
             [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-            [strongSelf popViewController];
+            if (strongSelf.needPopVC) {
+                [strongSelf popViewController];
+            }
             [strongSelf loginSuccessedWithPhoneNum:phoneNumber];
         }else{
             NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];

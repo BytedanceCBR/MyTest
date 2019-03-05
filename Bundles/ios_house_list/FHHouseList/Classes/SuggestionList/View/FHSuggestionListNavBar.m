@@ -140,7 +140,7 @@
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateNormal];
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateHighlighted];
     _bottomLineView = [[UIView alloc] init];
-    _bottomLineView.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _bottomLineView.backgroundColor = [UIColor themeGray6];
     [self addSubview:_bottomLineView];
     [_bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);

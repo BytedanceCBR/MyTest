@@ -660,7 +660,7 @@
     [self addClickHouseSearchLog];
     
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
-    //sug_list
+    //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(self.houseType) ,
@@ -670,7 +670,7 @@
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }

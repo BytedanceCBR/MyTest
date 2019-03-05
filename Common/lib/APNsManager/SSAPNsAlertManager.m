@@ -22,6 +22,7 @@
 #import "TTArticleTabBarController.h"
 #import "TTAccountManager.h"
 #import "FHHouseBridgeManager.h"
+#import <FHLocManager.h>
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -421,7 +422,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     }
                 }
             } else {
-                
+                [FHLocManager sharedInstance].isShowHomeViewController = NO;
                 // push对消息特殊处理
 //                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
 ////                    if (![TTAccountManager isLogin]) {

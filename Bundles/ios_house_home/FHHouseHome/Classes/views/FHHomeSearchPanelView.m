@@ -259,7 +259,7 @@
         infos[@"homepage_roll_data"] = homePageRollData;
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://sug_list"] userInfo:userInfo];
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
 
 }
 

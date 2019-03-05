@@ -103,7 +103,7 @@
 {
     if (!_bgView) {
         _bgView = [[UIView alloc]init];
-        _bgView.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5" alpha:0.4];
+        _bgView.backgroundColor = [UIColor themeGray7];
     }
     return _bgView;
 }
@@ -133,7 +133,7 @@
 {
     if (!_line) {
         _line = [[UIView alloc]init];
-        _line.backgroundColor = [UIColor whiteColor];
+        _line.backgroundColor = [UIColor themeGray6];
     }
     return _line;
 }
@@ -143,7 +143,7 @@
     if (!_subtitleLabel) {
         _subtitleLabel = [[UILabel alloc]init];
         _subtitleLabel.font = [UIFont themeFontRegular:14];
-        _subtitleLabel.textColor = [UIColor colorWithHexString:@"#737a80"];
+        _subtitleLabel.textColor = [UIColor themeGray2];
         _subtitleLabel.numberOfLines = 0;
     }
     return _subtitleLabel;

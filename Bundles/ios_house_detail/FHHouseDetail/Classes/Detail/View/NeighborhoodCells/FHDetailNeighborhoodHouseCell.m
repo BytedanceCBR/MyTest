@@ -265,8 +265,8 @@
         [_rentBtn setTitle:@"租房" forState:UIControlStateNormal];
         [_rentBtn setTitle:@"租房" forState:UIControlStateHighlighted];
         _rentBtn.titleLabel.font = [UIFont themeFontRegular:14];
-        [_rentBtn setTitleColor:[UIColor colorWithHexString:@"#8a9299"] forState:UIControlStateNormal];
-        [_rentBtn setTitleColor:[UIColor colorWithHexString:@"#299cff"] forState:UIControlStateSelected];
+        [_rentBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [_rentBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateSelected];
         [self.headerView addSubview:_rentBtn];
         [_rentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.headerView).offset(23);
@@ -283,8 +283,8 @@
         [_ershouBtn setTitle:@"二手房" forState:UIControlStateNormal];
         [_ershouBtn setTitle:@"二手房" forState:UIControlStateHighlighted];
         _ershouBtn.titleLabel.font = [UIFont themeFontRegular:14];
-        [_ershouBtn setTitleColor:[UIColor colorWithHexString:@"#8a9299"] forState:UIControlStateNormal];
-        [_ershouBtn setTitleColor:[UIColor colorWithHexString:@"#299cff"] forState:UIControlStateSelected];
+        [_ershouBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [_ershouBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateSelected];
         [self.headerView addSubview:_ershouBtn];
         [_ershouBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.headerView).offset(23);
