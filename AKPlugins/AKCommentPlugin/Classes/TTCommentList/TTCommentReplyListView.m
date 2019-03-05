@@ -84,8 +84,8 @@
 
 - (void)refreshReplyListBackgroundColors
 {
-    self.replyTableView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
-    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+    self.replyTableView.backgroundColor = [UIColor tt_themedColorForKey:kFHColorPaleGrey];
+    self.backgroundColor = [UIColor tt_themedColorForKey:kFHColorPaleGrey];
 }
 
 - (void)refreshFramesWithWidth:(CGFloat)width
