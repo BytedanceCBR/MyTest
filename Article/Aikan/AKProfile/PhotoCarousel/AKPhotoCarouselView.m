@@ -94,7 +94,7 @@
         NSInteger dis = self.cellModels.count - self.indexViews.count;
         for (NSInteger i = 0; i < dis; i += 1) {
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, indexViewSize, indexViewSize)];
-            view.backgroundColor = [UIColor colorWithHexString:@"D8D8D8"];
+            view.backgroundColor = [UIColor colorWithHexString:@"e8e8e8"];
             view.clipsToBounds = YES;
             view.layer.cornerRadius = view.width / 2;
             view.hidden = NO;
@@ -124,7 +124,7 @@
         if (idx == selectIndex) {
             obj.backgroundColor = [UIColor colorWithHexString:@"EF514A"];
         } else {
-            obj.backgroundColor = [UIColor colorWithHexString:@"D8D8D8"];
+            obj.backgroundColor = [UIColor colorWithHexString:@"e8e8e8"];
         }
     }];
 }

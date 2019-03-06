@@ -20,7 +20,7 @@
 #import "TTArticleDetailViewController.h"
 #import "TTTrackerWrapper.h"
 #import "TTImageView.h"
-
+#import "UIColor+Theme.h"
 #define kTitleFontSize [SSUserSettingManager newDetailRelateReadFontSize]
 
 @interface TTDetailNatantRelateReadPlainView ()
@@ -62,7 +62,7 @@
         _titleLabel.numberOfLines = 2;
         _titleLabel.font = [UIFont systemFontOfSize:kTitleFontSize];
         _titleLabel.textColors = [TTUISettingHelper detailViewBodyColors];
-        _titleLabel.textColors = @[ [UIColor colorWithHexString:@"081f33"],[UIColor colorWithHexString:@"707070"] ];
+        _titleLabel.textColors = @[ [UIColor themeGray1],[UIColor colorWithHexString:@"707070"] ];
         [self addSubview:_titleLabel];
         
         

@@ -169,7 +169,7 @@
 #define kFHColorCoral @"red1"//= "#ff5869"
 #define kFHColorRed2 @"red2"//= "#fff2ed"
 #define kFHColorRed3 @"red3"//= "#ff8151"
-#define kFHColorLightishGreen @"green1"//= "#69db82"
+#define kFHColorLightishGreen @"green1"//= "#0cce6b"
 
 
 

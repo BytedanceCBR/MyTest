@@ -503,7 +503,7 @@
         CGFloat maxWidth = self.width - [TTVCommentListCellHelper cellHorizontalPadding] - [TTVCommentListCellHelper avatarSize] - [TTVCommentListCellHelper avatarRightPadding] - [TTVCommentListCellHelper cellRightPadding] - 30.f - [TTVCommentListCellHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTVCommentListCellHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTVCommentListCellHelper nameViewFontSize] verifiedInfo:nil verified:NO owner:NO appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTVCommentListCellHelper avatarRightPadding], [TTVCommentListCellHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
+        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {
@@ -537,7 +537,7 @@
         _userInfoLabel = [[TTAsyncLabel alloc] init];
         _userInfoLabel.frame = CGRectMake(self.nameView.left, self.nameView.bottom, self.width - [TTVCommentListCellHelper cellHorizontalPadding] - [TTVCommentListCellHelper avatarSize] - [TTVCommentListCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _userInfoLabel.font = [TTVCommentListCellHelper userInfoLabelFont];
-        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
+        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _userInfoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _userInfoLabel.backgroundColor = [UIColor clearColor];
         _userInfoLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
