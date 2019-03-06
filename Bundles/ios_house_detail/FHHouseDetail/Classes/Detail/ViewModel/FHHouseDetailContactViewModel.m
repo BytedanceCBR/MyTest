@@ -67,6 +67,12 @@
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
         
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
+        
+        [FHEnvContext sharedInstance].messageManager ;
+        
         __weak typeof(self)wself = self;
         _bottomBar.bottomBarContactBlock = ^{
             [wself contactAction];
@@ -96,11 +102,7 @@
         _navBar.messageActionBlock = ^{
             [wself messageAction];
         };
-        if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
-            [_navBar displayMessageDot:YES];
-        } else {
-            [_navBar displayMessageDot:NO];
-        }
+        [self refreshMessageDot];
     }
     return self;
 }
@@ -113,6 +115,14 @@
         _bottomBar = bottomBar;
     }
     return self;
+}
+
+- (void)refreshMessageDot {
+    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [_navBar displayMessageDot:YES];
+    } else {
+        [_navBar displayMessageDot:NO];
+    }
 }
 
 - (void)refreshFollowStatus:(NSNotification *)noti

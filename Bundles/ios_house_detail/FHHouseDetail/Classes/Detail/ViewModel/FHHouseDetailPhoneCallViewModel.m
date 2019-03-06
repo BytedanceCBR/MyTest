@@ -353,6 +353,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         imParams = [[NSString alloc] initWithData:imJsonData encoding:NSUTF8StringEncoding];
     }
     NSString *realtorDeUrl = contactPhone.realtorDetailUrl;
+//    realtorDeUrl = [realtorDeUrl stringByReplacingOccurrencesOfString:@"https://i.haoduofangs.com" withString:@"http://10.1.15.29:8889"];
     NSString *jumpUrl =@"";
     if (isEmptyString(realtorDeUrl)) {
         jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];

@@ -135,6 +135,7 @@
         return;
     }
     self.unreadChatMsgCount = unreadCount;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHChatMessageUnreadChangedNotification" object:nil];
     [self refreshBadgeNumber];
 }
 
