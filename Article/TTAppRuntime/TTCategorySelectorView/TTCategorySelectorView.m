@@ -33,7 +33,7 @@
 #import "TTCategory+ConfigDisplayName.h"
 #import <FHLocManager.h>
 #import <UIFont+House.h>
-
+#import "UIColor+Theme.h"
 #define kFirstLeftMargin    15
 #define kLastRightMargin    68
 
@@ -106,7 +106,7 @@
         self.maskTitleLabel.backgroundColor = [UIColor clearColor];
         
         self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 3, 20, 3)];
-        self.bottomSelectView.backgroundColor = [UIColor clearColor];
+        self.bottomSelectView.backgroundColor = [UIColor themeRed1];
         self.bottomSelectView.alpha = 0;
         self.bottomSelectView.layer.cornerRadius = 1.5;
         

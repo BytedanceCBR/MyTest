@@ -472,6 +472,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         _answerListView.tableFooterView = nil;
     }
     else {
+        CGFloat bottom = 0;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
         //是否替换为引导回答界面
         if (_needShowEmptyView) {
             if (!_listFooterView) {
@@ -484,10 +488,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         }
         else if (_needShowFoldView && [self isFoldTipViewDataAvailable]) {
             if (!_listFooterView) {
-                self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight)];
+                self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight + bottom)];
                 self.listFooterView.viewModel = self.viewModel;
             }
-            self.listFooterView.height = kWDWendaListFooterViewHeight;
+            self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
             _answerListView.tableFooterView = self.listFooterView;
             WeakSelf;
             [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{

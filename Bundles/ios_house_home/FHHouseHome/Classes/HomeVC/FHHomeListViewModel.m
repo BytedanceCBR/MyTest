@@ -135,7 +135,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
         
-        if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
+        if ([self checkIsHasFindHouse] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
         {
             self.tableViewV.hidden = YES;
             self.isFromLocalTestChange = YES;
@@ -738,18 +738,24 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     }
 }
 
+- (BOOL)checkIsHasFindHouse
+{
+    return [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+}
+
 //重载首页头部数据
 - (void)reloadHomeTableHeaderSection
 {
     self.dataSource.showPlaceHolder = YES;
     self.dataSource.currentHouseType = self.currentHouseType;
-    self.dataSource.isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+    self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
     if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {
         [UIView performWithoutAnimation:^{
             [self.tableViewV reloadData];
         }];
     }
 }
+
 
 //重载当前请求数据
 - (void)reloadHomeTableHouseSection:(NSArray <JSONModel *> *)models
@@ -761,7 +767,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
-    self.dataSource.isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+    self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
     }

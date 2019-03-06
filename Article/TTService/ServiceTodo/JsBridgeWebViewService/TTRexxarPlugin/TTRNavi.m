@@ -295,6 +295,8 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     
     if ([cityId isKindOfClass:[NSString class]] && cityId.length > 0) {
         
+        [controller.navigationController popToRootViewControllerAnimated:NO];
+
         if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
             [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
         }
