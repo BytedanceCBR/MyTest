@@ -606,7 +606,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         self.titleLabel.attributedText = cellLayOut.titleAttributedStr;
         self.titleLabel.frame = cellLayOut.titleLabelFrame;
 //        self.titleLabel.frame = CGRectMake(cellLayOut.titleLabelFrame.origin.x, 10, cellLayOut.titleLabelFrame.size.width, cellLayOut.titleLabelFrame.size.height);
-        self.titleLabel.textColorThemeKey = kFHColorDarkIndigo;
+        self.titleLabel.textColorThemeKey = kFHColorCharcoalGrey;
         if ([cellLayOut.orderedData.article.hasRead isKindOfClass:[NSNumber class]] && [cellLayOut.orderedData.article.hasRead isEqualToNumber:@(1)]) {
             self.titleLabel.textColorThemeKey = kFHColorCoolGrey3;
         }
