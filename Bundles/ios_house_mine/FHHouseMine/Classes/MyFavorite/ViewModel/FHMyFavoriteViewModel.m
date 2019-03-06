@@ -516,6 +516,10 @@ extern NSString *const kFHDetailFollowUpNotification;
                 }
             }];
         }
+        
+        if (wself.dataList.count < 10) {
+            self.refreshFooter.hidden = YES;
+        }
     }
 }
 
@@ -536,9 +540,14 @@ extern NSString *const kFHDetailFollowUpNotification;
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [wself deleteFocusCell:indexPath.row];
-                    [[ToastManager manager] dismissCustomLoading];
-                    [[ToastManager manager] showToast:@"取消关注"];
+                    
+                    if (wself.dataList.count < 10) {
+                        self.refreshFooter.hidden = YES;
+                    }
                 }
+                
+                [[ToastManager manager] dismissCustomLoading];
+                [[ToastManager manager] showToast:@"取消关注"];
             }];
         }
     }];
@@ -547,6 +556,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
     config.performsFirstActionWithFullSwipe = NO;
 
+    
     return config;
 }
 
