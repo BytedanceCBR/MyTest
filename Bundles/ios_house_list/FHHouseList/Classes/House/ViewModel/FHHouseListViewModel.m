@@ -854,9 +854,10 @@
                 
                 if (indexPath.row < self.sugesstHouseList.count) {
                     FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];                    
                 }
                 return cell;
             }
@@ -928,7 +929,9 @@
 //                }
             } else {
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
-                return isLastCell ? 125 : 105;
+                FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+                return (isLastCell ? 125 : 105)+reasonHeight;
 
 //                if (indexPath.row < self.sugesstHouseList.count) {
 //
