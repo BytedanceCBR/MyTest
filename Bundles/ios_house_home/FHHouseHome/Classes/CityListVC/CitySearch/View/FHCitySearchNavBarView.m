@@ -37,7 +37,7 @@
     CGFloat statusBarHeight = (isIphoneX ? 44 : 20);
     // searchAreaPanel
     _searchAreaPanel = [[UIView alloc] init];
-    _searchAreaPanel.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+    _searchAreaPanel.backgroundColor = [UIColor themeGray7];
     _searchAreaPanel.layer.masksToBounds = YES;
     _searchAreaPanel.layer.cornerRadius = 4.0;
     [self addSubview:_searchAreaPanel];
@@ -80,8 +80,8 @@
     _searchInput = [[UITextField alloc] init];
     _searchInput.background = NULL;
     _searchInput.font = [UIFont themeFontRegular:14];
-    _searchInput.textColor = [UIColor colorWithHexString:@"#081f33"];
-    _searchInput.tintColor = [UIColor colorWithHexString:@"#081f33"];
+    _searchInput.textColor = [UIColor themeGray1];
+    _searchInput.tintColor = [UIColor themeGray1];
     _searchInput.returnKeyType = UIReturnKeySearch;
     _searchInput.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_searchAreaPanel addSubview:_searchInput];
@@ -96,7 +96,7 @@
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateNormal];
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateHighlighted];
     _bottomLineView = [[UIView alloc] init];
-    _bottomLineView.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _bottomLineView.backgroundColor = [UIColor themeGray6];
     [self addSubview:_bottomLineView];
     [_bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
@@ -111,7 +111,7 @@
 
 - (void)setSearchPlaceHolderText:(NSString *)text {
     if (text.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#a1aab3"]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]};
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
         _searchInput.attributedPlaceholder = attrStr;
     }

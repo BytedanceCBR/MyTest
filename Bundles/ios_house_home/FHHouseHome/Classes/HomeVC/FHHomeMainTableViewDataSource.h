@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showPlaceHolder;
 @property (nonatomic, assign) FHHouseType currentHouseType;
 @property (nonatomic, strong) NSString * originSearchId;
+@property (nonatomic,assign) BOOL isHasFindHouseCategory;
 
 - (NSString *)pageTypeString;
 

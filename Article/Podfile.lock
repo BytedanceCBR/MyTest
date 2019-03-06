@@ -466,7 +466,7 @@ DEPENDENCIES:
   - Heimdallr/Utility (= 0.4.21)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESVideoPlayer (= 0.1.16)
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, tag `0.5.2`)
+  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -623,8 +623,8 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
+    :branch: feature/develop
     :git: git@code.byted.org:fproject/ios_house_filter.git
-    :tag: 0.5.2
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAccountSDK:
@@ -674,8 +674,8 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
+    :commit: 1792e88f340f438e75089ccd4cdee5464eaa082c
     :git: git@code.byted.org:fproject/ios_house_filter.git
-    :tag: 0.5.2
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
@@ -822,6 +822,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: a8e7dbc1720219badc2dec4c1463cfb58e0898b5
+PODFILE CHECKSUM: f4d8617b722773be8ff29f83f022d791662d9def
 
 COCOAPODS: 1.4.0

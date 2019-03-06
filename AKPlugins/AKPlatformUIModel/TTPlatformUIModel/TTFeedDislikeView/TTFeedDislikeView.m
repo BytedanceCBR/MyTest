@@ -18,6 +18,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
 #import "TTTracker.h"
+#import "UIColor+Theme.h"
 
 #define kMaskViewTag 20141209
 
@@ -371,10 +372,10 @@ static TTFeedDislikeView *__visibleDislikeView;
     [super themeChanged:notification];
     _contentBgView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     if ([TTFeedDislikeView isFeedDislikeRefactorEnabled]) {
-        [self.titleLabel setTextColor:[UIColor colorWithHexString:@"#45494d"]];
+        [self.titleLabel setTextColor:[UIColor themeGray1]];
     }
     else {
-        [self.titleLabel setTextColor:[UIColor colorWithHexString:@"#45494d"]];
+        [self.titleLabel setTextColor:[UIColor themeGray1]];
     }
 }
 

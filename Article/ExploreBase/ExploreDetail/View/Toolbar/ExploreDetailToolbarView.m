@@ -65,7 +65,7 @@
         _topButton.hidden = YES;
 
         self.badgeLabel = [[SSThemedLabel alloc] init];
-        self.badgeLabel.backgroundColorThemeKey = kColorBackground7;
+        self.badgeLabel.backgroundColorThemeKey = kFHColorCoral;
         self.badgeLabel.textColorThemeKey = kColorText8;
         self.badgeLabel.font = [UIFont systemFontOfSize:8];
         self.badgeLabel.layer.cornerRadius = 5;
@@ -503,11 +503,11 @@
         _collectButton.selectedImageName = @"tab_collect_press";
         _shareButton.imageName = [self _shareIconName];
         _writeButton.borderColors = nil;
-        _writeButton.borderColorThemeKey = kColorLine1;
+        _writeButton.borderColorThemeKey = kFHColorSilver2;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
-        _writeButton.backgroundColorThemeKey = kColorBackground3;
+        _writeButton.backgroundColorThemeKey = kFHColorPaleGrey;
         _writeButton.layer.masksToBounds = YES;
         
 //        [_writeButton setImageName:@"write_new"];

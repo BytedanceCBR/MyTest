@@ -151,9 +151,16 @@ extern NSString *const kFHDetailFollowUpNotification;
     }];
     
     self.tableView.hasMore = followModel.data.hasMore;
+
+    
     self.viewController.hasValidateData = self.dataList.count > 0;
     self.showPlaceHolder = NO;
+
     [self updateTableViewWithMoreData:followModel.data.hasMore];
+    
+    if (!followModel.data.hasMore && self.dataList.count <= 10) {
+        self.refreshFooter.hidden = YES;
+    }
     
     if(followModel.data.hasMore){
         self.offset += self.limit;
@@ -183,6 +190,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -444,9 +452,10 @@ extern NSString *const kFHDetailFollowUpNotification;
         
         if (indexPath.row < self.dataList.count) {
             FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
             [cell updateWithHouseCellModel:cellModel];
             [cell refreshTopMargin: 20];
-            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+            [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
         }
         return cell;
     }
@@ -464,7 +473,9 @@ extern NSString *const kFHDetailFollowUpNotification;
         return 105;
     }else{
         BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
-        return isLastCell ? 125 : 105;
+        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+        return (isLastCell ? 125 : 105)+reasonHeight;
     }
 }
 
@@ -501,7 +512,7 @@ extern NSString *const kFHDetailFollowUpNotification;
                 }else{
                     [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
-                    [[ToastManager manager] showToast:@"已取消关注"];
+                    [[ToastManager manager] showToast:@"取消关注"];
                 }
             }];
         }
@@ -526,7 +537,7 @@ extern NSString *const kFHDetailFollowUpNotification;
                 }else{
                     [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
-                    [[ToastManager manager] showToast:@"已取消关注"];
+                    [[ToastManager manager] showToast:@"取消关注"];
                 }
             }];
         }

@@ -511,16 +511,17 @@
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
                 FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 [imageInfoCell updateWithHouseCellModel:cellModel];
                 [imageInfoCell refreshTopMargin:0];
-                [imageInfoCell refreshBottomMargin:20];
+                [imageInfoCell refreshBottomMargin:20+reasonHeight];
             }
             return cell;
         }
     }
     if (self.rightTableView == tableView) {
         if (indexPath.row >= 0 && indexPath.row < self.rentItems.count) {
-            FHSearchHouseDataItemsModel *item = self.rentItems[indexPath.row];
+            FHHouseRentDataItemsModel *item = self.rentItems[indexPath.row];
             FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
@@ -538,6 +539,10 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    FHSearchHouseDataItemsModel *item = self.rentItems[indexPath.row];
+    if ([item isKindOfClass:[FHSearchHouseDataItemsModel class]] && [item showRecommendReason]) {
+        return 108+[FHSingleImageInfoCell recommendReasonHeight];
+    }
     return 108;
 }
 

@@ -32,17 +32,6 @@
             }
             [theCell setTags:tags];
         }
-        
-        /*
-         theCell.majorTitle.text = @"合租 | 双井 远洋沁山水5号… ";
-         theCell.extendTitle.text = @"1室1厅/66平/东/苏州街33号公寓";
-         theCell.priceLabel.text = @"8000元/月";
-         FHTagItem* item = [FHTagItem instanceWithText:@"新房"
-         withColor:@"e8eaeb"
-         withBgColor:@"a1aab3"];
-         [theCell setTags:@[item]];
-         */
-
     }
 }
 

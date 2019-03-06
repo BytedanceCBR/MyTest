@@ -227,9 +227,10 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
         if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
             FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
             [imageInfoCell updateWithHouseCellModel:cellModel];
             [imageInfoCell refreshTopMargin:0];
-            [imageInfoCell refreshBottomMargin:20];
+            [imageInfoCell refreshBottomMargin:20+reasonHeight];
         }
         return cell;
     }
@@ -239,6 +240,10 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    FHSearchHouseDataItemsModel *item = self.items[indexPath.row];    
+    if ([item showRecommendReason]) {
+        return 108 + [FHSingleImageInfoCell recommendReasonHeight];
+    }
     return 108;
 }
 

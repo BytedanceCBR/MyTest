@@ -326,3 +326,16 @@
 
 
 
+@implementation FHSearchHouseDataItemsModel (RecommendReason)
+
+-(BOOL)showRecommendReason
+{    
+    for (FHSearchHouseDataItemsRecommendReasonsModel *reason in self.recommendReasons) {
+        if (reason.text.length > 0) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+@end
