@@ -119,6 +119,16 @@
     return size.width;
 }
 
+// 猜你想搜前3个词计算:行数以及长度
+- (FHGuessYouWantFirstWords *)firstThreeWords:(NSArray *)array {
+    if (array.count <= 0) {
+        return nil;
+    }
+    FHGuessYouWantFirstWords *guess = [[FHGuessYouWantFirstWords alloc] init];
+    
+    return guess;
+}
+
 - (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(NSString *)firstText array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count {
     // 计算猜你想搜高度
     if (array.count <= 0) {
@@ -312,6 +322,21 @@
     }
     // 返回打乱顺序之后的数组
     return tmp.copy;
+}
+
+@end
+
+
+@implementation FHGuessYouWantFirstWords
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _wordLine = 0;
+        _wordLength = 0;
+    }
+    return self;
 }
 
 @end
