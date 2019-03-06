@@ -153,6 +153,8 @@
         [wself loadMore];
     }];
     self.tableView.mj_footer = _refreshFooter;
+    [_refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
+    
     _refreshFooter.hidden = YES;
 }
 

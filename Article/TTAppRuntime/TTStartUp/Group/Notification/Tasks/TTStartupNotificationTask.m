@@ -144,10 +144,10 @@ TTAccountMulticastProtocol
 
 - (void)onAccountSessionExpired:(NSError *)error
 {
-    NSString *expirationText = [[error userInfo] objectForKey:kErrorDisplayMessageKey];
-    if (!expirationText) expirationText = [error.userInfo objectForKey:TTAccountErrMsgKey];
-    if (!expirationText) expirationText = [error.userInfo objectForKey:@"message"];
-    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:expirationText indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
+//    NSString *expirationText = [[error userInfo] objectForKey:kErrorDisplayMessageKey];
+//    if (!expirationText) expirationText = [error.userInfo objectForKey:TTAccountErrMsgKey];
+//    if (!expirationText) expirationText = [error.userInfo objectForKey:@"message"];
+//    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:expirationText indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
 }
 
 - (void)autoLoginFinished:(NSNotification*)notification

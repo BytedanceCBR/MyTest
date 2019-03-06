@@ -85,6 +85,7 @@
 #import "TTSettingMineTabManager.h"
 #import "TTTabBarProvider.h"
 #import "TTURLUtils.h"
+#import <FHEnvContext.h>
 
 //爱看
 #import "AKTaskSettingHelper.h"
@@ -1383,6 +1384,11 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)triggerLogoutUnRegisterDidSelectCell
 {
+    
+    NSDictionary *params = @{@"category":@"event_v3",@"page_type":@"minetab"};
+    [FHEnvContext recordEvent:params andEventKey:@"account_cancellation"];
+    
+    
     NSString *unencodedString = @"http://m.haoduofangs.com/f100/inner/valuation/delcount/";
     NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
                                                                                                     (CFStringRef)unencodedString,
