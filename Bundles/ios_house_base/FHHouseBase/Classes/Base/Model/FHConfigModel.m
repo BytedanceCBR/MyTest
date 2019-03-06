@@ -138,6 +138,7 @@
                            @"opData2": @"op_data_2",
                            @"opData": @"op_data",
                            @"rentOpData": @"rent_op_data",
+                           @"houseOpData": @"house_op_data",
                            @"entryInfo": @"entry_info",
                            @"currentCityId": @"current_city_id",
                            @"mapSearch": @"map_search",
@@ -197,6 +198,25 @@
 
 
 @implementation  FHConfigDataRentOpDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"opStyle": @"op_style",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation  FHConfigDataHouseOpDataModel
 
 + (JSONKeyMapper*)keyMapper
 {
@@ -309,6 +329,30 @@
     NSDictionary *dict = @{
                            @"logPb": @"log_pb",
                            @"openUrl": @"open_url",
+                           @"descriptionStr": @"description",
+                           @"backgroundColor": @"background_color",
+                           @"textColor": @"text_color",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation  FHConfigDataHouseOpDataItemsModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"logPb": @"log_pb",
+                           @"openUrl": @"open_url",
+                           @"descriptionStr": @"description",
                            @"backgroundColor": @"background_color",
                            @"textColor": @"text_color",
                            };
