@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseListBannerItemView : UIView
 
+@property (nonatomic, copy) void(^clickedItemBlock)(NSInteger index);
+
 @end
 
 @interface FHHouseListBannerView : UIView

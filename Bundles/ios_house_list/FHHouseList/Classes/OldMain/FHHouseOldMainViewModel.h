@@ -11,10 +11,15 @@
 #import <FHCommonUI/FHErrorView.h>
 #import <TTRoute.h>
 #import <FHHouseBase/FHTracerModel.h>
+#import <FHHouseBase/FHBaseViewController.h>
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHHouseListRedirectTipView;
 @interface FHHouseOldMainViewModel : NSObject <FHHouseFilterDelegate>
+
+@property(nonatomic , strong) UIView *headerView;
+@property(nonatomic , strong) UIScrollView *containerScrollView;
+@property(nonatomic , weak) FHBaseViewController *viewController;
 
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
 @property(nonatomic , copy) void (^closeConditionFilter)();
@@ -36,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , assign) BOOL showRedirectTip;
 
 //@property(nonatomic , weak) id<FHHouseListViewModelDelegate> viewModelDelegate;
+- (UIView *)iconHeaderView;
 
 - (NSString *)categoryName;
 

@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry.h>
 #import <UIImageView+BDWebImage.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 @implementation FHHouseListBannerItem
 
@@ -22,6 +23,7 @@
 @property(nonatomic , strong) UIImageView *bgView;
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UILabel *subtitleLabel;
+@property(nonatomic , strong) UIControl *tapBtn;
 
 @end
 
@@ -41,11 +43,14 @@
     [self addSubview:self.bgView];
     [self.bgView addSubview:self.titleLabel];
     [self.bgView addSubview:self.subtitleLabel];
-    
+    [self addSubview:self.tapBtn];
+    [self.tapBtn addTarget:self action:@selector(tapBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.centerY.mas_equalTo(self);
         make.bottom.mas_equalTo(0);
+//        make.height.mas_equalTo(60);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(10);
@@ -57,6 +62,16 @@
         make.right.mas_equalTo(-10);
         make.bottom.mas_equalTo(-12);
     }];
+    [self.tapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
+    }];
+}
+
+- (void)tapBtnDidClick:(UIControl *)btn
+{
+    if (self.clickedItemBlock) {
+        self.clickedItemBlock(self.tag);
+    }
 }
 
 - (UIImageView *)bgView
@@ -86,6 +101,14 @@
         _subtitleLabel.textColor = [UIColor colorWithHexString:@"#ffeccb"];
     }
     return _subtitleLabel;
+}
+
+- (UIControl *)tapBtn
+{
+    if (!_tapBtn) {
+        _tapBtn = [[UIControl alloc]init];
+    }
+    return _tapBtn;
 }
 
 @end
@@ -139,22 +162,21 @@
         [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]]; // add by zjing for test placeholder
         [self.containerView addSubview:itemView];
         itemView.tag = 100 + index;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
-        itemView.userInteractionEnabled = YES;
-        [itemView addGestureRecognizer:tap];
+        __weak typeof(self)wself = self;
+        itemView.clickedItemBlock = ^(NSInteger index) {
+            [wself tapAction:index - 100];
+        };
     }
     [self updateLayout];
 }
 
-- (void)tapAction:(UITapGestureRecognizer *)tap
+- (void)tapAction:(NSInteger)index
 {
-    NSInteger index = tap.view.tag - 100;
     if (index >= self.itemsArray.count) {
         return;
     }
     FHHouseListBannerItem *item = self.itemsArray[index];
-    
-    
+
     if (self.clickedItemCallBack) {
         self.clickedItemCallBack(index);
     }
@@ -169,7 +191,7 @@
         [bannerViews mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:10 leadSpacing:20 tailSpacing:20];
         [bannerViews mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.mas_equalTo(self.containerView);
-//            make.height.mas_equalTo(60);
+            make.height.mas_equalTo(60);
         }];
     } else {
         UIView * view = bannerViews.firstObject;

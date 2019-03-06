@@ -17,17 +17,19 @@
 #import <FHCommonUI/UIView+House.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
-#import "FHHouseListBannerView.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import "FHHouseOldMainViewModel.h"
+#import <TTBaseLib/TTDeviceHelper.h>
 
+#define kFilterBarHeight 44
 
 @interface FHHouseOldHomeViewController ()<TTRouteInitializeProtocol>
 
 @property (nonatomic , strong) FHFakeInputNavbar *navbar;
-@property (nonatomic,strong) FHHouseListBannerView *bannerView;
 @property (nonatomic , strong) UIView *containerView;
+@property (nonatomic , strong) UIScrollView *containerScrollView;
 @property (nonatomic , strong) UITableView* tableView;
+@property (nonatomic , strong) UIView *tableContainerView;
 
 @property (nonatomic , strong) UIView *filterContainerView;
 @property (nonatomic , strong) UIView *filterPanel;
@@ -45,7 +47,6 @@
 
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
-@property (nonatomic , strong) NSArray<FHHouseListBannerItem *> *bannerItems;
 
 @property (nonatomic , copy) NSString *associationalWord;// 联想词
 @property (nonatomic , copy) NSString *suggestionParams; // sug
@@ -114,6 +115,7 @@
     [self initNavbar];
     
     self.viewModel = [[FHHouseOldMainViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    self.viewModel.viewController = self;
     [self initFilter];
     [self setupViewModelBlock];
     
@@ -122,32 +124,54 @@
     [self initConstraints];
     self.viewModel.maskView = self.errorMaskView;
     [self.viewModel setRedirectTipView:self.redirectTipView];
+    self.viewModel.containerScrollView = _containerScrollView;
 
-    [self setupBannerView];
     [self.houseFilterViewModel trigerConditionChanged];
-    
 }
 
-- (void)setupBannerView
+- (void)setupUI
 {
-    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (dataModel.houseOpData) {
-        NSMutableArray *items = @[].mutableCopy;
-        for (NSInteger index = 0; index < dataModel.houseOpData.items.count; index++) {
-            FHConfigDataOpData2ItemsModel *obj = dataModel.houseOpData.items[index];
-            FHHouseListBannerItem *item = [[FHHouseListBannerItem alloc]init];
-            item.title = obj.title;
-            item.subtitle = obj.descriptionStr;
-            item.openUrl = obj.openUrl;
-            FHConfigDataOpData2ItemsImageModel *imageModel = obj.image.firstObject;
-            if (imageModel) {
-                item.iconName = imageModel.url;
-            }
-            [items addObject:item];
-        }
-        [self.bannerView addBannerItems:items];
+    _containerView = [[UIView alloc] initWithFrame:self.tableView.frame];
+    _tableContainerView = [[UIView alloc]initWithFrame:_containerView.bounds];
+    [_tableContainerView addSubview:self.tableView];
+    [_containerView addSubview:_tableContainerView];
+
+    self.automaticallyAdjustsScrollViewInsets = NO;
+
+    _containerScrollView = [[UIScrollView alloc]init];
+    _containerScrollView.backgroundColor = [UIColor whiteColor];
+    _containerScrollView.scrollsToTop = NO;
+    [self.view addSubview:_containerScrollView];
+
+    if (@available(iOS 11.0 , *)) {
+        _containerScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
+    [_containerScrollView addSubview:_viewModel.iconHeaderView];
+    self.filterContainerView.top = _viewModel.iconHeaderView.bottom;
+    [_containerScrollView addSubview:self.filterContainerView];
+    _containerView.top = self.filterContainerView.bottom;
+    [_containerScrollView addSubview:_containerView];
+    _containerScrollView.contentSize = CGSizeMake(self.view.width, _containerView.bottom);
+    
+    [_filterContainerView addSubview:self.filterPanel];
+    [_containerScrollView bringSubviewToFront:self.filterContainerView];
+    
+    //error view
+    self.errorMaskView = [[FHErrorView alloc] init];
+    [self.containerView addSubview:_errorMaskView];
+    self.errorMaskView.hidden = YES;
+    
+    [_containerView addSubview:_filterBgControl];
+    //notifyview
+    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.width, 32)];
+    [_containerView addSubview:self.notifyBarView];
+    
+    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
+    [_containerView addSubview:self.redirectTipView];
+    
+    [self.view addSubview:self.navbar];
 }
+
 
 - (void)initFilter
 {
@@ -160,11 +184,11 @@
     
     [self.houseFilterViewModel setFilterConditions:self.paramObj.queryParams];
     
-//    self.viewModel.viewModelDelegate = self;
     [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
     
     [bridge showBottomLine:NO];
     
+    _filterContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), kFilterBarHeight)];
     UIView *bottomLine = [[UIView alloc] init];
     bottomLine.backgroundColor = [UIColor themeGray6];
     [self.filterPanel addSubview:bottomLine];
@@ -207,10 +231,10 @@
         }
         return nil;
     };
-    _viewModel.sugSelectBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
-        
-        [wself handleSugSelection:paramObj];
-    };
+//    _viewModel.sugSelectBlock = ^(TTRouteParamObj * _Nonnull paramObj) {
+//
+//        [wself handleSugSelection:paramObj];
+//    };
     _viewModel.houseListOpenUrlUpdateBlock = ^(TTRouteParamObj * _Nonnull paramObj, BOOL isFromMap) {
         
         [wself handleListOpenUrlUpdate:paramObj];
@@ -224,34 +248,6 @@
     };
 }
 
--(void)resetFilter:(TTRouteParamObj *)paramObj {
-    
-    [_filterBgControl removeFromSuperview];
-    [self.filterContainerView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj removeFromSuperview];
-    }];
-    
-    [self initFilter];
-    
-    [self.view addSubview:self.filterBgControl];
-    [self.filterContainerView addSubview:self.filterPanel];
-    
-    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
-    }];
-    
-    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.filterContainerView);
-    }];
-    
-    
-    self.viewModel.houseType = self.houseType;
-    [self.houseFilterViewModel setFilterConditions:paramObj.queryParams];
-    [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
-    
-    
-}
 #pragma mark 处理sug带回的houseType，导航栏placeholder，筛选器
 -(void)handleListOpenUrlUpdate:(TTRouteParamObj *)paramObj {
     
@@ -279,21 +275,21 @@
     self.associationalWord = placeholder;
 }
 
--(void)handleSugSelection:(TTRouteParamObj *)paramObj {
-    
-    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
-    if (houseTypeStr.length > 0 && houseTypeStr.integerValue != self.houseType) {
-        
-        self.viewModel.isEnterCategory = YES;
-        self.houseType = houseTypeStr.integerValue;
-        [self resetFilter:paramObj];
-        
-    }
-    
-    [self handleListOpenUrlUpdate:paramObj];
-    [self.houseFilterBridge trigerConditionChanged];
-    
-}
+//-(void)handleSugSelection:(TTRouteParamObj *)paramObj {
+//
+//    NSString *houseTypeStr = paramObj.allParams[@"house_type"];
+//    if (houseTypeStr.length > 0 && houseTypeStr.integerValue != self.houseType) {
+//
+//        self.viewModel.isEnterCategory = YES;
+//        self.houseType = houseTypeStr.integerValue;
+//        [self resetFilter:paramObj];
+//
+//    }
+//
+//    [self handleListOpenUrlUpdate:paramObj];
+//    [self.houseFilterBridge trigerConditionChanged];
+//
+//}
 
 -(NSString *)placeholderByHouseType:(FHHouseType)houseType
 {
@@ -331,101 +327,42 @@
         make.height.mas_equalTo(height);
     }];
     
-    [self.bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
+    [self.containerScrollView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.bottom.mas_equalTo(self.view);
         make.top.mas_equalTo(self.navbar.mas_bottom);
-        make.height.mas_equalTo(78);
     }];
     
     [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.bottom.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.edges.mas_equalTo(self.containerView);
     }];
     
     [self.errorMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.tableView);
-    }];
-    
-    [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.bottom.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.bannerView.mas_bottom);
-    }];
-    
-    [self.filterContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(@44);
+        make.edges.mas_equalTo(self.containerView);
     }];
     
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.filterContainerView);
-    }];
-    
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.redirectTipView.mas_bottom);
-        make.left.right.bottom.mas_equalTo(self.containerView);
+        make.left.top.right.mas_equalTo(0);
+        make.height.mas_equalTo(kFilterBarHeight);
     }];
     
     [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.filterContainerView.mas_bottom);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(0);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.tableView);
+        make.top.left.right.mas_equalTo(0);
         make.height.mas_equalTo(32);
     }];
-    
 }
 
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
-        [self.view endEditing:YES];
+//        [self.view endEditing:YES];
     }
-}
-
--(void)setupUI {
-    
-    _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
-    [self.view addSubview:_containerView];
-    
-    self.automaticallyAdjustsScrollViewInsets = NO;
-    
-    [_containerView addSubview:self.tableView];
-    
-    //error view
-    self.errorMaskView = [[FHErrorView alloc] init];
-    [self.containerView addSubview:_errorMaskView];
-    self.errorMaskView.hidden = YES;
-    
-    //notifyview
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBarView];
-    
-    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.redirectTipView];
-    
-    [self.view addSubview:self.navbar];
-    self.bannerView = [[FHHouseListBannerView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:self.bannerView];
-    __weak typeof(self)wself = self;
-    self.bannerView.clickedItemCallBack = ^(NSInteger index) {
-        if (index > wself.bannerItems.count) {
-            return;
-        }
-    };
-
-    [self.view addSubview:self.filterBgControl];
-    
-    _filterContainerView = [[UIView alloc]init];
-    [self.view addSubview:_filterContainerView];
-    
-    [_filterContainerView addSubview:self.filterPanel];
-    [self.view bringSubviewToFront:self.filterBgControl];
-    
 }
 
 #pragma mark - show notify
@@ -467,7 +404,10 @@
 -(UITableView *)tableView {
     if (!_tableView) {
         
-        _tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+        CGFloat height = [FHFakeInputNavbar perferredHeight];
+        CGRect frame = self.view.bounds;
+        frame.size.height = self.view.height - height - kFilterBarHeight;
+        _tableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
         if (@available(iOS 11.0, *)) {
             
             _tableView.estimatedRowHeight = 0;

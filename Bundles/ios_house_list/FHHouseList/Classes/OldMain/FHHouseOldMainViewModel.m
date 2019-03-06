@@ -29,15 +29,23 @@
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleModel.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHCityListViewModel.h" // add by zjing for test
+#import "FHHouseListBannerView.h"
+#import <FHCommonUI/UIView+House.h>
 
 #define kFHHouseOldMainCellId @"kFHHouseOldMainCellId"
 #define kFHHouseOldMainRecommendTitleCellId @"kFHHouseOldMainRecommendTitleCellId"
 #define kFHHouseOldMainPlaceholderCellId @"kFHHouseOldMainPlaceholderCellId"
+#define HOUSE_ICON_HEADER_HEIGHT 60
+#define HOUSE_TABLE_HEADER_HEIGHT (HOUSE_ICON_HEADER_HEIGHT+19)
+#define kFilterBarHeight 44
 
 @interface FHHouseOldMainViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate>
 
 @property(nonatomic , weak) FHErrorView *maskView;
 @property (nonatomic , weak) FHHouseListRedirectTipView *redirectTipView;
+@property(nonatomic , strong) UIView *iconHeaderView;
+@property (nonatomic,strong) FHHouseListBannerView *iconsHeaderView;
+@property (nonatomic , strong) FHConfigDataRentOpDataModel *houseOpDataModel;
 
 @property(nonatomic, weak) UITableView *tableView;
 
@@ -73,6 +81,17 @@
 @end
 
 @implementation FHHouseOldMainViewModel
+
+-(void)setContainerScrollView:(UIScrollView *)containerScrollView
+{
+    _containerScrollView = containerScrollView;
+    _containerScrollView.delegate = self;
+}
+
+-(UIView *)iconHeaderView
+{
+    return _iconHeaderView;
+}
 
 - (void)setMaskView:(FHErrorView *)maskView
 {
@@ -154,6 +173,7 @@
     self = [super init];
     if (self) {
         
+        _houseType = FHHouseTypeSecondHandHouse;
         _canChangeHouseSearchDic = YES;
         self.houseList = [NSMutableArray array];
         self.sugesstHouseList = [NSMutableArray array];
@@ -165,8 +185,8 @@
         self.showRedirectTip = YES;
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         
-        self.houseType = FHHouseTypeSecondHandHouse;
-        
+        [self setupBannerView];
+
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
@@ -178,6 +198,120 @@
     }
     return self;
 }
+
+- (void)setupBannerView
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (dataModel.houseOpData.items.count > 0) {
+        NSMutableArray *items = @[].mutableCopy;
+        _iconsHeaderView =  [[FHHouseListBannerView alloc] init];
+        _iconsHeaderView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, HOUSE_TABLE_HEADER_HEIGHT);
+        for (NSInteger index = 0; index < dataModel.houseOpData.items.count; index++) {
+            FHConfigDataOpData2ItemsModel *obj = dataModel.houseOpData.items[index];
+            FHHouseListBannerItem *item = [[FHHouseListBannerItem alloc]init];
+            item.title = obj.title;
+            item.subtitle = obj.descriptionStr;
+            item.openUrl = obj.openUrl;
+            FHConfigDataOpData2ItemsImageModel *imageModel = obj.image.firstObject;
+            if (imageModel) {
+                item.iconName = imageModel.url;
+            }
+            [items addObject:item];
+        }
+        [_iconsHeaderView addBannerItems:items];
+        __weak typeof(self)wself = self;
+        _iconsHeaderView.clickedItemCallBack = ^(NSInteger index) {
+            if (index < wself.houseOpDataModel.items.count ) {
+                //TODO: 添加埋点 add by zjing for test
+                FHConfigDataRentOpDataItemsModel *model = wself.houseOpDataModel.items[index];
+                [wself quickJump:model];
+            }
+        };
+        UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, HOUSE_TABLE_HEADER_HEIGHT)];
+        header.backgroundColor  = [UIColor whiteColor];
+        [header addSubview:_iconsHeaderView];
+        
+        self.iconHeaderView = header;
+        self.houseOpDataModel = dataModel.houseOpData;
+    }
+}
+
+#pragma mark - quick jump
+- (void)quickJump:(FHConfigDataRentOpDataItemsModel *)model
+{
+    NSMutableString *openUrl = [[NSMutableString alloc] initWithString:model.openUrl];// model.openUrl;
+    if (![openUrl containsString:@"house_type"]) {
+        [openUrl appendFormat:@"&house_type=%ld",FHHouseTypeRentHouse];
+        //        openUrl = [openUrl stringByAppendingFormat:@"&house_type=%ld",FHHouseTypeRentHouse];
+    }
+    if (![openUrl containsString:@"search_id"]) {
+        [openUrl appendFormat:@"&search_id=%@",self.searchId?:@"be_null"];
+    }
+    TTRouteUserInfo *userInfo = nil;
+    NSURL *url = nil;
+    
+    NSString *originFrom = model.logPb[@"origin_from"];
+    NSDictionary *param  = nil;
+//    param = [self addEnterHouseListLog:model.openUrl]; // add by zjing for test
+    if (param) {
+        NSDictionary *infoDict = @{@"tracer":param};
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
+        if (originFrom.length == 0) {
+            originFrom = param[@"origin_from"];
+        }
+        
+        if (originFrom) {
+            SETTRACERKV(@"origin_from", originFrom);
+        }
+    }
+    url = [NSURL URLWithString:openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    
+}
+//- (void)setupHeader
+//{
+//    NSDictionary *dict = nil;
+//    if ([[[FHEnvContext sharedInstance] getConfigFromCache].rentOpData respondsToSelector:@selector(toDictionary)]) {
+//        dict =  [[FHEnvContext sharedInstance] getConfigFromCache].rentOpData.toDictionary;
+//    }
+//    
+//    _rentModel = [[FHConfigDataRentOpDataModel alloc] initWithDictionary:dict error:nil];
+//    
+//    _iconsHeaderView =  [[FHSpringboardView alloc] initWithRowCount:MAX_ICON_COUNT];
+//    _iconsHeaderView.frame = CGRectMake(0, 0, CGRectGetWidth(self.viewController.view.frame), 109);
+//    __weak typeof(self) wself = self;
+//    _iconsHeaderView.tapIconBlock = ^(NSInteger index) {
+//        if (index < wself.rentModel.items.count ) {
+//            //TODO: 添加埋点
+//            FHConfigDataRentOpDataItemsModel *model = wself.rentModel.items[index];
+//            [wself quickJump:model];
+//        }
+//    };
+//    
+//    NSMutableArray *items = [NSMutableArray new];
+//    UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];
+//    for(FHConfigDataRentOpDataItemsModel *model in _rentModel.items){
+//        FHSpringboardIconItemView* item = [[FHSpringboardIconItemView alloc] init];
+//        item.nameLabel.text = model.title;
+//        FHConfigDataRentOpDataItemsImageModel *imgModel = [model.image firstObject];
+//        NSURL *imgUrl = [NSURL URLWithString:imgModel.url];
+//        [item.iconView bd_setImageWithURL:imgUrl placeholder:placeHolder];
+//        //        [item.iconView bd_setImageWithURL:imgUrl placeholderImage:placeHolder];
+//        [items addObject:item];
+//    }
+//    if (items.count > MAX_ICON_COUNT) {
+//        items = [items subarrayWithRange:NSMakeRange(0, MAX_ICON_COUNT)];
+//    }
+//    
+//    _iconsHeaderView.backgroundColor = [UIColor whiteColor];
+//    [_iconsHeaderView addItems:items];
+//    
+//    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.viewController.view.frame), TABLE_HEADER_HEIGHT)];
+//    header.backgroundColor  = [UIColor themeGray7];
+//    [header addSubview:_iconsHeaderView];
+//    
+//    self.iconHeaderView = header;
+//}
 
 -(void)configTableView
 {
@@ -274,9 +408,8 @@
         if (!wself) {
             return ;
         }
+        wself.tableView.scrollEnabled = YES;
         [wself processData:model error:error];
-        
-        
     }];
     
     self.requestTask = task;
@@ -293,9 +426,8 @@
         if (!wself) {
             return ;
         }
+        wself.tableView.scrollEnabled = YES;
         [wself processData:model error:error];
-        
-        
     }];
     
     self.requestTask = task;
@@ -486,7 +618,7 @@
 #pragma mark - filter delegate
 
 #pragma mark filter条件改变
--(void)onConditionChanged:(NSString *)condition
+- (void)onConditionChanged:(NSString *)condition
 {
     NSString *allQuery = @"";
     if (self.getAllQueryString) {
@@ -494,9 +626,8 @@
         allQuery = self.getAllQueryString();
     }
     
-    //    if ([self.condition isEqualToString:allQuery]) {
-    //        return;
-    //    }
+    self.tableView.scrollEnabled = YES;
+
     self.condition = allQuery;
     [self.filterOpenUrlMdodel overwriteFliter:self.condition];
     
@@ -508,20 +639,24 @@
 }
 
 #pragma mark filter将要显示
--(void)onConditionWillPanelDisplay
+- (void)onConditionWillPanelDisplay
 {
-    //    NSLog(@"onConditionWillPanelDisplay");
-    
+    self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
+    self.containerScrollView.scrollEnabled = NO;
 }
 
 #pragma mark filter将要消失
--(void)onConditionPanelWillDisappear
+- (void)onConditionPanelWillDisappear
 {
-    
+    if (self.houseOpDataModel.items.count > 1) {
+        self.containerScrollView.scrollEnabled = YES;
+    }else {
+        self.containerScrollView.scrollEnabled = NO;
+    }
 }
 
 #pragma mark - nav 点击事件
--(void)showInputSearch {
+- (void)showInputSearch {
     if (self.closeConditionFilter) {
         self.closeConditionFilter();
     }
@@ -805,10 +940,11 @@
     return 105;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return CGFLOAT_MIN;
+   return CGFLOAT_MIN;
 }
+
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     return CGFLOAT_MIN;
@@ -833,6 +969,167 @@
             }
         }
     }
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGPoint offset = self.tableView.contentOffset;
+    CGPoint coffset = self.containerScrollView.contentOffset;
+    [self.viewController.view endEditing:YES];
+    
+    NSLog(@"scrollview scroll: %@  offset is: %f  coffset is: %f  draging: %@",scrollView == self.tableView?@"TableView":@"ContainerView",offset.y,coffset.y,scrollView.isDragging?@"YES":@"NO");
+    
+    CGFloat threshold = self.iconsHeaderView.height;
+    CGFloat realOffset = offset.y + self.tableView.contentInset.top;
+    
+    if (scrollView == _containerScrollView) {
+        
+        if (coffset.y > threshold) {
+            //向上滑动， 此时应滑动tableview
+            if (self.tableView.scrollEnabled) {
+                if (self.tableView.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top > self.tableView.contentSize.height) {
+                    //内容不满一屏幕
+                    offset = CGPointMake(0, -self.tableView.contentInset.top);;
+                }else{
+                    CGFloat delta = (offset.y + self.tableView.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top - self.tableView.contentSize.height);
+                    if (delta > 0) {
+                        if (delta < 10) {
+                            offset.y += (coffset.y - threshold);
+                        }else{
+                            offset.y += (coffset.y - threshold)*(10/delta);
+                        }
+                    }else{
+                        offset.y += coffset.y - threshold;
+                    }
+                    offset.y -= self.tableView.contentInset.top;
+                }
+            }
+            coffset.y = threshold;
+            
+            self.tableView.contentOffset = offset;
+            self.containerScrollView.contentOffset = CGPointMake(0, threshold);
+        }else if(coffset.y > 0 && realOffset > 0){
+            //注释后，则在筛选器在顶部时不能向下滑动，只能等tableview滑动下来后才可以
+            //            offset.y += (coffset.y-threshold - self.tableView.contentInset.top);
+            //            self.tableView.contentOffset = offset;
+            if (self.tableView.scrollEnabled) {
+                self.containerScrollView.contentOffset = CGPointMake(0, threshold);
+            }
+        }
+        
+        
+    }else if (scrollView == self.tableView){
+        
+        UIEdgeInsets insets = self.tableView.contentInset;
+        CGFloat realOffset = offset.y + insets.top;
+        if (realOffset < 0) {
+            
+            if (coffset.y > -10) {
+                coffset.y += realOffset;
+            }else if (coffset.y > -20){
+                coffset.y += realOffset * 0.3;
+            }else {//if (coffset.y > -50)
+                coffset.y += realOffset * 0.1;
+            }
+            
+            if (coffset.y < -30) {
+                coffset.y = -30;
+            }
+            
+            if (self.houseOpDataModel.items.count > 0) {
+                self.containerScrollView.contentOffset = coffset;
+                self.tableView.contentOffset = CGPointMake(0, -insets.top);
+            }else {
+                self.tableView.contentOffset = CGPointMake(0, offset.y);
+            }
+        }else if (coffset.y < threshold){
+            
+            coffset.y += realOffset;
+            if (coffset.y > threshold) {
+                coffset.y = threshold;
+            }
+            self.tableView.contentOffset = CGPointMake(0, -insets.top);;
+            if (self.houseOpDataModel.items.count > 0) {
+                self.containerScrollView.contentOffset = coffset;
+            }
+        }
+    }
+    
+}
+
+//- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+//{
+//    if (scrollView == self.tableView && self.tableView.contentOffset.y + self.tableView.height - self.tableView.contentInset.bottom + 0.5 - self.tableView.contentSize.height > 0) {
+//        [self checkScrollMoveEffect:scrollView animated:YES];
+//    }
+//}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    [self checkScrollMoveEffect:scrollView animated:YES];
+}
+
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    [self checkScrollMoveEffect:scrollView animated:NO];
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (scrollView == self.tableView) {
+        [self checkScrollMoveEffect:scrollView animated:YES];
+    }
+}
+
+-(void)checkScrollMoveEffect:(UIScrollView *)scrollView animated:(BOOL)animated
+{
+        NSLog(@"scrollview move %@ info is: %@",scrollView == self.tableView?@"tableview":@"containerview",scrollView);
+    if (scrollView == self.tableView) {
+        if (self.containerScrollView.contentOffset.y < 0) {
+            if (animated) {
+                [UIView animateWithDuration:0.1 animations:^{
+                    self.containerScrollView.contentOffset = CGPointZero;
+                }];
+            }else{
+                [self.containerScrollView setContentOffset:CGPointZero animated:NO];
+            }
+        }else if(self.containerScrollView.contentOffset.y + self.containerScrollView.height > self.containerScrollView.contentSize.height){
+            self.containerScrollView.contentOffset = CGPointMake(0, self.containerScrollView.contentSize.height - self.containerScrollView.height);
+        }
+        if ([self tableViewDragUpToLimit]) {
+            //滑动到底部
+            [self.tableView setContentOffset:CGPointMake(0, self.tableView.contentSize.height + self.tableView.contentInset.bottom - self.tableView.height - 0.5) animated:YES];
+        }
+        
+    }else if (scrollView == self.containerScrollView && self.tableView.scrollEnabled){
+        if (self.tableView.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top > self.tableView.contentSize.height) {
+            //内容不满一屏幕
+            self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);;
+        }else{
+            if (self.tableView.contentOffset.y + self.tableView.contentInset.top < 0) {
+                self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
+            }else if (self.tableView.contentOffset.y + self.tableView.height  > self.tableView.contentSize.height + self.tableView.contentInset.bottom){
+                self.tableView.contentOffset = CGPointMake(0, self.tableView.contentSize.height + self.tableView.contentInset.bottom - self.tableView.height - self.tableView.contentInset.top );
+            }
+        }
+    }
+    
+}
+
+-(BOOL)tableViewDragUpToLimit
+{
+    return self.tableView.contentOffset.y + self.tableView.height - self.tableView.contentInset.bottom + 0.5 - self.tableView.contentSize.height > 0;
+}
+
+
+-(CGFloat)topViewHeight
+{
+    return self.tableView.tableHeaderView.height;
+}
+
+-(CGFloat)headerBottomOffset
+{
+    return MAX(CGRectGetHeight(self.tableView.tableHeaderView.frame) - self.tableView.contentOffset.y,0) + kFilterBarHeight;
 }
 
 #pragma mark - 详情页跳转
