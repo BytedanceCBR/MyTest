@@ -346,7 +346,7 @@
         self.extendTitle.text = model.displayDescription;
         self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
         if (model.tags) {
-            NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:model.tags];
+            NSMutableAttributedString * attributeString =  [FHSingleImageInfoCellModel  tagsStringWithTagList:model.tags];
             self.areaLabel.attributedText =  attributeString;
         }
  

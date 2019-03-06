@@ -306,7 +306,7 @@
 {
     self.majorTitle.text = commonModel.displayTitle;
     self.extendTitle.text = commonModel.displayDescription;
-    NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:commonModel.tags];
+    NSMutableAttributedString * attributeString =  [FHSingleImageInfoCellModel  tagsStringWithTagList:commonModel.tags];
     self.areaLabel.attributedText =  attributeString;
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
@@ -417,7 +417,7 @@
         self.majorTitle.text = model.displayTitle;
         self.extendTitle.text = model.displayDescription;
         self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
-        NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:model.tags];
+        NSMutableAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
         self.areaLabel.attributedText =  attributeString;
         
         self.priceLabel.text = model.displayPricePerSqm;
@@ -670,7 +670,7 @@
     return _roomSpaceLabel;
 }
 
--(UILabel *)recommendReasonView {
+-(FHHouseRecommendReasonView *)recommendReasonView {
     
     if (!_recommendReasonView) {
         _recommendReasonView = [[FHHouseRecommendReasonView alloc] init];

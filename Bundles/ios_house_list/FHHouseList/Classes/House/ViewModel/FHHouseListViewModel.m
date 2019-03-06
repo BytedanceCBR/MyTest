@@ -33,6 +33,7 @@
 #import "FHRecommendSecondhandHouseTitleModel.h"
 #import "FHHouseBridgeManager.h"
 #import "FHCityListViewModel.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -202,7 +203,7 @@
     [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kFHHouseListCellId];
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
-
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
 }
 
 
@@ -826,28 +827,22 @@
             return cell;
         } else {
             if (indexPath.section == 0) {
-                FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
-                BOOL isFirstCell = (indexPath.row == 0);
-                BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                
+                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
                 if (indexPath.row < self.houseList.count) {
-                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                    [cell updateWithHouseCellModel:cellModel];
+                    FHSingleImageInfoCellModel * cellModel = self.houseList[indexPath.row];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];                    
+                    [cell updateWithHouseCellModel:cellModel];
                 }
                 return cell;
             } else {
-                FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
+                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
                 BOOL isFirstCell = (indexPath.row == 0);
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 
                 if (indexPath.row < self.sugesstHouseList.count) {
                     FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
-                    [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell updateWithHouseCellModel:cellModel];
                 }
                 return cell;
             }

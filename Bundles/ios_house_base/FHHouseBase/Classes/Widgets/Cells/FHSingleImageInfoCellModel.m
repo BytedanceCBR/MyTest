@@ -39,7 +39,7 @@
     _houseModel = houseModel;
     _houseType = FHHouseTypeNewHouse;
     _houseId = houseModel.houseId;
-    _tagsAttrStr = [self tagsStringWithTagList:houseModel.tags];
+    _tagsAttrStr = [self.class tagsStringWithTagList:houseModel.tags];
     _titleSize = [self titleSizeWithTagList:houseModel.tags titleStr:houseModel.displayTitle];
     _originPriceAttrStr = nil;
 
@@ -50,7 +50,7 @@
     _secondModel = secondModel;
     _houseType = FHHouseTypeSecondHandHouse;
     _houseId = secondModel.hid;
-    _tagsAttrStr = [self tagsStringWithTagList:secondModel.tags];
+    _tagsAttrStr = [self.class tagsStringWithTagList:secondModel.tags];
     _titleSize = [self titleSizeWithTagList:secondModel.tags titleStr:secondModel.displayTitle];
     _originPriceAttrStr = [self originPriceAttr:secondModel.originPrice];
 
@@ -61,7 +61,7 @@
     _rentModel = rentModel;
     _houseType = FHHouseTypeRentHouse;
     _houseId = rentModel.id;
-    _tagsAttrStr = [self tagsStringWithTagList:rentModel.tags];
+    _tagsAttrStr = [self.class tagsStringWithTagList:rentModel.tags];
     _titleSize = [self titleSizeWithTagList:rentModel.tags titleStr:rentModel.title];
     _originPriceAttrStr = nil;
 
@@ -173,7 +173,7 @@
 }
 
 
--(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList {
++(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList {
     
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (tagList.count > 0) {
@@ -187,7 +187,7 @@
                 
                 UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
                 UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
-                NSAttributedString *attr = [self createTagAttrString:element.content isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
+                NSAttributedString *attr = [self.class createTagAttrString:element.content isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
                 [attrTexts addObject:attr];
             }
         }];
@@ -216,7 +216,7 @@
     return text;
 }
 
--(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
++(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
     
     NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"  %@  ",text]];
     attributeText.yy_font = [UIFont themeFontRegular:10];
