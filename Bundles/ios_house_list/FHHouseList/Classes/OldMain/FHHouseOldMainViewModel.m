@@ -639,7 +639,7 @@
 }
 
 #pragma mark filter将要显示
-- (void)onConditionWillPanelDisplay
+- (void)onConditionPanelWillDisplay
 {
     self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
     self.containerScrollView.scrollEnabled = NO;
