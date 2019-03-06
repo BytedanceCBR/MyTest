@@ -192,7 +192,7 @@
     [self.finishedButton setTitle:@"提交" forState:UIControlStateNormal];
     self.finishedButton.titleColorThemeKey = kColorText10;
     self.finishedButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
-    self.finishedButton.backgroundColorThemeKey = kFHColorClearBlue;
+    self.finishedButton.backgroundColorThemeKey = kFHColorCoral;
     self.finishedButton.highlightedBackgroundColorThemeKey = kColorBackground4Highlighted;
     self.finishedButton.titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:17.0f]];
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.finishedButton.frame.size.width, 0.5)];

@@ -61,25 +61,33 @@
             make.height.mas_equalTo(50);
         }];
         [self.starsContainer updateStarsCount:[model.evaluationInfo.totalScore integerValue]];
-        
-        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-        flowLayout.itemSize = CGSizeMake(140, 122);
-        flowLayout.minimumLineSpacing = 10;
-        flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        NSString *identifier = NSStringFromClass([FHDetailEvaluationItemCollectionCell class]);
-        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:122 cellIdentifier:identifier cellCls:[FHDetailEvaluationItemCollectionCell class] datas:model.evaluationInfo.subScores];
-        [self.containerView addSubview:colView];
-        __weak typeof(self) wSelf = self;
-        colView.clickBlk = ^(NSInteger index) {
-            [wSelf collectionCellClick:index];
-        };
-        [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.starsContainer.mas_bottom).offset(8);
-            make.left.right.mas_equalTo(self.containerView);
-            make.bottom.mas_equalTo(self.containerView);
-        }];
-        [colView reloadData];
+        if (model.evaluationInfo.subScores.count > 0) {
+            UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+            flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
+            flowLayout.itemSize = CGSizeMake(140, 122);
+            flowLayout.minimumLineSpacing = 10;
+            flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+            NSString *identifier = NSStringFromClass([FHDetailEvaluationItemCollectionCell class]);
+            FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:122 cellIdentifier:identifier cellCls:[FHDetailEvaluationItemCollectionCell class] datas:model.evaluationInfo.subScores];
+            [self.containerView addSubview:colView];
+            __weak typeof(self) wSelf = self;
+            colView.clickBlk = ^(NSInteger index) {
+                [wSelf collectionCellClick:index];
+            };
+            [colView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.starsContainer.mas_bottom).offset(8);
+                make.left.right.mas_equalTo(self.containerView);
+                make.bottom.mas_equalTo(self.containerView);
+            }];
+            [colView reloadData];
+        } else {
+            [_starsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(self.containerView);
+                make.top.mas_equalTo(10);
+                make.height.mas_equalTo(50);
+                make.bottom.mas_equalTo(self.containerView).offset(6);
+            }];
+        }
     }
     
     [self layoutIfNeeded];
@@ -209,7 +217,7 @@
             self.levelLabel.backgroundColor = [UIColor themeRed1];
             self.levelLabel.text = @"高";
         } else {
-            self.levelLabel.backgroundColor = [UIColor themeBlue1];
+            self.levelLabel.backgroundColor = [UIColor themeGreen1];
             self.levelLabel.text = @"低";
         }
     }
@@ -221,13 +229,13 @@
     _backView = [[UIView alloc] init];
     _backView.layer.cornerRadius = 4.0;
     _backView.layer.masksToBounds = YES;
-    _backView.backgroundColor = [UIColor themeGray5];
+    _backView.backgroundColor = [UIColor themeGray8];
     
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _descLabel.textColor = [UIColor themeGray3];
     
     _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _nameLabel.textColor = [UIColor themeGray3];
+    _nameLabel.textColor = [UIColor themeGray1];
     _nameLabel.font = [UIFont themeFontMedium:16];
     _nameLabel.textAlignment = NSTextAlignmentLeft;
     

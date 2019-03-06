@@ -271,7 +271,7 @@
         _fontSize = fontSize;
         _ownerType = TTOwnerType_CommentAuthor;
         self.centerY = baselineOriginPoint.y;
-        _textColorThemedKey = kFHColorDarkIndigo;
+        _textColorThemedKey = kFHColorCharcoalGrey;
         _titleClickActionExtendToLogos = YES;
 
         _logoModelArray = [NSMutableArray arrayWithCapacity:logoCount];
@@ -280,7 +280,7 @@
         _titleLabel = [[TTAsyncLabel alloc] initWithFrame:CGRectZero];
         _titleLabel.backgroundColor = [UIColor clearColor];
 //        _titleLabel.textColorThemeKey = _textColorThemedKey;
-        _titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
+        _titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:fontSize] ? : [UIFont boldSystemFontOfSize:fontSize];
         _titleLabel.numberOfLines = 1;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;

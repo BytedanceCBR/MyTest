@@ -74,8 +74,8 @@
             _sendButton.titleLabel.font = [UIFont systemFontOfSize:16.0f];
         }
         
-        _sendButton.titleColorThemeKey = kColorText6;
-        _sendButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
+        _sendButton.titleColorThemeKey = kFHColorCoral;
+//        _sendButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
         _sendButton.disabledTitleColorThemeKey = kColorText9;
         _sendButton.enabled = NO;
         [_sendButton setTitle:@"发布" forState:UIControlStateNormal];
