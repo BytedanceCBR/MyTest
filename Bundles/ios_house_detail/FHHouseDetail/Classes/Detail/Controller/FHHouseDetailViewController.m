@@ -111,8 +111,9 @@
     }
     
     // Push推送过来的状态栏修改
+    __weak typeof(self) wSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self refreshContentOffset:self.tableView.contentOffset];
+        [wSelf refreshContentOffset:wSelf.tableView.contentOffset];
     });
 }
 
