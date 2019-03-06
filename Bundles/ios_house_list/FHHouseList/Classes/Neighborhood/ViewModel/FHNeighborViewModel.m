@@ -276,7 +276,7 @@
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
             
-            if (hasMore && self.houseList.count <= 10) {
+            if (hasMore && self.houseList.count < 10) {
                 self.tableView.mj_footer.hidden = YES;
             }
         } else {

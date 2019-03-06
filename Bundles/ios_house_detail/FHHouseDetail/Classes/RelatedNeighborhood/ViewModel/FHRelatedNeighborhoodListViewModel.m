@@ -147,7 +147,7 @@
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
             
-            if (hasMore && self.houseList.count <= 10) {
+            if (hasMore && self.houseList.count < 10) {
                 self.refreshFooter.hidden = YES;
             }
         } else {

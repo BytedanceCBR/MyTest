@@ -523,7 +523,7 @@
         [self updateTableViewWithMoreData:hasMore];
         
         if (self.houseType != FHHouseTypeSecondHandHouse) {
-            if (!hasMore && self.houseList.count <= 10) {
+            if (!hasMore && self.houseList.count < 10) {
                 self.refreshFooter.hidden = YES;
             }
         }
