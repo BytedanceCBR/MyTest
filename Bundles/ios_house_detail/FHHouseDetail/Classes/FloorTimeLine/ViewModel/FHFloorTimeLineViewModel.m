@@ -120,7 +120,7 @@
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.timeLineListTable.mj_footer.hidden = NO;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@" -- 没有更多内容了 -- "];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
         [self.timeLineListTable.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.timeLineListTable.mj_footer endRefreshing];

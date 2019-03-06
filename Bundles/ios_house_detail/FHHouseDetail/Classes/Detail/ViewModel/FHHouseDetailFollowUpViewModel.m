@@ -102,7 +102,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     [FHHouseDetailAPI requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (error) {
-            [[ToastManager manager] showToast:@"取消关注失败"];
+            [[ToastManager manager] showToast:@"取消失败"];
         }else {
             if (model.status.integerValue == 0) {
                 [[ToastManager manager] showToast:@"取消关注"];
