@@ -248,9 +248,10 @@
     [queryP addEntriesFromDictionary:paramObj.allParams];
     NSDictionary *baseParams = [self categoryLogDict];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"enter_from"] = baseParams[@"enter_from"] ? : @"be_null";
-    dict[@"element_from"] = baseParams[@"element_from"] ? : @"be_null";
-    dict[@"origin_from"] = baseParams[@"origin_from"] ? : @"be_null";
+    dict[@"enter_from"] = @"old_kind_list";
+    NSDictionary *logpbDict = model.logPb;
+    dict[@"element_from"] = logpbDict[@"element_from"] ? : @"be_null";
+    dict[@"origin_from"] = logpbDict[@"origin_from"] ? : @"be_null";
     dict[@"log_pb"] = model.logPb ? : @"be_null";
     dict[@"search_id"] = baseParams[@"search_id"] ? : @"be_null";
     dict[@"origin_search_id"] = baseParams[@"origin_search_id"] ? : @"be_null";
