@@ -292,7 +292,14 @@ static NSMutableArray  * _Nullable identifierArr;
         if (itemModel.image.count > 0) {
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
-                [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
+                if ([TTInstallSandBoxHelper isAPPFirstLaunch]) {
+                    [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"] options:BDImageRequestIgnoreDiskCache completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+                        
+                    }];
+                }else
+                {
+                    [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
+                }
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(20);
                     make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
