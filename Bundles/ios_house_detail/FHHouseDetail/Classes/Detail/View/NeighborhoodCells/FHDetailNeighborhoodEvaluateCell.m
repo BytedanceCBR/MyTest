@@ -209,7 +209,7 @@
             self.levelLabel.backgroundColor = [UIColor themeRed1];
             self.levelLabel.text = @"高";
         } else {
-            self.levelLabel.backgroundColor = [UIColor themeBlue1];
+            self.levelLabel.backgroundColor = [UIColor themeGreen1];
             self.levelLabel.text = @"低";
         }
     }
@@ -221,13 +221,13 @@
     _backView = [[UIView alloc] init];
     _backView.layer.cornerRadius = 4.0;
     _backView.layer.masksToBounds = YES;
-    _backView.backgroundColor = [UIColor themeGray5];
+    _backView.backgroundColor = [UIColor themeGray8];
     
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _descLabel.textColor = [UIColor themeGray3];
     
     _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _nameLabel.textColor = [UIColor themeGray3];
+    _nameLabel.textColor = [UIColor themeGray1];
     _nameLabel.font = [UIFont themeFontMedium:16];
     _nameLabel.textAlignment = NSTextAlignmentLeft;
     
