@@ -390,7 +390,7 @@
 
 - (void)trackEndedByAppWillEnterBackground {
     
-//    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 }
 
