@@ -58,6 +58,7 @@
         self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [weakSelf requestData:NO];
         }];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
         self.tableView.mj_footer = self.refreshFooter;
         
         self.viewController = viewController;
@@ -109,6 +110,11 @@
             [wself.dataList addObjectsFromArray:model.data.list];
             wself.page++;
             [wself updateTableViewWithMoreData:model.data.hasMore];
+            
+            if(!model.data.hasMore && wself.dataList.count < 10)
+            {
+                wself.tableView.mj_footer.hidden = YES;
+            }
             
             if(wself.dataList.count > 0){
                 [wself.viewController.emptyView hideEmptyView];
