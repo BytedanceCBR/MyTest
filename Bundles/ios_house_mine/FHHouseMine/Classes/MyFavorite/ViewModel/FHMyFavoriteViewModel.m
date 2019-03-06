@@ -452,9 +452,10 @@ extern NSString *const kFHDetailFollowUpNotification;
         
         if (indexPath.row < self.dataList.count) {
             FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
             [cell updateWithHouseCellModel:cellModel];
             [cell refreshTopMargin: 20];
-            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+            [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
         }
         return cell;
     }
@@ -472,7 +473,9 @@ extern NSString *const kFHDetailFollowUpNotification;
         return 105;
     }else{
         BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
-        return isLastCell ? 125 : 105;
+        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+        return (isLastCell ? 125 : 105)+reasonHeight;
     }
 }
 

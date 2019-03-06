@@ -14,6 +14,7 @@
 #import "UIFont+House.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "UIViewController+Track.h"
+#import "UIView+House.h"
 
 @interface FHHouseDetailViewController ()
 
@@ -115,6 +116,11 @@
     [super viewWillAppear:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self refreshContentOffset:self.tableView.contentOffset];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -221,7 +227,7 @@
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(64);
         if (@available(iOS 11.0, *)) {
-            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom);
+            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
             make.bottom.mas_equalTo(self.view);
         }
