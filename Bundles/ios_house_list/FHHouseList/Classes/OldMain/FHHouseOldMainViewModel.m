@@ -217,14 +217,18 @@
                 item.iconName = imageModel.url;
             }
             [items addObject:item];
+            NSDictionary *logpbDict = obj.logPb;
+            [self addOperationShowLog:logpbDict[@"operation_name"]];
         }
         [_iconsHeaderView addBannerItems:items];
         __weak typeof(self)wself = self;
         _iconsHeaderView.clickedItemCallBack = ^(NSInteger index) {
             if (index < wself.houseOpDataModel.items.count ) {
-                //TODO: 添加埋点 add by zjing for test
+
                 FHConfigDataRentOpDataItemsModel *model = wself.houseOpDataModel.items[index];
                 [wself quickJump:model];
+                NSDictionary *logpbDict = model.logPb;
+                [wself addOperationClickLog:logpbDict[@"operation_name"]];
             }
         };
         UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, HOUSE_TABLE_HEADER_HEIGHT)];
@@ -239,79 +243,40 @@
 #pragma mark - quick jump
 - (void)quickJump:(FHConfigDataRentOpDataItemsModel *)model
 {
-    NSMutableString *openUrl = [[NSMutableString alloc] initWithString:model.openUrl];// model.openUrl;
-    if (![openUrl containsString:@"house_type"]) {
-        [openUrl appendFormat:@"&house_type=%ld",FHHouseTypeRentHouse];
-        //        openUrl = [openUrl stringByAppendingFormat:@"&house_type=%ld",FHHouseTypeRentHouse];
-    }
-    if (![openUrl containsString:@"search_id"]) {
-        [openUrl appendFormat:@"&search_id=%@",self.searchId?:@"be_null"];
-    }
-    TTRouteUserInfo *userInfo = nil;
-    NSURL *url = nil;
-    
-    NSString *originFrom = model.logPb[@"origin_from"];
-    NSDictionary *param  = nil;
-//    param = [self addEnterHouseListLog:model.openUrl]; // add by zjing for test
-    if (param) {
-        NSDictionary *infoDict = @{@"tracer":param};
-        userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
-        if (originFrom.length == 0) {
-            originFrom = param[@"origin_from"];
-        }
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:model.openUrl]];
+    NSMutableDictionary *queryP = [NSMutableDictionary new];
+    [queryP addEntriesFromDictionary:paramObj.allParams];
+    NSDictionary *baseParams = [self categoryLogDict];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    dict[@"enter_from"] = baseParams[@"enter_from"] ? : @"be_null";
+    dict[@"element_from"] = baseParams[@"element_from"] ? : @"be_null";
+    dict[@"origin_from"] = baseParams[@"origin_from"] ? : @"be_null";
+    dict[@"log_pb"] = model.logPb ? : @"be_null";
+    dict[@"search_id"] = baseParams[@"search_id"] ? : @"be_null";
+    dict[@"origin_search_id"] = baseParams[@"origin_search_id"] ? : @"be_null";
+
+    NSString *reportParams = [self getEvaluateWebParams:dict];
+    NSString *jumpUrl = @"sslocal://webview";
+    NSMutableString *urlS = [[NSMutableString alloc] init];
+    [urlS appendString:queryP[@"url"]];
+    [urlS appendFormat:@"&report_params=%@",reportParams];
+    queryP[@"url"] = urlS;
         
-        if (originFrom) {
-            SETTRACERKV(@"origin_from", originFrom);
-        }
-    }
-    url = [NSURL URLWithString:openUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:queryP];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
 }
-//- (void)setupHeader
-//{
-//    NSDictionary *dict = nil;
-//    if ([[[FHEnvContext sharedInstance] getConfigFromCache].rentOpData respondsToSelector:@selector(toDictionary)]) {
-//        dict =  [[FHEnvContext sharedInstance] getConfigFromCache].rentOpData.toDictionary;
-//    }
-//    
-//    _rentModel = [[FHConfigDataRentOpDataModel alloc] initWithDictionary:dict error:nil];
-//    
-//    _iconsHeaderView =  [[FHSpringboardView alloc] initWithRowCount:MAX_ICON_COUNT];
-//    _iconsHeaderView.frame = CGRectMake(0, 0, CGRectGetWidth(self.viewController.view.frame), 109);
-//    __weak typeof(self) wself = self;
-//    _iconsHeaderView.tapIconBlock = ^(NSInteger index) {
-//        if (index < wself.rentModel.items.count ) {
-//            //TODO: 添加埋点
-//            FHConfigDataRentOpDataItemsModel *model = wself.rentModel.items[index];
-//            [wself quickJump:model];
-//        }
-//    };
-//    
-//    NSMutableArray *items = [NSMutableArray new];
-//    UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];
-//    for(FHConfigDataRentOpDataItemsModel *model in _rentModel.items){
-//        FHSpringboardIconItemView* item = [[FHSpringboardIconItemView alloc] init];
-//        item.nameLabel.text = model.title;
-//        FHConfigDataRentOpDataItemsImageModel *imgModel = [model.image firstObject];
-//        NSURL *imgUrl = [NSURL URLWithString:imgModel.url];
-//        [item.iconView bd_setImageWithURL:imgUrl placeholder:placeHolder];
-//        //        [item.iconView bd_setImageWithURL:imgUrl placeholderImage:placeHolder];
-//        [items addObject:item];
-//    }
-//    if (items.count > MAX_ICON_COUNT) {
-//        items = [items subarrayWithRange:NSMakeRange(0, MAX_ICON_COUNT)];
-//    }
-//    
-//    _iconsHeaderView.backgroundColor = [UIColor whiteColor];
-//    [_iconsHeaderView addItems:items];
-//    
-//    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.viewController.view.frame), TABLE_HEADER_HEIGHT)];
-//    header.backgroundColor  = [UIColor themeGray7];
-//    [header addSubview:_iconsHeaderView];
-//    
-//    self.iconHeaderView = header;
-//}
+
+- (NSString *)getEvaluateWebParams:(NSDictionary *)dic
+{
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+    if (data && !error) {
+        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        return temp;
+    }
+    return nil;
+}
 
 -(void)configTableView
 {
@@ -1182,7 +1147,7 @@
 
 -(NSString *)categoryName
 {
-    return @"old_list";
+    return @"old_kind_list";
 }
 
 -(NSString *)houseTypeString
@@ -1192,7 +1157,7 @@
 
 -(NSString *)pageTypeString
 {
-    return @"old_list";
+    return @"old_kind_list";
 }
 
 -(NSString *)elementTypeString {
@@ -1325,5 +1290,23 @@
     
     return [self categoryLogDict];
 }
+
+- (void)addOperationShowLog:(NSString *)operationName
+{
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"operation_name"] = operationName ? : @"be_null";
+    tracerDict[@"page_type"] = @"old_kind_list";
+    [FHUserTracker writeEvent:@"operation_show" params:tracerDict];
+}
+
+- (void)addOperationClickLog:(NSString *)operationName
+{
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"operation_name"] = operationName ? : @"be_null";
+    tracerDict[@"page_type"] = @"old_kind_list";
+    [FHUserTracker writeEvent:@"operation_click" params:tracerDict];
+}
+
+
 
 @end
