@@ -251,12 +251,15 @@
     infos[@"from_home"] = @(1);
     if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count) {
         FHHomeRollDataDataModel *model = self.rollDatas[self.searchTitleIndex];
-        NSMutableDictionary *homePageRollData = [NSMutableDictionary new];
-        homePageRollData[@"text"] = model.text ?: @"";
-        homePageRollData[@"guess_search_id"] = model.guessSearchId ?: @"";
-        homePageRollData[@"house_type"] = model.houseType ?: @"";
-        homePageRollData[@"open_url"] = model.openUrl ?: @"";
-        infos[@"homepage_roll_data"] = homePageRollData;
+        if (model.detail.count > 0) {
+            FHHomeRollDataDataDetailModel *detailModel = model.detail[0];
+            NSMutableDictionary *homePageRollData = [NSMutableDictionary new];
+            homePageRollData[@"text"] = detailModel.text ?: @"";
+            homePageRollData[@"guess_search_id"] = detailModel.guessSearchId ?: @"";
+            homePageRollData[@"house_type"] = detailModel.houseType ?: @"";
+            homePageRollData[@"open_url"] = detailModel.openUrl ?: @"";
+            infos[@"homepage_roll_data"] = homePageRollData;
+        }
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];

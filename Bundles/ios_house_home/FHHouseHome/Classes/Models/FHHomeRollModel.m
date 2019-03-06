@@ -1,35 +1,13 @@
-//
-//  FHHomeRollModel.m
-//  AFgzipRequestSerializer
-//
-//  Created by 谢飞 on 2018/12/22.
-//
-
+//GENERATED CODE , DON'T EDIT
 #import "FHHomeRollModel.h"
-
-//for implementation
-@implementation  FHHomeRollDataModel
-
+@implementation FHHomeRollDataModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
-
 @end
 
-
-@implementation  FHHomeRollModel
-
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-
-@end
-
-
-@implementation  FHHomeRollDataDataModel
-
+@implementation FHHomeRollDataDataDetailModel
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
@@ -41,10 +19,23 @@
         return dict[keyName]?:keyName;
     }];
 }
-
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
-
 @end
+
+@implementation FHHomeRollModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHHomeRollDataDataModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+

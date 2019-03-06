@@ -254,8 +254,10 @@
 #pragma mark 找房频道首页相关
 +(TTHttpTask *)requestHomeSearchRoll:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeRollModel *model, NSError *error))completion
 {
-    NSString *url = QURL(@"/f100/api/home_page_roll_screen?");
-    
+    NSString *url = QURL(@"/f100/api/v2/home_page_roll_screen?");
+    // add by zyk test
+    url = @"http://m.quduzixun.com/f100/api/v2/home_page_roll_screen?city_id=122&source=app&uid_type=12&user_id=585&test_type=1";
+    param = nil;
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
         if (!completion) {
             return ;
