@@ -96,6 +96,11 @@
     [self setupUI];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.contactViewModel refreshMessageDot];
+}
+
 - (void)setupUI
 {
     __weak typeof(self)wself = self;
