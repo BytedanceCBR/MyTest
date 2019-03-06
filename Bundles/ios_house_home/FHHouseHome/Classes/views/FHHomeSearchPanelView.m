@@ -91,7 +91,7 @@
 {
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont themeFontSemibold:14];
-    label.textColor = [UIColor colorWithHexString:@"#081f33"];
+    label.textColor = [UIColor themeGray1];
     label.numberOfLines = 1;
     label.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     self.countryLabel = label;
@@ -168,7 +168,7 @@
 
     self.categoryPlaceholderLabel = [UILabel new];
     self.categoryPlaceholderLabel.font = [UIFont themeFontRegular:14];
-    self.categoryPlaceholderLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
+    self.categoryPlaceholderLabel.textColor = [UIColor themeGray3];
     self.categoryPlaceholderLabel.text = [UIScreen mainScreen].bounds.size.width < 375 ? @"输入小区/商圈/地铁" : @"请输入小区/商圈/地铁";
 
     [self addSubview:self.categoryPlaceholderLabel];
@@ -196,7 +196,7 @@
 
     self.categoryLabel1 = [UILabel new];
     self.categoryLabel1.font = [UIFont themeFontRegular:14];
-    self.categoryLabel1.textColor = [UIColor colorWithHexString:@"#081f33"];
+    self.categoryLabel1.textColor = [UIColor themeGray1];
     self.categoryLabel1.text = @"";
 
 
@@ -211,7 +211,7 @@
 
     self.categoryLabel2 = [UILabel new];
     self.categoryLabel2.font = [UIFont themeFontRegular:14];
-    self.categoryLabel2.textColor = [UIColor colorWithHexString:@"#081f33"];
+    self.categoryLabel2.textColor = [UIColor themeGray1];
     self.categoryLabel2.text = @"";
 
     [self.categoryBgView addSubview:self.categoryLabel2];

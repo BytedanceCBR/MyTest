@@ -40,9 +40,9 @@ def appPods
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     
     #pod 'ios_house_filter' , :path => '../../lab/ios_house_filter' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
-#	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
-	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
-        
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
+#    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
+
     pod 'SecGuard', '0.8.10.1'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'

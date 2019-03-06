@@ -59,18 +59,18 @@
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#299cff"];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     //    _segmentedControl.selec
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#8a9299"],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontMedium:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#299cff"],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 30);
@@ -87,7 +87,7 @@
     }];
     
     _segementBottomLine = [UIView new];
-    _segementBottomLine.backgroundColor = [UIColor colorWithHexString:@"#f0f0f0"];
+    _segementBottomLine.backgroundColor = [UIColor themeGray6];
     [_segmentedControl addSubview:_segementBottomLine];
     [_segementBottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(_segmentedControl);
@@ -101,7 +101,7 @@
 - (void)setUpLeftView
 {
     _leftView = [UIView new];
-    _leftView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _leftView.backgroundColor = [UIColor themeGray7];
     [self.view addSubview:_leftView];
     
     [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -112,7 +112,7 @@
     }];
     
     _leftFilterView = [UIScrollView new];
-    _leftFilterView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _leftFilterView.backgroundColor = [UIColor themeGray7];
     [_leftView addSubview:_leftFilterView];
     
     [_leftFilterView mas_makeConstraints:^(MASConstraintMaker *make) {

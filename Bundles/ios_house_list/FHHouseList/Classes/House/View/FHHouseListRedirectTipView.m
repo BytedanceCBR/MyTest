@@ -31,7 +31,7 @@
 
 - (void)setupUI
 {
-    self.backgroundColor = [UIColor colorWithHexString:@"#e6f3ff"];
+    self.backgroundColor = [UIColor themeRed2];
     [self addSubview:self.closeBtn];
     [self addSubview:self.leftLabel];
     [self addSubview:self.rightBtn];
@@ -104,7 +104,7 @@
 {
     if (!_leftLabel) {
         _leftLabel = [[UILabel alloc]init];
-        _leftLabel.textColor = [UIColor colorWithHexString:@"#3d6e99"];
+        _leftLabel.textColor = [UIColor themeGray3];
         _leftLabel.font = [UIFont themeFontRegular:14];
     }
     return _leftLabel;

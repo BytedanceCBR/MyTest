@@ -100,12 +100,12 @@
     _priceLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_priceLabel];
     
-    _monthUp = [UILabel createLabel:@"环比上月" textColor:@"#a1aab3" fontSize:11];
+    _monthUp = [UILabel createLabel:@"环比上月" textColor:@"" fontSize:11];
     _monthUp.textColor = [UIColor themeGray3];
     _monthUp.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_monthUp];
     
-    _monthUpLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:11];
+    _monthUpLabel = [UILabel createLabel:@"" textColor:@"" fontSize:11];
     _monthUpLabel.textColor = [UIColor themeGray3];
     _monthUpLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_monthUpLabel];

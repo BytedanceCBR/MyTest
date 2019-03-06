@@ -19,7 +19,7 @@
 #define kSearchFieldLeft (kMineIconLeft + kMineIconW + kMineIconRightGap)
 #define kSearchFieldExtendLeft 15
 #define kSearchImageBackLeft 15
-#define kSearchLabelBackColor [UIColor colorWithHexString:@"#f2f4f5"]
+#define kSearchLabelBackColor [UIColor colorWithHexString:@"#f5f5f5"]
 #define kSearchFieldExtendRight 15
 #define kLogoSearchFieldLeft (kTopBarIconWidth + kLogoIconRight + kLogoIconLeft)
 //搜索label在搜索框上的左边距
