@@ -41,7 +41,7 @@
     [self addSubview:_openAllBtn];
     
     _title = [[UILabel alloc] init];
-    NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc] initWithString:@"查看更多" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#081f33"]}];
+    NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc] initWithString:@"查看更多" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor themeGray1]}];
     _title.backgroundColor = [UIColor whiteColor];
     _title.attributedText = attriStr;
     [self addSubview:_title];

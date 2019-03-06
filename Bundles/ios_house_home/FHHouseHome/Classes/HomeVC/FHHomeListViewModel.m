@@ -21,6 +21,7 @@
 #import <UIScrollView+Refresh.h>
 #import <MJRefresh.h>
 #import <FHRefreshCustomFooter.h>
+#import <TTArticleCategoryManager.h>
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
@@ -134,7 +135,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
         }];
         
-        if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
+        if ([self checkIsHasFindHouse] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
         {
             self.tableViewV.hidden = YES;
             self.isFromLocalTestChange = YES;
@@ -301,7 +302,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableViewV.mj_footer.hidden = NO;
     if (hasMore == NO) {
-        [self.refreshFooter setUpNoMoreDataText:@" -- 没有更多房源了 -- "];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:3];
         [self.tableViewV.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableViewV.mj_footer endRefreshing];
@@ -737,18 +738,24 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     }
 }
 
+- (BOOL)checkIsHasFindHouse
+{
+    return [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+}
+
 //重载首页头部数据
 - (void)reloadHomeTableHeaderSection
 {
     self.dataSource.showPlaceHolder = YES;
     self.dataSource.currentHouseType = self.currentHouseType;
-    
+    self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
     if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {
         [UIView performWithoutAnimation:^{
             [self.tableViewV reloadData];
         }];
     }
 }
+
 
 //重载当前请求数据
 - (void)reloadHomeTableHouseSection:(NSArray <JSONModel *> *)models
@@ -760,7 +767,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     self.dataSource.showPlaceHolder = NO;
     self.dataSource.modelsArray = models;
     self.dataSource.currentHouseType = self.currentHouseType;
-    
+    self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
     if (self.tableViewV.numberOfSections > kFHHomeListHouseBaseViewSection) {
         [self.tableViewV reloadData];
     }

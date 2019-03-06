@@ -211,9 +211,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     MAUserLocationRepresentation *r = [[MAUserLocationRepresentation alloc] init];
     r.showsHeadingIndicator = NO;///是否显示方向指示(MAUserTrackingModeFollowWithHeading模式开启)。默认为YES
-    r.fillColor = RGBA(0x29, 0x9c, 0xff, 0.3);///精度圈 填充颜色, 默认 kAccuracyCircleDefaultColor
-    r.strokeColor = r.fillColor;
-    r.lineWidth = 1;///精度圈 边线宽度，默认0
+    r.fillColor = [[UIColor themeRed1] colorWithAlphaComponent:0.3];///精度圈 填充颜色, 默认 kAccuracyCircleDefaultColor
+//    r.strokeColor = r.fillColor;
+//    r.lineWidth = 1;///精度圈 边线宽度，默认0
     r.locationDotBgColor = [UIColor clearColor];///定位点背景色，不设置默认白色
     r.locationDotFillColor = [UIColor themeRed1];///定位点蓝色圆点颜色，不设置默认蓝色
     UIImage *image = [UIImage imageNamed:@"mapsearch_location_center"];

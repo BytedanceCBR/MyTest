@@ -49,6 +49,11 @@
     return RGB(0xf5, 0xf5, 0xf5);
 }
 
++(UIColor *)themeGray8
+{
+    return RGB(0xf7, 0xf7, 0xf7);
+}
+
 +(UIColor *)themeRed
 {
     return RGB(0xff, 0x5b, 0x4c);
@@ -72,6 +77,11 @@
 +(UIColor *)themeGreen1
 {
     return RGB(0x0c, 0xce, 0x6b);
+}
+
++(UIColor *)themeBlue1
+{
+    return RGB(0x29, 0x9c, 0xff);
 }
 
 + (UIColor *)colorWithHexString:(NSString *)hexString {

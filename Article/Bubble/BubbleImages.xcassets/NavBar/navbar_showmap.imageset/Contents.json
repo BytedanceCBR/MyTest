@@ -6,12 +6,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "navbar_showmap@2x.png",
+      "filename" : "ic-navigation-map-dark@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "navbar_showmap@3x.png",
+      "filename" : "ic-navigation-map-dark@3x.png",
       "scale" : "3x"
     }
   ],

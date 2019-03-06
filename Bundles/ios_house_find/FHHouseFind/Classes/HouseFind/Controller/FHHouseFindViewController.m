@@ -151,14 +151,13 @@
     _segmentView = [[HMSegmentedControl alloc]initWithFrame:CGRectZero];
     _segmentView.sectionTitles = @[@"",@"",@"",@""];
     _segmentView.selectionIndicatorHeight = 0;
-    _segmentView.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
     _segmentView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentView.isNeedNetworkCheck = NO;
     _segmentView.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:18],NSFontAttributeName,
-                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontMedium:18],NSFontAttributeName,
@@ -167,8 +166,8 @@
     _segmentView.selectedTitleTextAttributes = attributeSelect;
     _segmentView.titleFormatter = ^NSAttributedString *(HMSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected) {
         
-        NSDictionary *attr = @{NSFontAttributeName:selected?[UIFont themeFontSemibold:20]:[UIFont themeFontRegular:20],
-                               NSForegroundColorAttributeName:selected?[UIColor themeGray1]:[UIColor themeGray4]
+        NSDictionary *attr = @{NSFontAttributeName:selected?[UIFont themeFontMedium:18]:[UIFont themeFontRegular:18],
+                               NSForegroundColorAttributeName:selected?[UIColor themeGray1]:[UIColor themeGray3]
                                };        
         return  [[NSAttributedString alloc] initWithString:title attributes:attr];
         
@@ -183,12 +182,12 @@
         [_searchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         NSAttributedString *attrTitle = [[NSAttributedString alloc] initWithString:@"开始找房" attributes:
                                          @{NSForegroundColorAttributeName:[UIColor whiteColor],
-                                           NSFontAttributeName:[UIFont themeFontMedium:16]}];
+                                           NSFontAttributeName:[UIFont themeFontMedium:18]}];
         [_searchButton setAttributedTitle:attrTitle forState:UIControlStateNormal];
-        _searchButton.backgroundColor = HEXINTRGB(0x299cff);
+        _searchButton.backgroundColor = [UIColor themeRed1];
         _searchButton.layer.shadowOffset = CGSizeMake(0, 2);
-        _searchButton.layer.shadowColor = [RGBA(41, 156, 255,0.4) CGColor];
-        _searchButton.layer.cornerRadius = 26;
+        _searchButton.layer.shadowColor = [[[UIColor themeRed1] colorWithAlphaComponent:0.4] CGColor];
+        _searchButton.layer.cornerRadius = 4;
         _searchButton.layer.shadowRadius = 10;
 //        _searchButton.layer.masksToBounds = YES;
     }

@@ -442,7 +442,7 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
         NSString *tempText = self.sectionsKeyData[section];
         headerView.label.text = tempText;
         if (section < self.mainCount - 1) {
-            headerView.label.textColor = [UIColor themeGray2];
+            headerView.label.textColor = [UIColor themeGray3];
             [headerView.label mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(headerView).offset(20);
                 make.left.mas_equalTo(20);

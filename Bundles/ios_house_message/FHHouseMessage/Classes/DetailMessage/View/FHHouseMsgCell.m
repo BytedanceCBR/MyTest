@@ -73,8 +73,6 @@
     self.imageTopLeftLabelBgView = [[UIView alloc] init];
     _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed1];
     _imageTopLeftLabelBgView.hidden = YES;
-//    _imageTopLeftLabelBgView.layer.cornerRadius = 4;
-//    _imageTopLeftLabelBgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_imageTopLeftLabelBgView];
     
     self.imageTopLeftLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
@@ -88,7 +86,7 @@
     self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
     [self.infoPanel addSubview:_titleLabel];
     
-    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
+    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.infoPanel addSubview:_subTitleLabel];
     
     self.areaLabel = [[YYLabel alloc] init];

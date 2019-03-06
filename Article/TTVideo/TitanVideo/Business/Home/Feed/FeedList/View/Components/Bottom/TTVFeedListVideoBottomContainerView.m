@@ -34,6 +34,7 @@
 #import <TTKitchen/TTKitchenHeader.h>
 #import "AKUILayout.h"
 #import "TTVDiggAction.h"
+#import "UIColor+Theme.h"
 #define kLeftPadding        20
 #define kRightPadding       20
 #define kTopPadding         12
@@ -88,8 +89,8 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
         _digButton.hitTestEdgeInsets = UIEdgeInsetsMake(0, -10, 0, -10);
         _digButton.highlightedTitleColorThemeKey = nil;
         _digButton.selectedTitleColorThemeKey = nil;
-        [_digButton setTitleColor:[UIColor colorWithHexString:@"ff5b4c"] forState:UIControlStateSelected];
-        [_digButton setTitleColor:[UIColor colorWithHexString:@"8a9299"] forState:UIControlStateNormal];
+        [_digButton setTitleColor:[UIColor themeGray3] forState:UIControlStateSelected];
+        [_digButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
         _digButton.titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12.f]];
         _digButton.manuallySetSelectedEnabled = YES;
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];

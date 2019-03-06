@@ -214,10 +214,10 @@
         self.levelLabel.text = model.scoreLevel;
         NSInteger levelV = [model.scoreLevel integerValue];
         if (levelV == 1) {
-            self.levelLabel.backgroundColor = [UIColor colorWithHexString:@"#ff5b4c"];
+            self.levelLabel.backgroundColor = [UIColor themeRed1];
             self.levelLabel.text = @"高";
         } else {
-            self.levelLabel.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
+            self.levelLabel.backgroundColor = [UIColor themeBlue1];
             self.levelLabel.text = @"低";
         }
     }
@@ -229,16 +229,24 @@
     _backView = [[UIView alloc] init];
     _backView.layer.cornerRadius = 4.0;
     _backView.layer.masksToBounds = YES;
-    _backView.backgroundColor = [UIColor colorWithHexString:@"#f7f8f9"];
-    _descLabel = [UILabel createLabel:@"" textColor:@"#737a80" fontSize:12];
-    _nameLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
+    _backView.backgroundColor = [UIColor themeGray5];
+    
+    _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _descLabel.textColor = [UIColor themeGray3];
+    
+    _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _nameLabel.textColor = [UIColor themeGray3];
     _nameLabel.font = [UIFont themeFontMedium:16];
     _nameLabel.textAlignment = NSTextAlignmentLeft;
-    _scoreLabel = [UILabel createLabel:@"" textColor:@"#737a80" fontSize:14];
+    
+    _scoreLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _scoreLabel.textColor = [UIColor themeGray3];
+    
     _levelLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];
     _levelLabel.textAlignment = NSTextAlignmentCenter;
-    _levelLabel.backgroundColor = [UIColor colorWithHexString:@"#ff5b4c"];
+    _levelLabel.backgroundColor = [UIColor themeRed1];
     _levelLabel.layer.masksToBounds = YES;
+    
     [self.contentView addSubview:_backView];
     
     [_backView mas_makeConstraints:^(MASConstraintMaker *make) {

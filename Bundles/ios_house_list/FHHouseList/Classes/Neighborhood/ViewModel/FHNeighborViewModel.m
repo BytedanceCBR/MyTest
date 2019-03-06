@@ -62,6 +62,7 @@
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
+//        self.tableView.mj_footer
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
          [self.tableView.mj_footer endRefreshing];
@@ -274,6 +275,10 @@
             }];
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
+            
+            if (hasMore && self.houseList.count < 10) {
+                self.tableView.mj_footer.hidden = YES;
+            }
         } else {
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
         }

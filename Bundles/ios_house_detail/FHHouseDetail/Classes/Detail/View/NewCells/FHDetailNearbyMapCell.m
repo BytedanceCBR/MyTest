@@ -49,7 +49,6 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) NSString * searchCategory;
 @property (nonatomic , strong) NSArray * nameArray;
 @property (nonatomic , assign) BOOL isFirst;
-@property (nonatomic , assign) NSInteger retrySnap;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
 @property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
@@ -66,8 +65,7 @@ static const float kSegementedPadingTop = 5;
         _isFirst = YES;
          self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
-        _retrySnap = 2;
-        
+
         _nameArray = [NSArray arrayWithObjects:@"交通",@"购物",@"医院",@"教育", nil];
         _countCategoryDict = [NSMutableDictionary new];
         _poiDatasDict = [NSMutableDictionary new];
@@ -399,9 +397,8 @@ static const float kSegementedPadingTop = 5;
     self.pointCenterAnnotation = userAnna;
     
     [self.mapView setCenterCoordinate:self.centerPoint];
-    
-    [self performSelector:@selector(snapShotAnnotationImage) withObject:nil afterDelay:0.3];
-    
+//    [self performSelector:@selector(snapShotAnnotationImage) withObject:nil afterDelay:0.1];
+    [self snapShotAnnotationImage];
     //改变显示的tableview数据
     [self changePoiData];
 }
@@ -640,25 +637,20 @@ static const float kSegementedPadingTop = 5;
     UIView *annotationView = [self.mapView viewForAnnotation:self.pointCenterAnnotation];
     if (annotationView) {
         UIView *superAnnotationView = [annotationView superview];
-        if (superAnnotationView) {
+        if ([superAnnotationView isKindOfClass:[UIView class]]) {
             self.mapAnnotionImageView.image = [self getImageFromView:superAnnotationView];
         }
     }else
     {
         self.mapAnnotionImageView.image = nil;
     }
-    
-    if (self.mapAnnotionImageView.image == nil && _retrySnap > 0) {
-        [self snapShotAnnotationImage];
-        _retrySnap --;
-    }else
-    {
-        _retrySnap = 0;
-    }
 }
 
 - (UIImage *)getImageFromView:(UIView *)view
 {
+    if (view.frame.size.height <= 0.1 || view.frame.size.width <= 0.1) {
+        return nil;
+    }
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();

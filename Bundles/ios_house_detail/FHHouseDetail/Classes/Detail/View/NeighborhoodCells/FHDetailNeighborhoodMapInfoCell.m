@@ -180,7 +180,7 @@
 - (void)snapshotMap {
     UIView *annotionView = [self.mapView viewForAnnotation:self.pointAnnotation];
     UIView *superAnnotionView = annotionView.superview;
-    if (superAnnotionView) {
+    if ([superAnnotionView isKindOfClass:[UIView class]]) {
         self.mapAnnotionImageView.image = [self getImageFromView:superAnnotionView];
     } else {
         self.mapAnnotionImageView.image = nil;
@@ -189,6 +189,9 @@
 
 - (UIImage *)getImageFromView:(UIView *)view
 {
+    if (view.frame.size.height <= 0.1 || view.frame.size.width <= 0.1) {
+        return nil;
+    }
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
