@@ -518,8 +518,16 @@
         }];
         
         [self.tableView reloadData];
+        
+        
         [self updateTableViewWithMoreData:hasMore];
         
+        if (self.houseType != FHHouseTypeSecondHandHouse) {
+            if (!hasMore && self.houseList.count <= 10) {
+                self.refreshFooter.hidden = YES;
+            }
+        }
+
         if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
@@ -577,6 +585,7 @@
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
