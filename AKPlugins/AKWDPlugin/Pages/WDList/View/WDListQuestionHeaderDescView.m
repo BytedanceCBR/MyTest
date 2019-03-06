@@ -227,7 +227,7 @@
     NSMutableAttributedString *tokenArrow = [[NSMutableAttributedString alloc] initWithString:arrowString
                                                                                    attributes:@{NSBaselineOffsetAttributeName:@(fontSize/2 - 6),
                                                                                                 NSFontAttributeName : [UIFont fontWithName:wd_iconfont size:10],
-                                                                                                NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5]}
+                                                                                                NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorCoral]}
                                              ];
     [token appendAttributedString:foldToken];
     [token appendAttributedString:tokenArrow];
