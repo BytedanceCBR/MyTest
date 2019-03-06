@@ -221,7 +221,7 @@
     NSMutableAttributedString *foldToken = [[NSMutableAttributedString alloc] initWithString:foldString
                                                                                   attributes:@{
                                                                                                NSFontAttributeName : [UIFont systemFontOfSize:fontSize],
-                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorClearBlue]}
+                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorCoral]}
                                             ];
     NSString *arrowString = [NSString stringWithFormat:@" %@",ask_arrow_down];
     NSMutableAttributedString *tokenArrow = [[NSMutableAttributedString alloc] initWithString:arrowString
