@@ -98,6 +98,7 @@
             [wself requestData:NO];
         }];
         _tableView.mj_footer = footer;
+        [footer setUpNoMoreDataText:@"没有更多信息了"];
         footer.hidden = YES;
         
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
@@ -271,7 +272,9 @@
        wself.tableView.mj_footer.hidden = NO;
        //reset load more state
        if (model.data && !model.data.hasMore) {
+       
            [wself.tableView.mj_footer endRefreshingWithNoMoreData];
+           
        }else{
            if (isHead) {
                [wself.tableView.mj_footer resetNoMoreData];
@@ -280,7 +283,7 @@
            }
        }
        
-        
+       
         if (!isHead && model.data.items.count == 0) {
             [[FHMainManager sharedInstance] showToast:@"请求失败" duration:2];
         }
@@ -325,6 +328,14 @@
        
        if (isHead && wself.houseList.count > 0) {
            [wself.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+       }
+       
+       if(_houseList.count < 10)
+       {
+           wself.tableView.mj_footer.hidden = YES;
+       }else
+       {
+           wself.tableView.mj_footer.hidden = NO;
        }
        
     }];

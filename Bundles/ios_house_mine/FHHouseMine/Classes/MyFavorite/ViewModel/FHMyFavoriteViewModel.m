@@ -158,7 +158,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
     [self updateTableViewWithMoreData:followModel.data.hasMore];
     
-    if (!followModel.data.hasMore && self.dataList.count <= 10) {
+    if (!followModel.data.hasMore && self.dataList.count < 10) {
         self.refreshFooter.hidden = YES;
     }
     
