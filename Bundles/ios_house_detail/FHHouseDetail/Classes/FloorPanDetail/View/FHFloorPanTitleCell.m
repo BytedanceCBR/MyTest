@@ -46,7 +46,7 @@
         }];
         
         _pricingPerSqm = [UILabel new];
-        _pricingPerSqm.textColor = [UIColor themeGray2];
+        _pricingPerSqm.textColor = [UIColor themeGray3];
         _pricingPerSqm.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_pricingPerSqm];
         [_pricingPerSqm mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -100,7 +100,7 @@
             NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
             NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
                                           [UIFont themeFontRegular:12],NSFontAttributeName,@(2),NSBaselineOffsetAttributeName,
-                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray2],NSBackgroundColorAttributeName,nil];
+                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
             [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
             self.statusLabel.attributedText = tagStr;
         }else

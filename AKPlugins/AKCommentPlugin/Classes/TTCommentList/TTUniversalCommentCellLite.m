@@ -322,7 +322,7 @@
     [self refreshContent];
 
     self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
-    self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
+    self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
 }
 
 #pragma mark - TTTAttributedLabel Delegate
@@ -502,7 +502,7 @@
         CGFloat maxWidth = self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding] - [TTUniversalCommentCellLiteHelper cellRightPadding] - 30.f - [TTUniversalCommentCellLiteHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTUniversalCommentCellLiteHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTUniversalCommentCellLiteHelper nameViewFontSize] verifiedInfo:nil verified:NO owner:NO appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTUniversalCommentCellLiteHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
+        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {
@@ -540,7 +540,7 @@
         _userInfoLabel = [[TTAsyncLabel alloc] init];
         _userInfoLabel.frame = CGRectMake(self.nameView.left, self.nameView.bottom, self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _userInfoLabel.font = [TTUniversalCommentCellLiteHelper userInfoLabelFont];
-        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
+        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _userInfoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _userInfoLabel.backgroundColor = [UIColor clearColor];
         _userInfoLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -566,7 +566,7 @@
     if (!_contentLabel) {
         _contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(self.nameView.left, self.timeLabel.bottom + [TTUniversalCommentCellLiteHelper contentLabelPadding], 0, 0)];
         _contentLabel.font = [TTCommentUIHelper tt_fontOfSize:[TTUniversalCommentCellLiteHelper contentLabelFont].pointSize]; // 采用苹方字体能正确居中对齐...
-        _contentLabel.textColor = SSGetThemedColorWithKey(kFHColorCoolGrey3);
+        _contentLabel.textColor = SSGetThemedColorWithKey(kFHColorCharcoalGrey);
         _contentLabel.backgroundColor = [UIColor clearColor];
         _contentLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
         _contentLabel.attributedTruncationToken = [self attributedTruncationToken];
@@ -592,8 +592,8 @@
         _replyButton.hidden = YES;
         _replyButton.layer.cornerRadius = _replyButton.height / 2.f;
         _replyButton.layer.masksToBounds = YES;
-        _replyButton.backgroundColorThemeKey = kColorBackground3;
-        _replyButton.titleColorThemeKey = kColorText1;
+        _replyButton.backgroundColorThemeKey = kFHColorPaleGrey;
+        _replyButton.titleColorThemeKey = kFHColorBattleShipGrey;
         _replyButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     }
     return _replyButton;

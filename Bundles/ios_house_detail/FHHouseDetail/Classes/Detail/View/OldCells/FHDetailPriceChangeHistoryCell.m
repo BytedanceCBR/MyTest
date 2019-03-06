@@ -67,9 +67,10 @@
 - (void)setupUI {
     _leftIconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ershou_price_tips_22"]];
     [self.contentView addSubview:_leftIconImageView];
-    _rightArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-detail"]];
+    _rightArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-1"]];
     [self.contentView addSubview:_rightArrowImageView];
-    _infoLabel = [UILabel createLabel:@"" textColor:@"#3d6e99" fontSize:12];
+    _infoLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _infoLabel.textColor = [UIColor themeGray3];
     [self.contentView addSubview:_infoLabel];
     
     [self.leftIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {

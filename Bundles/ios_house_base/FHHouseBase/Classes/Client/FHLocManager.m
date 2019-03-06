@@ -72,7 +72,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     self.retryConfigCount = 3;
     self.isShowSwitch = YES;
     self.isShowSplashAdView = NO;
-    self.isShowHomeViewController = NO;
+    self.isShowHomeViewController = YES;
 }
 
 - (void)saveCurrentLocationData {

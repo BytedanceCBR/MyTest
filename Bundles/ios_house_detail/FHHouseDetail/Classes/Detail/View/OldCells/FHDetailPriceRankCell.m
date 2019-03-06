@@ -143,7 +143,7 @@
     if (!_subtitleLabel) {
         _subtitleLabel = [[UILabel alloc]init];
         _subtitleLabel.font = [UIFont themeFontRegular:14];
-        _subtitleLabel.textColor = [UIColor themeGray2];
+        _subtitleLabel.textColor = [UIColor themeGray3];
         _subtitleLabel.numberOfLines = 0;
     }
     return _subtitleLabel;

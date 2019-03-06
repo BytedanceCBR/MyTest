@@ -246,7 +246,7 @@
         }
         NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc] initWithString:str];
         attributeText.yy_font = [UIFont themeFontRegular:16];
-        attributeText.yy_color = [UIColor colorWithHexString:@"#081f33"];
+        attributeText.yy_color = [UIColor themeGray1];
         self.descLabel.attributedText = attributeText;
         self.priceLabel.text = model.displayPrice;
         self.spaceLabel.text = model.displayPricePerSqm;
@@ -266,11 +266,13 @@
     _descLabel = [[YYLabel alloc] init];
     [self addSubview:_descLabel];
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
+    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _priceLabel.textColor = [UIColor themeRed1];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     
-    _spaceLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:12];
+    _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _spaceLabel.textColor = [UIColor themeGray3];
     [self addSubview:_spaceLabel];
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {

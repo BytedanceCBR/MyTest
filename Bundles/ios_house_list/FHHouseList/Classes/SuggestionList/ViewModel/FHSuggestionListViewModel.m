@@ -370,7 +370,7 @@
         if (indexPath.row - 1 < self.historyData.count) {
             FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
             cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
-            NSAttributedString *text1 = [self processHighlightedDefault:model.listText textColorHex:@"#081f33" fontSize:15.0];
+            NSAttributedString *text1 = [self processHighlightedDefault:model.listText textColor:[UIColor themeGray1] fontSize:15.0];
             cell.label.attributedText = text1;
             if (indexPath.row - 1 == self.sugListData.count - 1) {
                 // 末尾
@@ -392,11 +392,11 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
-                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
-                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColorHex:@"#bbbbbb" fontSize:12.0];
+                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
+                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColor:[UIColor themeGray3] fontSize:12.0];
                 
-                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColorHex:@"#ff5869" fontSize:15.0];
-                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColorHex:@"#ff5869" fontSize:12.0];
+                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeRed1] fontSize:15.0];
+                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeRed1] fontSize:12.0];
                 
                 cell.secondaryLabel.text = model.tips;
                 cell.secondarySubLabel.text = model.tips2;
@@ -408,14 +408,14 @@
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
                 NSString *originText = model.text;
-                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
+                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
                 NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
                 if (model.text2.length > 0) {
                     originText = [NSString stringWithFormat:@"%@ (%@)", originText, model.text2];
                     NSAttributedString *text2 = [self processHighlightedGray:model.text2];
                     [resultText appendAttributedString:text2];
                 }
-                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColorHex:@"#ff5869" fontSize:15.0];
+                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeRed1] fontSize:15.0];
                 cell.secondaryLabel.text = [NSString stringWithFormat:@"约%@套", model.count];
                 if (indexPath.row == self.sugListData.count - 1) {
                     // 末尾
@@ -532,9 +532,8 @@
 }
 
 // 1、默认
-- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColorHex:(NSString *)textColorHex fontSize:(CGFloat)fontSize {
-    // #081f33 默认 #299cff 高亮  #8a9299  灰色
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:[UIColor colorWithHexString:textColorHex]};
+- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
     NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
     
     return attrStr;
@@ -542,19 +541,17 @@
 
 // 2、部分 灰色
 - (NSAttributedString *)processHighlightedGray:(NSString *)text2 {
-    // #081f33 默认 #299cff 高亮  #8a9299  灰色
     NSString *retStr = [NSString stringWithFormat:@" (%@)",text2];
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:15],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#8a9299"]};
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:15],NSForegroundColorAttributeName:[UIColor themeGray3]};
     NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:retStr attributes:attr];
     
     return attrStr;
 }
 
 // 3、高亮
-- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColorHex:(NSString *)textColorHex fontSize:(CGFloat)fontSize {
-    // #081f33 默认 #299cff 高亮  #8a9299  灰色
+- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
     if (self.highlightedText.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:[UIColor colorWithHexString:textColorHex]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
         NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
         
         NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",self.highlightedText] options:NSRegularExpressionCaseInsensitive error:nil];

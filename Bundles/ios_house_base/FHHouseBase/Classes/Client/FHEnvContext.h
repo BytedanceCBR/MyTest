@@ -30,8 +30,6 @@ static NSString *const kUserHasSelectedCityKey = @"k_fh_has_sel_city";
 
 static NSString *const kTracerEventType = @"house_app2c_v2";
 
-static NSString *const kFHBaseColorBlue = @"#299cff";
-
 static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_finish";
 
 @class FHMessageManager;
