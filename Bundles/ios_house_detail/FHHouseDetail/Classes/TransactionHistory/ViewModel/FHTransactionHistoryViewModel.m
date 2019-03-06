@@ -113,7 +113,7 @@
             
             if(!model.data.hasMore && wself.dataList.count < 10)
             {
-                self.tableView.mj_footer.hidden = YES;
+                wself.tableView.mj_footer.hidden = YES;
             }
             
             if(wself.dataList.count > 0){
