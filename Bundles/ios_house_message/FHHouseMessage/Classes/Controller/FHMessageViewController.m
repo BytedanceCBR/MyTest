@@ -85,9 +85,10 @@
     _tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
-//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
-//    _tableView.tableHeaderView = headerView;
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
+    _tableView.tableHeaderView = headerView;
 
     [self.containerView addSubview:_tableView];
     [self.containerView addSubview:_notNetHeader];
