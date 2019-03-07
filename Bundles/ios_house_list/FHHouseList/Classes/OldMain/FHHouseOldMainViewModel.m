@@ -1045,7 +1045,7 @@
             }
         }
     }
-    if (self.containerScrollView.contentOffset.y > HOUSE_ICON_HEADER_HEIGHT) {
+    if (self.containerScrollView.contentOffset.y > HOUSE_TABLE_HEADER_HEIGHT) {
         [self updateBottomLineMargin:0];
     }else {
         [self updateBottomLineMargin:20];

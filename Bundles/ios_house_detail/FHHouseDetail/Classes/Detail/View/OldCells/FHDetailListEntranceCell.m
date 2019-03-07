@@ -8,6 +8,7 @@
 #import "FHDetailListEntranceCell.h"
 #import "FHDetailOldModel.h"
 #import <TTRoute/TTRoute.h>
+#import <UIImageView+BDWebImage.h>
 
 @implementation FHDetailListEntranceItemView
 
@@ -45,7 +46,7 @@
 - (UIImageView *)icon
 {
     if (!_icon) {
-        _icon = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"detail_entrance_icon"]];
+        _icon = [[UIImageView alloc]init];
     }
     return _icon;
 }
@@ -97,6 +98,7 @@
         FHDetailDataListEntranceItemModel *item = model.listEntrance[index];
         FHDetailListEntranceItemView *itemView = [[FHDetailListEntranceItemView alloc]initWithFrame:CGRectZero];
         itemView.nameLabel.text = item.listName;
+        [itemView.icon bd_setImageWithURL:[NSURL URLWithString:item.icon] placeholder:[UIImage imageNamed:@"detail_entrance_icon"]];
         itemView.tag = 100 + index;
         [self.containerView addSubview:itemView];
         [itemView addTarget:self action:@selector(entranceDidClick:) forControlEvents:UIControlEventTouchUpInside];
