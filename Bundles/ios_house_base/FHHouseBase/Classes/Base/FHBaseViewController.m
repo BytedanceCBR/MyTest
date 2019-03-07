@@ -68,6 +68,7 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     self.view.backgroundColor = UIColor.whiteColor;
     self.ttHideNavigationBar = YES;
+    self.isLoadingData = NO;
     self.navigationController.navigationBar.hidden = YES;
     [self _setupData];
 }

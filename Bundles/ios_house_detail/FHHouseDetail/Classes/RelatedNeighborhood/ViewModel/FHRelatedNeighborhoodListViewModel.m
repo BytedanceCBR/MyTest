@@ -20,6 +20,8 @@
 #import <TTUIWidget/UIViewController+Track.h>
 #import "FHHouseDetailAPI.h"
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
+#import <FHCommonUI/FHErrorView.h>
+#import <TTReachability/TTReachability.h>
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -37,10 +39,21 @@
 @property(nonatomic , assign) BOOL isRefresh;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
 @property (nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
+@property(nonatomic , weak) FHErrorView *maskView;
 
 @end
 
 @implementation FHRelatedNeighborhoodListViewModel
+
+-(void)setMaskView:(FHErrorView *)maskView {
+    
+    __weak typeof(self)wself = self;
+    _maskView = maskView;
+    _maskView.retryBlock = ^{
+        wself.isRefresh = YES;
+        [wself requestRelatedNeighborhoodSearch:wself.neighborhoodId searchId:wself.searchId offset:@(1)];
+    };
+}
 
 -(instancetype)initWithController:(FHRelatedNeighborhoodListViewController *)viewController tableView:(UITableView *)tableView {
     self = [super init];
@@ -90,15 +103,24 @@
 // 周边小区
 - (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId searchId:(NSString*)searchId offset:(NSString *)offset
 {
-    if (self.httpTask) {
-        [self.httpTask cancel];
+    if (![TTReachability isNetworkConnected]) {
+        if (_isRefresh) {
+            [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            self.maskView.hidden = NO;
+        }else{
+            [[ToastManager manager] showToast:@"网络异常"];
+            [self.tableView.mj_footer endRefreshing];
+        }
+        return;
     }
+
     __weak typeof(self) wSelf = self;
-    self.httpTask = [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:searchId offset:offset query:nil count:15 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *httpTask = [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:searchId offset:offset query:nil count:15 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
 
         wSelf.relatedNeighborhoodData = model.data;
         [wSelf processDetailRelatedData:model error:error];
     }];
+    _httpTask = httpTask;
 }
 
 // 处理详情页周边请求数据
@@ -109,7 +131,7 @@
         NSArray *items = model.data.items;
         if (items.count > 0) {
             self.listController.hasValidateData = YES;
-            [self.listController.emptyView hideEmptyView];
+            self.maskView.hidden = YES;
             // 转换模型类型
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
@@ -132,7 +154,7 @@
             self.hasEnterCategory = YES;
         }
     } else {
-        [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
+        [self processError:FHEmptyMaskViewTypeNoData tips:@"网络异常"];
     }
 }
 
@@ -147,7 +169,7 @@
     // 此时需要看是否已经有有效数据，如果已经有的话只需要toast提示，不显示空页面
     if (self.houseList.count > 0) {
         self.listController.hasValidateData = YES;
-        [self.listController.emptyView hideEmptyView];
+        self.maskView.hidden = YES;
         if (tips.length > 0) {
             // Toast
             [[ToastManager manager] showToast:tips];
@@ -155,6 +177,7 @@
     } else {
         self.listController.hasValidateData = NO;
         [self.listController.emptyView showEmptyWithType:maskViewType];
+        self.maskView.hidden = NO;
         if (tips.length > 0) {
             // Toast
             [[ToastManager manager] showToast:tips];

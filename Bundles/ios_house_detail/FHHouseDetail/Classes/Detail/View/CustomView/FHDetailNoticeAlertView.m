@@ -169,18 +169,44 @@
     NSDictionary *userInfo = noti.userInfo;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
     CGFloat duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey]doubleValue];
-    [UIView animateWithDuration:duration animations:^{
-        CGFloat contentViewHeight = self.contentView.height;
-        CGFloat tempOffset = [UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y;
+    UIViewAnimationCurve animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+    UIViewAnimationOptions options = UIViewAnimationCurveEaseIn | UIViewAnimationCurveEaseOut | UIViewAnimationCurveLinear;
+    switch (animationCurve) {
+        case UIViewAnimationCurveEaseInOut:
+            options = UIViewAnimationOptionCurveEaseInOut;
+            break;
+        case UIViewAnimationCurveEaseIn:
+            options = UIViewAnimationOptionCurveEaseIn;
+            break;
+        case UIViewAnimationCurveEaseOut:
+            options = UIViewAnimationOptionCurveEaseOut;
+            break;
+        case UIViewAnimationCurveLinear:
+            options = UIViewAnimationOptionCurveLinear;
+            break;
+        default:
+            options = animationCurve << 16;
+            break;
+    }
+    CGFloat contentViewHeight = self.contentView.height;
+    CGFloat tempOffset = [UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y;
+    CGFloat offset = 0;
+    BOOL isDismissing = CGRectGetMinY(keyBoardBounds) >= [[[UIApplication sharedApplication] delegate] window].bounds.size.height;
+    if (isDismissing) {
+        offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) / 2;
+    }else {
         if (tempOffset > 0) {
             CGFloat offsetKeybord = 30;
-            CGFloat offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) - offsetKeybord;
-            self.contentView.top = offset;
+            offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) - offsetKeybord;
         }else {
-            CGFloat offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) / 2;
-            self.contentView.top = offset;
+            offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) / 2;
         }
-    } completion:nil];
+    }
+    [UIView animateWithDuration:duration delay:0 options:options animations:^{
+        self.contentView.top = offset;
+    } completion:^(BOOL finished) {
+
+    }];
 }
 
 - (void)textFieldDidChange:(NSNotification *)noti

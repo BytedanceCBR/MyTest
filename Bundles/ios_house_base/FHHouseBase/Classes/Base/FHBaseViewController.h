@@ -59,6 +59,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, assign) BOOL hasValidateData;
 
+/**
+ * 默认是NO，正在加载数据
+ */
+@property (nonatomic, assign) BOOL isLoadingData;
+
 
 /**
  * 空页面，默认是NULL

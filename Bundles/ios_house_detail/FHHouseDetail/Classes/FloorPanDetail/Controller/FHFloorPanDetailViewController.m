@@ -15,6 +15,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import "FHFloorPanDetailViewModel.h"
 #import "UIViewController+Track.h"
+#import "FHFloorCoreInfoViewModel.h"
 
 @interface FHFloorPanDetailViewController ()
 
@@ -30,7 +31,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.ttTrackStayEnable = YES;
-        _floorPanId = paramObj.allParams[@"floorpanid"];
+        _floorPanId = paramObj.allParams[@"floor_plan_id"];
         
         [self processTracerData:paramObj.allParams[@"tracer"]];
     }
@@ -170,7 +171,7 @@
             self.tracerDict[@"rank"] = rank;
         }
     }
-    
+
     self.coreInfoListViewModel.logPB = self.tracerDict[@"log_pb"];
     
     self.coreInfoListViewModel.detailTracerDic = self.tracerDict;

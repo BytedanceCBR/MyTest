@@ -46,6 +46,8 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
 @property (nonatomic, strong) NSMutableDictionary *traceDict;
+@property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
+@property (nonatomic , strong) NSString *titleStr;
 
 @end
 
@@ -68,6 +70,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
             self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
         }
+        
+        if ([[userInfo.allInfo objectForKey:@"title"] isKindOfClass:[NSString class]]) {
+            self.titleStr = [userInfo.allInfo objectForKey:@"title"];
+        }
+        
     }
     return self;
 }
@@ -266,6 +273,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)cleanAllAnnotations
 {
+    [self.mapView removeAnnotation:self.pointCenterAnnotation];
     [self.mapView removeAnnotations:self.poiAnnotations];
     [self.poiAnnotations removeAllObjects];
 }
@@ -275,6 +283,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     if (![FHEnvContext isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
+    }
+    
+    if ([categoryName isEqualToString:@"交通"]) {
+        categoryName = @"公交";
     }
     
     AMapPOIKeywordsSearchRequest *requestPoi = [AMapPOIKeywordsSearchRequest new];
@@ -389,8 +401,15 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         UIAlertAction *appleAction = [UIAlertAction actionWithTitle:@"苹果地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
             MKMapItem *mapItemCurrent = [MKMapItem mapItemForCurrentLocation];
+            MKPlacemark *placeMark = nil;
+            if (@available(iOS 10.0 , *)) {
+                placeMark = [[MKPlacemark alloc] initWithCoordinate:self.centerPoint postalAddress:nil];
+            }else
+            {
+                placeMark = [[MKPlacemark alloc] initWithCoordinate:self.centerPoint addressDictionary:nil];
+            }
             
-            MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:[[MKPlacemark alloc] initWithCoordinate:self.centerPoint postalAddress:nil]];
+            MKMapItem *toLocation = [[MKMapItem alloc] initWithPlacemark:placeMark];
             NSDictionary *dictOptions = [NSDictionary dictionaryWithObjectsAndKeys:MKLaunchOptionsDirectionsModeDriving, MKLaunchOptionsDirectionsModeKey,@(YES),MKLaunchOptionsShowsTrafficKey,nil];
             
             [MKMapItem openMapsWithItems:@[mapItemCurrent,toLocation] launchOptions:dictOptions];
@@ -404,9 +423,10 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"baidumap://"]]) {
         UIAlertAction *baiduAction = [UIAlertAction actionWithTitle:@"百度地图" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            NSURL *baiduMapUrlString = [NSURL URLWithString:[googleMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
-            if ([baiduMapUrlString isKindOfClass:[NSURL class]]) {
-                [application openURL:baiduMapUrlString];
+            NSString *stringEncode = [baiduMapUrlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+            NSURL *baiduMapUrl = [NSURL URLWithString:stringEncode];
+            if ([baiduMapUrl isKindOfClass:[NSURL class]]) {
+                [application openURL:baiduMapUrl];
             }
         }];
         
@@ -417,23 +437,26 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         
     }];
     [optionMenu addAction:cancelAction];
-
     
     [self presentViewController:optionMenu animated:YES completion:nil];
-
 }
 
 - (void)setUpAnnotations
 {
-    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
-    userAnna.type = @"user";
-    userAnna.coordinate = self.centerPoint;
-    [self.mapView addAnnotation:userAnna];
-    
     for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
         [self.mapView addAnnotation:self.poiAnnotations[i]];
     }
     _mapView.zoomLevel  = 15;
+    
+    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
+    userAnna.type = @"user";
+    userAnna.coordinate = self.centerPoint;
+    
+    userAnna.title = self.titleStr;
+    
+    [self.mapView addAnnotation:userAnna];
+    self.pointCenterAnnotation = userAnna;
+    
     [self.mapView setCenterCoordinate:self.centerPoint];
 }
 

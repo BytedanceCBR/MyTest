@@ -203,7 +203,13 @@
 
 - (NSDictionary *)elementHouseShowUpload
 {
-    return @{@"element_type":@"related",@"search_id":self.itemModel.searchId ? self.itemModel.searchId : @"be_null",@"house_type":@"new",@"rank":@(self.itemModel.index)};
+    NSString *groupId = self.itemModel.groupId;
+    if (!groupId) {
+        groupId = self.itemModel.id;
+    }
+    NSDictionary *logpb = self.itemModel.logPb;
+    
+    return @{@"element_type":@"related",@"search_id":self.itemModel.searchId ? self.itemModel.searchId : @"be_null",@"group_id": groupId.length > 0 ? groupId : @"be_null",@"impr_id":self.itemModel.imprId ? self.itemModel.imprId : @"be_null",@"house_type":@"new",@"log_pb": logpb ? logpb : @"be_null" ,@"rank":@(self.itemModel.index)};
 }
 
 -(void)refreshBottomMargin:(CGFloat)bottom {

@@ -59,12 +59,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNewHouseItemModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, copy , nullable) NSString *displayTitle;
 @property (nonatomic, copy , nullable) NSString *displayDescription;
 @property (nonatomic, copy , nullable) NSString *houseId;
 @property (nonatomic, copy , nullable) NSString *displayPricePerSqm;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsHouseImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;

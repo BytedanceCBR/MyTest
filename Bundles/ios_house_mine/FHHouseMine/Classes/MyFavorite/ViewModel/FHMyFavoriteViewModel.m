@@ -54,6 +54,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     if (self) {
         
         _dataList = [[NSMutableArray alloc] init];
+        _removedDataList = [NSMutableArray new];
         _limit = 10;
         _type = type;
         _tableView = tableView;
@@ -75,8 +76,18 @@ extern NSString *const kFHDetailFollowUpNotification;
         
         self.viewController = viewController;
         
+        [self initNotification];
+        
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(cancelFocusItem:) name:kFHDetailFollowUpNotification object:nil];
 }
 
 - (void)requestData:(BOOL)isHead {
@@ -195,11 +206,8 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (NSDictionary *)categoryLogDict {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    [tracerDict addEntriesFromDictionary:self.viewController.tracerDict];
     tracerDict[@"category_name"] = [self categoryName];
-    tracerDict[@"enter_from"] = @"minetab";
-    tracerDict[@"enter_type"] = @"click";
-    tracerDict[@"element_from"] = @"be_null";
-    tracerDict[@"origin_from"] = [self originFrom];
     tracerDict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     tracerDict[@"origin_search_id"] = self.originSearchId ? self.originSearchId : @"be_null";
     
@@ -226,28 +234,6 @@ extern NSString *const kFHDetailFollowUpNotification;
             break;
     }
     return categoryName;
-}
-
-- (NSString *)originFrom {
-    NSString *originFrom = @"be_null";
-    switch (self.type) {
-        case FHHouseTypeNewHouse:
-            originFrom = @"minetab_new";
-            break;
-        case FHHouseTypeRentHouse:
-            originFrom = @"minetab_rent";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            originFrom = @"minetab_old";
-            break;
-        case FHHouseTypeNeighborhood:
-            originFrom = @"minetab_neighborhood";
-            break;
-            
-        default:
-            break;
-    }
-    return originFrom;
 }
 
 - (NSString *)houseType {
@@ -322,6 +308,71 @@ extern NSString *const kFHDetailFollowUpNotification;
     return cellModel;
 }
 
+- (void)cancelFocusItem:(NSNotification *)notification {
+    NSInteger followStatus = [notification.userInfo[@"followStatus"] integerValue];
+    if(followStatus == 0){
+        // 取消收藏
+        NSString *followId = notification.userInfo[@"followId"];
+        NSInteger index = [self.dataList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
+            if([followId isEqualToString:[self getFollowId:cellModel]]){
+                return YES;
+            }
+            return NO;
+        }];
+        //找不到index时会返回一个大数
+        if(index < self.dataList.count && index >= 0){
+            [self deleteFocusCell:index];
+        }
+    } else if (followStatus == 1) {
+        // 收藏
+        NSString *followId = notification.userInfo[@"followId"];
+        NSInteger index = [self.removedDataList indexOfObjectPassingTest:^BOOL(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)obj;
+            if([followId isEqualToString:[self getFollowId:cellModel]]){
+                return YES;
+            }
+            return NO;
+        }];
+        //找不到index时会返回一个大数
+        if(index < self.removedDataList.count && index >= 0){
+            [self addFirstFocusCell:index];
+        }
+    }
+}
+
+- (void)addFirstFocusCell:(NSInteger)index {
+    if(index < self.removedDataList.count && index >= 0){
+        id data = self.removedDataList[index];
+        [self.dataList insertObject:data atIndex:0];
+        [self.removedDataList removeObjectAtIndex:index];
+        self.offset++;
+        if(self.dataList.count > 0){
+            [self.viewController.emptyView hideEmptyView];
+            [self.tableView reloadData];
+        }else{
+            [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+        }
+    }
+}
+
+- (void)deleteFocusCell:(NSInteger)index {
+    if(index < self.dataList.count && index >= 0){
+        id data = self.dataList[index];
+        [self.removedDataList addObject:data];
+        [self.dataList removeObjectAtIndex:index];
+        if(self.offset > 0){
+            self.offset--;
+        }
+        if(self.dataList.count > 0){
+            [self.viewController.emptyView hideEmptyView];
+            [self.tableView reloadData];
+        }else{
+            [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+        }
+    }
+}
+
 //列表页刷新 埋点
 - (void)trackRefresh {
     NSMutableDictionary *dict = [self categoryLogDict];
@@ -359,6 +410,28 @@ extern NSString *const kFHDetailFollowUpNotification;
     return [_dataList count];
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(!self.showPlaceHolder && indexPath.row < self.dataList.count){
+        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+        
+        if (!_clientShowDict) {
+            _clientShowDict = [NSMutableDictionary new];
+        }
+        
+        NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+        NSString *followId = [self getFollowId:cellModel];
+        if(followId){
+            if (_clientShowDict[followId]) {
+                return;
+            }
+    
+            _clientShowDict[followId] = @(indexPath.row);
+            [self trackHouseShow:cellModel rank:indexPath.row];
+        }
+    }
+}
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(self.showPlaceHolder){
@@ -370,23 +443,10 @@ extern NSString *const kFHDetailFollowUpNotification;
         BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
         
         if (indexPath.row < self.dataList.count) {
-            
             FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
             [cell updateWithHouseCellModel:cellModel];
             [cell refreshTopMargin: 20];
             [cell refreshBottomMargin:isLastCell ? 20 : 0];
-            
-            if (!_clientShowDict) {
-                _clientShowDict = [NSMutableDictionary new];
-            }
-            
-            NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-            if (_clientShowDict[row]) {
-                return cell;
-            }
-            
-            _clientShowDict[row] = @(indexPath.row);
-            [self trackHouseShow:cellModel rank:indexPath.row];
         }
         return cell;
     }
@@ -428,25 +488,18 @@ extern NSString *const kFHDetailFollowUpNotification;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    __weak typeof(self) wself = self;
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-        [self trackDeleteFollow:cellModel];
+        FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
+        [wself trackDeleteFollow:cellModel];
         [[ToastManager manager] showCustomLoading:@"正在取消关注"];
-        if(indexPath.row < self.dataList.count){
-            
+        if(indexPath.row < wself.dataList.count){
             [self cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
                 if(error){
-                    [self.tableView setEditing:NO animated:YES];
+                    [wself.tableView setEditing:NO animated:YES];
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
-                    [self.dataList removeObjectAtIndex:indexPath.row];
-                    if(self.dataList.count > 0){
-                        [self.viewController.emptyView hideEmptyView];
-                        [self.tableView reloadData];
-                    }else{
-                        [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
-                    }
-                    
+                    [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"已取消关注"];
                 }
@@ -471,14 +524,7 @@ extern NSString *const kFHDetailFollowUpNotification;
                     [wself.tableView setEditing:NO animated:YES];
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
-                    [wself.dataList removeObjectAtIndex:indexPath.row];
-                    if(wself.dataList.count > 0){
-                        [wself.viewController.emptyView hideEmptyView];
-                        [wself.tableView reloadData];
-                    }else{
-                        [wself.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
-                    }
-
+                    [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"已取消关注"];
                 }
@@ -548,6 +594,11 @@ extern NSString *const kFHDetailFollowUpNotification;
 }
 
 - (void)cancelHouseFollow:(FHSingleImageInfoCellModel *)cellModel completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString *followId = [self getFollowId:cellModel];
+    [FHHouseDetailAPI requestCancelFollow:followId houseType:self.type actionType:self.type completion:completion];
+}
+
+- (NSString *)getFollowId:(FHSingleImageInfoCellModel *)cellModel {
     NSString *followId = @"";
     switch (self.type) {
         case FHHouseTypeNewHouse:
@@ -578,7 +629,7 @@ extern NSString *const kFHDetailFollowUpNotification;
             break;
     }
     
-    [FHHouseDetailAPI requestCancelFollow:followId houseType:self.type actionType:self.type completion:completion];
+    return followId;
 }
 
 -(NSString *)pageTypeString {

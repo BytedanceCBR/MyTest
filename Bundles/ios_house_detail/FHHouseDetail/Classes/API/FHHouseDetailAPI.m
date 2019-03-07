@@ -455,10 +455,8 @@
     }
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:GET needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
-        FHDetailVirtualNumResponseModel *model = nil;
-        if (!error) {
-            model = [[FHDetailVirtualNumResponseModel alloc] initWithDictionary:jsonObj error:&error];
-        }
+        NSError *jerror = nil;
+        FHDetailVirtualNumResponseModel *model = [[FHDetailVirtualNumResponseModel alloc] initWithDictionary:jsonObj error:&jerror];
         if (![model.status isEqualToString:@"0"]) {
             error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
         }

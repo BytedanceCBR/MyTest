@@ -9,6 +9,7 @@
 #import "FHDetailNewModel.h"
 #import "FHHouseDetailContactViewModel.h"
 #import <FHEnvContext.h>
+#import "FHDetailHouseNameCell.h"
 
 static const CGFloat kLabelKeyFontSize = 12;
 
@@ -294,7 +295,11 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [infoDict setValue:@"公交" forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
-    
+    FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
+    if ([model isKindOfClass:[FHDetailNewHouseCoreInfoModel class]]) {
+        FHDetailHouseNameModel * houseName = (FHDetailHouseNameModel *)model.houseName;
+        [infoDict setValue:houseName.name forKey:@"title"];
+    }
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     [tracer setValue:@"address" forKey:@"click_type"];
     [tracer setValue:@"house_info" forKey:@"element_from"];

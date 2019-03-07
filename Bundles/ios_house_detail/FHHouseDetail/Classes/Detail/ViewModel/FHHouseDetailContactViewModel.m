@@ -45,7 +45,7 @@
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
-@property (nonatomic, strong)FHHouseDetailFollowUpViewModel *followUpViewModel;
+@property (nonatomic, strong, readwrite)FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
 @end
@@ -139,6 +139,11 @@
 {
     _followStatus = followStatus;
     [self.navBar setFollowStatus:followStatus];
+}
+
+- (void)hideFollowBtn
+{
+    [self.navBar hideFollowBtn];
 }
 
 - (void)setTracerDict:(NSDictionary *)tracerDict
@@ -240,6 +245,7 @@
     [self tryTraceImElementShow];
     if (contactPhone.showRealtorinfo) {
         [self addRealtorShowLog:contactPhone];
+        [self addElementShowLog:contactPhone];
     }
 }
 
@@ -274,7 +280,7 @@
 
 - (void)fillFormAction
 {
-    [self.phoneCallViewModel fillFormAction];
+    [self.phoneCallViewModel fillFormActionWithCustomHouseId:self.customHouseId fromStr:self.fromStr];
 }
 
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
@@ -284,7 +290,7 @@
 
 - (void)callAction
 {
-    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone searchId:self.searchId imprId:self.imprId];
+    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone realtorId:self.contactPhone.realtorId searchId:self.searchId imprId:self.imprId];
     // 静默关注功能
     [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }
@@ -357,6 +363,25 @@
         [tracerDic setValue:@"0" forKey:@"im_show"];
     }
     [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
+}
+
+- (void)addElementShowLog:(FHDetailContactModel *)contactPhone
+{
+//    1. event_type ：house_app2c_v2
+//    2. page_type（页面类型）：old_detail（二手房详情页）
+//    3. element_type（组件类型）：底部button：old_detail_button，详情页推荐经纪人：old_detail_related
+//    4. rank
+//    5. origin_from
+//    6. origin_search_id
+//    7.log_pb
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDic[@"element_type"] = @"old_detail_button";
+    tracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
+    tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
+    tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
+    tracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"element_show" params:tracerDic];
 }
 
 #pragma mark TTShareManagerDelegate

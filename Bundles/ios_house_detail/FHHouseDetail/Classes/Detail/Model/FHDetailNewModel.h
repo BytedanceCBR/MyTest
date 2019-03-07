@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak , nullable) UITableViewCell *cell;
 @property (nonatomic, copy , nullable) NSString *gaodeLng;
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
+@property (nonatomic, copy , nullable) NSString *title;
 
 @end
 
@@ -114,6 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, copy , nullable) NSString *squaremeter;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListImagesModel> *images;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, assign) NSInteger index;

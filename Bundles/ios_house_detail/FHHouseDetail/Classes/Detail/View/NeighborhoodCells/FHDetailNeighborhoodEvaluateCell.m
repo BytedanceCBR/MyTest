@@ -154,8 +154,8 @@
             NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
             [tracerDic addEntriesFromDictionary:temp];
             tracerDic[@"enter_from"] = enter_from;
-            if (self.baseViewModel.logPB) {
-                tracerDic[@"log_pb"] = self.baseViewModel.logPB;
+            if (self.baseViewModel.listLogPB) {
+                tracerDic[@"log_pb"] = self.baseViewModel.listLogPB;
             }
             [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
             //

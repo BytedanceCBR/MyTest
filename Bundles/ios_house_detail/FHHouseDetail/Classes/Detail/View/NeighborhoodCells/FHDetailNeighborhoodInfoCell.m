@@ -124,7 +124,21 @@
 - (NSString *)elementTypeString:(FHHouseType)houseType {
     return @"neighborhood_detail";
 }
-
+// 小区评测
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType {
+    NSMutableArray *elementTypes = [NSMutableArray new];
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    // 二手房
+    if (model.neighborhoodInfo.evaluationInfo) {
+        [elementTypes addObject:@"neighborhood_evaluation"];
+    }
+    // 租房
+    if (model.rent_neighborhoodInfo.evaluationInfo) {
+        [elementTypes addObject:@"neighborhood_evaluation"];
+    }
+    // 二手房和租房只会存在一个
+    return elementTypes;
+}
 - (void)updateRentCellData {
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {
@@ -391,26 +405,27 @@
         NSString *enter_from = @"old_detail";
         NSString *neighborhood_id = @"0";
         NSString *urlStr = @"";
+        NSDictionary *log_pb = nil;
         if (model.neighborhoodInfo) {
             // 二手房
             enter_from = @"old_detail";
             neighborhood_id = model.neighborhoodInfo.id;
             urlStr = model.neighborhoodInfo.evaluationInfo.detailUrl;
+            log_pb = model.neighborhoodInfo.logPb;
         }
         if (model.rent_neighborhoodInfo) {
             // 租房
             enter_from = @"rent_detail";
             neighborhood_id = model.rent_neighborhoodInfo.id;
             urlStr = model.rent_neighborhoodInfo.evaluationInfo.detailUrl;
+            log_pb = model.rent_neighborhoodInfo.logPb;
         }
         if (urlStr.length > 0) {
             NSMutableDictionary *tracerDic = [NSMutableDictionary new];
             NSDictionary *temp = [self.baseViewModel.detailTracerDic dictionaryWithValuesForKeys:@[@"origin_from",@"origin_search_id"]];
             [tracerDic addEntriesFromDictionary:temp];
             tracerDic[@"enter_from"] = enter_from;
-            if (self.baseViewModel.logPB) {
-                tracerDic[@"log_pb"] = self.baseViewModel.logPB;
-            }
+            tracerDic[@"log_pb"] = log_pb ? log_pb : @"be_null";// 特殊，传入当前小区的logpb
             [FHUserTracker writeEvent:@"enter_neighborhood_evaluation" params:tracerDic];
             //
             NSString *reportParams = [self getEvaluateWebParams:tracerDic];
@@ -429,6 +444,17 @@
     [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
     [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
     
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    
+    if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
+        if (model.neighborhoodInfo.name.length > 0) {
+            [infoDict setValue:model.neighborhoodInfo.name forKey:@"title"];
+        }
+        if (model.rent_neighborhoodInfo.name.length > 0) {
+            [infoDict setValue:model.rent_neighborhoodInfo.name forKey:@"title"];
+        }
+    }
+
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     [tracer setValue:@"map" forKey:@"click_type"];
     [tracer setValue:@"house_info" forKey:@"element_from"];
@@ -446,21 +472,24 @@
         NSString *enter_from = @"be_null";
         NSString *neighborhood_id = @"0";
         NSString *source = @"";
+        NSDictionary *log_pb = nil;
         if (model.neighborhoodInfo) {
             // 二手房
             enter_from = @"old_detail";
             neighborhood_id = model.neighborhoodInfo.id;
             source = @"";
+            log_pb = model.neighborhoodInfo.logPb;
         }
         if (model.rent_neighborhoodInfo) {
             // 租房
             enter_from = @"rent_detail";
             neighborhood_id = model.rent_neighborhoodInfo.id;
             source = @"rent_detail";
+            log_pb = model.rent_neighborhoodInfo.logPb;
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"card_type"] = @"no_pic";
-        tracerDic[@"log_pb"] = self.baseViewModel.logPB ? self.baseViewModel.logPB : @"be_null";
+        tracerDic[@"log_pb"] = log_pb ? log_pb : @"be_null";// 特殊，传入当前小区的logpb
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_from"] = @"neighborhood_detail";
         tracerDic[@"enter_from"] = enter_from;

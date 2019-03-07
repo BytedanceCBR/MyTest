@@ -169,6 +169,14 @@
             }];
             
             _timeLineLeading.hidden = YES;
+            
+            
+            [_timeLineTailing mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(24);
+                make.width.mas_equalTo(0.5);
+                make.top.equalTo(self.redDotView.mas_bottom).offset(4);
+                make.bottom.equalTo(self.contentView);
+            }];
         }else
         {
             _timeLineLeading.hidden = NO;

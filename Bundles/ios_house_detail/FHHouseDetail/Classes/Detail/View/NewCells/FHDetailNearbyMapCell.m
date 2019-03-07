@@ -49,6 +49,7 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) NSString * searchCategory;
 @property (nonatomic , strong) NSArray * nameArray;
 @property (nonatomic , assign) BOOL isFirst;
+@property (nonatomic , assign) NSInteger retrySnap;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
 @property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
@@ -65,7 +66,8 @@ static const float kSegementedPadingTop = 5;
         _isFirst = YES;
          self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
-
+        _retrySnap = 2;
+        
         _nameArray = [NSArray arrayWithObjects:@"交通",@"购物",@"医院",@"教育", nil];
         _countCategoryDict = [NSMutableDictionary new];
         _poiDatasDict = [NSMutableDictionary new];
@@ -132,7 +134,7 @@ static const float kSegementedPadingTop = 5;
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentedControl.isNeedNetworkCheck = NO;
-//    _segmentedControl.selec
+    
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
                                      [UIColor colorWithHexString:@"#8a9299"],NSForegroundColorAttributeName,nil];
@@ -170,20 +172,57 @@ static const float kSegementedPadingTop = 5;
     }];
 }
 
-- (void)setUpMapImageView
+- (void)setUpMapViewSetting:(BOOL)isRetry
 {
-    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
-    
-    _mapView = [[MAMapView alloc] initWithFrame:mapRect];
     _mapView.runLoopMode = NSDefaultRunLoopMode;
     _mapView.showsCompass = NO;
     _mapView.showsScale = NO;
     _mapView.zoomEnabled = NO;
     _mapView.scrollEnabled = NO;
     _mapView.zoomLevel = 14;
-    
     _mapView.delegate = self;
+    [_mapView forceRefresh];
     
+    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
+    WeakSelf;
+    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        StrongSelf;
+        if (resultImage) {
+            self.mapImageView.image = resultImage;
+        }
+    }];
+    
+    if (self.centerPoint.latitude && self.centerPoint.longitude) {
+        [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
+    }
+    if (isRetry) {
+        [self.mapImageView addSubview:_mapView];
+        _mapView.hidden = YES;
+    }
+}
+
+- (void)setUpMapImageView
+{
+    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
+    
+    _mapView = [[MAMapView alloc] initWithFrame:mapRect];
+    
+    //3秒如果截图失败则重试一次
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (self.mapImageView.image == nil) {
+                if (_mapView) {
+                    [_mapView removeFromSuperview];
+                    _mapView = nil;
+                }
+                _mapView = [[MAMapView alloc] initWithFrame:mapRect];
+                [self setUpMapViewSetting:YES];
+            }
+        });
+    });
+    
+    [self setUpMapViewSetting:NO];
+
     _mapImageView = [[UIImageView alloc] initWithFrame:mapRect];
     _mapImageView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
     [self.contentView addSubview:_mapImageView];
@@ -204,9 +243,8 @@ static const float kSegementedPadingTop = 5;
     
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtn];
-//    [_mapMaskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.edges.equalTo(_mapImageView);
-//    }];
+
+    
     [_mapMaskBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.segmentedControl.mas_bottom);
         make.left.right.equalTo(self.contentView);
@@ -216,11 +254,7 @@ static const float kSegementedPadingTop = 5;
     
     [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
-    WeakSelf;
-    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        StrongSelf;
-        self.mapImageView.image = resultImage;
-    }];
+
 }
 
 - (void)mapMaskBtnClick:(UIButton *)sender
@@ -241,6 +275,7 @@ static const float kSegementedPadingTop = 5;
     [infoDict setValue:selectCategory forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
+    [infoDict setValue:self.dataModel.title forKey:@"title"];
 
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     
@@ -269,7 +304,6 @@ static const float kSegementedPadingTop = 5;
     _locationList.delegate = self;
     _locationList.dataSource = self;
     [_locationList registerClass:[FHDetailNearbyMapItemCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNearbyMapItemCell class])];
-//    [_locationList setBackgroundColor:[UIColor redColor]];
     [self.contentView addSubview:_locationList];
     
     
@@ -284,7 +318,8 @@ static const float kSegementedPadingTop = 5;
     _emptyInfoLabel = [UILabel new];
     _emptyInfoLabel.text = @"附近没有交通信息";
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
-    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
+//    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
+    _emptyInfoLabel.hidden = NO;
     _emptyInfoLabel.textColor = [UIColor themeBlue1];
     
     [_locationList addSubview:_emptyInfoLabel];
@@ -337,7 +372,6 @@ static const float kSegementedPadingTop = 5;
     [_mapMaskBtnLocation mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.locationList);
     }];
-//    [_dataModel.tableView endUpdates];
 
     if (self.indexChangeCallBack) {
         self.indexChangeCallBack();
@@ -346,21 +380,24 @@ static const float kSegementedPadingTop = 5;
 
 - (void)cleanAllAnnotations
 {
+    [self.mapView removeAnnotation:self.pointCenterAnnotation];
     [self.mapView removeAnnotations:self.poiAnnotations];
     [self.poiAnnotations removeAllObjects];
 }
 
 - (void)setUpAnnotations
 {
+    for (NSInteger i = 0; i < _poiAnnotations.count; i++) {
+        [self.mapView addAnnotation:_poiAnnotations[i]];
+    }
+    
     FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
     userAnna.type = @"user";
+    
     userAnna.coordinate = self.centerPoint;
     [self.mapView addAnnotation:userAnna];
     self.pointCenterAnnotation = userAnna;
     
-    for (NSInteger i = 0; i < _poiAnnotations.count; i++) {
-        [self.mapView addAnnotation:_poiAnnotations[i]];
-    }
     [self.mapView setCenterCoordinate:self.centerPoint];
     
     [self performSelector:@selector(snapShotAnnotationImage) withObject:nil afterDelay:0.3];
@@ -609,6 +646,14 @@ static const float kSegementedPadingTop = 5;
     }else
     {
         self.mapAnnotionImageView.image = nil;
+    }
+    
+    if (self.mapAnnotionImageView.image == nil && _retrySnap > 0) {
+        [self snapShotAnnotationImage];
+        _retrySnap --;
+    }else
+    {
+        _retrySnap = 0;
     }
 }
 
