@@ -49,6 +49,7 @@
     if (self) {
         _coverColor = [UIColor clearColor];
         _avatarView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
+        _avatarView.backgroundColor = [UIColor whiteColor];
         CGFloat borderWidth = [TTDeviceHelper ssOnePixel];
         _nightCoverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.height)];
         if (_allowCorner) {
@@ -83,10 +84,10 @@
 }
 
 - (void)tt_setImageWithURLString:(NSString *)urlString {
-    
-    if ([urlString rangeOfString:@"/origin/"].location != NSNotFound) {
-        urlString = [urlString stringByReplacingOccurrencesOfString:@"/origin/" withString:@"/thumb/"];
-    }
+
+//    if ([urlString rangeOfString:@"/origin/"].location != NSNotFound) {
+//        urlString = [urlString stringByReplacingOccurrencesOfString:@"/origin/" withString:@"/thumb/"];
+//    }
     NSURL *url = [NSURL URLWithString:urlString];
     
     WeakSelf;

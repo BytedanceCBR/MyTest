@@ -188,8 +188,8 @@
         }
     }
 
-    NSDictionary *inactiveLinkAttributes = @{NSForegroundColorAttributeName:self.replyModel.notReplyMsg ? SSGetThemedColorWithKey(kColorText5) : SSGetThemedColorWithKey(kFHColorCoolGrey3) };
-    NSDictionary *activeLinkAttributes = @{NSForegroundColorAttributeName:SSGetThemedColorWithKey(kColorText5Highlighted)};
+    NSDictionary *inactiveLinkAttributes = @{NSForegroundColorAttributeName:self.replyModel.notReplyMsg ? SSGetThemedColorWithKey(kFHColorRed3) : SSGetThemedColorWithKey(kFHColorCoolGrey3) };
+    NSDictionary *activeLinkAttributes = @{NSForegroundColorAttributeName:SSGetThemedColorWithKey(kFHColorRed3)};
     _replyLabel.labelInactiveLinkAttributes = inactiveLinkAttributes;
     _replyLabel.labelActiveLinkAttributes = activeLinkAttributes;
     _replyLabel.attributedText = mAttributedText;
