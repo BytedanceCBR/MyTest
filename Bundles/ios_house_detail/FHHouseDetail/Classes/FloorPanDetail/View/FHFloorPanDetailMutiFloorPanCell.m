@@ -16,6 +16,7 @@
 #import "FHDetailHeaderView.h"
 #import "FHDetailMultitemCollectionView.h"
 #import "FHDetailFloorPanDetailInfoModel.h"
+#import "FHHouseDetailSubPageViewController.h"
 
 @interface FHFloorPanDetailMutiFloorPanCell ()
 
@@ -132,7 +133,7 @@
             
                 NSMutableDictionary *traceParam = [NSMutableDictionary new];
                 traceParam[@"enter_from"] = @"new_detail";
-                traceParam[@"log_pb"] = self.baseViewModel.logPB;
+                traceParam[@"log_pb"] = floorPanInfoModel.logPb; 
                 traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
                 traceParam[@"card_type"] = @"left_pic";
                 traceParam[@"rank"] = @(floorPanInfoModel.index);
@@ -142,15 +143,15 @@
                 NSMutableDictionary *infoDict = @{@"house_type":@(1),
                                        @"tracer": traceParam
                                        }.mutableCopy;
-                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
-                NSMutableDictionary *subPageParams = model.subPageParams;
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
+                NSMutableDictionary *subPageParams = model.subPageVC.subPageParams;
                
 //                subPageParams[@"tracer"] = nil;
                 if (subPageParams) {
                     [infoDict addEntriesFromDictionary:subPageParams];
                 }
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_plan_detail"] userInfo:info];
             }
         }
     }

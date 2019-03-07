@@ -17,8 +17,6 @@
 #import "FHUserTracker.h"
 #import "FHHouseType.h"
 
-extern NSString *const kFHDetailFollowUpNotification;
-
 @interface FHMyFavoriteViewController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol>
 
 @property(nonatomic, strong) FHMyFavoriteViewModel *viewModel;
@@ -32,7 +30,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        self.type = [paramObj.allParams[@"type"] integerValue];
+        self.type = [paramObj.allParams[@"house_type"] integerValue];
     }
     return self;
 }
@@ -49,11 +47,6 @@ extern NSString *const kFHDetailFollowUpNotification;
     [self initView];
     [self initConstraints];
     [self initViewModel];
-    [self initNotification];
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -122,14 +115,6 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (void)initViewModel {
     _viewModel = [[FHMyFavoriteViewModel alloc] initWithTableView:_tableView controller:self type:self.type];
-    [self startLoadData];
-}
-
-- (void)initNotification {
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshData:) name:kFHDetailFollowUpNotification object:nil];
-}
-
-- (void)refreshData:(NSNotification *)notification {
     [self startLoadData];
 }
 

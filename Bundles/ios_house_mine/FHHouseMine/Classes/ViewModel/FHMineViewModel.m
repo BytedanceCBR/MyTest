@@ -214,13 +214,44 @@
 - (void)goToFocusDetail:(FHHouseType)type {
     if ([TTReachability isNetworkConnected]) {
         NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
+        
+        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+        tracerDict[@"enter_from"] = @"minetab";
+        tracerDict[@"enter_type"] = @"click";
+        tracerDict[@"element_from"] = @"be_null";
+        tracerDict[@"origin_from"] = [self focusOriginFrom:type];
+        
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"type"] = @(type);
+        dict[@"house_type"] = @(type);
+        dict[@"tracer"] = tracerDict;
+        
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     } else {
         [[ToastManager manager] showToast:@"网络异常"];
     }
+}
+
+- (NSString *)focusOriginFrom:(FHHouseType)type {
+    NSString *originFrom = @"be_null";
+    switch (type) {
+        case FHHouseTypeNewHouse:
+            originFrom = @"minetab_new";
+            break;
+        case FHHouseTypeRentHouse:
+            originFrom = @"minetab_rent";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            originFrom = @"minetab_old";
+            break;
+        case FHHouseTypeNeighborhood:
+            originFrom = @"minetab_neighborhood";
+            break;
+            
+        default:
+            break;
+    }
+    return originFrom;
 }
 
 #pragma mark - UITableViewDataSource

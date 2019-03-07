@@ -168,7 +168,8 @@
         double lat = [model.neighborhoodInfo.gaodeLat doubleValue];
         [infoDict setValue:@(lat) forKey:@"latitude"];
         [infoDict setValue:@(lng) forKey:@"longitude"];
-        
+        [infoDict setValue:model.neighborhoodInfo.name forKey:@"title"];
+
         NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
         [tracer setValue:@"address" forKey:@"click_type"];
         [tracer setValue:@"house_info" forKey:@"element_from"];

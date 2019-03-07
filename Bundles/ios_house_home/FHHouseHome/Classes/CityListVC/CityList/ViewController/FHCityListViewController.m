@@ -51,7 +51,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.hasShowenConfigListData = NO;
-        self.disablePanGesture = [paramObj.userInfo.allInfo[@"disablePanGes"] boolValue];
+        self.disablePanGesture = [paramObj.allParams[@"disablePanGes"] boolValue];
     }
     return self;
 }

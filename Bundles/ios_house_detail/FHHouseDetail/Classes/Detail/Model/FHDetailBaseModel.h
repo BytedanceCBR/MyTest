@@ -97,6 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *virtualNumber;
+@property (nonatomic, assign) NSInteger isVirtual;
 
 @end
 

@@ -9,6 +9,7 @@
 #import "FHFloorCoreInfoViewModel.h"
 #import "FHDetailHouseNameCell.h"
 #import "FHDetailDisclaimerCell.h"
+#import "FHFloorCoreInfoViewModel.h"
 
 @interface FHFloorMoreCoreInfoViewController () <TTRouteInitializeProtocol>
 

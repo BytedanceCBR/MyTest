@@ -117,18 +117,20 @@
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
-                [self.detailController.emptyView hideEmptyView];
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 NSString *neighborhoodId = model.data.neighborhoodInfo.id;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
+                wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         } else {
+            wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
@@ -144,7 +146,6 @@
     self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
     
     self.detailData = model;
-    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -194,6 +195,7 @@
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        nearbyMapModel.title = model.data.neighborhoodInfo.name;
         //        nearbyMapModel.tableView = self.tableView;
         [self.items addObject:nearbyMapModel];
         
@@ -248,6 +250,7 @@
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
+        self.detailController.isLoadingData = NO;
         // 周边小区
         if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线

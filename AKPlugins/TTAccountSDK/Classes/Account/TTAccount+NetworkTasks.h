@@ -368,6 +368,16 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable id<TTAccountSessionTask>)logout:(void(^)(BOOL success, NSError * _Nullable error))completedBlock;
 
 
+#pragma mark - 注销F项目账号
+/**
+ *  退出当前登录账户
+ *
+ *  @param completedBlock   完成后的回调
+ *  @return HTTP请求任务
+ */
+
++ (nullable id<TTAccountSessionTask>)logoutAndClearCookie:(void(^)(BOOL success, NSError * _Nullable error))completedBlock;
+
 #pragma mark - 退出【解绑】已绑定的第三方平台
 /**
  *  退出绑定的第三方平台账号

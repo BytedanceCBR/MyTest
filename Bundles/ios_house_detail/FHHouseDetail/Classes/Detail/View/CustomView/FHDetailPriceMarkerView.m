@@ -125,7 +125,7 @@
     }
     if (items.count > 2) {
         
-        FHDetailPriceMarkerItem *item = items[1];
+        FHDetailPriceMarkerItem *item = items[2];
         NSString *name = item.name;
         self.titleLabel.text = item.priceModel.timeStr;
         if (name.length > 7) {

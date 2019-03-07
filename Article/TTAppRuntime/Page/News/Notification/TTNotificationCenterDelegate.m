@@ -79,12 +79,14 @@ typedef void(^NotificationActionCompletionBlock) (void);
     
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
-    UNNotificationAction *actionDislike = [UNNotificationAction actionWithIdentifier:kNotificationActionIdentifierDislike
-                                                                               title:@"不感兴趣"
-                                                                             options:UNNotificationActionOptionAuthenticationRequired];
-    UNNotificationAction *actionFavorite = [UNNotificationAction actionWithIdentifier:kNotificationActionIdentifierFavorite
-                                                                                title:@"收藏"
-                                                                              options:UNNotificationActionOptionAuthenticationRequired];
+    
+    // add by zjing 去掉推送里面的三个选项
+//    UNNotificationAction *actionDislike = [UNNotificationAction actionWithIdentifier:kNotificationActionIdentifierDislike
+//                                                                               title:@"不感兴趣"
+//                                                                             options:UNNotificationActionOptionAuthenticationRequired];
+//    UNNotificationAction *actionFavorite = [UNNotificationAction actionWithIdentifier:kNotificationActionIdentifierFavorite
+//                                                                                title:@"收藏"
+//                                                                              options:UNNotificationActionOptionAuthenticationRequired];
     UNNotificationAction *actionLaunch = [UNNotificationAction actionWithIdentifier:kNotificationActionIdentifierLaunch
                                                                               title:@"打开"
                                                                             options:UNNotificationActionOptionAuthenticationRequired | UNNotificationActionOptionForeground];
@@ -92,13 +94,13 @@ typedef void(^NotificationActionCompletionBlock) (void);
 
     NSMutableArray *newsCategoryActions = [NSMutableArray arrayWithCapacity:3];
     NSMutableArray *newsCategoryNoDislikeActions = [NSMutableArray arrayWithCapacity:2];
-    if (actionDislike) {
-        [newsCategoryActions addObject:actionDislike];
-    }
-    if (actionFavorite) {
-        [newsCategoryActions addObject:actionFavorite];
-        [newsCategoryNoDislikeActions addObject:actionFavorite];
-    }
+//    if (actionDislike) {
+//        [newsCategoryActions addObject:actionDislike];
+//    }
+//    if (actionFavorite) {
+//        [newsCategoryActions addObject:actionFavorite];
+//        [newsCategoryNoDislikeActions addObject:actionFavorite];
+//    }
     if (actionLaunch) {
         [newsCategoryActions addObject:actionLaunch];
         [newsCategoryNoDislikeActions addObject:actionLaunch];
@@ -112,6 +114,8 @@ typedef void(^NotificationActionCompletionBlock) (void);
     }
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
+    
+
     UNNotificationCategory *newsCategory = [UNNotificationCategory categoryWithIdentifier:kNotificationCategoryIdentifierArticleDetail
                                                                                   actions:newsCategoryActions.copy
                                                                         intentIdentifiers:@[]
@@ -120,6 +124,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
                                                                                            actions:newsCategoryNoDislikeActions.copy
                                                                                  intentIdentifiers:@[]
                                                                                            options:UNNotificationCategoryOptionCustomDismissAction];
+    
     [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:[NSSet setWithObjects:newsCategory, newsCategoryNoDislike, nil]];
 #pragma clang diagnostic pop
 }
@@ -171,41 +176,43 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
         completionHandler();
     }
     else {
+        
+        // add by zjing 去掉推送的三个选项
         if ([response.notification.request.content.categoryIdentifier isEqualToString:kNotificationCategoryIdentifierArticleDetail]
             || [response.notification.request.content.categoryIdentifier isEqualToString:kNotificationCategoryIdentifierArticleDetailNoDislike]) {
-            
+
             NSString *groupID = [payload objectForKey:@"group_id"];
-            
+
             TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:groupID];
-            
-            if ([response.actionIdentifier isEqualToString:kNotificationActionIdentifierDislike]) {
-                wrapperTrackEvent(@"apn", @"click_dislike");
-                
-                TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
-                context.groupModel = groupModel;
-                [self.itemActionManager setContext:context];
-                
-                [self.itemActionManager startItemActionByType:DetailActionTypeNewVersionDislike actionSource:DetailActionSourceNotification];
-                self.completionBlock = completionHandler;
-            }
-            else if ([response.actionIdentifier isEqualToString:kNotificationActionIdentifierFavorite]) {
-                wrapperTrackEvent(@"apn", @"click_favorite");
-                
-                TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
-                context.groupModel = groupModel;
-                [self.itemActionManager setContext:context];
-                
-                [self.itemActionManager startItemActionByType:DetailActionTypeFavourite actionSource:DetailActionSourceNotification];
-                self.completionBlock = completionHandler;
-            }
-            else {
+
+//            if ([response.actionIdentifier isEqualToString:kNotificationActionIdentifierDislike]) {
+//                wrapperTrackEvent(@"apn", @"click_dislike");
+//
+//                TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
+//                context.groupModel = groupModel;
+//                [self.itemActionManager setContext:context];
+//
+//                [self.itemActionManager startItemActionByType:DetailActionTypeNewVersionDislike actionSource:DetailActionSourceNotification];
+//                self.completionBlock = completionHandler;
+//            }
+//            else if ([response.actionIdentifier isEqualToString:kNotificationActionIdentifierFavorite]) {
+//                wrapperTrackEvent(@"apn", @"click_favorite");
+//
+//                TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
+//                context.groupModel = groupModel;
+//                [self.itemActionManager setContext:context];
+//
+//                [self.itemActionManager startItemActionByType:DetailActionTypeFavourite actionSource:DetailActionSourceNotification];
+//                self.completionBlock = completionHandler;
+//            }
+//            else {
                 [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
                     wrapperTrackEvent(@"apn", @"click_launch");
                     ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = SharedAppDelegate;
                     [[APNsManager sharedManager] handleRemoteNotification:payload];
                     completionHandler();
                 }];
-            }
+//            }
         }
         else {
             completionHandler();

@@ -108,6 +108,22 @@
         if (itemModel.logPb) {
             [tracerDic addEntriesFromDictionary:itemModel.logPb];
         }
+        
+        if (itemModel.searchId) {
+            [tracerDic setValue:itemModel.searchId forKey:@"search_id"];
+        }
+        
+        if ([itemModel.groupId isKindOfClass:[NSString class]] && itemModel.groupId.length > 0) {
+            [tracerDic setValue:itemModel.groupId forKey:@"group_id"];
+        }else
+        {
+            [tracerDic setValue:itemModel.id forKey:@"group_id"];
+        }
+        
+        if (itemModel.imprId) {
+            [tracerDic setValue:itemModel.imprId forKey:@"impr_id"];
+        }
+        
         [tracerDic removeObjectForKey:@"enter_from"];
         [tracerDic removeObjectForKey:@"element_from"];
         [tracerDic removeObjectForKey:@"house_type"];
@@ -163,7 +179,7 @@
             if ([floorPanInfoModel isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
                 NSMutableDictionary *traceParam = [NSMutableDictionary new];
                 traceParam[@"enter_from"] = @"new_detail";
-                traceParam[@"log_pb"] = self.baseViewModel.logPB;
+                traceParam[@"log_pb"] = floorPanInfoModel.logPb;
                 traceParam[@"origin_from"] = self.baseViewModel.detailTracerDic[@"origin_from"];
                 traceParam[@"card_type"] = @"left_pic";
                 traceParam[@"rank"] = @(floorPanInfoModel.index);
@@ -176,13 +192,13 @@
                 
                 NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:nil];
                 infoDict[@"house_type"] = @(1);
-                [infoDict setValue:floorPanInfoModel.id forKey:@"floorpanid"];
+                [infoDict setValue:floorPanInfoModel.id forKey:@"floor_plan_id"];
                 NSMutableDictionary *subPageParams = [self.baseViewModel subPageParams];
                 [infoDict addEntriesFromDictionary:subPageParams];
                 infoDict[@"tracer"] = traceParam;
                 TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
 
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_pan_detail"] userInfo:info];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://floor_plan_detail"] userInfo:info];
             }
         }
     }

@@ -11,6 +11,7 @@
 #import "FHDetailNavBar.h"
 #import "TTDeviceHelper.h"
 #import <TTUIWidget/UIViewController+Track.h>
+#import <FHEnvContext.h>
 
 @interface FHHouseDetailSubPageViewController ()
 
@@ -25,6 +26,8 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, assign) NSInteger followStatus;
+@property (nonatomic, copy) NSString *customHouseId; //
+@property (nonatomic, copy) NSString *fromStr; //
 
 @end
 
@@ -34,26 +37,10 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
-        self.houseType = [paramObj.allParams[@"house_type"] integerValue];
-        
-        if (!self.houseType) {
-            if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
-                self.houseType = FHHouseTypeNeighborhood;
-            }
-            
-            if ([paramObj.sourceURL.absoluteString containsString:@"old_house_detail"]) {
-                self.houseType = FHHouseTypeSecondHandHouse;
-            }
-            
-            if ([paramObj.sourceURL.absoluteString containsString:@"new_house_detail"]) {
-                self.houseType = FHHouseTypeNewHouse;
-            }
-            
-            if ([paramObj.sourceURL.absoluteString containsString:@"rent_detail"]) {
-                self.houseType = FHHouseTypeRentHouse;
-            }
+        self.houseType = FHHouseTypeNewHouse;
+        if (paramObj.allParams[@"house_type"]) {
+            self.houseType = [paramObj.allParams[@"house_type"] integerValue];
         }
-        
         self.ttTrackStayEnable = YES;
         switch (_houseType) {
             case FHHouseTypeNewHouse:
@@ -70,24 +57,49 @@
                 break;
             default:
                 if (!self.houseId) {
-                    self.houseId = paramObj.allParams[@"house_id"];
+                    self.houseId = paramObj.allParams[@"court_id"];
                 }
                 break;
+        }
+        if ([paramObj.sourceURL.absoluteString containsString:@"floor_plan_detail"]) {
+            self.customHouseId = paramObj.allParams[@"floor_plan_id"];
+            self.fromStr = @"app_floorplan";
         }
         
         if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
             self.houseId = paramObj.allParams[@"neighborhood_id"];
         }
-        
-        NSDictionary *tracer = paramObj.allParams[@"tracer"];
-        if ([tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *logPbDict = tracer[@"log_pb"];
+        NSDictionary *allInfo = paramObj.userInfo.allInfo;
+        if ([paramObj.allParams[@"subscribe_status"] isKindOfClass:[NSString class]]) {
+            NSString *statusStr = paramObj.allParams[@"subscribe_status"];
+            if (statusStr.length > 0) {
+                if ([statusStr isEqualToString:@"true"]) {
+                    _followStatus = 1;
+                }else {
+                    _followStatus = 0;
+                }
+            }
+        }else {
+            _followStatus = [allInfo[@"follow_status"] integerValue];
+        }
+        if (allInfo[@"contact_phone"]) {
+            _contactPhone = allInfo[@"contact_phone"];
+        }else {
+            _contactPhone = [[FHDetailContactModel alloc]init];
+            _contactPhone.phone = paramObj.allParams[@"telephone"];
+        }
+        if ([paramObj.queryParams[@"log_pb"] isKindOfClass:[NSString class]]) {
+            
+            NSData *jsonData = [paramObj.queryParams[@"log_pb"] dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *logPbDict = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingAllowFragments error:nil];
+            self.searchId = logPbDict[@"search_id"];
+            self.imprId = logPbDict[@"impr_id"];
+        }else if ([allInfo[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            
+            NSDictionary *logPbDict = allInfo[@"log_pb"];
             self.searchId = logPbDict[@"search_id"];
             self.imprId = logPbDict[@"impr_id"];
         }
-        _contactPhone = paramObj.userInfo.allInfo[@"contact_phone"];
-        NSDictionary *allInfo = paramObj.userInfo.allInfo;
-        _followStatus = [allInfo[@"follow_status"] integerValue];
     }
     return self;
 }
@@ -99,6 +111,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.contactViewModel refreshMessageDot];
+    if (![FHEnvContext isNetworkConnected]) {
+        [self.contactViewModel hideFollowBtn];
+    }
 }
 
 - (void)setupUI
@@ -123,8 +138,9 @@
             make.bottom.mas_equalTo(self.view);
         }
     }];
-    
     self.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
+    self.contactViewModel.customHouseId = self.customHouseId;
+    self.contactViewModel.fromStr = self.fromStr;
     self.contactViewModel.searchId = self.searchId;
     self.contactViewModel.imprId = self.imprId;
     NSMutableDictionary *tracer = @{}.mutableCopy;

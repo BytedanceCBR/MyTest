@@ -106,13 +106,14 @@
 - (void)startLoadData {
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
+
     [FHHouseDetailAPI requestRentDetail:self.houseId completion:^(FHRentDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
                 
                 wSelf.detailController.hasValidateData = YES;
-                [self.detailController.emptyView hideEmptyView];
+                [wSelf.detailController.emptyView hideEmptyView];
                 wSelf.bottomBar.hidden = NO;
                 // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
                 [wSelf handleBottomBarStatus:model.data.status];
@@ -121,11 +122,13 @@
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
+                wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         } else {
+            wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
@@ -142,6 +145,7 @@
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
+        self.bottomStatusBar.text = @"停止出租";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -149,6 +153,14 @@
             make.height.mas_equalTo(0);
         }];
         [self.detailController.emptyView showEmptyWithTip:@"该房源已下架" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+    }else if (status == 2) {
+        self.bottomStatusBar.hidden = NO;
+        [self.navBar showRightItems:YES];
+        //        self.
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(30);
+        }];
+        self.bottomStatusBar.text = @"该房源已出租";
     }else {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:YES];
@@ -166,7 +178,6 @@
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
-    self.logPB = model.data.logPb;
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.houseImage) {
@@ -264,6 +275,7 @@
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 2) {
+         self.detailController.isLoadingData = NO;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
             // 添加分割线--当存在某个数据的时候在顶部添加分割线

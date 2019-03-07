@@ -53,6 +53,7 @@
     @"gaodeLng": @"gaode_lng",
     @"displayPricePerSqm": @"display_price_per_sqm",
     @"imprId": @"impr_id",
+    @"groupId": @"group_id",
     @"displayBuiltYear": @"display_built_year",
     @"houseType": @"house_type",
     @"displayStatsInfo": @"display_stats_info",
