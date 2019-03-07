@@ -26,7 +26,7 @@
 
 @property (nonatomic, weak)     id<FHHouseSuggestionDelegate>    suggestDelegate;
 
-@property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;
+@property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;// 传入搜索列表的轮播词-只用于搜索框展示和搜索用
 @property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 
 @end
@@ -72,6 +72,11 @@
         if (dic) {
             self.homePageRollDic = [NSMutableDictionary dictionaryWithDictionary:dic];
             self.viewModel.homePageRollDic = self.homePageRollDic;
+        }
+        // 4.1、guess_you_want_words 猜你想搜前3个词，外部轮播传入
+        id tempArray = paramObj.allParams[@"guess_you_want_words"];
+        if (tempArray && [tempArray isKindOfClass:[NSArray class]]) {
+            self.viewModel.guessYouWantWords = [[NSMutableArray alloc] initWithArray:tempArray];
         }
         // 5、tracer（TRACER_KEY）: self.tracerDict 字典
         // 6、H5页面传入的其他字段 3.18号上 H5放到report_params

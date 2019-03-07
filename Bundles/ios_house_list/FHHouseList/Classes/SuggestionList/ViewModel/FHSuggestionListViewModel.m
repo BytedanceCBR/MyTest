@@ -640,7 +640,40 @@
             // 构建数据源
             [wself.guessYouWantData removeAllObjects];
             if (model.data.data.count > 0) {
-                // 把外部传入的搜索词放到第一个位置
+                // 把外部传入的轮播词放到前3个位置
+                NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.data];
+                if (self.guessYouWantWords.count > 0) {
+                    
+                }
+                NSString *text = self.homePageRollDic[@"text"];
+                NSInteger houseType  = [self.homePageRollDic[@"house_type"] integerValue];
+                if (text.length > 0 && houseType == self.houseType) {
+                    NSInteger index = 0;
+                    FHGuessYouWantResponseDataDataModel *tempModel  = [[FHGuessYouWantResponseDataDataModel alloc] init];
+                    tempModel.text = text;
+                    tempModel.openUrl = self.homePageRollDic[@"open_url"];
+                    tempModel.guessSearchId = self.homePageRollDic[@"guess_search_id"];
+                    tempModel.houseType = [NSString stringWithFormat:@"%ld",houseType];
+                    for (FHGuessYouWantResponseDataDataModel *obj in tempData) {
+                        if ([obj.text isEqualToString:text]) {
+                            tempModel = obj;
+                            [tempData removeObjectAtIndex:index];
+                            break;
+                        }
+                        index += 1;
+                    }
+                    // 猜你想搜：第一行展示长度大于第二行-逻辑
+                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:text array:tempData count:1];
+                    
+                    [tempData insertObject:tempModel atIndex:0];
+                } else {
+                    // 猜你想搜：第一行展示长度大于第二行-逻辑
+                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:@"" array:tempData count:1];
+                }
+                [wself.guessYouWantData addObjectsFromArray:tempData];
+                wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;
+                
+                /*
                 NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.data];
                 NSString *text = self.homePageRollDic[@"text"];
                 NSInteger houseType  = [self.homePageRollDic[@"house_type"] integerValue];
@@ -669,6 +702,7 @@
                 }
                 [wself.guessYouWantData addObjectsFromArray:tempData];
                 wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;
+                 */
             } else {
                 wself.guessYouWantView.guessYouWantItems = NULL;
             }

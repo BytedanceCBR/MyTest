@@ -34,4 +34,12 @@ typedef void(^FHGuessYouWantItemClick)(FHGuessYouWantResponseDataDataModel *mode
 
 @end
 
+// 数据结构体
+@interface FHGuessYouWantFirstWords : NSObject
+
+@property (nonatomic, assign)   NSInteger       wordLine;
+@property (nonatomic, assign)   CGFloat       wordLength;
+
+@end
+
 NS_ASSUME_NONNULL_END

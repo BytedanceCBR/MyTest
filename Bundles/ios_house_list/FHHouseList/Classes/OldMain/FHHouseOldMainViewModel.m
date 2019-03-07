@@ -797,12 +797,12 @@
                 BOOL isFirstCell = (indexPath.row == 0);
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
                 
-                if (indexPath.row < self.houseList.count) {
-                    
+                if (indexPath.row < self.houseList.count) {                    
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
                 }
                 return cell;
             } else {
@@ -812,9 +812,10 @@
                 
                 if (indexPath.row < self.sugesstHouseList.count) {
                     FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
                 }
                 return cell;
             }
@@ -864,7 +865,9 @@
         } else {
             if (indexPath.section == 0) {
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                return isLastCell ? 125 : 105;
+                FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+                return (isLastCell ? 125 : 105)+reasonHeight;
                 //                if (indexPath.row < self.houseList.count) {
                 //
                 //                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -882,7 +885,9 @@
                 //                }
             } else {
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
-                return isLastCell ? 125 : 105;
+                FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+                return (isLastCell ? 125 : 105)+reasonHeight;
                 
                 //                if (indexPath.row < self.sugesstHouseList.count) {
                 //
