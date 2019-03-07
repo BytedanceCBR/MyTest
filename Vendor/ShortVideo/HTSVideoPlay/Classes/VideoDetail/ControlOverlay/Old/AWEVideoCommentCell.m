@@ -77,6 +77,7 @@
         self.thumbView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 36, 36) allowCorner:YES];
         self.thumbView.placeholderName = @"hts_vp_head_icon";
         self.thumbView.cornerRadius = 18;
+        self.thumbView.borderWidth = 0;
         self.thumbView.userInteractionEnabled = YES;
         
         [self addSubview:self.thumbView];

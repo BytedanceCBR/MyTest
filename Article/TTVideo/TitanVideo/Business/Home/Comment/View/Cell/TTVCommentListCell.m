@@ -491,7 +491,6 @@
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
         _avatarView.borderColor = [UIColor clearColor];
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         // add by zjing 去掉头像点击
 //        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
