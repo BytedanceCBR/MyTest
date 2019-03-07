@@ -468,8 +468,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }else
         {
             //过滤多余tip提示
-            if ((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) {
+            if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch)) {
                 [self.homeViewController showNotify:model.data.refreshTip];
+                self.tableViewV.contentOffset = CGPointMake(0, 0);
                 [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             }
         }
