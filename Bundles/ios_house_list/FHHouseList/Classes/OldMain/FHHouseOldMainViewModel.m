@@ -571,6 +571,7 @@
                 
                 [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
+            self.tableView.scrollEnabled = NO;
         }
     }
     [self.tableView.mj_footer endRefreshing];
@@ -631,7 +632,7 @@
 #pragma mark filter将要消失
 - (void)onConditionPanelWillDisappear
 {
-    if (self.houseOpDataModel.items.count > 1) {
+    if (self.houseOpDataModel.items.count > 0) {
         self.containerScrollView.scrollEnabled = YES;
     }else {
         self.containerScrollView.scrollEnabled = NO;
@@ -965,7 +966,7 @@
     
 //    NSLog(@"scrollview scroll: %@  offset is: %f  coffset is: %f  draging: %@",scrollView == self.tableView?@"TableView":@"ContainerView",offset.y,coffset.y,scrollView.isDragging?@"YES":@"NO");
     
-    CGFloat threshold = self.iconsHeaderView.height;
+    CGFloat threshold = self.houseOpDataModel.items.count > 0 ? HOUSE_TABLE_HEADER_HEIGHT : 0;
     CGFloat realOffset = offset.y + self.tableView.contentInset.top;
 //    NSLog(@"scrollview scroll: real offset is: %f\n\n",realOffset);
     
@@ -976,7 +977,7 @@
             if (self.tableView.scrollEnabled) {
                 if (self.tableView.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top > self.tableView.contentSize.height) {
                     //内容不满一屏幕
-                    offset = CGPointMake(0, -self.tableView.contentInset.top);;
+                    offset = CGPointMake(0, -self.tableView.contentInset.top);
                 }else{
                     CGFloat delta = (offset.y + self.tableView.height + self.tableView.contentInset.bottom + self.tableView.contentInset.top - self.tableView.contentSize.height);
                     if (delta > 0) {
@@ -988,7 +989,7 @@
                     }else{
                         offset.y += coffset.y - threshold;
                     }
-                    offset.y -= self.tableView.contentInset.top;
+//                    offset.y -= self.tableView.contentInset.top; // 注释掉避免refreshTip出现时上滑页面引起的死循环然后crash
                 }
             }
             coffset.y = threshold;
@@ -1116,11 +1117,6 @@
     return self.tableView.contentOffset.y + self.tableView.height - self.tableView.contentInset.bottom + 0.5 - self.tableView.contentSize.height > 0;
 }
 
-
--(CGFloat)topViewHeight
-{
-    return self.tableView.tableHeaderView.height;
-}
 
 -(CGFloat)headerBottomOffset
 {

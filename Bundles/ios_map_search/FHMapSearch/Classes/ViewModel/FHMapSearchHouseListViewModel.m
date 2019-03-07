@@ -623,7 +623,7 @@
 #pragma mark - gesture recognizer
 -(void)handleGesture:(UIPanGestureRecognizer *)pan
 {
-    CGPoint touchLocation =  [pan locationInView:[[UIApplication sharedApplication]keyWindow]];
+    CGPoint touchLocation =  [pan locationInView:[UIApplication sharedApplication].delegate.window];
     switch (pan.state) {
         case UIGestureRecognizerStateBegan:
         {
