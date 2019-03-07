@@ -162,8 +162,8 @@
     bottomLine.backgroundColor = [UIColor themeGray6];
     [self.filterPanel addSubview:bottomLine];
     [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.bottom.mas_equalTo(0);
-        make.height.mas_equalTo(0.5);
+        make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
 
 

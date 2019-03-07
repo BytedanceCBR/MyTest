@@ -98,7 +98,7 @@
     [self.bgView addSubview:_tipLabel];
     
     _subtitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _subtitleLabel.textColor = [UIColor themeGray3];
+    _subtitleLabel.textColor = [UIColor themeGray2];
     _subtitleLabel.numberOfLines = 0;
     [self.bgView addSubview:_subtitleLabel];
     
