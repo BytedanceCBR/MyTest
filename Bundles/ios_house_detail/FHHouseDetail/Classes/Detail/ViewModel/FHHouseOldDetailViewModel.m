@@ -32,6 +32,7 @@
 #import "FHDetailNeighborhoodInfoCell.h"
 #import "FHDetailNeighborhoodMapInfoCell.h"
 #import "FHDetailNeighborhoodEvaluateCell.h"
+#import "FHDetailListEntranceCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -66,6 +67,7 @@
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
+    [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
 
 }
 // cell class
@@ -144,6 +146,10 @@
     // 均价走势
     if ([model isKindOfClass:[FHDetailPriceRankModel class]]) {
         return [FHDetailPriceRankCell class];
+    }
+    // 房源榜单
+    if ([model isKindOfClass:[FHDetailListEntranceModel class]]) {
+        return [FHDetailListEntranceCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -249,6 +255,16 @@
         propertyModel.baseInfo = model.data.baseInfo;
         propertyModel.certificate = model.data.certificate;
         [self.items addObject:propertyModel];
+    }
+    
+    // 房源榜单
+    if (model.data.listEntrance.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailListEntranceModel *entranceModel = [[FHDetailListEntranceModel alloc] init];
+        entranceModel.listEntrance = model.data.listEntrance;
+        [self.items addObject:entranceModel];
     }
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
