@@ -73,7 +73,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.hasShowedData = NO;
         self.isHasCallBackForFirstTime = NO;
         self.isFirstChange = YES;
-
+        
         
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
@@ -96,21 +96,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }];
         self.tableViewV.mj_footer = self.refreshFooter;
         
-        // 上拉刷新，修改tabbar条和请求数据
-        //        [self.tableViewV tt_addDefaultPullUpLoadMoreWithHandler:^{
-        //            StrongSelf;
-        //            if ([FHEnvContext isNetworkConnected]) {
-        //                [self requestDataForRefresh:FHHomePullTriggerTypePullUp];
-        //            }else
-        //            {
-        //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        //                    dispatch_async(dispatch_get_main_queue(), ^{
-        //                        [self.tableViewV finishPullUpWithSuccess:YES];
-        //                    });
-        //                });
-        //                [[ToastManager manager] showToast:@"网络异常"];
-        //            }
-        //        }];
         // 下拉刷新，修改tabbar条和请求数据
         [self.tableViewV tt_addDefaultPullDownRefreshWithHandler:^{
             StrongSelf;
@@ -146,7 +131,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-//       __block NSString *previousCityId = configDataModel.currentCityId;
+        //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         __block BOOL isShowLocalTest = NO;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
@@ -173,7 +158,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self requestOriginData:self.isFirstChange];
                 return ;
             }
-
+            
             //过滤多余刷新
             if (configDataModel == [[FHEnvContext sharedInstance] getConfigFromCache] && !self.isFirstChange) {
                 return;
@@ -181,7 +166,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
-        
+                
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
                     if ([self.tableViewV numberOfRowsInSection:0] > 0) {
@@ -208,7 +193,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
             
             self.isFirstChange = NO;
-
+            
             //防止二次刷新
             if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch && (configDataModel.cityAvailability.enable == YES || self.isFirstChange)&& ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 return;
@@ -221,7 +206,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             //请求推荐房源
             [self requestOriginData:self.isFirstChange];
-                        
+            
         }];
         
         //切换推荐房源类型
@@ -434,24 +419,28 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             }
         }
         
+        //缓存房源数据
         NSString *cahceKey = [self getCurrentHouseTypeChacheKey];
         if (kIsNSString(cahceKey)) {
             self.itemsDataCache[cahceKey] = model.data.items;
         }
         
+        //缓存oirigin searchid
         if (kIsNSString(cahceKey)) {
             self.originSearchIdCache[cahceKey] = model.data.searchId;
         }
         
+        //缓存searchid
         if (kIsNSString(cahceKey)) {
             self.itemsSearchIdCache[cahceKey] = model.data.searchId;
         }
         
-        
+        //缓存loadmore状态
         if (kIsNSString(cahceKey) && model.data.hasMore != nil) {
             self.isItemsHasMoreCache[cahceKey] = @(model.data.hasMore);
         }
         
+        //结束刷新态
         [self.tableViewV finishPullDownWithSuccess:YES];
         [self reloadHomeTableHouseSection:model.data.items];
         
@@ -532,7 +521,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.requestRefreshTask = nil;
         
         [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
-
+        
         NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
         NSMutableArray *modelsCache =[[NSMutableArray alloc] initWithArray:self.itemsDataCache[cacheKey]];
         if (kIsNSString(cahceKey)) {
@@ -576,14 +565,17 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         self.isRetryedPullDownRefresh = NO;
         
+        //缓存origin searchid
         if (kIsNSString(cahceKey) && pullType == FHHomePullTriggerTypePullDown) {
             self.originSearchIdCache[cahceKey] = model.data.searchId;
         }
         
+        //缓存search id
         if (kIsNSString(cahceKey) && model.data.searchId) {
             self.itemsSearchIdCache[cacheKey] = model.data.searchId;
         }
         
+        //缓存load more状态
         if (kIsNSString(cahceKey) && model.data.hasMore != nil) {
             self.isItemsHasMoreCache[cacheKey] = @(model.data.hasMore);
         }
@@ -592,7 +584,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self.tableViewV finishPullUpWithSuccess:YES];
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
         
-
+        
         self.tableViewV.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
         
