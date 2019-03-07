@@ -75,7 +75,7 @@
     return [self fitSizeWithiPhone6:14.f iPhone5:13.f];
 }
 + (NSString *)nameViewTextColorKey {
-    return kColorText5;
+    return kFHColorCharcoalGrey;
 }
 
 + (CGFloat)nameViewBottomPadding {
@@ -119,7 +119,7 @@
 }
 
 + (NSString *)timeLabelTextColorKey {
-    return kColorText13;
+    return kFHColorCoolGrey3;
 }
 
 #pragma mark - followButton
@@ -615,7 +615,7 @@
         CGFloat maxWidth = self.width - [TTCommentDetailHeaderUIHelper cellHorizontalPadding] -[TTCommentDetailHeaderUIHelper avatarSize] - [TTCommentDetailHeaderUIHelper avatarRightPadding] - [TTCommentDetailHeaderUIHelper nameViewRightPadding] - [TTCommentDetailHeaderUIHelper followButtonSize].width - [TTCommentDetailHeaderUIHelper cellHorizontalPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14]].lineHeight title:nil fontSize:[TTCommentDetailHeaderUIHelper nameViewFontSize] verifiedInfo:nil appendLogoInfoArray:nil];
         WeakSelf;
-        [_nameView setTextColorThemedKey:[TTCommentDetailHeaderUIHelper nameViewTextColorKey]];
+//        [_nameView setTextColorThemedKey:[TTCommentDetailHeaderUIHelper nameViewTextColorKey]];
         [_nameView clickTitleWithAction:^(NSString *title){
             StrongSelf;
             [self nameViewOnClick:nil];
@@ -659,7 +659,7 @@
     if (!_timeLabel) {
         _timeLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         _timeLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12]];
-        _timeLabel.textColorThemeKey = kColorText1;
+        _timeLabel.textColorThemeKey = kFHColorCoolGrey3;
     }
     return _timeLabel;
 }
@@ -720,7 +720,7 @@
     if (!_reportButton) {
         _reportButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         _reportButton.titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12]];
-        _reportButton.titleColorThemeKey = kColorText1;
+        _reportButton.titleColorThemeKey = kFHColorCoral;
         _reportButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_reportButton setTitle:@"举报" forState:UIControlStateNormal];
         [_reportButton sizeToFit];

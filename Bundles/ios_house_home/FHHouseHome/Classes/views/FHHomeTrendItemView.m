@@ -133,6 +133,7 @@
         _btn.layer.borderColor = [UIColor themeGray6].CGColor;
         _btn.layer.cornerRadius = 2;
         _btn.layer.masksToBounds = YES;
+        _btn.backgroundColor = [UIColor whiteColor];
         _btn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
     }
     return _btn;
