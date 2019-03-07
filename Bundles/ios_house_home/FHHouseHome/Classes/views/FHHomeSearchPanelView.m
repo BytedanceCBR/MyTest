@@ -204,8 +204,9 @@
 
     [self.categoryLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(9);
-        make.left.right.centerY.equalTo(self.categoryBgView);
+        make.left.centerY.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
+        make.right.equalTo(self.categoryBgView).offset(-5);
     }];
 
 
@@ -218,8 +219,9 @@
 
     [self.categoryLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(35);
-        make.left.right.equalTo(self.categoryBgView);
+        make.left.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
+        make.right.equalTo(self.categoryBgView).offset(-5);
     }];
 
     self.searchBtn = [UIButton new];
@@ -342,7 +344,6 @@
 - (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
 {
     _searchTitles = searchTitles;
-
     if (kIsNSArray(_searchTitles)) {
         self.searchTitleIndex = 0;
         if (_searchTitles.count  > 0) {
