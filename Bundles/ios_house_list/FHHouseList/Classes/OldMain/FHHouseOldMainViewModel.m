@@ -606,11 +606,20 @@
     
 }
 
+- (void)updateBottomLineMargin:(CGFloat)margin
+{
+    [self.bottomLine mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(margin);
+        make.right.mas_equalTo(-margin);
+    }];
+}
+
 #pragma mark filter将要显示
 - (void)onConditionPanelWillDisplay
 {
     self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
     self.containerScrollView.scrollEnabled = NO;
+    [self updateBottomLineMargin:0];
 }
 
 #pragma mark filter将要消失
@@ -1030,7 +1039,11 @@
             }
         }
     }
-    
+    if (self.containerScrollView.contentOffset.y > HOUSE_ICON_HEADER_HEIGHT) {
+        [self updateBottomLineMargin:0];
+    }else {
+        [self updateBottomLineMargin:20];
+    }
 }
 
 //- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
