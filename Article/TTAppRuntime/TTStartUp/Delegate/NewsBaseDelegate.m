@@ -77,6 +77,7 @@
 #import "TTViewControllerHierarchyHelper.h"
 #import "TTLocalImageTracker.h"
 #import <TTDialogDirector/TTDialogDirector.h>
+#import <TTMonitor/TTExtensions.h>
 
 ///...
 //#import "TVLManager.h"
@@ -152,6 +153,10 @@ static NSTimeInterval lastTime;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
+    [TTExtensions networkStatus];
+    
     self.userLaunchTheAppDirectly = SSIsEmptyDictionary(launchOptions);
     if ([TTVersionHelper isFirstLaunchAfterUpdate]) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ArticleDetailTitleViewTip"];

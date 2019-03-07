@@ -249,8 +249,9 @@ def appPods
     #-----头条端监控库-----
 #    pod 'TTMonitor', '0.7.9.42'
     pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
-    pod 'Heimdallr','0.4.21', :subspecs => [
+    pod 'Heimdallr','0.6.27', :subspecs => [
     'Core',
+    'Monitors',
     'TTMonitor',
     'TTNet',
     'HMDStart',
@@ -268,10 +269,13 @@ def appPods
     'HMDSession',
     'HMDConfig',
     'HMDStore',
-    'ALog'
+    'ALog',
+#    'CloudCommand',
+#    'DiskManager'
     ]
 
-    pod_binary 'BDALog' , '0.1.15'
+    pod 'BDALog' , '0.1.12'
+    pod 'BDAlogProtocol', '0.1.6'
     
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'

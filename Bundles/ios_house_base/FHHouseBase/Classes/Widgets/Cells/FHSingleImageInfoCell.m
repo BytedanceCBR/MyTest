@@ -670,7 +670,7 @@
     return _roomSpaceLabel;
 }
 
--(UILabel *)recommendReasonView {
+-(FHHouseRecommendReasonView *)recommendReasonView {
     
     if (!_recommendReasonView) {
         _recommendReasonView = [[FHHouseRecommendReasonView alloc] init];
