@@ -155,6 +155,14 @@
     [self layoutIfNeeded];
 }
 
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    FHDetailPropertyListModel *model = (FHDetailPropertyListModel *)self.currentData;
+    if (model.certificate && model.certificate.labels.count) {
+        return @[@"agency_info"];
+    }
+    return @[];
+}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
