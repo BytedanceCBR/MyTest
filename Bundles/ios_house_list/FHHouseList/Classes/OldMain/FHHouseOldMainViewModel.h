@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UIView *headerView;
 @property(nonatomic , strong) UIScrollView *containerScrollView;
 @property(nonatomic , weak) FHBaseViewController *viewController;
+@property(nonatomic , weak) UIView *bottomLine;
 
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件
 @property(nonatomic , copy) void (^closeConditionFilter)();

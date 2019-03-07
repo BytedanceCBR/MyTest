@@ -681,9 +681,20 @@
             self.containerScrollView.contentOffset = coffset;
         }
     }
-    
+    if (self.containerScrollView.contentOffset.y > ICON_HEADER_HEIGHT) {
+        [self updateBottomLineMargin:0];
+    }else {
+        [self updateBottomLineMargin:20];
+    }
 }
 
+- (void)updateBottomLineMargin:(CGFloat)margin
+{
+    [self.bottomLine mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(margin);
+        make.right.mas_equalTo(-margin);
+    }];
+}
 //- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 //{
 //    if (scrollView == self.tableView && self.tableView.contentOffset.y + self.tableView.height - self.tableView.contentInset.bottom + 0.5 - self.tableView.contentSize.height > 0) {
