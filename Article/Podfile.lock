@@ -30,7 +30,8 @@ PODS:
   - BDAccount/SinaWeibo (0.1.0)
   - BDAccount/TencentQQ (0.1.0)
   - BDAccount/WeChat (0.1.0)
-  - BDALog (0.1.15.1-binary)
+  - BDALog (0.1.12)
+  - BDAlogProtocol (0.1.6)
   - BDTArticle (0.2.3)
   - BDTBasePlayer (0.3.47)
   - BDTExploreOrderedData (0.1.6)
@@ -74,25 +75,26 @@ PODS:
     - FMDB/standard (= 2.6.2.1-binary)
   - FMDB/standard (2.6.2.1-binary)
   - Godzippa (1.1.0.1-binary)
-  - Heimdallr/ALog (0.4.21)
-  - Heimdallr/Core (0.4.21)
-  - Heimdallr/CrashDetector (0.4.21)
-  - Heimdallr/DeviceInfo (0.4.21)
-  - Heimdallr/FMDB (0.4.21)
-  - Heimdallr/HMDANR (0.4.21)
-  - Heimdallr/HMDConfig (0.4.21)
-  - Heimdallr/HMDOOM (0.4.21)
-  - Heimdallr/HMDSession (0.4.21)
-  - Heimdallr/HMDStart (0.4.21)
-  - Heimdallr/HMDStore (0.4.21)
-  - Heimdallr/Log (0.4.21)
-  - Heimdallr/Mach (0.4.21)
-  - Heimdallr/MemorySnapshot (0.4.21)
-  - Heimdallr/TTMonitor (0.4.21)
-  - Heimdallr/TTNet (0.4.21)
-  - Heimdallr/UITracker (0.4.21)
-  - Heimdallr/Upload (0.4.21)
-  - Heimdallr/Utility (0.4.21)
+  - Heimdallr/ALog (0.6.27)
+  - Heimdallr/Core (0.6.27)
+  - Heimdallr/CrashDetector (0.6.27)
+  - Heimdallr/DeviceInfo (0.6.27)
+  - Heimdallr/FMDB (0.6.27)
+  - Heimdallr/HMDANR (0.6.27)
+  - Heimdallr/HMDConfig (0.6.27)
+  - Heimdallr/HMDOOM (0.6.27)
+  - Heimdallr/HMDSession (0.6.27)
+  - Heimdallr/HMDStart (0.6.27)
+  - Heimdallr/HMDStore (0.6.27)
+  - Heimdallr/Log (0.6.27)
+  - Heimdallr/Mach (0.6.27)
+  - Heimdallr/MemorySnapshot (0.6.27)
+  - Heimdallr/Monitors (0.6.27)
+  - Heimdallr/TTMonitor (0.6.27)
+  - Heimdallr/TTNet (0.6.27)
+  - Heimdallr/UITracker (0.6.27)
+  - Heimdallr/Upload (0.6.27)
+  - Heimdallr/Utility (0.6.27)
   - HTSVideoPlay (0.3.9):
     - HTSVideoPlay/Yoga (= 0.3.9)
     - HTSVideoPlay/YogaKit (= 0.3.9)
@@ -412,7 +414,8 @@ DEPENDENCIES:
   - BDAccount/SinaWeibo (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDAccount/TencentQQ (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDAccount/WeChat (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDALog (= 0.1.15.1-binary)
+  - BDALog (= 0.1.12)
+  - BDAlogProtocol (= 0.1.6)
   - BDTArticle (= 0.2.3)
   - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
   - BDTExploreOrderedData (= 0.1.6)
@@ -445,25 +448,26 @@ DEPENDENCIES:
   - FLEX (= 2.1.1)
   - FMDB (= 2.6.2.1-binary)
   - Godzippa (= 1.1.0.1-binary)
-  - Heimdallr/ALog (= 0.4.21)
-  - Heimdallr/Core (= 0.4.21)
-  - Heimdallr/CrashDetector (= 0.4.21)
-  - Heimdallr/DeviceInfo (= 0.4.21)
-  - Heimdallr/FMDB (= 0.4.21)
-  - Heimdallr/HMDANR (= 0.4.21)
-  - Heimdallr/HMDConfig (= 0.4.21)
-  - Heimdallr/HMDOOM (= 0.4.21)
-  - Heimdallr/HMDSession (= 0.4.21)
-  - Heimdallr/HMDStart (= 0.4.21)
-  - Heimdallr/HMDStore (= 0.4.21)
-  - Heimdallr/Log (= 0.4.21)
-  - Heimdallr/Mach (= 0.4.21)
-  - Heimdallr/MemorySnapshot (= 0.4.21)
-  - Heimdallr/TTMonitor (= 0.4.21)
-  - Heimdallr/TTNet (= 0.4.21)
-  - Heimdallr/UITracker (= 0.4.21)
-  - Heimdallr/Upload (= 0.4.21)
-  - Heimdallr/Utility (= 0.4.21)
+  - Heimdallr/ALog (= 0.6.27)
+  - Heimdallr/Core (= 0.6.27)
+  - Heimdallr/CrashDetector (= 0.6.27)
+  - Heimdallr/DeviceInfo (= 0.6.27)
+  - Heimdallr/FMDB (= 0.6.27)
+  - Heimdallr/HMDANR (= 0.6.27)
+  - Heimdallr/HMDConfig (= 0.6.27)
+  - Heimdallr/HMDOOM (= 0.6.27)
+  - Heimdallr/HMDSession (= 0.6.27)
+  - Heimdallr/HMDStart (= 0.6.27)
+  - Heimdallr/HMDStore (= 0.6.27)
+  - Heimdallr/Log (= 0.6.27)
+  - Heimdallr/Mach (= 0.6.27)
+  - Heimdallr/MemorySnapshot (= 0.6.27)
+  - Heimdallr/Monitors (= 0.6.27)
+  - Heimdallr/TTMonitor (= 0.6.27)
+  - Heimdallr/TTNet (= 0.6.27)
+  - Heimdallr/UITracker (= 0.6.27)
+  - Heimdallr/Upload (= 0.6.27)
+  - Heimdallr/Utility (= 0.6.27)
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESVideoPlayer (= 0.1.16)
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
@@ -700,7 +704,8 @@ SPEC CHECKSUMS:
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
   AWEVideoPlayer: 07ffe01239d24b1010d95b074c002dc7a54b04fc
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
-  BDALog: 50b75a0bb09085cf428f2a2819a2afbcd387bc13
+  BDALog: 989a655db0f8ec62a4a56970a462eb1a83d75645
+  BDAlogProtocol: 3079beb0afd725ea0e209a617dc4381158aa151f
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
   BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
   BDTExploreOrderedData: f5b3d5c3705b41ba9437ec0a4d9172e424398e23
@@ -726,7 +731,7 @@ SPEC CHECKSUMS:
   FLEX: b30872f2be292005f4f6cec85b045940f35f8026
   FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
   Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
-  Heimdallr: 634081d3dc9c0e5b2f7105fbf0b8e1392b9bfae8
+  Heimdallr: 922a5de48bae6444dfb3a4f2236658d269d5d7cf
   HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
   IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
   ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
@@ -822,6 +827,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: f4d8617b722773be8ff29f83f022d791662d9def
+PODFILE CHECKSUM: b97e3555d401fefa8301a36b05782608697efc3c
 
 COCOAPODS: 1.4.0

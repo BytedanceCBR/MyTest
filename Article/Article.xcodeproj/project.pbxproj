@@ -314,9 +314,6 @@
 		3D4736FA222D3369001899BA /* TTOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D4736F8222D3369001899BA /* TTOpenURLTask.m */; };
 		3D4736FB222D3369001899BA /* TTOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D4736F8222D3369001899BA /* TTOpenURLTask.m */; };
 		3D4736FC222D3369001899BA /* TTOpenURLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D4736F8222D3369001899BA /* TTOpenURLTask.m */; };
-		3D49A1082181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
-		3D49A1092181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
-		3D49A10A2181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
 		3D721A9E218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
@@ -2649,7 +2646,7 @@
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -3298,7 +3295,6 @@
 		D47953AD21ECC94E00548965 /* NewsBaseDelegate+Notification.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DB7421F1332DA0002B455 /* NewsBaseDelegate+Notification.m */; };
 		D47953AE21ECC94E00548965 /* ExploreVideoTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = FED1F2EB1B904DAC00B521F7 /* ExploreVideoTopView.m */; };
 		D47953AF21ECC94E00548965 /* TTPersonalHomeHorizontalPagingView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC3001F1333610002B455 /* TTPersonalHomeHorizontalPagingView.m */; };
-		D47953B121ECC94E00548965 /* TTHMDMonitorStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */; };
 		D47953B221ECC94E00548965 /* TTPersonalHomeErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC3111F1333610002B455 /* TTPersonalHomeErrorView.m */; };
 		D47953B321ECC94E00548965 /* TTLayOutPureTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = ABBEA6DE1F334345005DAD27 /* TTLayOutPureTitleCell.m */; };
 		D47953B421ECC94E00548965 /* TTAdCanvasPreloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DB9A4DD1F20B01C005E4A06 /* TTAdCanvasPreloader.m */; };
@@ -6806,8 +6802,6 @@
 		3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHouseEvnContextBridgeImp.m; sourceTree = "<group>"; };
 		3D4736F7222D3369001899BA /* TTOpenURLTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTOpenURLTask.h; sourceTree = "<group>"; };
 		3D4736F8222D3369001899BA /* TTOpenURLTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTOpenURLTask.m; sourceTree = "<group>"; };
-		3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTHMDMonitorStartupTask.h; sourceTree = "<group>"; };
-		3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHMDMonitorStartupTask.m; sourceTree = "<group>"; };
 		3D5BD565222440EB0037E8E3 /* NewsInHouse.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = NewsInHouse.entitlements; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseCellsBridgeImp.h; sourceTree = "<group>"; };
@@ -9348,7 +9342,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -13731,8 +13725,6 @@
 				FEB9CB091F7516F5005EA557 /* TTFeedPreloadTask.m */,
 				F223E0D02002057600A03AC5 /* TTIESPlayerTask.h */,
 				F223E0D12002057600A03AC5 /* TTIESPlayerTask.m */,
-				3D49A1062181F9A700597A21 /* TTHMDMonitorStartupTask.h */,
-				3D49A1072181F9A800597A21 /* TTHMDMonitorStartupTask.m */,
 			);
 			path = Tasks;
 			sourceTree = "<group>";
@@ -18180,6 +18172,8 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/heimdallr_conf.json",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
@@ -18260,6 +18254,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/heimdallr_conf.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
@@ -18408,6 +18404,8 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/heimdallr_conf.json",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
@@ -18488,6 +18486,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/heimdallr_conf.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
@@ -18578,6 +18578,8 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/heimdallr_conf.json",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
@@ -18657,6 +18659,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/heimdallr_conf.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
@@ -19047,6 +19051,8 @@
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay_ad.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.bundle",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/Heimdallr.plist",
+				"${PODS_ROOT}/Heimdallr/Heimdallr/Assets/heimdallr_conf.json",
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
@@ -19126,6 +19132,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay_ad.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Heimdallr.plist",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/heimdallr_conf.json",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
@@ -19832,7 +19840,6 @@
 				A97DBB571F1332E20002B455 /* NewsBaseDelegate+Notification.m in Sources */,
 				FED1F2EC1B904DAC00B521F7 /* ExploreVideoTopView.m in Sources */,
 				A97DC49A1F1333640002B455 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
-				3D49A1082181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				A97DC4B61F1333640002B455 /* TTPersonalHomeErrorView.m in Sources */,
 				ABBEA6DF1F334345005DAD27 /* TTLayOutPureTitleCell.m in Sources */,
 				2DB9A5A41F20B01D005E4A06 /* TTAdCanvasPreloader.m in Sources */,
@@ -21272,7 +21279,6 @@
 				B373CAD22174587A008F9905 /* NewsBaseDelegate+Notification.m in Sources */,
 				B373CAD32174587A008F9905 /* ExploreVideoTopView.m in Sources */,
 				B373CAD42174587A008F9905 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
-				3D49A10A2181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				B373CAD72174587A008F9905 /* TTPersonalHomeErrorView.m in Sources */,
 				B373CAD82174587A008F9905 /* TTLayOutPureTitleCell.m in Sources */,
 				B373CAD92174587A008F9905 /* TTAdCanvasPreloader.m in Sources */,
@@ -22691,7 +22697,6 @@
 				D47953AD21ECC94E00548965 /* NewsBaseDelegate+Notification.m in Sources */,
 				D47953AE21ECC94E00548965 /* ExploreVideoTopView.m in Sources */,
 				D47953AF21ECC94E00548965 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
-				D47953B121ECC94E00548965 /* TTHMDMonitorStartupTask.m in Sources */,
 				D47953B221ECC94E00548965 /* TTPersonalHomeErrorView.m in Sources */,
 				D47953B321ECC94E00548965 /* TTLayOutPureTitleCell.m in Sources */,
 				D47953B421ECC94E00548965 /* TTAdCanvasPreloader.m in Sources */,
@@ -24110,7 +24115,6 @@
 				FEFA55A6205FB1A8001F50D8 /* NewsBaseDelegate+Notification.m in Sources */,
 				FEFA55A7205FB1A8001F50D8 /* ExploreVideoTopView.m in Sources */,
 				FEFA55A8205FB1A8001F50D8 /* TTPersonalHomeHorizontalPagingView.m in Sources */,
-				3D49A1092181F9A800597A21 /* TTHMDMonitorStartupTask.m in Sources */,
 				FEFA55A9205FB1A8001F50D8 /* TTPersonalHomeErrorView.m in Sources */,
 				FEFA55AA205FB1A8001F50D8 /* TTLayOutPureTitleCell.m in Sources */,
 				FEFA55AD205FB1A8001F50D8 /* TTAdCanvasPreloader.m in Sources */,

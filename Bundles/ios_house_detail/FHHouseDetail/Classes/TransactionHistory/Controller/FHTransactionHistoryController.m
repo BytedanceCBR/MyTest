@@ -15,6 +15,7 @@
 #import "UIViewController+Track.h"
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
+#import <TTDeviceHelper.h>
 
 @interface FHTransactionHistoryController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol>
 
@@ -74,6 +75,10 @@
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.estimatedSectionFooterHeight = 0;
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
+    
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
     
     _tableView.backgroundColor = [UIColor whiteColor];

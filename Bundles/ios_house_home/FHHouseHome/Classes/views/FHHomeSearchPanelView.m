@@ -204,8 +204,9 @@
 
     [self.categoryLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(9);
-        make.left.right.centerY.equalTo(self.categoryBgView);
+        make.left.centerY.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
+        make.right.equalTo(self.categoryBgView).offset(-5);
     }];
 
 
@@ -218,8 +219,9 @@
 
     [self.categoryLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(35);
-        make.left.right.equalTo(self.categoryBgView);
+        make.left.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
+        make.right.equalTo(self.categoryBgView).offset(-5);
     }];
 
     self.searchBtn = [UIButton new];
@@ -259,6 +261,19 @@
             homePageRollData[@"house_type"] = detailModel.houseType ?: @"";
             homePageRollData[@"open_url"] = detailModel.openUrl ?: @"";
             infos[@"homepage_roll_data"] = homePageRollData;
+            // 猜你想搜前3个词：guessYouWantWords
+            NSMutableArray *guessYouWantWords = [NSMutableArray new]; // 数组里面3个字典
+            [model.detail enumerateObjectsUsingBlock:^(FHHomeRollDataDataDetailModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSMutableDictionary *temp = [NSMutableDictionary new];
+                temp[@"text"] = obj.text ?: @"";
+                temp[@"guess_search_id"] = obj.guessSearchId ?: @"";
+                temp[@"house_type"] = obj.houseType ?: @"";
+                temp[@"open_url"] = obj.openUrl ?: @"";
+                [guessYouWantWords addObject:temp];
+            }];
+            if (guessYouWantWords.count > 0) {
+                infos[@"guess_you_want_words"] = guessYouWantWords;
+            }
         }
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
@@ -329,7 +344,6 @@
 - (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
 {
     _searchTitles = searchTitles;
-
     if (kIsNSArray(_searchTitles)) {
         self.searchTitleIndex = 0;
         if (_searchTitles.count  > 0) {

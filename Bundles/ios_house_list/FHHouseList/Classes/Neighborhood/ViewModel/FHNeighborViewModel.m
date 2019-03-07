@@ -275,10 +275,7 @@
             }];
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
-            
-            if (hasMore && self.houseList.count < 10) {
-                self.tableView.mj_footer.hidden = YES;
-            }
+    
         } else {
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
         }
@@ -290,9 +287,15 @@
         if (self.firstRequestData && self.houseList.count > 0) {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
+        
+        if (!hasMore && self.houseList.count < 10) {
+            self.tableView.mj_footer.hidden = YES;
+        }
+        
     } else {
         [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
     }
+
 }
 
 #pragma mark - Request

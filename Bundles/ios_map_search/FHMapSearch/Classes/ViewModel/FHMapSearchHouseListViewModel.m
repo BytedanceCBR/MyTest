@@ -77,6 +77,7 @@
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadHouseData:NO];
     }];
+    [_refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
     self.tableView.mj_footer = _refreshFooter;
     
     [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kCellId];
@@ -556,6 +557,11 @@
             }
             wself.tableView.mj_footer.hidden = NO;
             wself.tableView.scrollEnabled = YES;
+            
+            
+            if (wself.houseList.count < 10 && !houseModel.hasMore) {
+                wself.tableView.mj_footer.hidden = YES;
+            }
             
             if (wself.houseList.count == 0) {
                 //没有数据 提示数据走丢了
