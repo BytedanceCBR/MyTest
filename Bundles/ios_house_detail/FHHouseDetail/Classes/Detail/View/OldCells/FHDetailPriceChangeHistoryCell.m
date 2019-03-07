@@ -73,6 +73,10 @@
     _infoLabel.textColor = [UIColor themeGray3];
     [self.contentView addSubview:_infoLabel];
     
+    _sepLine = [[UIView alloc] init];
+    _sepLine.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:_sepLine];
+    
     [self.leftIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(20);
         make.centerY.mas_equalTo(self.infoLabel);
@@ -82,7 +86,7 @@
         make.left.mas_equalTo(self.leftIconImageView.mas_right).offset(6);
         make.right.mas_equalTo(self.contentView).offset(-32);
         make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(self.contentView).offset(-10);
+        make.bottom.mas_equalTo(self.contentView).offset(-14);
     }];
     [self.rightArrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.infoLabel);
