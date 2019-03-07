@@ -539,9 +539,11 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHSearchHouseDataItemsModel *item = self.rentItems[indexPath.row];
-    if ([item isKindOfClass:[FHSearchHouseDataItemsModel class]] && [item showRecommendReason]) {
-        return 108+[FHSingleImageInfoCell recommendReasonHeight];
+    if (self.leftTableView == tableView) {
+        FHSearchHouseDataItemsModel *item = self.rentItems[indexPath.row];
+        if ([item isKindOfClass:[FHSearchHouseDataItemsModel class]] && [item showRecommendReason]) {
+            return 108+[FHSingleImageInfoCell recommendReasonHeight];
+        }
     }
     return 108;
 }
