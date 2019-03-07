@@ -352,7 +352,6 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         _avatarView.cornerRadius = [TTCommentDetailCellHelper avatarSize] / 2;
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         _avatarView.borderColor = [UIColor clearColor];
         [_avatarView setupVerifyViewForLength:[TTCommentDetailCellHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
             return [TTCommentDetailCellHelper verifyLogoSize:standardSize];

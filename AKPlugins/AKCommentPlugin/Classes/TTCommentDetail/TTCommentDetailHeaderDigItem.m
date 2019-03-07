@@ -26,7 +26,7 @@
     if (self) {
         _avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:self.bounds allowCorner:YES];
         _avatarView.cornerRadius = _avatarView.width / 2.f;
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
+        _avatarView.borderWidth = 0;
         _avatarView.userInteractionEnabled = NO;
         [_avatarView setupVerifyViewForLength:24.f adaptationSizeBlock:nil];
         [self.contentView addSubview:self.avatarView];
