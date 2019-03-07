@@ -357,7 +357,10 @@
         [self updateOriginPriceLabelConstraints:nil];
         [self updateLayoutComponents:self.areaLabel.attributedText.string.length > 0];
         [self refreshTopMargin:10];
-        [self refreshBottomMargin:20];
+        
+        if (model.isLast) {
+          [self refreshBottomMargin:20];
+        }
     }
 }
 

@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, assign) NSInteger index;
-
+@property (nonatomic, assign) BOOL isLast;
 
 @end
 
