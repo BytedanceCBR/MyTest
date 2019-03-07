@@ -152,6 +152,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             
+            self.tableViewV.hidden = NO;
+            
             //切换城市先隐藏error页
             [self.homeViewController.emptyView hideEmptyView];
             
@@ -160,6 +162,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             
             if ([FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
+                
                 //刷新头部
                 [self reloadHomeTableHeaderSection];
                 
@@ -399,6 +402,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
             }
             self.tableViewV.hidden = YES;
+            self.categoryView.segmentedControl.userInteractionEnabled = YES;
+            [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
             return;
         }
         
@@ -411,6 +416,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             {
                 self.isFromLocalTestChange = YES;
                 [self checkCityStatus];
+                self.categoryView.segmentedControl.userInteractionEnabled = YES;
+                [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
                 return;
             }
             
@@ -421,6 +428,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                         [self checkCityStatus];
                     });
                 });
+                self.categoryView.segmentedControl.userInteractionEnabled = YES;
+                [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
                 return;
             }
         }
@@ -443,7 +452,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.isItemsHasMoreCache[cahceKey] = @(model.data.hasMore);
         }
         
-        self.categoryView.segmentedControl.userInteractionEnabled = YES;
         [self.tableViewV finishPullDownWithSuccess:YES];
         [self reloadHomeTableHouseSection:model.data.items];
         
@@ -485,6 +493,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.originSearchId = model.data.searchId;
         self.tableViewV.hidden = NO;
         [self checkLoadingAndEmpty];
+        
+        self.categoryView.segmentedControl.userInteractionEnabled = YES;
     }];
 }
 
@@ -544,7 +554,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 self.tableViewV.hidden = YES;
                 self.isFromLocalTestChange = YES;
                 [self checkCityStatus];
-
+                self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
             }
             
@@ -558,6 +568,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 {
                     [self.tableViewV finishPullDownWithSuccess:YES];
                 }
+                
+                self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
             }
         }
@@ -576,7 +588,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.isItemsHasMoreCache[cacheKey] = @(model.data.hasMore);
         }
         
-        self.categoryView.segmentedControl.userInteractionEnabled = YES;
         [self.tableViewV finishPullDownWithSuccess:YES];
         [self.tableViewV finishPullUpWithSuccess:YES];
         [self reloadHomeTableHouseSection:self.itemsDataCache[cacheKey]];
@@ -595,6 +606,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.tableViewV.contentOffset = CGPointMake(0, 0);
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
+        
+        self.categoryView.segmentedControl.userInteractionEnabled = YES;
     }];
 }
 

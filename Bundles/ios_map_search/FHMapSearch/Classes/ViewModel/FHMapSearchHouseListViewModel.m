@@ -444,6 +444,10 @@
             wself.tableView.mj_footer.hidden = NO;
             wself.tableView.scrollEnabled = YES;
         
+            if (wself.houseList.count < 10 && !houseModel.hasMore) {
+                wself.tableView.mj_footer.hidden = YES;
+            }
+            
             if (wself.houseList.count == 0) {
                 //没有数据 提示数据走丢了
                 NSString *tip = nil;
