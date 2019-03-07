@@ -377,12 +377,12 @@
 - (NSAttributedString *)attributedTruncationToken {
     NSMutableAttributedString *truncationToken = [[NSMutableAttributedString alloc] initWithString:@"...全文" attributes:@{
         NSFontAttributeName : [TTVCommentListCellHelper contentLabelFont],
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kColorText5),
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCoral),
         NSLinkAttributeName : [NSURL URLWithString:kTTCommentContentLabelTruncationTokenURLString],
     }];
 
     [truncationToken addAttributes:@{
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kColorText1)
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCharcoalGrey)
     } range:NSMakeRange(0, 3)];
 
     return truncationToken;
