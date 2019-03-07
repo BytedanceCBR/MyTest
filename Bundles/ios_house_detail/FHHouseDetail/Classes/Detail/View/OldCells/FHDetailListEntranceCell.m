@@ -110,6 +110,21 @@
         }];
         bottomY += 34;
     }
+    if (model.listEntrance.count == 1) {
+        [_containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.top.mas_equalTo(7);
+            make.bottom.mas_equalTo(-7);
+            
+        }];
+    }else {
+        [_containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.top.mas_equalTo(13);
+            make.bottom.mas_equalTo(-13);
+            
+        }];
+    }
 }
 
 - (void)entranceDidClick:(UIControl *)btn
