@@ -486,8 +486,9 @@
         _avatarView.cornerRadius = [TTUniversalCommentCellLiteHelper avatarSize] / 2;
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
+        _avatarView.contentMode = UIViewContentModeScaleAspectFill;
         _avatarView.borderColor = [UIColor clearColor];
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
+//        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         [_avatarView setupVerifyViewForLength:[TTUniversalCommentCellLiteHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
             return [TTUniversalCommentCellLiteHelper verifyLogoSize:standardSize];
         }];
