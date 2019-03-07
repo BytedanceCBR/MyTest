@@ -69,8 +69,8 @@
 {
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(10);
-        make.width.height.mas_equalTo(62);
+        make.top.mas_equalTo(14);
+        make.width.height.mas_equalTo(54);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {

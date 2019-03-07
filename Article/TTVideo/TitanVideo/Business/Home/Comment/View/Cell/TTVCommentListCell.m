@@ -377,12 +377,12 @@
 - (NSAttributedString *)attributedTruncationToken {
     NSMutableAttributedString *truncationToken = [[NSMutableAttributedString alloc] initWithString:@"...全文" attributes:@{
         NSFontAttributeName : [TTVCommentListCellHelper contentLabelFont],
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kColorText5),
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCoral),
         NSLinkAttributeName : [NSURL URLWithString:kTTCommentContentLabelTruncationTokenURLString],
     }];
 
     [truncationToken addAttributes:@{
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kColorText1)
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCharcoalGrey)
     } range:NSMakeRange(0, 3)];
 
     return truncationToken;
@@ -491,7 +491,6 @@
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
         _avatarView.borderColor = [UIColor clearColor];
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         // add by zjing 去掉头像点击
 //        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }

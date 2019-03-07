@@ -191,24 +191,24 @@
         self.roomSpaceLabel.text = model.pricePerSqm;
     }
     
+    //超过1行时候，只显示一行，不能显示的tag就不显示了
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
-    
+    NSMutableAttributedString *temptext = [[NSMutableAttributedString alloc] init];
     NSArray *attrTexts = model.tags;
-//    NSMutableArray *attrTexts = [NSMutableArray array];
-//    [attrTexts addObjectsFromArray:model.tags];
-//    [attrTexts addObjectsFromArray:model.tags];
-//    [attrTexts addObjectsFromArray:model.tags];
-//    [attrTexts addObjectsFromArray:model.tags];
-//    [attrTexts addObjectsFromArray:model.tags];
-//    [attrTexts addObjectsFromArray:model.tags];
-//    [attrTexts addObjectsFromArray:model.tags];
-//    [attrTexts addObjectsFromArray:model.tags];
+    CGFloat areaLabelMaxWidth = [UIScreen mainScreen].bounds.size.width - 164;
     
     for (NSInteger i = 0; i < attrTexts.count; i++) {
         FHHouseMsgDataItemsItemsTagsModel *tag = attrTexts[i];
-        
+        temptext = [text mutableCopy];
         NSAttributedString *attrText = [self createTagAttrStringWithText:tag.content isFirst:(i == 0) textColor:HEXRGBA(tag.textColor) backgroundColor:HEXRGBA(tag.backgroundColor)];
-        [text appendAttributedString:attrText];
+        [temptext appendAttributedString:attrText];
+        CGSize strSize = [[temptext string] boundingRectWithSize:CGSizeMake(MAXFLOAT,  MAXFLOAT)
+                                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                     attributes:attrText.yy_attributes
+                                                        context:nil].size;
+        if(strSize.width < areaLabelMaxWidth){
+            text = [temptext mutableCopy];
+        }
     }
     
     self.areaLabel.attributedText = text;
@@ -301,7 +301,7 @@
             make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
             make.height.mas_equalTo(17);
         }];
-        
+                
         [self.areaLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.infoPanel);
             make.top.mas_equalTo(self.subTitleLabel.mas_bottom);
