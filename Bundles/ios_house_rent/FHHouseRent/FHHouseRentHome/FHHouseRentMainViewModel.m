@@ -71,6 +71,8 @@
 @property(nonatomic , copy) NSString *originFrom;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
+@property(nonatomic , assign) CGFloat bottomLineMargin;
+
 @end
 
 
@@ -83,6 +85,7 @@
     if (self) {
         _houseList = [NSMutableArray new];
         _headerHeight = kFilterBarHeight;
+        _bottomLineMargin = 20;
         
         self.tableView = tableView;
         self.viewController = viewController;
@@ -690,6 +693,10 @@
 
 - (void)updateBottomLineMargin:(CGFloat)margin
 {
+    if (margin == _bottomLineMargin) {
+        return;
+    }
+    _bottomLineMargin = margin;
     [self.bottomLine mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(margin);
         make.right.mas_equalTo(-margin);

@@ -77,6 +77,7 @@
 // log
 @property (nonatomic , assign) BOOL isFirstLoad;
 @property (nonatomic , assign) BOOL fromRecommend;
+@property(nonatomic , assign) CGFloat bottomLineMargin;
 
 @end
 
@@ -175,6 +176,7 @@
         
         _houseType = FHHouseTypeSecondHandHouse;
         _canChangeHouseSearchDic = YES;
+        _bottomLineMargin = 20;
         self.houseList = [NSMutableArray array];
         self.sugesstHouseList = [NSMutableArray array];
         self.showPlaceHolder = YES;
@@ -608,6 +610,10 @@
 
 - (void)updateBottomLineMargin:(CGFloat)margin
 {
+    if (margin == _bottomLineMargin) {
+        return;
+    }
+    _bottomLineMargin = margin;
     [self.bottomLine mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(margin);
         make.right.mas_equalTo(-margin);
