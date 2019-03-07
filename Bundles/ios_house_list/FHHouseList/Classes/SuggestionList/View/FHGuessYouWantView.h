@@ -12,13 +12,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^FHGuessYouWantItemClick)(FHGuessYouWantResponseDataDataModel *model);
 
+// 数据结构体
+@interface FHGuessYouWantFirstWords : NSObject
+
+@property (nonatomic, assign)   NSInteger       wordLine;
+@property (nonatomic, assign)   CGFloat       wordLength;
+
+@end
+
 @interface FHGuessYouWantView : UIView
 
 @property (nonatomic, copy)     FHGuessYouWantItemClick       clickBlk;
 @property (nonatomic, assign)   CGFloat       guessYouWangtViewHeight; // 默认是128，2行
 @property (nonatomic, strong)   NSArray<FHGuessYouWantResponseDataDataModel>       *guessYouWantItems;
-
-- (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(NSString *)firstText array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count;
+// 猜你想搜前3个词计算:行数以及长度，外部限制3个吧
+- (FHGuessYouWantFirstWords *)firstThreeWords:(NSArray *)array;
+- (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(FHGuessYouWantFirstWords *)firstWords array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count;
 
 @end
 
@@ -34,12 +43,5 @@ typedef void(^FHGuessYouWantItemClick)(FHGuessYouWantResponseDataDataModel *mode
 
 @end
 
-// 数据结构体
-@interface FHGuessYouWantFirstWords : NSObject
-
-@property (nonatomic, assign)   NSInteger       wordLine;
-@property (nonatomic, assign)   CGFloat       wordLength;
-
-@end
 
 NS_ASSUME_NONNULL_END

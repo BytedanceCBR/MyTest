@@ -157,23 +157,40 @@
     return guess;
 }
 
-- (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(NSString *)firstText array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count {
+- (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(FHGuessYouWantFirstWords *)firstWords array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count {
     // 计算猜你想搜高度
-    if (array.count <= 0) {
+    if (array.count <= 0 && firstWords.wordLength < 1.0) {
         self.guessYouWangtViewHeight = CGFLOAT_MIN;
         return NULL;
     } else {
         self.guessYouWangtViewHeight = 128; // 一行是89
     }
     NSInteger   line = 1;
-    CGFloat     firstWordLength = [self guessYouWantTextLength:firstText];
-    CGFloat     firstLineLen = firstWordLength + 10;
+    CGFloat     firstLineLen = 0;
     CGFloat     remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
     NSInteger   secondLineLen = 0;
-    remainWidth -= (firstWordLength + 10);
-    if (firstText.length == 0) {
-        firstLineLen = 0;
-        remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+    
+    if (firstWords) {
+        if (firstWords.wordLine == 1) {
+            line = 1;
+            firstLineLen = firstWords.wordLength;
+            remainWidth -= firstLineLen;
+            secondLineLen = 0;
+            if (firstLineLen < 1.0) {
+                firstLineLen = 0;
+                remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+            }
+        }
+        if (firstWords.wordLine == 2) {
+            line = 2;
+            secondLineLen = firstWords.wordLength;
+            remainWidth -= secondLineLen;
+            firstLineLen = 0;
+            if (secondLineLen < 1.0) {
+                secondLineLen = 0;
+                remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+            }
+        }
     }
     NSMutableArray *vArray = [array mutableCopy];
     NSMutableArray<FHGuessYouWantResponseDataDataModel>       *retArray = [NSMutableArray new];
@@ -238,7 +255,7 @@
             return retArray;
         }
         NSArray *tempArray = [array fh_randomArray];
-        return [self firstLineGreaterThanSecond:firstText array:tempArray count:count + 1];
+        return [self firstLineGreaterThanSecond:firstWords array:tempArray count:count + 1];
     }
 }
 
