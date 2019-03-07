@@ -295,7 +295,9 @@
             [wself loadData:wself.isRefresh];
         }
     }];
+    [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
     self.tableView.mj_footer = self.refreshFooter;
+    self.tableView.mj_footer.hidden = YES;
     
     [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kFHHouseOldMainCellId];
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseOldMainRecommendTitleCellId];
@@ -946,10 +948,11 @@
     CGPoint coffset = self.containerScrollView.contentOffset;
     [self.viewController.view endEditing:YES];
     
-    NSLog(@"scrollview scroll: %@  offset is: %f  coffset is: %f  draging: %@",scrollView == self.tableView?@"TableView":@"ContainerView",offset.y,coffset.y,scrollView.isDragging?@"YES":@"NO");
+//    NSLog(@"scrollview scroll: %@  offset is: %f  coffset is: %f  draging: %@",scrollView == self.tableView?@"TableView":@"ContainerView",offset.y,coffset.y,scrollView.isDragging?@"YES":@"NO");
     
     CGFloat threshold = self.iconsHeaderView.height;
     CGFloat realOffset = offset.y + self.tableView.contentInset.top;
+//    NSLog(@"scrollview scroll: real offset is: %f\n\n",realOffset);
     
     if (scrollView == _containerScrollView) {
         
@@ -979,8 +982,12 @@
             self.containerScrollView.contentOffset = CGPointMake(0, threshold);
         }else if(coffset.y > 0 && realOffset > 0){
             //注释后，则在筛选器在顶部时不能向下滑动，只能等tableview滑动下来后才可以
-            //            offset.y += (coffset.y-threshold - self.tableView.contentInset.top);
-            //            self.tableView.contentOffset = offset;
+            CGPoint location = [scrollView.panGestureRecognizer locationInView:scrollView];
+            if (location.y > threshold + kFilterBarHeight+10) {
+                //不在筛选栏滑动
+                offset.y += (coffset.y-threshold - self.tableView.contentInset.top);
+                self.tableView.contentOffset = offset;
+            }
             if (self.tableView.scrollEnabled) {
                 self.containerScrollView.contentOffset = CGPointMake(0, threshold);
             }
@@ -1052,7 +1059,7 @@
 
 -(void)checkScrollMoveEffect:(UIScrollView *)scrollView animated:(BOOL)animated
 {
-        NSLog(@"scrollview move %@ info is: %@",scrollView == self.tableView?@"tableview":@"containerview",scrollView);
+//        NSLog(@"scrollview move %@ info is: %@",scrollView == self.tableView?@"tableview":@"containerview",scrollView);
     if (scrollView == self.tableView) {
         if (self.containerScrollView.contentOffset.y < 0) {
             if (animated) {
@@ -1078,7 +1085,7 @@
             if (self.tableView.contentOffset.y + self.tableView.contentInset.top < 0) {
                 self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
             }else if (self.tableView.contentOffset.y + self.tableView.height  > self.tableView.contentSize.height + self.tableView.contentInset.bottom){
-                self.tableView.contentOffset = CGPointMake(0, self.tableView.contentSize.height + self.tableView.contentInset.bottom - self.tableView.height - self.tableView.contentInset.top );
+                self.tableView.contentOffset = CGPointMake(0, self.tableView.contentSize.height + self.tableView.contentInset.bottom - self.tableView.height - self.tableView.contentInset.top -0.5 );
             }
         }
     }

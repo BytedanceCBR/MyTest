@@ -639,8 +639,12 @@
             self.containerScrollView.contentOffset = CGPointMake(0, threshold);
         }else if(coffset.y > 0 && realOffset > 0){
             //注释后，则在筛选器在顶部时不能向下滑动，只能等tableview滑动下来后才可以
-//            offset.y += (coffset.y-threshold - self.tableView.contentInset.top);
-//            self.tableView.contentOffset = offset;
+            CGPoint location = [scrollView.panGestureRecognizer locationInView:scrollView];
+            if (location.y > threshold + kFilterBarHeight+10) {
+                //不在筛选栏滑动
+                offset.y += (coffset.y-threshold - self.tableView.contentInset.top);
+                self.tableView.contentOffset = offset;
+            }
             if (self.tableView.scrollEnabled) {
                 self.containerScrollView.contentOffset = CGPointMake(0, threshold);
             }
