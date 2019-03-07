@@ -674,7 +674,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 1792e88f340f438e75089ccd4cdee5464eaa082c
+    :commit: 5617875ef83b57e15a94d49839296f811e1a89e1
     :git: git@code.byted.org:fproject/ios_house_filter.git
   TTDialogDirector:
     :commit: 8ed5beb
