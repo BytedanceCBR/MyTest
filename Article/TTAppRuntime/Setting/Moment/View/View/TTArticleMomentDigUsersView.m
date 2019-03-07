@@ -135,7 +135,6 @@
     if (!_nameView) {
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(_avatarView.right + kCellAvatarViewRightPadding, 0) maxWidth:maxWidth limitHeight:kCellNameLabelFontSize + 2 title:text fontSize:kCellNameLabelFontSize verifiedInfo:nil appendLogoInfoArray:userModel.authorBadgeList];
         _nameView.isBanShowAuthor = self.isBanShowAuthor;
-        [_nameView setTextColorThemedKey:kColorText1];
         [self.contentView addSubview:_nameView];
     }
     else {
