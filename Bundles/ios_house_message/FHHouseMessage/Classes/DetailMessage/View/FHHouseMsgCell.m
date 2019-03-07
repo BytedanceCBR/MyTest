@@ -99,7 +99,7 @@
     self.priceLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor themeRed1]];
     [self.contentView addSubview:_priceLabel];
     
-    self.roomSpaceLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    self.roomSpaceLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [_roomSpaceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_roomSpaceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.contentView addSubview:_roomSpaceLabel];
@@ -194,6 +194,15 @@
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
     
     NSArray *attrTexts = model.tags;
+//    NSMutableArray *attrTexts = [NSMutableArray array];
+//    [attrTexts addObjectsFromArray:model.tags];
+//    [attrTexts addObjectsFromArray:model.tags];
+//    [attrTexts addObjectsFromArray:model.tags];
+//    [attrTexts addObjectsFromArray:model.tags];
+//    [attrTexts addObjectsFromArray:model.tags];
+//    [attrTexts addObjectsFromArray:model.tags];
+//    [attrTexts addObjectsFromArray:model.tags];
+//    [attrTexts addObjectsFromArray:model.tags];
     
     for (NSInteger i = 0; i < attrTexts.count; i++) {
         FHHouseMsgDataItemsItemsTagsModel *tag = attrTexts[i];

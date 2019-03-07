@@ -94,8 +94,8 @@
 {
     if (!_closeBtn) {
         _closeBtn = [[UIButton alloc]init];
-        [_closeBtn setImage:[UIImage imageNamed:@"house_list_close_blue"] forState:UIControlStateNormal];
-        [_closeBtn setImage:[UIImage imageNamed:@"house_list_close_blue"] forState:UIControlStateHighlighted];
+        [_closeBtn setImage:[UIImage imageNamed:@"house_list_close"] forState:UIControlStateNormal];
+        [_closeBtn setImage:[UIImage imageNamed:@"house_list_close"] forState:UIControlStateHighlighted];
     }
     return _closeBtn;
 }
@@ -104,7 +104,7 @@
 {
     if (!_leftLabel) {
         _leftLabel = [[UILabel alloc]init];
-        _leftLabel.textColor = [UIColor themeGray3];
+        _leftLabel.textColor = [UIColor themeGray2];
         _leftLabel.font = [UIFont themeFontRegular:14];
     }
     return _leftLabel;
@@ -114,8 +114,8 @@
 {
     if (!_rightBtn) {
         _rightBtn = [[UIButton alloc]init];
-        [_rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
-        [_rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateHighlighted];
+        [_rightBtn setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
+        [_rightBtn setTitleColor:[UIColor themeRed3] forState:UIControlStateHighlighted];
         _rightBtn.titleLabel.font = [UIFont themeFontRegular:14];
     }
     return _rightBtn;

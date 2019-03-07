@@ -159,7 +159,7 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     alog_set_console_log(true);
     [[HMDLogUploader sharedInstance] uploadAlogIfCrashed];
 #else
-    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"tt_lite_ios_arch_settings" defaultValue:@{} freeze:YES];
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
     if ([archSettings tt_boolValueForKey:@"alog_enable"]) {
         alog_open_default([path UTF8String], "BDALog");
         int level = [archSettings tt_intValueForKey:@"alog_level"];

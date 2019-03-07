@@ -46,7 +46,7 @@
     _title.attributedText = attriStr;
     [self addSubview:_title];
     
-    _settingArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"setting-arrow"]];
+    _settingArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"setting-arrow-1"]];
     [self addSubview:_settingArrowImageView];
     
     _topBorderView = [[UIView alloc] init];
@@ -72,9 +72,9 @@
         make.centerY.mas_equalTo(self.openAllBtn);
     }];
     [self.settingArrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(14);
+        make.height.width.mas_equalTo(16);
         make.centerY.mas_equalTo(self.openAllBtn);
-        make.left.mas_equalTo(self.title.mas_right).offset(4);
+        make.left.mas_equalTo(self.title.mas_right).offset(1);
     }];
     
     [self.openAllBtn addTarget:self action:@selector(openButtonClick:) forControlEvents:UIControlEventTouchUpInside];
