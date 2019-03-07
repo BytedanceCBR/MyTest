@@ -259,6 +259,19 @@
             homePageRollData[@"house_type"] = detailModel.houseType ?: @"";
             homePageRollData[@"open_url"] = detailModel.openUrl ?: @"";
             infos[@"homepage_roll_data"] = homePageRollData;
+            // 猜你想搜前3个词：guessYouWantWords
+            NSMutableArray *guessYouWantWords = [NSMutableArray new]; // 数组里面3个字典
+            [model.detail enumerateObjectsUsingBlock:^(FHHomeRollDataDataDetailModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSMutableDictionary *temp = [NSMutableDictionary new];
+                temp[@"text"] = obj.text ?: @"";
+                temp[@"guess_search_id"] = obj.guessSearchId ?: @"";
+                temp[@"house_type"] = obj.houseType ?: @"";
+                temp[@"open_url"] = obj.openUrl ?: @"";
+                [guessYouWantWords addObject:temp];
+            }];
+            if (guessYouWantWords.count > 0) {
+                infos[@"guess_you_want_words"] = guessYouWantWords;
+            }
         }
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
