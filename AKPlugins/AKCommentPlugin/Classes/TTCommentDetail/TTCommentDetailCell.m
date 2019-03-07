@@ -241,7 +241,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 - (void)themeChanged:(NSNotification *)notification {
     [self refreshContent];
 
-    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
     self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
 }
 
@@ -368,7 +368,6 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         CGFloat maxWidth = self.width - [TTCommentDetailCellHelper cellHorizontalPadding] - [TTCommentDetailCellHelper avatarSize] - [TTCommentDetailCellHelper avatarRightPadding] - [TTCommentDetailCellHelper cellRightPadding] - 30.f - [TTCommentDetailCellHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTCommentDetailCellHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTCommentDetailCellHelper nameViewFontSize] verifiedInfo:nil appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTCommentDetailCellHelper avatarRightPadding], [TTCommentDetailCellHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        [_nameView setTextColorThemedKey:kColorText9];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {
@@ -417,7 +416,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         _timeLabel = [[TTAsyncLabel alloc] init];
         _timeLabel.frame = CGRectMake(self.nameView.left, self.contentLabel.bottom, self.width - [TTCommentDetailCellHelper cellHorizontalPadding] - [TTCommentDetailCellHelper avatarSize] - [TTCommentDetailCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _timeLabel.font = [TTCommentDetailCellHelper timeLabelFont];
-        _timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        _timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         _timeLabel.numberOfLines = 1;
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;

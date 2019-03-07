@@ -131,8 +131,8 @@
 
 - (void)setupUI {
     _label = [[UILabel alloc] init];
-    _label.highlightedTextColor = [UIColor colorWithHexString:@"#f85959"];
-    _label.textColor = [UIColor colorWithHexString:@"#505050"];
+    _label.highlightedTextColor = [UIColor themeRed1];
+    _label.textColor = [UIColor themeGray1];
     _label.font = [UIFont themeFontRegular:14];
     _label.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_label];
