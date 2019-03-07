@@ -160,6 +160,7 @@
         make.bottom.mas_equalTo(self.filterPanel.mas_bottom);
         make.height.mas_equalTo(0.5);
     }];
+    self.viewModel.bottomLine = bottomLine;
 }
 
 -(void)initTableView

@@ -35,8 +35,8 @@
 #define kFHHouseOldMainCellId @"kFHHouseOldMainCellId"
 #define kFHHouseOldMainRecommendTitleCellId @"kFHHouseOldMainRecommendTitleCellId"
 #define kFHHouseOldMainPlaceholderCellId @"kFHHouseOldMainPlaceholderCellId"
-#define HOUSE_ICON_HEADER_HEIGHT 60
-#define HOUSE_TABLE_HEADER_HEIGHT (HOUSE_ICON_HEADER_HEIGHT+19)
+#define HOUSE_ICON_HEADER_HEIGHT (60 * [UIScreen mainScreen].bounds.size.width / 375.0f)
+#define HOUSE_TABLE_HEADER_HEIGHT (HOUSE_ICON_HEADER_HEIGHT + 19 * [UIScreen mainScreen].bounds.size.width / 375.0f)
 #define kFilterBarHeight 44
 
 @interface FHHouseOldMainViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate>
@@ -248,9 +248,10 @@
     [queryP addEntriesFromDictionary:paramObj.allParams];
     NSDictionary *baseParams = [self categoryLogDict];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[@"enter_from"] = baseParams[@"enter_from"] ? : @"be_null";
-    dict[@"element_from"] = baseParams[@"element_from"] ? : @"be_null";
-    dict[@"origin_from"] = baseParams[@"origin_from"] ? : @"be_null";
+    dict[@"enter_from"] = @"old_kind_list";
+    NSDictionary *logpbDict = model.logPb;
+    dict[@"element_from"] = logpbDict[@"element_from"] ? : @"be_null";
+    dict[@"origin_from"] = logpbDict[@"origin_from"] ? : @"be_null";
     dict[@"log_pb"] = model.logPb ? : @"be_null";
     dict[@"search_id"] = baseParams[@"search_id"] ? : @"be_null";
     dict[@"origin_search_id"] = baseParams[@"origin_search_id"] ? : @"be_null";
@@ -261,7 +262,7 @@
     [urlS appendString:queryP[@"url"]];
     [urlS appendFormat:@"&report_params=%@",reportParams];
     queryP[@"url"] = urlS;
-        
+    queryP[@"hide_nav_bottom_line"] = @(YES);
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:queryP];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
 }
@@ -605,11 +606,20 @@
     
 }
 
+- (void)updateBottomLineMargin:(CGFloat)margin
+{
+    [self.bottomLine mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(margin);
+        make.right.mas_equalTo(-margin);
+    }];
+}
+
 #pragma mark filter将要显示
 - (void)onConditionPanelWillDisplay
 {
     self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
     self.containerScrollView.scrollEnabled = NO;
+    [self updateBottomLineMargin:0];
 }
 
 #pragma mark filter将要消失
@@ -628,19 +638,17 @@
         self.closeConditionFilter();
     }
     [self addClickHouseSearchLog];
+    NSMutableDictionary *traceParam = [self categoryLogDict].mutableCopy;
+    traceParam[@"element_from"] = [self elementTypeString];
+    traceParam[@"page_type"] = [self pageTypeString];
     
-    NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
-    //sug_list
-    NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-    [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                            @"tracer": traceParam,
-                           @"from_home":@(3), // list
-                           @"sug_delegate":sugDelegateTable
+                           @"from_home":@(5)// list
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
@@ -1031,7 +1039,11 @@
             }
         }
     }
-    
+    if (self.containerScrollView.contentOffset.y > HOUSE_ICON_HEADER_HEIGHT) {
+        [self updateBottomLineMargin:0];
+    }else {
+        [self updateBottomLineMargin:20];
+    }
 }
 
 //- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset

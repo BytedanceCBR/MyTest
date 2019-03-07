@@ -26,6 +26,8 @@
 #import "TTReachability.h"
 #import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
+#import <Heimdallr/HMDTTMonitor.h>
+
 
 #define kCellId @"singleCellId"
 
@@ -473,6 +475,7 @@
                 }else{
                     [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
             }else{
                 [wself showMaskView:NO];
             }
@@ -582,6 +585,10 @@
             }
         }else{
             if (error) {
+                if (error.code == NSURLErrorCancelled) {
+                    //用户主动取消
+                    return;
+                }
                 if (showLoading) {
                     [wself.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
                     [wself.maskView showRetry:YES];
@@ -589,6 +596,7 @@
                 }else{
                     [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
             }else{
                 [wself showMaskView:NO];
             }

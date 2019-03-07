@@ -282,6 +282,9 @@
         {
             FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
             itemModel.index = i;
+            if (i == _relatedHouseData.data.items.count - 1) {
+                itemModel.isLast = YES;
+            }
             [self.items addObject:itemModel];
         }
     }

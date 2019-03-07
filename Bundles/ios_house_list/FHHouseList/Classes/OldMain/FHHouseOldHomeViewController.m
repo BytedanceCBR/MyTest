@@ -193,9 +193,13 @@
     bottomLine.backgroundColor = [UIColor themeGray6];
     [self.filterPanel addSubview:bottomLine];
     [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.bottom.mas_equalTo(0);
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.bottom.mas_equalTo(0);
         make.height.mas_equalTo(0.5);
     }];
+    self.viewModel.bottomLine = bottomLine;
+    
 }
 
 -(void)setupViewModelBlock {

@@ -50,17 +50,18 @@
         make.left.right.mas_equalTo(0);
         make.centerY.mas_equalTo(self);
         make.bottom.mas_equalTo(0);
-//        make.height.mas_equalTo(60);
     }];
+    CGFloat topMargin = [TTDeviceHelper isScreenWidthLarge320] ? 13 : 9;
+    CGFloat bottomMargin = [TTDeviceHelper isScreenWidthLarge320] ? 12 : 8;
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(10);
         make.right.mas_equalTo(-10);
-        make.top.mas_equalTo(13);
+        make.top.mas_equalTo(topMargin);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(10);
         make.right.mas_equalTo(-10);
-        make.bottom.mas_equalTo(-12);
+        make.bottom.mas_equalTo(-bottomMargin);
     }];
     [self.tapBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(0);
@@ -78,7 +79,6 @@
 {
     if (!_bgView) {
         _bgView = [[UIImageView alloc]init];
-        _bgView.contentMode = UIViewContentModeScaleAspectFill;
     }
     return _bgView;
 }
@@ -87,7 +87,7 @@
 {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.font = [UIFont themeFontRegular:15];
+        _titleLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:15] : [UIFont themeFontRegular:13];
         _titleLabel.textColor = [UIColor whiteColor];
     }
     return _titleLabel;
@@ -97,7 +97,7 @@
 {
     if (!_subtitleLabel) {
         _subtitleLabel = [[UILabel alloc]init];
-        _subtitleLabel.font = [UIFont themeFontLight:12];
+        _subtitleLabel.font = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontLight:12] : [UIFont themeFontLight:10];
         _subtitleLabel.textColor = [UIColor colorWithHexString:@"#ffeccb"];
     }
     return _subtitleLabel;
@@ -137,7 +137,7 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(14);
         make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(60);
+        make.height.mas_equalTo(60 * [TTDeviceHelper scaleToScreen375]);
     }];
 }
 
@@ -188,10 +188,10 @@
     NSArray *bannerViews = self.containerView.subviews;
     if (bannerViews.count > 1) {
 
-        [bannerViews mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:10 leadSpacing:20 tailSpacing:20];
+        [bannerViews mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedSpacing:10 leadSpacing:20 * [TTDeviceHelper scaleToScreen375] tailSpacing:20 * [TTDeviceHelper scaleToScreen375]];
         [bannerViews mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.mas_equalTo(self.containerView);
-            make.height.mas_equalTo(60);
+            make.height.mas_equalTo(60 * [TTDeviceHelper scaleToScreen375]);
         }];
     } else {
         UIView * view = bannerViews.firstObject;
