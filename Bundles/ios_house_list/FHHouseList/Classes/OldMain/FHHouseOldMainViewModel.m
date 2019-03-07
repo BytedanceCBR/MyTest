@@ -35,8 +35,8 @@
 #define kFHHouseOldMainCellId @"kFHHouseOldMainCellId"
 #define kFHHouseOldMainRecommendTitleCellId @"kFHHouseOldMainRecommendTitleCellId"
 #define kFHHouseOldMainPlaceholderCellId @"kFHHouseOldMainPlaceholderCellId"
-#define HOUSE_ICON_HEADER_HEIGHT 60
-#define HOUSE_TABLE_HEADER_HEIGHT (HOUSE_ICON_HEADER_HEIGHT+19)
+#define HOUSE_ICON_HEADER_HEIGHT (60 * [UIScreen mainScreen].bounds.size.width / 375.0f)
+#define HOUSE_TABLE_HEADER_HEIGHT (HOUSE_ICON_HEADER_HEIGHT + 19 * [UIScreen mainScreen].bounds.size.width / 375.0f)
 #define kFilterBarHeight 44
 
 @interface FHHouseOldMainViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate>
@@ -627,19 +627,17 @@
         self.closeConditionFilter();
     }
     [self addClickHouseSearchLog];
+    NSMutableDictionary *traceParam = [self categoryLogDict].mutableCopy;
+    traceParam[@"element_from"] = [self elementTypeString];
+    traceParam[@"page_type"] = [self pageTypeString];
     
-    NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
-    //sug_list
-    NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-    [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                            @"tracer": traceParam,
-                           @"from_home":@(3), // list
-                           @"sug_delegate":sugDelegateTable
+                           @"from_home":@(5)// list
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
