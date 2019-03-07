@@ -262,7 +262,7 @@
     [urlS appendString:queryP[@"url"]];
     [urlS appendFormat:@"&report_params=%@",reportParams];
     queryP[@"url"] = urlS;
-        
+    queryP[@"hide_nav_bottom_line"] = @(YES);
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:queryP];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
 }
