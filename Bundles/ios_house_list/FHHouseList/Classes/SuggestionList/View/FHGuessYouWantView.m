@@ -119,12 +119,40 @@
     return size.width;
 }
 
-// 猜你想搜前3个词计算:行数以及长度
+// 猜你想搜前3个词计算:行数以及长度，外部限制3个吧
 - (FHGuessYouWantFirstWords *)firstThreeWords:(NSArray *)array {
     if (array.count <= 0) {
         return nil;
     }
     FHGuessYouWantFirstWords *guess = [[FHGuessYouWantFirstWords alloc] init];
+    guess.wordLine = 1;
+    guess.wordLength = 0;
+    __block NSInteger   line = 1;
+    __block CGFloat     firstLineLen = 0;
+    __block CGFloat     remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+    __block NSInteger   secondLineLen = 0;
+    [array enumerateObjectsUsingBlock:^(FHGuessYouWantResponseDataDataModel*  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (item.text.length > 0) {
+            CGFloat len = [self guessYouWantTextLength:item.text];
+            if (len > remainWidth) {
+                if (line >= 2) {
+                    line = 2;
+                    *stop = YES;
+                }
+                line += 1;
+                remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+            }
+            remainWidth -= (len + 10);
+            if (line == 1) {
+                firstLineLen += (len + 10);
+                guess.wordLength = firstLineLen;
+            } else if (line == 2) {
+                secondLineLen += (len + 10);
+                guess.wordLength = secondLineLen;
+            }
+        }
+    }];
+    guess.wordLine = line;
     
     return guess;
 }
