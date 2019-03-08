@@ -898,9 +898,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         MACircleRenderer *accuracyCircleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
         
-        accuracyCircleRenderer.lineWidth    = 1.f;
-        accuracyCircleRenderer.strokeColor  = RGB(41, 156 ,255 );
-        accuracyCircleRenderer.fillColor    = RGBA(41, 156 ,255 , 0.3);
+//        accuracyCircleRenderer.lineWidth    = 1.f;
+//        accuracyCircleRenderer.strokeColor  = RGB(41, 156 ,255 );
+        accuracyCircleRenderer.fillColor    = [[UIColor themeRed1] colorWithAlphaComponent:0.3];
         
         return accuracyCircleRenderer;
     }
