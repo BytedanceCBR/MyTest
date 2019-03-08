@@ -467,6 +467,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     params[@"realtor_position"] = extraDict[@"realtor_position"] ? : @"detail_button";
     params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
     params[@"is_dial"] = @(1);
+    params[@"conversation_id"] = @"be_null";
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
 
