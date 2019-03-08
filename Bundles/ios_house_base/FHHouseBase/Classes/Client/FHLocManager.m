@@ -23,6 +23,7 @@
 #import <NSTimer+NoRetain.h>
 #import <TTUIResponderHelper.h>
 #import <HMDTTMonitor.h>
+#import <TTInstallIDManager.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -283,6 +284,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             [uploadParams setValue:@"定位错误" forKey:@"desc"];
             [uploadParams setValue:statusNumber forKey:@"location_status"];
             [uploadParams setValue:netStatusNumber forKey:@"network_status"];
+            [uploadParams setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            
 
             [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" attributes:uploadParams];
             
