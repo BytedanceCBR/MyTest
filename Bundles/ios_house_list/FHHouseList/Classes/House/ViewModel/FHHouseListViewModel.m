@@ -34,6 +34,7 @@
 #import "FHHouseBridgeManager.h"
 #import "FHCityListViewModel.h"
 #import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -474,14 +475,16 @@
         // 二手房、租房应该有 houseListOpenUrl
         if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
             if (self.houseListOpenUrl.length <= 0) {
-                NSMutableDictionary *reason = @{@"desc":@"列表地图openurl为空",@"detail":@"null",@"house_type":@(self.houseType)}.mutableCopy;
-                NSDictionary *dic = [[FHEnvContext sharedInstance] getRequestCommonParams];
-                if (dic && [dic isKindOfClass:[NSDictionary class]]) {
-                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:0];
-                    NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                    reason[@"detail"] = dataStr;
+                NSString *res = [NSString stringWithFormat:@"列表地图openurl为空:%ld",self.houseType];
+                // device_id
+                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+                if (did.length == 0) {
+                    did = @"null";
                 }
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl" attributes:reason];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
+                                                        metric:nil
+                                                      category:@{@"status":@(0),@"desc":res}
+                                                         extra:@{@"device_id":did}];
             }
         }
         

@@ -23,6 +23,7 @@
 #import "FHHouseListRedirectTipView.h"
 #import "HMDTTMonitor.h"
 #import "FHEnvContext.h"
+#import "TTInstallIDManager.h"
 
 #define kFilterBarHeight 44
 
@@ -70,14 +71,16 @@
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
         if (self.houseType <= 0 || self.houseType > 4) {
             // 目前4种房源：1，2，3，4
-            NSMutableDictionary *reason = @{@"desc":@"房源列表house_type错误",@"detail":@"null",@"house_type":@(self.houseType)}.mutableCopy;
-            NSDictionary *dic = [[FHEnvContext sharedInstance] getRequestCommonParams];
-            if (dic && [dic isKindOfClass:[NSDictionary class]]) {
-                NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:0 error:0];
-                NSString *dataStr = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                reason[@"detail"] = dataStr;
+            NSString *res = [NSString stringWithFormat:@"房源列表house_type错误:%ld",self.houseType];
+            // device_id
+            NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+            if (did.length == 0) {
+                did = @"null";
             }
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_house_type_error" attributes:reason];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_house_type_error"
+                                                    metric:nil
+                                                  category:@{@"status":@(0),@"desc":res}
+                                                     extra:@{@"device_id":did}];
             self.houseType = FHHouseTypeSecondHandHouse;
         }
         self.tracerModel.categoryName = [self categoryName];
