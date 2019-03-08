@@ -9,7 +9,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry.h>
-#import <UIImageView+BDWebImage.h>
+#import <BDWebImage/BDWebImage.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 
 @implementation FHHouseListBannerItem
@@ -159,10 +159,18 @@
         itemView.titleLabel.text = item.title;
         itemView.subtitleLabel.text = item.subtitle;
         NSURL *imgUrl = [NSURL URLWithString:item.iconName];
-        [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]]; // add by zjing for test placeholder
+        __weak typeof(self) wself = self;
+        [[BDWebImageManager sharedManager] requestImage:imgUrl options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                UIImage *strechImage = [image stretchableImageWithLeftCapWidth:image.size.width / 2 topCapHeight:image.size.height / 2];
+                itemView.bgView.image = strechImage;
+            }else {
+                itemView.bgView.image = [UIImage imageNamed:@"icon_placeholder"];
+            }
+        }];
+//        [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]]; // add by zjing for test placeholder
         [self.containerView addSubview:itemView];
         itemView.tag = 100 + index;
-        __weak typeof(self)wself = self;
         itemView.clickedItemBlock = ^(NSInteger index) {
             [wself tapAction:index - 100];
         };
