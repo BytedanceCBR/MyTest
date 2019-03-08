@@ -105,8 +105,16 @@
         self.contentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _contentLabel.numberOfLines = 0;
         _contentLabel.backgroundColor = [UIColor clearColor];
-        _contentLabel.labelInactiveLinkAttributes = @{NSForegroundColorAttributeName:[UIColor blueColor]};
-        _contentLabel.labelActiveLinkAttributes = @{NSForegroundColorAttributeName:[UIColor tt_themedColorForKey:kColorText5Highlighted]};
+        _contentLabel.labelInactiveLinkAttributes = @{
+                                                      NSForegroundColorAttributeName:[UIColor whiteColor],
+                                                      NSUnderlineColorAttributeName:[UIColor whiteColor],
+                                                      NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]
+                                                      };
+        _contentLabel.labelActiveLinkAttributes = @{
+                                                    NSForegroundColorAttributeName:[UIColor tt_themedColorForKey:kFHColorCoolGrey3],
+                                                    NSUnderlineColorAttributeName:[UIColor tt_themedColorForKey:kFHColorCoolGrey3],
+                                                    NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]
+                                                    };
         _contentLabel.labelTappingDelegate = self;
         _contentLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:ContentLabelFontSize];
         [_ssContentView addSubview:_contentLabel];
@@ -224,7 +232,6 @@
     [attrString setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:ContentLabelFontSize]} range:NSMakeRange(0, attrString.length)];
     _contentLabel.attributedText = attrString;
     [_contentLabel removeAllLinkAttributes];
-    
     [_contentLabel detectAndAddLinkToLabel];
     if (!SSIsEmptyArray(model.links)) {
         NSArray * linkAry = model.links;
