@@ -158,7 +158,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
     [self updateTableViewWithMoreData:followModel.data.hasMore];
     
-    if (!followModel.data.hasMore && self.dataList.count < 10) {
+    if (!followModel.data.hasMore && self.dataList.count < self.limit) {
         self.refreshFooter.hidden = YES;
     }
     
@@ -372,11 +372,20 @@ extern NSString *const kFHDetailFollowUpNotification;
         if(self.offset > 0){
             self.offset--;
         }
-        if(self.dataList.count > 0){
-            [self.viewController.emptyView hideEmptyView];
-            [self.tableView reloadData];
+        
+        //删除一条后有下页有新数据，用新数据填充
+        if(self.tableView.hasMore && self.dataList.count < self.limit){
+            [self requestData:YES];
         }else{
-            [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+            if(self.dataList.count > 0){
+                [self.viewController.emptyView hideEmptyView];
+                [self.tableView reloadData];
+                if (self.dataList.count < self.limit) {
+                    self.refreshFooter.hidden = YES;
+                }
+            }else{
+                [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+            }
         }
     }
 }
@@ -545,14 +554,9 @@ extern NSString *const kFHDetailFollowUpNotification;
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [wself deleteFocusCell:indexPath.row];
-                    
-                    if (wself.dataList.count < 10) {
-                        self.refreshFooter.hidden = YES;
-                    }
+                    [[ToastManager manager] dismissCustomLoading];
+                    [[ToastManager manager] showToast:@"取消关注"];
                 }
-                
-                [[ToastManager manager] dismissCustomLoading];
-                [[ToastManager manager] showToast:@"取消关注"];
             }];
         }
     }];
