@@ -117,7 +117,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 [params setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
                 
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" attributes:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" attributes:params];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
