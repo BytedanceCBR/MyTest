@@ -22,6 +22,7 @@
 #import <NSDictionary+TTAdditions.h>
 #import <NSTimer+NoRetain.h>
 #import <TTUIResponderHelper.h>
+#import <HMDTTMonitor.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -273,6 +274,13 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         [wSelf sendLocationAuthorizedTrace];
         
         if (error.code == AMapLocationErrorLocateFailed) {
+            
+            NSNumber *statusNumber = [NSNumber numberWithInteger:[self isHaveLocationAuthorization] ? 1 : 0];
+            
+            NSNumber *netStatusNumber = [NSNumber numberWithInteger:[FHEnvContext isNetworkConnected] ? 1 : 0];
+
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" attributes:@{@"desc":@"定位错误",@"location_status":statusNumber,@"network_status":netStatusNumber}];
+            
             NSLog(@"定位错误:%@",error.localizedDescription);
         }else if (error.code == AMapLocationErrorReGeocodeFailed || error.code == AMapLocationErrorTimeOut || error.code == AMapLocationErrorCannotFindHost || error.code == AMapLocationErrorBadURL || error.code == AMapLocationErrorNotConnectedToInternet || error.code == AMapLocationErrorCannotConnectToHost)
         {

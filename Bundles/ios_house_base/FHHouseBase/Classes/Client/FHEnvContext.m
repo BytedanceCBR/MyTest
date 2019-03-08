@@ -22,6 +22,7 @@
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
+#import <HMDTTMonitor.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -70,6 +71,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
             }
         }
         
+        if (!cityId) {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_city_id_error" attributes:@{@"desc":@"上报切换城市id不合法",@"reason":@"city_id为0或者其他"}];
+            return;
+        }
+        
         __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
         
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
@@ -108,6 +114,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 }
                 [[ToastManager manager] dismissCustomLoading];
                 [[ToastManager manager] showToast:@"切换城市失败"];
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" attributes:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
