@@ -62,7 +62,7 @@
     if (@available(iOS 11.0 , *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         UIEdgeInsets inset = UIEdgeInsetsZero;
-        inset.bottom = [[UIApplication sharedApplication]keyWindow].safeAreaInsets.bottom;
+        inset.bottom = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
         self.tableView.contentInset = inset;
     }
 }
@@ -72,7 +72,7 @@
     self.tableView.contentOffset = CGPointZero;
     UIEdgeInsets inset = UIEdgeInsetsZero;
     if (@available(iOS 11.0 , *)) {
-        inset.bottom = [[UIApplication sharedApplication]keyWindow].safeAreaInsets.bottom;
+        inset.bottom = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
     }
     if (self.tableView.mj_footer) {
         inset.bottom += self.tableView.mj_footer.height;

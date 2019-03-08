@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showNotify:(NSString *)message;
 
+- (void)hideImmediately;
+
 @end
 
 NS_ASSUME_NONNULL_END

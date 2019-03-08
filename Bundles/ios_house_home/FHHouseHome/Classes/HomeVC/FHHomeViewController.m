@@ -103,9 +103,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
     
-    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:0.9 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.9 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
@@ -121,6 +121,11 @@ static CGFloat const kSectionHeaderHeight = 38;
         
     });
     
+}
+
+- (void)hideImmediately
+{
+    [self.notifyBar hideImmediately];
 }
          
 - (void)retryLoadData
