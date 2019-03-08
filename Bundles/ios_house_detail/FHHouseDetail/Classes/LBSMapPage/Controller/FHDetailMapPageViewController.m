@@ -22,7 +22,7 @@
 #import <FHEnvContext.h>
 #import "UIViewController+Track.h"
 #import <FHEnvContext.h>
-
+#import <HMDTTMonitor.h>
 #import "FHMyMAAnnotation.h"
 
 static NSInteger const kBottomBarTagValue = 100;

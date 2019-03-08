@@ -24,6 +24,7 @@
 #import "FHDetailHeaderView.h"
 #import "UIColor+Theme.h"
 #import "TTRoute.h"
+#import <HMDTTMonitor.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -274,6 +275,8 @@ static const float kSegementedPadingTop = 5;
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
     [infoDict setValue:self.dataModel.title forKey:@"title"];
+    
+
 
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     

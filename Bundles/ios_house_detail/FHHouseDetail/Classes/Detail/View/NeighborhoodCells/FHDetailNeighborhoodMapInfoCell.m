@@ -31,6 +31,7 @@
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import <FHEnvContext.h>
+#import <HMDTTMonitor.h>
 
 @interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate>
 
@@ -223,7 +224,17 @@
     [infoDict setValue:@(self.centerPoint.latitude) forKey:@"latitude"];
     [infoDict setValue:@(self.centerPoint.longitude) forKey:@"longitude"];
     
+
     FHDetailNeighborhoodMapInfoModel *model = (FHDetailNeighborhoodMapInfoModel *)self.currentData;
+    
+    if (!self.centerPoint.latitude || !self.centerPoint.longitude) {
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.houseId forKey:@"house_id"];
+        [params setValue:model.houseType forKey:@"house_type"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+    }
     
     if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
         if (model.title.length > 0) {
@@ -235,7 +246,7 @@
         }
     }
     
-
+   
     
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     [tracer setValue:@"map" forKey:@"click_type"];
