@@ -89,60 +89,27 @@
 //        urlString = [urlString stringByReplacingOccurrencesOfString:@"/origin/" withString:@"/thumb/"];
 //    }
     NSURL *url = [NSURL URLWithString:urlString];
-    
     WeakSelf;
-    if ([urlString isEqualToString:self.urlString]) {
-        [self.avatarView sd_setImageWithURL:url placeholderImage:self.avatarView.image options:SDWebImageAvoidAutoSetImage | SDWebImageRetryFailed | SDWebImageLowPriority completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            StrongSelf;
-            if (!error) {
-                self.avatarView.hidden = NO;
-                if (self.allowCorner) {
-                    [self tt_asyncSetCornerImage:image imageView:self.avatarView completion:^(UIImage *clipImage) {
-                        self.avatarView.image = clipImage;
-                    }];
-                }
-                else {
-                    self.avatarView.image = image;
-                }
-                if (cacheType != SDImageCacheTypeMemory) {
-                    self.avatarView.alpha = 0;
-                    [UIView animateWithDuration:0.5f animations:^{
-                        self.avatarView.alpha = 1;
-                    }];
-                }
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    [manager loadImageWithURL:url options: SDWebImageAvoidAutoSetImage | SDWebImageRetryFailed | SDWebImageLowPriority progress:nil completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+        if(image && finished){
+            if (self.allowCorner) {
+                [self tt_asyncSetCornerImage:image imageView:self.avatarView completion:^(UIImage *clipImage) {
+                    self.avatarView.image = clipImage;
+                }];
             }
             else {
-                self.avatarView.hidden = YES;
+                self.avatarView.image = image;
             }
-        }];
-    }
-    else {
-        [self.avatarView sd_setImageWithURL:url placeholderImage:nil options:SDWebImageAvoidAutoSetImage | SDWebImageRetryFailed | SDWebImageLowPriority completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            StrongSelf;
-            if (!error) {
-                self.avatarView.hidden = NO;
-                if (self.allowCorner) {
-                    [self tt_asyncSetCornerImage:image imageView:self.avatarView completion:^(UIImage *clipImage) {
-                        self.avatarView.image = clipImage;
-                    }];
-                }
-                else {
-                    self.avatarView.image = image;
-                }
-                if (cacheType != SDImageCacheTypeMemory) {
-                    self.avatarView.alpha = 0;
-                    [UIView animateWithDuration:0.5f animations:^{
-                        self.avatarView.alpha = 1;
-                    }];
-                }
+            if (cacheType != SDImageCacheTypeMemory) {
+                self.avatarView.alpha = 0;
+                [UIView animateWithDuration:0.5f animations:^{
+                    self.avatarView.alpha = 1;
+                }];
             }
-            else {
-                self.avatarView.hidden = YES;
-            }
-        }];
-    }
+        }
+    }];
     self.urlString = urlString;
-    
 }
 
 - (void)addTouchTarget:(id)target action:(SEL)action {
@@ -191,11 +158,11 @@
     _placeholderName = placeholderName;
     if (_allowCorner) {
         [self tt_asyncSetCornerImage:[UIImage imageNamed:_placeholderName] imageView:self completion:^(UIImage *clipImage) {
-            self.image = clipImage;
+            self.avatarView.image = clipImage;
         }];
     }
     else {
-        self.image = [UIImage imageNamed:_placeholderName];
+        self.avatarView.image = [UIImage imageNamed:_placeholderName];
     }
 }
 
