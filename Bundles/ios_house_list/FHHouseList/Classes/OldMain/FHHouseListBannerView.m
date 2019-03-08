@@ -152,7 +152,7 @@
     }
     CGFloat margin = 10;
     CGFloat inset = 10;
-    for (NSInteger index = 0; index < 3; index++) {
+    for (NSInteger index = 0; index < items.count; index++) {
         
         FHHouseListBannerItem *item = items[index];
         FHHouseListBannerItemView *itemView = [[FHHouseListBannerItemView alloc]init];
@@ -200,7 +200,7 @@
             [theView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.containerView);
                 make.left.mas_equalTo(20);
-                make.right.mas_equalTo(-20);
+                make.right.mas_equalTo(-[UIScreen mainScreen].bounds.size.width / 2 - 5);
             }];
         }
     }
