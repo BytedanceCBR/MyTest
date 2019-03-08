@@ -23,7 +23,7 @@
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
 #define indexPormptLabelLeftPadding 5.f
-#define indexPormptLabelWidth 50.f
+#define indexPormptLabelWidth 80.f
 #define indexPormptLabelHeight 28.f
 
 #define indexTitleLabelTextSize 17.f
