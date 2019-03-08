@@ -115,9 +115,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 [[ToastManager manager] dismissCustomLoading];
                 [[ToastManager manager] showToast:@"切换城市失败"];
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
-                [params setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
                 
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" attributes:params];
+                NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+                
+                [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" metric:nil category:params extra:paramsExtra];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
