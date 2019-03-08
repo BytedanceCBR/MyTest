@@ -185,7 +185,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"realtor_id"] = contactPhone.realtorId;
     dict[@"realtor_rank"] = rank ?: @"0";
     dict[@"realtor_position"] = position ?: @"detail_button";
-  
+    dict[@"conversation_id"] = @"be_null";
     
     [TTTracker eventV3:@"click_im" params:dict];
     
