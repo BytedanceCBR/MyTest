@@ -220,6 +220,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //上报stay埋点
             [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
             
+            //收起tip
+            [self.homeViewController hideImmediately];
+            
             //设置当前房源类型
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if (currentDataModel.houseTypeList.count > indexValue) {
