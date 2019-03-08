@@ -279,7 +279,12 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             
             NSNumber *netStatusNumber = [NSNumber numberWithInteger:[FHEnvContext isNetworkConnected] ? 1 : 0];
 
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" attributes:@{@"desc":@"定位错误",@"location_status":statusNumber,@"network_status":netStatusNumber}];
+            NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+            [uploadParams setValue:@"定位错误" forKey:@"desc"];
+            [uploadParams setValue:statusNumber forKey:@"location_status"];
+            [uploadParams setValue:netStatusNumber forKey:@"network_status"];
+
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" attributes:uploadParams];
             
             NSLog(@"定位错误:%@",error.localizedDescription);
         }else if (error.code == AMapLocationErrorReGeocodeFailed || error.code == AMapLocationErrorTimeOut || error.code == AMapLocationErrorCannotFindHost || error.code == AMapLocationErrorBadURL || error.code == AMapLocationErrorNotConnectedToInternet || error.code == AMapLocationErrorCannotConnectToHost)
