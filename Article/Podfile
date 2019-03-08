@@ -208,8 +208,8 @@ def appPods
     #-----头条网络库-----
 #    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
 #pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
-    pod 'TTNetworkManager','2.2.8.47-rc.0'
-
+#    pod 'TTNetworkManager','2.2.8.47-rc.0'
+    pod 'TTNetworkManager'
 
 #    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
@@ -421,7 +421,7 @@ def appPods
     #支持自动约束cell缓存高度
     pod 'UITableView+FDTemplateLayoutCell', '1.6'
 
-    pod 'TTIMSDK', '0.7.2', :subspecs => [
+    pod 'TTIMSDK', '0.7.7', :subspecs => [
     'IMKit',
     'IMKit_WebSocket',
     'Feature_ApplicationStatus',
