@@ -108,6 +108,7 @@
         
         _progressView = [[TTRWebViewProgressView alloc] initWithFrame:self.bounds];
         _progressView.height = 2.f;
+        _progressView.lineFillColor = [UIColor tt_themedColorForKey:kFHColorCoral];
         [self.ssWebView addDelegate:(NSObject<YSWebViewDelegate> *)_progressView];
         [self addSubview:_progressView];
         
