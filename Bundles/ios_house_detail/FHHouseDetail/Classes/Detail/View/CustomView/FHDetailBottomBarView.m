@@ -48,29 +48,28 @@
     [self addSubview:self.leftView];
     [self.leftView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.mas_equalTo(self);
-        make.width.mas_equalTo(0);
+        make.width.mas_equalTo(160);
     }];
-    
+    self.leftView.hidden = YES;
     [self.leftView addSubview:self.avatarView];
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
     [self.leftView addSubview:self.licenceIcon];
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self.leftView);
         make.width.height.mas_equalTo(42);
     }];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
         make.top.mas_equalTo(self.avatarView).offset(2);
-        make.right.mas_equalTo(self.licenceIcon.mas_left);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
         make.height.width.mas_equalTo(20);
         make.centerY.mas_equalTo(self.nameLabel);
-        make.right.mas_lessThanOrEqualTo(self.leftView).offset(-4);
     }];
+
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel);
         make.top.mas_equalTo(self.nameLabel.mas_bottom);
@@ -81,7 +80,7 @@
     [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(10);
         make.bottom.mas_equalTo(-10);
-        make.left.mas_equalTo(self.leftView.mas_right).offset(20);
+        make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(44);
     }];
@@ -120,13 +119,17 @@
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
-            make.right.mas_equalTo(self.licenceIcon.mas_left).mas_offset(-4);
+        }];
+        [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
+            make.height.width.mas_equalTo(20);
+            make.centerY.mas_equalTo(self.nameLabel);
         }];
     } else {
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
-            make.right.mas_equalTo(self);
+            make.right.mas_equalTo(0);
         }];
     }
 }
@@ -161,9 +164,15 @@
     }else {
         [self displayLicense:NO];
     }
-    [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(leftWidth);
-    }];
+    if (leftWidth > 0) {
+        [self.contactBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(160 + 20);
+        }];
+    }else {
+        [self.contactBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(20);
+        }];
+    }
 }
 
 - (void)startLoading
