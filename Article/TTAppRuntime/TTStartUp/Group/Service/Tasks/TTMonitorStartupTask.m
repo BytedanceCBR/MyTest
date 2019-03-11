@@ -49,7 +49,7 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"tt_ios_arch_settings" defaultValue:@{} freeze:YES];
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
     if ([archSettings tt_boolValueForKey:@"alog_enable"]) {
         alog_close();
     }
@@ -142,10 +142,10 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
 #pragma mark - apm init
 // 初始化 APM 监控
 - (void)initApmMonitor{
-    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"tt_lite_ios_arch_settings" defaultValue:@{} freeze:YES];
-    if ([archSettings tt_boolValueForKey:@"apm_enable"]) {
-        [self setupAPMModule];
-    }
+//    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+//    if ([archSettings tt_boolValueForKey:@"apm_enable"]) {
+    [self setupAPMModule];
+//    }
 }
 
 - (void)initALog {
@@ -215,12 +215,12 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
 
 - (BOOL)shouldIgnoreNetworkForTTMonitor {
     //如果APM的kHMDModuleNetworkTracker功能开启，则TTMonitor不开启api_all，api_error，image_monitor在内的网络监控
-    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"tt_lite_ios_arch_settings" defaultValue:@{} freeze:YES];
-    if ([archSettings tt_boolValueForKey:@"apm_enable"]) {
-        if ([[Heimdallr shared] isModuleWorkingForName:kHMDModuleNetworkTracker]) {
-            return YES;
-        }
+//    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+//    if ([archSettings tt_boolValueForKey:@"apm_enable"]) {
+    if ([[Heimdallr shared] isModuleWorkingForName:kHMDModuleNetworkTracker]) {
+        return YES;
     }
+    //    }
     return NO;
 }
 

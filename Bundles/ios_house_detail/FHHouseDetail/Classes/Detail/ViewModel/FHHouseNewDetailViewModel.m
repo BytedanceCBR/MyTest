@@ -24,6 +24,7 @@
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNewListSingleImageCell.h"
+#import <HMDTTMonitor.h>
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -248,6 +249,19 @@
         nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
         nearbyMapModel.title = model.data.coreInfo.name;
+    
+        
+        if (!model.data.coreInfo.gaodeLat || !model.data.coreInfo.gaodeLng) {
+            NSMutableDictionary *params = [NSMutableDictionary new];
+            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+            [params setValue:@"经纬度缺失" forKey:@"reason"];
+            [params setValue:model.data.coreInfo.id forKey:@"house_id"];
+            [params setValue:@(1) forKey:@"house_type"];
+            [params setValue:model.data.coreInfo.name forKey:@"name"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+        }
+        
+        
 //        nearbyMapModel.tableView = self.tableView;
         [self.items addObject:nearbyMapModel];
         

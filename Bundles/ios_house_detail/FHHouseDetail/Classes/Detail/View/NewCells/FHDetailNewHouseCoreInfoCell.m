@@ -10,6 +10,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import <FHEnvContext.h>
 #import "FHDetailHouseNameCell.h"
+#import <HMDTTMonitor.h>
 
 static const CGFloat kLabelKeyFontSize = 12;
 
@@ -300,6 +301,17 @@ static const CGFloat kLabelKeyRightPandding = -20;
         FHDetailHouseNameModel * houseName = (FHDetailHouseNameModel *)model.houseName;
         [infoDict setValue:houseName.name forKey:@"title"];
     }
+    
+    if (!longitude || !latitude) {
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.courtId forKey:@"house_id"];
+        [params setValue:@(1) forKey:@"house_type"];
+        [params setValue:infoDict[@"title"] forKey:@"name"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+    }
+    
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     [tracer setValue:@"address" forKey:@"click_type"];
     [tracer setValue:@"house_info" forKey:@"element_from"];

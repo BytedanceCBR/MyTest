@@ -22,6 +22,8 @@
 #import <NSDictionary+TTAdditions.h>
 #import <NSTimer+NoRetain.h>
 #import <TTUIResponderHelper.h>
+#import <HMDTTMonitor.h>
+#import <TTInstallIDManager.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -273,6 +275,22 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         [wSelf sendLocationAuthorizedTrace];
         
         if (error.code == AMapLocationErrorLocateFailed) {
+            
+            NSNumber *statusNumber = [NSNumber numberWithInteger:[self isHaveLocationAuthorization] ? 1 : 0];
+            
+            NSNumber *netStatusNumber = [NSNumber numberWithInteger:[FHEnvContext isNetworkConnected] ? 1 : 0];
+
+            NSMutableDictionary *uploadParams = [NSMutableDictionary new];
+            [uploadParams setValue:@"定位错误" forKey:@"desc"];
+            [uploadParams setValue:statusNumber forKey:@"location_status"];
+            [uploadParams setValue:netStatusNumber forKey:@"network_status"];
+            
+            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+            
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" metric:nil category:uploadParams extra:paramsExtra];
+            
             NSLog(@"定位错误:%@",error.localizedDescription);
         }else if (error.code == AMapLocationErrorReGeocodeFailed || error.code == AMapLocationErrorTimeOut || error.code == AMapLocationErrorCannotFindHost || error.code == AMapLocationErrorBadURL || error.code == AMapLocationErrorNotConnectedToInternet || error.code == AMapLocationErrorCannotConnectToHost)
         {

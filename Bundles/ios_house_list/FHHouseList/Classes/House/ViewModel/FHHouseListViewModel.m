@@ -33,6 +33,8 @@
 #import "FHRecommendSecondhandHouseTitleModel.h"
 #import "FHHouseBridgeManager.h"
 #import "FHCityListViewModel.h"
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -469,6 +471,21 @@
             itemArray = houseModel.items;
             redirectTips = houseModel.redirectTips;
 
+        }
+        // 二手房、租房应该有 houseListOpenUrl
+        if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+            if (self.houseListOpenUrl.length <= 0) {
+                NSString *res = [NSString stringWithFormat:@"列表地图openurl为空:%ld",self.houseType];
+                // device_id
+                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+                if (did.length == 0) {
+                    did = @"null";
+                }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
+                                                        metric:nil
+                                                      category:@{@"status":@(0),@"desc":res}
+                                                         extra:@{@"device_id":did}];
+            }
         }
         
         if (self.isFirstLoad) {

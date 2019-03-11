@@ -9,7 +9,7 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry.h>
-#import <UIImageView+BDWebImage.h>
+#import <BDWebImage/BDWebImage.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 
 @implementation FHHouseListBannerItem
@@ -152,17 +152,25 @@
     }
     CGFloat margin = 10;
     CGFloat inset = 10;
-    for (NSInteger index = 0; index < 3; index++) {
+    for (NSInteger index = 0; index < items.count; index++) {
         
         FHHouseListBannerItem *item = items[index];
         FHHouseListBannerItemView *itemView = [[FHHouseListBannerItemView alloc]init];
         itemView.titleLabel.text = item.title;
         itemView.subtitleLabel.text = item.subtitle;
         NSURL *imgUrl = [NSURL URLWithString:item.iconName];
-        [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]]; // add by zjing for test placeholder
+        __weak typeof(self) wself = self;
+        [[BDWebImageManager sharedManager] requestImage:imgUrl options:BDImageRequestHighPriority complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+            if (!error && image) {
+                UIImage *strechImage = [image stretchableImageWithLeftCapWidth:image.size.width / 2 topCapHeight:image.size.height / 2];
+                itemView.bgView.image = strechImage;
+            }else {
+                itemView.bgView.image = [UIImage imageNamed:@"icon_placeholder"];
+            }
+        }];
+//        [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]]; // add by zjing for test placeholder
         [self.containerView addSubview:itemView];
         itemView.tag = 100 + index;
-        __weak typeof(self)wself = self;
         itemView.clickedItemBlock = ^(NSInteger index) {
             [wself tapAction:index - 100];
         };
@@ -200,7 +208,7 @@
             [theView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.containerView);
                 make.left.mas_equalTo(20);
-                make.right.mas_equalTo(-20);
+                make.right.mas_equalTo(-[UIScreen mainScreen].bounds.size.width / 2 - 5);
             }];
         }
     }
