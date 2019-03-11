@@ -70,6 +70,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 @implementation FHMapSearchViewModel
 
+//+(void)load
+//{
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        
+//        for (int i = 0 ; i < 100; i++) {
+//            [[HMDTTMonitor defaultManager] hmdTrackService:@"map_location_failed" attributes:@{@"longitude":@(0),@"latitude":@(0)}];
+//        }
+//        
+//    });
+//}
+
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel viewController:(FHMapSearchViewController *)viewController
 {
     self = [super init];
