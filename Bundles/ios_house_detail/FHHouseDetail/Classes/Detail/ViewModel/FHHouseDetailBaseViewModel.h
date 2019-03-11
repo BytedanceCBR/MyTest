@@ -59,6 +59,9 @@ typedef enum : NSUInteger {
 
 // excetionLog
 - (void)addDetailCoreInfoExcetionLog;
+- (BOOL)isMissTitle;
+- (BOOL)isMissImage;
+- (BOOL)isMissCoreInfo;
 - (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message;
 
 @end

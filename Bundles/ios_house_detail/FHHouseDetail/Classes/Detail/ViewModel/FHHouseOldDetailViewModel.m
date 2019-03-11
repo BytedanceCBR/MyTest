@@ -473,33 +473,23 @@
     }];
 }
 
-
-- (void)addDetailCoreInfoExcetionLog
+- (BOOL)isMissTitle
 {
-    //    detail_core_info_error
-    NSMutableDictionary *attr = @{}.mutableCopy;
-    NSInteger status = 0;
     FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
-    if (!model) {
-        return;
-    }
-    if (model.data.title.length < 1) {
-        attr[@"title"] = @(1);
-        attr[@"house_id"] = self.houseId;
-        status |= FHDetailCoreInfoErrorTypeTitle;
-    }
-    if (model.data.houseImage.count < 1) {
-        attr[@"image"] = @(1);
-        attr[@"house_id"] = self.houseId;
-        status |= FHDetailCoreInfoErrorTypeImage;
-    }
-    if (model.data.coreInfo.count < 1) {
-        attr[@"core_info"] = @(1);
-        attr[@"house_id"] = self.houseId;
-        status |= FHDetailCoreInfoErrorTypeCoreInfo;
-    }
-    attr[@"house_type"] = @(self.houseType);
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_core_info_error" status:status extra:attr];
+    return model.data.title.length < 1;
 }
+
+- (BOOL)isMissImage
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.houseImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
+}
+
 
 @end

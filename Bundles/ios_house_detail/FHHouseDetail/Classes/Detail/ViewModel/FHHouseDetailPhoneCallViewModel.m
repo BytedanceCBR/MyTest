@@ -146,12 +146,12 @@ typedef enum : NSUInteger {
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
             if (model.data.isVirtual) {
-                [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
             }else {
-                [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
             }
         }else {
-            [self addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
+            [wself addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
         }
         NSMutableDictionary *extra = @{}.mutableCopy;
         if (extraDict) {
@@ -201,13 +201,13 @@ typedef enum : NSUInteger {
             }
             [wself addRealtorClickCallLogWithExtra:extra isVirtual:isVirtual];
             if (model.data.isVirtual) {
-                [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
             }else {
-                [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
             }
         }else {
             failBlock(error);
-            [self addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
+            [wself addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
         }
         [wself callPhone:urlStr];
         successBlock(YES);

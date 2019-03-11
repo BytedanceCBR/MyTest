@@ -332,32 +332,22 @@
     }
 }
 
-- (void)addDetailCoreInfoExcetionLog
+- (BOOL)isMissTitle
 {
-    //    detail_core_info_error
-    NSMutableDictionary *attr = @{}.mutableCopy;
-    NSInteger status = 0;
     FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
-    if (!model) {
-        return;
-    }
-    if (model.data.coreInfo.name.length < 1) {
-        attr[@"title"] = @(1);
-        attr[@"house_id"] = self.houseId;
-        status |= FHDetailCoreInfoErrorTypeTitle;
-    }
-    if (model.data.imageGroup.count < 1) {
-        attr[@"image"] = @(1);
-        attr[@"house_id"] = self.houseId;
-        status |= FHDetailCoreInfoErrorTypeImage;
-    }
-    if (model.data.coreInfo == nil) {
-        attr[@"core_info"] = @(1);
-        attr[@"house_id"] = self.houseId;
-        status |= FHDetailCoreInfoErrorTypeCoreInfo;
-    }
-    attr[@"house_type"] = @(self.houseType);
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_core_info_error" status:status extra:attr];
-    
+    return model.data.coreInfo.name.length < 1;
 }
+
+- (BOOL)isMissImage
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.imageGroup.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.coreInfo == nil;
+}
+
 @end
