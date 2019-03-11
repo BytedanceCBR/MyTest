@@ -1249,6 +1249,24 @@
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    // enter_query 判空
+    NSString *enter_query = params[@"enter_query"];
+    if (enter_query && [enter_query isKindOfClass:[NSString class]]) {
+        if (enter_query.length <= 0) {
+            params[@"enter_query"] = @"be_null";
+        }
+    } else {
+         params[@"enter_query"] = @"be_null";
+    }
+    // search_query 判空
+    NSString *search_query = params[@"search_query"];
+    if (search_query && [search_query isKindOfClass:[NSString class]]) {
+        if (search_query.length <= 0) {
+            params[@"search_query"] = @"be_null";
+        }
+    } else {
+         params[@"search_query"] = @"be_null";
+    }
     TRACK_EVENT(@"house_search",params);
     self.canChangeHouseSearchDic = YES;
 }
