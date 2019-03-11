@@ -26,7 +26,7 @@
 
 @property (nonatomic, weak)     id<FHHouseSuggestionDelegate>    suggestDelegate;
 
-@property (nonatomic, strong)   NSDictionary       *homePageRollDic;
+@property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;// 传入搜索列表的轮播词-只用于搜索框展示和搜索用
 @property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 
 @end
@@ -70,31 +70,77 @@
          */
         id dic = paramObj.allParams[@"homepage_roll_data"];
         if (dic) {
-            self.homePageRollDic = [NSDictionary dictionaryWithDictionary:dic];
+            self.homePageRollDic = [NSMutableDictionary dictionaryWithDictionary:dic];
             self.viewModel.homePageRollDic = self.homePageRollDic;
         }
+        // 4.1、guess_you_want_words 猜你想搜前3个词，外部轮播传入
+        id tempArray = paramObj.allParams[@"guess_you_want_words"];
+        if (tempArray && [tempArray isKindOfClass:[NSArray class]]) {
+            self.viewModel.guessYouWantWords = [[NSMutableArray alloc] initWithArray:tempArray];
+        }
         // 5、tracer（TRACER_KEY）: self.tracerDict 字典
-        // 6、H5页面传入的其他字段 3.18号上
-        /*
-        if (paramObj.allParams[@"page_type"]) {
-            self.viewModel.pageTypeStr = paramObj.allParams[@"page_type"];
+        // 6、H5页面传入的其他字段 3.18号上 H5放到report_params
+        NSMutableDictionary *paramDic = [NSMutableDictionary dictionaryWithDictionary:paramObj.allParams];
+        NSString *report_params = paramObj.allParams[@"report_params"];
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                [paramDic addEntriesFromDictionary:report_params_dic];
+            }
+        }
+        if (paramDic[@"page_type"]) {
+            self.viewModel.pageTypeStr = paramDic[@"page_type"];
         }
         //
-        if (paramObj.allParams[@"origin_from"]) {
-            NSString *origin_from = paramObj.allParams[@"origin_from"];
+        if (paramDic[@"origin_from"]) {
+            NSString *origin_from = paramDic[@"origin_from"];
             self.tracerDict[@"origin_from"] = origin_from;
         }
-        if (paramObj.allParams[@"enter_from"]) {
-            NSString *enter_from = paramObj.allParams[@"enter_from"];
+        if (paramDic[@"enter_from"]) {
+            NSString *enter_from = paramDic[@"enter_from"];
             self.tracerDict[@"enter_from"] = enter_from;
         }
-        if (paramObj.allParams[@"element_from"]) {
-            NSString *element_from = paramObj.allParams[@"element_from"];
+        if (paramDic[@"element_from"]) {
+            NSString *element_from = paramDic[@"element_from"];
             self.tracerDict[@"element_from"] = element_from;
         }
-        */
+        if (paramDic[@"origin_search_id"]) {
+            NSString *origin_search_id = paramDic[@"origin_search_id"];
+            self.tracerDict[@"origin_search_id"] = origin_search_id;
+        }
+        // 7、hint_text：text guess_search_id house_type
+        NSString *hint_text = paramDic[@"hint_text"];
+        NSString *guess_search_id = paramDic[@"guess_search_id"];
+        if (!self.homePageRollDic) {
+            self.homePageRollDic = [NSMutableDictionary new];
+        }
+        if (hint_text.length > 0) {
+            self.homePageRollDic[@"text"] = hint_text;
+        }
+        if (guess_search_id.length > 0) {
+            self.homePageRollDic[@"guess_search_id"] = guess_search_id;
+        }
+        if (self.homePageRollDic.count > 0) {
+            self.homePageRollDic[@"house_type"] = @(self.viewModel.houseType);
+            self.viewModel.homePageRollDic = self.homePageRollDic;
+        }
     }
     return self;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 - (void)viewDidLoad {
@@ -338,6 +384,12 @@
         NSDictionary *infos = @{
                                 @"houseSearch":houseSearchParams
                                 };
+        if (self.tracerDict.count > 0) {
+            infos = @{
+                      @"houseSearch":houseSearchParams,
+                      @"tracer": self.tracerDict
+                      };
+        }
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos];
     } else {
         self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
@@ -374,7 +426,7 @@
 
 // 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
 - (void)dismissSelfVCIfNeeded {
-    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab) {
+    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault) {
         [self removeFromParentViewController];
     }
 }

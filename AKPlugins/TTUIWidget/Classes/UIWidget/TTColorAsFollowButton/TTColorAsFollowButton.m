@@ -9,7 +9,7 @@
 #import "TTColorAsFollowButton.h"
 #import <TTUGCAttributedLabel.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 @implementation TTColorAsFollowButton
 

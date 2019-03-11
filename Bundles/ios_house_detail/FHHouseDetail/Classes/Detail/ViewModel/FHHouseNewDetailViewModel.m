@@ -24,6 +24,7 @@
 #import "FHNewHouseItemModel.h"
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNewListSingleImageCell.h"
+#import <HMDTTMonitor.h>
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -123,17 +124,25 @@
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
-            wSelf.dataModel = model;
-            wSelf.detailController.hasValidateData = YES;
-            [wSelf.detailController.emptyView hideEmptyView];
-            wSelf.bottomBar.hidden = NO;
-            [wSelf processDetailData:model];
-        }else
-        {
+            if (model.data) {
+                wSelf.dataModel = model;
+                wSelf.detailController.hasValidateData = YES;
+                [wSelf.detailController.emptyView hideEmptyView];
+                wSelf.bottomBar.hidden = NO;
+                [wSelf processDetailData:model];
+            }else {
+                wSelf.detailController.isLoadingData = NO;
+                wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+            }
+        }else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -141,6 +150,8 @@
 
 - (void)processDetailData:(FHDetailNewModel *)model {
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.highlightedRealtor) {
@@ -247,6 +258,20 @@
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.coreInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.coreInfo.gaodeLng;
+        nearbyMapModel.title = model.data.coreInfo.name;
+    
+        
+        if (!model.data.coreInfo.gaodeLat || !model.data.coreInfo.gaodeLng) {
+            NSMutableDictionary *params = [NSMutableDictionary new];
+            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+            [params setValue:@"经纬度缺失" forKey:@"reason"];
+            [params setValue:model.data.coreInfo.id forKey:@"house_id"];
+            [params setValue:@(1) forKey:@"house_type"];
+            [params setValue:model.data.coreInfo.name forKey:@"name"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+        }
+        
+        
 //        nearbyMapModel.tableView = self.tableView;
         [self.items addObject:nearbyMapModel];
         
@@ -281,6 +306,9 @@
         {
             FHNewHouseItemModel *itemModel = [[FHNewHouseItemModel alloc] initWithData:[(_relatedHouseData.data.items[i]) toJSONData] error:nil];
             itemModel.index = i;
+            if (i == _relatedHouseData.data.items.count - 1) {
+                itemModel.isLast = YES;
+            }
             [self.items addObject:itemModel];
         }
     }
@@ -302,6 +330,24 @@
     if (cell.didClickCellBlk) {
         cell.didClickCellBlk();
     }
+}
+
+- (BOOL)isMissTitle
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.coreInfo.name.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.imageGroup.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.coreInfo == nil;
 }
 
 @end

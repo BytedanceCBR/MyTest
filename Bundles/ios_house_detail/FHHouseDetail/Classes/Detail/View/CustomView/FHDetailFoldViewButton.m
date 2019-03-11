@@ -15,6 +15,7 @@
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
 #import "FHExtendHotAreaButton.h"
+#import "UIColor+Theme.h"
 
 @interface FHDetailFoldViewButton ()
 
@@ -54,7 +55,7 @@
     [self addSubview:_iconView];
     _keyLabel = [[UILabel alloc] init];
     _keyLabel.text = @"";
-    _keyLabel.textColor = [UIColor colorWithHexString:@"#299cff"];
+    _keyLabel.textColor = [UIColor themeRed1];
     _keyLabel.font = [UIFont themeFontRegular:14];
     [self addSubview:_keyLabel];
     

@@ -26,7 +26,8 @@
 
 - (void)setupUI {
     _starsSize = 18;
-    _starsName = [UILabel createLabel:@"3.0" textColor:@"#081f33" fontSize:36];
+    _starsName = [UILabel createLabel:@"3.0" textColor:@"" fontSize:36];
+    _starsName.textColor = [UIColor themeGray1];
     _starsName.font = [UIFont themeFontMedium:36];
     _starsName.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_starsName];

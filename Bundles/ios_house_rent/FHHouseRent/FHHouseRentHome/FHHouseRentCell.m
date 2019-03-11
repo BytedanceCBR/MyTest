@@ -147,7 +147,7 @@
      self.majorTitle = [[UILabel alloc] init];
     int fontSize = (SCREEN_WIDTH == 320) ? 14 : 16;
     _majorTitle.font = [UIFont themeFontRegular:fontSize];
-    _majorTitle.textColor = [UIColor themeBlack];
+    _majorTitle.textColor = [UIColor themeGray1];
     _majorTitle.preferredMaxLayoutWidth = SCREEN_WIDTH - 2*HOR_MARGIN -ICON_WIDTH - 15;
     [_infoContainerView addSubview:_majorTitle];
     [_majorTitle mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -157,7 +157,7 @@
 
     self.extendTitle = [[UILabel alloc] init];
     _extendTitle.font = [UIFont themeFontRegular:12];
-    _extendTitle.textColor = [UIColor themeGray2];
+    _extendTitle.textColor = [UIColor themeGray3];
     [_infoContainerView addSubview:_extendTitle];
     [_extendTitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.infoContainerView);
@@ -176,7 +176,7 @@
 
     self.priceLabel = [[UILabel alloc] init];
     _priceLabel.font = [UIFont themeFontMedium:14];
-    _priceLabel.textColor = [UIColor themeRed];
+    _priceLabel.textColor = [UIColor themeRed1];
     [_infoContainerView addSubview:_priceLabel];
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.infoContainerView);

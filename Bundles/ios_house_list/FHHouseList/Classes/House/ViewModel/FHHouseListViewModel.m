@@ -33,6 +33,8 @@
 #import "FHRecommendSecondhandHouseTitleModel.h"
 #import "FHHouseBridgeManager.h"
 #import "FHCityListViewModel.h"
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -470,6 +472,21 @@
             redirectTips = houseModel.redirectTips;
 
         }
+        // 二手房、租房应该有 houseListOpenUrl
+        if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+            if (self.houseListOpenUrl.length <= 0) {
+                NSString *res = [NSString stringWithFormat:@"列表地图openurl为空:%ld",self.houseType];
+                // device_id
+                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+                if (did.length == 0) {
+                    did = @"null";
+                }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
+                                                        metric:nil
+                                                      category:@{@"status":@(0),@"desc":res}
+                                                         extra:@{@"device_id":did}];
+            }
+        }
         
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
@@ -518,8 +535,16 @@
         }];
         
         [self.tableView reloadData];
+        
+        
         [self updateTableViewWithMoreData:hasMore];
         
+        if (self.houseType != FHHouseTypeSecondHandHouse) {
+            if (!hasMore && self.houseList.count < 10) {
+                self.refreshFooter.hidden = YES;
+            }
+        }
+
         if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
@@ -577,6 +602,7 @@
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -660,7 +686,7 @@
     [self addClickHouseSearchLog];
     
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
-    //sug_list
+    //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(self.houseType) ,
@@ -670,7 +696,7 @@
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
@@ -831,11 +857,11 @@
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
                 
                 if (indexPath.row < self.houseList.count) {
-                    
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];                    
                 }
                 return cell;
             } else {
@@ -845,9 +871,10 @@
                 
                 if (indexPath.row < self.sugesstHouseList.count) {
                     FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];                    
                 }
                 return cell;
             }
@@ -896,8 +923,12 @@
             return height;
         } else {
             if (indexPath.section == 0) {
+                
+                FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+                
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                return isLastCell ? 125 : 105;
+                return (isLastCell ? 125 : 105)+reasonHeight;
 //                if (indexPath.row < self.houseList.count) {
 //
 //                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -915,7 +946,9 @@
 //                }
             } else {
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
-                return isLastCell ? 125 : 105;
+                FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+                return (isLastCell ? 125 : 105)+reasonHeight;
 
 //                if (indexPath.row < self.sugesstHouseList.count) {
 //

@@ -51,13 +51,13 @@
     self.iconView = [[UIImageView alloc] init];
     [self.contentView addSubview:_iconView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self.contentView addSubview:_titleLabel];
     
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_subTitleLabel];
     
-    self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray4]];
+    self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_timeLabel];
     
     self.unreadView = [[TTBadgeNumberView alloc] init];
@@ -69,8 +69,8 @@
 {
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(10);
-        make.width.height.mas_equalTo(62);
+        make.top.mas_equalTo(14);
+        make.width.height.mas_equalTo(54);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {

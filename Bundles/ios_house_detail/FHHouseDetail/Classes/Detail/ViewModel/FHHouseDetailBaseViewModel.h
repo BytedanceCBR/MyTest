@@ -13,8 +13,15 @@
 #import "FHHouseDetailContactViewModel.h"
 #import <TTReachability.h>
 #import "FHDetailNavBar.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 NS_ASSUME_NONNULL_BEGIN
+
+typedef enum : NSUInteger {
+    FHDetailCoreInfoErrorTypeTitle = 1 << 0,
+    FHDetailCoreInfoErrorTypeImage = 1 << 1,
+    FHDetailCoreInfoErrorTypeCoreInfo = 1 << 2,
+} FHDetailCoreInfoErrorType;
 
 @interface FHHouseDetailBaseViewModel : NSObject
 
@@ -49,6 +56,13 @@ NS_ASSUME_NONNULL_BEGIN
 // 埋点相关
 - (void)addGoDetailLog;
 - (void)addStayPageLog:(NSTimeInterval)stayTime;
+
+// excetionLog
+- (void)addDetailCoreInfoExcetionLog;
+- (BOOL)isMissTitle;
+- (BOOL)isMissImage;
+- (BOOL)isMissCoreInfo;
+- (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message;
 
 @end
 

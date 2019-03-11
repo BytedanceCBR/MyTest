@@ -10,11 +10,22 @@
 #import "TTMonitor.h"
 #import "TTInstallIDManager.h"
 #import "TTDebugRealMonitorManager.h"
-#import "TTHttpsControlManager.h"
+#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "NewsBaseDelegate.h"
 #import "BSBacktraceLogger.h"
 #import "TTWatchdogMonitorRecorder.h"
 #import "TTMonitorConfiguration.h"
+#import <Heimdallr/HMDInjectedInfo.h>
+#import <Heimdallr/HMDConstants.h>
+#import <TTTracker/TTTrackerSessionHandler.h>
+#import <TTTracker/TTTrackerProxy.h>
+#import <TTSettingsManager/TTSettingsManager.h>
+#import <BDAgileLog.h>
+#import "HMDLogUploader.h"
+#import "BSBacktraceLogger.h"
+#import "TTWatchdogMonitorRecorder.h"
+#import "TTMonitorConfiguration.h"
+#import <Heimdallr/Heimdallr.h>
 
 static BOOL TTDebugrealInitialized = NO;
 NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNotification";
@@ -32,7 +43,16 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     [[self class] settingMonitor];
+    [self initApmMonitor];
+    [self initALog];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(watchDogDidTrigered) name:TTWatchDogDidTrigeredNotification object:nil];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if ([archSettings tt_boolValueForKey:@"alog_enable"]) {
+        alog_close();
+    }
 }
 
 - (void)watchDogDidTrigered
@@ -45,7 +65,7 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     }else{
         threadsStr = [BSBacktraceLogger bs_backtraceOfMainThread];
     }
-
+    
     if ([TTMonitorConfiguration queryIfEnabledForKey:@"upload_all_thread_stack"]) {
         NSArray *threads = [threadsStr componentsSeparatedByString:@"\n\n"];
         [threads enumerateObjectsUsingBlock:^(NSString* _Nonnull threadStr, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -116,6 +136,92 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     [[TTMonitor shareManager] setUrlTransformBlock:^(NSURL * url){
         return [[[TTHttpsControlManager sharedInstance_tt] transferedURLFrom:url] copy];
     }];
+}
+
+
+#pragma mark - apm init
+// 初始化 APM 监控
+- (void)initApmMonitor{
+//    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+//    if ([archSettings tt_boolValueForKey:@"apm_enable"]) {
+    [self setupAPMModule];
+//    }
+}
+
+- (void)initALog {
+    NSString *directory = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *path = [directory stringByAppendingPathComponent:@"alog"];
+    
+#if DEBUG
+    // Debug下默认开启ALog
+    alog_open_default([path UTF8String], "BDALog");
+    alog_set_log_level(kLevelAll);
+    alog_set_console_log(true);
+    [[HMDLogUploader sharedInstance] uploadAlogIfCrashed];
+#else
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if ([archSettings tt_boolValueForKey:@"alog_enable"]) {
+        alog_open_default([path UTF8String], "BDALog");
+        int level = [archSettings tt_intValueForKey:@"alog_level"];
+        if (level == kLevelAll
+            || level == kLevelVerbose
+            || level == kLevelDebug
+            || level == kLevelInfo
+            || level == kLevelWarn
+            || level == kLevelError
+            || level == kLevelFatal
+            || level == kLevelNone) {
+            alog_set_log_level(level);
+        }
+        else {
+            alog_set_log_level(kLevelNone); //如果下发异常，则默认为None
+        }
+        [[HMDLogUploader sharedInstance] uploadAlogIfCrashed];
+    }
+#endif
+}
+
+- (void)setupAPMModule{
+    
+    HMDInjectedInfo *injectedInfo = [HMDInjectedInfo defaultInfo];
+    injectedInfo.appID = [TTSandBoxHelper ssAppID];
+    injectedInfo.appName = [TTSandBoxHelper appName];
+    injectedInfo.channel = [TTSandBoxHelper getCurrentChannel];
+    injectedInfo.deviceID = [TTInstallIDManager sharedInstance].deviceID;
+    injectedInfo.installID = [TTInstallIDManager sharedInstance].installID;
+    injectedInfo.userID = [[TTAccount sharedAccount] userIdString];
+    injectedInfo.userName = [[[TTAccount sharedAccount] user] name];
+    injectedInfo.commonParams = [TTNetworkManager shareInstance].commonParams;
+    injectedInfo.sessionID = [TTTrackerSessionHandler sharedHandler].sessionID;
+    injectedInfo.buildInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"BuildInfo"];
+    
+    [[Heimdallr shared] setupWithInjectedInfo:injectedInfo];
+    
+    // 保证 sessionID 唯一
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionIDDidChanged:) name:kTrackerCleanerWillStartCleanNotification object:nil];
+}
+
+- (void)sessionIDDidChanged:(NSNotification *)noti {
+    if ([[noti.userInfo objectForKey:kTrackerCleanerWillStartCleanFromTypeKey] integerValue] == TTTrackerCleanerStartCleanFromAppWillEnterForground) {
+        [HMDInjectedInfo defaultInfo].sessionID = [TTTrackerSessionHandler sharedHandler].sessionID;
+    }
+}
+
+- (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - TTNetworkMonitorSwitchDelegate
+
+- (BOOL)shouldIgnoreNetworkForTTMonitor {
+    //如果APM的kHMDModuleNetworkTracker功能开启，则TTMonitor不开启api_all，api_error，image_monitor在内的网络监控
+//    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+//    if ([archSettings tt_boolValueForKey:@"apm_enable"]) {
+    if ([[Heimdallr shared] isModuleWorkingForName:kHMDModuleNetworkTracker]) {
+        return YES;
+    }
+    //    }
+    return NO;
 }
 
 @end

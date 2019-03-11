@@ -21,7 +21,7 @@
 
 
 #define kPhotoSourceSelectActionSheetTag 100
-#define TipLabelFontSize 11.f
+#define TipLabelFontSize 12.f
 #define ContentViewLeftMargin 8.f
 #define ContentViewRightMargin 8.f
 
@@ -80,7 +80,7 @@
     self.inputTextView = [[SSThemedTextView alloc] initWithFrame:[self frameForInputTextView]];
     _inputTextView.backgroundColor = [UIColor clearColor];
     _inputTextView.delegate = self;
-    _inputTextView.font = [UIFont systemFontOfSize:15.f];
+    _inputTextView.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
     _inputTextView.scrollsToTop = NO;
     if ([TTThemeManager sharedInstance_tt].currentThemeMode == TTThemeModeDay) {
         _inputTextView.keyboardAppearance = UIKeyboardAppearanceLight;
@@ -109,22 +109,22 @@
     
     self.contactField = [[SSThemedTextField alloc] initWithFrame:CGRectZero];
     _contactField.backgroundColor = [UIColor clearColor];
-    _contactField.font = [UIFont systemFontOfSize:15.f];
+    _contactField.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
     _contactField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     NSString * defaultContact = [SSFeedbackManager defaultContactString];
     if (isEmptyString(defaultContact)) {
         defaultContact = ContactViewNoInputTip;
     }
     _contactField.placeholder = defaultContact;
-    _contactField.placeholderColorThemeKey = kColorText3;
+    _contactField.placeholderColorThemeKey = kFHColorCoolGrey3;
     [_contactView addSubview:_contactField];
     
 
     self.tipLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
     [_tipLabel setText:NSLocalizedString(@"您的联系方式有助于我们沟通和解决问题，仅工作人员可见", nil)];
     _tipLabel.backgroundColor = [UIColor clearColor];
-    _tipLabel.font = [UIFont systemFontOfSize:TipLabelFontSize];
-    _tipLabel.textColorThemeKey = kColorText3;
+    _tipLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:TipLabelFontSize];
+    _tipLabel.textColorThemeKey = kFHColorCharcoalGrey;
     [_containerView addSubview:_tipLabel];
 
     [self ssLayoutSubviews];
@@ -412,10 +412,10 @@
 - (void)themeChanged:(NSNotification *)notification
 {
     self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
-    _tipLabel.textColor = [UIColor colorWithHexString:[[TTThemeManager sharedInstance_tt] selectFromDayColorName:@"bfbfbf" nightColorName:@"b1b1b1"]];
+//    _tipLabel.textColor = [UIColor colorWithHexString:[[TTThemeManager sharedInstance_tt] selectFromDayColorName:@"bfbfbf" nightColorName:@"b1b1b1"]];
     _bgImgView.image = [self backgroundImge];
     _contactImageView.image = [self backgroundImge];
-    _inputTextView.textColor = [UIColor colorWithHexString:[[TTThemeManager sharedInstance_tt] selectFromDayColorName:@"000000" nightColorName:@"b1b1b1"]];
+//    _inputTextView.textColor = [UIColor colorWithHexString:[[TTThemeManager sharedInstance_tt] selectFromDayColorName:@"000000" nightColorName:@"b1b1b1"]];
     _contactField.textColor = _inputTextView.textColor;
 }
 

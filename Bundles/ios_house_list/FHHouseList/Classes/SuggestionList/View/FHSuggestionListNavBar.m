@@ -39,7 +39,7 @@
     CGFloat statusBarHeight = (isIphoneX ? 44 : 20);
     // searchAreaPanel
     _searchAreaPanel = [[UIView alloc] init];
-    _searchAreaPanel.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+    _searchAreaPanel.backgroundColor = [UIColor themeGray7];
     _searchAreaPanel.layer.masksToBounds = YES;
     _searchAreaPanel.layer.cornerRadius = 4.0;
     [self addSubview:_searchAreaPanel];
@@ -48,8 +48,8 @@
     [_backBtn setTitle:@"取消" forState:UIControlStateNormal];
     [_backBtn setTitle:@"取消" forState:UIControlStateHighlighted];
     _backBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    [_backBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateNormal];
-    [_backBtn setTitleColor:[UIColor themeBlue1] forState:UIControlStateHighlighted];
+    [_backBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_backBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
     [self addSubview:_backBtn];
     [_searchAreaPanel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
@@ -69,7 +69,7 @@
     }];
     // searchTypeLabel
     _searchTypeLabel = [[UILabel alloc] init];
-    _searchTypeLabel.textColor = [UIColor colorWithHexString:@"#081f33"];
+    _searchTypeLabel.textColor = [UIColor themeGray1];
     _searchTypeLabel.font = [UIFont themeFontRegular:14];
     [_searchAreaPanel addSubview:_searchTypeLabel];
     [_searchTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -89,7 +89,7 @@
     }];
     // verticalLineView
     _verticalLineView = [[UIView alloc] init];
-    _verticalLineView.backgroundColor = [UIColor colorWithHexString:@"#d8d8d8"];
+    _verticalLineView.backgroundColor = [UIColor themeGray6];
     _verticalLineView.layer.masksToBounds = YES;
     // _verticalLineView.layer.borderColor = [UIColor whiteColor].CGColor;
     // _verticalLineView.layer.borderWidth = 0.5;
@@ -124,8 +124,8 @@
     _searchInput = [[UITextField alloc] init];
     _searchInput.background = NULL;
     _searchInput.font = [UIFont themeFontRegular:14];
-    _searchInput.textColor = [UIColor colorWithHexString:@"#081f33"];
-    _searchInput.tintColor = [UIColor colorWithHexString:@"#081f33"];
+    _searchInput.textColor = [UIColor themeGray1];
+    _searchInput.tintColor = [UIColor themeGray1];
     _searchInput.returnKeyType = UIReturnKeySearch;
     _searchInput.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_searchAreaPanel addSubview:_searchInput];
@@ -140,7 +140,7 @@
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateNormal];
     [btn setImage:[UIImage imageNamed:@"search_delete"] forState:UIControlStateHighlighted];
     _bottomLineView = [[UIView alloc] init];
-    _bottomLineView.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _bottomLineView.backgroundColor = [UIColor themeGray6];
     [self addSubview:_bottomLineView];
     [_bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
@@ -155,7 +155,7 @@
 
 - (void)setSearchPlaceHolderText:(NSString *)text {
     if (text.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#a1aab3"]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]};
         NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
         _searchInput.attributedPlaceholder = attrStr;
     }

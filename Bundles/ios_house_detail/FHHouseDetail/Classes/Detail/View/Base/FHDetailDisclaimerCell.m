@@ -18,6 +18,7 @@
 #import <YYText.h>
 #import <TTShareManager.h>
 #import <TTPhotoScrollViewController.h>
+#import "UIColor+Theme.h"
 
 @interface FHDetailDisclaimerCell ()
 
@@ -56,11 +57,11 @@
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:10],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#a1aab3"]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray3]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
-            UIColor *color = [UIColor colorWithHexString:@"#299cff"];
+            UIColor *color = [UIColor themeRed1];
             __weak typeof(FHDisclaimerModelDisclaimerRichTextModel *) wObj = obj;
             [attrText yy_setTextHighlightRange:range color:color backgroundColor:nil userInfo:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
                 if (wObj.linkUrl.length > 0) {
@@ -151,9 +152,10 @@
 
 - (void)setupUI {
     _lineHeight = 0;
-    self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+    self.contentView.backgroundColor = [UIColor themeGray7];
     
-    _ownerLabel = [UILabel createLabel:@"" textColor:@"#3d6e99" fontSize:10];
+    _ownerLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _ownerLabel.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_ownerLabel];
     
     _tapButton = [[UIButton alloc] init];
@@ -165,15 +167,15 @@
     
     _disclaimerContent = [[YYLabel alloc] init];
     _disclaimerContent.numberOfLines = 0;
-    _disclaimerContent.textColor = [UIColor colorWithHexString:@"#a1aab3"];
-    _disclaimerContent.font = [UIFont themeFontRegular:10];
-    _disclaimerContent.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _disclaimerContent.textColor = [UIColor themeGray3];
+    _disclaimerContent.font = [UIFont themeFontRegular:12];
+    _disclaimerContent.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_disclaimerContent];
     
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(5);
-        make.height.mas_equalTo(14);
+        make.height.mas_equalTo(20);
         make.right.mas_equalTo(self.contactIcon.mas_left).offset(-6);
     }];
     
@@ -195,7 +197,7 @@
     [self.disclaimerContent mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
+        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(3);
         make.bottom.mas_equalTo(-5);
     }];
     

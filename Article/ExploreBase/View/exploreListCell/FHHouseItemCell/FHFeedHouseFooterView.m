@@ -45,7 +45,7 @@
         
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size: 18] ? : [UIFont systemFontOfSize:18];
-        _tipLabel.textColor = [UIColor themeBlue1];
+        _tipLabel.textColor = [UIColor themeGray1];
     }
     
     return _tipLabel;
@@ -120,7 +120,7 @@
         
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size: 16] ? : [UIFont systemFontOfSize:16];
-        _tipLabel.textColor = [UIColor themeBlue1];
+        _tipLabel.textColor = [UIColor themeGray1];
     }
     
     return _tipLabel;

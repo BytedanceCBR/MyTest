@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, assign) NSInteger index;
-
+@property (nonatomic, assign) BOOL isLast;
 
 @end
 
@@ -96,6 +96,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHNewHouseListDataModel *data ;
+
+@end
+
+@interface FHNewHouseItemModel (RecommendReason)
+
+-(BOOL)showRecommendReason;
+
 
 @end
 

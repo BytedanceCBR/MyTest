@@ -22,7 +22,7 @@
 #import <FHEnvContext.h>
 #import "UIViewController+Track.h"
 #import <FHEnvContext.h>
-
+#import <HMDTTMonitor.h>
 #import "FHMyMAAnnotation.h"
 
 static NSInteger const kBottomBarTagValue = 100;
@@ -47,6 +47,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
 @property (nonatomic, strong) NSMutableDictionary *traceDict;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
+@property (nonatomic , strong) NSString *titleStr;
 
 @end
 
@@ -69,6 +70,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
             self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
         }
+        
+        if ([[userInfo.allInfo objectForKey:@"title"] isKindOfClass:[NSString class]]) {
+            self.titleStr = [userInfo.allInfo objectForKey:@"title"];
+        }
+        
     }
     return self;
 }
@@ -220,11 +226,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         buttonLabel.textAlignment = NSTextAlignmentCenter;
         buttonLabel.font = [UIFont themeFontRegular:9];
         if (i == self.selectedIndex) {
-            buttonLabel.textColor = [UIColor themeBlue];
+            buttonLabel.textColor = [UIColor themeRed1];
             self.previouseLabel = buttonLabel;
         }else
         {
-            buttonLabel.textColor = [UIColor themeGray];
+            buttonLabel.textColor = [UIColor themeGray3];
         }
         buttonLabel.tag = i + kBottomButtonLabelTagValue;
         [buttonLabel setFrame:CGRectMake(0, 30, itemWidth, 13)];
@@ -253,8 +259,8 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     
     if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
         [self.previouseIconButton setImage:[UIImage imageNamed:_imageNameArray[self.previouseIconButton.tag]] forState:UIControlStateNormal];
-        self.previouseLabel.textColor = [UIColor themeGray];
-        buttonLabel.textColor = [UIColor themeBlue];
+        self.previouseLabel.textColor = [UIColor themeGray1];
+        buttonLabel.textColor = [UIColor themeRed1];
         [button setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[button.tag]]] forState:UIControlStateNormal];
     }
     if (self.nameArray.count > button.tag) {
@@ -340,7 +346,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 //        }
 //    }
     
-    [self requestPoiInfo:self.centerPoint andKeyWord:@"交通"];
+    [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
 }
 
 - (void)createMenu
@@ -437,16 +443,20 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)setUpAnnotations
 {
-    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
-    userAnna.type = @"user";
-    userAnna.coordinate = self.centerPoint;
-    [self.mapView addAnnotation:userAnna];
-    self.pointCenterAnnotation = userAnna;
-    
     for (NSInteger i = 0; i < self.poiAnnotations.count; i++) {
         [self.mapView addAnnotation:self.poiAnnotations[i]];
     }
     _mapView.zoomLevel  = 15;
+    
+    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
+    userAnna.type = @"user";
+    userAnna.coordinate = self.centerPoint;
+    
+    userAnna.title = self.titleStr;
+    
+    [self.mapView addAnnotation:userAnna];
+    self.pointCenterAnnotation = userAnna;
+    
     [self.mapView setCenterCoordinate:self.centerPoint];
 }
 

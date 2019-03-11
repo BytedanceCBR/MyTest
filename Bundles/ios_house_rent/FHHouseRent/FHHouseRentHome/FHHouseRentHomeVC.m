@@ -160,6 +160,7 @@
         make.bottom.mas_equalTo(self.filterPanel.mas_bottom);
         make.height.mas_equalTo(0.5);
     }];
+    self.viewModel.bottomLine = bottomLine;
 }
 
 -(void)initTableView
@@ -174,7 +175,7 @@
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         UIEdgeInsets inset = UIEdgeInsetsZero;
-        inset.bottom = [[UIApplication sharedApplication]keyWindow].safeAreaInsets.bottom;
+        inset.bottom = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
         _tableView.contentInset = inset;
         
         _containerScrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

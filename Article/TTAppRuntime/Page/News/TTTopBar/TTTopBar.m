@@ -119,7 +119,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         citySwichButton.layer.masksToBounds = YES;
         citySwichButton.layer.cornerRadius = 12;
         [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:12]];
-        citySwichButton.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
+        citySwichButton.backgroundColor = [UIColor tt_themedColorForKey:kFHColorCoral];;
         [citySwichButton setTitle:dataModel.currentCityName forState:UIControlStateNormal];
         [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.topUnAvalibleCityContainer).offset(20);
@@ -158,7 +158,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         UILabel *topTipForCityLabel = [UILabel new];
         topTipForCityLabel.text = @"找房服务即将开通,敬请期待";
         topTipForCityLabel.font = [UIFont themeFontRegular:14];
-        topTipForCityLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
+        topTipForCityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         [self.topUnAvalibleCityContainer addSubview:topTipForCityLabel];
         
         [topTipForCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -34,7 +34,7 @@
         _arrowView = [[UIImageView alloc] initWithImage:arrowImage];
         
         _contentLabel = [[UILabel alloc] init];
-        _contentLabel.textColor = [UIColor themeBlack];
+        _contentLabel.textColor = [UIColor themeGray1];
         _contentLabel.font = [UIFont systemFontOfSize:12];
         _contentLabel.textAlignment = NSTextAlignmentCenter;
 
@@ -87,15 +87,15 @@
         switch (houseAnnotation.type) {
             case FHHouseAnnotationTypeSelected:
             {
-                bgImageName = @"mapsearch_annotation_bg_blue";
-                arrowImageName = @"mapsearch_annotation_arrow_blue";
+                bgImageName = @"mapsearch_annotation_bg_red";
+                arrowImageName = @"mapsearch_annotation_arrow_red";
                 textColor = [UIColor whiteColor];
             }
                 break;
             case FHHouseAnnotationTypeOverSelected:
             {
-                bgImageName = @"mapsearch_annotation_bg_grayblue";
-                arrowImageName = @"mapsearch_annotation_arrow_grayblue";
+                bgImageName = @"mapsearch_annotation_bg_grayRed";
+                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
                 textColor = [UIColor whiteColor];
             }
                 break;
@@ -104,7 +104,7 @@
             {
                 bgImageName = @"mapsearch_annotation_bg";
                 arrowImageName = @"mapsearch_annotation_arrow";
-                textColor = [UIColor themeBlack];
+                textColor = [UIColor themeGray1];
             }
                 break;
         }
@@ -122,7 +122,7 @@
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
     self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 29-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(15, 7, self.width-30, 17);
+    self.contentLabel.frame = CGRectMake(15, 8, self.width-30, 17);
 }
 
 //-(void)willMoveToSuperview:(UIView *)newSuperview

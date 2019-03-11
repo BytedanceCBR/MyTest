@@ -91,7 +91,7 @@
         
         _inputTextField = [[FHTextField alloc] init];
         _inputTextField.borderStyle = UITextBorderStyleNone;
-        _inputTextField.backgroundColor = [UIColor themeGrayPale];
+        _inputTextField.backgroundColor = [UIColor themeGray7];
         _inputTextField.font = [UIFont themeFontRegular:14];
         _inputTextField.textColor = [UIColor themeGray3];
         _inputTextField.delegate = self;
@@ -182,7 +182,7 @@
 {
     if (inputText) {
         NSDictionary *attrDict = @{NSFontAttributeName:[UIFont themeFontRegular:12],
-                                   NSForegroundColorAttributeName:[UIColor themeBlack]
+                                   NSForegroundColorAttributeName:[UIColor themeGray1]
                                    };
         NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:inputText attributes:attrDict];
         _inputTextField.attributedText = attrText;

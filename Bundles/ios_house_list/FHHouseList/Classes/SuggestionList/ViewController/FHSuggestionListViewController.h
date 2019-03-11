@@ -17,6 +17,7 @@ typedef enum : NSUInteger {
     FHEnterSuggestionTypeFindTab       =   2,
     FHEnterSuggestionTypeList       =   3,
     FHEnterSuggestionTypeRenting       =   4,
+    FHEnterSuggestionTypeOldMain       =   5,//
 } FHEnterSuggestionType;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -34,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  };
  TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
  
- NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+ NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
  [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
  */
 @interface FHSuggestionListViewController : FHBaseViewController

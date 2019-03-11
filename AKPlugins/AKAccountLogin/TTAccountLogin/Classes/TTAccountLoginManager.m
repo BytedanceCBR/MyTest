@@ -420,21 +420,23 @@ static BOOL s_loginAlertShowing = NO;
 + (void)showAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete {
     TTAcountFLoginDelegate *delegate = [[TTAcountFLoginDelegate alloc] init];
     delegate.completeAlert = complete;
+    NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [delegateTable addObject:delegate];
     NSMutableDictionary *dict = @{}.mutableCopy;
-    [dict setObject:delegate forKey:@"delegate"];
+    [dict setObject:delegateTable forKey:@"delegate"];
 
     if (params.count > 0) {
         if ([params tta_stringForKey:@"enter_from"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_from"] forKey:@"enter_from"];
-            
         }
         if ([params tta_stringForKey:@"enter_type"] != nil) {
             [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
-            
+        }
+        if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
+            [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
         }
     }
 
-//    NSDictionary *dict = [NSDictionary dictionaryWithObject:delegate forKey:@"delegate"];
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:userInfo];
 }

@@ -36,7 +36,7 @@
         self.titleLabel = [[UILabel alloc] init];
         [self.contentView addSubview:self.titleLabel];
         self.titleLabel.font = [UIFont themeFontRegular:18];
-        self.titleLabel.textColor = [UIColor themeBlue1];
+        self.titleLabel.textColor = [UIColor themeGray1];
         [self setupUI];
         self.userInteractionEnabled = NO;
     }

@@ -158,17 +158,19 @@
 #define kFHColorbMutedBlue @"blue3"//= "#3d6e99"
 #define kFHColorVeryLightBlue @"blue4"//= "#e6f3ff"
 
-#define kFHColorCharcoalGrey @"grey1"//= "#45494d"
-#define kFHColorBattleShipGrey @"grey2"//= "#737a80"
-#define kFHColorCoolGrey3 @"grey3"//= "#8a9299"
-#define kFHColorCoolGrey2 @"grey4"//= "#a1aab3"
-#define kFHColorSilver @"grey5"//= "#e1e3e6"
-#define kFHColorSilver2 @"grey6"//= "#e8eaeb"
-#define kFHColorPaleGrey @"grey7"//= "#f2f4f5"
+#define kFHColorCharcoalGrey @"grey1"//= "#333333"
+#define kFHColorBattleShipGrey @"grey2"//= "#666666"
+#define kFHColorCoolGrey3 @"grey3"//= "#999999"
+#define kFHColorCoolGrey2 @"grey4"//= "#bbbbbb"
+#define kFHColorSilver @"grey5"//= "#dddddd"
+#define kFHColorSilver2 @"grey6"//= "#e8e8e8"
+#define kFHColorPaleGrey @"grey7"//= "#f5f5f5"
 
-#define kFHColorCoral @"red1"//= "#ff5b4c"
-#define kFHColorLightishGreen @"green1"//= "#69db82"
-#define kFHColorCoralPink @"red2"//= "#ff5869"
-#define kFHColorDarkBlue @"darkblue1"//= "#0b1626"
+#define kFHColorCoral @"red1"//= "#ff5869"
+#define kFHColorRed2 @"red2"//= "#fff2ed"
+#define kFHColorRed3 @"red3"//= "#ff8151"
+#define kFHColorLightishGreen @"green1"//= "#0cce6b"
+
+
 
 #endif

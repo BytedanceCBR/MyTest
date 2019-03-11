@@ -89,14 +89,16 @@
 }
 
 - (void)setupUI {
-    self.backgroundColor = [UIColor colorWithHexString:@"#f7f8f9"];
+    self.backgroundColor = [UIColor themeGray7];
     self.layer.cornerRadius = 4.0;
     
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:16];
-    _keyLabel.font = [UIFont themeFontMedium:16];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:18];
+    _keyLabel.textColor = [UIColor themeRed1];
+    _keyLabel.font = [UIFont themeFontMedium:18];
     [self addSubview:_keyLabel];
     
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:12];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _valueLabel.textColor = [UIColor themeGray3];
     [self addSubview:_valueLabel];
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {

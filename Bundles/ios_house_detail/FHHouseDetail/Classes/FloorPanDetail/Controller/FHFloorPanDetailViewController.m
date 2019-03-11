@@ -208,7 +208,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"FHFloorPanDetailViewController dealloc");
+   
 }
 
 @end

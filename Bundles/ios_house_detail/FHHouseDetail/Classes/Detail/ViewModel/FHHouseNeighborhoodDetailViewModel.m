@@ -26,6 +26,7 @@
 #import "FHDetailNearbyMapCell.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailPureTitleCell.h"
+#import <HMDTTMonitor.h>
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -128,12 +129,14 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -146,6 +149,8 @@
     self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -183,6 +188,7 @@
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
         FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        infoModel.log_pb = self.listLogPB; // listLogPB也是当前小区的logPb
         infoModel.evaluationInfo = model.data.evaluationInfo;
         [self.items addObject:infoModel];
     }
@@ -195,7 +201,21 @@
         FHDetailNearbyMapModel *nearbyMapModel = [[FHDetailNearbyMapModel alloc] init];
         nearbyMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         nearbyMapModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        nearbyMapModel.title = model.data.neighborhoodInfo.name;
         //        nearbyMapModel.tableView = self.tableView;
+        
+        
+        if (!model.data.neighborhoodInfo.gaodeLat || !model.data.neighborhoodInfo.gaodeLng) {
+            NSMutableDictionary *params = [NSMutableDictionary new];
+            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+            [params setValue:@"经纬度缺失" forKey:@"reason"];
+            [params setValue:model.data.neighborhoodInfo.id forKey:@"house_id"];
+            [params setValue:@(4) forKey:@"house_type"];
+            [params setValue:model.data.neighborhoodInfo.name forKey:@"name"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+        }
+        
+        
         [self.items addObject:nearbyMapModel];
         
         __weak typeof(self) wSelf = self;
@@ -312,6 +332,24 @@
         wSelf.sameNeighborhoodRentHouseData = model.data;
         [wSelf processDetailRelatedData];
     }];
+}
+
+- (BOOL)isMissTitle
+{
+    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
+    return model.data.name.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
+    return model.data.neighborhoodImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
 }
 
 @end

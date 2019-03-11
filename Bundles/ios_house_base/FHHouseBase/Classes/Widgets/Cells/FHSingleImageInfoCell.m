@@ -16,6 +16,7 @@
 #import "FHCornerView.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHHomeHouseModel.h"
+#import "FHHouseRecommendReasonView.h"
 
 @interface FHSingleImageInfoCell () <FHHouseSingleImageInfoCellBridgeDelegate>
 
@@ -28,6 +29,7 @@
 @property(nonatomic, strong) UILabel *priceLabel;
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *roomSpaceLabel;
+@property(nonatomic, strong) FHHouseRecommendReasonView *recommendReasonView;
 
 @property(nonatomic, weak) UIView *infoPanel;
 
@@ -160,6 +162,15 @@
         make.right.mas_equalTo(@0);
         make.center.mas_equalTo(self.imageTopLeftLabelBgView);
     }];
+    
+    [self.infoPanel addSubview:self.recommendReasonView];
+    [self.recommendReasonView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(infoPanel);
+        make.right.mas_equalTo(infoPanel);
+        make.top.mas_equalTo(self.priceLabel.mas_bottom).offset(2);
+        make.height.mas_equalTo(16);
+    }];
+    self.recommendReasonView.hidden = YES;
     
     _lastShowTag = YES;
 
@@ -430,6 +441,13 @@
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
     [self.majorImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
     
+    if (model.recommendReasons.count > 0) {
+        self.recommendReasonView.hidden = NO;
+        [self.recommendReasonView setReasons:model.recommendReasons];
+    }else{
+        self.recommendReasonView.hidden = YES;
+    }
+    
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
         
         self.imageTopLeftLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
@@ -521,6 +539,7 @@
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel andIsFirst:(BOOL)isFirst andIsLast:(BOOL)isLast
 {
     _cellModel = cellModel;
+    CGFloat recommendHeight = 0;
     
     switch (cellModel.houseType) {
         case FHHouseTypeNewHouse:
@@ -529,6 +548,7 @@
             break;
         case FHHouseTypeSecondHandHouse:
             [self updateWithSecondHouseModel:cellModel.secondModel];
+            recommendHeight = [cellModel.secondModel showRecommendReason]?[FHSingleImageInfoCell recommendReasonHeight]:0;
             break;
         case FHHouseTypeRentHouse:
             [self updateWithRentHouseModel:cellModel.rentModel];
@@ -548,10 +568,10 @@
     }
     
     if (isLast) {
-        [self refreshBottomMargin:20];
+        [self refreshBottomMargin:20+recommendHeight];
     }else
     {
-        [self refreshBottomMargin:0];
+        [self refreshBottomMargin:recommendHeight];
     }
     
 }
@@ -577,7 +597,7 @@
         
         _majorTitle = [[UILabel alloc]init];
         _majorTitle.font = [UIFont themeFontRegular:16];
-        _majorTitle.textColor = [UIColor themeBlack];
+        _majorTitle.textColor = [UIColor themeGray1];
     }
     return _majorTitle;
 }
@@ -588,7 +608,7 @@
         
         _extendTitle = [[UILabel alloc]init];
         _extendTitle.font = [UIFont themeFontRegular:12];
-        _extendTitle.textColor = [UIColor themeGray2];
+        _extendTitle.textColor = [UIColor themeGray3];
     }
     return _extendTitle;
 }
@@ -600,7 +620,7 @@
         _areaLabel = [[YYLabel alloc]init];
         _areaLabel.numberOfLines = 0;
         _areaLabel.font = [UIFont themeFontRegular:12];
-        _areaLabel.textColor = [UIColor themeGray2];
+        _areaLabel.textColor = [UIColor themeGray3];
         _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _areaLabel;
@@ -612,7 +632,7 @@
         
         _priceLabel = [[UILabel alloc]init];
         _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor themeRed];
+        _priceLabel.textColor = [UIColor themeRed1];
     }
     return _priceLabel;
 }
@@ -628,7 +648,7 @@
         }else {
             _originPriceLabel.font = [UIFont themeFontRegular:10];
         }
-        _originPriceLabel.textColor = [UIColor themeGray];
+        _originPriceLabel.textColor = [UIColor themeGray3];
         _originPriceLabel.hidden = YES;
     }
     return _originPriceLabel;
@@ -645,9 +665,17 @@
         }else {
             _roomSpaceLabel.font = [UIFont themeFontRegular:10];
         }
-        _roomSpaceLabel.textColor = [UIColor themeGray];
+        _roomSpaceLabel.textColor = [UIColor themeGray3];
     }
     return _roomSpaceLabel;
+}
+
+-(FHHouseRecommendReasonView *)recommendReasonView {
+    
+    if (!_recommendReasonView) {
+        _recommendReasonView = [[FHHouseRecommendReasonView alloc] init];
+    }
+    return _recommendReasonView;
 }
 
 -(UIView *)headView {
@@ -686,7 +714,7 @@
     if (!_imageTopLeftLabelBgView) {
         
         _imageTopLeftLabelBgView = [[FHCornerView alloc]init];
-        _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed];
+        _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed3];
         _imageTopLeftLabelBgView.hidden = YES;
     }
     return _imageTopLeftLabelBgView;
@@ -705,6 +733,11 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
++(CGFloat)recommendReasonHeight
+{
+    return 22;
 }
 
 @end

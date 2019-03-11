@@ -91,7 +91,7 @@
     self.finishedButton.layer.cornerRadius = 6;
     [self.finishedButton.titleLabel setFont:[UIFont systemFontOfSize:14]];
     [self.finishedButton setEnabled:YES];
-    [self.finishedButton setBackgroundImage:[UIImage imageWithUIColor:[UIColor colorWithDayColorName:@"299cff" nightColorName:@"67778b"]] forState:UIControlStateNormal];
+    [self.finishedButton setBackgroundImage:[UIImage imageWithUIColor:[UIColor colorWithDayColorName:@"ff5869" nightColorName:@"67778b"]] forState:UIControlStateNormal];
     CGFloat bottomInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     self.navigationController.view.frame = CGRectMake(0, screenHeight - self.finishedButton.bottom - 10 - bottomInset, screenWidth, self.finishedButton.bottom + 10 + bottomInset);
     

@@ -17,6 +17,7 @@
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHLocManager.h"
+#import <HMDTTMonitor.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -86,6 +87,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    
 }
 
 
@@ -103,16 +106,16 @@ static CGFloat const kSectionHeaderHeight = 38;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
     
-    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    [self.notifyBar showMessage:message actionButtonTitle:@"" delayHide:YES duration:0.9 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.9 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
             UIEdgeInsets inset = self.mainTableView.contentInset;
             inset.top = 0;
             self.mainTableView.contentInset = inset;
             [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
      
-//            [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+//    [self.mainTableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }];
 //        [UIView animateWithDuration:0.3 animations:^{
 //
@@ -121,6 +124,11 @@ static CGFloat const kSectionHeaderHeight = 38;
         
     });
     
+}
+
+- (void)hideImmediately
+{
+    [self.notifyBar hideImmediately];
 }
          
 - (void)retryLoadData
@@ -165,7 +173,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 }
 
 - (void)willAppear
-{
+{    
     if (![FHEnvContext isNetworkConnected]) {
         if (self.homeListViewModel.hasShowedData) {
             [[ToastManager manager] showToast:@"网络异常"];
@@ -215,6 +223,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
 }
 
+
 - (void)didDisappear
 {
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
@@ -225,7 +234,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom
 {
     self.mainTableView.ttContentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
-    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
+//    self.mainTableView.scrollIndicatorInsets = UIEdgeInsetsMake(top, 0, bottom, 0);
 }
 
 - (BOOL)tt_hasValidateData

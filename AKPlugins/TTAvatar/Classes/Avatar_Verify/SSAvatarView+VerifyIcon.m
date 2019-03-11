@@ -7,7 +7,7 @@
 //
 
 #import "SSAvatarView+VerifyIcon.h"
-#import "TTVerifyIconMacro.h"
+#import <TTVerifyKit/TTVerifyIconMacro.h>
 
 // TTBaseLib
 #import "UIViewAdditions.h"

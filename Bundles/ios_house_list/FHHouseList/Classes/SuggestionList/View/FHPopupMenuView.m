@@ -62,9 +62,9 @@
         [self.popMenuContainer addSubview:menuView];
         menuView.label.text = [[FHHouseTypeManager sharedInstance] stringValueForType:obj.houseType];
         if (obj.isSelected) {
-            menuView.label.textColor = [UIColor colorWithHexString:@"#299cff"];
+            menuView.label.textColor = [UIColor themeRed1];
         } else {
-            menuView.label.textColor = [UIColor colorWithHexString:@"#505050"];
+            menuView.label.textColor = [UIColor themeGray3];
         }
         menuView.menuItem = obj;
         [menuView addTarget:self action:@selector(menuClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -131,8 +131,8 @@
 
 - (void)setupUI {
     _label = [[UILabel alloc] init];
-    _label.highlightedTextColor = [UIColor colorWithHexString:@"#f85959"];
-    _label.textColor = [UIColor colorWithHexString:@"#505050"];
+    _label.highlightedTextColor = [UIColor themeRed1];
+    _label.textColor = [UIColor themeGray1];
     _label.font = [UIFont themeFontRegular:14];
     _label.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_label];

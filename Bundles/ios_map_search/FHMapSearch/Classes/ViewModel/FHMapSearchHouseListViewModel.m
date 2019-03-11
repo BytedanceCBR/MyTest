@@ -26,6 +26,8 @@
 #import "TTReachability.h"
 #import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
+#import <Heimdallr/HMDTTMonitor.h>
+
 
 #define kCellId @"singleCellId"
 
@@ -77,6 +79,7 @@
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadHouseData:NO];
     }];
+    [_refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
     self.tableView.mj_footer = _refreshFooter;
     
     [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kCellId];
@@ -183,9 +186,10 @@
             FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:oldModel];
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
                 FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 [imageInfoCell updateWithHouseCellModel:cellModel];
                 [imageInfoCell refreshTopMargin:20];
-                [imageInfoCell refreshBottomMargin:0];
+                [imageInfoCell refreshBottomMargin:reasonHeight];
             }
         }
     }
@@ -199,6 +203,13 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    id model = _houseList[indexPath.row];
+    if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
+        if ([oldModel showRecommendReason]) {
+            return 105+[FHSingleImageInfoCell recommendReasonHeight];
+        }
+    }
     return 105;
 }
 
@@ -433,6 +444,10 @@
             wself.tableView.mj_footer.hidden = NO;
             wself.tableView.scrollEnabled = YES;
         
+            if (wself.houseList.count < 10 && !houseModel.hasMore) {
+                wself.tableView.mj_footer.hidden = YES;
+            }
+            
             if (wself.houseList.count == 0) {
                 //没有数据 提示数据走丢了
                 NSString *tip = nil;
@@ -464,6 +479,7 @@
                 }else{
                     [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
             }else{
                 [wself showMaskView:NO];
             }
@@ -549,6 +565,11 @@
             wself.tableView.mj_footer.hidden = NO;
             wself.tableView.scrollEnabled = YES;
             
+            
+            if (wself.houseList.count < 10 && !houseModel.hasMore) {
+                wself.tableView.mj_footer.hidden = YES;
+            }
+            
             if (wself.houseList.count == 0) {
                 //没有数据 提示数据走丢了
                 NSString *tip = nil;
@@ -568,6 +589,10 @@
             }
         }else{
             if (error) {
+                if (error.code == NSURLErrorCancelled) {
+                    //用户主动取消
+                    return;
+                }
                 if (showLoading) {
                     [wself.maskView showErrorWithTip:@"网络异常，请检查网络连接"];
                     [wself.maskView showRetry:YES];
@@ -575,6 +600,7 @@
                 }else{
                     [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
             }else{
                 [wself showMaskView:NO];
             }
@@ -601,7 +627,7 @@
 #pragma mark - gesture recognizer
 -(void)handleGesture:(UIPanGestureRecognizer *)pan
 {
-    CGPoint touchLocation =  [pan locationInView:[[UIApplication sharedApplication]keyWindow]];
+    CGPoint touchLocation =  [pan locationInView:[UIApplication sharedApplication].delegate.window];
     switch (pan.state) {
         case UIGestureRecognizerStateBegan:
         {

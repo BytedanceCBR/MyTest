@@ -38,7 +38,7 @@
         
         _timeLabel = [UILabel new];
         _timeLabel.font = [UIFont themeFontRegular:18];
-        _timeLabel.textColor = [UIColor colorWithHexString:@"#081f33"];
+        _timeLabel.textColor = [UIColor themeGray1];
         [self.contentView addSubview:_timeLabel];
         [_timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(48);
@@ -49,7 +49,7 @@
 
         _redDotView= [UIView new];
         _redDotView.layer.cornerRadius = 4;
-        _redDotView.backgroundColor = [UIColor colorWithHexString:@"#a1aab3"];
+        _redDotView.backgroundColor = [UIColor themeGray4];
         [self.contentView addSubview:_redDotView];
         [_redDotView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(20);
@@ -60,7 +60,7 @@
 
         _titleLabel = [UILabel new];
         _titleLabel.font = [UIFont themeFontSemibold:16];
-        _titleLabel.textColor = [UIColor colorWithHexString:@"#081f33"];
+        _titleLabel.textColor = [UIColor themeGray1];
         [self.contentView addSubview:_titleLabel];
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.timeLabel.mas_bottom).offset(16);
@@ -72,7 +72,7 @@
 
         _contentLabel = [UILabel new];
         _contentLabel.font = [UIFont themeFontRegular:16];
-        _contentLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
+        _contentLabel.textColor = [UIColor themeGray3];
         _contentLabel.numberOfLines = 2;
         _contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.contentView addSubview:_contentLabel];
@@ -85,7 +85,7 @@
 
 
         _timeLineLeading = [UIView new];
-        _timeLineLeading.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+        _timeLineLeading.backgroundColor = [UIColor themeGray8];
         [self.contentView addSubview:_timeLineLeading];
         [_timeLineLeading mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(24);
@@ -97,7 +97,7 @@
 
 
         _timeLineTailing = [UIView new];
-        _timeLineTailing.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+        _timeLineTailing.backgroundColor = [UIColor themeGray8];
         [self.contentView addSubview:_timeLineTailing];
         [_timeLineTailing mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(24);

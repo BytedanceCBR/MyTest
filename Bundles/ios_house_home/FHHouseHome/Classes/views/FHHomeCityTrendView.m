@@ -208,7 +208,7 @@
     self.line.left = self.leftView.right;
     self.line.centerY = self.leftView.centerY;
     
-    self.rightArrow.size = CGSizeMake(18 * WIDTHSCALE, 18 * WIDTHSCALE);
+    self.rightArrow.size = CGSizeMake(16 * WIDTHSCALE, 16 * WIDTHSCALE);
     self.rightArrow.left = self.width - 15 - self.rightArrow.width;
     self.rightArrow.centerY = self.leftView.centerY;
     
@@ -246,7 +246,7 @@
     if (!_line) {
         
         _line = [[UIView alloc]init];
-        _line.backgroundColor = [UIColor themeGrayPale];
+        _line.backgroundColor = [UIColor themeGray6];
     }
     return _line;
 }

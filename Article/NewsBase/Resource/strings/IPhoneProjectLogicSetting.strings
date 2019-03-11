@@ -7,29 +7,18 @@
 */
 
 // f100
-//"house_list"            = "_TtC6Bubble18CategoryListPageVC";
 "house_list"            = "FHHouseListViewController";
-
-//"flogin"                = "_TtC6Bubble12QuickLoginVC";
 "flogin"                = "FHLoginViewController";
-
-//"aboutUs"               = "_TtC6Bubble19AboutViewController";
 "aboutUs"               = "FHAboutUsViewController";
 "old_house_detail"      = "FHHouseDetailViewController";
 "neighborhood_detail"   = "FHHouseDetailViewController";
 "new_house_detail"      = "FHHouseDetailViewController";
 "rent_detail"           = "FHHouseDetailViewController";
-"sug_list"              = "FHSuggestionListViewController";
+"house_search"          = "FHSuggestionListViewController";
 
-//"message_detail_list"   = "_TtC6Bubble13MessageListVC";
-//"message_system_list"   = "_TtC6Bubble19SystemMessageListVC";
 "message_detail_list"   = "FHMessageListViewController";
 "message_system_list"   = "FHMessageListViewController";
-//"house_list_in_neighborhood" = "_TtC6Bubble17ErshouHouseListVC";
 "house_list_in_neighborhood" = "FHNeighborListViewController";
-"neighborhood_sales_list"   = "_TtC6Bubble20TransactionHistoryVC";
-//"fh_webview"            = "_TtC6Bubble19FHWebViewController";
-"fh_house_detail_map"   = "_TtC6Bubble12LBSMapPageVC";
 "myFavorite"            = "FHMyFavoriteViewController";
 "editUserProfile"       = "TTEditUserProfileViewController";
 // SSAppPageController
@@ -99,7 +88,6 @@
 "renthouse_main"  =  "FHHouseRentHomeVC";
 "rent_main"  =  "FHHouseRentHomeVC";
 "realtor_detail"       = "FHRealtorDetailWebViewController";
-//"webview_oc"           = "FHWebviewViewController";
 "city_list"            = "FHCityListViewController";
 "city_search"          = "FHCitySearchViewController";
 
@@ -114,3 +102,4 @@
 "neighborhood_sales_list"        = "FHTransactionHistoryController";
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
+"second_house_main"   = "FHHouseOldHomeViewController";

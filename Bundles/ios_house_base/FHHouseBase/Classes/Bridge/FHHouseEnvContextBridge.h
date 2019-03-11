@@ -49,6 +49,8 @@
 //获取当前默认频道
 - (NSString *)getFeedStartCategoryName;
 
+//判断是否是当前home tab
+- (BOOL)isCurrentTabFirst;
 @end
 
 

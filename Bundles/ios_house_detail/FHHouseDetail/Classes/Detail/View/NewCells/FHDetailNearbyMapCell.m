@@ -22,8 +22,9 @@
 #import "FHDetailNearbyMapItemCell.h"
 #import "FHDetailNewModel.h"
 #import "FHDetailHeaderView.h"
-
+#import "UIColor+Theme.h"
 #import "TTRoute.h"
+#import <HMDTTMonitor.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -49,7 +50,6 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) NSString * searchCategory;
 @property (nonatomic , strong) NSArray * nameArray;
 @property (nonatomic , assign) BOOL isFirst;
-@property (nonatomic , assign) NSInteger retrySnap;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
 @property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
@@ -66,8 +66,7 @@ static const float kSegementedPadingTop = 5;
         _isFirst = YES;
          self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
-        _retrySnap = 2;
-        
+
         _nameArray = [NSArray arrayWithObjects:@"交通",@"购物",@"医院",@"教育", nil];
         _countCategoryDict = [NSMutableDictionary new];
         _poiDatasDict = [NSMutableDictionary new];
@@ -130,18 +129,18 @@ static const float kSegementedPadingTop = 5;
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.sectionTitles = @[@"交通(0)",@"购物(0)",@"医院(0)",@"教育(0)"];
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#299cff"];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _segmentedControl.isNeedNetworkCheck = NO;
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#8a9299"],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontMedium:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#299cff"],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontRegular:16],NSFontAttributeName,
+                                     [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
 //    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(-10, 5, 0, 5);
@@ -224,7 +223,7 @@ static const float kSegementedPadingTop = 5;
     [self setUpMapViewSetting:NO];
 
     _mapImageView = [[UIImageView alloc] initWithFrame:mapRect];
-    _mapImageView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _mapImageView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_mapImageView];
     
     [_mapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -275,6 +274,9 @@ static const float kSegementedPadingTop = 5;
     [infoDict setValue:selectCategory forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
+    [infoDict setValue:self.dataModel.title forKey:@"title"];
+    
+
 
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     
@@ -319,7 +321,7 @@ static const float kSegementedPadingTop = 5;
     _emptyInfoLabel.textAlignment = NSTextAlignmentCenter;
 //    _emptyInfoLabel.hidden = [FHEnvContext isNetworkConnected] ? YES : NO;
     _emptyInfoLabel.hidden = NO;
-    _emptyInfoLabel.textColor = [UIColor themeBlue1];
+    _emptyInfoLabel.textColor = [UIColor themeGray1];
     
     [_locationList addSubview:_emptyInfoLabel];
     
@@ -398,9 +400,8 @@ static const float kSegementedPadingTop = 5;
     self.pointCenterAnnotation = userAnna;
     
     [self.mapView setCenterCoordinate:self.centerPoint];
-    
-    [self performSelector:@selector(snapShotAnnotationImage) withObject:nil afterDelay:0.3];
-    
+//    [self performSelector:@selector(snapShotAnnotationImage) withObject:nil afterDelay:0.1];
+    [self snapShotAnnotationImage];
     //改变显示的tableview数据
     [self changePoiData];
 }
@@ -533,7 +534,7 @@ static const float kSegementedPadingTop = 5;
             titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
             backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 35);
             
-            UIImage *imageAnna = [UIImage imageNamed:@"mapcell_annotation_bg"];
+            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_annotation_bg"];
             
             CGFloat width = imageAnna.size.width > 0 ? imageAnna.size.width : 10;
             CGFloat height = imageAnna.size.height > 0 ? imageAnna.size.height : 10;
@@ -546,16 +547,16 @@ static const float kSegementedPadingTop = 5;
             
             [annotationV addSubview:titleLabel];
             titleLabel.font = [UIFont themeFontRegular:12];
-            titleLabel.textColor = [UIColor colorWithHexString:@"#081f33"];
+            titleLabel.textColor = [UIColor themeGray1];
             titleLabel.layer.masksToBounds = YES;
             
             titleLabel.numberOfLines = 1;
             titleLabel.textAlignment = NSTextAlignmentCenter;
             titleLabel.backgroundColor = [UIColor clearColor];
             [titleLabel sizeToFit];
-            titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y);
+            titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
             
-            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapcell_annotation_arrow"]];
+            UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
             [backImageView addSubview:bottomArrowView];
             bottomArrowView.backgroundColor = [UIColor clearColor];
             bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);
@@ -639,25 +640,20 @@ static const float kSegementedPadingTop = 5;
     UIView *annotationView = [self.mapView viewForAnnotation:self.pointCenterAnnotation];
     if (annotationView) {
         UIView *superAnnotationView = [annotationView superview];
-        if (superAnnotationView) {
+        if ([superAnnotationView isKindOfClass:[UIView class]]) {
             self.mapAnnotionImageView.image = [self getImageFromView:superAnnotationView];
         }
     }else
     {
         self.mapAnnotionImageView.image = nil;
     }
-    
-    if (self.mapAnnotionImageView.image == nil && _retrySnap > 0) {
-        [self snapShotAnnotationImage];
-        _retrySnap --;
-    }else
-    {
-        _retrySnap = 0;
-    }
 }
 
 - (UIImage *)getImageFromView:(UIView *)view
 {
+    if (view.frame.size.height <= 0.1 || view.frame.size.width <= 0.1) {
+        return nil;
+    }
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();

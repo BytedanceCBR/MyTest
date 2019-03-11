@@ -10,7 +10,7 @@
 #import "TTArticleCellConst.h"
 #import "TTArticleCellHelper.h"
 #import "TTDeviceHelper.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTThemeConst.h"
 #import "NewsUserSettingManager.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
