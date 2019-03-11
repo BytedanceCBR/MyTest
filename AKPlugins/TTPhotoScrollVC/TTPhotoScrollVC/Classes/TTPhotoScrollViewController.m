@@ -23,7 +23,7 @@
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
 #define indexPormptLabelLeftPadding 5.f
-#define indexPormptLabelWidth 80.f
+#define indexPormptLabelWidth 50.f
 #define indexPormptLabelHeight 28.f
 
 #define indexTitleLabelTextSize 17.f
@@ -345,7 +345,11 @@
     self.bottomBar.frame = CGRectMake(0, self.view.height - bottomBarHeight - bottomInset, self.view.width, bottomBarHeight);
     self.topBar.frame = CGRectMake(0, topInset, self.view.width, topBarHeight);
     self.saveButton.frame = CGRectMake(self.view.width - saveButtonRightPadding - saveButtonWidth, self.view.height - saveButtonHeight - saveButtonBottomPadding - bottomInset, saveButtonWidth, saveButtonHeight);
-    self.indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, indexPormptLabelWidth, indexPormptLabelHeight);
+    if (self.indexPromptLabel.frame.size.width <= indexPormptLabelWidth) {
+        self.indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, indexPormptLabelWidth, indexPormptLabelHeight);
+    } else {
+        self.indexPromptLabel.frame = CGRectMake(self.indexPromptLabel.frame.origin.x, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, self.indexPromptLabel.frame.size.width, indexPormptLabelHeight);
+    }
     if (self.mode == PhotosScrollViewSupportBrowse) {
         self.indexPromptLabel.centerX = self.view.width/2;
     }
@@ -608,12 +612,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
     
     NSString * text = [NSString stringWithFormat:@"%li/%li", (long)_currentIndex + 1, (long)_photoCount];
     [_indexPromptLabel setText:text];
-    /*
-     [_indexPromptLabel sizeToFit];
-     CGRect frame = _indexPromptLabel.frame;
-     frame.origin.x = indexPormptLabelLeftPadding;
-     frame.origin.y = self.view.frame.size.height - frame.size.height - indexPromptLabelBottomPadding;
-     _indexPromptLabel.frame = frame;*/
+    
+    CGFloat width = [text boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: _indexPromptLabel.font} context:nil].size.width;
+    _indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, _indexPromptLabel.frame.origin.y, width + 10, _indexPromptLabel.frame.size.height);
 }
 
 - (CGRect)frameForPagingScrollView
