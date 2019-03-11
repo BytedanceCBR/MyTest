@@ -473,7 +473,7 @@
         // 二手房、租房应该有 houseListOpenUrl
         if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
             if (self.houseListOpenUrl.length <= 0) {
-                NSString *res = [NSString stringWithFormat:@"列表地图openurl为空:%ld",self.houseType];
+                NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
                 // device_id
                 NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
                 if (did.length == 0) {
@@ -481,7 +481,7 @@
                 }
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
                                                         metric:nil
-                                                      category:@{@"status":@(0),@"desc":res}
+                                                      category:@{@"status":@(0),@"house_type":res}
                                                          extra:@{@"device_id":did}];
             }
         }
