@@ -278,5 +278,53 @@
     
 }
 
+- (BOOL)isMissTitle
+{
+    return NO;
+}
+- (BOOL)isMissImage
+{
+    return NO;
+}
+- (BOOL)isMissCoreInfo
+{
+    return NO;
+}
+
+// excetionLog
+- (void)addDetailCoreInfoExcetionLog
+{
+    //    detail_core_info_error
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    NSInteger status = 0;
+    if ([self isMissTitle]) {
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeTitle;
+    }
+    if ([self isMissImage]) {
+        attr[@"image"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeImage;
+    }
+    if ([self isMissCoreInfo]) {
+        attr[@"core_info"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeCoreInfo;
+    }
+    attr[@"house_type"] = @(self.houseType);
+    if (status != 0) {
+        [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_core_info_error" status:status extra:attr];
+    }
+    
+}
+
+- (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message
+{
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    attr[@"message"] = message;
+    attr[@"house_type"] = @(self.houseType);
+    attr[@"house_id"] = self.houseId;
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_failed" status:status extra:attr];
+}
 
 @end

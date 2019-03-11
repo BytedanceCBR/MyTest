@@ -15,6 +15,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 @interface FHHouseDetailViewController ()
 
@@ -94,6 +95,12 @@
         // source
         if ([paramObj.allParams[@"source"] isKindOfClass:[NSString class]]) {
             self.source = paramObj.allParams[@"source"];
+        }
+
+        if (self.houseId.length < 1) {
+            [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(1)} extra:@{@"openurl":paramObj.sourceURL.absoluteString}];
+        }else {
+            [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
     }
     return self;

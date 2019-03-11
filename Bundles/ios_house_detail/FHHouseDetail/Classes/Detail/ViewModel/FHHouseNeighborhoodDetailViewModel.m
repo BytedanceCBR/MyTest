@@ -129,12 +129,14 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -147,6 +149,8 @@
     self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -328,6 +332,24 @@
         wSelf.sameNeighborhoodRentHouseData = model.data;
         [wSelf processDetailRelatedData];
     }];
+}
+
+- (BOOL)isMissTitle
+{
+    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
+    return model.data.name.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
+    return model.data.neighborhoodImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
 }
 
 @end

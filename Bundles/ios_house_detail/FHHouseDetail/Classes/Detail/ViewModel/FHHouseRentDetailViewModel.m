@@ -132,12 +132,14 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -184,6 +186,8 @@
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.houseImage) {
@@ -318,6 +322,24 @@
          [wSelf processDetailRelatedData];
      }];
  }
+
+- (BOOL)isMissTitle
+{
+    FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
+    return model.data.title.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
+    return model.data.houseImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
+}
 
 
 @end

@@ -163,6 +163,7 @@
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -180,12 +181,15 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            NSDictionary *userInfo = error.userInfo;
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -215,10 +219,12 @@
     }
 }
 
+
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -466,5 +472,24 @@
         [wSelf processDetailRelatedData];
     }];
 }
+
+- (BOOL)isMissTitle
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.title.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.houseImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
+}
+
 
 @end

@@ -124,17 +124,25 @@
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
-            wSelf.dataModel = model;
-            wSelf.detailController.hasValidateData = YES;
-            [wSelf.detailController.emptyView hideEmptyView];
-            wSelf.bottomBar.hidden = NO;
-            [wSelf processDetailData:model];
-        }else
-        {
+            if (model.data) {
+                wSelf.dataModel = model;
+                wSelf.detailController.hasValidateData = YES;
+                [wSelf.detailController.emptyView hideEmptyView];
+                wSelf.bottomBar.hidden = NO;
+                [wSelf processDetailData:model];
+            }else {
+                wSelf.detailController.isLoadingData = NO;
+                wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+            }
+        }else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -142,6 +150,8 @@
 
 - (void)processDetailData:(FHDetailNewModel *)model {
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.highlightedRealtor) {
@@ -320,6 +330,24 @@
     if (cell.didClickCellBlk) {
         cell.didClickCellBlk();
     }
+}
+
+- (BOOL)isMissTitle
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.coreInfo.name.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.imageGroup.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.coreInfo == nil;
 }
 
 @end
