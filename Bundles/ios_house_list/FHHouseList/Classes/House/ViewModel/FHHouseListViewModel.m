@@ -32,7 +32,6 @@
 #import "FHRecommendSecondhandHouseTitleCell.h"
 #import "FHRecommendSecondhandHouseTitleModel.h"
 #import "FHHouseBridgeManager.h"
-#import "FHCityListViewModel.h"
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 
@@ -142,8 +141,7 @@
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
             // 进历史
             if (isSuccess) {
-                FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
-                [cityListViewModel switchCityByOpenUrlSuccess];
+                [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
             }
         }];
         NSDictionary *params = @{@"click_type":@"switch",

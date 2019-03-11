@@ -28,7 +28,6 @@
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleCell.h>
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleModel.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
-#import "FHCityListViewModel.h" // add by zjing for test
 #import "FHHouseListBannerView.h"
 #import <FHCommonUI/UIView+House.h>
 
@@ -159,8 +158,7 @@
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
             // 进历史
             if (isSuccess) {
-                FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
-                [cityListViewModel switchCityByOpenUrlSuccess];
+                [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
             }
         }];
         NSDictionary *params = @{@"click_type":@"switch",
