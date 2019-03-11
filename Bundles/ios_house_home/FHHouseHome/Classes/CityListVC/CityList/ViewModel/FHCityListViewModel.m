@@ -14,6 +14,7 @@
 #import "FHUtils.h"
 #import "FHIndexSectionView.h"
 #import "FHUserTracker.h"
+#import "FHHouseSwitchCityDelegate.h"
 
 #define kCityListItemCellId @"city_list_item_cell_id"
 #define kCityListHotItemCellId @"city_list_hot_item_cell_id"
@@ -21,7 +22,7 @@
 static const NSString *kHistoryCityCacheKey = @"cache_country_list_history";
 static const NSString *kFHHistoryListKey = @"key_history_list";
 
-@interface FHCityListViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHCityListViewModel ()<UITableViewDelegate,UITableViewDataSource,FHHouseSwitchCityDelegate>
 
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHCityListViewController *listController;
@@ -48,6 +49,11 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
         [self loadListCityData:[[FHEnvContext sharedInstance] getConfigFromCache]];
     }
     return self;
+}
+
+- (instancetype)init
+{
+    return [self initWithController:nil tableView:nil];
 }
 
 -(void)configTableView
