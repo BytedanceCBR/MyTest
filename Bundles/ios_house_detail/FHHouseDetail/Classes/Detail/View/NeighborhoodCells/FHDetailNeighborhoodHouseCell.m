@@ -587,7 +587,7 @@
     }
 }
 
-// 添加house_show 埋点：这种方式效率不高，后续可以考虑优化
+// 添加house_show 埋点
 - (void)addHouseShowByIndex:(NSInteger)index {
     FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
     if (model.currentSelIndex == 0) {

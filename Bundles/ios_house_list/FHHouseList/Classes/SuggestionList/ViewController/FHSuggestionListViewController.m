@@ -426,7 +426,7 @@
 
 // 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
 - (void)dismissSelfVCIfNeeded {
-    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault) {
+    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeOldMain) {
         [self removeFromParentViewController];
     }
 }
