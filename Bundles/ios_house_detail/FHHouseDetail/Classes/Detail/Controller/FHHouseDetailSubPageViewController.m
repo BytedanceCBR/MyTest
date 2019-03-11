@@ -133,7 +133,7 @@
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(64);
         if (@available(iOS 11.0, *)) {
-            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom);
+            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
             make.bottom.mas_equalTo(self.view);
         }
@@ -161,7 +161,7 @@
 {
     UILabel *titleLabel = [UILabel new];
     titleLabel.text = navTitle;
-    titleLabel.textColor = [UIColor themeBlue1];
+    titleLabel.textColor = [UIColor themeGray1];
     titleLabel.textAlignment = NSTextAlignmentCenter;
     
     [self.navBar addSubview:titleLabel];

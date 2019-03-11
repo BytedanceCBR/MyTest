@@ -665,7 +665,7 @@ static struct timeval commentTimeval;
         _publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
         [_publishButton sizeToFit];
         _publishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _publishButton.titleColorThemeKey = kFHColorClearBlue;
+        _publishButton.titleColorThemeKey = kFHColorCoral;
         _publishButton.disabledTitleColorThemeKey = kFHColorCoolGrey2;
         [_publishButton addTarget:self action:@selector(publish:) forControlEvents:UIControlEventTouchUpInside];
         _publishButton.enabled = NO;

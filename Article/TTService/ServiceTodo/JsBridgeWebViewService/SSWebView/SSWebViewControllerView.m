@@ -9,7 +9,7 @@
 #import "SSWebViewControllerView.h"
 #import "TTActivityShareManager.h"
 #import "SSWebViewUtil.h"
-#import <TTNetworkUtilities.h>
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTAdManager.h"
 
 #import "ArticleShareManager.h"
@@ -38,7 +38,7 @@
 #import "TTActivityShareSequenceManager.h"
 #import "TTVSettingsConfiguration.h"
 #import "SSCommonLogic.h"
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 #define toolBarHeight 40.f
 
@@ -209,7 +209,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     if (!_activityActionManager) {
         self.activityActionManager = [[TTActivityShareManager alloc] init];
         self.activityActionManager.forwardToWeitoutiao = self.isRepostWeitoutiaoFromWeb;
-        if ([TTKitchen getBOOL:kTTKUGCRepostLinkEnable]) {
+        if ([TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
             self.activityActionManager.forwardToWeitoutiao = YES;
         }
     }
@@ -292,7 +292,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         enableShare = YES;
     }
     if (!isEmptyString(host)) { // 如果host在白名单，也可以分享
-        NSArray *array = [TTKitchen getArray:kTTKUGCWhiteListOfShareHost];
+        NSArray *array = [TTKitchen getArray:kKCUGCWhiteListOfShareHost];
         for (NSString *whiteListHost in array) {
             if ([host containsString:whiteListHost]) {
                 enableShare = YES;
@@ -449,7 +449,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     NSInteger repostType = self.repostType;
 
     if (self.isRepostWeitoutiaoFromWeb == NO
-        && [TTKitchen getBOOL:kTTKUGCRepostLinkEnable]) {
+        && [TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
         
         NSURL *curURL = _ssWebContainer.ssWebView.currentURL;
         if ([curURL.host containsString:@"mp.weixin.qq.com"]) {

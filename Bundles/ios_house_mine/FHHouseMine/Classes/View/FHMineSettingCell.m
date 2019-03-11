@@ -35,8 +35,8 @@
     [self.contentView addSubview:_indicatorView];
     _indicatorView.image = [UIImage imageNamed:_indicatorImageName];
     [_indicatorView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-20);
-        make.width.height.mas_equalTo(12);
+        make.right.mas_equalTo(-15);
+        make.width.height.mas_equalTo(16);
         make.centerY.mas_equalTo(self.contentView);
     }];
     
@@ -51,7 +51,7 @@
 }
 
 - (void)setLabelStyle:(UILabel*) label {
-    label.textColor = [UIColor themeBlack];
+    label.textColor = [UIColor themeGray1];
     label.font = [UIFont themeFontRegular:16];
 }
 

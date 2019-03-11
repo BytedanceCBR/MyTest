@@ -176,6 +176,8 @@
                            @"coreInfo": @"core_info",
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"recommendedRealtors": @"recommended_realtors",
+                           @"listEntrance": @"list_entrance",
+                           
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -222,6 +224,22 @@
 }
 @end
 
+@implementation FHDetailDataListEntranceItemModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"listName": @"list_name",
+                           @"entranceUrl": @"entrance_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 
 @implementation FHDetailOldDataHousePricingRankBuySuggestionModel

@@ -321,12 +321,14 @@
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
     [self addSubview:_imBtn];
     
-    self.name = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
+    self.name = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _name.textColor = [UIColor themeGray1];
     _name.font = [UIFont themeFontMedium:16];
     _name.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_name];
     
-    self.agency = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:14];
+    self.agency = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _name.textColor = [UIColor themeGray3];
     _agency.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_agency];
     

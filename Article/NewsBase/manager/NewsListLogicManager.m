@@ -11,7 +11,7 @@
 #import "TTProjectLogicManager.h"
 #import "TTCategoryDefine.h"
 #import "TTCategoryBadgeNumberManager.h"
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 #define kListLogicReturnBackgroundTimeKey @"kListLogicReturnBackgroundTimeKey"
 
@@ -343,7 +343,7 @@ static NewsListLogicManager * shareManager;
 
 + (NSTimeInterval)fetchFollowListAutoReloadWithNotifyInterval {
 
-    NSTimeInterval time = [TTKitchen getFloat:kTTKUGCFollowAutoRefreshWithNotifyInterval];
+    NSTimeInterval time = [TTKitchen getFloat:kKCUGCFollowAutoRefreshWithNotifyInterval];
     if (time < 0) {
         time = 1 * 60 * 60;
     }

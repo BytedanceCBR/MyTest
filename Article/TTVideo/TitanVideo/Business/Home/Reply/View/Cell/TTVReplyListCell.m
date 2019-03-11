@@ -14,7 +14,7 @@
 #import "TTDeviceUIUtils.h"
 #import "DetailActionRequestManager.h"
 #import "TTActionSheetController.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTUGCAttributedLabel.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Emoji.h"
@@ -368,7 +368,6 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         _avatarView.cornerRadius = [TTVReplyListCellHelper avatarSize] / 2;
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         _avatarView.borderColor = [UIColor clearColor];
         // add by zjing icon去掉点击
 //        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
@@ -412,7 +411,7 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         _userInfoLabel = [[TTAsyncLabel alloc] init];
         _userInfoLabel.frame = CGRectMake(self.nameView.left, self.nameView.bottom, self.width - [TTVReplyListCellHelper cellHorizontalPadding] - [TTVReplyListCellHelper avatarSize] - [TTVReplyListCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _userInfoLabel.font = [TTVReplyListCellHelper userInfoLabelFont];
-        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorDarkIndigo];
+        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _userInfoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _userInfoLabel.backgroundColor = [UIColor clearColor];
         _userInfoLabel.layer.backgroundColor = [UIColor clearColor].CGColor;

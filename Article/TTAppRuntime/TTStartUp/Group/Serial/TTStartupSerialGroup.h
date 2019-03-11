@@ -34,7 +34,7 @@ typedef NS_ENUM(NSUInteger, TTSerialStartupType) {
     TTSerialStartupTypePermissionSettingsReport,//上报推送权限设置
     TTServiceStartupTypeUseBDWebImage,//BDWebImage
     TTServiceStartupTypeFHIMStartupTask,//BDWebImage
-
+    TTServiceStartupTypeOpenURL,//open url 调起
 };
 
 @interface TTStartupSerialGroup : TTStartupGroup

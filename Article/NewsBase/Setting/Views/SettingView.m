@@ -42,7 +42,7 @@
 #import "SettingNormalCell.h"
 #import "SettingSwitch.h"
 
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 //#import "revision.h"
 
 #import "TTAuthorizeHintView.h"
@@ -84,6 +84,8 @@
 #import "TTTabBarProvider.h"
 #import "TTSettingMineTabManager.h"
 #import "TTTabBarProvider.h"
+#import "TTURLUtils.h"
+#import <FHEnvContext.h>
 
 //爱看
 #import "AKTaskSettingHelper.h"
@@ -115,7 +117,8 @@ typedef NS_ENUM(NSUInteger, TTSettingSectionType) {
     kTTSettingSectionTypeTTCover,      // 头条封面、当前版本、使用帮助
     kTTSettingSectionTypeLogout,       // 退出登录
     //    kTTSettingSectionTypeUmengDebug,   // 友盟Debug
-    kTTSettingSectionTypeAbout
+    kTTSettingSectionTypeAbout,
+    kTTSettingSectionTypeLogoutUnRegister
 };
 
 typedef NS_ENUM(NSUInteger, TTSettingCellType) {
@@ -147,6 +150,7 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeAbout,                   // 关于我们
     SettingCellTypeUserProtocol,            // 用户协议
     SettingCellTypePrivacyProtocol,         // 隐私协议
+    SettingCellTypeLogoutUnRegister         // 注销登录
 
 };
 typedef TTSettingCellType SettingCellType;
@@ -255,6 +259,7 @@ TTEditUserProfileViewControllerDelegate
         [_readModeSwitch addTarget:self action:@selector(readModeChanged:) forControlEvents:UIControlEventValueChanged];
         
         self.pushNotificatoinSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
+        self.pushNotificatoinSwitch.onTintColor = [UIColor tt_themedColorForKey:kFHColorCoral];
         [_pushNotificatoinSwitch addTarget:self action:@selector(pushNotificationChanged:) forControlEvents:UIControlEventValueChanged];
         self.showAwardCoinTipSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
         [_showAwardCoinTipSwitch addTarget:self action:@selector(showAwardCoinTipSwitchAction:) forControlEvents:UIControlEventValueChanged];
@@ -746,6 +751,11 @@ TTEditUserProfileViewControllerDelegate
         cell.accessoryView = NULL;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
+    else if (cellType == SettingCellTypeLogoutUnRegister) {
+        cell.textLabel.text = @"注销账号";
+        cell.accessoryView = NULL;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
     
     // luohuaqing: bug fix. 在IOS8上，textLabel和detailTextLabel的默认font size会随系统设置的改变而改变
     if ([TTDeviceHelper OSVersionNumber] >= 8)
@@ -774,7 +784,7 @@ TTEditUserProfileViewControllerDelegate
 //        return @[@(kTTSettingSectionTypeAccount),
         return @[@(kTTSettingSectionTypeAbstractFont),
                  @(kTTSettingSectionTypeAbout),
-                 @(kTTSettingSectionTypeLogout),];
+                 @(kTTSettingSectionTypeLogout),@(kTTSettingSectionTypeLogoutUnRegister)];
     } else {
         return @[@(kTTSettingSectionTypeAbstractFont),@(kTTSettingSectionTypeAbout)];
     }
@@ -809,6 +819,8 @@ TTEditUserProfileViewControllerDelegate
                      @(SettingCellTypePrivacyProtocol)];
         case kTTSettingSectionTypeLogout:
             return @[@(SettingCellTypeLogout)];
+        case kTTSettingSectionTypeLogoutUnRegister:
+            return @[@(SettingCellTypeLogoutUnRegister)];
         default:
             return @[];
     }
@@ -1308,6 +1320,8 @@ TTEditUserProfileViewControllerDelegate
         [ self openUserBlacklistsDidSelectCell:nil];
     } else if (cellType == SettingCellTypeLogout) {
         [self triggerLogoutDidSelectCell];
+    } else if (cellType == SettingCellTypeLogoutUnRegister) {
+        [self triggerLogoutUnRegisterDidSelectCell];
     } else if (cellType == SettingCellTypeADRegisterEntrance) { // 广告合作
         if ([TTAccountManager isLogin]) {
             NSURL *url = [TTStringHelper URLWithURLString:@"https://ad.toutiao.com/m/self_service/?source2=ttappsetting"];
@@ -1367,6 +1381,25 @@ TTEditUserProfileViewControllerDelegate
             [alertVC showFrom:[TTUIResponderHelper topmostViewController] animated:YES];
         });
     }
+}
+
+- (void)triggerLogoutUnRegisterDidSelectCell
+{
+    
+    NSDictionary *params = @{@"category":@"event_v3",@"page_type":@"minetab"};
+    [FHEnvContext recordEvent:params andEventKey:@"account_cancellation"];
+    
+    
+    NSString *unencodedString = @"http://m.haoduofangs.com/f100/inner/valuation/delcount/";
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                    (CFStringRef)unencodedString,
+                                                                                                    NULL,
+                                                                                                    (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                    kCFStringEncodingUTF8));
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+    
+    NSURL *url = [TTURLUtils URLWithString:urlStr];
+    [[TTRoute sharedRoute] openURLByPushViewController:url];
 }
 
 - (void)logout {

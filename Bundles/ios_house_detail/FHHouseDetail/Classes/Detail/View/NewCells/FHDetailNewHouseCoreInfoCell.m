@@ -10,6 +10,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import <FHEnvContext.h>
 #import "FHDetailHouseNameCell.h"
+#import <HMDTTMonitor.h>
 
 static const CGFloat kLabelKeyFontSize = 12;
 
@@ -67,7 +68,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     
     _pricingPerSqmLabel = [UILabel new];
     _pricingPerSqmLabel.font = [UIFont themeFontMedium:16];
-    _pricingPerSqmLabel.textColor = [UIColor colorWithHexString:@"#ff5b4c"];
+    _pricingPerSqmLabel.textColor = [UIColor themeRed1];
     _pricingPerSqmLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_pricingPerSqmLabel];
     [_pricingPerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -95,7 +96,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     
     _openDataLabel = [UILabel new];
     _openDataLabel.font = [UIFont themeFontRegular:15];
-    _openDataLabel.textColor = [UIColor colorWithHexString:@"#081f33"];
+    _openDataLabel.textColor = [UIColor themeGray1];
     _openDataLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_openDataLabel];
     [_openDataLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -134,7 +135,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     
     _courtAddressLabel = [UILabel new];
     _courtAddressLabel.font = [UIFont themeFontRegular:15];
-    _courtAddressLabel.textColor = [UIColor colorWithHexString:@"#3d6e99"];
+    _courtAddressLabel.textColor = [UIColor themeGray3];
     _courtAddressLabel.textAlignment = NSTextAlignmentLeft;
     _courtAddressLabel.numberOfLines = 0;
     [self.contentView addSubview:_courtAddressLabel];
@@ -157,9 +158,9 @@ static const CGFloat kLabelKeyRightPandding = -20;
     }];
     
     _moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    NSAttributedString *attributeString = [[NSAttributedString alloc] initWithString:@"更多楼盘信息" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
+    NSAttributedString *attributeString = [[NSAttributedString alloc] initWithString:@"更多楼盘信息" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14.f],NSForegroundColorAttributeName:[UIColor themeGray3]}];
     [_moreBtn setAttributedTitle:attributeString forState:UIControlStateNormal];
-    _moreBtn.backgroundColor = [UIColor colorWithHexString:@"#f6f7f8"];
+    _moreBtn.backgroundColor = [UIColor themeGray8];
     _moreBtn.layer.cornerRadius = 5;
     [_moreBtn addTarget:self action:@selector(moreInfoButClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_moreBtn];
@@ -184,7 +185,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateNormal];
     [_priceChangedNotify setImage:[UIImage imageNamed:@"ic-new-house-price-change-notice"] forState:UIControlStateHighlighted];
     [_priceChangedNotify setTitle:@"变价通知" forState:UIControlStateNormal];
-    NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+    NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray1]}];
     [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
     _priceChangedNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [self.contentView addSubview:_priceChangedNotify];
@@ -213,7 +214,7 @@ static const CGFloat kLabelKeyRightPandding = -20;
     [_openNotify setImage:[UIImage imageNamed:@"ic-new-house-opening-notice"] forState:UIControlStateNormal];
     [_openNotify setImage:[UIImage imageNamed:@"ic-new-house-opening-notice"] forState:UIControlStateHighlighted];
     [_openNotify setTitle:@"开盘通知" forState:UIControlStateNormal];
-    NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
+    NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray1]}];
     [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
     _openNotify.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [_openNotify addTarget:self action:@selector(openNotifyActionClick) forControlEvents:UIControlEventTouchUpInside];
@@ -300,6 +301,17 @@ static const CGFloat kLabelKeyRightPandding = -20;
         FHDetailHouseNameModel * houseName = (FHDetailHouseNameModel *)model.houseName;
         [infoDict setValue:houseName.name forKey:@"title"];
     }
+    
+    if (!longitude || !latitude) {
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+        [params setValue:@"经纬度缺失" forKey:@"reason"];
+        [params setValue:model.courtId forKey:@"house_id"];
+        [params setValue:@(1) forKey:@"house_type"];
+        [params setValue:infoDict[@"title"] forKey:@"name"];
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+    }
+    
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
     [tracer setValue:@"address" forKey:@"click_type"];
     [tracer setValue:@"house_info" forKey:@"element_from"];
@@ -322,17 +334,17 @@ static const CGFloat kLabelKeyRightPandding = -20;
         self.courtAddressLabel.text = model.courtAddress;
 
 //        if (model.pricingSubStauts != 0) {
-//            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
+//            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray3]}];
 //            [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
 //
-//            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray2]}];
+//            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray3]}];
 //            [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }else
 //        {
-            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+            NSAttributedString *stringAttriChange = [[NSAttributedString alloc] initWithString:@"变价通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray1]}];
             [_priceChangedNotify setAttributedTitle:stringAttriChange forState:UIControlStateNormal];
             
-            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeBlue3]}];
+            NSAttributedString *stringAttriOpen = [[NSAttributedString alloc] initWithString:@"开盘通知" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16.f],NSForegroundColorAttributeName:[UIColor themeGray1]}];
             [_openNotify setAttributedTitle:stringAttriOpen forState:UIControlStateNormal];
 //        }
     }

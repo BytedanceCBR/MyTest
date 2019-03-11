@@ -61,13 +61,13 @@
     [self.contentView addSubview:_msgStateView];
     self.msgStateView.hidden = YES;
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
     [self.contentView addSubview:_titleLabel];
     
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_subTitleLabel];
     
-    self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray4]];
+    self.timeLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.contentView addSubview:_timeLabel];
     
     self.unreadView = [[TTBadgeNumberView alloc] init];

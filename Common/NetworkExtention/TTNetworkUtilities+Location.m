@@ -5,7 +5,7 @@
 //  Created by chenren on 2018/02/06.
 //
 
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTLocationManager.h"
 #import "NSDataAdditions.h"
 #import "NSString+URLEncoding.h"

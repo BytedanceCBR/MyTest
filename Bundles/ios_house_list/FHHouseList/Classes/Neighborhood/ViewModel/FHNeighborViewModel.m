@@ -62,6 +62,7 @@
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
+//        self.tableView.mj_footer
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
          [self.tableView.mj_footer endRefreshing];
@@ -161,9 +162,10 @@
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         id model = _houseList[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
         [cell updateWithHouseCellModel:cellModel];
         [cell refreshTopMargin: 20];
-        [cell refreshBottomMargin:isLastCell ? 20 : 0];
+        [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
         return cell;
     } else {
         // PlaceholderCell
@@ -196,10 +198,11 @@
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
             CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
             if (height < 1) {
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 height = [tableView fd_heightForCellWithIdentifier:kSingleImageCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:isLastCell ? 20 : 0];
+                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
                 }];
             }
             return height;
@@ -272,6 +275,7 @@
             }];
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
+    
         } else {
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
         }
@@ -283,9 +287,15 @@
         if (self.firstRequestData && self.houseList.count > 0) {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
+        
+        if (!hasMore && self.houseList.count < 10) {
+            self.tableView.mj_footer.hidden = YES;
+        }
+        
     } else {
         [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
     }
+
 }
 
 #pragma mark - Request

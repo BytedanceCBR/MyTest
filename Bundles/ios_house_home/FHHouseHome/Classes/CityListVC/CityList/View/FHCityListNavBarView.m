@@ -45,7 +45,7 @@
     }];
     // _searchBtn
     _searchBtn = [[UIButton alloc] init];
-    _searchBtn.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+    _searchBtn.backgroundColor = [UIColor themeGray7];
     _searchBtn.layer.cornerRadius = 4.0;
     [self addSubview:_searchBtn];
     [_searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -66,7 +66,7 @@
     
     // searchLabel
     _searchLabel = [[UILabel alloc] init];
-    _searchLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
+    _searchLabel.textColor = [UIColor themeGray3];
     _searchLabel.font = [UIFont themeFontRegular:12];
     _searchLabel.text = @"请输入城市名称";
     [_searchBtn addSubview:_searchLabel];
@@ -78,7 +78,7 @@
     }];
     
     _bottomLineView = [[UIView alloc] init];
-    _bottomLineView.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _bottomLineView.backgroundColor = [UIColor themeGray6];
     [self addSubview:_bottomLineView];
     [_bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);

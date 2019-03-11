@@ -9,6 +9,15 @@
 
 @implementation UIFont (House)
 
++(UIFont *)themeFontLight:(CGFloat)fontSize
+{
+    UIFont *font = [UIFont fontWithName:@"PingFangSC-Light" size:fontSize];
+    if (!font) {
+        font = [UIFont systemFontOfSize:fontSize];
+    }
+    return font;
+}
+
 +(UIFont *)themeFontRegular:(CGFloat)fontSize
 {
     UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:fontSize];

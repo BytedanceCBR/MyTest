@@ -29,7 +29,7 @@
 #import "TTIESPlayerTask.h"
 #import "TTStartupAKActivityTabTask.h"
 #import "TTStartupAKLaunchTask.h"
-#import "TTHMDMonitorStartupTask.h"
+//#import "TTHMDMonitorStartupTask.h"
 
 @implementation TTStartupServiceGroup
 
@@ -42,6 +42,7 @@
     
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeHMDMonitor]];
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
+    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCellRegister]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMapperRegister]];
@@ -131,9 +132,9 @@
         case TTServiceStartupTypeAkLaunch:
             return [[TTStartupAKLaunchTask alloc] init];
             break;
-        case TTServiceStartupTypeHMDMonitor:
-            return [[TTHMDMonitorStartupTask alloc]init];
-            break;
+//        case TTServiceStartupTypeHMDMonitor:
+//            return [[TTHMDMonitorStartupTask alloc]init];
+//            break;
         default:
             return [[TTStartupTask alloc] init];
             break;

@@ -41,16 +41,16 @@
     [self addSubview:_openAllBtn];
     
     _title = [[UILabel alloc] init];
-    NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc] initWithString:@"查看更多" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#081f33"]}];
+    NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc] initWithString:@"查看更多" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:16],NSForegroundColorAttributeName:[UIColor themeGray1]}];
     _title.backgroundColor = [UIColor whiteColor];
     _title.attributedText = attriStr;
     [self addSubview:_title];
     
-    _settingArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"setting-arrow"]];
+    _settingArrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"setting-arrow-1"]];
     [self addSubview:_settingArrowImageView];
     
     _topBorderView = [[UIView alloc] init];
-    _topBorderView.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _topBorderView.backgroundColor = [UIColor themeGray6];
     [self addSubview:_topBorderView];
     CGFloat topBorderHeight = 0.5;
     if (UIScreen.mainScreen.scale > 2) {
@@ -72,9 +72,9 @@
         make.centerY.mas_equalTo(self.openAllBtn);
     }];
     [self.settingArrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(14);
+        make.height.width.mas_equalTo(16);
         make.centerY.mas_equalTo(self.openAllBtn);
-        make.left.mas_equalTo(self.title.mas_right).offset(4);
+        make.left.mas_equalTo(self.title.mas_right).offset(1);
     }];
     
     [self.openAllBtn addTarget:self action:@selector(openButtonClick:) forControlEvents:UIControlEventTouchUpInside];

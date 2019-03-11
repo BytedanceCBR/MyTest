@@ -30,6 +30,9 @@
 #import "FHDetailPriceTrendCellModel.h"
 #import "FHDetailPureTitleCell.h"
 #import "FHDetailNeighborhoodInfoCell.h"
+#import "FHDetailNeighborhoodMapInfoCell.h"
+#import "FHDetailNeighborhoodEvaluateCell.h"
+#import "FHDetailListEntranceCell.h"
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -62,6 +65,9 @@
     [self.tableView registerClass:[FHDetailPriceRankCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPriceRankCell class])];
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
+    [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
 
 }
 // cell class
@@ -102,6 +108,14 @@
     if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
         return [FHDetailNeighborhoodInfoCell class];
     }
+    // 小区评测
+    if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
+        return [FHDetailNeighborhoodEvaluateCell class];
+    }
+    // 小区地图
+    if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
+        return [FHDetailNeighborhoodMapInfoCell class];
+    }
     // 购房小建议
     if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
         return [FHDetailSuggestTipCell class];
@@ -133,6 +147,10 @@
     if ([model isKindOfClass:[FHDetailPriceRankModel class]]) {
         return [FHDetailPriceRankCell class];
     }
+    // 房源榜单
+    if ([model isKindOfClass:[FHDetailListEntranceModel class]]) {
+        return [FHDetailListEntranceCell class];
+    }
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -145,6 +163,7 @@
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -162,12 +181,15 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            NSDictionary *userInfo = error.userInfo;
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -197,10 +219,12 @@
     }
 }
 
+
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -232,9 +256,10 @@
         [self.items addObject:priceChangeHistoryModel];
     }
     // 添加属性列表
-    if (model.data.baseInfo) {
+    if (model.data.baseInfo || model.data.certificate) {
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.certificate = model.data.certificate;
         [self.items addObject:propertyModel];
     }
     
@@ -268,6 +293,16 @@
     NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
     NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
     
+    // 房源榜单
+    if (model.data.listEntrance.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailListEntranceModel *entranceModel = [[FHDetailListEntranceModel alloc] init];
+        entranceModel.listEntrance = model.data.listEntrance;
+        [self.items addObject:entranceModel];
+    }
+
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -303,6 +338,7 @@
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
+    
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -310,6 +346,26 @@
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        [self.items addObject:infoModel];
+    }
+    // 小区评测
+    if (model.data.neighborhoodInfo.evaluationInfo) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+        infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
+        infoModel.log_pb = model.data.neighborhoodInfo.logPb;
+        [self.items addObject:infoModel];
+    }
+    // 地图
+    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
+        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        infoModel.title = model.data.neighborhoodInfo.name;
+        infoModel.category = @"公交";
+        
         [self.items addObject:infoModel];
     }
 
@@ -449,5 +505,24 @@
         [wSelf processDetailRelatedData];
     }];
 }
+
+- (BOOL)isMissTitle
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.title.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.houseImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
+}
+
 
 @end

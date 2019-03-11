@@ -32,7 +32,7 @@
 #import "UIView+CustomTimingFunction.h"
 #import "TTUIResponderHelper.h"
 #import <TTNewsAccountBusiness/TTAccountManager.h>
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import "SSCommentInputHeader.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "AKHelper.h"
@@ -198,7 +198,7 @@
 
     // toolbar 禁表情
 
-    BOOL  isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    BOOL  isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
     if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
         self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
     }

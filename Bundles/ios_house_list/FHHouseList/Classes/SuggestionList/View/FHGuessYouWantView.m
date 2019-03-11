@@ -38,7 +38,7 @@
     _label = [[UILabel alloc] init];
     _label.text = @"猜你想搜";
     _label.font = [UIFont themeFontMedium:14];
-    _label.textColor = [UIColor themeBlue1];
+    _label.textColor = [UIColor themeGray1];
     [self addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.mas_equalTo(20);
@@ -119,23 +119,78 @@
     return size.width;
 }
 
-- (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(NSString *)firstText array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count {
-    // 计算猜你想搜高度
+// 猜你想搜前3个词计算:行数以及长度，外部限制3个吧
+- (FHGuessYouWantFirstWords *)firstThreeWords:(NSArray *)array {
     if (array.count <= 0) {
+        return nil;
+    }
+    FHGuessYouWantFirstWords *guess = [[FHGuessYouWantFirstWords alloc] init];
+    guess.wordLine = 1;
+    guess.wordLength = 0;
+    __block NSInteger   line = 1;
+    __block CGFloat     firstLineLen = 0;
+    __block CGFloat     remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+    __block NSInteger   secondLineLen = 0;
+    [array enumerateObjectsUsingBlock:^(FHGuessYouWantResponseDataDataModel*  _Nonnull item, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (item.text.length > 0) {
+            CGFloat len = [self guessYouWantTextLength:item.text];
+            if (len > remainWidth) {
+                if (line >= 2) {
+                    line = 2;
+                    *stop = YES;
+                }
+                line += 1;
+                remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+            }
+            remainWidth -= (len + 10);
+            if (line == 1) {
+                firstLineLen += (len + 10);
+                guess.wordLength = firstLineLen;
+            } else if (line == 2) {
+                secondLineLen += (len + 10);
+                guess.wordLength = secondLineLen;
+            }
+        }
+    }];
+    guess.wordLine = line;
+    
+    return guess;
+}
+
+- (NSArray<FHGuessYouWantResponseDataDataModel>       *)firstLineGreaterThanSecond:(FHGuessYouWantFirstWords *)firstWords array:(NSArray<FHGuessYouWantResponseDataDataModel> *)array count:(NSInteger)count {
+    // 计算猜你想搜高度
+    if (array.count <= 0 && firstWords.wordLength < 1.0) {
         self.guessYouWangtViewHeight = CGFLOAT_MIN;
         return NULL;
     } else {
         self.guessYouWangtViewHeight = 128; // 一行是89
     }
     NSInteger   line = 1;
-    CGFloat     firstWordLength = [self guessYouWantTextLength:firstText];
-    CGFloat     firstLineLen = firstWordLength + 10;
+    CGFloat     firstLineLen = 0;
     CGFloat     remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
     NSInteger   secondLineLen = 0;
-    remainWidth -= (firstWordLength + 10);
-    if (firstText.length == 0) {
-        firstLineLen = 0;
-        remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+    
+    if (firstWords) {
+        if (firstWords.wordLine == 1) {
+            line = 1;
+            firstLineLen = firstWords.wordLength;
+            remainWidth -= firstLineLen;
+            secondLineLen = 0;
+            if (firstLineLen < 1.0) {
+                firstLineLen = 0;
+                remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+            }
+        }
+        if (firstWords.wordLine == 2) {
+            line = 2;
+            secondLineLen = firstWords.wordLength;
+            remainWidth -= secondLineLen;
+            firstLineLen = 0;
+            if (secondLineLen < 1.0) {
+                secondLineLen = 0;
+                remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
+            }
+        }
     }
     NSMutableArray *vArray = [array mutableCopy];
     NSMutableArray<FHGuessYouWantResponseDataDataModel>       *retArray = [NSMutableArray new];
@@ -200,7 +255,7 @@
             return retArray;
         }
         NSArray *tempArray = [array fh_randomArray];
-        return [self firstLineGreaterThanSecond:firstText array:tempArray count:count + 1];
+        return [self firstLineGreaterThanSecond:firstWords array:tempArray count:count + 1];
     }
 }
 
@@ -275,12 +330,12 @@
 - (void)setupUI {
     
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    self.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5"];
+    self.backgroundColor = [UIColor themeGray7];
     self.layer.cornerRadius = 4.0;
     _label = [[UILabel alloc] init];
     _label.numberOfLines = 1;
     _label.font = [UIFont themeFontRegular:12];
-    _label.textColor = [UIColor themeBlue1];
+    _label.textColor = [UIColor themeGray1];
     [self addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.mas_equalTo(self).offset(6);
@@ -312,6 +367,21 @@
     }
     // 返回打乱顺序之后的数组
     return tmp.copy;
+}
+
+@end
+
+
+@implementation FHGuessYouWantFirstWords
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _wordLine = 0;
+        _wordLength = 0;
+    }
+    return self;
 }
 
 @end

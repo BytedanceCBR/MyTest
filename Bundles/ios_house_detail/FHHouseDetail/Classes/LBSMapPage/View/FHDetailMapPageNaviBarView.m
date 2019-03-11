@@ -60,7 +60,7 @@
     _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_rightBtn setTitle:@"导航" forState:UIControlStateNormal];
     [_rightBtn.titleLabel setFont:[UIFont themeFontRegular:16]];
-    [_rightBtn setTitleColor:[UIColor themeBlue] forState:UIControlStateNormal];
+    [_rightBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [self addSubview:_rightBtn];
     [_rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(36);
@@ -83,17 +83,12 @@
     
     
     _seperatorLine = [[UIView alloc] init];
-    _seperatorLine.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _seperatorLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:_seperatorLine];
     [_seperatorLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
         make.height.mas_equalTo(0.5);
     }];
-    
-    //    self.title.text = "位置及周边"
-    //    re.rightBtn.setTitle("导航", for: .normal)
-    //    re.rightBtn.setTitleColor(hexStringToUIColor(hex: "#299cff"), for: .normal)
-    //    re.rightBtn.isSelected = false
 }
 
 - (void)backBtnClick

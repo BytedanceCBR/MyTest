@@ -145,10 +145,10 @@
     
     if (self.isSelected) {
         if ([TTFeedDislikeView isFeedDislikeRefactorEnabled]) {
-            self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorClearBlue].CGColor;
+            self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
         }
         else {
-            self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorClearBlue].CGColor;
+            self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
         }
     } else {
         self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorBattleShipGrey].CGColor;
@@ -209,11 +209,11 @@
     
     if ([TTFeedDislikeView isFeedDislikeRefactorEnabled]) {
         [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorBattleShipGrey] forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorClearBlue] forState:UIControlStateSelected];
+        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoral] forState:UIControlStateSelected];
     }
     else {
         [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorBattleShipGrey] forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorClearBlue] forState:UIControlStateSelected];
+        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoral] forState:UIControlStateSelected];
     }
     
     [self refreshBorder];

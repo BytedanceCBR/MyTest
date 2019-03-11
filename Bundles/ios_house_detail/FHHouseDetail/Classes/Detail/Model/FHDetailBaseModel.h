@@ -141,6 +141,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHDetailDataCertificateLabelsModel<NSObject>
+@end
+
+@interface FHDetailDataCertificateLabelsModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *fontColor;
+@property (nonatomic, copy , nullable) NSString *tag;
+@property (nonatomic, copy , nullable) NSString *icon;
+@end
+
+@interface FHDetailDataCertificateModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *bgColor;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataCertificateLabelsModel> *labels;
+@end
+
+
 // 二手房、租房共用 协议
 @protocol FHDetailDataBaseInfoModel<NSObject>
 @end

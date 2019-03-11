@@ -22,9 +22,17 @@
 #import <FHHouseBase/FHGeneralBizConfig.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import "IMManager.h"
+#import <HMDTTMonitor.h>
 
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
+
+typedef enum : NSUInteger {
+    FHPhoneCallTypeSuccessVirtual = 0,
+    FHPhoneCallTypeSuccessReal,
+    FHPhoneCallTypeNetFailed,
+    FHPhoneCallTypeRequestFailed,
+} FHPhoneCallType;
 
 @interface FHHouseDetailPhoneCallViewModel () <FHRealtorDetailWebViewControllerDelegate>
 
@@ -85,7 +93,42 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [alertView showFrom:self.belongsVC.view];
     self.alertView = alertView;
 }
+- (void)addDetailCallExceptionLog:(NSInteger)status realtorId:(NSString *)realtorId errorCode:(NSInteger)errorCode message:(NSString *)message
+{
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    if (status != FHPhoneCallTypeSuccessVirtual && status != FHPhoneCallTypeSuccessReal) {
+        attr[@"realtor_id"] = realtorId;
+        attr[@"house_id"] = self.houseId;
+    }
+    if (status == FHPhoneCallTypeRequestFailed) {
+        attr[@"error_code"] = @(errorCode);
+        attr[@"message"] = message;
+    }
+    attr[@"desc"] = [self exceptionStatusStrBy:status];
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_call_exception" status:status extra:attr];
+}
 
+- (NSString *)exceptionStatusStrBy:(NSInteger)status
+{
+    switch (status) {
+        case FHPhoneCallTypeSuccessVirtual:
+            return @"success_virtual";
+            break;
+        case FHPhoneCallTypeSuccessReal:
+            return @"success_real";
+            break;
+        case FHPhoneCallTypeNetFailed:
+            return @"net_failed";
+            break;
+        case FHPhoneCallTypeRequestFailed:
+            return @"request_failed";
+            break;
+            
+        default:
+            return @"be_null";
+            break;
+    }
+}
 
 - (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
 {
@@ -95,6 +138,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
         [self addClickCallLogWithExtra:extraDict isVirtual:0];
+        [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed realtorId:realtorId errorCode:0 message:nil];
         return;
     }
     [self.bottomBar startLoading];
@@ -105,6 +149,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
         NSInteger isVirtual = model.data.isVirtual;
         if (!error && model.data.virtualNumber.length > 0) {
             urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
+            if (model.data.isVirtual) {
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
+            }else {
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
+            }
+        }else {
+            [wself addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
         }
         NSMutableDictionary *extra = @{}.mutableCopy;
         if (extraDict) {
@@ -134,6 +185,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [self addRealtorClickCallLogWithExtra:reportParams isVirtual:0];
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
         failBlock(error);
+        [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed realtorId:realtorId errorCode:0 message:nil];
         return;
     }
     [self.bottomBar startLoading];
@@ -152,8 +204,14 @@ extern NSString *const kFHPhoneNumberCacheKey;
                 extra[@"realtor_id"] = model.data.realtorId;
             }
             [wself addRealtorClickCallLogWithExtra:extra isVirtual:isVirtual];
+            if (model.data.isVirtual) {
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
+            }else {
+                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
+            }
         }else {
             failBlock(error);
+            [wself addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
         }
         [wself callPhone:urlStr];
         successBlock(YES);

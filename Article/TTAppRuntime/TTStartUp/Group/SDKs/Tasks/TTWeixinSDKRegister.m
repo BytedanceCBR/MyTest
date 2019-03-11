@@ -11,7 +11,7 @@
 #import "NewsBaseDelegate.h"
 //#import "TTDingTalkSDKRegister.h"
 #import "TTWeChatShare.h"
-#import "SSPayManager.h"
+//#import "SSPayManager.h"
 
 @implementation TTWeixinSDKRegister
 
@@ -26,7 +26,7 @@
         [TTWeChatShare sharedWeChatShare].payDelegate = (id<TTWeChatSharePayDelegate>)SharedAppDelegate;
     }
     [TTShareApiConfig shareRegisterWXApp:[SharedAppDelegate weixinAppID]];
-    [SSPayManager registerWxAppID:[SharedAppDelegate weixinAppID]];
+//    [SSPayManager registerWxAppID:[SharedAppDelegate weixinAppID]];
 }
 
 @end

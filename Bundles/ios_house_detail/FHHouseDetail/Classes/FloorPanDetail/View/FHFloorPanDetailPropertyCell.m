@@ -65,20 +65,22 @@
             FHDetailFloorPanDetailInfoDataBaseInfoModel *itemModel = model.baseInfo[i];
             UILabel *nameLabel = [UILabel new];
             nameLabel.font = [UIFont themeFontRegular:15];
-            nameLabel.textColor = [UIColor themeGray2];
+            nameLabel.textColor = [UIColor themeGray3];
             nameLabel.textAlignment = NSTextAlignmentLeft;
             nameLabel.numberOfLines = 0;
             nameLabel.text = itemModel.attr;
             [itemContenView addSubview:nameLabel];
+            
             
             [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(15);
                 make.top.mas_equalTo(0);
             }];
             
+            
             UILabel *valueLabel = [UILabel new];
             valueLabel.font = [UIFont themeFontRegular:15];
-            valueLabel.textColor = [UIColor themeBlue1];
+            valueLabel.textColor = [UIColor themeGray1];
             valueLabel.textAlignment = NSTextAlignmentLeft;
             valueLabel.numberOfLines = 0;
             valueLabel.text = itemModel.value;
@@ -87,7 +89,6 @@
             [valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(nameLabel.mas_right).offset(10);
                 make.top.equalTo(nameLabel);
-                make.right.equalTo(itemContenView).offset(-15);
                 make.bottom.equalTo(itemContenView).offset(-7);
             }];
             

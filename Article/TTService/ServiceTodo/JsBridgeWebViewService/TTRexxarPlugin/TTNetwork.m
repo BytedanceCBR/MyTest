@@ -7,10 +7,11 @@
 //
 
 #import "TTNetwork.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTBridgeDefines.h"
 #import "FHEnvContext.h"
+#import "FHPostDataHTTPRequestSerializer.h"
 
 @implementation TTNetwork
 
@@ -36,7 +37,9 @@
     method = [method.uppercaseString isEqualToString:@"POST"]? @"POST": @"GET";
     
     NSDictionary *header = [param tt_dictionaryValueForKey:@"header"];
-    NSDictionary *params = [param tt_dictionaryValueForKey:[method isEqualToString:@"GET"]? @"params": @"data"];
+    NSString *stringKey = [method isEqualToString:@"GET"] ? @"params" : @"data";
+    
+    NSDictionary *params = [param tt_objectForKey:stringKey];
     
     BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
     
@@ -72,22 +75,40 @@
      });
      }
      */
-    
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
-    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
-        NSString *result = @"";
-        
-        if([obj isKindOfClass:[NSData class]]){
-            result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
-        }
-        if (callback) {
-            callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
-                                                      @"status": @(response.statusCode),
-                                                      @"code": error?@(0): @(1),
-                                                      @"beginReqNetTime": startTime
-                                                      });
-        }
-    }];
+    if ([method isEqualToString:@"GET"]) {
+        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
+            NSString *result = @"";
+            
+            if([obj isKindOfClass:[NSData class]]){
+                result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+            }
+            if (callback) {
+                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
+                                                          @"status": @(response.statusCode),
+                                                          @"code": error?@(0): @(1),
+                                                          @"beginReqNetTime": startTime
+                                                          });
+            }
+        }];
+    }else
+    {
+        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+            if (callback) {
+                NSString *result = @"";
+                if([obj isKindOfClass:[NSData class]]){
+                    result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+                }
+                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
+                                                          @"response": result,
+                                                          @"status": @(response.statusCode),
+                                                          @"code": error?@(0): @(1),
+                                                          @"beginReqNetTime":startTime
+                                                          });
+            }
+        }];
+    }
+
 //    :url
 //                                                          params:params
 //                                                          method:method

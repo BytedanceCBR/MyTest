@@ -24,8 +24,8 @@
 #import "TTCommentDataManager.h"
 #import "TTCommentDefines.h"
 #import "TTCommentWriteView.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "FHTraceEventUtils.h"
-#import <TTKitchen/TTKitchen.h>
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceGroupDraftKey @"PersistenceGroupDraftKey" // 对应文章、帖子
@@ -193,7 +193,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     }
 
     //settings配置
-    BOOL isConfigureShow = [TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable];
+    BOOL isConfigureShow = [TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable];
 
     NSNumber *conditionIsShowRepostEntrance = [conditions tt_objectForKey:@"kQuickInputViewConditionShowRepostEntrance"];
     //外部条件

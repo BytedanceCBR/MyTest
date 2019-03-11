@@ -12,6 +12,7 @@
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "UILabel+House.h"
+#import "FHAgencyNameInfoView.h"
 
 @implementation FHDetailPropertyListCell
 
@@ -35,14 +36,23 @@
     for (UIView *v in self.contentView.subviews) {
         [v removeFromSuperview];
     }
+
+    FHDetailPropertyListModel *propertyModel = (FHDetailPropertyListModel *)self.currentData;
     FHDetailPropertyListModel *model = (FHDetailPropertyListModel *)data;
+    FHAgencyNameInfoView *infoView = nil;
+    if (model.certificate && model.certificate.labels.count) {
+        infoView = [[FHAgencyNameInfoView alloc] init];
+        infoView.backgroundColor = [UIColor colorWithHexString:model.certificate.bgColor]?:[UIColor themeRed2];
+        [infoView setAgencyNameInfo:model.certificate.labels];
+        [self.contentView addSubview:infoView];
+    }
+    __block UIView *lastView = nil; // 最后一个视图
     NSInteger count = model.baseInfo.count;
     if (count > 0) {
         NSMutableArray *singles = [NSMutableArray new];
         __block NSInteger doubleCount = 0;// 两列计数
         __block CGFloat topOffset = 6;// 高度
         __block CGFloat listRowHeight = 29;// 30
-        __block UIView *lastView = nil; // 最后一个视图
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
         CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
@@ -121,13 +131,38 @@
                 make.left.mas_equalTo(lastViewLeftOffset);
                 make.width.mas_equalTo(vWidTemp);
                 make.height.mas_equalTo(listRowHeight);
-                make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
+                if (!infoView) {
+                    make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
+                }
             }];
         }
     }
+    
+    if (infoView) {
+        [infoView mas_makeConstraints:^(MASConstraintMaker *make) {
+            if (lastView) {
+                make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            }else{
+                make.top.mas_equalTo(10);
+            }
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(self.contentView).offset(-20);
+            make.height.mas_equalTo(26);
+            make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
+        }];
+    }
+    
     [self layoutIfNeeded];
 }
 
+- (NSArray *)elementTypeStringArray:(FHHouseType)houseType
+{
+    FHDetailPropertyListModel *model = (FHDetailPropertyListModel *)self.currentData;
+    if (model.certificate && model.certificate.labels.count) {
+        return @[@"agency_info"];
+    }
+    return @[];
+}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -160,12 +195,14 @@
 
 - (void)setupUI {
     self.backgroundColor = UIColor.whiteColor;
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#8a9299" fontSize:14];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _keyLabel.textColor = [UIColor themeGray3];
     [self addSubview:_keyLabel];
     [_keyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:14];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _valueLabel.textColor = [UIColor themeGray1];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     

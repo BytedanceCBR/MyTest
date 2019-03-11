@@ -31,7 +31,7 @@
     // descLabel
     self.descLabel = [[UILabel alloc] init];
     self.descLabel.text = @"未开通";
-    self.descLabel.textColor = [UIColor colorWithHexString:@"#e1e3e6"];
+    self.descLabel.textColor = [UIColor themeGray5];
     self.descLabel.font = [UIFont themeFontRegular:12];
     [self.contentView addSubview:self.descLabel];
     [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -41,7 +41,7 @@
     }];
     // cityNameLabel
     self.cityNameLabel = [[UILabel alloc] init];
-    self.cityNameLabel.textColor = [UIColor themeBlue1];
+    self.cityNameLabel.textColor = [UIColor themeGray1];
     self.cityNameLabel.font = [UIFont themeFontRegular:15];
     [self.contentView addSubview:self.cityNameLabel];
     [self.cityNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -72,7 +72,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+        self.backgroundColor = [UIColor themeGray7];
         self.rowViews = [[NSMutableArray alloc] init];
         [self setupUI];
     }
@@ -150,7 +150,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+        self.backgroundColor = [UIColor themeGray7];
         [self setupUI];
     }
     return self;
@@ -159,7 +159,7 @@
 - (void)setupUI {
     // label
     self.label = [[UILabel alloc] init];
-    self.label.textColor = [UIColor themeGray4];
+    self.label.textColor = [UIColor themeGray3];
     self.label.font = [UIFont themeFontRegular:16];
     [self addSubview:self.label];
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -196,7 +196,7 @@
     // label
     self.label = [[UILabel alloc] init];
     self.label.textAlignment = NSTextAlignmentCenter;
-    self.label.textColor = [UIColor colorWithHexString:@"#45494d"];
+    self.label.textColor = [UIColor themeGray1];
     self.label.font = [UIFont themeFontRegular:14 * UIScreen.mainScreen.bounds.size.width / 375.0];
     [self addSubview:self.label];
     [self.label mas_makeConstraints:^(MASConstraintMaker *make) {

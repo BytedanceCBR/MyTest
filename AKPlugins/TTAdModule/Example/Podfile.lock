@@ -1,0 +1,441 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.2):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Crashlytics (3.7.2):
+    - Fabric (~> 1.6.3)
+  - Fabric (1.6.13)
+  - FLAnimatedImage (1.0.12)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - Godzippa (1.1.0)
+  - JSONModel (1.7.0)
+  - KVOController (1.1.0)
+  - libwebp (0.6.0):
+    - libwebp/core (= 0.6.0)
+    - libwebp/dec (= 0.6.0)
+    - libwebp/demux (= 0.6.0)
+    - libwebp/dsp (= 0.6.0)
+    - libwebp/enc (= 0.6.0)
+    - libwebp/mux (= 0.6.0)
+    - libwebp/utils (= 0.6.0)
+    - libwebp/webp (= 0.6.0)
+  - libwebp/core (0.6.0):
+    - libwebp/webp
+  - libwebp/dec (0.6.0):
+    - libwebp/core
+  - libwebp/demux (0.6.0):
+    - libwebp/core
+  - libwebp/dsp (0.6.0):
+    - libwebp/core
+  - libwebp/enc (0.6.0):
+    - libwebp/core
+  - libwebp/mux (0.6.0):
+    - libwebp/core
+  - libwebp/utils (0.6.0):
+    - libwebp/core
+  - libwebp/webp (0.6.0)
+  - Masonry (1.0.1)
+  - MJExtension (3.0.13)
+  - SDWebImage/Core (4.1.0)
+  - SDWebImage/GIF (4.1.0):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - SDWebImage/WebP (4.1.0):
+    - libwebp
+    - SDWebImage/Core
+  - TTABManager (0.0.5):
+    - TTBaseLib
+  - TTAccountLogin (1.3.2):
+    - JSONModel
+    - TTAccountLogin/AccountLoginUIKit (= 1.3.2)
+    - TTAccountSDK
+    - TTBaseLib
+    - TTMonitor
+    - TTPlatformBaseLib/TTTrackerWrapper
+    - TTReachability
+    - TTTracker
+    - TTUIWidget
+  - TTAccountLogin/AccountLoginUIKit (1.3.2):
+    - JSONModel
+    - TTAccountSDK
+    - TTBaseLib
+    - TTMonitor
+    - TTPlatformBaseLib/TTTrackerWrapper
+    - TTReachability
+    - TTTracker
+    - TTUIWidget
+  - TTAccountSDK (2.3.0):
+    - TTAccountSDK/Account (= 2.3.0)
+    - TTAccountSDK/Logger (= 2.3.0)
+    - TTAccountSDK/RenRenAccount (= 2.3.0)
+    - TTAccountSDK/SinaWeiboAccount (= 2.3.0)
+    - TTAccountSDK/TencentQQAccount (= 2.3.0)
+    - TTAccountSDK/TencentWBAccount (= 2.3.0)
+    - TTAccountSDK/ThirdPartyAccountFoundation (= 2.3.0)
+    - TTAccountSDK/TianYiAccount (= 2.3.0)
+    - TTAccountSDK/WeChatAccount (= 2.3.0)
+    - TTNetworkManager
+  - TTAccountSDK/Account (2.3.0):
+    - TTAccountSDK/Logger
+    - TTNetworkManager
+  - TTAccountSDK/Logger (2.3.0):
+    - TTNetworkManager
+  - TTAccountSDK/RenRenAccount (2.3.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation
+    - TTNetworkManager
+  - TTAccountSDK/SinaWeiboAccount (2.3.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation
+    - TTNetworkManager
+    - TTThirdPartySDKs/WeiboSDK (~> 0.0.4)
+  - TTAccountSDK/TencentQQAccount (2.3.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation
+    - TTNetworkManager
+    - TTThirdPartySDKs/QQSDK (~> 0.0.4)
+  - TTAccountSDK/TencentWBAccount (2.3.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation
+    - TTNetworkManager
+  - TTAccountSDK/ThirdPartyAccountFoundation (2.3.0):
+    - TTAccountSDK/Account
+    - TTAccountSDK/ThirdPartyAccountFoundation/AuthLoginCore (= 2.3.0)
+    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 2.3.0)
+    - TTNetworkManager
+  - TTAccountSDK/ThirdPartyAccountFoundation/AuthLoginCore (2.3.0):
+    - TTAccountSDK/Account
+    - TTNetworkManager
+  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (2.3.0):
+    - TTAccountSDK/Account
+    - TTAccountSDK/ThirdPartyAccountFoundation/AuthLoginCore
+    - TTNetworkManager
+  - TTAccountSDK/TianYiAccount (2.3.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation
+    - TTNetworkManager
+  - TTAccountSDK/WeChatAccount (2.3.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation
+    - TTNetworkManager
+    - TTThirdPartySDKs/WeChatSDK (~> 0.0.4)
+  - TTAdModule (0.1.18.1):
+    - JSONModel
+    - TTBaseLib
+    - TTImage
+    - TTInstallService
+    - TTMonitor
+    - TTUIWidget
+  - TTBaseLib (1.0.23):
+    - TTBaseLib/TTBaseTool (= 1.0.23)
+    - TTBaseLib/TTBusinessManager (= 1.0.23)
+    - TTBaseLib/TTCategory (= 1.0.23)
+    - TTBaseLib/TTDeviceHelper (= 1.0.23)
+    - TTBaseLib/TTNetworkHelper (= 1.0.23)
+    - TTBaseLib/TTRobust (= 1.0.23)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.23)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.23)
+  - TTBaseLib/TTBaseTool (1.0.23)
+  - TTBaseLib/TTBusinessManager (1.0.23)
+  - TTBaseLib/TTCategory (1.0.23)
+  - TTBaseLib/TTDeviceHelper (1.0.23)
+  - TTBaseLib/TTNetworkHelper (1.0.23):
+    - TTReachability
+  - TTBaseLib/TTRobust (1.0.23)
+  - TTBaseLib/TTSandBoxHelper (1.0.23)
+  - TTBaseLib/TTUIResponderHelper (1.0.23)
+  - TTEntityBase (0.2.0):
+    - FMDB (= 2.6.2)
+  - TTImage (0.7.2):
+    - SDWebImage/Core (= 4.1.0)
+    - SDWebImage/GIF (= 4.1.0)
+    - SDWebImage/WebP (= 4.1.0)
+    - TTThemed
+  - TTImagePicker (1.0.9):
+    - TTBaseLib
+    - TTUIWidget
+  - TTInstallService (1.0.0):
+    - TTNetworkManager (>= 2.1.0)
+  - TTMonitor (0.8.1):
+    - FMDB (= 2.6.2)
+    - TTNetworkManager
+    - TTReachability
+  - TTNetBusiness (0.0.7):
+    - JSONModel
+    - TTABManager
+    - TTBaseLib
+    - TTInstallService
+    - TTMonitor
+    - TTNetworkManager
+    - TTPersistence
+    - TTServiceKit
+    - TTThemed
+    - TTTracker
+    - TTUserSettings
+  - TTNetworkManager (2.1.0):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+  - TTNewsAccountBusiness (0.1.14):
+    - TTNewsAccountBusiness/Classes (= 0.1.14)
+    - TTNewsAccountBusiness/SSCookieManager (= 0.1.14)
+  - TTNewsAccountBusiness/Classes (0.1.14):
+    - TTAccountLogin
+    - TTAccountSDK
+    - TTInstallService
+    - TTPlatformBaseLib/TTKeyChainStorage
+    - TTServiceKit
+  - TTNewsAccountBusiness/SSCookieManager (0.1.14)
+  - TTPersistence (0.2.3)
+  - TTPlatformBaseLib (0.2.6):
+    - TTPlatformBaseLib/ArticleJSManager (= 0.2.6)
+    - TTPlatformBaseLib/TTCategoryManager (= 0.2.6)
+    - TTPlatformBaseLib/TTIconFontDefine (= 0.2.6)
+    - TTPlatformBaseLib/TTKeyChainStorage (= 0.2.6)
+    - TTPlatformBaseLib/TTPlatformSwitcher (= 0.2.6)
+    - TTPlatformBaseLib/TTPostDataSerializer (= 0.2.6)
+    - TTPlatformBaseLib/TTProfileFillManager (= 0.2.6)
+    - TTPlatformBaseLib/TTTAssetCountHelper (= 0.2.6)
+    - TTPlatformBaseLib/TTTrackerWrapper (= 0.2.6)
+    - TTPlatformBaseLib/TTURLDomainHelper (= 0.2.6)
+  - TTPlatformBaseLib/ArticleJSManager (0.2.6)
+  - TTPlatformBaseLib/TTCategoryManager (0.2.6)
+  - TTPlatformBaseLib/TTIconFontDefine (0.2.6)
+  - TTPlatformBaseLib/TTKeyChainStorage (0.2.6)
+  - TTPlatformBaseLib/TTPlatformSwitcher (0.2.6)
+  - TTPlatformBaseLib/TTPostDataSerializer (0.2.6)
+  - TTPlatformBaseLib/TTProfileFillManager (0.2.6)
+  - TTPlatformBaseLib/TTTAssetCountHelper (0.2.6)
+  - TTPlatformBaseLib/TTTrackerWrapper (0.2.6):
+    - TTTracker
+  - TTPlatformBaseLib/TTURLDomainHelper (0.2.6)
+  - TTPlatformUIModel (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTPlatformUIModel/HPGrowingTextView (= 0.2.18)
+    - TTPlatformUIModel/TTActionSheet (= 0.2.18)
+    - TTPlatformUIModel/TTAssetView (= 0.2.18)
+    - TTPlatformUIModel/TTBackButtonView (= 0.2.18)
+    - TTPlatformUIModel/TTBubbleView (= 0.2.18)
+    - TTPlatformUIModel/TTCategory (= 0.2.18)
+    - TTPlatformUIModel/TTDetailViewController (= 0.2.18)
+    - TTPlatformUIModel/TTFeedDislikeView (= 0.2.18)
+    - TTPlatformUIModel/TTHeaderScrollView (= 0.2.18)
+    - TTPlatformUIModel/TTImageDetectorViewController (= 0.2.18)
+    - TTPlatformUIModel/TTLabel (= 0.2.18)
+    - TTPlatformUIModel/TTModel (= 0.2.18)
+    - TTPlatformUIModel/TTSeachBarView (= 0.2.18)
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/HPGrowingTextView (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTActionSheet (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTAssetView (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTBackButtonView (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTBubbleView (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTCategory (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTDetailViewController (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTFeedDislikeView (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTHeaderScrollView (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTImageDetectorViewController (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTLabel (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTModel (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTSeachBarView (0.2.18):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTReachability (0.1.8)
+  - TTRoute (0.2.19)
+  - TTServiceKit (0.4.2)
+  - TTThemed (0.1.5):
+    - TTBaseLib
+  - TTThirdPartySDKs/QQSDK (0.0.4)
+  - TTThirdPartySDKs/WeChatSDK (0.0.4)
+  - TTThirdPartySDKs/WeiboSDK (0.0.4)
+  - TTTracker (1.0.0):
+    - FMDB (~> 2.6.2)
+    - TTInstallService (>= 1.0.0)
+    - TTNetworkManager (>= 2.1.0)
+  - TTUIWidget (0.8.36):
+    - KVOController (= 1.1.0)
+    - Masonry (= 1.0.1)
+    - TTBaseLib
+    - TTImage
+    - TTRoute
+    - TTThemed
+    - TTVerifyKit
+  - TTUserSettings (0.3.3):
+    - TTBaseLib
+    - TTNetworkManager (< 3.0)
+  - TTVerifyKit (0.3.0):
+    - TTBaseLib
+    - TTImage (~> 0.7)
+    - TTThemed
+
+DEPENDENCIES:
+  - Crashlytics (= 3.7.2)
+  - TTAccountSDK
+  - TTAdModule (from `../`)
+  - TTImagePicker
+  - TTInstallService (= 1.0.0)
+  - TTNetBusiness
+  - TTNetworkManager (= 2.1.0)
+  - TTNewsAccountBusiness
+  - TTPersistence
+  - TTPlatformBaseLib
+  - TTPlatformUIModel
+  - TTTracker (= 1.0.0)
+
+EXTERNAL SOURCES:
+  TTAdModule:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Crashlytics: 130ab943f8c78cda7a814b434f270b2e2c8a3cba
+  Fabric: 2fb5676bc811af011a04513451f463dac6803206
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
+  JSONModel: 840bc0fcffb24b8454d2c026bf26fea454b8e98d
+  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
+  libwebp: 1d5a07c2eb97f9c31bd5f154bb82efc0ea67c6a2
+  Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
+  MJExtension: 5932755f451458eefa24239358817f8d291240c7
+  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+  TTABManager: 9193051c1e8ae4850ec95e5f277c95918207b31a
+  TTAccountLogin: 9bd376e3cb72e4d95e5e7afde3286f1489c66bf3
+  TTAccountSDK: a3a969ebea365a49ea095066e3a0db6c3ee79242
+  TTAdModule: baebf4546a23b1dbd1bda70b5266995e74eb64cd
+  TTBaseLib: 5e1e660dc806f8ff205feb5353694b434c4afa16
+  TTEntityBase: 2a3f8ad8d2314b435aed7bd009956f9c3acf834e
+  TTImage: da387306d0bf91f456e9506a0f8bec0bfa02d7ae
+  TTImagePicker: 887edf863677aefe0f87fee9056326686907ad53
+  TTInstallService: 9265bd760a7ce358beb779c80392fba9d25f6c31
+  TTMonitor: 81d9415841e0997fa1780af08f5bb1bd2bd10b50
+  TTNetBusiness: dd7c42839b2a6eda925c48b0cc59b11fd62f11ec
+  TTNetworkManager: 9cf0160da8a981831f968142b5e3ffb7f3bfc704
+  TTNewsAccountBusiness: 35f2ab8ddd38d11b8927d94711e8995577b5cdb4
+  TTPersistence: efdb5743bbe6b3413570363d29ccb1a83f415426
+  TTPlatformBaseLib: 10a65cbefe92773ef182b0898003d4881248e318
+  TTPlatformUIModel: 0165442f6f9f2a34d89cf7ce1b1dbce54b1d808d
+  TTReachability: 9148c1a7f8f4dd169b76a8729620e8ed3da43b21
+  TTRoute: 03b5a0f3b2ea7044869f01483cbf50a980229379
+  TTServiceKit: 77b50aa5724a7a5e2aeecae59066c5bc47b041c3
+  TTThemed: c671929a0e6e293128c1c7d85e5190b581f8dc41
+  TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
+  TTTracker: c5311aba5673f43f04e120fcdbe22bbdd0ac536e
+  TTUIWidget: 5281d3b48a8891132a1443ba704645ad02c4b433
+  TTUserSettings: 09e3bfe8944124f72aa2d588de03daf53e961c34
+  TTVerifyKit: cc38d6605f2cc02585c6632e711310ef828ce569
+
+PODFILE CHECKSUM: 63a1fec457ec74971afd58de97b07540b95e558c
+
+COCOAPODS: 1.2.1

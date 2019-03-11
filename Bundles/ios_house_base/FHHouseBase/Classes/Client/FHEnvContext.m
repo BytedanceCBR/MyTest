@@ -19,10 +19,11 @@
 #import "ToastManager.h"
 #import "TTArticleCategoryManager.h"
 #import <objc/runtime.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
 #import "FHMessageManager.h"
+#import <HMDTTMonitor.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -109,10 +110,22 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 }
                 [[ToastManager manager] dismissCustomLoading];
                 [[ToastManager manager] showToast:@"切换城市失败"];
+                NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
+                
+                NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+                
+                [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" metric:nil category:params extra:paramsExtra];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
         }];
+    }else
+    {
+        if (!cityId) {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_city_id_error" attributes:@{@"desc":@"上报切换城市id不合法,",@"reason":@"city_id为0或者其他"}];
+        }
     }
 }
 

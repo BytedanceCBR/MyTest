@@ -91,7 +91,7 @@
 {
     UILabel *label = [[UILabel alloc] init];
     label.font = [UIFont themeFontSemibold:14];
-    label.textColor = [UIColor colorWithHexString:@"#081f33"];
+    label.textColor = [UIColor themeGray1];
     label.numberOfLines = 1;
     label.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     self.countryLabel = label;
@@ -168,7 +168,7 @@
 
     self.categoryPlaceholderLabel = [UILabel new];
     self.categoryPlaceholderLabel.font = [UIFont themeFontRegular:14];
-    self.categoryPlaceholderLabel.textColor = [UIColor colorWithHexString:@"#8a9299"];
+    self.categoryPlaceholderLabel.textColor = [UIColor themeGray3];
     self.categoryPlaceholderLabel.text = [UIScreen mainScreen].bounds.size.width < 375 ? @"输入小区/商圈/地铁" : @"请输入小区/商圈/地铁";
 
     [self addSubview:self.categoryPlaceholderLabel];
@@ -196,7 +196,7 @@
 
     self.categoryLabel1 = [UILabel new];
     self.categoryLabel1.font = [UIFont themeFontRegular:14];
-    self.categoryLabel1.textColor = [UIColor colorWithHexString:@"#081f33"];
+    self.categoryLabel1.textColor = [UIColor themeGray1];
     self.categoryLabel1.text = @"";
 
 
@@ -204,22 +204,24 @@
 
     [self.categoryLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(9);
-        make.left.right.centerY.equalTo(self.categoryBgView);
+        make.left.centerY.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
+        make.right.equalTo(self.categoryBgView).offset(-5);
     }];
 
 
     self.categoryLabel2 = [UILabel new];
     self.categoryLabel2.font = [UIFont themeFontRegular:14];
-    self.categoryLabel2.textColor = [UIColor colorWithHexString:@"#081f33"];
+    self.categoryLabel2.textColor = [UIColor themeGray1];
     self.categoryLabel2.text = @"";
 
     [self.categoryBgView addSubview:self.categoryLabel2];
 
     [self.categoryLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(35);
-        make.left.right.equalTo(self.categoryBgView);
+        make.left.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
+        make.right.equalTo(self.categoryBgView).offset(-5);
     }];
 
     self.searchBtn = [UIButton new];
@@ -251,15 +253,31 @@
     infos[@"from_home"] = @(1);
     if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count) {
         FHHomeRollDataDataModel *model = self.rollDatas[self.searchTitleIndex];
-        NSMutableDictionary *homePageRollData = [NSMutableDictionary new];
-        homePageRollData[@"text"] = model.text ?: @"";
-        homePageRollData[@"guess_search_id"] = model.guessSearchId ?: @"";
-        homePageRollData[@"house_type"] = model.houseType ?: @"";
-        homePageRollData[@"open_url"] = model.openUrl ?: @"";
-        infos[@"homepage_roll_data"] = homePageRollData;
+        if (model.detail.count > 0) {
+            FHHomeRollDataDataDetailModel *detailModel = model.detail[0];
+            NSMutableDictionary *homePageRollData = [NSMutableDictionary new];
+            homePageRollData[@"text"] = detailModel.text ?: @"";
+            homePageRollData[@"guess_search_id"] = detailModel.guessSearchId ?: @"";
+            homePageRollData[@"house_type"] = detailModel.houseType ?: @"";
+            homePageRollData[@"open_url"] = detailModel.openUrl ?: @"";
+            infos[@"homepage_roll_data"] = homePageRollData;
+            // 猜你想搜前3个词：guessYouWantWords
+            NSMutableArray *guessYouWantWords = [NSMutableArray new]; // 数组里面3个字典
+            [model.detail enumerateObjectsUsingBlock:^(FHHomeRollDataDataDetailModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSMutableDictionary *temp = [NSMutableDictionary new];
+                temp[@"text"] = obj.text ?: @"";
+                temp[@"guess_search_id"] = obj.guessSearchId ?: @"";
+                temp[@"house_type"] = obj.houseType ?: @"";
+                temp[@"open_url"] = obj.openUrl ?: @"";
+                [guessYouWantWords addObject:temp];
+            }];
+            if (guessYouWantWords.count > 0) {
+                infos[@"guess_you_want_words"] = guessYouWantWords;
+            }
+        }
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://sug_list"] userInfo:userInfo];
+    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
 
 }
 
@@ -326,7 +344,6 @@
 - (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
 {
     _searchTitles = searchTitles;
-
     if (kIsNSArray(_searchTitles)) {
         self.searchTitleIndex = 0;
         if (_searchTitles.count  > 0) {

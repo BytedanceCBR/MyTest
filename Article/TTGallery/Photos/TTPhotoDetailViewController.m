@@ -43,7 +43,7 @@
 #import "TTURLTracker.h"
 #import <TTTracker/TTTrackerProxy.h>
 #import "TTServiceCenter.h"
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 //爱看
 #import "AKHelper.h"
@@ -1411,7 +1411,7 @@
 
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error {
     // toolbar 禁表情
-    BOOL  isBanRepostOrEmoji = ![TTKitchen getBOOL:kTTKCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    BOOL  isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
     self.toolbarView.banEmojiInput = self.commentViewController.banEmojiInput || isBanRepostOrEmoji;
 }
 

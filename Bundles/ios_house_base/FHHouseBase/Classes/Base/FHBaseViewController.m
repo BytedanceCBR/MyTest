@@ -65,6 +65,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // push过来的页面默认状态栏是隐藏的
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     self.view.backgroundColor = UIColor.whiteColor;
@@ -167,7 +168,7 @@
         [_customNavBarView mas_makeConstraints:^(MASConstraintMaker *maker) {
             if (@available(iOS 11.0 , *)) {
                 maker.left.right.top.mas_equalTo(self.view);
-                maker.height.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
+                maker.height.mas_equalTo(44.f + [UIApplication sharedApplication].delegate.window.safeAreaInsets.top);
             } else {
                 maker.left.right.top.mas_equalTo(self.view);
                 maker.height.mas_equalTo(65);

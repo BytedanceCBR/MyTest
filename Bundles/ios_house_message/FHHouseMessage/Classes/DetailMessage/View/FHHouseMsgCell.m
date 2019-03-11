@@ -71,10 +71,8 @@
     [self.contentView addSubview:_imgView];
     
     self.imageTopLeftLabelBgView = [[UIView alloc] init];
-    _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed];
+    _imageTopLeftLabelBgView.backgroundColor = [UIColor themeRed1];
     _imageTopLeftLabelBgView.hidden = YES;
-//    _imageTopLeftLabelBgView.layer.cornerRadius = 4;
-//    _imageTopLeftLabelBgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_imageTopLeftLabelBgView];
     
     self.imageTopLeftLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor whiteColor]];
@@ -85,23 +83,23 @@
     self.infoPanel = [[UIView alloc] init];
     [self.contentView addSubview:_infoPanel];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
     [self.infoPanel addSubview:_titleLabel];
     
-    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
+    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.infoPanel addSubview:_subTitleLabel];
     
     self.areaLabel = [[YYLabel alloc] init];
     _areaLabel.numberOfLines = 0;
     _areaLabel.font = [UIFont themeFontRegular:12];
-    _areaLabel.textColor = [UIColor themeGray];
+    _areaLabel.textColor = [UIColor themeGray1];
     _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self.infoPanel addSubview:_areaLabel];
     
-    self.priceLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor themeRed]];
+    self.priceLabel = [self LabelWithFont:[UIFont themeFontMedium:14] textColor:[UIColor themeRed1]];
     [self.contentView addSubview:_priceLabel];
     
-    self.roomSpaceLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray]];
+    self.roomSpaceLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [_roomSpaceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_roomSpaceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.contentView addSubview:_roomSpaceLabel];
@@ -193,15 +191,24 @@
         self.roomSpaceLabel.text = model.pricePerSqm;
     }
     
+    //超过1行时候，只显示一行，不能显示的tag就不显示了
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] init];
-    
+    NSMutableAttributedString *temptext = [[NSMutableAttributedString alloc] init];
     NSArray *attrTexts = model.tags;
+    CGFloat areaLabelMaxWidth = [UIScreen mainScreen].bounds.size.width - 164;
     
     for (NSInteger i = 0; i < attrTexts.count; i++) {
         FHHouseMsgDataItemsItemsTagsModel *tag = attrTexts[i];
-        
+        temptext = [text mutableCopy];
         NSAttributedString *attrText = [self createTagAttrStringWithText:tag.content isFirst:(i == 0) textColor:HEXRGBA(tag.textColor) backgroundColor:HEXRGBA(tag.backgroundColor)];
-        [text appendAttributedString:attrText];
+        [temptext appendAttributedString:attrText];
+        CGSize strSize = [[temptext string] boundingRectWithSize:CGSizeMake(MAXFLOAT,  MAXFLOAT)
+                                                        options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                                                     attributes:attrText.yy_attributes
+                                                        context:nil].size;
+        if(strSize.width < areaLabelMaxWidth){
+            text = [temptext mutableCopy];
+        }
     }
     
     self.areaLabel.attributedText = text;
@@ -225,9 +232,9 @@
     }
     
     if([model.status integerValue] == 1){ // 已下架
-        self.priceLabel.textColor = [UIColor themeGray];
+        self.priceLabel.textColor = [UIColor themeGray1];
     }else{
-        self.priceLabel.textColor = [UIColor themeRed];
+        self.priceLabel.textColor = [UIColor themeRed1];
     }
 }
 
@@ -294,7 +301,7 @@
             make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
             make.height.mas_equalTo(17);
         }];
-        
+                
         [self.areaLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.infoPanel);
             make.top.mas_equalTo(self.subTitleLabel.mas_bottom);

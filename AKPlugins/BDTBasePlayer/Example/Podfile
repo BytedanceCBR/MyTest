@@ -1,0 +1,17 @@
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+# ignore all warnings from all pods
+#inhibit_all_warnings!
+
+target 'BDTBasePlayer_Example' do
+    pod 'BDTBasePlayer', :path => '../'
+    pod 'TTPlayerSDK', '2.9.3.14'
+    pod 'TTFFmpeg', '1.2.5'
+    pod 'TTVideoEngine', '1.8.3.8'
+    pod 'TTPreloaderSDK', '1.4.16'
+    pod 'TTFileUploadClient', ‘1.5.1.1'
+end
+
+

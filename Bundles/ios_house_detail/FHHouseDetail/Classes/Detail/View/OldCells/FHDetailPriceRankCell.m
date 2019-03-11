@@ -103,7 +103,7 @@
 {
     if (!_bgView) {
         _bgView = [[UIView alloc]init];
-        _bgView.backgroundColor = [UIColor colorWithHexString:@"#f2f4f5" alpha:0.4];
+        _bgView.backgroundColor = [UIColor themeGray7];
     }
     return _bgView;
 }
@@ -113,7 +113,7 @@
     if (!_tipLabel) {
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.font = [UIFont themeFontRegular:16];
-        _tipLabel.textColor = [UIColor themeBlack];
+        _tipLabel.textColor = [UIColor themeGray1];
         _tipLabel.text = @"同小区同户型挂牌价排名";
     }
     return _tipLabel;
@@ -124,7 +124,7 @@
     if (!_rankLabel) {
         _rankLabel = [[UILabel alloc]init];
         _rankLabel.font = [UIFont themeFontRegular:12];
-        _rankLabel.textColor = [UIColor themeBlack];
+        _rankLabel.textColor = [UIColor themeGray1];
     }
     return _rankLabel;
 }
@@ -133,7 +133,7 @@
 {
     if (!_line) {
         _line = [[UIView alloc]init];
-        _line.backgroundColor = [UIColor whiteColor];
+        _line.backgroundColor = [UIColor themeGray6];
     }
     return _line;
 }
@@ -143,7 +143,7 @@
     if (!_subtitleLabel) {
         _subtitleLabel = [[UILabel alloc]init];
         _subtitleLabel.font = [UIFont themeFontRegular:14];
-        _subtitleLabel.textColor = [UIColor colorWithHexString:@"#737a80"];
+        _subtitleLabel.textColor = [UIColor themeGray3];
         _subtitleLabel.numberOfLines = 0;
     }
     return _subtitleLabel;

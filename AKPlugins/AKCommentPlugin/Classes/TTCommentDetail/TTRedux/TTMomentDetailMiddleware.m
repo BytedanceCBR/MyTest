@@ -20,6 +20,7 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTNewsAccountBusiness/TTAccountBusiness.h>
 #import <TTUGCFoundation/TTRichSpanText+Comment.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import <TTUGCAttributedLabel.h>
 #import <TTShare/TTShareManager.h>
 #import <TTShare/TTWechatTimelineContentItem.h>
@@ -29,7 +30,6 @@
 //#import <TTShare/TTDingTalkContentItem.h>
 #import <AKShareServicePlugin/TTForwardWeitoutiaoContentItem.h>
 #import <SDWebImage/SDImageCache.h>
-#import <TTKitchen/TTKitchen.h>
 
 
 @interface TTMomentDetailMiddleware () <UIActionSheetDelegate, TTShareManagerDelegate>
@@ -483,7 +483,7 @@
 - (nullable NSArray<id<TTActivityContentItemProtocol>> *)shareContentItems:(TTCommentDetailModel *)commentDetailModel {
     NSMutableArray *shareActivityContentItemTypes = [NSMutableArray array];
 
-    NSString *shareTitle = [TTKitchen getString:kTTKUGCFeedNamesShare];
+    NSString *shareTitle = [TTKitchen getString:kKCUGCFeedNamesShare];
     NSString *shareDescription = isEmptyString(commentDetailModel.content) ? NSLocalizedString(@"发现你感兴趣的新鲜事", nil) : [NSString stringWithFormat:@"%@: %@", commentDetailModel.user.name, commentDetailModel.content];
     UIImage *shareImage = [self wechatImageWithGroupThumbnailURLString:commentDetailModel.groupThumbURL avatarURLString:commentDetailModel.user.avatarURLString];
     NSString *shareImageUrl = commentDetailModel.groupThumbURL ?: commentDetailModel.user.avatarURLString;

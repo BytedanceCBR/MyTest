@@ -19,7 +19,7 @@
 #import <TTURLUtils.h>
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTAdPromotionManager.h"
-#import <TTKitchen/TTKitchen.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 
 #pragma mark - Class Cluster
@@ -847,7 +847,7 @@
 }
 
 - (NSString *)activityTitle {
-    return [TTKitchen getString:kTTKUGCRepostWordingShareIconTitle];
+    return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
 }
 
 - (UIImage *)activityImage {

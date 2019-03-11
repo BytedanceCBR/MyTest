@@ -10,7 +10,7 @@
 #import <TTVideoService/VideoFeed.pbobjc.h>
 #import <TTVideoService/Common.pbobjc.h>
 #import "TTVFeedItem+Extension.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTIconLabel+VerifyIcon.h"
 
 #define kLeftPadding        15

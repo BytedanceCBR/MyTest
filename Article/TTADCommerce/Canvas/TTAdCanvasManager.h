@@ -10,7 +10,7 @@
 #import "TTAdCanvasLayoutModel.h"
 #import "TTAdCanvasModel.h"
 #import "TTAdSingletonManager.h"
-#import "TTRNView.h"
+//#import "TTRNView.h"
 #import <Foundation/Foundation.h>
 #import <TTShareManager.h>
 
@@ -22,9 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 Singleton_Interface(TTAdCanvasManager)
 
-@property (nonatomic, strong, nullable) TTRNView *rnView;
+//@property (nonatomic, strong, nullable) TTRNView *rnView;
 
-- (TTRNView *)createRNView;
+//- (TTRNView *)createRNView;
 
 - (void)destroyRNView;
 
@@ -76,7 +76,7 @@ Singleton_Interface(TTAdCanvasManager)
 + (void)mergeProjects:(NSArray<TTAdCanvasProjectModel *> *) projectModels;
 + (void)mergeProject:(TTAdCanvasProjectModel *)projectModel;
 
-- (void)setRNFatalHandler:(TTRNFatalHandler)handler;
+//- (void)setRNFatalHandler:(TTRNFatalHandler)handler;
 
 - (void)canvasCall;
 

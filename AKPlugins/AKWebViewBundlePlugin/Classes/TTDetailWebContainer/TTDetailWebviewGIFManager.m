@@ -13,7 +13,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "FLAnimatedImageView+WebCache.h"
 #import "TTThemeManager.h"
-#import "YYImage.h"
+#import <YYImage/YYImage.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <mach/mach.h>
 #import "TTDetailWebviewContainer.h"
