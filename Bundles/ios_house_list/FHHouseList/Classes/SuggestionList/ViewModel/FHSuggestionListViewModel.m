@@ -309,6 +309,9 @@
                     break;
             }
             break;
+        case FHEnterSuggestionTypeOldMain:
+            retPageTypeStr = @"old_kind_list";
+            break;
         default:
             retPageTypeStr = @"maintab";
             break;
