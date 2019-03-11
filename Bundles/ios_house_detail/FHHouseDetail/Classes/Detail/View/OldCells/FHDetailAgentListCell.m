@@ -328,7 +328,7 @@
     [self addSubview:_name];
     
     self.agency = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _name.textColor = [UIColor themeGray3];
+    _agency.textColor = [UIColor themeGray3];
     _agency.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_agency];
     

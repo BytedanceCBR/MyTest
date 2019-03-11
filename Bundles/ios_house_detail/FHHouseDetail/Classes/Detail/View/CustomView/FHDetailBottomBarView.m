@@ -58,8 +58,14 @@
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
     [self.leftView addSubview:self.licenceIcon];
+    
+    CGFloat avatarLeftMargin = 20;
+    if ([TTDeviceHelper is568Screen]) {
+        avatarLeftMargin = 15;
+    }
+    
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(avatarLeftMargin);
         make.centerY.mas_equalTo(self);
         make.width.height.mas_equalTo(42);
     }];
@@ -91,15 +97,18 @@
     }];
     
     CGFloat btnBetween = 10;
+    CGFloat btnRightMargin = -20;
     if ([TTDeviceHelper is568Screen]) {
         btnBetween = 5;
+        btnRightMargin = -15;
     }
     [self addSubview:self.contactBtn];
+    
     [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(10);
         make.bottom.mas_equalTo(-10);
         make.left.mas_equalTo(self.imChatBtn.mas_right).offset(btnBetween);
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(btnRightMargin);
         make.height.mas_equalTo(44);
     }];
     
@@ -164,7 +173,12 @@
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     self.imChatBtn.hidden = !isEmptyString(contactPhone.imOpenUrl) ? NO : YES;
     
-    CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? [UIScreen mainScreen].bounds.size.width - 228 : 0;
+    CGFloat offset = 228;
+    if ([TTDeviceHelper is568Screen]) {
+        offset = 178;
+    }
+    
+    CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? [UIScreen mainScreen].bounds.size.width - offset : 0;
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
     if (contactPhone.realtorName.length > 0) {
         if (contactPhone.realtorName.length > 4) {
