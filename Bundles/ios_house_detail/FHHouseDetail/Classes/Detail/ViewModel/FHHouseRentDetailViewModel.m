@@ -132,12 +132,14 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -184,6 +186,8 @@
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.houseImage) {
@@ -319,6 +323,34 @@
      }];
  }
 
+- (void)addDetailCoreInfoExcetionLog
+{
+    //    detail_core_info_error
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    NSInteger status = 0;
+    FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
+    if (!model) {
+        return;
+    }
+    if (model.data.title.length < 1) {
+        attr[@"title"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeTitle;
+    }
+    if (model.data.houseImage.count < 1) {
+        attr[@"image"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeImage;
+    }
+    if (model.data.coreInfo.count < 1) {
+        attr[@"core_info"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeCoreInfo;
+    }
+    attr[@"house_type"] = @(self.houseType);
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_core_info_error" status:status extra:attr];
+    
+}
 
 @end
 

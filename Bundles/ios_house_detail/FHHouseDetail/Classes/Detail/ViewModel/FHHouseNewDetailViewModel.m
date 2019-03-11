@@ -124,17 +124,25 @@
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
-            wSelf.dataModel = model;
-            wSelf.detailController.hasValidateData = YES;
-            [wSelf.detailController.emptyView hideEmptyView];
-            wSelf.bottomBar.hidden = NO;
-            [wSelf processDetailData:model];
-        }else
-        {
+            if (model.data) {
+                wSelf.dataModel = model;
+                wSelf.detailController.hasValidateData = YES;
+                [wSelf.detailController.emptyView hideEmptyView];
+                wSelf.bottomBar.hidden = NO;
+                [wSelf processDetailData:model];
+            }else {
+                wSelf.detailController.isLoadingData = NO;
+                wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+            }
+        }else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -142,6 +150,8 @@
 
 - (void)processDetailData:(FHDetailNewModel *)model {
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.highlightedRealtor) {
@@ -322,4 +332,32 @@
     }
 }
 
+- (void)addDetailCoreInfoExcetionLog
+{
+    //    detail_core_info_error
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    NSInteger status = 0;
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    if (!model) {
+        return;
+    }
+    if (model.data.coreInfo.name.length < 1) {
+        attr[@"title"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeTitle;
+    }
+    if (model.data.imageGroup.count < 1) {
+        attr[@"image"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeImage;
+    }
+    if (model.data.coreInfo == nil) {
+        attr[@"core_info"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeCoreInfo;
+    }
+    attr[@"house_type"] = @(self.houseType);
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_core_info_error" status:status extra:attr];
+    
+}
 @end

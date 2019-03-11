@@ -278,5 +278,19 @@
     
 }
 
+// excetionLog
+- (void)addDetailCoreInfoExcetionLog
+{
+    
+}
+
+- (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message
+{
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    attr[@"message"] = message;
+    attr[@"house_type"] = @(self.houseType);
+    attr[@"house_id"] = self.houseId;
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_failed" status:status extra:attr];
+}
 
 @end
