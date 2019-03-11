@@ -662,13 +662,13 @@
     } callbackInMainThread:NO];
 }
 
-+ (void)addDetailRelatedRequestFailedLog:(NSString *)urlStr houseId:(NSString *)houseId status:(NSInteger)status message:(NSString *)message
++ (void)addDetailRelatedRequestFailedLog:(NSString *)urlStr houseId:(NSString *)houseId status:(NSString *)status message:(NSString *)message
 {
     NSMutableDictionary *attr = @{}.mutableCopy;
     attr[@"message"] = message;
     attr[@"house_id"] = houseId;
     attr[@"url"] = urlStr;
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_related_failed" status:status extra:attr];
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_related_failed" status:status.integerValue extra:attr];
 }
 
 @end
