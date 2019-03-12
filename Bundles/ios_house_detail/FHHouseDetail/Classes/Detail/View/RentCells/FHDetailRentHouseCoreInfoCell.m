@@ -41,9 +41,8 @@
     if (count > 0) {
         CGFloat fixedSpace = 4.0;
         __block CGFloat width = ((UIScreen.mainScreen.bounds.size.width - 40) - (count - 1) * fixedSpace) / count;
-        __block CGFloat remainWidth = UIScreen.mainScreen.bounds.size.width - 40;
         __block CGFloat leftOffset = 20.0;
-        __block BOOL firstItemTooLength = NO;
+        __block BOOL firstWordTooLong = NO;
         [model.coreInfo enumerateObjectsUsingBlock:^(FHDetailOldDataCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailRentHouseCoreInfoItemView *itemView = [[FHDetailRentHouseCoreInfoItemView alloc] init];
             [self.contentView addSubview:itemView];
@@ -52,13 +51,19 @@
             itemView.valueLabel.text = obj.attr;
             CGSize size = [itemView.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 40)];
             if (size.width + 20 > width && idx == 0) {
-                firstItemTooLength = YES;
-            }
-            if (firstItemTooLength) {
+                // 第一个数据如果过长，展示完全
                 width = size.width + 21;
-                if (width > remainWidth) {
-                    width = remainWidth;
+                firstWordTooLong = YES;
+            }
+            if (firstWordTooLong) {
+                itemView.keyLabel.font = [UIFont themeFontMedium:14];
+                if (idx == 0) {
+                    // 第一个数据重新计算
+                    size = [itemView.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 40)];
+                    width = size.width + 21;
                 }
+            } else {
+                itemView.keyLabel.font = [UIFont themeFontMedium:15];
             }
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.contentView);
@@ -66,12 +71,9 @@
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
             leftOffset += (width + fixedSpace);
-            // 重新计算remainWidth
-            if (firstItemTooLength) {
-                remainWidth -= (width + fixedSpace);
-                if (remainWidth < 0) {
-                    remainWidth = 0;
-                }
+            // 重新计算item width
+            if (count - 1 - idx > 0 && idx == 0) {
+                width = ((UIScreen.mainScreen.bounds.size.width - leftOffset - 20) - (count - 2 - idx) * fixedSpace) / (count - 1 - idx);
             }
         }];
     }
