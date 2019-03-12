@@ -57,7 +57,7 @@
 }
 
 - (NSString *)sessionId {
-    return [[TTAccount sharedAccount] sessionKey];
+    return [[TTAccount sharedAccount] sessionKey] ?: @"";
 }
 
 - (void)registerTTRoute {
