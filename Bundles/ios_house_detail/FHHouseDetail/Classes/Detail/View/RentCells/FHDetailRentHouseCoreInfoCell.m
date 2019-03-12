@@ -40,20 +40,29 @@
     NSInteger count = model.coreInfo.count;
     if (count > 0) {
         CGFloat fixedSpace = 4.0;
-        CGFloat width = ((UIScreen.mainScreen.bounds.size.width - 40) - (count - 1) * fixedSpace) / count;
+        __block CGFloat width = ((UIScreen.mainScreen.bounds.size.width - 40) - (count - 1) * fixedSpace) / count;
         __block CGFloat leftOffset = 20.0;
         [model.coreInfo enumerateObjectsUsingBlock:^(FHDetailOldDataCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailRentHouseCoreInfoItemView *itemView = [[FHDetailRentHouseCoreInfoItemView alloc] init];
             [self.contentView addSubview:itemView];
+            // 设置数据
+            itemView.keyLabel.text = obj.value;
+            itemView.valueLabel.text = obj.attr;
+            CGSize size = [itemView.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 40)];
+            if (size.width + 20 > width) {
+                // 说明
+                width = size.width + 21;
+            }
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.contentView);
                 make.width.mas_equalTo(width);
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
             leftOffset += (width + fixedSpace);
-            // 设置数据
-            itemView.keyLabel.text = obj.value;
-            itemView.valueLabel.text = obj.attr;
+            // 重新计算item width
+            if (count - 1 - idx > 0) {
+                width = ((UIScreen.mainScreen.bounds.size.width - leftOffset - 20) - (count - 2 - idx) * fixedSpace) / (count - 1 - idx);
+            }
         }];
     }
     [self layoutIfNeeded];
