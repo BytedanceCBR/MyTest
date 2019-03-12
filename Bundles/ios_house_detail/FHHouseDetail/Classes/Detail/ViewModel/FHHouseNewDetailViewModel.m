@@ -233,6 +233,7 @@
         newsCellModel.hasMore = model.data.timeline.hasMore;
         newsCellModel.titleText = @"楼盘动态";
         newsCellModel.courtId = model.data.coreInfo.id;
+        newsCellModel.clickEnable = YES;
         
         [self.items addObject:newsCellModel];
         
@@ -300,6 +301,8 @@
         FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
         newsCellModel.hasMore = NO;
         newsCellModel.titleText = @"周边新盘";
+        newsCellModel.clickEnable = NO;
+        
         [self.items addObject:newsCellModel];
         
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
