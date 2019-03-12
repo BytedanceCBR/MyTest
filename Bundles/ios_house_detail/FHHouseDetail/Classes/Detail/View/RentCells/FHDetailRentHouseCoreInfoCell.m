@@ -49,8 +49,8 @@
             itemView.keyLabel.text = obj.value;
             itemView.valueLabel.text = obj.attr;
             CGSize size = [itemView.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 40)];
-            if (size.width + 20 > width) {
-                // 说明
+            if (size.width + 20 > width && idx == 0) {
+                // 第一个数据如果过长，展示完全
                 width = size.width + 21;
             }
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -60,7 +60,7 @@
             }];
             leftOffset += (width + fixedSpace);
             // 重新计算item width
-            if (count - 1 - idx > 0) {
+            if (count - 1 - idx > 0 && idx == 0) {
                 width = ((UIScreen.mainScreen.bounds.size.width - leftOffset - 20) - (count - 2 - idx) * fixedSpace) / (count - 1 - idx);
             }
         }];
