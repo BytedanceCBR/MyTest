@@ -57,7 +57,7 @@
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray3]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:10],NSForegroundColorAttributeName:[UIColor themeGray3]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             NSRange range = [self rangeOfArray:obj.highlightRange originalLength:text.length];
@@ -154,7 +154,7 @@
     _lineHeight = 0;
     self.contentView.backgroundColor = [UIColor themeGray7];
     
-    _ownerLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _ownerLabel = [UILabel createLabel:@"" textColor:@"" fontSize:10];
     _ownerLabel.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_ownerLabel];
     
@@ -168,14 +168,14 @@
     _disclaimerContent = [[YYLabel alloc] init];
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor themeGray3];
-    _disclaimerContent.font = [UIFont themeFontRegular:12];
+    _disclaimerContent.font = [UIFont themeFontRegular:10];
     _disclaimerContent.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_disclaimerContent];
     
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(5);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(14);
         make.right.mas_equalTo(self.contactIcon.mas_left).offset(-6);
     }];
     
@@ -197,7 +197,7 @@
     [self.disclaimerContent mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(3);
+        make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
         make.bottom.mas_equalTo(-5);
     }];
     
