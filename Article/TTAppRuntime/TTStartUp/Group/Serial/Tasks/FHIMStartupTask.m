@@ -164,14 +164,16 @@
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     NSLog(@"startup IM");
-    FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
-    [IMManager shareInstance].accountCenter = accountCenter;
-
-    FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
-    [[FHIMConfigManager shareInstance] registerDelegate:delegate];
-
-    NSString* uid = [[TTAccount sharedAccount] userIdString];
-    [[IMManager shareInstance] startupWithUid:uid];
+    if ([SSCommonLogic imCanStart]) {
+        FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
+        [IMManager shareInstance].accountCenter = accountCenter;
+        
+        FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
+        [[FHIMConfigManager shareInstance] registerDelegate:delegate];
+        
+        NSString* uid = [[TTAccount sharedAccount] userIdString];
+        [[IMManager shareInstance] startupWithUid:uid];
+    }
 }
 
 #pragma mark - 打开Watch Session
