@@ -9,7 +9,8 @@
 #import "TTABHelperTask.h"
 #import <TTABManager/TTABHelper.h>
 #import "TTSystemPermClientAB.h"
-
+#import <BDABTestSDK/BDABTestBaseExperiment.h>
+#import <BDABTestSDK/BDABTestManager.h>
 
 
 @implementation TTABHelperTask
@@ -27,6 +28,20 @@
     [[TTABHelper sharedInstance_tt] distributionIfNeed];
     
     [self.class startClientABs];
+    
+    [self.class registABTests];
+}
+
++ (void)registABTests
+{
+    // add by zjing for test
+    BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
+                                                                        owner:@"zjing"
+                                                                  description:@"找房tab是否增加房源展现。。。"
+                                                                 defaultValue:@(NO)
+                                                                    valueType:BDABTestValueTypeNumber
+                                                                     isSticky:YES];
+    [BDABTestManager registerExperiment:exp];
 }
 
 + (void)startClientABs

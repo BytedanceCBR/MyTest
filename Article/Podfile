@@ -463,6 +463,11 @@ def appPods
     
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
+    # ab test sdk
+#    pod_source 'BDABTestSDK', '1.0.0.1-binary'
+#    pod_source 'BDABTestSDK', '1.0.0'
+    pod 'BDABTestSDK', '1.0.0'
+
 
 end
 target 'NewsLite' do

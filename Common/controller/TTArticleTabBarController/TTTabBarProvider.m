@@ -34,6 +34,7 @@
 #import "FHMessageViewController.h"
 #import "FHMineViewController.h"
 #import <FHHouseFind/FHHouseFindViewController.h>
+#import <BDABTestSDK/BDABTestManager.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -119,14 +120,19 @@ static NSString *lastTabIdentifier;
     } else if ([identifier isEqualToString:kFHouseFindTabKey]) {
 
         UIViewController *houseFindVC = nil;
+        // add by zjing for test
+        id find_tab_show = [BDABTestManager getExperimentValueForKey:@"zjing_find_tab_show" withExposure:YES];
+        NSInteger findTabShow = [find_tab_show integerValue];
+        if (findTabShow == 1) {
 
-        if ([SSCommonLogic findTabShowHouse] == 1) {
+//        if ([SSCommonLogic findTabShowHouse] == 1) {
             houseFindVC = [[FHHouseFindListViewController alloc]init];
 
         }else {
 //           houseFindVC = [[HouseFindVC alloc] init];
             houseFindVC = [[FHHouseFindViewController alloc] init];
         }
+        
         return houseFindVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {

@@ -13,6 +13,9 @@
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import "TTBaseMacro.h"
+#import <BDABTestSDK/BDABTestManager.h>
+#import <TTRoute/TTRoute.h>
+#import <TTUIResponderHelper.h>
 
 @interface FHHomeCityTrendView()
 
@@ -75,6 +78,11 @@
 }
 
 -(void)leftBtnDidClick:(UIButton *)btn {
+    
+    // add by zjing for test
+    UIViewController *panelVC = [BDABTestManager panelViewController];
+    [[TTUIResponderHelper topmostViewController]presentViewController:panelVC animated:YES completion:nil];
+    return;
     
     if (self.clickedLeftCallback) {
         self.clickedLeftCallback(btn);
