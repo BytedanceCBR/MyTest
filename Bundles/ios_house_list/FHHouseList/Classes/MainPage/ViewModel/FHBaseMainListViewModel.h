@@ -16,9 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHMainListTopView;
 @interface FHBaseMainListViewModel : NSObject
 
-//@property(nonatomic , strong) UIView *filterContainerView;
 @property(nonatomic , strong) UIView *filterPanel;
 @property(nonatomic , strong) UIView *filterBgControl;
+@property(nonatomic , strong) UIView *topBannerView;
 
 @property(nonatomic , strong) FHFakeInputNavbar *navbar;
 @property(nonatomic , strong) FHErrorView *errorMaskView;
@@ -29,6 +29,10 @@ NS_ASSUME_NONNULL_BEGIN
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj;
 
 -(void)requestData:(BOOL)isHead;
+
+-(void)showMapSearch;
+
+-(void)showInputSearch;
 
 @end
 

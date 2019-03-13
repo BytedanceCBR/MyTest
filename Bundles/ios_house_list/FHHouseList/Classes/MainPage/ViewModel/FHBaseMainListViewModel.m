@@ -23,50 +23,24 @@
 #import <FHHouseBase/FHTracerModel.h>
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/FHCommonDefines.h>
 #import <TTUIWidget/UIViewController+Track.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHMainListTopView.h"
-
+#import "FHMainRentTopView.h"
+#import "FHMainOldTopView.h"
 
 #import <FHHouseRent/FHHouseRentFilterType.h>
 #import <FHHouseRent/FHHouseRentCell.h>
 #import <BDWebImage/BDWebImage.h>
+#import "FHBaseMainListViewModel+Internal.h"
+#import "FHBaseMainListViewModel+Old.h"
+#import "FHBaseMainListViewModel+Rent.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kFilterBarHeight 44
 #define MAX_ICON_COUNT 4
-#define ICON_HEADER_HEIGHT 109
-
-
-@interface FHBaseMainListViewModel ()<UITableViewDelegate,UITableViewDataSource,FHConditionFilterViewModelDelegate>
-
-@property(nonatomic , strong) UITableView *tableView;
-@property(nonatomic , assign) FHHouseType houseType;
-@property (nonatomic , strong) FHConfigDataRentOpDataModel *rentModel;
-@property(nonatomic , strong) NSMutableArray *houseList;
-@property(nonatomic , strong) NSString *searchId;
-@property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
-@property(nonatomic , strong) FHHouseRentDataModel *currentRentDataModel;
-@property(nonatomic , copy)  NSString *conditionFilter;
-@property(nonatomic , strong) NSString *suggestion;
-@property(nonatomic , strong) NSDictionary *houseSearchDict;
-@property(nonatomic , assign) BOOL showPlaceHolder;
-@property(nonatomic , strong) UIImage *placeHolderImage;
-@property(nonatomic , copy  ) NSString *mapFindHouseOpenUrl;
-@property(nonatomic , weak) TTHttpTask *requestTask;
-
-@property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
-@property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
-
-@property(nonatomic , strong) NSMutableDictionary *showHouseDict;
-@property(nonatomic , strong) NSMutableDictionary *stayTraceDict;
-@property(nonatomic , assign) CGFloat headerHeight;
-
-@property(nonatomic , copy) NSString *originSearchId;
-@property(nonatomic , copy) NSString *originFrom;
-@property(nonatomic , assign) BOOL isFirstLoad;
-
-@end
+#define ICON_HEADER_HEIGHT 115
 
 @implementation FHBaseMainListViewModel
 
@@ -79,7 +53,7 @@
         
         self.tableView = tableView;
         self.houseType = houseType;
-        [self initFilter];
+        
         
         tableView.delegate = self;
         tableView.dataSource = self;
@@ -97,6 +71,8 @@
         
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         
+        [self initTopBanner];
+        [self initFilter];
     }
     return self;
 }
@@ -114,6 +90,28 @@
     self.filterPanel.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, kFilterBarHeight);
     
 }
+
+
+-(void)initTopBanner
+{
+    if (_houseType == FHHouseTypeRentHouse) {
+        
+        FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT)];
+        
+        NSDictionary *dict = nil;
+        if ([[[FHEnvContext sharedInstance] getConfigFromCache].rentOpData respondsToSelector:@selector(toDictionary)]) {
+            dict =  [[FHEnvContext sharedInstance] getConfigFromCache].rentOpData.toDictionary;
+        }
+        
+        FHConfigDataRentOpDataModel *rentModel = [[FHConfigDataRentOpDataModel alloc] initWithDictionary:dict error:nil];
+        topView.items = rentModel.items;
+        topView.delegate = self;
+        
+        self.topBannerView = topView;
+    }
+    
+}
+
 
 
 -(void)setErrorMaskView:(FHErrorView *)errorMaskView
@@ -199,12 +197,10 @@
                 if (tip.length == 0) {
                     tip = @"请求成功";
                 }
-//                wself.showNotify(tip);
                 [wself showNotifyMessage:tip];
             }
             
             [wself addHouseRankLog];
-            
         }
         
         wself.tableView.mj_footer.hidden = NO;
@@ -289,7 +285,7 @@
     //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
-    NSDictionary *dict = @{@"house_type":@(FHHouseTypeRentHouse) ,
+    NSDictionary *dict = @{@"house_type":@(_houseType) ,
                            @"tracer": traceParam,
                            @"from_home":@(4),
                            @"sug_delegate":sugDelegateTable
@@ -303,11 +299,15 @@
 
 -(void)showMapSearch
 {
-    if (self.currentRentDataModel.mapFindHouseOpenUrl.length > 0) {
-        NSURL *url = [NSURL URLWithString:self.currentRentDataModel.mapFindHouseOpenUrl];
-        NSDictionary *dict = @{};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    if (_houseType == FHHouseTypeRentHouse) {
+        if (self.mapFindHouseOpenUrl.length > 0) {
+            NSURL *url = [NSURL URLWithString:self.mapFindHouseOpenUrl];
+            NSDictionary *dict = @{};
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }else{
+            [self showOldMapSearch];
+        }
     }
 }
 
@@ -321,6 +321,75 @@
     [self addStayLog];
 }
 
+#pragma mark - top banner rent delegate
+-(void)selecteRentItem:(FHConfigDataRentOpDataItemsModel *)model
+{
+    NSMutableString *openUrl = [[NSMutableString alloc] initWithString:model.openUrl];// model.openUrl;
+    if (![openUrl containsString:@"house_type"]) {
+        [openUrl appendFormat:@"&house_type=%ld",FHHouseTypeRentHouse];
+        //        openUrl = [openUrl stringByAppendingFormat:@"&house_type=%ld",FHHouseTypeRentHouse];
+    }
+    if (![openUrl containsString:@"search_id"]) {
+        [openUrl appendFormat:@"&search_id=%@",self.searchId?:@"be_null"];
+    }
+    TTRouteUserInfo *userInfo = nil;
+    NSURL *url = nil;
+    FHHouseRentFilterType filterType = [self rentFilterType:model.openUrl];
+    
+    NSString *originFrom = model.logPb[@"origin_from"];
+    
+    if (filterType == FHHouseRentFilterTypeMap){
+        
+        //王然说点击不爆切换埋点
+        //        [self addMapsearchLog];
+        
+        //        if (self.mapFindHouseOpenUrl.length > 0) {
+        //            //使用跳转
+        //            openUrl = self.mapFindHouseOpenUrl;
+        //        }
+        if (originFrom.length == 0) {
+            originFrom = @"renting_mapfind";
+        }
+        
+        if (![openUrl containsString:@"enter_from"]) {
+            [openUrl appendString:@"&enter_from=renting"];
+        }
+        if (![openUrl containsString:@"origin_from"]) {
+            [openUrl appendFormat:@"&origin_from=%@",originFrom];
+        }
+        
+        SETTRACERKV(UT_ORIGIN_FROM, originFrom);
+        
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params addEntriesFromDictionary:[self.viewController.tracerModel neatLogDict] ];
+        
+        params[@"enter_from"] = @"renting";
+        params[@"origin_from"] = originFrom;
+        params[@"origin_search_id"] = nil;//remove origin_search_id
+        
+        NSDictionary *infoDict = @{@"tracer":params};
+        userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
+        
+    }else{
+        NSDictionary *param = [self addEnterHouseListLog:model.openUrl];
+        if (param) {
+            NSDictionary *infoDict = @{@"tracer":param};
+            userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
+            if (originFrom.length == 0) {
+                originFrom = param[@"origin_from"];
+            }
+            
+            if (originFrom) {
+                SETTRACERKV(@"origin_from", originFrom);
+            }
+        }
+    }
+    url = [NSURL URLWithString:openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    
+}
+
+#pragma mark -
 
 #pragma mark - filter delegate
 
@@ -475,10 +544,9 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     BOOL shouldInTable = (scrollView.contentOffset.y + scrollView.contentInset.top <  [self.topView filterTop]);
-//    BOOL shouldInTable = (-scrollView.contentOffset.y  > [self.topView filterTop]);
     [self moveTop:shouldInTable];
     
-    NSLog(@"[SCROLL] offset is: %f top %f  top cal height: %f should intable : %@",scrollView.contentOffset.y,scrollView.contentInset.top,(self.topView.height - [self.topView filterTop]),shouldInTable?@"YES":@"NO");
+//    NSLog(@"[SCROLL] offset is: %f top %f  top cal height: %f should intable : %@",scrollView.contentOffset.y,scrollView.contentInset.top,(self.topView.height - [self.topView filterTop]),shouldInTable?@"YES":@"NO");
 }
 
 
@@ -507,15 +575,6 @@
         
         [self.topContainerView addSubview:self.topView];
         self.topView.top = -[self.topView filterTop];
-        
-//        UIEdgeInsets insets = self.tableView.contentInset;
-//        insets.top = 0;
-//        self.tableView.contentInset = insets;
-//        self.tableView.contentOffset = ;
-        
-        NSLog(@"top container is: %@  set height to: %f",self.topContainerView,self.topView.height - [self.topView filterTop]);
-        
-        
     }
 }
 
@@ -545,13 +604,18 @@
 {
     
     UIEdgeInsets insets = self.tableView.contentInset;
-//    CGFloat offsetdiff = insets.top - topViewHeight;
+    
+    BOOL isTop = fabs(self.tableView.contentOffset.y) < 0.1; //首次进入情况
     insets.top = topViewHeight;
     self.tableView.contentInset = insets;
     _topView.frame = CGRectMake(0, -topViewHeight, _topView.width, topViewHeight);
     
     if (isShow) {
-        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+        if (isTop) {
+            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+        }else{
+            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+        }
     }else{
         //
         if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
@@ -930,11 +994,7 @@
             }
         }
     }
-    
-    
     return FHHouseRentFilterTypeNone;
-    
-    
 }
 
 #pragma mark - sug delegate

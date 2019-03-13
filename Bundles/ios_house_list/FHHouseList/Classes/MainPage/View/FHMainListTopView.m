@@ -38,7 +38,7 @@
         filterView.top = bannerView.bottom;
         top = filterView.bottom;
         self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, top, [UIScreen mainScreen].bounds.size.width, NOTIFY_HEIGHT)];
-        _bottomLine = [[UIView alloc]initWithFrame:CGRectMake(0, top - ONE_PIXEL, filterView.width - 2*HOR_MARIN, ONE_PIXEL)];
+        _bottomLine = [[UIView alloc]initWithFrame:CGRectMake(0, top - ONE_PIXEL, filterView.width - 2*HOR_MARGIN, ONE_PIXEL)];
         _bottomLine.backgroundColor = [UIColor themeGray6];
         [self addSubview:_notifyBarView];
         [self addSubview:bannerView];
@@ -84,7 +84,7 @@
 -(void)willMoveToSuperview:(UIView *)newSuperview
 {
     if ([newSuperview isKindOfClass:[UIScrollView class]]) {
-        self.bottomLine.frame = CGRectMake(HOR_MARIN, self.filterBarView.bottom - ONE_PIXEL, self.width - 2*HOR_MARIN, ONE_PIXEL);
+        self.bottomLine.frame = CGRectMake(HOR_MARGIN, self.filterBarView.bottom - ONE_PIXEL, self.width - 2*HOR_MARGIN, ONE_PIXEL);
     }else{
         self.bottomLine.frame = CGRectMake(0, self.filterBarView.bottom - ONE_PIXEL, self.width , ONE_PIXEL);
     }

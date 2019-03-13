@@ -33,10 +33,18 @@
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
     self = [super initWithRouteParamObj:paramObj];
-    if (self) {
-        
+    if (self) {        
         self.paramObj = paramObj;
         
+        _houseType = FHHouseTypeSecondHandHouse;
+        if (paramObj.allParams[@"house_type"]) {
+            _houseType = [paramObj.allParams[@"house_type"] intValue];
+        }else{
+            NSString *host = paramObj.sourceURL.host;
+            if ([host hasPrefix:@"rent"]) {
+                _houseType = FHHouseTypeRentHouse;
+            }
+        }
     }
     return self;
 }
@@ -60,27 +68,22 @@
     return _tableView;
 }
 
--(UIView *)topBannerView //顶部运营view
-{
-    UIView *banner = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 100)];
-    banner.backgroundColor =[UIColor redColor];
-    return banner;
-}
 
 -(void)initNavbar
 {
-    _navbar = [[FHFakeInputNavbar alloc] initWithType:FHFakeInputNavbarTypeDefault];
+    FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMap : FHFakeInputNavbarTypeDefault);
+    _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
     _navbar.placeHolder = @"你想住哪里？";
     __weak typeof(self) wself = self;
     _navbar.defaultBackAction = ^{
         [wself.navigationController popViewControllerAnimated:YES];
     };
     _navbar.showMapAction = ^{
-//        [wself.viewModel showMapSearch];
+        [wself.viewModel showMapSearch];
     };
     
     _navbar.tapInputBar = ^{
-//        [wself.viewModel showInputSearch];
+        [wself.viewModel showInputSearch];
     };
     
     [self.view addSubview:_navbar];
@@ -100,7 +103,7 @@
     
     _viewModel = [[FHBaseMainListViewModel alloc] initWithTableView:self.tableView houseType:_houseType routeParam:self.paramObj];
     
-    _topView = [[FHMainListTopView alloc] initWithBannerView:self.topBannerView filterView:self.viewModel.filterPanel];
+    _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel];
     
     UIEdgeInsets insets = self.tableView.contentInset;
     insets.top = CGRectGetHeight(_topView.bounds);

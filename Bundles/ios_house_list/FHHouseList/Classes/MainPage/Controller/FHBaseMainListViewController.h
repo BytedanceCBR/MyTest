@@ -14,11 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong , readonly) UITableView *tableView;
 
--(UIView *)topBannerView; //顶部运营view
-
-
-
-
 @end
 
 NS_ASSUME_NONNULL_END

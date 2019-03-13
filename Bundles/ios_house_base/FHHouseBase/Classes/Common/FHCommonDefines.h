@@ -11,7 +11,7 @@
 #define NO_EMPTY_STR(str) ([str isKindOfClass:[NSString class]] && str.length > 0)
 #define SCREEN_WIDTH   CGRectGetWidth([[UIScreen mainScreen] bounds])
 #define SCREEN_HEIGHT  CGRectGetHeight([[UIScreen mainScreen] bounds])
-#define HOR_MARIN      20
+#define HOR_MARGIN      20
 #define ONE_PIXEL      1.0/[[UIScreen mainScreen]scale]
 
 #endif /* FHCommonDefines_h */
