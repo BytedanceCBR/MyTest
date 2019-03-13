@@ -93,10 +93,7 @@
     [self setBadgeNumber:_unreadChatMsgCount + _unreadSystemMsgCount];
 }
 
-//- (void)getNewNumberWithCompletion:(void(^)(NSInteger number , NSError *error))completion {
-////=======
 - (void)getNewNumberWithCompletion:(void(^)(NSInteger number ,id obj ,NSError *error))completion {
-//>>>>>>> a48c522ed4c88b587f9c054c46beab41a8871ff2
     
     NSString *url = [[FHURLSettings baseURL] stringByAppendingString:@"/f100/api/msg/unread"];
     
