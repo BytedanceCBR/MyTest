@@ -19,10 +19,12 @@ typedef enum : NSUInteger {
 @property(nonatomic , assign) FHDetailNavBarType type;
 @property(nonatomic , copy) void (^backActionBlock)();
 @property(nonatomic , copy) void (^shareActionBlock)();
+@property(nonatomic , copy) void (^messageActionBlock)();
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
 - (instancetype)initWithType:(FHDetailNavBarType)type;
 - (void)refreshAlpha:(CGFloat)alpha;
+- (void)displayMessageDot:(BOOL)show;
 - (void)setFollowStatus:(NSInteger)followStatus;
 - (void)showRightItems:(BOOL)showItem;
 - (void)hideFollowBtn;

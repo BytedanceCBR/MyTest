@@ -15,7 +15,7 @@ NSString * const TTActivityContentItemTypeForwardWeitoutiao = @"com.toutiao.Acti
 - (instancetype)init {
     self = [super init];
     if (self) {
-        NSString *contentTitle = [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        NSString *contentTitle = [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
         _contentTitle = contentTitle;
     }
     return self;

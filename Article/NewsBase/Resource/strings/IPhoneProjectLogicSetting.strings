@@ -1,3 +1,4 @@
+
 /* 
   IPhoneProjectLogicSetting.strings
   Article
@@ -100,6 +101,15 @@
 "floor_coreinfo_detail"        = "FHFloorMoreCoreInfoViewController";
 "floor_timeline_detail"        = "FHFloorTimeLineViewController";
 "neighborhood_sales_list"        = "FHTransactionHistoryController";
+
+"test_detail"           = "FHHouseDetailViewController";
+
+//im 单聊
+"open_single_chat" = "ChatRootViewController";
+//会话列表
+"message_conversation_list" = "FHTempMessageViewController";
+
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
+
 "second_house_main"   = "FHHouseOldHomeViewController";

@@ -343,7 +343,7 @@ static NewsListLogicManager * shareManager;
 
 + (NSTimeInterval)fetchFollowListAutoReloadWithNotifyInterval {
 
-    NSTimeInterval time = [KitchenMgr getFloat:kKCUGCFollowAutoRefreshWithNotifyInterval];
+    NSTimeInterval time = [TTKitchen getFloat:kKCUGCFollowAutoRefreshWithNotifyInterval];
     if (time < 0) {
         time = 1 * 60 * 60;
     }

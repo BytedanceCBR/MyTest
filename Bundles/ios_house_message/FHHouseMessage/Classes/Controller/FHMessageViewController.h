@@ -1,4 +1,5 @@
 //
+
 //  FHMessageViewController.h
 //  FHHouseMessage
 //
@@ -6,14 +7,20 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHNoNetHeaderView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHMessageViewController : FHBaseViewController
+@interface FHMessageViewController<UIViewControllerErrorHandler> : FHBaseViewController 
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic , strong) UIView *containerView;
+@property(nonatomic, strong) FHNoNetHeaderView *notNetHeader;
 
+- (NSString *)getPageType;
+- (CGFloat) getBottomMargin;
+- (BOOL) leftActionHidden;
+- (BOOL) isAlignToSafeBottom;
 @end
 
 NS_ASSUME_NONNULL_END

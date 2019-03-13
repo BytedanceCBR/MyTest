@@ -1570,6 +1570,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (NSInteger)findTabShowHouse;
 //首页推荐红点请求时间间隔
 + (NSInteger)categoryBadgeTimeInterval;
++ (BOOL)imCanStart;
 
 @end
 

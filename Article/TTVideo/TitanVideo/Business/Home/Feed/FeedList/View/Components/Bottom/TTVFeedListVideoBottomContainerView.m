@@ -316,7 +316,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
     }
 }
 
