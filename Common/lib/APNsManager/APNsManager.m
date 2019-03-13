@@ -29,6 +29,7 @@
 //#import "Bubble-Swift.h"
 #import "TTLaunchTracer.h"
 #import "FHHouseBridgeManager.h"
+#import <FHLocManager.h>
 
 @interface APNsManager ()
 @end
@@ -140,7 +141,8 @@ static APNsManager *_sharedManager = nil;
 
         [TTTracker eventV3:@"push_click" params:param];
 
-        
+        [FHLocManager sharedInstance].isShowHomeViewController = NO;
+
         NSString *appURL = paramObj.scheme;
         if (isEmptyString(appURL) || [TTRoute conformsToRouteWithScheme:appURL]) {
             
@@ -159,7 +161,6 @@ static APNsManager *_sharedManager = nil;
                     }
                 }
             } else {
-                
                 // push对消息特殊处理
 //                if ([[handledOpenURL host] isEqualToString:@"message_detail_list"]) {
 ////                    if (![TTAccountManager isLogin]) {

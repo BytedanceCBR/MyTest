@@ -138,4 +138,12 @@
 @end
 
 
+@implementation FHNewHouseItemModel (RecommendReason)
+
+-(BOOL)showRecommendReason
+{
+    return NO;
+}
+
+@end
 

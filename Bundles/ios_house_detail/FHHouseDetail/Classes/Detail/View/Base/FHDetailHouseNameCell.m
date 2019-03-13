@@ -15,6 +15,7 @@
 #import "YYLabel.h"
 #import <YYText.h>
 #import "UILabel+House.h"
+#import "UIColor+Theme.h"
 
 @interface FHDetailHouseNameCell ()
 
@@ -76,16 +77,19 @@
 }
 
 - (void)setupUI {
-    _nameLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:24];
+    _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:24];
+    _nameLabel.textColor = [UIColor themeGray1];
     _nameLabel.font = [UIFont themeFontMedium:24];
     _nameLabel.numberOfLines = 2;
     [self.contentView addSubview:_nameLabel];
     
-    _aliasLabel = [UILabel createLabel:@"别名" textColor:@"#a1aab3" fontSize:12];
+    _aliasLabel = [UILabel createLabel:@"别名" textColor:@"" fontSize:12];
+    _aliasLabel.textColor = [UIColor themeGray3];
     _aliasLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_aliasLabel];
     
-    _secondaryLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:12];
+    _secondaryLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _secondaryLabel.textColor = [UIColor themeGray1];
     [self.contentView addSubview:_secondaryLabel];
     
     _tagsView = [[YYLabel alloc] init];
@@ -94,7 +98,7 @@
     [self.contentView addSubview:_tagsView];
     
     _bottomLine = [[UIView alloc] init];
-    _bottomLine.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _bottomLine.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_bottomLine];
     
     // 布局
@@ -191,7 +195,7 @@
 - (NSMutableAttributedString *)createTagAttributeTextNormal:(NSString *)content fontSize:(CGFloat)fontSize {
     NSMutableAttributedString * attributeText = [[NSMutableAttributedString alloc] initWithString:content];
     attributeText.yy_font = [UIFont themeFontRegular:fontSize];
-    attributeText.yy_color = [UIColor colorWithHexString:@"#a1aab3"];
+    attributeText.yy_color = [UIColor themeGray3];
     attributeText.yy_lineSpacing = 2;
     attributeText.yy_lineHeightMultiple = 0;
     attributeText.yy_maximumLineHeight = 0;

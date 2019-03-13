@@ -14,84 +14,88 @@
     return [UIColor whiteColor];
 }
 
-+(UIColor *)themeBlack
-{
-    return RGB(0x08, 0x1f, 0x33);
-}
-
-+(UIColor *)themeGray
-{
-    return RGB(0xa1, 0xaa, 0xb3);
-}
-
-+(UIColor *)themeGrayPale
-{
-    return RGB(0xf2, 0xf4, 0xf5);
-}
-
 +(UIColor *)themeGray1
 {
-    return RGB(0x45, 0x49, 0x4d);
+    return RGB(0x33, 0x33, 0x33);
 }
 
 +(UIColor *)themeGray2
 {
-    return RGB(0x73, 0x7a, 0x80);
+    return RGB(0x66, 0x66, 0x66);
 }
 
 +(UIColor *)themeGray3
 {
-    return RGB(0x8a, 0x92, 0x99);
+    return RGB(0x99, 0x99, 0x99);
 }
 
 +(UIColor *)themeGray4
 {
-    return RGB(0xa1, 0xaa, 0xb3);
+    return RGB(0xbb, 0xbb, 0xbb);
 }
 
 +(UIColor *)themeGray5
 {
-    return RGB(0xe1, 0xe3, 0xe6);
+    return RGB(0xdd, 0xdd, 0xdd);
 }
 
 +(UIColor *)themeGray6
 {
-    return RGB(0xe8, 0xea, 0xeb);
+    return RGB(0xe8, 0xe8, 0xe8);
 }
 
 +(UIColor *)themeGray7
 {
-    return RGB(0xf2, 0xf4, 0xf5);
+    return RGB(0xf5, 0xf5, 0xf5);
 }
 
-+(UIColor *)themeBlue
++(UIColor *)themeGray8
 {
-    return RGB(0x29, 0x9c, 0xff);
-}
-
-+(UIColor *)themeBlue1
-{
-    return RGB(0x08, 0x1f, 0x33);
-}
-
-+(UIColor *)themeBlue2
-{
-    return RGB(0x29, 0x9c, 0xff);
-}
-
-+(UIColor *)themeBlue3
-{
-    return RGB(0x3d, 0x6e, 0x99);
-}
-
-+(UIColor *)themeBlue4
-{
-    return RGB(0xe6, 0xf3, 0xff);
+    return RGB(0xf7, 0xf7, 0xf7);
 }
 
 +(UIColor *)themeRed
 {
     return RGB(0xff, 0x5b, 0x4c);
+}
+
++(UIColor *)themeRed1
+{
+    return RGB(0xff, 0x58, 0x69);
+}
+
++(UIColor *)themeRed2
+{
+    return RGB(0xff, 0xf2, 0xed);
+}
+
++(UIColor *)themeRed3
+{
+    return RGB(0xff, 0x81, 0x51);
+}
+
++(UIColor *)themeGreen1
+{
+    return RGB(0x0c, 0xce, 0x6b);
+}
+
++(UIColor *)themeBlue1
+{
+    return RGB(0x29, 0x9c, 0xff);
+}
+
++(UIColor *)themeIMBubbleRed
+{
+    return RGB(0xff, 0x58, 0x69);
+}
+
++(UIColor *)themeIMOrange
+{
+    return RGB(0xff, 0x81, 0x51);
+}
+
++ (UIColor *)colorWithHexStr:(NSString *)hexString {
+    [UIColor colorWithHexString:hexString];
 }
 
 + (UIColor *)colorWithHexString:(NSString *)hexString {

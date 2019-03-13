@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIFont (House)
 
++(UIFont *)themeFontLight:(CGFloat)fontSize;
+
 +(UIFont *)themeFontRegular:(CGFloat)fontSize;
 
 +(UIFont *)themeFontMedium:(CGFloat)fontSize;

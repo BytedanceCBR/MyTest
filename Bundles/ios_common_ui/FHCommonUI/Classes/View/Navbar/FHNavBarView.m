@@ -6,6 +6,7 @@
 //
 
 #import "FHNavBarView.h"
+#import "UIColor+Theme.h"
 
 static const CGFloat kNaviLeftRightMargin = 18.0f;
 
@@ -61,7 +62,7 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
     
     _title = [[UILabel alloc] init];
     _title.textAlignment = NSTextAlignmentCenter;
-    _title.textColor = [UIColor colorWithHexString:@"#081f33"];
+    _title.textColor = [UIColor themeGray1];
     _title.font = [UIFont themeFontMedium:18];
     [self addSubview:_title];
     [_title mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -74,7 +75,7 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
     }];
     
     _seperatorLine = [[UIView alloc] init];
-    _seperatorLine.backgroundColor = [UIColor colorWithHexString:@"#e8eaeb"];
+    _seperatorLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:_seperatorLine];
     [_seperatorLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0.5);

@@ -227,9 +227,10 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
         if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
             FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
             [imageInfoCell updateWithHouseCellModel:cellModel];
             [imageInfoCell refreshTopMargin:0];
-            [imageInfoCell refreshBottomMargin:20];
+            [imageInfoCell refreshBottomMargin:20+reasonHeight];
         }
         return cell;
     }
@@ -239,6 +240,10 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    FHSearchHouseDataItemsModel *item = self.items[indexPath.row];    
+    if ([item showRecommendReason]) {
+        return 108 + [FHSingleImageInfoCell recommendReasonHeight];
+    }
     return 108;
 }
 
@@ -269,7 +274,7 @@
     }
 }
 
-// 添加house_show 埋点：这种方式效率不高，后续可以考虑优化
+// 添加house_show 埋点
 - (void)addHouseShowByIndex:(NSInteger)index {
     if (index >= 0 && index < self.items.count) {
         NSString *tempKey = [NSString stringWithFormat:@"%ld", index];

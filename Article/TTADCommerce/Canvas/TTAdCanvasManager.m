@@ -40,7 +40,7 @@
 static NSString * const kTTAdCanvasModel = @"kTTAdCanvasModel";
 
 
-@interface TTAdCanvasManager ()<TTRNViewDelegate, SSActivityViewDelegate, TTAdCanvasVCDelegate>
+@interface TTAdCanvasManager ()<SSActivityViewDelegate, TTAdCanvasVCDelegate>
 @property (nonatomic, strong) TTActivityShareManager* activityActionManager;
 @property (nonatomic, strong) SSActivityView* shareView;
 @property (nonatomic, strong) TTActionSheetController* actionSheetController;
@@ -212,21 +212,21 @@ Singleton_Implementation(TTAdCanvasManager)
             [openInfo  setValue:@"2" forKey:@"style"];
         } else {
             canvasVC = [[TTAdCanvasViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(baseCondition)];
-            self.rnView = nil;
-            WeakSelf;
-            [self setRNFatalHandler:^{
-                StrongSelf;
-                self.isRnFatal = YES;
-                [navi popViewControllerAnimated:NO];
-                [self pushWithNavi:navi orderData:orderData];
-                
-                TTAdRNBundleInfo *bundleInfo = [TTCanvasBundleManager currentCanvasBundleInfo];
-                NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:4];
-                [extra setValue:[bundleInfo toJSONString] forKey:@"bundle"];
-                [extra setValue:rawAd.ad_id forKey:@"ad_id"];
-                [extra setValue:rawAd.log_extra forKey:@"log_extra"];
-                [TTAdMonitorManager trackService:@"ad_canvas_fatalerror" status:0 extra:extra];
-            }];
+//            self.rnView = nil;
+//            WeakSelf;
+//            [self setRNFatalHandler:^{
+//                StrongSelf;
+//                self.isRnFatal = YES;
+//                [navi popViewControllerAnimated:NO];
+//                [self pushWithNavi:navi orderData:orderData];
+//
+//                TTAdRNBundleInfo *bundleInfo = [TTCanvasBundleManager currentCanvasBundleInfo];
+//                NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:4];
+//                [extra setValue:[bundleInfo toJSONString] forKey:@"bundle"];
+//                [extra setValue:rawAd.ad_id forKey:@"ad_id"];
+//                [extra setValue:rawAd.log_extra forKey:@"log_extra"];
+//                [TTAdMonitorManager trackService:@"ad_canvas_fatalerror" status:0 extra:extra];
+//            }];
             [openInfo setValue:@"1" forKey:@"style"];
         }
         canvasVC.viewModel = viewModel;
@@ -432,29 +432,29 @@ Singleton_Implementation(TTAdCanvasManager)
     if (TTAdCanvasUtils.nativeEnable) {
         return;
     }
-    TTRNView* rnView = [self createRNView];
-    [rnView loadModule:kTTAdCanvasReatModule initialProperties:@{}];
-    WeakSelf;
-    [self setRNFatalHandler:^{
-        StrongSelf;
-        self.isRnFatal = YES;
-    }];
+//    TTRNView* rnView = [self createRNView];
+//    [rnView loadModule:kTTAdCanvasReatModule initialProperties:@{}];
+//    WeakSelf;
+//    [self setRNFatalHandler:^{
+//        StrongSelf;
+//        self.isRnFatal = YES;
+//    }];
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [TTTrackerWrapper eventV3:@"precreate_canvas_rn" params:params];
 }
 
-- (TTRNView *)createRNView {
-    self.rnView = [[TTRNView alloc] init];
-    self.rnView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    self.rnView.delegate = self;
-    return self.rnView;
-}
+//- (TTRNView *)createRNView {
+//    self.rnView = [[TTRNView alloc] init];
+//    self.rnView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+//    self.rnView.delegate = self;
+//    return self.rnView;
+//}
 
 - (void)destroyRNView
 {
-    self.rnView.delegate = nil;
-    self.rnView = nil;
+//    self.rnView.delegate = nil;
+//    self.rnView = nil;
 }
 
 #pragma mark TTRNViewDelegate
@@ -469,12 +469,12 @@ Singleton_Implementation(TTAdCanvasManager)
     return [TTCanvasBundleManager fallbackSourceURL];
 }
 
-- (void)setRNFatalHandler:(TTRNFatalHandler)handler
-{
-    if (self.rnView) {
-        [self.rnView setFatalHandler:handler];
-    }
-}
+//- (void)setRNFatalHandler:(TTRNFatalHandler)handler
+//{
+//    if (self.rnView) {
+//        [self.rnView setFatalHandler:handler];
+//    }
+//}
 
 #pragma mark --TTAdCanvasVCDelegate
 

@@ -43,11 +43,11 @@
 //    _scrollView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self addSubview:_scrollView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:30] textColor:[UIColor themeBlack]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontRegular:30] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"手机快捷登录";
     [self.scrollView addSubview:_titleLabel];
     
-    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray]];
+    self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     _subTitleLabel.text = @"未注册手机验证后自动注册";
     [self.scrollView addSubview:_subTitleLabel];
     
@@ -57,6 +57,7 @@
     self.phoneInput = [[UITextField alloc] init];
     _phoneInput.font = [UIFont themeFontRegular:14];
     _phoneInput.placeholder = @"请输入手机号";
+    [_phoneInput setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
     _phoneInput.keyboardType = UIKeyboardTypePhonePad;
     _phoneInput.returnKeyType = UIReturnKeyDone;
     [self.scrollView addSubview:_phoneInput];
@@ -68,6 +69,7 @@
     self.varifyCodeInput = [[UITextField alloc] init];
     _varifyCodeInput.font = [UIFont themeFontRegular:14];
     _varifyCodeInput.placeholder = @"请输入验证码";
+    [_varifyCodeInput setValue:[UIColor themeGray3] forKeyPath:@"_placeholderLabel.textColor"];
     _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
     _varifyCodeInput.returnKeyType = UIReturnKeyGo;
     [self.scrollView addSubview:_varifyCodeInput];
@@ -77,14 +79,14 @@
     [self.scrollView addSubview:_singleLine2];
     
     self.sendVerifyCodeBtn = [[UIButton alloc] init];
-    [self setButtonContent:@"获取验证码" font:[UIFont themeFontRegular:14] color:[UIColor themeBlack] state:UIControlStateNormal btn:_sendVerifyCodeBtn];
+    [self setButtonContent:@"获取验证码" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:_sendVerifyCodeBtn];
     [self setButtonContent:@"获取验证码" font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:_sendVerifyCodeBtn];
     _sendVerifyCodeBtn.enabled = NO;
     [_sendVerifyCodeBtn addTarget:self action:@selector(sendVerifyCode) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:_sendVerifyCodeBtn];
     
     self.confirmBtn = [[UIButton alloc] init];
-    _confirmBtn.backgroundColor = [UIColor themeBlue];
+    _confirmBtn.backgroundColor = [UIColor themeRed1];
     _confirmBtn.alpha = 0.6;
     _confirmBtn.layer.cornerRadius = 23;
     _confirmBtn.enabled = NO;
@@ -101,7 +103,7 @@
     self.agreementLabel = [[YYLabel alloc] init];
     _agreementLabel.numberOfLines = 0;
     _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _agreementLabel.textColor = [UIColor themeGray];
+    _agreementLabel.textColor = [UIColor themeGray3];
     _agreementLabel.font = [UIFont themeFontRegular:13];
     [self addSubview:_agreementLabel];
 }
@@ -182,13 +184,13 @@
     self.acceptCheckBox.selected = YES;
     NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:@"我已阅读并同意 《幸福里用户使用协议》及《隐私协议》"];
     [attrText addAttributes:[self commonTextStyle] range:NSMakeRange(0, attrText.length)];
-    [attrText yy_setTextHighlightRange:NSMakeRange(8, 11) color:[UIColor themeBlue] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+    [attrText yy_setTextHighlightRange:NSMakeRange(8, 11) color:[UIColor themeRed1] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
         if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(goToUserProtocol)]) {
             [self.delegate goToUserProtocol];
         }
     }];
     
-    [attrText yy_setTextHighlightRange:NSMakeRange(20, 6) color:[UIColor themeBlue] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+    [attrText yy_setTextHighlightRange:NSMakeRange(20, 6) color:[UIColor themeRed1] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
         if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(goToSecretProtocol)]) {
             [self.delegate goToSecretProtocol];
         }
@@ -221,7 +223,7 @@
 - (NSDictionary *)commonTextStyle {
     return @{
              NSFontAttributeName : [UIFont themeFontRegular:13],
-             NSForegroundColorAttributeName : [UIColor themeGray],
+             NSForegroundColorAttributeName : [UIColor themeGray3],
              };
 }
 

@@ -32,8 +32,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _loadMoreButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        _loadMoreButton.titleColorThemeKey = kFHColorDarkIndigo;
-        _loadMoreButton.highlightedTitleColorThemeKey = kFHColorDarkIndigo;
+        _loadMoreButton.titleColorThemeKey = kFHColorCharcoalGrey;
+        _loadMoreButton.highlightedTitleColorThemeKey = kFHColorCharcoalGrey;
         _loadMoreButton.userInteractionEnabled = NO;
         
         NSString *title = @"查看更多";

@@ -97,4 +97,11 @@
 
 @end
 
+@implementation FHHouseNeighborDataItemsModel (RecommendReason)
 
+-(BOOL)showRecommendReason
+{
+    return NO;
+}
+
+@end

@@ -33,7 +33,7 @@
 {
     UILabel *label = [[UILabel alloc]init];
     label.font = [UIFont themeFontRegular:18];
-    label.textColor = [UIColor themeBlack];
+    label.textColor = [UIColor themeGray1];
     label.textAlignment = NSTextAlignmentCenter;
     
     return label;

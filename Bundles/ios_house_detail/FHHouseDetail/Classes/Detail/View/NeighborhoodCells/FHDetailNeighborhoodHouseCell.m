@@ -265,8 +265,8 @@
         [_rentBtn setTitle:@"租房" forState:UIControlStateNormal];
         [_rentBtn setTitle:@"租房" forState:UIControlStateHighlighted];
         _rentBtn.titleLabel.font = [UIFont themeFontRegular:14];
-        [_rentBtn setTitleColor:[UIColor colorWithHexString:@"#8a9299"] forState:UIControlStateNormal];
-        [_rentBtn setTitleColor:[UIColor colorWithHexString:@"#299cff"] forState:UIControlStateSelected];
+        [_rentBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [_rentBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateSelected];
         [self.headerView addSubview:_rentBtn];
         [_rentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.headerView).offset(23);
@@ -283,8 +283,8 @@
         [_ershouBtn setTitle:@"二手房" forState:UIControlStateNormal];
         [_ershouBtn setTitle:@"二手房" forState:UIControlStateHighlighted];
         _ershouBtn.titleLabel.font = [UIFont themeFontRegular:14];
-        [_ershouBtn setTitleColor:[UIColor colorWithHexString:@"#8a9299"] forState:UIControlStateNormal];
-        [_ershouBtn setTitleColor:[UIColor colorWithHexString:@"#299cff"] forState:UIControlStateSelected];
+        [_ershouBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [_ershouBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateSelected];
         [self.headerView addSubview:_ershouBtn];
         [_ershouBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.headerView).offset(23);
@@ -511,16 +511,17 @@
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
                 FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 [imageInfoCell updateWithHouseCellModel:cellModel];
                 [imageInfoCell refreshTopMargin:0];
-                [imageInfoCell refreshBottomMargin:20];
+                [imageInfoCell refreshBottomMargin:20+reasonHeight];
             }
             return cell;
         }
     }
     if (self.rightTableView == tableView) {
         if (indexPath.row >= 0 && indexPath.row < self.rentItems.count) {
-            FHSearchHouseDataItemsModel *item = self.rentItems[indexPath.row];
+            FHHouseRentDataItemsModel *item = self.rentItems[indexPath.row];
             FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
             if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
@@ -538,6 +539,12 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.leftTableView == tableView) {
+        FHSearchHouseDataItemsModel *item = self.ershouItems[indexPath.row];
+        if ([item isKindOfClass:[FHSearchHouseDataItemsModel class]] && [item showRecommendReason]) {
+            return 108+[FHSingleImageInfoCell recommendReasonHeight];
+        }
+    }
     return 108;
 }
 
@@ -580,7 +587,7 @@
     }
 }
 
-// 添加house_show 埋点：这种方式效率不高，后续可以考虑优化
+// 添加house_show 埋点
 - (void)addHouseShowByIndex:(NSInteger)index {
     FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
     if (model.currentSelIndex == 0) {

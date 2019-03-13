@@ -16,6 +16,7 @@
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
 #import "FHHouseType.h"
+#import <TTDeviceHelper.h>
 
 @interface FHMyFavoriteViewController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol>
 
@@ -99,6 +100,9 @@
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     

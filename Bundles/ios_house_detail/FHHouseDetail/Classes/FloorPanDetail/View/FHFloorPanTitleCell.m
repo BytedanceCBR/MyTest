@@ -25,7 +25,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         _nameLabel = [UILabel new];
-        _nameLabel.textColor = [UIColor themeBlue1];
+        _nameLabel.textColor = [UIColor themeGray1];
         _nameLabel.font = [UIFont themeFontMedium:24];
         [self.contentView addSubview:_nameLabel];
         [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -46,7 +46,7 @@
         }];
         
         _pricingPerSqm = [UILabel new];
-        _pricingPerSqm.textColor = [UIColor themeGray2];
+        _pricingPerSqm.textColor = [UIColor themeGray3];
         _pricingPerSqm.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_pricingPerSqm];
         [_pricingPerSqm mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -69,7 +69,7 @@
         
         _statusLabel = [UILabel new];
         _statusLabel.font = [UIFont themeFontRegular:10];
-        _statusLabel.textColor = [UIColor themeBlue1];
+        _statusLabel.textColor = [UIColor themeGray1];
         _statusLabel.textAlignment = NSTextAlignmentCenter;
         [_statusBGView addSubview:_statusLabel];
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -100,7 +100,7 @@
             NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
             NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
                                           [UIFont themeFontRegular:12],NSFontAttributeName,@(2),NSBaselineOffsetAttributeName,
-                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray2],NSBackgroundColorAttributeName,nil];
+                                          model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
             [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
             self.statusLabel.attributedText = tagStr;
         }else

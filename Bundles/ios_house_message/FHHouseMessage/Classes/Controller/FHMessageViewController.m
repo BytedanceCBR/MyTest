@@ -15,8 +15,13 @@
 #import "UIViewController+Track.h"
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
+#import "TTRoute.h"
+#import "ChatMsg.h"
+#import "IMManager.h"
+#import <TTReachability/TTReachability.h>
+#import "FHBubbleTipManager.h"
 
-@interface FHMessageViewController ()<UIViewControllerErrorHandler>
+@interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;
 
@@ -34,11 +39,14 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.viewModel viewWillAppear];
+//    [self.viewModel viewWillAppear];
+    [FHBubbleTipManager shareInstance].canShowTip = NO;
     [self startLoadData];
 }
 
@@ -46,35 +54,71 @@
     [super viewWillDisappear:animated];
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
+    [FHBubbleTipManager shareInstance].canShowTip = YES;
+}
 
+- (void)userInfoReload {
+    [_tableView reloadData];
 }
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.leftBtn.hidden = YES;
+    self.customNavBarView.leftBtn.hidden = [self leftActionHidden];
     self.customNavBarView.title.text = @"消息";
+}
+
+- (BOOL)leftActionHidden {
+    return YES;
 }
 
 - (void)initView {
     self.containerView = [[UIView alloc] init];
     [self.view addSubview:_containerView];
     
+    _notNetHeader = [[FHNoNetHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 30)];
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+    } else {
+        [_notNetHeader setHidden:NO];
+    }
+    
     _tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 10)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.01f)];
     _tableView.tableHeaderView = headerView;
-    
+
     [self.containerView addSubview:_tableView];
+    [self.containerView addSubview:_notNetHeader];
     
     [self addDefaultEmptyViewFullScreen];
 }
 
+- (void)networkStateChange:(NSNotification *)notification {
+    if ([TTReachability isNetworkConnected]) {
+        [_notNetHeader setHidden:YES];
+    } else {
+        [_notNetHeader setHidden:NO];
+    }
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        if ([TTReachability isNetworkConnected]) {
+            make.top.left.right.bottom.mas_equalTo(self.containerView);
+        } else {
+            make.top.mas_equalTo(self.containerView).offset(30);
+            make.left.right.bottom.mas_equalTo(self.containerView);
+        }
+    }];
+}
+
+
 - (void)initConstraints {
-    CGFloat bottom = 49;
+    CGFloat bottom = [self getBottomMargin];
     if (@available(iOS 11.0 , *)) {
-        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        if([self isAlignToSafeBottom]){
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
     }
     
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -88,12 +132,26 @@
     }];
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.bottom.mas_equalTo(self.containerView);
+        if ([TTReachability isNetworkConnected]) {
+            make.top.left.right.bottom.mas_equalTo(self.containerView);
+        } else {
+            make.top.mas_equalTo(self.containerView).offset(30);
+            make.left.right.bottom.mas_equalTo(self.containerView);
+        }
     }];
+}
+
+- (CGFloat)getBottomMargin {
+    return 49;
 }
 
 - (void)initViewModel {
     _viewModel = [[FHMessageViewModel alloc] initWithTableView:_tableView controller:self];
+    [_viewModel setPageType:[self getPageType]];
+}
+
+- (NSString *)getPageType {
+    return @"message_list";
 }
 
 - (void)startLoadData {
@@ -150,4 +208,7 @@
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
+- (BOOL) isAlignToSafeBottom {
+    return YES;
+}
 @end

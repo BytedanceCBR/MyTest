@@ -38,7 +38,7 @@
             FHFloorPanCorePropertyCellItemModel *itemModel = model.list[i];
             UILabel *nameLabel = [UILabel new];
             nameLabel.font = [UIFont themeFontRegular:15];
-            nameLabel.textColor = [UIColor themeGray2];
+            nameLabel.textColor = [UIColor themeGray3];
             nameLabel.textAlignment = NSTextAlignmentLeft;
             nameLabel.numberOfLines = 0;
             nameLabel.text = itemModel.propertyName;
@@ -53,7 +53,7 @@
             
             UILabel *valueLabel = [UILabel new];
             valueLabel.font = [UIFont themeFontRegular:15];
-            valueLabel.textColor = [UIColor themeBlue1];
+            valueLabel.textColor = [UIColor themeGray1];
             valueLabel.textAlignment = NSTextAlignmentLeft;
             valueLabel.numberOfLines = 0;
             valueLabel.text = itemModel.propertyValue;

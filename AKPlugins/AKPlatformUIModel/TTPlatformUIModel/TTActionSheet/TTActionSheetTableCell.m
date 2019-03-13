@@ -25,10 +25,10 @@
     if (self) {
         _contentLabel = [[UILabel alloc] init];
         _contentLabel.centerY = self.contentView.centerY;
-        _contentLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        _contentLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _revokeLabel = [[UILabel alloc] init];
         _revokeLabel.text = @"撤销";
-        _revokeLabel.textColor = [UIColor tt_themedColorForKey:kColorText5];
+        _revokeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorRed3];
         _revokeLabel.hidden = YES;
         _seperatorView = [[UIView alloc] init];
         [_seperatorView setBackgroundColor:[UIColor tt_themedColorForKey:kColorLine1]];

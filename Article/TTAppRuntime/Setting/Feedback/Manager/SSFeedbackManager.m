@@ -435,6 +435,7 @@ static SSFeedbackManager *manager = nil;
     if (model == nil) {
         return;
     }
+    model.feedbackType = @(feedbackTypeServer);
     NSData * arch = [NSKeyedArchiver archivedDataWithRootObject:model];
     [[NSUserDefaults standardUserDefaults] setObject:arch forKey:kSSFeedbackDefaultModelKey];
     [[NSUserDefaults standardUserDefaults] synchronize];

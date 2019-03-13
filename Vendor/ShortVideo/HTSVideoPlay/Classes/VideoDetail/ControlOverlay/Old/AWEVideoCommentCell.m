@@ -77,6 +77,7 @@
         self.thumbView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 36, 36) allowCorner:YES];
         self.thumbView.placeholderName = @"hts_vp_head_icon";
         self.thumbView.cornerRadius = 18;
+        self.thumbView.borderWidth = 0;
         self.thumbView.userInteractionEnabled = YES;
         
         [self addSubview:self.thumbView];
@@ -89,7 +90,7 @@
         self.userLabel = [UILabel new];
         self.userLabel.text = nil;
         self.userLabel.font = [UIFont systemFontOfSize:14.0];
-        self.userLabel.textColor = [UIColor tt_themedColorForKey:kColorText3];
+        self.userLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         [self addSubview:self.userLabel];
         [self.userLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.thumbView.mas_top);
@@ -111,7 +112,7 @@
         self.timeLabel = [UILabel new];
         self.timeLabel.text = nil;
         self.timeLabel.font = [UIFont systemFontOfSize:12.0];
-        self.timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         [self addSubview:self.timeLabel];
         [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.commentLabel.mas_bottom).offset(8);

@@ -30,7 +30,11 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
+#import "IMManager.h"
+#import "TTTracker.h"
 #import <FHHouseBase/FHUserTracker.h>
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
@@ -63,6 +67,12 @@
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
         
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
+        
+        [FHEnvContext sharedInstance].messageManager ;
+        
         __weak typeof(self)wself = self;
         _bottomBar.bottomBarContactBlock = ^{
             [wself contactAction];
@@ -74,6 +84,10 @@
             [wself jump2RealtorDetail];
         };
         
+        _bottomBar.bottomBarImBlock = ^{
+            [wself imAction];
+        };
+ 
         _navBar.collectActionBlock = ^(BOOL followStatus){
             if (!followStatus) {
                 
@@ -85,6 +99,10 @@
         _navBar.shareActionBlock = ^{
             [wself shareAction];
         };
+        _navBar.messageActionBlock = ^{
+            [wself messageAction];
+        };
+        [self refreshMessageDot];
     }
     return self;
 }
@@ -93,12 +111,18 @@
 {
     self = [super init];
     if (self) {
-        
         _navBar = navBar;
         _bottomBar = bottomBar;
-
     }
     return self;
+}
+
+- (void)refreshMessageDot {
+    if ([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]) {
+        [_navBar displayMessageDot:YES];
+    } else {
+        [_navBar displayMessageDot:NO];
+    }
 }
 
 - (void)refreshFollowStatus:(NSNotification *)noti
@@ -146,6 +170,7 @@
     [self.followUpViewModel cancelFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType];
 }
 
+//todo 增加埋点的东西
 - (void)jump2RealtorDetail
 {
     [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone];
@@ -185,6 +210,26 @@
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
 }
 
+- (void)messageAction {
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:[_tracerDict objectForKey:@"page_type"]  forKey:@"page_type"];
+    [params setValue:[_tracerDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+    [params setValue:[_tracerDict objectForKey:@"rank"] forKey:@"rank"];
+    [params setValue:@"left_pic" forKey:@"card_type"];
+    [params setValue:[_tracerDict objectForKey:@"element_from"] forKey:@"element_from"];
+    [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
+    [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
+    [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
+    [TTTracker eventV3:@"click_im_message" params:params];
+    
+    
+    NSString *messageSchema = @"sslocal://message_conversation_list";
+    NSURL *openUrl = [NSURL URLWithString:messageSchema];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
+}
+
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone
 {
     _contactPhone = contactPhone;
@@ -197,9 +242,28 @@
         }
     }
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle];
+    [self tryTraceImElementShow];
     if (contactPhone.showRealtorinfo) {
         [self addRealtorShowLog:contactPhone];
         [self addElementShowLog:contactPhone];
+    }
+}
+
+- (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
+    [self.phoneCallViewModel generateImParams:houseId houseTitle:houseTitle houseCover:houseCover houseType:houseType houseDes:houseDes housePrice:housePrice houseAvgPrice:houseAvgPrice];
+}
+
+- (void)tryTraceImElementShow {
+    if (!isEmptyString(_contactPhone.imOpenUrl)) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:@"im" forKey:@"element_type"];
+        [params setValue:[_tracerDict objectForKey:@"page_type"]  forKey:@"page_type"];
+        [params setValue:[_tracerDict objectForKey:@"rank"] forKey:@"rank"];
+        [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
+        [params setValue:[_tracerDict objectForKey:@"origin_search_id"] forKey:@"origin_search_id"];
+        [params setValue:[_tracerDict objectForKey:@"log_pb"] forKey:@"log_pb"];
+        [TTTracker eventV3:@"element_show" params:params];
     }
 }
 
@@ -229,6 +293,11 @@
     [self.phoneCallViewModel callWithPhone:self.contactPhone.phone realtorId:self.contactPhone.realtorId searchId:self.searchId imprId:self.imprId];
     // 静默关注功能
     [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+}
+
+
+- (void)imAction {
+    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:@"detail_button"];
 }
 
 #pragma mark 埋点相关
@@ -283,6 +352,16 @@
     tracerDic[@"realtor_id"] = contactPhone.realtorId ?: @"be_null";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"detail_button";
+    if (_contactPhone.phone.length < 1) {
+        [tracerDic setValue:@"0" forKey:@"phone_show"];
+    } else {
+        [tracerDic setValue:@"1" forKey:@"phone_show"];
+    }
+    if (!isEmptyString(_contactPhone.imOpenUrl)) {
+        [tracerDic setValue:@"1" forKey:@"im_show"];
+    } else {
+        [tracerDic setValue:@"0" forKey:@"im_show"];
+    }
     [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
 }
 

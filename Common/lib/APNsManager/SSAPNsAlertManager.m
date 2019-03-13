@@ -421,7 +421,6 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     }
                 }
             } else {
-                
                 // push对消息特殊处理
 //                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
 ////                    if (![TTAccountManager isLogin]) {

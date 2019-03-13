@@ -8,11 +8,11 @@
 
 #import "TTPersonalHomeHeaderInfoView.h"
 #import "NSStringAdditions.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTTrackerWrapper.h"
 #import "TTRoute.h"
 #import "SSCommonLogic.h"
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTPersonalHomeMultiplePlatformFollowersInfoView.h"
@@ -469,7 +469,7 @@ typedef NS_ENUM(NSInteger, TTPersonalHomeHeaderInfoItemType) {
         [medalImageView removeFromSuperview];
     }
     _medalImageViews = @[].mutableCopy;
-    NSDictionary* settingMedals = [[TTKitchenMgr sharedInstance] getDictionary:kKCUGCMedals];
+    NSDictionary* settingMedals = [TTKitchen getDictionary:kKCUGCMedals];
 
     if (self.infoModel.medals.count > 0) {
         for (NSString* medal in self.infoModel.medals) {

@@ -92,7 +92,7 @@
 
 #import "NSObject+MultiDelegates.h"
 #import "TTURLUtils.h"
-#import "TTRNBridge.h"
+//#import "TTRNBridge.h"
 
 #import "TTStringHelper.h"
 #import "NSObject+TTAdditions.h"
@@ -102,7 +102,7 @@
 #import "ExploreEntryManager.h"
 #import "UIImage+TTThemeExtension.h"
 
-#import "TTRNView.h"
+//#import "TTRNView.h"
 #import "NSObject+FBKVOController.h"
 #import "TTLayOutCellViewBase.h"
 #import <Crashlytics/Crashlytics.h>
@@ -154,7 +154,7 @@
 #import <TTDialogDirector/TTDialogDirector+ClientAB.h>
 //#import "RecommendRedpacketData.h"
 //#import "FRThreadSmartDetailManager.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTVOwnPlayerPreloaderWrapper.h"
 #import "TTVSettingsConfiguration.h"
 //#import "TTFollowCategoryFetchExtraManager.h"
@@ -2178,7 +2178,7 @@ TTRefreshViewDelegate
     }
         
     //关注频道
-    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
+    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
         [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:self.categoryID withClean:YES];
     }
 
@@ -2746,7 +2746,7 @@ TTRefreshViewDelegate
                                          [weakSelf tryFetchTipIfNeedWithForce:NO];
                                          
                                          //关注频道刷新后，告知提醒轮询manager
-                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
+                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
                                              __block ExploreOrderedData * firstOrderedData = nil;
                                              [weakSelf.fetchListManager.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                                  if ([obj isKindOfClass:[ExploreOrderedData class]]) {
@@ -2755,7 +2755,7 @@ TTRefreshViewDelegate
                                                  }
                                              }];
                                              NSTimeInterval minBehotTime =  [firstOrderedData behotTime];
-                                             if (getMore && [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) {
+                                             if (getMore && [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) {
                                                  minBehotTime = [[NSDate date] timeIntervalSince1970];
                                              }
                                              [[TTInfiniteLoopFetchNewsListRefreshTipManager sharedManager] newsListLastHadRefreshWithCategoryID:cid
@@ -3460,7 +3460,7 @@ TTRefreshViewDelegate
     [TTFeedDislikeView dismissIfVisible];
     
     //按住RNCell滑动列表时需要主动调用RCTRootView的cancelTouches方法，否则松手后仍会触发点击事件
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate

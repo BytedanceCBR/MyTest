@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UIView *headerView;
 @property(nonatomic , strong) UIScrollView *containerScrollView;
 @property(nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
+@property(nonatomic , weak) UIView *bottomLine;
 
 -(UIView *)iconHeaderView;
 

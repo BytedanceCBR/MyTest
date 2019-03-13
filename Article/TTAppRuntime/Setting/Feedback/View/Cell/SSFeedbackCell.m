@@ -19,13 +19,13 @@
 #import "TTURLUtils.h"
 #import "TTRoute.h"
 
-#define AvatarViewWidth 30.f
-#define SSContentViewSeverTypeLeftPadding   43.f
-#define SSContentViewSeverTypeRightPadding  39.f
-#define SSContentViewUserTypeLeftPadding    38.f
-#define SSContentViewUserTypeRightPadding   44.f
+#define AvatarViewWidth 36.f
+#define SSContentViewSeverTypeLeftPadding   66.f
+#define SSContentViewSeverTypeRightPadding  22.f
+#define SSContentViewUserTypeLeftPadding    22.f
+#define SSContentViewUserTypeRightPadding   66.f
 
-#define SSContentViewTopPadding             8.f
+#define SSContentViewTopPadding             5.f
 #define SSContentViewBottomPadding          9.f
 
 #define SSContentViewLeftMargin             12.f
@@ -35,7 +35,7 @@
 
 #define FeedbackImageViewTopPadding         10.f
 #define CreateTimeLabelTopPadding           5.f
-#define ContentLabelFontSize                  15.f
+#define ContentLabelFontSize                12.f
 #define CreateTimeLabelFontSize             10.f
 #define FeedbackImgViewRightPadding         66.f
 
@@ -87,7 +87,7 @@
             _avatarView.marginEdgeInsets = UIEdgeInsetsZero;
         }else{
             _avatarView.avatarStyle = SSAvatarViewStyleRound;
-            _avatarView.avatarImgPadding = 2.f;
+            _avatarView.avatarImgPadding = 0.f;
         }
         
         [self.contentView addSubview:_avatarView];
@@ -98,21 +98,30 @@
         [self.contentView addSubview:_ssContentView];
         
         self.contentBgImgView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        //_contentBgImgView.contentStretch = CGRectMake(0.49, 0.49, 0.02, 0.02);
+        _contentBgImgView.layer.cornerRadius = 4;
         _contentBgImgView.backgroundColor = [UIColor clearColor];
         [self.ssContentView addSubview:_contentBgImgView];
         
         self.contentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _contentLabel.numberOfLines = 0;
         _contentLabel.backgroundColor = [UIColor clearColor];
-        _contentLabel.labelInactiveLinkAttributes = @{NSForegroundColorAttributeName:[UIColor blueColor]};
-        _contentLabel.labelActiveLinkAttributes = @{NSForegroundColorAttributeName:[UIColor tt_themedColorForKey:kColorText5Highlighted]};
+        _contentLabel.labelInactiveLinkAttributes = @{
+                                                      NSForegroundColorAttributeName:[UIColor whiteColor],
+                                                      NSUnderlineColorAttributeName:[UIColor whiteColor],
+                                                      NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]
+                                                      };
+        _contentLabel.labelActiveLinkAttributes = @{
+                                                    NSForegroundColorAttributeName:[UIColor tt_themedColorForKey:kFHColorCoolGrey3],
+                                                    NSUnderlineColorAttributeName:[UIColor tt_themedColorForKey:kFHColorCoolGrey3],
+                                                    NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]
+                                                    };
         _contentLabel.labelTappingDelegate = self;
+        _contentLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:ContentLabelFontSize];
         [_ssContentView addSubview:_contentLabel];
         
         self.timeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _timeLabel.backgroundColor = [UIColor clearColor];
-        [_timeLabel setFont:[UIFont systemFontOfSize:CreateTimeLabelFontSize]];
+        _timeLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:CreateTimeLabelFontSize];
         [_ssContentView addSubview:_timeLabel];
         
         self.feedbackImageView = [[TTImageView alloc] initWithFrame:CGRectZero];
@@ -157,8 +166,8 @@
 
 - (void)themeChanged:(NSNotification *)notification
 {
-    [_contentLabel setTextColor:[UIColor tt_themedColorForKey:kColorText1]];
-    [_timeLabel setTextColor:[UIColor tt_themedColorForKey:kColorText3]];
+    [_contentLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey]];
+    [_timeLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3]];
     [self refreshContentBgImgView];
     _avatarView.backgroundNormalImage = [UIImage themedImageNamed:@"headbg_comment.png"];
     _avatarView.backgroundHightlightImage = [UIImage themedImageNamed:@"headbg_comment.png"];
@@ -166,19 +175,15 @@
 
 - (void)refreshContentBgImgView
 {
-    NSString * resourceImage = nil;
+    NSString *colorKey = nil;
     if ([_model.feedbackType intValue] == feedbackTypeUser) {
-        resourceImage = @"right_dialog.png";
+        colorKey = kFHColorCoral;
     }
     else if ([_model.feedbackType intValue] == feedbackTypeServer) {
-        resourceImage = @"left_dialog.png";
+        colorKey = kFHColorPaleGrey;
     }
     
-    if (resourceImage) {
-        UIImage * image = [UIImage themedImageNamed:resourceImage];
-        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(image.size.height * 0.5f - 1, image.size.width * 0.5f - 1, image.size.height * 0.5f, image.size.width * 0.5f)];
-        _contentBgImgView.image = image;
-    }
+    _contentBgImgView.backgroundColor = [UIColor tt_themedColorForKey:colorKey];
 }
 
 - (void)refreshFeedbackModel:(SSFeedbackModel *)model
@@ -208,10 +213,14 @@
     if ([_model.feedbackType intValue]== feedbackTypeServer) {
         _timeLabel.textAlignment = NSTextAlignmentLeft;
         _contentLabel.textAlignment = NSTextAlignmentLeft;
+        [_contentLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey]];
+        [_timeLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3]];
     }
     else {
         _timeLabel.textAlignment = NSTextAlignmentRight;
         _contentLabel.textAlignment = NSTextAlignmentRight;
+        [_contentLabel setTextColor:[UIColor whiteColor]];
+        [_timeLabel setTextColor:[UIColor whiteColor]];
     }
     
     if (isEmptyString(model.content)) {
@@ -223,7 +232,6 @@
     [attrString setAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:ContentLabelFontSize]} range:NSMakeRange(0, attrString.length)];
     _contentLabel.attributedText = attrString;
     [_contentLabel removeAllLinkAttributes];
-    
     [_contentLabel detectAndAddLinkToLabel];
     if (!SSIsEmptyArray(model.links)) {
         NSArray * linkAry = model.links;
@@ -247,11 +255,11 @@
     CGRect frame = CGRectZero;
     frame.size.width = [SSFeedbackCell widthForSSContentViewByModel:_model listViewWidth:[self widthForCell]];
     if ([_model.feedbackType intValue] == feedbackTypeUser) {
-        frame.origin.x = [self widthForCell] - frame.size.width - SSContentViewSeverTypeRightPadding;
+        frame.origin.x = [self widthForCell] - frame.size.width - SSContentViewUserTypeRightPadding;
     }
     else if ([_model.feedbackType intValue] == feedbackTypeServer) {
         
-        frame.origin.x = SSContentViewUserTypeLeftPadding;
+        frame.origin.x = SSContentViewSeverTypeLeftPadding;
     }
     frame.origin.y = SSContentViewTopPadding;
     
@@ -307,10 +315,10 @@
 {
     CGPoint point = CGPointZero;
     if ([_model.feedbackType intValue] == feedbackTypeUser) {
-        point.x = [self widthForCell] - AvatarViewWidth - 8;
+        point.x = [self widthForCell] - AvatarViewWidth - 20;
     }
     else if ([_model.feedbackType intValue] == feedbackTypeServer) {
-        point.x = 8;
+        point.x = 20;
     }
     point.y = 5.f;
     return point;
@@ -395,10 +403,10 @@
 + (CGFloat)maxWidthForSSContentViewByModel:(SSFeedbackModel *)model listViewWidth:(CGFloat)width
 {
     CGFloat titleLabelWidth = width;
-    if ([model.feedbackType intValue] == feedbackTypeUser) {
+    if ([model.feedbackType intValue] == feedbackTypeServer) {
         titleLabelWidth -= (SSContentViewSeverTypeLeftPadding + SSContentViewSeverTypeRightPadding);
     }
-    else if ([model.feedbackType intValue] == feedbackTypeServer) {
+    else if ([model.feedbackType intValue] == feedbackTypeUser) {
         titleLabelWidth -= (SSContentViewUserTypeRightPadding + SSContentViewUserTypeLeftPadding);
     }
     return titleLabelWidth;
@@ -406,7 +414,7 @@
 
 + (CGFloat)availableWidthForSSContentViewByModel:(SSFeedbackModel *)model listViewWidth:(CGFloat)width
 {
-    float contentWidth = [self widthForContentLabel:model listViewWidth:width] + 16;
+    float contentWidth = [self widthForContentLabel:model listViewWidth:width];
     if (!isEmptyString(model.imageURLStr)) {
         float imgWidth = [self widthForFeedbackImageByModel:model listViewWidth:width];
         return MAX(imgWidth, contentWidth);

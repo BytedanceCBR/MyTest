@@ -309,6 +309,9 @@
                     break;
             }
             break;
+        case FHEnterSuggestionTypeOldMain:
+            retPageTypeStr = @"old_kind_list";
+            break;
         default:
             retPageTypeStr = @"maintab";
             break;
@@ -370,7 +373,7 @@
         if (indexPath.row - 1 < self.historyData.count) {
             FHSuggestionSearchHistoryResponseDataDataModel *model  = self.historyData[indexPath.row - 1];
             cell.secondaryLabel.text = [[FHHouseTypeManager sharedInstance] stringValueForType:self.houseType];
-            NSAttributedString *text1 = [self processHighlightedDefault:model.listText textColorHex:@"#081f33" fontSize:15.0];
+            NSAttributedString *text1 = [self processHighlightedDefault:model.listText textColor:[UIColor themeGray1] fontSize:15.0];
             cell.label.attributedText = text1;
             if (indexPath.row - 1 == self.sugListData.count - 1) {
                 // 末尾
@@ -392,11 +395,11 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
-                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
-                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColorHex:@"#a1aab3" fontSize:12.0];
+                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
+                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColor:[UIColor themeGray3] fontSize:12.0];
                 
-                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColorHex:@"#299cff" fontSize:15.0];
-                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColorHex:@"#299cff" fontSize:12.0];
+                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeRed1] fontSize:15.0];
+                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeRed1] fontSize:12.0];
                 
                 cell.secondaryLabel.text = model.tips;
                 cell.secondarySubLabel.text = model.tips2;
@@ -408,14 +411,14 @@
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
                 NSString *originText = model.text;
-                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColorHex:@"#081f33" fontSize:15.0];
+                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
                 NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
                 if (model.text2.length > 0) {
                     originText = [NSString stringWithFormat:@"%@ (%@)", originText, model.text2];
                     NSAttributedString *text2 = [self processHighlightedGray:model.text2];
                     [resultText appendAttributedString:text2];
                 }
-                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColorHex:@"#299cff" fontSize:15.0];
+                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeRed1] fontSize:15.0];
                 cell.secondaryLabel.text = [NSString stringWithFormat:@"约%@套", model.count];
                 if (indexPath.row == self.sugListData.count - 1) {
                     // 末尾
@@ -532,9 +535,8 @@
 }
 
 // 1、默认
-- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColorHex:(NSString *)textColorHex fontSize:(CGFloat)fontSize {
-    // #081f33 默认 #299cff 高亮  #8a9299  灰色
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:[UIColor colorWithHexString:textColorHex]};
+- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
     NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
     
     return attrStr;
@@ -542,19 +544,17 @@
 
 // 2、部分 灰色
 - (NSAttributedString *)processHighlightedGray:(NSString *)text2 {
-    // #081f33 默认 #299cff 高亮  #8a9299  灰色
     NSString *retStr = [NSString stringWithFormat:@" (%@)",text2];
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:15],NSForegroundColorAttributeName:[UIColor colorWithHexString:@"#8a9299"]};
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:15],NSForegroundColorAttributeName:[UIColor themeGray3]};
     NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:retStr attributes:attr];
     
     return attrStr;
 }
 
 // 3、高亮
-- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColorHex:(NSString *)textColorHex fontSize:(CGFloat)fontSize {
-    // #081f33 默认 #299cff 高亮  #8a9299  灰色
+- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
     if (self.highlightedText.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:[UIColor colorWithHexString:textColorHex]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
         NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
         
         NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",self.highlightedText] options:NSRegularExpressionCaseInsensitive error:nil];
@@ -643,32 +643,52 @@
             // 构建数据源
             [wself.guessYouWantData removeAllObjects];
             if (model.data.data.count > 0) {
-                // 把外部传入的搜索词放到第一个位置
+                // 把外部传入的轮播词放到前3个位置
                 NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.data];
-                NSString *text = self.homePageRollDic[@"text"];
-                NSInteger houseType  = [self.homePageRollDic[@"house_type"] integerValue];
-                if (text.length > 0 && houseType == self.houseType) {
-                    NSInteger index = 0;
-                    FHGuessYouWantResponseDataDataModel *tempModel  = [[FHGuessYouWantResponseDataDataModel alloc] init];
-                    tempModel.text = text;
-                    tempModel.openUrl = self.homePageRollDic[@"open_url"];
-                    tempModel.guessSearchId = self.homePageRollDic[@"guess_search_id"];
-                    tempModel.houseType = [NSString stringWithFormat:@"%ld",houseType];
-                    for (FHGuessYouWantResponseDataDataModel *obj in tempData) {
-                        if ([obj.text isEqualToString:text]) {
-                            tempModel = obj;
-                            [tempData removeObjectAtIndex:index];
-                            break;
+                if (wself.guessYouWantWords.count > 0) {
+                    NSMutableArray *guessArray = [NSMutableArray new];
+                    [wself.guessYouWantWords enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if ([obj isKindOfClass:[NSDictionary class]]) {
+                            NSString *text = obj[@"text"];
+                            NSInteger houseType  = [obj[@"house_type"] integerValue];
+                            NSString *open_url = obj[@"open_url"];
+                            NSString *guess_search_id = obj[@"guess_search_id"];
+                            if (text.length > 0 && houseType == wself.houseType) {
+                                NSInteger index = 0;
+                                FHGuessYouWantResponseDataDataModel *tempModel  = [[FHGuessYouWantResponseDataDataModel alloc] init];
+                                tempModel.text = text;
+                                tempModel.openUrl = open_url;
+                                tempModel.guessSearchId = guess_search_id;
+                                tempModel.houseType = [NSString stringWithFormat:@"%ld",houseType];
+                                for (FHGuessYouWantResponseDataDataModel *obj in tempData) {
+                                    if ([obj.text isEqualToString:text]) {
+                                        tempModel = obj;
+                                        [tempData removeObjectAtIndex:index];
+                                        break;
+                                    }
+                                    index += 1;
+                                }
+                                [guessArray addObject:tempModel];
+                            }
                         }
-                        index += 1;
+                    }];
+                    if (guessArray.count > 0) {
+                        if (guessArray.count > 3) {
+                            guessArray = [guessArray subarrayWithRange:NSMakeRange(0, 3)];
+                        }
+                        FHGuessYouWantFirstWords *firsetWords = [wself.guessYouWantView firstThreeWords:guessArray];
+                        tempData = [wself.guessYouWantView firstLineGreaterThanSecond:firsetWords array:tempData count:1];
+                        NSMutableArray *temp = [NSMutableArray new];
+                        [temp addObjectsFromArray:guessArray];
+                        [temp addObjectsFromArray:tempData];
+                        tempData = temp;
+                    } else {
+                        // 猜你想搜：第一行展示长度大于第二行-逻辑
+                        tempData = [wself.guessYouWantView firstLineGreaterThanSecond:nil array:tempData count:1];
                     }
-                    // 猜你想搜：第一行展示长度大于第二行-逻辑
-                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:text array:tempData count:1];
-                    
-                    [tempData insertObject:tempModel atIndex:0];
                 } else {
                     // 猜你想搜：第一行展示长度大于第二行-逻辑
-                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:@"" array:tempData count:1];
+                    tempData = [wself.guessYouWantView firstLineGreaterThanSecond:nil array:tempData count:1];
                 }
                 [wself.guessYouWantData addObjectsFromArray:tempData];
                 wself.guessYouWantView.guessYouWantItems = wself.guessYouWantData;

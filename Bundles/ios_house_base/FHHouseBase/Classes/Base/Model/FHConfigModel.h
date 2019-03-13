@@ -104,7 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHConfigDataHouseOpDataItemsModel<NSObject>
 
+@end
 
 
 @protocol FHConfigDataRentOpDataItemsImageModel<NSObject>
@@ -140,6 +142,27 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHConfigDataRentOpDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsModel> *items;
+@property (nonatomic, copy , nullable) NSString *opStyle;
+
+@end
+
+@interface  FHConfigDataHouseOpDataItemsModel  : JSONModel
+
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *descriptionStr;
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsImageModel> *image;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+
+@end
+
+
+@interface  FHConfigDataHouseOpDataModel  : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataHouseOpDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *opStyle;
 
 @end
@@ -278,6 +301,7 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *rentOpData ;
+@property (nonatomic, strong , nullable) FHConfigDataOpData2Model *houseOpData ;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataEntryInfoModel> *entryInfo;
 @property (nonatomic, copy , nullable) NSString *currentCityId;
 @property (nonatomic, strong , nullable) FHConfigDataMapSearchModel *mapSearch ;

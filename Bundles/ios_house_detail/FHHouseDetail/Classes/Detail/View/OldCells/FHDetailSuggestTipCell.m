@@ -17,7 +17,7 @@
 
 @interface FHDetailSuggestTipCell ()
 
-@property (nonatomic, strong)   UIView       *tipBgView;
+//@property (nonatomic, strong)   UIView       *tipBgView;
 @property (nonatomic, strong)   UILabel       *tipLabel;
 @property (nonatomic, strong)   UILabel       *subtitleLabel;
 @property (nonatomic, strong)   UIImageView       *trendIcon;
@@ -79,23 +79,26 @@
 - (void)setupUI {
     
     _bgView = [[UIView alloc] init];
-    _bgView.backgroundColor = [UIColor colorWithHexString:@"#f0f8ff"];
+    _bgView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_bgView];
     
     _trendIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sentiment-satisfied-material"]];
     _trendIcon.contentMode = UIViewContentModeScaleAspectFill;
     [self.bgView addSubview:_trendIcon];
     
-    _tipBgView = [[UIView alloc] init];
-    _tipBgView.backgroundColor = [UIColor colorWithHexString:@"#299cff"];
-    _tipBgView.layer.cornerRadius = 4.0;
-    _tipBgView.layer.masksToBounds = YES;
-    [self.bgView addSubview:_tipBgView];
+//    _tipBgView = [[UIView alloc] init];
+//    _tipBgView.backgroundColor = [UIColor themeGray7];
+//    _tipBgView.layer.cornerRadius = 4.0;
+//    _tipBgView.layer.masksToBounds = YES;
+//    [self.bgView addSubview:_tipBgView];
     
-    _tipLabel = [UILabel createLabel:@"购房小建议" textColor:@"#ffffff" fontSize:16];
+    _tipLabel = [UILabel createLabel:@"购房小建议" textColor:@"" fontSize:16];
+    _tipLabel.textColor = [UIColor themeGray1];
+    _tipLabel.font = [UIFont themeFontMedium:16];
     [self.bgView addSubview:_tipLabel];
     
-    _subtitleLabel = [UILabel createLabel:@"" textColor:@"#3d6e99" fontSize:14];
+    _subtitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _subtitleLabel.textColor = [UIColor themeGray2];
     _subtitleLabel.numberOfLines = 0;
     [self.bgView addSubview:_subtitleLabel];
     
@@ -110,18 +113,19 @@
     [self.trendIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.right.mas_equalTo(self.bgView);
     }];
-    [self.tipBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(10);
-        make.left.mas_equalTo(-4);
-        make.right.mas_equalTo(self.tipLabel.mas_right).offset(12);
-        make.bottom.mas_equalTo(self.tipLabel.mas_bottom).offset(3);
-    }];
+//    [self.tipBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(10);
+//        make.left.mas_equalTo(-4);
+//        make.right.mas_equalTo(self.tipLabel.mas_right).offset(12);
+//        make.bottom.mas_equalTo(self.tipLabel.mas_bottom).offset(3);
+//    }];
     [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.tipBgView).offset(3);
-        make.left.mas_equalTo(self.tipBgView).offset(15);
+        make.top.mas_equalTo(self.bgView).offset(15);
+        make.left.mas_equalTo(self.bgView).offset(15);
+        make.height.mas_equalTo(22);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.tipBgView.mas_bottom).offset(10);
+        make.top.mas_equalTo(self.tipLabel.mas_bottom).offset(11);
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.bottom.mas_equalTo(-15);

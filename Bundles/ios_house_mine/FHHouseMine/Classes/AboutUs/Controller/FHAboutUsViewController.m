@@ -51,7 +51,7 @@
     
     self.versionLabel = [[UILabel alloc] init];
     _versionLabel.font = [UIFont themeFontRegular:16];
-    _versionLabel.textColor = [UIColor themeGray];
+    _versionLabel.textColor = [UIColor themeGray1];
     _versionLabel.text = [NSString stringWithFormat:@"版本号%@",[TTSandBoxHelper versionName]];
     [self.view addSubview:_versionLabel];
     
