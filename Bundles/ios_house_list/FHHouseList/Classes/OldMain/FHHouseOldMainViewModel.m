@@ -35,7 +35,7 @@
 #define kFHHouseOldMainRecommendTitleCellId @"kFHHouseOldMainRecommendTitleCellId"
 #define kFHHouseOldMainPlaceholderCellId @"kFHHouseOldMainPlaceholderCellId"
 #define HOUSE_ICON_HEADER_HEIGHT (60 * [UIScreen mainScreen].bounds.size.width / 375.0f)
-#define HOUSE_TABLE_HEADER_HEIGHT (HOUSE_ICON_HEADER_HEIGHT + 19 * [UIScreen mainScreen].bounds.size.width / 375.0f)
+#define HOUSE_TABLE_HEADER_HEIGHT floor(HOUSE_ICON_HEADER_HEIGHT + 19 * [UIScreen mainScreen].bounds.size.width / 375.0f) //414屏幕会出现小数 导致滑动出现问题
 #define kFilterBarHeight 44
 
 @interface FHHouseOldMainViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate>
