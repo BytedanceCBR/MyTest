@@ -167,8 +167,21 @@
     }
     
     
+    if (self.houseType == FHHouseTypeRentHouse) {
+        
+        [self requestRentData:isHead query:query completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
+            
+        }];
+        
+    }else{
+        
+        
+        
+    }
+    
+    
     __weak typeof(self) wself = self;
-    self.requestTask =  [FHMainApi searchRent:query params:nil offset:offset searchId:self.currentRentDataModel.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
+    self.requestTask =  [FHMainApi searchRent:query params:nil offset:offset searchId:self.searchId sugParam:nil completion:^(FHHouseRentModel * _Nonnull model, NSError * _Nonnull error) {
         
         wself.tableView.scrollEnabled = YES;
         if (error) {

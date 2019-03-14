@@ -11,9 +11,9 @@
 
 @implementation FHBaseMainListViewModel (Old)
 
--(void)loadData:(BOOL)isRefresh
+-(void)loadData:(BOOL)isRefresh  query:(NSString *)query
 {
-    [self loadData:isRefresh fromRecommend:self.fromRecommend];
+    [self loadData:isRefresh fromRecommend:self.fromRecommend query:nil];
 }
 
 #pragma mark - 网络请求
@@ -23,7 +23,7 @@
     NSMutableDictionary *param = [NSMutableDictionary new];
     
     if (isRefresh) {
-        if (!_isFirstLoad && _canChangeHouseSearchDic) {
+        if (!self.isFirstLoad && self.canChangeHouseSearchDic) {
             if (self.houseSearchDic.count <= 0) {
                 // pageType 默认就是 [self pageTypeString]
                 self.houseSearchDic = @{

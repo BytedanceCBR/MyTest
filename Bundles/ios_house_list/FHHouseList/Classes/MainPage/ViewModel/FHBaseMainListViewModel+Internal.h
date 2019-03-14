@@ -9,6 +9,12 @@
 #define FHBaseMainListViewModel_Internal_h
 
 #import <TTNetworkManager/TTHttpTask.h>
+#import <FHConditionFilterViewModel.h>
+#import <FHHouseBase/FHSearchFilterOpenUrlModel.h>
+#import <FHHouseBase/FHHouseFilterBridge.h>
+
+#import "FHMainRentTopView.h"
+#import "FHMainOldTopView.h"
 
 @interface FHBaseMainListViewModel ()<UITableViewDelegate,UITableViewDataSource,FHConditionFilterViewModelDelegate,FHMainRentTopViewDelegate,FHMainOldTopViewDelegate>
 
@@ -17,7 +23,7 @@
 
 @property(nonatomic , strong) NSMutableArray *houseList;
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
-@property(nonatomic , strong) FHHouseRentDataModel *currentRentDataModel;
+//@property(nonatomic , strong) FHHouseRentDataModel *currentRentDataModel;
 @property(nonatomic , copy)  NSString *conditionFilter;
 @property(nonatomic , strong) NSString *suggestion;
 @property(nonatomic , strong) NSDictionary *houseSearchDict;
@@ -38,11 +44,11 @@
 @property(nonatomic , assign) BOOL isFirstLoad;
 @property(nonatomic , assign) BOOL fromRecommend;
 
-@property(nonatomic , copy) NSString *mapFindHouseOpenUrl;
+//@property(nonatomic , copy) NSString *mapFindHouseOpenUrl;
 @property(nonatomic , copy) NSString *searchId;
 @property(nonatomic , copy) NSString *recommendSearchId;
-@property(nonatomic , copy) NSString *originSearchId;
-@property(nonatomic , copy) NSString *originFrom;
+//@property(nonatomic , copy) NSString *originSearchId;
+//@property(nonatomic , copy) NSString *originFrom;
 @property(nonatomic , strong) NSDictionary *houseSearchDic;
 
 
