@@ -250,6 +250,7 @@
 {
     self.shareBtn.hidden = !showItem;
     self.collectBtn.hidden = !showItem;
+    self.messageBtn.hidden = !showItem;
 }
 
 - (void)backAction:(UIButton *)sender
