@@ -11,7 +11,6 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>
 
-
 #define NOTIFY_HEIGHT 32
 
 @interface FHMainListTopView ()

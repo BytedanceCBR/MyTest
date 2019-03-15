@@ -12,6 +12,9 @@
 #import <FHHouseBase/FHHouseType.h>
 #import "FHBaseMainListViewModel.h"
 #import <TTBaseLib/UIViewAdditions.h>
+#import "FHHouseListRedirectTipView.h"
+
+#define TOP_HOR_PADDING 3
 
 @interface FHBaseMainListViewController ()
 
@@ -21,8 +24,9 @@
 @property(nonatomic , strong) FHMainListTopView *topView;
 @property(nonatomic , strong) UITableView *tableView;
 @property(nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , strong) FHHouseListRedirectTipView *redirectTipView;
 @property(nonatomic , strong) FHBaseMainListViewModel *viewModel;
-
+@property(nonatomic , strong) FHErrorView *errorView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
 
 @end
@@ -113,23 +117,27 @@
     
     [self.containerView addSubview:self.tableView];
     
-    [self.containerView addSubview:self.viewModel.filterBgControl];
-    self.viewModel.filterBgControl.hidden = YES;
-    
-    [self initConstraints];
+    self.redirectTipView = [[FHHouseListRedirectTipView alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 100)];
+    [self.containerView addSubview:_redirectTipView];
     
     _viewModel.viewController = self;
     _viewModel.navbar = self.navbar;
-    [self addDefaultEmptyViewFullScreen];
-    [self.containerView addSubview:self.emptyView];
-    _viewModel.errorMaskView = self.emptyView;
-    self.emptyView.hidden = YES;
+    _errorView = [[FHErrorView alloc] init];
+    [self.containerView addSubview:_errorView];
+    _viewModel.errorMaskView = _errorView;
+    _errorView.hidden = YES;
     _viewModel.topContainerView = _topContainerView;
     _viewModel.topView = self.topView;
     
+    [self.containerView addSubview:self.viewModel.filterBgControl];
+    self.viewModel.filterBgControl.hidden = YES;
+    
     [self.view bringSubviewToFront:_navbar];
     
+    [self initConstraints];
+    
     [self.viewModel requestData:YES];
+    self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
 }
 
 -(void)initConstraints
@@ -157,11 +165,19 @@
     }];
     
     [self.viewModel.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
+        make.left.right.bottom.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.viewModel.filterPanel.height);
     }];
     
-    [self.emptyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
+    [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.viewModel.filterPanel.mas_bottom);
+    }];
+    
+    [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(0);
     }];
     
 }

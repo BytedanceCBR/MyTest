@@ -8,12 +8,22 @@
 #import "FHBaseMainListViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+@protocol FHBaseModelProtocol;
+@class TTHttpTask;
 @interface FHBaseMainListViewModel (Old)
 
 -(void)showOldMapSearch;
 
--(void)loadData:(BOOL)isRefresh  query:(NSString *)query;
+-(TTHttpTask *)loadData:(BOOL)isRefresh  query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
+
+-(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query  completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
+
+- (void)updateRedirectTipInfo;
+
+- (void)closeRedirectTip;
+
+- (void)clickRedirectTip;
+
 
 @end
 

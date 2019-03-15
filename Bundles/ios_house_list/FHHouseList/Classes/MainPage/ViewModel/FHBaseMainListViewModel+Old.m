@@ -8,16 +8,22 @@
 #import "FHBaseMainListViewModel+Old.h"
 #import "FHBaseMainListViewModel+Internal.h"
 #import <TTRoute/TTRoute.h>
+#import "FHHouseListAPI.h"
+#import <MJRefresh/MJRefresh.h>
+#import <FHHouseBase/FHMapSearchOpenUrlDelegate.h>
+#import <FHHouseBase/FHEnvContext.h>
+#import <Masonry/Masonry.h>
+#import <FHHouseHome/FHCityListViewModel.h>
 
 @implementation FHBaseMainListViewModel (Old)
 
--(void)loadData:(BOOL)isRefresh  query:(NSString *)query
+-(TTHttpTask *)loadData:(BOOL)isRefresh  query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
 {
-    [self loadData:isRefresh fromRecommend:self.fromRecommend query:nil];
+    return [self loadData:isRefresh fromRecommend:self.fromRecommend query:nil completion:completion];
 }
 
 #pragma mark - 网络请求
--(void)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query
+-(TTHttpTask *)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend query:(NSString *)query  completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
 {
     NSInteger offset = 0;
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -51,47 +57,42 @@
     
     NSString *searchId = self.searchId;
     if (isFromRecommend) {
-        [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId];
+        return [self requestRecommendErshouHouseListData:isRefresh query:query offset:offset searchId:self.recommendSearchId completion:completion];
     } else {
-        [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId];
+        return [self requestErshouHouseListData:isRefresh query:query offset:offset searchId:searchId completion:completion];
     }
     
+    return nil;
 }
 
-- (void)requestErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId
+- (TTHttpTask *)requestErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
 {
-    [self.requestTask cancel];
+//    __weak typeof(self) wself = self;
     
-    __weak typeof(self) wself = self;
+    NSDictionary *param = @{@"house_type":@(self.houseType)};
     
-    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:param offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
-        if (!wself) {
-            return ;
+        if (completion) {
+            completion(model , error);
         }
-        wself.tableView.scrollEnabled = YES;
-        [wself processData:model error:error];
+        
     }];
     
-    self.requestTask = task;
+    return task;
 }
 
-- (void)requestRecommendErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId
+- (TTHttpTask *)requestRecommendErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion
 {
-    [_requestTask cancel];
-    
-    __weak typeof(self) wself = self;
-    
-    TTHttpTask *task = [FHHouseListAPI recommendErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHRecommendSecondhandHouseModel class] completion:^(FHRecommendSecondhandHouseModel *  _Nullable model, NSError * _Nullable error) {
+    NSDictionary *param = @{@"house_type":@(self.houseType)};
+    TTHttpTask *task = [FHHouseListAPI recommendErshouHouseList:query params:param offset:offset searchId:searchId sugParam:nil class:[FHRecommendSecondhandHouseModel class] completion:^(FHRecommendSecondhandHouseModel *  _Nullable model, NSError * _Nullable error) {
         
-        if (!wself) {
-            return ;
+        if (completion) {
+            completion(model , error);
         }
-        wself.tableView.scrollEnabled = YES;
-        [wself processData:model error:error];
     }];
     
-    self.requestTask = task;
+    return task;
 }
 
 
@@ -150,7 +151,7 @@
         }
         
         //需要重置非过滤器条件，以及热词placeholder
-        self.closeConditionFilter();
+        [self.houseFilterBridge closeConditionFilterPanel];
         
         NSURL *url = [NSURL URLWithString:openUrl];
         NSMutableDictionary *dict = @{}.mutableCopy;
@@ -182,6 +183,58 @@
 -(NSString *)stayPageEvent {
     
     return @"enter_category";
+}
+
+- (void)updateRedirectTipInfo
+{
+    if (self.showRedirectTip && self.redirectTips) {
+        
+        self.redirectTipView.hidden = NO;
+        self.redirectTipView.text = self.redirectTips.text;
+        self.redirectTipView.text1 = self.redirectTips.text2;
+        [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(36);
+        }];
+        
+        NSDictionary *params = @{@"page_type":@"city_switch",
+                                 @"enter_from":@"search"};
+        [FHUserTracker writeEvent:@"city_switch_show" params:params];
+        
+    }else {
+        self.redirectTipView.hidden = YES;
+        [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }
+}
+
+- (void)closeRedirectTip
+{
+    self.showRedirectTip = NO;
+    self.redirectTipView.hidden = YES;
+    [self.redirectTipView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
+    }];
+    NSDictionary *params = @{@"click_type":@"cancel",
+                             @"enter_from":@"search"};
+    [FHUserTracker writeEvent:@"city_click" params:params];
+}
+
+- (void)clickRedirectTip
+{
+    if (self.redirectTips.openUrl.length > 0) {
+        
+        [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
+            // 进历史
+            if (isSuccess) {
+                FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
+                [cityListViewModel switchCityByOpenUrlSuccess];
+            }
+        }];
+        NSDictionary *params = @{@"click_type":@"switch",
+                                 @"enter_from":@"search"};
+        [FHUserTracker writeEvent:@"city_click" params:params];
+    }
 }
 
 @end

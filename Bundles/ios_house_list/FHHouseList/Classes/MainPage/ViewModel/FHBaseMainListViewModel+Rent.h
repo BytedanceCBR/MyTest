@@ -9,9 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHHouseRentModel;
+@class TTHttpTask;
 @interface FHBaseMainListViewModel (Rent)
 
--(void)requestRentData:(BOOL)isHead query:(NSString *_Nullable)query completion:(void(^)(FHHouseRentModel *_Nullable model , NSError *_Nullable error))completion;
+-(TTHttpTask *)requestRentData:(BOOL)isHead query:(NSString *_Nullable)query completion:(void(^_Nullable)(FHHouseRentModel *_Nullable model , NSError *_Nullable error))completion;
 
 @end
 

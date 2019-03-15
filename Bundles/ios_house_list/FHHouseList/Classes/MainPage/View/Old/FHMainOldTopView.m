@@ -48,7 +48,7 @@
         
         [self addSubview:_collectionView];
         
-        self.backgroundColor = [UIColor themeGray7];
+        self.backgroundColor = [UIColor whiteColor];
         _collectionView.backgroundColor = [UIColor whiteColor];
         
     }
@@ -108,8 +108,7 @@
 
 -(CGFloat)widthForItem:(NSInteger)totalCount
 {
- 
-    return (CGRectGetWidth(self.bounds) - 2*HOR_MARGIN - ITEM_HOR_MARGIN*(totalCount-1))/totalCount;
+    return floor((CGRectGetWidth(self.bounds) - 2*HOR_MARGIN - ITEM_HOR_MARGIN*(totalCount-1))/totalCount*2)/2;
     
 }
 
