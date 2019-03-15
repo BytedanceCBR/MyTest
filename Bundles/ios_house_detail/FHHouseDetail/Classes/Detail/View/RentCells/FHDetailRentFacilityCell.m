@@ -57,7 +57,7 @@
         }];
         NSMutableArray *tempArray = [NSMutableArray new];
         [model.facilities enumerateObjectsUsingBlock:^(FHRentDetailResponseDataFacilitiesModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            FHDetailStrickoutLabel *strickoutLable = [[FHDetailStrickoutLabel alloc] init];
+            UILabel *strickoutLable = [[UILabel alloc] init];
             strickoutLable.textColor = [UIColor colorWithHexString:@"#a0aab3"];
             strickoutLable.font = [UIFont themeFontRegular:14];
             FHHouseRentFacilityItemView *itemView = [[FHHouseRentFacilityItemView alloc] initWithStrickoutLabel:strickoutLable];
@@ -66,7 +66,10 @@
                 itemView.strickoutLabel.hidden = YES;
             } else {
                 if (obj.name.length > 0) {
-                    itemView.strickoutLabel.text = obj.name;
+                    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:obj.name];
+                    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, obj.name.length)];
+                    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor colorWithHexString:@"#a0aab3"] range:NSMakeRange(0, obj.name.length)];
+                    itemView.strickoutLabel.attributedText = attri;
                     itemView.strickoutLabel.hidden = NO;
                 }
             }
