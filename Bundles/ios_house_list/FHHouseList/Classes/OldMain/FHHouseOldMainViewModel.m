@@ -622,7 +622,9 @@
 #pragma mark filter将要显示
 - (void)onConditionPanelWillDisplay
 {
-    self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
+    if (self.houseOpDataModel.items.count > 0) {
+        self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
+    }
     self.containerScrollView.scrollEnabled = NO;
     [self updateBottomLineMargin:0];
 }
