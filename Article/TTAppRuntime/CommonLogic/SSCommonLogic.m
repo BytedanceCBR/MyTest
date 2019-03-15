@@ -6202,6 +6202,18 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     return res;
 }
 
++ (BOOL)imCanStart
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_open"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_im_open"] integerValue];
+        if (info == 0) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 @end
 
 

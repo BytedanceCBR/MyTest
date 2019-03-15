@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, copy , nullable) NSString *timestamp;
+@property (nonatomic, copy , nullable) NSNumber *timestamp;
 @property (nonatomic, copy , nullable) NSString *content;
 @property (nonatomic, copy , nullable) NSString *unread;
 @property (nonatomic, copy , nullable) NSString *dateStr;

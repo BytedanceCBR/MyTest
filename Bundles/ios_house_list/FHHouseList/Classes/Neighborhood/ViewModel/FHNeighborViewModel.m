@@ -277,6 +277,7 @@
             [self updateTableViewWithMoreData:hasMore];
     
         } else {
+            self.lastHasMore = hasMore;
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
         }
         // enter category

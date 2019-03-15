@@ -412,7 +412,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
     }
 }
 

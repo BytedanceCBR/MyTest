@@ -251,6 +251,8 @@
                                                                            indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"]
                                                                            dismissHandler:nil];
         [indicatorView showFromParentView:activityPanelControllerWindow];
+        
+        [self sendFavoriteAction:DetailActionTypeFavourite entity:self.detailModel.answerEntity];
     }
     else {
         TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
@@ -258,6 +260,8 @@
                                                                            indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"]
                                                                            dismissHandler:nil];
         [indicatorView showFromParentView:activityPanelControllerWindow];
+        
+        [self sendFavoriteAction:DetailActionTypeUnFavourite entity:self.detailModel.answerEntity];
     }
     
    

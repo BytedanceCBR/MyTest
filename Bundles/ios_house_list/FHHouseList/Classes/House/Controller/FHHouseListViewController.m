@@ -71,7 +71,7 @@
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
         if (self.houseType <= 0 || self.houseType > 4) {
             // 目前4种房源：1，2，3，4
-            NSString *res = [NSString stringWithFormat:@"房源列表house_type错误:%ld",self.houseType];
+            NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
             // device_id
             NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
             if (did.length == 0) {
@@ -79,7 +79,7 @@
             }
             [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_house_type_error"
                                                     metric:nil
-                                                  category:@{@"status":@(0),@"desc":res}
+                                                  category:@{@"status":@(0),@"house_type":res}
                                                      extra:@{@"device_id":did}];
             self.houseType = FHHouseTypeSecondHandHouse;
         }
@@ -321,6 +321,12 @@
 {
     [super viewDidAppear:animated];
 
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.houseFilterViewModel closeConditionFilterPanel];
 }
 
 

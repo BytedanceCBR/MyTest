@@ -16,7 +16,6 @@
 #import "TTSandBoxHelper.h"
 #import "FHHomeConfigManager.h"
 #import "FHUtils.h"
-#import "FHCityListViewModel.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
 #import <NSDictionary+TTAdditions.h>
@@ -159,8 +158,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
                 // 进历史
                 if (isSuccess) {
-                    FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
-                    [cityListViewModel switchCityByOpenUrlSuccess];
+                    [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
                 }
             }];
             NSDictionary *params = @{@"click_type":@"switch",

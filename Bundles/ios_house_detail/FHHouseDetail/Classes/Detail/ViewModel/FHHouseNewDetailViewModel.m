@@ -124,17 +124,25 @@
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
-            wSelf.dataModel = model;
-            wSelf.detailController.hasValidateData = YES;
-            [wSelf.detailController.emptyView hideEmptyView];
-            wSelf.bottomBar.hidden = NO;
-            [wSelf processDetailData:model];
-        }else
-        {
+            if (model.data) {
+                wSelf.dataModel = model;
+                wSelf.detailController.hasValidateData = YES;
+                [wSelf.detailController.emptyView hideEmptyView];
+                wSelf.bottomBar.hidden = NO;
+                [wSelf processDetailData:model];
+            }else {
+                wSelf.detailController.isLoadingData = NO;
+                wSelf.detailController.hasValidateData = NO;
+                wSelf.bottomBar.hidden = YES;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+            }
+        }else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -142,6 +150,8 @@
 
 - (void)processDetailData:(FHDetailNewModel *)model {
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.highlightedRealtor) {
@@ -223,6 +233,7 @@
         newsCellModel.hasMore = model.data.timeline.hasMore;
         newsCellModel.titleText = @"楼盘动态";
         newsCellModel.courtId = model.data.coreInfo.id;
+        newsCellModel.clickEnable = YES;
         
         [self.items addObject:newsCellModel];
         
@@ -290,6 +301,8 @@
         FHDetailNewHouseNewsCellModel *newsCellModel = [[FHDetailNewHouseNewsCellModel alloc] init];
         newsCellModel.hasMore = NO;
         newsCellModel.titleText = @"周边新盘";
+        newsCellModel.clickEnable = NO;
+        
         [self.items addObject:newsCellModel];
         
         for(NSInteger i = 0;i < _relatedHouseData.data.items.count; i++)
@@ -320,6 +333,24 @@
     if (cell.didClickCellBlk) {
         cell.didClickCellBlk();
     }
+}
+
+- (BOOL)isMissTitle
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.coreInfo.name.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.imageGroup.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailNewModel *model = (FHDetailNewModel *)self.detailData;
+    return model.data.coreInfo == nil;
 }
 
 @end

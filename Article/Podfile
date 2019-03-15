@@ -5,7 +5,6 @@ source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
 #source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
 #source 'git@code.byted.org:ugc/UGCSpecs.git'
 
-
 source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
 source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
 source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
@@ -13,6 +12,7 @@ source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
 source 'git@code.byted.org:ugc/UGCSpecs.git'
 
 
+source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
 
 require File.dirname(__FILE__)+'/pod_binary.rb'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false
@@ -49,6 +49,11 @@ def appPods
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     
     #pod 'ios_house_filter' , :path => '../../lab/ios_house_filter' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
+#	pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :branch => 'feature/develop'
+#    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
+#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
+
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
 
@@ -114,6 +119,10 @@ def appPods
     pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings => false
     pod_binary 'TTKitchen', '1.0.2'
 
+#    pod 'TTKitchen', '1.3.9', :subspecs => [
+#    'Core',
+#    'TTCommonConfig',
+#    ]
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     pod 'BDTArticle', '0.2.3'
@@ -200,11 +209,11 @@ def appPods
     pod 'TTServiceProtocols', :path => '../AKPlugins/AKServiceProtocols', :inhibit_warnings => false
     
     #-----头条图片/视频选择器-----
-    pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false,
-    :subspecs => [
-    'Category',
-    'Model'
-    ]
+    pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false
+#    :subspecs => [
+#    'Category',
+#    'Model'
+#    ]
 
     #-----头条头像-----
 #    pod 'TTAvatar', '0.4.13'
@@ -265,7 +274,6 @@ def appPods
 #pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
     pod_binary 'TTNetworkManager' , '2.2.8.55-rc.1'
 
-
 #    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
 #    pod 'IESAntiSpam/RequestEncrypt', '0.6.5.2'
@@ -293,7 +301,6 @@ def appPods
     'TTMonitor',
     'TTNet',
     'HMDStart',
-    'FMDB',
     'Mach',
     'Utility',
     'DeviceInfo',
@@ -308,6 +315,7 @@ def appPods
     'HMDConfig',
     'HMDStore',
     'ALog',
+    'FMDB'
 #    'CloudCommand',
 #    'DiskManager'
     ]
@@ -485,6 +493,43 @@ def appPods
     #支持自动约束cell缓存高度
     pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
 
+
+    pod 'TTIMSDK', '0.7.7', :subspecs => [
+    'IMKit',
+    'IMKit_WebSocket',
+    'Feature_ApplicationStatus',
+    'IMKit_Core',
+    'Foundation_Plugin_TTNetwork',
+    'Foundation',
+    'Feature_WebSocket',
+    'Feature_Essential_PB',
+    'Feature_Essential',
+    'Feature_Core_Store',
+    'Feature_Core_Sender',
+    'Feature_Core_Puller',
+    'Feature_Core_Notifier',
+    'Feature_Core_Logger',
+    'Feature_Core_ErrorHandler',
+    'Feature_Core_CurrentUser',
+    'Feature_Core_ConversationInfo',
+    'Feature_Core_Config',
+    'Feature_Core',
+    'Feature_ApplicationStatus',
+    'Bridges'
+    ]
+    
+    pod 'IGListKit'
+    pod 'Bolts'
+    pod 'ToutiaoFrontierWebSocket'
+    pod_binary 'WCDB', '1.0.7.5'
+    pod_binary 'SQLiteRepairKit' , '1.2.1'
+    pod_binary 'WCDBOptimizedSQLCipher' , '1.2.1'
+    pod 'SocketRocket', '0.5.1'
+    
+    
+    pod 'TTFileUploadClient', '1.7.6.3'
+    pod 'RXCollections'
+
     pod_binary 'MBProgressHUD' , '1.1.0'
     
     pod_binary 'Masonry' , '1.0.1'
@@ -501,7 +546,6 @@ def appPods
     
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
-
 end
 target 'NewsLite' do
     appPods

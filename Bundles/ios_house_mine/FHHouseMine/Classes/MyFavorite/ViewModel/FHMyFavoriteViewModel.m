@@ -488,10 +488,14 @@ extern NSString *const kFHDetailFollowUpNotification;
     if (self.showPlaceHolder) {
         return 105;
     }else{
-        BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
-        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+        if (indexPath.row < self.dataList.count) {
+            BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
+            FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-        return (isLastCell ? 125 : 105)+reasonHeight;
+            return (isLastCell ? 125 : 105)+reasonHeight;
+        }else{
+            return 0;
+        }
     }
 }
 

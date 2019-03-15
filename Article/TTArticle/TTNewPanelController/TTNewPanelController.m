@@ -638,7 +638,7 @@
     TTPanelControllerItem *item = self.data[sender.row][sender.index];
 
     if ([ExploreMovieView isFullScreen] || [TTVPlayVideo currentPlayingPlayVideo].player.context.isFullScreen) {
-        if ([sender.nameLabel.text rangeOfString:@"举报"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:[KitchenMgr getString:kKCUGCRepostWordingShareIconTitle]].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"系统"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"邮件"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"短信"].location !=NSNotFound )
+        if ([sender.nameLabel.text rangeOfString:@"举报"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:[TTKitchen getString:kKCUGCRepostWordingShareIconTitle]].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"系统"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"邮件"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"短信"].location !=NSNotFound )
         {
             ExploreMovieView *movieView = [ExploreMovieView currentFullScreenMovieView];
             [movieView exitFullScreen:NO completion:^(BOOL finished) {

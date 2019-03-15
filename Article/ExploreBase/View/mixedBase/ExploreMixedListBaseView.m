@@ -2178,7 +2178,7 @@ TTRefreshViewDelegate
     }
         
     //关注频道
-    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
+    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
         [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:self.categoryID withClean:YES];
     }
 
@@ -2746,7 +2746,7 @@ TTRefreshViewDelegate
                                          [weakSelf tryFetchTipIfNeedWithForce:NO];
                                          
                                          //关注频道刷新后，告知提醒轮询manager
-                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
+                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
                                              __block ExploreOrderedData * firstOrderedData = nil;
                                              [weakSelf.fetchListManager.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                                  if ([obj isKindOfClass:[ExploreOrderedData class]]) {
@@ -2755,7 +2755,7 @@ TTRefreshViewDelegate
                                                  }
                                              }];
                                              NSTimeInterval minBehotTime =  [firstOrderedData behotTime];
-                                             if (getMore && [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) {
+                                             if (getMore && [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) {
                                                  minBehotTime = [[NSDate date] timeIntervalSince1970];
                                              }
                                              [[TTInfiniteLoopFetchNewsListRefreshTipManager sharedManager] newsListLastHadRefreshWithCategoryID:cid

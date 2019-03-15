@@ -52,7 +52,15 @@ NS_ASSUME_NONNULL_BEGIN
 // #299cff
 +(UIColor *)themeBlue1;
 
+// #ff5869
++(UIColor *)themeIMBubbleRed;
+
+// #ff8151
++(UIColor *)themeIMOrange;
+
 + (UIColor *)colorWithHexString:(NSString *)hexString;
+
++ (UIColor *)colorWithHexStr:(NSString *)hexString;
 
 + (UIColor *)colorWithHexString:(NSString *)hexString alpha:(CGFloat)alpha;
 

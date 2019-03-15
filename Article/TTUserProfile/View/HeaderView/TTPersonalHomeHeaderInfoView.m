@@ -469,7 +469,7 @@ typedef NS_ENUM(NSInteger, TTPersonalHomeHeaderInfoItemType) {
         [medalImageView removeFromSuperview];
     }
     _medalImageViews = @[].mutableCopy;
-    NSDictionary* settingMedals = [[TTKitchenMgr sharedInstance] getDictionary:kKCUGCMedals];
+    NSDictionary* settingMedals = [TTKitchen getDictionary:kKCUGCMedals];
 
     if (self.infoModel.medals.count > 0) {
         for (NSString* medal in self.infoModel.medals) {

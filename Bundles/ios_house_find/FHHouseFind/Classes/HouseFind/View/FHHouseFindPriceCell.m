@@ -145,11 +145,12 @@
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if (![string isEqualToString:[@(string.integerValue) description]]) {
+    NSString *result =  [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if ((result.length > textField.text.length) && ![string isEqualToString:[@(string.integerValue) description]]) {
+        //输入非数字
         return NO;
     }
     
-    NSString *result =  [textField.text stringByReplacingCharactersInRange:range withString:string];
     if (result.length >= 9) {
         return NO;
     }

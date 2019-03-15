@@ -115,7 +115,7 @@
 
 - (BOOL)adapterCommentToolBarEnable
 {
-    return [KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable];
+    return [TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable];
 }
 
 #pragma mark - WDVideoPlayerTransferSender

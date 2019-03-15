@@ -63,6 +63,9 @@
                            @"avatarUrl": @"avatar_url",
                            @"showRealtorinfo": @"show_realtorinfo",
                            @"noticeDesc": @"notice_desc",
+                           @"imOpenUrl" : @"chat_openurl",
+                           @"imLabel" : @"chat_button_text",
+                           @"realtorDetailUrl" : @"main_page_info"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

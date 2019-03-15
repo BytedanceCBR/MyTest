@@ -22,6 +22,7 @@
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "FHMessageManager.h"
 #import "FHHouseBridgeManager.h"
+#import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
@@ -69,11 +70,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
             if ([elts.lastObject respondsToSelector:@selector(integerValue)]) {
                 cityId = [elts.lastObject integerValue];
             }
-        }
-        
-        if (!cityId) {
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_city_id_error" attributes:@{@"desc":@"上报切换城市id不合法",@"reason":@"city_id为0或者其他"}];
-            return;
         }
         
         __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
@@ -125,6 +121,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
         }];
+    }else
+    {
+        if (!cityId) {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_city_id_error" attributes:@{@"desc":@"上报切换城市id不合法,",@"reason":@"city_id为0或者其他"}];
+        }
     }
 }
 

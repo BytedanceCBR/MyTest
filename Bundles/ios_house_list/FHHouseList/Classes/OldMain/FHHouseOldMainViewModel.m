@@ -28,7 +28,6 @@
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleCell.h>
 #import <FHHouseBase/FHRecommendSecondhandHouseTitleModel.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
-#import "FHCityListViewModel.h" // add by zjing for test
 #import "FHHouseListBannerView.h"
 #import <FHCommonUI/UIView+House.h>
 
@@ -36,7 +35,7 @@
 #define kFHHouseOldMainRecommendTitleCellId @"kFHHouseOldMainRecommendTitleCellId"
 #define kFHHouseOldMainPlaceholderCellId @"kFHHouseOldMainPlaceholderCellId"
 #define HOUSE_ICON_HEADER_HEIGHT (60 * [UIScreen mainScreen].bounds.size.width / 375.0f)
-#define HOUSE_TABLE_HEADER_HEIGHT (HOUSE_ICON_HEADER_HEIGHT + 19 * [UIScreen mainScreen].bounds.size.width / 375.0f)
+#define HOUSE_TABLE_HEADER_HEIGHT floor(HOUSE_ICON_HEADER_HEIGHT + 19 * [UIScreen mainScreen].bounds.size.width / 375.0f) //414屏幕会出现小数 导致滑动出现问题
 #define kFilterBarHeight 44
 
 @interface FHHouseOldMainViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate>
@@ -159,8 +158,7 @@
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
             // 进历史
             if (isSuccess) {
-                FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
-                [cityListViewModel switchCityByOpenUrlSuccess];
+                [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
             }
         }];
         NSDictionary *params = @{@"click_type":@"switch",
@@ -624,7 +622,9 @@
 #pragma mark filter将要显示
 - (void)onConditionPanelWillDisplay
 {
-    self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
+    if (self.houseOpDataModel.items.count > 0) {
+        self.containerScrollView.contentOffset = CGPointMake(0, HOUSE_TABLE_HEADER_HEIGHT);
+    }
     self.containerScrollView.scrollEnabled = NO;
     [self updateBottomLineMargin:0];
 }
@@ -1271,6 +1271,24 @@
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    // enter_query 判空
+    NSString *enter_query = params[@"enter_query"];
+    if (enter_query && [enter_query isKindOfClass:[NSString class]]) {
+        if (enter_query.length <= 0) {
+            params[@"enter_query"] = @"be_null";
+        }
+    } else {
+        params[@"enter_query"] = @"be_null";
+    }
+    // search_query 判空
+    NSString *search_query = params[@"search_query"];
+    if (search_query && [search_query isKindOfClass:[NSString class]]) {
+        if (search_query.length <= 0) {
+            params[@"search_query"] = @"be_null";
+        }
+    } else {
+        params[@"search_query"] = @"be_null";
+    }
     TRACK_EVENT(@"house_search",params);
     self.canChangeHouseSearchDic = YES;
 }

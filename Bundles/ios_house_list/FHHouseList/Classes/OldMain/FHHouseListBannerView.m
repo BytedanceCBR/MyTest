@@ -168,7 +168,6 @@
                 itemView.bgView.image = [UIImage imageNamed:@"icon_placeholder"];
             }
         }];
-//        [itemView.bgView bd_setImageWithURL:imgUrl placeholder:[UIImage imageNamed:@"icon_placeholder"]]; // add by zjing for test placeholder
         [self.containerView addSubview:itemView];
         itemView.tag = 100 + index;
         itemView.clickedItemBlock = ^(NSInteger index) {

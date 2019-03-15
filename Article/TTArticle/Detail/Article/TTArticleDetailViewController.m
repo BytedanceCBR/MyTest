@@ -1391,7 +1391,7 @@
             self.toolbarView.hidden = NO;
             
             // toolbar 禁表情，改变 toolbarType 会重置 button 的状态
-            BOOL isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+            BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
             if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
                 self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
             }
@@ -2639,7 +2639,7 @@
     }
     
     // toolbar 禁表情
-    BOOL isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
     if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
         self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
     }

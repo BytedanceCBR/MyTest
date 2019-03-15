@@ -163,6 +163,7 @@
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -180,12 +181,15 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            NSDictionary *userInfo = error.userInfo;
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -215,10 +219,12 @@
     }
 }
 
+
 // 处理详情页数据
 - (void)processDetailData:(FHDetailOldModel *)model {
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -257,6 +263,36 @@
         [self.items addObject:propertyModel];
     }
     
+    //生成IM卡片的schema用 个人认为server应该加接口
+    NSString *imgUrl = @"";
+    if (model.data.houseImage.count > 0) {
+        FHDetailHouseDataItemsHouseImageModel *imageInfo = model.data.houseImage[0];
+        imgUrl = imageInfo.url ?: @"";
+    }
+    NSString *area = @"";
+    NSString *price = @"";
+    if (model.data.coreInfo.count >= 3) {
+        FHDetailOldDataCoreInfoModel *areaInfo = model.data.coreInfo[2];
+        area = areaInfo.value ?: @"";
+        FHDetailOldDataCoreInfoModel *priceInfo = model.data.coreInfo[0];
+        price = priceInfo.value ?: @"";
+    }
+    NSString *face = @"";
+    NSString *avgPrice = @"";
+    if (model.data.baseInfo.count >= 3) {
+        FHDetailOldDataCoreInfoModel *baseInfo = model.data.baseInfo[2];
+        face = baseInfo.value ?: @"";
+        FHDetailOldDataCoreInfoModel *avgPriceInfo = model.data.baseInfo[0];
+        avgPrice = avgPriceInfo.value ?: @"";
+    }
+    NSString *tag = @"";
+    if (model.data.tags > 0) {
+        FHSearchHouseDataItemsTagsModel *tagInfo = model.data.tags[0];
+        tag = tagInfo.content ?: @"";
+    }
+    NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
+    NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
+    
     // 房源榜单
     if (model.data.listEntrance.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -266,6 +302,7 @@
         entranceModel.listEntrance = model.data.listEntrance;
         [self.items addObject:entranceModel];
     }
+
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -281,6 +318,7 @@
         }
         agentListModel.recommendedRealtors = tempArray;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
+        [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
         agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
         agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
@@ -364,6 +402,7 @@
     }
     
     // --
+    [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
@@ -466,5 +505,24 @@
         [wSelf processDetailRelatedData];
     }];
 }
+
+- (BOOL)isMissTitle
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.title.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.houseImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHDetailOldModel *model = (FHDetailOldModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
+}
+
 
 @end
