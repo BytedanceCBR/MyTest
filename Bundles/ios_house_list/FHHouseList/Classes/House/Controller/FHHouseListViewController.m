@@ -323,6 +323,12 @@
 
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.houseFilterViewModel closeConditionFilterPanel];
+}
+
 
 -(void)initConstraints
 {
