@@ -67,6 +67,7 @@
 #import "TTAppStoreStarManager.h"
 #import "TTClientABTestBrowserViewController.h"
 #import "FHUtils.h"
+#import "LogViewerSettingViewController.h"
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
@@ -110,7 +111,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
-        
+
+        STTableViewCellItem *logViewDebutItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证工具" target:self action:@selector(_openLogViewSetting)];
+        logViewDebutItem.switchStyle = NO;
+        [itemArray addObject:logViewDebutItem];
+
+
         STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
         htmlBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:htmlBridgeDebugItem];
@@ -642,6 +648,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 {
     [self.navigationController pushViewController:[[TSVDebugViewController alloc] init]
                                          animated:YES];
+}
+
+- (void)_openLogViewSetting {
+    NSLog(@"_openLogViewSetting");
+    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)_openHtmlBridge
