@@ -542,10 +542,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
+            
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0 && !error) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                 self.tableViewV.hidden = YES;
                 self.isFromLocalTestChange = YES;
                 [self checkCityStatus];
+                
+                if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                    [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
+                }
+                
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
             }
