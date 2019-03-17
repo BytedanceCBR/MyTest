@@ -311,6 +311,15 @@
 }
 @end
 
+@implementation FHDetailFloorPanListResponseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
 @implementation FHDetailNewDataCoreInfoSaleStatusModel
 + (JSONKeyMapper*)keyMapper
 {

@@ -159,10 +159,11 @@
 
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
-    
-    if ([self.currentData isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
+
+    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]] && model.hasMore) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
-        [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"floorlist"];
+        [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"court_id"];
         [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
         infoDict[@"house_type"] = @(1);
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
