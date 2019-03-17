@@ -28,7 +28,8 @@
 #import "TTTracker.h"
 #import <TTImage/TTImageView.h>
 #import <TTImage/TTWebImageManager.h>
-
+#import <BDWebImage/BDWebImageDownloader.h>
+#import <BDWebImage/BDWebImageManager.h>
 #define MinZoomScale 1.f
 #define MaxZoomScale 2.5f
 
@@ -572,35 +573,45 @@
     if (_placeholderImage) {
         self.largeImageView.center = CGPointMake(self.width / 2.f, self.height / 2.f);
     }
-    
-    _isDownloading = ![TTWebImageManager diskImageExistsWithKey:url];
+
+    UIImage *image  = [[BDWebImageManager sharedManager].imageCache imageForKey:url];
+    if (image) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            _isDownloading = NO;
+            _imageloadingProgressView.hidden = YES;
+            [self loadFinishedWithImage:image];
+        });
+        return;
+    }
+    _isDownloading = YES;
     if (_isDownloading) {
         [self showPlaceholderIfNeeded];
     }
-    
+
     _imageloadingProgressView.hidden = NO;
     _imageloadingProgressView.loadingProgress = 0;
-    
-    
+
+
     __weak TTShowImageView * wself = self;
-    
-    [[TTImageDownloader sharedInstance] downloadImageWithURL:url options:TTWebImageDownloaderHighPriority progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+    [[BDWebImageManager sharedManager]requestImage:[NSURL URLWithString:url] alternativeURLs:nil options:BDImageRequestHighPriority cacheName:url transformer:nil progress:^(BDWebImageRequest *request, NSInteger receivedSize, NSInteger expectedSize) {
         if (!wself.imageloadingProgressView.hidden) {
             wself.imageloadingProgressView.loadingProgress = receivedSize/(expectedSize*1.0f);
         }
-    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, BOOL finished, NSString * _Nullable url) {
+    } complete:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         _isDownloading = NO;
         if (error) {
             [wself tryLoadNextUrlIfFailed];
-            
+
             wself.imageloadingProgressView.hidden = YES;
             [TTTracker event:@"image" label:@"fail"];
         }
         else {
             dispatch_async(dispatch_get_main_queue(), ^{
                 wself.imageloadingProgressView.hidden = YES;
-                
-                if (data) {
+
+                if (image) {
+                    [wself loadFinishedWithImage:image];
+                }else if (data) {
                     [wself loadImageFromData:data];
                 } else {
                     [wself loadFailed];
@@ -608,6 +619,7 @@
             });
         }
     }];
+
 }
 
 - (void)loadImageFromAsset:(ALAsset *)asset
