@@ -219,7 +219,7 @@
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
         [self.items addObject:grayLine];
-        
+        model.data.floorpanList.courtId = model.data.coreInfo.id;
         [self.items addObject:model.data.floorpanList];
     }
     
