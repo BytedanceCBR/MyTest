@@ -13,6 +13,8 @@
 #import "FHBaseMainListViewModel.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import "FHHouseListRedirectTipView.h"
+#import <FHHouseBase/FHUserTracker.h>
+#import <TTUIWidget/UIViewController+Track.h>
 
 #define TOP_HOR_PADDING 3
 
@@ -28,6 +30,8 @@
 @property(nonatomic , strong) FHBaseMainListViewModel *viewModel;
 @property(nonatomic , strong) FHErrorView *errorView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
+
+@property (nonatomic , copy) NSString *associationalWord;// 联想词
 
 @end
 
@@ -49,6 +53,20 @@
                 _houseType = FHHouseTypeRentHouse;
             }
         }
+        
+        self.hidesBottomBarWhenPushed = YES;
+        self.tracerModel.categoryName = [self categoryName];
+        self.tracerDict = paramObj.userInfo.allInfo[@"tracer"];
+        NSString *fullText = paramObj.queryParams[@"full_text"];
+        NSString *displayText = paramObj.queryParams[@"display_text"];
+        if (fullText.length > 0) {
+            self.associationalWord = fullText;
+        }else if (displayText.length > 0) {
+            self.associationalWord = displayText;
+        }
+        self.ttTrackStayEnable = YES;
+        
+        
     }
     return self;
 }
@@ -77,7 +95,6 @@
 {
     FHFakeInputNavbarType type = (_houseType == FHHouseTypeSecondHandHouse ? FHFakeInputNavbarTypeMap : FHFakeInputNavbarTypeDefault);
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
-    _navbar.placeHolder = @"你想住哪里？";
     __weak typeof(self) wself = self;
     _navbar.defaultBackAction = ^{
         [wself.navigationController popViewControllerAnimated:YES];
@@ -136,6 +153,12 @@
     
     [self initConstraints];
     
+    if (self.associationalWord.length > 0) {
+        _navbar.placeHolder = self.associationalWord;
+    }else{
+        _navbar.placeHolder = [self.viewModel navbarPlaceholder];
+    }
+    self.tracerModel.categoryName = [_viewModel categoryName];
     [self.viewModel requestData:YES];
     self.tableView.contentOffset = CGPointMake(0, -self.tableView.contentInset.top);
 }
@@ -182,6 +205,41 @@
     
 }
 
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    
+}
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+    [self.viewModel addStayLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+    
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+    [self.viewModel addStayLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        [self.view endEditing:YES];
+    }
+}
 
 /*
 #pragma mark - Navigation

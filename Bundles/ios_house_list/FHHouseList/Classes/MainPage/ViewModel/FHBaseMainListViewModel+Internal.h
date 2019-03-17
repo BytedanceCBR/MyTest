@@ -29,38 +29,36 @@
 @property(nonatomic , strong) NSMutableArray *houseList;
 
 @property (nonatomic, copy) NSString *houseListOpenUrl;
+@property(nonatomic , copy  ) NSString *mapFindHouseOpenUrl;
 @property(nonatomic , strong) FHSearchFilterOpenUrlModel *filterOpenUrlMdodel;
 
-@property(nonatomic , copy)  NSString *conditionFilter;
 @property(nonatomic , strong) NSString *suggestion;
-@property(nonatomic , strong) NSDictionary *houseSearchDict;
 @property(nonatomic , assign) BOOL showPlaceHolder;
 @property(nonatomic , strong) UIImage *placeHolderImage;
-@property(nonatomic , copy  ) NSString *mapFindHouseOpenUrl;
+
 @property(nonatomic , weak) TTHttpTask *requestTask;
 
+@property(nonatomic , copy)   NSString *conditionFilter;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
 
 @property(nonatomic , strong) NSMutableDictionary *showHouseDict;
 @property(nonatomic , strong) NSMutableDictionary *stayTraceDict;
 
+@property(nonatomic , copy) NSString *searchId;
 @property(nonatomic , copy) NSString *originSearchId;
 @property(nonatomic , copy) NSString *originFrom;
-@property(nonatomic , copy) NSString *searchId;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
+@property(nonatomic , assign) BOOL mainListPage;//是否是大类页
 
-@property (nonatomic , strong) FHConfigDataRentOpDataModel *rentModel;
-
-//old
-@property(nonatomic , strong) NSMutableDictionary *houseShowCache;
+//list
 @property(nonatomic , assign) BOOL canChangeHouseSearchDic;
 @property(nonatomic , assign,getter=isFromRecommend) BOOL fromRecommend;
 @property(nonatomic , strong) NSMutableArray *sugesstHouseList;
 @property(nonatomic , copy) NSString *recommendSearchId;
 @property(nonatomic , strong) NSDictionary *houseSearchDic;
-@property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
+@property(nonatomic , assign) BOOL addEnterCategory; // 是否算enter_category
 @property (nonatomic , assign) BOOL showRedirectTip;
 @property (nonatomic, strong ) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic , weak) FHHouseListRedirectTipView *redirectTipView;
@@ -69,11 +67,11 @@
 
 -(NSString *)pageTypeString;
 
--(NSString *)categoryName;
-
 -(NSString *)pageTypeString;
 
 -(NSString *)houseTypeString;
+
+-(void)addStayLog:(NSTimeInterval)duration;
 
 @end
 

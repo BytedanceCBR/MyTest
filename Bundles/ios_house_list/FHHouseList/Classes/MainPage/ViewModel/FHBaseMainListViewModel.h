@@ -34,6 +34,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showInputSearch;
 
+-(NSString *)navbarPlaceholder;
+
+-(NSString *)categoryName;
+
+-(void)addStayLog:(NSTimeInterval)duration;
+
 @end
 
 NS_ASSUME_NONNULL_END

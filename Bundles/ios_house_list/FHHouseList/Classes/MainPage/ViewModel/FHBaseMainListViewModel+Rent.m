@@ -26,4 +26,54 @@
     }];
 }
 
+-(NSString *)originFromWithFilterType:(FHHouseRentFilterType)filterType
+{
+    switch (filterType) {
+            case FHHouseRentFilterTypeWhole:
+            return  @"renting_fully";
+            case FHHouseRentFilterTypeApart:
+            return  @"renting_apartment";
+            case FHHouseRentFilterTypeShare:
+            return  @"renting_joint";
+            case FHHouseRentFilterTypeMap:
+            return @"renting_mapfind";
+        default:
+            return nil;
+    }
+    return nil;
+}
+
+-(FHHouseRentFilterType)rentFilterType:(NSString *)openUrl
+{
+    NSURL *url = [NSURL URLWithString:openUrl];
+    if (!url) {
+        return FHHouseRentFilterTypeNone;
+    }
+    NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES];
+    if ([components.host isEqualToString:@"mapfind_rent"]) {
+        return FHHouseRentFilterTypeMap;
+    }
+    
+    if ([components.host isEqualToString:@"house_list"]) {
+        for (NSURLQueryItem *queryItem in components.queryItems) {
+            if ([queryItem.name isEqualToString:@"rental_type[]"]) {
+                if ([queryItem.value isEqualToString:@"1"]) {
+                    //整租
+                    return FHHouseRentFilterTypeWhole;
+                }else if ([queryItem.value isEqualToString:@"2"]){
+                    //合租
+                    return FHHouseRentFilterTypeShare;
+                }
+            }else if ([queryItem.name isEqualToString:@"rental_contract_type[]"]){
+                if ([queryItem.value isEqualToString:@"2"]) {
+                    //公寓
+                    return FHHouseRentFilterTypeApart;
+                }
+                
+            }
+        }
+    }
+    return FHHouseRentFilterTypeNone;
+}
+
 @end
