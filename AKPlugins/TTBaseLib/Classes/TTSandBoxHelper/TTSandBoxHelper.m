@@ -47,7 +47,7 @@
 }
 
 + (BOOL)isInHouseApp {
-    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
+    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"com.bytedance.fp1" options:NSCaseInsensitiveSearch];
     if (isRange.location != NSNotFound) {
         return YES;
     }

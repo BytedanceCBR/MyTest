@@ -7,6 +7,7 @@
 
 #import "LogViewerSettingViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import <TTTracker/TTTracker.h>
 #define ScreenHeight [UIScreen mainScreen].bounds.size.height
 #define ScreenWidth [UIScreen mainScreen].bounds.size.width
 @interface LogViewerSettingViewController ()<AVCaptureMetadataOutputObjectsDelegate, CAAnimationDelegate>
@@ -24,12 +25,17 @@
     // Do any additional setup after loading the view.
     [self.view setBackgroundColor:[UIColor whiteColor]];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
-
+    [self configCamera];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
-    
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [_session removeObserver:self forKeyPath:@"running" context:nil];
 }
 
 -(void)back:(id)sender {
@@ -83,6 +89,25 @@
 
     //开始捕获
     [_session startRunning];
+}
+
+/**
+ *
+ *  监听扫码状态-修改扫描动画
+ *
+ */
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context{
+    if ([object isKindOfClass:[AVCaptureSession class]]) {
+        BOOL isRunning = ((AVCaptureSession *)object).isRunning;
+        if (isRunning) {
+            [self addAnimation];
+        }else{
+            [self removeAnimation];
+        }
+    }
 }
 
 /**
@@ -168,20 +193,25 @@
 -(void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection{
     if (metadataObjects.count>0) {
         [_session stopRunning];
-        NSURL *url=[[NSBundle mainBundle]URLForResource:@"scanSuccess.wav" withExtension:nil];
-        //2.加载音效文件，创建音效ID（SoundID,一个ID对应一个音效文件）
-        SystemSoundID soundID=8787;
-        AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundID);
-        //3.播放音效文件
-        //下面的两个函数都可以用来播放音效文件，第一个函数伴随有震动效果
-        AudioServicesPlayAlertSound(soundID);
-
-        AudioServicesPlaySystemSound(8787);
+//        NSURL *url=[[NSBundle mainBundle]URLForResource:@"scanSuccess.wav" withExtension:nil];
+//        //2.加载音效文件，创建音效ID（SoundID,一个ID对应一个音效文件）
+//        SystemSoundID soundID=8787;
+//        AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &soundID);
+//        //3.播放音效文件
+//        //下面的两个函数都可以用来播放音效文件，第一个函数伴随有震动效果
+//        AudioServicesPlayAlertSound(soundID);
+//
+//        AudioServicesPlaySystemSound(8787);
 
         AVMetadataMachineReadableCodeObject * metadataObject = [metadataObjects objectAtIndex :0];
 
         //输出扫描字符串
         NSString *data = metadataObject.stringValue;
+        NSLog(@"data: %@", data);
+        if (!isEmptyString(data)) {
+            [[TTTracker sharedInstance] setDebugLogServerAddress:data];
+        }
+        [self.navigationController popViewControllerAnimated:YES];
 //        ScanResultViewController *resultVC = [[ScanResultViewController alloc] init];
 //        resultVC.title = @"扫描结果";
 //        resultVC.result = data;
@@ -226,6 +256,7 @@
     [line.layer removeAnimationForKey:@"LineAnimation"];
     line.hidden = YES;
 }
+
 
 
 /*
