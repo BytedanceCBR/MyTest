@@ -37,7 +37,7 @@
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
     //除非误操作info.plist文件，否则版本一直会有
     if (!buildVersionNew) {
-        buildVersionNew = @"65300";
+        buildVersionNew = @"66000";
     }
     return buildVersionNew;
 }
@@ -129,7 +129,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *appBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *key = [[NSBundle mainBundle] objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@%@",appVersion,appBuild]];
+    NSString *key = [NSString stringWithFormat:@"%@%@",appVersion,appBuild];
     NSNumber * currentStatus = [defaults objectForKey:[NSString stringWithFormat:@"APP_LAUNCHED%@", key]];
     return [currentStatus intValue] == 1 ? NO : YES;
 

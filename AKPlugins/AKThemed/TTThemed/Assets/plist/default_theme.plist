@@ -53,7 +53,7 @@
 		<key>BlueBorderColor</key>
 		<string>2a90d7</string>
 		<key>Text1</key>
-		<string>081f33</string>
+		<string>333333</string>
 		<key>Text2</key>
 		<string>505050</string>
 		<key>Text3</key>
@@ -147,7 +147,7 @@
 		<key>Line6</key>
 		<string>4065997f</string>
 		<key>Line7</key>
-		<string>d8d8d8</string>
+		<string>e8e8e8</string>
 		<key>Line8</key>
 		<string>ffffff</string>
 		<key>Line9</key>
@@ -171,7 +171,7 @@
 		<key>Line6Highlighted</key>
 		<string>4065997f</string>
 		<key>Line7Highlighted</key>
-		<string>d8d8d87f</string>
+		<string>e8e8e87f</string>
 		<key>Line8Highlighted</key>
 		<string>ffffff7f</string>
 		<key>Line11Highlighted</key>
@@ -193,7 +193,7 @@
 		<key>Background2</key>
 		<string>e8e8e8</string>
 		<key>Background3</key>
-		<string>f2f4f5</string>
+		<string>f5f5f5</string>
 		<key>Background4</key>
 		<string>ffffff</string>
 		<key>Background5</key>
@@ -295,27 +295,27 @@
 		<key>blue4</key>
 		<string>e6f3ff</string>
 		<key>grey1</key>
-		<string>45494d</string>
+		<string>333333</string>
 		<key>grey2</key>
-		<string>737a80</string>
+		<string>666666</string>
 		<key>grey3</key>
-		<string>8a9299</string>
+		<string>999999</string>
 		<key>grey4</key>
-		<string>a1aab3</string>
+		<string>bbbbbb</string>
 		<key>grey5</key>
-		<string>e1e3e6</string>
+		<string>dddddd</string>
 		<key>grey6</key>
-		<string>e8eaeb</string>
+		<string>e8e8e8</string>
 		<key>grey7</key>
-		<string>f2f4f5</string>
+		<string>f5f5f5</string>
 		<key>red1</key>
-		<string>ff5b4c</string>
-		<key>red2</key>
 		<string>ff5869</string>
+		<key>red2</key>
+		<string>fff2ed</string>
+		<key>red3</key>
+		<string>ff8151</string>
 		<key>green1</key>
-		<string>69db82</string>
-		<key>darkblue1</key>
-		<string>0b1626</string>
+		<string>0cce6b</string>
 	</dict>
 	<key>images</key>
 	<dict>

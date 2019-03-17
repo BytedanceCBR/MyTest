@@ -365,12 +365,21 @@ TTFeedCollectionCellDelegate>
     if ([cell respondsToSelector:@selector(didAppear)]) {
         [cell didAppear];
     }
-    
+    [self handleHomeTabBar];
+
     [cell refreshIfNeeded];
     
     // 切换频道时停止视频播放
     [ExploreMovieView removeAllExploreMovieView];
     
+}
+
+- (void)handleHomeTabBar
+{
+    NSString * currentCategory = [TTArticleCategoryManager currentSelectedCategoryID];
+    if (![currentCategory isEqualToString:@"f_find_house"]) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView

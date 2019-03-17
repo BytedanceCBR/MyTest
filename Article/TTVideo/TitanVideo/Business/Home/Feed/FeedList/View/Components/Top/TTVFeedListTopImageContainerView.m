@@ -119,7 +119,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 
         _videoRightBottomLabelImageView = [[UIImageView alloc] init];
         CGSize imageSize = CGSizeMake(_videoRightBottomLabel.size.width, _videoRightBottomLabel.size.height);
-        UIImage *videoRightBottomLabelImage = [UIImage imageWithSize:imageSize cornerRadius:MIN(imageSize.width, imageSize.height) / 2 backgroundColor:SSGetThemedColorWithKey(kColorBackground15)];
+        UIImage *videoRightBottomLabelImage = [UIImage imageWithSize:imageSize cornerRadius:MIN(imageSize.width, imageSize.height) / 2 backgroundColor:[UIColor colorWithHexString:@"00000080"]];
         videoRightBottomLabelImage = [videoRightBottomLabelImage stretchableImageWithLeftCapWidth:videoRightBottomLabelImage.size.width / 2.0 topCapHeight:videoRightBottomLabelImage.size.height / 2.0];
         _videoRightBottomLabelImageView.image = videoRightBottomLabelImage;
         [_videoRightBottomLabelImageView sizeToFit];

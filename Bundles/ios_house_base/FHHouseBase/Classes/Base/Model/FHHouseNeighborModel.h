@@ -72,7 +72,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@interface FHHouseNeighborDataItemsModel (RecommendReason)
 
+-(BOOL)showRecommendReason;
+
+@end
 
 
 NS_ASSUME_NONNULL_END

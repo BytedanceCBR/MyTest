@@ -30,7 +30,9 @@ typedef enum SSFeedbackSegmentType {
 
 @interface SSFeedbackInputButton : UIView
 
+@property(nonatomic, retain)UIView * topLine;
 @property(nonatomic, retain)UIButton * bgButton;
+@property(nonatomic, retain)UIView * bgView;
 @property(nonatomic, retain)UILabel * inputTitleLabel;
 - (void)refreshUI;
 
@@ -48,15 +50,26 @@ typedef enum SSFeedbackSegmentType {
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.topLine = [[UIView alloc] init];
+        _topLine.backgroundColor = [UIColor tt_themedColorForKey:kFHColorSilver2];
+        [self addSubview:_topLine];
+        
         self.bgButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.backgroundColor = [UIColor whiteColor];
         [self addSubview:_bgButton];
+        
+        self.bgView = [[UIView alloc] init];
+        _bgView.backgroundColor = [UIColor tt_themedColorForKey:kFHColorPaleGrey];
+        _bgView.layer.cornerRadius = 4;
+        _bgView.userInteractionEnabled = NO;
+        [self addSubview:_bgView];
         
         self.inputTitleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [_inputTitleLabel setText:NSLocalizedString(@"期待您的意见反馈", nil)];
         [_inputTitleLabel sizeToFit];
         _inputTitleLabel.backgroundColor = [UIColor clearColor];
-        [_inputTitleLabel setFont:[UIFont systemFontOfSize:14.f]];
+        _inputTitleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
+        [_inputTitleLabel setTextColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3]];
         [self addSubview:_inputTitleLabel];
         [self refreshUI];
     }
@@ -69,31 +82,32 @@ typedef enum SSFeedbackSegmentType {
     UIEdgeInsets safeAreaInsets = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
     CGFloat padding = [TTUIResponderHelper paddingForViewWidth:0];
     float originY = (self.frame.size.height - _inputTitleLabel.frame.size.height - safeAreaInsets.bottom) / 2.f;
-    float originX = padding + 60.f + safeAreaInsets.left;
+    float originX = padding + 34.f + safeAreaInsets.left;
     _inputTitleLabel.origin = CGPointMake(originX, originY);
+    _topLine.frame = CGRectMake(padding + safeAreaInsets.left, 0, self.width - 2 *padding - safeAreaInsets.left - safeAreaInsets.right, 0.5);
     _bgButton.frame = CGRectMake(padding + safeAreaInsets.left, 0, self.width - 2 *padding - safeAreaInsets.left - safeAreaInsets.right, self.height - safeAreaInsets.bottom);
+    _bgView.frame = CGRectMake(padding + safeAreaInsets.left + 20, 8, self.width - 2 *padding - safeAreaInsets.left - safeAreaInsets.right - 40, self.height - safeAreaInsets.bottom - 16);
 }
 
 - (void)refreshUI
 {
-    if(([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay)){
-        [self setBackgroundColor:[UIColor colorWithRed:247.f/255.f green:247.f/255.f blue:247.f/255.f alpha:1.f]];
-    }
-    else{
-        [self setBackgroundColor:[UIColor colorWithRed:20.f/255.f green:21.f/255.f blue:22.f/255.f alpha:1.f]];
-    }
+//    if(([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay)){
+//        [self setBackgroundColor:[UIColor colorWithRed:247.f/255.f green:247.f/255.f blue:247.f/255.f alpha:1.f]];
+//    }
+//    else{
+//        [self setBackgroundColor:[UIColor colorWithRed:20.f/255.f green:21.f/255.f blue:22.f/255.f alpha:1.f]];
+//    }
     
-    UIImage *backgroundImage = [UIImage themedImageNamed:@"dock_comment.png"];
-    UIEdgeInsets capInsets = UIEdgeInsetsMake(0, backgroundImage.size.width / 2.f, 0, backgroundImage.size.width / 2.f);
-    backgroundImage = [backgroundImage resizableImageWithCapInsets:capInsets];
+//    UIImage *backgroundImage = [UIImage themedImageNamed:@"dock_comment.png"];
+//    UIEdgeInsets capInsets = UIEdgeInsetsMake(0, backgroundImage.size.width / 2.f, 0, backgroundImage.size.width / 2.f);
+//    backgroundImage = [backgroundImage resizableImageWithCapInsets:capInsets];
+//
+//    UIImage *backgroundHighlightImage = [UIImage themedImageNamed:@"dock_comment.png"];
+//    capInsets = UIEdgeInsetsMake(0, backgroundHighlightImage.size.width / 2.f, 0, backgroundHighlightImage.size.width / 2.f);
+//    backgroundHighlightImage = [backgroundHighlightImage resizableImageWithCapInsets:capInsets];
     
-    UIImage *backgroundHighlightImage = [UIImage themedImageNamed:@"dock_comment.png"];
-    capInsets = UIEdgeInsetsMake(0, backgroundHighlightImage.size.width / 2.f, 0, backgroundHighlightImage.size.width / 2.f);
-    backgroundHighlightImage = [backgroundHighlightImage resizableImageWithCapInsets:capInsets];
-    
-    [_bgButton setBackgroundImage:backgroundImage forState:UIControlStateNormal];
-    [_bgButton setBackgroundImage:backgroundHighlightImage forState:UIControlStateHighlighted];
-    [_inputTitleLabel setTextColor:[UIColor tt_themedColorForKey:kColorText3]];
+//    [_bgButton setBackgroundImage:backgroundImage forState:UIControlStateNormal];
+//    [_bgButton setBackgroundImage:backgroundHighlightImage forState:UIControlStateHighlighted];
 }
 
 - (void)safeAreaInsetsDidChange

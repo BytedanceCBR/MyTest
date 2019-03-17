@@ -71,6 +71,8 @@
 @property(nonatomic , copy) NSString *originFrom;
 @property(nonatomic , assign) BOOL isFirstLoad;
 
+@property(nonatomic , assign) CGFloat bottomLineMargin;
+
 @end
 
 
@@ -83,6 +85,7 @@
     if (self) {
         _houseList = [NSMutableArray new];
         _headerHeight = kFilterBarHeight;
+        _bottomLineMargin = 20;
         
         self.tableView = tableView;
         self.viewController = viewController;
@@ -98,6 +101,7 @@
             [wself requestData:NO];
         }];
         _tableView.mj_footer = footer;
+        [footer setUpNoMoreDataText:@"没有更多信息了"];
         footer.hidden = YES;
         
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
@@ -164,7 +168,7 @@
     [_iconsHeaderView addItems:items];
     
     UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.viewController.view.frame), TABLE_HEADER_HEIGHT)];
-    header.backgroundColor  = [UIColor themeGrayPale];
+    header.backgroundColor  = [UIColor themeGray7];
     [header addSubview:_iconsHeaderView];
     
     self.iconHeaderView = header;
@@ -271,7 +275,9 @@
        wself.tableView.mj_footer.hidden = NO;
        //reset load more state
        if (model.data && !model.data.hasMore) {
+       
            [wself.tableView.mj_footer endRefreshingWithNoMoreData];
+           
        }else{
            if (isHead) {
                [wself.tableView.mj_footer resetNoMoreData];
@@ -280,7 +286,7 @@
            }
        }
        
-        
+       
         if (!isHead && model.data.items.count == 0) {
             [[FHMainManager sharedInstance] showToast:@"请求失败" duration:2];
         }
@@ -327,6 +333,14 @@
            [wself.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
        }
        
+       if(_houseList.count < 10)
+       {
+           wself.tableView.mj_footer.hidden = YES;
+       }else
+       {
+           wself.tableView.mj_footer.hidden = NO;
+       }
+       
     }];
 }
 
@@ -347,7 +361,7 @@
     traceParam[@"origin_from"] = @"renting_search";
     traceParam[@"origin_search_id"] = self.originSearchId ? : @"be_null";
 
-    //sug_list
+    //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(FHHouseTypeRentHouse) ,
@@ -357,7 +371,7 @@
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         
 }
@@ -628,8 +642,12 @@
             self.containerScrollView.contentOffset = CGPointMake(0, threshold);
         }else if(coffset.y > 0 && realOffset > 0){
             //注释后，则在筛选器在顶部时不能向下滑动，只能等tableview滑动下来后才可以
-//            offset.y += (coffset.y-threshold - self.tableView.contentInset.top);
-//            self.tableView.contentOffset = offset;
+            CGPoint location = [scrollView.panGestureRecognizer locationInView:scrollView];
+            if (location.y > threshold + kFilterBarHeight+10) {
+                //不在筛选栏滑动
+                offset.y += (coffset.y-threshold - self.tableView.contentInset.top);
+                self.tableView.contentOffset = offset;
+            }
             if (self.tableView.scrollEnabled) {
                 self.containerScrollView.contentOffset = CGPointMake(0, threshold);
             }
@@ -666,9 +684,24 @@
             self.containerScrollView.contentOffset = coffset;
         }
     }
-    
+    if (self.containerScrollView.contentOffset.y > ICON_HEADER_HEIGHT) {
+        [self updateBottomLineMargin:0];
+    }else {
+        [self updateBottomLineMargin:20];
+    }
 }
 
+- (void)updateBottomLineMargin:(CGFloat)margin
+{
+    if (margin == _bottomLineMargin) {
+        return;
+    }
+    _bottomLineMargin = margin;
+    [self.bottomLine mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(margin);
+        make.right.mas_equalTo(-margin);
+    }];
+}
 //- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 //{
 //    if (scrollView == self.tableView && self.tableView.contentOffset.y + self.tableView.height - self.tableView.contentInset.bottom + 0.5 - self.tableView.contentSize.height > 0) {

@@ -52,7 +52,7 @@
     
     tf.keyboardType = UIKeyboardTypeNumberPad;
     tf.textAlignment = NSTextAlignmentLeft;
-    tf.textColor = [UIColor themeBlack];
+    tf.textColor = [UIColor themeGray1];
     tf.font = [UIFont themeFontRegular:14];
     
     tf.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];
@@ -89,36 +89,37 @@
     }];
 }
 
--(void)updateWithLowerPrice:(NSNumber *)lowPrice higherPrice:(NSNumber *)highPrice
+-(void) updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice
 {
 
     if (!(lowPrice && highPrice)) {
         //至少有一个为nil
-        if (!lowPrice) {
-            self.lowerTextField.text = nil;
-        }
-        if (!highPrice) {
-            self.higherTextField.text = nil;
-        }
+        self.lowerTextField.text = lowPrice;
+        self.higherTextField.text = highPrice;
         return;
     }
     
     if (lowPrice.integerValue > highPrice.integerValue ) {
-        NSNumber *tempNum = lowPrice;
+        NSString *tempNum = lowPrice;
         lowPrice = highPrice;
         highPrice = tempNum;
         
-        if (lowPrice.integerValue > 0) {
-            self.lowerTextField.text = [NSString stringWithFormat:@"%d",lowPrice.intValue];
-        }else{
-            self.lowerTextField.text = nil;
-        }
-        if (highPrice.integerValue > 0) {
-            self.higherTextField.text = [NSString stringWithFormat:@"%d",highPrice.intValue];
-        }else{
-            self.higherTextField.text = nil;
-        }
     }
+    if (lowPrice.integerValue > 0) {
+        self.lowerTextField.text = [NSString stringWithFormat:@"%d",lowPrice.intValue];
+    }else if (lowPrice.length > 0){
+        self.lowerTextField.text = lowPrice;
+    }else{
+        self.lowerTextField.text = nil;
+    }
+    if (highPrice.integerValue > 0) {
+        self.higherTextField.text = [NSString stringWithFormat:@"%d",highPrice.intValue];
+    }else if (highPrice.length > 0){
+        self.higherTextField.text = highPrice;
+    }else{
+        self.higherTextField.text = nil;
+    }
+    
 }
 
 
@@ -126,9 +127,9 @@
 {
     if (self.delegate) {
         
-        NSNumber *number = nil;
+        NSString *number = nil;
         if (textField.text.length > 0) {
-            number = @([textField.text integerValue]);
+            number = textField.text;//@(textField.text integerValue]);
         }
         
         if (textField == self.lowerTextField) {            
@@ -145,6 +146,11 @@
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     NSString *result =  [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if ((result.length > textField.text.length) && ![string isEqualToString:[@(string.integerValue) description]]) {
+        //输入非数字
+        return NO;
+    }
+    
     if (result.length >= 9) {
         return NO;
     }
@@ -153,11 +159,11 @@
         return YES;
     }
     
-    if ([result isEqualToString:[NSString stringWithFormat:@"%d",result.intValue]]) {
-        return YES;
-    }
+//    if ([result isEqualToString:[NSString stringWithFormat:@"%d",result.intValue]]) {
+//        return YES;
+//    }
     
-    return NO;
+    return YES;
     
 }
 

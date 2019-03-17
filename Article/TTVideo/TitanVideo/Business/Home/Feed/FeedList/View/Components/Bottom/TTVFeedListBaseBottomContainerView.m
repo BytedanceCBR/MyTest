@@ -23,7 +23,7 @@
 //#import "TTRepostOriginModels.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
 //#import "TTShareToRepostManager.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTAsyncCornerImageView+VerifyIcon.h"
 #import "TTRelevantDurationTracker.h"
 #import "TTUGCTrackerHelper.h"
@@ -97,7 +97,7 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
             _avatarLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         }
         _avatarLabel.textAlignment = NSTextAlignmentLeft;
-        _avatarLabel.textColorThemeKey = kColorText1;
+        _avatarLabel.textColorThemeKey = kFHColorCharcoalGrey;
         [self addSubview:_avatarLabel];
     }
     return _avatarLabel;

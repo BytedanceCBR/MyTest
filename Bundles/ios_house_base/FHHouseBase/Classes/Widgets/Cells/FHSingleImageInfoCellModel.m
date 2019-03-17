@@ -151,7 +151,7 @@
     }
     NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
     [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
-    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray] range:NSMakeRange(0, originPrice.length)];
+    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray3] range:NSMakeRange(0, originPrice.length)];
     return attri;
 }
 
@@ -237,7 +237,7 @@
         
         _majorTitle = [[UILabel alloc]init];
         _majorTitle.font = [UIFont themeFontRegular:16];
-        _majorTitle.textColor = [UIColor themeBlack];
+        _majorTitle.textColor = [UIColor themeGray1];
     }
     return _majorTitle;
 }

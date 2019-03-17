@@ -13,7 +13,7 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTActivityShareSequenceManager.h"
 #import "TTMessageCenter.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 static const CGFloat kPrePlayBtnBottom = 11.5;
 
@@ -278,7 +278,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
     }
 }
 

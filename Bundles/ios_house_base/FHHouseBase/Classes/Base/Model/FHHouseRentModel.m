@@ -111,3 +111,11 @@
 
 
 
+@implementation FHHouseRentDataItemsModel (RecommendReason)
+
+-(BOOL)showRecommendReason
+{
+    return NO;
+}
+
+@end

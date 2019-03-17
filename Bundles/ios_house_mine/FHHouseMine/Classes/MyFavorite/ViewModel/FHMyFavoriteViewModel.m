@@ -151,9 +151,16 @@ extern NSString *const kFHDetailFollowUpNotification;
     }];
     
     self.tableView.hasMore = followModel.data.hasMore;
+
+    
     self.viewController.hasValidateData = self.dataList.count > 0;
     self.showPlaceHolder = NO;
+
     [self updateTableViewWithMoreData:followModel.data.hasMore];
+    
+    if (!followModel.data.hasMore && self.dataList.count < self.limit) {
+        self.refreshFooter.hidden = YES;
+    }
     
     if(followModel.data.hasMore){
         self.offset += self.limit;
@@ -183,6 +190,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -364,12 +372,28 @@ extern NSString *const kFHDetailFollowUpNotification;
         if(self.offset > 0){
             self.offset--;
         }
-        if(self.dataList.count > 0){
-            [self.viewController.emptyView hideEmptyView];
-            [self.tableView reloadData];
+        
+        //删除一条后有下页有新数据，用新数据填充
+        if(self.tableView.hasMore && self.dataList.count < self.limit){
+            [self requestData:YES];
         }else{
-            [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+            if(self.dataList.count > 0){
+                [self.viewController.emptyView hideEmptyView];
+                [self.tableView reloadData];
+                if (self.dataList.count < self.limit) {
+                    self.refreshFooter.hidden = YES;
+                }
+            }else{
+                [self.viewController.emptyView showEmptyWithTip:[self emptyTitle] errorImageName:@"group-9" showRetry:NO];
+            }
         }
+    }
+}
+
+- (void)hideMjFooter
+{
+    if (self.dataList.count <= 9) {
+        self.tableView.mj_footer.hidden = YES;
     }
 }
 
@@ -444,9 +468,10 @@ extern NSString *const kFHDetailFollowUpNotification;
         
         if (indexPath.row < self.dataList.count) {
             FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
             [cell updateWithHouseCellModel:cellModel];
             [cell refreshTopMargin: 20];
-            [cell refreshBottomMargin:isLastCell ? 20 : 0];
+            [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
         }
         return cell;
     }
@@ -463,8 +488,14 @@ extern NSString *const kFHDetailFollowUpNotification;
     if (self.showPlaceHolder) {
         return 105;
     }else{
-        BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
-        return isLastCell ? 125 : 105;
+        if (indexPath.row < self.dataList.count) {
+            BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
+            FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+            return (isLastCell ? 125 : 105)+reasonHeight;
+        }else{
+            return 0;
+        }
     }
 }
 
@@ -501,11 +532,13 @@ extern NSString *const kFHDetailFollowUpNotification;
                 }else{
                     [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
-                    [[ToastManager manager] showToast:@"已取消关注"];
+                    [[ToastManager manager] showToast:@"取消关注"];
                 }
             }];
         }
     }
+    
+    [self performSelector:@selector(hideMjFooter) withObject:nil afterDelay:0.1];
 }
 
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -526,16 +559,17 @@ extern NSString *const kFHDetailFollowUpNotification;
                 }else{
                     [wself deleteFocusCell:indexPath.row];
                     [[ToastManager manager] dismissCustomLoading];
-                    [[ToastManager manager] showToast:@"已取消关注"];
+                    [[ToastManager manager] showToast:@"取消关注"];
                 }
             }];
         }
     }];
 
-    action.backgroundColor = [UIColor colorWithRed:236/255.0 green:77/255.0 blue:61/255.0 alpha:1];
+    action.backgroundColor = [UIColor themeRed1];
     UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
     config.performsFirstActionWithFullSwipe = NO;
 
+    
     return config;
 }
 

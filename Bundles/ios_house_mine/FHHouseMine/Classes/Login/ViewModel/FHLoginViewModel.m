@@ -38,7 +38,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (self) {
         
         view.delegate = self;
-        
+        _needPopVC = YES;
         _view = view;
         _viewController = viewController;
     }
@@ -173,15 +173,25 @@ extern NSString *const kFHPhoneNumberCacheKey;
     
     [FHMineAPI requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
+            __strong typeof(self) strongSelf = weakSelf;
             [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-            [weakSelf popViewController];
+            if (strongSelf.needPopVC) {
+                [strongSelf popViewController];
+            }
+            [strongSelf loginSuccessedWithPhoneNum:phoneNumber];
         }else{
             NSString *errorMessage = [FHMineAPI errorMessageByErrorCode:error];
             [[ToastManager manager] showToast:errorMessage];
         }
     }];
+}
+
+- (void)loginSuccessedWithPhoneNum:(NSString *)phoneNumber {
+    if (self.loginDelegate.completeAlert) {
+        self.loginDelegate.completeAlert(TTAccountAlertCompletionEventTypeDone, phoneNumber);
+    }
 }
 
 - (void)traceLogin {
@@ -254,7 +264,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     
     if(self.verifyCodeRetryTime == 0){
         [self stopTimer];
-        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeBlack] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
+        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
         self.view.sendVerifyCodeBtn.enabled = YES;
         self.isRequestingSMS = NO;
     }else{

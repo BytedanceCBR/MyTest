@@ -30,6 +30,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshWithData:(id)data;
 
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel andIsFirst:(BOOL)isFirst andIsLast:(BOOL)isLast;
+
++(CGFloat)recommendReasonHeight;
+
 @end
 
 NS_ASSUME_NONNULL_END

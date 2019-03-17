@@ -5,8 +5,8 @@
 //  Created by lizhuoli on 17/1/22.
 //
 //
-#import "TTVerifyIconImageView.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconImageView.h>
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTAsyncCornerImageView.h"
 #import "TTAvatarDecoratorView.h"
 

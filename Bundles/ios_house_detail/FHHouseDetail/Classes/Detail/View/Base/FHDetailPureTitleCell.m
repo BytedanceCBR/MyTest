@@ -51,7 +51,7 @@
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
         _titleLabel.font = [UIFont themeFontMedium:18];
-        _titleLabel.textColor = [UIColor themeBlack];
+        _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.text = @"价格分析";
     }
     return _titleLabel;

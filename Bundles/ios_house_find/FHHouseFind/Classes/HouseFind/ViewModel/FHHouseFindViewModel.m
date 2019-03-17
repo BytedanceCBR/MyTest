@@ -534,7 +534,7 @@
             if (item.options.count > 0) {
                 option = [item.options firstObject];
             }
-            if (option.supportMulti) {
+            if ([option.supportMulti boolValue]) {
                 [model addSelecteItem:selectItem withIndex:indexPath.item];
             }else{
                 [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
@@ -629,19 +629,17 @@
 }
 
 #pragma mark - price cell delegate
--(void)updateLowerPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell
+-(void)updateLowerPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    
     priceItem.lowerPrice = price;
 }
 
--(void)updateHigherPrice:(NSNumber *)price inCell:(FHHouseFindPriceCell *)cell
+-(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    
     priceItem.higherPrice = price;
 }
 
@@ -697,7 +695,7 @@
           @"from_home":@"2"
           };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
-    NSURL *url = [NSURL URLWithString:@"sslocal://sug_list"];
+    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }

@@ -13,7 +13,7 @@
 #import "TTInstallIDManager.h"
 #import "revision.h"
 
-#import "TTHttpsControlManager.h"
+#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "TTTrackerUtil.h"
 #import "TTAppLogExceptionResponseModel.h"
 #import <TTAccountBusiness.h>

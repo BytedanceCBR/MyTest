@@ -23,6 +23,7 @@
 #import "FHDetailRentRelatedHouseCell.h"
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNeighborhoodInfoCell.h"
+#import "FHDetailNeighborhoodMapInfoCell.h"
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -48,6 +49,7 @@
     [self.tableView registerClass:[FHDetailRentRelatedHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailRentRelatedHouseCell class])];
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
+    [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -82,6 +84,10 @@
     // 小区信息
     if ([model isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
         return [FHDetailNeighborhoodInfoCell class];
+    }
+    // 小区地图
+    if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
+        return [FHDetailNeighborhoodMapInfoCell class];
     }
     // 同小区房源
     if ([model isKindOfClass:[FHDetailRentSameNeighborhoodHouseModel class]]) {
@@ -126,12 +132,14 @@
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
                 [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
             wSelf.detailController.isLoadingData = NO;
             wSelf.detailController.hasValidateData = NO;
             wSelf.bottomBar.hidden = YES;
             [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -178,6 +186,8 @@
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
+    [self addDetailCoreInfoExcetionLog];
+
     // 清空数据源
     [self.items removeAllObjects];
     if (model.data.houseImage) {
@@ -232,7 +242,43 @@
         infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
         [self.items addObject:infoModel];
     }
+    // 地图
+    if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
+        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+        infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
+        infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
+        infoModel.title = model.data.neighborhoodInfo.name;
+        infoModel.category = @"公交";
+        
+        [self.items addObject:infoModel];
+    }
  
+    //生成IM卡片的schema用 个人认为server应该加接口
+    NSString *imgUrl = @"";
+    if (model.data.houseImage.count > 0) {
+        FHDetailHouseDataItemsHouseImageModel *imageInfo = model.data.houseImage[0];
+        imgUrl = imageInfo.url ?: @"";
+    }
+    NSString *area = @"";
+    NSString *area2 = @"";
+    if (model.data.coreInfo.count >= 3) {
+        FHDetailOldDataCoreInfoModel *areaInfo = model.data.coreInfo[1];
+        area = areaInfo.value ?: @"";
+        FHDetailOldDataCoreInfoModel *areaInfo2 = model.data.coreInfo[2];
+        area2 = areaInfo2.value ?: @"";
+    }
+    
+    NSString *face = @"";
+    if (model.data.baseInfo.count >= 2) {
+        FHDetailOldDataCoreInfoModel *baseInfo = model.data.baseInfo[1];
+        face = baseInfo.value ?: @"";
+    }
+    NSString *tag = model.data.neighborhoodInfo.name ?: @"";
+    NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
+    NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@/%@", area, area2, face, tag];
+    NSString *price = model.data.pricing ?: @"";
+    [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:@""];
+    
     [self reloadData];
  
 }
@@ -302,6 +348,24 @@
          [wSelf processDetailRelatedData];
      }];
  }
+
+- (BOOL)isMissTitle
+{
+    FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
+    return model.data.title.length < 1;
+}
+
+- (BOOL)isMissImage
+{
+    FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
+    return model.data.houseImage.count < 1;
+}
+
+- (BOOL)isMissCoreInfo
+{
+    FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
+    return model.data.coreInfo.count < 1;
+}
 
 
 @end

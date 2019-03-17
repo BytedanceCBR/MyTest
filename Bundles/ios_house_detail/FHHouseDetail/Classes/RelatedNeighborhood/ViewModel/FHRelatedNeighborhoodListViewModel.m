@@ -89,6 +89,7 @@
     self.tableView.mj_footer.hidden = NO;
     self.hasMore = hasMore;
     if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -145,6 +146,10 @@
             }];
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
+            
+            if (hasMore && self.houseList.count < 10) {
+                self.refreshFooter.hidden = YES;
+            }
         } else {
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
         }

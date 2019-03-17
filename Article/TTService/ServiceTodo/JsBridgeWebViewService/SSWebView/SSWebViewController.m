@@ -301,6 +301,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         if ([[params allKeys] containsObject:@"fhJSParams"]) {
             self.fhJSParams = [params objectForKey:@"fhJSParams"];
         }
+        if ([[params allKeys] containsObject:@"hide_nav_bottom_line"]) {
+            self.ttNeedHideBottomLine = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bottom_line"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bottom_line"]] isEqualToString:@"true"];
+        }
+        
     }
     return self;
 }

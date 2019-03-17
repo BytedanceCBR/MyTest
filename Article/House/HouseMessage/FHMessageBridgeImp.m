@@ -8,6 +8,8 @@
 #import "FHMessageBridgeImp.h"
 #import "TTTabBarManager.h"
 #import "TTTabBarItem.h"
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 @implementation FHMessageBridgeImp
 
@@ -22,13 +24,14 @@
 }
 
 - (void)reduceMessageTabBarBadgeNumber:(NSInteger)number {
-    TTTabBarItem *tabBarItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMessageTabKey];
-    TTBadgeNumberView *badgeView = tabBarItem.ttBadgeView;
-    NSInteger msgCount = number;
-    NSInteger tabMsgCount = badgeView.badgeNumber;
-    tabMsgCount -= msgCount;
-    tabMsgCount = tabMsgCount >= 0 ? tabMsgCount : 0;
-    badgeView.badgeNumber = tabMsgCount;
+    [[FHEnvContext sharedInstance].messageManager reduceSystemMessageTabBarBadgeNumber:number];
+//    TTTabBarItem *tabBarItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMessageTabKey];
+//    TTBadgeNumberView *badgeView = tabBarItem.ttBadgeView;
+//    NSInteger msgCount = number;
+//    NSInteger tabMsgCount = badgeView.badgeNumber;
+//    tabMsgCount -= msgCount;
+//    tabMsgCount = tabMsgCount >= 0 ? tabMsgCount : 0;
+//    badgeView.badgeNumber = tabMsgCount;
 }
 
 - (void)setMessageTabBadgeNumber:(NSInteger)number {

@@ -91,6 +91,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kFHHomeListHeaderBaseViewSection) {
+        [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForFindHouse;
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
@@ -105,16 +106,11 @@
         return;
     }
     FHHomeHouseDataItemsModel *cellModel = [_modelsArray objectAtIndex:indexPath.row];
-     if (cellModel.idx && [self.traceRecordDict objectForKey:cellModel.idx] != nil)
+     if (cellModel.idx && ![self.traceRecordDict objectForKey:cellModel.idx])
      {
-         return;
-     }else
-     {
-         BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
-         
-         if (cellModel.idx && isHasFindHouseCategory) {
+         if (cellModel.idx && self.isHasFindHouseCategory) {
              [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
-
+             
              NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
              
              NSMutableDictionary *tracerDict = [NSMutableDictionary new];

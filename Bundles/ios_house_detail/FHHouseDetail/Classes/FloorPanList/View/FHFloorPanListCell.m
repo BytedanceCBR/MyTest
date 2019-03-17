@@ -45,7 +45,7 @@
         
         _nameLabel = [UILabel new];
         _nameLabel.font = [UIFont themeFontMedium:16];
-        _nameLabel.textColor = [UIColor themeBlue1];
+        _nameLabel.textColor = [UIColor themeGray1];
         _nameLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_nameLabel];
@@ -59,7 +59,7 @@
 
         _roomSpaceLabel = [UILabel new];
         _roomSpaceLabel.font = [UIFont themeFontRegular:12];
-        _roomSpaceLabel.textColor = [UIColor themeGray2];
+        _roomSpaceLabel.textColor = [UIColor themeGray3];
         _roomSpaceLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_roomSpaceLabel];
@@ -74,7 +74,7 @@
 
         _priceLabel = [UILabel new];
         _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor colorWithHexString:@"#f85959"];
+        _priceLabel.textColor = [UIColor themeRed1];
         _priceLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_priceLabel];
@@ -102,7 +102,7 @@
 
         _statusLabel = [UILabel new];
         _statusLabel.font = [UIFont themeFontRegular:10];
-        _statusLabel.textColor = [UIColor themeBlue1];
+        _statusLabel.textColor = [UIColor themeGray1];
         _statusLabel.textAlignment = NSTextAlignmentCenter;
         [_statusBGView addSubview:_statusLabel];
         [_statusLabel mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -12,6 +12,7 @@
 #import "FHCommonDefines.h"
 #import "FHDetailOldModel.h"
 #import "UILabel+House.h"
+#import "UIColor+Theme.h"
 
 @implementation FHDetailRentHouseCoreInfoCell
 
@@ -39,20 +40,41 @@
     NSInteger count = model.coreInfo.count;
     if (count > 0) {
         CGFloat fixedSpace = 4.0;
-        CGFloat width = ((UIScreen.mainScreen.bounds.size.width - 40) - (count - 1) * fixedSpace) / count;
+        __block CGFloat width = ((UIScreen.mainScreen.bounds.size.width - 40) - (count - 1) * fixedSpace) / count;
         __block CGFloat leftOffset = 20.0;
+        __block BOOL firstWordTooLong = NO;
         [model.coreInfo enumerateObjectsUsingBlock:^(FHDetailOldDataCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailRentHouseCoreInfoItemView *itemView = [[FHDetailRentHouseCoreInfoItemView alloc] init];
             [self.contentView addSubview:itemView];
+            // 设置数据
+            itemView.keyLabel.text = obj.value;
+            itemView.valueLabel.text = obj.attr;
+            CGSize size = [itemView.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 40)];
+            if (size.width + 20 > width && idx == 0) {
+                // 第一个数据如果过长，展示完全
+                width = size.width + 21;
+                firstWordTooLong = YES;
+            }
+            if (firstWordTooLong) {
+                itemView.keyLabel.font = [UIFont themeFontMedium:14];
+                if (idx == 0) {
+                    // 第一个数据重新计算
+                    size = [itemView.keyLabel sizeThatFits:CGSizeMake(SCREEN_WIDTH, 40)];
+                    width = size.width + 21;
+                }
+            } else {
+                itemView.keyLabel.font = [UIFont themeFontMedium:15];
+            }
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.bottom.mas_equalTo(self.contentView);
                 make.width.mas_equalTo(width);
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
             leftOffset += (width + fixedSpace);
-            // 设置数据
-            itemView.keyLabel.text = obj.value;
-            itemView.valueLabel.text = obj.attr;
+            // 重新计算item width
+            if (count - 1 - idx > 0 && idx == 0) {
+                width = ((UIScreen.mainScreen.bounds.size.width - leftOffset - 20) - (count - 2 - idx) * fixedSpace) / (count - 1 - idx);
+            }
         }];
     }
     [self layoutIfNeeded];
@@ -77,14 +99,16 @@
 }
 
 - (void)setupUI {
-    self.backgroundColor = [UIColor colorWithHexString:@"#f7f8f9"];
+    self.backgroundColor = [UIColor themeGray7];
     self.layer.cornerRadius = 4.0;
     
-    _keyLabel = [UILabel createLabel:@"" textColor:@"#ff5b4c" fontSize:15];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _keyLabel.textColor = [UIColor themeRed1];
     _keyLabel.font = [UIFont themeFontMedium:15];
     [self addSubview:_keyLabel];
     
-    _valueLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:12];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _valueLabel.textColor = [UIColor themeGray3];
     [self addSubview:_valueLabel];
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {

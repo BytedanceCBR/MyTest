@@ -17,6 +17,7 @@
 #import "ArticleURLSetting.h"
 #import "TTArticleCategoryManager.h"
 #import "TTCategoryBadgeNumberManager.h"
+#import "TTTabBarProvider.h"
 
 @implementation FHHouseEvnContextBridgeImp
 
@@ -48,6 +49,14 @@
     NSString *province = [FHLocManager sharedInstance].currentReGeocode.province;
     return province;
 //    return [[[EnvContext shared] client] currentProvince];
+}
+
+- (BOOL)isCurrentTabFirst
+{
+    if ([[TTTabBarProvider currentSelectedTabTag] isEqualToString:kTTTabHomeTabKey]) {
+        return YES;
+    }
+    return NO;
 }
 
 -(BOOL)locationSameAsChooseCity

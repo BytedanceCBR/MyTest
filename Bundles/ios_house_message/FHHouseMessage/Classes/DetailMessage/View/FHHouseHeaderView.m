@@ -17,7 +17,7 @@
     self = [super initWithFrame:frame];
     
     if(self){
-        self.backgroundColor = [UIColor themeGrayPale];
+        self.backgroundColor = [UIColor themeGray7];
         [self initViews];
         [self initConstraints];
     }
@@ -38,7 +38,7 @@
     _contentView.backgroundColor = [UIColor whiteColor];
     [self addSubview:_contentView];
     
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeBlack]];
+    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     _contentLabel.numberOfLines = 2;
     _contentLabel.lineBreakMode = UILineBreakModeCharacterWrap;
     [_contentView addSubview:_contentLabel];
