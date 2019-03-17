@@ -548,12 +548,25 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 self.isFromLocalTestChange = YES;
                 [self checkCityStatus];
                 
+                
                 if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                     [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
                 }
                 
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
+            }else
+            {
+                if (error && self.dataSource.modelsArray.count == 0) {
+                    [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
+                    return;
+                }else
+                {
+                    if (error) {
+                        [[ToastManager manager] showToast:@"网络异常"];
+                        return;
+                    }
+                }
             }
             
             
