@@ -11,7 +11,7 @@
 #import "TTSystemPermClientAB.h"
 #import <BDABTestSDK/BDABTestBaseExperiment.h>
 #import <BDABTestSDK/BDABTestManager.h>
-
+#import <TTTracker.h>
 
 @implementation TTABHelperTask
 
@@ -30,19 +30,26 @@
     [self.class startClientABs];
     
     [self.class registABTests];
+
 }
 
+// 注册实验（所有通过BDABTestSDK取值的实验都必须注册
 + (void)registABTests
 {
     // add by zjing for test
-    BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
-                                                                        owner:@"zjing"
-                                                                  description:@"找房tab是否增加房源展现。。。"
-                                                                 defaultValue:@(NO)
-                                                                    valueType:BDABTestValueTypeNumber
-                                                                     isSticky:YES];
+//    BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
+//                                                                        owner:@"zjing"
+//                                                                  description:@"找房tab是否增加房源展现。。。"
+//                                                                 defaultValue:@{@"show":@(0)}
+//                                                                    valueType:BDABTestValueTypeDictionary
+//                                                                     isSticky:YES];
     [BDABTestManager registerExperiment:exp];
+    [TTTracker sharedInstance].abSDKVersionBlock = ^NSString *{
+        NSString *exposureVid = [BDABTestManager queryExposureExperiments];
+        return exposureVid;
+    };
 }
+
 
 + (void)startClientABs
 {
