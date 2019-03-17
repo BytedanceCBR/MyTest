@@ -63,9 +63,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *phone;
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, copy , nullable) NSString *realtorName;
+@property (nonatomic, copy , nullable) NSString *imOpenUrl;
+@property (nonatomic, copy , nullable) NSString *imLabel;
+@property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
+
+- (nonnull id)copyWithZone:(nullable NSZone *)zone;
+
+- (void)encodeWithCoder:(nonnull NSCoder *)aCoder;
+
+- (nullable instancetype)initWithCoder:(nonnull NSCoder *)aDecoder;
+
+- (instancetype)initWithData:(NSData *)data error:(NSError *__autoreleasing *)error;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err;
+
+- (NSDictionary *)toDictionary;
+
+- (NSDictionary *)toDictionaryWithKeys:(NSArray *)propertyNames;
 
 @end
 

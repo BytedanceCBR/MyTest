@@ -41,6 +41,7 @@
     TTStartupServiceGroup *group = [[TTStartupServiceGroup alloc] init];
     
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeHMDMonitor]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCellRegister]];

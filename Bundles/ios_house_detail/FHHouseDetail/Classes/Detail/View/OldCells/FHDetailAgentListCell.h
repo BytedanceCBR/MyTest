@@ -23,8 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UIImageView       *avator;
 @property (nonatomic, strong)   UIButton       *licenceIcon;
 @property (nonatomic, strong)   UIButton       *callBtn;
+@property (nonatomic, strong)   UIButton       *imBtn;
 @property (nonatomic, strong)   UILabel       *name;
 @property (nonatomic, strong)   UILabel       *agency;
+
 
 @end
 

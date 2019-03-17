@@ -534,7 +534,7 @@
             if (item.options.count > 0) {
                 option = [item.options firstObject];
             }
-            if (option.supportMulti) {
+            if ([option.supportMulti boolValue]) {
                 [model addSelecteItem:selectItem withIndex:indexPath.item];
             }else{
                 [model clearAddSelecteItem:selectItem withIndex:indexPath.item];

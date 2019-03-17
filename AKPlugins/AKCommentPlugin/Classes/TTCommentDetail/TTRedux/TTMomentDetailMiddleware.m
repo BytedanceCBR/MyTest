@@ -483,7 +483,7 @@
 - (nullable NSArray<id<TTActivityContentItemProtocol>> *)shareContentItems:(TTCommentDetailModel *)commentDetailModel {
     NSMutableArray *shareActivityContentItemTypes = [NSMutableArray array];
 
-    NSString *shareTitle = [KitchenMgr getString:kKCUGCFeedNamesShare];
+    NSString *shareTitle = [TTKitchen getString:kKCUGCFeedNamesShare];
     NSString *shareDescription = isEmptyString(commentDetailModel.content) ? NSLocalizedString(@"发现你感兴趣的新鲜事", nil) : [NSString stringWithFormat:@"%@: %@", commentDetailModel.user.name, commentDetailModel.content];
     UIImage *shareImage = [self wechatImageWithGroupThumbnailURLString:commentDetailModel.groupThumbURL avatarURLString:commentDetailModel.user.avatarURLString];
     NSString *shareImageUrl = commentDetailModel.groupThumbURL ?: commentDetailModel.user.avatarURLString;

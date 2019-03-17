@@ -847,7 +847,7 @@
 }
 
 - (NSString *)activityTitle {
-    return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+    return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
 }
 
 - (UIImage *)activityImage {

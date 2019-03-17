@@ -16,6 +16,8 @@
 @property(nonatomic , strong) UIButton *backBtn;
 @property(nonatomic , strong) UIButton *collectBtn;
 @property(nonatomic , strong) UIButton *shareBtn;
+@property(nonatomic , strong) UIButton *messageBtn;
+@property(nonatomic , strong) UIImageView *messageDot;
 @property(nonatomic , strong) UIView *gradientView;
 @property(nonatomic , strong) UIView *bottomLine;
 
@@ -29,6 +31,8 @@
 @property(nonatomic , strong) UIImage *backWhiteImage;
 @property(nonatomic , strong) UIImage *shareBlackImage;
 @property(nonatomic , strong) UIImage *shareWhiteImage;
+@property(nonatomic , strong) UIImage *messageBlackImage;
+@property(nonatomic , strong) UIImage *messageWhiteImage;
 @end
 
 @implementation FHDetailNavBar
@@ -122,6 +126,23 @@
     [_collectBtn setImage:self.collectWhiteImage forState:UIControlStateHighlighted];
     [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_collectBtn];
+    
+    _messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateNormal];
+    [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateHighlighted];
+    [_messageBtn addTarget:self action:@selector(messageAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_messageBtn];
+
+    _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateNormal];
+    [_shareBtn setImage:[UIImage imageNamed:@"detail_share_white"] forState:UIControlStateHighlighted];
+    [_shareBtn addTarget:self action:@selector(shareAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_shareBtn];
+    
+    _messageDot = [[UIImageView alloc] init];
+    _messageDot.hidden = YES;
+    [_messageDot setImage:[UIImage imageNamed:@"detail_message_dot"]];
+    [self addSubview:_messageDot];
 
     [_backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
@@ -129,6 +150,7 @@
         make.width.mas_equalTo(40);
         make.bottom.mas_equalTo(self);
     }];
+
     if (_type == FHDetailNavBarTypeDefault) {
         [self addSubview:self.shareBtn];
         [_shareBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -137,18 +159,42 @@
             make.width.mas_equalTo(40);
             make.bottom.mas_equalTo(self);
         }];
-        [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.shareBtn.mas_left).mas_offset(-14);
+        [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.shareBtn.mas_left).mas_offset(-12);
             make.height.mas_equalTo(44);
             make.width.mas_equalTo(40);
             make.bottom.mas_equalTo(self);
         }];
-    }else {
         [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn.mas_left).mas_offset(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn).offset(-5);
+            make.height.mas_equalTo(10);
+            make.width.mas_equalTo(10);
+            make.top.mas_equalTo(self.messageBtn).offset(10);
+        }];
+    }else {
+        [_messageBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(-12);
             make.height.mas_equalTo(44);
             make.width.mas_equalTo(40);
             make.bottom.mas_equalTo(self);
+        }];
+        [_collectBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn.mas_left).mas_offset(-12);
+            make.height.mas_equalTo(44);
+            make.width.mas_equalTo(40);
+            make.bottom.mas_equalTo(self);
+        }];
+        [_messageDot mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.messageBtn).offset(-5);
+            make.height.mas_equalTo(10);
+            make.width.mas_equalTo(10);
+            make.top.mas_equalTo(self.messageBtn).offset(10);
         }];
     }
 
@@ -171,6 +217,8 @@
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
         [_shareBtn setImage:self.shareBlackImage forState:UIControlStateNormal];
         [_shareBtn setImage:self.shareBlackImage forState:UIControlStateHighlighted];
+        [_messageBtn setImage:self.messageBlackImage forState:UIControlStateNormal];
+        [_messageBtn setImage:self.messageBlackImage forState:UIControlStateHighlighted];
     }else {
         _gradientView.alpha = 1;
         UIImage *image = self.followStatus ? self.collectYellowImage : self.collectWhiteImage;
@@ -180,6 +228,8 @@
         [_collectBtn setImage:image forState:UIControlStateHighlighted];
         [_shareBtn setImage:self.shareWhiteImage forState:UIControlStateNormal];
         [_shareBtn setImage:self.shareWhiteImage forState:UIControlStateHighlighted];
+        [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateNormal];
+        [_messageBtn setImage:self.messageWhiteImage forState:UIControlStateHighlighted];
     }
     if (alpha >= 1) {
         _bottomLine.hidden = NO;
@@ -209,6 +259,7 @@
 {
     self.shareBtn.hidden = !showItem;
     self.collectBtn.hidden = !showItem;
+    self.messageBtn.hidden = !showItem;
 }
 
 - (void)backAction:(UIButton *)sender
@@ -225,11 +276,23 @@
     }
 }
 
+- (void)messageAction:(UIButton *)sender
+{
+    if (self.messageActionBlock) {
+        self.messageActionBlock();
+    }
+}
+
 - (void)shareAction:(UIButton *)sender
 {
     if (self.shareActionBlock) {
         self.shareActionBlock();
     }
+}
+
+
+- (void)displayMessageDot:(BOOL)show {
+    self.messageDot.hidden = !show;
 }
 
 - (UIButton *)shareBtn
@@ -292,4 +355,19 @@
     }
     return _shareWhiteImage;
 }
+- (UIImage *)messageBlackImage
+{
+    if (!_messageBlackImage) {
+        _messageBlackImage = [UIImage imageNamed:@"detail_message_black"];
+    }
+    return _messageBlackImage;
+}
+- (UIImage *)messageWhiteImage
+{
+    if (!_messageWhiteImage) {
+        _messageWhiteImage = [UIImage imageNamed:@"detail_message_white"];
+    }
+    return _messageWhiteImage;
+}
+
 @end

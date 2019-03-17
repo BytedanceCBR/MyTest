@@ -70,7 +70,7 @@
 }
 
 - (void)setupDecoratorWithUserID:(NSString *)uid nightMode:(BOOL)enableNightMode completion:(TTAvatarDecoratorCompletionBlock)block {
-    if (!block || isEmptyString(uid) || ![KitchenMgr getBOOL:kKCUserDecorationUserIDSwitch]) {
+    if (!block || isEmptyString(uid) || ![TTKitchen getBOOL:kKCUserDecorationUserIDSwitch]) {
         return;
     }
 

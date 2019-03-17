@@ -2597,6 +2597,10 @@
 		B373CF012174587A008F9905 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058C15876AE500EB27FA /* libz.1.dylib */; };
 		B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
 		B373CF032174587A008F9905 /* libttheif_dec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF860F21FA1CA8100926C1A /* libttheif_dec.a */; };
+		B376FC9822193F7C009D8E2F /* FHIMStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */; };
+		B376FC9922193F7C009D8E2F /* FHIMStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */; };
+		B376FC9A22193F7C009D8E2F /* FHIMStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */; };
+		B376FC9B22193F7C009D8E2F /* FHIMStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */; };
 		B388CB162142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9D92142652800653188 /* LaunchScreen.storyboard */; };
 		B388CB172142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9D92142652800653188 /* LaunchScreen.storyboard */; };
 		B388CB1E2142652A00653188 /* FTTNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B388C9DE2142652800653188 /* FTTNavigationController.m */; };
@@ -2646,7 +2650,7 @@
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
@@ -8320,6 +8324,8 @@
 		B358140A432F576A8121CD57 /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
 		B373CF102174587A008F9905 /* f100.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B376FC9622193F7C009D8E2F /* FHIMStartupTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHIMStartupTask.h; sourceTree = "<group>"; };
+		B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHIMStartupTask.m; sourceTree = "<group>"; };
 		B388C9D92142652800653188 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B388C9DE2142652800653188 /* FTTNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTTNavigationController.m; sourceTree = "<group>"; };
 		B388C9E22142652800653188 /* FTTNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTTNavigationController.h; sourceTree = "<group>"; };
@@ -9342,7 +9348,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -13666,6 +13672,8 @@
 				A97DB7D91F1332DB0002B455 /* TTWatchConnectionTask.m */,
 				DE636091202B2D6F00DF530D /* TTSetUseBDWebImageTask.h */,
 				DE636092202B2D7100DF530D /* TTSetUseBDWebImageTask.m */,
+				B376FC9622193F7C009D8E2F /* FHIMStartupTask.h */,
+				B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */,
 				3D4736F7222D3369001899BA /* TTOpenURLTask.h */,
 				3D4736F8222D3369001899BA /* TTOpenURLTask.m */,
 			);
@@ -18179,6 +18187,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18197,6 +18206,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/../../../../f_pods/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -18261,6 +18272,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18279,6 +18291,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/images.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18411,6 +18425,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18429,6 +18444,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/../../../../f_pods/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -18493,6 +18510,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18511,6 +18529,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/images.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EditImage.xcassets",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18585,6 +18605,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -18603,6 +18624,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/../../../../f_pods/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -18666,6 +18689,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -18684,6 +18708,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/images.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -19058,6 +19084,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
+				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/new_icon.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/290-cai978.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
@@ -19076,6 +19103,8 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
+				"${PODS_ROOT}/../../../../f_pods/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -19139,6 +19168,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/new_icon.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/290-cai978.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
@@ -19157,6 +19187,8 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/images.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ios_house_im.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -19229,6 +19261,7 @@
 			files = (
 				AB1621F11F500EFA00B4CC0C /* TTShareMethodUtil.m in Sources */,
 				2D70F6F11D445C910021AAB3 /* TTNPopupView.m in Sources */,
+				B376FC9822193F7C009D8E2F /* FHIMStartupTask.m in Sources */,
 				F23C0C6E2007B06300B8072A /* TTPersonalHomeMultiplePlatformFollowersInfoViewModel.m in Sources */,
 				ABBF8DF71F2D8F9400FEC7BB /* NewsUserSettingManager.m in Sources */,
 				A97DC4321F1333630002B455 /* TTInterestCell.m in Sources */,
@@ -22059,6 +22092,7 @@
 				B373CE722174587A008F9905 /* TTRNCellView.m in Sources */,
 				B373CE732174587A008F9905 /* TTLayoutLoopCellModel.m in Sources */,
 				B373CE742174587A008F9905 /* ExploreSubscribePGCCell.m in Sources */,
+				B376FC9A22193F7C009D8E2F /* FHIMStartupTask.m in Sources */,
 				B373CE752174587A008F9905 /* TTVFeedCellMoreActionManager.m in Sources */,
 				B373CE762174587A008F9905 /* ExploreArticleLianZaiCell.m in Sources */,
 				B373CE772174587A008F9905 /* TTAppLinkOpenURLTask.m in Sources */,
@@ -23477,6 +23511,7 @@
 				D479577821ECC94E00548965 /* TTRNCellView.m in Sources */,
 				D479577921ECC94E00548965 /* TTLayoutLoopCellModel.m in Sources */,
 				D479577A21ECC94E00548965 /* ExploreSubscribePGCCell.m in Sources */,
+				B376FC9B22193F7C009D8E2F /* FHIMStartupTask.m in Sources */,
 				D479577B21ECC94E00548965 /* TTVFeedCellMoreActionManager.m in Sources */,
 				D479577C21ECC94E00548965 /* ExploreArticleLianZaiCell.m in Sources */,
 				D479577D21ECC94E00548965 /* TTAppLinkOpenURLTask.m in Sources */,
@@ -24895,6 +24930,7 @@
 				FEFA59A5205FB1A8001F50D8 /* TTRNCellView.m in Sources */,
 				FEFA59A6205FB1A8001F50D8 /* TTLayoutLoopCellModel.m in Sources */,
 				FEFA59A7205FB1A8001F50D8 /* ExploreSubscribePGCCell.m in Sources */,
+				B376FC9922193F7C009D8E2F /* FHIMStartupTask.m in Sources */,
 				FEFA59A8205FB1A8001F50D8 /* TTVFeedCellMoreActionManager.m in Sources */,
 				FEFA59A9205FB1A8001F50D8 /* ExploreArticleLianZaiCell.m in Sources */,
 				FEFA59AD205FB1A8001F50D8 /* TTAppLinkOpenURLTask.m in Sources */,
@@ -25493,6 +25529,7 @@
 					"$(inherited)",
 					"DEBUG=1",
 					"SD_WEBP=1",
+					"SDK_DEBUG=1",
 				);
 				GCC_THUMB_SUPPORT = NO;
 				HEADER_SEARCH_PATHS = (

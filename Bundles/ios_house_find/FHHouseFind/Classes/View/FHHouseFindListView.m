@@ -346,9 +346,8 @@
             _tableView.estimatedSectionFooterHeight = 0;
             self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-        }
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 49, 0);
+
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.showsVerticalScrollIndicator = NO;
         

@@ -33,6 +33,7 @@ typedef NS_ENUM(NSUInteger, TTSerialStartupType) {
     TTSerialStartupTypeSetHook,//设置pod库中的钩子方法
     TTSerialStartupTypePermissionSettingsReport,//上报推送权限设置
     TTServiceStartupTypeUseBDWebImage,//BDWebImage
+    TTServiceStartupTypeFHIMStartupTask,//BDWebImage
     TTServiceStartupTypeOpenURL,//open url 调起
 };
 

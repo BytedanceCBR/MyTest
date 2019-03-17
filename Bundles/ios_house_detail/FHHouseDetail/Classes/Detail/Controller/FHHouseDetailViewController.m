@@ -124,11 +124,10 @@
     });
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.viewModel.contactViewModel refreshMessageDot];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {

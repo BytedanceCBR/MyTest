@@ -396,7 +396,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
     }
 }
 
