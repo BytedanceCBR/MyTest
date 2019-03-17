@@ -323,6 +323,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         if (completion) {
             // 城市选择重新定位需回调
             completion(regeocode);
+            [[FHEnvContext sharedInstance] updateRequestCommonParams];
         } else {
             NSInteger cityId = 0;
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
