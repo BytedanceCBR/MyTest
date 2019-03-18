@@ -49,7 +49,7 @@
 }
 
 - (BOOL)followButtonColorStyleIsRed {
-    NSString *colorStyle = [[TTKitchenMgr sharedInstance] getString:kKCUGCFollowButtonColorStyle];
+    NSString *colorStyle = [TTKitchen getString:kKCUGCFollowButtonColorStyle];
 
     return [colorStyle isEqualToString:@"red"];
 }

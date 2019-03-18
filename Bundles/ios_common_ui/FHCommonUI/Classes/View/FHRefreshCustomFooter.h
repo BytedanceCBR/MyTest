@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setUpNoMoreDataText:(NSString *)text;
 
+- (void)setUpNoMoreDataText:(NSString *)text offsetY:(CGFloat)offsetY;
+
 @end
 
 NS_ASSUME_NONNULL_END

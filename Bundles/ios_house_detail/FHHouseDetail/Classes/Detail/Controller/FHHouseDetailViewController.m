@@ -14,6 +14,8 @@
 #import "UIFont+House.h"
 #import "FHHouseDetailContactViewModel.h"
 #import "UIViewController+Track.h"
+#import "UIView+House.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 @interface FHHouseDetailViewController ()
 
@@ -94,6 +96,12 @@
         if ([paramObj.allParams[@"source"] isKindOfClass:[NSString class]]) {
             self.source = paramObj.allParams[@"source"];
         }
+
+        if (self.houseId.length < 1) {
+            [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(1)} extra:@{@"openurl":paramObj.sourceURL.absoluteString}];
+        }else {
+            [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
+        }
     }
     return self;
 }
@@ -108,13 +116,23 @@
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
     }
+    
+    // Push推送过来的状态栏修改
+    __weak typeof(self) wSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [wSelf refreshContentOffset:wSelf.tableView.contentOffset];
+    });
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.viewModel.contactViewModel refreshMessageDot];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self refreshContentOffset:self.tableView.contentOffset];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -221,7 +239,7 @@
         make.left.right.mas_equalTo(self.view);
         make.height.mas_equalTo(64);
         if (@available(iOS 11.0, *)) {
-            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom);
+            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
         }else {
             make.bottom.mas_equalTo(self.view);
         }

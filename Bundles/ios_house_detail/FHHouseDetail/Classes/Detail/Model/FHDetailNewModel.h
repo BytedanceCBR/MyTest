@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeLng;
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *houseId;
+@property (nonatomic, copy , nullable) NSString *houseType;
 
 @end
 
@@ -126,6 +128,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, copy , nullable) NSString *userStatus;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataFloorpanListListModel> *list;
+@property (nonatomic, copy , nullable) NSString *courtId;
+
 @end
 
 @interface FHDetailNewDataCoreInfoSaleStatusModel : JSONModel
@@ -200,6 +204,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNewDataTimelineListModel> *list;
 
+@end
+
+@interface FHDetailFloorPanListResponseModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) FHDetailNewDataFloorpanListModel *data ;
 @end
 
 @interface FHDetailNewTimeLineResponseModel : JSONModel

@@ -70,11 +70,11 @@ static const float kSegementedPadingTop = 5;
     
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:14],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#a1aab3"],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontMedium:14],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#ff5869"],NSForegroundColorAttributeName,nil];
+                                      [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(5, 15, 0, 0);

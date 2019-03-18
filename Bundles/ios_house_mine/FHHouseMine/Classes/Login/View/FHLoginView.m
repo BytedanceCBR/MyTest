@@ -103,7 +103,7 @@
     self.agreementLabel = [[YYLabel alloc] init];
     _agreementLabel.numberOfLines = 0;
     _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _agreementLabel.textColor = [UIColor themeGray1];
+    _agreementLabel.textColor = [UIColor themeGray3];
     _agreementLabel.font = [UIFont themeFontRegular:13];
     [self addSubview:_agreementLabel];
 }
@@ -223,7 +223,7 @@
 - (NSDictionary *)commonTextStyle {
     return @{
              NSFontAttributeName : [UIFont themeFontRegular:13],
-             NSForegroundColorAttributeName : [UIColor themeGray1],
+             NSForegroundColorAttributeName : [UIColor themeGray3],
              };
 }
 

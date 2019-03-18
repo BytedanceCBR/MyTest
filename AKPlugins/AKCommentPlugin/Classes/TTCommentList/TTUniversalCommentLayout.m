@@ -92,7 +92,7 @@
 }
 
 + (UIColor *)contentLabelTextColor {
-    return SSGetThemedColorWithKey(kColorText1);
+    return SSGetThemedColorWithKey(kFHColorCharcoalGrey);
 }
 
 + (NSParagraphStyle *)contentLabelParagraphStyle {

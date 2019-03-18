@@ -59,9 +59,11 @@
             itemView.tag = idx;
             itemView.licenceIcon.tag = idx;
             itemView.callBtn.tag = idx;
+            itemView.imBtn.tag = idx;
             [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.licenceIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
             
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -137,6 +139,16 @@
         [model.phoneCallViewModel callWithPhone:contact.phone realtorId:contact.realtorId searchId:model.searchId imprId:model.imprId extraDict:extraDict];
         // 静默关注功能
         [model.phoneCallViewModel.followUpViewModel silentFollowHouseByFollowId:model.houseId houseType:model.houseType actionType:model.houseType showTip:NO];
+    }
+}
+
+// 点击会话
+- (void)imclick:(UIControl *)control {
+    NSInteger index = control.tag;
+    FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
+    if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
+        FHDetailContactModel *contact = model.recommendedRealtors[index];
+        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] position:@"detail_related"];
     }
 }
 
@@ -242,6 +254,16 @@
             tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
             tracerDic[@"realtor_rank"] = @(i);
             tracerDic[@"realtor_position"] = @"detail_related";
+            if (contact.phone.length < 1) {
+                [tracerDic setValue:@"0" forKey:@"phone_show"];
+            } else {
+                [tracerDic setValue:@"1" forKey:@"phone_show"];
+            }
+            if (![@"" isEqualToString:contact.imOpenUrl] && contact.imOpenUrl != nil) {
+                [tracerDic setValue:@"1" forKey:@"im_show"];
+            } else {
+                [tracerDic setValue:@"0" forKey:@"im_show"];
+            }
             // 移除字段
             [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
             [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
@@ -277,7 +299,7 @@
 }
 
 - (void)setupUI {
-    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default-avatar-icons"]];
+    _avator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_default_avatar"]];
     _avator.layer.cornerRadius = 23;
     _avator.contentMode = UIViewContentModeScaleAspectFill;
     _avator.clipsToBounds = YES;
@@ -288,8 +310,16 @@
     [self addSubview:_licenceIcon];
     
     _callBtn = [[FHExtendHotAreaButton alloc] init];
-    [_callBtn setImage:[UIImage imageNamed:@"icon-phone"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal"] forState:UIControlStateNormal];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateSelected];
+    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press"] forState:UIControlStateHighlighted];
     [self addSubview:_callBtn];
+    
+    _imBtn = [[FHExtendHotAreaButton alloc] init];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal"] forState:UIControlStateNormal];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateSelected];
+    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press"] forState:UIControlStateHighlighted];
+    [self addSubview:_imBtn];
     
     self.name = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _name.textColor = [UIColor themeGray1];
@@ -298,7 +328,7 @@
     [self addSubview:_name];
     
     self.agency = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _name.textColor = [UIColor themeGray3];
+    _agency.textColor = [UIColor themeGray3];
     _agency.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_agency];
     
@@ -317,17 +347,22 @@
         make.top.mas_equalTo(self.name.mas_bottom);
         make.height.mas_equalTo(20);
         make.left.mas_equalTo(self.avator.mas_right).offset(14);
-        make.right.mas_lessThanOrEqualTo(self.callBtn.mas_left);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.name.mas_right).offset(4);
         make.width.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.name);
-        make.right.mas_lessThanOrEqualTo(self.callBtn.mas_left).offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(40);
         make.right.mas_equalTo(-20);
+        make.centerY.mas_equalTo(self.avator);
+    }];
+    [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(40);
+        make.right.mas_equalTo(self.callBtn.mas_left).offset(-20);
         make.centerY.mas_equalTo(self.avator);
     }];
 }

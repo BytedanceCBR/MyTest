@@ -22,7 +22,7 @@
 #import <FHEnvContext.h>
 #import "UIViewController+Track.h"
 #import <FHEnvContext.h>
-
+#import <HMDTTMonitor.h>
 #import "FHMyMAAnnotation.h"
 
 static NSInteger const kBottomBarTagValue = 100;
@@ -230,7 +230,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
             self.previouseLabel = buttonLabel;
         }else
         {
-            buttonLabel.textColor = [UIColor themeGray1];
+            buttonLabel.textColor = [UIColor themeGray3];
         }
         buttonLabel.tag = i + kBottomButtonLabelTagValue;
         [buttonLabel setFrame:CGRectMake(0, 30, itemWidth, 13)];

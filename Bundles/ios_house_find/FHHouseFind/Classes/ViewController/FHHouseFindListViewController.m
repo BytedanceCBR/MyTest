@@ -154,7 +154,6 @@
     _segmentView = [[HMSegmentedControl alloc]initWithFrame:CGRectZero];
     _segmentView.sectionTitles = @[@"",@"",@"",@""];
     _segmentView.selectionIndicatorHeight = 0;
-    _segmentView.selectionIndicatorColor = [UIColor colorWithHexString:@"#f85959"];
     _segmentView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentView.isNeedNetworkCheck = NO;

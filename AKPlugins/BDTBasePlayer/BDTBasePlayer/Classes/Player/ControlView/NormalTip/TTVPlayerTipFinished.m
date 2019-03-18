@@ -97,7 +97,7 @@ static const CGFloat KMoreButtonCenterY = 22;
         _bannerHeight = 0;
         //背景view
         _backView = [[UIView alloc] initWithFrame:self.bounds];
-        _backView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
+        _backView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.9];
         [self addSubview:_backView];
 
         _containerView = [[UIView alloc] initWithFrame:_backView.bounds];

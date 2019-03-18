@@ -141,6 +141,18 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *priceChangeDesc;
 @end
 
+
+@protocol FHDetailDataListEntranceItemModel<NSObject>
+@end
+
+@interface FHDetailDataListEntranceItemModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *icon;
+@property (nonatomic, copy , nullable) NSString *listName;
+@property (nonatomic, copy , nullable) NSString *entranceUrl;
+@end
+
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -170,6 +182,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
 @property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataListEntranceItemModel> *listEntrance;
+
 @end
 
 @interface FHDetailOldModel : JSONModel

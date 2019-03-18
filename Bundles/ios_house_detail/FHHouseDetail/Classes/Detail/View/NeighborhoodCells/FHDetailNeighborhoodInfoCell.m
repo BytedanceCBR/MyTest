@@ -156,7 +156,7 @@
     [self.contentView addSubview:_nameKey];
     [self.nameKey mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(20);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(-51);// 一定有区域名称
     }];

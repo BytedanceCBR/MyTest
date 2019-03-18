@@ -224,19 +224,19 @@
     _keyLabel.textColor = [UIColor themeGray1];
     [self addSubview:_keyLabel];
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _valueLabel.textColor = [UIColor themeGray2];
+    _valueLabel.textColor = [UIColor themeGray3];
     _valueLabel.numberOfLines = 0;
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     [self addSubview:_valueLabel];
     
     [self.iconImg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.width.mas_equalTo(10);
-        make.height.mas_equalTo(8);
+        make.width.mas_equalTo(12);
+        make.height.mas_equalTo(12);
         make.centerY.mas_equalTo(self.keyLabel);
     }];
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.iconImg.mas_right).offset(4);
+        make.left.mas_equalTo(self.iconImg.mas_right).offset(2);
         make.top.mas_equalTo(4);
         make.height.mas_equalTo(26);
         make.right.mas_equalTo(self).offset(-20);

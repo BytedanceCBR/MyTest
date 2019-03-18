@@ -17,7 +17,6 @@
 //#import "TTShareToRepostManager.h"
 #import "TTActivityShareSequenceManager.h"
 #import <TTKitchen/TTKitchenHeader.h>
-//#import "TTKitchenHeader.h"
 #import "TTWebImageManager.h"
 #import "TTShareConstants.h"
 
@@ -510,7 +509,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [shareView addSubview:iconView];
             
             UIImageView *lineView = [[UIImageView alloc] initWithFrame:CGRectMake(0, shareView.bounds.size.height - 101, shareView.bounds.size.width, 1)];
-            lineView.backgroundColor = [UIColor colorWithHexString:@"d8d8d8"];
+            lineView.backgroundColor = [UIColor colorWithHexString:@"e8e8e8"];
             [shareView addSubview:lineView];
             
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(73, shareView.bounds.size.height - 73, shareView.bounds.size.width - 73 - 64 - 15, 25)];

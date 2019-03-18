@@ -357,6 +357,10 @@
         [self updateOriginPriceLabelConstraints:nil];
         [self updateLayoutComponents:self.areaLabel.attributedText.string.length > 0];
         [self refreshTopMargin:10];
+        
+        if (model.isLast) {
+          [self refreshBottomMargin:20];
+        }
     }
 }
 
@@ -435,7 +439,7 @@
         
         _extendTitle = [[UILabel alloc]init];
         _extendTitle.font = [UIFont themeFontRegular:12];
-        _extendTitle.textColor = [UIColor themeGray2];
+        _extendTitle.textColor = [UIColor themeGray3];
     }
     return _extendTitle;
 }
@@ -447,7 +451,7 @@
         _areaLabel = [[YYLabel alloc]init];
         _areaLabel.numberOfLines = 0;
         _areaLabel.font = [UIFont themeFontRegular:12];
-        _areaLabel.textColor = [UIColor themeGray2];
+        _areaLabel.textColor = [UIColor themeGray3];
         _areaLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _areaLabel;

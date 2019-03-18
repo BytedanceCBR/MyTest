@@ -89,11 +89,6 @@
         make.left.right.bottom.equalTo(self);
         make.height.mas_equalTo(0.5);
     }];
-    
-    //    self.title.text = "位置及周边"
-    //    re.rightBtn.setTitle("导航", for: .normal)
-    //    re.rightBtn.setTitleColor(hexStringToUIColor(hex: "#299cff"), for: .normal)
-    //    re.rightBtn.isSelected = false
 }
 
 - (void)backBtnClick

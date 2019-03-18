@@ -452,7 +452,7 @@ static const CGFloat KLabelInfoHeight = 20;
         for (NSString * tag in tags) {
             NSRange range = [title rangeOfString:tag];
             if (range.location != NSNotFound) {
-                [attrTitle addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(kFHColorDarkIndigo) range:range];
+                [attrTitle addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(kFHColorCharcoalGrey) range:range];
             }
         }
         return attrTitle;

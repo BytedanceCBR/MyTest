@@ -18,6 +18,7 @@
 @property (nonatomic , strong) UITableView *floorListTable;
 @property (nonatomic , strong) FHFloorPanListViewModel *panListModel;
 @property (nonatomic , strong) NSMutableArray<FHDetailNewDataFloorpanListListModel *> *floorList;
+@property (nonatomic , strong) NSString *courtId;
 @end
 
 @implementation FHFloorPanListViewController
@@ -31,6 +32,10 @@
             _floorList = (NSMutableArray<FHDetailNewDataFloorpanListListModel *> *)floorList;
         }
         
+        if (paramObj.userInfo.allInfo[@"court_id"]) {
+            _courtId = paramObj.userInfo.allInfo[@"court_id"];
+        }
+        
     }
     return self;
 }
@@ -38,39 +43,49 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    
     [self setUpSegmentedControl];
     
     [self setUpLeftView];
     
     [self setUpFloorListTable];
     
-    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList];
+    _panListModel = [[FHFloorPanListViewModel alloc] initWithController:self tableView:self.floorListTable houseType:0 andLeftScrollView:self.leftFilterView andSegementView:self.segmentedControl andItems:_floorList andCourtId:_courtId];
     
     [self setNavBarTitle:@"楼盘户型"];
     
     [(FHDetailNavBar *)[self getNaviBar] removeBottomLine];
 
+    
+    [self addDefaultEmptyViewFullScreen];
+
+    if (![TTReachability isNetworkConnected]) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+        [self.view bringSubviewToFront:[self getNaviBar]];
+        return;
+    }
+    
+    [self.view bringSubviewToFront:[self getNaviBar]];
     // Do any additional setup after loading the view.
 }
 
 - (void)setUpSegmentedControl
 {
-    
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 15);
     _segmentedControl.selectionIndicatorHeight = 2;
-    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexString:@"#299cff"];
+    _segmentedControl.selectionIndicatorColor = [UIColor themeRed1];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     //    _segmentedControl.selec
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#8a9299"],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontMedium:16],NSFontAttributeName,
-                                     [UIColor colorWithHexString:@"#299cff"],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeRed1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 15, 0, 30);
@@ -87,7 +102,7 @@
     }];
     
     _segementBottomLine = [UIView new];
-    _segementBottomLine.backgroundColor = [UIColor colorWithHexString:@"#f0f0f0"];
+    _segementBottomLine.backgroundColor = [UIColor themeGray6];
     [_segmentedControl addSubview:_segementBottomLine];
     [_segementBottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(_segmentedControl);
@@ -101,7 +116,7 @@
 - (void)setUpLeftView
 {
     _leftView = [UIView new];
-    _leftView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _leftView.backgroundColor = [UIColor themeGray7];
     [self.view addSubview:_leftView];
     
     [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -112,7 +127,7 @@
     }];
     
     _leftFilterView = [UIScrollView new];
-    _leftFilterView.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
+    _leftFilterView.backgroundColor = [UIColor themeGray7];
     [_leftView addSubview:_leftFilterView];
     
     [_leftFilterView mas_makeConstraints:^(MASConstraintMaker *make) {

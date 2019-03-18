@@ -159,10 +159,11 @@
 
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
-    
-    if ([self.currentData isKindOfClass:[FHDetailNewDataFloorpanListModel class]]) {
+    FHDetailNewDataFloorpanListModel *model = (FHDetailNewDataFloorpanListModel *)self.currentData;
+
+    if ([model isKindOfClass:[FHDetailNewDataFloorpanListModel class]] && model.hasMore) {
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
-        [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"floorlist"];
+        [infoDict setValue:((FHDetailNewDataFloorpanListModel *)self.currentData).list forKey:@"court_id"];
         [infoDict addEntriesFromDictionary:[self.baseViewModel subPageParams]];
         infoDict[@"house_type"] = @(1);
         TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
@@ -256,7 +257,7 @@
             NSMutableAttributedString *tagStr = [[NSMutableAttributedString alloc] initWithString:model.saleStatus.content ? [NSString stringWithFormat:@" %@ ",model.saleStatus.content]: @""];
                 NSDictionary *attributeTag = [NSDictionary dictionaryWithObjectsAndKeys:
                                                  [UIFont themeFontRegular:10],NSFontAttributeName,
-                                                 model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray2],NSBackgroundColorAttributeName,nil];
+                                                 model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.textColor] : [UIColor whiteColor],NSForegroundColorAttributeName,model.saleStatus.textColor ? [UIColor colorWithHexString:model.saleStatus.backgroundColor] : [UIColor themeGray3],NSBackgroundColorAttributeName,nil];
        
             [tagStr addAttributes:attributeTag range:NSMakeRange(0, tagStr.length)];
           
@@ -280,21 +281,24 @@
     _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
     [self addSubview:_icon];
     
-    _descLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
+    _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _descLabel.textColor = [UIColor themeGray1];
     [self addSubview:_descLabel];
     
     
-    _statusLabel = [UILabel createLabel:@"" textColor:@"#081f33" fontSize:16];
+    _statusLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _statusLabel.textColor = [UIColor themeGray1];
     _statusLabel.layer.masksToBounds = YES;
     _statusLabel.layer.cornerRadius = 2;
     [self addSubview:_statusLabel];
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"#f85959" fontSize:16];
+    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _priceLabel.textColor = [UIColor themeRed1];
     _priceLabel.font = [UIFont themeFontMedium:16];
     [self addSubview:_priceLabel];
     
-    _spaceLabel = [UILabel createLabel:@"" textColor:@"#ffffff" fontSize:12];
-    _spaceLabel.textColor = [UIColor themeGray2];
+    _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _spaceLabel.textColor = [UIColor themeGray3];
     [self addSubview:_spaceLabel];
     
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {

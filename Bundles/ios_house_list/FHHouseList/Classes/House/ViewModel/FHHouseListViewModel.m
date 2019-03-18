@@ -34,6 +34,8 @@
 #import "FHHouseBridgeManager.h"
 #import "FHCityListViewModel.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
+#import "HMDTTMonitor.h"
+#import "TTInstallIDManager.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -141,8 +143,7 @@
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
             // 进历史
             if (isSuccess) {
-                FHCityListViewModel *cityListViewModel = [[FHCityListViewModel alloc] initWithController:nil tableView:nil];
-                [cityListViewModel switchCityByOpenUrlSuccess];
+                [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
             }
         }];
         NSDictionary *params = @{@"click_type":@"switch",
@@ -471,6 +472,21 @@
             redirectTips = houseModel.redirectTips;
 
         }
+        // 二手房、租房应该有 houseListOpenUrl
+        if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+            if (self.houseListOpenUrl.length <= 0) {
+                NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
+                // device_id
+                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+                if (did.length == 0) {
+                    did = @"null";
+                }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
+                                                        metric:nil
+                                                      category:@{@"status":@(0),@"house_type":res}
+                                                         extra:@{@"device_id":did}];
+            }
+        }
         
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
@@ -519,8 +535,16 @@
         }];
         
         [self.tableView reloadData];
+        
+        
         [self updateTableViewWithMoreData:hasMore];
         
+        if (self.houseType != FHHouseTypeSecondHandHouse) {
+            if (!hasMore && self.houseList.count < 10) {
+                self.refreshFooter.hidden = YES;
+            }
+        }
+
         if (self.isRefresh && self.viewModelDelegate && itemArray.count > 0) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
@@ -578,6 +602,7 @@
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
         [self.tableView.mj_footer endRefreshing];
@@ -896,7 +921,7 @@
                 CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                return (isLastCell ? 125 : 105)+reasonHeight;
+                return (isLastCell ? 125 : 106)+reasonHeight;
 //                if (indexPath.row < self.houseList.count) {
 //
 //                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -914,7 +939,9 @@
 //                }
             } else {
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
-                return isLastCell ? 125 : 105;
+                FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+                return (isLastCell ? 125 : 106)+reasonHeight;
 
 //                if (indexPath.row < self.sugesstHouseList.count) {
 //
@@ -1217,6 +1244,24 @@
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    // enter_query 判空
+    NSString *enter_query = params[@"enter_query"];
+    if (enter_query && [enter_query isKindOfClass:[NSString class]]) {
+        if (enter_query.length <= 0) {
+            params[@"enter_query"] = @"be_null";
+        }
+    } else {
+         params[@"enter_query"] = @"be_null";
+    }
+    // search_query 判空
+    NSString *search_query = params[@"search_query"];
+    if (search_query && [search_query isKindOfClass:[NSString class]]) {
+        if (search_query.length <= 0) {
+            params[@"search_query"] = @"be_null";
+        }
+    } else {
+         params[@"search_query"] = @"be_null";
+    }
     TRACK_EVENT(@"house_search",params);
     self.canChangeHouseSearchDic = YES;
 }

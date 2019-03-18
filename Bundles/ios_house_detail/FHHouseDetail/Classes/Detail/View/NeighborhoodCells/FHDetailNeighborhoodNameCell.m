@@ -18,6 +18,7 @@
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
+#import <HMDTTMonitor.h>
 
 @interface FHDetailNeighborhoodNameCell ()
 
@@ -100,12 +101,12 @@
     _priceLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_priceLabel];
     
-    _monthUp = [UILabel createLabel:@"环比上月" textColor:@"#a1aab3" fontSize:11];
+    _monthUp = [UILabel createLabel:@"环比上月" textColor:@"" fontSize:11];
     _monthUp.textColor = [UIColor themeGray3];
     _monthUp.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_monthUp];
     
-    _monthUpLabel = [UILabel createLabel:@"" textColor:@"#a1aab3" fontSize:11];
+    _monthUpLabel = [UILabel createLabel:@"" textColor:@"" fontSize:11];
     _monthUpLabel.textColor = [UIColor themeGray3];
     _monthUpLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_monthUpLabel];
@@ -175,6 +176,16 @@
         [infoDict setValue:@(lat) forKey:@"latitude"];
         [infoDict setValue:@(lng) forKey:@"longitude"];
         [infoDict setValue:model.neighborhoodInfo.name forKey:@"title"];
+        
+        if (!lng || !lat) {
+            NSMutableDictionary *params = [NSMutableDictionary new];
+            [params setValue:@"用户点击详情页地图进入地图页失败" forKey:@"desc"];
+            [params setValue:@"经纬度缺失" forKey:@"reason"];
+            [params setValue:model.neighborhoodInfo.id forKey:@"house_id"];
+            [params setValue:@(4) forKey:@"house_type"];
+            [params setValue:model.name forKey:@"name"];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"detail_map_location_failed" attributes:params];
+        }
 
         NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.baseViewModel.detailTracerDic];
         [tracer setValue:@"address" forKey:@"click_type"];

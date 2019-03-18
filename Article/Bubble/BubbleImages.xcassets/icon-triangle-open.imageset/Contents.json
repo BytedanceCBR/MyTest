@@ -6,12 +6,12 @@
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-triangle-open@2x.png",
+      "filename" : "ic-home-searchbar-dropdown@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-triangle-open@3x.png",
+      "filename" : "ic-home-searchbar-dropdown@3x.png",
       "scale" : "3x"
     }
   ],

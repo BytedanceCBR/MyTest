@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy)void(^bottomBarContactBlock)(void);
 @property(nonatomic, copy)void(^bottomBarRealtorBlock)(void);
 @property(nonatomic, copy)void(^bottomBarLicenseBlock)(void);
+@property(nonatomic, copy)void(^bottomBarImBlock)(void);
 
 - (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle;
 - (void)startLoading;

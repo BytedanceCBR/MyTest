@@ -129,7 +129,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *appBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *key = [[NSBundle mainBundle] objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@%@",appVersion,appBuild]];
+    NSString *key = [NSString stringWithFormat:@"%@%@",appVersion,appBuild];
     NSNumber * currentStatus = [defaults objectForKey:[NSString stringWithFormat:@"APP_LAUNCHED%@", key]];
     return [currentStatus intValue] == 1 ? NO : YES;
 
@@ -139,7 +139,7 @@
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSString *appBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *key = [[NSBundle mainBundle] objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@%@",appVersion,appBuild]];
+    NSString *key = [NSString stringWithFormat:@"%@%@",appVersion,appBuild];
     [defaults setObject:[NSNumber numberWithInt:1] forKey:[NSString stringWithFormat:@"APP_LAUNCHED%@", key]];
     [defaults synchronize];
 }

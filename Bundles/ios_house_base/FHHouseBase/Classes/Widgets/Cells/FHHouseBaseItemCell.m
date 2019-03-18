@@ -17,18 +17,18 @@
 #import "FHCommonDefines.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHHomeHouseModel.h"
-#import "FHHomeHouseModel.h"
 #import "FHHouseRecommendReasonView.h"
 
-#define MAIN_NORMAL_TOP 10
-#define MAIN_FIRST_TOP 20
-#define MAIN_IMG_WIDTH  114
-#define MAIN_IMG_HEIGHT 85
-#define MAIN_TAG_BG_WIDTH 48
-#define MAIN_TAG_BG_HEIGHT 16
-#define MAIN_TAG_WIDTH    40
-#define MAIN_TAG_HEIGHT   10
+#define MAIN_NORMAL_TOP     10
+#define MAIN_FIRST_TOP      20
+#define MAIN_IMG_WIDTH      114
+#define MAIN_IMG_HEIGHT     85
+#define MAIN_TAG_BG_WIDTH   48
+#define MAIN_TAG_BG_HEIGHT  16
+#define MAIN_TAG_WIDTH      40
+#define MAIN_TAG_HEIGHT     10
 #define INFO_TO_ICON_MARGIN 12
+#define PRICE_BG_TOP_MARGIN 7
 
 @interface FHHouseBaseItemCell ()
 
@@ -50,11 +50,11 @@
 
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 
-@property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView;
+@property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
-@property(nonatomic, assign) CGFloat topMargin;
-@property(nonatomic, assign) CGFloat bottomMargin;
-@property(nonatomic, assign) BOOL lastShowTag;
+//@property(nonatomic, assign) CGFloat topMargin;
+//@property(nonatomic, assign) CGFloat bottomMargin;
+//@property(nonatomic, assign) BOOL lastShowTag;
 
 @end
 
@@ -206,7 +206,7 @@
 
 -(CGFloat)contentMaxWidth
 {
-    return  SCREEN_WIDTH - 170;
+    return  SCREEN_WIDTH - 170; //根据UI图 直接计算出来
 }
 
 -(void)initUI
@@ -299,7 +299,7 @@
     
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(5);
+        layout.marginTop = YGPointValue(6);
         layout.marginLeft = YGPointValue(-3);
         layout.height = YGPointValue(15);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
@@ -317,33 +317,36 @@
         layout.flexDirection = YGFlexDirectionRow;
         layout.width = YGPercentValue(100);
         layout.height = YGPointValue(20);
-        layout.marginTop = YGPointValue(5);
-        layout.alignItems = YGAlignCenter;
+        layout.marginTop = YGPointValue(7);
+        layout.alignItems = YGAlignFlexEnd;
     }];
     
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.height = YGPointValue(20);
+//        layout.height = YGPointValue(20);
         layout.maxWidth = YGPointValue(130);
-        layout.alignSelf = YGAlignFlexEnd;
+//        layout.alignSelf = YGAlignFlexEnd;
+        layout.marginBottom = YGPointValue(-1);
     }];
     
     [_originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(6);
         layout.isIncludedInLayout = NO;
+        layout.marginBottom = YGPointValue(0);
     }];
     
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(10);
+        layout.marginBottom = YGPointValue(0);
     }];
     
     
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isIncludedInLayout = NO;
-        layout.marginTop = YGPointValue(2);
+        layout.marginTop = YGPointValue(4);
         layout.height = YGPointValue(16);
     }];
     _recReasonView.hidden = YES;
@@ -654,9 +657,9 @@
     
     [self.priceLabel.yoga markDirty];
     
-    if (self.priceBgView.yoga.marginTop.value != (showTags?5:0)) {
+    if (self.priceBgView.yoga.marginTop.value != (showTags?PRICE_BG_TOP_MARGIN:0)) {
         [self.priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.marginTop = YGPointValue(showTags?5:0);
+            layout.marginTop = YGPointValue(showTags?PRICE_BG_TOP_MARGIN:0);
         }];
         [self.priceBgView.yoga markDirty];
     }

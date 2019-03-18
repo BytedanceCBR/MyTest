@@ -315,11 +315,6 @@
 
 - (void)setIsDataEnabled:(BOOL)isDataEnabled {
     _isDataEnabled = isDataEnabled;
-//    if (isDataEnabled) {
-//        self.keyLabel.textColor = [UIColor colorWithHexString:@"#517b9f"];
-//    } else {
-//        self.keyLabel.textColor = [UIColor colorWithHexString:@"#a1aab3"];
-//    }
 }
 
 @end

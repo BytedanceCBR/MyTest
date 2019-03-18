@@ -17,6 +17,8 @@
 
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
+@property (nonatomic, strong)   NSHashTable               *weakedCellTable;
+@property (nonatomic, assign)   CGPoint       lastPointOffset;
 
 @end
 
@@ -50,6 +52,8 @@
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];
         _elementShowCaches = [NSMutableDictionary new];
+        _lastPointOffset = CGPointZero;
+        _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
@@ -152,6 +156,9 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    if ([cell conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)] && ![self.weakedCellTable containsObject:cell]) {
+        [self.weakedCellTable addObject:cell];
+    }
     // 添加element_show埋点
     if (!self.elementShowCaches[tempKey]) {
         self.elementShowCaches[tempKey] = @(YES);
@@ -195,14 +202,22 @@
         return;
     }
     // 解决类似周边房源列表页的house_show问题
-    NSArray *visableCells = [self.tableView visibleCells];
-    [visableCells enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
-            if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
-                [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
-            }
+    CGPoint offset = scrollView.contentOffset;
+    if (offset.y > self.lastPointOffset.y) {
+        // 向上滑动
+        if (self.weakedCellTable.count > 0) {
+            NSArray *arr = self.weakedCellTable.allObjects;
+            [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+                    if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
+                        [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
+                    }
+                }
+            }];
         }
-    }];
+    }
+    self.lastPointOffset = offset;
+    
     [self.detailController refreshContentOffset:scrollView.contentOffset];
 }
 
@@ -278,5 +293,53 @@
     
 }
 
+- (BOOL)isMissTitle
+{
+    return NO;
+}
+- (BOOL)isMissImage
+{
+    return NO;
+}
+- (BOOL)isMissCoreInfo
+{
+    return NO;
+}
+
+// excetionLog
+- (void)addDetailCoreInfoExcetionLog
+{
+    //    detail_core_info_error
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    NSInteger status = 0;
+    if ([self isMissTitle]) {
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeTitle;
+    }
+    if ([self isMissImage]) {
+        attr[@"image"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeImage;
+    }
+    if ([self isMissCoreInfo]) {
+        attr[@"core_info"] = @(1);
+        attr[@"house_id"] = self.houseId;
+        status |= FHDetailCoreInfoErrorTypeCoreInfo;
+    }
+    attr[@"house_type"] = @(self.houseType);
+    if (status != 0) {
+        [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_core_info_error" status:status extra:attr];
+    }
+    
+}
+
+- (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message
+{
+    NSMutableDictionary *attr = @{}.mutableCopy;
+    attr[@"message"] = message;
+    attr[@"house_type"] = @(self.houseType);
+    attr[@"house_id"] = self.houseId;
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_failed" status:status extra:attr];
+}
 
 @end

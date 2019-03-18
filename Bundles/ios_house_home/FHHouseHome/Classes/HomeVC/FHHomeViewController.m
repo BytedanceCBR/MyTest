@@ -17,6 +17,7 @@
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHLocManager.h"
+#import <HMDTTMonitor.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -86,6 +87,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    
 }
 
 
@@ -121,6 +124,11 @@ static CGFloat const kSectionHeaderHeight = 38;
         
     });
     
+}
+
+- (void)hideImmediately
+{
+    [self.notifyBar hideImmediately];
 }
          
 - (void)retryLoadData
@@ -165,9 +173,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 }
 
 - (void)willAppear
-{
-    [FHLocManager sharedInstance].isShowHomeViewController = YES;
-    
+{    
     if (![FHEnvContext isNetworkConnected]) {
         if (self.homeListViewModel.hasShowedData) {
             [[ToastManager manager] showToast:@"网络异常"];
@@ -214,7 +220,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)willDisappear
 {
-    [FHLocManager sharedInstance].isShowHomeViewController = NO;
+    
 }
 
 

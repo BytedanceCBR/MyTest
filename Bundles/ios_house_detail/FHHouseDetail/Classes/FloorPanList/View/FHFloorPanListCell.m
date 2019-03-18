@@ -59,7 +59,7 @@
 
         _roomSpaceLabel = [UILabel new];
         _roomSpaceLabel.font = [UIFont themeFontRegular:12];
-        _roomSpaceLabel.textColor = [UIColor themeGray2];
+        _roomSpaceLabel.textColor = [UIColor themeGray3];
         _roomSpaceLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_roomSpaceLabel];
@@ -74,7 +74,7 @@
 
         _priceLabel = [UILabel new];
         _priceLabel.font = [UIFont themeFontMedium:14];
-        _priceLabel.textColor = [UIColor colorWithHexString:@"#f85959"];
+        _priceLabel.textColor = [UIColor themeRed1];
         _priceLabel.textAlignment = NSTextAlignmentLeft;
 
         [self.contentView addSubview:_priceLabel];

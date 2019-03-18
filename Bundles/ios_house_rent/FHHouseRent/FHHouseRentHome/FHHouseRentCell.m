@@ -157,7 +157,7 @@
 
     self.extendTitle = [[UILabel alloc] init];
     _extendTitle.font = [UIFont themeFontRegular:12];
-    _extendTitle.textColor = [UIColor themeGray2];
+    _extendTitle.textColor = [UIColor themeGray3];
     [_infoContainerView addSubview:_extendTitle];
     [_extendTitle mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.infoContainerView);

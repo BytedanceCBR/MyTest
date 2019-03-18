@@ -136,9 +136,9 @@
         case TTDiggButtonStyleTypeCommentOnly: {
             self.imageName = @"comment_like_icon";
             self.selectedImageName = @"comment_like_icon_press";
-            self.tintColorThemeKey = @"979FAC";
+            self.tintColorThemeKey = kFHColorCoolGrey3;
             self.selectedTintColorThemeKey = kFHColorCoral;
-            self.titleColorThemeKey = @"979FAC";
+            self.titleColorThemeKey = kFHColorCoolGrey3;
             self.imageEdgeInsets = UIEdgeInsetsMake(-1, 0, 1, 5);
 //            [self setTitleEdgeInsets:UIEdgeInsetsMake(1, 6, 0, 0)];
 

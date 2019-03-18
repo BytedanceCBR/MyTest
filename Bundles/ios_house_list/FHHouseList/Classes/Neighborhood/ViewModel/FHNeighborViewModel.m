@@ -62,6 +62,7 @@
     self.tableView.mj_footer.hidden = NO;
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
+//        self.tableView.mj_footer
         [self.tableView.mj_footer endRefreshingWithNoMoreData];
     }else {
          [self.tableView.mj_footer endRefreshing];
@@ -274,7 +275,9 @@
             }];
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
+    
         } else {
+            self.lastHasMore = hasMore;
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
         }
         // enter category
@@ -285,9 +288,15 @@
         if (self.firstRequestData && self.houseList.count > 0) {
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
+        
+        if (!hasMore && self.houseList.count < 10) {
+            self.tableView.mj_footer.hidden = YES;
+        }
+        
     } else {
         [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
     }
+
 }
 
 #pragma mark - Request

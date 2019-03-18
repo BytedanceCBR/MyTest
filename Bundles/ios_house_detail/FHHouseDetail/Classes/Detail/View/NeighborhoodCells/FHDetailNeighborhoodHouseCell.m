@@ -539,9 +539,11 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FHSearchHouseDataItemsModel *item = self.rentItems[indexPath.row];
-    if ([item isKindOfClass:[FHSearchHouseDataItemsModel class]] && [item showRecommendReason]) {
-        return 108+[FHSingleImageInfoCell recommendReasonHeight];
+    if (self.leftTableView == tableView) {
+        FHSearchHouseDataItemsModel *item = self.ershouItems[indexPath.row];
+        if ([item isKindOfClass:[FHSearchHouseDataItemsModel class]] && [item showRecommendReason]) {
+            return 108+[FHSingleImageInfoCell recommendReasonHeight];
+        }
     }
     return 108;
 }
@@ -585,7 +587,7 @@
     }
 }
 
-// 添加house_show 埋点：这种方式效率不高，后续可以考虑优化
+// 添加house_show 埋点
 - (void)addHouseShowByIndex:(NSInteger)index {
     FHDetailNeighborhoodHouseModel *model = (FHDetailNeighborhoodHouseModel *)self.currentData;
     if (model.currentSelIndex == 0) {

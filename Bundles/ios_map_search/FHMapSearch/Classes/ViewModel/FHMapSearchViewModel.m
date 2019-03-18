@@ -25,6 +25,7 @@
 #import "FHMapSearchBubbleModel.h"
 #import "UIColor+Theme.h"
 #import "FHHouseRentModel.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 #define kTipDuration 3
 
@@ -179,6 +180,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         if (center.latitude > 0 && center.longitude > 0) {
             [_mapView setCenterCoordinate:center animated:NO];
+        }else{
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"map_location_failed" attributes:@{@"longitude":@(center.longitude),@"latitude":@(center.latitude)}];
         }
         
 //        MAUserLocationRepresentation *r = [[MAUserLocationRepresentation alloc] init];
@@ -211,9 +214,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     MAUserLocationRepresentation *r = [[MAUserLocationRepresentation alloc] init];
     r.showsHeadingIndicator = NO;///是否显示方向指示(MAUserTrackingModeFollowWithHeading模式开启)。默认为YES
-    r.fillColor = RGBA(0x29, 0x9c, 0xff, 0.3);///精度圈 填充颜色, 默认 kAccuracyCircleDefaultColor
-    r.strokeColor = r.fillColor;
-    r.lineWidth = 1;///精度圈 边线宽度，默认0
+    r.fillColor = [[UIColor themeRed1] colorWithAlphaComponent:0.3];///精度圈 填充颜色, 默认 kAccuracyCircleDefaultColor
+//    r.strokeColor = r.fillColor;
+//    r.lineWidth = 1;///精度圈 边线宽度，默认0
     r.locationDotBgColor = [UIColor clearColor];///定位点背景色，不设置默认白色
     r.locationDotFillColor = [UIColor themeRed1];///定位点蓝色圆点颜色，不设置默认蓝色
     UIImage *image = [UIImage imageNamed:@"mapsearch_location_center"];
@@ -504,6 +507,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             if (error.code != NSURLErrorCancelled) {
                 //请求取消
                 [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
             }
             return;
         }
@@ -894,9 +898,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         
         MACircleRenderer *accuracyCircleRenderer = [[MACircleRenderer alloc] initWithCircle:overlay];
         
-        accuracyCircleRenderer.lineWidth    = 1.f;
-        accuracyCircleRenderer.strokeColor  = RGB(41, 156 ,255 );
-        accuracyCircleRenderer.fillColor    = RGBA(41, 156 ,255 , 0.3);
+//        accuracyCircleRenderer.lineWidth    = 1.f;
+//        accuracyCircleRenderer.strokeColor  = RGB(41, 156 ,255 );
+        accuracyCircleRenderer.fillColor    = [[UIColor themeRed1] colorWithAlphaComponent:0.3];
         
         return accuracyCircleRenderer;
     }
@@ -906,6 +910,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)mapInitComplete:(MAMapView *)mapView
 {
     [self requestHouses:NO showTip:YES];
+}
+
+- (void)mapViewDidFailLoadingMap:(MAMapView *)mapView withError:(NSError *)error
+{
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"map_load_failed" attributes:@{@"desc":error.localizedDescription?:@"",@"reason":error.localizedFailureReason?:@""}];
 }
 
 -(BOOL)shouldRequest:(CLLocationCoordinate2D )currentCenter

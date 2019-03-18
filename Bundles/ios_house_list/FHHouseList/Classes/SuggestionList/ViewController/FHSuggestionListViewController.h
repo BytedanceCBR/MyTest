@@ -17,6 +17,7 @@ typedef enum : NSUInteger {
     FHEnterSuggestionTypeFindTab       =   2,
     FHEnterSuggestionTypeList       =   3,
     FHEnterSuggestionTypeRenting       =   4,
+    FHEnterSuggestionTypeOldMain       =   5,//
 } FHEnterSuggestionType;
 
 NS_ASSUME_NONNULL_BEGIN

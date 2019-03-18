@@ -52,12 +52,16 @@
 
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
+    FHDetailNewHouseNewsCellModel *model = (FHDetailNewHouseNewsCellModel *)self.currentData;
 
-    NSString *courtId = ((FHDetailNewHouseNewsCellModel *)self.currentData).courtId;
+    if (model && model.clickEnable) {
+        NSString *courtId = ((FHDetailNewHouseNewsCellModel *)self.currentData).courtId;
+        
+        NSDictionary *dict = [self.baseViewModel subPageParams];
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
+    }
 
-    NSDictionary *dict = [self.baseViewModel subPageParams];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:dict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://floor_timeline_detail?court_id=%@",courtId]] userInfo:userInfo];
 }
 
 - (void)awakeFromNib {
