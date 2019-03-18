@@ -17,8 +17,6 @@
 #import "FHExtendHotAreaButton.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
-#import "FHSingleImageInfoCell.h"
-#import "FHSingleImageInfoCellModel.h"
 #import "FHDetailBottomOpenAllView.h"
 #import "FHDetailStarsCountView.h"
 #import <MAMapKit/MAMapKit.h>

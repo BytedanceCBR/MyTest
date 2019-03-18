@@ -408,12 +408,15 @@
             
             self.imageTagLabelBgView.hidden = YES;
         }
-        
 //        [self updateOriginPriceLabelConstraints:nil];
     } else {
         self.pricePerSqmLabel.text = @"";
     }
     
+    [self hideRecommendReason];
+    [self updateTitlesLayout:YES];
+    
+    [self.contentView.yoga applyLayoutPreservingOrigin:NO];
 }
 
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel

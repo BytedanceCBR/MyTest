@@ -4,7 +4,7 @@
 //
 //  Created by 谷春晖 on 2018/11/18.
 //
-
+#if 0
 #import "FHSingleImageInfoCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
@@ -741,3 +741,4 @@
 }
 
 @end
+#endif

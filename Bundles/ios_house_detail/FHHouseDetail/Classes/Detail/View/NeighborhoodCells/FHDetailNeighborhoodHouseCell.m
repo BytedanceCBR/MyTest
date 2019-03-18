@@ -513,8 +513,8 @@
             if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
                 FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
                 CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-                [imageInfoCell updateWithHouseCellModel:cellModel];
                 [imageInfoCell refreshTopMargin:0];
+                [imageInfoCell updateWithHouseCellModel:cellModel];
             }
             return cell;
         }
@@ -526,8 +526,8 @@
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseBaseItemCell"];
             if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
                 FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
-                [imageInfoCell updateWithHouseCellModel:cellModel];
                 [imageInfoCell refreshTopMargin:0];
+                [imageInfoCell updateWithHouseCellModel:cellModel];
             }
             return cell;
         }
