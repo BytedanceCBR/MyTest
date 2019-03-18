@@ -555,31 +555,37 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
-            }else
-            {
-                if (error && self.dataSource.modelsArray.count == 0) {
-                    [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
-                    return;
-                }else
-                {
-                    if (error) {
-                        [[ToastManager manager] showToast:@"网络异常"];
-                        return;
-                    }
-                }
             }
-            
             
             if (model.data.items.count == 0 && self.dataSource.modelsArray.count != 0) {
                 if (self.isRetryedPullDownRefresh) {
                     self.isRetryedPullDownRefresh = NO;
-                    [self.tableViewV finishPullDownWithSuccess:YES];
                     [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
+                    return;
                 }else
                 {
                     [self.tableViewV finishPullDownWithSuccess:YES];
                 }
                 
+                self.categoryView.segmentedControl.userInteractionEnabled = YES;
+            }
+            
+            if (error && self.itemsDataCache.allKeys.count == 0 && self.dataSource.showPlaceHolder) {
+                [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
+                return;
+            }else
+            {
+                if (error) {
+                    [[ToastManager manager] showToast:@"网络异常"];
+                    self.categoryView.segmentedControl.userInteractionEnabled = YES;
+                    return;
+                }
+            }
+        }else
+        {
+            if (error) {
+                [[ToastManager manager] showToast:@"网络异常"];
+                [self updateTableViewWithMoreData:YES];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
             }
