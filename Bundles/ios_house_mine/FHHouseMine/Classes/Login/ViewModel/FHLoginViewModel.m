@@ -101,7 +101,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         limit = 11;
         
         //设置登录和获取验证码是否可点击
-        if(text.length > 0 && self.verifyCodeRetryTime <= 0){
+        if(text.length > 0){
             [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
         }else{
             [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
@@ -116,7 +116,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled {
-    [self.view enableSendVerifyCodeBtn:enabled];
+    [self.view enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
     [self.view enableConfirmBtn:enabled];
 }
 
