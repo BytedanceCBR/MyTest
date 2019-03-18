@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)refreshTopMargin:(CGFloat)top;
 
++(CGFloat)recommendReasonHeight;
 
 @end
 

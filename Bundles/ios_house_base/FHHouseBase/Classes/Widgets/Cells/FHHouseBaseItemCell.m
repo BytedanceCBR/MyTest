@@ -28,7 +28,7 @@
 #define MAIN_TAG_WIDTH      40
 #define MAIN_TAG_HEIGHT     10
 #define INFO_TO_ICON_MARGIN 12
-#define PRICE_BG_TOP_MARGIN 7
+#define PRICE_BG_TOP_MARGIN 5
 
 @interface FHHouseBaseItemCell ()
 
@@ -70,11 +70,17 @@
     return placeholderImage;
 }
 
++(CGFloat)recommendReasonHeight
+{
+    return 22;
+}
+
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self initUI];
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
@@ -318,7 +324,7 @@
         layout.width = YGPercentValue(100);
         layout.height = YGPointValue(20);
         layout.marginTop = YGPointValue(7);
-        layout.alignItems = YGAlignFlexEnd;
+        layout.alignItems = YGAlignCenter;
     }];
     
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -326,20 +332,20 @@
 //        layout.height = YGPointValue(20);
         layout.maxWidth = YGPointValue(130);
 //        layout.alignSelf = YGAlignFlexEnd;
-        layout.marginBottom = YGPointValue(-1);
+//        layout.marginBottom = YGPointValue(-1);
     }];
     
     [_originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(6);
         layout.isIncludedInLayout = NO;
-        layout.marginBottom = YGPointValue(0);
+//        layout.marginBottom = YGPointValue(0);
     }];
     
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(10);
-        layout.marginBottom = YGPointValue(0);
+//        layout.marginBottom = YGPointValue(0);
     }];
     
     
