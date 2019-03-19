@@ -51,6 +51,11 @@
 
 //判断是否是当前home tab
 - (BOOL)isCurrentTabFirst;
+
+- (BOOL)isNeedSwitchCityCompare;
+
+- (void)setUpLocationInfo:(NSDictionary *)dict;
+
 @end
 
 
