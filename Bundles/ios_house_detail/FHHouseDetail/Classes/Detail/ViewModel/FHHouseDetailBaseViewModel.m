@@ -70,7 +70,13 @@
 }
 
 - (void)reloadData {
+    
+    CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
+    self.tableView.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width,10000);//设置大frame 强制计算cell高度
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.tableView.frame = frame;
+    });
 }
 
 #pragma mark - 需要子类实现的方法
