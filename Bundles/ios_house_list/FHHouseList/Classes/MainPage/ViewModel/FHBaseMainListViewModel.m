@@ -370,7 +370,7 @@
             [self.tableView.mj_footer endRefreshing];
         }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
+        if (isRefresh && (items.count > 0 || recommendItems.count > 0) && !_showFilter) {
             [self showNotifyMessage:refreshTip];
         }
         
@@ -726,11 +726,16 @@
 
 -(void)onConditionPanelWillDisplay
 {
+    self.showFilter = YES;
     self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
+    [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo([self.topView filterBottom]);
+    }];
 }
 
 -(void)onConditionPanelWillDisappear
 {
+    self.showFilter = NO;
 }
 
 -(UIImage *)placeHolderImage
@@ -891,6 +896,9 @@
 -(void)moveToTableView:(BOOL)toTableView
 {
     if (toTableView) {
+        if (!self.topBannerView) {
+            return;
+        }        
         if (self.topView.superview == self.tableView) {
             return;
         }

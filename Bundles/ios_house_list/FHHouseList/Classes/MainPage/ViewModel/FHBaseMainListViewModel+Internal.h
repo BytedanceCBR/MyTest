@@ -56,12 +56,14 @@
 @property(nonatomic , assign) BOOL canChangeHouseSearchDic;
 @property(nonatomic , assign,getter=isFromRecommend) BOOL fromRecommend;
 @property(nonatomic , strong) NSMutableArray *sugesstHouseList;
-@property(nonatomic , copy) NSString *recommendSearchId;
+@property(nonatomic , copy)   NSString *recommendSearchId;
 @property(nonatomic , strong) NSDictionary *houseSearchDic;
 @property(nonatomic , assign) BOOL addEnterCategory; // 是否算enter_category
-@property (nonatomic , assign) BOOL showRedirectTip;
-@property (nonatomic, strong ) FHSearchHouseDataRedirectTipsModel *redirectTips;
-@property (nonatomic , weak) FHHouseListRedirectTipView *redirectTipView;
+@property(nonatomic , assign) BOOL showRedirectTip;
+@property(nonatomic , strong) FHSearchHouseDataRedirectTipsModel *redirectTips;
+@property(nonatomic , weak)   FHHouseListRedirectTipView *redirectTipView;
+
+@property(nonatomic , assign) BOOL showFilter;
 
 -(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap showReload:(BOOL)showReload;
 

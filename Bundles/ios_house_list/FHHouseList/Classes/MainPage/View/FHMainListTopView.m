@@ -31,21 +31,27 @@
         self.bannerView = bannerView;
         self.filterBarView = filterView;
         
+        CGFloat width = SCREEN_WIDTH;
+        
         CGFloat top = 0;
         bannerView.top = top;
         top = bannerView.bottom;
         filterView.top = bannerView.bottom;
         top = filterView.bottom;
-        self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, top, [UIScreen mainScreen].bounds.size.width, NOTIFY_HEIGHT)];
+        self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, top, width, NOTIFY_HEIGHT)];
         _bottomLine = [[UIView alloc]initWithFrame:CGRectMake(0, top - ONE_PIXEL, filterView.width - 2*HOR_MARGIN, ONE_PIXEL)];
         _bottomLine.backgroundColor = [UIColor themeGray6];
         [self addSubview:_notifyBarView];
-        [self addSubview:bannerView];
-        [self addSubview:filterView];
+        if (bannerView) {
+            [self addSubview:bannerView];
+        }
+        if (filterView) {
+            [self addSubview:filterView];
+        }        
         [self addSubview:_bottomLine];
         
         _notifyBarView.hidden = YES;
-        self.frame = CGRectMake(0, 0, bannerView.width, filterView.bottom);
+        self.frame = CGRectMake(0, 0, width, filterView.bottom);
     }
     return self;
 }
@@ -74,11 +80,11 @@
     return self.filterBarView.bottom;
 }
 
--(void)setFrame:(CGRect)frame
-{
-    [super setFrame:frame];
-    NSLog(@"[SCROLL] topview set frame : %@",NSStringFromCGRect(frame));
-}
+//-(void)setFrame:(CGRect)frame
+//{
+//    [super setFrame:frame];
+//    NSLog(@"[SCROLL] topview set frame : %@",NSStringFromCGRect(frame));
+//}
 
 -(void)willMoveToSuperview:(UIView *)newSuperview
 {
