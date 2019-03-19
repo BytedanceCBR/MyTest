@@ -386,6 +386,7 @@
             priceTrendModel.priceTrends = model.data.priceTrend;
             priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
             priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
+            priceTrendModel.hasSuggestion = (model.data.housePricingRank.buySuggestion != nil) ? YES : NO;
             priceTrendModel.tableView = self.tableView;
             [self.items addObject:priceTrendModel];
         }
@@ -394,8 +395,6 @@
     // 购房小建议
     if (model.data.housePricingRank.buySuggestion) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
         [self.items addObject:infoModel];

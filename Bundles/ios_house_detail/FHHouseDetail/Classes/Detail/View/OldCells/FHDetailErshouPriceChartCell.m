@@ -31,7 +31,6 @@
 @property(nonatomic , strong) UIView *chartBgView;
 @property(nonatomic , strong) UIView *bottomBgView;
 @property(nonatomic , strong) PNLineChart *chartView;
-@property(nonatomic , strong) FHDetailFoldViewButton *foldButton;
 @property(nonatomic, strong) FHDetailPriceMarkerView *markerView;
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel *> *priceTrends;
@@ -298,7 +297,6 @@
     [self.contentView addSubview:self.bottomBgView];
     self.bottomBgView.clipsToBounds = YES;
     [self.bottomBgView addSubview:self.chartBgView];
-    [self.bottomBgView addSubview:self.foldButton];
     [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(138);
@@ -328,7 +326,6 @@
 
     [self setupChartUI];
     [self updateChartConstraints:NO];
-    [self.foldButton addTarget:self action:@selector(foldBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)refreshWithData:(id)data
@@ -341,7 +338,6 @@
     NSArray *priceTrends = cellModel.priceTrends; 
     self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
     self.priceView.hidden = NO;
-    self.foldButton.isFold = cellModel.isFold;
     [self updateChartConstraints:NO];
     
     float pricingPerSqm = cellModel.neighborhoodInfo.pricingPerSqmV.floatValue;
@@ -385,48 +381,20 @@
     self.priceTrends = priceTrends;
 }
 
-- (void)foldBtnDidClick:(UIButton *)btn
-{
-    FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
-    model.isFold = !model.isFold;
-    self.foldButton.isFold = model.isFold;
-    [self updateChartConstraints:YES];
-    if (!self.foldButton.isFold) {
-        [self addClickPriceRankLog];
-    }
-}
-
 - (void)updateChartConstraints:(BOOL)animated
 {
+    FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
+    CGFloat bottomHeight = 58;
+    if (!model.hasSuggestion) {
+        bottomHeight = 58 - 20;
+    }
     [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
         make.height.mas_equalTo(207 + 50);
     }];
-    FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;
-    if (animated) {
-        [model.tableView beginUpdates];
-    }
-    if (model.isFold) {
-        [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(58);
-        }];
-        [self.foldButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.mas_equalTo(self.bottomBgView);
-            make.height.mas_equalTo(58);
-        }];
-    }else {
-        [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(315);
-        }];
-        [self.foldButton mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.mas_equalTo(self.bottomBgView);
-            make.height.mas_equalTo(58);
-        }];
-    }
-    [self setNeedsUpdateConstraints];
-    if (animated) {
-        [model.tableView endUpdates];
-    }    
+    [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(315 - bottomHeight);
+    }];
 }
 
 - (void)setupChartUI
@@ -693,14 +661,6 @@
     return _chartView;
 }
 
-- (FHDetailFoldViewButton *)foldButton
-{
-    if (!_foldButton) {
-        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"更多信息" upText:@"收起" isFold:YES];
-        _foldButton.backgroundColor = [UIColor whiteColor];
-    }
-    return _foldButton;
-}
 - (NSDateFormatter *)monthFormatter
 {
     if (!_monthFormatter) {
