@@ -24,6 +24,7 @@
 #import "FHHouseBridgeManager.h"
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
+#import "FHIESGeckoManager.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -365,7 +366,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
         //轮询红点
         [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
     }
-
+    
+    
+    [FHIESGeckoManager configGeckoInfo];
+    [FHIESGeckoManager configIESWebFalcon];
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
