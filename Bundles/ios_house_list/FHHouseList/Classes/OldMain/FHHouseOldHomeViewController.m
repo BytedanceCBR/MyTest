@@ -365,7 +365,7 @@
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
-//        [self.view endEditing:YES];
+        [self.view endEditing:YES];
     }
 }
 

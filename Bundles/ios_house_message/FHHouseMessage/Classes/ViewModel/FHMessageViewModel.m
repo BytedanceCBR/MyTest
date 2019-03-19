@@ -22,6 +22,7 @@
 #import "FHUserTracker.h"
 #import "TTAccount.h"
 
+#import <ReactiveObjC/ReactiveObjC.h>
 #define kCellId @"FHMessageCell_id"
 @interface DeleteAlertDelegate : NSObject<UIAlertViewDelegate>
 @property (nonatomic, strong) IMConversation* conv;
@@ -62,14 +63,21 @@
         _dataList = [[NSMutableArray alloc] init];
         _isFirstLoad = YES;
         self.tableView = tableView;
-        
+
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
-        
+
         tableView.delegate = self;
         tableView.dataSource = self;
-        
+
         self.viewController = viewController;
         [[IMManager shareInstance] addChatStateObverver:self];
+        @weakify(self)
+        [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:KUSER_UPDATE_NOTIFICATION object:nil] throttle:2] subscribeNext:^(NSNotification * _Nullable x) {
+            @strongify(self)
+            NSArray<IMConversation*>* allConversations = [[IMManager shareInstance].chatService allConversations];
+            [_combiner resetConversations:allConversations];
+            [self.tableView reloadData];
+        }];
     }
     return self;
 }
