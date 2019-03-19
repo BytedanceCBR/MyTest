@@ -619,7 +619,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }else
         {
             if (error) {
-                [[ToastManager manager] showToast:@"网络异常"];
                 [self updateTableViewWithMoreData:YES];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
