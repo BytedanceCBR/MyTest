@@ -509,7 +509,7 @@ def appPods
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
     # ab test sdk
-    pod_binary 'BDABTestSDK', '1.0.0.1-binary'
+    pod  'BDABTestSDK', '1.0.1'
     #pod 'BDABTestSDK', '1.0.0'
 
 
