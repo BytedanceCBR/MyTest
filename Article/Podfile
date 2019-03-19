@@ -1,10 +1,4 @@
 #—————————————pod私有源--------------------------------------
-#source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git'
-#source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
-source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
-#source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
-#source 'git@code.byted.org:ugc/UGCSpecs.git'
-
 source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
 source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
 source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
@@ -64,8 +58,10 @@ def appPods
 #    #-----安全组sdk-----#
 #    pod 'IESSafeGuard', '0.6.5'
 
-    pod 'TTRNKit'
-    pod 'IESGeckoKit'
+    pod 'TTRNKit', '0.3.3'
+    pod 'IESGeckoKit', '0.4.0'
+    pod 'IESWebKit', '0.1.4'
+#    pod 'IESWebKit/Falcon', :git => 'git@code.byted.org:ugc/IESWebKit.git', :branch => 'master'
     pod 'React', '0.55.9-alpha.22', :subspecs => [ #可根据需要选择相应子库以减少包大小
     'Core',
     'CxxBridge',
