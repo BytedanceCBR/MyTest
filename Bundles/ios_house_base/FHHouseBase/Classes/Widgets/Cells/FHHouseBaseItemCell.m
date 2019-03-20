@@ -52,10 +52,6 @@
 
 @property(nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 
-//@property(nonatomic, assign) CGFloat topMargin;
-//@property(nonatomic, assign) CGFloat bottomMargin;
-//@property(nonatomic, assign) BOOL lastShowTag;
-
 @end
 
 @implementation FHHouseBaseItemCell
@@ -388,7 +384,6 @@
             self.imageTagLabelBgView.hidden = YES;
         }
         
-//        [self updateOriginPriceLabelConstraints:self.cellModel.originPriceAttrStr];
     } else if (houseType == FHHouseTypeRentHouse) {
         
         self.mainTitleLabel.text = commonModel.title;
@@ -408,7 +403,6 @@
             
             self.imageTagLabelBgView.hidden = YES;
         }
-//        [self updateOriginPriceLabelConstraints:nil];
     } else {
         self.pricePerSqmLabel.text = @"";
     }
@@ -520,10 +514,7 @@
         
         self.priceLabel.text = model.displayPricePerSqm;
         FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
-        
-//        [self updateOriginPriceLabelConstraints:nil];
-//        [self updateLayoutComponents:self.tagLabel.attributedText.string.length > 0];
+        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];        
     }
 }
 
@@ -664,7 +655,6 @@
     [self.tagLabel.yoga markDirty];
     
     [self.priceLabel.yoga markDirty];
-    
     [self.originPriceLabel.yoga markDirty];
     [self.pricePerSqmLabel.yoga markDirty];
     

@@ -14,4 +14,8 @@
 #define HOR_MARGIN      20
 #define ONE_PIXEL      1.0/[[UIScreen mainScreen]scale]
 
+#ifndef IS_EMPTY_STRING
+#define IS_EMPTY_STRING(str) (!str || ![str isKindOfClass:[NSString class]] || str.length == 0)
+#endif
+
 #endif /* FHCommonDefines_h */
