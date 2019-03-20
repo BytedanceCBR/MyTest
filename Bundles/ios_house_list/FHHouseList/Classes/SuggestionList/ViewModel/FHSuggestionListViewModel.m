@@ -75,10 +75,13 @@
 
 - (void)setupSubscribeView {
     self.subscribeView = [[FHSugHasSubscribeView alloc] init];
-//    __weak typeof(self) wself = self;
-//    self.subscribeView.clickBlk = ^(FHGuessYouWantResponseDataDataModel * _Nonnull model) {
-//        [wself guessYouWantItemClick:model];
-//    };
+    __weak typeof(self) wself = self;
+    self.subscribeView.clickBlk = ^(FHSugSubscribeDataDataItemsModel * _Nonnull model) {
+        [wself subscribeItemClick:model];
+    };
+    self.subscribeView.clickHeader = ^{
+        [wself sugSubscribeListClick];
+    };
     [self.sectionHeaderView addSubview:self.subscribeView];
     [self.subscribeView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.sectionHeaderView);
@@ -88,6 +91,28 @@
     self.subscribeView.hidden = YES;
 }
 
+- (void)sugSubscribeListClick {
+    // add by zyk 记得埋点添加
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://sug_subscribe_list?house_type=%ld",self.houseType];
+    NSDictionary * infos = @{};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+    
+    NSURL *url = [NSURL URLWithString:openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+// 订阅搜索item点击
+- (void)subscribeItemClick:(FHGuessYouWantResponseDataDataModel *)model {
+    NSString *jumpUrl = model.openUrl;
+    if (jumpUrl.length > 0) {
+        // add by zyk 埋点逻辑添加
+        NSDictionary * infos = @{};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        
+        NSURL *url = [NSURL URLWithString:jumpUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
 // 猜你想搜点击
 - (void)guessYouWantItemClick:(FHGuessYouWantResponseDataDataModel *)model {
     NSString *jumpUrl = model.openUrl;
