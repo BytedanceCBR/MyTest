@@ -638,7 +638,6 @@
 
 -(void)updateTitlesLayout:(BOOL)showTags
 {
-//    BOOL showTags = self.cellModel.tagsAttrStr.length > 0;
     
     self.mainTitleLabel.numberOfLines = showTags?1:2;
     
@@ -665,6 +664,9 @@
     [self.tagLabel.yoga markDirty];
     
     [self.priceLabel.yoga markDirty];
+    
+    [self.originPriceLabel.yoga markDirty];
+    [self.pricePerSqmLabel.yoga markDirty];
     
     if (self.priceBgView.yoga.marginTop.value != (showTags?PRICE_BG_TOP_MARGIN:0)) {
         [self.priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
