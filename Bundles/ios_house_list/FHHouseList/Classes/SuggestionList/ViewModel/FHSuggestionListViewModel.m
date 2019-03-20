@@ -70,6 +70,7 @@
         make.left.right.top.mas_equalTo(self.sectionHeaderView);
         make.height.mas_equalTo(CGFLOAT_MIN);
     }];
+    self.guessYouWantView.hidden = YES;
 }
 
 - (void)setupSubscribeView {
@@ -84,6 +85,7 @@
         make.top.mas_equalTo(self.guessYouWantView.mas_bottom);
         make.height.mas_equalTo(CGFLOAT_MIN);
     }];
+    self.subscribeView.hidden = YES;
 }
 
 // 猜你想搜点击
@@ -626,7 +628,13 @@
     if (self.guessHttpTask) {
         [self.guessHttpTask cancel];
     }
+    if (self.sugSubscribeTask) {
+        [self.sugSubscribeTask cancel];
+    }
+    [self.subscribeItems removeAllObjects];
     [self.guessYouWantData removeAllObjects];
+    self.guessYouWantView.hidden = YES;
+    self.subscribeView.hidden = YES;
     [self reloadHistoryTableView];
 }
 
@@ -645,7 +653,9 @@
             [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(self.guessYouWantView.guessYouWangtViewHeight);
             }];
+            self.guessYouWantView.hidden = NO;
         } else {
+            self.guessYouWantView.hidden = YES;
             [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(CGFLOAT_MIN);
             }];
@@ -654,7 +664,9 @@
             [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(self.subscribeView.hasSubscribeViewHeight);
             }];
+             self.subscribeView.hidden = NO;
         } else {
+             self.subscribeView.hidden = YES;
             [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(0);
             }];
