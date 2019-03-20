@@ -73,7 +73,9 @@
 }
 
 - (void)headerButtonClick:(UIButton *)button {
-    
+    if (self.clickHeader) {
+        self.clickHeader();
+    }
 }
 
 // 先设置totalCount
@@ -106,7 +108,80 @@
         self.headerButton.hidden = YES;
     }
     // 添加Views
-    
+    CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - 40 - 11) / 2.0;
+    CGFloat topOffset = 54;
+    [self.subscribeItems enumerateObjectsUsingBlock:^(FHSugSubscribeDataDataItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (idx >= 4) {
+            *stop = YES;
+        }
+        NSInteger row = idx / 2;
+        NSInteger column = idx % 2;
+        CGRect frame = CGRectMake(20 + column * (itemWidth + 11), topOffset + row * (60 + 10), itemWidth, 60);
+        FHSubscribeView *itemView = [[FHSubscribeView alloc] initWithFrame:frame];
+        itemView.titleLabel.text = obj.title;
+        itemView.sugLabel.text = obj.text;
+        itemView.tag = idx;
+        [itemView addTarget:self action:@selector(subscribeViewClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:itemView];
+        [self.tempViews addObject:itemView];
+    }];
+}
+
+- (void)subscribeViewClick:(FHSubscribeView *)v {
+    NSInteger idx = v.tag;
+    if (idx >= 0 && idx < self.subscribeItems.count) {
+        FHSugSubscribeDataDataItemsModel*  obj = self.subscribeItems[idx];
+        if (self.clickBlk) {
+            self.clickBlk(obj);
+        }
+    }
+}
+
+@end
+
+
+@interface FHSubscribeView ()
+
+@end
+
+@implementation FHSubscribeView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor themeGray7];
+        self.layer.cornerRadius = 4.0;
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    // titleLabel
+    _titleLabel = [[UILabel alloc] init];
+    _titleLabel.text = @"";
+    _titleLabel.font = [UIFont themeFontMedium:14];
+    _titleLabel.textColor = [UIColor themeGray1];
+    [self addSubview:_titleLabel];
+    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(8);
+        make.left.mas_equalTo(14);
+        make.right.mas_equalTo(-14);
+        make.height.mas_equalTo(24);
+    }];
+    // sugLabel
+    _sugLabel = [[UILabel alloc] init];
+    _sugLabel.text = @"";
+    _sugLabel.font = [UIFont themeFontRegular:12];
+    _sugLabel.textColor = [UIColor themeGray3];
+    [self addSubview:_sugLabel];
+    [_sugLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.titleLabel.mas_bottom);
+        make.left.mas_equalTo(14);
+        make.right.mas_equalTo(-14);
+        make.height.mas_equalTo(20);
+    }];
 }
 
 @end
