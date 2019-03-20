@@ -32,7 +32,7 @@
 @property (nonatomic, strong)   FHGuessYouWantView *guessYouWantView;
 @property (nonatomic, strong)   FHSugHasSubscribeView *subscribeView;// 已订阅搜索
 @property (nonatomic, strong)   UIView       *sectionHeaderView;
-@property (nonatomic, assign)   NSInteger       totalCount;
+@property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
 
 @property (nonatomic, assign)   BOOL       hasShowKeyboard;
@@ -47,12 +47,14 @@
         self.listController = viewController;
         self.loadRequestTimes = 0;
         self.guessYouWantData = [NSMutableArray new];
+        self.subscribeItems = [NSMutableArray new];
         self.historyShowTracerDic = [NSMutableDictionary new];
         self.associatedCount = 0;
         self.hasShowKeyboard = NO;
         self.sectionHeaderView = [[UIView alloc] init];
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         [self setupGuessYouWantView];
+        [self setupSubscribeView];
     }
     return self;
 }
@@ -66,6 +68,7 @@
     [self.sectionHeaderView addSubview:self.guessYouWantView];
     [self.guessYouWantView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(self.sectionHeaderView);
+        make.height.mas_equalTo(CGFLOAT_MIN);
     }];
 }
 
@@ -79,6 +82,7 @@
     [self.subscribeView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.sectionHeaderView);
         make.top.mas_equalTo(self.guessYouWantView.mas_bottom);
+        make.height.mas_equalTo(CGFLOAT_MIN);
     }];
 }
 
@@ -637,6 +641,25 @@
 
 - (void)reloadHistoryTableView {
     if (self.listController.historyTableView != NULL && self.loadRequestTimes >= 3) {
+        if (self.guessYouWantData.count > 0) {
+            [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.guessYouWantView.guessYouWangtViewHeight);
+            }];
+        } else {
+            [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(CGFLOAT_MIN);
+            }];
+        }
+        if (self.subscribeItems.count > 0) {
+            [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.subscribeView.hasSubscribeViewHeight);
+            }];
+        } else {
+            [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(0);
+            }];
+        }
+        
         if (!self.hasShowKeyboard) {
             [self.listController.naviBar.searchInput becomeFirstResponder];
             self.hasShowKeyboard = YES;
@@ -675,7 +698,9 @@
     __weak typeof(self) wself = self;
     self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:4 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
-        if (model != NULL && error == NULL) {
+        wself.subscribeView.totalCount = 0;
+        // if (model != NULL && error == NULL) add by zyk 后面要改w回来，现在为了测试
+        if (model != NULL) {
             // 构建数据源
             [wself.subscribeItems removeAllObjects];
             if (model.data.data.items.count > 0) {
@@ -686,6 +711,8 @@
                 } else {
                     wself.totalCount = 0;
                 }
+                // count 和 数据要一起变
+                wself.subscribeView.totalCount = wself.totalCount;
                 [wself.subscribeItems addObjectsFromArray:tempData];
                 wself.subscribeView.subscribeItems = wself.subscribeItems;
             } else {
