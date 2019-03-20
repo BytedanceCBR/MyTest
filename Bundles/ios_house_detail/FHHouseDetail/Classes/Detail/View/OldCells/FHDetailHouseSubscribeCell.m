@@ -120,7 +120,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }];
     
     [self.subscribeIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.right.mas_equalTo(self.bgView);
+        make.top.bottom.right.left.mas_equalTo(self.bgView);
     }];
     
     [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -231,7 +231,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    [self showFullPhoneNum:NO];
+    NSArray *modes = @[NSDefaultRunLoopMode];
+    [self performSelector:@selector(showFullPhoneNum:) withObject:[NSNumber numberWithBool:NO] afterDelay:0 inModes:modes];
+//    [self showFullPhoneNum:NO];
     return YES;
 }
 
