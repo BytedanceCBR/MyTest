@@ -445,6 +445,7 @@
     self.viewModel.loadRequestTimes = 0;
     [self requestHistoryFromRemote];
     [self requestGuessYouWantData];
+    [self requestSugSubscribe];
 }
 
 // 历史记录
@@ -470,6 +471,14 @@
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
     if (cityId) {
         [self.viewModel requestGuessYouWant:cityId houseType:self.houseType];
+    }
+}
+
+// 搜索订阅
+- (void)requestSugSubscribe {
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    if (cityId) {
+        [self.viewModel requestSugSubscribe:cityId houseType:self.houseType];
     }
 }
 

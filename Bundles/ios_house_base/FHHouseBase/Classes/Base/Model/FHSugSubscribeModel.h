@@ -1,5 +1,6 @@
 //GENERATED CODE , DON'T EDIT
 #import <JSONModel.h>
+#import "FHBaseModelProtocol.h"
 NS_ASSUME_NONNULL_BEGIN
 
 // 搜索列表页面返回的是否订阅模型
@@ -26,18 +27,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSugSubscribeDataDataModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSArray<FHSugSubscribeDataDataItemsModel> *items;
+@property (nonatomic, copy , nullable) NSString *total;
 
 @end
 
-@interface FHSugSubscribeDataModel : JSONModel 
+@interface FHSugSubscribeDataModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHSugSubscribeDataDataModel *data ;  
 @end
 
-@interface FHSugSubscribeModel : JSONModel 
-
+@interface FHSugSubscribeModel : JSONModel <FHBaseModelProtocol>
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHSugSubscribeDataModel *data ;  
 @end
 

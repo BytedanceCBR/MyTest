@@ -230,4 +230,16 @@
 }
 
 
++ (TTHttpTask *)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType subscribe_type:(NSInteger)type subscribe_count:(NSInteger)count  class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString *queryPath = @"/f100/api/get_subscribe_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"city_id"] = @(cityId);
+    paramDic[@"house_type"] = @(houseType);
+    paramDic[@"subscribe_list_type"] = @(type);
+    paramDic[@"subscribe_list_count"] = @(count);
+    paramDic[@"source"] = @"app";
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

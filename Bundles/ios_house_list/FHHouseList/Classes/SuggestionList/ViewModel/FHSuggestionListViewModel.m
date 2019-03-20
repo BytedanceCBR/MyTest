@@ -12,6 +12,8 @@
 #import "FHGuessYouWantView.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
+#import "FHSugHasSubscribeView.h"
+#import "FHSugSubscribeModel.h"
 
 @interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -19,6 +21,7 @@
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
 @property(nonatomic , weak) TTHttpTask *historyHttpTask;
 @property(nonatomic , weak) TTHttpTask *guessHttpTask;
+@property(nonatomic , weak) TTHttpTask *sugSubscribeTask;
 @property(nonatomic , weak) TTHttpTask *delHistoryHttpTask;
 
 @property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseDataModel> *sugListData;
@@ -27,6 +30,11 @@
 
 @property (nonatomic, copy)     NSString       *highlightedText;
 @property (nonatomic, strong)   FHGuessYouWantView *guessYouWantView;
+@property (nonatomic, strong)   FHSugHasSubscribeView *subscribeView;// 已订阅搜索
+@property (nonatomic, strong)   UIView       *sectionHeaderView;
+@property (nonatomic, assign)   NSInteger       totalCount;
+@property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
+
 @property (nonatomic, assign)   BOOL       hasShowKeyboard;
 
 @end
@@ -42,6 +50,8 @@
         self.historyShowTracerDic = [NSMutableDictionary new];
         self.associatedCount = 0;
         self.hasShowKeyboard = NO;
+        self.sectionHeaderView = [[UIView alloc] init];
+        self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         [self setupGuessYouWantView];
     }
     return self;
@@ -53,6 +63,23 @@
     self.guessYouWantView.clickBlk = ^(FHGuessYouWantResponseDataDataModel * _Nonnull model) {
         [wself guessYouWantItemClick:model];
     };
+    [self.sectionHeaderView addSubview:self.guessYouWantView];
+    [self.guessYouWantView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(self.sectionHeaderView);
+    }];
+}
+
+- (void)setupSubscribeView {
+    self.subscribeView = [[FHSugHasSubscribeView alloc] init];
+//    __weak typeof(self) wself = self;
+//    self.subscribeView.clickBlk = ^(FHGuessYouWantResponseDataDataModel * _Nonnull model) {
+//        [wself guessYouWantItemClick:model];
+//    };
+    [self.sectionHeaderView addSubview:self.subscribeView];
+    [self.subscribeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.sectionHeaderView);
+        make.top.mas_equalTo(self.guessYouWantView.mas_bottom);
+    }];
 }
 
 // 猜你想搜点击
@@ -457,9 +484,9 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
-        // 历史记录
-        if (self.guessYouWantData.count > 0) {
-            return self.guessYouWantView;
+        // 历史记录:猜你想搜 & 已订阅搜索
+        if (self.guessYouWantData.count > 0 || self.subscribeItems.count > 0) {
+            return self.sectionHeaderView;
         }
     }
     return nil;
@@ -494,8 +521,16 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
         // 历史记录
-        if (self.guessYouWantData.count > 0) {
-            return self.guessYouWantView.guessYouWangtViewHeight;
+        if (self.guessYouWantData.count > 0 && self.subscribeItems.count > 0) {
+            return self.guessYouWantView.guessYouWangtViewHeight + self.subscribeView.hasSubscribeViewHeight;
+        } else if (self.guessYouWantData.count > 0 || self.subscribeItems.count > 0) {
+            if (self.guessYouWantData.count > 0) {
+                return self.guessYouWantView.guessYouWangtViewHeight;
+            }
+            if (self.subscribeItems.count > 0) {
+                return self.subscribeView.hasSubscribeViewHeight;
+            }
+            return CGFLOAT_MIN;
         } else {
             return CGFLOAT_MIN;
         }
@@ -601,7 +636,7 @@
 }
 
 - (void)reloadHistoryTableView {
-    if (self.listController.historyTableView != NULL && self.loadRequestTimes >= 2) {
+    if (self.listController.historyTableView != NULL && self.loadRequestTimes >= 3) {
         if (!self.hasShowKeyboard) {
             [self.listController.naviBar.searchInput becomeFirstResponder];
             self.hasShowKeyboard = YES;
@@ -629,6 +664,37 @@
         } else {
             
         }
+    }];
+}
+
+- (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType {
+    
+    if (self.sugSubscribeTask) {
+        [self.sugSubscribeTask cancel];
+    }
+    __weak typeof(self) wself = self;
+    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:4 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
+        wself.loadRequestTimes += 1;
+        if (model != NULL && error == NULL) {
+            // 构建数据源
+            [wself.subscribeItems removeAllObjects];
+            if (model.data.data.items.count > 0) {
+                NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.data.items];
+                NSString *countStr = model.data.data.total;
+                if (countStr.length > 0) {
+                    wself.totalCount = [countStr integerValue];
+                } else {
+                    wself.totalCount = 0;
+                }
+                [wself.subscribeItems addObjectsFromArray:tempData];
+                wself.subscribeView.subscribeItems = wself.subscribeItems;
+            } else {
+                wself.subscribeView.subscribeItems = NULL;
+            }
+        } else {
+            wself.subscribeView.subscribeItems = NULL;
+        }
+        [wself reloadHistoryTableView];
     }];
 }
 
