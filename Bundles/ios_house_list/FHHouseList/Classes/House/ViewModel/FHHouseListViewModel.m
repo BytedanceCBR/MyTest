@@ -34,6 +34,8 @@
 #import "FHHouseBridgeManager.h"
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
+#import "FHSugSubscribeModel.h"
+#import "FHSuggestionSubscribCell.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
 
@@ -200,6 +202,8 @@
     self.tableView.mj_footer = self.refreshFooter;
     
     [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kFHHouseListCellId];
+    [self.tableView registerClass:[FHSuggestionSubscribCell class] forCellReuseIdentifier:kFHHouseListSubscribCellId];
+    
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
 
@@ -404,7 +408,7 @@
 //        NSString *searchId;
 //        NSString *houseListOpenUrl;
 //        NSString *mapFindHouseOpenUrl;
-        NSArray *itemArray = @[];
+        NSMutableArray *itemArray = [NSMutableArray new];
         NSArray *recommendItemArray = @[];
         BOOL hasMore = NO;
         NSString *refreshTip;
@@ -416,6 +420,7 @@
             self.recommendSearchId = recommendHouseDataModel.searchId;
             hasMore = recommendHouseDataModel.hasMore;
             recommendItemArray = recommendHouseDataModel.items;
+            
         } else if ([model isKindOfClass:[FHSearchHouseModel class]]) {
 
             FHSearchHouseDataModel *houseModel = ((FHSearchHouseModel *)model).data;
@@ -438,6 +443,8 @@
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
             }
+            
+
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
@@ -488,6 +495,13 @@
         
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
+            
+            //只有二手房有订阅
+            if (self.houseType == FHHouseTypeSecondHandHouse) {
+                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = [[FHSugSubscribeDataDataSubscribeInfoModel alloc] initWithDictionary:@{@"text":@"怡海花园/安定门/200万以下/1000万以上///",@"is_subscribe":@(1),@"subscribe_id":@"123456567"} error:nil];
+                [itemArray addObject:subscribeMode];
+            }
+
             self.isFirstLoad = NO;
             if (self.searchId.length > 0 ) {
                 SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
@@ -517,6 +531,12 @@
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
             if (cellModel) {
                 cellModel.isRecommendCell = NO;
+                if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                    cellModel.isSubscribCell = YES;
+                }else
+                {
+                    cellModel.isSubscribCell = NO;
+                }
                 [self.houseList addObject:cellModel];
             }
 
@@ -589,6 +609,11 @@
         
         FHHouseNeighborDataItemsModel *item = (FHHouseNeighborDataItemsModel *)obj;
         cellModel.neighborModel = obj;
+        
+    }else if ([obj isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+        
+        FHSugSubscribeDataDataSubscribeInfoModel *item = (FHSugSubscribeDataDataSubscribeInfoModel *)obj;
+        cellModel.subscribModel = obj;
         
     }
     return cellModel;
@@ -856,6 +881,16 @@
                 
                 if (indexPath.row < self.houseList.count) {
                     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+                    if (cellModel.isSubscribCell) {
+                        if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                            FHSugSubscribeDataDataSubscribeInfoModel *subscribModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
+                            FHSuggestionSubscribCell *subScribCell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListSubscribCellId];
+                            if ([subScribCell respondsToSelector:@selector(refreshUI:)]) {
+                                [subScribCell refreshUI:subscribModel];
+                            }
+                            return subScribCell;
+                        }
+                    }
                     CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                     [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
