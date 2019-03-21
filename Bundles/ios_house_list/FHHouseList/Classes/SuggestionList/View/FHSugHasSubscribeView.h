@@ -28,6 +28,7 @@ typedef void(^FHSugHasSubscribeItemClick)(FHSugSubscribeDataDataItemsModel *mode
 
 @property (nonatomic, strong)   UILabel       *titleLabel;
 @property (nonatomic, strong)   UILabel       *sugLabel;
+@property (nonatomic, assign)   BOOL       isValid;
 
 @end
 

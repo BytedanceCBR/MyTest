@@ -120,6 +120,7 @@
         FHSubscribeView *itemView = [[FHSubscribeView alloc] initWithFrame:frame];
         itemView.titleLabel.text = obj.title;
         itemView.sugLabel.text = obj.text;
+        itemView.isValid = obj.status;
         itemView.tag = idx;
         [itemView addTarget:self action:@selector(subscribeViewClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:itemView];
@@ -142,6 +143,8 @@
 
 @interface FHSubscribeView ()
 
+@property (nonatomic, strong)   UILabel       *unValidLabel; // 已失效
+
 @end
 
 @implementation FHSubscribeView
@@ -152,6 +155,7 @@
     if (self) {
         self.backgroundColor = [UIColor themeGray7];
         self.layer.cornerRadius = 4.0;
+        self.isValid = YES;
         [self setupUI];
     }
     return self;
@@ -167,7 +171,6 @@
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(8);
         make.left.mas_equalTo(14);
-        make.right.mas_equalTo(-14);
         make.height.mas_equalTo(24);
     }];
     // sugLabel
@@ -182,6 +185,50 @@
         make.right.mas_equalTo(-14);
         make.height.mas_equalTo(20);
     }];
+    // unValidLabel
+    _unValidLabel = [[UILabel alloc] init];
+    _unValidLabel.layer.cornerRadius = 2.0;
+    _unValidLabel.layer.borderColor = [UIColor themeGray6].CGColor;
+    _unValidLabel.layer.borderWidth = 0.5;
+    _unValidLabel.text = @"已失效";
+    _unValidLabel.textAlignment = NSTextAlignmentCenter;
+    _unValidLabel.backgroundColor = [UIColor themeGray7];
+    _unValidLabel.font = [UIFont themeFontRegular:10];
+    _unValidLabel.textColor = [UIColor themeGray3];
+    [self addSubview:_unValidLabel];
+    [_unValidLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.titleLabel);
+        make.left.mas_equalTo(self.titleLabel.mas_right).offset(4);
+        make.right.mas_equalTo(self).offset(-14);
+        make.height.mas_equalTo(15);
+        make.width.mas_equalTo(36);
+    }];
+}
+
+- (void)setIsValid:(BOOL)isValid {
+    _isValid = isValid;
+    self.enabled = isValid;
+    if (isValid) {
+        self.backgroundColor = [UIColor themeGray7];
+        self.layer.borderColor = [UIColor themeGray7].CGColor;
+        self.layer.borderWidth = 0;
+        _titleLabel.textColor = [UIColor themeGray1];
+        _sugLabel.textColor = [UIColor themeGray3];
+        [self.unValidLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0);
+            make.right.mas_equalTo(self).offset(-10);
+        }];
+    } else {
+        self.backgroundColor = [UIColor whiteColor];
+        self.layer.borderColor = [UIColor themeGray6].CGColor;
+        self.layer.borderWidth = 0.5;
+        _titleLabel.textColor = [UIColor themeGray3];
+        _sugLabel.textColor = [UIColor themeGray4];
+        [self.unValidLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(36);
+            make.right.mas_equalTo(self).offset(-14);
+        }];
+    }
 }
 
 @end
