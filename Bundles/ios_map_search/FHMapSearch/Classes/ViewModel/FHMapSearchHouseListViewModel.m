@@ -24,7 +24,7 @@
 #import "FHMapSearchBubbleModel.h"
 #import "FHMainApi.h"
 #import "TTReachability.h"
-#import "FHSingleImageInfoCell.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHSingleImageInfoCellModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
 
@@ -82,7 +82,7 @@
     [_refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
     self.tableView.mj_footer = _refreshFooter;
     
-    [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kCellId];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
 }
 
 -(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
@@ -174,22 +174,21 @@
     if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
         FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
         FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:rentModel];
-        if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
-            FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
-            [imageInfoCell updateWithHouseCellModel:cellModel];
+        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
             [imageInfoCell refreshTopMargin:20];
-            [imageInfoCell refreshBottomMargin:0];
+            [imageInfoCell updateWithHouseCellModel:cellModel];            
         }
     }else{
         if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
             FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
             FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:oldModel];
-            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
-                FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                [imageInfoCell updateWithHouseCellModel:cellModel];
+            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+                FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
                 [imageInfoCell refreshTopMargin:20];
-                [imageInfoCell refreshBottomMargin:reasonHeight];
+                [imageInfoCell updateWithHouseCellModel:cellModel];
+                
             }
         }
     }
@@ -207,7 +206,7 @@
     if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
         FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
         if ([oldModel showRecommendReason]) {
-            return 105+[FHSingleImageInfoCell recommendReasonHeight];
+            return 105+[FHHouseBaseItemCell recommendReasonHeight];
         }
     }
     return 105;
