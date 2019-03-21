@@ -309,13 +309,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 - (void)addClientABTestLog
 {
     id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
-    //    获取曝光结果
-    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
-    NSMutableDictionary *params = @{}.mutableCopy;
-    if (exposureExperiments.length > 0) {
-        params[@"experiments"] = exposureExperiments;
-    }
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"abtest_show_house" status:[res1 integerValue] extra:params];
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"abtest_show_house" status:[res1 integerValue] extra:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
