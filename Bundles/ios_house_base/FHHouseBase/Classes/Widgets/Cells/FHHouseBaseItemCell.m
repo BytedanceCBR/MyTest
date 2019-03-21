@@ -278,7 +278,7 @@
     
     [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(-3);
+        layout.marginTop = YGPointValue(-2);
         layout.height = YGPointValue(22);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
@@ -341,6 +341,7 @@
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(10);
+        layout.flexGrow = 1;
 //        layout.marginBottom = YGPointValue(0);
     }];
     
@@ -364,12 +365,13 @@
     self.tagLabel.attributedText =  attributeString;
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
+    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
     FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:placeholder];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
         FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
-        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:placeholder];
         self.subTitleLabel.text = commonModel.displaySubtitle;
         self.priceLabel.text = commonModel.displayPrice;
         self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
@@ -391,7 +393,7 @@
         self.priceLabel.text = commonModel.pricing;
         self.pricePerSqmLabel.text = nil;
         FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
-        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:placeholder];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
             
@@ -438,7 +440,7 @@
 - (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model
 {
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
     self.imageTagLabelBgView.hidden = YES;
     [self updateImageTopLeft];
@@ -447,6 +449,11 @@
     self.subTitleLabel.text = model.displaySubtitle;
     self.tagLabel.text = model.displayStatsInfo;
     self.priceLabel.text = model.displayPrice;
+    
+    self.originPriceLabel.text = nil;
+    self.pricePerSqmLabel.text = nil;
+    self.originPriceLabel.hidden = YES;
+    self.pricePerSqmLabel.hidden = YES;
     
     if (self.tagLabel.yoga.marginLeft.value != 0) {
         [self.tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -465,7 +472,7 @@
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];
+    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
     self.imageTagLabelBgView.hidden = YES;
     [self updateImageTopLeft];
@@ -476,6 +483,8 @@
     
     self.priceLabel.text = model.displayPricePerSqm;
     
+    self.originPriceLabel.text = nil;
+    self.pricePerSqmLabel.text = nil;
     self.originPriceLabel.hidden = YES;
     self.pricePerSqmLabel.hidden = YES;
     if (self.pricePerSqmLabel.yoga.isIncludedInLayout == self.pricePerSqmLabel.hidden) {
@@ -514,7 +523,7 @@
         
         self.priceLabel.text = model.displayPricePerSqm;
         FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed: @"default_image"]];        
+        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     }
 }
 
@@ -635,7 +644,7 @@
     BOOL oneRow = self.cellModel.titleSize.height < 30;
     
     [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.marginTop = YGPointValue(oneRow?-3:-6);
+        layout.marginTop = YGPointValue(oneRow?-2:-5);
         layout.height = YGPointValue(oneRow?22:50);
     }];
     [self.mainTitleLabel.yoga markDirty];
@@ -668,7 +677,7 @@
 
 -(void)hideRecommendReason
 {
-    if (self.recReasonView.yoga.isIncludedInLayout) {
+    if ( _recReasonView && self.recReasonView.yoga.isIncludedInLayout) {
         [self.recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
             layout.isIncludedInLayout = NO;
         }];
