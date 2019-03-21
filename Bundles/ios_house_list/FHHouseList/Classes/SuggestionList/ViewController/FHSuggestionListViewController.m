@@ -28,6 +28,7 @@
 
 @property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;// 传入搜索列表的轮播词-只用于搜索框展示和搜索用
 @property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
+@property (nonatomic, assign)   BOOL       hasDismissedVC;
 
 @end
 
@@ -147,6 +148,7 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.canSearchWithRollData = NO;
+    self.hasDismissedVC = NO;
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     self.houseType = self.viewModel.houseType;// 执行网络请求等逻辑
@@ -427,7 +429,14 @@
 // 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
 - (void)dismissSelfVCIfNeeded {
     if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeOldMain) {
-        [self removeFromParentViewController];
+        // 解决连续点击猜你想搜页面白屏问题，多次走当前方法
+        if (!self.hasDismissedVC) {
+            self.hasDismissedVC = YES;
+            __weak typeof(self) wSelf = self;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [wSelf removeFromParentViewController];
+            });
+        }
     }
 }
 
