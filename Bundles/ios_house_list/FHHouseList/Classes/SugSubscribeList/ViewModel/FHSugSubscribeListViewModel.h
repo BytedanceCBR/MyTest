@@ -6,10 +6,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHSugSubscribeListViewController.h"
+#import "FHHouseListAPI.h"
+#import "FHSuggestionListModel.h"
+#import "FHSugSubscribeModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSugSubscribeListViewModel : NSObject
+
+-(instancetype)initWithController:(FHSugSubscribeListViewController *)viewController tableView:(UITableView *)tableView;
+- (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType;
 
 @end
 
