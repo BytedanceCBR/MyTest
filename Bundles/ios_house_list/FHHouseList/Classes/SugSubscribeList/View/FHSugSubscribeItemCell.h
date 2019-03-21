@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSugSubscribeItemCell : UITableViewCell
 
+@property (nonatomic, strong)   UILabel       *titleLabel;
+@property (nonatomic, strong)   UILabel       *sugLabel;
+@property (nonatomic, assign)   BOOL       isValid;
+
 @end
 
 NS_ASSUME_NONNULL_END

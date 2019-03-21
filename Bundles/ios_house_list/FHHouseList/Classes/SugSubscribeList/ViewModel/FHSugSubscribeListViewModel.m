@@ -50,7 +50,7 @@
         // 显示空页面
         self.tableView.hidden = YES;
         self.listController.hasValidateData = NO;
-        [self.listController.emptyView showEmptyWithTip:@"暂无订阅结果" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
+        [self.listController.emptyView showEmptyWithTip:@"尚未订阅任何搜索" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
     }
 }
 
@@ -89,21 +89,18 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if (self.listController.hasValidateData == YES) {
-//        FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-//        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//        id model = _houseList[indexPath.row];
-//        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-//        [cell updateWithHouseCellModel:cellModel];
-//        [cell refreshTopMargin: 20];
-//        [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
-//        return cell;
-//    } else {
-//        // PlaceholderCell
-//        FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
-//        return cell;
-//    }
+    if (indexPath.row >= 0 && indexPath.row < self.subscribeItems.count) {
+        
+        FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[indexPath.row];
+        FHSugSubscribeItemCell *cell = (FHSugSubscribeItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHSugSubscribeItemCell"];
+        if (cell) {
+            cell.titleLabel.text = model.title;
+            cell.sugLabel.text = model.text;
+            cell.isValid = model.status;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            return cell;
+        }
+    }
     return [[UITableViewCell alloc] init];
 }
 
