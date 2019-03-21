@@ -73,6 +73,11 @@
 @property (nonatomic , assign) BOOL isFirstLoad;
 @property (nonatomic , assign) BOOL fromRecommend;
 
+//subscribe
+@property (nonatomic , assign) NSInteger subScribeOffset;
+@property (nonatomic , strong) NSString * subScribeSearchId;
+@property (nonatomic , assign) NSString * subScribeQuery;
+
 @end
 
 
@@ -355,6 +360,12 @@
     
     __weak typeof(self) wself = self;
     
+    if (self.isRefresh) {
+        self.subScribeQuery = query;
+        self.subScribeOffset = offset;
+        self.subScribeSearchId = searchId;
+    }
+    
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (!wself) {
@@ -367,6 +378,58 @@
     
     self.requestTask = task;
 }
+
+- (void)requestAddSubScribe
+{
+    [_requestTask cancel];
+    
+    __weak typeof(self) wself = self;
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    [dict setValue:@"怡海花园/安定门/200万以下/1000万以上///" forKey:@"text"];
+    [dict setValue:@"1" forKey:@"status"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+
+    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeDataDataSubscribeInfoModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
+        if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+            FHSugSubscribeDataDataSubscribeInfoModel *infoModel = (FHSugSubscribeDataDataSubscribeInfoModel *)model;
+            if (infoModel.text) {
+                NSMutableDictionary *dict = [NSMutableDictionary new];
+                [dict setValue:infoModel.text forKey:@"text"];
+                [dict setValue:@"1" forKey:@"status"];
+
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+            }
+        }
+
+    }];
+    
+    self.requestTask = task;
+}
+
+- (void)requestDeleteSubScribe:(NSString *)subscribeId andText:(NSString *)text
+{
+    [_requestTask cancel];
+    
+    __weak typeof(self) wself = self;
+    NSMutableDictionary *dict = [NSMutableDictionary new];
+    [dict setValue:text forKey:@"text"];
+    [dict setValue:@"0" forKey:@"status"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+    
+    TTHttpTask *task = [FHHouseListAPI requestDeleteSugSubscribe:subscribeId class:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        NSMutableDictionary *dict = [NSMutableDictionary new];
+        [dict setValue:text forKey:@"text"];
+        [dict setValue:@"0" forKey:@"status"];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+    }];
+    
+    self.requestTask = task;
+}
+
+
 
 -(void)requestRecommendErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId{
     
@@ -894,6 +957,14 @@
                             if ([subScribCell respondsToSelector:@selector(refreshUI:)]) {
                                 [subScribCell refreshUI:subscribModel];
                             }
+                            __weak typeof(self) weakSelf = self;
+                            subScribCell.addSubscribeAction = ^{
+                                [weakSelf requestAddSubScribe];
+                            };
+                            
+                            subScribCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
+                                [weakSelf requestDeleteSubScribe:subscribeId andText:subscribModel.text];
+                            };
                             return subScribCell;
                         }
                     }

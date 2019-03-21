@@ -7,8 +7,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSugSubscribeDataDataSubscribeInfoModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *subscribeId;
+@property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, assign) BOOL isSubscribe;
+@property (nonatomic, assign) BOOL status;
+
+
 @end
 
 // 推荐列表返回的m数据模型（订阅成功时的）
