@@ -135,7 +135,7 @@
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.infoPanel);
-        make.top.mas_equalTo(self.infoPanel).offset(-3);
+        make.top.mas_equalTo(self.infoPanel).offset(-2);
         make.height.mas_equalTo(20);
     }];
     
@@ -263,7 +263,7 @@
         
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.infoPanel).offset(-3);
+            make.top.mas_equalTo(self.infoPanel).offset(-2);
             make.height.mas_equalTo(20);
         }];
         
@@ -294,7 +294,7 @@
         
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.infoPanel);            
-            make.top.mas_equalTo(self.infoPanel).offset(fitSize.height < 30 ? -3 : -5);
+            make.top.mas_equalTo(self.infoPanel).offset(fitSize.height < 30 ? -2 : -4);
             make.height.mas_equalTo(fitSize.height < 30 ? 20 : 50);
         }];
         
