@@ -93,6 +93,8 @@
 #import "AKLoginTrafficViewController.h"
 //#import "Bubble-Swift.h"
 #import <FHEnvContext.h>
+#import <BDABTestSDK/BDABTestManager.h>
+#import <HMDTTMonitor.h>
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -299,8 +301,22 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 //    [self addKVO];
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
+    
+    [self addClientABTestLog];
 }
 
+// add by zjing 测试客户端AB分流清空
+- (void)addClientABTestLog
+{
+    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
+    //    获取曝光结果
+    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (exposureExperiments.length > 0) {
+        params[@"experiments"] = exposureExperiments;
+    }
+    [[HMDTTMonitor defaultManager]hmdTrackService:@"abtest_show_house" status:[res1 integerValue] extra:params];
+}
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];

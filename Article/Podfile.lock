@@ -21,6 +21,9 @@ PODS:
   - AMapSearch (6.1.1.1-binary)
   - Aspects (1.4.1.1-binary)
   - AWEVideoPlayer (0.3.20)
+  - BDABTestSDK (1.0.1):
+    - BDABTestSDK/Core (= 1.0.1)
+  - BDABTestSDK/Core (1.0.1)
   - BDAccount/Account (0.1.0)
   - BDAccount/AccountCore (0.1.0)
   - BDAccount/Flow (0.1.0)
@@ -393,7 +396,7 @@ PODS:
   - TTThirdPartySDKs/QQSDK (0.0.4)
   - TTThirdPartySDKs/WeChatSDK (0.0.4)
   - TTThirdPartySDKs/WeiboSDK (0.0.4)
-  - TTTracker (1.0.0.6)
+  - TTTracker (1.0.6-rc.2)
   - TTUGCFoundation (0.1.3):
     - TTUGCFoundation/RequestMonitor (= 0.1.3)
     - TTUGCFoundation/TTUGCActionDataService (= 0.1.3)
@@ -448,6 +451,7 @@ DEPENDENCIES:
   - AMapSearch (= 6.1.1.1-binary)
   - Aspects (= 1.4.1.1-binary)
   - AWEVideoPlayer (= 0.3.20)
+  - BDABTestSDK (= 1.0.1)
   - BDAccount/Account (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDAccount/AccountCore (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDAccount/Flow (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
@@ -637,7 +641,7 @@ DEPENDENCIES:
   - TTThirdPartySDKs/QQSDK (= 0.0.4)
   - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
   - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
-  - TTTracker (= 1.0.0.6)
+  - TTTracker (= 1.0.6-rc.2)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
   - TTUIWidget (from `../AKPlugins/TTUIWidget`)
   - TTUserSettings (= 0.3.4.1-binary)
@@ -781,6 +785,7 @@ SPEC CHECKSUMS:
   AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
   AWEVideoPlayer: 07ffe01239d24b1010d95b074c002dc7a54b04fc
+  BDABTestSDK: 31c6d15c2afe5104d384117ff2ee08fb530f102e
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
   BDALog: 989a655db0f8ec62a4a56970a462eb1a83d75645
   BDAlogProtocol: 3079beb0afd725ea0e209a617dc4381158aa151f
@@ -894,7 +899,7 @@ SPEC CHECKSUMS:
   TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
   TTThemed: c441f202fc9c8833863bf6f8473fd833cd5e3ac6
   TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
-  TTTracker: 4ae6c8f08938190fdcc0f55bc833fc40b0f35754
+  TTTracker: 48995fe0c835171ca88a104783fb1ff183e28876
   TTUGCFoundation: 38878721f4ea5eecaa985eda71e933a8dded1fe5
   TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
@@ -916,6 +921,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 78be08792ba17711108309aba5b03795523dba12
+PODFILE CHECKSUM: 7a6f45e4b501805f30e4db7e9efa1b1888b12cf4
 
 COCOAPODS: 1.4.0

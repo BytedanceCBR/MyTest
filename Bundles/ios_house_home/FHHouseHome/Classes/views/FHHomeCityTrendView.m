@@ -79,15 +79,9 @@
 
 -(void)leftBtnDidClick:(UIButton *)btn {
     
-    // add by zjing for test
-    UIViewController *panelVC = [BDABTestManager panelViewController];
-    [[TTUIResponderHelper topmostViewController]presentViewController:panelVC animated:YES completion:nil];
-    return;
-    
     if (self.clickedLeftCallback) {
         self.clickedLeftCallback(btn);
     }
-
 }
 
 
