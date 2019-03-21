@@ -338,7 +338,6 @@
     NSArray *priceTrends = cellModel.priceTrends; 
     self.priceValueLabel.text = cellModel.neighborhoodInfo.pricingPerSqm;
     self.priceView.hidden = NO;
-    [self updateChartConstraints:NO];
     
     float pricingPerSqm = cellModel.neighborhoodInfo.pricingPerSqmV.floatValue;
     if (pricingPerSqm > 0) {
@@ -379,6 +378,17 @@
         }
     }
     self.priceTrends = priceTrends;
+    if (priceTrends.count < 1) {
+        [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.top.mas_equalTo(0);
+            make.height.mas_equalTo(0);
+        }];
+        [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0);
+        }];
+    }else {
+        [self updateChartConstraints:NO];
+    }
 }
 
 - (void)updateChartConstraints:(BOOL)animated
