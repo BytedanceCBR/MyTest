@@ -6,10 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHSugSubscribeListViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSugSubscribeListViewModel : NSObject
+
+-(instancetype)initWithController:(FHSugSubscribeListViewController *)viewController tableView:(UITableView *)tableView;
 
 @end
 
