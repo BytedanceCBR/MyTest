@@ -9,6 +9,8 @@
 #import "FHHouseListAPI.h"
 #import "FHSugSubscribeItemCell.h"
 
+#define kFHSugSubscribeNotificationName @"kFHSugSubscribeNotificationName"
+
 @interface FHSugSubscribeListViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic , weak) UITableView *tableView;
@@ -28,6 +30,22 @@
         self.listController = viewController;
         self.tableView = tableView;
         [self configTableView];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:kFHSugSubscribeNotificationName object:nil];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+             NSDictionary *ui =       @{@"subscribe_state":@(NO),
+                      @"subscribe_id":@"123458",
+                                        };
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+        });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[2];
+            NSDictionary *ui =       @{@"subscribe_state":@(YES),
+                                       @"subscribe_id":@"123458",
+                                       @"subscribe_item":model
+                                       };
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+        });
     }
     return self;
 }
@@ -38,6 +56,39 @@
     _tableView.dataSource = self;
 
     [_tableView registerClass:[FHSugSubscribeItemCell class] forCellReuseIdentifier:@"FHSugSubscribeItemCell"];
+}
+
+- (void)sugSubscribeNoti:(NSNotification *)noti {
+    NSDictionary *userInfo = noti.object;
+    if (userInfo) {
+        BOOL subscribe_state = [userInfo[@"subscribe_state"] boolValue];
+        if (subscribe_state) {
+            // 订阅
+            FHSugSubscribeDataDataItemsModel *subscribe_item = userInfo[@"subscribe_item"];
+            if (subscribe_item && [subscribe_item isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
+                [self.subscribeItems insertObject:subscribe_item atIndex:0];
+            }
+        } else {
+            // 取消订阅
+            NSString *subscribe_id = userInfo[@"subscribe_id"];
+            __block NSInteger findIndex = -1;
+            if (subscribe_id.length > 0) {
+                [self.subscribeItems enumerateObjectsUsingBlock:^(FHSugSubscribeDataDataItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj.subscribeId isEqualToString:subscribe_id]) {
+                        findIndex = idx;
+                        *stop = YES;
+                    }
+                }];
+                if (findIndex >= 0 && findIndex < self.subscribeItems.count) {
+                    [self.subscribeItems removeObjectAtIndex:findIndex];
+                }
+            }
+        }
+        __weak typeof(self) wself = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wself reloadListData];
+        });
+    }
 }
 
 - (void)reloadListData {
@@ -65,6 +116,12 @@
         [wself.subscribeItems removeAllObjects];
         if (model != NULL) {
             // 构建数据源
+            NSString *countStr = model.data.data.total;
+            if (countStr.length > 0) {
+                wself.totalCount = [countStr integerValue];
+            } else {
+                wself.totalCount = 0;
+            }
             if (model.data.data.items.count > 0) {
                 [wself.subscribeItems addObjectsFromArray:model.data.data.items];
             }
@@ -74,6 +131,11 @@
         // 刷新
         [wself reloadListData];
     }];
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource

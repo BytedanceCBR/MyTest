@@ -55,8 +55,52 @@
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         [self setupGuessYouWantView];
         [self setupSubscribeView];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
     }
     return self;
+}
+
+- (void)sugSubscribeNoti:(NSNotification *)noti {
+    NSDictionary *userInfo = noti.object;
+    if (userInfo) {
+        BOOL subscribe_state = [userInfo[@"subscribe_state"] boolValue];
+        if (subscribe_state) {
+            // 订阅
+            FHSugSubscribeDataDataItemsModel *subscribe_item = userInfo[@"subscribe_item"];
+            if (subscribe_item && [subscribe_item isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
+                [self.subscribeItems insertObject:subscribe_item atIndex:0];
+                self.totalCount += 1;
+            }
+        } else {
+            // 取消订阅
+            NSString *subscribe_id = userInfo[@"subscribe_id"];
+            __block NSInteger findIndex = -1;
+            if (subscribe_id.length > 0) {
+                [self.subscribeItems enumerateObjectsUsingBlock:^(FHSugSubscribeDataDataItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj.subscribeId isEqualToString:subscribe_id]) {
+                        findIndex = idx;
+                        *stop = YES;
+                    }
+                }];
+                if (findIndex >= 0 && findIndex < self.subscribeItems.count) {
+                    [self.subscribeItems removeObjectAtIndex:findIndex];
+                    self.totalCount -= 1;
+                }
+            }
+        }
+        __weak typeof(self) wself = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // count 和 数据要一起变
+            wself.subscribeView.totalCount = wself.totalCount;
+            wself.subscribeView.subscribeItems = wself.subscribeItems;
+            [wself reloadHistoryTableView];
+        });
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupGuessYouWantView {
@@ -733,7 +777,7 @@
         [self.sugSubscribeTask cancel];
     }
     __weak typeof(self) wself = self;
-    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:4 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         wself.subscribeView.totalCount = 0;
         // if (model != NULL && error == NULL) add by zyk 后面要改w回来，现在为了测试
