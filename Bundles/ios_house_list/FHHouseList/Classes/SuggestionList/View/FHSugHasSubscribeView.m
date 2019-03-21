@@ -191,6 +191,7 @@
     _unValidLabel.layer.borderColor = [UIColor themeGray6].CGColor;
     _unValidLabel.layer.borderWidth = 0.5;
     _unValidLabel.text = @"已失效";
+    _unValidLabel.textAlignment = NSTextAlignmentCenter;
     _unValidLabel.backgroundColor = [UIColor themeGray7];
     _unValidLabel.font = [UIFont themeFontRegular:10];
     _unValidLabel.textColor = [UIColor themeGray3];
@@ -198,9 +199,9 @@
     [_unValidLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
         make.left.mas_equalTo(self.titleLabel.mas_right).offset(4);
-        make.right.mas_lessThanOrEqualTo(self).offset(-14);
+        make.right.mas_equalTo(self).offset(-14);
         make.height.mas_equalTo(15);
-        make.width.mas_equalTo(30);
+        make.width.mas_equalTo(36);
     }];
 }
 
@@ -215,7 +216,7 @@
         _sugLabel.textColor = [UIColor themeGray3];
         [self.unValidLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(0);
-            make.right.mas_lessThanOrEqualTo(self).offset(-10);
+            make.right.mas_equalTo(self).offset(-10);
         }];
     } else {
         self.backgroundColor = [UIColor whiteColor];
@@ -224,8 +225,8 @@
         _titleLabel.textColor = [UIColor themeGray3];
         _sugLabel.textColor = [UIColor themeGray4];
         [self.unValidLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(30);
-            make.right.mas_lessThanOrEqualTo(self).offset(-14);
+            make.width.mas_equalTo(36);
+            make.right.mas_equalTo(self).offset(-14);
         }];
     }
 }
