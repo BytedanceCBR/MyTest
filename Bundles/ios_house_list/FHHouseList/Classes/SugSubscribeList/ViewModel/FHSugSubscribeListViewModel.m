@@ -32,20 +32,38 @@
         [self configTableView];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:kFHSugSubscribeNotificationName object:nil];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
              NSDictionary *ui =       @{@"subscribe_state":@(NO),
                       @"subscribe_id":@"123458",
                                         };
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
         });
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[2];
-            NSDictionary *ui =       @{@"subscribe_state":@(YES),
-                                       @"subscribe_id":@"123458",
-                                       @"subscribe_item":model
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSDictionary *ui =       @{@"subscribe_state":@(NO),
+                                       @"subscribe_id":@"123457",
                                        };
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
         });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSDictionary *ui =       @{@"subscribe_state":@(NO),
+                                       @"subscribe_id":@"123456",
+                                       };
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+        });
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSDictionary *ui =       @{@"subscribe_state":@(NO),
+                                       @"subscribe_id":@"123459",
+                                       };
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+        });
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[2];
+//            NSDictionary *ui =       @{@"subscribe_state":@(YES),
+//                                       @"subscribe_id":@"123458",
+//                                       @"subscribe_item":model
+//                                       };
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+//        });
     }
     return self;
 }
