@@ -94,7 +94,7 @@
 - (void)sugSubscribeListClick {
     // add by zyk 记得埋点添加
     NSString *openUrl = [NSString stringWithFormat:@"fschema://sug_subscribe_list?house_type=%ld",self.houseType];
-    NSDictionary * infos = @{};
+    NSDictionary * infos = @{@"title":@"我订阅的搜索"};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     
     NSURL *url = [NSURL URLWithString:openUrl];
