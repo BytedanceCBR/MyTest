@@ -241,8 +241,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    NSArray *modes = @[NSDefaultRunLoopMode];
-    [self performSelector:@selector(showFullPhoneNum:) withObject:[NSNumber numberWithBool:NO] afterDelay:0 inModes:modes];
+//    NSArray *modes = @[NSDefaultRunLoopMode];
+//    [self performSelector:@selector(showFullPhoneNum:) withObject:[NSNumber numberWithBool:NO] afterDelay:0 inModes:modes];
 //    [self showFullPhoneNum:NO];
     return YES;
 }
