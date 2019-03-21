@@ -7,13 +7,15 @@
 
 #import "FHSugSubscribeListViewModel.h"
 #import "FHHouseListAPI.h"
-
+#import "FHSugSubscribeItemCell.h"
 
 @interface FHSugSubscribeListViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHSugSubscribeListViewController *listController;
 @property(nonatomic , weak) TTHttpTask *httpTask;
+@property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
+@property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
 
 @end
 
@@ -22,6 +24,7 @@
 -(instancetype)initWithController:(FHSugSubscribeListViewController *)viewController tableView:(UITableView *)tableView
 {   self = [super init];
     if (self) {
+        self.subscribeItems = [NSMutableArray new];
         self.listController = viewController;
         self.tableView = tableView;
         [self configTableView];
@@ -33,9 +36,44 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
+
+    [_tableView registerClass:[FHSugSubscribeItemCell class] forCellReuseIdentifier:@"FHSugSubscribeItemCell"];
+}
+
+- (void)reloadListData {
+    if (self.subscribeItems.count > 0) {
+        self.tableView.hidden = NO;
+        [self.listController.emptyView hideEmptyView];
+        self.listController.hasValidateData = YES;
+        [self.tableView reloadData];
+    } else {
+        // 显示空页面
+        self.tableView.hidden = YES;
+        self.listController.hasValidateData = NO;
+        [self.listController.emptyView showEmptyWithTip:@"暂无订阅结果" errorImageName:kFHErrorMaskNoListDataImageName showRetry:NO];
+    }
+}
+
+- (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType {
     
-//    [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kSingleImageCellId];
-//    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    if (self.httpTask) {
+        [self.httpTask cancel];
+    }
+    __weak typeof(self) wself = self;
+    self.httpTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:3 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
+        // if (model != NULL && error == NULL) add by zyk 后面要改w回来，现在为了测试
+        [wself.subscribeItems removeAllObjects];
+        if (model != NULL) {
+            // 构建数据源
+            if (model.data.data.items.count > 0) {
+                [wself.subscribeItems addObjectsFromArray:model.data.data.items];
+            }
+        } else {
+            wself.listController.hasValidateData = NO;
+        }
+        // 刷新
+        [wself reloadListData];
+    }];
 }
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
@@ -46,13 +84,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (self.listController.hasValidateData == YES) {
-//        return _houseList.count;
-    } else {
-        // PlaceholderCell Count
-        return 10;
-    }
-    return 0;
+    return self.subscribeItems.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -77,39 +109,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if (self.listController.hasValidateData == YES && indexPath.row < self.houseList.count) {
-//        NSInteger rank = indexPath.row - 1;
-//        NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
-//        if (!self.houseShowTracerDic[recordKey]) {
-//            // 埋点
-//            self.houseShowTracerDic[recordKey] = @(YES);
-//            [self addHouseShowLog:indexPath];
-//        }
-//    }
-}
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (self.listController.hasValidateData) {
-        
-//        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//        if (indexPath.row < self.houseList.count) {
-//
-//            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//            CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-//            if (height < 1) {
-//                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-//                height = [tableView fd_heightForCellWithIdentifier:kSingleImageCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-//                    [cell updateWithHouseCellModel:cellModel];
-//                    [cell refreshTopMargin: 20];
-//                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
-//                }];
-//            }
-//            return height;
-//        }
-    }
-    
-    return 105;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -124,7 +124,6 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    [self jump2DetailPage:indexPath];
 }
 
 @end
