@@ -216,10 +216,10 @@
     // key:实验BDABTestBaseExperiment初始化的key，value：实验数据，即Libra实验组对应配置参数，数据类型必须对应
     NSMutableDictionary *experiments = @{}.mutableCopy;
     if ([fhSettings valueForKey:@"f_test_params"]) {
-//        experiments[@"f_test_params"] = @{@"card_Style":@"1"};
+        experiments[@"f_test_params"] = fhSettings[@"f_test_params"];
     }
     if ([fhSettings valueForKey:@"show_house"]) {
-//        experiments[@"show_house"] = @"2";
+        experiments[@"show_house"] = fhSettings[@"show_house"];
     }
     if (experiments.count > 0) {
         [BDABTestManager saveServerSettingsForClientExperiments:experiments];
