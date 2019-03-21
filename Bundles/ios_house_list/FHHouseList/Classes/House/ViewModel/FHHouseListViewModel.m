@@ -444,7 +444,18 @@
                 [self.sugesstHouseList addObject:recommendTitleModel];
             }
             
-
+            if (self.isRefresh) {
+              
+                //只有二手房有订阅
+                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = [[FHSugSubscribeDataDataSubscribeInfoModel alloc] initWithDictionary:@{@"text":@"怡海花园/安定门/200万以下/1000万以上///",@"is_subscribe":@(1),@"subscribe_id":@"123456567"} error:nil];
+                if (itemArray.count > 9) {
+                    [itemArray insertObject:subscribeMode atIndex:9];
+                }else
+                {
+                    [itemArray addObject:subscribeMode];
+                }
+            }
+    
         } else if ([model isKindOfClass:[FHNewHouseListResponseModel class]]) {
             
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
@@ -495,12 +506,7 @@
         
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
-            
-            //只有二手房有订阅
-            if (self.houseType == FHHouseTypeSecondHandHouse) {
-                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = [[FHSugSubscribeDataDataSubscribeInfoModel alloc] initWithDictionary:@{@"text":@"怡海花园/安定门/200万以下/1000万以上///",@"is_subscribe":@(1),@"subscribe_id":@"123456567"} error:nil];
-                [itemArray addObject:subscribeMode];
-            }
+   
 
             self.isFirstLoad = NO;
             if (self.searchId.length > 0 ) {
@@ -956,12 +962,19 @@
             return height;
         } else {
             if (indexPath.section == 0) {
-                
+            
                 FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
                 CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
                 
+                if (cellModel.isSubscribCell) {
+                    if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                        return 121;
+                    }
+                }
+                
                 BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
                 return (isLastCell ? 125 : 105)+reasonHeight;
+
 //                if (indexPath.row < self.houseList.count) {
 //
 //                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];

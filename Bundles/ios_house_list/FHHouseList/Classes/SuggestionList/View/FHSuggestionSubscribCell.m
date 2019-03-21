@@ -27,17 +27,28 @@
 
 - (void)setupUI {
     
-    
     _backImageView = [UIImageView new];
     [self.contentView addSubview:_backImageView];
-    [_backImageView setBackgroundColor:[UIColor redColor]];
+    [_backImageView setImage:[UIImage imageNamed:@"suglist_subscribe_mask"]];
+    
     [_backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(14);
         make.right.mas_equalTo(-14);
-        make.top.bottom.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(101);
+        make.bottom.mas_equalTo(self.contentView);
     }];
     
-    // label
+    UIImageView *imageRight = [[UIImageView alloc] init];
+    [imageRight setImage:[UIImage imageNamed:@"suglist_subscribe_right"]];
+    [_backImageView addSubview:imageRight];
+    [imageRight mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-14);
+        make.height.mas_equalTo(61);
+        make.width.mas_equalTo(166);
+        make.bottom.equalTo(self.backImageView).offset(-8);
+    }];
+
+
     _titleLabel = [[UILabel alloc] init];
     _titleLabel.font = [UIFont themeFontMedium:14];
     _titleLabel.textColor = [UIColor themeGray1];
@@ -45,10 +56,11 @@
     [self.contentView addSubview:_titleLabel];
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(36);
-        make.top.mas_equalTo(19);
+        make.top.mas_equalTo(40);
         make.height.mas_equalTo(20);
     }];
-    // secondaryLabel
+
+
     _subTitleLabel = [[UILabel alloc] init];
     _subTitleLabel.font = [UIFont themeFontRegular:11];
     _subTitleLabel.textColor = [UIColor themeGray3];
@@ -57,37 +69,39 @@
     
     
     [_subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleLabel.mas_right).offset(0);
-        make.top.equalTo(self.titleLabel.mas_bottom);
+        make.left.equalTo(self.titleLabel).offset(0);
+        make.top.equalTo(self.titleLabel.mas_bottom).offset(1);
         make.height.mas_equalTo(16);
     }];
     
     _bottomContentLabel = [[UILabel alloc] init];
     _bottomContentLabel.font = [UIFont themeFontRegular:12];
     _bottomContentLabel.textColor = [UIColor themeGray2];
-    _bottomContentLabel.textAlignment = NSTextAlignmentRight;
+    _bottomContentLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_bottomContentLabel];
     [_bottomContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleLabel.mas_right).offset(6);
-        make.top.equalTo(self.subTitleLabel.mas_bottom);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.width.mas_greaterThanOrEqualTo(63);
+        make.left.equalTo(self.contentView).offset(36);
+        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(6);
+        make.right.equalTo(self.contentView).offset(-36);
     }];
     
     _subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
     _subscribeBtn.layer.masksToBounds = YES;
+    _subscribeBtn.titleLabel.font = [UIFont themeFontRegular:12];
     _subscribeBtn.layer.borderColor = [UIColor themeRed1].CGColor;
     _subscribeBtn.layer.borderWidth = 0.5;
-    
+    _subscribeBtn.layer.cornerRadius = 8;
+    [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [self.contentView addSubview:_subscribeBtn];
-    [_subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.titleLabel.mas_right).offset(6);
-        make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.width.mas_greaterThanOrEqualTo(63);
-    }];
     
+    
+    [_subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.contentView).offset(-40);
+        make.top.equalTo(self.titleLabel);
+        make.width.mas_equalTo(52);
+        make.height.mas_equalTo(21);
+    }];
 }
 
 - (void)refreshUI:(JSONModel *)data
