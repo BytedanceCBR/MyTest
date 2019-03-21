@@ -228,6 +228,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         propertyModel.baseInfo = model.data.baseInfo;
         [self.items addObject:propertyModel];
     }
+    // 添加房屋配置
+    if (model.data.facilities.count > 0) {
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailRentFacilityModel *infoModel = [[FHDetailRentFacilityModel alloc] init];
+        infoModel.facilities = model.data.facilities;
+        [self.items addObject:infoModel];
+    }
     //添加订阅房源动态卡片
     if([self isShowSubscribe]){
         FHDetailHouseSubscribeModel *subscribeModel = [[FHDetailHouseSubscribeModel alloc] init];
@@ -242,14 +250,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
                 };
             }
         });
-    }
-    // 添加房屋配置
-    if (model.data.facilities.count > 0) {
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailRentFacilityModel *infoModel = [[FHDetailRentFacilityModel alloc] init];
-        infoModel.facilities = model.data.facilities;
-        [self.items addObject:infoModel];
     }
     // 房源概况
     if (model.data.houseOverview.list.count > 0) {
@@ -405,7 +405,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
-            [[ToastManager manager] showToast:@"提交成功"];
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
             
@@ -425,7 +425,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (BOOL)isShowSubscribe {
     BOOL isShow = NO;
     NSDictionary *fhSettings = [self fhSettings];
-    BOOL rentHouseSubscribe =  [fhSettings tt_boolValueForKey:@"f_is_show_rent_house_sub_entry"];
+    BOOL rentHouseSubscribe =  [fhSettings tt_boolValueForKey:@"f_is_show_house_sub_entry"];
     //根据服务器setting设置和本地缓存，已经订阅过的house不再显示
     YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
     if(rentHouseSubscribe && ![subscribeHouseCache containsObjectForKey:self.houseId]){
