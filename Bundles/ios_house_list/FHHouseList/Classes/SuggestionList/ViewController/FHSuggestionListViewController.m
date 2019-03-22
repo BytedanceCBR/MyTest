@@ -417,26 +417,16 @@
         }
         [self.navigationController popViewControllerAnimated:YES];
     } else {
-        // 拿到所需参数，跳转
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        NSMutableDictionary *tempInfos = [NSMutableDictionary dictionaryWithDictionary:infos];
+        // 跳转页面之后需要移除当前页面，如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
+        if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeOldMain) {
+            tempInfos[@"fh_needRemoveLastVC_key"] = @(YES);
+            tempInfos[@"fh_needRemoveedVCNameString_key"] = @"FHSuggestionListViewController";
+        }
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tempInfos];
         
         NSURL *url = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
-    [self dismissSelfVCIfNeeded];
-}
-
-// 如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
-- (void)dismissSelfVCIfNeeded {
-    if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeOldMain) {
-        // 解决连续点击猜你想搜页面白屏问题，多次走当前方法
-        if (!self.hasDismissedVC) {
-            self.hasDismissedVC = YES;
-            __weak typeof(self) wSelf = self;
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [wSelf removeFromParentViewController];
-            });
-        }
     }
 }
 

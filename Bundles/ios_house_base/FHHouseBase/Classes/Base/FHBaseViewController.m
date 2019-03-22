@@ -20,6 +20,10 @@
 
 @property (nonatomic, copy) NSString *titleName;
 @property (nonatomic, assign) UIEdgeInsets emptyEdgeInsets;
+@property (nonatomic, assign)   BOOL       isFirstViewDidAppear;
+/* 需要移除之前的某个页面 */
+@property (nonatomic, assign)   BOOL       needRemoveLastVC;// fh_needRemoveLastVC_key @(YES)
+@property (nonatomic, copy)     NSString       *needRemovedVCNameString; // 类名Key：fh_needRemoveedVCNameString_key
 
 @end
 
@@ -29,8 +33,14 @@
 {
     self = [super init];
     if (self) {
+        self.isFirstViewDidAppear = YES;
+        self.needRemoveLastVC = NO;
         self.titleName = [paramObj.userInfo.allInfo objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
+        if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
+            self.needRemoveLastVC = [paramObj.allParams[@"fh_needRemoveLastVC_key"] boolValue];
+            self.needRemovedVCNameString = paramObj.allParams[@"fh_needRemoveedVCNameString_key"];
+        }
         if ([tracer isKindOfClass:[FHTracerModel class]]) {
             self.tracerModel = (FHTracerModel *)tracer;
             self.tracerDict = [NSMutableDictionary new];
@@ -195,6 +205,26 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    if (self.isFirstViewDidAppear && self.needRemoveLastVC && self.needRemovedVCNameString.length > 0) {
+        self.isFirstViewDidAppear = NO;
+        self.needRemoveLastVC = NO;
+        if (self.navigationController && self.navigationController.viewControllers.count > 0) {
+            __block BOOL hasChanged = NO;
+            NSMutableArray *arrVCs = [[NSMutableArray alloc] initWithArray:self.navigationController.viewControllers];
+            [arrVCs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([NSStringFromClass([obj class]) isEqualToString:self.needRemovedVCNameString]) {
+                    [arrVCs removeObjectAtIndex:idx];
+                    hasChanged = YES;
+                    *stop = YES;
+                }
+            }];
+            if (hasChanged) {
+                self.navigationController.viewControllers = arrVCs;
+            }
+        }
+    }
+    self.isFirstViewDidAppear = NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations

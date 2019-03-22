@@ -47,7 +47,7 @@
     [self addSubview:_rightIcon];
     [_rightIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(-24);
+        make.right.mas_equalTo(-15);
         make.height.width.mas_equalTo(16);
     }];
     // sugLabel
