@@ -50,7 +50,7 @@
         if (!isNeedUploadLaunchlog) {
             return NO;
         }
-        NSMutableDictionary *dic = [[self dealUrlToLogParams:[NSURL URLWithString:[scheme stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]] mutableCopy];
+        NSMutableDictionary *dic = [[self dealUrlToLogParams:[NSURL URLWithString:scheme]] mutableCopy];
         if (!SSIsEmptyDictionary(dic)) {
             dic[@"event_type"] = @"house_app2c_v2";
             [TTTrackerWrapper eventV3:@"launch_log" params:dic];
