@@ -15,6 +15,7 @@
 #import "FHEnvContext.h"
 #import "ToastManager.h"
 #import "TTNavigationController.h"
+#import "FHSugSubscribeListViewController.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -436,8 +437,11 @@
         NSMutableDictionary *tempInfos = [NSMutableDictionary dictionaryWithDictionary:infos];
         // 跳转页面之后需要移除当前页面，如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
         if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeOldMain) {
-            tempInfos[@"fh_needRemoveLastVC_key"] = @(YES);
-            tempInfos[@"fh_needRemoveedVCNamesString_key"] = @[@"FHSuggestionListViewController",@"FHSugSubscribeListViewController"];
+            UIViewController *topVC = self.navigationController.viewControllers.lastObject;
+            if (![topVC isKindOfClass:[FHSugSubscribeListViewController class]]) {
+                tempInfos[@"fh_needRemoveLastVC_key"] = @(YES);
+                tempInfos[@"fh_needRemoveedVCNamesString_key"] = @[@"FHSuggestionListViewController",@"FHSugSubscribeListViewController"];
+            }
         }
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tempInfos];
         
