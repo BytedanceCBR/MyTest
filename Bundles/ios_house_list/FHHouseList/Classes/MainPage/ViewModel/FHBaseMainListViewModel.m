@@ -44,8 +44,13 @@
 #import "FHBaseMainListViewModel+Old.h"
 #import "FHBaseMainListViewModel+Rent.h"
 
+#import "FHSugSubscribeModel.h"
+#import "FHSuggestionSubscribCell.h"
+#import "FHHouseListAPI.h"
+
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
+#define kSubscribMainPage @"kFHHouseListSubscribCellId"
 #define kSugCellId @"sug_cell_id"
 #define kFilterBarHeight 44
 #define MAX_ICON_COUNT 4
@@ -68,6 +73,7 @@
         tableView.delegate = self;
         tableView.dataSource = self;
         
+        [_tableView registerClass:[FHSuggestionSubscribCell class] forCellReuseIdentifier:kSubscribMainPage];
         [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleCellId];
         [_tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kSugCellId];
         [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
@@ -188,6 +194,56 @@
     self.errorMaskView.hidden = !show;
 }
 
+- (void)requestAddSubScribe:(NSString *)text
+{
+    [_requestTask cancel];
+    
+    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
+        if ([model isKindOfClass:[FHSugSubscribeModel class]]) {
+            FHSugSubscribeModel *infoModel = (FHSugSubscribeModel *)model;
+            if (infoModel.data.items.firstObject) {
+                FHSugSubscribeDataDataSubscribeInfoModel *subModel = (FHSugSubscribeDataDataSubscribeInfoModel *)infoModel.data.items.firstObject;
+                
+                NSMutableDictionary *dict = [NSMutableDictionary new];
+                [dict setValue:text forKey:@"text"];
+                [dict setValue:@"1" forKey:@"status"];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+                
+                NSMutableDictionary *uiDict = [NSMutableDictionary new];
+                [uiDict setValue:@(YES) forKey:@"subscribe_state"];
+                [uiDict setValue:subModel.subscribeId forKey:@"subscribe_id"];
+                [uiDict setValue:subModel forKey:@"subscribe_item"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
+            }
+        }
+        
+    }];
+    
+    self.requestTask = task;
+}
+
+- (void)requestDeleteSubScribe:(NSString *)subscribeId andText:(NSString *)text
+{
+    [_requestTask cancel];
+    
+    TTHttpTask *task = [FHHouseListAPI requestDeleteSugSubscribe:subscribeId class:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if (!error) {
+            NSMutableDictionary *dict = [NSMutableDictionary new];
+            [dict setValue:text forKey:@"text"];
+            [dict setValue:@"0" forKey:@"status"];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+            
+            NSMutableDictionary *uiDict = [NSMutableDictionary new];
+            [uiDict setValue:@(NO) forKey:@"subscribe_state"];
+            [uiDict setValue:subscribeId forKey:@"subscribe_id"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
+        }
+    }];
+    
+    self.requestTask = task;
+}
 
 
 -(void)requestData:(BOOL)isHead
@@ -265,7 +321,7 @@
     if (model) {
         
         
-        NSArray *items = nil;
+        NSMutableArray *items = nil;
         NSArray *recommendItems = nil;
         BOOL hasMore = NO;
         NSString *refreshTip = nil;
@@ -284,7 +340,7 @@
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
-            items = houseModel.items;
+            items = [NSMutableArray arrayWithArray:houseModel.items];
             redirectTips = houseModel.redirectTips;
             recommendHouseDataModel = houseModel.recommendSearchModel;
             recommendItems = recommendHouseDataModel.items;
@@ -299,6 +355,19 @@
                 recommendTitleModel.title = recommendHouseDataModel.recommendTitle;
                 [self.sugesstHouseList addObject:recommendTitleModel];
             }
+            
+            if (isRefresh) {
+                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
+                if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                    if (items.count > 9) {
+                        [items insertObject:subscribeMode atIndex:9];
+                    }else
+                    {
+                        [items addObject:subscribeMode];
+                    }
+                }
+            }
+            
         }else if ([model isKindOfClass:[FHHouseRentModel class]]){ //租房大类页
             FHHouseRentDataModel *rentModel = [(FHHouseRentModel *)model data];
             
@@ -307,7 +376,7 @@
             
             hasMore = rentModel.hasMore;
             refreshTip = rentModel.refreshTip;
-            items = rentModel.items;
+            items = [NSMutableArray arrayWithArray:rentModel.items];
             self.searchId = rentModel.searchId;
         }
         
@@ -343,11 +412,17 @@
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
                 cellModel.secondModel = obj;
                 cellModel.isRecommendCell = NO;
+    
                 [self.houseList addObject:cellModel];
             }else if ([obj isKindOfClass:[FHHouseRentDataItemsModel class]]){
                 FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
                 cellModel.rentModel = obj;
                 cellModel.isRecommendCell = NO;
+                [self.houseList addObject:cellModel];
+            }else if ([obj isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]){
+                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
+                cellModel.subscribModel = obj;
+                cellModel.isSubscribCell = YES;
                 [self.houseList addObject:cellModel];
             }
         }];
@@ -787,6 +862,26 @@
                 if (indexPath.row < self.houseList.count) {
                     cellModel = self.houseList[indexPath.row];
                 }
+                
+                if (cellModel.isSubscribCell) {
+                    if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                        FHSugSubscribeDataDataSubscribeInfoModel *subscribModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
+                        FHSuggestionSubscribCell *subScribCell = [tableView dequeueReusableCellWithIdentifier:kSubscribMainPage];
+                        if ([subScribCell respondsToSelector:@selector(refreshUI:)]) {
+                            [subScribCell refreshUI:subscribModel];
+                        }
+                        __weak typeof(self) weakSelf = self;
+                        subScribCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
+                            [weakSelf requestAddSubScribe:subscribeText];
+                        };
+                        
+                        subScribCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
+                            [weakSelf requestDeleteSubScribe:subscribeId andText:subscribModel.text];
+                        };
+                        return subScribCell;
+                    }
+                }
+                
             } else {
                 isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 if (indexPath.row < self.sugesstHouseList.count) {
@@ -834,6 +929,12 @@
         } else {
             isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
             cellModel = self.sugesstHouseList[indexPath.row];
+        }
+        
+        if (cellModel.isSubscribCell) {
+            if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                return 121;
+            }
         }
         
         CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;

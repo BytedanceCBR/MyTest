@@ -77,7 +77,7 @@
 //subscribe
 @property (nonatomic , assign) NSInteger subScribeOffset;
 @property (nonatomic , strong) NSString * subScribeSearchId;
-@property (nonatomic , assign) NSString * subScribeQuery;
+@property (nonatomic , strong) NSString * subScribeQuery;
 
 @end
 
@@ -361,9 +361,13 @@
     __weak typeof(self) wself = self;
     
     if (self.isRefresh) {
-        self.subScribeQuery = query;
+        if (query) {
+            self.subScribeQuery = [NSString stringWithString:query];
+        }
         self.subScribeOffset = offset;
-        self.subScribeSearchId = searchId;
+        if (searchId) {
+            self.subScribeSearchId = [NSString stringWithString:searchId];
+        }
     }
     
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:nil offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -508,10 +512,6 @@
             }
             
             if (self.isRefresh) {
-              
-                //只有二手房有订阅
-//                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = [[FHSugSubscribeDataDataSubscribeInfoModel alloc] initWithDictionary:@{@"text":@"怡海花园/安定门/200万以下/1000万以上///",@"is_subscribe":@(0),@"subscribe_id":@"123456567"} error:nil];
-                
                 FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
                 if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
                     if (itemArray.count > 9) {

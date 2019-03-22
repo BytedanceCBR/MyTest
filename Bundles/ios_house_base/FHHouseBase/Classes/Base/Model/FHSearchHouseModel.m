@@ -238,6 +238,7 @@
                            @"coreInfo": @"core_info",
                            @"hid":@"id",
                            @"originPrice":@"origin_price",
+                           @"subscribeInfo": @"subscribe_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

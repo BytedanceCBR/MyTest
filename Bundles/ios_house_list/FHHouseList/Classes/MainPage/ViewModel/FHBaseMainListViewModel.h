@@ -26,6 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UIView *topContainerView;
 @property(nonatomic , weak) FHBaseMainListViewController *viewController;
 
+@property (nonatomic , assign) NSInteger subScribeOffset;
+@property (nonatomic , strong) NSString * subScribeSearchId;
+@property (nonatomic , strong) NSString * subScribeQuery;
+
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj;
 
 -(void)requestData:(BOOL)isHead;

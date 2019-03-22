@@ -150,9 +150,11 @@
     //如果是同一个订阅条件
     if (text && [text isEqualToString:_currentModel.text]) {
         if (status && [status isEqualToString:@"1"]) {
+            self.currentModel.isSubscribe = YES;
             [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         }else if (status && [status isEqualToString:@"0"])
         {
+            self.currentModel.isSubscribe = NO;
             [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
         }
     }
