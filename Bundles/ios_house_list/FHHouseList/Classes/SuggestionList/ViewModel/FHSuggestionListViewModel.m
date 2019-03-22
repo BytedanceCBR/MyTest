@@ -14,8 +14,9 @@
 #import "FHHouseTypeManager.h"
 #import "FHSugHasSubscribeView.h"
 #import "FHSugSubscribeModel.h"
+#import "FHSugSubscribeListViewModel.h"
 
-@interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
 @property(nonatomic , weak) FHSuggestionListViewController *listController;
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
@@ -157,6 +158,12 @@
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
+
+// 搜索订阅组合列表页cell点击：FHSugSubscribeListViewController
+- (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
+    
+}
+
 // 猜你想搜点击
 - (void)guessYouWantItemClick:(FHGuessYouWantResponseDataDataModel *)model {
     NSString *jumpUrl = model.openUrl;

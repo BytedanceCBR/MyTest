@@ -110,4 +110,14 @@
     [self.viewModel requestSugSubscribe:cityId houseType:self.houseType];
 }
 
+// cell 点击
+- (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
+    if (model && [model isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
+        if (model.status) {
+            // 可点击
+            
+        }
+    }
+}
+
 @end

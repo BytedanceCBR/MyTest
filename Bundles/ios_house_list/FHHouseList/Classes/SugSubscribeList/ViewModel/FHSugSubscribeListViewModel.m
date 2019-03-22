@@ -8,6 +8,7 @@
 #import "FHSugSubscribeListViewModel.h"
 #import "FHHouseListAPI.h"
 #import "FHSugSubscribeItemCell.h"
+#import "FHSugSubscribeListViewController.h"
 
 #define kFHSugSubscribeNotificationName @"kFHSugSubscribeNotificationName"
 
@@ -32,30 +33,30 @@
         [self configTableView];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:kFHSugSubscribeNotificationName object:nil];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-             NSDictionary *ui =       @{@"subscribe_state":@(NO),
-                      @"subscribe_id":@"123458",
-                                        };
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-        });
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSDictionary *ui =       @{@"subscribe_state":@(NO),
-                                       @"subscribe_id":@"123457",
-                                       };
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-        });
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSDictionary *ui =       @{@"subscribe_state":@(NO),
-                                       @"subscribe_id":@"123456",
-                                       };
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-        });
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSDictionary *ui =       @{@"subscribe_state":@(NO),
-                                       @"subscribe_id":@"123459",
-                                       };
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-        });
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//             NSDictionary *ui =       @{@"subscribe_state":@(NO),
+//                      @"subscribe_id":@"123458",
+//                                        };
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+//        });
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            NSDictionary *ui =       @{@"subscribe_state":@(NO),
+//                                       @"subscribe_id":@"123457",
+//                                       };
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+//        });
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            NSDictionary *ui =       @{@"subscribe_state":@(NO),
+//                                       @"subscribe_id":@"123456",
+//                                       };
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+//        });
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            NSDictionary *ui =       @{@"subscribe_state":@(NO),
+//                                       @"subscribe_id":@"123459",
+//                                       };
+//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
+//        });
 //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //            FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[2];
 //            NSDictionary *ui =       @{@"subscribe_state":@(YES),
@@ -201,6 +202,11 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    // 由 FHSugSubscribeListViewController 转 FHSuggestionListViewModel 转 FHSuggestionListViewController 进行页面跳转和页面移除等操作
+    if (indexPath.row >= 0 && indexPath.row < self.subscribeItems.count) {
+        FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[indexPath.row];
+        [self.listController cellSubscribeItemClick:model];
+    }
 }
 
 @end

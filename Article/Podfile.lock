@@ -517,7 +517,7 @@ DEPENDENCIES:
   - HTSVideoPlay (from `../Vendor/ShortVideo`)
   - IESVideoPlayer (= 0.1.16)
   - IGListKit
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
+  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/sort_callback`)
   - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, branch `feature/develop`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
@@ -703,7 +703,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
-    :branch: feature/develop
+    :branch: feature/sort_callback
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
     :branch: feature/develop
@@ -757,7 +757,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 5617875ef83b57e15a94d49839296f811e1a89e1
+    :commit: 379217f887994592dd585eb90340007efc6bcfa6
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
     :commit: 4c220b29d50534a413a40462760d5798693f0597
@@ -921,6 +921,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: dcfcd91434ea2bf4a0394d8d0c0cd64feace9615
+PODFILE CHECKSUM: a3ae1b24e7a97b98f802ab57a1c6839f1db3910a
 
 COCOAPODS: 1.4.0
