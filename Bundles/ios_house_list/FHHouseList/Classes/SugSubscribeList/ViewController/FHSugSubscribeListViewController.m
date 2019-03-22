@@ -30,6 +30,8 @@
 
 @property (nonatomic, strong)   UILabel       *headerLabel;
 
+@property (nonatomic, weak)     id<FHSugSubscribeListDelegate>    subscribeDelegate; // 搜索组合订阅列表页的代理subscribe_delegate
+
 @end
 
 @implementation FHSugSubscribeListViewController
@@ -38,6 +40,8 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+        NSHashTable<FHSugSubscribeListDelegate> *subscribe_delegate = paramObj.allParams[@"subscribe_delegate"];
+        self.subscribeDelegate = subscribe_delegate.anyObject;
     }
     return self;
 }
@@ -115,7 +119,9 @@
     if (model && [model isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
         if (model.status) {
             // 可点击
-            
+            if (self.subscribeDelegate) {
+                [self.subscribeDelegate cellSubscribeItemClick:model];
+            }
         }
     }
 }

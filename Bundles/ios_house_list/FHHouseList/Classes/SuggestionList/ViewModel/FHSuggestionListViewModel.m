@@ -138,8 +138,12 @@
 
 - (void)sugSubscribeListClick {
     // add by zyk 记得埋点添加
+    NSHashTable *subscribeDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [subscribeDelegateTable addObject:self];
+    
     NSString *openUrl = [NSString stringWithFormat:@"fschema://sug_subscribe_list?house_type=%ld",self.houseType];
-    NSDictionary * infos = @{@"title":@"我订阅的搜索"};
+    NSDictionary * infos = @{@"title":@"我订阅的搜索",
+                             @"subscribe_delegate":subscribeDelegateTable};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     
     NSURL *url = [NSURL URLWithString:openUrl];
@@ -155,13 +159,23 @@
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
         
         NSURL *url = [NSURL URLWithString:jumpUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
     }
 }
 
 // 搜索订阅组合列表页cell点击：FHSugSubscribeListViewController
 - (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
-    
+    NSString *jumpUrl = model.openUrl;
+    if (jumpUrl.length > 0) {
+        // add by zyk 埋点逻辑添加
+        NSDictionary * infos = @{};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+        
+        NSURL *url = [NSURL URLWithString:jumpUrl];
+//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    }
 }
 
 // 猜你想搜点击

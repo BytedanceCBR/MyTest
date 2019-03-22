@@ -23,7 +23,7 @@
 @property (nonatomic, assign)   BOOL       isFirstViewDidAppear;
 /* 需要移除之前的某个页面 */
 @property (nonatomic, assign)   BOOL       needRemoveLastVC;// fh_needRemoveLastVC_key @(YES)
-@property (nonatomic, copy)     NSString       *needRemovedVCNameString; // 类名Key：fh_needRemoveedVCNameString_key
+@property (nonatomic, copy)     NSArray       *needRemovedVCNameStringArrs; // 类名数组key：fh_needRemoveedVCNamesString_key
 
 @end
 
@@ -39,7 +39,7 @@
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
         if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
             self.needRemoveLastVC = [paramObj.allParams[@"fh_needRemoveLastVC_key"] boolValue];
-            self.needRemovedVCNameString = paramObj.allParams[@"fh_needRemoveedVCNameString_key"];
+            self.needRemovedVCNameStringArrs = paramObj.allParams[@"fh_needRemoveedVCNamesString_key"];
         }
         if ([tracer isKindOfClass:[FHTracerModel class]]) {
             self.tracerModel = (FHTracerModel *)tracer;
@@ -206,17 +206,25 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (self.isFirstViewDidAppear && self.needRemoveLastVC && self.needRemovedVCNameString.length > 0) {
+    if (self.isFirstViewDidAppear && self.needRemoveLastVC && self.needRemovedVCNameStringArrs.count > 0) {
         self.isFirstViewDidAppear = NO;
         self.needRemoveLastVC = NO;
         if (self.navigationController && self.navigationController.viewControllers.count > 0) {
             __block BOOL hasChanged = NO;
             NSMutableArray *arrVCs = [[NSMutableArray alloc] initWithArray:self.navigationController.viewControllers];
-            [arrVCs enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([NSStringFromClass([obj class]) isEqualToString:self.needRemovedVCNameString]) {
-                    [arrVCs removeObjectAtIndex:idx];
-                    hasChanged = YES;
-                    *stop = YES;
+            // 从后向前移除页面
+            [self.needRemovedVCNameStringArrs enumerateObjectsUsingBlock:^(NSString *  _Nonnull clsName, NSUInteger idx, BOOL * _Nonnull stop1) {
+                if (clsName.length > 0) {
+                    NSArray *reversedArray = [[arrVCs reverseObjectEnumerator] allObjects];
+                    [reversedArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop2) {
+                        if ([NSStringFromClass([obj class]) isEqualToString:clsName]) {
+                            if ([arrVCs containsObject:obj]) {
+                                [arrVCs removeObject:obj];
+                                hasChanged = YES;
+                                *stop2 = YES;
+                            }
+                        }
+                    }];
                 }
             }];
             if (hasChanged) {
