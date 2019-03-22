@@ -372,30 +372,24 @@
             return ;
         }
         [wself processData:model error:error];
-
         
     }];
     
     self.requestTask = task;
 }
 
-- (void)requestAddSubScribe
+- (void)requestAddSubScribe:(NSString *)text
 {
     [_requestTask cancel];
-    
-    __weak typeof(self) wself = self;
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    [dict setValue:@"怡海花园/安定门/200万以下/1000万以上///" forKey:@"text"];
-    [dict setValue:@"1" forKey:@"status"];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
 
-    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeDataDataSubscribeInfoModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
-        if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
-            FHSugSubscribeDataDataSubscribeInfoModel *infoModel = (FHSugSubscribeDataDataSubscribeInfoModel *)model;
-            if (infoModel.text) {
+    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeDataModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
+        if ([model isKindOfClass:[FHSugSubscribeDataModel class]]) {
+            FHSugSubscribeDataModel *infoModel = (FHSugSubscribeDataModel *)model;
+            if (infoModel.data.items.firstObject) {
+                FHSugSubscribeDataDataSubscribeInfoModel *subModel = (FHSugSubscribeDataDataSubscribeInfoModel *)infoModel.data.items.firstObject;
+                
                 NSMutableDictionary *dict = [NSMutableDictionary new];
-                [dict setValue:infoModel.text forKey:@"text"];
+                [dict setValue:text forKey:@"text"];
                 [dict setValue:@"1" forKey:@"status"];
 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
@@ -411,19 +405,14 @@
 {
     [_requestTask cancel];
     
-    __weak typeof(self) wself = self;
-    NSMutableDictionary *dict = [NSMutableDictionary new];
-    [dict setValue:text forKey:@"text"];
-    [dict setValue:@"0" forKey:@"status"];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
-    
     TTHttpTask *task = [FHHouseListAPI requestDeleteSugSubscribe:subscribeId class:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        NSMutableDictionary *dict = [NSMutableDictionary new];
-        [dict setValue:text forKey:@"text"];
-        [dict setValue:@"0" forKey:@"status"];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+        if (!error) {
+            NSMutableDictionary *dict = [NSMutableDictionary new];
+            [dict setValue:text forKey:@"text"];
+            [dict setValue:@"0" forKey:@"status"];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+        }
     }];
     
     self.requestTask = task;
@@ -510,12 +499,16 @@
             if (self.isRefresh) {
               
                 //只有二手房有订阅
-                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = [[FHSugSubscribeDataDataSubscribeInfoModel alloc] initWithDictionary:@{@"text":@"怡海花园/安定门/200万以下/1000万以上///",@"is_subscribe":@(1),@"subscribe_id":@"123456567"} error:nil];
-                if (itemArray.count > 9) {
-                    [itemArray insertObject:subscribeMode atIndex:9];
-                }else
-                {
-                    [itemArray addObject:subscribeMode];
+//                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = [[FHSugSubscribeDataDataSubscribeInfoModel alloc] initWithDictionary:@{@"text":@"怡海花园/安定门/200万以下/1000万以上///",@"is_subscribe":@(0),@"subscribe_id":@"123456567"} error:nil];
+                
+                FHSugSubscribeDataDataSubscribeInfoModel *subscribeMode = houseModel.subscribeInfo;
+                if ([subscribeMode isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                    if (itemArray.count > 9) {
+                        [itemArray insertObject:subscribeMode atIndex:9];
+                    }else
+                    {
+                        [itemArray addObject:subscribeMode];
+                    }
                 }
             }
     
@@ -962,8 +955,8 @@
                                 [subScribCell refreshUI:subscribModel];
                             }
                             __weak typeof(self) weakSelf = self;
-                            subScribCell.addSubscribeAction = ^{
-                                [weakSelf requestAddSubScribe];
+                            subScribCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
+                                [weakSelf requestAddSubScribe:subscribeText];
                             };
                             
                             subScribCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {

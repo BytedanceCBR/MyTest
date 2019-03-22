@@ -20,7 +20,7 @@ static NSString * const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionS
 @property (nonatomic, strong)   UIButton      *subscribeBtn;
 @property (nonatomic, strong)   UIImageView   *backImageView;
 
-@property (nonatomic, copy) void (^addSubscribeAction)();
+@property (nonatomic, copy) void (^addSubscribeAction)(NSString *subscribeText);
 
 @property (nonatomic, copy) void (^deleteSubscribeAction)(NSString *subscribeId);
 

@@ -60,6 +60,7 @@
                            @"mapFindHouseOpenUrl": @"map_find_house_open_url",
                            @"houseListOpenUrl": @"house_list_open_url",
                            @"recommendSearchModel": @"recommend_search",
+                           @"subscribeInfo": @"subscribe_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
