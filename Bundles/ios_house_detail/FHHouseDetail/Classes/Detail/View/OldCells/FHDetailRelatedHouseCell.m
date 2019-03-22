@@ -18,6 +18,7 @@
 #import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHDetailBottomOpenAllView.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -71,7 +72,7 @@
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
-        [tv registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseBaseItemCell  class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
@@ -225,12 +226,11 @@
         FHSearchHouseDataItemsModel *item = self.items[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
-        if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
-            FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-            [imageInfoCell updateWithHouseCellModel:cellModel];
+        if ([cell isKindOfClass:[FHHouseBaseItemCell  class]]) {
+            FHHouseBaseItemCell  *imageInfoCell = (FHHouseBaseItemCell  *)cell;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell  recommendReasonHeight] : 0;
             [imageInfoCell refreshTopMargin:0];
-            [imageInfoCell refreshBottomMargin:20+reasonHeight];
+            [imageInfoCell updateWithHouseCellModel:cellModel];
         }
         return cell;
     }
@@ -242,7 +242,7 @@
 {
     FHSearchHouseDataItemsModel *item = self.items[indexPath.row];    
     if ([item showRecommendReason]) {
-        return 108 + [FHSingleImageInfoCell recommendReasonHeight];
+        return 108 + [FHHouseBaseItemCell  recommendReasonHeight];
     }
     return 108;
 }

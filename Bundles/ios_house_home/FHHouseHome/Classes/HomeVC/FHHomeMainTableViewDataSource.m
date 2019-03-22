@@ -11,7 +11,7 @@
 #import <UITableView+FDTemplateLayoutCell.h>
 #import "FHPlaceHolderCell.h"
 #import "FHEnvContext.h"
-#import "FHSingleImageInfoCell.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHSingleImageInfoCellModel.h"
 #import "FHSearchHouseModel.h"
 #import "FHNewHouseItemModel.h"
@@ -21,8 +21,6 @@
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
-#import "FHSingleImageInfoCell.h"
-#import "FHSingleImageInfoCellModel.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -74,14 +72,13 @@
             return cell;
         }
         //to do 房源cell
-        FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHSingleImageInfoCell class])];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseBaseItemCell class])];
         BOOL isFirstCell = (indexPath.row == 0);
         BOOL isLastCell = (indexPath.row == self.modelsArray.count - 1);
         if (indexPath.row < self.modelsArray.count) {
             JSONModel *model = self.modelsArray[indexPath.row];
-            [cell updateHomeHouseCellModel:model andType:self.currentHouseType];
             [cell refreshTopMargin: 20];
-            [cell refreshBottomMargin:0];
+            [cell updateHomeHouseCellModel:model andType:self.currentHouseType];            
         }
         return cell;
     }

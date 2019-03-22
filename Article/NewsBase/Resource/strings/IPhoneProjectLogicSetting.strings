@@ -87,8 +87,9 @@
 "mapfind_house"        = "FHMapSearchViewController";
 "mapfind_rent"         = "FHMapSearchViewController";
 
-"renthouse_main"  =  "FHHouseRentHomeVC";
-"rent_main"  =  "FHHouseRentHomeVC";
+"renthouse_main"  = "FHBaseMainListViewController";
+//"FHHouseRentHomeVC";
+"rent_main"  =  "FHBaseMainListViewController";
 "realtor_detail"       = "FHRealtorDetailWebViewController";
 "city_list"            = "FHCityListViewController";
 "city_search"          = "FHCitySearchViewController";
@@ -113,4 +114,5 @@
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
 
-"second_house_main"   = "FHHouseOldHomeViewController";
+//"second_house_main"   = "FHHouseOldHomeViewController";
+"second_house_main"   = "FHBaseMainListViewController";

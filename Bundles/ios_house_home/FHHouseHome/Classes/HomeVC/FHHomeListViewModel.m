@@ -619,7 +619,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }else
         {
             if (error) {
-                if (![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                if ([error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                     [[ToastManager manager] showToast:@"网络异常"];
                 }
                 [self updateTableViewWithMoreData:YES];

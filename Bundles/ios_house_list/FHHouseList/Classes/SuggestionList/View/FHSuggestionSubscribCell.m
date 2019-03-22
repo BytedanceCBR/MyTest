@@ -10,9 +10,12 @@
 #import <UIColor+Theme.h>
 #import <Masonry.h>
 #import "FHSugSubscribeModel.h"
+#import <FHEnvContext.h>
+#import <ToastManager.h>
+#import <NSDictionary+TTAdditions.h>
 
 @interface FHSuggestionSubscribCell()
-
+@property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
 @end
 
 @implementation FHSuggestionSubscribCell
@@ -92,6 +95,7 @@
     _subscribeBtn.layer.borderColor = [UIColor themeRed1].CGColor;
     _subscribeBtn.layer.borderWidth = 0.5;
     _subscribeBtn.layer.cornerRadius = 8;
+    [_subscribeBtn addTarget:self action:@selector(subscribeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [self.contentView addSubview:_subscribeBtn];
     
@@ -102,15 +106,70 @@
         make.width.mas_equalTo(52);
         make.height.mas_equalTo(21);
     }];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(subscribeStatusChanged:) name:kFHSuggestionSubscribeNotificationKey object:nil];
+
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+}
+
+- (void)subscribeBtnClick:(UIButton *)button
+{
+    
+    if (![FHEnvContext isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
+    _subscribeBtn.userInteractionEnabled = NO;
+    if ([_subscribeBtn.titleLabel.text isEqualToString:@"订阅"]) {
+        [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
+        if(self.addSubscribeAction)
+        {
+
+            self.addSubscribeAction();
+        }
+    }else
+    {
+        [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
+    }
+    [self performSelector:@selector(enabelSubscribBtn) withObject:nil afterDelay:1];
+}
+
+#pragma mark -
+- (void)subscribeStatusChanged:(NSNotification *)notification {
+    NSString *text = [notification.userInfo tt_stringValueForKey:@"text"];
+    NSString *status = [notification.userInfo tt_stringValueForKey:@"status"];
+    
+    //如果是同一个订阅条件
+    if (text && [text isEqualToString:_currentModel.text]) {
+        if (status && [status isEqualToString:@"1"]) {
+            [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
+        }else if (status && [status isEqualToString:@"0"])
+        {
+            [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
+        }
+    }
+}
+
+- (void)enabelSubscribBtn
+{
+    _subscribeBtn.userInteractionEnabled = YES;
 }
 
 - (void)refreshUI:(JSONModel *)data
 {
     if ([data isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         FHSugSubscribeDataDataSubscribeInfoModel *model = (FHSugSubscribeDataDataSubscribeInfoModel *)data;
+        self.currentModel = model;
         _titleLabel.text = @"订阅当前搜索条件";
         _subTitleLabel.text = @"新上房源立刻通知";
         _bottomContentLabel.text = [NSString stringWithFormat:@"当前选择：%@",model.text];
+        if (model.isSubscribe) {
+            [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
+        }else
+        {
+            [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
+        }
     }
 }
 
@@ -123,6 +182,11 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end

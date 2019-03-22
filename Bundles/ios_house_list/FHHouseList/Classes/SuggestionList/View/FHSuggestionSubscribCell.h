@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString * const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionSubscribeNotificationKey";
+
 @interface FHSuggestionSubscribCell : UITableViewCell
 
 @property (nonatomic, strong)   UILabel       *titleLabel;
@@ -17,6 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel       *bottomContentLabel;
 @property (nonatomic, strong)   UIButton      *subscribeBtn;
 @property (nonatomic, strong)   UIImageView   *backImageView;
+
+@property (nonatomic, copy) void (^addSubscribeAction)();
+
+@property (nonatomic, copy) void (^deleteSubscribeAction)(NSString *subscribeId);
 
 - (void)refreshUI:(JSONModel *)data;
 
