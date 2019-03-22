@@ -393,6 +393,12 @@
                 [dict setValue:@"1" forKey:@"status"];
 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+                
+                NSMutableDictionary *uiDict = [NSMutableDictionary new];
+                [uiDict setValue:@(YES) forKey:@"subscribe_state"];
+                [uiDict setValue:subModel.subscribeId forKey:@"subscribe_id"];
+                [uiDict setValue:subModel forKey:@"subscribe_item"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
             }
         }
 
@@ -412,6 +418,11 @@
             [dict setValue:@"0" forKey:@"status"];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+            
+            NSMutableDictionary *uiDict = [NSMutableDictionary new];
+            [uiDict setValue:@(NO) forKey:@"subscribe_state"];
+            [uiDict setValue:subscribeId forKey:@"subscribe_id"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
         }
     }];
     
