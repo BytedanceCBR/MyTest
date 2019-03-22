@@ -137,7 +137,10 @@
 }
 
 - (void)sugSubscribeListClick {
-    // add by zyk 记得埋点添加
+    // 埋点添加
+    NSDictionary *tracerDic = @{@"page_type":@"search_detail"};
+    [FHUserTracker writeEvent:@"click_loadmore" params:tracerDic];
+    
     NSHashTable *subscribeDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [subscribeDelegateTable addObject:self];
     
@@ -152,28 +155,78 @@
 
 // 订阅搜索item点击
 - (void)subscribeItemClick:(FHGuessYouWantResponseDataDataModel *)model {
-    NSString *jumpUrl = model.openUrl;
-    if (jumpUrl.length > 0) {
-        // add by zyk 埋点逻辑添加
-        NSDictionary * infos = @{};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-        
-        NSURL *url = [NSURL URLWithString:jumpUrl];
-//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+    NSString *enter_from = @"search_detail";
+    NSString *element_from = @"be_null";
+    switch (self.houseType) {
+        case FHHouseTypeSecondHandHouse:
+            element_from = @"old_subscribe";
+            break;
+        case FHHouseTypeNewHouse:
+            element_from = @"new_subscribe";
+            break;
+        case FHHouseTypeRentHouse:
+            element_from = @"rent_subscribe";
+            break;
+        case FHHouseTypeNeighborhood:
+            element_from = @"neighborhood_subscribe";
+            break;
+        default:
+            break;
     }
+    [self jumpCategoryListVCFromSubscribeItem:model enterFrom:enter_from elementFrom:element_from];
 }
 
 // 搜索订阅组合列表页cell点击：FHSugSubscribeListViewController
 - (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
+    NSString *enter_from = @"be_null";
+    NSString *element_from = @"be_null";
+    switch (self.houseType) {
+        case FHHouseTypeSecondHandHouse:
+            enter_from = @"old_subscribe_list";
+            break;
+        case FHHouseTypeNewHouse:
+            enter_from = @"new_subscribe_list";
+            break;
+        case FHHouseTypeRentHouse:
+            enter_from = @"rent_subscribe_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            enter_from = @"neighborhood_subscribe_list";
+            break;
+        default:
+            break;
+    }
+    [self jumpCategoryListVCFromSubscribeItem:model enterFrom:enter_from elementFrom:element_from];
+}
+
+- (void)jumpCategoryListVCFromSubscribeItem:(FHSugSubscribeDataDataItemsModel *)model enterFrom:(NSString *)enter_from elementFrom:(NSString *)element_from {
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
-        // add by zyk 埋点逻辑添加
-        NSDictionary * infos = @{};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-        
-        NSURL *url = [NSURL URLWithString:jumpUrl];
-//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        if (placeHolder.length > 0) {
+            jumpUrl = [NSString stringWithFormat:@"%@&placeholder=%@",jumpUrl,placeHolder];
+        }
+        NSString *queryType = @"subscribe"; // 订阅搜索
+        NSString *pageType = [self pageTypeString];
+        NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+        NSDictionary *houseSearchParams = @{
+                                            @"enter_query":queryText,
+                                            @"search_query":queryText,
+                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                            @"query_type":queryType
+                                            };
+        NSMutableDictionary *infos = [NSMutableDictionary new];
+        infos[@"houseSearch"] = houseSearchParams;
+    
+        NSMutableDictionary *tracer = [NSMutableDictionary new];
+        tracer[@"enter_type"] = @"click";
+        tracer[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
+        tracer[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
+        if (self.listController.tracerDict[@"origin_from"]) {
+            tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
+        }
+        infos[@"tracer"] = tracer;
+
         [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
     }
 }
