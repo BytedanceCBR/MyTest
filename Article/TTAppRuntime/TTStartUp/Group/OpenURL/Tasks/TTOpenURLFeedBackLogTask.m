@@ -24,7 +24,8 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     
-    BOOL isNeedUploadLaunchlog = [[[TTSettingsManager sharedManager] settingForKey:@"tt_need_upload_launchlog" defaultValue:@0 freeze:NO] boolValue];
+    NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL isNeedUploadLaunchlog = [archSettings tt_boolValueForKey:@"tt_need_upload_launchlog"];
     if (!isNeedUploadLaunchlog) {
         return NO;
     }
@@ -44,14 +45,14 @@
         NSURL *webpageURL = userActivity.webpageURL;
         NSDictionary *queryDict = [self queryItemsForURL:webpageURL];
         NSString *scheme = [queryDict objectForKey:@"scheme"];
-        
-        BOOL isNeedUploadLaunchlog = [[[TTSettingsManager sharedManager] settingForKey:@"tt_need_upload_launchlog" defaultValue:@0 freeze:NO] boolValue];
+        NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+        BOOL isNeedUploadLaunchlog = [archSettings tt_boolValueForKey:@"tt_need_upload_launchlog"];
         if (!isNeedUploadLaunchlog) {
             return NO;
         }
         NSMutableDictionary *dic = [[self dealUrlToLogParams:[NSURL URLWithString:[scheme stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]] mutableCopy];
         if (!SSIsEmptyDictionary(dic)) {
-            dic[@"dic"] = @"house_app2c_v2";
+            dic[@"event_type"] = @"house_app2c_v2";
             [TTTrackerWrapper eventV3:@"launch_log" params:dic];
         }
     }
@@ -72,10 +73,10 @@
         return nil;
     }
     
-    //如果不允许log
-    if (![[dic valueForKey:@"needlaunchlog"] boolValue]) {
-        return nil;
-    }
+    //如果不允许log removed by zjing
+//    if (![[dic valueForKey:@"needlaunchlog"] boolValue]) {
+//        return nil;
+//    }
     
     NSString *authority;
 
