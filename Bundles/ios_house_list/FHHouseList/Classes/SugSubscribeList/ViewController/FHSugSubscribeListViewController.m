@@ -59,6 +59,7 @@
     [self setupDefaultNavBar:YES];
     [self configTableView];
     self.viewModel = [[FHSugSubscribeListViewModel alloc] initWithController:self tableView:_tableView];
+    self.viewModel.houseType = self.houseType;
     [self.view addSubview:_tableView];
     _tableView.backgroundColor = [UIColor whiteColor];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {

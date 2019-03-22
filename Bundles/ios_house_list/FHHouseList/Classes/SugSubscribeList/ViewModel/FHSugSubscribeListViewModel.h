@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSugSubscribeListViewModel : NSObject
 
+@property (nonatomic, assign)     FHHouseType       houseType;
 -(instancetype)initWithController:(FHSugSubscribeListViewController *)viewController tableView:(UITableView *)tableView;
 - (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType;
 

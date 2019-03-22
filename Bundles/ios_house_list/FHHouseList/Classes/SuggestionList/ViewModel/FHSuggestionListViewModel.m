@@ -118,8 +118,14 @@
     self.guessYouWantView.hidden = YES;
 }
 
+- (void)setHouseType:(FHHouseType)houseType {
+    _houseType = houseType;
+    self.subscribeView.houseType = houseType;
+}
+
 - (void)setupSubscribeView {
     self.subscribeView = [[FHSugHasSubscribeView alloc] init];
+    self.subscribeView.houseType = self.houseType;
     __weak typeof(self) wself = self;
     self.subscribeView.clickBlk = ^(FHSugSubscribeDataDataItemsModel * _Nonnull model) {
         [wself subscribeItemClick:model];

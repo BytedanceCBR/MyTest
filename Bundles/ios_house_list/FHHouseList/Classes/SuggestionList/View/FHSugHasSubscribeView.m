@@ -18,6 +18,7 @@
 @property (nonatomic, strong)   UIButton       *rightButton;
 @property (nonatomic, strong)   UIButton       *headerButton;
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
+@property (nonatomic, strong)   NSMutableDictionary *tracerCacheDic;// 埋点
 
 @end
 
@@ -37,6 +38,8 @@
 }
 
 - (void)setupUI {
+    // 埋点cache
+    self.tracerCacheDic = [NSMutableDictionary new];
     // headerButton
     _headerButton = [[UIButton alloc] init];
     _headerButton.backgroundColor = [UIColor whiteColor];
@@ -122,10 +125,50 @@
         [itemView addTarget:self action:@selector(subscribeViewClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:itemView];
         [self.tempViews addObject:itemView];
+        [self addItemShowTracer:obj index:idx];
         if (idx >= 3) {
             *stop = YES;
         }
     }];
+}
+
+- (NSString *)wordType {
+    NSString *word_type = @"be_null";
+    switch (self.houseType) {
+        case FHHouseTypeSecondHandHouse:
+            word_type = @"old";
+            break;
+        case FHHouseTypeNewHouse:
+            word_type = @"new";
+            break;
+        case FHHouseTypeRentHouse:
+            word_type = @"rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            word_type = @"neighborhood";
+            break;
+        default:
+            break;
+    }
+    return word_type;
+}
+
+- (void)addItemShowTracer:(FHSugSubscribeDataDataItemsModel* )item index:(NSInteger)index {
+    if (item) {
+        NSString *subscribe_id = item.subscribeId;
+        if (subscribe_id.length > 0) {
+            if (self.tracerCacheDic[subscribe_id]) {
+                return;
+            }
+            self.tracerCacheDic[subscribe_id] = @"1";
+            NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
+            tracerDic[@"word"] = item.text.length > 0 ? item.text : @"be_null";
+            tracerDic[@"word_type"] = [self wordType];
+            tracerDic[@"page_type"] = @"search_detail";
+            tracerDic[@"rank"] = @(index);
+            [FHUserTracker writeEvent:@"subscribe_card_show" params:tracerDic];
+        }
+    }
 }
 
 - (void)subscribeViewClick:(FHSubscribeView *)v {
@@ -134,6 +177,21 @@
         FHSugSubscribeDataDataItemsModel*  obj = self.subscribeItems[idx];
         if (self.clickBlk) {
             self.clickBlk(obj);
+            [self addItemClickTracer:obj index:idx];
+        }
+    }
+}
+
+- (void)addItemClickTracer:(FHSugSubscribeDataDataItemsModel* )item index:(NSInteger)index {
+    if (item) {
+        NSString *subscribe_id = item.subscribeId;
+        if (subscribe_id.length > 0) {
+            NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
+            tracerDic[@"word"] = item.text.length > 0 ? item.text : @"be_null";
+            tracerDic[@"word_type"] = [self wordType];
+            tracerDic[@"page_type"] = @"search_detail";
+            tracerDic[@"rank"] = @(index);
+            [FHUserTracker writeEvent:@"subscribe_card_click" params:tracerDic];
         }
     }
 }
