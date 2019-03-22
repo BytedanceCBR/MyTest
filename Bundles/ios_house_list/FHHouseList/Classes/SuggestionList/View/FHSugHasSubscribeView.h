@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHSugSubscribeModel.h"
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,6 +17,7 @@ typedef void(^FHSugHasSubscribeItemClick)(FHSugSubscribeDataDataItemsModel *mode
 // 已订阅搜索
 @interface FHSugHasSubscribeView : UIView
 
+@property (nonatomic, assign)     FHHouseType       houseType;
 @property (nonatomic, assign)   CGFloat       hasSubscribeViewHeight; // 194
 @property (nonatomic, copy)     FHSugHasSubscribeItemClick       clickBlk;
 @property (nonatomic, copy)     dispatch_block_t       clickHeader;

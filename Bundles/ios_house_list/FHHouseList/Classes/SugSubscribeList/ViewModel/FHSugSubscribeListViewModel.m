@@ -9,6 +9,7 @@
 #import "FHHouseListAPI.h"
 #import "FHSugSubscribeItemCell.h"
 #import "FHSugSubscribeListViewController.h"
+#import "FHUserTracker.h"
 
 #define kFHSugSubscribeNotificationName @"kFHSugSubscribeNotificationName"
 
@@ -19,6 +20,7 @@
 @property(nonatomic , weak) TTHttpTask *httpTask;
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
 @property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
+@property (nonatomic, strong)   NSMutableDictionary *tracerCacheDic;// 埋点
 
 @end
 
@@ -30,41 +32,9 @@
         self.subscribeItems = [NSMutableArray new];
         self.listController = viewController;
         self.tableView = tableView;
+        self.tracerCacheDic = [NSMutableDictionary new];
         [self configTableView];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:kFHSugSubscribeNotificationName object:nil];
-        
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//             NSDictionary *ui =       @{@"subscribe_state":@(NO),
-//                      @"subscribe_id":@"123458",
-//                                        };
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-//        });
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            NSDictionary *ui =       @{@"subscribe_state":@(NO),
-//                                       @"subscribe_id":@"123457",
-//                                       };
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-//        });
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            NSDictionary *ui =       @{@"subscribe_state":@(NO),
-//                                       @"subscribe_id":@"123456",
-//                                       };
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-//        });
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            NSDictionary *ui =       @{@"subscribe_state":@(NO),
-//                                       @"subscribe_id":@"123459",
-//                                       };
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-//        });
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[2];
-//            NSDictionary *ui =       @{@"subscribe_state":@(YES),
-//                                       @"subscribe_id":@"123458",
-//                                       @"subscribe_item":model
-//                                       };
-//            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSugSubscribeNotificationName object:ui];
-//        });
     }
     return self;
 }
@@ -131,18 +101,17 @@
     }
     __weak typeof(self) wself = self;
     self.httpTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:3 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
-        // if (model != NULL && error == NULL) add by zyk 后面要改w回来，现在为了测试
         [wself.subscribeItems removeAllObjects];
-        if (model != NULL) {
+        if (model != NULL && error == NULL) {
             // 构建数据源
-            NSString *countStr = model.data.data.total;
+            NSString *countStr = model.data.total;
             if (countStr.length > 0) {
                 wself.totalCount = [countStr integerValue];
             } else {
                 wself.totalCount = 0;
             }
-            if (model.data.data.items.count > 0) {
-                [wself.subscribeItems addObjectsFromArray:model.data.data.items];
+            if (model.data.items.count > 0) {
+                [wself.subscribeItems addObjectsFromArray:model.data.items];
             }
         } else {
             wself.listController.hasValidateData = NO;
@@ -187,7 +156,10 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if (indexPath.row >= 0 && indexPath.row < self.subscribeItems.count) {
+        FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[indexPath.row];
+        [self addItemShowTracer:model index:indexPath.row];
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -206,6 +178,82 @@
     if (indexPath.row >= 0 && indexPath.row < self.subscribeItems.count) {
         FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[indexPath.row];
         [self.listController cellSubscribeItemClick:model];
+        [self addItemClickTracer:model index:indexPath.row];
+    }
+}
+
+// 埋点添加
+- (NSString *)wordType {
+    NSString *word_type = @"be_null";
+    switch (self.houseType) {
+        case FHHouseTypeSecondHandHouse:
+            word_type = @"old";
+            break;
+        case FHHouseTypeNewHouse:
+            word_type = @"new";
+            break;
+        case FHHouseTypeRentHouse:
+            word_type = @"rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            word_type = @"neighborhood";
+            break;
+        default:
+            break;
+    }
+    return word_type;
+}
+
+- (NSString *)pageType {
+    NSString *page_type = @"be_null";
+    switch (self.houseType) {
+        case FHHouseTypeSecondHandHouse:
+            page_type = @"old_subscribe_list";
+            break;
+        case FHHouseTypeNewHouse:
+            page_type = @"new_subscribe_list";
+            break;
+        case FHHouseTypeRentHouse:
+            page_type = @"rent_subscribe_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            page_type = @"neighborhood_subscribe_list";
+            break;
+        default:
+            break;
+    }
+    return page_type;
+}
+
+- (void)addItemShowTracer:(FHSugSubscribeDataDataItemsModel* )item index:(NSInteger)index {
+    if (item) {
+        NSString *subscribe_id = item.subscribeId;
+        if (subscribe_id.length > 0) {
+            if (self.tracerCacheDic[subscribe_id]) {
+                return;
+            }
+            self.tracerCacheDic[subscribe_id] = @"1";
+            NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
+            tracerDic[@"word"] = item.text.length > 0 ? item.text : @"be_null";
+            tracerDic[@"word_type"] = [self wordType];
+            tracerDic[@"page_type"] = [self pageType];
+            tracerDic[@"rank"] = @(index);
+            [FHUserTracker writeEvent:@"subscribe_card_show" params:tracerDic];
+        }
+    }
+}
+
+- (void)addItemClickTracer:(FHSugSubscribeDataDataItemsModel* )item index:(NSInteger)index {
+    if (item) {
+        NSString *subscribe_id = item.subscribeId;
+        if (subscribe_id.length > 0) {
+            NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
+            tracerDic[@"word"] = item.text.length > 0 ? item.text : @"be_null";
+            tracerDic[@"word_type"] = [self wordType];
+            tracerDic[@"page_type"] = [self pageType];
+            tracerDic[@"rank"] = @(index);
+            [FHUserTracker writeEvent:@"subscribe_card_click" params:tracerDic];
+        }
     }
 }
 
