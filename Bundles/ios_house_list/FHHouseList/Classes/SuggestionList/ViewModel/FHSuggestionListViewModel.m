@@ -860,13 +860,12 @@
     self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         wself.subscribeView.totalCount = 0;
-        // if (model != NULL && error == NULL) add by zyk 后面要改w回来，现在为了测试
-        if (model != NULL) {
+        if (model != NULL && error == NULL) {
             // 构建数据源
             [wself.subscribeItems removeAllObjects];
-            if (model.data.data.items.count > 0) {
-                NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.data.items];
-                NSString *countStr = model.data.data.total;
+            if (model.data.items.count > 0) {
+                NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.items];
+                NSString *countStr = model.data.total;
                 if (countStr.length > 0) {
                     wself.totalCount = [countStr integerValue];
                 } else {

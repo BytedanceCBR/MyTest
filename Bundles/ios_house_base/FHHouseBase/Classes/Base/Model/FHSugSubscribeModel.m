@@ -49,10 +49,4 @@
 }
 @end
 
-@implementation FHSugSubscribeDataModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 

@@ -382,9 +382,9 @@
 {
     [_requestTask cancel];
 
-    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeDataModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
-        if ([model isKindOfClass:[FHSugSubscribeDataModel class]]) {
-            FHSugSubscribeDataModel *infoModel = (FHSugSubscribeDataModel *)model;
+    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
+        if ([model isKindOfClass:[FHSugSubscribeModel class]]) {
+            FHSugSubscribeModel *infoModel = (FHSugSubscribeModel *)model;
             if (infoModel.data.items.firstObject) {
                 FHSugSubscribeDataDataSubscribeInfoModel *subModel = (FHSugSubscribeDataDataSubscribeInfoModel *)infoModel.data.items.firstObject;
                 

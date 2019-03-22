@@ -101,18 +101,17 @@
     }
     __weak typeof(self) wself = self;
     self.httpTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:3 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
-        // if (model != NULL && error == NULL) add by zyk 后面要改w回来，现在为了测试
         [wself.subscribeItems removeAllObjects];
-        if (model != NULL) {
+        if (model != NULL && error == NULL) {
             // 构建数据源
-            NSString *countStr = model.data.data.total;
+            NSString *countStr = model.data.total;
             if (countStr.length > 0) {
                 wself.totalCount = [countStr integerValue];
             } else {
                 wself.totalCount = 0;
             }
-            if (model.data.data.items.count > 0) {
-                [wself.subscribeItems addObjectsFromArray:model.data.data.items];
+            if (model.data.items.count > 0) {
+                [wself.subscribeItems addObjectsFromArray:model.data.items];
             }
         } else {
             wself.listController.hasValidateData = NO;

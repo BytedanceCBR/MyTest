@@ -36,15 +36,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHSugSubscribeDataModel : JSONModel
-
-@property (nonatomic, strong , nullable) FHSugSubscribeDataDataModel *data ;  
-@end
-
 @interface FHSugSubscribeModel : JSONModel <FHBaseModelProtocol>
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, strong , nullable) FHSugSubscribeDataModel *data ;  
+@property (nonatomic, strong , nullable) FHSugSubscribeDataDataModel *data ;
 @end
 
 
