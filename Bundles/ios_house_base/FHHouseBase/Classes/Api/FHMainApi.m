@@ -9,6 +9,7 @@
 #import <TTNetworkManager.h>
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
+#import "FHCommonDefines.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -26,58 +27,6 @@
 {
     return [FHURLSettings baseURL];
 }
-
-#pragma mark - config
-
-/*
-+(TTHttpTask *)getSearchConfig:(NSDictionary *)param completion:(void(^)(FHSearchConfigModel *model , NSError *error))completion
-{
-//
-    NSString *url = [[self host] stringByAppendingString:@"/f100/api/search_config"];
-    
-    NSDictionary *commonParams = [TTNetworkManager shareInstance].commonParamsblock();
-    
-    NSMutableDictionary *requestParam = [[NSMutableDictionary alloc] initWithDictionary:commonParams];
-
-    
-    if ([param[@"city_name"] isKindOfClass:[NSString class]]){
-        requestParam[@"city_name"] = param[@"city_name"];
-    }else
-    {
-        requestParam[@"city_name"] = nil;
-    }
-    
-    if ([param[@"city_id"] isKindOfClass:[NSString class]]) {
-        requestParam[@"city_id"] = param[@"city_id"];
-    }else
-    {
-        requestParam[@"city_id"] = nil;
-    }
-    
-    if ([param[@"gaode_city_id"] isKindOfClass:[NSString class]]) {
-        requestParam[@"gaode_city_id"] = param[@"gaode_city_id"];
-    }
-    
-    
-    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:requestParam method:GET needCommonParams:false callback:^(NSError *error, id obj) {
-        
-        FHSearchConfigModel *model = nil;
-        if (!error) {
-            model = [[FHSearchConfigModel alloc] initWithData:obj error:&error];
-        }
-        
-        if (![model.status isEqualToString:@"0"]) {
-            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
-        }
-        
-        if (completion) {
-            completion(model,error);
-        }
-        
-    }];
-    
-}
- */
 
 /*
  city_id, gaode_city_id, gaode_lng, gaode_lat, gaode_city_name
@@ -243,10 +192,16 @@
     NSString *url = QURL(queryPath);
     
     return [[TTNetworkManager shareInstance] requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
-        id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&error];
-        if (completion) {
-            completion(model, error);
-        }
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        id<FHBaseModelProtocol> model = (id<FHBaseModelProtocol>)[self generateModel:obj class:cls error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
+            
     }];
 }
 
@@ -281,6 +236,139 @@
     }];
 }
 
+
+#pragma Mark - base request
++(TTHttpTask *_Nullable)getRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param jsonClass:(Class _Nonnull)clazz completion:(void(^_Nullable)(JSONModel *_Nullable model , NSError *_Nullable error))completion
+{
+    
+    NSString *url = nil;
+    if (![[path lowercaseString] hasPrefix:@"http"]) {
+        url = QURL(path);
+    }else{
+        url = path;
+    }
+    
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id rmodel = [self  generateModel:obj class:clazz error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(rmodel,error);
+                });
+            }
+        });
+        
+    }];
+}
+
+
++(TTHttpTask *)postRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param jsonClass:(Class _Nonnull)clazz completion:(void(^_Nullable)(JSONModel *_Nullable model , NSError *_Nullable error))completion
+{
+    NSString *url = QURL(path);
+    
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:param method:POST needCommonParams:YES callback:^(NSError *error, id obj) {
+        __block NSError *backError = error;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            id rmodel = [self  generateModel:obj class:clazz error:&backError];
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(rmodel,error);
+                });
+            }
+        });
+    }];
+    
+}
+
+
++(TTHttpTask *_Nullable)getRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
+{
+    NSString *url = nil;
+    if (![[path lowercaseString] hasPrefix:@"http"]) {
+        url = QURL(path);
+    }else{
+        url = path;
+    }
+    
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj) {
+        if (completion) {
+            NSDictionary *json = nil;
+            
+            if (!error) {
+                @try{
+                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                }
+                @catch(NSException *e){
+                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                }
+            }
+            completion(json,error);
+        }
+    }];
+}
+
++(TTHttpTask *_Nullable)postRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
+{
+    NSString *url = QURL(path);
+    
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:param method:POST needCommonParams:YES callback:^(NSError *error, id obj) {
+        if (completion) {
+            NSDictionary *json = nil;
+            
+            if (!error) {
+                @try{
+                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                }
+                @catch(NSException *e){
+                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                }
+            }
+            completion(json,error);
+        }
+    }];
+}
+
+//+(TTHttpTask *_Nullable)postJsonRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
+//{
+//    NSString *url = QURL(path);
+//
+//    if (!IS_EMPTY_STRING(query)) {
+//        url = [url stringByAppendingFormat:@"?%@",query];
+//    }
+//
+//    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:POST needCommonParams:YES requestSerializer:[FHBJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+//        if (completion) {
+//            NSDictionary *json = nil;
+//
+//            if (!error) {
+//                @try{
+//                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+//                }
+//                @catch(NSException *e){
+//                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+//                }
+//            }
+//            completion(json,error);
+//        }
+//    }];
+//}
 
 
 @end

@@ -15,7 +15,6 @@
 #import "FHHouseRentModel.h"
 #import "FHNewHouseItemModel.h"
 
-#import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHPlaceHolderCell.h"
 #import "TTReachability.h"
@@ -32,6 +31,8 @@
 #import "FHRecommendSecondhandHouseTitleCell.h"
 #import "FHRecommendSecondhandHouseTitleModel.h"
 #import "FHHouseBridgeManager.h"
+#import "FHCityListViewModel.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "HMDTTMonitor.h"
 #import "TTInstallIDManager.h"
 
@@ -199,10 +200,9 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     
-    [self.tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kFHHouseListCellId];
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFHHouseListRecommendTitleCellId];
     [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
-
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
 }
 
 
@@ -850,29 +850,22 @@
             return cell;
         } else {
             if (indexPath.section == 0) {
-                FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
-                BOOL isFirstCell = (indexPath.row == 0);
-                BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                
+                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
                 if (indexPath.row < self.houseList.count) {
-                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                    [cell updateWithHouseCellModel:cellModel];
+                    FHSingleImageInfoCellModel * cellModel = self.houseList[indexPath.row];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];                    
+                    [cell updateWithHouseCellModel:cellModel];
                 }
                 return cell;
             } else {
-                FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListCellId];
+                FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
                 BOOL isFirstCell = (indexPath.row == 0);
                 BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 
                 if (indexPath.row < self.sugesstHouseList.count) {
                     FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
-                    CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                    [cell updateWithHouseCellModel:cellModel];
                     [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];                    
+                    [cell updateWithHouseCellModel:cellModel];
                 }
                 return cell;
             }
@@ -920,48 +913,18 @@
             }
             return height;
         } else {
+            FHSingleImageInfoCellModel *cellModel  = nil;
+            BOOL isLastCell = NO;
+            
             if (indexPath.section == 0) {
-                
-                FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                
-                BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-                return (isLastCell ? 125 : 105)+reasonHeight;
-//                if (indexPath.row < self.houseList.count) {
-//
-//                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-//                    if (height < 1) {
-//                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-//
-//                            [cell updateWithHouseCellModel:cellModel];
-//                            [cell refreshTopMargin: 20];
-//                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
-//
-//                        }];
-//                    }
-//                    return height;
-//                }
+                cellModel = self.houseList[indexPath.row];
+                isLastCell = (indexPath.row == self.houseList.count - 1);
             } else {
-                BOOL isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
-                FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
-                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                return (isLastCell ? 125 : 105)+reasonHeight;
-
-//                if (indexPath.row < self.sugesstHouseList.count) {
-//
-//                    FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
-//                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-//                    if (height < 1) {
-//                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-//                            [cell updateWithHouseCellModel:cellModel];
-//                            [cell refreshTopMargin: 20];
-//                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
-//                        }];
-//                    }
-//                    return height;
-//                }
+                isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
+                cellModel = self.sugesstHouseList[indexPath.row];
             }
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+            return (isLastCell ? 125 : 105)+reasonHeight;
         }
     }
 
