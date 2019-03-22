@@ -10,13 +10,15 @@
 #import "FHSuggestionListNavBar.h"
 #import "UIViewController+Track.h"
 #import "FHHouseType.h"
-
+#import "FHSugSubscribeListViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSugSubscribeListViewController : FHBaseViewController
 
 @property (nonatomic, assign) FHHouseType houseType;
+
+- (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model;
 
 @end
 

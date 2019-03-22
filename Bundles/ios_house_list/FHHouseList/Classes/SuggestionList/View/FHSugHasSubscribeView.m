@@ -111,9 +111,6 @@
     CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - 40 - 11) / 2.0;
     CGFloat topOffset = 54;
     [self.subscribeItems enumerateObjectsUsingBlock:^(FHSugSubscribeDataDataItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (idx >= 4) {
-            *stop = YES;
-        }
         NSInteger row = idx / 2;
         NSInteger column = idx % 2;
         CGRect frame = CGRectMake(20 + column * (itemWidth + 11), topOffset + row * (60 + 10), itemWidth, 60);
@@ -125,6 +122,9 @@
         [itemView addTarget:self action:@selector(subscribeViewClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:itemView];
         [self.tempViews addObject:itemView];
+        if (idx >= 3) {
+            *stop = YES;
+        }
     }];
 }
 

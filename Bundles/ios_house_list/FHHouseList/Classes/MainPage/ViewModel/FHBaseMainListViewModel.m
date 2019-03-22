@@ -1431,7 +1431,6 @@
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     if (_mainListPage && _houseType == FHHouseTypeRentHouse) {
         //JUMP to cat list page
-        [self.viewController.navigationController popViewControllerAnimated:NO];
         
         NSMutableDictionary *tracerDict = [self baseLogParam];
         [tracerDict addEntriesFromDictionary:allInfo[@"houseSearch"]];

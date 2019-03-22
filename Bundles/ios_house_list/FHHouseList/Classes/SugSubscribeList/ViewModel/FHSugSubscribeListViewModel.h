@@ -6,12 +6,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHSugSubscribeListViewController.h"
 #import "FHHouseListAPI.h"
 #import "FHSuggestionListModel.h"
 #import "FHSugSubscribeModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class FHSugSubscribeListViewController;
+
+@protocol FHSugSubscribeListDelegate <NSObject>
+
+@optional
+- (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model;
+
+@end
 
 @interface FHSugSubscribeListViewModel : NSObject
 
