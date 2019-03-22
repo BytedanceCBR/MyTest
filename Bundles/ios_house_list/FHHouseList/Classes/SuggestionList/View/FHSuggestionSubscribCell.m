@@ -122,15 +122,19 @@
     
     _subscribeBtn.userInteractionEnabled = NO;
     if ([_subscribeBtn.titleLabel.text isEqualToString:@"订阅"]) {
-        [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
+//        [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         if(self.addSubscribeAction)
         {
 
-            self.addSubscribeAction();
+            self.addSubscribeAction(self.currentModel.text);
         }
     }else
     {
-        [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
+        if(self.deleteSubscribeAction)
+        {
+            self.deleteSubscribeAction(self.currentModel.text);
+        }
+//        [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
     }
     [self performSelector:@selector(enabelSubscribBtn) withObject:nil afterDelay:1];
 }
@@ -138,8 +142,11 @@
 #pragma mark -
 - (void)subscribeStatusChanged:(NSNotification *)notification {
     NSString *text = [notification.userInfo tt_stringValueForKey:@"text"];
+    NSString *subId = [notification.userInfo tt_stringValueForKey:@"subId"];
     NSString *status = [notification.userInfo tt_stringValueForKey:@"status"];
-    
+    if (subId) {
+        self.currentModel.subscribeId = subId;
+    }
     //如果是同一个订阅条件
     if (text && [text isEqualToString:_currentModel.text]) {
         if (status && [status isEqualToString:@"1"]) {
@@ -163,7 +170,7 @@
         self.currentModel = model;
         _titleLabel.text = @"订阅当前搜索条件";
         _subTitleLabel.text = @"新上房源立刻通知";
-        _bottomContentLabel.text = [NSString stringWithFormat:@"当前选择：%@",model.text];
+        _bottomContentLabel.text = model.text ? : @"暂无";
         if (model.isSubscribe) {
             [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         }else
