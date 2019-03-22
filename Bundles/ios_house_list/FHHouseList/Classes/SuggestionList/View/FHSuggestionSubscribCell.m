@@ -132,7 +132,7 @@
     {
         if(self.deleteSubscribeAction)
         {
-            self.deleteSubscribeAction(self.currentModel.text);
+            self.deleteSubscribeAction(self.currentModel.subscribeId);
         }
 //        [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
     }
