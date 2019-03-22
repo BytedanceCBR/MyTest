@@ -113,3 +113,5 @@
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
 
 "second_house_main"   = "FHHouseOldHomeViewController";
+
+"commute_config" = "FHCommuteConfigViewController";

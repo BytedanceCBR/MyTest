@@ -108,4 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+NSHashTable *wrap_weak(NSObject * obj);
+NSObject *unwrap_weak(NSHashTable *table);
+
 NS_ASSUME_NONNULL_END
