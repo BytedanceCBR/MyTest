@@ -78,6 +78,7 @@
 @property (nonatomic , assign) NSInteger subScribeOffset;
 @property (nonatomic , strong) NSString * subScribeSearchId;
 @property (nonatomic , strong) NSString * subScribeQuery;
+@property (nonatomic , strong) NSDictionary * subScribeShowDict;
 
 @end
 
@@ -385,7 +386,7 @@
 - (void)requestAddSubScribe:(NSString *)text
 {
     [_requestTask cancel];
-
+    __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHSugSubscribeModel class]]) {
             FHSugSubscribeModel *infoModel = (FHSugSubscribeModel *)model;
@@ -403,6 +404,13 @@
                 [uiDict setValue:subModel.subscribeId forKey:@"subscribe_id"];
                 [uiDict setValue:subModel forKey:@"subscribe_item"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
+                
+                if (wself.subScribeShowDict) {
+                    NSMutableDictionary *traceParams = [NSMutableDictionary dictionaryWithDictionary:self.subScribeShowDict];
+                    [traceParams setValue:@"confirm" forKey:@"click_type"];
+                    TRACK_EVENT(@"subscribe_click",traceParams);
+                }
+                
             }
         }
 
@@ -414,7 +422,7 @@
 - (void)requestDeleteSubScribe:(NSString *)subscribeId andText:(NSString *)text
 {
     [_requestTask cancel];
-    
+    __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI requestDeleteSugSubscribe:subscribeId class:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (!error) {
             NSMutableDictionary *dict = [NSMutableDictionary new];
@@ -427,6 +435,13 @@
             [uiDict setValue:@(NO) forKey:@"subscribe_state"];
             [uiDict setValue:subscribeId forKey:@"subscribe_id"];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
+            
+
+            if (wself.subScribeShowDict) {
+                NSMutableDictionary *traceParams = [NSMutableDictionary dictionaryWithDictionary:self.subScribeShowDict];
+                [traceParams setValue:@"cannel" forKey:@"click_type"];
+                TRACK_EVENT(@"subscribe_click",traceParams);
+            }
         }
     }];
     
@@ -1303,8 +1318,26 @@
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
     tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
 
-    [FHUserTracker writeEvent:@"house_show" params:tracerDict];
 
+    if (cellModel.isSubscribCell) {
+        if ([cellModel.subscribModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+            FHSugSubscribeDataDataSubscribeInfoModel *cellSubModel = (FHSugSubscribeDataDataSubscribeInfoModel *)cellModel.subscribModel;
+            if ([cellSubModel.subscribeId isKindOfClass:[NSString class]] && [cellSubModel.subscribeId integerValue] != 0) {
+                [tracerDict setValue:cellSubModel.subscribeId forKey:@"subscribe_id"];
+            }else
+            {
+                [tracerDict setValue:@"be_null" forKey:@"subscribe_id"];
+            }
+            [tracerDict setValue:cellSubModel.text forKey:@"word"];
+        }
+        [tracerDict removeObjectForKey:@"impr_id"];
+        [tracerDict removeObjectForKey:@"group_id"];
+        self.subScribeShowDict = tracerDict;
+        [FHUserTracker writeEvent:@"subscribe_show" params:tracerDict];
+    }else
+    {
+        [FHUserTracker writeEvent:@"house_show" params:tracerDict];
+    }
 }
 
 

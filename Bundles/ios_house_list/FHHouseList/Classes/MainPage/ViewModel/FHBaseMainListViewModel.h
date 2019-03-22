@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , assign) NSInteger subScribeOffset;
 @property (nonatomic , strong) NSString * subScribeSearchId;
 @property (nonatomic , strong) NSString * subScribeQuery;
+@property (nonatomic , strong) NSDictionary * subScribeShowDict;
 
 -(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj;
 
