@@ -174,8 +174,12 @@
     if (show) {
         [_errorMaskView showEmptyWithType:type];
         _errorMaskView.retryButton.enabled = enableTap;
-        
+            
         CGFloat top = self.tableView.contentOffset.y;
+        if (!_tableView.window) {
+            //还未显示
+            top = - _topView.height;
+        }
         if (top > 0) {
             top = 0;
         }
