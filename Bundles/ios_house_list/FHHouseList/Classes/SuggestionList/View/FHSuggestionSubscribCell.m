@@ -158,6 +158,8 @@
             [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
         }
     }
+    
+    [self enabelSubscribBtn];
 }
 
 - (void)enabelSubscribBtn
