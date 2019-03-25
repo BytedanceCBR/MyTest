@@ -495,6 +495,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (void)saveCurrentUserCityId:(NSString *)cityId
 {
     [FHUtils setContent:cityId forKey:kUserDefaultCityId];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
 }
 
 - (TTReachability *)reachability
