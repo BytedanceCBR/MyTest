@@ -134,7 +134,8 @@
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(self.infoPanel);
+        make.left.right.mas_equalTo(self.infoPanel);
+        make.top.mas_equalTo(self.infoPanel).offset(-2);
         make.height.mas_equalTo(20);
     }];
     
@@ -261,7 +262,8 @@
         self.titleLabel.numberOfLines = 1;
         
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(self.infoPanel);
+            make.left.right.mas_equalTo(self.infoPanel);
+            make.top.mas_equalTo(self.infoPanel).offset(-2);
             make.height.mas_equalTo(20);
         }];
         
@@ -291,8 +293,8 @@
         CGSize fitSize = [self.titleLabel sizeThatFits:CGSizeMake(UIScreen.mainScreen.bounds.size.width * (UIScreen.mainScreen.bounds.size.width > 376 ? 0.6 : (UIScreen.mainScreen.bounds.size.width > 321 ? 0.56 : 0.48)), 0)];
         
         [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(self.infoPanel);
-            make.top.mas_equalTo(self.infoPanel).offset(fitSize.height < 30 ? 0 : -5);
+            make.left.right.mas_equalTo(self.infoPanel);            
+            make.top.mas_equalTo(self.infoPanel).offset(fitSize.height < 30 ? -2 : -4);
             make.height.mas_equalTo(fitSize.height < 30 ? 20 : 50);
         }];
         

@@ -130,6 +130,12 @@
     [[TTLocationManager sharedManager] setUpAmapInfo:dict];
 }
 
+- (BOOL)isOpenWebOffline
+{
+    BOOL isOpen = [SSCommonLogic configSwitchFWebOffline];
+    return isOpen;
+}
+
 - (BOOL)isNeedSwitchCityCompare
 {
     NSInteger daysCount = [SSCommonLogic configSwitchTimeDaysCount];
