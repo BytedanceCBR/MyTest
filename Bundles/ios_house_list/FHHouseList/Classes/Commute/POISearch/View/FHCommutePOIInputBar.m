@@ -42,7 +42,7 @@
         _searechField.font = [UIFont themeFontRegular:14];
         
         UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        UIImage * img = SYS_IMG(@"input_delete");
+        UIImage * img = SYS_IMG(@"search_delete");
         [rightButton setImage:img forState:UIControlStateNormal];
         [rightButton addTarget:self action:@selector(onClearAction) forControlEvents:UIControlEventTouchUpInside];
         rightButton.frame = CGRectMake(0, (BAR_HEIGHT - 24)/2, 24, 24);
@@ -51,6 +51,11 @@
         _searechField.rightView = rightView;
         _clearView = rightView;
         _clearView.hidden = YES;
+        
+        UIView *leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 1)];
+        leftView.backgroundColor = [UIColor clearColor];
+        _searechField.leftView = leftView;
+        _searechField.leftViewMode = UITextFieldViewModeAlways;
         
         _searechField.clearButtonMode = UITextFieldViewModeNever;
         _searechField.rightViewMode = UITextFieldViewModeAlways;
@@ -97,6 +102,11 @@
     return [_searechField canBecomeFirstResponder];
 }
 
+- (BOOL)resignFirstResponder
+{
+    return [_searechField resignFirstResponder];
+}
+
 -(void)setDelegate:(id<FHCommutePOIInputBarDelegate>)delegate
 {
     _delegate = delegate;
@@ -117,7 +127,7 @@
 {
     if (!IS_EMPTY_STRING(placeHolder)) {
         NSDictionary *dict = @{NSFontAttributeName:[UIFont themeFontRegular:14],
-                               NSForegroundColorAttributeName:[UIColor themeGray4]
+                               NSForegroundColorAttributeName:[UIColor themeGray3]
                                };
         NSAttributedString *attrPlaceholder = [[NSAttributedString alloc] initWithString:placeHolder attributes:dict] ;
         self.searechField.attributedPlaceholder = attrPlaceholder;

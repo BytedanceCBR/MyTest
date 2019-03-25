@@ -115,3 +115,4 @@
 "second_house_main"   = "FHHouseOldHomeViewController";
 
 "commute_config" = "FHCommuteConfigViewController";
+"commute_poi" = "FHCommutePOISearchViewController";

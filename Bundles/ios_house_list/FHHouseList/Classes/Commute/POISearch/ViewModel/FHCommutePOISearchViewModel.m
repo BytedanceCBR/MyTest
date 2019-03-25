@@ -11,6 +11,7 @@
 #import <FHHouseBase/FHLocManager.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import <MJRefresh/MJRefresh.h>
+#import <FHCommonUI/FHRefreshCustomFooter.h>
 
 #import "FHCommutePOIInputBar.h"
 #import "FHCommutePOIInfoCell.h"
@@ -21,8 +22,9 @@
 
 #define CELL_ID @"cell_id"
 #define LOCATION_HEADER_HEIGHT 76
+#define MAX_AROUND_BUILD_COUNT 5
 
-@interface FHCommutePOISearchViewModel ()<UITableViewDelegate,UITableViewDataSource,AMapSearchDelegate>
+@interface FHCommutePOISearchViewModel ()<UITableViewDelegate,UITableViewDataSource,AMapSearchDelegate,FHCommutePOIInputBarDelegate>
 
 @property(nonatomic , strong) NSArray *aroundPois;
 @property(nonatomic , strong) NSMutableArray *searchPois;
@@ -34,6 +36,8 @@
 @property(nonatomic , strong) AMapLocationReGeocode * currentReGeocode;
 @property(nonatomic , strong) AMapPOIKeywordsSearchRequest *keywordRequest;
 @property(nonatomic , strong) AMapPOIAroundSearchRequest *aroundRequest;
+@property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
+
 
 @end
 
@@ -48,15 +52,27 @@
         
         _tableView = tableView;
         _inputBar = inputBar;
+        _inputBar.delegate = self;
         
         
         [tableView registerClass:[FHCommutePOIInfoCell class] forCellReuseIdentifier:CELL_ID];
+        
         tableView.delegate = self;
         tableView.dataSource = self;
         
-        _searchAPI = [[AMapSearchAPI alloc] init];
+        __weak typeof(self)wself = self;
+        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+            wself.keywordRequest.page++;
+            [wself.searchAPI AMapPOIKeywordsSearch:wself.keywordRequest];
+        }];
+        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
+        self.tableView.mj_footer = self.refreshFooter;
+        self.tableView.mj_footer.hidden = YES;
         
-        if ([FHLocManager sharedInstance].isSameToLocCity) {
+        _searchAPI = [[AMapSearchAPI alloc] init];
+        _searchAPI.delegate = self;
+        //
+        if ([FHEnvContext isSameLocCityToUserSelect]) {
             //定位地和选择地是同一城市才选择
             _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
             if (_currentReGeocode) {
@@ -110,6 +126,7 @@
         geo.longitude = location.coordinate.longitude;
         request.location = geo;
         request.city = _currentReGeocode.city;
+        request.radius = 1000;
         self.aroundRequest = request;
         [_searchAPI AMapPOIAroundSearch:request];
     }
@@ -117,8 +134,12 @@
 
 -(void)poiSearch:(NSString *)keyword
 {
+    if ([self.keywordRequest.keywords isEqualToString:keyword]) {
+        return;
+    }
+    
     NSString *cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal ];
-    if ([cityName hasSuffix:@"市"]) {
+    if (![cityName hasSuffix:@"市"]) {
         cityName = [cityName stringByAppendingString:@"市"];
     }
     AMapPOIKeywordsSearchRequest *request = [[AMapPOIKeywordsSearchRequest alloc] init];
@@ -144,7 +165,7 @@
  */
 - (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error
 {
-    
+    NSLog(@"[POI] request is: %@ error is: %@",request,error);
 }
 
 /**
@@ -156,18 +177,40 @@
 {
     if (request == self.keywordRequest) {
         
+        if (response.count == 0) {
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+        }else{
+            [self.tableView.mj_footer endRefreshing];
+        }
+        
         if (request.page == 1) {
             [self.searchPois removeAllObjects];
-        }else{
-            
+            if (response.count > 0) {
+                [self.tableView.mj_footer resetNoMoreData];
+            }
         }
+        
+        if (request.page == 1 && response.count == 0) {
+            self.tableView.mj_footer.hidden = YES;
+        }else{
+            self.tableView.mj_footer.hidden = NO;
+        }
+        
         [self.searchPois addObjectsFromArray:response.pois];
         [self.tableView reloadData];
-        
+        if (self.searchPois.count > 0) {
+            self.tableView.tableHeaderView = nil;
+        }else{
+            self.tableView.tableHeaderView = _locationHeaderView;
+        }
         
     }else if (request == self.aroundRequest){
         
-        self.aroundPois = response.pois;
+//        if (response.count > MAX_AROUND_BUILD_COUNT) {
+//            self.aroundPois = [response.pois subarrayWithRange:NSMakeRange(0, MAX_AROUND_BUILD_COUNT)];
+//        }else{
+            self.aroundPois = response.pois;
+//        }
         [self.tableView reloadData];
     }
 }
@@ -227,7 +270,10 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-        return _aroundPois.count;
+        if (_searchPois.count == 0) {
+            return _aroundPois.count;
+        }
+        return 0;
     }
     return _searchPois.count;
 }
@@ -243,7 +289,7 @@
         poi = _searchPois[indexPath.row];
     }
     
-    [cell updateName:poi.name address:poi.address];
+    [cell updateName:poi.name address:poi.address inputKey:_keywordRequest.keywords];
     
     return cell;
     
@@ -251,6 +297,10 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 1 && indexPath.row == 0 && _aroundPois.count == 0 &&  tableView.tableHeaderView != _locationHeaderView) {
+        return 53;//第一个距离输入框
+    }
+    
     return 59;
 }
 
@@ -265,7 +315,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return CGFLOAT_MIN;
+    return 10;//CGFLOAT_MIN;
     
 }
 
@@ -274,14 +324,29 @@
     if (section == 0 && _searchPois.count == 0 && _aroundPois.count > 0) {
         return self.itemHeader;
     }
-    return nil;
+    return [[UIView alloc]init];
     
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    AMapPOI *poi = nil;
+    if (indexPath.section == 0) {
+        poi = _aroundPois[indexPath.row];
+    }else{
+        poi = _searchPois[indexPath.row];
+    }
     
-    
+    if (poi && [self.viewController.sugDelegate respondsToSelector:@selector(userChoosePoi:)]) {
+        [self.viewController.sugDelegate userChoosePoi:poi];
+    }
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView.isDragging) {
+        [self.inputBar resignFirstResponder];
+    }
 }
 
 
@@ -302,7 +367,10 @@
 {
     if (self.viewController.sugDelegate) {
         NSString *content =  [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-//        [self.viewController.sugDelegate searchByInput:content inController:self.viewController];
+        NSString *result  =  [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        if (result.length > 0) {
+            [self poiSearch:result];
+        }
     }
     
     return YES;
@@ -320,18 +388,12 @@
     
     NSString *result  =  [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (result.length > 0) {
-        //        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(requestSug:) object:content];
-        //        if (content.length == 1 || [[NSDate date] timeIntervalSinceDate:_lastSugDate] > 1) {
         [self poiSearch:result];
-        //        }else{
-        //            [self performSelector:@selector(requestSug:) withObject:content afterDelay:1];
-        //        }
     }else{
         //reset to history mode
-//        self.inputMode = FHSugInputModeHistory;
+        self.keywordRequest = nil;
         [self.tableView reloadData];
     }
-    
     
     return YES;
 }
@@ -343,19 +405,20 @@
 
 -(void)inputBarCancel
 {
-//    if ([self.viewController.sugDelegate respondsToSelector:@selector(sugCancelled:)]) {
-//        [self.viewController.sugDelegate sugCancelled:self.viewController];
-//    }else{
-//        [self.viewController.navigationController popViewControllerAnimated:YES];
-//    }
+    if ([self.viewController.sugDelegate respondsToSelector:@selector(userCanced:)]) {
+        [self.viewController.sugDelegate userCanced:self.viewController];
+    }else{
+        [self.viewController.navigationController popViewControllerAnimated:YES];
+    }
 }
 -(void)textFieldClear
 {
-//    self.associatedCount = 0;
-//    [self.sugTask cancel];
-//    self.inputMode = FHSugInputModeHistory;
-//    [self requestHistory];
+    self.keywordRequest = nil;
+    self.tableView.mj_footer.hidden = YES;
+    [self.searchPois removeAllObjects];
+    [self.tableView setContentOffset:CGPointZero animated:YES];
     [self.tableView reloadData];
+    self.tableView.tableHeaderView = _locationHeaderView;
 }
 
 

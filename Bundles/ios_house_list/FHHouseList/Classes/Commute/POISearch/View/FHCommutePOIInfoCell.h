@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommutePOIInfoCell : UITableViewCell
 
--(void)updateName:(NSString *)name address:(NSString *)address;
+-(void)updateName:(NSString *)name address:(NSString *)address inputKey:(NSString *)keyword;
 
 @end
 

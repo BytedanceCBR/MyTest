@@ -6,23 +6,25 @@
 //
 
 #import <FHHouseBase/FHBaseViewController.h>
+#import <AMapSearchKit/AMapSearchKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 extern NSString *const COMMUTE_POI_DELEGATE_KEY;
 
-@protocol FHCommutePOISearchDelegate <NSObject>
-
-
-
-@end
-
+@protocol FHCommutePOISearchDelegate;
 @interface FHCommutePOISearchViewController : FHBaseViewController
 
 @property(nonatomic , weak)  id <FHCommutePOISearchDelegate> sugDelegate;
 
 @end
 
+@protocol FHCommutePOISearchDelegate <NSObject>
 
+-(void)userChoosePoi:(AMapAOI *)poi;
+
+-(void)userCanced:(FHCommutePOISearchViewController *)viewController;
+
+@end
 
 NS_ASSUME_NONNULL_END

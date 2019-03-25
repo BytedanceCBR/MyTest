@@ -67,23 +67,39 @@
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
-        make.top.mas_equalTo(TOP_MARGIN);
+//        make.top.mas_equalTo(TOP_MARGIN);
         make.right.mas_lessThanOrEqualTo(-HOR_MARGIN);
         make.height.mas_equalTo(20);
+        make.bottom.mas_equalTo(self.addressLabel.mas_top).offset(-ITEM_VER_MARGIN);
     }];
     
     [_addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
         make.right.mas_lessThanOrEqualTo(self.contentView).offset(-HOR_MARGIN);
-        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(ITEM_VER_MARGIN);
+        make.bottom.mas_equalTo(self.contentView);
+//        make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(ITEM_VER_MARGIN);
     }];
 }
 
 
--(void)updateName:(NSString *)name address:(NSString *)address
+-(void)updateName:(NSString *)name address:(NSString *)address inputKey:(NSString *)keyword
 {
-    _nameLabel.text = name;
+    NSDictionary *titleDict = @{NSFontAttributeName:[UIFont themeFontRegular:14],
+                                NSForegroundColorAttributeName:[UIColor themeGray1]
+                                };
+    NSMutableAttributedString *titleAttr = [[NSMutableAttributedString alloc]initWithString:name attributes:titleDict];
+    
+    if (keyword.length > 0) {
+        NSRange range = [name rangeOfString:keyword];
+        if (range.location != NSNotFound && range.length > 0) {
+            NSDictionary *highDict = @{NSForegroundColorAttributeName:[UIColor themeRed1]};
+            [titleAttr addAttributes:highDict range:range];
+        }
+    }
+    
+    _nameLabel.attributedText = titleAttr;
     _addressLabel.text = address;
+            
 }
 
 

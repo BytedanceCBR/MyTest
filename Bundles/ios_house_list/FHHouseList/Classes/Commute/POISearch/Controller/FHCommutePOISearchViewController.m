@@ -44,6 +44,9 @@
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = [UIColor whiteColor];
+    _tableView.sectionHeaderHeight = 0;
+    _tableView.sectionFooterHeight = 0;
+    
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         UIEdgeInsets safeInsets = UIEdgeInsetsZero;
@@ -72,7 +75,6 @@
         make.left.right.top.mas_equalTo(self.view);
         make.height.mas_equalTo(barHeight);
     }];
-    
     
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self.view);

@@ -29,16 +29,6 @@
 
 @implementation FHCommuteConfigViewController
 
-+(void)load
-{
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        NSURL *url = [NSURL URLWithString:@"sslocal://commute_config"];
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
-        
-    });
-}
-
 -(UILabel *)label:(UIFont *)font text:(NSString *)text
 {
     UILabel *label = [[UILabel alloc] init];
@@ -51,7 +41,7 @@
 
 -(void)initBanners
 {
-    _topBanner = [[UIImageView alloc]initWithImage:IMG(@"commute_banner.jpg")];
+    _topBanner = [[UIImageView alloc]initWithImage:SYS_IMG(@"commute_banner.jpg")];
     
     _bannerTitleLabel = [self label:[UIFont themeFontMedium:32] text:@"通勤找房"];
     _bannerSubtitleLabel = [self label:[UIFont themeFontRegular:14] text:@"更好的生活从缩短通勤开始"];
@@ -115,7 +105,7 @@
     [self initBanners];
     
     _backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_backButton setImage:IMG(@"nav_back_arrow_white") forState:UIControlStateNormal];
+    [_backButton setImage:SYS_IMG(@"nav_back_arrow_white") forState:UIControlStateNormal];
     [_backButton addTarget:self
                     action:@selector(backAction:)
           forControlEvents:UIControlEventTouchUpInside];
