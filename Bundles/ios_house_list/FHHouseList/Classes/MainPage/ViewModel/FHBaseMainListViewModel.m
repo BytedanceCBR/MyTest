@@ -208,7 +208,8 @@
                 NSMutableDictionary *dict = [NSMutableDictionary new];
                 [dict setValue:text forKey:@"text"];
                 [dict setValue:@"1" forKey:@"status"];
-                
+                [dict setValue:subModel.subscribeId forKey:@"subId"];
+
                 [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
                 
                 NSMutableDictionary *uiDict = [NSMutableDictionary new];
