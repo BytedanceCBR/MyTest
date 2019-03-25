@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 添加导航栏右边视图，移除之前视图，从右向左排列，默认第一个viewRightOffset：@18.0，NSNumber类型
 - (void)addRightViews:(NSArray *)rightViews viewsWidth:(NSArray *)viewsWidth viewsHeight:(NSArray *)viewsHeight viewsRightOffset:(NSArray *)viewsRightOffset;
 
+- (void)cleanStyle:(BOOL)isCleanStyle;
+
 @end
 
 @interface FHHotAreaButton : UIButton

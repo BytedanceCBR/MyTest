@@ -144,6 +144,11 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
     }
 }
 
+- (void)cleanStyle:(BOOL)isCleanStyle {
+    self.backgroundColor = [UIColor clearColor];
+    [self.seperatorLine setHidden:YES];
+}
+
 @end
 
 @interface FHHotAreaButton ()
