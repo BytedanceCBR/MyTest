@@ -79,6 +79,7 @@
 @property (nonatomic , strong) NSString * subScribeSearchId;
 @property (nonatomic , strong) NSString * subScribeQuery;
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
+@property (nonatomic , assign) BOOL isShowSubscribeCell;
 
 @end
 
@@ -173,6 +174,7 @@
         self.isFirstLoad = YES;
         self.tableView = tableView;
         self.showRedirectTip = YES;
+        self.isShowSubscribeCell = NO;
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
@@ -965,6 +967,10 @@
         if (indexPath.section == 1 && indexPath.row == 0 && [self.sugesstHouseList[0] isKindOfClass:[FHRecommendSecondhandHouseTitleModel class]]) {
             FHRecommendSecondhandHouseTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListRecommendTitleCellId];
             FHRecommendSecondhandHouseTitleModel *model = self.sugesstHouseList[0];
+            if (self.isShowSubscribeCell) {
+                [cell hideSeprateLine:self.houseList.count > 1 ? NO : YES];
+            }
+          
             [cell bindData:model];
             return cell;
         } else {
@@ -984,7 +990,9 @@
                             subScribCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
                                 [weakSelf requestAddSubScribe:subscribeText];
                             };
-                            
+                            if (cellModel == self.houseList.lastObject) {
+                                self.isShowSubscribeCell = YES;
+                            }
                             subScribCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                                 [weakSelf requestDeleteSubScribe:subscribeId andText:subscribModel.text];
                             };
@@ -1049,6 +1057,14 @@
             FHRecommendSecondhandHouseTitleModel *titleModel = self.sugesstHouseList[0];
             if (titleModel.noDataTip.length > 0) {
                 height += 58;
+            }
+            if (self.isShowSubscribeCell) {
+                if (titleModel.noDataTip.length > 0) {
+                    height -= 30;
+                }else
+                {
+                    height -= 10;
+                }
             }
             return height;
         } else {
