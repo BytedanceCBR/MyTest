@@ -81,7 +81,7 @@
         [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.contentView).offset(20);
             make.right.mas_equalTo(self.contentView).offset(-20);
-            make.top.mas_equalTo(self.divider.mas_bottom).offset(0);
+            make.top.mas_equalTo(self.divider.mas_bottom).offset(12);
             make.height.mas_equalTo(24);
         }];
     }else
@@ -89,7 +89,7 @@
         [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.contentView).offset(20);
             make.right.mas_equalTo(self.contentView).offset(-20);
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView).offset(3);
             make.height.mas_equalTo(24);
         }];
     }

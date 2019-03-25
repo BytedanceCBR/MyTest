@@ -946,7 +946,7 @@
                 height -= 30;
             }else
             {
-                height -= 10;
+                height -= 3;
             }
         }
         return height;
