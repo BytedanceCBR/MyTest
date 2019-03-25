@@ -64,6 +64,19 @@
         make.top.mas_equalTo(segment.mas_bottom).mas_offset(21);
         make.height.mas_equalTo(20);
     }];
+    _questionLabel.text = @"什么是降价房？";
+
+    self.answerLabel = [[UILabel alloc] init];
+    _answerLabel.font = [UIFont themeFontRegular:14];
+    _answerLabel.textColor = [UIColor themeGray1];
+    [self addSubview:_answerLabel];
+    [_answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.top.mas_equalTo(_questionLabel.mas_bottom).mas_offset(6);
+        make.height.mas_equalTo(20);
+    }];
+    _answerLabel.text = @"是指业务急售、降价幅度大的房源，适合捡漏";
 }
 
 @end
