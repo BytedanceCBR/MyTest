@@ -857,6 +857,7 @@
         [self.sugSubscribeTask cancel];
     }
     __weak typeof(self) wself = self;
+    // "subscribe_list_type": 2(搜索页) / 3(独立展示页) 请求总数50
     self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         wself.subscribeView.totalCount = 0;
