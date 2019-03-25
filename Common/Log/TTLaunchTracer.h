@@ -26,6 +26,8 @@ typedef NS_ENUM(NSUInteger, TTAppLaunchFrom) {
 @interface TTLaunchTracer : NSObject
 @property (nonatomic, assign) TTAppLaunchFrom launchFromType;
 @property (nonatomic, assign) NSInteger badgeNumber;
+@property (nonatomic, strong) NSDictionary *extGrowth;
+
 + (instancetype)shareInstance;
 
 - (void)setLaunchFrom:(TTAppLaunchFrom) from;

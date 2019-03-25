@@ -23,7 +23,7 @@
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
 #define indexPormptLabelLeftPadding 5.f
-#define indexPormptLabelWidth 50.f
+#define indexPormptLabelWidth 60.f
 #define indexPormptLabelHeight 28.f
 
 #define indexTitleLabelTextSize 17.f
@@ -615,6 +615,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
     
     CGFloat width = [text boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: _indexPromptLabel.font} context:nil].size.width;
     _indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, _indexPromptLabel.frame.origin.y, width + 10, _indexPromptLabel.frame.size.height);
+    if (self.mode == PhotosScrollViewSupportBrowse) {
+        self.indexPromptLabel.centerX = self.view.width/2;
+    }
 }
 
 - (CGRect)frameForPagingScrollView
