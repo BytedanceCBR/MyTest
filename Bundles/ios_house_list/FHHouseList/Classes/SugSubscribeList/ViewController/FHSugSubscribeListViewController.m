@@ -79,7 +79,7 @@
     _tableView.tableHeaderView = headerBgView;
     
     // empty view
-    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(height, 0, 0, 0)];
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
 }
 
 - (void)configTableView {
