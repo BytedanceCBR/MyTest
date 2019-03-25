@@ -967,11 +967,13 @@
         if (indexPath.section == 1 && indexPath.row == 0 && [self.sugesstHouseList[0] isKindOfClass:[FHRecommendSecondhandHouseTitleModel class]]) {
             FHRecommendSecondhandHouseTitleCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListRecommendTitleCellId];
             FHRecommendSecondhandHouseTitleModel *model = self.sugesstHouseList[0];
+
+            [cell bindData:model];
+            
             if (self.isShowSubscribeCell) {
                 [cell hideSeprateLine:self.houseList.count > 1 ? NO : YES];
             }
-          
-            [cell bindData:model];
+            
             return cell;
         } else {
             if (indexPath.section == 0) {

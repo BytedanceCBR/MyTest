@@ -69,7 +69,8 @@
         
         self.tableView = tableView;
         self.houseType = houseType;
-        
+        self.isShowSubscribeCell = NO;
+
         tableView.delegate = self;
         tableView.dataSource = self;
         
@@ -863,6 +864,11 @@
             FHRecommendSecondhandHouseTitleCell *scell = [tableView dequeueReusableCellWithIdentifier:kSugCellId];
             FHRecommendSecondhandHouseTitleModel *model = self.sugesstHouseList[indexPath.row];
             [scell bindData:model];
+            
+            if (self.isShowSubscribeCell) {
+                [scell hideSeprateLine:self.houseList.count > 1 ? NO : YES];
+            }
+            
             cell = scell;
         } else {
             
@@ -886,6 +892,10 @@
                         subScribCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
                             [weakSelf requestAddSubScribe:subscribeText];
                         };
+                        
+                        if (cellModel == self.houseList.lastObject) {
+                            self.isShowSubscribeCell = YES;
+                        }
                         
                         subScribCell.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
                             [weakSelf requestDeleteSubScribe:subscribeId andText:subscribModel.text];
@@ -930,6 +940,14 @@
         FHRecommendSecondhandHouseTitleModel *titleModel = self.sugesstHouseList[indexPath.row];
         if (titleModel.noDataTip.length > 0) {
             height += 58;
+        }
+        if (self.isShowSubscribeCell) {
+            if (titleModel.noDataTip.length > 0) {
+                height -= 30;
+            }else
+            {
+                height -= 10;
+            }
         }
         return height;
     } else {
