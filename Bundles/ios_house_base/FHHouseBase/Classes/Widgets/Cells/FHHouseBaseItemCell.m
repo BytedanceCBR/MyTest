@@ -638,10 +638,9 @@
 
 -(void)updateTitlesLayout:(BOOL)showTags
 {
-    
     self.mainTitleLabel.numberOfLines = showTags?1:2;
     
-    BOOL oneRow = self.cellModel.titleSize.height < 30;
+    BOOL oneRow = showTags || self.cellModel.titleSize.height < 30;
     
     [self.mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.marginTop = YGPointValue(oneRow?-2:-5);

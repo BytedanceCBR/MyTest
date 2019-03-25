@@ -172,22 +172,37 @@
 -(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap
 {
     if (show) {
+        [self.tableView reloadData];
         [_errorMaskView showEmptyWithType:type];
         _errorMaskView.retryButton.enabled = enableTap;
-            
-        CGFloat top = self.tableView.contentOffset.y;
-        if (!_tableView.window) {
-            //还未显示
-            top = - _topView.height;
-        }
-        if (top > 0) {
-            top = 0;
-        }
-        [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(-top);
-        }];
         
-        self.tableView.scrollEnabled = NO;
+//        if (self.topBannerView) {
+//            //没有banner ，直接覆盖到table上
+//            CGRect frame = self.tableView.frame;
+//            frame.origin = CGPointZero;
+//            self.errorMaskView.frame = frame;
+//            self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+//            return;
+//        }
+
+        CGRect frame = self.tableView.frame;
+        frame.origin = CGPointZero;
+        self.errorMaskView.frame = frame;
+        self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+
+//        CGFloat top = self.tableView.contentOffset.y;
+//        if (!_tableView.window) {
+//            //还未显示
+//            top = - _topView.height;
+//        }
+//        if (top > 0) {
+//            top = 0;
+//        }
+//        [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(-top);
+//        }];
+        
+//        self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
 }
@@ -903,7 +918,7 @@
     if (toTableView) {
         if (!self.topBannerView) {
             return;
-        }        
+        }
         if (self.topView.superview == self.tableView) {
             return;
         }

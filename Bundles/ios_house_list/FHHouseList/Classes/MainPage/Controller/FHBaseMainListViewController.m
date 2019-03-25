@@ -140,7 +140,7 @@
     _viewModel.viewController = self;
     _viewModel.navbar = self.navbar;
     _errorView = [[FHErrorView alloc] init];
-    [self.containerView addSubview:_errorView];
+    [self.tableView addSubview:_errorView];
     _viewModel.errorMaskView = _errorView;
     _errorView.hidden = YES;
     _viewModel.topContainerView = _topContainerView;
@@ -192,10 +192,10 @@
         make.top.mas_equalTo(self.viewModel.filterPanel.height);
     }];
     
-    [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.left.right.mas_equalTo(self.containerView);
-        make.top.mas_equalTo(self.viewModel.filterPanel.mas_bottom);
-    }];
+//    [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.bottom.left.right.mas_equalTo(self.containerView);
+//        make.top.mas_equalTo(self.viewModel.filterPanel.mas_bottom);
+//    }];
     
     [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.containerView);
