@@ -94,7 +94,7 @@
     _subscribeBtn.titleLabel.font = [UIFont themeFontRegular:12];
     _subscribeBtn.layer.borderColor = [UIColor themeRed1].CGColor;
     _subscribeBtn.layer.borderWidth = 0.5;
-    _subscribeBtn.layer.cornerRadius = 8;
+    _subscribeBtn.layer.cornerRadius = 10.5;
     [_subscribeBtn addTarget:self action:@selector(subscribeBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
     [self.contentView addSubview:_subscribeBtn];
