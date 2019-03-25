@@ -84,7 +84,7 @@ def appPods
     'Extra'
     ]
     
-    pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
+    pod 'yoga', :path => '../ReactCommon/yoga'
 
     #-----视频业务库-----#
     pod_binary 'TTVideoService', '0.1.71'
