@@ -208,16 +208,12 @@
 - (void)jumpCategoryListVCFromSubscribeItem:(FHSugSubscribeDataDataItemsModel *)model enterFrom:(NSString *)enter_from elementFrom:(NSString *)element_from {
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
-        NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-        if (placeHolder.length > 0) {
-            jumpUrl = [NSString stringWithFormat:@"%@&placeholder=%@",jumpUrl,placeHolder];
-        }
         NSString *queryType = @"subscribe"; // 订阅搜索
         NSString *pageType = [self pageTypeString];
-        NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+        // 特殊埋点需求，此处enter_query和search_query都埋:be_null
         NSDictionary *houseSearchParams = @{
-                                            @"enter_query":queryText,
-                                            @"search_query":queryText,
+                                            @"enter_query":@"be_null",
+                                            @"search_query":@"be_null",
                                             @"page_type":pageType.length > 0 ? pageType : @"be_null",
                                             @"query_type":queryType
                                             };
@@ -233,7 +229,8 @@
         }
         infos[@"tracer"] = tracer;
 
-        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos];
+        // 参数都在jumpUrl中
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos];
     }
 }
 
@@ -857,6 +854,7 @@
         [self.sugSubscribeTask cancel];
     }
     __weak typeof(self) wself = self;
+    // "subscribe_list_type": 2(搜索页) / 3(独立展示页) 请求总数50
     self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
         wself.loadRequestTimes += 1;
         wself.subscribeView.totalCount = 0;

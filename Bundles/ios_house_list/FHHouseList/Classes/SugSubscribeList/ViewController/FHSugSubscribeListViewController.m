@@ -88,7 +88,7 @@
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+    _tableView.estimatedRowHeight = 75;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
