@@ -389,7 +389,12 @@
 {
     [_requestTask cancel];
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:nil offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
+    NSDictionary *paramsDict = nil;
+    if (_houseType) {
+        paramsDict = @{@"house_type":@(_houseType)};
+    }
+    
+    TTHttpTask *task = [FHHouseListAPI requestAddSugSubscribe:_subScribeQuery params:paramsDict offset:_subScribeOffset searchId:_subScribeSearchId sugParam:nil class:[FHSugSubscribeModel class] completion:^(id<FHBaseModelProtocol>  _Nullable model, NSError * _Nullable error) {
         if ([model isKindOfClass:[FHSugSubscribeModel class]]) {
             FHSugSubscribeModel *infoModel = (FHSugSubscribeModel *)model;
             if (infoModel.data.items.firstObject) {
