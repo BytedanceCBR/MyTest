@@ -113,4 +113,4 @@
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
 
 "second_house_main"   = "FHHouseOldHomeViewController";
-"city_market"   = "FHCityMarketViewController";
+"city_market"   = "FHCityMarketDetailViewController";

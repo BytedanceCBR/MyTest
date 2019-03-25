@@ -35,6 +35,16 @@
     return self;
 }
 
+-(instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        _navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 64 : 84;
+        [self initHeaderBgView];
+        [self initHeaderInfo];
+    }
+    return self;
+}
+
 -(void)initHeaderBgView {
     self.bgView = [[UIImageView alloc] init];
     [self addSubview:_bgView];
