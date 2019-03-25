@@ -22,6 +22,8 @@
 #define MAIN_SCREEN_WIDTH   [UIScreen mainScreen].bounds.size.width
 #define MAIN_SCREENH_HEIGHT [UIScreen mainScreen].bounds.size.height
 
+static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
+
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
 static NSString *const kUserDefaultCityId = @"k_fh_config_key_select_city_id";

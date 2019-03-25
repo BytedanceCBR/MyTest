@@ -48,9 +48,13 @@ static TTLaunchTracer* _instance;
     if (_launchFromType == TTAPPLaunchFromRemotePush) {
         launchType = @"click_news_notify";
     }
-    [TTTracker eventV3:@"launch_log" params:@{@"gd_label": launchType,
-                                              @"tips": @(_badgeNumber),
-                                              @"event_type": @"house_app2c_v2"}];
+    NSMutableDictionary *params = @{@"gd_label": launchType,
+                                    @"tips": @(_badgeNumber),
+                                    @"event_type": @"house_app2c_v2"}.mutableCopy;
+    if (_extGrowth) {
+        params[@"ext_growth"] = _extGrowth;
+    }
+    [TTTracker eventV3:@"launch_log" params:params];
 }
 
 - (void)willEnterForeground {

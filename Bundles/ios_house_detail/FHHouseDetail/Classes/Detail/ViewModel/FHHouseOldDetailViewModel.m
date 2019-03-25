@@ -312,11 +312,7 @@
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
-        NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:model.data.recommendedRealtors];
-        if (tempArray.count > 5) {
-            tempArray = [tempArray subarrayWithRange:NSMakeRange(0, 5)];
-        }
-        agentListModel.recommendedRealtors = tempArray;
+        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
@@ -369,7 +365,7 @@
         [self.items addObject:infoModel];
     }
 
-    if (model.data.housePricingRank || model.data.priceTrend.count > 0) {
+    if (model.data.housePricingRank.analyseDetail.length > 0) {
         
         // 价格分析
         FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
@@ -380,22 +376,19 @@
             priceRankModel.priceRank = model.data.housePricingRank;
             [self.items addObject:priceRankModel];
         }
-        // 均价走势
-        if (model.data.priceTrend.count > 0) {
-            FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
-            priceTrendModel.priceTrends = model.data.priceTrend;
-            priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
-            priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
-            priceTrendModel.tableView = self.tableView;
-            [self.items addObject:priceTrendModel];
-        }
     }
+    // 均价走势
+    FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
+    priceTrendModel.priceTrends = model.data.priceTrend;
+    priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
+    priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
+    priceTrendModel.hasSuggestion = (model.data.housePricingRank.buySuggestion.content.length > 0) ? YES : NO;
+    priceTrendModel.tableView = self.tableView;
+    [self.items addObject:priceTrendModel];
     
     // 购房小建议
-    if (model.data.housePricingRank.buySuggestion) {
+    if (model.data.housePricingRank.buySuggestion.content.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
         [self.items addObject:infoModel];
