@@ -145,9 +145,10 @@
         FHSugSubscribeItemCell *cell = (FHSugSubscribeItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHSugSubscribeItemCell"];
         if (cell) {
             cell.titleLabel.text = model.title;
-            cell.sugLabel.text = model.text;
+            cell.sugLabel.text = model.text; 
             cell.isValid = model.status;
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            [cell updateConstraintsIfNeeded];
             return cell;
         }
     }
@@ -160,10 +161,6 @@
         FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[indexPath.row];
         [self addItemShowTracer:model index:indexPath.row];
     }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewAutomaticDimension;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
