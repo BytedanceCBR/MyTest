@@ -597,7 +597,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 {
                     [self.tableViewV finishPullDownWithSuccess:YES];
                     //如果切换城市请求推荐数据失败，超时处理
-                    if (pullType == FHHomePullTriggerTypePullDown && [FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                    if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                             [self.homeViewController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
                     }
                 }
@@ -619,6 +619,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }else
         {
             if (error) {
+                if ([error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                    [[ToastManager manager] showToast:@"网络异常"];
+                }
                 [self updateTableViewWithMoreData:YES];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
