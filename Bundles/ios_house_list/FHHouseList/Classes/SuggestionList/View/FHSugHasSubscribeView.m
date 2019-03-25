@@ -102,14 +102,9 @@
     } else {
          self.hasSubscribeViewHeight = 194;
     }
-    if (self.totalCount > 4) {
-        // 显示右边箭头 可点击
-        self.rightButton.hidden = NO;
-        self.headerButton.hidden = NO;
-    } else {
-        self.rightButton.hidden = YES;
-        self.headerButton.hidden = YES;
-    }
+    // 显示右边箭头 可点击
+    self.rightButton.hidden = NO;
+    self.headerButton.hidden = NO;
     // 添加Views
     CGFloat itemWidth = ([UIScreen mainScreen].bounds.size.width - 40 - 11) / 2.0;
     CGFloat topOffset = 54;
