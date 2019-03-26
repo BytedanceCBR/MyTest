@@ -882,7 +882,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_showPlaceHolder || [_houseList count] <= indexPath.row) {
+    if (_showPlaceHolder) {
         return;
     }
     
@@ -909,7 +909,6 @@
     BOOL shouldInTable = (scrollView.contentOffset.y + scrollView.contentInset.top <  [self.topView filterTop]);
     [self moveToTableView:shouldInTable];
     
-//    NSLog(@"[SCROLL] offset is: %f top %f  top cal height: %f should intable : %@",scrollView.contentOffset.y,scrollView.contentInset.top,(self.topView.height - [self.topView filterTop]),shouldInTable?@"YES":@"NO");
 }
 
 
@@ -1327,7 +1326,7 @@
         }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
-            FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+            cellModel = self.sugesstHouseList[indexPath.row];
         }
     }
     
