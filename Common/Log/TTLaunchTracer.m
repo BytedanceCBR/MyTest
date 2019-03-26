@@ -46,7 +46,8 @@ static TTLaunchTracer* _instance;
     _hasReportLaunch = YES;
     NSString* launchType = @"enter_launch";
     if (_launchFromType == TTAPPLaunchFromRemotePush) {
-        launchType = @"click_news_notify";
+//        launchType = @"click_news_notify";
+        return;
     }
     NSMutableDictionary *params = @{@"gd_label": launchType,
                                     @"tips": @(_badgeNumber),
