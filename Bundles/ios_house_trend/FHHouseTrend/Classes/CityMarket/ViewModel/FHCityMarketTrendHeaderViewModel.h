@@ -6,7 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "FHCityMarketDetailResponseModel.h"
+@class FHCityMarketDetailResponseModel;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityMarketTrendHeaderViewModel : NSObject
@@ -14,7 +15,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString* price;
 @property (nonatomic, copy) NSString* unit;
 @property (nonatomic, copy) NSString* source;
-@property (nonatomic, strong) NSArray* properties;
+@property (nonatomic, strong) NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>* properties;
+@property (nonatomic, strong) FHCityMarketDetailResponseModel* model;
+-(void)requestData;
+
 @end
 
 NS_ASSUME_NONNULL_END

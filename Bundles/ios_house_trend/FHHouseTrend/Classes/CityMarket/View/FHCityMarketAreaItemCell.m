@@ -21,6 +21,16 @@
 
 @implementation FHCityMarketAreaItemCell
 
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self setupUI];
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -89,6 +99,16 @@
         make.left.mas_equalTo(self.titleLabel.mas_right);
         make.centerY.mas_equalTo(self.titleLabel);
         make.width.height.mas_equalTo(14);
+    }];
+
+    UIView* seperateLine = [[UIView alloc] init];
+    seperateLine.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:seperateLine];
+    [seperateLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(1);
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.bottom.mas_equalTo(self.contentView);
     }];
 }
 

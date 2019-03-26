@@ -21,6 +21,15 @@
 
 @implementation FHCityMarketRecomandHouseCell
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self setupUI];
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -81,7 +90,7 @@
     [backgroundView addSubview:_titleLabel];
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(22);
-        make.left.mas_equalTo(self.houseIconView).mas_offset(-15);
+        make.left.mas_equalTo(self.houseIconView.mas_right).mas_offset(15);
         make.top.mas_equalTo(backgroundView).mas_offset(14);
         make.right.mas_equalTo(backgroundView).mas_offset(-15);
     }];

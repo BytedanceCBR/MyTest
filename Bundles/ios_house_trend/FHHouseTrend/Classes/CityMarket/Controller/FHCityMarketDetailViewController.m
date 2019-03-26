@@ -11,7 +11,15 @@
 #import <Masonry.h>
 #import "TTDeviceHelper.h"
 #import "FHCityMarketTrendHeaderViewModel.h"
-
+#import "FHDetailListViewModel.h"
+#import "FHChatSectionCellPlaceHolder.h"
+#import "FHCityMarketRecommendSectionPlaceHolder.h"
+#import "FHAreaItemSectionPlaceHolder.h"
+#import "CityMarketDetailAPI.h"
+#import "ReactiveObjC.h"
+#import "FHCityMarketHeaderPropertyItemView.h"
+#import "FHCityMarketHeaderPropertyBar.h"
+#import "RXCollection.h"
 @interface FHCityMarketDetailViewController ()
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
@@ -24,7 +32,6 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-
     }
     return self;
 }
@@ -53,6 +60,11 @@
     _tableView.tableHeaderView = _headerView;
 
     _listViewModel = [[FHDetailListViewModel alloc] init];
+    _listViewModel.tableView = _tableView;
+    _tableView.delegate = _listViewModel;
+    _tableView.dataSource = _listViewModel;
+    [self setupSections];
+    [self bindHeaderView];
 }
 
 -(void)initNavBar {
@@ -65,7 +77,34 @@
 
 -(void)bindHeaderView {
     _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
-    
+
+    RAC(_headerView.titleLabel, text) = RACObserve(_headerViewModel, title);
+    RAC(_headerView.priceLabel, text) = RACObserve(_headerViewModel, price);
+    RAC(_headerView.sourceLabel, text) = RACObserve(_headerViewModel, source);
+    RAC(_headerView.unitLabel, text) = RACObserve(_headerViewModel, unit);
+    [[[RACObserve(_headerViewModel, properties) skip:1] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
+        NSArray* result = [value rx_mapWithBlock:^id(FHCityMarketDetailResponseDataSummaryItemListModel* each) {
+            FHCityMarketHeaderPropertyItemView* itemView = [[FHCityMarketHeaderPropertyItemView alloc] init];
+            itemView.nameLabel.text = each.desc;
+            itemView.valueLabel.text = each.value;
+            [itemView setArraw:[each.showArrow integerValue]];
+        }];
+        return result;
+    }] subscribeNext:^(id  _Nullable x) {
+        [_headerView.propertyBar setPropertyItem:x];
+    }];
+
+    [_headerViewModel requestData];
+}
+
+-(void)setupSections {
+    id<FHSectionCellPlaceHolder> holder = [[FHChatSectionCellPlaceHolder alloc] init];
+    [_listViewModel addSectionPlaceHolder:holder];
+    holder = [[FHCityMarketRecommendSectionPlaceHolder alloc] init];
+    [_listViewModel addSectionPlaceHolder:holder];
+    holder = [[FHAreaItemSectionPlaceHolder alloc] init];
+    [_listViewModel addSectionPlaceHolder:holder];
+    [self.tableView reloadData];
 }
 
 @end

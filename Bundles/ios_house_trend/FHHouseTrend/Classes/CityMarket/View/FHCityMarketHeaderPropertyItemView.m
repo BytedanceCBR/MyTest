@@ -13,8 +13,6 @@
 {
 
 }
-@property (nonatomic, strong) UILabel* nameLabel;
-@property (nonatomic, strong) UILabel* valueLabel;
 @end
 
 @implementation FHCityMarketHeaderPropertyItemView
@@ -32,7 +30,6 @@
     self.nameLabel = [[UILabel alloc] init];
     _nameLabel.font = [UIFont themeFontRegular:11];
     _nameLabel.textColor = [UIColor colorWithHexString:@"999999"];
-    _nameLabel.text = @"降价趋势(比上月)";
     [self addSubview:_nameLabel];
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
@@ -43,7 +40,6 @@
     self.valueLabel = [[UILabel alloc] init];
     _valueLabel.font = [UIFont themeFontSemibold:18];
     _valueLabel.textColor = [UIColor blackColor];
-    _valueLabel.text = @"value";
     [self addSubview:_valueLabel];
     [_valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self->_nameLabel.mas_left);
@@ -51,6 +47,31 @@
         make.right.mas_equalTo(-5);
         make.height.mas_equalTo(21);
     }];
+
+    self.arrawView = [[UIImageView alloc] init];
+    [_arrawView setHidden:YES];
+    [self addSubview:_arrawView];
+    [_arrawView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.valueLabel.mas_right);
+        make.centerY.mas_equalTo(self.valueLabel);
+        make.height.with.mas_equalTo(13);
+    }];
+}
+
+-(void)setArraw:(NSInteger)flag {
+    switch (flag) {
+        case 1:
+            _arrawView.image = [UIImage imageNamed:@"arraw-up"];
+            [_arrawView setHidden:NO];
+            break;
+        case -1:
+            _arrawView.image = [UIImage imageNamed:@"arrow-down"];
+            [_arrawView setHidden:NO];
+            break;
+        default:
+            [_arrawView setHidden:YES];
+            break;
+    }
 }
 /*
 // Only override drawRect: if you perform custom drawing.

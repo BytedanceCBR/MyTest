@@ -10,7 +10,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityMarketHeaderPropertyItemView : UIView
-
+@property (nonatomic, strong) UILabel* nameLabel;
+@property (nonatomic, strong) UILabel* valueLabel;
+@property (nonatomic, strong) UIImageView* arrawView;
+-(void)setArraw:(NSInteger)flag;
 @end
 
 NS_ASSUME_NONNULL_END

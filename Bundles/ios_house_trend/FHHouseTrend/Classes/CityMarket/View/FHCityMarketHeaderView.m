@@ -16,10 +16,7 @@
     CGFloat _navBarHeight;
 }
 @property (nonatomic, strong) UIImageView* bgView;
-@property (nonatomic, strong) UILabel* titleLabel;
-@property (nonatomic, strong) UILabel* priceLabel;
-@property (nonatomic, strong) UILabel* sourceLabel;
-@property (nonatomic, strong) UILabel* unitLabel;
+
 @end
 
 @implementation FHCityMarketHeaderView
@@ -59,7 +56,7 @@
     self.titleLabel = [[UILabel alloc] init];
     _titleLabel.textColor = [UIColor whiteColor];
     _titleLabel.font = [UIFont themeFontRegular:12];
-    _titleLabel.text = @"南京·二月房价行情";
+//    _titleLabel.text = @"南京·二月房价行情";
     [self addSubview:_titleLabel];
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(_navBarHeight + 29);
@@ -71,7 +68,7 @@
     self.priceLabel = [[UILabel alloc] init];
     _priceLabel.textColor = [UIColor whiteColor];
     _priceLabel.font = [UIFont themeFontSemibold:40];
-    _priceLabel.text = @"29745";
+//    _priceLabel.text = @"29745";
     [self addSubview:_priceLabel];
     [_priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(_titleLabel.mas_bottom).mas_offset(5);
@@ -82,7 +79,7 @@
     self.unitLabel = [[UILabel alloc] init];
     _unitLabel.textColor = [UIColor whiteColor];
     _unitLabel.font = [UIFont themeFontSemibold:14];
-    _unitLabel.text = @"元/平";
+//    _unitLabel.text = @"元/平";
     [self addSubview:_unitLabel];
     [_unitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(_priceLabel.mas_bottom).mas_offset(-5);
@@ -95,7 +92,7 @@
     _sourceLabel.textColor = [UIColor whiteColor];
     _sourceLabel.font = [UIFont themeFontRegular:11];
     _sourceLabel.alpha = 0.5;
-    _sourceLabel.text = @"数据来源：今日头条房产频道";
+//    _sourceLabel.text = @"数据来源：今日头条房产频道";
     [self addSubview:_sourceLabel];
     [_sourceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(_priceLabel.mas_bottom).mas_offset(5);
