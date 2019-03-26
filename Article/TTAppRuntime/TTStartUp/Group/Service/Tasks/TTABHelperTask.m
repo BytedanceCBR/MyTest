@@ -61,41 +61,41 @@
 {
     // 注册实验（所有通过BDABTestSDK取值的实验都必须注册
     // 需要添加的服务端实验都在此先注册
-        BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
-                                                                            owner:@"zjing"
-                                                                      description:@"模拟服务端实验找房tab是否增加房源展现，默认为0"
-                                                                     defaultValue:@{@"show":@(0)}
-                                                                        valueType:BDABTestValueTypeDictionary
-                                                                         isSticky:YES settingsValueBlock:^id(NSString *key) {
-                                                                             if (key.length > 0) {
-                                                                                 NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-                                                                                 if ([archSettings valueForKey:key]) {
-                                                                                     return archSettings[key];
-                                                                                 }
-                                                                             }
-                                                                             return nil;
-                                                                         }];
-        [BDABTestManager registerExperiment:exp];
+//        BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
+//                                                                            owner:@"zjing"
+//                                                                      description:@"模拟服务端实验找房tab是否增加房源展现，默认为0"
+//                                                                     defaultValue:@{@"show":@(0)}
+//                                                                        valueType:BDABTestValueTypeDictionary
+//                                                                         isSticky:YES settingsValueBlock:^id(NSString *key) {
+//                                                                             if (key.length > 0) {
+//                                                                                 NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+//                                                                                 if ([archSettings valueForKey:key]) {
+//                                                                                     return archSettings[key];
+//                                                                                 }
+//                                                                             }
+//                                                                             return nil;
+//                                                                         }];
+//        [BDABTestManager registerExperiment:exp];
 }
 
 // 添加客户端实验
 + (void)registClientABs
 {
     // 客户端分层实验在此添加
-    [self addCardStyleTest];
+//    [self addCardStyleTest];
     [self addShowHouseTest];
     
     //启动实验引擎，请确保在所有客户端本地分流实验都注册完成后再调用此接口！
     [BDABTestManager launchClientExperimentManager];
     
     //获取实验值
-    id res = [BDABTestManager getExperimentValueForKey:@"f_test_params" withExposure:YES];
-    NSLog(@"BDClientABTest card_Style is %@",res);
-    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
-    NSLog(@"BDClientABTest show_house is %@",res1);
+//    id res = [BDABTestManager getExperimentValueForKey:@"f_test_params" withExposure:YES];
+//    NSLog(@"BDClientABTest card_Style is %@",res);
+//    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
+//    NSLog(@"BDClientABTest show_house is %@",res1);
     //    获取曝光结果
-    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
-    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
+//    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
+//    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
 }
 
 
@@ -128,10 +128,10 @@
     [BDABTestManager registerExperiment:clientEXP];
     //获取实验值
     id res = [BDABTestManager getExperimentValueForKey:@"f_test_params" withExposure:YES];
-    NSLog(@"BDClientABTest card_Style is %@",res);
+//    NSLog(@"BDClientABTest card_Style is %@",res);
 //    获取曝光结果
     NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
-    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
+//    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
 }
 
 // test 注册字符串类型的客户端分层实验

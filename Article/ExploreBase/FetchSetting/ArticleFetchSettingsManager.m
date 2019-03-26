@@ -215,8 +215,8 @@
     // 将需要覆盖的settings数据保存到BDABTest SDK
     // key:实验BDABTestBaseExperiment初始化的key，value：实验数据，即Libra实验组对应配置参数，数据类型必须对应
     NSMutableDictionary *experiments = @{}.mutableCopy;
-    if ([fhSettings valueForKey:@"f_test_params"] && [[fhSettings valueForKey:@"f_test_params"] isKindOfClass:[NSDictionary class]]) {
-        experiments[@"f_test_params"] = fhSettings[@"f_test_params"];
+//    if ([fhSettings valueForKey:@"f_test_params"] && [[fhSettings valueForKey:@"f_test_params"] isKindOfClass:[NSDictionary class]]) {
+//        experiments[@"f_test_params"] = fhSettings[@"f_test_params"];
     }
     if ([fhSettings valueForKey:@"show_house"] && [[fhSettings valueForKey:@"show_house"] isKindOfClass:[NSString class]]) {
         experiments[@"show_house"] = fhSettings[@"show_house"];
