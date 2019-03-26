@@ -13,7 +13,7 @@
 #define kCellId @"cell_id"
 #define ITEM_HOR_MARGIN  10
 #define TOP_PADDING      14
-#define BOTTOM_PADDING   2
+#define BOTTOM_PADDING   4
 
 
 @interface FHMainOldTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
@@ -98,7 +98,7 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat width = [self widthForItem:self.items.count < 2? 2:self.items.count];
-    return CGSizeMake(width, self.collectionView.frame.size.height - TOP_PADDING);
+    return CGSizeMake(width, self.collectionView.frame.size.height - TOP_PADDING );
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section

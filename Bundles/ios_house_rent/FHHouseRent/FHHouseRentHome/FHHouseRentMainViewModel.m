@@ -269,7 +269,7 @@
                 }
                 wself.showNotify(tip);
             }
-            
+            [wself.showHouseDict removeAllObjects];
             [wself addHouseRankLog];
 
         }
