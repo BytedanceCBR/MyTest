@@ -292,6 +292,7 @@ static NSMutableArray  * _Nullable identifierArr;
         if (itemModel.image.count > 0) {
             FHConfigDataOpData2ItemsImageModel * imageModel = itemModel.image[0];
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
+
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
 
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {

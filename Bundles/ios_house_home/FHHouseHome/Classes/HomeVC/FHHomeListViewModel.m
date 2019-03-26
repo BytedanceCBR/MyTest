@@ -49,6 +49,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
 @property (nonatomic, assign) BOOL isFromLocalTestChange;
+@property(nonatomic, weak)   NSTimer *timer;
 
 @end
 
@@ -336,6 +337,26 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     }
 }
 
+//检测16秒内切换城市下拉刷请求是否返回
+- (void)checkoutRequestRefreshPullDown
+{
+    //如果当前没有数据，并且请求还没有返回
+    if (self.itemsDataCache.allKeys.count == 0 && self.requestRefreshTask != nil) {
+        [self.homeViewController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
+    }
+}
+
+- (void)startTimeOutTimer
+{
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:16 target:self selector:@selector(checkoutRequestRefreshPullDown) userInfo:nil repeats:NO];
+    self.timer = timer;
+}
+
 //请求房源推荐数据
 - (void)requestOriginData:(BOOL)isFirstChange
 {
@@ -511,6 +532,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }
     }
     
+    //如果切换城市请求推荐数据失败，超时处理
+    if (pullType == FHHomePullTriggerTypePullDown && [FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+        [self startTimeOutTimer];
+    }
+    
     if ([self.requestRefreshTask isKindOfClass:[TTHttpTask class]]) {
         [self.requestRefreshTask cancel];
         self.requestRefreshTask = nil;
@@ -522,6 +548,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         StrongSelf;
         
         self.requestRefreshTask = nil;
+        
+        if (self.timer) {
+            [self.timer invalidate];
+            self.timer = nil;
+        }
         
         [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
         
@@ -565,6 +596,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 }else
                 {
                     [self.tableViewV finishPullDownWithSuccess:YES];
+                    //如果切换城市请求推荐数据失败，超时处理
+                    if ([FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                            [self.homeViewController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
+                    }
                 }
                 
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
@@ -584,7 +619,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         }else
         {
             if (error) {
-                [[ToastManager manager] showToast:@"网络异常"];
+                if ([error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                    [[ToastManager manager] showToast:@"网络异常"];
+                }
                 [self updateTableViewWithMoreData:YES];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;

@@ -33,6 +33,12 @@
 #import "FHDetailNeighborhoodMapInfoCell.h"
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailListEntranceCell.h"
+#import "FHDetailHouseSubscribeCell.h"
+#import "FHEnvContext.h"
+#import "NSDictionary+TTAdditions.h"
+
+extern NSString *const kFHPhoneNumberCacheKey;
+extern NSString *const kFHSubscribeHouseCacheKey;
 
 @interface FHHouseOldDetailViewModel ()
 
@@ -68,6 +74,7 @@
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
+    [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
 
 }
 // cell class
@@ -150,6 +157,10 @@
     // 房源榜单
     if ([model isKindOfClass:[FHDetailListEntranceModel class]]) {
         return [FHDetailListEntranceCell class];
+    }
+    // 订阅房源动态
+    if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
+        return [FHDetailHouseSubscribeCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -263,6 +274,22 @@
         [self.items addObject:propertyModel];
     }
     
+    //添加订阅房源动态卡片
+    if([self isShowSubscribe]){
+        FHDetailHouseSubscribeModel *subscribeModel = [[FHDetailHouseSubscribeModel alloc] init];
+        subscribeModel.tableView = self.tableView;
+        [self.items addObject:subscribeModel];
+        
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ((FHDetailHouseSubscribeCell *)subscribeModel.cell) {
+                ((FHDetailHouseSubscribeCell *)subscribeModel.cell).subscribeBlock = ^(NSString * _Nonnull phoneNum) {
+                    [wSelf subscribeFormRequest:phoneNum subscribeModel:subscribeModel];
+                };
+            }
+        });
+    }
+    
     //生成IM卡片的schema用 个人认为server应该加接口
     NSString *imgUrl = @"";
     if (model.data.houseImage.count > 0) {
@@ -312,11 +339,7 @@
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
-        NSMutableArray *tempArray = [[NSMutableArray alloc] initWithArray:model.data.recommendedRealtors];
-        if (tempArray.count > 5) {
-            tempArray = [tempArray subarrayWithRange:NSMakeRange(0, 5)];
-        }
-        agentListModel.recommendedRealtors = tempArray;
+        agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
@@ -369,7 +392,7 @@
         [self.items addObject:infoModel];
     }
 
-    if (model.data.housePricingRank || model.data.priceTrend.count > 0) {
+    if (model.data.housePricingRank.analyseDetail.length > 0) {
         
         // 价格分析
         FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
@@ -380,22 +403,19 @@
             priceRankModel.priceRank = model.data.housePricingRank;
             [self.items addObject:priceRankModel];
         }
-        // 均价走势
-        if (model.data.priceTrend.count > 0) {
-            FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
-            priceTrendModel.priceTrends = model.data.priceTrend;
-            priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
-            priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
-            priceTrendModel.tableView = self.tableView;
-            [self.items addObject:priceTrendModel];
-        }
     }
+    // 均价走势
+    FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
+    priceTrendModel.priceTrends = model.data.priceTrend;
+    priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
+    priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
+    priceTrendModel.hasSuggestion = (model.data.housePricingRank.buySuggestion.content.length > 0) ? YES : NO;
+    priceTrendModel.tableView = self.tableView;
+    [self.items addObject:priceTrendModel];
     
     // 购房小建议
-    if (model.data.housePricingRank.buySuggestion) {
+    if (model.data.housePricingRank.buySuggestion.content.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
         FHDetailSuggestTipModel *infoModel = [[FHDetailSuggestTipModel alloc] init];
         infoModel.buySuggestion = model.data.housePricingRank.buySuggestion;
         [self.items addObject:infoModel];
@@ -524,5 +544,52 @@
     return model.data.coreInfo.count < 1;
 }
 
+- (void)subscribeFormRequest:(NSString *)phoneNum subscribeModel:(FHDetailHouseSubscribeModel *)subscribeModel {
+    __weak typeof(self)wself = self;
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    NSString *houseId = self.houseId;
+    NSString *from = @"app_oldhouse_subscription";
+    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+        
+        if (model.status.integerValue == 0 && !error) {
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+            
+            YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
+            [subscribeHouseCache setObject:@"1" forKey:self.houseId];
+            
+            [wself.items removeObject:subscribeModel];
+            [wself reloadData];
+        }else {
+            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+        }
+    }];
+    // 静默关注功能
+    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+}
+
+- (BOOL)isShowSubscribe {
+    BOOL isShow = NO;
+    NSDictionary *fhSettings = [self fhSettings];
+    BOOL oldHouseSubscribe =  [fhSettings tt_boolValueForKey:@"f_is_show_house_sub_entry"];
+    //根据服务器setting设置和本地缓存，已经订阅过的house不再显示
+    YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
+    if(oldHouseSubscribe && ![subscribeHouseCache containsObjectForKey:self.houseId]){
+        isShow = YES;
+    }
+    return isShow;
+}
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
 
 @end

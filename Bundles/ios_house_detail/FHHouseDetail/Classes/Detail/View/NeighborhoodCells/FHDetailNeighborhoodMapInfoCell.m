@@ -110,13 +110,13 @@
     self.mapImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.contentView addSubview:self.mapImageView];
     [self.mapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(SCREEN_WIDTH * self.mapHightScale);
+        make.height.mas_equalTo(floor(SCREEN_WIDTH * self.mapHightScale));
         make.edges.equalTo(self.contentView);
     }];
     self.mapAnnotionImageView.backgroundColor = UIColor.clearColor;
     [self.mapImageView addSubview:self.mapAnnotionImageView];
     
-    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * self.mapHightScale);
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(SCREEN_WIDTH * self.mapHightScale));
     __weak typeof(self) weakSelf = self;
     [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
         weakSelf.mapImageView.image = resultImage;
@@ -152,7 +152,7 @@
         [self setLocation:model.gaodeLat lng:model.gaodeLng];
     }
 
-    [self layoutIfNeeded];
+//    [self layoutIfNeeded];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {

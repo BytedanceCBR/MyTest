@@ -9,5 +9,5 @@
 #import "TTStartupTask.h"
 
 @interface TTAppLogStartupTask : TTStartupTask<UIApplicationDelegate>
-
++(void)updateCustomerHeader;
 @end

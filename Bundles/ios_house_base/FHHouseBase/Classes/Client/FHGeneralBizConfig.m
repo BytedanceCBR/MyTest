@@ -15,6 +15,7 @@ static NSString *const kGeneralKey = @"config";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
+static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 
 @interface FHGeneralBizConfig ()
@@ -23,6 +24,7 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
 @property (nonatomic, strong) YYCache *userSelectCache;
 @property (nonatomic, strong) YYCache *userDefaultSelectCityCache;
 @property(nonatomic , strong) YYCache *sendPhoneNumberCache;
+@property(nonatomic , strong) YYCache *subscribeHouseCache;
 
 @end
 
@@ -163,6 +165,14 @@ NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
         _sendPhoneNumberCache = [YYCache cacheWithName:kFHPhoneNumberCacheKey];
     }
     return _sendPhoneNumberCache;
+}
+
+- (YYCache *)subscribeHouseCache
+{
+    if (!_subscribeHouseCache) {
+        _subscribeHouseCache = [YYCache cacheWithName:kFHSubscribeHouseCacheKey];
+    }
+    return _subscribeHouseCache;
 }
 
 @end

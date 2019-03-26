@@ -18,6 +18,8 @@
 #import "TTCategoryStayTrackManager.h"
 #import "FHLocManager.h"
 #import <HMDTTMonitor.h>
+#import "TTSandBoxHelper.h"
+#import "TTArticleCategoryManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -102,6 +104,9 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 -(void)showNotify:(NSString *)message
 {
+    
+    [self hideImmediately];
+    
     UIEdgeInsets inset = self.mainTableView.contentInset;
     inset.top = 32;
     self.mainTableView.contentInset = inset;
@@ -169,7 +174,15 @@ static CGFloat const kSectionHeaderHeight = 38;
         [self.homeListViewModel updateCategoryViewSegmented:NO];
         [self.homeListViewModel requestOriginData:YES];
     }
+    
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
+    
+    //首次无网启动点击加载重试，增加拉取频道
+    if ([TTSandBoxHelper isAPPFirstLaunch]) {
+        [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
+         
+        }];
+    }
 }
 
 - (void)willAppear
