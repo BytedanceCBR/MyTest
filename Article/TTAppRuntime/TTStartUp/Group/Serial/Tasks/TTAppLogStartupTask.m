@@ -112,8 +112,8 @@
         NSString* currentCityName = [FHLocManager sharedInstance].currentReGeocode.city;
         NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.province;
         customHeader[@"city_name"] = currentCityName;
-        customHeader[@"province_name"] = currentCityName;
-        customHeader[@"house_city"] =  [FHEnvContext getCurrentSelectCityIdFromLocal];
+        customHeader[@"province_name"] = provinceName;
+        customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
         return [customHeader copy];
     }];
 }
