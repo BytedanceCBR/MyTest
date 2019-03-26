@@ -217,7 +217,7 @@
     NSMutableDictionary *experiments = @{}.mutableCopy;
 //    if ([fhSettings valueForKey:@"f_test_params"] && [[fhSettings valueForKey:@"f_test_params"] isKindOfClass:[NSDictionary class]]) {
 //        experiments[@"f_test_params"] = fhSettings[@"f_test_params"];
-    }
+//    }
     if ([fhSettings valueForKey:@"show_house"] && [[fhSettings valueForKey:@"show_house"] isKindOfClass:[NSString class]]) {
         experiments[@"show_house"] = fhSettings[@"show_house"];
     }
