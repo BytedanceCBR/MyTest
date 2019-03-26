@@ -17,7 +17,7 @@
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
 
-@interface FHHouseDetailViewController ()
+@interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) UITableView *tableView;
@@ -133,6 +133,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
+    [self.view endEditing:YES];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -141,7 +142,6 @@
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
-
 }
 
 #pragma mark - for keyboard show
@@ -397,13 +397,22 @@
 
 - (void)configTableView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+    tapGesturRecognizer.cancelsTouchesInView = NO;
+    tapGesturRecognizer.delegate = self;
+    [_tableView addGestureRecognizer:tapGesturRecognizer];
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
     }
+}
+
+-(void)tapAction:(id)tap {
+    [_tableView endEditing:YES];
 }
 
 - (UIView *)getNaviBar
@@ -414,6 +423,13 @@
 - (UIView *)getBottomBar
 {
     return self.bottomBar;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if([otherGestureRecognizer.view isKindOfClass:[UITextField class]] || [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]){
+        return NO;
+    }
+    return YES;
 }
 
 @end
