@@ -51,9 +51,6 @@ static TTLaunchTracer* _instance;
     NSMutableDictionary *params = @{@"gd_label": launchType,
                                     @"tips": @(_badgeNumber),
                                     @"event_type": @"house_app2c_v2"}.mutableCopy;
-    if (_extGrowth) {
-        params[@"ext_growth"] = _extGrowth;
-    }
     [TTTracker eventV3:@"launch_log" params:params];
 }
 
