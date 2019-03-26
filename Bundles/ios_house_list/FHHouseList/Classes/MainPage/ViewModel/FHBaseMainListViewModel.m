@@ -61,6 +61,7 @@
         
         _houseList = [NSMutableArray new];
         _sugesstHouseList = [NSMutableArray new];
+        _showHouseDict = [NSMutableDictionary new];
         
         self.tableView = tableView;
         self.houseType = houseType;
@@ -279,6 +280,7 @@
         [self.houseList removeAllObjects];
         [self.sugesstHouseList removeAllObjects];
         [self.tableView.mj_footer endRefreshing];
+        [self.showHouseDict removeAllObjects];
     }
     
     if (model) {
