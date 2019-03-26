@@ -114,8 +114,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
         make.bottom.mas_equalTo(-20);
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
         make.height.mas_equalTo(94);
     }];
     

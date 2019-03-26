@@ -580,15 +580,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 }
 
 - (BOOL)isShowSubscribe {
-    BOOL isShow = NO;
-    NSDictionary *fhSettings = [self fhSettings];
-    BOOL oldHouseSubscribe =  [fhSettings tt_boolValueForKey:@"f_is_show_house_sub_entry"];
-    //根据服务器setting设置和本地缓存，已经订阅过的house不再显示
-    YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
-    if(oldHouseSubscribe && ![subscribeHouseCache containsObjectForKey:self.houseId]){
-        isShow = YES;
-    }
-    return isShow;
+//    BOOL isShow = NO;
+//    NSDictionary *fhSettings = [self fhSettings];
+//    BOOL oldHouseSubscribe =  [fhSettings tt_boolValueForKey:@"f_is_show_house_sub_entry"];
+//    //根据服务器setting设置和本地缓存，已经订阅过的house不再显示
+//    YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
+//    if(oldHouseSubscribe && ![subscribeHouseCache containsObjectForKey:self.houseId]){
+//        isShow = YES;
+//    }
+//    return isShow;
+    return YES;
 }
 
 - (NSDictionary *)fhSettings {
