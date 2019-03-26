@@ -144,6 +144,8 @@ NSString * logBaseURL(void);
 + (NSString*)appLogConfigURLString;
 + (NSString*)appLogV3ConfigURLString;
 + (NSString*)appLogURLString;
++ (NSString*)rtAppLogURLString;
++ (NSString *)trackLogConfigURLString;
 + (NSString*)appLogV2ConfigURLString;
 + (NSString*)appLogV2URLString;
 #pragma mark - Auth URLs

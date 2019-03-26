@@ -1021,6 +1021,18 @@ static CommonURLSetting *_sharedInstance = nil;
     return [NSString stringWithFormat:@"%@/service/2/app_log/", [self logBaseURL]];
 }
 
++ (NSString*)rtAppLogURLString
+{
+    return @"http://rtlog.haoduofangs.com/service/2/app_log/";
+    //    return [NSString stringWithFormat:@"%@/service/2/app_log/", [self logBaseURL]];
+}
+
++ (NSString *)trackLogConfigURLString
+{
+    return [NSString stringWithFormat:@"%@/service/2/log_settings/", [self logBaseURL]];
+}
+
+
 + (NSString*)requestNewSessionURLString
 {
     return [NSString stringWithFormat:@"%@/auth/chain_login/", [self SNSBaseURL]];
