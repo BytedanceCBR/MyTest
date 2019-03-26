@@ -17,11 +17,12 @@
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
 
-@interface FHHouseDetailViewController ()
+@interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *bottomStatusBar;
+@property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
@@ -133,6 +134,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
+    [self.view endEditing:YES];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -141,7 +143,6 @@
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
-
 }
 
 #pragma mark - for keyboard show
@@ -208,6 +209,10 @@
     [self.view addSubview:_navBar];
     self.viewModel.navBar = _navBar;
 
+    _bottomMaskView = [[UIView alloc] init];
+    _bottomMaskView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_bottomMaskView];
+    
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
@@ -249,6 +254,12 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
         make.height.mas_equalTo(0);
     }];
+    
+    [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bottomBar.mas_top);
+        make.left.right.bottom.mas_equalTo(self.view);
+    }];
+    
     [self.view bringSubviewToFront:_navBar];
 }
 
@@ -397,13 +408,22 @@
 
 - (void)configTableView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+    tapGesturRecognizer.cancelsTouchesInView = NO;
+    tapGesturRecognizer.delegate = self;
+    [_tableView addGestureRecognizer:tapGesturRecognizer];
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+}
+
+-(void)tapAction:(id)tap {
+    [_tableView endEditing:YES];
 }
 
 - (UIView *)getNaviBar
@@ -414,6 +434,13 @@
 - (UIView *)getBottomBar
 {
     return self.bottomBar;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if([otherGestureRecognizer.view isKindOfClass:[UITextField class]] || [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]){
+        return NO;
+    }
+    return YES;
 }
 
 @end

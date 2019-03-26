@@ -14,6 +14,7 @@
 #if __has_include("BDImageCache.h")
 #import "BDImageCache.h"
 #endif
+#import <BDABTestSDK/BDABTestManager.h>
 
 static const NSInteger kSDOptimizeCacheMaxCacheAge = 60 * 60 * 24 * 2; // 2day
 static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M
@@ -28,6 +29,10 @@ static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // ABTest 获取命中的实验组
+        [self fetchABTestData];
+        
         [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
 
         if ([[[TTSettingsManager sharedManager] settingForKey:@"tt_disk_cache_optimize" defaultValue:@1 freeze:YES] boolValue]) {
@@ -43,6 +48,16 @@ static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M
             }
         }
     });
+}
+
+
+// 获取命中的实验
+- (void)fetchABTestData
+{
+    [BDABTestManager fetchExperimentDataWithHostType:BDABTestHostTypeDomestic completionBlock:^(NSError *error, NSDictionary *data) {
+        
+//        NSLog(@"abtest data:%@",data);
+    }];
 }
 
 @end
