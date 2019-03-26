@@ -413,15 +413,40 @@
                 [uiDict setValue:subModel forKey:@"subscribe_item"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
                 
-                if (wself.subScribeShowDict) {
-                    NSMutableDictionary *traceParams = [NSMutableDictionary dictionaryWithDictionary:self.subScribeShowDict];
-                    [traceParams setValue:@"confirm" forKey:@"click_type"];
-                    TRACK_EVENT(@"subscribe_click",traceParams);
+                NSMutableDictionary *dictClickParams = [NSMutableDictionary new];
+                
+                if (self.subScribeShowDict) {
+                    [dictClickParams addEntriesFromDictionary:self.subScribeShowDict];
                 }
                 
+                if (subModel.subscribeId) {
+                    [dictClickParams setValue:subModel.subscribeId forKey:@"subscribe_id"];
+                }
+                
+                if (subModel.title) {
+                    [dictClickParams setValue:subModel.title forKey:@"title"];
+                }else
+                {
+                    [dictClickParams setValue:@"be_null" forKey:@"title"];
+                }
+                
+                if (subModel.text) {
+                    [dictClickParams setValue:subModel.text forKey:@"text"];
+                }else
+                {
+                    [dictClickParams setValue:@"be_null" forKey:@"text"];
+                }
+                
+                if (dictClickParams) {
+                    self.subScribeShowDict = [NSDictionary dictionaryWithDictionary:dictClickParams];
+                }
+                
+                if (wself.subScribeShowDict) {
+                    [dictClickParams setValue:@"confirm" forKey:@"click_type"];
+                    TRACK_EVENT(@"subscribe_click",dictClickParams);
+                }
             }
         }
-
     }];
     
     self.requestTask = task;
@@ -444,7 +469,7 @@
             [uiDict setValue:subscribeId forKey:@"subscribe_id"];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
             
-
+            
             if (wself.subScribeShowDict) {
                 NSMutableDictionary *traceParams = [NSMutableDictionary dictionaryWithDictionary:self.subScribeShowDict];
                 [traceParams setValue:@"cancel" forKey:@"click_type"];
@@ -1352,7 +1377,19 @@
             {
                 [tracerDict setValue:@"be_null" forKey:@"subscribe_id"];
             }
-            [tracerDict setValue:cellSubModel.text forKey:@"word"];
+            if (cellSubModel.title) {
+                [tracerDict setValue:cellSubModel.title forKey:@"title"];
+            }else
+            {
+                [tracerDict setValue:@"be_null" forKey:@"title"];
+            }
+            
+            if (cellSubModel.text) {
+                [tracerDict setValue:cellSubModel.text forKey:@"text"];
+            }else
+            {
+                [tracerDict setValue:@"be_null" forKey:@"text"];
+            }
         }
         [tracerDict removeObjectForKey:@"impr_id"];
         [tracerDict removeObjectForKey:@"group_id"];

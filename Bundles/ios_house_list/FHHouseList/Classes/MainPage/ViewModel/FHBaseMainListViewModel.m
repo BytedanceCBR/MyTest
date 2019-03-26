@@ -223,10 +223,39 @@
                 [uiDict setValue:subModel forKey:@"subscribe_item"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
                 
+                NSMutableDictionary *dictClickParams = [NSMutableDictionary new];
+                
+                if (self.subScribeShowDict) {
+                    [dictClickParams addEntriesFromDictionary:self.subScribeShowDict];
+                }
+                
+                if (subModel.subscribeId) {
+                    [dictClickParams setValue:subModel.subscribeId forKey:@"subscribe_id"];
+                }
+                
+                if (subModel.title) {
+                    [dictClickParams setValue:subModel.title forKey:@"title"];
+                }else
+                {
+                    [dictClickParams setValue:@"be_null" forKey:@"title"];
+                }
+                
+                if (subModel.text) {
+                    [dictClickParams setValue:subModel.text forKey:@"text"];
+                }else
+                {
+                    [dictClickParams setValue:@"be_null" forKey:@"text"];
+                }
+                
+                if (dictClickParams) {
+                    self.subScribeShowDict = [NSDictionary dictionaryWithDictionary:dictClickParams];
+                }
+                
                 if (wself.subScribeShowDict) {
-                    NSMutableDictionary *traceParams = [NSMutableDictionary dictionaryWithDictionary:self.subScribeShowDict];
-                    [traceParams setValue:@"confirm" forKey:@"click_type"];
-                    TRACK_EVENT(@"subscribe_click",traceParams);
+                    if (wself.subScribeShowDict) {
+                        [dictClickParams setValue:@"confirm" forKey:@"click_type"];
+                        TRACK_EVENT(@"subscribe_click",dictClickParams);
+                    }
                 }
             }
         }
@@ -1197,10 +1226,12 @@
         }
     }
     
-    NSURL *url = [NSURL URLWithString:urlStr];
-    if (url) {
-        TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracerParam,@"house_type":@(self.houseType)}];
-        [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
+    if (urlStr) {
+        NSURL *url = [NSURL URLWithString:urlStr];
+        if (url) {
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracerParam,@"house_type":@(self.houseType)}];
+            [[TTRoute sharedRoute] openURLByViewController:url userInfo: userInfo];
+        }
     }
 }
 
@@ -1507,8 +1538,22 @@
             {
                 [param setValue:@"be_null" forKey:@"subscribe_id"];
             }
-            [param setValue:cellSubModel.text forKey:@"word"];
+            
+            if (cellSubModel.title) {
+                [param setValue:cellSubModel.title forKey:@"title"];
+            }else
+            {
+                [param setValue:@"be_null" forKey:@"title"];
+            }
+            
+            if (cellSubModel.text) {
+                [param setValue:cellSubModel.text forKey:@"text"];
+            }else
+            {
+                [param setValue:@"be_null" forKey:@"text"];
+            }
         }
+        
         [param removeObjectForKey:@"impr_id"];
         [param removeObjectForKey:@"group_id"];
         self.subScribeShowDict = param;
