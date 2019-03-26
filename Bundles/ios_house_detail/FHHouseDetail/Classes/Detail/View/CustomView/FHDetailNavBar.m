@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "Masonry.h"
 #import "TTDeviceHelper.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 
 @interface FHDetailNavBar ()
 
@@ -120,12 +121,17 @@
     [_backBtn setImage:self.backWhiteImage forState:UIControlStateHighlighted];
     [_backBtn addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_backBtn];
-
+    
     _collectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_collectBtn setImage:self.collectWhiteImage forState:UIControlStateNormal];
     [_collectBtn setImage:self.collectWhiteImage forState:UIControlStateHighlighted];
-    [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
+//    [_collectBtn addTarget:self action:@selector(collectAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_collectBtn];
+    @weakify(self);
+    [[[[_collectBtn rac_signalForControlEvents:UIControlEventTouchUpInside]takeUntil:self.rac_willDeallocSignal] throttle:0.3]subscribeNext:^(__kindof UIControl * _Nullable x) {
+        @strongify(self);
+        [self collectAction:x];
+    }];
     
     _messageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_messageBtn setImage:[UIImage imageNamed:@"detail_message_white"] forState:UIControlStateNormal];
