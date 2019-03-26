@@ -32,6 +32,7 @@ NSString * logBaseURL(void);
 + (NSString *)channelBaseURL;
 + (NSString*)SNSBaseURL;
 + (NSString*)logBaseURL;
++ (NSString*)xlogBaseURL;
 + (NSString*)monitorBaseURL;
 
 #pragma mark - 详情页默认hosts
