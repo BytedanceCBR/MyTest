@@ -172,18 +172,37 @@
 -(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap
 {
     if (show) {
+        [self.tableView reloadData];
         [_errorMaskView showEmptyWithType:type];
         _errorMaskView.retryButton.enabled = enableTap;
         
-        CGFloat top = self.tableView.contentOffset.y;
-        if (top > 0) {
-            top = 0;
-        }
-        [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(-top);
-        }];
+//        if (self.topBannerView) {
+//            //没有banner ，直接覆盖到table上
+//            CGRect frame = self.tableView.frame;
+//            frame.origin = CGPointZero;
+//            self.errorMaskView.frame = frame;
+//            self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+//            return;
+//        }
+
+        CGRect frame = self.tableView.frame;
+        frame.origin = CGPointZero;
+        self.errorMaskView.frame = frame;
+        self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+
+//        CGFloat top = self.tableView.contentOffset.y;
+//        if (!_tableView.window) {
+//            //还未显示
+//            top = - _topView.height;
+//        }
+//        if (top > 0) {
+//            top = 0;
+//        }
+//        [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.top.mas_equalTo(-top);
+//        }];
         
-        self.tableView.scrollEnabled = NO;
+//        self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
 }
@@ -863,7 +882,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (_showPlaceHolder || [_houseList count] <= indexPath.row) {
+    if (_showPlaceHolder) {
         return;
     }
     
@@ -890,7 +909,6 @@
     BOOL shouldInTable = (scrollView.contentOffset.y + scrollView.contentInset.top <  [self.topView filterTop]);
     [self moveToTableView:shouldInTable];
     
-//    NSLog(@"[SCROLL] offset is: %f top %f  top cal height: %f should intable : %@",scrollView.contentOffset.y,scrollView.contentInset.top,(self.topView.height - [self.topView filterTop]),shouldInTable?@"YES":@"NO");
 }
 
 
@@ -899,7 +917,7 @@
     if (toTableView) {
         if (!self.topBannerView) {
             return;
-        }        
+        }
         if (self.topView.superview == self.tableView) {
             return;
         }
@@ -1308,7 +1326,7 @@
         }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
-            FHSingleImageInfoCellModel *cellModel = self.sugesstHouseList[indexPath.row];
+            cellModel = self.sugesstHouseList[indexPath.row];
         }
     }
     

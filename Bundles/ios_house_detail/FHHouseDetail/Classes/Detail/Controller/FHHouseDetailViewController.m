@@ -22,6 +22,7 @@
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *bottomStatusBar;
+@property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
@@ -208,6 +209,10 @@
     [self.view addSubview:_navBar];
     self.viewModel.navBar = _navBar;
 
+    _bottomMaskView = [[UIView alloc] init];
+    _bottomMaskView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_bottomMaskView];
+    
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
@@ -249,6 +254,12 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
         make.height.mas_equalTo(0);
     }];
+    
+    [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bottomBar.mas_top);
+        make.left.right.bottom.mas_equalTo(self.view);
+    }];
+    
     [self.view bringSubviewToFront:_navBar];
 }
 
