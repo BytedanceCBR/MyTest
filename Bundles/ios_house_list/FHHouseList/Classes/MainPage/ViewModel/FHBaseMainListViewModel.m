@@ -1176,7 +1176,7 @@
         NSInteger rank = ((indexPath.section == 0) ? indexPath.row : indexPath.row - 1);
         
         if (cellModel.isRecommendCell) {
-            tracerParam[UT_ENTER_FROM] = @"search_related_list";
+            tracerParam[UT_ENTER_FROM] = [self pageTypeString];
             tracerParam[UT_ELEMENT_FROM] = @"search_related";
             tracerParam[UT_SEARCH_ID] = self.recommendSearchId;
         } else {
@@ -1512,7 +1512,7 @@
     param[@"card_type"] = @"left_pic";
     
     if (cellModel.isRecommendCell) {
-        param[UT_PAGE_TYPE] = @"search_related_list";
+        param[UT_PAGE_TYPE] = [self pageTypeString];
         param[@"element_type"] = @"search_related";
         param[UT_SEARCH_ID] = self.recommendSearchId ? : @"be_null";
     } else {

@@ -1179,7 +1179,7 @@
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[@"card_type"] = @"left_pic";
     if (cellModel.isRecommendCell) {
-        traceParam[@"enter_from"] = @"search_related_list";
+        traceParam[@"enter_from"] = [self pageTypeString];
         traceParam[@"element_from"] = @"search_related";
         traceParam[@"search_id"] = self.recommendSearchId;
     } else {
@@ -1352,7 +1352,7 @@
     tracerDict[@"house_type"] = [self houseTypeString] ? : @"be_null";
     tracerDict[@"card_type"] = @"left_pic";
     if (cellModel.isRecommendCell) {
-        tracerDict[@"page_type"] = @"search_related_list";
+        tracerDict[@"page_type"] = [self pageTypeString];
         tracerDict[@"element_type"] = @"search_related";
         tracerDict[@"search_id"] = self.recommendSearchId ? : @"be_null";
     } else {
