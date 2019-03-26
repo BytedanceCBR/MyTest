@@ -447,7 +447,7 @@
 
             if (wself.subScribeShowDict) {
                 NSMutableDictionary *traceParams = [NSMutableDictionary dictionaryWithDictionary:self.subScribeShowDict];
-                [traceParams setValue:@"cannel" forKey:@"click_type"];
+                [traceParams setValue:@"cancel" forKey:@"click_type"];
                 TRACK_EVENT(@"subscribe_click",traceParams);
             }
         }
