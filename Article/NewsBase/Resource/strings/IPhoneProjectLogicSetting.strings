@@ -115,3 +115,7 @@
 
 //"second_house_main"   = "FHHouseOldHomeViewController";
 "second_house_main"   = "FHBaseMainListViewController";
+// 帮我找房提交页面
+"house_find_help"   = "FHHouseFindHelpViewController";
+// 帮我找房结果页
+"house_find_result"   = "FHHouseFindResultViewController";
