@@ -65,7 +65,7 @@
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(self.line.mas_bottom).mas_offset(17);
+        make.top.mas_equalTo(self.rankLabel.mas_bottom).mas_offset(18);
         make.bottom.mas_equalTo(-17);
     }];
 }
