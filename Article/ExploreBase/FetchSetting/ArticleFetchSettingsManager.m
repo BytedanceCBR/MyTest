@@ -660,7 +660,7 @@
     [TTAccountTestSettings parseAccountConfFromSettings:dSettings];
     
     //WKWebview开关
-    if ([dSettings objectForKey:@"wkwebview_enable"]) {
+    if ([dSettings objectForKey:@"wkwebview_enable"] && [[dSettings objectForKey:@"wkwebview_enable"] respondsToSelector:@selector(boolValue)]) {
         [SSCommonLogic setWKWebViewEnabledEnabled:[[dSettings objectForKey:@"wkwebview_enable"] boolValue]];
     }
     
