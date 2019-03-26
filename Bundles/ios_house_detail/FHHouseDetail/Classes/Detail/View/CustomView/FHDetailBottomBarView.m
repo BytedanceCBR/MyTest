@@ -51,9 +51,9 @@
     [self addSubview:self.leftView];
     [self.leftView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.mas_equalTo(self);
-        make.width.mas_equalTo(0);
+        make.width.mas_equalTo(160);
     }];
-    
+    self.leftView.hidden = YES;
     [self.leftView addSubview:self.avatarView];
     [self.leftView addSubview:self.nameLabel];
     [self.leftView addSubview:self.agencyLabel];
@@ -72,7 +72,6 @@
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
         make.top.mas_equalTo(self.avatarView).offset(2);
-        make.right.mas_equalTo(self.licenceIcon.mas_left);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
@@ -80,6 +79,7 @@
         make.centerY.mas_equalTo(self.nameLabel);
         make.right.mas_lessThanOrEqualTo(self.leftView).offset(0);
     }];
+
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.nameLabel);
         make.top.mas_equalTo(self.nameLabel.mas_bottom);
@@ -154,13 +154,17 @@
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
-            make.right.mas_equalTo(self.licenceIcon.mas_left).mas_offset(-4);
+        }];
+        [self.licenceIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
+            make.height.width.mas_equalTo(20);
+            make.centerY.mas_equalTo(self.nameLabel);
         }];
     } else {
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
             make.top.mas_equalTo(self.avatarView).offset(2);
-            make.right.mas_equalTo(self);
+            make.right.mas_equalTo(0);
         }];
     }
 }
@@ -238,8 +242,6 @@
             }];
         }
     }
-    
-    // add by zjing for test 缺少点击跳转经纪人详情页，埋点以及营业执照和从业人员信息卡展示
 }
 
 - (void)startLoading

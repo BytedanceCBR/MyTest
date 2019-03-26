@@ -73,6 +73,8 @@
 //#import "TTToutiaoFantasyManager.h"
 #import "TTASettingConfiguration.h"
 #import "AKTaskSettingHelper.h"
+#import <BDABTestSDK/BDABTestManager.h>
+
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"
 #define kFetchTimeInterval (3 * 60 * 60)
 
@@ -206,11 +208,32 @@
     }
 }
 
+#pragma mark 固化settings配置到客户端分层
+- (void)saveServerSettingsForClientABs
+{
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    // 将需要覆盖的settings数据保存到BDABTest SDK
+    // key:实验BDABTestBaseExperiment初始化的key，value：实验数据，即Libra实验组对应配置参数，数据类型必须对应
+    NSMutableDictionary *experiments = @{}.mutableCopy;
+//    if ([fhSettings valueForKey:@"f_test_params"] && [[fhSettings valueForKey:@"f_test_params"] isKindOfClass:[NSDictionary class]]) {
+//        experiments[@"f_test_params"] = fhSettings[@"f_test_params"];
+    }
+    if ([fhSettings valueForKey:@"show_house"] && [[fhSettings valueForKey:@"show_house"] isKindOfClass:[NSString class]]) {
+        experiments[@"show_house"] = fhSettings[@"show_house"];
+    }
+    if (experiments.count > 0) {
+        [BDABTestManager saveServerSettingsForClientExperiments:experiments];
+    }
+}
+
 - (void)dealAppSettingResult:(NSDictionary *)dSettings
 {
     [super dealAppSettingResult:dSettings];
     
     [[TTSettingsManager sharedManager] saveSettings:dSettings];
+    
+    // 固化settings配置的实验数据
+    [self saveServerSettingsForClientABs];
     
     [[NSUserDefaults standardUserDefaults] setDouble:[[NSDate date] timeIntervalSince1970] forKey:SSFetchSettingsManagerFetchedDateKey];
     
