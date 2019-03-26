@@ -4,6 +4,7 @@
 //
 //  Created by 张静 on 2019/3/20.
 //
+#if INHOUSE
 
 #import "FHClientABTestDebugViewController.h"
 #import "TTSettingsManager+SaveSettings.h"
@@ -82,3 +83,5 @@
     return result;
 }
 @end
+
+#endif

@@ -31,7 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isSavedSearchConfig;
 
 - (NSString *)readLocalDefaultCityNamePreviousVersion;
+
 - (YYCache *)sendPhoneNumberCache;
+
+- (YYCache *)subscribeHouseCache;
 
 @end
 
