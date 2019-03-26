@@ -157,7 +157,8 @@
             }
             self.tracerCacheDic[subscribe_id] = @"1";
             NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
-            tracerDic[@"word"] = item.text.length > 0 ? item.text : @"be_null";
+            tracerDic[@"title"] = item.title.length > 0 ? item.title : @"be_null";
+            tracerDic[@"text"] = item.text.length > 0 ? item.text : @"be_null";
             tracerDic[@"word_type"] = [self wordType];
             tracerDic[@"page_type"] = @"search_detail";
             tracerDic[@"rank"] = @(index);
@@ -182,7 +183,8 @@
         NSString *subscribe_id = item.subscribeId;
         if (subscribe_id.length > 0) {
             NSMutableDictionary *tracerDic = @{@"subscribe_id":subscribe_id}.mutableCopy;
-            tracerDic[@"word"] = item.text.length > 0 ? item.text : @"be_null";
+            tracerDic[@"title"] = item.title.length > 0 ? item.title : @"be_null";
+            tracerDic[@"text"] = item.text.length > 0 ? item.text : @"be_null";
             tracerDic[@"word_type"] = [self wordType];
             tracerDic[@"page_type"] = @"search_detail";
             tracerDic[@"rank"] = @(index);
