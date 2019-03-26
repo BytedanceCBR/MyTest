@@ -18,6 +18,7 @@
 #import "FHSingleImageInfoCell.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHDetailBottomOpenAllView.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 
 @interface FHDetailRentRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -72,7 +73,7 @@
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
-        [tv registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
@@ -232,11 +233,10 @@
         FHHouseRentDataItemsModel *item = self.items[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
-        if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
-            FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
-            [imageInfoCell updateWithHouseCellModel:cellModel];
+        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
             [imageInfoCell refreshTopMargin:0];
-            [imageInfoCell refreshBottomMargin:20];
+            [imageInfoCell updateWithHouseCellModel:cellModel];
         }
         return cell;
     }

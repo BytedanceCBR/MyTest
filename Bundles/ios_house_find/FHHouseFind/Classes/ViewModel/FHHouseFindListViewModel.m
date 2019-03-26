@@ -9,7 +9,6 @@
 #import "FHHouseFindListView.h"
 #import "TTRoute.h"
 #import "FHEnvContext.h"
-#import "FHHomeConfigManager.h"
 #import "HMSegmentedControl.h"
 #import "FHHouseFindSectionItem.h"
 #import "FHHouseFindListViewController.h"
@@ -83,7 +82,7 @@
         wself.configDataModel = [[FHEnvContext sharedInstance]getConfigFromCache];
         [wself refreshDataWithConfigDataModel];
         isFirstChange = NO;
-
+        
     }];
     
 }
@@ -189,7 +188,7 @@
         NSString *placeholder = [self placeholderByHouseType:FHHouseTypeNeighborhood];
         [self.sugDict setValue:placeholder forKey:[self placeholderKeyByHouseType:FHHouseTypeNeighborhood]];
     }
-
+    
     self.itemList = itemList;
     [self.segmentView setSectionTitles:titleList];
 }
@@ -237,7 +236,7 @@
             }
         }
     }
-
+    
     FHHouseFindListView *baseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
     baseView.showRedirectTip = YES;
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
@@ -334,7 +333,7 @@
                 [wself startTrack];
                 [wself addEnterCategoryLog];
             }
-
+            
         }
     };
 }
@@ -350,7 +349,7 @@
     }
     if (index >= 0 && index < self.itemList.count) {
         self.segmentView.selectedSegmentIndex = index;
-
+        
     }
     [self.scrollView endEditing:YES];
 }
@@ -363,7 +362,7 @@
             
             FHHouseFindListView *lastBaseView = [self.scrollView viewWithTag:10 + self.lastSelectIndex];
             [lastBaseView viewWillDisappear:YES];
-
+            
             FHHouseFindListView *currentBaseView = [self.scrollView viewWithTag:10 + self.currentSelectIndex];
             [currentBaseView viewWillAppear:YES];
             
@@ -387,7 +386,7 @@
     if (self.sugSelectBlock) {
         self.sugSelectBlock(placeholder);
     }
-
+    
 }
 
 - (void)dealloc

@@ -9,65 +9,56 @@
 #define FHUserTrackerDefine_h
 
 //keys
-#define UT_EVENT_TYPE  @"event_type"
-#define UT_ORIGIN_FROM @"origin_from"
-#define UT_ENTER_FROM  @"enter_from"        //列表入口
-#define UT_CATEGORY_NAME @"category_name"  //列表名
-#define UT_ENTER_TYPE    @"enter_type"     //列表名
-#define UT_ELEMENT_FROM  @"element_from"   //组件入口
-#define UT_ENTER_CATEOGRY @"enter_category"
+extern NSString *const UT_EVENT_TYPE; //@"event_type"
+extern NSString *const UT_ORIGIN_FROM; //@"origin_from"
+extern NSString *const UT_ENTER_FROM; //@"enter_from"
+extern NSString *const UT_CATEGORY_NAME; //@"category_name"
+extern NSString *const UT_ENTER_TYPE; //@"enter_type"
+extern NSString *const UT_ELEMENT_FROM; //@"element_from"
+extern NSString *const UT_ENTER_CATEOGRY; //@"enter_category"
+extern NSString *const UT_SEARCH_ID; //@"search_id"
+extern NSString *const UT_ORIGIN_SEARCH_ID; //@"origin_search_id"
+extern NSString *const UT_STAY_TIME; //@"stay_time"
+extern NSString *const UT_PAGE_TYPE; // @"page_type"
+extern NSString *const UT_LOG_PB ; // @"log_pb"
 
-
-#define UT_SEARCH_ID     @"search_id"
-#define UT_ORIGIN_SEARCH_ID @"origin_search_id"
-
-#define UT_STAY_TIME    @"stay_time"  // 停留时长，单位毫秒
-
-
-//values
-#define UT_OF_RENTING_SEARCH @"renting_search"
-#define UT_OF_RENTING_LIST   @"renting_list"
-#define UT_OF_RENTING_ALL    @"renting_all"
-#define UT_OF_RENTING_FULLY  @"renting_fully"
-#define UT_OF_RENTING_JOINT  @"renting_joint"
-#define UT_OF_RENTING_APARTMENT  @"renting_apartment"
-
-#define UT_OF_SCHOOL_OPERATION  @"school_operation"
-#define UT_OF_DISCOUNT_OPERATION  @"discount_operation"
-#define UT_OF_SMALL_OPERATION     @"small_operation"
-
-#define UT_OF_CITY_MARKET         @"city_market"
-
+extern NSString *const UT_OF_RENTING_SEARCH; //@"renting_search"
+extern NSString *const UT_OF_RENTING_LIST; //@"renting_list"
+extern NSString *const UT_OF_RENTING_ALL; //@"renting_all"
+extern NSString *const UT_OF_RENTING_FULLY; //@"renting_fully"
+extern NSString *const UT_OF_RENTING_JOINT; //@"renting_joint"
+extern NSString *const UT_OF_RENTING_APARTMENT; //@"renting_apartment"
+extern NSString *const UT_OF_SCHOOL_OPERATION; //@"school_operation"
+extern NSString *const UT_OF_DISCOUNT_OPERATION; //@"discount_operation"
+extern NSString *const UT_OF_SMALL_OPERATION; //@"small_operation"
+extern NSString *const UT_OF_CITY_MARKET; //@"city_market"
 
 // main tab
-#define UT_OF_MAIN_NEW            @"new"
-#define UT_OF_MAIN_OLD            @"old"
-#define UT_OF_MAIN_NEIGHBORHOOD   @"neighborhood"
-#define UT_OF_MAIN_GANGXU         @"gangxufang"
-#define UT_OF_MAIN_SEARCH         @"maintab_search"
-#define UT_OF_MAIN_MIX_LIST       @"mix_list"
-#define UT_OF_MAIN_NEW_LIST       @"new_list"
+extern NSString *const UT_OF_MAIN_NEW; //@"new"
+extern NSString *const UT_OF_MAIN_OLD; //@"old"
+extern NSString *const UT_OF_MAIN_NEIGHBORHOOD; //@"neighborhood"
+extern NSString *const UT_OF_MAIN_GANGXU; //@"gangxufang"
+extern NSString *const UT_OF_MAIN_SEARCH; //@"maintab_search"
+extern NSString *const UT_OF_MAIN_MIX_LIST; //@"mix_list"
+extern NSString *const UT_OF_MAIN_NEW_LIST; //@"new_list"
 
 //find tab
-#define UT_OF_FIND_SEARCH        @"findtab_find"
-#define UT_OF_FIND_FIND          @"findtab_find"
-#define UT_OF_FIND_HISTORY       @"findtab_history"
-
+extern NSString *const UT_OF_FIND_SEARCH; //@"findtab_find"
+extern NSString *const UT_OF_FIND_FIND; //@"findtab_find"
+extern NSString *const UT_OF_FIND_HISTORY; //@"findtab_history"
 
 //message tab
-#define UT_OF_MESSAGE_RECOMMEND   @"messagetab_recommend"
-#define UT_OF_MESSAGE_RENT        @"messagetab_rent"
-#define UT_OF_MESSAGE_NEW         @"messagetab_new"
-#define UT_OF_MESSAGE_OLD         @"messagetab_old"
-#define UT_OF_MESSAGE_NEIGHBORHOOD @"messagetab_neighborhood"
+extern NSString *const UT_OF_MESSAGE_RECOMMEND; //@"messagetab_recommend"
+extern NSString *const UT_OF_MESSAGE_RENT; //@"messagetab_rent"
+extern NSString *const UT_OF_MESSAGE_NEW; //@"messagetab_new"
+extern NSString *const UT_OF_MESSAGE_OLD; //@"messagetab_old"
+extern NSString *const UT_OF_MESSAGE_NEIGHBORHOOD; //@"messagetab_neighborhood"
+extern NSString *const UT_OF_MINE_RENT; //@"minetab_rent"
+extern NSString *const UT_OF_MINE_NEW; //@"minetab_new"
+extern NSString *const UT_OF_MINE_OLD; //@"minetab_old"
+extern NSString *const UT_OF_MINE_NEIGHBORHOOD; //@"minetab_neighborhood"
 
-#define UT_OF_MINE_RENT           @"minetab_rent"
-#define UT_OF_MINE_NEW            @"minetab_new"
-#define UT_OF_MINE_OLD            @"minetab_old"
-#define UT_OF_MINE_NEIGHBORHOOD   @"minetab_neighborhood"
-
-#define UT_OF_PUSH               @"push"
-
+extern NSString *const UT_OF_PUSH; //@"push"
 
 /*
  

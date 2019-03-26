@@ -106,6 +106,9 @@ static APNsManager *_sharedManager = nil;
         }
 
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
+        if ([paramObj.allParams valueForKey:@"ext_growth"]) {
+            [[TTLaunchTracer shareInstance]setExtGrowth:[paramObj.allParams valueForKey:@"ext_growth"]];
+        }
         if (!isEmptyString(paramObj.host)) {
             [self trackWithPageName:paramObj.host params:paramObj.queryParams];
         }

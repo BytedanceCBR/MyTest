@@ -15,9 +15,10 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
-#import "FHSingleImageInfoCell.h"
-#import "FHSingleImageInfoCellModel.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <FHHouseBase/FHSingleImageInfoCellModel.h>
+
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -54,7 +55,7 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     
-    [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kSingleImageCellId];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
 }
 
@@ -158,14 +159,13 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData == YES) {
-        FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         id model = _houseList[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
         [cell updateWithHouseCellModel:cellModel];
         [cell refreshTopMargin: 20];
-        [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
         return cell;
     } else {
         // PlaceholderCell
@@ -194,18 +194,10 @@
         
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
-            
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-            CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-            if (height < 1) {
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                height = [tableView fd_heightForCellWithIdentifier:kSingleImageCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-                    [cell updateWithHouseCellModel:cellModel];
-                    [cell refreshTopMargin: 20];
-                    [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
-                }];
-            }
-            return height;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+            return (isLastCell ? 125 : 106)+reasonHeight;
         }
     }
     
