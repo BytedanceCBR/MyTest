@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseFindHelpBottomView;
+
 @interface FHHouseFindHelpViewModel : NSObject
+
+-(instancetype)initWithCollectionView:(UICollectionView *)collectionView bottomView:(FHHouseFindHelpBottomView *)bottomView;
 
 @end
 

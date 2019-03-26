@@ -28,12 +28,15 @@
     [super viewDidLoad];
     
     [self setupUI];
+    [self initConstraints];
+
 }
 
 - (void)setupUI
 {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"帮我找房";
+    self.view.backgroundColor = [UIColor whiteColor];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -51,11 +54,30 @@
     [self.view addSubview:_contentView];
     
     _bottomView = [[FHHouseFindHelpBottomView alloc]init];
-    _bottomView.backgroundColor = [UIColor redColor];
     [self.view addSubview:_bottomView];
 
-    
+    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView bottomView:_bottomView];
 }
 
+-(void)initConstraints
+{
+    CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    
+    CGFloat bottomHeight = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+    } else {
+        // Fallback on earlier versions
+    }
+    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(60);
+        make.bottom.mas_equalTo(self.view).offset(-bottomHeight);
+    }];
+    [_contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.bottomView.mas_top);
+    }];
+}
 
 @end
