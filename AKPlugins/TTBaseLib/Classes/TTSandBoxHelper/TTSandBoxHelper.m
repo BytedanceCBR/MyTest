@@ -37,7 +37,7 @@
     NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
     //除非误操作info.plist文件，否则版本一直会有
     if (!buildVersionNew) {
-        buildVersionNew = @"66000";
+        buildVersionNew = @"66200";
     }
     return buildVersionNew;
 }
@@ -47,7 +47,7 @@
 }
 
 + (BOOL)isInHouseApp {
-    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
+    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
     if (isRange.location != NSNotFound) {
         return YES;
     }
@@ -129,7 +129,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *appBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *key = [[NSBundle mainBundle] objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@%@",appVersion,appBuild]];
+    NSString *key = [NSString stringWithFormat:@"%@%@",appVersion,appBuild];
     NSNumber * currentStatus = [defaults objectForKey:[NSString stringWithFormat:@"APP_LAUNCHED%@", key]];
     return [currentStatus intValue] == 1 ? NO : YES;
 
@@ -139,7 +139,7 @@
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSString *appBuild = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
     NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSString *key = [[NSBundle mainBundle] objectForInfoDictionaryKey:[NSString stringWithFormat:@"%@%@",appVersion,appBuild]];
+    NSString *key = [NSString stringWithFormat:@"%@%@",appVersion,appBuild];
     [defaults setObject:[NSNumber numberWithInt:1] forKey:[NSString stringWithFormat:@"APP_LAUNCHED%@", key]];
     [defaults synchronize];
 }

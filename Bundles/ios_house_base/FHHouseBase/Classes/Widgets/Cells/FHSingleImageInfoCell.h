@@ -4,7 +4,7 @@
 //
 //  Created by 谷春晖 on 2018/11/18.
 //
-
+#if 0
 #import <UIKit/UIKit.h>
 #import "FHHouseType.h"
 
@@ -36,3 +36,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

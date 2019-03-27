@@ -17,7 +17,7 @@
 #import "FHHouseBridgeManager.h"
 #import "FHHouseRentModel.h"
 #import "FHFeedHouseCellHelper.h"
-#import <FHSingleImageInfoCell.h>
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <FHSingleImageInfoCellModel.h>
 
 #define kFHFeedHouseCellId @"kFHFeedHouseCellId"
@@ -421,7 +421,7 @@
         }else if (self.houseItemsData.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             
             FHSearchHouseDataItemsModel *item = self.houseItemsData.secondHouseList[indexPath.row];
-            CGFloat reasonHeight = [item showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+            CGFloat reasonHeight = [item showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
             
             return (indexPath.row == self.houseItemsData.secondHouseList.count - 1 ? 125 : 105)+reasonHeight;
             
@@ -447,15 +447,20 @@
             
             FHNewHouseItemModel *model = self.houseItemsData.houseList[indexPath.row];
             BOOL isFirstCell = (indexPath.row == 0);
-            BOOL isLastCell = (indexPath.row == self.houseItemsData.houseList.count - 1);
+//            BOOL isLastCell = (indexPath.row == self.houseItemsData.houseList.count - 1);
 //            SEL sel = @selector(updateWithNewHouseModel:isFirstCell:isLastCell:);
 //            if ([cell respondsToSelector:sel]) {
 //                [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithNewHouseModel:model isFirstCell:isFirstCell isLastCell:isLastCell];
 //            }
-            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
                 FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
                 infoCellModel.houseModel = model;
-                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel andIsFirst:isFirstCell andIsLast:isLastCell];
+                CGFloat topMargin = isFirstCell ? 5: 20;
+                FHHouseBaseItemCell *houseCell = (FHHouseBaseItemCell *)cell;
+                [houseCell refreshTopMargin:topMargin];
+                [houseCell updateWithHouseCellModel:infoCellModel];
+                
+//                [(FHHouseBaseItemCell *)cell updateWithHouseCellModel:infoCellModel andIsFirst:isFirstCell andIsLast:isLastCell];
             }
         }
         
@@ -465,13 +470,16 @@
             
             FHSearchHouseDataItemsModel *item = self.houseItemsData.secondHouseList[indexPath.row];
             BOOL isFirstCell = (indexPath.row == 0);
-            BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
-            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+//            BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
+            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
                 FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
                 infoCellModel.secondModel = item;
-                [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel andIsFirst:isFirstCell andIsLast:isLastCell];
-//                [(FHSingleImageInfoCell *)cell refreshTopMargin: 20];
-//                [(FHSingleImageInfoCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
+                CGFloat topMargin = isFirstCell ? 5: 20;
+                FHHouseBaseItemCell *houseCell = (FHHouseBaseItemCell *)cell;
+                [houseCell refreshTopMargin:topMargin];
+                [houseCell updateWithHouseCellModel:infoCellModel];
+//                [(FHHouseBaseItemCell *)cell refreshTopMargin: 20];
+//                [(FHHouseBaseItemCell *)cell refreshBottomMargin:isLastCell ? 20 : 0];
             }
 //            [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithSecondHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
             
@@ -480,12 +488,15 @@
         
         FHHouseRentDataItemsModel *item = self.houseItemsData.rentHouseList[indexPath.row];
         BOOL isFirstCell = (indexPath.row == 0);
-        BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
+//        BOOL isLastCell = (indexPath.row == self.houseItemsData.secondHouseList.count - 1);
 //        [(id<FHHouseSingleImageInfoCellBridgeDelegate>)cell updateWithRentHouseModel:item isFirstCell:isFirstCell isLastCell:isLastCell];
-        if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
+        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
             FHSingleImageInfoCellModel *infoCellModel = [FHSingleImageInfoCellModel new];
             infoCellModel.rentModel = item;
-            [(FHSingleImageInfoCell *)cell updateWithHouseCellModel:infoCellModel andIsFirst:isFirstCell andIsLast:isLastCell];
+            CGFloat topMargin = isFirstCell ? 5: 20;
+            FHHouseBaseItemCell *houseCell = (FHHouseBaseItemCell *)cell;
+            [houseCell refreshTopMargin:topMargin];
+            [houseCell updateWithHouseCellModel:infoCellModel];
         }
     }
     return cell;

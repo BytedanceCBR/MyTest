@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHHouseDetailSubPageViewController;
 @interface FHFloorPanListViewModel : FHHouseDetailBaseViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(HMSegmentedControl *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems;
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId ;
 
 @end
 

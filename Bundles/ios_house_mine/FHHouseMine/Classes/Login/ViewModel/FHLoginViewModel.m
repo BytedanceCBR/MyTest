@@ -116,7 +116,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled {
-    [self.view enableSendVerifyCodeBtn:enabled];
+    [self.view enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
     [self.view enableConfirmBtn:enabled];
 }
 
@@ -265,7 +265,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if(self.verifyCodeRetryTime == 0){
         [self stopTimer];
         [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
-        self.view.sendVerifyCodeBtn.enabled = YES;
+        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
+        self.view.sendVerifyCodeBtn.enabled = (self.view.phoneInput.text.length > 0);
         self.isRequestingSMS = NO;
     }else{
         self.view.sendVerifyCodeBtn.enabled = NO;

@@ -42,7 +42,7 @@
 
 - (void)createDefaultStyle {
     _toastStyle = [[CSToastStyle alloc] initWithDefaultStyle];
-    _toastStyle.backgroundColor = RGBA(0x08, 0x1f, 0x33,0.96);
+    _toastStyle.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.96];
     _toastStyle.cornerRadius = 4.0;
     _toastStyle.messageFont = [UIFont systemFontOfSize:14.0];
     _toastStyle.messageAlignment = NSTextAlignmentCenter;

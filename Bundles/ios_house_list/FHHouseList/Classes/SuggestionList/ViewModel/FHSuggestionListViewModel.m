@@ -12,13 +12,17 @@
 #import "FHGuessYouWantView.h"
 #import "FHUserTracker.h"
 #import "FHHouseTypeManager.h"
+#import "FHSugHasSubscribeView.h"
+#import "FHSugSubscribeModel.h"
+#import "FHSugSubscribeListViewModel.h"
 
-@interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource>
+@interface FHSuggestionListViewModel () <UITableViewDelegate, UITableViewDataSource, FHSugSubscribeListDelegate>
 
 @property(nonatomic , weak) FHSuggestionListViewController *listController;
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
 @property(nonatomic , weak) TTHttpTask *historyHttpTask;
 @property(nonatomic , weak) TTHttpTask *guessHttpTask;
+@property(nonatomic , weak) TTHttpTask *sugSubscribeTask;
 @property(nonatomic , weak) TTHttpTask *delHistoryHttpTask;
 
 @property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseDataModel> *sugListData;
@@ -27,6 +31,11 @@
 
 @property (nonatomic, copy)     NSString       *highlightedText;
 @property (nonatomic, strong)   FHGuessYouWantView *guessYouWantView;
+@property (nonatomic, strong)   FHSugHasSubscribeView *subscribeView;// 已订阅搜索
+@property (nonatomic, strong)   UIView       *sectionHeaderView;
+@property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
+@property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
+
 @property (nonatomic, assign)   BOOL       hasShowKeyboard;
 
 @end
@@ -39,12 +48,60 @@
         self.listController = viewController;
         self.loadRequestTimes = 0;
         self.guessYouWantData = [NSMutableArray new];
+        self.subscribeItems = [NSMutableArray new];
         self.historyShowTracerDic = [NSMutableDictionary new];
         self.associatedCount = 0;
         self.hasShowKeyboard = NO;
+        self.sectionHeaderView = [[UIView alloc] init];
+        self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         [self setupGuessYouWantView];
+        [self setupSubscribeView];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sugSubscribeNoti:) name:@"kFHSugSubscribeNotificationName" object:nil];
     }
     return self;
+}
+
+- (void)sugSubscribeNoti:(NSNotification *)noti {
+    NSDictionary *userInfo = noti.object;
+    if (userInfo) {
+        BOOL subscribe_state = [userInfo[@"subscribe_state"] boolValue];
+        if (subscribe_state) {
+            // 订阅
+            FHSugSubscribeDataDataItemsModel *subscribe_item = userInfo[@"subscribe_item"];
+            if (subscribe_item && [subscribe_item isKindOfClass:[FHSugSubscribeDataDataItemsModel class]]) {
+                [self.subscribeItems insertObject:subscribe_item atIndex:0];
+                self.totalCount += 1;
+            }
+        } else {
+            // 取消订阅
+            NSString *subscribe_id = userInfo[@"subscribe_id"];
+            __block NSInteger findIndex = -1;
+            if (subscribe_id.length > 0) {
+                [self.subscribeItems enumerateObjectsUsingBlock:^(FHSugSubscribeDataDataItemsModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj.subscribeId isEqualToString:subscribe_id]) {
+                        findIndex = idx;
+                        *stop = YES;
+                    }
+                }];
+                if (findIndex >= 0 && findIndex < self.subscribeItems.count) {
+                    [self.subscribeItems removeObjectAtIndex:findIndex];
+                    self.totalCount -= 1;
+                }
+            }
+        }
+        __weak typeof(self) wself = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // count 和 数据要一起变
+            wself.subscribeView.totalCount = wself.totalCount;
+            wself.subscribeView.subscribeItems = wself.subscribeItems;
+            [wself reloadHistoryTableView];
+        });
+    }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupGuessYouWantView {
@@ -53,6 +110,128 @@
     self.guessYouWantView.clickBlk = ^(FHGuessYouWantResponseDataDataModel * _Nonnull model) {
         [wself guessYouWantItemClick:model];
     };
+    [self.sectionHeaderView addSubview:self.guessYouWantView];
+    [self.guessYouWantView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(self.sectionHeaderView);
+        make.height.mas_equalTo(CGFLOAT_MIN);
+    }];
+    self.guessYouWantView.hidden = YES;
+}
+
+- (void)setHouseType:(FHHouseType)houseType {
+    _houseType = houseType;
+    self.subscribeView.houseType = houseType;
+}
+
+- (void)setupSubscribeView {
+    self.subscribeView = [[FHSugHasSubscribeView alloc] init];
+    self.subscribeView.houseType = self.houseType;
+    __weak typeof(self) wself = self;
+    self.subscribeView.clickBlk = ^(FHSugSubscribeDataDataItemsModel * _Nonnull model) {
+        [wself subscribeItemClick:model];
+    };
+    self.subscribeView.clickHeader = ^{
+        [wself sugSubscribeListClick];
+    };
+    [self.sectionHeaderView addSubview:self.subscribeView];
+    [self.subscribeView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.sectionHeaderView);
+        make.top.mas_equalTo(self.guessYouWantView.mas_bottom);
+        make.height.mas_equalTo(CGFLOAT_MIN);
+    }];
+    self.subscribeView.hidden = YES;
+}
+
+- (void)sugSubscribeListClick {
+    // 埋点添加
+    NSDictionary *tracerDic = @{@"page_type":@"search_detail"};
+    [FHUserTracker writeEvent:@"click_loadmore" params:tracerDic];
+    
+    NSHashTable *subscribeDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [subscribeDelegateTable addObject:self];
+    
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://sug_subscribe_list?house_type=%ld",self.houseType];
+    NSDictionary * infos = @{@"title":@"我订阅的搜索",
+                             @"subscribe_delegate":subscribeDelegateTable};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+    
+    NSURL *url = [NSURL URLWithString:openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+// 订阅搜索item点击
+- (void)subscribeItemClick:(FHGuessYouWantResponseDataDataModel *)model {
+    NSString *enter_from = @"search_detail";
+    NSString *element_from = @"be_null";
+    switch (self.houseType) {
+        case FHHouseTypeSecondHandHouse:
+            element_from = @"old_subscribe";
+            break;
+        case FHHouseTypeNewHouse:
+            element_from = @"new_subscribe";
+            break;
+        case FHHouseTypeRentHouse:
+            element_from = @"rent_subscribe";
+            break;
+        case FHHouseTypeNeighborhood:
+            element_from = @"neighborhood_subscribe";
+            break;
+        default:
+            break;
+    }
+    [self jumpCategoryListVCFromSubscribeItem:model enterFrom:enter_from elementFrom:element_from];
+}
+
+// 搜索订阅组合列表页cell点击：FHSugSubscribeListViewController
+- (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
+    NSString *enter_from = @"be_null";
+    NSString *element_from = @"be_null";
+    switch (self.houseType) {
+        case FHHouseTypeSecondHandHouse:
+            enter_from = @"old_subscribe_list";
+            break;
+        case FHHouseTypeNewHouse:
+            enter_from = @"new_subscribe_list";
+            break;
+        case FHHouseTypeRentHouse:
+            enter_from = @"rent_subscribe_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            enter_from = @"neighborhood_subscribe_list";
+            break;
+        default:
+            break;
+    }
+    [self jumpCategoryListVCFromSubscribeItem:model enterFrom:enter_from elementFrom:element_from];
+}
+
+- (void)jumpCategoryListVCFromSubscribeItem:(FHSugSubscribeDataDataItemsModel *)model enterFrom:(NSString *)enter_from elementFrom:(NSString *)element_from {
+    NSString *jumpUrl = model.openUrl;
+    if (jumpUrl.length > 0) {
+        NSString *queryType = @"subscribe"; // 订阅搜索
+        NSString *pageType = [self pageTypeString];
+        // 特殊埋点需求，此处enter_query和search_query都埋:be_null
+        NSDictionary *houseSearchParams = @{
+                                            @"enter_query":@"be_null",
+                                            @"search_query":@"be_null",
+                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                            @"query_type":queryType
+                                            };
+        NSMutableDictionary *infos = [NSMutableDictionary new];
+        infos[@"houseSearch"] = houseSearchParams;
+    
+        NSMutableDictionary *tracer = [NSMutableDictionary new];
+        tracer[@"enter_type"] = @"click";
+        tracer[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
+        tracer[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
+        if (self.listController.tracerDict[@"origin_from"]) {
+            tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
+        }
+        infos[@"tracer"] = tracer;
+
+        // 参数都在jumpUrl中
+        [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos];
+    }
 }
 
 // 猜你想搜点击
@@ -457,9 +636,9 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
-        // 历史记录
-        if (self.guessYouWantData.count > 0) {
-            return self.guessYouWantView;
+        // 历史记录:猜你想搜 & 已订阅搜索
+        if (self.guessYouWantData.count > 0 || self.subscribeItems.count > 0) {
+            return self.sectionHeaderView;
         }
     }
     return nil;
@@ -494,8 +673,16 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
         // 历史记录
-        if (self.guessYouWantData.count > 0) {
-            return self.guessYouWantView.guessYouWangtViewHeight;
+        if (self.guessYouWantData.count > 0 && self.subscribeItems.count > 0) {
+            return self.guessYouWantView.guessYouWangtViewHeight + self.subscribeView.hasSubscribeViewHeight;
+        } else if (self.guessYouWantData.count > 0 || self.subscribeItems.count > 0) {
+            if (self.guessYouWantData.count > 0) {
+                return self.guessYouWantView.guessYouWangtViewHeight;
+            }
+            if (self.subscribeItems.count > 0) {
+                return self.subscribeView.hasSubscribeViewHeight;
+            }
+            return CGFLOAT_MIN;
         } else {
             return CGFLOAT_MIN;
         }
@@ -587,7 +774,13 @@
     if (self.guessHttpTask) {
         [self.guessHttpTask cancel];
     }
+    if (self.sugSubscribeTask) {
+        [self.sugSubscribeTask cancel];
+    }
+    [self.subscribeItems removeAllObjects];
     [self.guessYouWantData removeAllObjects];
+    self.guessYouWantView.hidden = YES;
+    self.subscribeView.hidden = YES;
     [self reloadHistoryTableView];
 }
 
@@ -601,7 +794,30 @@
 }
 
 - (void)reloadHistoryTableView {
-    if (self.listController.historyTableView != NULL && self.loadRequestTimes >= 2) {
+    if (self.listController.historyTableView != NULL && self.loadRequestTimes >= 3) {
+        if (self.guessYouWantData.count > 0) {
+            [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.guessYouWantView.guessYouWangtViewHeight);
+            }];
+            self.guessYouWantView.hidden = NO;
+        } else {
+            self.guessYouWantView.hidden = YES;
+            [self.guessYouWantView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(CGFLOAT_MIN);
+            }];
+        }
+        if (self.subscribeItems.count > 0) {
+            [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.subscribeView.hasSubscribeViewHeight);
+            }];
+             self.subscribeView.hidden = NO;
+        } else {
+             self.subscribeView.hidden = YES;
+            [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(0);
+            }];
+        }
+        
         if (!self.hasShowKeyboard) {
             [self.listController.naviBar.searchInput becomeFirstResponder];
             self.hasShowKeyboard = YES;
@@ -629,6 +845,41 @@
         } else {
             
         }
+    }];
+}
+
+- (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType {
+    
+    if (self.sugSubscribeTask) {
+        [self.sugSubscribeTask cancel];
+    }
+    __weak typeof(self) wself = self;
+    // "subscribe_list_type": 2(搜索页) / 3(独立展示页) 请求总数50
+    self.sugSubscribeTask = [FHHouseListAPI requestSugSubscribe:cityId houseType:houseType subscribe_type:2 subscribe_count:50 class:[FHSugSubscribeModel class] completion:^(FHSugSubscribeModel *  _Nonnull model, NSError * _Nonnull error) {
+        wself.loadRequestTimes += 1;
+        wself.subscribeView.totalCount = 0;
+        if (model != NULL && error == NULL) {
+            // 构建数据源
+            [wself.subscribeItems removeAllObjects];
+            if (model.data.items.count > 0) {
+                NSMutableArray *tempData = [[NSMutableArray alloc] initWithArray:model.data.items];
+                NSString *countStr = model.data.total;
+                if (countStr.length > 0) {
+                    wself.totalCount = [countStr integerValue];
+                } else {
+                    wself.totalCount = 0;
+                }
+                // count 和 数据要一起变
+                wself.subscribeView.totalCount = wself.totalCount;
+                [wself.subscribeItems addObjectsFromArray:tempData];
+                wself.subscribeView.subscribeItems = wself.subscribeItems;
+            } else {
+                wself.subscribeView.subscribeItems = NULL;
+            }
+        } else {
+            wself.subscribeView.subscribeItems = NULL;
+        }
+        [wself reloadHistoryTableView];
     }];
 }
 

@@ -22,6 +22,8 @@
 #define MAIN_SCREEN_WIDTH   [UIScreen mainScreen].bounds.size.width
 #define MAIN_SCREENH_HEIGHT [UIScreen mainScreen].bounds.size.height
 
+static NSString *const kFHUserSelectCityNotification = @"k_fh_user_select_city";
+
 static NSString *const kUserDefaultCityName = @"kUserDefaultCityName";
 
 static NSString *const kUserDefaultCityId = @"k_fh_config_key_select_city_id";
@@ -41,7 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
     
 }
 @property (nonatomic, strong)FHGeneralBizConfig *generalBizConfig;
-@property (nonatomic, assign) BOOL isSameToLocCity;
 @property (nonatomic, assign) BOOL isSendConfigFromFirstRemote;
 @property (nonatomic, assign) BOOL isRefreshFromAlertCitySwitch;
 @property (nonatomic, assign) BOOL isRefreshFromCitySwitch;

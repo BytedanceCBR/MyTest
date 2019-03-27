@@ -672,7 +672,6 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
     BOOL result = YES;
-    NSLog(@"request url = %@",[request URL]);
     
     if ([self.ssWebContainer.ssWebView canGoBack] && self.isShowCloseWebBtn) {
         [self.backButtonView showCloseButton:YES];

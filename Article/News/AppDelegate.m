@@ -14,6 +14,9 @@
 
 #import "AppDelegate.h"
 #import "TTLaunchTracer.h"
+#import "FHEnvContext.h"
+#import "TTAppLogStartupTask.h"
+
 #define APPSEE_ENABLE 0
 
 extern NSString * const SSCommonLogicSettingWebViewQueryStringEnableKey;
@@ -101,9 +104,15 @@ extern NSString *const kTTAppseeEnableKey;
         [self initAppsee];
     }
 #endif
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didUserChangeCity) name:kFHSwitchGetLightFinishedNotification object:nil];
     
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
     
+}
+
+-(void)didUserChangeCity {
+    [TTAppLogStartupTask updateCustomerHeader];
 }
 
 - (void) applicationWillEnterForeground:(UIApplication *)application {
