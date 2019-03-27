@@ -151,10 +151,14 @@
     if (text && [text isEqualToString:_currentModel.text]) {
         if (status && [status isEqualToString:@"1"]) {
             self.currentModel.isSubscribe = YES;
+            [_subscribeBtn setBackgroundColor:[UIColor themeRed1]];
+            [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         }else if (status && [status isEqualToString:@"0"])
         {
             self.currentModel.isSubscribe = NO;
+            [_subscribeBtn setBackgroundColor:[UIColor whiteColor]];
+            [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
         }
     }
@@ -176,9 +180,13 @@
         _subTitleLabel.text = @"新上房源立刻通知";
         _bottomContentLabel.text = model.text ? : @"暂无";
         if (model.isSubscribe) {
+            [_subscribeBtn setBackgroundColor:[UIColor themeRed1]];
+            [_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
         }else
         {
+            [_subscribeBtn setBackgroundColor:[UIColor whiteColor]];
+            [_subscribeBtn setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
             [_subscribeBtn setTitle:@"订阅" forState:UIControlStateNormal];
         }
     }
