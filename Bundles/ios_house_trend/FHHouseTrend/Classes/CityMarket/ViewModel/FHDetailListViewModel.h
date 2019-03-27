@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) UITableView* tableView;
 
 -(void)addSectionPlaceHolder:(id<FHSectionCellPlaceHolder>)placeHolder;
+-(void)adjustSectionOffset;
 @end
 
 NS_ASSUME_NONNULL_END

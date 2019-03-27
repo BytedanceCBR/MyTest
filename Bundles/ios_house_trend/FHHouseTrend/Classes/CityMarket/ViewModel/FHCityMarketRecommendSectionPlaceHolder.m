@@ -20,6 +20,10 @@
     return YES;
 }
 
+- (NSUInteger)numberOfSection {
+    return 0;
+}
+
 - (NSUInteger)numberOfRowInSection:(NSUInteger)section {
     return 1;
 }

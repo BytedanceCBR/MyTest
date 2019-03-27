@@ -188,9 +188,7 @@
 
 
 @interface FHCityMarketTrendChatView ()<UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) PNLineChart* lineChart;
 @property (nonatomic, strong) UICollectionView* selectorCollectionView;
-@property (nonatomic, strong) UILabel* sourceLabel;
 @end
 
 @implementation FHCityMarketTrendChatView
@@ -222,7 +220,7 @@
     [self addSubview:_banner];
     [_banner mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.top.mas_equalTo(_selectorCollectionView.mas_bottom).mas_offset(10);
+        make.top.mas_equalTo(_selectorCollectionView.mas_bottom).mas_offset(20);
         make.height.mas_equalTo(20);
     }];
 
@@ -231,10 +229,11 @@
     self.sourceLabel = [[UILabel alloc] init];
     _sourceLabel.font = [UIFont themeFontRegular:11];
     _sourceLabel.textColor = [UIColor themeGray1];
+    _sourceLabel.alpha = 0.5;
     [self addSubview:_sourceLabel];
     [_sourceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.top.mas_equalTo(self.lineChart.mas_bottom);
+        make.top.mas_equalTo(self.lineChart.mas_bottom).mas_offset(13);
         make.height.mas_equalTo(16);
         make.bottom.mas_equalTo(self);
     }];
@@ -265,12 +264,32 @@
 }
 
 -(void)setupChartView {
-    self.lineChart = [[PNLineChart alloc] init];
+    self.lineChart = [[PNLineChart alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 207.0)];
+    self.lineChart.yLabelNum = 4; // 4 lines
+    self.lineChart.chartMarginLeft = 20;
+    self.lineChart.chartMarginRight = 20;
+    self.lineChart.backgroundColor = [UIColor whiteColor];
+    self.lineChart.yGridLinesColor = [UIColor themeGray6];
+    self.lineChart.showYGridLines = YES; // 横着的虚线
+    [self.lineChart.chartData enumerateObjectsUsingBlock:^(PNLineChartData *obj, NSUInteger idx, BOOL *stop) {
+        obj.pointLabelColor = [UIColor blackColor];
+    }];
+    self.lineChart.showCoordinateAxis = YES;// 坐标轴的线
+    self.lineChart.yLabelColor = [UIColor themeGray3];
+    self.lineChart.yLabelFormat = @"%.2f";
+    self.lineChart.yLabelFont = [UIFont themeFontRegular:12];
+    self.lineChart.yLabelHeight = 17;
+    self.lineChart.showGenYLabels = YES; // 竖轴的label值
+    self.lineChart.xLabelColor = [UIColor themeGray3];
+    self.lineChart.xLabelFont = [UIFont themeFontRegular:12];
+    self.lineChart.yHighlightedColor = [UIColor themeRed1];
+    self.lineChart.axisColor = [UIColor themeGray6]; // x轴和y轴
+    [self.lineChart setXLabels:@[@"", @"", @"", @"", @"", @""]];
     [self addSubview:_lineChart];
     [_lineChart mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self);
-        make.top.mas_equalTo(self.banner.mas_bottom);
-        make.height.mas_equalTo(231);
+        make.top.mas_equalTo(self.banner.mas_bottom).mas_offset(10);
+        make.height.mas_equalTo(207);
     }];
 }
 

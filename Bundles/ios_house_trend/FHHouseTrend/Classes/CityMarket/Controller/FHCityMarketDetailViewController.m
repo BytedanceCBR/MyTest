@@ -20,11 +20,14 @@
 #import "FHCityMarketHeaderPropertyItemView.h"
 #import "FHCityMarketHeaderPropertyBar.h"
 #import "RXCollection.h"
+#import "FHCityMarketDetailResponseModel.h"
 @interface FHCityMarketDetailViewController ()
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
 @property (nonatomic, strong) FHCityMarketHeaderView* headerView;
 @property (nonatomic, strong) FHCityMarketTrendHeaderViewModel* headerViewModel;
+@property (nonatomic, strong) FHChatSectionCellPlaceHolder* chatSectionCellPlaceHolder;
+@property (nonatomic, strong) FHAreaItemSectionPlaceHolder* areaItemSectionCellPlaceHolder;
 @end
 
 @implementation FHCityMarketDetailViewController
@@ -82,28 +85,52 @@
     RAC(_headerView.priceLabel, text) = RACObserve(_headerViewModel, price);
     RAC(_headerView.sourceLabel, text) = RACObserve(_headerViewModel, source);
     RAC(_headerView.unitLabel, text) = RACObserve(_headerViewModel, unit);
+    @weakify(self);
     [[[RACObserve(_headerViewModel, properties) skip:1] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
         NSArray* result = [value rx_mapWithBlock:^id(FHCityMarketDetailResponseDataSummaryItemListModel* each) {
             FHCityMarketHeaderPropertyItemView* itemView = [[FHCityMarketHeaderPropertyItemView alloc] init];
             itemView.nameLabel.text = each.desc;
             itemView.valueLabel.text = each.value;
             [itemView setArraw:[each.showArrow integerValue]];
+            return itemView;
         }];
         return result;
     }] subscribeNext:^(id  _Nullable x) {
-        [_headerView.propertyBar setPropertyItem:x];
+        @strongify(self);
+        [self.headerView.propertyBar setPropertyItem:x];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.listViewModel adjustSectionOffset];
+            [self.tableView reloadData];
+        });
     }];
 
+    RAC(_chatSectionCellPlaceHolder, marketTrendList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
+        return value.data.marketTrendList;
+    }];
+
+    RAC(_chatSectionCellPlaceHolder, districtNameList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
+        FHCityMarketDetailResponseDataMarketTrendListModel* listModel = value.data.marketTrendList.firstObject;
+        return [listModel.districtMarketInfoList rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel* each) {
+            return each.locationName;
+        }];
+    }];
+
+    RAC(_areaItemSectionCellPlaceHolder, hotList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel* _Nullable value) {
+        return value.data.hotList;
+    }];
     [_headerViewModel requestData];
 }
 
 -(void)setupSections {
-    id<FHSectionCellPlaceHolder> holder = [[FHChatSectionCellPlaceHolder alloc] init];
-    [_listViewModel addSectionPlaceHolder:holder];
+    _chatSectionCellPlaceHolder = [[FHChatSectionCellPlaceHolder alloc] init];
+    [_listViewModel addSectionPlaceHolder:_chatSectionCellPlaceHolder];
+
+
+    id<FHSectionCellPlaceHolder> holder = nil;
     holder = [[FHCityMarketRecommendSectionPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:holder];
-    holder = [[FHAreaItemSectionPlaceHolder alloc] init];
-    [_listViewModel addSectionPlaceHolder:holder];
+    self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
+    [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
     [self.tableView reloadData];
 }
 

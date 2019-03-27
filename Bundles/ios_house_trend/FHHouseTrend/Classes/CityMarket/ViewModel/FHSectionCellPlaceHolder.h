@@ -10,8 +10,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHSectionCellPlaceHolder <NSObject>
+@property (nonatomic, assign) NSUInteger sectionOffset;
 -(void)registerCellToTableView:(UITableView*)tableView;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (NSUInteger)numberOfSection;
 -(NSUInteger)numberOfRowInSection:(NSUInteger)section;
 -(BOOL)isDisplayData;
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath;

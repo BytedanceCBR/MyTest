@@ -37,11 +37,25 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
-    @"districtMarketInfoList": @"district_market_info_list",
     @"updateTime": @"update_time",
     @"dataSource": @"data_source",
-    @"onSaleValueDesc": @"on_sale_value_desc",
-    @"soldValueDesc": @"sold_value_desc",
+    @"districtMarketInfoList": @"district_market_info_list",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTimeLineModel
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"timeStamp": @"time_stamp",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -59,7 +73,7 @@
   NSDictionary *dict = @{
     @"pricePerSqmUnit": @"price_per_sqm_unit",
     @"dataSource": @"data_source",
-    @"districtNameList": @"district_name_list",
+    @"bottomOpenUrl": @"bottom_open_url",
     @"specialOldHouseList": @"special_old_house_list",
     @"marketTrendList": @"market_trend_list",
     @"summaryItemList": @"summary_item_list",
@@ -88,6 +102,9 @@
 {
   NSDictionary *dict = @{
     @"locationName": @"location_name",
+    @"timeLine": @"time_line",
+    @"trendLines": @"trend_lines",
+    @"dottedLineColor": @"dotted_line_color",
     @"locationId": @"location_id",
     @"locationType": @"location_type",
   };
@@ -139,13 +156,12 @@
 }
 @end
 
-@implementation FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListValuesModel
+@implementation FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
-    @"timeStamp": @"time_stamp",
-    @"marketValue": @"market_value",
-    @"soldValue": @"sold_value",
+    @"shortDesc": @"short_desc",
+    @"valueUnit": @"value_unit",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

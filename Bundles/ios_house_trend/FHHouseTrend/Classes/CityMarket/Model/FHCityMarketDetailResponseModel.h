@@ -20,35 +20,44 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel<NSObject>
 @end
 
-@protocol FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListValuesModel<NSObject>
+@protocol FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTimeLineModel<NSObject>
 @end
 
-@interface FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListValuesModel : JSONModel 
+@interface FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTimeLineModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *timeStamp;
-@property (nonatomic, copy , nullable) NSString *marketValue;
 @property (nonatomic, copy , nullable) NSString *year;
-@property (nonatomic, copy , nullable) NSString *soldValue;
 @property (nonatomic, copy , nullable) NSString *month;
+@end
+
+@protocol FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel<NSObject>
+@end
+
+@interface FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel : JSONModel 
+
+@property (nonatomic, copy , nullable) NSString *color;
+@property (nonatomic, copy , nullable) NSString *shortDesc;
+@property (nonatomic, strong , nullable) NSArray *values;
+@property (nonatomic, copy , nullable) NSString *valueUnit;
+@property (nonatomic, copy , nullable) NSString *desc;
 @end
 
 @interface FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel : JSONModel 
 
-@property (nonatomic, copy , nullable) NSString *color;
-@property (nonatomic, copy , nullable) NSString *locationId;
 @property (nonatomic, copy , nullable) NSString *locationName;
+@property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTimeLineModel> *timeLine;
+@property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel> *trendLines;
+@property (nonatomic, copy , nullable) NSString *dottedLineColor;
+@property (nonatomic, copy , nullable) NSString *locationId;
 @property (nonatomic, copy , nullable) NSString *locationType;
-@property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListValuesModel> *values;
 @end
 
 @interface FHCityMarketDetailResponseDataMarketTrendListModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *updateTime;
 @property (nonatomic, copy , nullable) NSString *dataSource;
-@property (nonatomic, copy , nullable) NSString *onSaleValueDesc;
-@property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel> *districtMarketInfoList;
-@property (nonatomic, copy , nullable) NSString *soldValueDesc;
+@property (nonatomic, copy , nullable) NSString *title;
 @end
 
 @protocol FHCityMarketDetailResponseDataSummaryItemListModel<NSObject>
@@ -58,7 +67,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *value;
-@property (nonatomic, copy , nullable) NSNumber *showArrow;
+@property (nonatomic, copy , nullable) NSString *showArrow;
 @end
 
 @protocol FHCityMarketDetailResponseDataHotListModel<NSObject>
@@ -87,8 +96,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 @property (nonatomic, copy , nullable) NSString *dataSource;
-@property (nonatomic, strong , nullable) NSArray *districtNameList;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) NSArray *bottomOpenUrl;
 @property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataSpecialOldHouseListModel> *specialOldHouseList;
 @property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataMarketTrendListModel> *marketTrendList;
 @property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataSummaryItemListModel> *summaryItemList;

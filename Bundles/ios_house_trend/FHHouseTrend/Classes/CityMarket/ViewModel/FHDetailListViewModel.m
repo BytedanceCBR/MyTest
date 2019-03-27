@@ -26,14 +26,20 @@
 -(void)addSectionPlaceHolder:(id<FHSectionCellPlaceHolder>)placeHolder {
     [placeHolder registerCellToTableView:_tableView];
     [_sections addObject:placeHolder];
+    [self adjustSectionOffset];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSUInteger numberOfSections = [[_sections rx_filterWithBlock:^BOOL(id<FHSectionCellPlaceHolder> each) {
+    NSArray<id<FHSectionCellPlaceHolder>>* holders = [_sections rx_filterWithBlock:^BOOL(id<FHSectionCellPlaceHolder> each) {
         return [each isDisplayData];
-    }] count];
-    return numberOfSections;
+    }];
+
+    __block NSUInteger count = 0;
+    [holders enumerateObjectsUsingBlock:^(id<FHSectionCellPlaceHolder>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        count += [obj numberOfSection];
+    }];
+    return count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -52,12 +58,18 @@
 -(id<FHSectionCellPlaceHolder>)holderAtSection:(NSUInteger)section {
     __block id<FHSectionCellPlaceHolder> result = nil;
     __block NSUInteger index = 0;
+
     [_sections enumerateObjectsUsingBlock:^(id<FHSectionCellPlaceHolder>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (index == section && [obj isDisplayData]) {
-            result = obj;
-            *stop = YES;
-        } else if ([obj isDisplayData]) {
-            index += 1;
+        NSUInteger sectionCount = [obj numberOfSection];
+        if ([obj isDisplayData]) {
+            if (section >= index && section < index + sectionCount) {
+                result = obj;
+                *stop = YES;
+            } else {
+                index += sectionCount;
+            }
+        } else {
+            // do nothing
         }
     }];
     return result;
@@ -85,6 +97,16 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     id<FHSectionCellPlaceHolder> holder = [self holderAtSection:section];
     return [holder tableView:tableView heightForHeaderInSection:section];
+}
+
+-(void)adjustSectionOffset {
+    __block NSUInteger sectionOffset = 0;
+    [_sections enumerateObjectsUsingBlock:^(id<FHSectionCellPlaceHolder>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isDisplayData]) {
+            [obj setSectionOffset:sectionOffset];
+            sectionOffset += [obj numberOfSection];
+        }
+    }];
 }
 
 @end

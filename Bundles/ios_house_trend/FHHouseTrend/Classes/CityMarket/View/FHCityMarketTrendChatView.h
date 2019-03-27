@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+@class PNLineChart;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityMarketTrendChatViewInfoItem : NSObject
@@ -20,9 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHCityMarketTrendChatView : UIView
+@property (nonatomic, strong) PNLineChart* lineChart;
 @property (nonatomic, strong) UILabel* titleLable;
 @property (nonatomic, strong) FHCityMarketTrendChatViewInfoBanner* banner;
 @property (nonatomic, strong) NSArray<NSString*>* categorys;
+@property (nonatomic, strong) UILabel* sourceLabel;
 @end
 
 NS_ASSUME_NONNULL_END

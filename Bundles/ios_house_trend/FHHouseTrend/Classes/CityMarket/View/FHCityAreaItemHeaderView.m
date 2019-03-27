@@ -12,6 +12,7 @@
 #import "ReactiveObjC.h"
 
 @interface FHCityAreaItemHeaderView ()
+@property (nonatomic, strong) UIImageView* arrawView;
 @end
 
 @implementation FHCityAreaItemHeaderView
@@ -49,6 +50,15 @@
         make.right.mas_equalTo(-34);
         make.centerY.mas_equalTo(self.nameLabel);
         make.height.mas_equalTo(22);
+    }];
+
+    self.arrawView = [[UIImageView alloc] init];
+    _arrawView.image = [UIImage imageNamed:@"arrowicon-detail-gray"];
+    [self addSubview:_arrawView];
+    [_arrawView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.with.mas_equalTo(14);
+        make.centerY.mas_equalTo(_openMore);
+        make.left.mas_equalTo(_openMore.mas_right);
     }];
 
     self.headerNameLabel = [[UILabel alloc] init];

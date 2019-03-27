@@ -44,7 +44,7 @@
     [_valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self->_nameLabel.mas_left);
         make.top.mas_equalTo(self->_nameLabel.mas_bottom).mas_offset(3);
-        make.right.mas_equalTo(-5);
+        make.right.lessThanOrEqualTo(self.mas_right).mas_offset(-5);
         make.height.mas_equalTo(21);
     }];
 
