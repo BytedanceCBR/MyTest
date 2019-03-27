@@ -416,10 +416,10 @@
     [_tableView addGestureRecognizer:tapGesturRecognizer];
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
-        _tableView.estimatedSectionFooterHeight = 0;
-        _tableView.estimatedSectionHeaderHeight = 0;
     }
+    _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+    _tableView.estimatedSectionFooterHeight = 0;
+    _tableView.estimatedSectionHeaderHeight = 0;
 }
 
 -(void)tapAction:(id)tap {

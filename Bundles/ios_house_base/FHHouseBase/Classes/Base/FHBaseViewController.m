@@ -20,6 +20,10 @@
 
 @property (nonatomic, copy) NSString *titleName;
 @property (nonatomic, assign) UIEdgeInsets emptyEdgeInsets;
+@property (nonatomic, assign)   BOOL       isFirstViewDidAppear;
+/* 需要移除之前的某个页面 */
+@property (nonatomic, assign)   BOOL       needRemoveLastVC;// fh_needRemoveLastVC_key @(YES)
+@property (nonatomic, copy)     NSArray       *needRemovedVCNameStringArrs; // 类名数组key：fh_needRemoveedVCNamesString_key
 
 @end
 
@@ -29,8 +33,14 @@
 {
     self = [super init];
     if (self) {
+        self.isFirstViewDidAppear = YES;
+        self.needRemoveLastVC = NO;
         self.titleName = [paramObj.userInfo.allInfo objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
+        if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
+            self.needRemoveLastVC = [paramObj.allParams[@"fh_needRemoveLastVC_key"] boolValue];
+            self.needRemovedVCNameStringArrs = paramObj.allParams[@"fh_needRemoveedVCNamesString_key"];
+        }
         if ([tracer isKindOfClass:[FHTracerModel class]]) {
             self.tracerModel = (FHTracerModel *)tracer;
             self.tracerDict = [NSMutableDictionary new];
@@ -195,6 +205,34 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    if (self.isFirstViewDidAppear && self.needRemoveLastVC && self.needRemovedVCNameStringArrs.count > 0) {
+        self.isFirstViewDidAppear = NO;
+        self.needRemoveLastVC = NO;
+        if (self.navigationController && self.navigationController.viewControllers.count > 0) {
+            __block BOOL hasChanged = NO;
+            NSMutableArray *arrVCs = [[NSMutableArray alloc] initWithArray:self.navigationController.viewControllers];
+            // 从后向前移除页面
+            [self.needRemovedVCNameStringArrs enumerateObjectsUsingBlock:^(NSString *  _Nonnull clsName, NSUInteger idx, BOOL * _Nonnull stop1) {
+                if (clsName.length > 0) {
+                    NSArray *reversedArray = [[arrVCs reverseObjectEnumerator] allObjects];
+                    [reversedArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop2) {
+                        if ([NSStringFromClass([obj class]) isEqualToString:clsName]) {
+                            if ([arrVCs containsObject:obj]) {
+                                [arrVCs removeObject:obj];
+                                hasChanged = YES;
+                                *stop2 = YES;
+                            }
+                        }
+                    }];
+                }
+            }];
+            if (hasChanged) {
+                self.navigationController.viewControllers = arrVCs;
+            }
+        }
+    }
+    self.isFirstViewDidAppear = NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
