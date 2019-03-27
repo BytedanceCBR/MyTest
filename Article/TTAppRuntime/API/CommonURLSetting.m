@@ -28,7 +28,7 @@
 #define SNSBaseURLDomain     @"isub.haoduofangs.com"
 #define LogBaseURLDomain     @"log.haoduofangs.com"
 #define ChannelBaseURLDomain @"ichannel.haoduofangs.com"
-#define AppMonitorDomain     @"mon.snssdk.com"
+#define AppMonitorDomain     @"mon.haoduofangs.com" //@"mon.snssdk.com"
 #define SecurityBaseURLDomain    @"security.haoduofangs.com"
 #define kibYangGuangURLDomain  @"ib.365yg.com"
 #define kiYangGuangURLDomain  @"i.365yg.com"
@@ -53,6 +53,7 @@ static inline void setBaseURLDomains(NSDictionary *domains) {
 
 static inline NSDictionary *baseURLDomains() {
     NSDictionary *domains = [[NSUserDefaults standardUserDefaults] objectForKey:kBaseURLDomainsUserDefaultKey];
+    domains = nil;
     if (!domains || !domains[kSecurityBaseURLDomainKey]) {
         domains = @{kNormalBaseURLDomainKey : NormalBaseURLDomain,
                     kSNSBaseURLDomainKey : SNSBaseURLDomain,
@@ -592,6 +593,11 @@ static CommonURLSetting *_sharedInstance = nil;
     return baseURLForKey(kLogBaseURLDomainKey);
 }
 
++ (NSString*)xlogBaseURL
+{
+    return @"https://xlog.snssdk.com";//@"https://xlog.haoduofangs.com";
+}
+
 + (NSString*)monitorBaseURL
 {
     return baseURLForKey(kAppMonitorBaseURLDomainKey);
@@ -1020,6 +1026,17 @@ static CommonURLSetting *_sharedInstance = nil;
 {
     return [NSString stringWithFormat:@"%@/service/2/app_log/", [self logBaseURL]];
 }
+
++ (NSString*)rtAppLogURLString
+{
+    return @"http://rtlog.snssdk.com/service/2/app_log/";
+}
+
++ (NSString *)trackLogConfigURLString
+{
+    return [NSString stringWithFormat:@"%@/service/2/log_settings/", [self logBaseURL]];
+}
+
 
 + (NSString*)requestNewSessionURLString
 {

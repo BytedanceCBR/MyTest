@@ -196,7 +196,7 @@
     [TTNetworkManager shareInstance].isEncryptQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isEncryptQuery;
     [TTNetworkManager shareInstance].isKeepPlainQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isKeepPlainQuery;
 
-    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.toutiao.com";
+    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.haoduofangs.com";
     [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm.bytedance.com";
     [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm.pstatp.com";
 
