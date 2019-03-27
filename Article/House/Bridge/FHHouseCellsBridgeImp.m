@@ -6,14 +6,13 @@
 //
 
 #import "FHHouseCellsBridgeImp.h"
-//#import "Bubble-Swift.h"
-#import <FHSingleImageInfoCell.h>
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 
 @implementation FHHouseCellsBridgeImp
 
 -(Class)singleImageCellClass
 {
-   return  FHSingleImageInfoCell.class;
+   return  FHHouseBaseItemCell.class;
 }
 
 @end

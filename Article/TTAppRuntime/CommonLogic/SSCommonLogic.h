@@ -1288,6 +1288,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)showMyAppFansView;
 + (BOOL)useImageVideoNewApi;
 + (NSInteger)configSwitchTimeDaysCount;
++ (BOOL)configSwitchFWebOffline;
 + (NSInteger)configEditProfileEntry;
 + (BOOL)useNewSearchTransitionAnimation;
 + (BOOL)useNewSearchTransitionAnimationForVideo;

@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TTRoute.h"
+#import <TTRoute/TTRoute.h>
 #import "FHNavBarView.h"
 #import "FHErrorView.h"
 
@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TTRouteInitializeProtocol;
 @class FHTracerModel;
 
-@interface FHBaseViewController : UIViewController <FHUITracerProtocol>
+@interface FHBaseViewController : UIViewController <FHUITracerProtocol,TTRouteInitializeProtocol>
 
 @property(nonatomic , strong) NSMutableDictionary *tracerDict;
 @property(nonatomic , strong) FHTracerModel *tracerModel;

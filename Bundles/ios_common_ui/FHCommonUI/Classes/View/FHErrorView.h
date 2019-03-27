@@ -26,7 +26,7 @@ typedef enum : NSUInteger {
 
 @interface FHErrorView : UIView
 
-@property(nonatomic, copy) void (^retryBlock)();
+@property(nonatomic, copy) void (^retryBlock)(void);
 @property(nonatomic , strong) UIButton *retryButton;
 
 - (void)showEmptyWithType:(FHEmptyMaskViewType)maskViewType;

@@ -7,7 +7,7 @@
 
 #import "FHHouseRentMainViewModel.h"
 #import "FHHouseRentCell.h"
-#import <FHMainApi.h>
+#import <FHHouseBase/FHMainApi.h>
 #import <UIScrollView+Refresh.h>
 #import "FHSearchFilterOpenUrlModel.h"
 #import <TTRoute.h>
@@ -33,6 +33,8 @@
 #import <FHRentArticleListNotifyBarView.h>
 #import "UIViewController+Track.h"
 #import "FHEnvContext.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <FHHouseBase/FHSingleImageInfoCellModel.h>
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kFilterBarHeight 44
@@ -93,7 +95,7 @@
         tableView.delegate = self;
         tableView.dataSource = self;
         
-        [_tableView registerClass:[FHHouseRentCell class] forCellReuseIdentifier:@"item"];
+        [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"item"];
         [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
         
         __weak typeof(self) wself = self;
@@ -267,7 +269,7 @@
                 }
                 wself.showNotify(tip);
             }
-            
+            [wself.showHouseDict removeAllObjects];
             [wself addHouseRankLog];
 
         }
@@ -297,8 +299,9 @@
         if (isHead) {
             [wself.houseList removeAllObjects];
         }
-        
-        [wself.houseList addObjectsFromArray:model.data.items];
+       
+       [wself handleHouseItems:model.data];
+//        [wself.houseList addObjectsFromArray:model.data.items];
         wself.showPlaceHolder = NO;
         [wself.tableView reloadData];
         wself.mapFindHouseOpenUrl = model.data.mapFindHouseOpenUrl;
@@ -342,6 +345,14 @@
        }
        
     }];
+}
+
+-(void)handleHouseItems:(FHHouseRentDataModel *)data
+{
+    for (FHHouseRentDataItemsModel *item in data.items) {
+        FHSingleImageInfoCellModel *model = [FHSingleImageInfoCellModel houseItemByModel:item];
+        [self.houseList addObject:model];
+    }
 }
 
 -(void)showInputSearch
@@ -433,37 +444,37 @@
     return _placeHolderImage;
 }
 
--(UIImage *)contentSnapshot
-{
-    CGRect bounds = self.tableView.frame;
-    bounds.origin = CGPointZero;
-    // 1、先根据 view，生成 整个 view 的截图
-    UIGraphicsBeginImageContextWithOptions(bounds.size, YES, 0);  //NO，YES 控制是否透明
-    if ([self.tableView respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
-        [self.tableView drawViewHierarchyInRect:bounds afterScreenUpdates:NO];
-    } else {
-        [self.tableView.layer renderInContext:UIGraphicsGetCurrentContext()];
-    }
-    UIImage *wholeImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    
-    // 2、根据 view 的图片。生成指定位置大小的图片。
-    CGFloat screenScale = [[UIScreen mainScreen] scale];
-    CGFloat top = [self headerBottomOffset];
-    bounds = CGRectMake(0, top, self.tableView.width, self.tableView.height - top);
-    CGRect imageToExtractFrame = CGRectApplyAffineTransform(bounds, CGAffineTransformMakeScale(screenScale, screenScale));
-    CGImageRef imageRef = CGImageCreateWithImageInRect([wholeImage CGImage], imageToExtractFrame);
-    
-    wholeImage = nil;
-    
-    UIImage *image = [UIImage imageWithCGImage:imageRef
-                                         scale:screenScale
-                                   orientation:UIImageOrientationUp];
-    CGImageRelease(imageRef);
-    return image;
-    
-}
+//-(UIImage *)contentSnapshot
+//{
+//    CGRect bounds = self.tableView.frame;
+//    bounds.origin = CGPointZero;
+//    // 1、先根据 view，生成 整个 view 的截图
+//    UIGraphicsBeginImageContextWithOptions(bounds.size, YES, 0);  //NO，YES 控制是否透明
+//    if ([self.tableView respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+//        [self.tableView drawViewHierarchyInRect:bounds afterScreenUpdates:NO];
+//    } else {
+//        [self.tableView.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    }
+//    UIImage *wholeImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//
+//
+//    // 2、根据 view 的图片。生成指定位置大小的图片。
+//    CGFloat screenScale = [[UIScreen mainScreen] scale];
+//    CGFloat top = [self headerBottomOffset];
+//    bounds = CGRectMake(0, top, self.tableView.width, self.tableView.height - top);
+//    CGRect imageToExtractFrame = CGRectApplyAffineTransform(bounds, CGAffineTransformMakeScale(screenScale, screenScale));
+//    CGImageRef imageRef = CGImageCreateWithImageInRect([wholeImage CGImage], imageToExtractFrame);
+//
+//    wholeImage = nil;
+//
+//    UIImage *image = [UIImage imageWithCGImage:imageRef
+//                                         scale:screenScale
+//                                   orientation:UIImageOrientationUp];
+//    CGImageRelease(imageRef);
+//    return image;
+//
+//}
 
 #pragma mark - tableview delegate & datasource
 -(NSInteger)numberOfSections
@@ -488,29 +499,12 @@
         cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCellId];
         
     }else{
-        
-        FHHouseRentCell *rentCell = [tableView dequeueReusableCellWithIdentifier:@"item"];
-        FHHouseRentDataItemsModel *model = _houseList[indexPath.row];
-        
-        rentCell.majorTitle.text = model.title;
-        rentCell.extendTitle.text = model.subtitle;
-        rentCell.priceLabel.text = model.pricing;
-        if (model.tags.count > 0) {
-            NSMutableArray *tags = [NSMutableArray new];
-            for (FHSearchHouseDataItemsTagsModel *tag in model.tags) {
-                FHTagItem *item = [FHTagItem instanceWithText:tag.content withColor:tag.textColor withBgColor:tag.backgroundColor];
-                [tags addObject:item];
-            }
-            [rentCell setTags:tags];
-        }else{
-            [rentCell setTags:@[]];
-        }
-     
-        FHSearchHouseDataItemsHouseImageModel *imgModel = [model.houseImage firstObject];
-        [rentCell setHouseImages:model.houseImageTag];        
-        [rentCell.iconView bd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholder:self.placeHolderImage];
-        
                 
+        FHSingleImageInfoCellModel *model = _houseList[indexPath.row];
+        FHHouseBaseItemCell *rentCell = [tableView dequeueReusableCellWithIdentifier:@"item"];
+        
+        [rentCell refreshTopMargin:(indexPath.row == 0? 20 : 15)];
+        [rentCell updateWithHouseCellModel:model];
         cell = rentCell;
         
     }
@@ -558,7 +552,8 @@
         return;
     }
     
-    FHHouseRentDataItemsModel *model = _houseList[indexPath.row];
+    FHSingleImageInfoCellModel *cmodel = _houseList[indexPath.row];
+    FHHouseRentDataItemsModel *model = cmodel.rentModel;
     
     SETTRACERKV(UT_ORIGIN_FROM, @"renting_list");
     
@@ -1002,7 +997,8 @@
 
 -(void)addHouseShowLog:(NSIndexPath *)indexPath
 {
-    FHHouseRentDataItemsModel *model = _houseList[indexPath.row];
+    FHSingleImageInfoCellModel *cmodel = _houseList[indexPath.row];
+    FHHouseRentDataItemsModel *model = cmodel.rentModel;
     if (_showHouseDict[model.id]) {
         //already add log
         return;
@@ -1044,7 +1040,8 @@
 
 -(void)addGodetailLog:(NSIndexPath *)indexPath
 {
-    FHHouseRentDataItemsModel *model = _houseList[indexPath.row];
+    FHSingleImageInfoCellModel *cmodel = _houseList[indexPath.row];
+    FHHouseRentDataItemsModel *model = cmodel.rentModel;
     NSMutableDictionary *param = [self baseLogParam];
     
     /*
