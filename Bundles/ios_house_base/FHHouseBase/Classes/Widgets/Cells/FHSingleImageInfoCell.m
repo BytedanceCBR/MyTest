@@ -4,7 +4,7 @@
 //
 //  Created by 谷春晖 on 2018/11/18.
 //
-
+#if 0
 #import "FHSingleImageInfoCell.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
@@ -306,7 +306,7 @@
 {
     self.majorTitle.text = commonModel.displayTitle;
     self.extendTitle.text = commonModel.displayDescription;
-    NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:commonModel.tags];
+    NSMutableAttributedString * attributeString =  [FHSingleImageInfoCellModel  tagsStringWithTagList:commonModel.tags];
     self.areaLabel.attributedText =  attributeString;
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
@@ -417,7 +417,7 @@
         self.majorTitle.text = model.displayTitle;
         self.extendTitle.text = model.displayDescription;
         self.areaLabel.attributedText = self.cellModel.tagsAttrStr;
-        NSMutableAttributedString * attributeString =  [[FHSingleImageInfoCellModel new] tagsStringWithTagList:model.tags];
+        NSMutableAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
         self.areaLabel.attributedText =  attributeString;
         
         self.priceLabel.text = model.displayPricePerSqm;
@@ -741,3 +741,4 @@
 }
 
 @end
+#endif

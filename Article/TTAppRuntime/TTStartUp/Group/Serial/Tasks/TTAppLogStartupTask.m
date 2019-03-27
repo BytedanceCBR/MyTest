@@ -24,7 +24,7 @@
 #import "SSWebViewUtil.h"
 //#import "Bubble-Swift.h"
 #import "FHLocManager.h"
-
+#import "FHEnvContext.h"
 @implementation TTAppLogStartupTask
 
 + (void)load
@@ -90,19 +90,30 @@
         [eventDic setValue:@"event_type" forKey:@"house_app2c_v2"];
         return [eventDic copy];
     }];
-    
+
+    [[self class] updateCustomerHeader];
+
+    [TTTracker startWithAppID:[TTSandBoxHelper ssAppID] channel:[TTSandBoxHelper getCurrentChannel]];
+
+    if ([TTSandBoxHelper isInHouseApp]) {
+        [[TTTracker sharedInstance] setIsInHouseVersion:YES];
+        [self enableUmengLabelDisplay];
+    }
+}
+
++(void)updateCustomerHeader {
     [[TTTracker sharedInstance] setCustomHeaderBlock:^(void) {
         NSMutableDictionary *customHeader = [NSMutableDictionary dictionary];
         if ([SSCommonLogic isUAEnable]) {
             [customHeader setValue:[self userAgentString] forKey:@"web_ua"];
         }
-//        NSString* currentCityName = [[EnvContext shared].client currentCityName];
-//        NSString* provinceName = [[EnvContext shared].client currentProvince];
+        //        NSString* currentCityName = [[EnvContext shared].client currentCityName];
+        //        NSString* provinceName = [[EnvContext shared].client currentProvince];
         NSString* currentCityName = [FHLocManager sharedInstance].currentReGeocode.city;
         NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.province;
         customHeader[@"city_name"] = currentCityName;
-        customHeader[@"province_name"] = currentCityName;
-
+        customHeader[@"province_name"] = provinceName;
+        customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
         return [customHeader copy];
     }];
     
@@ -124,6 +135,7 @@
         [[TTTracker sharedInstance] setIsInHouseVersion:YES];
         [self enableUmengLabelDisplay];
     }
+
 }
 
 + (void)enableUmengLabelDisplay {

@@ -122,6 +122,10 @@ static inline CGFloat navigationBarTop() {
 #pragma mark ============= TODOP delete =============
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)myPopGestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
+    //当这个手势是textfield的长按手势时，长按出放大镜，不触发侧滑手势
+    if([otherGestureRecognizer.view isKindOfClass:[UITextField class]] && [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]){
+        return NO;
+    }
     //    otherGestureRecognizer.delaysTouchesBegan = YES;
     // 修复单元格无法滑出删除功能的问题
     if ([otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]]) {

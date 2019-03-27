@@ -46,11 +46,13 @@ static TTLaunchTracer* _instance;
     _hasReportLaunch = YES;
     NSString* launchType = @"enter_launch";
     if (_launchFromType == TTAPPLaunchFromRemotePush) {
-        launchType = @"click_news_notify";
+//        launchType = @"click_news_notify";
+        return;
     }
-    [TTTracker eventV3:@"launch_log" params:@{@"gd_label": launchType,
-                                              @"tips": @(_badgeNumber),
-                                              @"event_type": @"house_app2c_v2"}];
+    NSMutableDictionary *params = @{@"gd_label": launchType,
+                                    @"tips": @(_badgeNumber),
+                                    @"event_type": @"house_app2c_v2"}.mutableCopy;
+    [TTTracker eventV3:@"launch_log" params:params];
 }
 
 - (void)willEnterForeground {
