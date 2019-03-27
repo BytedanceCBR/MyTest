@@ -15,6 +15,7 @@
 #import "FHHouseListRedirectTipView.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTUIWidget/UIViewController+Track.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 
 #define TOP_HOR_PADDING 3
 
@@ -114,6 +115,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.ttNeedIgnoreZoomAnimation = YES;
     
     [self initNavbar];
     _topContainerView = [[UIView alloc]init];

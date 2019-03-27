@@ -79,6 +79,18 @@ static APNsManager *_sharedManager = nil;
 
 #pragma mark - public
 
+- (void)writeLaunchLogEvent:(id)extGrowth badgeNumber:(NSInteger)badgeNumber
+{
+    NSString* launchType = @"click_news_notify";
+    NSMutableDictionary *params = @{@"gd_label": launchType,
+                                    @"tips": @(badgeNumber),
+                                    @"event_type": @"house_app2c_v2"}.mutableCopy;
+    if (extGrowth) {
+        params[@"ext_growth"] = extGrowth;
+    }
+    [TTTracker eventV3:@"launch_log" params:params];
+}
+
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
     
@@ -107,7 +119,9 @@ static APNsManager *_sharedManager = nil;
 
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
         if ([paramObj.allParams valueForKey:@"ext_growth"]) {
-            [[TTLaunchTracer shareInstance]setExtGrowth:[paramObj.allParams valueForKey:@"ext_growth"]];
+            NSDictionary *apsDict = [userInfo tt_dictionaryValueForKey:@"aps"];
+            NSInteger badgeNumber = [apsDict[@"badge"]integerValue];
+            [self writeLaunchLogEvent:[paramObj.allParams valueForKey:@"ext_growth"] badgeNumber:badgeNumber];
         }
         if (!isEmptyString(paramObj.host)) {
             [self trackWithPageName:paramObj.host params:paramObj.queryParams];
