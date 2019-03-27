@@ -673,7 +673,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
                                         animationParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitAnimationParams] ?: @{}];
     self.ttRNKit.delegate = self;
     FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
-    [self.ttRNKit enterDebug:self contentViewController:vc];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)_openHtmlBridge
