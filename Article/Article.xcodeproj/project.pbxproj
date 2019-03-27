@@ -513,6 +513,10 @@
 		52231B0D1B85B0C80098C13E /* ArticleShareManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 48FD8A4E16F2FA4A00B77520 /* ArticleShareManager.m */; };
 		52D6C68A1C0C3193004E04C7 /* TTVideoCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */; };
 		52FD3FD11D08022000B37861 /* TTVideoEmbededAdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */; };
+		6103463322433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6103463222433C3100DB33D0 /* FHClientABTestDebugViewController.m */; };
+		6103463422433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6103463222433C3100DB33D0 /* FHClientABTestDebugViewController.m */; };
+		6103463522433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6103463222433C3100DB33D0 /* FHClientABTestDebugViewController.m */; };
+		6103463622433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6103463222433C3100DB33D0 /* FHClientABTestDebugViewController.m */; };
 		610FF9D521A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
 		610FF9D621A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
 		610FF9D721A532E4003E8D68 /* FHFeedHouseItemViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */; };
@@ -7195,6 +7199,8 @@
 		52D6C6891C0C3193004E04C7 /* TTVideoCommon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoCommon.m; sourceTree = "<group>"; };
 		52FD3FCF1D08022000B37861 /* TTVideoEmbededAdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTVideoEmbededAdButton.h; sourceTree = "<group>"; };
 		52FD3FD01D08022000B37861 /* TTVideoEmbededAdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVideoEmbededAdButton.m; sourceTree = "<group>"; };
+		6103463122433C3000DB33D0 /* FHClientABTestDebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHClientABTestDebugViewController.h; sourceTree = "<group>"; };
+		6103463222433C3100DB33D0 /* FHClientABTestDebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHClientABTestDebugViewController.m; sourceTree = "<group>"; };
 		610FF9D321A532E4003E8D68 /* FHFeedHouseItemViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseItemViewModel.h; sourceTree = "<group>"; };
 		610FF9D421A532E4003E8D68 /* FHFeedHouseItemViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHFeedHouseItemViewModel.m; sourceTree = "<group>"; };
 		610FF9DD21A53C70003E8D68 /* FHFeedHouseFooterView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHFeedHouseFooterView.h; sourceTree = "<group>"; };
@@ -9524,6 +9530,8 @@
 		038D9ADE1F41A1C900E90F73 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				6103463122433C3000DB33D0 /* FHClientABTestDebugViewController.h */,
+				6103463222433C3100DB33D0 /* FHClientABTestDebugViewController.m */,
 				038D9ADF1F41A1C900E90F73 /* SSDebugUserDefaultsViewController.h */,
 				038D9AE01F41A1C900E90F73 /* SSDebugUserDefaultsViewController.m */,
 				038D9AE11F41A1C900E90F73 /* SSDebugViewController.h */,
@@ -19694,6 +19702,7 @@
 				2DB9A8B81F33000C005E4A06 /* TTTouchContext.m in Sources */,
 				A97DBC6F1F1332E50002B455 /* TTStartupSerialGroup.m in Sources */,
 				A97DBB471F1332E20002B455 /* TTOpenInSafariWindow.m in Sources */,
+				6103463322433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */,
 				06E5DF621AA066A700BDEAD8 /* SSLocationPickerController.m in Sources */,
 				F87694241F31D0D400D59CA5 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
 				2DCAD0161DDC237200EBF9CF /* ExploreVideoDetailAppLargePicADView.m in Sources */,
@@ -21131,6 +21140,7 @@
 				B373C9E92174587A008F9905 /* TTTouchContext.m in Sources */,
 				B373C9EA2174587A008F9905 /* TTStartupSerialGroup.m in Sources */,
 				B373C9EB2174587A008F9905 /* TTOpenInSafariWindow.m in Sources */,
+				6103463522433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */,
 				61FAA1F721AE7FE4007ED05F /* FHFeedHouseCellHelper.m in Sources */,
 				B373C9EC2174587A008F9905 /* SSLocationPickerController.m in Sources */,
 				B373C9ED2174587A008F9905 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
@@ -22550,6 +22560,7 @@
 				D47952BF21ECC94E00548965 /* TTTouchContext.m in Sources */,
 				D47952C021ECC94E00548965 /* TTStartupSerialGroup.m in Sources */,
 				D47952C121ECC94E00548965 /* TTOpenInSafariWindow.m in Sources */,
+				6103463622433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */,
 				D47952C221ECC94E00548965 /* FHFeedHouseCellHelper.m in Sources */,
 				D47952C321ECC94E00548965 /* SSLocationPickerController.m in Sources */,
 				D47952C421ECC94E00548965 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,
@@ -23969,6 +23980,7 @@
 				FEFA5499205FB1A8001F50D8 /* TTTouchContext.m in Sources */,
 				FEFA549A205FB1A8001F50D8 /* TTStartupSerialGroup.m in Sources */,
 				FEFA549D205FB1A8001F50D8 /* TTOpenInSafariWindow.m in Sources */,
+				6103463422433C3100DB33D0 /* FHClientABTestDebugViewController.m in Sources */,
 				61FAA1F621AE7FE4007ED05F /* FHFeedHouseCellHelper.m in Sources */,
 				FEFA549E205FB1A8001F50D8 /* SSLocationPickerController.m in Sources */,
 				FEFA549F205FB1A8001F50D8 /* TTVVideoInformationResponse+TTAdDetailInnerArticleProtocolSupport.m in Sources */,

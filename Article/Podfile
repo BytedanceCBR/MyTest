@@ -341,7 +341,7 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod 'TTTracker', '1.0.0.6'
+    pod 'TTTracker', '1.0.6-rc.2'
     #-----头条推送SDK----
     pod_binary 'TTPushSDK', '0.1.1'
     #-----路由-----
@@ -539,6 +539,11 @@ def appPods
     
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
+    # ab test sdk
+    pod  'BDABTestSDK', '1.0.1'
+    #pod 'BDABTestSDK', '1.0.0'
+
+
 end
 target 'NewsLite' do
     appPods
