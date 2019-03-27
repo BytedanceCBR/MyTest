@@ -753,6 +753,10 @@
 -(void)onConditionPanelWillDisappear
 {
     self.showFilter = NO;
+    if (!self.errorMaskView.isHidden) {
+        //显示无网或者无结果view
+        self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
+    }
 }
 
 -(UIImage *)placeHolderImage
