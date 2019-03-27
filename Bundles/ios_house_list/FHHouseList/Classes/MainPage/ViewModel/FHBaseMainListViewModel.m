@@ -177,21 +177,12 @@
         [_errorMaskView showEmptyWithType:type];
         _errorMaskView.retryButton.enabled = enableTap;
         
-//        if (self.topBannerView) {
-//            //没有banner ，直接覆盖到table上
-//            CGRect frame = self.tableView.frame;
-//            frame.origin = CGPointZero;
-//            self.errorMaskView.frame = frame;
-//            self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-//            return;
-//        }
-
-        CGRect frame = self.tableView.frame;
-        frame.origin = CGPointZero;
-        self.errorMaskView.frame = frame;
-        self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-
-//        CGFloat top = self.tableView.contentOffset.y;
+        //        CGRect frame = self.tableView.frame;
+        //        frame.origin = CGPointZero;
+        //        self.errorMaskView.frame = frame;
+        //        self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+                
+        CGFloat top = _topView.height; //self.tableView.contentOffset.y;
 //        if (!_tableView.window) {
 //            //还未显示
 //            top = - _topView.height;
@@ -199,11 +190,13 @@
 //        if (top > 0) {
 //            top = 0;
 //        }
-//        [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.top.mas_equalTo(-top);
-//        }];
+        [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(top);
+        }];
+        self.tableView.contentOffset = CGPointMake(0, -top);
         
-//        self.tableView.scrollEnabled = NO;
+        
+        self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
 }
@@ -226,6 +219,7 @@
     
     if (![TTReachability isNetworkConnected]) {
         if (isHead) {
+            self.showPlaceHolder = NO;
             [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoNetWorkAndRefresh enableTap:YES ];
         }else{
             [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
@@ -399,6 +393,7 @@
             [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoDataForCondition enableTap:NO ];
         } else {
             [self showErrorMask:NO tip:FHEmptyMaskViewTypeNoData enableTap:NO ];
+            self.tableView.scrollEnabled = YES;
         }
         
         // 刷新请求的时候将列表滑动在最顶部
