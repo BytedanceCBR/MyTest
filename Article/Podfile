@@ -76,7 +76,7 @@ def appPods
     'RNFetchBlob',
     'base',
     'runtime',
-    'yoga',
+#    'yoga',
     'third-party',
     'RCTAnimation', # Needed for FlatList and animations running on native UI thread
     'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
