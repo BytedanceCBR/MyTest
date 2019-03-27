@@ -67,6 +67,12 @@
 #import "TTAppStoreStarManager.h"
 #import "TTClientABTestBrowserViewController.h"
 #import "FHUtils.h"
+#import "TTRNKitHelper.h"
+#import "TTRNKit.h"
+#import "TTRNKitMacro.h"
+
+#import "FHRNDebugViewController.h"
+
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
@@ -78,7 +84,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 
 
-@interface SSDebugViewController () {
+@interface SSDebugViewController ()<TTRNKitProtocol> {
     
 }
 
@@ -98,6 +104,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 @property(nonatomic, weak)   STTableViewCellItem *item52;
 @property(nonatomic, weak)   STTableViewCellItem *item53;
 @property(nonatomic, weak)   STTableViewCellItem *item54;
+@property (nonatomic, strong) TTRNKit *ttRNKit;
 
 @end
 
@@ -110,6 +117,11 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
+        
+        STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
+        rnBridgeDebugItem.switchStyle = NO;
+        [itemArray addObject:rnBridgeDebugItem];
+        
         
         STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
         htmlBridgeDebugItem.switchStyle = NO;
@@ -644,6 +656,15 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
                                          animated:YES];
 }
 
+- (void)_openRNBridge
+{
+    self.ttRNKit = [[TTRNKit alloc] initWithGeckoParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitGeckoParams] ?: @{}
+                                        animationParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitAnimationParams] ?: @{}];
+    self.ttRNKit.delegate = self;
+    FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
+    [self.ttRNKit enterDebug:self contentViewController:vc];
+}
+
 - (void)_openHtmlBridge
 {
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
@@ -978,6 +999,30 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 {
     return [[NSUserDefaults standardUserDefaults] integerForKey:@"cellSubtitleFontSize"];
 }
+
+
+# pragma mark - TTRNKitProtocol
+- (UIViewController *)presentor {
+    return self;
+}
+
+- (void)handleWithWrapper:(TTRNKitViewWrapper *)wrapper
+              specialHost:(NSString *)specialHost
+                      url:(NSString *)url
+            reactCallback:(RCTResponseSenderBlock)reactCallback
+              webCallback:(TTRNKitWebViewCallback)webCallBack
+            sourceWrapper:(TTRNKitViewWrapper *)sourceWrapper
+                  context:(TTRNKit *)context {
+    
+}
+
+- (void)closeparams:(NSDictionary *)params
+      reactCallback:(RCTResponseSenderBlock)reactCallback
+        webCallback:(TTRNKitWebViewCallback)webCallback
+      sourceWrapper:(TTRNKitViewWrapper *)wrapper {
+    
+}
+
 
 #pragma mark - WKWebView switch setting
 

@@ -122,6 +122,10 @@ NS_ASSUME_NONNULL_BEGIN
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
 
+
+//获取当前三位版本号
++ (NSString *)getToutiaoVersionCode;
+
 //返回origin_search id
 
 //接受config数据

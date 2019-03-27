@@ -11,19 +11,17 @@
 #import <IESFalconManager.h>
 #import "SSZipArchive.h"
 #import "FHHouseBridgeManager.h"
-
-#if DEBUG
-static NSString * const kFHIESGeckoKey = @"adc27f2b35fb3337a4cb1ea86d05db7a";
-#else
-static NSString * const kFHIESGeckoKey = @"7838c7618ea608a0f8ad6b04255b97b9";
-#endif
+#import <FHEnvContext.h>
 
 @implementation FHIESGeckoManager
 
 + (void)configGeckoInfo
 {
     [IESGeckoKit setDeviceID:[[TTInstallIDManager sharedInstance] deviceID]];
-    [IESGeckoKit registerAccessKey:kFHIESGeckoKey appVersion:@"6.6.1" channels:@[@"fe_app_c"]];
+
+    NSString *stringVersion = [FHEnvContext getToutiaoVersionCode];
+    
+    [IESGeckoKit registerAccessKey:kFHIESGeckoKey appVersion:stringVersion channels:@[@"fe_app_c",@"test_ios"]];
     [IESGeckoKit syncResourcesIfNeeded];// 同步资源文件
 }
 

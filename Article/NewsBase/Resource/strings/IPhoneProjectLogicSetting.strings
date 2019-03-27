@@ -115,3 +115,5 @@
 
 //"second_house_main"   = "FHHouseOldHomeViewController";
 "second_house_main"   = "FHBaseMainListViewController";
+
+"react" = "FHRNBaseViewController";

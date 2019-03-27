@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'FHRNKit_Example' do
+  pod 'FHRNKit', :path => '../'
+
+  target 'FHRNKit_Tests' do
+    inherit! :search_paths
+
+    pod 'FBSnapshotTestCase'
+  end
+end

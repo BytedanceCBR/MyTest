@@ -476,6 +476,27 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return @"深圳";
 }
 
+
+//获取当前三位版本号
++ (NSString *)getToutiaoVersionCode
+{
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
+    
+    NSString * versionFirst = @"6";
+    NSString * versionMiddle = @"6";
+    NSString * versionEnd = @"1";
+    
+    if ([buildVersionNew isKindOfClass:[NSString class]] && buildVersionNew.length > 3) {
+        versionFirst = [buildVersionNew substringWithRange:NSMakeRange(0, 1)];
+        versionMiddle = [buildVersionNew substringWithRange:NSMakeRange(1, 1)];
+        versionEnd = [buildVersionNew substringWithRange:NSMakeRange(2, 1)];
+        
+    }
+    NSString *stringVersion = [NSString stringWithFormat:@"%@.%@.%@",versionFirst,versionMiddle,versionEnd];
+    return stringVersion;
+}
+
 //保存当前城市名称
 + (void)saveCurrentUserDeaultCityName:(NSString *)cityName
 {
