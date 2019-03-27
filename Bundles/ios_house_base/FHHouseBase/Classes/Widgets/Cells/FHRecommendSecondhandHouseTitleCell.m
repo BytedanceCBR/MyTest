@@ -52,6 +52,48 @@
     [super setSelected:selected animated:animated];
 }
 
+- (void)hideSeprateLine:(BOOL)isFirstCell
+{
+    self.divider.hidden = YES;
+    
+    [self.noDataTipImage mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView).offset(10.5);
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.height.mas_equalTo(16);
+        make.width.mas_equalTo(16);
+    }];
+    
+    [self.noDataTipLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView).offset(10);
+        make.left.mas_equalTo(self.noDataTipImage.mas_right).offset(5);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.height.mas_equalTo(18);
+    }];
+    
+    [self.divider mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.top.mas_equalTo(self.noDataTipLabel.mas_bottom).offset(10);
+        make.height.mas_equalTo(0.5);
+    }];
+    
+    if (isFirstCell) {
+        [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.contentView).offset(20);
+            make.right.mas_equalTo(self.contentView).offset(-20);
+            make.top.mas_equalTo(self.divider.mas_bottom).offset(12);
+            make.height.mas_equalTo(24);
+        }];
+    }else
+    {
+        [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.contentView).offset(20);
+            make.right.mas_equalTo(self.contentView).offset(-20);
+            make.bottom.equalTo(self.contentView).offset(3);
+            make.height.mas_equalTo(24);
+        }];
+    }
+}
 
 - (void)bindData:(FHRecommendSecondhandHouseTitleModel *)model {
     if ([model.noDataTip isEqualToString:@""]) {
@@ -92,6 +134,11 @@
         make.top.mas_equalTo(self.divider.mas_bottom).offset(20);
         make.height.mas_equalTo(24);
     }];
+}
+
+- (void)prepareForReuse
+{
+    [self setupUI];
 }
 
 - (void)adjustDividerConstraints : (BOOL) showNodataTip {

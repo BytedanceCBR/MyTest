@@ -68,6 +68,16 @@
 {
     NSDictionary *param = @{@"house_type":@(self.houseType)};
     
+    if (isRefresh) {
+        if (query) {
+            self.subScribeQuery = [NSString stringWithString:query];
+        }
+        self.subScribeOffset = offset;
+        if (searchId) {
+            self.subScribeSearchId = [NSString stringWithString:searchId];
+        }
+    }
+
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:param offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
         
         if (completion) {

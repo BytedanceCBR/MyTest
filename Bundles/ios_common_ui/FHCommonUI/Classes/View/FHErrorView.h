@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 #define kFHErrorMaskNoNetWorkImageName      @"group-4"          // 无网络
 #define kFHErrorMaskNetWorkErrorImageName   @"group-9"          // 网络异常
 #define kFHErrorMaskNoMessageImageName      @"empty_message"    // 无消息
+#define kFHErrorMaskNoListDataImageName     @"group_invalid"    // 列表空数据
 
 typedef enum : NSUInteger {
     FHEmptyMaskViewTypeNoNetWorkAndRefresh,         // 网络异常，请检查网络连接；刷新按钮        "group-4"
