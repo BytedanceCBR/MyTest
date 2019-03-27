@@ -127,10 +127,10 @@
     //注册实验
     [BDABTestManager registerExperiment:clientEXP];
     //获取实验值
-    id res = [BDABTestManager getExperimentValueForKey:@"f_test_params" withExposure:YES];
+//    id res = [BDABTestManager getExperimentValueForKey:@"f_test_params" withExposure:YES];
 //    NSLog(@"BDClientABTest card_Style is %@",res);
 //    获取曝光结果
-    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
+//    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
 }
 
@@ -160,11 +160,11 @@
     //注册实验
     [BDABTestManager registerExperiment:clientEXP];
     
-    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
-    NSLog(@"BDClientABTest show_house is %@",res1);
-//    获取曝光结果
-    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
-    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
+//    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
+//    NSLog(@"BDClientABTest show_house is %@",res1);
+////    获取曝光结果
+//    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
+//    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
 }
 
 
