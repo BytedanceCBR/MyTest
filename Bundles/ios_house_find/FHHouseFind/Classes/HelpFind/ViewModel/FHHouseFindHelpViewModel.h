@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindHelpViewModel : NSObject
 
+@property(nonatomic , copy)   void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
+
 -(instancetype)initWithCollectionView:(UICollectionView *)collectionView bottomView:(FHHouseFindHelpBottomView *)bottomView;
 
 @end

@@ -39,7 +39,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    layout.scrollDirection = UICollectionViewScrollDirectionVertical;
     layout.minimumLineSpacing = 0;
     
     _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
@@ -56,7 +56,23 @@
     _bottomView = [[FHHouseFindHelpBottomView alloc]init];
     [self.view addSubview:_bottomView];
 
+    __weak typeof(self)wself = self;
     _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView bottomView:_bottomView];
+    _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
+        if (noData) {
+            [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+        }else if(!available){
+            [wself.errorMaskView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:kFHErrorMaskNetWorkErrorImageName] showRetry:NO];
+        }else{
+            wself.errorMaskView.hidden = YES;
+        }
+    };
+    
+    self.errorMaskView = [[FHErrorView alloc]initWithFrame:[UIScreen mainScreen].bounds];
+    [self.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+    [self.view addSubview:self.errorMaskView];
+    self.errorMaskView.hidden = YES;
+    
 }
 
 -(void)initConstraints
@@ -75,7 +91,8 @@
         make.bottom.mas_equalTo(self.view).offset(-bottomHeight);
     }];
     [_contentView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(self.view);
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
         make.bottom.mas_equalTo(self.bottomView.mas_top);
     }];
 }
