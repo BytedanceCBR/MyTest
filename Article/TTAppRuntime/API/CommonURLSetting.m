@@ -595,7 +595,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)xlogBaseURL
 {
-    return @"https://xlog.haoduofangs.com";
+    return @"https://xlog.snssdk.com";//@"https://xlog.haoduofangs.com";
 }
 
 + (NSString*)monitorBaseURL
@@ -1029,8 +1029,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)rtAppLogURLString
 {
-    return @"http://rtlog.haoduofangs.com/service/2/app_log/";
-    //    return [NSString stringWithFormat:@"%@/service/2/app_log/", [self logBaseURL]];
+    return @"http://rtlog.snssdk.com/service/2/app_log/";
 }
 
 + (NSString *)trackLogConfigURLString
