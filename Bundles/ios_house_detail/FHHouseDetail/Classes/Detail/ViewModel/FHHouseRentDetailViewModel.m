@@ -24,6 +24,13 @@
 #import "FHDetailDisclaimerCell.h"
 #import "FHDetailNeighborhoodInfoCell.h"
 #import "FHDetailNeighborhoodMapInfoCell.h"
+#import "FHDetailHouseSubscribeCell.h"
+#import "FHEnvContext.h"
+#import "NSDictionary+TTAdditions.h"
+#import "FHHouseDetailFollowUpViewModel.h"
+
+extern NSString *const kFHPhoneNumberCacheKey;
+extern NSString *const kFHSubscribeHouseCacheKey;
 
 @interface FHHouseRentDetailViewModel ()
 
@@ -50,6 +57,7 @@
     [self.tableView registerClass:[FHDetailDisclaimerCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailDisclaimerCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
+    [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
@@ -100,6 +108,10 @@
     // 免责声明
     if ([model isKindOfClass:[FHDetailDisclaimerModel class]]) {
         return [FHDetailDisclaimerCell class];
+    }
+    // 订阅房源动态
+    if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
+        return [FHDetailHouseSubscribeCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -223,6 +235,21 @@
         FHDetailRentFacilityModel *infoModel = [[FHDetailRentFacilityModel alloc] init];
         infoModel.facilities = model.data.facilities;
         [self.items addObject:infoModel];
+    }
+    //添加订阅房源动态卡片
+    if([self isShowSubscribe]){
+        FHDetailHouseSubscribeModel *subscribeModel = [[FHDetailHouseSubscribeModel alloc] init];
+        subscribeModel.tableView = self.tableView;
+        [self.items addObject:subscribeModel];
+        
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ((FHDetailHouseSubscribeCell *)subscribeModel.cell) {
+                ((FHDetailHouseSubscribeCell *)subscribeModel.cell).subscribeBlock = ^(NSString * _Nonnull phoneNum) {
+                    [wSelf subscribeFormRequest:phoneNum subscribeModel:subscribeModel];
+                };
+            }
+        });
     }
     // 房源概况
     if (model.data.houseOverview.list.count > 0) {
@@ -365,6 +392,54 @@
 {
     FHRentDetailResponseModel *model = (FHRentDetailResponseModel *)self.detailData;
     return model.data.coreInfo.count < 1;
+}
+
+- (void)subscribeFormRequest:(NSString *)phoneNum subscribeModel:(FHDetailHouseSubscribeModel *)subscribeModel {
+    __weak typeof(self)wself = self;
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    NSString *houseId = self.houseId;
+    NSString *from = @"app_renthouse_subscription";
+    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+        
+        if (model.status.integerValue == 0 && !error) {
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
+            
+            YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
+            [subscribeHouseCache setObject:@"1" forKey:self.houseId];
+            
+            [wself.items removeObject:subscribeModel];
+            [wself reloadData];
+        }else {
+            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+        }
+    }];
+    // 静默关注功能
+    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+}
+
+- (BOOL)isShowSubscribe {
+    BOOL isShow = NO;
+    NSDictionary *fhSettings = [self fhSettings];
+    BOOL rentHouseSubscribe =  [fhSettings tt_boolValueForKey:@"f_is_show_house_sub_entry"];
+    //根据服务器setting设置和本地缓存，已经订阅过的house不再显示
+    YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
+    if(rentHouseSubscribe && ![subscribeHouseCache containsObjectForKey:self.houseId]){
+        isShow = YES;
+    }
+    return isShow;
+}
+
+- (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
 }
 
 

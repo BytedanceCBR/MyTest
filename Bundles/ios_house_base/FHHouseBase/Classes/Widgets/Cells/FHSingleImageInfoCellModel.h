@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSingleImageInfoCellModel : NSObject
 
 @property (nonatomic, assign) BOOL isRecommendCell;
+@property (nonatomic, assign) BOOL isSubscribCell;
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, copy , nullable) NSString *houseId;
 
@@ -25,12 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseRentDataItemsModel *rentModel;
 @property (nonatomic, strong , nullable) FHHouseNeighborDataItemsModel *neighborModel;
 
+@property (nonatomic, strong , nullable) JSONModel *subscribModel;//搜索订阅数据model
+
 @property (nonatomic, assign) CGSize titleSize;
 
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *tagsAttrStr;
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *originPriceAttrStr;
 
--(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList;
++(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList;
 
 #pragma mark log
 -(NSString *)imprId;

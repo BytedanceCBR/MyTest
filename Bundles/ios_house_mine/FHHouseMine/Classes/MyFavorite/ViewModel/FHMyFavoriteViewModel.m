@@ -15,7 +15,7 @@
 #import "FHMessageViewController.h"
 #import "FHFollowModel.h"
 #import "FHSingleImageInfoCellModel.h"
-#import "FHSingleImageInfoCell.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <UIScrollView+Refresh.h>
 #import "ToastManager.h"
 #import "FHHouseDetailAPI.h"
@@ -61,7 +61,7 @@ extern NSString *const kFHDetailFollowUpNotification;
         _showPlaceHolder = YES;
         _isFirstLoad = YES;
         
-        [tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kCellId];
+        [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
         [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
         
         tableView.delegate = self;
@@ -462,16 +462,15 @@ extern NSString *const kFHDetailFollowUpNotification;
         FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHFavoriteListPlaceholderCellId];
         return cell;
     }else{
-        FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
         BOOL isFirstCell = (indexPath.row == 0);
-        BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
+//        BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
         
         if (indexPath.row < self.dataList.count) {
             FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-            [cell updateWithHouseCellModel:cellModel];
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
             [cell refreshTopMargin: 20];
-            [cell refreshBottomMargin:(isLastCell ? 20 : 0)+reasonHeight];
+            [cell updateWithHouseCellModel:cellModel];            
         }
         return cell;
     }
@@ -491,7 +490,7 @@ extern NSString *const kFHDetailFollowUpNotification;
         if (indexPath.row < self.dataList.count) {
             BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
             FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
             return (isLastCell ? 125 : 105)+reasonHeight;
         }else{
             return 0;

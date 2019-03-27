@@ -32,6 +32,7 @@ NSString * logBaseURL(void);
 + (NSString *)channelBaseURL;
 + (NSString*)SNSBaseURL;
 + (NSString*)logBaseURL;
++ (NSString*)xlogBaseURL;
 + (NSString*)monitorBaseURL;
 
 #pragma mark - 详情页默认hosts
@@ -144,6 +145,8 @@ NSString * logBaseURL(void);
 + (NSString*)appLogConfigURLString;
 + (NSString*)appLogV3ConfigURLString;
 + (NSString*)appLogURLString;
++ (NSString*)rtAppLogURLString;
++ (NSString *)trackLogConfigURLString;
 + (NSString*)appLogV2ConfigURLString;
 + (NSString*)appLogV2URLString;
 #pragma mark - Auth URLs
