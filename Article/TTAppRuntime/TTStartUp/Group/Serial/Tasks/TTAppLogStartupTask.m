@@ -91,6 +91,17 @@
         return [eventDic copy];
     }];
 
+    [[TTTracker sharedInstance] setTransferBlock:^NSString * _Nonnull(TTTrackerURLType type) {
+        if (type == TTTrackerURLTypeBatchReport) {
+            return  [CommonURLSetting appLogURLString];
+        }else if (type == TTTrackerURLTypeImmediateReport){
+            return [CommonURLSetting rtAppLogURLString];
+        }else if (type == TTTrackerURLTypeConfig){
+            return [CommonURLSetting trackLogConfigURLString];
+        }
+        return nil;
+    }];
+    
     [[self class] updateCustomerHeader];
 
     [TTTracker startWithAppID:[TTSandBoxHelper ssAppID] channel:[TTSandBoxHelper getCurrentChannel]];
@@ -116,26 +127,6 @@
         customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
         return [customHeader copy];
     }];
-    
-    [[TTTracker sharedInstance] setTransferBlock:^NSString * _Nonnull(TTTrackerURLType type) {
-        //return @"http://log.snssdk.com/service/2/app_log/";
-        if (type == TTTrackerURLTypeBatchReport) {
-            return  [CommonURLSetting appLogURLString];
-        }else if (type == TTTrackerURLTypeImmediateReport){
-            return [CommonURLSetting rtAppLogURLString];
-        }else if (type == TTTrackerURLTypeConfig){
-            return [CommonURLSetting trackLogConfigURLString];
-        }
-        return nil;
-    }];
-    
-    [TTTracker startWithAppID:[TTSandBoxHelper ssAppID] channel:[TTSandBoxHelper getCurrentChannel]];
-
-    if ([TTSandBoxHelper isInHouseApp]) {
-        [[TTTracker sharedInstance] setIsInHouseVersion:YES];
-        [self enableUmengLabelDisplay];
-    }
-
 }
 
 + (void)enableUmengLabelDisplay {
