@@ -27,6 +27,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
 //是否重新是重新发送验证码
 @property(nonatomic , assign) BOOL isVerifyCodeRetry;
+@property(nonatomic , assign) BOOL noStopTimer;
 
 @end
 
@@ -53,7 +54,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)viewWillDisappear {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self stopTimer];
+    if(self.noStopTimer){
+        self.noStopTimer = NO;
+    }else{
+        [self stopTimer];
+    }
 }
 
 #pragma mark - 键盘通知
@@ -123,12 +128,14 @@ extern NSString *const kFHPhoneNumberCacheKey;
 #pragma mark -- FHLoginViewDelegate
 
 - (void)goToUserProtocol {
+    self.noStopTimer = YES;
     NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 - (void)goToSecretProtocol {
+    self.noStopTimer = YES;
     NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/private_policy.html&title=隐私协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];

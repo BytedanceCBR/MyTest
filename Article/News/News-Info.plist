@@ -171,6 +171,8 @@
 	<string>方便您使用拍照功能上传头像</string>
 	<key>NSContactsUsageDescription</key>
 	<string>允许访问可帮您快速找到通讯录好友</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>方便为您推荐本地房源</string>
 	<key>NSLocationUsageDescription</key>
 	<string>方便为您推荐本地房源</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
