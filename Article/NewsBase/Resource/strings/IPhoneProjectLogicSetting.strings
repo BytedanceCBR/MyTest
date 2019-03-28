@@ -114,3 +114,4 @@
 
 "second_house_main"   = "FHHouseOldHomeViewController";
 "city_market"   = "FHCityMarketDetailViewController";
+"city_market_hot_list"   = "FHCityMarketHotCityListViewController";

@@ -352,7 +352,9 @@
     }
     self.selectPoint = CGPointMake(lineX, minY);
     [self setNeedsDisplay];
-    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
+    if ([_delegate respondsToSelector:@selector(userClickedOnKeyPoint:lineIndex:pointIndex:selectPoint:)]) {
+        [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
+    }
 }
 
 #pragma mark - Draw Chart
@@ -397,7 +399,7 @@
     // set the chart will be misplaced
     [self resetCavanHeight];
     [self prepareYLabelsWithData:_chartData];
-
+    [_pathPoints removeAllObjects];
     _chartPath = [[NSMutableArray alloc] init];
     _pointPath = [[NSMutableArray alloc] init];
     _gradeStringPaths = [NSMutableArray array];

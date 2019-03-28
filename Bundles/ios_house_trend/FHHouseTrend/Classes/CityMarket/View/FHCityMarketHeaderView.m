@@ -43,6 +43,7 @@
 }
 
 -(void)initHeaderBgView {
+    self.backgroundColor = [UIColor whiteColor];
     self.bgView = [[UIImageView alloc] init];
     [self addSubview:_bgView];
     [_bgView mas_makeConstraints:^(MASConstraintMaker *make) {

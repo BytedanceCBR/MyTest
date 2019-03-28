@@ -15,6 +15,12 @@
 #import "PNChart.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "FHCityMarketTrendChatViewModel.h"
+#import "ReactiveObjC.h"
+@interface FHChatSectionCellPlaceHolder ()
+@property (nonatomic, strong) NSMutableDictionary<NSNumber*, FHCityMarketTrendChatViewModel*>* chartViewModels;
+@end
+
 @implementation FHChatSectionCellPlaceHolder
 
 - (instancetype)init
@@ -22,6 +28,7 @@
     self = [super init];
     if (self) {
         FHConfigDataModel* model = [[FHEnvContext sharedInstance] getConfigFromCache];
+        self.chartViewModels = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -54,8 +61,13 @@
         item.color = each.color;
         return item;
     }];
+    FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* trendLine = infoList.trendLines.firstObject;
+    cell.chatView.banner.unitLabel.text = trendLine.valueUnit;
+    cell.chatView.sourceLabel.text = [NSString stringWithFormat:@"%@ 更新时间: %@", model.dataSource, model.updateTime];
     [cell.chatView.banner setItems:items];
-    [self setupChat:infoList ofChartView:cell.chatView.lineChart];
+
+    FHCityMarketTrendChatViewModel* viewModel = [self viewModelAtIndexPath:indexPath withModel:model withCell:cell];
+//    [self setupChat:infoList ofChartView:cell.chatView.lineChart];
     return cell;
 }
 
@@ -68,9 +80,40 @@
 }
 
 - (CGFloat)tableView:(nonnull UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0;
+    return CGFLOAT_MIN;
 }
 
+-(FHCityMarketTrendChatViewModel*)viewModelAtIndexPath:(NSIndexPath*)indexPath
+                                             withModel:(FHCityMarketDetailResponseDataMarketTrendListModel*)model
+                                              withCell:(FHCityMarketTrendChatCellTableViewCell*) cell {
+    FHCityMarketTrendChatViewModel* result = _chartViewModels[@(indexPath.row)];
+    if (result == nil) {
+        result = [[FHCityMarketTrendChatViewModel alloc] init];
+        result.model = model;
+        cell.chatView.lineChart.delegate = result;
+        [self bindViewModel:result toCell:cell];
+        FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel* info = model.districtMarketInfoList.firstObject;
+        cell.chatView.selectCategory = info.locationName;
+        result.chartView = cell.chatView.lineChart;
+        _chartViewModels[@(indexPath.row)] = result;
+    }
+    return result;
+}
+
+-(void)bindViewModel:(FHCityMarketTrendChatViewModel*)model toCell:(FHCityMarketTrendChatCellTableViewCell*)cell {
+    [[RACObserve(cell.chatView, selectCategory) filter:^BOOL(id  _Nullable value) {
+        return value != nil;
+    }] subscribeNext:^(id  _Nullable x) {
+        [model changeCategory:x];
+    }];
+    @weakify(cell);
+    @weakify(self);
+    [RACObserve(model, selectedInfoListModel) subscribeNext:^(id  _Nullable x) {
+        @strongify(cell);
+        @strongify(self);
+        [self setupChat:x ofChartView:cell.chatView.lineChart];
+    }];
+}
 
 -(void)setupChat:(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*)values
       ofChartView:(PNLineChart*) chartView {
@@ -79,9 +122,11 @@
         UIColor* color = [UIColor colorWithHexString:each.color];
         data01.color = color;
         data01.alpha = 1;
+        data01.highlightedImg = [self highlightImgNameByIndex:index];
         data01.showPointLabel = NO; // 是否显示坐标点的值
         data01.itemCount = [each.values count];
         data01.inflexionPointColor = color;
+        data01.inflexionPointColor = [self lineColorByIndex:index];
         data01.inflexionPointStyle = PNLineChartPointStyleCircle;
         data01.lineWidth = 1;
         data01.inflexionPointWidth = 4; // inflexionPoint 圆圈圈
@@ -100,36 +145,42 @@
         return each.month;
     }];
     [chartView setXLabels:xLabels];
-
-//    for (NSInteger index = priceTrends.count - 1; index >= 0; index--) {
-//
-//        FHDetailPriceTrendModel *priceTrend = priceTrends[index];
-//        NSArray *data01Array = priceTrend.values;
-//        PNLineChartData *data01 = [PNLineChartData new];
-//        data01.color = [self lineColorByIndex:index];
-//        data01.highlightedImg = [self highlightImgNameByIndex:index];
-//        data01.alpha = 1;
-//        data01.showPointLabel = NO; // 是否显示坐标点的值
-//        data01.itemCount = data01Array.count;
-//        data01.inflexionPointColor = [self lineColorByIndex:index];
-//        data01.inflexionPointStyle = PNLineChartPointStyleCircle;
-//        data01.lineWidth = 1;
-//        data01.inflexionPointWidth = 4; // inflexionPoint 圆圈圈
-//        data01.pointLabelFormat = @"%.2f";
-//        __weak typeof(self)wself = self;
-//        data01.getData = ^(NSUInteger index) {
-//
-//            FHDetailPriceTrendValuesModel *trendValue = data01Array[index];
-//            CGFloat yValue = trendValue.price.floatValue / wself.unitPerSquare;
-//            return [PNLineChartDataItem dataItemWithY:yValue andRawY:yValue];
-//
-//            return [PNLineChartDataItem dataItemWithY:yValue];
-//        };
-//        [mutable addObject:data01];
-//    }
-
 }
 
+- (NSString *)highlightImgNameByIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+            return @"detail_circle_red";
+            break;
+        case 1:
+            return @"detail_circle_dark";
+            break;
+        case 2:
+            return @"detail_circle_gray";
+            break;
+        default:
+            return @"detail_circle_gray";
+            break;
+    }
+}
 
+- (UIColor *)lineColorByIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+            return [UIColor themeRed1];
+            break;
+        case 1:
+            return [UIColor colorWithHexString:@"#bebebe"];
+            break;
+        case 2:
+            return [UIColor themeGray5];
+            break;
+        default:
+            return [UIColor themeGray5];
+            break;
+    }
+}
 
 @end

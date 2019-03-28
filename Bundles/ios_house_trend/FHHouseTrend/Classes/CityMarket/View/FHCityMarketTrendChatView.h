@@ -10,8 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityMarketTrendChatViewInfoItem : NSObject
-@property (nonatomic, strong) NSString* name;
-@property (nonatomic, strong) NSString* color;
+@property (nonatomic, copy) NSString* name;
+@property (nonatomic, copy) NSString* color;
 @end
 
 @interface FHCityMarketTrendChatViewInfoBanner : UIView
@@ -25,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHCityMarketTrendChatViewInfoBanner* banner;
 @property (nonatomic, strong) NSArray<NSString*>* categorys;
 @property (nonatomic, strong) UILabel* sourceLabel;
+@property (nonatomic, copy) NSString* selectCategory;
 @end
 
 NS_ASSUME_NONNULL_END

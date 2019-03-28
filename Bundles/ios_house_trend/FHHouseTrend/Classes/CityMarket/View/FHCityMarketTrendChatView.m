@@ -160,7 +160,7 @@
         make.edges.mas_equalTo(self.contentView);
 //        make.width.mas_greaterThanOrEqualTo(65);
     }];
-    [self configSelectedStyle:false];
+    [self configSelectedStyle:NO];
 }
 
 -(void)configSelectedStyle:(BOOL)isSelected {
@@ -175,7 +175,7 @@
 
 -(void)setItemSelected:(BOOL)isSelected {
     _isSelected = isSelected;
-//    [self configSelectedStyle:_isSelected];
+    [self configSelectedStyle:_isSelected];
 }
 
 - (void)prepareForReuse {
@@ -237,13 +237,19 @@
         make.height.mas_equalTo(16);
         make.bottom.mas_equalTo(self);
     }];
-    _sourceLabel.text = @"数据来源：今日头条房产频道  更新时间：2019-02";
-    @weakify(self);
-    [RACObserve(self, categorys) subscribeNext:^(id  _Nullable x) {
-        @strongify(self);
-        [_selectorCollectionView reloadData];
-    }];
+//    @weakify(self);
+//    [RACObserve(self, categorys) subscribeNext:^(id  _Nullable x) {
+//        @strongify(self);
+//        [_selectorCollectionView reloadData];
+//    }];
 
+}
+
+- (void)setCategorys:(NSArray<NSString *> *)categorys {
+    [self willChangeValueForKey:@"categorys"];
+    _categorys = categorys;
+    [_selectorCollectionView reloadData];
+    [self didChangeValueForKey:@"categorys"];
 }
 
 -(void)setupCollectionView {
@@ -296,7 +302,10 @@
 #pragma mark UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-
+    if ([_categorys count] > indexPath.row) {
+        self.selectCategory = _categorys[indexPath.row];
+    }
+    [_selectorCollectionView reloadData];
 }
 
 #pragma mark UICollectionViewDataSource
@@ -312,6 +321,11 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHCityMarketSelectItemCollectionViewCell * cell = [collectionView dequeueReusableSupplementaryViewOfKind:@"cell" withReuseIdentifier:@"item" forIndexPath:indexPath];
     cell.nameLabel.text = _categorys[indexPath.row];
+    if ([_categorys[indexPath.row] isEqualToString:_selectCategory]) {
+        [cell setItemSelected:YES];
+    } else {
+        [cell setItemSelected:NO];
+    }
     return cell;
 }
 

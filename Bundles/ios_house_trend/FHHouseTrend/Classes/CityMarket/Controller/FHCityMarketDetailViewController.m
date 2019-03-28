@@ -21,6 +21,8 @@
 #import "FHCityMarketHeaderPropertyBar.h"
 #import "RXCollection.h"
 #import "FHCityMarketDetailResponseModel.h"
+#import "FHCityMarketBottomBarView.h"
+
 @interface FHCityMarketDetailViewController ()
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
@@ -28,6 +30,8 @@
 @property (nonatomic, strong) FHCityMarketTrendHeaderViewModel* headerViewModel;
 @property (nonatomic, strong) FHChatSectionCellPlaceHolder* chatSectionCellPlaceHolder;
 @property (nonatomic, strong) FHAreaItemSectionPlaceHolder* areaItemSectionCellPlaceHolder;
+@property (nonatomic, strong) FHCityMarketRecommendSectionPlaceHolder* recommendSectionPlaceHolder;
+@property (nonatomic, strong) FHCityMarketBottomBarView* bottomBarView;
 @end
 
 @implementation FHCityMarketDetailViewController
@@ -43,7 +47,24 @@
     [super viewDidLoad];
     [self initNavBar];
 
-    self.tableView = [[UITableView alloc] init];
+    [self setupBottomBar];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    _listViewModel = [[FHDetailListViewModel alloc] init];
+    _listViewModel.tableView = _tableView;
+    _tableView.delegate = _listViewModel;
+    _tableView.dataSource = _listViewModel;
+    if (@available(iOS 7.0, *)) {
+        self.tableView.estimatedSectionFooterHeight = 0;
+        self.tableView.estimatedSectionHeaderHeight = 0;
+        self.tableView.estimatedRowHeight = 0;
+    } else {
+        // Fallback on earlier versions
+    }
+
+    self.tableView.sectionFooterHeight = 0;
+    self.tableView.sectionHeaderHeight = 0;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
+
     _tableView.bounces = NO;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0, *)) {
@@ -61,11 +82,9 @@
 
     self.headerView = [[FHCityMarketHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 195 + navBarHeight)]; //174
     _tableView.tableHeaderView = _headerView;
-
-    _listViewModel = [[FHDetailListViewModel alloc] init];
-    _listViewModel.tableView = _tableView;
-    _tableView.delegate = _listViewModel;
-    _tableView.dataSource = _listViewModel;
+    [self.view bringSubviewToFront:_bottomBarView];
+    // 这里设置tableView底部滚动的区域，保证内容可以完全露出
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
     [self setupSections];
     [self bindHeaderView];
 }
@@ -118,20 +137,45 @@
     RAC(_areaItemSectionCellPlaceHolder, hotList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel* _Nullable value) {
         return value.data.hotList;
     }];
+    RAC(_recommendSectionPlaceHolder, specialOldHouseList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
+        return value.data.specialOldHouseList;
+    }];
     [_headerViewModel requestData];
 }
 
 -(void)setupSections {
-    _chatSectionCellPlaceHolder = [[FHChatSectionCellPlaceHolder alloc] init];
+    self.chatSectionCellPlaceHolder = [[FHChatSectionCellPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:_chatSectionCellPlaceHolder];
 
+    self.recommendSectionPlaceHolder = [[FHCityMarketRecommendSectionPlaceHolder alloc] init];
+    [_listViewModel addSectionPlaceHolder:_recommendSectionPlaceHolder];
 
-    id<FHSectionCellPlaceHolder> holder = nil;
-    holder = [[FHCityMarketRecommendSectionPlaceHolder alloc] init];
-    [_listViewModel addSectionPlaceHolder:holder];
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
+
     [self.tableView reloadData];
+}
+
+-(void)setupBottomBar {
+    self.bottomBarView = [[FHCityMarketBottomBarView alloc] init];
+//    _bottomBarView.layer.shadowRadius = 4;
+//    _bottomBarView.layer.shadowColor = [UIColor blackColor].CGColor;
+//    _bottomBarView.layer.shadowOpacity = 0.06;
+//    _bottomBarView.layer.shadowOffset = CGSizeMake(0, -2);
+    [self.view addSubview:_bottomBarView];
+    [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.right.mas_equalTo(self.view);
+        make.height.mas_equalTo(64);
+    }];
+
+    FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
+    item.titleLabel.text = @"买房股价";
+    item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
+
+    FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
+    item2.titleLabel.text = @"帮我找房";
+    item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
+    [_bottomBarView setBottomBarItems:@[item, item2]];
 }
 
 @end

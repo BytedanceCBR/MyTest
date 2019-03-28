@@ -6,20 +6,17 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "PNLineChart.h"
+@class FHCityMarketDetailResponseDataMarketTrendListModel;
+@class FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel;
 NS_ASSUME_NONNULL_BEGIN
-@class PNLineChartData;
-@interface FHCityMarketTrendChatViewModel : NSObject
-@property (nonatomic, strong) NSArray<PNLineChartData*>* chartData;
-@property (nonatomic, strong) NSArray<NSString*>* xLabels;
-@property (nonatomic, assign) CGFloat maxValue;
-@property (nonatomic, assign) CGFloat minValue;
-@property (nonatomic, assign) CGFloat unitPerSquare;
-@property (nonatomic, strong) NSArray* model;
-@property (nonatomic, strong) NSArray* categorySelections;
-@property (nonatomic, copy) NSString* title;
-@property (nonatomic, copy) NSString* source;
-@property (nonatomic, copy) NSString* unitLabel;
+@interface FHCityMarketTrendChatViewModel : NSObject<PNChartDelegate>
+@property (nonatomic, copy) NSString* currentSelected;
+@property (nonatomic, strong) NSArray<NSString*>* categorys;
+@property (nonatomic, strong) FHCityMarketDetailResponseDataMarketTrendListModel* model;
+@property (nonatomic, strong) FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel* selectedInfoListModel;
+@property (nonatomic, weak) UIView* chartView;
+-(void)changeCategory:(NSString*)category;
 @end
 
 NS_ASSUME_NONNULL_END

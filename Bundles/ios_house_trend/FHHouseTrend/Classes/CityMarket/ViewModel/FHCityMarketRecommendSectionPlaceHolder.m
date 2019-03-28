@@ -8,24 +8,42 @@
 #import "FHCityMarketRecommendSectionPlaceHolder.h"
 #import "FHCityMarketRecommendHeaderView.h"
 #import "FHCityMarketRecomandHouseCell.h"
-
+#import "FHCityMarketDetailResponseModel.h"
+#import "RXCollection.h"
+#import "FHCityMarketRecommendViewModel.h"
+#import "ReactiveObjC.h"
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
+@property (nonatomic, strong) FHCityMarketRecommendViewModel* recommendViewModel;
 @end
 
 
 @implementation FHCityMarketRecommendSectionPlaceHolder
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _recommendViewModel = [[FHCityMarketRecommendViewModel alloc] init];
+        RAC(_recommendViewModel, specialOldHouseList) = RACObserve(self, specialOldHouseList);
+    }
+    return self;
+}
+
 - (BOOL)isDisplayData {
-    return YES;
+    return _specialOldHouseList != nil;
 }
 
 - (NSUInteger)numberOfSection {
-    return 0;
+    if ([_specialOldHouseList count] != 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 - (NSUInteger)numberOfRowInSection:(NSUInteger)section {
-    return 1;
+    return 3;
 }
 
 - (void)registerCellToTableView:(nonnull UITableView *)tableView {
@@ -44,6 +62,17 @@
 - (nonnull UIView *)tableView:(nonnull UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (_headerView == nil) {
         _headerView = [[FHCityMarketRecommendHeaderView alloc] init];
+        [_headerView.segment removeAllSegments];
+        NSArray* segmentTitles = [self.specialOldHouseList rx_mapWithBlock:^id(FHCityMarketDetailResponseDataSpecialOldHouseListModel* each) {
+            return each.title;
+        }];
+        [segmentTitles enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.headerView.segment insertSegmentWithTitle:obj atIndex:idx animated:NO];
+        }];
+        _headerView.segment.selectedSegmentIndex = 0;
+        RAC(_headerView.titleLabel, text) = RACObserve(_recommendViewModel, title);
+        RAC(_headerView.questionLabel, text) = RACObserve(_recommendViewModel, question);
+        RAC(_headerView.answerLabel, text) = RACObserve(_recommendViewModel, answoer);
     }
     return _headerView;
 }

@@ -11,8 +11,9 @@
 #import "FHCityMarketDetailResponseModel.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "ReactiveObjC.h"
+#import "TTRoute.h"
 @interface FHAreaItemSectionPlaceHolder ()
-@property (nonatomic, strong) NSMutableDictionary<NSNumber*, FHCityAreaItemHeaderView*>* headerViews;
 @end
 
 @implementation FHAreaItemSectionPlaceHolder
@@ -35,7 +36,12 @@
 }
 
 - (NSUInteger)numberOfRowInSection:(NSUInteger)section {
-    return 5;
+    if ([_hotList count] > section - _sectionOffset) {
+        NSArray* items = _hotList[section - _sectionOffset].items;
+        return [items count] > 5 ? 5 : [items count];
+    } else {
+        return 0;
+    }
 }
 
 - (void)registerCellToTableView:(nonnull UITableView *)tableView {
@@ -72,6 +78,11 @@
         if ([_hotList count] > section - _sectionOffset) {
             FHCityMarketDetailResponseDataHotListModel* model = _hotList[section - _sectionOffset];
             result.nameLabel.text = model.title;
+            @weakify(self);
+            [[result.openMore rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
+                @strongify(self);
+                [self jumpToListPage:section - _sectionOffset];
+            }];
         }
         _headerViews[@(section)] = result;
         
@@ -94,6 +105,16 @@
             return [UIColor colorWithHexString:@"999999"];
             break;
     }
+}
+
+-(void)jumpToListPage:(NSInteger)index {
+    FHCityMarketDetailResponseDataHotListModel* model = _hotList[index];
+    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{
+                                                                    @"model": model,
+                                                                    @"title": @"城市行情"
+                                                                    }];
+    NSURL* url = [NSURL URLWithString:@"sslocal://city_market_hot_list"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
 }
 
 @end
