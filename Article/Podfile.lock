@@ -220,7 +220,6 @@ PODS:
   - React/RNFetchBlob (0.55.9-alpha.22)
   - React/runtime (0.55.9-alpha.22)
   - React/third-party (0.55.9-alpha.22)
-  - React/yoga (0.55.9-alpha.22)
   - ReactiveObjC (3.0.0.1-binary)
   - RNCryptor-objc (3.0.5.1-binary)
   - RSSwizzle (0.1.1.1-binary)
@@ -602,7 +601,6 @@ DEPENDENCIES:
   - React/RNFetchBlob (= 0.55.9-alpha.22)
   - React/runtime (= 0.55.9-alpha.22)
   - React/third-party (= 0.55.9-alpha.22)
-  - React/yoga (= 0.55.9-alpha.22)
   - ReactiveObjC (= 3.0.0.1-binary)
   - RNCryptor-objc (= 3.0.5.1-binary)
   - RSSwizzle (= 0.1.1.1-binary)
@@ -1001,6 +999,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: b013257e9448da9c2f61450c5964444e3f8495cf
+PODFILE CHECKSUM: 46e6eae234307b5265d1209570d1014283b8b6bf
 
 COCOAPODS: 1.4.0
