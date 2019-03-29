@@ -68,6 +68,7 @@
 
 +(TTHttpTask*)requestOldDetail:(NSString *)houseId
                          ridcode:(NSString *)ridcode
+                       realtorId:(NSString *)realtorId
                          logPB:(NSDictionary *)logPB
                     completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion
 {
@@ -82,6 +83,9 @@
     paramDic[@"house_type"] = @(FHHouseTypeSecondHandHouse);
     if (ridcode.length > 0) {
         paramDic[@"ridcode"] = ridcode;
+    }
+    if (realtorId.length > 0) {
+        paramDic[@"realtor_id"] = realtorId;
     }
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
 
