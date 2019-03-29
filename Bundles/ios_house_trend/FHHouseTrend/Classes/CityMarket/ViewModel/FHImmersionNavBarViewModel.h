@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHImmersionNavBarViewModel : NSObject
 @property (nonatomic, assign) CGPoint currentContentOffset;
-
+@property (nonatomic, assign) CGFloat alpha;
 @end
 
 NS_ASSUME_NONNULL_END

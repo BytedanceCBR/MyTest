@@ -23,7 +23,7 @@
 #import "FHCityMarketDetailResponseModel.h"
 #import "FHCityMarketBottomBarView.h"
 #import "FHCityMarketRecommendViewModel.h"
-
+#import "FHImmersionNavBarViewModel.h"
 @interface FHCityMarketDetailViewController ()<FHCityMarketRecommendViewModelDataChangedListener>
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
@@ -33,6 +33,7 @@
 @property (nonatomic, strong) FHAreaItemSectionPlaceHolder* areaItemSectionCellPlaceHolder;
 @property (nonatomic, strong) FHCityMarketRecommendSectionPlaceHolder* recommendSectionPlaceHolder;
 @property (nonatomic, strong) FHCityMarketBottomBarView* bottomBarView;
+@property (nonatomic, strong) FHImmersionNavBarViewModel* navBarViewModel;
 @end
 
 @implementation FHCityMarketDetailViewController
@@ -40,6 +41,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        self.navBarViewModel = [[FHImmersionNavBarViewModel alloc] init];
     }
     return self;
 }
@@ -141,6 +143,9 @@
     RAC(_recommendSectionPlaceHolder, specialOldHouseList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
         return value.data.specialOldHouseList;
     }];
+
+    RAC(self.customNavBarView, alpha) = RACObserve(_navBarViewModel, alpha);
+    RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
     [_headerViewModel requestData];
 }
 
