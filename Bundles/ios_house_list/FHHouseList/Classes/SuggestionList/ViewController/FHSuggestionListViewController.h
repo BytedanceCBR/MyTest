@@ -12,13 +12,15 @@
 #import "FHSuggestionListNavBar.h"
 
 typedef enum : NSUInteger {
-    FHEnterSuggestionTypeDefault       =   0,
-    FHEnterSuggestionTypeHome       =   1,
-    FHEnterSuggestionTypeFindTab       =   2,
-    FHEnterSuggestionTypeList       =   3,
-    FHEnterSuggestionTypeRenting       =   4,
-    FHEnterSuggestionTypeOldMain       =   5,//
+    FHEnterSuggestionTypeDefault       =   0,// H5
+    FHEnterSuggestionTypeHome       =   1,// 首页
+    FHEnterSuggestionTypeFindTab       =   2,// 找房Tab
+    FHEnterSuggestionTypeList       =   3, // 列表页
+    FHEnterSuggestionTypeRenting       =   4,// 租房大类页
+    FHEnterSuggestionTypeOldMain       =   5,// 二手房大类页
 } FHEnterSuggestionType;
+
+// 特别说明：目前只有房源列表页和找房Tab列表页 需要pop back和回传数据need_back_vc
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -32,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  @"from_home":@(4),
  @"sug_delegate":sugDelegateTable,
  @"homepage_roll_data":test,
+ @"need_back_vc":vc
  };
  TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
  

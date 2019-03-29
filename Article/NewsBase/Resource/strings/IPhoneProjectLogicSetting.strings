@@ -16,6 +16,7 @@
 "new_house_detail"      = "FHHouseDetailViewController";
 "rent_detail"           = "FHHouseDetailViewController";
 "house_search"          = "FHSuggestionListViewController";
+"sug_subscribe_list"    = "FHSugSubscribeListViewController";
 
 "message_detail_list"   = "FHMessageListViewController";
 "message_system_list"   = "FHMessageListViewController";
@@ -86,8 +87,9 @@
 "mapfind_house"        = "FHMapSearchViewController";
 "mapfind_rent"         = "FHMapSearchViewController";
 
-"renthouse_main"  =  "FHHouseRentHomeVC";
-"rent_main"  =  "FHHouseRentHomeVC";
+"renthouse_main"  = "FHBaseMainListViewController";
+//"FHHouseRentHomeVC";
+"rent_main"  =  "FHBaseMainListViewController";
 "realtor_detail"       = "FHRealtorDetailWebViewController";
 "city_list"            = "FHCityListViewController";
 "city_search"          = "FHCitySearchViewController";
@@ -112,6 +114,18 @@
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
 
-"second_house_main"   = "FHHouseOldHomeViewController";
 "city_market"   = "FHCityMarketDetailViewController";
 "city_market_hot_list"   = "FHCityMarketHotCityListViewController";
+
+"second_house_main"   = "FHBaseMainListViewController";
+
+//房屋估价
+"price_valuation" = "FHPriceValuationViewController";
+//房屋估价历史
+"price_valuation_history" = "FHPriceValuationHistoryController";
+//房屋估计小区搜索
+"price_valuation_neiborhood_search" = "FHPriceValuationNeiborhoodSearchController";
+//房屋估价结果
+"price_valuation_result" = "FHPriceValuationResultController";
+//房屋估价补充信息
+"price_valuation_more_info" = "FHPriceValuationMoreInfoController";

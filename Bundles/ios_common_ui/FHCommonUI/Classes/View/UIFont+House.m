@@ -45,6 +45,15 @@
     return font;
 }
 
++(UIFont *)themeFontDINAlternateBold:(CGFloat)fontSize
+{
+    UIFont *font = [UIFont fontWithName:@"DINAlternate-Bold" size:fontSize];
+    if (!font) {
+        font = [UIFont boldSystemFontOfSize:fontSize];
+    }
+    return font;
+}
+
 @end
 
 /*

@@ -67,6 +67,8 @@
 #import "TTAppStoreStarManager.h"
 #import "TTClientABTestBrowserViewController.h"
 #import "FHUtils.h"
+#import "FHClientABTestDebugViewController.h"
+
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
@@ -110,6 +112,10 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
+    
+        STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
+        clientABDebugItem.switchStyle = NO;
+        [itemArray addObject:clientABDebugItem];
         
         STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
         htmlBridgeDebugItem.switchStyle = NO;
@@ -638,10 +644,22 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [self.navigationController pushViewController:clientABVC animated:YES];
 }
 
+- (void)_openABTestSDKClientABTestVC
+{
+    FHClientABTestDebugViewController *clientABVC = [FHClientABTestDebugViewController new];
+    [self.navigationController pushViewController:clientABVC animated:YES];
+}
+
 - (void)_openShortVideoDebug
 {
     [self.navigationController pushViewController:[[TSVDebugViewController alloc] init]
                                          animated:YES];
+}
+
+- (void)_openLogViewSetting {
+    NSLog(@"_openLogViewSetting");
+    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)_openHtmlBridge

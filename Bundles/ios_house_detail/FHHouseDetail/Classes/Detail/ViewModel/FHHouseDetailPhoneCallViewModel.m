@@ -426,7 +426,7 @@ typedef enum : NSUInteger {
 //    jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
-    info[@"title"] = @"经纪人详情页";
+    info[@"title"] = @"经纪人主页";
     info[@"realtor_id"] = contactPhone.realtorId;
     info[@"delegate"] = self;
     info[@"trace"] = self.tracerDict;

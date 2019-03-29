@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailNeighborhoodHouseCell.h"
-#import <Masonry.h>
+#import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import <UIImageView+BDWebImage.h>
 #import "FHCommonDefines.h"
@@ -17,9 +17,10 @@
 #import "FHExtendHotAreaButton.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
-#import "FHSingleImageInfoCell.h"
-#import "FHSingleImageInfoCellModel.h"
+#import "FHHouseBaseItemCell.h"
 #import "FHDetailBottomOpenAllView.h"
+#import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <FHHouseBase/FHSingleImageInfoCellModel.h>
 
 @interface FHDetailNeighborhoodHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -88,7 +89,7 @@
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
-        [tv registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCell"];
         [self.containerView addSubview:tv];
         self.leftTableView = tv;
         self.leftTableView.delegate = self;
@@ -135,7 +136,7 @@
         tv.separatorStyle = UITableViewCellSeparatorStyleNone;
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
-        [tv registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCell"];
         [self.containerView addSubview:tv];
         self.rightTableView = tv;
         self.rightTableView.delegate = self;
@@ -361,12 +362,12 @@
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
         if (detailModel.data.neighborhoodInfo.name.length > 0) {
             if (model.sameNeighborhoodErshouHouseData.total.length > 0) {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,model.sameNeighborhoodErshouHouseData.total];
+                userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.sameNeighborhoodErshouHouseData.total];
             } else {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@",detailModel.data.neighborhoodInfo.name];
+                userInfo[@"title"] = @"小区房源";
             }
         } else {
-            userInfo[@"title"] = @"同小区房源";// 默认值
+            userInfo[@"title"] = @"小区房源";// 默认值
         }
         if (neighborhood_id.length > 0) {
             userInfo[@"neighborhood_id"] = neighborhood_id;
@@ -415,12 +416,12 @@
         userInfo[@"house_type"] = @(FHHouseTypeRentHouse);
         if (detailModel.data.neighborhoodInfo.name.length > 0) {
             if (model.sameNeighborhoodRentHouseData.total.length > 0) {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,model.sameNeighborhoodRentHouseData.total];
+                userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.sameNeighborhoodRentHouseData.total];
             } else {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@",detailModel.data.neighborhoodInfo.name];
+                userInfo[@"title"] = @"小区房源";
             }
         } else {
-            userInfo[@"title"] = @"同小区房源";// 默认值
+            userInfo[@"title"] = @"小区房源";// 默认值
         }
         if (neighborhood_id.length > 0) {
             userInfo[@"neighborhood_id"] = neighborhood_id;
@@ -508,13 +509,12 @@
         if (indexPath.row >= 0 && indexPath.row < self.ershouItems.count) {
             FHSearchHouseDataItemsModel *item = self.ershouItems[indexPath.row];
             FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
-            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
-                FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
-                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHSingleImageInfoCell recommendReasonHeight] : 0;
-                [imageInfoCell updateWithHouseCellModel:cellModel];
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseBaseItemCell"];
+            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+                FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
+                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
                 [imageInfoCell refreshTopMargin:0];
-                [imageInfoCell refreshBottomMargin:20+reasonHeight];
+                [imageInfoCell updateWithHouseCellModel:cellModel];
             }
             return cell;
         }
@@ -523,12 +523,11 @@
         if (indexPath.row >= 0 && indexPath.row < self.rentItems.count) {
             FHHouseRentDataItemsModel *item = self.rentItems[indexPath.row];
             FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
-            if ([cell isKindOfClass:[FHSingleImageInfoCell class]]) {
-                FHSingleImageInfoCell *imageInfoCell = (FHSingleImageInfoCell *)cell;
-                [imageInfoCell updateWithHouseCellModel:cellModel];
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHouseBaseItemCell"];
+            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
+                FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
                 [imageInfoCell refreshTopMargin:0];
-                [imageInfoCell refreshBottomMargin:20];
+                [imageInfoCell updateWithHouseCellModel:cellModel];
             }
             return cell;
         }
@@ -542,7 +541,7 @@
     if (self.leftTableView == tableView) {
         FHSearchHouseDataItemsModel *item = self.ershouItems[indexPath.row];
         if ([item isKindOfClass:[FHSearchHouseDataItemsModel class]] && [item showRecommendReason]) {
-            return 108+[FHSingleImageInfoCell recommendReasonHeight];
+            return 108+[FHHouseBaseItemCell recommendReasonHeight];
         }
     }
     return 108;

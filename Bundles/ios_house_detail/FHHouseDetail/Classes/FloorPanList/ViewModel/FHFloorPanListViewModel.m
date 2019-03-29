@@ -191,15 +191,18 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
        
         if (self.currentTapLabel.tag == 1) {
             //在售
-            status = [NSString stringWithFormat:@"%d",2];
+//            status = [NSString stringWithFormat:@"%d",2];
+            status = @"在售";
         }else if(self.currentTapLabel.tag == 2)
         {
             //待售
-            status = [NSString stringWithFormat:@"%d",1];
+//            status = [NSString stringWithFormat:@"%d",1];
+            status = @"待售";
         }else
         {
             //售磬
-            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
+//            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
+            status = @"售磬";
         }
     }
     
@@ -216,12 +219,12 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
                 [currentItemsArray addObject:model];
             }
         }else if ([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
-            if ([model.saleStatus.id isEqualToString:status]) {
+            if ([model.saleStatus.content isEqualToString:status]) {
                 [currentItemsArray addObject:model];
             }
         }else
         {
-            if ([model.roomCount isEqualToString:roomCuntKey] && [model.saleStatus.id isEqualToString:status]) {
+            if ([model.roomCount isEqualToString:roomCuntKey] && [model.saleStatus.content isEqualToString:status]) {
                 [currentItemsArray addObject:model];
             }
         }

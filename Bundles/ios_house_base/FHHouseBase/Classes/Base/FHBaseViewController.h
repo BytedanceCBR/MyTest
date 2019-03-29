@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TTRoute.h"
+#import <TTRoute/TTRoute.h>
 #import "FHNavBarView.h"
 #import "FHErrorView.h"
 
@@ -22,6 +22,13 @@ extern NSString *const VCTITLE_KEY ;
 
 @end
 
+// 页面间数据传递协议
+@protocol FHHouseBaseDataProtocel <NSObject>
+
+- (void)callBackDataInfo:(NSDictionary *)info;
+
+@end
+
 NS_ASSUME_NONNULL_BEGIN
 
 /*
@@ -32,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol TTRouteInitializeProtocol;
 @class FHTracerModel;
 
-@interface FHBaseViewController : UIViewController <FHUITracerProtocol>
+@interface FHBaseViewController : UIViewController <FHUITracerProtocol,TTRouteInitializeProtocol>
 
 @property(nonatomic , strong) NSMutableDictionary *tracerDict;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
@@ -107,5 +114,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)goBack;
 
 @end
+
+NSHashTable *wrap_weak(NSObject * obj);
+NSObject *unwrap_weak(NSHashTable *table);
 
 NS_ASSUME_NONNULL_END

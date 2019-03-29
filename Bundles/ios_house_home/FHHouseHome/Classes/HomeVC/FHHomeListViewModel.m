@@ -190,6 +190,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     self.isFromLocalTestChange = NO;
                 }
                 
+                [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
+                
                 return;
             }
             
@@ -341,7 +343,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)checkoutRequestRefreshPullDown
 {
     //如果当前没有数据，并且请求还没有返回
-    if (self.itemsDataCache.allKeys.count == 0 && self.requestRefreshTask != nil) {
+    if (self.itemsDataCache.allKeys.count == 0 && self.requestRefreshTask != nil || self.dataSource.showPlaceHolder) {
         [self.homeViewController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
     }
 }
@@ -427,6 +429,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [self checkCityStatus];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
+                if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                    [self showCityUnAvalibleStatus];
+                    self.categoryView.segmentedControl.userInteractionEnabled = YES;
+                }
                 return;
             }
             
@@ -441,6 +447,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
                 return;
             }
+            
+            [self showCityUnAvalibleStatus];
+            self.categoryView.segmentedControl.userInteractionEnabled = YES;
+            return ;
         }
         
         //缓存房源数据
@@ -558,17 +568,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
         NSMutableArray *modelsCache =[[NSMutableArray alloc] initWithArray:self.itemsDataCache[cacheKey]];
-        if (kIsNSString(cahceKey)) {
-            if (pullType == FHHomePullTriggerTypePullUp) {
-                if (model && model.data.items.count > 0) {
-                    self.itemsDataCache[cacheKey] = [modelsCache arrayByAddingObjectsFromArray:model.data.items];
-                }
-            }else
-            {
-                self.itemsDataCache[cacheKey] = model.data.items;
-            }
-        }
-        
+
         [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:@(self.currentHouseType)];
         
         //判断下拉刷新
@@ -576,14 +576,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0 && !error) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                 self.tableViewV.hidden = YES;
-                self.isFromLocalTestChange = YES;
+                self.isFromLocalTestChange = NO;
                 [self checkCityStatus];
                 
                 
                 if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                     [self.homeViewController.emptyView showEmptyWithTip:@"数据走丢了" errorImage:[UIImage imageNamed:@"group-8"] showRetry:YES];
                 }
-                
+                [self.tableViewV finishPullDownWithSuccess:YES];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
             }
@@ -615,16 +615,33 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     self.categoryView.segmentedControl.userInteractionEnabled = YES;
                     return;
                 }
+                
+                if (model.data.items.count == 0 && self.dataSource.showPlaceHolder) {
+                    [self showCityUnAvalibleStatus];
+                    self.categoryView.segmentedControl.userInteractionEnabled = YES;
+                    return;
+                }
             }
         }else
         {
             if (error) {
-                if (![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                if ([error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
                     [[ToastManager manager] showToast:@"网络异常"];
                 }
                 [self updateTableViewWithMoreData:YES];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 return;
+            }
+        }
+        
+        if (kIsNSString(cahceKey)) {
+            if (pullType == FHHomePullTriggerTypePullUp) {
+                if (model && model.data.items.count > 0) {
+                    self.itemsDataCache[cacheKey] = [modelsCache arrayByAddingObjectsFromArray:model.data.items];
+                }
+            }else
+            {
+                self.itemsDataCache[cacheKey] = model.data.items;
             }
         }
         
@@ -805,8 +822,13 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 {
     if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
         [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-        [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+        [self showCityUnAvalibleStatus];
     }
+}
+
+- (void)showCityUnAvalibleStatus
+{
+    [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
 }
 
 - (BOOL)checkIsHasFindHouse

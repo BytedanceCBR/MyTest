@@ -230,4 +230,59 @@
 }
 
 
++ (TTHttpTask *)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType subscribe_type:(NSInteger)type subscribe_count:(NSInteger)count  class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString *queryPath = @"/f100/api/get_subscribe_list";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"city_id"] = @(cityId);
+    paramDic[@"house_type"] = @(houseType);
+    paramDic[@"subscribe_list_type"] = @(type);
+    paramDic[@"subscribe_list_count"] = @(count);
+    paramDic[@"source"] = @"app";
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
+
+
++(TTHttpTask *)requestAddSugSubscribe:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
+{
+    NSString *queryPath = @"/f100/api/add_subscribe";
+    
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    if (param) {
+        [qparam addEntriesFromDictionary:param];
+    }
+    qparam[@"offset"] = @(offset);
+    qparam[@"search_id"] = searchId?:@"";
+    if (sugParam) {
+        qparam[@"suggestion_params"] = sugParam;
+    }
+    
+    return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString *queryPath = @"/f100/api/delete_subscribe";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"subscribe_id"] = subscribeId;
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
++ (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString *queryPath = @"/f100/api/get_suggestion";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"city_id"] = @(cityId);
+    paramDic[@"house_type"] = @(houseType);
+    paramDic[@"source"] = @"app";
+    paramDic[@"only_neighborhood"] = @"1";
+    if (query.length > 0) {
+        paramDic[@"query"] = query;
+    }
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

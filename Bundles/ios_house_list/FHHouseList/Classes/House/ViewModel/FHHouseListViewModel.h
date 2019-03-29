@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *houseListOpenUrl;
 @property (nonatomic , assign) FHHouseType houseType;
 
+@property(nonatomic, weak) UIViewController *listVC;
+
 @property(nonatomic , copy) void (^sugSelectBlock)(TTRouteParamObj *paramObj);
 @property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj, BOOL isFromMap);
 

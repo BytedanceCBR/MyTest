@@ -23,6 +23,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)cleanStyle:(BOOL)isCleanStyle;
 
+//设置导航条透明
+- (void)setNaviBarTransparent:(BOOL)transparent;
+>>>>>>> feature/house/trend
+
 @end
 
 @interface FHHotAreaButton : UIButton

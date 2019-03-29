@@ -125,6 +125,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         return;
     }
     
+    //无定位权限不弹切换城市alert
+    if (![self isHaveLocationAuthorization]) {
+        return;
+    }
+    
     id<FHHouseEnvContextBridge> bridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
     //如果不在第一个tab
     if (![bridge isCurrentTabFirst]) {

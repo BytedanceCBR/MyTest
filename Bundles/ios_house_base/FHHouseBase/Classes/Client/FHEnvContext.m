@@ -24,6 +24,7 @@
 #import "FHHouseBridgeManager.h"
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
+#import "FHIESGeckoManager.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -31,7 +32,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @property (nonatomic, strong) TTReachability *reachability;
 @property (nonatomic, strong) FHClientHomeParamsModel *commonPageModel;
 @property (nonatomic, strong) NSMutableDictionary *commonRequestParam;
-@property (nonatomic , strong) NSDictionary *currentConfigDictionary;
 
 @end
 
@@ -365,7 +365,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
         //轮询红点
         [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
     }
-
+    
+    
+//    [FHIESGeckoManager configGeckoInfo];
+//    [FHIESGeckoManager configIESWebFalcon];
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
@@ -385,10 +388,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
         self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
         [self.generalBizConfig saveCurrentConfigDataCache:configModel];
-        if (![configModel.toDictionary isEqualToDictionary:self.currentConfigDictionary]) {
-            self.currentConfigDictionary = configModel.toDictionary;
-            [self.configDataReplay sendNext:configModel];
-        }
+        [self.configDataReplay sendNext:configModel];
     }
 }
 
@@ -491,6 +491,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 + (void)saveCurrentUserCityId:(NSString *)cityId
 {
     [FHUtils setContent:cityId forKey:kUserDefaultCityId];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
 }
 
 - (TTReachability *)reachability
