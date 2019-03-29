@@ -22,8 +22,9 @@
 #import "RXCollection.h"
 #import "FHCityMarketDetailResponseModel.h"
 #import "FHCityMarketBottomBarView.h"
+#import "FHCityMarketRecommendViewModel.h"
 
-@interface FHCityMarketDetailViewController ()
+@interface FHCityMarketDetailViewController ()<FHCityMarketRecommendViewModelDataChangedListener>
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
 @property (nonatomic, strong) FHCityMarketHeaderView* headerView;
@@ -146,8 +147,9 @@
 -(void)setupSections {
     self.chatSectionCellPlaceHolder = [[FHChatSectionCellPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:_chatSectionCellPlaceHolder];
-
-    self.recommendSectionPlaceHolder = [[FHCityMarketRecommendSectionPlaceHolder alloc] init];
+    FHCityMarketRecommendViewModel* viewModel = [[FHCityMarketRecommendViewModel alloc] init];
+    viewModel.listener = self;
+    self.recommendSectionPlaceHolder = [[FHCityMarketRecommendSectionPlaceHolder alloc] initWithViewModel:viewModel];
     [_listViewModel addSectionPlaceHolder:_recommendSectionPlaceHolder];
 
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
@@ -176,6 +178,11 @@
     item2.titleLabel.text = @"帮我找房";
     item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
     [_bottomBarView setBottomBarItems:@[item, item2]];
+}
+
+
+-(void)onDataArrived {
+    [_tableView reloadData];
 }
 
 @end

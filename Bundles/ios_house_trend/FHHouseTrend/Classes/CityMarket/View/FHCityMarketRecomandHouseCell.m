@@ -10,13 +10,6 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 @interface FHCityMarketRecomandHouseCell ()
-@property (nonatomic, strong) UIImageView* tagView;
-@property (nonatomic, strong) UIImageView* houseIconView;
-@property (nonatomic, strong) UILabel* titleLabel;
-@property (nonatomic, strong) UILabel* subTitleLabel;
-@property (nonatomic, strong) UILabel* priceLabel;
-@property (nonatomic, strong) UILabel* oldPriceLabel;
-@property (nonatomic, strong) UILabel* priceChangeLabel;
 @end
 
 @implementation FHCityMarketRecomandHouseCell

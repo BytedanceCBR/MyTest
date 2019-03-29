@@ -12,6 +12,8 @@
 #import "RXCollection.h"
 #import "FHCityMarketRecommendViewModel.h"
 #import "ReactiveObjC.h"
+#import "FHSearchHouseModel.h"
+#import "BDWebImage.h"
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
 @property (nonatomic, strong) FHCityMarketRecommendViewModel* recommendViewModel;
@@ -25,6 +27,15 @@
     self = [super init];
     if (self) {
         _recommendViewModel = [[FHCityMarketRecommendViewModel alloc] init];
+        RAC(_recommendViewModel, specialOldHouseList) = RACObserve(self, specialOldHouseList);
+    }
+    return self;
+}
+
+-(instancetype)initWithViewModel:(FHCityMarketRecommendViewModel*)viewModel {
+    self = [super init];
+    if (self) {
+        _recommendViewModel = viewModel;
         RAC(_recommendViewModel, specialOldHouseList) = RACObserve(self, specialOldHouseList);
     }
     return self;
@@ -52,6 +63,14 @@
 
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     FHCityMarketRecomandHouseCell* cell = [tableView dequeueReusableCellWithIdentifier:@"recommend" forIndexPath:indexPath];
+    FHSearchHouseDataModel* model = [_recommendViewModel currentData];
+    if (model != nil && [model.items count] > indexPath.row) {
+        FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
+        FHSearchHouseDataItemsHouseImageModel* imageModel = item.houseImage.firstObject;
+        if (imageModel != nil && !isEmptyString(imageModel.url)) {
+            [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+        }
+    }
     return cell;
 }
 
@@ -73,6 +92,9 @@
         RAC(_headerView.titleLabel, text) = RACObserve(_recommendViewModel, title);
         RAC(_headerView.questionLabel, text) = RACObserve(_recommendViewModel, question);
         RAC(_headerView.answerLabel, text) = RACObserve(_recommendViewModel, answoer);
+        [RACObserve(_headerView.segment, selectedSegmentIndex) subscribeNext:^(id  _Nullable x) {
+            [_recommendViewModel onCategoryChange:[x integerValue]];
+        }];
     }
     return _headerView;
 }
