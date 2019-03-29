@@ -66,7 +66,8 @@
     } callbackInMainThread:NO];
 }
 
-+(TTHttpTask*)requestOldDetail:(NSString*)houseId
++(TTHttpTask*)requestOldDetail:(NSString *)houseId
+                         ridcode:(NSString *)ridcode
                          logPB:(NSDictionary *)logPB
                     completion:(void(^)(FHDetailOldModel * _Nullable model , NSError * _Nullable error))completion
 {
@@ -79,6 +80,9 @@
     }
     paramDic[@"house_id"] = houseId ?: @"";
     paramDic[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    if (ridcode.length > 0) {
+        paramDic[@"ridcode"] = ridcode;
+    }
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
 
         FHDetailOldModel *model = [[FHDetailOldModel alloc] initWithDictionary:jsonObj error:&error];

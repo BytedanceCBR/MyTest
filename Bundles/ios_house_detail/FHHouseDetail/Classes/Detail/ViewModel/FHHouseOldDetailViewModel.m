@@ -173,7 +173,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (void)startLoadData {
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestOldDetail:self.houseId logPB:self.listLogPB completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode logPB:self.listLogPB completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
 
         if (model && error == NULL) {
             if (model.data) {

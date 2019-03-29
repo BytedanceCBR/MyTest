@@ -28,7 +28,8 @@
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
-@property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, copy)   NSString *houseId; // 房源id
+@property (nonatomic, copy)   NSString *ridcode; // 经纪人id，用来锁定经纪人展位
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的logPB
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
@@ -44,6 +45,7 @@
     if (self) {
         
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+        self.ridcode = paramObj.allParams[@"ridcode"];
 
         if (!self.houseType) {
             if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
@@ -193,6 +195,7 @@
     [self configTableView];
     self.viewModel = [FHHouseDetailBaseViewModel createDetailViewModelWithHouseType:self.houseType withController:self tableView:_tableView];
     self.viewModel.houseId = self.houseId;
+    self.viewModel.ridcode = self.ridcode;
     self.viewModel.listLogPB = self.listLogPB;
     // 构建详情页需要的埋点数据，放入baseViewModel中
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
