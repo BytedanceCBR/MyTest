@@ -73,8 +73,17 @@
         NSString *headerName = [NSString stringWithFormat:@"小区 %@",model.rent_neighborhoodInfo.name];
         self.headerView.label.text = headerName;
         NSString *districtName = model.rent_neighborhoodInfo.districtName;
-        self.nameValue.text = districtName;
-        NSString *schoolName = model.rent_neighborhoodInfo.schoolInfo.schoolName;
+        NSString *areaName = model.rent_neighborhoodInfo.areaName;
+        if (areaName.length > 0 && districtName.length > 0) {
+            self.nameValue.text = [NSString stringWithFormat:@"%@-%@",districtName,areaName];
+        } else {
+            self.nameValue.text = districtName;
+        }
+        NSString *schoolName = @"";
+        if (model.rent_neighborhoodInfo.schoolInfo.count > 0) {
+            FHRentDetailResponseDataSchoolInfoModel *schoolInfo = model.rent_neighborhoodInfo.schoolInfo[0];
+            schoolName = schoolInfo.schoolName;
+        }
         [self updateSchoolName:schoolName];
     }
 }
