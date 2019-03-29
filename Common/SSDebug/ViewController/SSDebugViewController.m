@@ -656,6 +656,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
                                          animated:YES];
 }
 
+- (void)_openLogViewSetting {
+    NSLog(@"_openLogViewSetting");
+    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - (void)_openHtmlBridge
 {
     TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
