@@ -10,7 +10,7 @@
 #import "FHPriceValuationResultView.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 
-@interface FHPriceValuationResultController()<UIViewControllerErrorHandler>
+@interface FHPriceValuationResultController()<UIViewControllerErrorHandler,UIScrollViewDelegate>
 
 @property(nonatomic, strong) FHPriceValuationResultViewModel *viewModel;
 @property(nonatomic ,strong) FHPriceValuationResultView *resultView;
@@ -25,8 +25,6 @@
         NSDictionary *params = paramObj.allParams;
         self.model = params[@"model"];
         self.infoModel = params[@"infoModel"];
-
-        //        [self addEnterCategoryLog];
     }
     return self;
 }
@@ -69,6 +67,7 @@
     [self.view layoutIfNeeded];
     self.resultView = [[FHPriceValuationResultView alloc] initWithFrame:self.view.bounds naviBarHeight:CGRectGetHeight(self.customNavBarView.frame)];
     _resultView.hidden = YES;
+    _resultView.scrollView.delegate = self;
     [self.view addSubview:_resultView];
     [self addDefaultEmptyViewFullScreen];
 }
@@ -88,6 +87,22 @@
 
 - (BOOL)tt_hasValidateData {
     return NO;
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat alpha = scrollView.contentOffset.y / 30;
+    if (alpha > 0) {
+        self.customNavBarView.title.textColor = [UIColor themeGray1];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+    }else {
+        self.customNavBarView.title.textColor = [UIColor whiteColor];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
+        [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+    }
+    [self.customNavBarView refreshAlpha:alpha];
 }
 
 @end

@@ -17,7 +17,6 @@
 @interface FHPriceValuationResultView()
 
 @property(nonatomic, assign) CGFloat naviBarHeight;
-@property(nonatomic, strong) UIScrollView *scrollView;
 @property(nonatomic, strong) UIImageView *headerImageView;
 @property(nonatomic, strong) UIView *cardView;
 @property(nonatomic, strong) UIButton *titleBtn;

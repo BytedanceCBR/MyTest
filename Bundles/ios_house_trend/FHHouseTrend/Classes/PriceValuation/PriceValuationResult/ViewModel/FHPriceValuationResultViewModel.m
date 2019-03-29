@@ -158,6 +158,21 @@ extern NSString *const kFHToastCountKey;
     return @"value_result";
 }
 
+- (BOOL)popToViewController:(NSString *)aVCName animated:(BOOL)animated {
+    __block UIViewController *viewController = nil;
+    [self.viewController.navigationController.viewControllers enumerateObjectsUsingBlock:^(__kindof UIViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:NSClassFromString(aVCName)]) {
+            viewController = obj;
+        }
+    }];
+    if (viewController) {
+        [self.viewController.navigationController popToViewController:viewController animated:animated];
+        return YES;
+    }else{
+        return NO;
+    }
+}
+
 #pragma mark - FHHouseBaseDataProtocel
 
 - (void)callBackDataInfo:(NSDictionary *)info {
@@ -228,11 +243,15 @@ extern NSString *const kFHToastCountKey;
 
 //进入城市行情页
 - (void)goToCityMarket {
-    
+//    BOOL isPop = [self popToViewController:@"FHPriceValuationHistoryController" animated:YES];
+//    if(!isPop){
+//        //push
+//        NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_history"];
+//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+//    }
 }
 
 - (void)houseSale {
-    
     //埋点
     [self addInfomationTracer:@"information_show"];
     

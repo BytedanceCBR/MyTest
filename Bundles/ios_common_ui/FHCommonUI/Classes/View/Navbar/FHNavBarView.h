@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 //设置导航条透明
 - (void)setNaviBarTransparent:(BOOL)transparent;
 
+- (void)refreshAlpha:(CGFloat)alpha;
+
 @end
 
 @interface FHHotAreaButton : UIButton
