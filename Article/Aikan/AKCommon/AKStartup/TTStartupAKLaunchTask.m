@@ -11,7 +11,7 @@
 #import <SecGuard/SGMSafeGuardManager.h>
 #import <TTRoute.h>
 #import "UIAlertView+FHAlertView.h"
-
+#import "CommonURLSetting.h"
 
 @interface PreFcAction : NSObject<UIAlertViewDelegate>
 {
@@ -109,7 +109,7 @@ void fhPreFcActionAlert(forceCrashMask mask)
 
 - (void)registerSafeGuardService
 {
-
+    [[SGMSafeGuardManager sharedManager] setCurrentHost:[CommonURLSetting xlogBaseURL]];
     SGMSafeGuardConfig *config = [SGMSafeGuardConfig configWithPlatform:SGMSafeGuardPlatformAweme
                                                                   appID:@"1370"
                                                                hostType:SGMSafeGuardHostTypeDomestic

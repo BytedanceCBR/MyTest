@@ -212,7 +212,13 @@
                            @"from_home":@(3), // list
                            @"sug_delegate":sugDelegateTable
                            };
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    NSMutableDictionary *dictInfo = [NSMutableDictionary dictionaryWithDictionary:dict];
+    if (self.listVC) {
+        NSHashTable *tempTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        [tempTable addObject:self.listVC];
+        dictInfo[@"need_back_vc"] = tempTable;
+    }
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dictInfo];
     
     NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];

@@ -1218,7 +1218,6 @@
 {
 
     //JUMP to cat list page
-    [self.viewController.navigationController popViewControllerAnimated:NO];
     
     NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
     NSMutableDictionary *tracerDict = [self baseLogParam];

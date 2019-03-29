@@ -15,6 +15,7 @@
 #import "FHHouseListRedirectTipView.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import <TTUIWidget/UIViewController+Track.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 
 #define TOP_HOR_PADDING 3
 
@@ -115,6 +116,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.ttNeedIgnoreZoomAnimation = YES;
     
     [self initNavbar];
     _topContainerView = [[UIView alloc]init];
@@ -141,7 +143,7 @@
     _viewModel.viewController = self;
     _viewModel.navbar = self.navbar;
     _errorView = [[FHErrorView alloc] init];
-    [self.tableView addSubview:_errorView];
+    [self.containerView addSubview:_errorView];
     _viewModel.errorMaskView = _errorView;
     _errorView.hidden = YES;
     _viewModel.topContainerView = _topContainerView;
@@ -193,10 +195,10 @@
         make.top.mas_equalTo(self.viewModel.filterPanel.height);
     }];
     
-//    [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.bottom.left.right.mas_equalTo(self.containerView);
-//        make.top.mas_equalTo(self.viewModel.filterPanel.mas_bottom);
-//    }];
+    [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.right.mas_equalTo(self.containerView);
+        make.top.mas_equalTo(self.viewModel.filterPanel.mas_bottom);
+    }];
     
     [self.redirectTipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.containerView);
