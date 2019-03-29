@@ -63,6 +63,8 @@
                 wself.viewController.hasValidateData = YES;
                 [wself.dataList addObjectsFromArray:historyModel.data.historyHouseList];
                 [wself.tableView reloadData];
+            }else{
+                [wself.viewController.emptyView showEmptyWithTip:@"暂无估价历史" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
             }
         }
     }];
