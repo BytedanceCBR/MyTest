@@ -6139,6 +6139,13 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
     return settingSwitchTime;
 }
 
++ (BOOL)configSwitchFWebOffline
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_web_offline"];
+    return boolOffline ? : NO;
+}
+
 + (NSInteger)configEditProfileEntry
 {
     NSDictionary *fhSettings = [self fhSettings];

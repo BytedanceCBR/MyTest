@@ -10,6 +10,7 @@
 #import "FHFloorPanListCell.h"
 #import <FHEnvContext.h>
 #import "FHHouseDetailSubPageViewController.h"
+#import <FHDetailNewModel.h>
 
 static const NSString *kDefaultLeftFilterStatus = @"0";
 static const NSString *kDefaultTopFilterStatus = @"-1";
@@ -26,13 +27,14 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 @property (nonatomic , weak) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) NSArray * nameLeftArray;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
+@property (nonatomic, strong)   NSString  *currentCourtId;
 
 @end
 
 
 @implementation FHFloorPanListViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems {
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andLeftScrollView:(UIScrollView *)leftScrollView andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId {
     self = [super init];
     if (self) {
         _nameLeftArray = @[@"不限",@"在售",@"待售",@"售罄"];
@@ -41,20 +43,12 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         _elementShowCaches = [NSMutableDictionary new];
         _allItems = allItems;
         _floorListVC = viewController;
-        _currentItems = _allItems;
         _segmentedControl = segmentView;
-        if (_allItems.count > 0) {
-            _segmentedControl.sectionTitles = [self getSegementViewTitlsArray];
-        }
-        [self configTableView];
+        _currentCourtId = courtId;
+        self.detailController = viewController;
         
-        [self setUpLeftFilterView];
-        
-        WeakSelf;
-        _segmentedControl.indexChangeBlock = ^(NSInteger index) {
-            StrongSelf;
-            [self refreshCurrentShowList];
-        };
+        [self startLoadData];
+
     }
     return self;
 }
@@ -197,15 +191,18 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
        
         if (self.currentTapLabel.tag == 1) {
             //在售
-            status = [NSString stringWithFormat:@"%d",2];
+//            status = [NSString stringWithFormat:@"%d",2];
+            status = @"在售";
         }else if(self.currentTapLabel.tag == 2)
         {
             //待售
-            status = [NSString stringWithFormat:@"%d",1];
+//            status = [NSString stringWithFormat:@"%d",1];
+            status = @"待售";
         }else
         {
             //售磬
-            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
+//            status = [NSString stringWithFormat:@"%d",self.currentTapLabel.tag];
+            status = @"售磬";
         }
     }
     
@@ -222,12 +219,12 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
                 [currentItemsArray addObject:model];
             }
         }else if ([roomCuntKey isEqualToString:kDefaultTopFilterStatus]) {
-            if ([model.saleStatus.id isEqualToString:status]) {
+            if ([model.saleStatus.content isEqualToString:status]) {
                 [currentItemsArray addObject:model];
             }
         }else
         {
-            if ([model.roomCount isEqualToString:roomCuntKey] && [model.saleStatus.id isEqualToString:status]) {
+            if ([model.roomCount isEqualToString:roomCuntKey] && [model.saleStatus.content isEqualToString:status]) {
                 [currentItemsArray addObject:model];
             }
         }
@@ -254,9 +251,51 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
 
 - (void)startLoadData
 {
+    if (![TTReachability isNetworkConnected]) {
+        [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+        return;
+    }
+    
+    if (_currentCourtId) {
+        [self.detailController startLoading];
+        __weak typeof(self) wSelf = self;
+        [FHHouseDetailAPI requestFloorPanListSearch:_currentCourtId completion:^(FHDetailFloorPanListResponseModel * _Nullable model, NSError * _Nullable error) {
+            if(model.data && !error)
+            {
+                self.leftFilterView.hidden = NO;
+                self.floorListTable.hidden = NO;
+                self.segmentedControl.hidden = NO;
+                
+                [wSelf.detailController.emptyView hideEmptyView];
+                wSelf.detailController.hasValidateData = YES;
+                [wSelf processDetailData:model];
+            }else
+            {
+                wSelf.detailController.hasValidateData = NO;
+                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            }
+        }];
+    }
 }
 
-- (void)processDetailData:(FHDetailNewModel *)model {
+- (void)processDetailData:(FHDetailFloorPanListResponseModel *)model {
+    self.allItems = model.data.list;
+    self.currentItems = model.data.list;
+
+    if (_allItems.count > 0) {
+        _segmentedControl.sectionTitles = [self getSegementViewTitlsArray];
+    }
+    [self configTableView];
+    
+    [self setUpLeftFilterView];
+    
+    WeakSelf;
+    _segmentedControl.indexChangeBlock = ^(NSInteger index) {
+        StrongSelf;
+        [self refreshCurrentShowList];
+    };
+    
+    [self refreshCurrentShowList];
 }
 
 #pragma UITableViewDelegate

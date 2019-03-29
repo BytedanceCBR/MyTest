@@ -13,6 +13,9 @@
 #import "UIViewAdditions.h"
 #import "TTDeviceHelper.h"
 #import "TTBaseMacro.h"
+#import <BDABTestSDK/BDABTestManager.h>
+#import <TTRoute/TTRoute.h>
+#import <TTUIResponderHelper.h>
 
 @interface FHHomeCityTrendView()
 
@@ -79,7 +82,6 @@
     if (self.clickedLeftCallback) {
         self.clickedLeftCallback(btn);
     }
-
 }
 
 

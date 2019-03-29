@@ -27,6 +27,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
 //是否重新是重新发送验证码
 @property(nonatomic , assign) BOOL isVerifyCodeRetry;
+@property(nonatomic , assign) BOOL noStopTimer;
 
 @end
 
@@ -53,7 +54,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)viewWillDisappear {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self stopTimer];
+    if(self.noStopTimer){
+        self.noStopTimer = NO;
+    }else{
+        [self stopTimer];
+    }
 }
 
 #pragma mark - 键盘通知
@@ -116,19 +121,21 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 
 - (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled {
-    [self.view enableSendVerifyCodeBtn:enabled];
+    [self.view enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
     [self.view enableConfirmBtn:enabled];
 }
 
 #pragma mark -- FHLoginViewDelegate
 
 - (void)goToUserProtocol {
+    self.noStopTimer = YES;
     NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/user_agreement.html&title=幸福里用户协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
 
 - (void)goToSecretProtocol {
+    self.noStopTimer = YES;
     NSString *urlStr = [NSString stringWithFormat:@"fschema://webview?url=%@/f100/download/private_policy.html&title=隐私协议&hide_more=1",[FHMineAPI host]];
     NSURL* url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
@@ -265,7 +272,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if(self.verifyCodeRetryTime == 0){
         [self stopTimer];
         [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray1] state:UIControlStateNormal btn:self.view.sendVerifyCodeBtn];
-        self.view.sendVerifyCodeBtn.enabled = YES;
+        [self.view setButtonContent:@"重新发送" font:[UIFont themeFontRegular:14] color:[UIColor themeGray3] state:UIControlStateDisabled btn:self.view.sendVerifyCodeBtn];
+        self.view.sendVerifyCodeBtn.enabled = (self.view.phoneInput.text.length > 0);
         self.isRequestingSMS = NO;
     }else{
         self.view.sendVerifyCodeBtn.enabled = NO;

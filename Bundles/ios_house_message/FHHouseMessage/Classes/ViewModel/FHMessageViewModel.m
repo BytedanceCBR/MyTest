@@ -21,6 +21,7 @@
 #import <libextobjc/extobjc.h>
 #import "FHUserTracker.h"
 #import "TTAccount.h"
+
 #import <ReactiveObjC/ReactiveObjC.h>
 #define kCellId @"FHMessageCell_id"
 @interface DeleteAlertDelegate : NSObject<UIAlertViewDelegate>
@@ -62,12 +63,12 @@
         _dataList = [[NSMutableArray alloc] init];
         _isFirstLoad = YES;
         self.tableView = tableView;
-        
+
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
-        
+
         tableView.delegate = self;
         tableView.dataSource = self;
-        
+
         self.viewController = viewController;
         [[IMManager shareInstance] addChatStateObverver:self];
         @weakify(self)

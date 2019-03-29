@@ -67,7 +67,8 @@
 #import "TTAppStoreStarManager.h"
 #import "TTClientABTestBrowserViewController.h"
 #import "FHUtils.h"
-#import "LogViewerSettingViewController.h"
+#import "FHClientABTestDebugViewController.h"
+
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
@@ -111,12 +112,11 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
-
-        STTableViewCellItem *logViewDebutItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证工具" target:self action:@selector(_openLogViewSetting)];
-        logViewDebutItem.switchStyle = NO;
-        [itemArray addObject:logViewDebutItem];
-
-
+    
+        STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
+        clientABDebugItem.switchStyle = NO;
+        [itemArray addObject:clientABDebugItem];
+        
         STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
         htmlBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:htmlBridgeDebugItem];
@@ -641,6 +641,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 - (void)_openClientABTestVC
 {
     TTClientABTestBrowserViewController *clientABVC = [TTClientABTestBrowserViewController new];
+    [self.navigationController pushViewController:clientABVC animated:YES];
+}
+
+- (void)_openABTestSDKClientABTestVC
+{
+    FHClientABTestDebugViewController *clientABVC = [FHClientABTestDebugViewController new];
     [self.navigationController pushViewController:clientABVC animated:YES];
 }
 

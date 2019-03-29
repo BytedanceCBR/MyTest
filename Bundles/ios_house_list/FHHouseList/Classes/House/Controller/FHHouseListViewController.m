@@ -323,6 +323,12 @@
 
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self.houseFilterViewModel closeConditionFilterPanel];
+}
+
 
 -(void)initConstraints
 {
@@ -382,6 +388,7 @@
     [self initNavbar];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    self.viewModel.listVC = self;
     [self initFilter];
     [self setupViewModelBlock];
 
