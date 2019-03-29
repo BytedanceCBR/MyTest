@@ -51,13 +51,16 @@
         
         if (error) {
             //TODO: show handle error
-        
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
             return;
         }
+        
+        [wself.viewController.emptyView hideEmptyView];
         
         if(model){
             wself.model = historyModel;
             if(historyModel.data.historyHouseList.count > 0){
+                wself.viewController.hasValidateData = YES;
                 [wself.dataList addObjectsFromArray:historyModel.data.historyHouseList];
                 [wself.tableView reloadData];
             }

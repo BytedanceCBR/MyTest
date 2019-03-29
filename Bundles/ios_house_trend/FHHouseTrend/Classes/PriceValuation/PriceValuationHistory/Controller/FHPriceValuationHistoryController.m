@@ -10,6 +10,7 @@
 #import "FHPriceValuationHistoryViewModel.h"
 #import "FHPriceValuationHistoryModel.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
+#import <TTReachability/TTReachability.h>
 
 @interface FHPriceValuationHistoryController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -53,7 +54,12 @@
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 10)];
     _tableView.tableHeaderView = headerView;
     
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 10)];
+    CGFloat height = 10;
+    if (@available(iOS 11.0 , *)) {
+        height += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, height)];
     _tableView.tableFooterView = footerView;
     
     _tableView.sectionFooterHeight = 0.0;
@@ -83,7 +89,21 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHPriceValuationHistoryViewModel alloc] initWithTableView:self.tableView controller:self];
-    [_viewModel requestData];
+    [self startLoadData];
+}
+
+- (void)startLoadData {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel requestData];
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        }
+    }
+}
+
+- (void)retryLoadData {
+    [self startLoadData];
 }
 
 #pragma mark - UIViewControllerErrorHandler

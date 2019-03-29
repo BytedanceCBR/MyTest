@@ -117,6 +117,20 @@ extern NSString *const kFHToastCountKey;
     }];
 }
 
+- (void)setDefaultBuildYear {
+    NSString *buildYear = self.viewController.infoModel.builtYear;
+    if((!buildYear || [buildYear isEqualToString:@""]) && _neighborhoodDetailModel){
+        NSArray *baseInfos = _neighborhoodDetailModel.data.baseInfo;
+        for (FHDetailNeighborhoodDataBaseInfoModel *model in baseInfos) {
+            if([model.attr isEqualToString:@"建造年代"]){
+                buildYear = [model.value substringToIndex:model.value.length - 1];
+                self.viewController.infoModel.builtYear = buildYear;
+                return;
+            }
+        }
+    }
+}
+
 - (void)addGoDetailTracer {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"page_type"] = [self pageType];
@@ -158,6 +172,9 @@ extern NSString *const kFHToastCountKey;
     
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
     tracerDict[@"enter_from"] = [self pageType];
+    
+    //默认带入小区的建造年代
+    [self setDefaultBuildYear];
 
     NSDictionary *dict = @{
                            @"infoModel" : self.viewController.infoModel,
