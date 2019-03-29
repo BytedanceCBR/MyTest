@@ -14,7 +14,6 @@
 #import "FHEnvContext.h"
 #import "YYCache.h"
 #import "TTSandBoxHelper.h"
-#import "FHHomeConfigManager.h"
 #import "FHUtils.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
@@ -122,7 +121,12 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
     
     //服务端配置频控
-    if (![[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] isNeedSwitchCityCompare]) {
+    if (![[[FHHouseBridgeManager sharedInstance] envContextBridge] isNeedSwitchCityCompare]) {
+        return;
+    }
+    
+    //无定位权限不弹切换城市alert
+    if (![self isHaveLocationAuthorization]) {
         return;
     }
     
@@ -221,7 +225,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
 }
 
- - (void)sendLocationAuthorizedTrace
+- (void)sendLocationAuthorizedTrace
 {
     if (!self.isHasSendPermissionTrace) {
         self.isHasSendPermissionTrace = YES;
@@ -250,8 +254,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)requestCurrentLocation:(BOOL)showAlert completion:(void(^)(AMapLocationReGeocode * reGeocode))completion
 {
-    [[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] isNeedSwitchCityCompare];
-    
     [self.locManager setDesiredAccuracy:kCLLocationAccuracyHundredMeters];
     
     [self.locManager setLocationTimeout:2];
@@ -277,7 +279,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             NSNumber *statusNumber = [NSNumber numberWithInteger:[self isHaveLocationAuthorization] ? 1 : 0];
             
             NSNumber *netStatusNumber = [NSNumber numberWithInteger:[FHEnvContext isNetworkConnected] ? 1 : 0];
-
+            
             NSMutableDictionary *uploadParams = [NSMutableDictionary new];
             [uploadParams setValue:@"定位错误" forKey:@"desc"];
             [uploadParams setValue:statusNumber forKey:@"location_status"];
@@ -310,7 +312,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             amapInfo[@"longitude"] = @(location.coordinate.longitude);
         }
         
-        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance setUpLocationInfo:amapInfo];
+        [[[FHHouseBridgeManager sharedInstance] envContextBridge] setUpLocationInfo:amapInfo];
         
         if (regeocode) {
             wSelf.currentReGeocode = regeocode;
@@ -326,6 +328,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         if (completion) {
             // 城市选择重新定位需回调
             completion(regeocode);
+            [[FHEnvContext sharedInstance] updateRequestCommonParams];
         } else {
             NSInteger cityId = 0;
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
@@ -349,7 +352,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 }
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-
+                
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
                     [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
@@ -404,7 +407,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
 - (void)updateAllConfig:(FHConfigModel * _Nullable) model isNeedDiff:(BOOL)needDiff
 {
-
+    
     if (![model isKindOfClass:[FHConfigModel class]]) {
         return ;
     }
@@ -484,9 +487,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     }
     
     NSInteger timeInterval = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getCategoryBadgeTimeInterval];
-
+    
     self.messageTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(timerSelecter) userInfo:nil repeats:YES];
-
+    
 }
 
 - (void)timerSelecter

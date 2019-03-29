@@ -9,6 +9,7 @@
 #import <JSONModel.h>
 #import "FHBaseModelProtocol.h"
 #import "FHHouseListModel.h"
+#import "FHSugSubscribeModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -197,6 +198,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHRecommendSecondhandHouseDataModel *recommendSearchModel;
+@property (nonatomic, strong, nullable) FHSugSubscribeDataDataSubscribeInfoModel *subscribeInfo;
 
 @end
 

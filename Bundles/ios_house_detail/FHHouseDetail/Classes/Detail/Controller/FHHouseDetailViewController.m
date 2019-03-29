@@ -17,17 +17,21 @@
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
 
-@interface FHHouseDetailViewController ()
+@interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UILabel *bottomStatusBar;
+@property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBarView *bottomBar;
 
 @property (nonatomic, strong)   FHHouseDetailBaseViewModel       *viewModel;
 @property (nonatomic, assign)   FHHouseType houseType; // 房源类型
 @property (nonatomic, copy)     NSString       *source; // 特殊标记，从哪进入的小区详情，比如地图租房列表“rent_detail”，此时小区房源展示租房列表
-@property (nonatomic, copy)   NSString* houseId; // 房源id
+@property (nonatomic, copy)   NSString *houseId; // 房源id
+@property (nonatomic, copy)   NSString *ridcode; // 经纪人id，用来锁定经纪人展位
+@property (nonatomic, copy)   NSString *realtorId; // 经纪人id，用来锁定经纪人展位
+
 @property (nonatomic, strong)   NSDictionary       *listLogPB; // 外部传入的logPB
 @property (nonatomic, copy)   NSString* searchId;
 @property (nonatomic, copy)   NSString* imprId;
@@ -43,6 +47,8 @@
     if (self) {
         
         self.houseType = [paramObj.allParams[@"house_type"] integerValue];
+        self.ridcode = paramObj.allParams[@"ridcode"];
+        self.realtorId = paramObj.allParams[@"realtor_id"];
 
         if (!self.houseType) {
             if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
@@ -133,6 +139,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self refreshContentOffset:self.tableView.contentOffset];
+    [self.view endEditing:YES];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -141,7 +148,6 @@
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
-
 }
 
 #pragma mark - for keyboard show
@@ -192,6 +198,8 @@
     [self configTableView];
     self.viewModel = [FHHouseDetailBaseViewModel createDetailViewModelWithHouseType:self.houseType withController:self tableView:_tableView];
     self.viewModel.houseId = self.houseId;
+    self.viewModel.ridcode = self.ridcode;
+    self.viewModel.realtorId = self.realtorId;
     self.viewModel.listLogPB = self.listLogPB;
     // 构建详情页需要的埋点数据，放入baseViewModel中
     self.viewModel.detailTracerDic = [self makeDetailTracerData];
@@ -208,6 +216,10 @@
     [self.view addSubview:_navBar];
     self.viewModel.navBar = _navBar;
 
+    _bottomMaskView = [[UIView alloc] init];
+    _bottomMaskView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_bottomMaskView];
+    
     _bottomBar = [[FHDetailBottomBarView alloc]initWithFrame:CGRectZero];
     [self.view addSubview:_bottomBar];
     self.viewModel.bottomBar = _bottomBar;
@@ -249,6 +261,12 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top);
         make.height.mas_equalTo(0);
     }];
+    
+    [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bottomBar.mas_top);
+        make.left.right.bottom.mas_equalTo(self.view);
+    }];
+    
     [self.view bringSubviewToFront:_navBar];
 }
 
@@ -397,13 +415,22 @@
 
 - (void)configTableView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+    tapGesturRecognizer.cancelsTouchesInView = NO;
+    tapGesturRecognizer.delegate = self;
+    [_tableView addGestureRecognizer:tapGesturRecognizer];
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
-        _tableView.estimatedSectionFooterHeight = 0;
-        _tableView.estimatedSectionHeaderHeight = 0;
     }
+    _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+    _tableView.estimatedSectionFooterHeight = 0;
+    _tableView.estimatedSectionHeaderHeight = 0;
+}
+
+-(void)tapAction:(id)tap {
+    [_tableView endEditing:YES];
 }
 
 - (UIView *)getNaviBar
@@ -414,6 +441,13 @@
 - (UIView *)getBottomBar
 {
     return self.bottomBar;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if([otherGestureRecognizer.view isKindOfClass:[UITextField class]] || [otherGestureRecognizer isKindOfClass:NSClassFromString(@"UIScrollViewPanGestureRecognizer")]){
+        return NO;
+    }
+    return YES;
 }
 
 @end

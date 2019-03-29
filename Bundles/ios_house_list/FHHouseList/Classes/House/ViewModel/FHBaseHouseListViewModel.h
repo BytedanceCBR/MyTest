@@ -13,6 +13,8 @@
 #import "FHTracerModel.h"
 
 #define kFHHouseListCellId @"kFHHouseListCellId"
+#define kFHHouseListSubscribCellId @"kFHHouseListSubscribCellId"
+#define kBaseCellId @"kBaseCellId"
 #define kFHHouseListRecommendTitleCellId @"kFHHouseListRecommendTitleCellId"
 #define kFHHouseListPlaceholderCellId @"kFHHouseListPlaceholderCellId"
 

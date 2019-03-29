@@ -14,7 +14,7 @@
 #import <FHCommonUI/ToastManager.h>
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHHouseTypeManager.h"
-#import <FHHouseBase/FHSingleImageInfoCell.h>
+#import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <FHHouseBase/FHSingleImageInfoCellModel.h>
 #import "FHRelatedNeighborhoodListViewController.h"
 #import <TTUIWidget/UIViewController+Track.h>
@@ -81,7 +81,7 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     _refreshFooter.hidden = YES;
-    [_tableView registerClass:[FHSingleImageInfoCell class] forCellReuseIdentifier:kSingleImageCellId];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
 }
 
@@ -248,13 +248,12 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData == YES) {
-        FHSingleImageInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         id model = _houseList[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        [cell updateWithHouseCellModel:cellModel];
         [cell refreshTopMargin: 20];
-        [cell refreshBottomMargin:isLastCell ? 20 : 0];
+        [cell updateWithHouseCellModel:cellModel];
         return cell;
     } else {
         // PlaceholderCell
@@ -282,10 +281,10 @@
     if (self.listController.hasValidateData) {
         
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        return isLastCell ? 125 : 105;
+        return isLastCell ? 126 : 106;
     }
     
-    return 105;
+    return 106;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

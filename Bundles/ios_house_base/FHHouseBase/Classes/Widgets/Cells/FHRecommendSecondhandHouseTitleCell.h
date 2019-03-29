@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void) bindData: (FHRecommendSecondhandHouseTitleModel *) model;
 
+- (void)hideSeprateLine:(BOOL)isFirstCell;
 
 @end
 
