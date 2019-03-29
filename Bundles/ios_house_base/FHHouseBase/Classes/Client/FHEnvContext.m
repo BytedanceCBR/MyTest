@@ -367,8 +367,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     
-    [FHIESGeckoManager configGeckoInfo];
-    [FHIESGeckoManager configIESWebFalcon];
+//    [FHIESGeckoManager configGeckoInfo];
+//    [FHIESGeckoManager configIESWebFalcon];
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict

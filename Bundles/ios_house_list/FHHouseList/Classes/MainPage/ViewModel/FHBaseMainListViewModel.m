@@ -694,10 +694,10 @@
 
 -(NSString *)navbarPlaceholder
 {
-    if (self.topView && _houseType == FHHouseTypeRentHouse) {
-        //大类页
-        return @"你想住哪里？";
-    }
+//    if (self.topView && _houseType == FHHouseTypeRentHouse) {
+//        //大类页
+//        return @"你想住哪里？";
+//    }
     switch (_houseType) {
             case FHHouseTypeNewHouse:
                 return @"请输入楼盘名/地址";
@@ -880,6 +880,7 @@
         //显示无网或者无结果view
         self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
     }
+    [self scrollViewDidScroll:self.tableView];
 }
 
 -(UIImage *)placeHolderImage
@@ -1073,6 +1074,10 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (self.showFilter) {
+        //正在展示筛选器
+        return;
+    }
     BOOL shouldInTable = (scrollView.contentOffset.y + scrollView.contentInset.top <  [self.topView filterTop]);
     [self moveToTableView:shouldInTable];
     

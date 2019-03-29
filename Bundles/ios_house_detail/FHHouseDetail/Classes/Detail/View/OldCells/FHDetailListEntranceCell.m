@@ -38,7 +38,8 @@
         make.right.mas_equalTo(self.rightArrow.mas_left).mas_equalTo(-11);
     }];
     [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-18);
+        make.width.height.mas_equalTo(16);
         make.centerY.mas_equalTo(self);
     }];
 }

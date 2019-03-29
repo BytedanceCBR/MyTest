@@ -190,6 +190,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     self.isFromLocalTestChange = NO;
                 }
                 
+                [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
+                
                 return;
             }
             
