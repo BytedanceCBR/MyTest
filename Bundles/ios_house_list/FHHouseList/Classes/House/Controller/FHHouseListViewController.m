@@ -24,12 +24,20 @@
 #import "HMDTTMonitor.h"
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
+#import "FHHouseListCommuteTipView.h"
+#import "FHCommuteFilterView.h"
 
 #define kFilterBarHeight 44
+#define COMMUTE_TOP_MARGIN 6
+#define COMMUTE_HEIGHT     42
 
 @interface FHHouseListViewController ()<TTRouteInitializeProtocol, FHHouseListViewModelDelegate>
 
 @property (nonatomic , strong) FHFakeInputNavbar *navbar;
+@property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
+@property (nonatomic , strong) UIView *commuteChooseBgView;
+@property (nonatomic , strong) FHCommuteFilterView *commuteFilterView;
+
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UITableView* tableView;
 
@@ -184,6 +192,37 @@
     }];
 
 
+}
+
+-(void)initCommuteTip
+{
+    _commuteTipView = [[FHHouseListCommuteTipView alloc] init];
+    __weak typeof(self) wself = self;
+    _commuteTipView.changeOrHideBlock = ^(BOOL showHide) {
+        if (showHide) {
+            wself.commuteChooseBgView.hidden = YES;
+        }else{
+            [wself.view bringSubviewToFront:wself.commuteChooseBgView];
+            [wself.commuteChooseBgView addSubview:wself.commuteFilterView];
+            wself.commuteChooseBgView.hidden = NO;
+        }
+        wself.commuteTipView.showHide = !showHide;
+    };
+    
+    [_commuteTipView updateTime:@"早高峰" tip:@" 通过公交30分钟内到达"];
+    
+    _commuteChooseBgView = [[UIView alloc] init];
+    _commuteChooseBgView.backgroundColor =  RGBA(0, 0, 0, 0.4);
+    _commuteChooseBgView.hidden = YES;
+}
+
+-(FHCommuteFilterView *)commuteFilterView
+{
+    if (!_commuteFilterView) {
+        _commuteFilterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 298) insets:UIEdgeInsetsMake(20, 0,  20, 0) type:FHCommuteTypeDrive];
+    }
+    return _commuteFilterView;
+    
 }
 
 -(void)setupViewModelBlock {
@@ -348,9 +387,26 @@
         make.edges.mas_equalTo(self.tableView);
     }];
     
+    if (_commuteTipView) {
+        [self.commuteTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.navbar.mas_bottom);
+            make.height.mas_equalTo(COMMUTE_HEIGHT);
+        }];
+        
+        [self.commuteChooseBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.commuteTipView.mas_bottom);
+        }];
+    }
+    
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.bottom.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.navbar.mas_bottom);
+        if (self.commuteTipView) {
+            make.top.mas_equalTo(self.commuteTipView.mas_bottom);
+        }else{
+            make.top.mas_equalTo(self.navbar.mas_bottom);
+        }
     }];
     
     [self.filterContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -451,6 +507,14 @@
 
     [_filterContainerView addSubview:self.filterPanel];
     [self.view bringSubviewToFront:self.filterBgControl];
+    
+    if (_houseType == FHHouseTypeRentHouse) {
+        //
+        [self initCommuteTip];
+        [self.view addSubview:_commuteTipView];
+        [self.view addSubview:_commuteChooseBgView];
+        
+    }
 
 }
 

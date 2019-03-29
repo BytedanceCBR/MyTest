@@ -55,6 +55,7 @@
 #define kFilterBarHeight 44
 #define MAX_ICON_COUNT 4
 #define ICON_HEADER_HEIGHT 115
+#define RENT_BANNER_HEIGHT 102
 #define OLD_ICON_HEADER_HEIGHT 80
 
 @implementation FHBaseMainListViewModel
@@ -134,7 +135,7 @@
     if (_houseType == FHHouseTypeRentHouse) {
         FHConfigDataRentOpDataModel *rentModel = dataModel.rentOpData;
         if (rentModel.items.count > 0) {
-            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT)];
+            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT+RENT_BANNER_HEIGHT)];
             topView.items = rentModel.items;
             topView.delegate = self;
             self.topBannerView = topView;
@@ -802,6 +803,12 @@
     }
     url = [NSURL URLWithString:openUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    
+}
+
+-(void)tapRentBanner
+{
+    NSLog(@"goto detail>>");
     
 }
 

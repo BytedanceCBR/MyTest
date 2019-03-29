@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMainRentTopView : UIView
 
 @property(nonatomic , strong) NSArray<FHConfigDataRentOpDataItemsModel *> *items;
+@property(nonatomic , strong) NSString *bannerUrl;
 @property(nonatomic , weak)   id<FHMainRentTopViewDelegate> delegate;
 
 @end
@@ -20,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHMainRentTopViewDelegate <NSObject>
 
 -(void)selecteRentItem:(FHConfigDataRentOpDataItemsModel *)item;
+
+-(void)tapRentBanner;
 
 @end
 

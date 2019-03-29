@@ -43,6 +43,8 @@
  
         _searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _searchButton.frame = CGRectMake(HOR_MARGIN, self.height - insets.bottom - SEARCH_BTN_HEIGHT, self.width - 2*HOR_MARGIN, SEARCH_BTN_HEIGHT);
+        _searchButton.layer.cornerRadius = 4;
+        _searchButton.layer.masksToBounds = YES;
         _searchButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
         _searchButton.backgroundColor = [UIColor themeRed1];
         _searchButton.titleLabel.font = [UIFont themeFontRegular:16];
@@ -52,6 +54,7 @@
         [_searchButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_searchButton];
         
+        self.backgroundColor = [UIColor whiteColor];
         
     }
     return self;
@@ -59,7 +62,9 @@
 
 -(void)searchAction:(id)sender
 {
-    
+    if (_chooseBlock) {
+        _chooseBlock(self.time,self.type);
+    }
 }
 
 -(void)updateType:(FHCommuteType)type time:(NSString *)time

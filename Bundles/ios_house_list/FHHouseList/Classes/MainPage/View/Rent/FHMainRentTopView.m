@@ -9,18 +9,22 @@
 #import "FHMainRentTopCell.h"
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>
+#import <BDWebImage/UIImageView+BDWebImage.h>
 
 @interface FHMainRentTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) UICollectionViewFlowLayout *layout;
-
+@property(nonatomic , strong) UIImageView *bannerView;
 @end
 
 #define kCellId @"cell_id"
 #define ITEM_WIDTH  56
 #define TOP_PADDING    15
 #define BOTTOM_PADDING 6
+
+#define BANNER_HEIGHT  102
+
 
 @implementation FHMainRentTopView
 
@@ -35,7 +39,13 @@
         layout.footerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
         
         CGRect f = self.bounds;
+        
+        BOOL needShowBanner = YES;
+        
         f.size.height -= BOTTOM_PADDING;
+        if (needShowBanner) {
+            f.size.height -= BANNER_HEIGHT;
+        }
         //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
         _collectionView = [[UICollectionView alloc]initWithFrame:f collectionViewLayout:layout];
         _collectionView.delegate = self;
@@ -46,9 +56,20 @@
         _layout = layout;
         
         [self addSubview:_collectionView];
+        if (needShowBanner) {
+            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_collectionView.frame), f.size.width, BANNER_HEIGHT)];
+            [self addSubview:_bannerView];
+            
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClickAction)];
+            [_bannerView addGestureRecognizer:tapGesture];
+            _bannerView.userInteractionEnabled = YES;
+        }
         
         self.backgroundColor = [UIColor themeGray7];
         _collectionView.backgroundColor = [UIColor whiteColor];
+        
+        _bannerView.backgroundColor = [UIColor redColor
+                                       ];
         
     }
     return self;
@@ -58,6 +79,12 @@
 {
     _items = items;
     
+}
+
+-(void)setBannerUrl:(NSString *)bannerUrl
+{
+    _bannerUrl = bannerUrl;
+    [_bannerView bd_setImageWithURL:[NSURL URLWithString:bannerUrl]];
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -111,6 +138,13 @@
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
     return UIEdgeInsetsMake(TOP_PADDING, 0, 0, 0);
+}
+
+-(void)bannerClickAction
+{
+    if ([self.delegate respondsToSelector:@selector(tapRentBanner)]) {
+        [self.delegate tapRentBanner];
+    }
 }
 
 /*

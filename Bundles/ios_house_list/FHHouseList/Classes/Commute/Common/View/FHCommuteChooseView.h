@@ -9,7 +9,7 @@
 #import "FHCommuteType.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+//通行方式选择
 @interface FHCommuteChooseView : UIView
 
 @property(nonatomic , copy) NSString *chooseTime;

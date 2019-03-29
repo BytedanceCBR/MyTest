@@ -1241,6 +1241,12 @@
     
 }
 
+#pragma mark - commute
+-(void)showCommuteInView:(UIView *)view
+{
+    
+}
+
 #pragma mark - 埋点相关
 -(NSMutableDictionary *)houseShowCache {
     

@@ -45,6 +45,10 @@
         [self.layer addSublayer:_minLineLayer];
         [self.layer addSublayer:_maxLineLayer];
         [self addSubview:_trackerImageView];
+        
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];        
+        [self addGestureRecognizer:pan];
+        
     }
     return self;
     
@@ -58,6 +62,46 @@
     }
 }
 
+
+-(void)panAction:(UIPanGestureRecognizer *)panGesture
+{
+    switch (panGesture.state) {
+        case UIGestureRecognizerStateBegan:
+        {
+            CGPoint location = [panGesture locationInView:_trackerImageView];
+            if (CGRectContainsPoint(_trackerImageView.bounds, location)) {
+                _inMove = YES;
+            }else{
+                _inMove = NO;
+            }
+        }
+            break;
+        case UIGestureRecognizerStateChanged:
+        {
+            if (_inMove) {
+                CGPoint location = [panGesture locationInView:self];
+                CGFloat value = (location.x/CGRectGetWidth(self.bounds))*(_maxValue - _minValue) + _minValue;
+                if (value < _minValue) {
+                    value = _minValue;
+                }else if (value > _maxValue){
+                    value = _maxValue;
+                }
+                self.value = value;
+                [self updateValue:YES];
+            }
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled:
+        {
+            _inMove = NO;
+            [self updateValue:NO];
+        }
+            break;
+        default:
+            break;
+    }
+}
 
 -(void)layoutSubviews
 {
@@ -90,49 +134,49 @@
 }
 
 
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [super touchesBegan:touches withEvent:event];
-    UITouch *touch = [touches anyObject];
-    CGPoint location = [touch locationInView:_trackerImageView];
-    if (CGRectContainsPoint(_trackerImageView.bounds, location)) {
-        _inMove = YES;
-    }else{
-        _inMove = NO;
-    }
-}
-
--(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [super touchesMoved:touches withEvent:event];
-    if (_inMove) {
-        UITouch *touch = [touches anyObject];
-        CGPoint location = [touch locationInView:self];
-        CGFloat value = (location.x/CGRectGetWidth(self.bounds))*(_maxValue - _minValue) + _minValue;
-        if (value < _minValue) {
-            value = _minValue;
-        }else if (value > _maxValue){
-            value = _maxValue;
-        }
-        self.value = value;
-        [self updateValue:YES];
-    }
-    
-}
-
--(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [super touchesEnded:touches withEvent:event];
-    _inMove = NO;
-    [self updateValue:NO];
-}
-
--(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [super touchesCancelled:touches withEvent:event];
-    _inMove = NO;
-    [self updateValue:NO];
-}
+//-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+//{
+//    [super touchesBegan:touches withEvent:event];
+//    UITouch *touch = [touches anyObject];
+//    CGPoint location = [touch locationInView:_trackerImageView];
+//    if (CGRectContainsPoint(_trackerImageView.bounds, location)) {
+//        _inMove = YES;
+//    }else{
+//        _inMove = NO;
+//    }
+//}
+//
+//-(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+//{
+//    [super touchesMoved:touches withEvent:event];
+//    if (_inMove) {
+//        UITouch *touch = [touches anyObject];
+//        CGPoint location = [touch locationInView:self];
+//        CGFloat value = (location.x/CGRectGetWidth(self.bounds))*(_maxValue - _minValue) + _minValue;
+//        if (value < _minValue) {
+//            value = _minValue;
+//        }else if (value > _maxValue){
+//            value = _maxValue;
+//        }
+//        self.value = value;
+//        [self updateValue:YES];
+//    }
+//
+//}
+//
+//-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+//{
+//    [super touchesEnded:touches withEvent:event];
+//    _inMove = NO;
+//    [self updateValue:NO];
+//}
+//
+//-(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+//{
+//    [super touchesCancelled:touches withEvent:event];
+//    _inMove = NO;
+//    [self updateValue:NO];
+//}
 
 -(void)updateValue:(BOOL)isDragging
 {
