@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNavBarView : UIView
-
+@property (nonatomic, strong) UIView    *bgView;
 @property (nonatomic, strong) UILabel   *title;
 @property (nonatomic, strong) UIButton  *leftBtn;
 @property (nonatomic , copy) void (^leftButtonBlock)();

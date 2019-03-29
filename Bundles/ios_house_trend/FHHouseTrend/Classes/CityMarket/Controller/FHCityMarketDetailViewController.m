@@ -144,7 +144,7 @@
         return value.data.specialOldHouseList;
     }];
 
-    RAC(self.customNavBarView, alpha) = RACObserve(_navBarViewModel, alpha);
+    RAC(self.customNavBarView.bgView, alpha) = RACObserve(_navBarViewModel, alpha);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
     [_headerViewModel requestData];
 }
