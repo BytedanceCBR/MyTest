@@ -11,9 +11,13 @@
 #import "FHHouseFindHelpRegionCell.h"
 #import "FHHouseFindPriceCell.h"
 #import "FHHouseFindTextItemCell.h"
+#import "FHHouseFindHelpContactCell.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import "FHHouseFindSelectModel.h"
 #import <FHHouseBase/FHHouseType.h>
+#import <TTNewsAccountBusiness/TTAccountManager+AccountInterfaceTask.h>
+#import <FHCommonUI/ToastManager.h>
+#import <TTReachability/TTReachability.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -22,15 +26,28 @@
 #define HELP_PRICE_CELL_ID @"price_cell_id"
 #define HELP_NORMAL_CELL_ID @"normal_cell_id"
 
+#define HELP_CONTACT_CELL_ID @"contact_cell_id"
+
+extern NSString *const kFHPhoneNumberCacheKey;
+
 @interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) FHHouseFindHelpBottomView *bottomView;
 @property (nonatomic , strong) NSArray<FHSearchFilterConfigItem *> *secondFilter;
+@property (nonatomic , strong) NSArray<NSString *> *titlesArray;
 @property (nonatomic , strong) RACDisposable *configDisposable;
 @property (nonatomic , assign) BOOL available;
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) NSMutableDictionary *selectMap; // housetype : FHHouseFindSelectModel
+
+@property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
+@property(nonatomic , assign) BOOL isRequestingSMS;
+@property(nonatomic , strong) NSTimer *timer;
+@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
+//是否重新是重新发送验证码
+@property(nonatomic , assign) BOOL isVerifyCodeRetry;
+@property(nonatomic , assign) CGFloat lastY;
 
 @end
 
@@ -56,7 +73,12 @@
             [wself confirmBtnDidClick];
         };
         [self setupHouseContent:nil];
-        
+
+//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
+
 //        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
 //            if (x) {
 //                dispatch_async(dispatch_get_main_queue(), ^{
@@ -65,6 +87,7 @@
 //            }
 //        }];
 //        self.configDisposable = disposable;
+        
     }
     return self;
 }
@@ -76,10 +99,42 @@
 
 - (void)confirmBtnDidClick
 {
+    [self.collectionView endEditing:YES];
+    __weak typeof(self) wself = self;
+    NSString *phoneNumber = self.contactCell.phoneInput.text;
+    NSString *smsCode = self.contactCell.varifyCodeInput.text;
+
+    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
+        [[ToastManager manager] showToast:@"手机号错误"];
+        return;
+    }
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+    if(smsCode.length == 0){
+        [[ToastManager manager] showToast:@"验证码为空"];
+        return;
+    }
+    [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
+        if(!error){
+//            [[ToastManager manager] showToast:@"登录成功"];
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+            [wself submitAction];
+        }else{
+            NSString *errorMessage = [wself errorMessageByErrorCode:error];
+            [[ToastManager manager] showToast:errorMessage];
+        }
+    }];
+}
+#pragma mark 提交选项
+- (void)submitAction
+{
     
 }
 
--(void)setupHouseContent:(FHConfigDataModel *)configData
+- (void)setupHouseContent:(FHConfigDataModel *)configData
 {
     if (!configData) {
         configData = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -103,8 +158,24 @@
         if (!avaiable) {
             return;
         }
-        self.secondFilter = configData.searchTabFilter;
+        self.secondFilter = configData.filter;
         
+        NSMutableArray *titles = @[].mutableCopy;
+        NSInteger sectionNum = 1;
+        for (FHSearchFilterConfigItem *configItem in configData.filter) {
+            
+            if ([configItem.tabId integerValue] == FHSearchTabIdTypeRegion) {
+                sectionNum += 1;
+                [titles addObject:@"您想买的区域是？"];
+            }else if ([configItem.tabId integerValue] == FHSearchTabIdTypePrice) {
+                sectionNum += 1;
+                [titles addObject:@"您的购房预算是多少？"];
+            }else if ([configItem.tabId integerValue] == FHSearchTabIdTypeRoom) {
+                sectionNum += 1;
+                [titles addObject:@"您想买的户型是？"];
+            }
+        }
+        self.titlesArray = titles;
         [self.collectionView reloadData];
     }
 }
@@ -133,7 +204,7 @@
 #pragma mark - UICollectionView delegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 4;
+    return self.titlesArray.count;
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -147,7 +218,8 @@
         FHSearchFilterConfigOption *options = [item.options firstObject];
         return options.options.count;
     }
-    return 10;
+
+    return 1;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -155,7 +227,15 @@
     NSInteger section = indexPath.section;
     FHHouseType ht = _houseType;
     NSArray *filter = [self filterOfHouseType:ht];
+
     // add by zjing for test
+    if (indexPath.section == 3) {
+        FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
+        pcell.delegate = self;
+        self.contactCell = pcell;
+        return pcell;
+    }
+    
     FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
     return pcell;
 
@@ -252,6 +332,9 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // add by zjing for test
+    if (indexPath.section == 3) {
+        return CGSizeMake(collectionView.frame.size.width, 180);
+    }
     return CGSizeMake(collectionView.frame.size.width, 36);
 
     FHHouseType ht = _houseType;
@@ -348,24 +431,273 @@
     return CGSizeMake(collectionView.frame.size.width - 2*HELP_ITEM_HOR_MARGIN, height);
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    [self.collectionView endEditing:YES];
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+//    [self.collectionView endEditing:YES];
+//}
 
 - (void)registerCell:(UICollectionView *)collectionview
 {
     [collectionview registerClass:[FHHouseFindHelpRegionCell class] forCellWithReuseIdentifier:HELP_REGION_CELL_ID];
     [collectionview registerClass:[FHHouseFindPriceCell class] forCellWithReuseIdentifier:HELP_PRICE_CELL_ID];
     [collectionview registerClass:[FHHouseFindTextItemCell class] forCellWithReuseIdentifier:HELP_NORMAL_CELL_ID];
+    [collectionview registerClass:[FHHouseFindHelpContactCell class] forCellWithReuseIdentifier:HELP_CONTACT_CELL_ID];
     
     [collectionview registerClass:[FHHouseFindHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:HELP_HEADER_ID];
+}
+
+#pragma mark - login相关
+- (void)keyboardWillShowNotifiction:(NSNotification *)notification
+{
+    if(_isHideKeyBoard){
+        return;
+    }
+    NSDictionary *userInfo = notification.userInfo;
+    CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
+    self.lastY = [self.collectionView convertPoint:self.contactCell.phoneInput.origin toView:self.viewController.view].y;
+    NSLog(@"zjing self.contactCell:%@ lastY:%f,keyboard %@",self.contactCell,self.lastY,userInfo[UIKeyboardFrameEndUserInfoKey]);
+
+    CGFloat offset = 0;
+    if (keyBoardBounds.origin.y < [UIScreen mainScreen].bounds.size.height && (self.lastY + keyBoardBounds.size.height > [UIScreen mainScreen].bounds.size.height)) {
+        offset = self.lastY + self.lastY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
+    }else {
+        offset = self.lastY;
+    }
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+        
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.collectionView.contentOffset = CGPointMake(0, offset);
+        
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+    
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+        [UIView setAnimationBeginsFromCurrentState:YES];
+        self.collectionView.contentOffset = CGPointMake(0, self.lastY);
+
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)keyboardFrameWillChange:(NSNotification *)noti
+{
+    NSDictionary *userInfo = noti.userInfo;
+    CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
+    CGFloat duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey]doubleValue];
+    UIViewAnimationCurve animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
+    UIViewAnimationOptions options = UIViewAnimationCurveEaseIn | UIViewAnimationCurveEaseOut | UIViewAnimationCurveLinear;
+    switch (animationCurve) {
+        case UIViewAnimationCurveEaseInOut:
+            options = UIViewAnimationOptionCurveEaseInOut;
+            break;
+        case UIViewAnimationCurveEaseIn:
+            options = UIViewAnimationOptionCurveEaseIn;
+            break;
+        case UIViewAnimationCurveEaseOut:
+            options = UIViewAnimationOptionCurveEaseOut;
+            break;
+        case UIViewAnimationCurveLinear:
+            options = UIViewAnimationOptionCurveLinear;
+            break;
+        default:
+            options = animationCurve << 16;
+            break;
+    }
+    self.lastY = [self.collectionView convertPoint:self.contactCell.origin toView:self.viewController.view].y;
+    
+    NSLog(@"zjing self.contactCell:%@ lastY:%f,keyboard %@",self.contactCell,self.lastY,userInfo[UIKeyboardFrameEndUserInfoKey]);
+    
+    CGFloat contentViewHeight = self.contactCell.height;
+
+    CGFloat tempOffset = [UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y;
+    CGFloat offset = 0;
+
+    BOOL isDismissing = CGRectGetMinY(keyBoardBounds) >= [[[UIApplication sharedApplication] delegate] window].bounds.size.height;
+    if (isDismissing) {
+//        offset = (keyBoardBounds.origin.y - contentViewHeight) / 2;
+        offset = self.lastY;
+    }else {
+        
+        if (keyBoardBounds.origin.y < [UIScreen mainScreen].bounds.size.height && (self.lastY + keyBoardBounds.size.height > [UIScreen mainScreen].bounds.size.height)) {
+            offset = self.lastY + self.lastY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
+        }else {
+            offset = self.lastY;
+        }
+//        if (tempOffset > 0) {
+//            CGFloat offsetKeybord = 30;
+//            offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) - offsetKeybord;
+//        }else {
+//            offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) / 2;
+//        }
+    }
+    NSLog(@"zjing offset:%f ",offset);
+    // add by zjing for test
+//    offset = 800;
+    [UIView animateWithDuration:duration delay:0 options:options animations:^{
+        self.collectionView.contentOffset = CGPointMake(0, offset);
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)textFieldDidChange:(NSNotification *)notification
+{
+    UITextField *textField = (UITextField *)notification.object;
+    NSString *text = textField.text;
+    NSInteger limit = 0;
+    if(textField == self.contactCell.phoneInput) {
+        limit = 11;
+        
+        //设置登录和获取验证码是否可点击
+        if(text.length > 0){
+            [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
+        }else{
+            [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
+        }
+    }else if(textField == self.contactCell.varifyCodeInput) {
+        limit = 6;
+    }
+    
+    if(text.length > limit) {
+        textField.text = [text substringToIndex:limit];
+    }
+}
+
+- (void)sendVerifyCode
+{
+    [self.collectionView endEditing:YES];
+    __weak typeof(self) weakSelf = self;
+    NSString *phoneNumber = self.contactCell.phoneInput.text;
+
+    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
+        [[ToastManager manager] showToast:@"手机号错误"];
+        return;
+    }
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+    
+    if(self.isRequestingSMS){
+        return;
+    }
+    
+    self.isRequestingSMS = YES;
+    [[ToastManager manager] showToast:@"正在获取验证码"];
+    
+    __weak typeof(self)wself = self;
+    [self requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
+        wself.isRequestingSMS = NO;
+        if(!error){
+            [wself blockRequestSendMessage:[retryTime integerValue]];
+            [[ToastManager manager] showToast:@"短信验证码发送成功"];
+            wself.isVerifyCodeRetry = YES;
+        }else{
+            NSString *errorMessage = [wself errorMessageByErrorCode:error];
+            [[ToastManager manager] showToast:errorMessage];
+        }
+    }];
+}
+
+- (void)blockRequestSendMessage:(NSInteger)retryTime
+{
+    self.verifyCodeRetryTime = retryTime;
+    [self startTimer];
+}
+
+- (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled
+{
+    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
+}
+
+- (BOOL)isPureInt:(NSString *)str
+{
+    NSScanner *scanner = [[NSScanner alloc] initWithString:str];
+    int val = 0;
+    return [scanner scanInt:&val] && scanner.isAtEnd;
+}
+
+- (void)requestSendVerifyCode:(NSString *)phoneNumber completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion
+{
+    [TTAccountManager startSendCodeWithPhoneNumber:phoneNumber captcha:nil type:TTASMSCodeScenarioQuickLogin unbindExist:NO completion:completion];
+}
+
+- (void)requestQuickLogin:(NSString *)phoneNumber smsCode:(NSString *)smsCode completion:(void(^_Nullable)(UIImage *captchaImage, NSNumber *newUser, NSError *error))completion
+{
+    [TTAccountManager startQuickLoginWithPhoneNumber:phoneNumber code:smsCode captcha:nil completion:completion];
+}
+
+- (NSString *)errorMessageByErrorCode:(NSError *)error {
+    switch (error.code) {
+        case -106:
+            return @"网络异常";
+            break;
+            
+        default:
+            return error.localizedDescription;
+            break;
+    }
+}
+
+- (void)setVerifyCodeButtonCountDown
+{
+    if(self.verifyCodeRetryTime < 0){
+        self.verifyCodeRetryTime = 0;
+    }
+    
+    if(self.verifyCodeRetryTime == 0){
+        [self stopTimer];
+        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateNormal];
+        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateHighlighted];
+        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateDisabled];
+        self.contactCell.sendVerifyCodeBtn.enabled = (self.contactCell.phoneInput.text.length > 0);
+        self.isRequestingSMS = NO;
+    }else{
+        self.contactCell.sendVerifyCodeBtn.enabled = NO;
+        [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
+    }
+    self.verifyCodeRetryTime--;
+    
+    // add by zjing for test
+    NSLog(@"zjing verifyCodeRetryTime:%ld",self.verifyCodeRetryTime);
+}
+
+- (void)startTimer
+{
+    if(_timer){
+        [self stopTimer];
+    }
+    [self.timer fire];
+}
+
+- (void)stopTimer {
+    [_timer invalidate];
+    _timer = nil;
+}
+
+- (NSTimer *)timer {
+    if(!_timer){
+        _timer  =  [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+    }
+    return _timer;
 }
 
 -(void)dealloc
 {
     [self.configDisposable dispose];
-//    [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
 }
 
 @end

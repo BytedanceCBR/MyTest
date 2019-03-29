@@ -9,7 +9,22 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHHouseFindLoginDelegate <NSObject>
+
+- (void)confirm;
+
+- (void)sendVerifyCode;
+
+@end
+
 @interface FHHouseFindHelpContactCell : UICollectionViewCell
+
+@property(nonatomic, strong, readonly) UITextField *phoneInput;
+@property(nonatomic, strong, readonly) UITextField *varifyCodeInput;
+@property(nonatomic, strong) UIButton *sendVerifyCodeBtn;
+@property(nonatomic , weak) id<FHHouseFindLoginDelegate> delegate;
+
+- (void)enableSendVerifyCodeBtn:(BOOL)enabled;
 
 @end
 

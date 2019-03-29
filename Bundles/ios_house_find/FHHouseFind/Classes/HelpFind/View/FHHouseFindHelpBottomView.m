@@ -67,6 +67,7 @@
 {
     if (!_resetBtn) {
         _resetBtn = [[UIButton alloc]init];
+        _resetBtn.titleLabel.font = [UIFont themeFontMedium:16];
         [_resetBtn setTitle:@"重置" forState:UIControlStateNormal];
         [_resetBtn setTitle:@"重置" forState:UIControlStateHighlighted];
         [_resetBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
@@ -81,6 +82,7 @@
 {
     if (!_confirmBtn) {
         _confirmBtn = [[UIButton alloc]init];
+        _confirmBtn.titleLabel.font = [UIFont themeFontMedium:16];
         [_confirmBtn setTitle:@"确定" forState:UIControlStateNormal];
         [_confirmBtn setTitle:@"确定" forState:UIControlStateHighlighted];
         [_confirmBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

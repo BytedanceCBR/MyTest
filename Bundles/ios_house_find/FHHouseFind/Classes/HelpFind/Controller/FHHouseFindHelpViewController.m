@@ -32,6 +32,34 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+//    [self.viewModel viewWillDisappear:animated];
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+//    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+//    [self tt_resetStayTime];
+    
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        if([change[@"new"] boolValue]){
+            [self.view endEditing:YES];
+            self.viewModel.isHideKeyBoard = NO;
+        }else{
+            self.viewModel.isHideKeyBoard = YES;
+        }
+    }
+}
+
 - (void)setupUI
 {
     [self setupDefaultNavBar:NO];
@@ -43,6 +71,7 @@
     layout.minimumLineSpacing = 0;
     
     _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
     _contentView.pagingEnabled = YES;
@@ -58,6 +87,7 @@
 
     __weak typeof(self)wself = self;
     _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView bottomView:_bottomView];
+    _viewModel.viewController = self;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
         if (noData) {
             [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNoData];

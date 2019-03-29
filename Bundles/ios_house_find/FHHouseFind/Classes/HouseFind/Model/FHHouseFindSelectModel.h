@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger , FHSearchTabIdType) {
+    FHSearchTabIdTypeRegion = 1, // 区域
     FHSearchTabIdTypePrice = 2,
     FHSearchTabIdTypeRoom  = 3,
     FHSearchTabIdTypeDirection = 6,

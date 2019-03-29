@@ -120,14 +120,16 @@ static NSString *lastTabIdentifier;
     } else if ([identifier isEqualToString:kFHouseFindTabKey]) {
 
         UIViewController *houseFindVC = nil;
-        if ([SSCommonLogic findTabShowHouse] == 1) {
-            houseFindVC = [[FHHouseFindListViewController alloc]init];
+//        if ([SSCommonLogic findTabShowHouse] == 1) {
+//            houseFindVC = [[FHHouseFindListViewController alloc]init];
+//
+//        }else {
+////           houseFindVC = [[HouseFindVC alloc] init];
+//            houseFindVC = [[FHHouseFindViewController alloc] init];
+//        }
+        // add by zjing for test
+        houseFindVC = [[FHHouseFindViewController alloc] init];
 
-        }else {
-//           houseFindVC = [[HouseFindVC alloc] init];
-            houseFindVC = [[FHHouseFindViewController alloc] init];
-        }
-        
         return houseFindVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {

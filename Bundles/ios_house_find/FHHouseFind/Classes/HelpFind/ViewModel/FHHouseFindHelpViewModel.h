@@ -13,7 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindHelpViewModel : NSObject
 
-@property(nonatomic , copy)   void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
+//屏蔽TTNavigationViewController带来的键盘变化
+@property(nonatomic , assign) BOOL isHideKeyBoard;
+@property(nonatomic , copy) void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
+@property(nonatomic, weak) UIViewController *viewController;
 
 -(instancetype)initWithCollectionView:(UICollectionView *)collectionView bottomView:(FHHouseFindHelpBottomView *)bottomView;
 

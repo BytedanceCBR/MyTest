@@ -40,7 +40,7 @@
     
     [self.regionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(20);
-        make.height.mas_equalTo(22);
+        make.height.mas_equalTo(24);
     }];
     [self.selectImgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.regionLabel);
@@ -75,6 +75,7 @@
     UIView *_bgView;
 }
 @property(nonatomic, strong)UIView *contentView;
+@property(nonatomic, strong)UIView *topView;
 @property(nonatomic, strong)UIButton *cancelBtn;
 @property(nonatomic, strong)UIButton *finishBtn;
 @property(nonatomic, strong)UITableView *tableView;
@@ -95,7 +96,9 @@
 
 - (void)setupUI
 {
+    self.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.contentView];
+    [self.contentView addSubview:self.topView];
     [self.contentView addSubview:self.cancelBtn];
     [self.contentView addSubview:self.finishBtn];
     [self.contentView addSubview:self.tableView];
@@ -106,25 +109,33 @@
     [self.cancelBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
     [self.finishBtn addTarget:self action:@selector(finishBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
+    [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.mas_equalTo(self);
+        make.height.mas_equalTo(42);
+    }];
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
-//        make.height.mas_equalTo(REGION_CONTENT_HEIGHT);
     }];
     [self.cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(42);
+        make.height.mas_equalTo(self.topView);
         make.left.mas_equalTo(10);
         make.width.mas_equalTo(52);
         make.top.mas_equalTo(0);
     }];
     [self.finishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(42);
+        make.height.mas_equalTo(self.topView);
         make.right.mas_equalTo(-10);
         make.width.mas_equalTo(52);
         make.top.mas_equalTo(0);
     }];
+    CGFloat bottomHeight = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomHeight = [UIApplication sharedApplication].delegate.window.tt_safeAreaInsets.bottom;
+    }
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.cancelBtn.mas_bottom);
-        make.left.right.bottom.mas_equalTo(0);
+        make.left.right.mas_equalTo(0);
+        make.height.mas_equalTo(REGION_CONTENT_HEIGHT - 42);
     }];
 }
 
@@ -149,7 +160,7 @@
     self.top = screenHeight;
     [UIView animateWithDuration:0.25 animations:^{
         self->_bgView.alpha = 0.4;
-        self.top = screenHeight - REGION_CONTENT_HEIGHT;
+        self.top = screenHeight - self.height;
     }];
     
 }
@@ -219,9 +230,18 @@
 {
     if (!_contentView) {
         _contentView = [[UIView alloc]init];
-        _contentView.backgroundColor = [UIColor themeGray7];
+        _contentView.backgroundColor = [UIColor whiteColor];
     }
     return _contentView;
+}
+
+- (UIView *)topView
+{
+    if (!_topView) {
+        _topView = [[UIView alloc]init];
+        _topView.backgroundColor = [UIColor themeGray7];
+    }
+    return _topView;
 }
 
 - (UIButton *)cancelBtn
@@ -253,13 +273,11 @@
     if (!_tableView) {
         _tableView = [[UITableView alloc]init];
         if (@available(iOS 11.0, *)) {
-            
             _tableView.estimatedRowHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
             _tableView.estimatedSectionFooterHeight = 0;
             self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, [UIApplication sharedApplication].delegate.window.tt_safeAreaInsets.bottom, 0);
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.backgroundColor = [UIColor whiteColor];
     }
