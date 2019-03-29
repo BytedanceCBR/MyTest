@@ -61,10 +61,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
         _collectionView = collectionView;
         _bottomView = bottomView;
         [self registerCell:collectionView];
+        _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         collectionView.delegate = self;
         collectionView.dataSource = self;
-//        collectionView.allowsSelection = NO;
-        
+        _collectionView.allowsMultipleSelection = YES;
+  
         __weak typeof(self)wself = self;
         _bottomView.resetBlock = ^{
             [wself resetBtnDidClick];
@@ -158,23 +159,37 @@ extern NSString *const kFHPhoneNumberCacheKey;
         if (!avaiable) {
             return;
         }
-        self.secondFilter = configData.filter;
         
         NSMutableArray *titles = @[].mutableCopy;
+        NSMutableArray *filterArray = @[].mutableCopy;
+        FHSearchFilterConfigItem *priceItem = nil;
+        FHSearchFilterConfigItem *roomItem = nil;
+        FHSearchFilterConfigItem *regionItem = nil;
         NSInteger sectionNum = 1;
-        for (FHSearchFilterConfigItem *configItem in configData.filter) {
-            
+
+        for (NSInteger index = 0; index < configData.filter.count; index++) {
+            FHSearchFilterConfigItem *configItem = configData.filter[index];
             if ([configItem.tabId integerValue] == FHSearchTabIdTypeRegion) {
-                sectionNum += 1;
-                [titles addObject:@"您想买的区域是？"];
+                regionItem = configItem;
             }else if ([configItem.tabId integerValue] == FHSearchTabIdTypePrice) {
-                sectionNum += 1;
-                [titles addObject:@"您的购房预算是多少？"];
+                priceItem = configItem;
             }else if ([configItem.tabId integerValue] == FHSearchTabIdTypeRoom) {
-                sectionNum += 1;
-                [titles addObject:@"您想买的户型是？"];
+                roomItem = configItem;
             }
         }
+        if (priceItem) {
+            [filterArray addObject:priceItem];
+            [titles addObject:@"您的购房预算是多少？"];
+        }
+        if (roomItem) {
+            [filterArray addObject:roomItem];
+            [titles addObject:@"您想买的户型是？"];
+        }
+        if (regionItem) {
+            [filterArray addObject:regionItem];
+            [titles addObject:@"您想买的区域是？"];
+        }
+        self.secondFilter = filterArray;
         self.titlesArray = titles;
         [self.collectionView reloadData];
     }
@@ -204,7 +219,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 #pragma mark - UICollectionView delegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return self.titlesArray.count;
+    return self.titlesArray.count + 1;
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -212,13 +227,14 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSArray *filter = [self filterOfHouseType:_houseType];
     if (filter.count > section) {
         FHSearchFilterConfigItem *item = filter[section];
+        FHSearchFilterConfigOption *options = [item.options firstObject];
         if ([item.tabId integerValue] == FHSearchTabIdTypePrice) {
+            return options.options.count;
+        }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             return 1;
         }
-        FHSearchFilterConfigOption *options = [item.options firstObject];
         return options.options.count;
     }
-
     return 1;
 }
 
@@ -227,44 +243,59 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSInteger section = indexPath.section;
     FHHouseType ht = _houseType;
     NSArray *filter = [self filterOfHouseType:ht];
-
-    // add by zjing for test
-    if (indexPath.section == 3) {
-        FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
-        pcell.delegate = self;
-        self.contactCell = pcell;
-        return pcell;
-    }
-    
-    FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
-    return pcell;
-
     if (filter.count > section) {
 
         FHHouseFindSelectModel *model = [self selectModelWithType:ht];
         FHSearchFilterConfigItem *item = filter[section];
         if ([item.tabId integerValue] == FHSearchTabIdTypePrice) {
 
-            FHHouseFindPriceCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_PRICE_CELL_ID forIndexPath:indexPath];
-            pcell.tag = ht;
-            pcell.delegate = self;
-
-            FHHouseFindSelectItemModel *priceItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
-            if (!priceItem) {
-                priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
-                priceItem.rate = item.rate;
-                priceItem.configOption = [item.options firstObject];
-            }else{
-                priceItem.rate = item.rate;
-                priceItem.configOption = [item.options firstObject];
+            if (indexPath.item == 0) {
+                
+                FHHouseFindPriceCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_PRICE_CELL_ID forIndexPath:indexPath];
+                pcell.tag = ht;
+                pcell.delegate = self;
+                
+                FHHouseFindSelectItemModel *priceItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
+                if (!priceItem) {
+                    priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
+                    priceItem.rate = item.rate;
+                    priceItem.configOption = [item.options firstObject];
+                }else{
+                    priceItem.rate = item.rate;
+                    priceItem.configOption = [item.options firstObject];
+                }
+                if (priceItem) {
+                    [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];
+                }
+                
+                return pcell;
+            }else {
+                
+                FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
+                NSString *text = nil;
+                
+                FHSearchFilterConfigOption *options = [item.options firstObject];
+                if (options.options.count > indexPath.item) {
+                    FHSearchFilterConfigOption *option = options.options[indexPath.item];
+                    text = option.text;
+                }
+                BOOL selected = NO;
+                if (model) {
+                    FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+                    selected = [model selecteItem:selectItem containIndex:indexPath.item];
+                }
+                
+                [tcell updateWithTitle:text highlighted:selected];
+                
+                return tcell;
             }
-            if (priceItem) {
-                [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];
-            }
 
+        }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
+            
+            FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
             return pcell;
-
-        }else{
+            
+        }else {
 
             FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
             NSString *text = nil;
@@ -290,37 +321,24 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
 
     }
-    return [[UICollectionViewCell alloc] init];
+    
+    FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
+    pcell.delegate = self;
+    self.contactCell = pcell;
+    return pcell;
+    
+//    return [[UICollectionViewCell alloc] init];
 }
 
 -(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
     FHHouseFindHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:HELP_HEADER_ID forIndexPath:indexPath];
-    if (indexPath.section == 0) {
-        [headerView updateTitle:@"您的购房预算是多少？" showDelete:NO];
-    }else if (indexPath.section == 1) {
-        
-        [headerView updateTitle:@"您想买的户型是？" showDelete:NO];
-//        NSInteger section = indexPath.section;
-//        if (histories.count > 0) {
-//            section -= 1;
-//        }
-//        NSArray *filter = [self filterOfHouseType:ht];
-//        if (filter.count > section) {
-//            FHSearchFilterConfigItem *item =  filter[section];
-//            [headerView updateTitle:item.text showDelete:NO];
-//        }else{
-//            return nil;
-//        }
-    }else if (indexPath.section == 2) {
-        
-        [headerView updateTitle:@"您想买的区域是？" showDelete:NO];
-
-    }else if (indexPath.section == 3) {
-        
+    NSInteger section = indexPath.section;
+    if (self.titlesArray.count > section) {
+        [headerView updateTitle:self.titlesArray[section] showDelete:NO];
+    }else {
         [headerView updateTitle:@"您的联系方式？" showDelete:NO];
     }
-    
     return headerView;
 }
 
@@ -331,24 +349,24 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    // add by zjing for test
-    if (indexPath.section == 3) {
-        return CGSizeMake(collectionView.frame.size.width, 180);
-    }
-    return CGSizeMake(collectionView.frame.size.width, 36);
-
     FHHouseType ht = _houseType;
     NSInteger section = indexPath.section;
     NSArray *filter = [self filterOfHouseType:ht];
     if (filter.count > section) {
         FHSearchFilterConfigItem *item =  filter[section];
         if ([item.tabId integerValue] == FHSearchTabIdTypePrice) {
-            return CGSizeMake(collectionView.frame.size.width - 2*HELP_ITEM_HOR_MARGIN, 36);
-        }else{
+            if (indexPath.item == 0) {
+                return CGSizeMake(collectionView.frame.size.width - 2*HELP_ITEM_HOR_MARGIN, 36);
+            }else {
+                return CGSizeMake(74, 30);
+            }
+        }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
+            return CGSizeMake(collectionView.frame.size.width, 36);
+        }else {
             return CGSizeMake(74, 30);
         }
     }
-    return CGSizeMake(collectionView.frame.size.width, 60);
+    return CGSizeMake(collectionView.frame.size.width, 180);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -403,23 +421,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    if (collectionView == self.collectionView) {
-        return UIEdgeInsetsZero;
-    }
-    //    FHHouseType ht = collectionView.tag;
-    //    NSArray *histories = self.historyMap[@(ht)];
-    //
-    //    if (section == 0 && histories.count > 0) {
-    //        return UIEdgeInsetsZero;
-    //    }
-    
     return UIEdgeInsetsMake(0, 20, 0, 20);
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
-{
-    return 13;
-}
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+//{
+//    return 10;
+//}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
