@@ -22,6 +22,13 @@ extern NSString *const VCTITLE_KEY ;
 
 @end
 
+// 页面间数据传递协议
+@protocol FHHouseBaseDataProtocel <NSObject>
+
+- (void)callBackDataInfo:(NSDictionary *)info;
+
+@end
+
 NS_ASSUME_NONNULL_BEGIN
 
 /*

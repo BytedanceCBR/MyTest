@@ -144,6 +144,18 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
     }
 }
 
+- (void)setNaviBarTransparent:(BOOL)transparent {
+    if(transparent){
+        self.backgroundColor = [UIColor clearColor];
+        self.bgView.alpha = 0;
+        self.seperatorLine.backgroundColor = [UIColor clearColor];
+    }else{
+        self.backgroundColor = [UIColor whiteColor];
+        self.bgView.alpha = 0.5;
+        self.seperatorLine.backgroundColor = [UIColor themeGray6];
+    }
+}
+
 @end
 
 @interface FHHotAreaButton ()
