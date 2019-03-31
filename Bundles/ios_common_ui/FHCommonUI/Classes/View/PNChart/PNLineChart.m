@@ -352,7 +352,9 @@
     }
     self.selectPoint = CGPointMake(lineX, minY);
     [self setNeedsDisplay];
-    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
+    if ([_delegate respondsToSelector:@selector(userClickedOnKeyPoint:lineIndex:pointIndex:selectPoint:)]) {
+        [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
+    }
 }
 
 #pragma mark - Draw Chart
@@ -397,7 +399,7 @@
     // set the chart will be misplaced
     [self resetCavanHeight];
     [self prepareYLabelsWithData:_chartData];
-
+    [_pathPoints removeAllObjects];
     _chartPath = [[NSMutableArray alloc] init];
     _pointPath = [[NSMutableArray alloc] init];
     _gradeStringPaths = [NSMutableArray array];
@@ -427,20 +429,20 @@
 
         pointLayer.path = pointPath.CGPath;
 
-        [CATransaction begin];
+//        [CATransaction begin];
         for (NSUInteger index = 0; index < progressLines.count; index++) {
             CAShapeLayer *chartLine = chartLines[index];
             //chartLine strokeColor is already set. no need to override here
-            [chartLine addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
+//            [chartLine addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
             chartLine.strokeEnd = 1.0;
         }
 
         // if you want cancel the point animation, comment this code, the point will show immediately
-        if (chartData.inflexionPointStyle != PNLineChartPointStyleNone) {
-            [pointLayer addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
-        }
+//        if (chartData.inflexionPointStyle != PNLineChartPointStyleNone) {
+//            [pointLayer addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
+//        }
 
-        [CATransaction commit];
+//        [CATransaction commit];
 
         NSMutableArray *textLayerArray = self.gradeStringPaths[lineIndex];
         for (CATextLayer *textLayer in textLayerArray) {
@@ -1381,7 +1383,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 - (CABasicAnimation *)pathAnimation {
     if (self.displayAnimated && !_pathAnimation) {
         _pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        _pathAnimation.duration = 1.0;
+        _pathAnimation.duration = 0.0;
         _pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         _pathAnimation.fromValue = @0.0f;
         _pathAnimation.toValue = @1.0f;

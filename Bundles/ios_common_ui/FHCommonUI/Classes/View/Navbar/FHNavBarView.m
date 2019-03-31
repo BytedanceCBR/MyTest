@@ -12,7 +12,6 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
 
 @interface FHNavBarView ()
 
-@property (nonatomic, strong) UIView    *bgView;
 @property (nonatomic, strong) UIView    *rightView;
 @property (nonatomic, strong) NSMutableArray *rightViewsArray;
 @property (nonatomic, strong) UIView    *seperatorLine;
@@ -142,6 +141,11 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
     if(_leftButtonBlock){
         _leftButtonBlock();
     }
+}
+
+- (void)cleanStyle:(BOOL)isCleanStyle {
+    self.backgroundColor = [UIColor clearColor];
+    [self.seperatorLine setHidden:YES];
 }
 
 - (void)setNaviBarTransparent:(BOOL)transparent {

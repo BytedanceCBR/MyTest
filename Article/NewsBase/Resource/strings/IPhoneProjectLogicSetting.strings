@@ -114,7 +114,9 @@
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
 
-//"second_house_main"   = "FHHouseOldHomeViewController";
+"city_market_trend"   = "FHCityMarketDetailViewController";
+"city_market_hot_list"   = "FHCityMarketHotCityListViewController";
+
 "second_house_main"   = "FHBaseMainListViewController";
 
 //房屋估价

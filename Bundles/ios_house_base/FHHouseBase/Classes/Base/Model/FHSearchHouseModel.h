@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHSearchHouseDataItemsModelBottomText <NSObject>
+
+@end
 
 @interface  FHSearchHouseDataItemsBaseInfoModel  : JSONModel
 
@@ -130,6 +133,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHSearchHouseDataItemsModelBottomText : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *color;
+
+@end
 
 @interface  FHSearchHouseDataItemsModel  : JSONModel
 
@@ -160,7 +169,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displaySameNeighborhoodTitle;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
-
+@property (nonatomic, strong) NSArray<FHSearchHouseDataItemsModelBottomText>* bottomText;
 @end
 
 @protocol FHRecommendSecondhandHouseTitleModel<NSObject>
