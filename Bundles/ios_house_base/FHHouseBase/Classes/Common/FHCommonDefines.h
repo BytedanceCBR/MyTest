@@ -21,4 +21,25 @@
 #endif
 
 
+#pragma mark - log
+
+#if DEBUG
+
+#define LLLog(fmt, ...) NSLog((@"LLLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define ZJLog(fmt, ...) NSLog((@"ZJLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define XFLog(fmt, ...) NSLog((@"XFLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define SMLog(fmt, ...) NSLog((@"SMLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define CHLog(fmt, ...) NSLog((@"CHLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+
+#else
+
+#define LLLog(fmt, ...)
+#define ZJLog(fmt, ...)
+#define XFLog(fmt, ...)
+#define SMLog(fmt, ...)
+#define CHLog(fmt, ...)
+
+#endif
+
+
 #endif /* FHCommonDefines_h */

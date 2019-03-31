@@ -19,6 +19,7 @@
 #import "TTFeedValidator.h"
 #import "TTTrackerWrapper.h"
 #import "NSObject+TTAdditions.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 @implementation ArticlePreInsertOperation
 
@@ -138,6 +139,7 @@ static TTFeedValidator *_feedValidator;
         ExploreOrderedDataCellType cellType = [dict tt_intValueForKey:@"cell_type"];
         BOOL supportCellType = [ExploreListHelper supportForCellType:cellType];
         if (!supportCellType) {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"article_cell_type_unsupport" attributes:@{@"cell_type":@(cellType),@"category_id":categoryID?:@"unknown"}];
             continue;
         }
         if (![[ArticlePreInsertOperation feedValidator] isValidObject:dict]) {
