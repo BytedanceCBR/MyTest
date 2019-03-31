@@ -47,6 +47,7 @@
 @property(nonatomic, strong) UILabel *priceLabel; //总价
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
+@property(nonatomic, strong) UILabel *distanceLabel; // 30 分钟到达
 
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 
@@ -196,6 +197,15 @@
         _pricePerSqmLabel.textColor = [UIColor themeGray3];
     }
     return _pricePerSqmLabel;
+}
+
+-(UILabel *)distanceLabel
+{
+    if (!_distanceLabel) {
+        _distanceLabel = [[UILabel alloc] init];
+        _distanceLabel.textAlignment = NSTextAlignmentRight;
+    }
+    return _distanceLabel;
 }
 
 -(FHHouseRecommendReasonView *)recReasonView {
@@ -439,6 +449,7 @@
 
 - (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model
 {
+    _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
@@ -471,6 +482,7 @@
 #pragma mark 新房
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     
+    _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
@@ -530,6 +542,7 @@
 #pragma mark 二手房
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model
 {
+    _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
@@ -592,6 +605,42 @@
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
     self.priceLabel.text = model.pricing;
     self.pricePerSqmLabel.text = nil;
+    
+    BOOL isCommute = YES;
+    if (isCommute) {
+        
+        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
+        
+        UIImage *clockImg =  SYS_IMG(@"clock_small");
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.image = clockImg;
+        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
+        
+        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
+        
+        [commuteAttr appendAttributedString:clockAttr];
+        
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray3]};
+        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:@" 公交30分钟" attributes:attr];
+        
+        [commuteAttr appendAttributedString:timeAttr];
+        
+        self.distanceLabel.attributedText = commuteAttr;
+        
+        if (!_distanceLabel){
+            [_distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.isEnabled = YES;
+                layout.marginLeft = YGPointValue(10);
+                layout.alignSelf = YGAlignCount;
+                layout.flexGrow = 1;
+            }];
+        }
+        [self.priceBgView addSubview:self.distanceLabel];
+        
+        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
+    }else{
+        [_distanceLabel removeFromSuperview];
+    }
     
     FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];

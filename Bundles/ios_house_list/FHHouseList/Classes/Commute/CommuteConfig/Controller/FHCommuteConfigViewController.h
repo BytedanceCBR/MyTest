@@ -6,10 +6,14 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHCommuteConfigDelegate.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommuteConfigViewController : FHBaseViewController
+
+@property(nonatomic , weak) id<FHCommuteConfigDelegate> delegate;
 
 @end
 

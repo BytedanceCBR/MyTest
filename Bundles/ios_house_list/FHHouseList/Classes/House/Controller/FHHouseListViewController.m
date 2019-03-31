@@ -35,7 +35,7 @@
 
 @property (nonatomic , strong) FHFakeInputNavbar *navbar;
 @property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
-@property (nonatomic , strong) UIView *commuteChooseBgView;
+@property (nonatomic , strong) UIControl *commuteChooseBgView;
 @property (nonatomic , strong) FHCommuteFilterView *commuteFilterView;
 
 @property (nonatomic , strong) UIView *containerView;
@@ -211,9 +211,10 @@
     
     [_commuteTipView updateTime:@"早高峰" tip:@" 通过公交30分钟内到达"];
     
-    _commuteChooseBgView = [[UIView alloc] init];
+    _commuteChooseBgView = [[UIControl alloc] init];
     _commuteChooseBgView.backgroundColor =  RGBA(0, 0, 0, 0.4);
     _commuteChooseBgView.hidden = YES;
+    [_commuteChooseBgView addTarget:self action:@selector(onCommuteBgTap) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(FHCommuteFilterView *)commuteFilterView
@@ -224,6 +225,13 @@
     return _commuteFilterView;
     
 }
+
+-(void)onCommuteBgTap
+{
+    self.commuteTipView.showHide = NO;
+    self.commuteChooseBgView.hidden = YES;
+}
+
 
 -(void)setupViewModelBlock {
     

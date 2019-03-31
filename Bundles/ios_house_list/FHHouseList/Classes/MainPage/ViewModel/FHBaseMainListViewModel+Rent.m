@@ -9,6 +9,8 @@
 #import "FHBaseMainListViewModel+Internal.h"
 #import <FHHouseBase/FHMainApi.h>
 #import <FHHouseBase/FHHouseRentModel.h>
+#import <TTRoute/TTRoute.h>
+#import <FHHouseBase/FHBaseViewController.h>
 
 @implementation FHBaseMainListViewModel (Rent)
 
@@ -74,6 +76,22 @@
         }
     }
     return FHHouseRentFilterTypeNone;
+}
+
+-(void)showCommuteConfigPage
+{    
+    id delegate = WRAP_WEAK(self);
+    NSDictionary *dict = @{COMMUTE_CONFIG_DELEGATE:delegate};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    NSURL *url = [NSURL URLWithString:@"sslocal://commute_config"];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+    
+}
+
+-(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration
+{
+    NSLog(@"location is: %@  duration is: %@",location,duration);
 }
 
 @end

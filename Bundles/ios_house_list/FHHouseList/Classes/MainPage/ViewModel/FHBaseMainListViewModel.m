@@ -809,7 +809,7 @@
 -(void)tapRentBanner
 {
     NSLog(@"goto detail>>");
-    
+    [self showCommuteConfigPage];
 }
 
 -(void)selecteOldItem:(FHConfigDataOpData2ItemsModel *)model

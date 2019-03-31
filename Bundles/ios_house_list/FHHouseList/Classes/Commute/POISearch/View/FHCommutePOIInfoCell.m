@@ -67,10 +67,10 @@
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
-//        make.top.mas_equalTo(TOP_MARGIN);
+        make.top.mas_equalTo(TOP_MARGIN);
         make.right.mas_lessThanOrEqualTo(-HOR_MARGIN);
         make.height.mas_equalTo(20);
-        make.bottom.mas_equalTo(self.addressLabel.mas_top).offset(-ITEM_VER_MARGIN);
+//        make.bottom.mas_equalTo(self.addressLabel.mas_top).offset(-ITEM_VER_MARGIN);
     }];
     
     [_addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {

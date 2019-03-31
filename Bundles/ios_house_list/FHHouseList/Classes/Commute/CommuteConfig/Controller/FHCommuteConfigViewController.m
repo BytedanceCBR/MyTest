@@ -12,10 +12,13 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTRoute/TTRoute.h>
+#import "FHCommutePOISearchViewController.h"
+#import <AMapSearchKit/AMapCommonObj.h>
+#import <FHCommonUI/ToastManager.h>
 
 #define BANNER_HEIGHT SCREEN_WIDTH*(224/375.0)
 #define INPUT_BG_HEIGHT 46
-@interface FHCommuteConfigViewController ()
+@interface FHCommuteConfigViewController ()<FHCommutePOISearchDelegate>
 
 @property(nonatomic , strong) UIImageView *topBanner;
 @property(nonatomic , strong) UIButton *backButton;
@@ -24,10 +27,26 @@
 @property(nonatomic , strong) FHCommuteFilterView *filterView;
 @property(nonatomic , strong) UIView *inputBgView;
 @property(nonatomic , strong) UILabel *inputLabel;
+@property(nonatomic , strong) AMapAOI *choosePOI;
+@property(nonatomic , strong) NSString *chooseLocation;
 
 @end
 
 @implementation FHCommuteConfigViewController
+
+
+-(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
+{
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        NSHashTable *table= paramObj.allParams[COMMUTE_CONFIG_DELEGATE];
+        if (table) {
+            self.delegate = UNWRAP_WEAK(table);
+        }
+    }
+    return self;
+    
+}
 
 -(UILabel *)label:(UIFont *)font text:(NSString *)text
 {
@@ -91,7 +110,9 @@
 
 -(void)showInputAction:(id)sender
 {
-    
+    FHCommutePOISearchViewController *controller = [[FHCommutePOISearchViewController alloc] init];
+    controller.sugDelegate = self;
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 -(void)backAction:(id)sender
@@ -112,6 +133,14 @@
     [self.view addSubview:_backButton];
     
     _filterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200) insets:UIEdgeInsetsMake(57, 0, 10, 0) type:FHCommuteTypeDrive];
+    __weak typeof(self) wself = self;
+    _filterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
+        if (wself.chooseLocation.length == 0) {
+            SHOW_TOAST(@"请选择目的地");
+            return ;
+        }
+        [wself startSearch:time type:type];                
+    };
     
     [self.view addSubview:_filterView];
     
@@ -120,17 +149,6 @@
     [self initConstraints];
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [(TTNavigationController *)self.navigationController panRecognizer].enabled = NO;
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [(TTNavigationController *)self.navigationController panRecognizer].enabled = YES;
-}
 
 -(void)initConstraints
 {
@@ -186,8 +204,27 @@
 }
 
 
+-(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController
+{
+    self.inputLabel.text = poi.name;
+    [viewController.navigationController popViewControllerAnimated:YES];
+    self.chooseLocation = poi.name;
+}
+
+-(void)userCanced:(FHCommutePOISearchViewController *)viewController
+{
+    [viewController.navigationController popViewControllerAnimated:YES];
+}
 
 
+-(void)startSearch:(NSString *)duration type:(FHCommuteType)type
+{
+    if ([self.delegate respondsToSelector:@selector(commuteWithDest:type:duration:)]) {
+        [self.delegate commuteWithDest:self.chooseLocation type:type duration:duration];
+    }
+    
+    [self.navigationController popViewControllerAnimated:YES ];
+}
 
 /*
 #pragma mark - Navigation
@@ -200,3 +237,5 @@
 */
 
 @end
+
+NSString *const COMMUTE_CONFIG_DELEGATE = @"_COMMUTE_CONFIG_DELEGATE_";

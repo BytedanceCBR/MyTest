@@ -21,7 +21,8 @@ extern NSString *const COMMUTE_POI_DELEGATE_KEY;
 
 @protocol FHCommutePOISearchDelegate <NSObject>
 
--(void)userChoosePoi:(AMapAOI *)poi;
+@required
+-(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController;
 
 -(void)userCanced:(FHCommutePOISearchViewController *)viewController;
 

@@ -37,7 +37,7 @@
 @property(nonatomic , strong) AMapPOIKeywordsSearchRequest *keywordRequest;
 @property(nonatomic , strong) AMapPOIAroundSearchRequest *aroundRequest;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-
+@property(nonatomic , strong) UIView *defaultHeader;
 
 @end
 
@@ -54,6 +54,9 @@
         _inputBar = inputBar;
         _inputBar.delegate = self;
         
+        UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 0.1)];
+        _tableView.tableHeaderView = header;
+        _defaultHeader = header;
         
         [tableView registerClass:[FHCommutePOIInfoCell class] forCellReuseIdentifier:CELL_ID];
         
@@ -199,7 +202,7 @@
         [self.searchPois addObjectsFromArray:response.pois];
         [self.tableView reloadData];
         if (self.searchPois.count > 0) {
-            self.tableView.tableHeaderView = nil;
+            self.tableView.tableHeaderView = self.defaultHeader;
         }else{
             self.tableView.tableHeaderView = _locationHeaderView;
         }
@@ -297,11 +300,23 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1 && indexPath.row == 0 && _aroundPois.count == 0 &&  tableView.tableHeaderView != _locationHeaderView) {
-        return 53;//第一个距离输入框
+    AMapPOI *poi = nil;
+    if (indexPath.section == 0) {
+        poi = _aroundPois[indexPath.row];
+    }else{
+        poi = _searchPois[indexPath.row];
+    }
+    CGFloat height = 59;
+    if (poi.address.length == 0) {
+        //没有地址
+        height = 40;
     }
     
-    return 59;
+    if (indexPath.section == 1 && indexPath.row == 0 && _aroundPois.count == 0 &&  tableView.tableHeaderView != _locationHeaderView) {
+        return height - 6;//第一个距离输入框
+    }
+    
+    return height;
 }
 
 
@@ -337,8 +352,8 @@
         poi = _searchPois[indexPath.row];
     }
     
-    if (poi && [self.viewController.sugDelegate respondsToSelector:@selector(userChoosePoi:)]) {
-        [self.viewController.sugDelegate userChoosePoi:poi];
+    if (poi && [self.viewController.sugDelegate respondsToSelector:@selector(userChoosePoi:inViewController:)]) {
+        [self.viewController.sugDelegate userChoosePoi:poi inViewController:self.viewController];
     }
 }
 
