@@ -114,7 +114,7 @@
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
 
-"city_market"   = "FHCityMarketDetailViewController";
+"city_market_trend"   = "FHCityMarketDetailViewController";
 "city_market_hot_list"   = "FHCityMarketHotCityListViewController";
 
 "second_house_main"   = "FHBaseMainListViewController";
