@@ -21,9 +21,9 @@ PODS:
   - AMapSearch (6.1.1.1-binary)
   - Aspects (1.4.1.1-binary)
   - AWEVideoPlayer (0.3.20)
-  - BDABTestSDK (1.0.1):
-    - BDABTestSDK/Core (= 1.0.1)
-  - BDABTestSDK/Core (1.0.1)
+  - BDABTestSDK (1.0.2-rc.3):
+    - BDABTestSDK/Core (= 1.0.2-rc.3)
+  - BDABTestSDK/Core (1.0.2-rc.3)
   - BDAccount/Account (0.1.0)
   - BDAccount/AccountCore (0.1.0)
   - BDAccount/Flow (0.1.0)
@@ -493,7 +493,7 @@ DEPENDENCIES:
   - AMapSearch (= 6.1.1.1-binary)
   - Aspects (= 1.4.1.1-binary)
   - AWEVideoPlayer (= 0.3.20)
-  - BDABTestSDK (= 1.0.1)
+  - BDABTestSDK (= 1.0.2-rc.3)
   - BDAccount/Account (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDAccount/AccountCore (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
   - BDAccount/Flow (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
@@ -564,7 +564,7 @@ DEPENDENCIES:
   - IESVideoPlayer (= 0.1.16)
   - IESWebKit (= 0.1.4)
   - IGListKit
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/sort_callback`)
+  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
   - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, branch `feature/develop`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
@@ -773,7 +773,7 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
-    :branch: feature/sort_callback
+    :branch: feature/develop
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
     :branch: feature/develop
@@ -829,7 +829,7 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 379217f887994592dd585eb90340007efc6bcfa6
+    :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
     :commit: 24b868a3583157c23e2b67c1e0272be592181ad6
@@ -857,7 +857,7 @@ SPEC CHECKSUMS:
   AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
   AWEVideoPlayer: 07ffe01239d24b1010d95b074c002dc7a54b04fc
-  BDABTestSDK: 31c6d15c2afe5104d384117ff2ee08fb530f102e
+  BDABTestSDK: eb7cdb2ce2887b35f44cc374ee01372e77278530
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
   BDALog: 989a655db0f8ec62a4a56970a462eb1a83d75645
   BDAlogProtocol: 3079beb0afd725ea0e209a617dc4381158aa151f
@@ -999,6 +999,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 46e6eae234307b5265d1209570d1014283b8b6bf
+PODFILE CHECKSUM: 4f81406f5450b559047dd7a251db668d69150271
 
 COCOAPODS: 1.4.0

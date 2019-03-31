@@ -18,6 +18,7 @@
 #import <TTNewsAccountBusiness/TTAccountManager+AccountInterfaceTask.h>
 #import <FHCommonUI/ToastManager.h>
 #import <TTReachability/TTReachability.h>
+#import "FHHouseFindHelpRegionSheet.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -25,12 +26,15 @@
 #define HELP_REGION_CELL_ID @"region_cell_id"
 #define HELP_PRICE_CELL_ID @"price_cell_id"
 #define HELP_NORMAL_CELL_ID @"normal_cell_id"
-
 #define HELP_CONTACT_CELL_ID @"contact_cell_id"
+
+#define ROOM_MAX_COUNT 2
+#define REGION_MAX_COUNT 3
+
 
 extern NSString *const kFHPhoneNumberCacheKey;
 
-@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate>
+@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) FHHouseFindHelpBottomView *bottomView;
@@ -40,6 +44,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property (nonatomic , assign) BOOL available;
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) NSMutableDictionary *selectMap; // housetype : FHHouseFindSelectModel
+@property (nonatomic , strong) FHSearchFilterConfigItem *regionConfigItem;
+@property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
 
 @property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
 @property(nonatomic , assign) BOOL isRequestingSMS;
@@ -58,6 +64,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
     self = [super init];
     if (self) {
         _houseType = FHHouseTypeSecondHandHouse;
+        _selectMap = [NSMutableDictionary new];
+        FHHouseFindSelectItemModel *selectItem = [FHHouseFindSelectItemModel new];
+        selectItem.tabId = FHSearchTabIdTypeRegion;
+        _selectRegionItem = selectItem;
+        
         _collectionView = collectionView;
         _bottomView = bottomView;
         [self registerCell:collectionView];
@@ -216,6 +227,51 @@ extern NSString *const kFHPhoneNumberCacheKey;
     return model;
 }
 
+- (void)showRegionSheet:(FHHouseFindSelectItemModel *)selectItem section:(NSInteger)section
+{
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    [_selectRegionItem.selectIndexes removeAllObjects];
+    if (selectItem.selectIndexes.count > 0) {
+        [_selectRegionItem.selectIndexes addObjectsFromArray:selectItem.selectIndexes];
+    }
+    CGRect frame = [UIScreen mainScreen].bounds;
+    CGFloat bottomHeight = 0;
+    if (@available(iOS 11.0, *)) {
+        bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+    } else {
+        // Fallback on earlier versions
+    }
+    __weak typeof(self)wself = self;
+    frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
+    FHHouseFindHelpRegionSheet *sheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
+    sheet.tableViewDelegate = self;
+    [sheet showWithCompleteBlock:^{
+        [wself updateRegionItem:section];
+    } cancelBlock:^{
+        
+    }];
+}
+
+- (void)updateRegionItem:(NSInteger)section
+{
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRegion];
+    if (!selectItem) {
+        selectItem = [model makeItemWithTabId:FHSearchTabIdTypeRegion];
+    }
+    [selectItem.selectIndexes removeAllObjects];
+    if (_selectRegionItem.selectIndexes.count > 0) {
+        [selectItem.selectIndexes addObjectsFromArray:_selectRegionItem.selectIndexes];
+    }
+
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:section]];
+    [CATransaction commit];
+}
+
 #pragma mark - UICollectionView delegate
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -286,7 +342,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
                 }
                 
                 [tcell updateWithTitle:text highlighted:selected];
-                
                 return tcell;
             }
 
@@ -294,7 +349,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
             
             FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
             return pcell;
-            
         }else {
 
             FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
@@ -307,27 +361,20 @@ extern NSString *const kFHPhoneNumberCacheKey;
             }else{
                 text = options.text;
             }
-
             BOOL selected = NO;
-
             if (model) {
                 FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
                 selected = [model selecteItem:selectItem containIndex:indexPath.item];
             }
-
             [tcell updateWithTitle:text highlighted:selected];
-
             return tcell;
         }
-
     }
     
     FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
     pcell.delegate = self;
     self.contactCell = pcell;
     return pcell;
-    
-//    return [[UICollectionViewCell alloc] init];
 }
 
 -(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
@@ -371,51 +418,59 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    FHHouseType ht = collectionView.tag;
-//    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
-//
-//    NSArray *filter = [self filterOfHouseType:ht];
-//    NSArray *histories = self.historyMap[@(ht)];
-//
-//    NSInteger section = indexPath.section;
-//    if (histories.count > 0) {
-//        section -= 1;
-//    }
-//
-//    if (filter.count > section) {
-//
-//        FHSearchFilterConfigItem *item = filter[section];
-//
-//        FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
-//        if (!selectItem) {
-//            selectItem = [model makeItemWithTabId:item.tabId.integerValue];
-//        }
-//        if (!selectItem.configOption) {
-//            selectItem.configOption = [item.options firstObject];
-//        }
-//
-//        if([model selecteItem:selectItem containIndex:indexPath.item]){
-//            //反选
-//            [model delSelecteItem:selectItem withIndex:indexPath.item];
-//        }else{
-//            //添加选择
-//            FHSearchFilterConfigOption *option = nil;
-//            if (item.options.count > 0) {
-//                option = [item.options firstObject];
-//            }
-//            if ([option.supportMulti boolValue]) {
-//                [model addSelecteItem:selectItem withIndex:indexPath.item];
-//            }else{
-//                [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
-//            }
-//        }
-//
-//        [CATransaction begin ];
-//        [CATransaction setDisableActions:YES];
-//        //        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
-//        [collectionView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]];
-//        [CATransaction commit];
-//    }
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+
+    NSArray *filter = [self filterOfHouseType:ht];
+    NSInteger section = indexPath.section;
+    if (filter.count > section) {
+
+        FHSearchFilterConfigItem *item = filter[section];
+
+        FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+        if (!selectItem) {
+            selectItem = [model makeItemWithTabId:item.tabId.integerValue];
+        }
+        if (!selectItem.configOption) {
+            selectItem.configOption = [item.options firstObject];
+        }
+        if (item.tabId.integerValue == FHSearchTabIdTypeRegion) {
+            
+            _regionConfigItem = item;
+            [self showRegionSheet:selectItem section:indexPath.section];
+        }else {
+            
+            if([model selecteItem:selectItem containIndex:indexPath.item]){
+                //反选
+                [model delSelecteItem:selectItem withIndex:indexPath.item];
+            }else{
+                if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
+                    [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
+                }else if (item.tabId.integerValue == FHSearchTabIdTypeRoom) {
+                    if (selectItem.selectIndexes.count >= ROOM_MAX_COUNT) {
+                        [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个",ROOM_MAX_COUNT]];
+                        return;
+                    }
+                }
+
+                //添加选择
+                FHSearchFilterConfigOption *option = nil;
+                if (item.options.count > 0) {
+                    option = [item.options firstObject];
+                }
+                if ([option.supportMulti boolValue]) {
+                    [model addSelecteItem:selectItem withIndex:indexPath.item];
+                }else{
+                    [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
+                }
+            }
+        }
+
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        [collectionView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]];
+        [CATransaction commit];
+    }
     
 }
 
@@ -423,11 +478,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
 {
     return UIEdgeInsetsMake(0, 20, 0, 20);
 }
-
-//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
-//{
-//    return 10;
-//}
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
@@ -450,8 +500,118 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [collectionview registerClass:[FHHouseFindPriceCell class] forCellWithReuseIdentifier:HELP_PRICE_CELL_ID];
     [collectionview registerClass:[FHHouseFindTextItemCell class] forCellWithReuseIdentifier:HELP_NORMAL_CELL_ID];
     [collectionview registerClass:[FHHouseFindHelpContactCell class] forCellWithReuseIdentifier:HELP_CONTACT_CELL_ID];
-    
     [collectionview registerClass:[FHHouseFindHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:HELP_HEADER_ID];
+}
+
+#pragma mark - UITableView delegate
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    if (_regionConfigItem.options.count < 1) {
+        return 0;
+    }
+    FHSearchFilterConfigOption *configOption = [_regionConfigItem.options firstObject];
+    return configOption.options.count > 0 ? 1 : 0;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (_regionConfigItem.options.count < 1) {
+        return 0;
+    }
+    FHSearchFilterConfigOption *configOption = [_regionConfigItem.options firstObject];
+    NSInteger count = configOption.options.count;
+    FHSearchFilterConfigOption *regionOption = [configOption.options firstObject];
+    if ([regionOption.type isEqualToString:@"empty"]) {
+        count -= 1;
+    }
+    return count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 54;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return CGFLOAT_MIN;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return CGFLOAT_MIN;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    FHHouseType ht = _houseType;
+    FHHouseFindHelpRegionItemCell *cell = [tableView dequeueReusableCellWithIdentifier:REGION_CELL_ID];
+    FHSearchFilterConfigOption *configOption = [_regionConfigItem.options firstObject];
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    NSInteger count = configOption.options.count;
+    NSInteger row = indexPath.row;
+    FHSearchFilterConfigOption *regionOption = [configOption.options firstObject];
+    if ([regionOption.type isEqualToString:@"empty"]) {
+        row += 1;
+    }
+    if (row < count) {
+        
+        BOOL selected = NO;
+        NSString *text = nil;
+        if (model) {
+            selected = [_selectRegionItem.selectIndexes containsObject:@(row)];
+        }
+        FHSearchFilterConfigOption *options = [_regionConfigItem.options firstObject];
+        if (options.options.count > row) {
+            FHSearchFilterConfigOption *option = options.options[row];
+            text = option.text;
+        }
+        cell.regionLabel.text = text;
+        cell.regionSelected = selected;
+    }
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    FHHouseFindSelectItemModel *selectItem = _selectRegionItem;
+    FHSearchFilterConfigOption *configOption = [_regionConfigItem.options firstObject];
+    NSInteger count = configOption.options.count;
+    NSInteger row = indexPath.row;
+    FHSearchFilterConfigOption *regionOption = [configOption.options firstObject];
+    if ([regionOption.type isEqualToString:@"empty"]) {
+        row += 1;
+    }
+    if (row < count) {
+
+        if ([selectItem.selectIndexes containsObject:@(row)]) {
+            [selectItem.selectIndexes removeObject:@(row)];
+        }else {
+            //添加选择
+            if (selectItem.selectIndexes.count >= REGION_MAX_COUNT) {
+                [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个",REGION_MAX_COUNT]];
+                return;
+            }
+            [selectItem.selectIndexes addObject:@(row)];
+
+            FHSearchFilterConfigOption *option = nil;
+            if (_regionConfigItem.options.count > 0) {
+                option = [_regionConfigItem.options firstObject];
+            }
+            if ([option.supportMulti boolValue]) {
+                [selectItem.selectIndexes addObject:@(row)];
+            }else{
+                [selectItem.selectIndexes removeAllObjects];
+                [selectItem.selectIndexes addObject:@(row)];
+            }
+        }
+    }
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [CATransaction commit];
 }
 
 #pragma mark - login相关

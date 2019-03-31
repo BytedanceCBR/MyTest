@@ -11,15 +11,6 @@
 #import <Masonry.h>
 #import <FHCommonUI/UIView+House.h>
 
-#define REGION_CELL_ID @"region_cell_id"
-
-@interface FHHouseFindHelpRegionItemCell: UITableViewCell
-
-@property(nonatomic, strong)UILabel *regionLabel;
-@property(nonatomic, strong)UIImageView *selectImgView;
-@property(nonatomic, assign)BOOL regionSelected;
-
-@end
 
 @implementation FHHouseFindHelpRegionItemCell
 
@@ -30,6 +21,18 @@
         [self setupUI];
     }
     return self;
+}
+
+- (void)setRegionSelected:(BOOL)regionSelected
+{
+    _regionSelected = regionSelected;
+    if (regionSelected) {
+        self.selectImgView.image = [UIImage imageNamed:@"housefind_selected"];
+        self.regionLabel.textColor = [UIColor themeRed1];
+    }else {
+        self.selectImgView.image = [UIImage imageNamed:@"housefind_normal"];
+        self.regionLabel.textColor = [UIColor themeGray1];
+    }
 }
 
 - (void)setupUI
@@ -70,16 +73,17 @@
 @end
 
 
-@interface FHHouseFindHelpRegionSheet () <UITableViewDataSource, UITableViewDelegate>
+@interface FHHouseFindHelpRegionSheet ()
 {
     UIView *_bgView;
 }
-@property(nonatomic, strong)UIView *contentView;
-@property(nonatomic, strong)UIView *topView;
-@property(nonatomic, strong)UIButton *cancelBtn;
-@property(nonatomic, strong)UIButton *finishBtn;
-@property(nonatomic, strong)UITableView *tableView;
-@property(nonatomic, strong)NSArray *itemList;
+@property(nonatomic, strong )UIView *contentView;
+@property(nonatomic, strong) UIView *topView;
+@property(nonatomic, strong) UIButton *cancelBtn;
+@property(nonatomic, strong) UIButton *finishBtn;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, copy, nullable) FHHouseFindRegionCompleteBlock completeBlock;
+@property(nonatomic, copy, nullable) FHHouseFindRegionCancelBlock cancelBlock;
 
 @end
 
@@ -106,7 +110,7 @@
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     
-    [self.cancelBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    [self.cancelBtn addTarget:self action:@selector(cancelBtnDidClick) forControlEvents:UIControlEventTouchUpInside];
     [self.finishBtn addTarget:self action:@selector(finishBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -139,12 +143,17 @@
     }];
 }
 
-- (void)showWithItemList:(NSArray *)itemList
+- (void)setTableViewDelegate:(id)tableViewDelegate
 {
-    if (itemList.count < 1) {
-        return;
-    }
-    _itemList = itemList;
+    _tableView.delegate = tableViewDelegate;
+    _tableView.dataSource = tableViewDelegate;
+}
+
+- (void)showWithCompleteBlock:(FHHouseFindRegionCompleteBlock)completeBlock cancelBlock:(FHHouseFindRegionCancelBlock)cancelBlock
+{
+    _completeBlock = completeBlock;
+    _cancelBlock = cancelBlock;
+    
     [self.tableView reloadData];
     
     _bgView = [[UIView alloc]initWithFrame:[UIScreen mainScreen].bounds];
@@ -152,7 +161,7 @@
     _bgView.alpha = 0;
     [[UIApplication sharedApplication].delegate.window addSubview:_bgView];
     _bgView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismiss)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelBtnDidClick)];
     [_bgView addGestureRecognizer:tap];
     
     CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
@@ -167,9 +176,16 @@
 
 - (void)finishBtnDidClick:(UIButton *)btn
 {
-    NSArray *itemList = @[];
-    if (self.selectItemsBlock) {
-        self.selectItemsBlock(itemList);
+    if (self.completeBlock) {
+        self.completeBlock();
+    }
+    [self dismiss];
+}
+
+- (void)cancelBtnDidClick
+{
+    if (self.cancelBlock) {
+        self.cancelBlock();
     }
     [self dismiss];
 }
@@ -185,45 +201,6 @@
         [self->_bgView removeFromSuperview];
         [self removeFromSuperview];
     }];
-}
-
-#pragma mark - UITableView delegate
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return _itemList.count > 0 ? 1 : 0;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return _itemList.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 54;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return CGFLOAT_MIN;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return CGFLOAT_MIN;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    FHHouseFindHelpRegionItemCell *cell = [tableView dequeueReusableCellWithIdentifier:REGION_CELL_ID];
-    // add by zjing for test
-    cell.regionLabel.text = @"朝阳";
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
 }
 
 - (UIView *)contentView

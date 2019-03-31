@@ -9,7 +9,6 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry/Masonry.h>
-#import "FHHouseFindHelpRegionSheet.h"
 
 @interface FHHouseFindHelpRegionCell()
 
@@ -60,25 +59,25 @@
         make.right.mas_equalTo(-10);
         make.centerY.mas_equalTo(self.bgView);
     }];
-    self.bgView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showRegionSheet)];
-    [self.bgView addGestureRecognizer:tap];
+//    self.bgView.userInteractionEnabled = YES;
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showRegionSheet)];
+//    [self.bgView addGestureRecognizer:tap];
 }
 
-- (void)showRegionSheet
-{
-    CGRect frame = [UIScreen mainScreen].bounds;
-    CGFloat bottomHeight = 0;
-    if (@available(iOS 11.0, *)) {
-        bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-    } else {
-        // Fallback on earlier versions
-    }
-    frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
-    FHHouseFindHelpRegionSheet *sheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
-    NSArray *itemList = @[@"heheheh",@"heheheh",@"heheheh",@"heheheh",@"heheheh",@"hehedddddddddheh",@"heheheh",@"heheheh"];
-    [sheet showWithItemList:itemList];
-}
+//- (void)showRegionSheet
+//{
+//    CGRect frame = [UIScreen mainScreen].bounds;
+//    CGFloat bottomHeight = 0;
+//    if (@available(iOS 11.0, *)) {
+//        bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+//    } else {
+//        // Fallback on earlier versions
+//    }
+//    frame.size.height = REGION_CONTENT_HEIGHT + bottomHeight;
+//    FHHouseFindHelpRegionSheet *sheet = [[FHHouseFindHelpRegionSheet alloc]initWithFrame:frame];
+//    NSArray *itemList = @[@"heheheh",@"heheheh",@"heheheh",@"heheheh",@"heheheh",@"hehedddddddddheh",@"heheheh",@"heheheh"];
+//    [sheet showWithItemList:itemList];
+//}
 
 - (UIView *)bgView
 {
