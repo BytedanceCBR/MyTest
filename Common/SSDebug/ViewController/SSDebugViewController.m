@@ -658,8 +658,8 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 
 - (void)_openLogViewSetting {
     NSLog(@"_openLogViewSetting");
-    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
-    [self.navigationController pushViewController:controller animated:YES];
+//    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
+//    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)_openHtmlBridge
