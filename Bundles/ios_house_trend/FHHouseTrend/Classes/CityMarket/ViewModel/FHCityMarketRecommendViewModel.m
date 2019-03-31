@@ -53,8 +53,9 @@
 -(void)requestData {
 
     [self.specialOldHouseList enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataSpecialOldHouseListModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary* param = @{@"order_by[]": @"11"};
         @weakify(self);
-        [FHHouseSearcher houseSearchWithQuery:@"house_type=2" param:nil offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable model) {
+        [FHHouseSearcher houseSearchWithQuery:@"house_type=2" param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable model) {
             @strongify(self);
             if (error == nil) {
                 self.dataCache[obj.title] = model;

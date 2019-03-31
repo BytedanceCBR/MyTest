@@ -25,7 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 //设置导航条透明
 - (void)setNaviBarTransparent:(BOOL)transparent;
->>>>>>> feature/house/trend
 
 @end
 

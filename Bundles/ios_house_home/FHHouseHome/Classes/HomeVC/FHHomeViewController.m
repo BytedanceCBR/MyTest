@@ -89,7 +89,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    NSURL* openUrl = [NSURL URLWithString:@"sslocal://city_market"];
+    NSURL* openUrl = [NSURL URLWithString:@"sslocal://city_market_trend"];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
 }
 

@@ -35,8 +35,8 @@
 
 - (void)setCurrentContentOffset:(CGPoint)currentContentOffset {
     [self willChangeValueForKey:@"currentContentOffset"];
-    NSLog(@"setCurrentContentOffset : %d -- %d", currentContentOffset.x, currentContentOffset.y);
     _currentContentOffset = currentContentOffset;
+    [self resetAlphaByOffset:_currentContentOffset.y];
     [self didChangeValueForKey:@"currentContentOffset"];
 }
 

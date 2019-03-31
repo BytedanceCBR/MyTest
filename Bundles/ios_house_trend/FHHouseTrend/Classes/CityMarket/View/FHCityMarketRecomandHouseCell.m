@@ -113,9 +113,9 @@
     [backgroundView addSubview:_oldPriceLabel];
     [_oldPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.priceLabel);
-        make.left.mas_equalTo(self.priceLabel).mas_offset(5);
+        make.left.mas_equalTo(self.priceLabel.mas_right).mas_offset(5);
         make.height.mas_equalTo(17);
-        make.right.mas_equalTo(backgroundView).mas_offset(-15);
+        make.right.lessThanOrEqualTo(backgroundView).mas_offset(-15);
     }];
 
 

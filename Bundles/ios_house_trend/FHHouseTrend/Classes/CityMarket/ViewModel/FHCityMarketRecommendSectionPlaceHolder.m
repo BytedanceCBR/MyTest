@@ -12,6 +12,8 @@
 #import "RXCollection.h"
 #import "FHCityMarketRecommendViewModel.h"
 #import "ReactiveObjC.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 #import "FHSearchHouseModel.h"
 #import "BDWebImage.h"
 @interface FHCityMarketRecommendSectionPlaceHolder ()
@@ -70,8 +72,39 @@
         if (imageModel != nil && !isEmptyString(imageModel.url)) {
             [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
         }
+        cell.titleLabel.text = item.displayTitle;
+        cell.subTitleLabel.text = item.displaySubtitle;
+        cell.priceLabel.text = item.displayPrice;
+        cell.oldPriceLabel.attributedText = [self getOldPriceAttribute:item.originPrice];
+        cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:item.bottomText];
     }
     return cell;
+}
+
+-(NSAttributedString*)getOldPriceAttribute:(NSString*)text {
+    return [[NSAttributedString alloc]
+            initWithString:text
+            attributes:@{
+                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
+                         NSFontAttributeName: [UIFont themeFontRegular:12],
+                         NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle],
+                         }];
+}
+
+-(NSAttributedString*)getPriceChangeAttribute:(NSArray<FHSearchHouseDataItemsModelBottomText*>*)texts {
+    NSArray<NSAttributedString*>* items = [texts rx_mapWithBlock:^id(FHSearchHouseDataItemsModelBottomText* each) {
+        return [[NSAttributedString alloc]
+                initWithString:each.text
+                attributes:@{
+                             NSForegroundColorAttributeName: [UIColor colorWithHexString:each.color],
+                             NSFontAttributeName: [UIFont themeFontRegular:12],
+                             }];
+    }];
+    NSMutableAttributedString* result = [[NSMutableAttributedString alloc] init];
+    [items enumerateObjectsUsingBlock:^(NSAttributedString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [result appendAttributedString:obj];
+    }];
+    return result;
 }
 
 - (CGFloat)tableView:(nonnull UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
