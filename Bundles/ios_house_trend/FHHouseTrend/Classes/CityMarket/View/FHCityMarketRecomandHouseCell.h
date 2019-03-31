@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UILabel* priceLabel;
 @property (nonatomic, strong) UILabel* oldPriceLabel;
 @property (nonatomic, strong) UILabel* priceChangeLabel;
+-(void)setIndex:(NSUInteger)index;
 @end
 
 NS_ASSUME_NONNULL_END

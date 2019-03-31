@@ -77,6 +77,7 @@
         cell.priceLabel.text = item.displayPrice;
         cell.oldPriceLabel.attributedText = [self getOldPriceAttribute:item.originPrice];
         cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:item.bottomText];
+        [cell setIndex:indexPath.row];
     }
     return cell;
 }

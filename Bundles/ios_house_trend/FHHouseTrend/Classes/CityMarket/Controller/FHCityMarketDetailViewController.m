@@ -24,7 +24,29 @@
 #import "FHCityMarketBottomBarView.h"
 #import "FHCityMarketRecommendViewModel.h"
 #import "FHImmersionNavBarViewModel.h"
+
+@interface FHCityOpenUrlJumpAction : NSObject
+@property (nonatomic, strong) NSURL* openUrl;
+-(void)jump;
+@end
+
+@implementation FHCityOpenUrlJumpAction
+
+- (void)jump {
+    [[TTRoute sharedRoute] openURLByPushViewController:_openUrl];
+}
+
+- (void)dealloc
+{
+
+}
+
+@end
+
 @interface FHCityMarketDetailViewController ()<FHCityMarketRecommendViewModelDataChangedListener>
+{
+    NSMutableArray<FHCityOpenUrlJumpAction*>* _actions;
+}
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
 @property (nonatomic, strong) FHCityMarketHeaderView* headerView;
@@ -42,6 +64,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.navBarViewModel = [[FHImmersionNavBarViewModel alloc] init];
+        _actions = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -176,15 +199,17 @@
     }];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
-    item.titleLabel.text = @"买房股价";
+    item.titleLabel.text = @"买房估价";
     item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
-
+    FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
+    action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
+    [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
+    [_actions addObject:action];
     FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
     item2.titleLabel.text = @"帮我找房";
     item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
     [_bottomBarView setBottomBarItems:@[item, item2]];
 }
-
 
 -(void)onDataArrived {
     [_tableView reloadData];

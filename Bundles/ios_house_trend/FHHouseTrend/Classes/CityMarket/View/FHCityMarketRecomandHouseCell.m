@@ -10,6 +10,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 @interface FHCityMarketRecomandHouseCell ()
+@property (nonatomic, strong) UILabel* tagLabel;
 @end
 
 @implementation FHCityMarketRecomandHouseCell
@@ -64,6 +65,16 @@
         make.top.mas_equalTo(self.contentView);
         make.width.mas_equalTo(57);
         make.height.mas_equalTo(50);
+    }];
+
+    self.tagLabel = [[UILabel alloc] init];
+    _tagLabel.font = [UIFont themeFontRegular:14];
+    _tagLabel.textColor = [UIColor whiteColor];
+    [self.contentView addSubview:_tagLabel];
+    [_tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.tagView).mas_offset(21);
+        make.left.mas_equalTo(self.tagView).mas_offset(16);
+        make.height.mas_equalTo(20);
     }];
 
     self.houseIconView = [[UIImageView alloc] init];
@@ -127,6 +138,12 @@
         make.height.mas_equalTo(17);
         make.right.mas_equalTo(backgroundView).mas_offset(-15);
     }];
+}
+
+-(void)setIndex:(NSUInteger)index {
+    NSUInteger imgIndex = index > 2 ? 2 : index;
+    _tagView.image = [UIImage imageNamed:[NSString stringWithFormat:@"crown-%d", imgIndex]];
+    _tagLabel.text = [NSString stringWithFormat:@"TOP%d", index + 1];
 }
 
 @end

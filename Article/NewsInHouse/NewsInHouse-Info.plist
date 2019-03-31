@@ -228,6 +228,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>66200</string>
+	<string>66300</string>
 </dict>
 </plist>
