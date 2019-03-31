@@ -71,7 +71,7 @@ extern NSString *const kFHToastCountKey;
             return;
         }
 
-        [wself.viewController setNavBar:NO];
+        [wself.viewController refreshContentOffset:self.view.scrollView.contentOffset];
         [wself.viewController.emptyView hideEmptyView];
         self.view.hidden = NO;
 
@@ -243,12 +243,12 @@ extern NSString *const kFHToastCountKey;
 
 //进入城市行情页
 - (void)goToCityMarket {
-//    BOOL isPop = [self popToViewController:@"FHPriceValuationHistoryController" animated:YES];
-//    if(!isPop){
-//        //push
-//        NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_history"];
-//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-//    }
+    BOOL isPop = [self popToViewController:@"FHCityMarketDetailViewController" animated:YES];
+    if(!isPop){
+        //push
+        NSURL* url = [NSURL URLWithString:@"sslocal://city_market_trend"];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
 }
 
 - (void)houseSale {

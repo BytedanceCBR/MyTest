@@ -45,8 +45,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [self scrollViewDidScroll:self.resultView.scrollView];
+    [self refreshContentOffset:self.resultView.scrollView.contentOffset];
 }
 
 - (void)initNavbar {
@@ -89,16 +88,11 @@
     [_viewModel requestData];
 }
 
-#pragma mark - UIViewControllerErrorHandler
-
-- (BOOL)tt_hasValidateData {
-    return NO;
-}
-
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat alpha = scrollView.contentOffset.y / 15;
+- (void)refreshContentOffset:(CGPoint)contentOffset {
+    CGFloat alpha = contentOffset.y / 15;
+    if(alpha > 1){
+        alpha = 1;
+    }
     if (alpha > 0) {
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
@@ -110,11 +104,23 @@
     }
     [self.customNavBarView refreshAlpha:alpha];
     
-    if (scrollView.contentOffset.y > 0) {
+    if (contentOffset.y > 0) {
         [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
     }else {
         [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
     }
+}
+
+#pragma mark - UIViewControllerErrorHandler
+
+- (BOOL)tt_hasValidateData {
+    return NO;
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self refreshContentOffset:scrollView.contentOffset];
 }
 
 @end

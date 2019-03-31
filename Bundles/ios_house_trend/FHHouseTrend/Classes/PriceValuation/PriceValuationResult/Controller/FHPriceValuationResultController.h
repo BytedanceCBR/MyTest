@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setNavBar:(BOOL)error;
 
+- (void)refreshContentOffset:(CGPoint)contentOffset;
+
 @end
 
 NS_ASSUME_NONNULL_END
