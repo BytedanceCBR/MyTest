@@ -538,6 +538,7 @@
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		6198677D2223E8EE0056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198677C2223E8EE0056B2EF /* NotificationService.m */; };
+		619867812223E8EE0056B2EF /* serviceNofExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 619867792223E8EE0056B2EF /* serviceNofExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		619867862223E9650056B2EF /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 619867562223E22B0056B2EF /* TTNotificationServiceExtensionBase.m */; };
 		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
 		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -6105,6 +6106,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6198677F2223E8EE0056B2EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 619867782223E8EE0056B2EF;
+			remoteInfo = serviceNofExtension;
+		};
 		619867912223E9A70056B2EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
@@ -6174,6 +6182,17 @@
 			files = (
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEFA5A54205FB1A8001F50D8 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				619867812223E8EE0056B2EF /* serviceNofExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */ = {
@@ -17483,6 +17502,7 @@
 				FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */,
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
 				FEFA5A25205FB1A8001F50D8 /* Frameworks */,
+				FEFA5A54205FB1A8001F50D8 /* Embed App Extensions */,
 				FEFA5A55205FB1A8001F50D8 /* ShellScript */,
 				FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */,
 				FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */,
@@ -17494,6 +17514,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				619867802223E8EE0056B2EF /* PBXTargetDependency */,
 			);
 			name = NewsLiteInHouse;
 			productName = Article;
@@ -17583,7 +17604,7 @@
 					};
 					FEFA5259205FB1A8001F50D8 = {
 						DevelopmentTeam = X46375UBYG;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -18195,7 +18216,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../lab/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
@@ -18437,7 +18458,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../lab/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 				"${PODS_ROOT}/TTDebugAssistant/TTDebugAssistant/Assets/EditImage.xcassets",
 			);
@@ -18621,7 +18642,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../lab/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -19104,7 +19125,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
-				"${PODS_ROOT}/../../../lab/ios_house_im/ios_house_im/Assets/images.xcassets",
+				"${PODS_ROOT}/ios_house_im/ios_house_im/Assets/images.xcassets",
 				"${PODS_CONFIGURATION_BUILD_DIR}/ios_house_im/ios_house_im.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
@@ -24959,6 +24980,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		619867802223E8EE0056B2EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 619867782223E8EE0056B2EF /* serviceNofExtension */;
+			targetProxy = 6198677F2223E8EE0056B2EF /* PBXContainerItemProxy */;
+		};
 		619867922223E9A70056B2EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6198678A2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */;
@@ -25929,9 +25955,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -26010,7 +26036,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse_dev;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -26034,9 +26060,9 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/NewsInHouse.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -26123,7 +26149,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1.inhouse;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
