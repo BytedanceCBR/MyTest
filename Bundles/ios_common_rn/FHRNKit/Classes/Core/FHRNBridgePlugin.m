@@ -11,11 +11,18 @@
 #import <FHEnvContext.h>
 #import <NSDictionary+TTAdditions.h>
 #import "FHRNHTTPRequestSerializer.h"
+#import <TTBridgeUnify/TTBridgeRegister.h>
+#import <TTBridgeUnify/TTBridgeDefines.h>
 
 @implementation FHRNBridgePlugin
 
 + (TTBridgeInstanceType)instanceType {
     return TTBridgeInstanceTypeAssociated;
+}
+
++ (void)load {
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
 }
 
 - (void)fetchWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -96,6 +103,12 @@
             }
         }];
     }
+}
+
+- (void)alertTestWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    UIAlertView *alertTest = [[UIAlertView alloc] initWithTitle:@"test" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+    [alertTest show];
 }
 
 @end
