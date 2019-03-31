@@ -269,6 +269,11 @@
     _selectorCollectionView.contentInset = UIEdgeInsetsMake(0, 20, 0, 0);
 }
 
+-(void)resetChatView {
+    [_lineChart removeFromSuperview];
+    [self setupChartView];
+}
+
 -(void)setupChartView {
     self.lineChart = [[PNLineChart alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 207.0)];
     self.lineChart.yLabelNum = 4; // 4 lines
