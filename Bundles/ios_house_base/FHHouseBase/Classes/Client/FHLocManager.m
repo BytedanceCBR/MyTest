@@ -22,6 +22,7 @@
 #import <TTUIResponderHelper.h>
 #import <HMDTTMonitor.h>
 #import <TTInstallIDManager.h>
+#import <TTArticleCategoryManager.h>
 
 NSString * const kFHAllConfigLoadSuccessNotice = @"FHAllConfigLoadSuccessNotice"; //通知名称
 NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //通知名称
@@ -122,6 +123,11 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     //服务端配置频控
     if (![[[FHHouseBridgeManager sharedInstance] envContextBridge] isNeedSwitchCityCompare]) {
+        return;
+    }
+    
+    //无定位权限不弹切换城市alert
+    if (![self isHaveLocationAuthorization]) {
         return;
     }
     
@@ -363,11 +369,12 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 }
                 
                 FHConfigDataModel *configCache = [[FHEnvContext sharedInstance] getConfigFromCache];
-                
                 if (!configCache) {
                     [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                     [wSelf updateAllConfig:model isNeedDiff:NO];
                 }
+                
+                [[TTArticleCategoryManager sharedManager] startGetCategory];
                 
                 wSelf.retryConfigCount = 3;
             }];

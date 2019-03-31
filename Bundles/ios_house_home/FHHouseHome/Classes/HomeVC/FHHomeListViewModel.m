@@ -190,6 +190,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     self.isFromLocalTestChange = NO;
                 }
                 
+                [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
+                
                 return;
             }
             
@@ -574,7 +576,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0 && !error) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                 self.tableViewV.hidden = YES;
-                self.isFromLocalTestChange = YES;
+                self.isFromLocalTestChange = NO;
                 [self checkCityStatus];
                 
                 

@@ -91,6 +91,17 @@
         return [eventDic copy];
     }];
 
+    [[TTTracker sharedInstance] setTransferBlock:^NSString * _Nonnull(TTTrackerURLType type) {
+        if (type == TTTrackerURLTypeBatchReport) {
+            return  [CommonURLSetting appLogURLString];
+        }else if (type == TTTrackerURLTypeImmediateReport){
+            return [CommonURLSetting rtAppLogURLString];
+        }else if (type == TTTrackerURLTypeConfig){
+            return [CommonURLSetting trackLogConfigURLString];
+        }
+        return nil;
+    }];
+    
     [[self class] updateCustomerHeader];
 
     [TTTracker startWithAppID:[TTSandBoxHelper ssAppID] channel:[TTSandBoxHelper getCurrentChannel]];

@@ -54,8 +54,7 @@ static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M
 // 获取命中的实验
 - (void)fetchABTestData
 {
-    [BDABTestManager fetchExperimentDataWithHostType:BDABTestHostTypeDomestic completionBlock:^(NSError *error, NSDictionary *data) {
-        
+    [BDABTestManager fetchExperimentDataWithURL:@"https://abtest-ch.haoduofangs.com/common" maxRetryCount:0 completionBlock:^(NSError *error, NSDictionary *data) {
 //        NSLog(@"abtest data:%@",data);
     }];
 }

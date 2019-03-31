@@ -28,7 +28,7 @@
 + (void)configIESWebFalcon
 {
     if ([[[FHHouseBridgeManager sharedInstance] envContextBridge] isOpenWebOffline]) {
-        IESFalconManager.interceptionWKHttpScheme = YES;
+        IESFalconManager.interceptionWKHttpScheme = NO;
         IESFalconManager.interceptionEnable = YES;
         
         NSString *pattern = @"^(http|https)://.*.[pstatp.com]/toutiao/";
