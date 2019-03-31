@@ -99,6 +99,11 @@
     return [holder tableView:tableView heightForHeaderInSection:section];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    id<FHSectionCellPlaceHolder> holder = [self holderAtSection:indexPath.section];
+    [holder tableView:tableView didSelectRowAtIndexPath:indexPath];
+}
+
 -(void)adjustSectionOffset {
     __block NSUInteger sectionOffset = 0;
     [_sections enumerateObjectsUsingBlock:^(id<FHSectionCellPlaceHolder>  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

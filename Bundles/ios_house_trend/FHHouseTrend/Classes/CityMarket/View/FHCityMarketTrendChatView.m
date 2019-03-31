@@ -263,6 +263,7 @@
         make.height.mas_equalTo(28);
         make.left.right.mas_equalTo(self);
     }];
+    _selectorCollectionView.showsHorizontalScrollIndicator = NO;
     _selectorCollectionView.backgroundColor = [UIColor whiteColor];
     _selectorCollectionView.dataSource = self;
     _selectorCollectionView.delegate = self;

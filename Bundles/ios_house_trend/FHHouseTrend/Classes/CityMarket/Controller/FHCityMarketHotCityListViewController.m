@@ -97,7 +97,11 @@
     [self.view addSubview:_bottomBarView];
     [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64);
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            make.height.mas_equalTo(98);
+        } else {
+            make.height.mas_equalTo(64);
+        }
     }];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];

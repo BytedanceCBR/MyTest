@@ -25,7 +25,7 @@
 {
     self = [super init];
     if (self) {
-        _navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 64 : 84;
+        _navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
         [self initHeaderBgView];
         [self initHeaderInfo];
     }
@@ -35,7 +35,7 @@
 -(instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 64 : 84;
+        _navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
         [self initHeaderBgView];
         [self initHeaderInfo];
     }

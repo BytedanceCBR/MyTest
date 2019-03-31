@@ -104,13 +104,14 @@
         make.left.right.bottom.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view);
     }];
-    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 64 : 84;
+    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
 
     self.headerView = [[FHCityMarketHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 195 + navBarHeight)]; //174
     _tableView.tableHeaderView = _headerView;
     [self.view bringSubviewToFront:_bottomBarView];
+    CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
     // 这里设置tableView底部滚动的区域，保证内容可以完全露出
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
     [self setupSections];
     [self bindHeaderView];
 }
@@ -195,7 +196,11 @@
     [self.view addSubview:_bottomBarView];
     [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64);
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            make.height.mas_equalTo(98);
+        } else {
+            make.height.mas_equalTo(64);
+        }
     }];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];

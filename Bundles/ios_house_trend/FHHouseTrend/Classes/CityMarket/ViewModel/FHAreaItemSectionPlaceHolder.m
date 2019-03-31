@@ -117,4 +117,12 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([_hotList count] > indexPath.section - _sectionOffset && [_hotList[indexPath.section - _sectionOffset].items count] > indexPath.row) {
+        FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - _sectionOffset].items[indexPath.row];
+        NSURL* url = [NSURL URLWithString:model.openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url];
+    }
+}
+
 @end

@@ -16,6 +16,7 @@
 #import "UIFont+House.h"
 #import "FHSearchHouseModel.h"
 #import "BDWebImage.h"
+#import "TTRoute.h"
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
 @property (nonatomic, strong) FHCityMarketRecommendViewModel* recommendViewModel;
@@ -135,6 +136,18 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 28 + 69 + 77;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHSearchHouseDataModel* model = [_recommendViewModel currentData];
+    if (model != nil && [model.items count] > indexPath.row) {
+        FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", item.hid];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }
+    }
 }
 
 @end
