@@ -132,10 +132,10 @@
             number = textField.text;//@(textField.text integerValue]);
         }
         
-        if (textField == self.lowerTextField) {            
+        if (textField == self.lowerTextField && [self.delegate respondsToSelector:@selector(updateLowerPrice:inCell:)]) {
             [self.delegate updateLowerPrice:number inCell:self];
         }
-        if (textField == self.higherTextField) {
+        if (textField == self.higherTextField && [self.delegate respondsToSelector:@selector(updateHigherPrice:inCell:)]) {
             [self.delegate updateHigherPrice:number inCell:self];
         }
     }

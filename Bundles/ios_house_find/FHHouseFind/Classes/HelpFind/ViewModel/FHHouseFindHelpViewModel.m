@@ -348,6 +348,24 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             
             FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
+            FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+            FHSearchFilterConfigOption *options = [item.options firstObject];
+            NSMutableString *titleString = [NSMutableString stringWithString:@""];
+            
+            NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"description" ascending:YES];
+            NSMutableArray *itemsArray = [selectItem.selectIndexes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
+            [itemsArray enumerateObjectsUsingBlock:^(NSNumber *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                
+                if (obj.integerValue < options.options.count) {
+                    FHSearchFilterConfigOption *itemOption = options.options[obj.integerValue];
+                    if (idx == 0) {
+                        [titleString appendString:itemOption.text];
+                    }else {
+                        [titleString appendString:[NSString stringWithFormat:@"/%@",itemOption.text]];
+                    }
+                }
+            }];
+            [pcell updateWithTitle:titleString];
             return pcell;
         }else {
 
