@@ -122,6 +122,11 @@
                         return NO;
                     }
                 }else{
+                    //控制小数点前面的字符数不大于6个
+                    NSUInteger loc = range.location;
+                    if(range.location >= 6){
+                        return NO;
+                    }
                     return YES;
                 }
                 
@@ -206,6 +211,11 @@
 
 - (void)evaluate {
     [self.view endEditing:YES];
+    
+    if([self.infoModel.squaremeter doubleValue] == 0){
+        [[ToastManager manager] showToast:@"面积不能为0"];
+        return;
+    }
     
     if ([TTReachability isNetworkConnected]) {
         NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];

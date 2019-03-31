@@ -14,7 +14,7 @@
 #import "UIView+House.h"
 #import "FHDetailPriceMarkerView.h"
 
-@interface FHPriceValuationResultView()
+@interface FHPriceValuationResultView()<PNChartDelegate>
 
 @property(nonatomic, assign) CGFloat naviBarHeight;
 @property(nonatomic, strong) UIImageView *headerImageView;

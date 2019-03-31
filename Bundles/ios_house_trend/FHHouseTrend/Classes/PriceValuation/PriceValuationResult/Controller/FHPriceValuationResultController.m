@@ -43,6 +43,12 @@
     [super viewWillAppear:animated];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self scrollViewDidScroll:self.resultView.scrollView];
+}
+
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"查房价";
@@ -92,7 +98,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat alpha = scrollView.contentOffset.y / 30;
+    CGFloat alpha = scrollView.contentOffset.y / 15;
     if (alpha > 0) {
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
@@ -103,6 +109,12 @@
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
     }
     [self.customNavBarView refreshAlpha:alpha];
+    
+    if (scrollView.contentOffset.y > 0) {
+        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
+    }else {
+        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+    }
 }
 
 @end
