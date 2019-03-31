@@ -122,6 +122,7 @@
     self.customNavBarView.title.text = @"城市行情";
     self.customNavBarView.title.textColor = [UIColor whiteColor];
     [self.customNavBarView cleanStyle:YES];
+    self.customNavBarView.bgView.backgroundColor = [UIColor whiteColor];
 }
 
 -(void)bindHeaderView {
@@ -169,6 +170,11 @@
     }];
 
     RAC(self.customNavBarView.bgView, alpha) = RACObserve(_navBarViewModel, alpha);
+    [RACObserve(_navBarViewModel, backButtonImage) subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self.customNavBarView.leftBtn setImage:x forState:UIControlStateNormal];
+    }];
+    RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
     [_headerViewModel requestData];
 }

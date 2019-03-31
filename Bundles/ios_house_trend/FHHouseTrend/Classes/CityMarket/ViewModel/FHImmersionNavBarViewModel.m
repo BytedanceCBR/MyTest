@@ -6,7 +6,8 @@
 //
 
 #import "FHImmersionNavBarViewModel.h"
-
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
 @interface FHImmersionNavBarViewModel ()
 {
     CGFloat _throttle;
@@ -42,12 +43,18 @@
 
 -(void)resetAlphaByOffset:(CGFloat)offset {
     CGFloat theAlpha = 0;
-    if (offset > _throttle) {
+    if (offset == 0) {
+        theAlpha = 0;
+        self.titleColor = [UIColor whiteColor];
+        self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
+    } else if (offset > _throttle) {
         theAlpha = 1;
+        self.titleColor = [UIColor blackColor];
+        self.backButtonImage = [UIImage imageNamed:@"icon-return"];
     } else if (_throttle - offset > 0) {
         theAlpha = 0.5;
-    } else {
-        theAlpha = 0;
+        self.titleColor = [UIColor whiteColor];
+        self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
     }
     self.alpha = theAlpha;
 }

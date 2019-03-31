@@ -40,7 +40,7 @@
     _headerPriceLabel.text = @"均价";
     [self addSubview:_headerPriceLabel];
     [_headerPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(188);
+        make.left.mas_equalTo(self.mas_right).mas_offset(-187);
         make.top.mas_equalTo(15);
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(-3);
