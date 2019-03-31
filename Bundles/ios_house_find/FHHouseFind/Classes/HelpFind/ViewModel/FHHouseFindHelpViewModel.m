@@ -34,7 +34,7 @@
 
 extern NSString *const kFHPhoneNumberCacheKey;
 
-@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate>
+@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) FHHouseFindHelpBottomView *bottomView;
@@ -266,10 +266,45 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [selectItem.selectIndexes addObjectsFromArray:_selectRegionItem.selectIndexes];
     }
 
+    [self reloadCollectionViewSection:section];
+}
+
+#pragma mark - price cell delegate
+
+- (void)reloadCollectionViewSection:(NSInteger)section
+{
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:section]];
     [CATransaction commit];
+}
+-(void)updateLowerPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
+{
+    FHHouseType ht = cell.tag;
+    FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
+    priceItem.lowerPrice = price;
+    [priceItem.selectIndexes removeAllObjects];
+    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
+}
+
+-(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
+{
+    FHHouseType ht = cell.tag;
+    FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
+    priceItem.higherPrice = price;
+    [priceItem.selectIndexes removeAllObjects];
+    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
+}
+-(FHHouseFindSelectItemModel *)priceItemWithHouseType:(FHHouseType)ht
+{
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    
+    FHHouseFindSelectItemModel *priceItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
+    if (!priceItem) {
+        priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
+        
+    }
+    return priceItem;
 }
 
 #pragma mark - UICollectionView delegate
@@ -464,6 +499,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
             }else{
                 if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
                     [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
+                    selectItem.lowerPrice = nil;
+                    selectItem.higherPrice = nil;
                 }else if (item.tabId.integerValue == FHSearchTabIdTypeRoom) {
                     if (selectItem.selectIndexes.count >= ROOM_MAX_COUNT) {
                         [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个",ROOM_MAX_COUNT]];
@@ -484,10 +521,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
             }
         }
 
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        [collectionView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section]];
-        [CATransaction commit];
+        [self reloadCollectionViewSection:indexPath.section];
     }
     
 }
@@ -739,6 +773,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
 - (void)textFieldDidChange:(NSNotification *)notification
 {
     UITextField *textField = (UITextField *)notification.object;
+    if (textField != self.contactCell.phoneInput && textField != self.contactCell.varifyCodeInput) {
+        return;
+    }
     NSString *text = textField.text;
     NSInteger limit = 0;
     if(textField == self.contactCell.phoneInput) {
