@@ -19,6 +19,7 @@
 #import <FHCommonUI/ToastManager.h>
 #import <TTReachability/TTReachability.h>
 #import "FHHouseFindHelpRegionSheet.h"
+#import <TTAccountSDK/TTAccount.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -106,13 +107,42 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)resetBtnDidClick
 {
-    
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    for (FHHouseFindSelectItemModel *itemModel in model.items) {
+        [itemModel.selectIndexes removeAllObjects];
+    }
+    [self.collectionView reloadData];
 }
 
 - (void)confirmBtnDidClick
 {
     [self.collectionView endEditing:YES];
     __weak typeof(self) wself = self;
+    
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
+    if (selectItem.higherPrice.length < 1 && selectItem.lowerPrice.length < 1 && selectItem.selectIndexes.count < 1) {
+        [[ToastManager manager] showToast:@"请选择购房预算"];
+        return;
+    }
+    selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRoom];
+    if (selectItem.selectIndexes.count < 1) {
+        [[ToastManager manager] showToast:@"请选择户型"];
+        return;
+    }
+    selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRegion];
+    if (selectItem.selectIndexes.count < 1) {
+        [[ToastManager manager] showToast:@"请选择区域"];
+        return;
+    }
+    
+    if([TTAccount sharedAccount].isLogin){
+        [self submitAction];
+        return;
+    }
+    
     NSString *phoneNumber = self.contactCell.phoneInput.text;
     NSString *smsCode = self.contactCell.varifyCodeInput.text;
 
@@ -143,6 +173,27 @@ extern NSString *const kFHPhoneNumberCacheKey;
 #pragma mark 提交选项
 - (void)submitAction
 {
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *selectModel = [self selectModelWithType:ht];
+    NSMutableString *query = [NSMutableString new];
+    if (selectModel.items.count > 0) {
+        for (FHHouseFindSelectItemModel *item in selectModel.items ) {
+            NSString *q = [item selectQuery];
+            if (!q) {
+#if DEBUG
+                NSLog(@"WARNING select query is nil for item : %@",item);
+#endif
+                continue;
+            }
+            if (query.length > 0) {
+                [query appendString:@"&"];
+            }
+            [query appendString:q];
+        }
+    }
+    NSLog(@"zjing query : %@",query);
+
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://house_list?house_type=%d&%@",ht,query];
     
 }
 
