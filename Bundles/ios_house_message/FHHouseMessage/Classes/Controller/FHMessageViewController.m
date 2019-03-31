@@ -20,7 +20,7 @@
 #import "IMManager.h"
 #import <TTReachability/TTReachability.h>
 #import "FHBubbleTipManager.h"
-
+#import "ReactiveObjC.h"
 @interface FHMessageViewController ()
 
 @property(nonatomic, strong) FHMessageViewModel *viewModel;

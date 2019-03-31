@@ -92,6 +92,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // delete订阅信息
 + (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
+//仅仅给小区使用的sug建议
++ (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

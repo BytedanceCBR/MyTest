@@ -114,9 +114,22 @@
 "transaction_history"        = "FHTransactionHistoryController";
 "related_neighborhood_list"   = "FHRelatedNeighborhoodListViewController";
 
-//"second_house_main"   = "FHHouseOldHomeViewController";
+"city_market_trend"   = "FHCityMarketDetailViewController";
+"city_market_hot_list"   = "FHCityMarketHotCityListViewController";
+
 "second_house_main"   = "FHBaseMainListViewController";
 // 帮我找房提交页面
 "house_find_help"   = "FHHouseFindHelpViewController";
 // 帮我找房结果页
 "house_find_result"   = "FHHouseFindResultViewController";
+
+//房屋估价
+"price_valuation" = "FHPriceValuationViewController";
+//房屋估价历史
+"price_valuation_history" = "FHPriceValuationHistoryController";
+//房屋估计小区搜索
+"price_valuation_neiborhood_search" = "FHPriceValuationNeiborhoodSearchController";
+//房屋估价结果
+"price_valuation_result" = "FHPriceValuationResultController";
+//房屋估价补充信息
+"price_valuation_more_info" = "FHPriceValuationMoreInfoController";
