@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPriceValuationResultView : UIView
 
+@property(nonatomic, strong) UIScrollView *scrollView;
 @property(nonatomic , weak) id<FHPriceValuationResultViewDelegate> delegate;
 
 - (instancetype)initWithFrame:(CGRect)frame naviBarHeight:(CGFloat)naviBarHeight;

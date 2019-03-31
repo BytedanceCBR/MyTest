@@ -152,11 +152,20 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
     if(transparent){
         self.backgroundColor = [UIColor clearColor];
         self.bgView.alpha = 0;
-        self.seperatorLine.backgroundColor = [UIColor clearColor];
+        self.seperatorLine.hidden = YES;
     }else{
         self.backgroundColor = [UIColor whiteColor];
         self.bgView.alpha = 0.5;
-        self.seperatorLine.backgroundColor = [UIColor themeGray6];
+        self.seperatorLine.hidden = NO;
+    }
+}
+
+- (void)refreshAlpha:(CGFloat)alpha {
+    self.backgroundColor = [UIColor colorWithWhite:1 alpha:alpha];
+    if (alpha >= 1) {
+        self.seperatorLine.hidden = NO;
+    }else {
+        self.seperatorLine.hidden = YES;
     }
 }
 

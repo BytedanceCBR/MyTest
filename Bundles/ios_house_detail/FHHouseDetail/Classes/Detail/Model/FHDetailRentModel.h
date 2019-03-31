@@ -21,6 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *content;
 @end
 
+@protocol FHRentDetailResponseDataSchoolInfoModel <NSObject>
+
+@end
+
 @interface FHRentDetailResponseDataSchoolInfoModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *schoolId;
 @property (nonatomic, copy , nullable) NSString *schoolName;
@@ -69,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataEvaluationInfo* evaluationInfo;
-@property (nonatomic, strong, nullable) FHRentDetailResponseDataSchoolInfoModel *schoolInfo;
+@property (nonatomic, strong, nullable) NSArray<FHRentDetailResponseDataSchoolInfoModel>* schoolInfo;
 
 @end
 

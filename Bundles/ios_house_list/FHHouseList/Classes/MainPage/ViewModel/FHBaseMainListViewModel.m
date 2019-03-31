@@ -694,10 +694,10 @@
 
 -(NSString *)navbarPlaceholder
 {
-    if (self.topView && _houseType == FHHouseTypeRentHouse) {
-        //大类页
-        return @"你想住哪里？";
-    }
+//    if (self.topView && _houseType == FHHouseTypeRentHouse) {
+//        //大类页
+//        return @"你想住哪里？";
+//    }
     switch (_houseType) {
             case FHHouseTypeNewHouse:
                 return @"请输入楼盘名/地址";
