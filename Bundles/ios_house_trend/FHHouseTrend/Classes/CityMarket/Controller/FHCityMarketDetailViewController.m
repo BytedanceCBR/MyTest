@@ -24,21 +24,22 @@
 #import "FHCityMarketBottomBarView.h"
 #import "FHCityMarketRecommendViewModel.h"
 #import "FHImmersionNavBarViewModel.h"
-
+#import "TTTracker.h"
+#import "TTTrackerWrapper.h"
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
+@property (nonatomic, strong) TTRouteUserInfo* userInfo;
 -(void)jump;
 @end
 
 @implementation FHCityOpenUrlJumpAction
 
 - (void)jump {
-    [[TTRoute sharedRoute] openURLByPushViewController:_openUrl];
-}
-
-- (void)dealloc
-{
-
+    if (_userInfo != nil) {
+        [[TTRoute sharedRoute] openURLByPushViewController:_openUrl userInfo:_userInfo];
+    } else {
+        [[TTRoute sharedRoute] openURLByPushViewController:_openUrl];
+    }
 }
 
 @end
@@ -65,6 +66,12 @@
     if (self) {
         self.navBarViewModel = [[FHImmersionNavBarViewModel alloc] init];
         _actions = [[NSMutableArray alloc] init];
+        self.tracerDict[@"enter_from"] = paramObj.allParams[@"enter_from"];
+        self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
+        self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
+        self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
+        NSDictionary* dict = paramObj.allParams[@"tracer"];
+        NSLog(@"%@", dict);
     }
     return self;
 }
@@ -104,15 +111,26 @@
         make.left.right.bottom.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view);
     }];
-    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 64 : 84;
+    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
 
     self.headerView = [[FHCityMarketHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 195 + navBarHeight)]; //174
     _tableView.tableHeaderView = _headerView;
     [self.view bringSubviewToFront:_bottomBarView];
+    CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
     // 这里设置tableView底部滚动的区域，保证内容可以完全露出
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
     [self setupSections];
     [self bindHeaderView];
+    [self logGoDetail];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
+-(void)logGoDetail {
+    [TTTrackerWrapper eventV3:@"go_detail" params:@{@"page_type": @"city_market"}];
 }
 
 -(void)initNavBar {
@@ -121,6 +139,7 @@
     self.customNavBarView.title.text = @"城市行情";
     self.customNavBarView.title.textColor = [UIColor whiteColor];
     [self.customNavBarView cleanStyle:YES];
+    self.customNavBarView.bgView.backgroundColor = [UIColor whiteColor];
 }
 
 -(void)bindHeaderView {
@@ -146,6 +165,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.listViewModel adjustSectionOffset];
             [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.listViewModel notifyCellDisplay];
+            });
         });
     }];
 
@@ -168,7 +190,19 @@
     }];
 
     RAC(self.customNavBarView.bgView, alpha) = RACObserve(_navBarViewModel, alpha);
+    [RACObserve(_navBarViewModel, backButtonImage) subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self.customNavBarView.leftBtn setImage:x forState:UIControlStateNormal];
+    }];
+    RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
+    [RACObserve(_navBarViewModel, statusBarStyle) subscribeNext:^(id  _Nullable x) {
+        if ([x integerValue] == 0) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        } else {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        }
+    }];
     [_headerViewModel requestData];
 }
 
@@ -183,7 +217,7 @@
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
 
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
 }
 
 -(void)setupBottomBar {
@@ -195,20 +229,34 @@
     [self.view addSubview:_bottomBarView];
     [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64);
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            make.height.mas_equalTo(98);
+        } else {
+            make.height.mas_equalTo(64);
+        }
     }];
+
+    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
     item.titleLabel.text = @"买房估价";
     item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
     FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
     action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
+    action.userInfo = info;
     [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     [_actions addObject:action];
+
     FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
     item2.titleLabel.text = @"帮我找房";
     item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
     [_bottomBarView setBottomBarItems:@[item, item2]];
+}
+
+-(NSDictionary*)traceParams {
+    self.tracerDict[@"enter_from"] = @"city_market";
+    self.tracerDict[@"origin_from"] = @"city_market";
+    return [self.tracerDict copy];
 }
 
 -(void)onDataArrived {

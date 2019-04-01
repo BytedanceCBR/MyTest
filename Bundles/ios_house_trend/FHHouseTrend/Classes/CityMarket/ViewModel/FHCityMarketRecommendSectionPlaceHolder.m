@@ -16,9 +16,13 @@
 #import "UIFont+House.h"
 #import "FHSearchHouseModel.h"
 #import "BDWebImage.h"
+#import "TTRoute.h"
+#import "FHCityMarketRecommendFooterView.h"
+
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
 @property (nonatomic, strong) FHCityMarketRecommendViewModel* recommendViewModel;
+@property (nonatomic, strong) FHCityMarketRecommendFooterView* footerView;
 @end
 
 
@@ -83,13 +87,17 @@
 }
 
 -(NSAttributedString*)getOldPriceAttribute:(NSString*)text {
-    return [[NSAttributedString alloc]
-            initWithString:text
-            attributes:@{
-                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
-                         NSFontAttributeName: [UIFont themeFontRegular:12],
-                         NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle],
-                         }];
+    if (text == nil) {
+        return nil;
+    } else {
+        return [[NSAttributedString alloc]
+                initWithString:text
+                attributes:@{
+                             NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
+                             NSFontAttributeName: [UIFont themeFontRegular:12],
+                             NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle],
+                             }];
+    }
 }
 
 -(NSAttributedString*)getPriceChangeAttribute:(NSArray<FHSearchHouseDataItemsModelBottomText*>*)texts {
@@ -123,7 +131,7 @@
             [self.headerView.segment insertSegmentWithTitle:obj atIndex:idx animated:NO];
         }];
         _headerView.segment.selectedSegmentIndex = 0;
-        RAC(_headerView.titleLabel, text) = RACObserve(_recommendViewModel, title);
+//        RAC(_headerView.titleLabel, text) = RACObserve(_recommendViewModel, title);
         RAC(_headerView.questionLabel, text) = RACObserve(_recommendViewModel, question);
         RAC(_headerView.answerLabel, text) = RACObserve(_recommendViewModel, answoer);
         [RACObserve(_headerView.segment, selectedSegmentIndex) subscribeNext:^(id  _Nullable x) {
@@ -135,6 +143,44 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 28 + 69 + 77;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHSearchHouseDataModel* model = [_recommendViewModel currentData];
+    if (model != nil && [model.items count] > indexPath.row) {
+        FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
+        NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", item.hid];
+        if (urlStr.length > 0) {
+            NSURL *url = [NSURL URLWithString:urlStr];
+            [[TTRoute sharedRoute] openURLByPushViewController:url];
+        }
+    }
+}
+
+- (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
+    NSIndexPath* indexPathWithOffset = [self indexPathWithOffset:indexPath];
+    if (![self.traceCache containsObject:indexPathWithOffset]) {
+        
+    }
+}
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    if (_footerView == nil) {
+        self.footerView = [[FHCityMarketRecommendFooterView alloc] init];
+        RAC(_footerView.textLabel, text) = RACObserve(_recommendViewModel, footerTitle);
+        [_footerView.clickBtn addTarget:self action:@selector(onClickMore:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _footerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 37;
+}
+
+-(void)onClickMore:(id)sender {
+    NSURL* url = [NSURL URLWithString:self.recommendViewModel.openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url];
 }
 
 @end

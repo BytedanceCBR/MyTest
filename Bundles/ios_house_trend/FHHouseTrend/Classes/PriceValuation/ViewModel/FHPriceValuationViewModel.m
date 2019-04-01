@@ -213,7 +213,7 @@
     dict[@"delegate"] = delegate;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_neiborhood_search"];
+    NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_neighborhood_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
