@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, readonly) UITextField *varifyCodeInput;
 @property(nonatomic, strong) UIButton *sendVerifyCodeBtn;
 @property(nonatomic , weak) id<FHHouseFindLoginDelegate> delegate;
+@property(nonatomic, copy) NSString *phoneNum;
 
 - (void)enableSendVerifyCodeBtn:(BOOL)enabled;
 

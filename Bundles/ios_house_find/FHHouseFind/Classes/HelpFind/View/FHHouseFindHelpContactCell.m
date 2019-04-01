@@ -83,6 +83,38 @@
     }];
 }
 
+- (void)setPhoneNum:(NSString *)phoneNum
+{
+    if (phoneNum.length > 0) {
+        self.phoneInput.text = phoneNum;
+        self.phoneInput.enabled = NO;
+        self.varifyCodeInput.hidden = YES;
+        self.sendVerifyCodeBtn.hidden = YES;
+        self.singleLine2.hidden = YES;
+        [self.varifyCodeInput mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.phoneInput.mas_bottom);
+            make.height.mas_equalTo(0);
+        }];
+        [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.varifyCodeInput.mas_bottom).mas_offset(20);
+            make.height.mas_equalTo(0);
+        }];
+    }else {
+        self.phoneInput.enabled = YES;
+        self.varifyCodeInput.hidden = NO;
+        self.sendVerifyCodeBtn.hidden = NO;
+        self.singleLine2.hidden = NO;
+        [self.varifyCodeInput mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(43);
+            make.height.mas_equalTo(20);
+        }];
+        [self.singleLine2 mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.varifyCodeInput.mas_bottom).offset(11);
+            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        }];
+    }
+}
+
 - (void)sendVerifyCode {
     if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode)]) {
         [self.delegate sendVerifyCode];

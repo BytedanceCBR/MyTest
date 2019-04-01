@@ -1,23 +1,23 @@
 //
-//  FHHouseFindHelpBottomView.m
+//  FHHouseFindHelpSubmitCell.m
 //  FHHouseFind
 //
-//  Created by 张静 on 2019/3/26.
+//  Created by 张静 on 2019/4/1.
 //
 
-#import "FHHouseFindHelpBottomView.h"
+#import "FHHouseFindHelpSubmitCell.h"
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <Masonry.h>
 
-@interface FHHouseFindHelpBottomView ()
+@interface FHHouseFindHelpSubmitCell ()
 
 @property(nonatomic, strong)UIButton *resetBtn;
 @property(nonatomic, strong)UIButton *confirmBtn;
 
 @end
 
-@implementation FHHouseFindHelpBottomView
+@implementation FHHouseFindHelpSubmitCell
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -37,12 +37,12 @@
     
     [self.resetBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.centerY.mas_equalTo(self);
+        make.top.mas_equalTo(10);
         make.height.mas_equalTo(40);
     }];
     [self.confirmBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.resetBtn.mas_right).mas_offset(20);
-        make.centerY.mas_equalTo(self);
+        make.centerY.mas_equalTo(self.resetBtn);
         make.height.mas_equalTo(40);
         make.right.mas_equalTo(-20);
         make.width.mas_equalTo(self.resetBtn);

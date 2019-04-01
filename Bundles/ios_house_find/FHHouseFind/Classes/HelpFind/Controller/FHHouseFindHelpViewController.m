@@ -11,12 +11,11 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import "FHHouseFindHelpViewModel.h"
-#import "FHHouseFindHelpBottomView.h"
+#import "FHHouseFindHelpSubmitCell.h"
 
 @interface FHHouseFindHelpViewController ()
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
-@property (nonatomic , strong) FHHouseFindHelpBottomView *bottomView;
 @property (nonatomic , strong) UICollectionView *contentView;
 @property (nonatomic , strong) FHHouseFindHelpViewModel *viewModel;
 
@@ -75,19 +74,16 @@
     _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
-    _contentView.pagingEnabled = YES;
-    _contentView.scrollsToTop = NO;
+//    _contentView.pagingEnabled = NO;
+//    _contentView.scrollsToTop = NO;
     if (@available(iOS 11.0, *)) {
         _contentView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
     [self.view addSubview:_contentView];
-    
-    _bottomView = [[FHHouseFindHelpBottomView alloc]init];
-    [self.view addSubview:_bottomView];
 
     __weak typeof(self)wself = self;
-    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView bottomView:_bottomView];
+    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView];
     _viewModel.viewController = self;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
         if (noData) {
@@ -108,23 +104,21 @@
 
 -(void)initConstraints
 {
-    CGFloat height = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
-    
     CGFloat bottomHeight = 0;
     if (@available(iOS 11.0, *)) {
         bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
     } else {
         // Fallback on earlier versions
     }
-    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(60);
-        make.bottom.mas_equalTo(self.view).offset(-bottomHeight);
-    }];
+//    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.mas_equalTo(self.view);
+//        make.height.mas_equalTo(60);
+//        make.bottom.mas_equalTo(self.view).offset(-bottomHeight);
+//    }];
     [_contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-        make.bottom.mas_equalTo(self.bottomView.mas_top);
+        make.bottom.mas_equalTo(-bottomHeight);
     }];
 }
 
