@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat alpha;
 @property (nonatomic, strong) UIColor* titleColor;
 @property (nonatomic, strong) UIImage* backButtonImage;
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 @end
 
 NS_ASSUME_NONNULL_END

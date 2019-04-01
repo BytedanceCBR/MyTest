@@ -48,12 +48,12 @@
     self.title = _specialOldHouseList[_selectedIndex].title;
     self.question = _specialOldHouseList[_selectedIndex].questionText;
     self.answoer = _specialOldHouseList[_selectedIndex].answerText;
+//    [_listener onDataArrived];
 }
 
 -(void)requestData {
-
     [self.specialOldHouseList enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataSpecialOldHouseListModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSDictionary* param = @{@"order_by[]": @"11"};
+        NSDictionary* param = @{@"order_by[]": @"10"};
         @weakify(self);
         [FHHouseSearcher houseSearchWithQuery:@"house_type=2" param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable model) {
             @strongify(self);

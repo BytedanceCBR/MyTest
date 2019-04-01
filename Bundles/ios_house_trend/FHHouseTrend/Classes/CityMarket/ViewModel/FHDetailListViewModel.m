@@ -119,4 +119,23 @@
     return CGFLOAT_MIN;
 }
 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    NSLog(@"scrollViewDidEndDragging");
+    [self notifyCellDisplay];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    NSLog(@"scrollViewDidEndDecelerating");
+    [self notifyCellDisplay];
+}
+
+-(void)notifyCellDisplay {
+    NSArray<NSIndexPath*>* paths = [_tableView indexPathsForVisibleRows];
+    [paths enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        id<FHSectionCellPlaceHolder> holder = [self holderAtSection:obj.section];
+        [holder traceCellDisplayAtIndexPath:obj];
+    }];
+}
+
 @end
+

@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)addSectionPlaceHolder:(id<FHSectionCellPlaceHolder>)placeHolder;
 -(void)adjustSectionOffset;
+-(void)notifyCellDisplay;
 @end
 
 NS_ASSUME_NONNULL_END

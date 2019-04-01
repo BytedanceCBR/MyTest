@@ -57,7 +57,7 @@
     } else {
         // Fallback on earlier versions
     }
-    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 64;
+    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
 
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {

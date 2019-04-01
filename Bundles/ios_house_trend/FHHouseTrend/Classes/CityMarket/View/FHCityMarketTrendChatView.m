@@ -59,6 +59,7 @@
 @end
 
 @interface FHCityMarketTrendChatViewInfoBanner ()
+@property (nonatomic, strong) NSArray<LineLabelItem*>* itemViews;
 @end
 
 @implementation FHCityMarketTrendChatViewInfoBanner
@@ -90,19 +91,22 @@
 }
 
 -(void)resetItems:(NSArray<FHCityMarketTrendChatViewInfoItem*>*)items {
-    NSArray<LineLabelItem*>* itemViews = [items rx_mapWithBlock:^id(id each) {
+    [_itemViews enumerateObjectsUsingBlock:^(LineLabelItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj removeFromSuperview];
+    }];
+    _itemViews = [items rx_mapWithBlock:^id(id each) {
         FHCityMarketTrendChatViewInfoItem* it = each;
         LineLabelItem* itemView = [[LineLabelItem alloc] init];
         itemView.nameLabel.text = it.name;
         itemView.dotIconView.backgroundColor = [UIColor colorWithHexString:it.color];
         return itemView;
     }];
-    [itemViews enumerateObjectsUsingBlock:^(LineLabelItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_itemViews enumerateObjectsUsingBlock:^(LineLabelItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [self addSubview:obj];
     }];
 
     __block UIView* currentView = nil;
-    [itemViews enumerateObjectsUsingBlock:^(LineLabelItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    [_itemViews enumerateObjectsUsingBlock:^(LineLabelItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj mas_makeConstraints:^(MASConstraintMaker *make) {
             if (currentView == nil) {
                 make.right.mas_equalTo(self).mas_offset(-20);

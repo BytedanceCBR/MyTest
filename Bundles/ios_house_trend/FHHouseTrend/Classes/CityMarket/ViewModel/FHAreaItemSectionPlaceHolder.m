@@ -36,8 +36,8 @@
 }
 
 - (NSUInteger)numberOfRowInSection:(NSUInteger)section {
-    if ([_hotList count] > section - _sectionOffset) {
-        NSArray* items = _hotList[section - _sectionOffset].items;
+    if ([_hotList count] > section - self.sectionOffset) {
+        NSArray* items = _hotList[section - self.sectionOffset].items;
         return [items count] > 5 ? 5 : [items count];
     } else {
         return 0;
@@ -51,8 +51,8 @@
 - (nonnull UITableViewCell *)tableView:(nonnull UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     FHCityMarketAreaItemCell* cell = [tableView dequeueReusableCellWithIdentifier:@"areaItem" forIndexPath:indexPath];
 
-    if ([_hotList count] > indexPath.section - _sectionOffset && [_hotList[indexPath.section - _sectionOffset].items count] > indexPath.row) {
-        FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - _sectionOffset].items[indexPath.row];
+    if ([_hotList count] > indexPath.section - self.sectionOffset && [_hotList[indexPath.section - self.sectionOffset].items count] > indexPath.row) {
+        FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - self.sectionOffset].items[indexPath.row];
         cell.titleLabel.text = model.neighborhoodName;
         cell.priceLabel.text = model.averagePrice;
         cell.countLabel.text = model.houseCount;
@@ -75,13 +75,13 @@
     if (result == nil) {
         result = [[FHCityAreaItemHeaderView alloc] init];
 
-        if ([_hotList count] > section - _sectionOffset) {
-            FHCityMarketDetailResponseDataHotListModel* model = _hotList[section - _sectionOffset];
+        if ([_hotList count] > section - self.sectionOffset) {
+            FHCityMarketDetailResponseDataHotListModel* model = _hotList[section - self.sectionOffset];
             result.nameLabel.text = model.title;
             @weakify(self);
             [[result.openMore rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
                 @strongify(self);
-                [self jumpToListPage:section - _sectionOffset];
+                [self jumpToListPage:section - self.sectionOffset];
             }];
         }
         _headerViews[@(section)] = result;
@@ -118,11 +118,15 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([_hotList count] > indexPath.section - _sectionOffset && [_hotList[indexPath.section - _sectionOffset].items count] > indexPath.row) {
-        FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - _sectionOffset].items[indexPath.row];
+    if ([_hotList count] > indexPath.section - self.sectionOffset && [_hotList[indexPath.section - self.sectionOffset].items count] > indexPath.row) {
+        FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - self.sectionOffset].items[indexPath.row];
         NSURL* url = [NSURL URLWithString:model.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url];
     }
+}
+
+- (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
+
 }
 
 @end

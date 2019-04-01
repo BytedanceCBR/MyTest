@@ -24,7 +24,8 @@
 #import "FHCityMarketBottomBarView.h"
 #import "FHCityMarketRecommendViewModel.h"
 #import "FHImmersionNavBarViewModel.h"
-
+#import "TTTracker.h"
+#import "TTTrackerWrapper.h"
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
 -(void)jump;
@@ -114,6 +115,16 @@
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
     [self setupSections];
     [self bindHeaderView];
+    [self logGoDetail];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
+-(void)logGoDetail {
+    [TTTrackerWrapper eventV3:@"go_detail" params:@{@"page_type": @"city_market"}];
 }
 
 -(void)initNavBar {
@@ -148,6 +159,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.listViewModel adjustSectionOffset];
             [self.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.listViewModel notifyCellDisplay];
+            });
         });
     }];
 
@@ -176,6 +190,13 @@
     }];
     RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
+    [RACObserve(_navBarViewModel, statusBarStyle) subscribeNext:^(id  _Nullable x) {
+        if ([x integerValue] == 0) {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+        } else {
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        }
+    }];
     [_headerViewModel requestData];
 }
 
@@ -190,7 +211,7 @@
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
 
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
 }
 
 -(void)setupBottomBar {

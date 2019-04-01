@@ -84,13 +84,17 @@
 }
 
 -(NSAttributedString*)getOldPriceAttribute:(NSString*)text {
-    return [[NSAttributedString alloc]
-            initWithString:text
-            attributes:@{
-                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
-                         NSFontAttributeName: [UIFont themeFontRegular:12],
-                         NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle],
-                         }];
+    if (text == nil) {
+        return nil;
+    } else {
+        return [[NSAttributedString alloc]
+                initWithString:text
+                attributes:@{
+                             NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
+                             NSFontAttributeName: [UIFont themeFontRegular:12],
+                             NSStrikethroughStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle],
+                             }];
+    }
 }
 
 -(NSAttributedString*)getPriceChangeAttribute:(NSArray<FHSearchHouseDataItemsModelBottomText*>*)texts {
@@ -147,6 +151,13 @@
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url];
         }
+    }
+}
+
+- (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
+    NSIndexPath* indexPathWithOffset = [self indexPathWithOffset:indexPath];
+    if (![self.traceCache containsObject:indexPathWithOffset]) {
+        
     }
 }
 
