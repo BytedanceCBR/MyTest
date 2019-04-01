@@ -10,6 +10,7 @@
 #import "FHHouseFindHelpViewController.h"
 #import "FHHouseFindResultViewController.h"
 #import <TTReachability/TTReachability.h>
+#import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 @interface FHHouseFindMainViewController ()
 
@@ -32,7 +33,10 @@
         self.paramObj = paramObj;
         self.hidesBottomBarWhenPushed = YES;
         _viewModel = [[FHHouseFindHelpMainViewModel alloc]initWithViewController:self paramObj:paramObj];
-
+        NSDictionary *recommendDict = [paramObj.allParams tt_dictionaryValueForKey:@"recommend_house"];
+        if (recommendDict.count > 0) {
+            _viewModel.recommendModel = [[FHHouseFindRecommendDataModel alloc]initWithDictionary:recommendDict error:nil];
+        }
     }
     return self;
 }
@@ -41,7 +45,11 @@
     [super viewDidLoad];
 
     [self setupUI];
-    [self startLoadData];
+    if (_viewModel.recommendModel.used) {
+        [self addHouseFindResultVC];
+    }else {
+        [self startLoadData];
+    }
 }
 
 - (void)setupUI
@@ -58,6 +66,7 @@
     _helpVC = [[FHHouseFindHelpViewController alloc]initWithRouteParamObj:self.paramObj];
     [self addChildViewController:_helpVC];
     [self.view addSubview:_helpVC.view];
+    [self.view bringSubviewToFront:self.emptyView];
 }
 
 - (void)addHouseFindResultVC
@@ -65,11 +74,11 @@
     _resultVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:self.paramObj];
     [self addChildViewController:_resultVC];
     [self.view addSubview:_resultVC.view];
+    [self.view bringSubviewToFront:self.emptyView];
 }
 
 - (void)startLoadData
 {
-    [self.viewModel startLoadData];
     if ([TTReachability isNetworkConnected]) {
         [self startLoading];
         self.isLoadingData = YES;
