@@ -61,21 +61,21 @@
 {
     // 注册实验（所有通过BDABTestSDK取值的实验都必须注册
     // 需要添加的服务端实验都在此先注册
-//        BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
-//                                                                            owner:@"zjing"
-//                                                                      description:@"模拟服务端实验找房tab是否增加房源展现，默认为0"
-//                                                                     defaultValue:@{@"show":@(0)}
-//                                                                        valueType:BDABTestValueTypeDictionary
-//                                                                         isSticky:YES settingsValueBlock:^id(NSString *key) {
-//                                                                             if (key.length > 0) {
-//                                                                                 NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-//                                                                                 if ([archSettings valueForKey:key]) {
-//                                                                                     return archSettings[key];
-//                                                                                 }
-//                                                                             }
-//                                                                             return nil;
-//                                                                         }];
-//        [BDABTestManager registerExperiment:exp];
+        BDABTestBaseExperiment *exp = [[BDABTestBaseExperiment alloc] initWithKey:@"zjing_find_tab_show"
+                                                                            owner:@"zjing"
+                                                                      description:@"模拟服务端实验找房tab是否增加房源展现，默认为0"
+                                                                     defaultValue:@{@"show":@(0)}
+                                                                        valueType:BDABTestValueTypeDictionary
+                                                                         isSticky:YES settingsValueBlock:^id(NSString *key) {
+                                                                             if (key.length > 0) {
+                                                                                 NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+                                                                                 if ([archSettings valueForKey:key]) {
+                                                                                     return archSettings[key];
+                                                                                 }
+                                                                             }
+                                                                             return nil;
+                                                                         }];
+        [BDABTestManager registerExperiment:exp];
 }
 
 // 添加客户端实验

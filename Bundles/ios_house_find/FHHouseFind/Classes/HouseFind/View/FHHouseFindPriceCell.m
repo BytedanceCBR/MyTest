@@ -89,7 +89,7 @@
     }];
 }
 
--(void) updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice
+-(void)updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice
 {
 
     if (!(lowPrice && highPrice)) {
@@ -132,7 +132,7 @@
             number = textField.text;//@(textField.text integerValue]);
         }
         
-        if (textField == self.lowerTextField) {            
+        if (textField == self.lowerTextField) {
             [self.delegate updateLowerPrice:number inCell:self];
         }
         if (textField == self.higherTextField) {

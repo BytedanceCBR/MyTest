@@ -46,8 +46,18 @@
             NSInteger highPrice = self.higherPrice.integerValue;
             [query appendFormat:@"%@[]=[0,%ld]",self.configOption.type?:@"price",highPrice*r];
         }else{
-            return nil;
-//            [query appendFormat:@"%@[]=[]",self.configOption.type?:@"price"];
+            if (self.fromType == FHHouseFindPriceFromTypeHelp) {
+                for (NSNumber *index in self.selectIndexes) {
+                    if (self.configOption.options.count > index.integerValue) {
+                        FHSearchFilterConfigOption *op = self.configOption.options[index.integerValue];
+                        if (query.length > 0) {
+                            [query appendString:@"&"];
+                        }
+                        [query appendFormat:@"%@[]=%@",op.type,op.value];
+                    }
+                }
+//                [query appendFormat:@"%@[]=[]",self.configOption.type?:@"price"];
+            }
         }
         
         /*
