@@ -694,10 +694,10 @@
 
 -(NSString *)navbarPlaceholder
 {
-    if (self.topView && _houseType == FHHouseTypeRentHouse) {
-        //大类页
-        return @"你想住哪里？";
-    }
+//    if (self.topView && _houseType == FHHouseTypeRentHouse) {
+//        //大类页
+//        return @"你想住哪里？";
+//    }
     switch (_houseType) {
             case FHHouseTypeNewHouse:
                 return @"请输入楼盘名/地址";
@@ -865,12 +865,13 @@
 
 -(void)onConditionPanelWillDisplay
 {
-    self.showFilter = YES;
     self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
     //只显示筛选器
     [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.topView filterBottom] - [self.topView filterTop]);
     }];
+    [self scrollViewDidScroll:self.tableView];
+    self.showFilter = YES;
 }
 
 -(void)onConditionPanelWillDisappear
