@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UILabel *decorateTypeLabel;
 @property(nonatomic , weak) id<FHPriceValuationMoreInfoViewDelegate> delegate;
 
+- (instancetype)initWithFrame:(CGRect)frame naviBarHeight:(CGFloat)naviBarHeight;
 - (void)updateView:(FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel *)infoModel;
 
 - (NSString *)getOrientations:(NSString *)type;

@@ -49,7 +49,8 @@
 }
 
 - (void)initView {
-    self.moreInfoView = [[FHPriceValuationMoreInfoView alloc] initWithFrame:self.view.bounds];
+    [self.view layoutIfNeeded];
+    self.moreInfoView = [[FHPriceValuationMoreInfoView alloc] initWithFrame:self.view.bounds naviBarHeight:CGRectGetHeight(self.customNavBarView.frame)];
     if(self.infoModel){
         [_moreInfoView updateView:self.infoModel];
     }
