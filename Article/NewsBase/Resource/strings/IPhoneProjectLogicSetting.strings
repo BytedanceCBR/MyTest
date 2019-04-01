@@ -122,6 +122,8 @@
 "house_find_help"   = "FHHouseFindHelpViewController";
 // 帮我找房结果页
 "house_find_result"   = "FHHouseFindResultViewController";
+// 帮我找房中转页
+"house_find"   = "FHHouseFindMainViewController";
 
 //房屋估价
 "price_valuation" = "FHPriceValuationViewController";
