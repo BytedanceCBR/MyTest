@@ -6,10 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TTRouteDefine.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindResultViewModel : NSObject
+
+- (instancetype)initWithTableView:(UITableView *)tableView routeParam:(TTRouteParamObj *)paramObj;
 
 @end
 
