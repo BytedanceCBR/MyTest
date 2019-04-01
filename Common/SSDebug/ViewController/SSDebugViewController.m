@@ -68,7 +68,7 @@
 #import "TTClientABTestBrowserViewController.h"
 #import "FHUtils.h"
 #import "FHClientABTestDebugViewController.h"
-
+#import "LogViewerSettingViewController.h"
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
