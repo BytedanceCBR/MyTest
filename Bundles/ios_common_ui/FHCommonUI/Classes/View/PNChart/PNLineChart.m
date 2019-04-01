@@ -1072,6 +1072,8 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 
     // do not create curved line chart by default
     _showSmoothLines = NO;
+    //默认设为YES，否则最左侧会有一条虚线显示出来
+    _hideMarker = YES;
 
 }
 

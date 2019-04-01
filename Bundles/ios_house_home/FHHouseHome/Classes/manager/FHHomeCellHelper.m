@@ -566,9 +566,10 @@ static NSMutableArray  * _Nullable identifierArr;
         [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
 
-        if (model.mapOpenUrl.length > 0) {
+        if (model.openUrl.length > 0) {
             
-            NSMutableString *urlStr = [NSMutableString stringWithString:model.mapOpenUrl];
+            NSMutableString *urlStr = [NSMutableString stringWithString:model.openUrl];
+            [urlStr appendString:@"?"];
             if (![urlStr containsString:@"enter_from"]) {
                 [urlStr appendString:@"&enter_from=city_market"];
             }

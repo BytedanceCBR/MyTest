@@ -28,20 +28,19 @@
     
     [self setupUI];
     [self initConstraints];
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
 //    [self.viewModel viewWillDisappear:animated];
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 //    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
 //    [self tt_resetStayTime];
     
@@ -61,8 +60,16 @@
 
 - (void)setupUI
 {
+    __weak typeof(self)wself = self;
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"帮我找房";
+    self.customNavBarView.leftButtonBlock = ^{
+        if (wself.parentViewController) {
+            [wself.parentViewController.navigationController popViewControllerAnimated:YES];
+        }else {
+            [wself.navigationController popViewControllerAnimated:YES];
+        }
+    };
     self.view.backgroundColor = [UIColor whiteColor];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
@@ -82,7 +89,6 @@
     
     [self.view addSubview:_contentView];
 
-    __weak typeof(self)wself = self;
     _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView];
     _viewModel.viewController = self;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
@@ -110,16 +116,16 @@
     } else {
         // Fallback on earlier versions
     }
-//    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.mas_equalTo(self.view);
-//        make.height.mas_equalTo(60);
-//        make.bottom.mas_equalTo(self.view).offset(-bottomHeight);
-//    }];
     [_contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
         make.bottom.mas_equalTo(-bottomHeight);
     }];
+}
+
+- (void)dealloc
+{
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 @end

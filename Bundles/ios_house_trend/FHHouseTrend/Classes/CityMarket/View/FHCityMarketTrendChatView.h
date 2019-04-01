@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray<NSString*>* categorys;
 @property (nonatomic, strong) UILabel* sourceLabel;
 @property (nonatomic, copy) NSString* selectCategory;
+-(void)resetChatView;
 @end
 
 NS_ASSUME_NONNULL_END

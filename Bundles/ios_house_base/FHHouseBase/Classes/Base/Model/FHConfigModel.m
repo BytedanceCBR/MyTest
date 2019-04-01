@@ -22,6 +22,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
                            @"mapOpenUrl": @"map_open_url",
                            @"cityDetailDesc": @"city_detail_desc",
                            @"pricingPerSqm": @"pricing_per_sqm",
@@ -128,6 +129,22 @@
 
 @end
 
+@implementation FHConfigDataEntranceSwitchModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"isPriceValuationShowHouseTrend": @"is_price_valuation_show_house_trend",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 
 @implementation  FHConfigDataModel
 
@@ -163,6 +180,7 @@
                            @"courtFilter": @"court_filter",
                            @"diffCode": @"diff_code",
                            @"saleHistoryFilter": @"sale_history_filter",
+                           @"entranceSwitch": @"entrance_switch",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

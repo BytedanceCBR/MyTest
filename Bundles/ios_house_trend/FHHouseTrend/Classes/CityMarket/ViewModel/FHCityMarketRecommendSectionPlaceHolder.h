@@ -7,12 +7,13 @@
 
 #import <Foundation/Foundation.h>
 #import "FHSectionCellPlaceHolder.h"
+#import "FHDetailTracerPlaceHolder.h"
+
 @class FHCityMarketDetailResponseDataSpecialOldHouseListModel;
 @class FHCityMarketRecommendViewModel;
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHCityMarketRecommendSectionPlaceHolder : NSObject<FHSectionCellPlaceHolder>
-@property (nonatomic, assign) NSUInteger sectionOffset;
+@interface FHCityMarketRecommendSectionPlaceHolder : FHDetailTracerPlaceHolder<FHSectionCellPlaceHolder>
 @property (nonatomic, strong) NSArray<FHCityMarketDetailResponseDataSpecialOldHouseListModel*> *specialOldHouseList;
 -(instancetype)initWithViewModel:(FHCityMarketRecommendViewModel*)viewModel;
 @end

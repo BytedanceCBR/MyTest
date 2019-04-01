@@ -17,6 +17,8 @@
                            @"priceTitle": @"price_title",
                            @"districtTitle": @"district_title",
                            @"roomNumTitle" : @"room_num_title",
+                           @"findHouseNumber" : @"find_house_number",
+                           @"bottomOpenUrl": @"botttom_open_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

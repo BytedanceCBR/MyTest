@@ -17,7 +17,7 @@
 @property(nonatomic, strong) UIView *inputView;
 @property(nonatomic, strong) FHPriceValuationSelectionView *decorateTypeView;
 @property(nonatomic, strong) UILabel *descLabel;
-
+@property(nonatomic, assign) CGFloat naviBarHeight;
 @property(nonatomic, strong) UIView *bottomView;
 @property(nonatomic, strong) UIButton *bottomBtn;
 
@@ -25,11 +25,12 @@
 
 @implementation FHPriceValuationMoreInfoView
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame naviBarHeight:(CGFloat)naviBarHeight {
     self = [super initWithFrame:frame];
     
     if(self){
         self.backgroundColor = [UIColor themeGray7];
+        self.naviBarHeight = naviBarHeight;
         [self initViews];
         [self initConstraints];
     }
@@ -210,6 +211,16 @@
     }];
 
     [self layoutIfNeeded];
+    //当内容高度不足时，让描述文字贴近底部按钮
+    CGFloat height = self.scrollView.contentSize.height;
+    CGFloat scrollViewHeight = self.scrollView.frame.size.height - self.naviBarHeight;
+    if(scrollViewHeight > height){
+        CGFloat diff = scrollViewHeight - height;
+        [self.descLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.decorateTypeView.mas_bottom).offset(56 + diff);
+        }];
+    }
+    
     [self addShadowToView:self.inputView withOpacity:0.1 shadowRadius:8 andCornerRadius:4];
 }
 

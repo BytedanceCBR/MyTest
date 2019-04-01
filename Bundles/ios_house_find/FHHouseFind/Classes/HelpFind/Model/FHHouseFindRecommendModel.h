@@ -16,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *priceTitle;
 @property (nonatomic, copy , nullable) NSString *districtTitle;
 @property (nonatomic, copy , nullable) NSString *roomNumTitle;
+@property (nonatomic, copy , nullable) NSString *bottomOpenUrl;
+@property (nonatomic, assign) NSInteger findHouseNumber;
+@property (nonatomic, assign) BOOL used;
+@property (nonatomic, assign) BOOL status;
 
 @end
 

@@ -502,7 +502,7 @@
             continue;
         }
         FHDetailPriceTrendValuesModel *priceValue = priceTrend.values[pointIndex];
-        FHDetailPriceMarkerItem *item = [[FHDetailPriceMarkerItem alloc]init];
+        FHDetailPriceMarkerItem *item = [[FHDetailPriceMarkerItem alloc] init];
         item.name = priceTrend.name;
         item.priceModel = priceValue;
         [trendItems addObject:item];

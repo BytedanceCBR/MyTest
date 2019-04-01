@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHImmersionNavBarViewModel : NSObject
 @property (nonatomic, assign) CGPoint currentContentOffset;
 @property (nonatomic, assign) CGFloat alpha;
+@property (nonatomic, strong) UIColor* titleColor;
+@property (nonatomic, strong) UIImage* backButtonImage;
+@property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
 @end
 
 NS_ASSUME_NONNULL_END

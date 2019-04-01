@@ -122,13 +122,15 @@
 "house_find_help"   = "FHHouseFindHelpViewController";
 // 帮我找房结果页
 "house_find_result"   = "FHHouseFindResultViewController";
+// 帮我找房中转页
+"house_find"   = "FHHouseFindMainViewController";
 
 //房屋估价
 "price_valuation" = "FHPriceValuationViewController";
 //房屋估价历史
 "price_valuation_history" = "FHPriceValuationHistoryController";
 //房屋估计小区搜索
-"price_valuation_neiborhood_search" = "FHPriceValuationNeiborhoodSearchController";
+"price_valuation_neighborhood_search" = "FHPriceValuationNeiborhoodSearchController";
 //房屋估价结果
 "price_valuation_result" = "FHPriceValuationResultController";
 //房屋估价补充信息
