@@ -21,7 +21,8 @@
 #import "FHHouseFindHelpRegionSheet.h"
 #import <TTAccountSDK/TTAccount.h>
 #import "FHHouseFindRecommendModel.h"
- 
+#import "FHHouseFindHelpMainViewModel.h"
+
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
 #define HELP_MAIN_CELL_ID @"main_cell_id"
@@ -187,7 +188,22 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     NSLog(@"zjing query : %@",query);
 
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://house_list?house_type=%d&%@",ht,query];
+// add by zjing for test
+    FHHouseFindRecommendDataModel *model = [[FHHouseFindRecommendDataModel alloc]init];
+    model.used = YES;
+    model.openUrl = @"ddddd";
+    NSDictionary *recommendDict = [model toDictionary];
+
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    if (recommendDict) {
+        infoDict[@"recommend_house"] = recommendDict;
+    }
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://house_find"];
+    if (urlStr.length > 0) {
+        NSURL *url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
     
 }
 

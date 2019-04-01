@@ -7,8 +7,6 @@
 
 #import "FHHouseFindMainViewController.h"
 #import "FHHouseFindHelpMainViewModel.h"
-#import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import "FHHouseFindRecommendModel.h"
 #import "FHHouseFindHelpViewController.h"
 #import "FHHouseFindResultViewController.h"
 #import <TTReachability/TTReachability.h>
@@ -18,7 +16,6 @@
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) FHHouseFindHelpMainViewModel *viewModel;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
-@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 @property (nonatomic , strong) FHHouseFindHelpViewController *helpVC;
 @property (nonatomic , strong) FHHouseFindResultViewController *resultVC;
 
@@ -34,10 +31,8 @@
         //init coordinate viewmodel according to viewmodel
         self.paramObj = paramObj;
         self.hidesBottomBarWhenPushed = YES;
-        NSDictionary *recommendDict = [paramObj.allParams tt_dictionaryValueForKey:@"recommend_house"];
-        if (recommendDict.count > 0) {
-            self.recommendModel = [[FHHouseFindRecommendDataModel alloc]initWithDictionary:recommendDict error:nil];
-        }
+        _viewModel = [[FHHouseFindHelpMainViewModel alloc]initWithViewController:self paramObj:paramObj];
+
     }
     return self;
 }
@@ -58,31 +53,27 @@
     }];
 }
 
-- (void)loadData
+- (void)addHouseFindHelpVC
 {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        // add by zjing for test
-        if (self.recommendModel.used) {
-            _resultVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:self.paramObj];
-            [self addChildViewController:_resultVC];
-            [self.view addSubview:_resultVC.view];
-        }else {
-            _helpVC = [[FHHouseFindHelpViewController alloc]initWithRouteParamObj:self.paramObj];
-            [self addChildViewController:_helpVC];
-            [self.view addSubview:_helpVC.view];
-        }
-        self.isLoadingData = NO;
-        self.hasValidateData = YES;
-
-    });
+    _helpVC = [[FHHouseFindHelpViewController alloc]initWithRouteParamObj:self.paramObj];
+    [self addChildViewController:_helpVC];
+    [self.view addSubview:_helpVC.view];
 }
+
+- (void)addHouseFindResultVC
+{
+    _resultVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:self.paramObj];
+    [self addChildViewController:_resultVC];
+    [self.view addSubview:_resultVC.view];
+}
+
 - (void)startLoadData
 {
+    [self.viewModel startLoadData];
     if ([TTReachability isNetworkConnected]) {
         [self startLoading];
         self.isLoadingData = YES;
-        [self loadData];
+        [self.viewModel startLoadData];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }

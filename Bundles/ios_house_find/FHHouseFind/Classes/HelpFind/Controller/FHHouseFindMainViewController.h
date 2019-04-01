@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindMainViewController : FHBaseViewController
 
+- (void)addHouseFindHelpVC;
+- (void)addHouseFindResultVC;
+
 @end
 
 NS_ASSUME_NONNULL_END
