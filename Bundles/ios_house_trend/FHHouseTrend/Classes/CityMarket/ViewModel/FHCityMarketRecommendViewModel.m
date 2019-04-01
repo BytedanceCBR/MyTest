@@ -48,7 +48,12 @@
     self.title = _specialOldHouseList[_selectedIndex].title;
     self.question = _specialOldHouseList[_selectedIndex].questionText;
     self.answoer = _specialOldHouseList[_selectedIndex].answerText;
-//    [_listener onDataArrived];
+    if ([_dataCache count] != 0) {
+        //下一mainLoop更新，避免首次加载页面时，有白屏现象
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_listener onDataArrived];
+        });
+    }
 }
 
 -(void)requestData {
