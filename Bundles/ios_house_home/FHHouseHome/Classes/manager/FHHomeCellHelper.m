@@ -23,6 +23,7 @@
 #import "FHPlaceHolderCell.h"
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
+#import <TTArticleCategoryManager.h>
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -172,12 +173,13 @@ static NSMutableArray  * _Nullable identifierArr;
         dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
     }
     
+    BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+
     //如果数据无变化直接返回
-    if (self.previousDataModel == dataModel) {
+    if (self.previousDataModel == dataModel && isHasFindHouseCategory) {
         return self.headerHeight;
     }
     
-
     CGFloat height = 0;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
