@@ -80,9 +80,9 @@
 -(void)leftBtnDidClick:(UIButton *)btn {
     
     // add by zjing for test
-//    NSURL *url = [[NSURL alloc] initWithString:@"sslocal://house_find_help"];
-//    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
-//    return;
+    NSURL *url = [[NSURL alloc] initWithString:@"sslocal://house_find"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
+    return;
     
     if (self.clickedLeftCallback) {
         self.clickedLeftCallback(btn);

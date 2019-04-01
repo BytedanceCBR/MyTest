@@ -41,6 +41,7 @@
     return self;
 }
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -63,7 +64,15 @@
 
 - (void)addHouseFindHelpVC
 {
-    _helpVC = [[FHHouseFindHelpViewController alloc]initWithRouteParamObj:self.paramObj];
+    NSDictionary *recommendDict = [_viewModel.recommendModel toDictionary];
+    TTRouteParamObj *paramObj = self.paramObj;
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    if (paramObj.userInfo.allInfo) {
+        [infoDict addEntriesFromDictionary:paramObj.userInfo.allInfo];
+    }
+    infoDict[@"recommend_house"] = recommendDict;
+    paramObj.userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
+    _helpVC = [[FHHouseFindHelpViewController alloc]initWithRouteParamObj:paramObj];
     [self addChildViewController:_helpVC];
     [self.view addSubview:_helpVC.view];
     [self.view bringSubviewToFront:self.emptyView];
@@ -71,7 +80,15 @@
 
 - (void)addHouseFindResultVC
 {
-    _resultVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:self.paramObj];
+    NSDictionary *recommendDict = [_viewModel.recommendModel toDictionary];
+    TTRouteParamObj *paramObj = self.paramObj;
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    if (paramObj.userInfo.allInfo) {
+        [infoDict addEntriesFromDictionary:paramObj.userInfo.allInfo];
+    }
+    infoDict[@"recommend_house"] = recommendDict;
+    paramObj.userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
+    _resultVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:paramObj];
     [self addChildViewController:_resultVC];
     [self.view addSubview:_resultVC.view];
     [self.view bringSubviewToFront:self.emptyView];

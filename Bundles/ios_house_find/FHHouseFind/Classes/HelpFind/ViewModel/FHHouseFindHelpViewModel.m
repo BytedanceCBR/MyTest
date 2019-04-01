@@ -22,6 +22,7 @@
 #import <TTAccountSDK/TTAccount.h>
 #import "FHHouseFindRecommendModel.h"
 #import "FHHouseFindHelpMainViewModel.h"
+#import "FHMainApi+HouseFind.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -48,7 +49,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , strong) NSMutableDictionary *selectMap; // housetype : FHHouseFindSelectModel
 @property (nonatomic , strong) FHSearchFilterConfigItem *regionConfigItem;
+@property (nonatomic , strong) FHSearchFilterConfigItem *priceConfigItem;
+@property (nonatomic , strong) FHSearchFilterConfigItem *roomConfigItem;
+
 @property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
 @property(nonatomic , assign) BOOL isRequestingSMS;
@@ -86,6 +91,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 
+        // add by zjing for test
+//        [self test];
 //        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
 //            if (x) {
 //                dispatch_async(dispatch_get_main_queue(), ^{
@@ -168,6 +175,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 #pragma mark 提交选项
 - (void)submitAction
 {
+    __weak typeof(self)wself = self;
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *selectModel = [self selectModelWithType:ht];
     NSMutableString *query = [NSMutableString new];
@@ -187,13 +195,21 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
     }
     NSLog(@"zjing query : %@",query);
+    [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:@"" completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
+        if (model && error == NULL) {
+            if (model.data) {
+                wself.recommendModel = model.data;
+                [wself jump2HouseFindResultPage:[model toDictionary]];
+            }
+        } else {
+            NSString *message = error.localizedDescription ? : @"请求失败，请稍后重试";
+            [[ToastManager manager]showToast:message];
+        }
+    }];
+}
 
-// add by zjing for test
-    FHHouseFindRecommendDataModel *model = [[FHHouseFindRecommendDataModel alloc]init];
-    model.used = YES;
-    model.openUrl = @"ddddd";
-    NSDictionary *recommendDict = [model toDictionary];
-
+- (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict
+{
     NSMutableDictionary *infoDict = @{}.mutableCopy;
     if (recommendDict) {
         infoDict[@"recommend_house"] = recommendDict;
@@ -204,7 +220,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
         NSURL *url = [NSURL URLWithString:urlStr];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
-    
 }
 
 - (void)setupHouseContent:(FHConfigDataModel *)configData
@@ -261,6 +276,10 @@ extern NSString *const kFHPhoneNumberCacheKey;
             [filterArray addObject:regionItem];
             [titles addObject:@"您想买的区域是？"];
         }
+        self.priceConfigItem = priceItem;
+        self.regionConfigItem = regionItem;
+        self.roomConfigItem = roomItem;
+
         self.secondFilter = filterArray;
         self.titlesArray = titles;
         [self.collectionView reloadData];
@@ -330,8 +349,80 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self reloadCollectionViewSection:section];
 }
 
-#pragma mark - price cell delegate
+- (void)test
+{
+    TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
+    NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
+    NSLog(@"zjing query str:%@",queryString);
+}
 
+- (NSString *)getNoneFilterQueryWithParams:(NSDictionary *)params
+{
+    FHHouseType ht = _houseType;
+    NSArray *filter = [self filterOfHouseType:ht];
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+
+    if (self.priceConfigItem) {
+        
+        FHSearchFilterConfigItem *item = self.priceConfigItem;
+        FHSearchFilterConfigOption *options = [item.options firstObject];
+        NSString *optionType = options.type;
+        FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+        if (!selectItem) {
+            selectItem = [model makeItemWithTabId:item.tabId.integerValue];
+        }
+        if (!selectItem.configOption) {
+            selectItem.configOption = [item.options firstObject];
+        }
+        [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL * _Nonnull stop) {
+            
+            NSString *keyStr = [key stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            if ([keyStr hasPrefix:optionType]) {
+                
+                if ([obj isKindOfClass:[NSArray class]]) {
+                    NSArray* items = (NSArray*)obj;
+                    
+                    [items enumerateObjectsUsingBlock:^(NSString *it, NSUInteger idx, BOOL * _Nonnull stop) {
+                        for (NSInteger index = 0; index < options.options.count; index++) {
+                            FHSearchFilterConfigOption *option = options.options[index];
+//                            NSString *valueStr = [self encodingIfNeeded:option.value];
+                            if ([it isEqualToString:option.value]) {
+                                [model clearAddSelecteItem:selectItem withIndex:index];
+                            }
+                        }
+                    }];
+                } else {
+                    for (NSInteger index = 0; index < options.options.count; index++) {
+                        FHSearchFilterConfigOption *option = options.options[index];
+                        NSString *valueStr = [self encodingIfNeeded:option.value];
+                        if ([obj isEqualToString:valueStr]) {
+                            [model clearAddSelecteItem:selectItem withIndex:index];
+                        }
+                    }
+                }
+            }
+        }];
+        NSLog(@"zjing selectItem : %@",selectItem);
+        NSLog(@"zjing selectItem index: %@",selectItem.selectIndexes);
+
+    }
+    
+    NSMutableDictionary *paramsDict = @{}.mutableCopy;
+    NSMutableString* result = [[NSMutableString alloc] init];
+    NSMutableSet<NSString*>* allKeys = [[NSMutableSet alloc] init];
+
+    return result;
+}
+
+- (NSString *)encodingIfNeeded:(NSString *)queryCondition
+{
+    if (![queryCondition containsString:@"%"]) {
+        return [[queryCondition stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+    }
+    return queryCondition;
+}
+
+#pragma mark - price cell delegate
 - (void)reloadCollectionViewSection:(NSInteger)section
 {
     [CATransaction begin];
