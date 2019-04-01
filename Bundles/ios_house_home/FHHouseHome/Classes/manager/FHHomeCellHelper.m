@@ -565,7 +565,7 @@ static NSMutableArray  * _Nullable identifierArr;
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
 
         if (model.openUrl.length > 0) {
-            
+
             NSMutableString *urlStr = [NSMutableString stringWithString:model.openUrl];
             [urlStr appendString:@"?"];
             if (![urlStr containsString:@"enter_from"]) {
