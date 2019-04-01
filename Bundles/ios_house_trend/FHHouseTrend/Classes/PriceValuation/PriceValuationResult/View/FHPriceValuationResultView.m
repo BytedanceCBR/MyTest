@@ -154,7 +154,7 @@
     [self.evaluateView addSubview:_spLineView];
     
     self.chartNameLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
-    _chartNameLabel.text = @"均价走势";
+    _chartNameLabel.text = @"房价走势";
     [self.chartBgView addSubview:_chartNameLabel];
     
     self.cityMarketBtn = [[UIButton alloc] init];
@@ -486,6 +486,16 @@
     [self.evaluateView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0);
     }];
+    [self layoutIfNeeded];
+    //当内容高度不足时，让描述文字贴近底部按钮
+    CGFloat height = self.scrollView.contentSize.height;
+    CGFloat scrollViewHeight = self.scrollView.frame.size.height;
+    if(scrollViewHeight > height){
+        CGFloat diff = scrollViewHeight - height;
+        [self.descView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.chartBgView.mas_bottom).offset(diff);
+        }];
+    }
 }
 
 - (NSAttributedString *)getAtributeStr:(NSString *)title content:(NSString *)content {
@@ -723,6 +733,7 @@
                   selectPoint:(CGPoint)selectPoint {
     [self addClickPriceTrendLog];
     
+//    self.cha
     FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
     if (pointIndex == self.selectIndex && self.hideMarker) {
         [view removeFromSuperview];
