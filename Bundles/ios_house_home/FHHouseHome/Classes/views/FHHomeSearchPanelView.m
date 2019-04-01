@@ -18,13 +18,9 @@
 
 @interface FHHomeSearchPanelView()
 {
-    BOOL isHighlighted;
     NSTimer *timer;
 }
 @property(nonatomic, strong) UIImageView * bgView;
-@property(nonatomic, strong) UIImageView * triangleImage;
-@property(nonatomic, strong) UIView * verticalLineView;
-@property(nonatomic, strong) UIImageView * searchIcon;
 @property(nonatomic, strong) UILabel * categoryPlaceholderLabel;
 @property(nonatomic, strong) UILabel * categoryLabel1;
 @property(nonatomic, strong) UILabel * categoryLabel2;
@@ -36,61 +32,58 @@
 
 @implementation FHHomeSearchPanelView
 
-- (instancetype)initWithFrame:(CGRect)frame withHighlight:(BOOL)highlighted
-{
-    if (self = [super initWithFrame:frame]) {
-        isHighlighted = highlighted;
-        [self setPanelStyle];
-        [self setupCountryLabel];
-        [self setupVerticalLine];
-        [self setSearchArea];
-    }
-    
-    return self;
-}
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        isHighlighted = NO;
-        [self setPanelStyle];
-        [self setupCountryLabel];
-       [self setupVerticalLine];
+        self.backgroundColor = [UIColor whiteColor];
+        [self setupCityButton];
         [self setSearchArea];
     }
     
     return self;
 }
 
-- (void)setPanelStyle
+- (void)updateCountryLabelLayout:(NSString *)labelText
 {
-    if (isHighlighted) {
-        self.backgroundColor = [UIColor colorWithHexString:@"#f4f5f6"];
-    } else {
-        self.backgroundColor = [UIColor whiteColor];
-    }
-    
-    UIImage *oldImage = [UIImage imageNamed:@"home_search_bg"];
-    UIImage *newImage = [oldImage stretchableImageWithLeftCapWidth:oldImage.size.width * 0.5 topCapHeight:oldImage.size.height * 0.5];
-    self.bgView = [[UIImageView alloc] initWithImage:newImage];
-    self.bgView.contentMode = UIViewContentModeScaleToFill;
-    self.bgView.layer.masksToBounds = YES;
-    [self addSubview:self.bgView];
-    
-    [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.left.mas_equalTo(self);
-        make.right.mas_equalTo(self);
-        make.top.mas_equalTo(self);
-        make.bottom.mas_equalTo(self);
-
+    self.countryLabel.text = labelText;
+    [self.countryLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(labelText.length * 14);
     }];
+    
+    [self.countryLabel sizeToFit];
 }
 
-- (void)setupCountryLabel
+- (void)setupCityButton
 {
+    UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.changeCountryBtn = citySwichButton;
+    [self addSubview:citySwichButton];
+    citySwichButton.layer.cornerRadius = 20;
+    citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
+    citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+    citySwichButton.layer.shadowRadius = 6.f;
+    citySwichButton.layer.shadowOpacity = 1.f;
+    [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:14]];
+    citySwichButton.backgroundColor = [UIColor whiteColor];
+    NSString *text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+    [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).offset(20);
+        make.height.mas_equalTo(40);
+        make.bottom.equalTo(self.mas_bottom).offset(-12);
+    }];
+    
+    UIImageView *imageButtonLeftIcon = [UIImageView new];
+    [citySwichButton addSubview:imageButtonLeftIcon];
+    [imageButtonLeftIcon setImage:[UIImage imageNamed:@"combined-shape-1"]];
+    [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(citySwichButton).offset(14);
+        make.height.mas_equalTo(18);
+        make.centerY.equalTo(citySwichButton);
+        make.width.mas_equalTo(18);
+    }];
+    
     UILabel *label = [[UILabel alloc] init];
-    label.font = [UIFont themeFontSemibold:14];
+    label.font = [UIFont themeFontRegular:14];
     label.textColor = [UIColor themeGray1];
     label.numberOfLines = 1;
     label.text = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
@@ -98,138 +91,104 @@
     [self addSubview:self.countryLabel];
     
     [self.countryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
+        make.left.mas_equalTo(imageButtonLeftIcon.mas_right).offset(2);
         make.centerY.equalTo(self);
         make.height.mas_equalTo(20);
         make.width.mas_equalTo(label.text.length * 14);
+        make.right.mas_equalTo(citySwichButton.mas_right).offset(-14);
     }];
     
     [self.countryLabel sizeToFit];
-    
-    self.triangleImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon-triangle-open"]];
-    [self addSubview:self.triangleImage];
-    
-    
-    [self.triangleImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.countryLabel.mas_right).offset(8);
-        make.centerY.equalTo(self);
-        make.height.width.mas_equalTo(10);
-    }];
-}
-
-- (void)updateCountryLabelLayout:(NSString *)labelText
-{
-    [self.countryLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.centerY.equalTo(self);
-        make.height.mas_equalTo(20);
-        make.width.mas_equalTo(labelText.length * 14);
-    }];
-}
-
-- (void)setupVerticalLine
-{
-    self.verticalLineView = [UIView new];
-    self.verticalLineView.backgroundColor = [UIColor colorWithHexString:@"#dae0e6"];
-    [self addSubview:self.verticalLineView];
-    
-    [self.verticalLineView  mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.triangleImage.mas_right).offset(11);
-        make.centerY.mas_equalTo(self);
-        make.width.mas_equalTo(1);
-        make.height.mas_equalTo(15);
-    }];
-
-    
-    self.changeCountryBtn = [UIButton new];
-     [[self.changeCountryBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(id x) {
-       
-    }];
-     
-    [self addSubview:self.changeCountryBtn];
-    
-    [self.changeCountryBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.top.left.equalTo(self);
-        make.right.equalTo(self.verticalLineView.mas_left);
-    }];
 }
 
 - (void)setSearchArea
 {
-    self.searchIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"home_icon_search"]];
-    [self addSubview:self.searchIcon];
-
-    [self.searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        
-        make.left.mas_equalTo(self.verticalLineView.mas_right).offset(10);
-        make.centerY.mas_equalTo(self.verticalLineView);
-        make.width.height.mas_equalTo(20);
+    UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.searchBtn = searchButton;
+    [self addSubview:searchButton];
+    [self.searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    searchButton.layer.cornerRadius = 20;
+    searchButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
+    searchButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+    searchButton.layer.shadowRadius = 6.f;
+    searchButton.layer.shadowOpacity = 1.f;
+    [searchButton.titleLabel setFont:[UIFont themeFontRegular:14]];
+    searchButton.backgroundColor = [UIColor whiteColor];
+    [searchButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.changeCountryBtn.mas_right).offset(10);
+        make.height.mas_equalTo(40);
+        make.bottom.equalTo(self.mas_bottom).offset(-12);
+        make.right.mas_equalTo(self).offset(-20);
     }];
-
+    
+    UIImageView *imageButtonLeftIcon = [UIImageView new];
+    [searchButton addSubview:imageButtonLeftIcon];
+    [imageButtonLeftIcon setImage:[UIImage imageNamed:@"search-name"]];
+    [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(searchButton).offset(14);
+        make.height.mas_equalTo(16);
+        make.centerY.equalTo(searchButton);
+        make.width.mas_equalTo(16);
+    }];
+    
+    
     self.categoryPlaceholderLabel = [UILabel new];
     self.categoryPlaceholderLabel.font = [UIFont themeFontRegular:14];
     self.categoryPlaceholderLabel.textColor = [UIColor themeGray3];
     self.categoryPlaceholderLabel.text = [UIScreen mainScreen].bounds.size.width < 375 ? @"输入小区/商圈/地铁" : @"请输入小区/商圈/地铁";
-
+    
     [self addSubview:self.categoryPlaceholderLabel];
-
+    
     [self.categoryPlaceholderLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.searchIcon.mas_right);
+        make.left.mas_equalTo(imageButtonLeftIcon.mas_right).offset(2);
         make.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self);
         make.right.mas_equalTo(self).offset(-2);
     }];
-
+    
     self.categoryBgView = [UIView new];
     self.categoryBgView.clipsToBounds = true;
     self.categoryBgView.hidden = true;
     [self addSubview:self.categoryBgView];
-
-
+    self.categoryBgView.userInteractionEnabled = NO;
+    
+    
     [self.categoryBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.searchIcon.mas_right);
+        make.left.mas_equalTo(imageButtonLeftIcon.mas_right).offset(2);
         make.height.mas_equalTo(38);
         make.right.mas_equalTo(self).offset(-2);
         make.centerY.mas_equalTo(self);
     }];
-
-
+    
+    
     self.categoryLabel1 = [UILabel new];
     self.categoryLabel1.font = [UIFont themeFontRegular:14];
-    self.categoryLabel1.textColor = [UIColor themeGray1];
+    self.categoryLabel1.textColor = [UIColor themeGray3];
     self.categoryLabel1.text = @"";
-
-
+    
+    
     [self.categoryBgView addSubview:self.categoryLabel1];
-
+    
     [self.categoryLabel1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(9);
         make.left.centerY.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
         make.right.equalTo(self.categoryBgView).offset(-5);
     }];
-
-
+    
+    
     self.categoryLabel2 = [UILabel new];
     self.categoryLabel2.font = [UIFont themeFontRegular:14];
-    self.categoryLabel2.textColor = [UIColor themeGray1];
+    self.categoryLabel2.textColor = [UIColor themeGray3];
     self.categoryLabel2.text = @"";
-
+    
     [self.categoryBgView addSubview:self.categoryLabel2];
-
+    
     [self.categoryLabel2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.categoryBgView).offset(35);
         make.left.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
         make.right.equalTo(self.categoryBgView).offset(-5);
-    }];
-
-    self.searchBtn = [UIButton new];
-    [self addSubview:self.searchBtn];
-    [self.searchBtn addTarget:self action:@selector(searchBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.verticalLineView.mas_right);
-        make.top.bottom.right.equalTo(self);
     }];
 }
 
@@ -357,15 +316,5 @@
         }
     }
 }
-
-
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
 
 @end

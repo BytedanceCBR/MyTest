@@ -339,11 +339,10 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     
     
     [_pageSearchPanel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        CGFloat offset = kSearchImageBackLeft;
-        make.left.equalTo(self).offset(offset);
-        make.centerY.mas_equalTo(_backgroundImageView.mas_bottom).offset(-kNavBarHeight / 2 - 3);
-        make.right.equalTo(self).offset(-offset);
-        make.height.mas_equalTo(52.0f);
+        make.left.equalTo(self);
+        make.bottom.mas_equalTo(_backgroundImageView.mas_bottom);
+        make.right.equalTo(self);
+        make.height.mas_equalTo(64.0f);
     }];
    
     [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];

@@ -22,8 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSMutableArray <NSString *> * searchTitles;
 @property (nonatomic, strong)   NSArray<FHHomeRollDataDataModel>      *rollDatas;
 
-- (instancetype)initWithFrame:(CGRect)frame withHighlight:(BOOL)highlighted;
-
 - (void)updateCountryLabelLayout:(NSString *)labelText;
 
 @end
