@@ -13,6 +13,7 @@
 #import "TTDeviceHelper.h"
 #import "UIView+House.h"
 #import "FHDetailPriceMarkerView.h"
+#import "FHEnvContext.h"
 
 @interface FHPriceValuationResultView()<PNChartDelegate>
 
@@ -166,6 +167,8 @@
     [_cityMarketBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, - _cityMarketBtn.imageView.image.size.width, 0, _cityMarketBtn.imageView.image.size.width)];
     [_cityMarketBtn setImageEdgeInsets:UIEdgeInsetsMake(0, _cityMarketBtn.titleLabel.bounds.size.width, 0, -_cityMarketBtn.titleLabel.bounds.size.width)];
     [self.chartBgView addSubview:_cityMarketBtn];
+    //由config控制这个按钮是否显示
+    _cityMarketBtn.hidden = ![FHEnvContext isPriceValuationShowHouseTrend];
     
     self.chartPriceLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
     [self.chartBgView addSubview:_chartPriceLabel];

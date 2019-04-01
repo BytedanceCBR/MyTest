@@ -121,6 +121,11 @@ NS_ASSUME_NONNULL_BEGIN
 //保存当前城市id
 + (void)saveCurrentUserCityId:(NSString *)cityId;
 
+/*
+ 判断在房屋估价结果页中是否显示查看城市行情的按钮
+ */
++ (BOOL)isPriceValuationShowHouseTrend;
+
 //返回origin_search id
 
 //接受config数据
