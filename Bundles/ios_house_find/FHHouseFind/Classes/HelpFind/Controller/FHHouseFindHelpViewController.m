@@ -104,7 +104,7 @@
     
     [self.view addSubview:_contentView];
 
-    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView];
+    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView recommendModel:self.recommendModel];
     _viewModel.viewController = self;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
         if (noData) {

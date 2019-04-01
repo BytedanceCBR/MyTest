@@ -67,15 +67,17 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 @implementation FHHouseFindHelpViewModel
 
--(instancetype)initWithCollectionView:(UICollectionView *)collectionView
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel
 {
     self = [super init];
     if (self) {
+        
         _houseType = FHHouseTypeSecondHandHouse;
         _selectMap = [NSMutableDictionary new];
         FHHouseFindSelectItemModel *selectItem = [FHHouseFindSelectItemModel new];
         selectItem.tabId = FHSearchTabIdTypeRegion;
         _selectRegionItem = selectItem;
+        _recommendModel = recommendModel;
         
         _collectionView = collectionView;
         [self registerCell:collectionView];
@@ -91,8 +93,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 
-        // add by zjing for test
-//        [self test];
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
+        [self refreshHouseFindItems:routeParamObj.queryParams];
 //        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
 //            if (x) {
 //                dispatch_async(dispatch_get_main_queue(), ^{
@@ -349,69 +351,88 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [self reloadCollectionViewSection:section];
 }
 
-- (void)test
+- (void)refreshHouseFindItems:(NSDictionary *)params
 {
-    TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
-    NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
-    NSLog(@"zjing query str:%@",queryString);
+    if (self.priceConfigItem) {
+        
+        [self selectItemWithConfigItem:self.priceConfigItem withParams:params];
+    }
+    if (self.roomConfigItem) {
+        
+        [self selectItemWithConfigItem:self.roomConfigItem withParams:params];
+    }
+    if (self.regionConfigItem) {
+        
+        [self selectItemWithConfigItem:self.regionConfigItem withParams:params];
+    }
 }
 
-- (NSString *)getNoneFilterQueryWithParams:(NSDictionary *)params
+- (void)selectItemWithConfigItem:(FHSearchFilterConfigItem *)item withParams:(NSDictionary *)params
 {
+    if (!item) {
+        return;
+    }
     FHHouseType ht = _houseType;
     NSArray *filter = [self filterOfHouseType:ht];
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
 
-    if (self.priceConfigItem) {
+    FHSearchFilterConfigOption *options = [item.options firstObject];
+    NSString *optionType = options.type;
+    FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+    if (!selectItem) {
+        selectItem = [model makeItemWithTabId:item.tabId.integerValue];
+    }
+    if (!selectItem.configOption) {
+        selectItem.configOption = [item.options firstObject];
+    }
+    if (item.tabId.integerValue == FHSearchTabIdTypeRegion && options.options.count > 0) {
+        for (FHSearchFilterConfigOption *subOptions in options.options) {
+            if (![subOptions.type isEqualToString:@"empty"]) {
+                optionType = subOptions.type;
+                break;
+            }
+        }
+    }
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL * _Nonnull stop) {
         
-        FHSearchFilterConfigItem *item = self.priceConfigItem;
-        FHSearchFilterConfigOption *options = [item.options firstObject];
-        NSString *optionType = options.type;
-        FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
-        if (!selectItem) {
-            selectItem = [model makeItemWithTabId:item.tabId.integerValue];
-        }
-        if (!selectItem.configOption) {
-            selectItem.configOption = [item.options firstObject];
-        }
-        [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL * _Nonnull stop) {
+        NSString *keyStr = [key stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        if ([keyStr hasPrefix:optionType]) {
             
-            NSString *keyStr = [key stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            if ([keyStr hasPrefix:optionType]) {
+            if ([obj isKindOfClass:[NSArray class]]) {
+                NSArray* items = (NSArray*)obj;
                 
-                if ([obj isKindOfClass:[NSArray class]]) {
-                    NSArray* items = (NSArray*)obj;
-                    
-                    [items enumerateObjectsUsingBlock:^(NSString *it, NSUInteger idx, BOOL * _Nonnull stop) {
-                        for (NSInteger index = 0; index < options.options.count; index++) {
-                            FHSearchFilterConfigOption *option = options.options[index];
-//                            NSString *valueStr = [self encodingIfNeeded:option.value];
-                            if ([it isEqualToString:option.value]) {
+                [items enumerateObjectsUsingBlock:^(NSString *it, NSUInteger idx, BOOL * _Nonnull stop) {
+                    for (NSInteger index = 0; index < options.options.count; index++) {
+                        FHSearchFilterConfigOption *option = options.options[index];
+                        if (![it isEqualToString:option.value]) {
+                            continue;
+                        }
+                        if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
+                            
+                            [model clearAddSelecteItem:selectItem withIndex:index];
+                        }else {
+                            FHSearchFilterConfigOption *option = nil;
+                            if (item.options.count > 0) {
+                                option = [item.options firstObject];
+                            }
+                            if ([option.supportMulti boolValue]) {
+                                [model addSelecteItem:selectItem withIndex:index];
+                            }else {
                                 [model clearAddSelecteItem:selectItem withIndex:index];
                             }
                         }
-                    }];
-                } else {
-                    for (NSInteger index = 0; index < options.options.count; index++) {
-                        FHSearchFilterConfigOption *option = options.options[index];
-                        NSString *valueStr = [self encodingIfNeeded:option.value];
-                        if ([obj isEqualToString:valueStr]) {
-                            [model clearAddSelecteItem:selectItem withIndex:index];
-                        }
+                    }
+                }];
+            }else {
+                for (NSInteger index = 0; index < options.options.count; index++) {
+                    FHSearchFilterConfigOption *option = options.options[index];
+                    if ([obj isEqualToString:option.value]) {
+                        [model clearAddSelecteItem:selectItem withIndex:index];
                     }
                 }
             }
-        }];
-        NSLog(@"zjing selectItem : %@",selectItem);
-        NSLog(@"zjing selectItem index: %@",selectItem.selectIndexes);
-
-    }
-    
-    NSMutableDictionary *paramsDict = @{}.mutableCopy;
-    NSMutableString* result = [[NSMutableString alloc] init];
-    NSMutableSet<NSString*>* allKeys = [[NSMutableSet alloc] init];
-
-    return result;
+        }
+    }];
 }
 
 - (NSString *)encodingIfNeeded:(NSString *)queryCondition

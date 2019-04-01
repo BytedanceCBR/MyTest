@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHHouseFindRecommendModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
 @property(nonatomic, weak) UIViewController *viewController;
 
--(instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel;
 
 @end
 
