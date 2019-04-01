@@ -353,8 +353,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     FHHouseFindSelectItemModel *priceItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
     if (!priceItem) {
         priceItem = [model makeItemWithTabId:FHSearchTabIdTypePrice];
-        
     }
+    priceItem.fromType = FHHouseFindPriceFromTypeHelp;
     return priceItem;
 }
 
@@ -406,6 +406,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
                     priceItem.rate = item.rate;
                     priceItem.configOption = [item.options firstObject];
                 }
+                priceItem.fromType = FHHouseFindPriceFromTypeHelp;
                 if (priceItem) {
                     [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];
                 }

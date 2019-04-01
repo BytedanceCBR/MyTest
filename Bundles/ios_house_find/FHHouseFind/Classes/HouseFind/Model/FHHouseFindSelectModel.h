@@ -20,6 +20,11 @@ typedef NS_ENUM(NSInteger , FHSearchTabIdType) {
     FHSearchTabIdTypeRentTime = 14,
 };
 
+typedef enum : NSInteger {
+    FHHouseFindPriceFromTypeDefault = 0,
+    FHHouseFindPriceFromTypeHelp,
+} FHHouseFindPriceFromType;
+
 @interface FHHouseFindSelectItemModel : NSObject
 
 @property(nonatomic , assign) NSInteger tabId;
@@ -27,6 +32,7 @@ typedef NS_ENUM(NSInteger , FHSearchTabIdType) {
 @property(nonatomic , copy)   NSString *lowerPrice; //输入要允许输入 0000000
 @property(nonatomic , copy)   NSString *higherPrice;
 @property(nonatomic , copy)   NSNumber *rate;
+@property(nonatomic , assign)   FHHouseFindPriceFromType fromType;
 @property(nonatomic , strong) FHSearchFilterConfigOption *configOption;
 
 -(NSString *)selectQuery;
