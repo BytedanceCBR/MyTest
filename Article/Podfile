@@ -33,7 +33,7 @@ def appPods
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     pod 'FHCommonUI'  , :path => '../Bundles/ios_common_ui' # :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/develop' #
     pod 'FHHouseBase' , :path => '../Bundles/ios_house_base' # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #
-    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
+#    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
     pod 'FHMapSearch' , :path => '../Bundles/ios_map_search' # :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #
     pod 'FHHouseHome' , :path => '../Bundles/ios_house_home' # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
     pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'

@@ -37,8 +37,7 @@
 #import "FHMainRentTopView.h"
 #import "FHMainOldTopView.h"
 
-#import <FHHouseRent/FHHouseRentFilterType.h>
-#import <FHHouseRent/FHHouseRentCell.h>
+#import <FHHouseBase/FHHouseRentFilterType.h>
 #import <BDWebImage/BDWebImage.h>
 #import "FHBaseMainListViewModel+Internal.h"
 #import "FHBaseMainListViewModel+Old.h"

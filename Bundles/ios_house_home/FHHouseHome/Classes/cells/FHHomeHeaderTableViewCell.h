@@ -6,7 +6,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <FHHouseRent.h>
+//#import <FHHouseRent.h>
+#import <FHHouseBase/FHRowsView.h>
 #import "FHHomeCellHelper.h"
 #import "FHBaseTableViewCell.h"
 

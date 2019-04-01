@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHHomeBaseTableCell.h"
-#import <FHHouseRent/FHRowsView.h>
+#import <FHHouseBase/FHRowsView.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

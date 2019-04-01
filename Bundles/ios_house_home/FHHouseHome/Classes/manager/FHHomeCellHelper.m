@@ -11,7 +11,7 @@
 #import "FHHomeCityTrendCell.h"
 #import <FHHouseBase/FHConfigModel.h>
 #import "UITableView+FDTemplateLayoutCell.h"
-#import <FHHouseRent/FHSpringboardView.h>
+#import <FHHouseBase/FHSpringboardView.h>
 #import <BDWebImage.h>
 #import "UIColor+Theme.h"
 #import <TTRoute.h>
