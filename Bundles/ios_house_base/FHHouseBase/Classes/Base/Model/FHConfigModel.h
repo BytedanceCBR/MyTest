@@ -262,6 +262,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface  FHConfigDataCityStatsModel  : JSONModel
 
+@property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *mapOpenUrl;
 @property (nonatomic, copy , nullable) NSString *addedNumToday;
 @property (nonatomic, copy , nullable) NSString *cityDetailDesc;

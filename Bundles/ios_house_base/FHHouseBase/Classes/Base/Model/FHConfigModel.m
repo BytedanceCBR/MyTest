@@ -22,6 +22,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
                            @"mapOpenUrl": @"map_open_url",
                            @"cityDetailDesc": @"city_detail_desc",
                            @"pricingPerSqm": @"pricing_per_sqm",
