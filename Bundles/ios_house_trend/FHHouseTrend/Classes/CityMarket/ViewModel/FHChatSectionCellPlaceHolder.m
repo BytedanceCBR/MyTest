@@ -111,12 +111,15 @@
     [RACObserve(model, selectedInfoListModel) subscribeNext:^(id  _Nullable x) {
         @strongify(cell);
         @strongify(self);
-        [self setupChat:x ofChartView:cell.chatView.lineChart];
+        [self setupChat:x ofChartView:cell.chatView];
+        cell.chatView.lineChart.delegate = model;
+        model.chartView = cell.chatView.lineChart;
     }];
 }
 
 -(void)setupChat:(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*)values
-      ofChartView:(PNLineChart*) chartView {
+      ofChartView:(FHCityMarketTrendChatView*) chartView {
+    [chartView resetChatView];
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
         UIColor* color = [UIColor colorWithHexString:each.color];
@@ -138,13 +141,13 @@
         return data01;
     }];
 
-    chartView.chartData = lineDatas;
-    [chartView strokeChart];
+    chartView.lineChart.chartData = lineDatas;
+    [chartView.lineChart strokeChart];
 
     NSArray* xLabels = [values.timeLine rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTimeLineModel* each) {
         return each.month;
     }];
-    [chartView setXLabels:xLabels];
+    [chartView.lineChart setXLabels:xLabels];
 }
 
 - (NSString *)highlightImgNameByIndex:(NSInteger)index
@@ -181,6 +184,23 @@
             return [UIColor themeGray5];
             break;
     }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+}
+
+- (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
+
+}
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return CGFLOAT_MIN;
 }
 
 @end

@@ -93,12 +93,6 @@
                                      @"page_type":@"setting",
                                      },
                              },
-                         @{
-                             @"name":@"房屋估价",
-                             @"url":@"sslocal://price_valuation",
-                             @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell",
-                             },
                          ];
     [self.dataList addObjectsFromArray:self.defaultList];
     
@@ -314,18 +308,6 @@
     NSString *goDetailTrackDic = dic[@"go_detail"];
     if(clickTrackDic){
         TRACK_EVENT(@"go_detail", goDetailTrackDic);
-    }
-    
-    if([dic[@"name"] isEqualToString:@"房屋估价"]){
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"tracer"] = @{@"enter_from":@"maintab"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSString *urlStr = dic[@"url"];
-        if(urlStr){
-            NSURL* url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        }
-        return;
     }
     
     NSString *urlStr = dic[@"url"];

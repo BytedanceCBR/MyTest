@@ -57,7 +57,7 @@
     } else {
         // Fallback on earlier versions
     }
-    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 64;
+    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
 
     [self.view addSubview:_tableView];
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -97,7 +97,11 @@
     [self.view addSubview:_bottomBarView];
     [_bottomBarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(64);
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            make.height.mas_equalTo(98);
+        } else {
+            make.height.mas_equalTo(64);
+        }
     }];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];

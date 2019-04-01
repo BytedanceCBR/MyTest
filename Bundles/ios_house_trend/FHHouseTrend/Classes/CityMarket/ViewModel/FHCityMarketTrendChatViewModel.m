@@ -48,6 +48,7 @@
     [self dismissInfoView];
     [_model.districtMarketInfoList enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([category isEqualToString:obj.locationName]) {
+            _selectIndex = NSUIntegerMax;
             self.selectedInfoListModel = obj;
         }
     }];

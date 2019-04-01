@@ -37,6 +37,9 @@
         _view.areaItemView.textField.delegate = self;
         _viewController = viewController;
         _infoModel = [[FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel alloc] init];
+        
+        //埋点
+        [self addGoDetailTracer];
     }
     return self;
 }
@@ -163,18 +166,23 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)addClickOptionsTracer:(NSString *)position {
+- (void)addGoDetailTracer {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"click_position"] = position;
-    TRACK_EVENT(@"click_options", tracerDict);
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    TRACK_EVENT(@"go_detail", tracerDict);
 }
 
-- (void)addGoDetailTracer {
-//    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-//    tracerDict[@"page_type"] = [self pageType];
-//    tracerDict[@"click_position"] = position;
-//    TRACK_EVENT(@"go_detail", tracerDict);
+- (void)addClickOptionsTracer:(NSString *)position {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"click_position"] = position;
+    TRACK_EVENT(@"click_options", tracerDict);
 }
 
 - (NSString *)pageType {
@@ -205,7 +213,7 @@
     dict[@"delegate"] = delegate;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
-    NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_neiborhood_search"];
+    NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_neighborhood_search"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
