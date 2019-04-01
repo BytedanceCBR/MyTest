@@ -110,7 +110,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             [self.topUnAvalibleCityContainer setBackgroundColor:[UIColor colorWithHexString:dataModel.cityAvailability.backgroundColor]];
         }
         
-        CGFloat padingTop = 10;
+        CGFloat padingTop = 8;
         if ([TTDeviceHelper isIPhoneXDevice]) {
             padingTop = 20;
         }
@@ -131,7 +131,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.topUnAvalibleCityContainer).offset(20);
             make.height.mas_equalTo(40);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(-12);
             make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 48); // button width
         }];
         [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 22, 0, 0)];
@@ -164,7 +164,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         [imageRightView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.topUnAvalibleCityContainer).offset(0);
             make.height.mas_equalTo(52);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(0);
             make.width.mas_equalTo(108);
         }];
         
