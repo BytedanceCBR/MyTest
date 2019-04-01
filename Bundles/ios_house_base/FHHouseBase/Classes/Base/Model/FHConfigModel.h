@@ -294,6 +294,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHConfigDataRentBannerItemsModel<NSObject>
+@end
+
+@protocol FHConfigDataRentBannerItemsImageModel<NSObject>
+@end
+
+@interface FHConfigDataRentBannerItemsImageModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *url;
+@property (nonatomic, copy , nullable) NSString *width;
+@property (nonatomic, strong , nullable) NSArray *urlList;
+@property (nonatomic, copy , nullable) NSString *uri;
+@property (nonatomic, copy , nullable) NSString *height;
+@end
+
+@interface FHConfigDataRentBannerItemsModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataRentBannerItemsImageModel> *image;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *id;
+@end
+
+@interface FHConfigDataRentBannerModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataRentBannerItemsModel> *items;
+@property (nonatomic, copy , nullable) NSString *opStyle;
+@end
+
+
 @interface  FHConfigDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
@@ -328,6 +362,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *neighborhoodFilterOrder;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *saleHistoryFilter;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *courtFilterOrder;
+@property (nonatomic, strong , nullable) FHConfigDataRentBannerModel *rentBanner ;
 
 @property (nonatomic, strong , nullable) NSString *diffCode;
 

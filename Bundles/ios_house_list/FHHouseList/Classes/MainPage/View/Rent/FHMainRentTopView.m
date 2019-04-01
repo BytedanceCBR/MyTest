@@ -10,6 +10,8 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <BDWebImage/UIImageView+BDWebImage.h>
+#import <FHHouseBase/FHConfigModel.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 @interface FHMainRentTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -24,11 +26,30 @@
 #define BOTTOM_PADDING 6
 
 #define BANNER_HEIGHT  102
+#define BANNER_HOR_MARGIN 14
 
 
 @implementation FHMainRentTopView
 
--(instancetype)initWithFrame:(CGRect)frame
++(CGFloat)bannerHeight:(FHConfigDataRentBannerModel *)rentBannerModel
+{
+    if (rentBannerModel.items.count > 0) {
+        FHConfigDataRentBannerItemsModel *item = [rentBannerModel.items firstObject];
+        if (item.image.count > 0) {
+            FHConfigDataRentBannerItemsImageModel *img = [item.image firstObject];
+            CGFloat bannerHeight = BANNER_HEIGHT;
+            CGFloat imgWidth = img.width.floatValue;
+            CGFloat imgHeight = img.height.floatValue;
+            if (imgWidth > 0 && imgHeight > 0) {
+                bannerHeight = (SCREEN_WIDTH - BANNER_HOR_MARGIN*2)*imgHeight/imgWidth;
+            }
+            return ceil(bannerHeight);
+        }
+    }
+    return 0;
+}
+
+-(instancetype)initWithFrame:(CGRect)frame banner:(FHConfigDataRentBannerModel *)rentBanner
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -40,11 +61,16 @@
         
         CGRect f = self.bounds;
         
-        BOOL needShowBanner = YES;
+        CGFloat bannerHeight = [self.class bannerHeight:rentBanner];
+        BOOL needShowBanner = rentBanner && rentBanner.items.count > 0 ;
+        FHConfigDataRentBannerItemsModel *model = [rentBanner.items firstObject];
+        if (bannerHeight == 0) {
+            needShowBanner = NO;
+        }
         
         f.size.height -= BOTTOM_PADDING;
         if (needShowBanner) {
-            f.size.height -= BANNER_HEIGHT;
+            f.size.height -= bannerHeight;
         }
         //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
         _collectionView = [[UICollectionView alloc]initWithFrame:f collectionViewLayout:layout];
@@ -57,19 +83,25 @@
         
         [self addSubview:_collectionView];
         if (needShowBanner) {
-            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(0, CGRectGetMaxY(_collectionView.frame), f.size.width, BANNER_HEIGHT)];
+            
+            FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
+            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(BANNER_HOR_MARGIN, CGRectGetMaxY(_collectionView.frame), f.size.width - 2*BANNER_HOR_MARGIN, bannerHeight)];
             [self addSubview:_bannerView];
+            
+            [_bannerView bd_setImageWithURL:[NSURL URLWithString:img.url] placeholder:nil];
             
             UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClickAction)];
             [_bannerView addGestureRecognizer:tapGesture];
             _bannerView.userInteractionEnabled = YES;
+            
+            self.backgroundColor = [UIColor whiteColor];
+        }else{
+            self.backgroundColor = [UIColor themeGray7];
         }
         
-        self.backgroundColor = [UIColor themeGray7];
-        _collectionView.backgroundColor = [UIColor whiteColor];
         
-        _bannerView.backgroundColor = [UIColor redColor
-                                       ];
+        _collectionView.backgroundColor = [UIColor whiteColor];
+        _bannerView.backgroundColor = [UIColor whiteColor];
         
     }
     return self;

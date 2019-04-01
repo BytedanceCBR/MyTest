@@ -26,6 +26,7 @@
 #import "TTInstallIDManager.h"
 #import "FHHouseListCommuteTipView.h"
 #import "FHCommuteFilterView.h"
+#import "FHCommuteManager.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -108,6 +109,7 @@
             self.associationalWord = displayText;
         }
         self.ttTrackStayEnable = YES;
+        self.ttHideNavigationBar = YES;
     }
     return self;
 }
@@ -202,6 +204,8 @@
         if (showHide) {
             wself.commuteChooseBgView.hidden = YES;
         }else{
+            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+            [wself.commuteFilterView updateType:manager.commuteType time:manager.duration];
             [wself.view bringSubviewToFront:wself.commuteChooseBgView];
             [wself.commuteChooseBgView addSubview:wself.commuteFilterView];
             wself.commuteChooseBgView.hidden = NO;
@@ -209,7 +213,7 @@
         wself.commuteTipView.showHide = !showHide;
     };
     
-    [_commuteTipView updateTime:@"早高峰" tip:@" 通过公交30分钟内到达"];
+    [self updateCommuteTip];
     
     _commuteChooseBgView = [[UIControl alloc] init];
     _commuteChooseBgView.backgroundColor =  RGBA(0, 0, 0, 0.4);
@@ -220,9 +224,31 @@
 -(FHCommuteFilterView *)commuteFilterView
 {
     if (!_commuteFilterView) {
-        _commuteFilterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 298) insets:UIEdgeInsetsMake(20, 0,  20, 0) type:FHCommuteTypeDrive];
+        FHCommuteType type = [[FHCommuteManager sharedInstance] commuteType];
+        if (type < 0) {
+            type = FHCommuteTypeDrive;
+        }
+        _commuteFilterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 298) insets:UIEdgeInsetsMake(20, 0,  20, 0) type:type];
+        __weak typeof(self) wself = self;
+        _commuteFilterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
+            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+            manager.duration = time;
+            manager.commuteType = type;
+            [manager sync];
+            [wself updateCommuteTip];
+            
+            [wself onCommuteBgTap];
+        };
     }
     return _commuteFilterView;
+    
+}
+
+-(void)updateCommuteTip
+{
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    NSString *tip = [NSString stringWithFormat:@" 通过%@%@分钟内到达",[manager commuteTypeName],manager.duration];
+    [_commuteTipView updateTime:@"早高峰" tip:tip];
     
 }
 
@@ -242,6 +268,7 @@
     
     _viewModel.closeConditionFilter = ^{
         [wself.houseFilterBridge closeConditionFilterPanel];
+        [wself onCommuteBgTap];
     };
     
     _viewModel.clearSortCondition = ^{
@@ -280,6 +307,11 @@
     
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
         //        [wself showNotify:message];
+    };
+    
+    _viewModel.commuteSugSelectBlock = ^(NSString * _Nonnull poi) {
+      
+        [wself refreshNavBar:wself.houseType placeholder:poi];
     };
     
 }
@@ -351,6 +383,7 @@
 {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 
 }
@@ -380,6 +413,7 @@
 -(void)initConstraints
 {
     CGFloat height = [FHFakeInputNavbar perferredHeight];
+    NSLog(@"[LIST] bar height is: %f",height);
     
     [self.navbar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.and.top.mas_equalTo(self.view);
@@ -449,6 +483,7 @@
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
     
+    
     [self initNavbar];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
@@ -516,12 +551,12 @@
     [_filterContainerView addSubview:self.filterPanel];
     [self.view bringSubviewToFront:self.filterBgControl];
     
-    if (_houseType == FHHouseTypeRentHouse) {
+    
+    if (_viewModel.isCommute) {
         //
         [self initCommuteTip];
         [self.view addSubview:_commuteTipView];
         [self.view addSubview:_commuteChooseBgView];
-        
     }
 
 }

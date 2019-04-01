@@ -9,6 +9,7 @@
 #define FHCommuteType_h
 
 typedef NS_ENUM(NSInteger , FHCommuteType) {
+    FHCommuteTypeInvalid = -1,
     FHCommuteTypeBus = 0,
     FHCommuteTypeDrive,
     FHCommuteTypeWalk ,

@@ -37,8 +37,9 @@
 #import "TTInstallIDManager.h"
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
+#import "FHCommutePOISearchViewController.h"
 
-@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
+@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
 @property(nonatomic , weak) FHErrorView *maskView;
 @property (nonatomic , weak) FHHouseListRedirectTipView *redirectTipView;
@@ -80,6 +81,7 @@
 @property (nonatomic , strong) NSString * subScribeQuery;
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
 @property (nonatomic , assign) BOOL isShowSubscribeCell;
+
 
 @end
 
@@ -180,6 +182,11 @@
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
 
+        if ([paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
+            self.houseType = FHHouseTypeRentHouse;
+            self.commute = YES;
+        }
+        
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
@@ -827,6 +834,13 @@
     if (self.closeConditionFilter) {
         self.closeConditionFilter();
     }
+    
+    if (self.isCommute) {
+        [self showPoiSearch];
+        return;
+    }
+    
+    
     [self addClickHouseSearchLog];
     
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
@@ -850,6 +864,36 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
+
+-(void)showPoiSearch {
+    
+    //commute_poi
+    
+    NSURL *url = [NSURL URLWithString:@"sslocal://commute_poi"];
+    
+    NSHashTable *delegate = WRAP_WEAK(self);
+    NSDictionary *param = @{COMMUTE_POI_DELEGATE_KEY:delegate};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
+    
+    [[TTRoute sharedRoute]openURLByViewController:url userInfo:userInfo];
+    
+}
+
+#pragma mark - poi search delegate
+
+-(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController
+{
+    if (self.commuteSugSelectBlock) {
+        self.commuteSugSelectBlock(poi.name);
+    }
+    [viewController.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)userCanced:(UIViewController *)viewController
+{
+    [viewController.navigationController popViewControllerAnimated:YES];
+}
+
 
 #pragma mark 地图找房
 -(void)showMapSearch {
@@ -969,6 +1013,9 @@
         self.sugSelectBlock(routeObject.paramObj);
     }
 }
+
+
+#pragma mark -
 
 -(void)resetCondition {
     //    self.resetConditionBlock(nil);

@@ -12,6 +12,8 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import <MJRefresh/MJRefresh.h>
 #import <FHCommonUI/FHRefreshCustomFooter.h>
+#import <FHCommonUI/ToastManager.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 #import "FHCommutePOIInputBar.h"
 #import "FHCommutePOIInfoCell.h"
@@ -79,13 +81,21 @@
             //定位地和选择地是同一城市才选择
             _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
             if (_currentReGeocode) {
-                self.locationHeaderView.location = _currentReGeocode.POIName;
+                self.locationHeaderView.location = _currentReGeocode.AOIName;
                 tableView.tableHeaderView = _locationHeaderView;
             }else{
                 [self reGeoSearch];
             }
             
-            [self nearBySearch];
+            [self nearBySearch:YES];
+        }else {
+            CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+            if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined) {
+                self.locationHeaderView.location = @"无法获取当前位置";
+                self.locationHeaderView.showRefresh = YES;
+                tableView.tableHeaderView = _locationHeaderView;
+            }
+            [self nearBySearch:NO];
         }
         
         
@@ -115,24 +125,48 @@
         geo.longitude = location.coordinate.longitude;
         request.location = geo;
         [_searchAPI AMapReGoecodeSearch:request];
+    }else{
+        self.locationHeaderView.loading = YES;
+        __weak typeof(self) wself = self;
+        [[FHLocManager sharedInstance] requestCurrentLocation:NO completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
+            if (!wself) {
+                return ;
+            }
+            if (reGeocode) {
+                wself.locationHeaderView.location = reGeocode.AOIName;
+                wself.currentReGeocode = reGeocode;
+                wself.locationHeaderView.loading = NO;
+            }else{
+                SHOW_TOAST(@"定位失败");
+            }
+        }];
     }
 }
 
--(void)nearBySearch
+-(void)nearBySearch:(BOOL)sameCity
 {
-    CLLocation *location = [FHLocManager sharedInstance].currentLocaton;
+    AMapPOIAroundSearchRequest *request = [[AMapPOIAroundSearchRequest alloc] init];
+    request.types = @"120000|120100|120200|120201|120202|120203";
+    
+    CLLocation *location = nil;
+    if (sameCity) {
+        location = [FHLocManager sharedInstance].currentLocaton;
+    }
+    
     if (location) {
-        AMapPOIAroundSearchRequest *request = [[AMapPOIAroundSearchRequest alloc] init];
-        request.types = @"120000|120100|120200|120201|120202|120203";
         AMapGeoPoint *geo = [[AMapGeoPoint alloc] init];
         geo.latitude = location.coordinate.latitude;
         geo.longitude = location.coordinate.longitude;
         request.location = geo;
         request.city = _currentReGeocode.city;
         request.radius = 1000;
-        self.aroundRequest = request;
-        [_searchAPI AMapPOIAroundSearch:request];
+    }else{
+        request.city = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     }
+    
+    self.aroundRequest = request;
+    [_searchAPI AMapPOIAroundSearch:request];
+    
 }
 
 -(void)poiSearch:(NSString *)keyword
@@ -226,11 +260,22 @@
 - (void)onReGeocodeSearchDone:(AMapReGeocodeSearchRequest *)request response:(AMapReGeocodeSearchResponse *)response
 {
     if (response.regeocode) {
-        AMapPOI *poi = [response.regeocode.pois firstObject];
-        if (poi) {
-            self.locationHeaderView.location = poi.name;
-            _tableView.tableHeaderView = _locationHeaderView;
+        AMapPOI *poi = nil;
+        if (response.regeocode.aois.count > 0) {
+           poi = [response.regeocode.aois firstObject];
+        }else if (response.regeocode.pois.count > 0){
+           poi = [response.regeocode.pois firstObject];
         }
+        NSString *name = nil;
+        
+        if (poi) {
+            name = poi.name;
+        }else{
+            name = response.regeocode.formattedAddress;
+        }
+        self.locationHeaderView.location = name;
+        _tableView.tableHeaderView = _locationHeaderView;
+        self.locationHeaderView.loading = NO;
     }
 }
 
@@ -259,9 +304,41 @@
 {
     if (!_locationHeaderView) {
         _locationHeaderView = [[FHCommutePOIHeaderView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, LOCATION_HEADER_HEIGHT)];
+        __weak typeof(self) wself = self;
+        _locationHeaderView.refreshBlock = ^{
+            [wself tryRequestAuthority];
+        };
     }
     return _locationHeaderView;
     
+}
+
+-(void)tryRequestAuthority
+{
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if (status != kCLAuthorizationStatusDenied ){
+        [self reGeoSearch];
+        self.locationHeaderView.loading = YES;
+        return;
+    }
+                    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"开启定位服务" message:@"请允许幸福里使用您的位置来为您提供更好的找房服务" preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    
+    UIAlertAction *config = [UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        NSURL *url = [[NSURL alloc] initWithString:UIApplicationOpenSettingsURLString];
+        if( [[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }];
+    
+    [alert addAction:cancel];
+    [alert addAction:config];
+    
+    [self.viewController presentViewController:alert animated:YES completion:nil];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

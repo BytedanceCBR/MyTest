@@ -24,7 +24,7 @@ extern NSString *const COMMUTE_POI_DELEGATE_KEY;
 @required
 -(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController;
 
--(void)userCanced:(FHCommutePOISearchViewController *)viewController;
+-(void)userCanced:(UIViewController *)viewController;
 
 @end
 

@@ -12,7 +12,7 @@
 
 @protocol FHCommuteConfigDelegate <NSObject>
 
--(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration;
+-(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration inController:(UIViewController *)controller;
 
 @end
 

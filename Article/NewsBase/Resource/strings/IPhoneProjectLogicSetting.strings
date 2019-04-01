@@ -119,4 +119,4 @@
 
 "commute_config" = "FHCommuteConfigViewController";
 "commute_poi" = "FHCommutePOISearchViewController";
-
+"commute_list" = "FHHouseListViewController";

@@ -89,9 +89,9 @@
     
 }
 
--(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration
+-(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration inController:(UIViewController *)controller
 {
-    NSLog(@"location is: %@  duration is: %@",location,duration);
+    [self gotoCommuteList:controller];
 }
 
 @end

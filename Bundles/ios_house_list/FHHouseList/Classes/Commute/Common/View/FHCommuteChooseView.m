@@ -49,7 +49,7 @@
         labelFrame.origin.x = HOR_MARGIN;
         _titleLabel.frame = labelFrame;
         
-        _slider = [[FHCommuteSlider  alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 2*HOR_MARGIN, THUMB_IMAGE_WIDTH)];
+        _slider = [[FHCommuteSlider  alloc] initWithFrame:CGRectMake(HOR_MARGIN, 0, SCREEN_WIDTH - 2*HOR_MARGIN, THUMB_IMAGE_WIDTH)];
         _slider.maxValue = 100;
         _slider.minValue = 0;
         _slider.type = type;
@@ -142,6 +142,7 @@
         _chooseTime = chooseTime;
         _currentIndex = index;
         [self setNeedsDisplay];
+        [self valueChanged:NO];
     }
 }
 

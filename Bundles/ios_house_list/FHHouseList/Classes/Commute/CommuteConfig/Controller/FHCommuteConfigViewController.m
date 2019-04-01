@@ -15,6 +15,7 @@
 #import "FHCommutePOISearchViewController.h"
 #import <AMapSearchKit/AMapCommonObj.h>
 #import <FHCommonUI/ToastManager.h>
+#import "FHCommuteManager.h"
 
 #define BANNER_HEIGHT SCREEN_WIDTH*(224/375.0)
 #define INPUT_BG_HEIGHT 46
@@ -147,6 +148,13 @@
     [self initInputTip];
     
     [self initConstraints];
+    
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    NSString *destLocation = manager.destLocation;
+    if (destLocation.length > 0) {
+        _inputLabel.text = destLocation;
+    }
+    [_filterView updateType:manager.commuteType time:manager.duration];
 }
 
 
@@ -219,11 +227,17 @@
 
 -(void)startSearch:(NSString *)duration type:(FHCommuteType)type
 {
-    if ([self.delegate respondsToSelector:@selector(commuteWithDest:type:duration:)]) {
-        [self.delegate commuteWithDest:self.chooseLocation type:type duration:duration];
-    }
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    manager.duration = duration;
+    manager.commuteType = type;
+    manager.destLocation = self.chooseLocation;
+    [manager sync];
     
-    [self.navigationController popViewControllerAnimated:YES ];
+    if ([self.delegate respondsToSelector:@selector(commuteWithDest:type:duration:inController:)]) {
+        [self.delegate commuteWithDest:self.chooseLocation type:type duration:duration inController:self];
+    }else{        
+        [self.navigationController popViewControllerAnimated:YES ];
+    }
 }
 
 /*

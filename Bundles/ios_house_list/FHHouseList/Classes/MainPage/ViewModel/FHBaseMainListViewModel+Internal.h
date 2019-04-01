@@ -75,6 +75,8 @@
 
 -(void)addStayLog:(NSTimeInterval)duration;
 
+-(void)gotoCommuteList:(UIViewController *)popController;
+
 @end
 
 #endif /* FHBaseMainListViewModel_Internal_h */

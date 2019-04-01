@@ -47,6 +47,7 @@
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
 #import "FHHouseListAPI.h"
+#import "FHCommuteManager.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -135,7 +136,8 @@
     if (_houseType == FHHouseTypeRentHouse) {
         FHConfigDataRentOpDataModel *rentModel = dataModel.rentOpData;
         if (rentModel.items.count > 0) {
-            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT+RENT_BANNER_HEIGHT)];
+            CGFloat bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
+            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight) banner:dataModel.rentBanner];
             topView.items = rentModel.items;
             topView.delegate = self;
             self.topBannerView = topView;
@@ -695,10 +697,6 @@
 
 -(NSString *)navbarPlaceholder
 {
-//    if (self.topView && _houseType == FHHouseTypeRentHouse) {
-//        //大类页
-//        return @"你想住哪里？";
-//    }
     switch (_houseType) {
             case FHHouseTypeNewHouse:
                 return @"请输入楼盘名/地址";
@@ -808,8 +806,12 @@
 
 -(void)tapRentBanner
 {
-    NSLog(@"goto detail>>");
-    [self showCommuteConfigPage];
+    NSString *destLocation = [[FHCommuteManager sharedInstance] destLocation];
+    if (destLocation.length == 0) {
+        [self showCommuteConfigPage];
+    }else{
+        [self gotoCommuteList:nil];
+    }
 }
 
 -(void)selecteOldItem:(FHConfigDataOpData2ItemsModel *)model
@@ -850,6 +852,37 @@
         return temp;
     }
     return nil;
+}
+
+-(void)gotoCommuteList:(UIViewController *)popController
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataRentBannerItemsModel *item = [dataModel.rentBanner.items firstObject];
+    NSURL *url = [NSURL URLWithString:item.openUrl];
+    
+    NSMutableDictionary *param = [[self baseLogParam]mutableCopy];
+    param[UT_CATEGORY_NAME] = @"rent_list";
+    param[UT_ENTER_TYPE] = @"click";
+    param[UT_ELEMENT_FROM] = @"renting_icon";
+    param[UT_SEARCH_ID] = self.searchId;
+    
+    param[UT_ORIGIN_FROM] = @"rent_list";
+    if (!param[UT_ORIGIN_SEARCH_ID]) {
+        param[UT_ORIGIN_SEARCH_ID] = @"be_null";
+    }
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
+    if (popController) {
+        __weak typeof(self) wself = self;
+        [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+            NSMutableArray *controllers = [[NSMutableArray alloc] initWithArray:nav.viewControllers];
+            [controllers removeObject:popController];
+            [controllers addObject:routeObj.instance];
+            [nav setViewControllers:controllers animated:YES];
+        }];
+    }else{
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 

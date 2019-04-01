@@ -12,6 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommutePOIHeaderView : UIView
 
 @property(nonatomic , strong) NSString *location;
+@property(nonatomic , copy)   void (^refreshBlock)(void);
+@property(nonatomic , assign) BOOL showRefresh;
+@property(nonatomic , assign) BOOL loading;
 
 @end
 

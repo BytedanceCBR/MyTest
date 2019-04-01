@@ -69,8 +69,12 @@
 
 -(void)updateType:(FHCommuteType)type time:(NSString *)time
 {
-    [_typeView chooseType:type];
-    _timeChooseView.chooseTime = time;
+    if (type >= 0) {
+        [_typeView chooseType:type];
+    }
+    if (!IS_EMPTY_STRING(time) ) {
+        _timeChooseView.chooseTime = time;
+    }    
 }
 
 -(FHCommuteType)type

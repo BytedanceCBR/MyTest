@@ -16,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) NSString *bannerUrl;
 @property(nonatomic , weak)   id<FHMainRentTopViewDelegate> delegate;
 
++(CGFloat)bannerHeight:(FHConfigDataRentBannerModel *)rentBannerModel;
+
+-(instancetype)initWithFrame:(CGRect)frame banner:(FHConfigDataRentBannerModel *)rentBanner;
+
 @end
 
 @protocol FHMainRentTopViewDelegate <NSObject>
