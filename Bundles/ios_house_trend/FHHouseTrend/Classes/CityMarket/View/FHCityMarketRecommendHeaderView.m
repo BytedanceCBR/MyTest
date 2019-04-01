@@ -31,6 +31,7 @@
     self.titleLabel = [[UILabel alloc] init];
     _titleLabel.textColor = [UIColor blackColor];
     _titleLabel.font = [UIFont themeFontSemibold:18];
+    _titleLabel.text = @"特色二手房";
     [self addSubview:_titleLabel];
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(25);

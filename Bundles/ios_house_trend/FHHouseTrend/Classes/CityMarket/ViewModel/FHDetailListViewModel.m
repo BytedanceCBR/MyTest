@@ -99,6 +99,17 @@
     return [holder tableView:tableView heightForHeaderInSection:section];
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    id<FHSectionCellPlaceHolder> holder = [self holderAtSection:section];
+    return [holder tableView:tableView viewForFooterInSection:section];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    id<FHSectionCellPlaceHolder> holder = [self holderAtSection:section];
+    return [holder tableView:tableView heightForFooterInSection:section];
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     id<FHSectionCellPlaceHolder> holder = [self holderAtSection:indexPath.section];
     [holder tableView:tableView didSelectRowAtIndexPath:indexPath];
@@ -112,11 +123,6 @@
             sectionOffset += [obj numberOfSection];
         }
     }];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return CGFLOAT_MIN;
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {

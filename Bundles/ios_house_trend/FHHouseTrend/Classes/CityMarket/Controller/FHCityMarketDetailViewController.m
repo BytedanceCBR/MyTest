@@ -28,18 +28,18 @@
 #import "TTTrackerWrapper.h"
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
+@property (nonatomic, strong) TTRouteUserInfo* userInfo;
 -(void)jump;
 @end
 
 @implementation FHCityOpenUrlJumpAction
 
 - (void)jump {
-    [[TTRoute sharedRoute] openURLByPushViewController:_openUrl];
-}
-
-- (void)dealloc
-{
-
+    if (_userInfo != nil) {
+        [[TTRoute sharedRoute] openURLByPushViewController:_openUrl userInfo:_userInfo];
+    } else {
+        [[TTRoute sharedRoute] openURLByPushViewController:_openUrl];
+    }
 }
 
 @end
@@ -66,6 +66,12 @@
     if (self) {
         self.navBarViewModel = [[FHImmersionNavBarViewModel alloc] init];
         _actions = [[NSMutableArray alloc] init];
+        self.tracerDict[@"enter_from"] = paramObj.allParams[@"enter_from"];
+        self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
+        self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
+        self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
+        NSDictionary* dict = paramObj.allParams[@"tracer"];
+        NSLog(@"%@", dict);
     }
     return self;
 }
@@ -230,17 +236,27 @@
         }
     }];
 
+    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
+
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
     item.titleLabel.text = @"买房估价";
     item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
     FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
     action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
+    action.userInfo = info;
     [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     [_actions addObject:action];
+
     FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
     item2.titleLabel.text = @"帮我找房";
     item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
     [_bottomBarView setBottomBarItems:@[item, item2]];
+}
+
+-(NSDictionary*)traceParams {
+    self.tracerDict[@"enter_from"] = @"city_market";
+    self.tracerDict[@"origin_from"] = @"city_market";
+    return [self.tracerDict copy];
 }
 
 -(void)onDataArrived {

@@ -34,7 +34,7 @@
 }
 
 - (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
-    
+
 }
 
 @end

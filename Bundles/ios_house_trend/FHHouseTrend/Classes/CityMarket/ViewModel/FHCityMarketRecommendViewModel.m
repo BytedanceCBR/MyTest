@@ -37,6 +37,8 @@
     self.title = _specialOldHouseList[_selectedIndex].title;
     self.question = _specialOldHouseList[_selectedIndex].questionText;
     self.answoer = _specialOldHouseList[_selectedIndex].answerText;
+    self.footerTitle = _specialOldHouseList[_selectedIndex].moreBtnText;
+    self.openUrl = _specialOldHouseList[_selectedIndex].openUrl;
 }
 
 -(void)onCategoryChange:(NSInteger)categoryIndex {
@@ -48,6 +50,8 @@
     self.title = _specialOldHouseList[_selectedIndex].title;
     self.question = _specialOldHouseList[_selectedIndex].questionText;
     self.answoer = _specialOldHouseList[_selectedIndex].answerText;
+    self.footerTitle = _specialOldHouseList[_selectedIndex].moreBtnText;
+    self.openUrl = _specialOldHouseList[_selectedIndex].openUrl;
     if ([_dataCache count] != 0) {
         //下一mainLoop更新，避免首次加载页面时，有白屏现象
         dispatch_async(dispatch_get_main_queue(), ^{
