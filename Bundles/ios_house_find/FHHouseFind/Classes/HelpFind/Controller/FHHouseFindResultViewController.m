@@ -8,7 +8,7 @@
 #import "FHHouseFindResultViewController.h"
 #import "FHHouseFindResultViewModel.h"
 #import <FHErrorView.h>
-
+#import "FHHouseFindRecommendModel.h"
 
 @interface FHHouseFindResultViewController () <TTRouteInitializeProtocol>
 
@@ -18,6 +18,7 @@
 @property (nonatomic , strong) UIView *bottomView;
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
+@property (nonatomic , strong) FHHouseFindRecommendModel *recommendModel;
 
 @end
 
@@ -27,13 +28,24 @@
 {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-      
+        _paramObj = paramObj;
+        NSDictionary *recommendDict = @{ @"bottom_open_url": @"sslocal://house_list?",
+            @"district_title": @"浦口/玄武/建邺",
+            @"find_house_number": @(2977),
+            @"open_url": @"sslocal://house_list?",
+            @"price_title": @"400000000-500000000万",
+            @"room_num_title": @"2室/3室",
+            @"used": @(YES) };
+        _recommendModel = [[FHHouseFindRecommendModel alloc] initWithDictionary:recommendDict error:nil];
+        
+        
+//     NSDictionary *recommendDict = paramObj.allParams[@"recommend_house"];
     }
     return self;
 }
 
 -(void)setupUI {
-    [self setupDefaultNavBar:NO];
+    [self initNavbar];
 
     _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_containerView];
@@ -52,8 +64,8 @@
     //    }];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-        make.bottom.mas_equalTo(-bottomHeight);
+        make.top.equalTo(self.view);
+        make.bottom.mas_equalTo(- bottomHeight);
     }];
     
     [_containerView setBackgroundColor:[UIColor redColor]];
@@ -69,17 +81,25 @@
         // Fallback on earlier versions
     }
 
+    
+    if (@available(iOS 11.0, *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        // Fallback on earlier versions
+    }
+    
     self.tableView.sectionFooterHeight = 0;
     self.tableView.sectionHeaderHeight = 0;
     self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
-
+  
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.bounces = NO;
 
     [_containerView addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.containerView);
+        make.top.left.right.equalTo(self.containerView);
+        make.bottom.mas_equalTo(bottomHeight != 0 ? -bottomHeight - 16 : -70);
     }];
     
     [_tableView setBackgroundColor:[UIColor whiteColor]];
@@ -87,8 +107,26 @@
     
     self.bottomView = [UIView new];
     [_containerView addSubview:self.bottomView];
+    [self.bottomView setBackgroundColor:[UIColor whiteColor]];
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.containerView);
+        make.width.mas_equalTo(self.containerView);
+        make.height.mas_equalTo(bottomHeight != 0 ? bottomHeight + 16 : 70);
+        make.bottom.equalTo(self.containerView).offset(0);
+    }];
+    
+    
+    UIButton *buttonOpenMore = [UIButton new];
+    [buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
+    [buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
+    [buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
+    
+    [self.bottomView addSubview:buttonOpenMore];
+    [buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.top.mas_equalTo(10);
+        make.height.mas_equalTo(40);
     }];
     
 
@@ -102,6 +140,7 @@
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"查房价";
     [self setNavBar:NO];
+    [self.customNavBarView setNaviBarTransparent:YES];
 }
 
 - (void)setNavBar:(BOOL)error {
