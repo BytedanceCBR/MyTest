@@ -156,7 +156,7 @@
     [self.categoryBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(imageButtonLeftIcon.mas_right).offset(2);
         make.height.mas_equalTo(38);
-        make.right.mas_equalTo(self).offset(-2);
+        make.right.mas_equalTo(self.searchBtn.mas_right).offset(0);
         make.centerY.mas_equalTo(self);
     }];
     
@@ -173,7 +173,7 @@
         make.top.equalTo(self.categoryBgView).offset(9);
         make.left.centerY.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
-        make.right.equalTo(self.categoryBgView).offset(-5);
+        make.right.equalTo(self.categoryBgView).offset(-6);
     }];
     
     
@@ -188,7 +188,7 @@
         make.top.equalTo(self.categoryBgView).offset(35);
         make.left.equalTo(self.categoryBgView);
         make.height.mas_equalTo(20);
-        make.right.equalTo(self.categoryBgView).offset(-5);
+        make.right.equalTo(self.categoryBgView).offset(-6);
     }];
 }
 
@@ -303,7 +303,7 @@
 - (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
 {
     _searchTitles = searchTitles;
-    if (kIsNSArray(_searchTitles)) {
+    if (kIsNSArray(searchTitles)) {
         self.searchTitleIndex = 0;
         if (_searchTitles.count  > 0) {
             [self setUpRollScreenTimer];
@@ -314,6 +314,9 @@
             self.categoryBgView.hidden = YES;
             self.categoryPlaceholderLabel.hidden = NO;
         }
+    } else {
+        self.categoryBgView.hidden = YES;
+        self.categoryPlaceholderLabel.hidden = NO;
     }
 }
 

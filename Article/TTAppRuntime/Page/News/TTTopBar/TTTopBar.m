@@ -114,6 +114,15 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         if ([TTDeviceHelper isIPhoneXDevice]) {
             padingTop = 20;
         }
+        BOOL isLarge320 = [TTDeviceHelper isScreenWidthLarge320];
+        CGFloat tipsFontSize = 14.0;
+        CGFloat leftOffset = 14;
+        // 适配小屏幕
+        if (!isLarge320) {
+            leftOffset = 10;
+            tipsFontSize = 12;
+        }
+        CGFloat widthOffset = leftOffset * 2;
         UILabel *cityLabel = [[UILabel alloc] init];
         cityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         cityLabel.text = dataModel.currentCityName;
@@ -132,7 +141,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             make.left.equalTo(self.topUnAvalibleCityContainer).offset(20);
             make.height.mas_equalTo(40);
             make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(-12);
-            make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 48); // button width
+            make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 24 + widthOffset); // button width
         }];
         [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 22, 0, 0)];
         [citySwichButton addTarget:self withActionBlock:^{
@@ -144,7 +153,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         [citySwichButton addSubview:imageButtonLeftIcon];
         [imageButtonLeftIcon setImage:[UIImage imageNamed:@"combined-shape-1"]];
         [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(citySwichButton).offset(14);
+            make.left.equalTo(citySwichButton).offset(leftOffset);
             make.height.mas_equalTo(18);
             make.centerY.equalTo(citySwichButton);
             make.width.mas_equalTo(18);
@@ -171,7 +180,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         
         UILabel *topTipForCityLabel = [UILabel new];
         topTipForCityLabel.text = @"找房服务即将开通，敬请期待";
-        topTipForCityLabel.font = [UIFont themeFontRegular:14];
+        topTipForCityLabel.font = [UIFont themeFontRegular:tipsFontSize];
         topTipForCityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         [self.topUnAvalibleCityContainer addSubview:topTipForCityLabel];
         
