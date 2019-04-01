@@ -52,16 +52,22 @@
 
 - (void)addGoDetailTracer {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"group_id"] = self.viewController.infoModel.estimateId;
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"group_id"] = self.viewController.infoModel.estimateId;
     TRACK_EVENT(@"go_detail", tracerDict);
 }
 
 - (void)addClickOptionsTracer:(NSString *)position {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"group_id"] = self.viewController.infoModel.estimateId;
-    tracerDict[@"click_position"] = position;
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"group_id"] = self.viewController.infoModel.estimateId;
+    tracer[@"click_position"] = position;
     TRACK_EVENT(@"click_options", tracerDict);
 }
 

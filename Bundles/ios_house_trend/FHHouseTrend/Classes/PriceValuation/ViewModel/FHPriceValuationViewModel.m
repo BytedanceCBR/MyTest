@@ -37,6 +37,9 @@
         _view.areaItemView.textField.delegate = self;
         _viewController = viewController;
         _infoModel = [[FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel alloc] init];
+        
+        //埋点
+        [self addGoDetailTracer];
     }
     return self;
 }
@@ -122,6 +125,11 @@
                         return NO;
                     }
                 }else{
+                    //控制小数点前面的字符数不大于6个
+                    NSUInteger loc = range.location;
+                    if(range.location >= 6){
+                        return NO;
+                    }
                     return YES;
                 }
                 
@@ -158,18 +166,23 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }
 
-- (void)addClickOptionsTracer:(NSString *)position {
+- (void)addGoDetailTracer {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"click_position"] = position;
-    TRACK_EVENT(@"click_options", tracerDict);
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    TRACK_EVENT(@"go_detail", tracerDict);
 }
 
-- (void)addGoDetailTracer {
-//    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-//    tracerDict[@"page_type"] = [self pageType];
-//    tracerDict[@"click_position"] = position;
-//    TRACK_EVENT(@"go_detail", tracerDict);
+- (void)addClickOptionsTracer:(NSString *)position {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"click_position"] = position;
+    TRACK_EVENT(@"click_options", tracerDict);
 }
 
 - (NSString *)pageType {
@@ -206,6 +219,11 @@
 
 - (void)evaluate {
     [self.view endEditing:YES];
+    
+    if([self.infoModel.squaremeter doubleValue] == 0){
+        [[ToastManager manager] showToast:@"面积不能为0"];
+        return;
+    }
     
     if ([TTReachability isNetworkConnected]) {
         NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];

@@ -136,6 +136,8 @@
 - (UILabel *)rightLabel {
     if(!_rightLabel){
         _rightLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
+        _rightLabel.textAlignment = NSTextAlignmentRight;
+        [_rightLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     }
     return _rightLabel;
 }

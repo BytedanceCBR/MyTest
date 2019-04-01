@@ -71,7 +71,7 @@ extern NSString *const kFHToastCountKey;
             return;
         }
 
-        [wself.viewController setNavBar:NO];
+        [wself.viewController refreshContentOffset:self.view.scrollView.contentOffset];
         [wself.viewController.emptyView hideEmptyView];
         self.view.hidden = NO;
 
@@ -133,24 +133,33 @@ extern NSString *const kFHToastCountKey;
 
 - (void)addGoDetailTracer {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"group_id"] = self.viewController.model.data.estimateId;
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"group_id"] = self.viewController.model.data.estimateId;
     TRACK_EVENT(@"go_detail", tracerDict);
 }
 
 - (void)addInfomationTracer:(NSString *)key {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"click_position"] = @"sale";
-    tracerDict[@"group_id"] = self.viewController.model.data.estimateId;
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"click_position"] = @"sale";
+    tracer[@"group_id"] = self.viewController.model.data.estimateId;
     TRACK_EVENT(key, tracerDict);
 }
 
 - (void)addClickExpectedTracer:(NSString *)result {
     NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
-    tracerDict[@"page_type"] = [self pageType];
-    tracerDict[@"click_type"] = result;
-    tracerDict[@"group_id"] = self.viewController.model.data.estimateId;
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"click_type"] = result;
+    tracer[@"group_id"] = self.viewController.model.data.estimateId;
     TRACK_EVENT(@"click_expected", tracerDict);
 }
 
@@ -203,15 +212,20 @@ extern NSString *const kFHToastCountKey;
 }
 
 - (void)goToNeiborhoodDetail {
-    NSMutableDictionary *traceParam = [self.viewController.tracerModel logDict];
-    traceParam[@"page_type"] = @"neighborhood_detail";
-    traceParam[@"card_type"] = @"no_pic";
-    traceParam[@"enter_from"] = [self pageType];
-    traceParam[@"element_from"] = @"be_null";
-    traceParam[@"rank"] = @"be_null";
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"page_type"] = @"neighborhood_detail";
+    tracer[@"card_type"] = @"no_pic";
+    tracer[@"enter_from"] = [self pageType];
+    tracer[@"element_from"] = @"be_null";
+    tracer[@"rank"] = @"be_null";
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
+    tracer[@"log_pb"] = tracerDict[@"log_pb"] ? tracerDict[@"log_pb"] : @"be_null";
     NSDictionary *dict = @{
                            @"house_type":@(FHHouseTypeNeighborhood),
-                           @"tracer": traceParam
+                           @"tracer": tracer
                            };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSString *urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",self.viewController.infoModel.neighborhoodId];
@@ -243,12 +257,12 @@ extern NSString *const kFHToastCountKey;
 
 //进入城市行情页
 - (void)goToCityMarket {
-//    BOOL isPop = [self popToViewController:@"FHPriceValuationHistoryController" animated:YES];
-//    if(!isPop){
-//        //push
-//        NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_history"];
-//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-//    }
+    BOOL isPop = [self popToViewController:@"FHCityMarketDetailViewController" animated:YES];
+    if(!isPop){
+        //push
+        NSURL* url = [NSURL URLWithString:@"sslocal://city_market_trend"];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+    }
 }
 
 - (void)houseSale {
