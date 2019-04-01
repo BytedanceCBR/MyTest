@@ -16,6 +16,7 @@
 #import <FHHouseListAPI.h>
 #import <TTHttpTask.h>
 #import "FHHouseFindResultViewController.h"
+#import "FHHouseFindResultTopHeader.h"
 
 #define kBaseCellId @"kBaseCellId"
 
@@ -31,7 +32,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) NSString *originFrom;
 @property(nonatomic , strong) NSString *originSearchId;
 @property(nonatomic , strong) NSString *searchId;
+@property(nonatomic , strong) FHHouseFindResultTopHeader *topHeader;
 @property(nonatomic , weak) TTHttpTask * requestTask;
+@property (nonatomic , strong) FHHouseFindRecommendModel *recommendModel;
 
 @end
 
@@ -45,6 +48,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.houseList = [NSMutableArray array];
         self.tableView = tableView;
         
+        _topHeader = [[FHHouseFindResultTopHeader alloc] initWithFrame:CGRectZero];
+        [_topHeader setBackgroundColor:[UIColor redColor]];
+        
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = FHHouseTypeSecondHandHouse;
         //
@@ -54,6 +60,17 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         //            self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
         //            self.originFrom = self.tracerModel.originFrom;
         //        }
+        
+        NSDictionary *recommendDict = @{ @"bottom_open_url": @"sslocal://house_list?",
+                                         @"district_title": @"浦口/玄武/建邺",
+                                         @"find_house_number": @(2977),
+                                         @"open_url": @"sslocal://house_list?",
+                                         @"price_title": @"400000000-500000000万",
+                                         @"room_num_title": @"2室/3室",
+                                         @"used": @(YES) };
+        _recommendModel = [[FHHouseFindRecommendModel alloc] initWithDictionary:recommendDict error:nil];
+        
+        [_topHeader refreshUI:_recommendModel];
         
         [self requestErshouHouseListData:YES query:@"xxx" offset:50 searchId:_searchId];
 
@@ -151,7 +168,35 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
     }
     return cellModel;
-    
+}
+
+- (NSString *)getNoneFilterQueryWithParams:(NSDictionary *)params
+{
+    NSMutableString* result = [[NSMutableString alloc] init];
+    NSMutableSet<NSString*>* allKeys = [[NSMutableSet alloc] init];
+    [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![allKeys containsObject:key]) {
+            if ([obj isKindOfClass:[NSArray class]]) {
+                NSArray* items = (NSArray*)obj;
+                [items enumerateObjectsUsingBlock:^(id  _Nonnull it, NSUInteger idx, BOOL * _Nonnull stop) {
+                    NSString* query = [self encodingIfNeeded:[NSString stringWithFormat:@"&%@=%@", key, it]];
+                    [result appendString:query];
+                }];
+            } else {
+                NSString* query = [self encodingIfNeeded:[NSString stringWithFormat:@"&%@=%@", key, obj]];
+                [result appendString:query];
+            }
+        }
+    }];
+    return result;
+}
+
+- (NSString *)encodingIfNeeded:(NSString *)queryCondition
+{
+    if (![queryCondition containsString:@"%"]) {
+        return [[queryCondition stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+    }
+    return queryCondition;
 }
 
 #pragma mark - UITableViewDelegate
@@ -162,6 +207,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+  
     return _houseList.count;
 }
 
@@ -211,12 +257,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    return [UIView new];
+    return _topHeader;
 }// custom view for header. will be adjusted to default or specified header height
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 100;
+    return 191;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
