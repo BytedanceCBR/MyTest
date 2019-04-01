@@ -6,7 +6,7 @@
 //
 
 #import "FHHouseFindHelpViewModel.h"
-#import "FHHouseFindHelpBottomView.h"
+#import "FHHouseFindHelpSubmitCell.h"
 #import "FHHouseFindHeaderView.h"
 #import "FHHouseFindHelpRegionCell.h"
 #import "FHHouseFindPriceCell.h"
@@ -20,7 +20,8 @@
 #import <TTReachability/TTReachability.h>
 #import "FHHouseFindHelpRegionSheet.h"
 #import <TTAccountSDK/TTAccount.h>
-
+#import "FHHouseFindRecommendModel.h"
+ 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
 #define HELP_MAIN_CELL_ID @"main_cell_id"
@@ -28,6 +29,7 @@
 #define HELP_PRICE_CELL_ID @"price_cell_id"
 #define HELP_NORMAL_CELL_ID @"normal_cell_id"
 #define HELP_CONTACT_CELL_ID @"contact_cell_id"
+#define HELP_SUBMIT_CELL_ID @"submit_cell_id"
 
 #define ROOM_MAX_COUNT 2
 #define REGION_MAX_COUNT 3
@@ -38,7 +40,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
-@property(nonatomic , strong) FHHouseFindHelpBottomView *bottomView;
 @property (nonatomic , strong) NSArray<FHSearchFilterConfigItem *> *secondFilter;
 @property (nonatomic , strong) NSArray<NSString *> *titlesArray;
 @property (nonatomic , strong) RACDisposable *configDisposable;
@@ -60,7 +61,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 @implementation FHHouseFindHelpViewModel
 
--(instancetype)initWithCollectionView:(UICollectionView *)collectionView bottomView:(FHHouseFindHelpBottomView *)bottomView
+-(instancetype)initWithCollectionView:(UICollectionView *)collectionView
 {
     self = [super init];
     if (self) {
@@ -71,20 +72,12 @@ extern NSString *const kFHPhoneNumberCacheKey;
         _selectRegionItem = selectItem;
         
         _collectionView = collectionView;
-        _bottomView = bottomView;
         [self registerCell:collectionView];
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         collectionView.delegate = self;
         collectionView.dataSource = self;
         _collectionView.allowsMultipleSelection = YES;
-  
-        __weak typeof(self)wself = self;
-        _bottomView.resetBlock = ^{
-            [wself resetBtnDidClick];
-        };
-        _bottomView.confirmBlock = ^{
-            [wself confirmBtnDidClick];
-        };
+
         [self setupHouseContent:nil];
 
 //        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
@@ -163,6 +156,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 //            [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+            [wself reloadCollectionViewSection:[wself.collectionView indexPathForCell:wself.contactCell].section];
             [wself submitAction];
         }else{
             NSString *errorMessage = [wself errorMessageByErrorCode:error];
@@ -377,7 +371,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
         return options.options.count;
     }
-    return 1;
+    return 2;
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -476,9 +470,29 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
     }
     
-    FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
-    pcell.delegate = self;
-    self.contactCell = pcell;
+    if (indexPath.item == 0) {
+        
+        FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
+        pcell.delegate = self;
+        self.contactCell = pcell;
+
+        if([TTAccount sharedAccount].isLogin){
+            
+            TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+            pcell.phoneNum = userInfo.mobile;
+        }else {
+            pcell.phoneNum = nil;
+        }
+        return pcell;
+    }
+    FHHouseFindHelpSubmitCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_SUBMIT_CELL_ID forIndexPath:indexPath];
+    __weak typeof(self)wself = self;
+    pcell.resetBlock = ^{
+        [wself resetBtnDidClick];
+    };
+    pcell.confirmBlock = ^{
+        [wself confirmBtnDidClick];
+    };
     return pcell;
 }
 
@@ -518,7 +532,14 @@ extern NSString *const kFHPhoneNumberCacheKey;
             return CGSizeMake(74, 30);
         }
     }
-    return CGSizeMake(collectionView.frame.size.width, 180);
+    if (indexPath.item == 0) {
+        
+        if([TTAccount sharedAccount].isLogin){
+            return CGSizeMake(collectionView.frame.size.width, 90);
+        }
+        return CGSizeMake(collectionView.frame.size.width, 150);
+    }
+    return CGSizeMake(collectionView.frame.size.width, 60);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -580,7 +601,14 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
-    return UIEdgeInsetsMake(0, 20, 0, 20);
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    
+    NSArray *filter = [self filterOfHouseType:ht];
+    if (filter.count > section) {
+        return UIEdgeInsetsMake(0, 20, 0, 20);
+    }
+    return UIEdgeInsetsZero;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
@@ -604,6 +632,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     [collectionview registerClass:[FHHouseFindPriceCell class] forCellWithReuseIdentifier:HELP_PRICE_CELL_ID];
     [collectionview registerClass:[FHHouseFindTextItemCell class] forCellWithReuseIdentifier:HELP_NORMAL_CELL_ID];
     [collectionview registerClass:[FHHouseFindHelpContactCell class] forCellWithReuseIdentifier:HELP_CONTACT_CELL_ID];
+    [collectionview registerClass:[FHHouseFindHelpSubmitCell class] forCellWithReuseIdentifier:HELP_SUBMIT_CELL_ID];
     [collectionview registerClass:[FHHouseFindHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:HELP_HEADER_ID];
 }
 
