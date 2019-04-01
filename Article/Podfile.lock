@@ -832,7 +832,7 @@ CHECKOUT OPTIONS:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 24b868a3583157c23e2b67c1e0272be592181ad6
+    :commit: e51ab1182a51823c41b69bf4ac7399529aaad508
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb

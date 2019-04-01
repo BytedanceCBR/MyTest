@@ -83,6 +83,7 @@ extern NSString *const kFHToastCountKey;
             self.viewController.infoModel = infoModel;
 
             [wself.view updateView:eModel infoModel:wself.viewController.infoModel];
+            [self addGoDetailTracer];
         }
     }];
 }
