@@ -9,9 +9,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *moreBtnText;
 @property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *rankOpenUrl;
 @property (nonatomic, copy , nullable) NSString *questionText;
 @property (nonatomic, copy , nullable) NSString *answerText;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *type;
 @end
 
 @protocol FHCityMarketDetailResponseDataMarketTrendListModel<NSObject>
@@ -50,6 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *dottedLineColor;
 @property (nonatomic, copy , nullable) NSString *locationId;
 @property (nonatomic, copy , nullable) NSString *locationType;
+@property (nonatomic, copy , nullable) NSString *type;
 @end
 
 @interface FHCityMarketDetailResponseDataMarketTrendListModel : JSONModel 
@@ -58,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *dataSource;
 @property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel> *districtMarketInfoList;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *type;
 @end
 
 @protocol FHCityMarketDetailResponseDataSummaryItemListModel<NSObject>
@@ -68,6 +72,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy , nullable) NSString *value;
 @property (nonatomic, copy , nullable) NSString *showArrow;
+@property (nonatomic, copy , nullable) NSString *type;
 @end
 
 @protocol FHCityMarketDetailResponseDataHotListModel<NSObject>
@@ -89,6 +94,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *itemType;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *moreBtnText;
+@property (nonatomic, copy , nullable) NSString *type;
 @property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataHotListItemsModel> *items;
 @end
 

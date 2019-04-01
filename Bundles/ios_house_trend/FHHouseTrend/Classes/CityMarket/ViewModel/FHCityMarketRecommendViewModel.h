@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<FHCityMarketRecommendViewModelDataChangedListener> listener;
 -(void)onCategoryChange:(NSInteger)categoryIndex;
 
+-(NSUInteger)arrivedDataCount;
 -(FHSearchHouseDataModel*)currentData;
 -(NSString*)categoryNameOfindex:(NSUInteger)index;
 @end

@@ -48,11 +48,12 @@
 }
 
 - (BOOL)isDisplayData {
-    return _specialOldHouseList != nil;
+    return [_recommendViewModel arrivedDataCount] >= 2;
+//    return _specialOldHouseList != nil;
 }
 
 - (NSUInteger)numberOfSection {
-    if ([_specialOldHouseList count] != 0) {
+    if ([_recommendViewModel arrivedDataCount] >= 2) {
         return 1;
     } else {
         return 0;

@@ -10,6 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailTracerPlaceHolder : NSObject
+@property (nonatomic, strong) NSDictionary* tracer;
 @property (nonatomic, strong) NSSet<NSIndexPath*>* traceCache;
 @property (nonatomic, assign) NSUInteger sectionOffset;
 -(NSUInteger)sectionWithOffset:(NSIndexPath*)indexPath;

@@ -126,7 +126,6 @@
 }
 
 - (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
-
 }
 
 
