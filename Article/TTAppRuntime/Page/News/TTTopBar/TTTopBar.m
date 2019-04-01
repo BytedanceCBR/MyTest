@@ -110,29 +110,29 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             [self.topUnAvalibleCityContainer setBackgroundColor:[UIColor colorWithHexString:dataModel.cityAvailability.backgroundColor]];
         }
         
-        CGFloat padingTop = 8;
+        CGFloat padingTop = 10;
         if ([TTDeviceHelper isIPhoneXDevice]) {
             padingTop = 20;
         }
+        UILabel *cityLabel = [[UILabel alloc] init];
+        cityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        cityLabel.text = dataModel.currentCityName;
+        cityLabel.font = [UIFont themeFontRegular:14];
+        
         UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.topUnAvalibleCityContainer addSubview:citySwichButton];
-//        citySwichButton.layer.masksToBounds = YES;
         citySwichButton.layer.cornerRadius = 20;
         citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
         citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
         citySwichButton.layer.shadowRadius = 6.f;
         citySwichButton.layer.shadowOpacity = 1.f;
         [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:14]];
-        citySwichButton.backgroundColor = [UIColor whiteColor];;
-        [citySwichButton setTitle:dataModel.currentCityName forState:UIControlStateNormal];
-        [citySwichButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey] forState:UIControlStateNormal];
-        [citySwichButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey] forState:UIControlStateHighlighted];
-        [citySwichButton setTitle:dataModel.currentCityName forState:UIControlStateNormal];
+        citySwichButton.backgroundColor = [UIColor whiteColor];
         [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.topUnAvalibleCityContainer).offset(20);
             make.height.mas_equalTo(40);
-            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(-12);
-            make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 44);
+            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 48); // button width
         }];
         [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 22, 0, 0)];
         [citySwichButton addTarget:self withActionBlock:^{
@@ -150,9 +150,16 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
             make.width.mas_equalTo(18);
         }];
         
+        [citySwichButton addSubview:cityLabel];
+        [cityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(imageButtonLeftIcon.mas_right).offset(2);
+            make.height.mas_equalTo(21);
+            make.centerY.mas_equalTo(imageButtonLeftIcon);
+        }];
         
         UIImageView *imageRightView = [UIImageView new];
         [self.topUnAvalibleCityContainer addSubview:imageRightView];
+        imageRightView.layer.opacity = 0.3;
         
         [imageRightView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.topUnAvalibleCityContainer).offset(0);
@@ -171,7 +178,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         [topTipForCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(citySwichButton.mas_right).offset(10);
             make.height.mas_equalTo(20);
-            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(-22);
+            make.centerY.equalTo(citySwichButton);
             make.width.mas_equalTo(183);
         }];
         
