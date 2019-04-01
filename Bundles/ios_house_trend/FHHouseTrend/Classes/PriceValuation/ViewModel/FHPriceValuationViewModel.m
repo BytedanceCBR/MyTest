@@ -172,7 +172,7 @@
     NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
-    TRACK_EVENT(@"go_detail", tracerDict);
+    TRACK_EVENT(@"go_detail", tracer);
 }
 
 - (void)addClickOptionsTracer:(NSString *)position {
@@ -182,7 +182,7 @@
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
     tracer[@"click_position"] = position;
-    TRACK_EVENT(@"click_options", tracerDict);
+    TRACK_EVENT(@"click_options", tracer);
 }
 
 - (NSString *)pageType {
