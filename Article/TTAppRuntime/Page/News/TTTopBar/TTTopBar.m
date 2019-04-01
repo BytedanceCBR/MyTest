@@ -116,18 +116,25 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         }
         UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.topUnAvalibleCityContainer addSubview:citySwichButton];
-        citySwichButton.layer.masksToBounds = YES;
-        citySwichButton.layer.cornerRadius = 12;
-        [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:12]];
-        citySwichButton.backgroundColor = [UIColor tt_themedColorForKey:kFHColorCoral];;
+//        citySwichButton.layer.masksToBounds = YES;
+        citySwichButton.layer.cornerRadius = 20;
+        citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
+        citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+        citySwichButton.layer.shadowRadius = 6.f;
+        citySwichButton.layer.shadowOpacity = 1.f;
+        [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:14]];
+        citySwichButton.backgroundColor = [UIColor whiteColor];;
+        [citySwichButton setTitle:dataModel.currentCityName forState:UIControlStateNormal];
+        [citySwichButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey] forState:UIControlStateNormal];
+        [citySwichButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCharcoalGrey] forState:UIControlStateHighlighted];
         [citySwichButton setTitle:dataModel.currentCityName forState:UIControlStateNormal];
         [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.topUnAvalibleCityContainer).offset(20);
-            make.height.mas_equalTo(24);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
-            make.width.mas_equalTo(dataModel.currentCityName.length * 15 + 24);
+            make.height.mas_equalTo(40);
+            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(-12);
+            make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 44);
         }];
-        [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
+        [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 22, 0, 0)];
         [citySwichButton addTarget:self withActionBlock:^{
             NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
@@ -135,12 +142,12 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         
         UIImageView *imageButtonLeftIcon = [UIImageView new];
         [citySwichButton addSubview:imageButtonLeftIcon];
-        [imageButtonLeftIcon setImage:[UIImage imageNamed:@"fhhome_topbar_buttonicon"]];
+        [imageButtonLeftIcon setImage:[UIImage imageNamed:@"combined-shape-1"]];
         [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(citySwichButton).offset(5);
-            make.height.mas_equalTo(16);
+            make.left.equalTo(citySwichButton).offset(14);
+            make.height.mas_equalTo(18);
             make.centerY.equalTo(citySwichButton);
-            make.width.mas_equalTo(16);
+            make.width.mas_equalTo(18);
         }];
         
         
@@ -156,7 +163,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         
         
         UILabel *topTipForCityLabel = [UILabel new];
-        topTipForCityLabel.text = @"找房服务即将开通,敬请期待";
+        topTipForCityLabel.text = @"找房服务即将开通，敬请期待";
         topTipForCityLabel.font = [UIFont themeFontRegular:14];
         topTipForCityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         [self.topUnAvalibleCityContainer addSubview:topTipForCityLabel];
@@ -164,8 +171,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         [topTipForCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(citySwichButton.mas_right).offset(10);
             make.height.mas_equalTo(20);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
-            make.width.mas_equalTo(182);
+            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(-22);
+            make.width.mas_equalTo(183);
         }];
         
         
