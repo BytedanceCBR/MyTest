@@ -132,17 +132,17 @@ extern NSString *const kFHPhoneNumberCacheKey;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
     if (selectItem.higherPrice.length < 1 && selectItem.lowerPrice.length < 1 && selectItem.selectIndexes.count < 1) {
-        [[ToastManager manager] showToast:@"请选择购房预算"];
+        [[ToastManager manager] showToast:@"请选择您的购房预算"];
         return;
     }
     selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRoom];
     if (selectItem.selectIndexes.count < 1) {
-        [[ToastManager manager] showToast:@"请选择户型"];
+        [[ToastManager manager] showToast:@"请选择您想购买的户型"];
         return;
     }
     selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRegion];
     if (selectItem.selectIndexes.count < 1) {
-        [[ToastManager manager] showToast:@"请选择区域"];
+        [[ToastManager manager] showToast:@"请选择您想购买的区域"];
         return;
     }
     
@@ -573,6 +573,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
                 }
                 priceItem.fromType = FHHouseFindPriceFromTypeHelp;
                 if (priceItem) {
+                    [pcell updateWithLowerPlaceholder:@"最低价 (万)" higherPlaceholder:@"最高价 (万)"];
                     [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];
                 }
                 
@@ -750,7 +751,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
                     selectItem.higherPrice = nil;
                 }else if (item.tabId.integerValue == FHSearchTabIdTypeRoom) {
                     if (selectItem.selectIndexes.count >= ROOM_MAX_COUNT) {
-                        [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个",ROOM_MAX_COUNT]];
+                        [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld种户型",ROOM_MAX_COUNT]];
                         return;
                     }
                 }
@@ -898,7 +899,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }else {
             //添加选择
             if (selectItem.selectIndexes.count >= REGION_MAX_COUNT) {
-                [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个",REGION_MAX_COUNT]];
+                [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个区域",REGION_MAX_COUNT]];
                 return;
             }
             [selectItem.selectIndexes addObject:@(row)];
