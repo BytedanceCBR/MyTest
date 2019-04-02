@@ -42,6 +42,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property (nonatomic, weak) FHHouseFindResultViewController *currentViewController;
 @property (nonatomic , strong) UIView *bottomView;
 @property (nonatomic , strong) UIButton *buttonOpenMore;
+@property(nonatomic , strong) FHTracerModel *tracerModel;
 
 @end
 
@@ -65,13 +66,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = FHHouseTypeSecondHandHouse;
-        //
-        //        self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
-        //        NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
-        //        if (tracerDict) {
-        //            self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
-        //            self.originFrom = self.tracerModel.originFrom;
-        //        }
+
+        NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
+        if (tracerDict) {
+            self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
+            self.originFrom = self.tracerModel.originFrom;
+        }
         
         NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
         
@@ -106,7 +106,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
     [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
-    
+    [_buttonOpenMore addTarget:self action:@selector(openMoreClick) forControlEvents:UIControlEventTouchUpInside];
     
     [self.bottomView addSubview:_buttonOpenMore];
     [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -115,6 +115,67 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         make.bottom.mas_equalTo(0);
         make.height.mas_equalTo(40);
     }];
+}
+
+#pragma mark category log
+-(void)addEnterCategoryLog {
+    
+    [FHUserTracker writeEvent:@"enter_category" params:[self categoryLogDict]];
+}
+
+-(void)addStayCategoryLog:(NSTimeInterval)stayTime {
+    
+    NSTimeInterval duration = stayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
+    tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
+    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    
+}
+
+-(NSDictionary *)categoryLogDict {
+    
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
+    tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
+    tracerDict[@"enter_type"] = self.tracerModel.enterType ? : @"be_null";
+    tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
+    tracerDict[@"search_id"] = self.searchId ? : @"be_null";
+    tracerDict[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
+    tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+    
+    return tracerDict;
+}
+
+-(NSString *)categoryName {
+    
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new_list";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old_list";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent_list";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood_list";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+- (void)openMoreClick
+{
+    if (self.recommendModel && self.recommendModel.bottomOpenUrl) {
+        NSURL *url1 = [NSURL URLWithString:self.recommendModel.bottomOpenUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
+    }
 }
 
 -(void)configTableView
@@ -171,6 +232,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }];
 
         if (itemArray.count > 0) {
+            [self addEnterCategoryLog];
+            
             [self.topHeader setTitleStr:itemArray.count];
             
             [self.currentViewController refreshContentOffset:CGPointMake(0, 0)];
@@ -285,16 +348,21 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.6)];
 //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
         [cellError.contentView addSubview:noDataErrorView];
-
+        
+        __weak typeof(self) weakSelf = self;
         noDataErrorView.retryBlock = ^{
-
+                NSURL *url1 = [NSURL URLWithString:@"sslocal://house_list?house_type=2"];
+                [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
         };
+        
         [noDataErrorView showEmptyWithTip:@"没有找到符合要求的二手房源" errorImageName:@"group-9"
                                 showRetry:YES];
+        noDataErrorView.retryButton.userInteractionEnabled = YES;
         [noDataErrorView.retryButton setTitle:@"查看其他房源" forState:UIControlStateNormal];
         [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
+        
 //
 //        [noDataErrorView mas_remakeConstraints:^(MASConstraintMaker *make) {
 //            make.top.left.right.equalTo(cellError.contentView);
@@ -326,6 +394,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 //                [self addHouseShowLog:cellModel withRank:indexPath.row];
 //                self.houseShowCache[cellModel.houseModel.groupId] = @"1";
 //            }
+            
         }
     }
 }
@@ -333,7 +402,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.isShowErrorPage) {
-        return [UIScreen mainScreen].bounds.size.width * 0.6;
+        return [UIScreen mainScreen].bounds.size.height * 0.6;
     }
     
     if (indexPath.row < self.houseList.count) {

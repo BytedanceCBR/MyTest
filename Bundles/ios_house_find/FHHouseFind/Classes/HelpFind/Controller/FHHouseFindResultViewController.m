@@ -138,10 +138,12 @@
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_black"] forState:UIControlStateNormal];
         [self.customNavBarView setNaviBarTransparent:NO];
     }else{
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         [self.customNavBarView setNaviBarTransparent:YES];
     }
@@ -160,11 +162,14 @@
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_black"] forState:UIControlStateNormal];
+
     }else {
         self.customNavBarView.title.hidden = YES;
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
     }
     [self.customNavBarView refreshAlpha:alpha];
     
@@ -182,10 +187,5 @@
     _viewModel = [[FHHouseFindResultViewModel alloc] initWithTableView:self.tableView viewController:self routeParam:_paramObj];
     // Do any additional setup after loading the view.
 }
-
-
-
-
-
 
 @end
