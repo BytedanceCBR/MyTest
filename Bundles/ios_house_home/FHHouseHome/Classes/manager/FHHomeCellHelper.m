@@ -95,9 +95,29 @@ static NSMutableArray  * _Nullable identifierArr;
         if (dataModel.opData.items.count != 0) {
             [modelsArray addObject:dataModel.opData];
         }
-        // 首页轮播banner
+        // 首页轮播banner，数据封装的时候判断是否是有效的数据
         if (dataModel.mainPageBannerOpData.items.count > 0) {
-            [modelsArray addObject:dataModel.mainPageBannerOpData];
+            FHConfigDataMainPageBannerOpDataModel *tempOpData = [[FHConfigDataMainPageBannerOpDataModel alloc] init];
+            tempOpData.opStyle = dataModel.mainPageBannerOpData.opStyle;
+            NSMutableArray *tModelArray = [NSMutableArray new];
+            for (int i = 0; i < dataModel.mainPageBannerOpData.items.count; i++) {
+                FHConfigDataRentOpDataItemsModel *tModel = dataModel.mainPageBannerOpData.items[i];
+                if (tModel.openUrl.length > 0 && tModel.image.count > 0) {
+                    NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
+                    // 是否有效的openUrl
+                    if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
+                        FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
+                        if (imageModel.url.length > 0) {
+                            // 有图片url
+                            [tModelArray addObject:tModel];
+                        }
+                    }
+                }
+            }
+            if (tModelArray.count > 0) {
+                tempOpData.items = tModelArray;
+                [modelsArray addObject:tempOpData];
+            }
         }
         //不同频道cell顺序不同
         if (type == FHHomeHeaderCellPositionTypeForNews) {
@@ -555,6 +575,12 @@ static NSMutableArray  * _Nullable identifierArr;
     
 }
 
+// 首页轮播banner
++ (void)fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model {
+    // 更新cell数据
+    [cell updateWithModel:model];
+}
+
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
     
     WeakSelf;
@@ -616,6 +642,10 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([cell isKindOfClass:[FHHomeCityTrendCell class]] && [model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
         cell.fd_enforceFrameLayout = YES;
         [self fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model];
+    }
+    
+    if ([cell isKindOfClass:[FHHomeScrollBannerCell class]] && [model isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        [self fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model];
     }
 }
 

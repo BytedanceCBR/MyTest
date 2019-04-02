@@ -17,6 +17,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 @interface FHHomeScrollBannerCell ()
 
 @property (nonatomic, strong)   FHHomeScrollBannerView       *bannerView;
+@property (nonatomic, strong)   FHConfigDataMainPageBannerOpDataModel       *model;
 
 @end
 
@@ -47,6 +48,29 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         make.bottom.mas_equalTo(self.contentView);// 下面的降价房cell之前布局有问题
         make.height.mas_equalTo(kFHScrollBannerHeight);
     }];
+    [_bannerView setContent:[UIScreen mainScreen].bounds.size.width - 40 height:kFHScrollBannerHeight];
+}
+
+// 注意cell的刷新频率问题
+-(void)updateWithModel:(FHConfigDataMainPageBannerOpDataModel *)model {
+    if (model) {
+        
+    }
+    _model = model;
+    // 获取图片数据数组
+    /*
+    NSMutableArray *imageUrls = [NSMutableArray new];
+    for (int i = 0; i < model.items.count; i++) {
+        FHConfigDataRentOpDataItemsModel *opData = model.items[i];
+        if (opData.image.count > 0) {
+            FHConfigDataRentOpDataItemsImageModel *opImage = opData.image[0];
+            if (opImage.url.length > 0) {
+                [imageUrls addObject:opImage.url];
+            }
+        }
+    }
+    [_bannerView setURLs:imageUrls];
+     */
 }
 
 @end

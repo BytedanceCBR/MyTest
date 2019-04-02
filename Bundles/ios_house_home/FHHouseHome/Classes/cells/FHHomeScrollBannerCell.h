@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHHomeBaseTableCell.h"
 #import <FHHomeBannerView.h>
+#import "FHConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,10 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHomeScrollBannerCell : FHHomeBaseTableCell
 
 + (CGFloat)cellHeight;
+-(void)updateWithModel:(FHConfigDataMainPageBannerOpDataModel *)model;
 
 @end
 
 @interface FHHomeScrollBannerView : UIView
+
+- (void)setContent:(CGFloat)wid height:(CGFloat)hei;
+- (void)setURLs:(NSArray *)urls;
 
 @end
 
