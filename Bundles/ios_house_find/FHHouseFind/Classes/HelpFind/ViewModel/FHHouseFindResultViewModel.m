@@ -179,6 +179,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     if (self.recommendModel && self.recommendModel.bottomOpenUrl) {
         NSURL *url1 = [NSURL URLWithString:self.recommendModel.bottomOpenUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
+    }else
+    {
+        NSURL *url1 = [NSURL URLWithString:@"sslocal://house_list?house_type=2"];
+        [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
     }
 }
 

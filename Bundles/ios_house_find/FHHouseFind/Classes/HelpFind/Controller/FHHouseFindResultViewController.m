@@ -8,7 +8,6 @@
 #import "FHHouseFindResultViewController.h"
 #import "FHHouseFindResultViewModel.h"
 #import <FHErrorView.h>
-#import "FHHouseFindRecommendModel.h"
 
 @interface FHHouseFindResultViewController () <TTRouteInitializeProtocol>
 
@@ -34,7 +33,7 @@
         NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
         
         if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
-            _recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
+           self.recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
         }
     }
     return self;
@@ -138,6 +137,11 @@
 - (FHHouseFindRecommendDataModel *)getRecommendModel
 {
     return self.viewModel.recommendModel;
+}
+
+- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+{
+    self.viewModel.recommendModel = recommendModel;
 }
 
 - (void)setNavBar:(BOOL)error {
