@@ -18,4 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHomeScrollBannerView : UIView
+
+@end
+
 NS_ASSUME_NONNULL_END
