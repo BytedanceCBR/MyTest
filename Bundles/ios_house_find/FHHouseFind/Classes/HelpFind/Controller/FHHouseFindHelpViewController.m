@@ -44,6 +44,7 @@
     [self setupUI];
     [self initConstraints];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    [self.viewModel addGoDetailLog];
 
 }
 
@@ -103,6 +104,7 @@
     layout.minimumInteritemSpacing = 13;
 
     _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
     if (@available(iOS 11.0, *)) {
@@ -113,6 +115,7 @@
 
     _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView recommendModel:self.recommendModel];
     _viewModel.viewController = self;
+    _viewModel.tracerDict = self.tracerDict;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
         if (noData) {
             [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNoData];
