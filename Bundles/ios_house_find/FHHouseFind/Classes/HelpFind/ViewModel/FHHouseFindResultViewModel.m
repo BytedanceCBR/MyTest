@@ -91,9 +91,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_topHeader refreshUI:self.recommendModel];
     
     if ([recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& recommendModel.openUrl) {
-        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
-        
+        NSLog(@"zjing query:%@",queryString);
         [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
     }
 }
