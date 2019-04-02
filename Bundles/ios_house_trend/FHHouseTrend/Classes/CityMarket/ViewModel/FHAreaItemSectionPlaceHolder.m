@@ -13,6 +13,7 @@
 #import "UIFont+House.h"
 #import "ReactiveObjC.h"
 #import "TTRoute.h"
+#import "FHUserTracker.h"
 @interface FHAreaItemSectionPlaceHolder ()
 @end
 
@@ -83,6 +84,7 @@
                 @strongify(self);
                 [self jumpToListPage:section - self.sectionOffset];
             }];
+            [self traceElementShow:@{@"element_type": model.type}];
         }
         _headerViews[@(section)] = result;
         
@@ -111,10 +113,11 @@
     FHCityMarketDetailResponseDataHotListModel* model = _hotList[index];
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{
                                                                     @"model": model,
-                                                                    @"title": @"城市行情"
+                                                                    @"title": model.title
                                                                     }];
     NSURL* url = [NSURL URLWithString:@"sslocal://city_market_hot_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
+    [self traceClickLoadMore:model.type];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -125,8 +128,20 @@
     }
 }
 
+-(void)traceClickLoadMore:(NSString*)type {
+    [FHUserTracker writeEvent:@"click_loadmore"
+                       params:@{
+                                @"page_type": @"city_market",
+                                @"element_from": type ? : @"be_null",
+                                }];
+}
+
 - (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
 
+}
+
+-(void)traceClickItem:(FHCityMarketDetailResponseDataHotListModel*)model {
+    [FHUserTracker writeEvent:@"click_house_deal" params:nil];
 }
 
 

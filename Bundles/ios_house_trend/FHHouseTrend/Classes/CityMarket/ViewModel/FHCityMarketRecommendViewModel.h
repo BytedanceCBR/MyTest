@@ -22,10 +22,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString* answoer;
 @property (nonatomic, copy) NSString* footerTitle;
 @property (nonatomic, copy) NSString* openUrl;
+@property (nonatomic, copy) NSString* type;
 @property (nonatomic, assign) NSUInteger selectedIndex;
 @property (nonatomic, weak) id<FHCityMarketRecommendViewModelDataChangedListener> listener;
 -(void)onCategoryChange:(NSInteger)categoryIndex;
 
+-(NSUInteger)arrivedDataCount;
 -(FHSearchHouseDataModel*)currentData;
 -(NSString*)categoryNameOfindex:(NSUInteger)index;
 @end

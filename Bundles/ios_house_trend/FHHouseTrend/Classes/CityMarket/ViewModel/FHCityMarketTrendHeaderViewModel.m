@@ -11,6 +11,7 @@
 #import <TTNetworkManager.h>
 #import "ReactiveObjC.h"
 #import "extobjc.h"
+#import "TTReachability.h"
 
 @interface FHCityMarketTrendHeaderViewModel ()
 @property (nonatomic, weak) TTHttpTask* marketDetailRequest;
@@ -40,10 +41,18 @@
 }
 
 - (void)requestData {
-    [_marketDetailRequest cancel];
-    _marketDetailRequest = [CityMarketDetailAPI
-                            requestCityMarketWithCompletion:^(FHCityMarketDetailResponseModel * _Nullable model, NSError * _Nullable error) {
-                                self.model = model;
-    }];
+    if([TTReachability isNetworkConnected]) {
+        [_marketDetailRequest cancel];
+        _marketDetailRequest = [CityMarketDetailAPI
+                                requestCityMarketWithCompletion:^(FHCityMarketDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+                                    if (error != nil) {
+                                        self.model = model;
+                                    } else {
+                                        [_delegate onNetworkError];
+                                    }
+                                }];
+    } else {
+        [_delegate onNoNetwork];
+    }
 }
 @end
