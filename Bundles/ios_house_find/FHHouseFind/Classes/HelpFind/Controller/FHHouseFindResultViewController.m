@@ -125,12 +125,19 @@
 
 - (void)rightBtnClick
 {
-    
+    if ([self.parentViewController respondsToSelector:@selector(jump2HouseFindHelpVC)]) {
+        [self.parentViewController performSelector:@selector(jump2HouseFindHelpVC)];
+    }
 }
 
 - (void)setNaviBarTitle:(NSString *)stringTitle
 {
     self.customNavBarView.title.text = stringTitle;
+}
+
+- (FHHouseFindRecommendDataModel *)getRecommendModel
+{
+    return self.viewModel.recommendModel;
 }
 
 - (void)setNavBar:(BOOL)error {
