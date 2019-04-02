@@ -8,6 +8,7 @@
 #import "FHHouseFindResultViewController.h"
 #import "FHHouseFindResultViewModel.h"
 #import <FHErrorView.h>
+#import <UIViewController+Track.h>
 
 @interface FHHouseFindResultViewController () <TTRouteInitializeProtocol>
 
@@ -35,6 +36,8 @@
         if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
            self.recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
         }
+        
+        self.ttTrackStayEnable = YES;
     }
     return self;
 }
@@ -189,6 +192,19 @@
     }else {
         [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
     }
+}
+
+#pragma mark - TTUIViewControllerTrackProtocol
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)viewDidLoad {
