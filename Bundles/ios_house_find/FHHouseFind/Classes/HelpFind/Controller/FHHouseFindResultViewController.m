@@ -15,6 +15,7 @@
 @property (nonatomic , strong) FHHouseFindResultViewModel *viewModel;
 @property (nonatomic , strong) UITableView* tableView;
 @property (nonatomic , strong) UIView *containerView;
+@property (nonatomic , strong) UIButton *rightBtn;
 
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
@@ -109,6 +110,22 @@
     [self setupDefaultNavBar:NO];
     [self setNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
+    
+    _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
+    [_rightBtn addTarget:self action:@selector(rightBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.customNavBarView addSubview:_rightBtn];
+    
+    [_rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.height.mas_equalTo(24);
+        make.bottom.mas_equalTo(-10);
+        make.right.equalTo(self.customNavBarView).offset(-20);
+    }];
+}
+
+- (void)rightBtnClick
+{
+    
 }
 
 - (void)setNaviBarTitle:(NSString *)stringTitle
