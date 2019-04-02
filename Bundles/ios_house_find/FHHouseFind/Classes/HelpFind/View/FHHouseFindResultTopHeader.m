@@ -110,7 +110,7 @@
         [subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(itemView);
             make.left.right.equalTo(itemView);
-            make.top.mas_equalTo(48);
+            make.top.mas_equalTo(50);
         }];
         
         switch (i) {
