@@ -77,6 +77,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+
     [self initNavBar];
     [self setupBottomBar];
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
@@ -84,6 +86,7 @@
     _listViewModel.tableView = _tableView;
     _tableView.delegate = _listViewModel;
     _tableView.dataSource = _listViewModel;
+
     if (@available(iOS 7.0, *)) {
         self.tableView.estimatedSectionFooterHeight = 0;
         self.tableView.estimatedSectionHeaderHeight = 0;
