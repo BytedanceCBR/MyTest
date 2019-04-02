@@ -393,11 +393,17 @@ extern NSString *const kFHPhoneNumberCacheKey;
             }
         }
     }
-    [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *obj, BOOL * _Nonnull stop) {
+    __block id priceItem = nil;
+    __block NSNumber *rate = nil;
+    [params enumerateKeysAndObjectsUsingBlock:^(NSString *key, id _Nonnull obj, BOOL * _Nonnull stop) {
         
         NSString *keyStr = [key stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         if ([keyStr hasPrefix:optionType]) {
             
+            if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
+                priceItem = obj;
+                rate = item.rate;
+            }
             if ([obj isKindOfClass:[NSArray class]]) {
                 NSArray* items = (NSArray*)obj;
                 
@@ -433,6 +439,38 @@ extern NSString *const kFHPhoneNumberCacheKey;
             }
         }
     }];
+    if (item.tabId.integerValue == FHSearchTabIdTypePrice && selectItem.selectIndexes.count < 1 && priceItem) {
+        NSString *item = nil;
+        if ([priceItem isKindOfClass:[NSArray class]]) {
+            NSArray *items = (NSArray*)priceItem;
+            if (items.count < 1) {
+                return;
+            }
+            item = items.firstObject;
+        }else {
+            item = (NSString *)priceItem;
+        }
+        if ([item isKindOfClass:[NSString class]]) {
+            if ([item hasPrefix:@"["]) {
+                item = [item substringFromIndex:1];
+            }
+            if ([item hasSuffix:@"]"]) {
+                item = [item substringToIndex:item.length - 1];
+            }
+            NSArray *array = [item componentsSeparatedByString:@","];
+            if (array.count > 0) {
+                if (rate != nil && rate.integerValue != 0) {
+                    NSInteger lowerPrice = [array.firstObject integerValue] / rate.integerValue;
+                    selectItem.lowerPrice = [NSString stringWithFormat:@"%ld",lowerPrice];
+                }
+            }
+            if (array.count > 1) {
+                NSInteger higherPrice = [array[1] integerValue] / rate.integerValue;
+                selectItem.higherPrice = [NSString stringWithFormat:@"%ld",higherPrice];
+            }
+        }
+//        NSLog(@"zjing %@",selectItem);
+    }
 }
 
 - (NSString *)encodingIfNeeded:(NSString *)queryCondition
