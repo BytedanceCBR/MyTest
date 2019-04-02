@@ -54,7 +54,7 @@
 
     if ([_hotList count] > indexPath.section - self.sectionOffset && [_hotList[indexPath.section - self.sectionOffset].items count] > indexPath.row) {
         FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - self.sectionOffset].items[indexPath.row];
-        cell.titleLabel.text = model.neighborhoodName;
+        cell.titleLabel.text = model.name;
         cell.priceLabel.text = model.averagePrice;
         cell.countLabel.text = model.houseCount;
         cell.numberLabel.text = [@(indexPath.row + 1) stringValue];

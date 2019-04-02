@@ -78,7 +78,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initNavBar];
-
     [self setupBottomBar];
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     _listViewModel = [[FHDetailListViewModel alloc] init];

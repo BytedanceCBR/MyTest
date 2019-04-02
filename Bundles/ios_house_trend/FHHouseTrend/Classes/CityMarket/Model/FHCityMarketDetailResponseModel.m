@@ -123,7 +123,6 @@
 {
   NSDictionary *dict = @{
     @"averagePrice": @"average_price",
-    @"neighborhoodName": @"neighborhood_name",
     @"openUrl": @"open_url",
     @"houseCount": @"house_count",
     @"groupId": @"group_id",

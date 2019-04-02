@@ -179,8 +179,10 @@
         FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", item.hid];
         if (urlStr.length > 0) {
+            NSMutableDictionary* dict = [self.tracer mutableCopy];
+            TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": dict}];
             NSURL *url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
         }
     }
 }
@@ -215,11 +217,24 @@
     [self traceClickLoadMore:self.recommendViewModel.type];
 }
 
+
+- (NSString *)getEvaluateWebParams:(NSDictionary *)dic
+{
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+    if (data && !error) {
+        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        return temp;
+    }
+    return nil;
+}
+
 -(NSString*)paramsFromDict:(NSDictionary*)dict {
     NSError* error;
     NSData* data = [NSJSONSerialization dataWithJSONObject:dict options:nil error:&error];
     if (error == nil) {
-        return [[NSString stringWithFormat:@"&report_params=%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]] URLEncodedString];
+        return [NSString stringWithFormat:@"&report_params=%@", [self getEvaluateWebParams:dict]];
     }
     return @"";
 }
