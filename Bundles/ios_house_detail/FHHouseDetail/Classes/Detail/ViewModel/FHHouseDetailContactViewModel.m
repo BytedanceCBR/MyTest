@@ -234,6 +234,16 @@
 {
     _contactPhone = contactPhone;
     NSString *contactTitle = @"电话咨询";
+    NSString *chatTitle = @"在线联系";
+    
+    if(contactPhone.callButtonText && ![contactPhone.callButtonText isEqualToString:@""]){
+        contactTitle = contactPhone.callButtonText;
+    }
+    
+    if(contactPhone.imLabel && ![contactPhone.imLabel isEqualToString:@""]){
+        chatTitle = contactPhone.imLabel;
+    }
+    
     if (contactPhone.phone.length < 1) {
         if (self.houseType == FHHouseTypeNeighborhood) {
             contactTitle = @"咨询经纪人";
@@ -241,12 +251,13 @@
             contactTitle = @"询底价";
         }
     }
-    [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle];
+    [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
     [self tryTraceImElementShow];
     if (contactPhone.showRealtorinfo) {
         [self addRealtorShowLog:contactPhone];
         [self addElementShowLog:contactPhone];
     }
+    [self addLeadShowLog:contactPhone];
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
@@ -376,11 +387,21 @@
 //    7.log_pb
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDic[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
     tracerDic[@"element_type"] = @"old_detail_button";
     tracerDic[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     tracerDic[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     tracerDic[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
     tracerDic[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
+    [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+}
+
+- (void)addLeadShowLog:(FHDetailContactModel *)contactPhone
+{
+    NSMutableDictionary *tracerDic = [self baseParams].mutableCopy;
+    tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
+    tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
+    tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
     [FHUserTracker writeEvent:@"element_show" params:tracerDic];
 }
 

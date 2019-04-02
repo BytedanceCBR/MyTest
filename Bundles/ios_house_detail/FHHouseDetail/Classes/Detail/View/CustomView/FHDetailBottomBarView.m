@@ -169,10 +169,13 @@
     }
 }
 
-- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle
+- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle chatTitle:(NSString *)chatTitle
 {
     [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
     [self.contactBtn setTitle:contactTitle forState:UIControlStateHighlighted];
+    
+    [self.imChatBtn setTitle:chatTitle forState:UIControlStateNormal];
+    [self.imChatBtn setTitle:chatTitle forState:UIControlStateHighlighted];
 
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     self.imChatBtn.hidden = !isEmptyString(contactPhone.imOpenUrl) ? NO : YES;
