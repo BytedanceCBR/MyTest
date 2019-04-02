@@ -24,6 +24,7 @@
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <TTArticleCategoryManager.h>
+#import "FHHomeScrollBannerCell.h"
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -69,6 +70,8 @@ static NSMutableArray  * _Nullable identifierArr;
     
     [tableView registerClass:[FHHomeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBannerCell class])];
     
+    [tableView registerClass:[FHHomeScrollBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeScrollBannerCell class])];
+    
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
 }
 
@@ -91,6 +94,10 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         if (dataModel.opData.items.count != 0) {
             [modelsArray addObject:dataModel.opData];
+        }
+        // 首页轮播banner
+        if (dataModel.mainPageBannerOpData.items.count > 0) {
+            [modelsArray addObject:dataModel.mainPageBannerOpData];
         }
         //不同频道cell顺序不同
         if (type == FHHomeHeaderCellPositionTypeForNews) {
@@ -646,6 +653,10 @@ static NSMutableArray  * _Nullable identifierArr;
     
     if ([model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
         return NSStringFromClass([FHHomeCityTrendCell class]);
+    }
+    
+    if ([model isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        return NSStringFromClass([FHHomeScrollBannerCell class]);
     }
     
     return NSStringFromClass([FHHomeBaseTableCell class]);

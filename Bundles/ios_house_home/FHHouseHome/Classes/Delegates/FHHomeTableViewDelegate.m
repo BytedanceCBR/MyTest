@@ -9,6 +9,7 @@
 #import "FHHomeBaseTableCell.h"
 #import "FHHomeCellHelper.h"
 #import <UITableView+FDTemplateLayoutCell.h>
+#import "FHHomeScrollBannerCell.h"
 
 @interface FHHomeTableViewDelegate()
 {
@@ -50,6 +51,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
     NSString *identifier = [FHHomeCellHelper configIdentifier:model];
+    if ([identifier isEqualToString:@"FHHomeScrollBannerCell"]) {
+        // 单独计算行高
+        return [FHHomeScrollBannerCell cellHeight];
+    }
     [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
         [FHHomeCellHelper configureCell:cell withJsonModel:model];
     }];

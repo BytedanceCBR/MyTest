@@ -138,6 +138,7 @@
                            @"opData2": @"op_data_2",
                            @"opData": @"op_data",
                            @"rentOpData": @"rent_op_data",
+                           @"mainPageBannerOpData": @"main_page_banner",
                            @"houseOpData": @"house_op_data",
                            @"entryInfo": @"entry_info",
                            @"currentCityId": @"current_city_id",
@@ -198,6 +199,25 @@
 
 
 @implementation  FHConfigDataRentOpDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"opStyle": @"op_style",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHConfigDataMainPageBannerOpDataModel
 
 + (JSONKeyMapper*)keyMapper
 {
