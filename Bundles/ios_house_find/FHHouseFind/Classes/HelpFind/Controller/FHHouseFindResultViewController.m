@@ -112,7 +112,6 @@
     
     _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
-    [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateHighlighted];
     [_rightBtn addTarget:self action:@selector(rightBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.customNavBarView addSubview:_rightBtn];
     
@@ -130,6 +129,11 @@
     }
 }
 
+- (void)setNaviBarTitle:(NSString *)stringTitle
+{
+    self.customNavBarView.title.text = stringTitle;
+}
+
 - (FHHouseFindRecommendDataModel *)getRecommendModel
 {
     return self.viewModel.recommendModel;
@@ -140,20 +144,17 @@
     self.viewModel.recommendModel = recommendModel;
 }
 
-- (void)setNaviBarTitle:(NSString *)stringTitle
-{
-    self.customNavBarView.title.text = stringTitle;
-}
-
 - (void)setNavBar:(BOOL)error {
     if(error){
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_black"] forState:UIControlStateNormal];
         [self.customNavBarView setNaviBarTransparent:NO];
     }else{
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
         [self.customNavBarView setNaviBarTransparent:YES];
     }
@@ -172,15 +173,14 @@
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
-        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"housefind_edit_black"] forState:UIControlStateNormal];
-        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"housefind_edit_black"] forState:UIControlStateHighlighted];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_black"] forState:UIControlStateNormal];
+
     }else {
         self.customNavBarView.title.hidden = YES;
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
-        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
-        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateHighlighted];
+        [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
     }
     [self.customNavBarView refreshAlpha:alpha];
     
@@ -198,10 +198,5 @@
     _viewModel = [[FHHouseFindResultViewModel alloc] initWithTableView:self.tableView viewController:self routeParam:_paramObj];
     // Do any additional setup after loading the view.
 }
-
-
-
-
-
 
 @end
