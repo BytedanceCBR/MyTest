@@ -113,6 +113,7 @@
     
     _rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
+    [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateHighlighted];
     [_rightBtn addTarget:self action:@selector(rightBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.customNavBarView addSubview:_rightBtn];
     
@@ -125,7 +126,14 @@
 
 - (void)rightBtnClick
 {
-    
+    if ([self.parentViewController respondsToSelector:@selector(jump2HouseFindHelpVC)]) {
+        [self.parentViewController performSelector:@selector(jump2HouseFindHelpVC)];
+    }
+}
+
+- (FHHouseFindRecommendDataModel *)getRecommendModel
+{
+    return self.viewModel.recommendModel;
 }
 
 - (void)setNaviBarTitle:(NSString *)stringTitle
@@ -160,11 +168,15 @@
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
+        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"housefind_edit_black"] forState:UIControlStateNormal];
+        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"housefind_edit_black"] forState:UIControlStateHighlighted];
     }else {
         self.customNavBarView.title.hidden = YES;
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
+        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
+        [self.rightBtn setBackgroundImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateHighlighted];
     }
     [self.customNavBarView refreshAlpha:alpha];
     

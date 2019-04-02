@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , assign) BOOL isHideKeyBoard;
 @property(nonatomic , copy) void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
 @property(nonatomic, weak) FHBaseViewController *viewController;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel;
 

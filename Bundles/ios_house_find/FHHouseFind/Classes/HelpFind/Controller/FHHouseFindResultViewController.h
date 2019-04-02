@@ -9,11 +9,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseFindRecommendDataModel;
 @interface FHHouseFindResultViewController : FHBaseViewController
 
 - (void)refreshContentOffset:(CGPoint)contentOffset;
 
 - (void)setNaviBarTitle:(NSString *)stringTitle;
+
+- (FHHouseFindRecommendDataModel *)getRecommendModel;
 
 @end
 

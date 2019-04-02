@@ -54,7 +54,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property (nonatomic , strong) FHSearchFilterConfigItem *roomConfigItem;
 
 @property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
-@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
 @property (nonatomic , weak) FHHouseFindHelpSubmitCell *commitCell;
@@ -81,7 +80,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
         FHHouseFindSelectItemModel *selectItem = [FHHouseFindSelectItemModel new];
         selectItem.tabId = FHSearchTabIdTypeRegion;
         _selectRegionItem = selectItem;
-        _recommendModel = recommendModel;
         
         _collectionView = collectionView;
         [self registerCell:collectionView];
@@ -94,18 +92,24 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [_collectionView addGestureRecognizer:tapGesture];
         
         [self setupHouseContent:nil];
+        self.recommendModel = recommendModel;
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 
-        if (self.recommendModel.openUrl.length > 0) {
-            
-            TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
-            [self refreshHouseFindItems:routeParamObj.queryParams];
-        }
     }
     return self;
+}
+
+- (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+{
+    _recommendModel = recommendModel;
+    if (recommendModel.openUrl.length > 0) {
+        
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
+        [self refreshHouseFindItems:routeParamObj.queryParams];
+    }
 }
 
 -(void)onTap
@@ -217,15 +221,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict
 {
-    NSMutableDictionary *infoDict = @{}.mutableCopy;
-    if (recommendDict) {
-        infoDict[@"recommend_house"] = recommendDict;
-    }
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://house_find"];
-    if (urlStr.length > 0) {
-        NSURL *url = [NSURL URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    if ([self.viewController.parentViewController respondsToSelector:@selector(jump2HouseFindResultVC)]) {
+        [self.viewController.parentViewController performSelector:@selector(jump2HouseFindResultVC)];
     }
 }
 
