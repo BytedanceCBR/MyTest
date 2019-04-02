@@ -23,6 +23,7 @@
 #import "FHHouseFindRecommendModel.h"
 #import "FHHouseFindHelpMainViewModel.h"
 #import "FHMainApi+HouseFind.h"
+#import <FHHouseBase/FHBaseViewController.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -39,7 +40,7 @@
 
 extern NSString *const kFHPhoneNumberCacheKey;
 
-@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate>
+@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property (nonatomic , strong) NSArray<FHSearchFilterConfigItem *> *secondFilter;
@@ -56,6 +57,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
+@property (nonatomic , weak) FHHouseFindHelpSubmitCell *commitCell;
+@property (nonatomic , weak) UITextField *activeTextField;
+
 @property(nonatomic , assign) BOOL isRequestingSMS;
 @property(nonatomic , strong) NSTimer *timer;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
@@ -85,30 +89,28 @@ extern NSString *const kFHPhoneNumberCacheKey;
         collectionView.delegate = self;
         collectionView.dataSource = self;
         _collectionView.allowsMultipleSelection = YES;
-
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
+        tapGesture.cancelsTouchesInView = NO;
+        [_collectionView addGestureRecognizer:tapGesture];
+        
         [self setupHouseContent:nil];
 
-//        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 
-        if (self.recommendModel.openUrl) {
+        if (self.recommendModel.openUrl.length > 0) {
+            
             TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
             [self refreshHouseFindItems:routeParamObj.queryParams];
         }
-
-//        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
-//            if (x) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [wself setupHouseContent:x];
-//                });
-//            }
-//        }];
-//        self.configDisposable = disposable;
-        
     }
     return self;
+}
+
+-(void)onTap
+{
+    [self.collectionView endEditing:YES];
 }
 
 - (void)resetBtnDidClick
@@ -199,7 +201,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
             [query appendString:q];
         }
     }
-    NSLog(@"zjing query : %@",query);
+//    NSLog(@"zjing query : %@",query);
     [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:@"" completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
@@ -642,6 +644,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (indexPath.item == 0) {
         
         FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
+        pcell.phoneInput.delegate = self;
+        pcell.varifyCodeInput.delegate = self;
         pcell.delegate = self;
         self.contactCell = pcell;
 
@@ -655,6 +659,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         return pcell;
     }
     FHHouseFindHelpSubmitCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_SUBMIT_CELL_ID forIndexPath:indexPath];
+    self.commitCell = pcell;
     __weak typeof(self)wself = self;
     pcell.resetBlock = ^{
         [wself resetBtnDidClick];
@@ -919,105 +924,54 @@ extern NSString *const kFHPhoneNumberCacheKey;
 #pragma mark - login相关
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification
 {
-    if(_isHideKeyBoard){
+//    if(_isHideKeyBoard){
+//        return;
+//    }
+    if (!self.activeTextField) {
         return;
     }
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
-    self.lastY = [self.collectionView convertPoint:self.contactCell.phoneInput.origin toView:self.viewController.view].y;
-    NSLog(@"zjing self.contactCell:%@ lastY:%f,keyboard %@",self.contactCell,self.lastY,userInfo[UIKeyboardFrameEndUserInfoKey]);
+    CGFloat screenY = [self.commitCell convertPoint:CGPointMake(0, self.commitCell.height) toView:self.viewController.view].y;
 
     CGFloat offset = 0;
-    if (keyBoardBounds.origin.y < [UIScreen mainScreen].bounds.size.height && (self.lastY + keyBoardBounds.size.height > [UIScreen mainScreen].bounds.size.height)) {
-        offset = self.lastY + self.lastY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
-    }else {
-        offset = self.lastY;
+    offset = screenY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
+    if (offset > 0) {
+        
+        NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+        NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
+        
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            self.collectionView.contentOffset = CGPointMake(0, offset + self.collectionView.contentOffset.y);
+            
+        } completion:^(BOOL finished) {
+            
+        }];
     }
-    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-    
-    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
-        
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.collectionView.contentOffset = CGPointMake(0, offset);
-        
-    } completion:^(BOOL finished) {
-        
-    }];
 }
 
-- (void)keyboardWillHideNotifiction:(NSNotification *)notification {
-    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
-    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-    
-    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
-        [UIView setAnimationBeginsFromCurrentState:YES];
-        self.collectionView.contentOffset = CGPointMake(0, self.lastY);
-
-    } completion:^(BOOL finished) {
-        
-    }];
-}
-
-- (void)keyboardFrameWillChange:(NSNotification *)noti
+- (void)keyboardWillHideNotifiction:(NSNotification *)notification
 {
-    NSDictionary *userInfo = noti.userInfo;
+    if (!self.activeTextField) {
+        return;
+    }
+    NSDictionary *userInfo = notification.userInfo;
+    NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
-    CGFloat duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey]doubleValue];
-    UIViewAnimationCurve animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] unsignedIntegerValue];
-    UIViewAnimationOptions options = UIViewAnimationCurveEaseIn | UIViewAnimationCurveEaseOut | UIViewAnimationCurveLinear;
-    switch (animationCurve) {
-        case UIViewAnimationCurveEaseInOut:
-            options = UIViewAnimationOptionCurveEaseInOut;
-            break;
-        case UIViewAnimationCurveEaseIn:
-            options = UIViewAnimationOptionCurveEaseIn;
-            break;
-        case UIViewAnimationCurveEaseOut:
-            options = UIViewAnimationOptionCurveEaseOut;
-            break;
-        case UIViewAnimationCurveLinear:
-            options = UIViewAnimationOptionCurveLinear;
-            break;
-        default:
-            options = animationCurve << 16;
-            break;
-    }
-    self.lastY = [self.collectionView convertPoint:self.contactCell.origin toView:self.viewController.view].y;
-    
-    NSLog(@"zjing self.contactCell:%@ lastY:%f,keyboard %@",self.contactCell,self.lastY,userInfo[UIKeyboardFrameEndUserInfoKey]);
-    
-    CGFloat contentViewHeight = self.contactCell.height;
-
-    CGFloat tempOffset = [UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y;
     CGFloat offset = 0;
-
-    BOOL isDismissing = CGRectGetMinY(keyBoardBounds) >= [[[UIApplication sharedApplication] delegate] window].bounds.size.height;
-    if (isDismissing) {
-//        offset = (keyBoardBounds.origin.y - contentViewHeight) / 2;
-        offset = self.lastY;
-    }else {
+    offset = self.collectionView.contentSize.height - self.collectionView.height;
+    if (offset > 0) {
         
-        if (keyBoardBounds.origin.y < [UIScreen mainScreen].bounds.size.height && (self.lastY + keyBoardBounds.size.height > [UIScreen mainScreen].bounds.size.height)) {
-            offset = self.lastY + self.lastY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
-        }else {
-            offset = self.lastY;
-        }
-//        if (tempOffset > 0) {
-//            CGFloat offsetKeybord = 30;
-//            offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) - offsetKeybord;
-//        }else {
-//            offset = ([UIScreen mainScreen].bounds.size.height - ([UIScreen mainScreen].bounds.size.height - keyBoardBounds.origin.y) - contentViewHeight) / 2;
-//        }
+        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+            [UIView setAnimationBeginsFromCurrentState:YES];
+            self.collectionView.contentOffset = CGPointMake(0, offset);
+        } completion:^(BOOL finished) {
+            
+        }];
     }
-    NSLog(@"zjing offset:%f ",offset);
-    // add by zjing for test
-//    offset = 800;
-    [UIView animateWithDuration:duration delay:0 options:options animations:^{
-        self.collectionView.contentOffset = CGPointMake(0, offset);
-    } completion:^(BOOL finished) {
-        
-    }];
 }
 
 - (void)textFieldDidChange:(NSNotification *)notification
@@ -1044,6 +998,16 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if(text.length > limit) {
         textField.text = [text substringToIndex:limit];
     }
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.activeTextField = textField;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    self.activeTextField = nil;
 }
 
 - (void)sendVerifyCode
