@@ -94,7 +94,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
         NSLog(@"zjing query:%@",queryString);
-        [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
+        [self requestErshouHouseListData:YES query:queryString offset:50 searchId:nil];
     }
 }
 
