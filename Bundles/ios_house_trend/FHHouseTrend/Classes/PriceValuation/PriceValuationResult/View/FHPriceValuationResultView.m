@@ -110,10 +110,14 @@
     CGFloat fontSize = CGRectGetWidth([UIScreen mainScreen].bounds) > 320 ? 14 : 11;
     self.avgPriceLabel = [self LabelWithFont:[UIFont themeFontRegular:fontSize] textColor:[UIColor themeGray3]];
     _avgPriceLabel.textAlignment = NSTextAlignmentRight;
+//    _avgPriceLabel.adjustsFontSizeToFitWidth = YES;
+//    _avgPriceLabel.minimumScaleFactor = 0.9;
     [self.cardView addSubview:_avgPriceLabel];
     
     self.toLastMonthLabel = [self LabelWithFont:[UIFont themeFontRegular:fontSize] textColor:[UIColor themeGray3]];
     _toLastMonthLabel.textAlignment = NSTextAlignmentLeft;
+//    _toLastMonthLabel.adjustsFontSizeToFitWidth = YES;
+//    _toLastMonthLabel.minimumScaleFactor = 0.9;
     [self.cardView addSubview:_toLastMonthLabel];
     
     self.moreInfoBtn = [[UIButton alloc] init];
@@ -129,16 +133,6 @@
     self.evaluateLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _evaluateLabel.text = @"估价结果是否符合您的预期？";
     [self.evaluateView addSubview:_evaluateLabel];
-    
-    self.evaluateDownBtn = [[UIButton alloc] init];
-    _moreInfoBtn.backgroundColor = [UIColor themeRed1];
-    [_moreInfoBtn setTitle:@"补全信息，结果更精确" forState:UIControlStateNormal];
-    [_moreInfoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _moreInfoBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    _moreInfoBtn.layer.cornerRadius = 4;
-    _moreInfoBtn.layer.masksToBounds = YES;
-    [_moreInfoBtn addTarget:self action:@selector(moreInfo) forControlEvents:UIControlEventTouchUpInside];
-    [self.cardView addSubview:_moreInfoBtn];
     
     self.evaluateDownBtn = [self buttonWithText:@"比预期低" imageName:@"price_valuation_down" tag:3];
     [self.evaluateView addSubview:_evaluateDownBtn];
@@ -468,7 +462,16 @@
         self.priceLabel.attributedText = [self getPriceStr:priceStr];
         self.avgPriceLabel.attributedText = [self getAtributeStr:@"房屋均价 " content:model.data.estimatePricingPersqmStr];
         self.toLastMonthLabel.attributedText = [self getAtributeStr:@"环比上月 " content:model.data.estimatePriceRateStr];
+        
+        //这里字号会根据文字长度改变，计算出最小字号
+//        CGFloat fontSizeAvg = [self getApproximateAdjustedFontSizeWithLabel:self.avgPriceLabel];
+//        CGFloat fontSizeToLast = [self getApproximateAdjustedFontSizeWithLabel:self.toLastMonthLabel];
+//
+//        CGFloat fontSizeMin = fontSizeAvg > fontSizeToLast ? fontSizeToLast : fontSizeAvg;
+//        self.avgPriceLabel.font = [UIFont themeFontRegular:fontSizeMin];
+//        self.toLastMonthLabel.font = [UIFont themeFontRegular:fontSizeMin];
     }
+    
     if(infoModel){
         [_titleBtn setTitle:infoModel.neighborhoodName forState:UIControlStateNormal];
         [_titleBtn sizeToFit];
@@ -504,6 +507,7 @@
         NSAttributedString *contentAstr = [[NSAttributedString alloc] initWithString:content attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}];
         [aStr appendAttributedString:contentAstr];
     }
+    
     return aStr;
 }
 
@@ -516,6 +520,19 @@
         [aStr appendAttributedString:unitAstr];
     }
     return aStr;
+}
+
+- (CGFloat)getApproximateAdjustedFontSizeWithLabel:(UILabel *)label {
+    UIFont *currentFont = label.font;
+    CGFloat originalFontSize = currentFont.pointSize;
+    CGSize currentSize = [label.text sizeWithAttributes:@{NSFontAttributeName:currentFont}];
+    
+    while(currentSize.width > label.frame.size.width && currentFont.pointSize > (originalFontSize * label.minimumScaleFactor)){
+        currentFont = [currentFont fontWithSize:currentFont.pointSize  -  1];
+        currentSize = [label.text sizeWithAttributes:@{NSFontAttributeName:currentFont}];
+    }
+    
+    return currentFont.pointSize;
 }
 
 - (NSDateFormatter *)monthFormatter {

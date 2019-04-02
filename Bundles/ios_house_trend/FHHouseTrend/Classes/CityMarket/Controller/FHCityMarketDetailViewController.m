@@ -294,9 +294,10 @@
 }
 
 -(NSDictionary*)traceParams {
-//    self.tracerDict[@"enter_from"] = @"city_market";
-//    self.tracerDict[@"origin_from"] = @"city_market";
-    return [self.tracerDict copy];
+    self.tracerDict[@"enter_from"] = @"city_market";
+    self.tracerDict[@"origin_from"] = @"city_market";
+    NSDictionary *tracer = @{@"tracer":[self.tracerDict copy]};
+    return tracer;
 }
 
 -(void)onDataArrived {
