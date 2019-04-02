@@ -37,7 +37,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) FHHouseFindResultTopHeader *topHeader;
 @property(nonatomic , weak) TTHttpTask * requestTask;
-@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 @property(nonatomic , assign) BOOL isShowErrorPage;
 @property (nonatomic, weak) FHHouseFindResultViewController *currentViewController;
 @property (nonatomic , strong) UIView *bottomView;
@@ -76,22 +75,27 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
         
         if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
-            _recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
+            self.recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
         }
-        
-        [_topHeader refreshUI:_recommendModel];
-        
-        if ([_recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& _recommendModel.openUrl) {
-            TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:_recommendModel.openUrl]];
-            NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
-            
-            [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
-        }
+
         [self configBottomFooter];
         [self configTableView];
         
     }
     return self;
+}
+
+- (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+{
+    _recommendModel = recommendModel;
+    [_topHeader refreshUI:self.recommendModel];
+    
+    if ([recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& recommendModel.openUrl) {
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
+        NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
+        
+        [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
+    }
 }
 
 - (void)configBottomFooter

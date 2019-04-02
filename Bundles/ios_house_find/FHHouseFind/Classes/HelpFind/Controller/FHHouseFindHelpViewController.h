@@ -9,7 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseFindRecommendDataModel;
 @interface FHHouseFindHelpViewController : FHBaseViewController
+
+- (FHHouseFindRecommendDataModel *)getRecommendModel;
 
 @end
 

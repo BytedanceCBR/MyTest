@@ -54,7 +54,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
 @property (nonatomic , strong) FHSearchFilterConfigItem *roomConfigItem;
 
 @property (nonatomic , strong) FHHouseFindSelectItemModel *selectRegionItem;
-@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @property (nonatomic , weak) FHHouseFindHelpContactCell *contactCell;
 @property (nonatomic , weak) FHHouseFindHelpSubmitCell *commitCell;
@@ -81,7 +80,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
         FHHouseFindSelectItemModel *selectItem = [FHHouseFindSelectItemModel new];
         selectItem.tabId = FHSearchTabIdTypeRegion;
         _selectRegionItem = selectItem;
-        _recommendModel = recommendModel;
         
         _collectionView = collectionView;
         [self registerCell:collectionView];
@@ -94,18 +92,24 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [_collectionView addGestureRecognizer:tapGesture];
         
         [self setupHouseContent:nil];
+        self.recommendModel = recommendModel;
 
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 
-        if (self.recommendModel.openUrl.length > 0) {
-            
-            TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
-            [self refreshHouseFindItems:routeParamObj.queryParams];
-        }
     }
     return self;
+}
+
+- (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+{
+    _recommendModel = recommendModel;
+    if (recommendModel.openUrl.length > 0) {
+        
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
+        [self refreshHouseFindItems:routeParamObj.queryParams];
+    }
 }
 
 -(void)onTap
@@ -132,17 +136,17 @@ extern NSString *const kFHPhoneNumberCacheKey;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
     if (selectItem.higherPrice.length < 1 && selectItem.lowerPrice.length < 1 && selectItem.selectIndexes.count < 1) {
-        [[ToastManager manager] showToast:@"请选择购房预算"];
+        [[ToastManager manager] showToast:@"请选择您的购房预算"];
         return;
     }
     selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRoom];
     if (selectItem.selectIndexes.count < 1) {
-        [[ToastManager manager] showToast:@"请选择户型"];
+        [[ToastManager manager] showToast:@"请选择您想购买的户型"];
         return;
     }
     selectItem = [model selectItemWithTabId:FHSearchTabIdTypeRegion];
     if (selectItem.selectIndexes.count < 1) {
-        [[ToastManager manager] showToast:@"请选择区域"];
+        [[ToastManager manager] showToast:@"请选择您想购买的区域"];
         return;
     }
     
@@ -217,15 +221,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 - (void)jump2HouseFindResultPage:(NSDictionary *)recommendDict
 {
-    NSMutableDictionary *infoDict = @{}.mutableCopy;
-    if (recommendDict) {
-        infoDict[@"recommend_house"] = recommendDict;
-    }
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    NSString *urlStr = [NSString stringWithFormat:@"sslocal://house_find"];
-    if (urlStr.length > 0) {
-        NSURL *url = [NSURL URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    if ([self.viewController.parentViewController respondsToSelector:@selector(jump2HouseFindResultVC)]) {
+        [self.viewController.parentViewController performSelector:@selector(jump2HouseFindResultVC)];
     }
 }
 
@@ -573,6 +570,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
                 }
                 priceItem.fromType = FHHouseFindPriceFromTypeHelp;
                 if (priceItem) {
+                    [pcell updateWithLowerPlaceholder:@"最低价 (万)" higherPlaceholder:@"最高价 (万)"];
                     [pcell updateWithLowerPrice:priceItem.lowerPrice higherPrice:priceItem.higherPrice];
                 }
                 
@@ -750,7 +748,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
                     selectItem.higherPrice = nil;
                 }else if (item.tabId.integerValue == FHSearchTabIdTypeRoom) {
                     if (selectItem.selectIndexes.count >= ROOM_MAX_COUNT) {
-                        [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个",ROOM_MAX_COUNT]];
+                        [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld种户型",ROOM_MAX_COUNT]];
                         return;
                     }
                 }
@@ -898,7 +896,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }else {
             //添加选择
             if (selectItem.selectIndexes.count >= REGION_MAX_COUNT) {
-                [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个",REGION_MAX_COUNT]];
+                [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld个区域",REGION_MAX_COUNT]];
                 return;
             }
             [selectItem.selectIndexes addObject:@(row)];

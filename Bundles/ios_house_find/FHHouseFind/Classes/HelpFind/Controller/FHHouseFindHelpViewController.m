@@ -61,6 +61,11 @@
     
 }
 
+- (FHHouseFindRecommendDataModel *)getRecommendModel
+{
+    return self.viewModel.recommendModel;
+}
+
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
