@@ -202,6 +202,7 @@
     __weak typeof(self) wself = self;
     _commuteTipView.changeOrHideBlock = ^(BOOL showHide) {
         if (showHide) {
+            [wself.viewModel addModifyCommuteLog:NO];
             wself.commuteChooseBgView.hidden = YES;
         }else{
             FHCommuteManager *manager = [FHCommuteManager sharedInstance];
@@ -209,6 +210,7 @@
             [wself.view bringSubviewToFront:wself.commuteChooseBgView];
             [wself.commuteChooseBgView addSubview:wself.commuteFilterView];
             wself.commuteChooseBgView.hidden = NO;
+            [wself.viewModel addModifyCommuteLog:YES];
         }
         wself.commuteTipView.showHide = !showHide;
     };
@@ -236,6 +238,7 @@
             manager.commuteType = type;
             [manager sync];
             [wself updateCommuteTip];
+            [wself.viewModel commuteFilterUpdated];
             
             [wself onCommuteBgTap];
         };
@@ -413,7 +416,6 @@
 -(void)initConstraints
 {
     CGFloat height = [FHFakeInputNavbar perferredHeight];
-    NSLog(@"[LIST] bar height is: %f",height);
     
     [self.navbar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.and.top.mas_equalTo(self.view);

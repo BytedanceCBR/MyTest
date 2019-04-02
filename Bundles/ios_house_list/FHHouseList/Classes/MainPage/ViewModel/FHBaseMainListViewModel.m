@@ -850,17 +850,20 @@
     NSURL *url = [NSURL URLWithString:item.openUrl];
     
     NSMutableDictionary *param = [[self baseLogParam]mutableCopy];
-    param[UT_CATEGORY_NAME] = @"rent_list";
     param[UT_ENTER_TYPE] = @"click";
-    param[UT_ELEMENT_FROM] = @"renting_icon";
+    param[UT_ENTER_FROM] = @"commuter_detail";
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
     param[UT_SEARCH_ID] = self.searchId;
     
-    param[UT_ORIGIN_FROM] = @"rent_list";
+    param[UT_ORIGIN_FROM] = UT_OF_COMMUTE;
     if (!param[UT_ORIGIN_SEARCH_ID]) {
         param[UT_ORIGIN_SEARCH_ID] = @"be_null";
     }
     
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
+    NSMutableDictionary *userInfoDict = [NSMutableDictionary new];
+    userInfoDict[TRACER_KEY] = param;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:userInfoDict];
     if (popController) {
         __weak typeof(self) wself = self;
         [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {

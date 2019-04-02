@@ -50,7 +50,7 @@ NSString *const UT_ORIGIN_SEARCH_ID = @"origin_search_id";
 NSString *const UT_STAY_TIME = @"stay_time";
 NSString *const UT_PAGE_TYPE = @"page_type";
 NSString *const UT_LOG_PB = @"log_pb";
-
+NSString *const UT_HOUSE_TYPE = @"house_type";
 
 NSString *const UT_OF_RENTING_SEARCH = @"renting_search";
 NSString *const UT_OF_RENTING_LIST = @"renting_list";
@@ -86,7 +86,12 @@ NSString *const UT_OF_MINE_OLD = @"minetab_old";
 NSString *const UT_OF_MINE_NEIGHBORHOOD = @"minetab_neighborhood";
 NSString *const UT_OF_PUSH = @"push";
 
-//COMMON
+NSString *const UT_OF_COMMUTE = @"commuter";
+
+//COMMON ACTION
 NSString *const UT_OF_ELEMENT_SHOW = @"element_show";
+NSString *const UT_GO_DETAIL = @"go_detail";
+NSString *const UT_BE_NULL = @"be_null";
+
 
 

@@ -46,6 +46,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSDictionary *)categoryLogDict;
 - (void)addClickHouseSearchLog;
 
+//通勤找房 点击 修改、收起 埋点
+-(void)addModifyCommuteLog:(BOOL)showOrHide;
+
+-(void)commuteFilterUpdated;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -38,6 +38,7 @@
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
 #import "FHCommutePOISearchViewController.h"
+#import "FHCommuteManager.h"
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -1289,10 +1290,12 @@
 }
 
 #pragma mark - commute
--(void)showCommuteInView:(UIView *)view
+-(void)commuteFilterUpdated
 {
-    
+    [self loadData:YES fromRecommend:NO];
+    [self addCommuteSearchLog];
 }
+
 
 #pragma mark - 埋点相关
 -(NSMutableDictionary *)houseShowCache {
@@ -1546,6 +1549,38 @@
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     TRACK_EVENT(@"house_rank",params);
+}
+
+-(void)addModifyCommuteLog:(BOOL)isShow
+{
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = [self pageTypeString];
+    param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ?: UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    
+    TRACK_EVENT(isShow?@"click_modification":@"click_close", param);
+    
+}
+
+-(void)addCommuteSearchLog
+{
+
+    NSString *location = [FHCommuteManager sharedInstance].destLocation;
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = [self pageTypeString];
+    param[UT_HOUSE_TYPE] = @"rent";
+    param[@"query_type"] = @"mutiple";
+    param[@"enter_query"] = UT_BE_NULL;
+    param[UT_SEARCH_ID] = @"be_null";
+    param[@"search_query"] = location ?:UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom?:UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.tracerModel.originSearchId?:UT_BE_NULL;
+    
+    TRACK_EVENT(@"house_search", param);
+    
 }
 
 -(NSDictionary *)categoryLogDict {
