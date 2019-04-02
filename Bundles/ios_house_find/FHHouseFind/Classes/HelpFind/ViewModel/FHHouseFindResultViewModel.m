@@ -144,7 +144,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
     tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
-    tracerDict[@"enter_type"] = self.tracerModel.enterType ? : @"be_null";
+    tracerDict[@"enter_type"] = @"click";
     tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
     tracerDict[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
@@ -227,7 +227,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         refreshTip = houseModel.refreshTip;
         itemArray = houseModel.items;
         self.searchId = houseModel.searchId;
-        
+        self.houseList = [NSMutableArray array];
+
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
@@ -403,13 +404,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
             
-//            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//            if (![self.houseShowCache.allKeys containsObject:cellModel]) {
-//
-//                [self addHouseShowLog:cellModel withRank:indexPath.row];
-//                self.houseShowCache[cellModel.houseModel.groupId] = @"1";
-//            }
-            
+            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            if (![self.houseShowCache.allKeys containsObject:cellModel.houseId] && cellModel.houseId) {
+                [self addHouseShowLog:cellModel withRank:indexPath.row];
+                self.houseShowCache[cellModel.houseId] = @"1";
+            }
         }
     }
 }
@@ -519,6 +518,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     traceParam[@"enter_from"] = [self pageTypeString];
     traceParam[@"element_from"] = @"be_null";
     traceParam[@"search_id"] = self.searchId;
+    traceParam[@"card_type"] = @"left_pic";
     traceParam[@"log_pb"] = [cellModel logPb];
     traceParam[@"origin_from"] = self.originFrom;
     traceParam[@"origin_search_id"] = self.originSearchId;

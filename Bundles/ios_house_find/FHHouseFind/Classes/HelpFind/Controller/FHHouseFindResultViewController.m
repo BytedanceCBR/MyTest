@@ -194,6 +194,13 @@
     }
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
+    [self tt_resetStayTime];
+}
+
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
