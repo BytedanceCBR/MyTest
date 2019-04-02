@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showCommuteConfigPage;
 
+-(void)tryAddCommuteShowLog;
+
 @end
 
 NS_ASSUME_NONNULL_END

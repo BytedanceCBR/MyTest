@@ -15,6 +15,7 @@ extern NSString *const UT_ENTER_FROM; //@"enter_from"
 extern NSString *const UT_CATEGORY_NAME; //@"category_name"
 extern NSString *const UT_ENTER_TYPE; //@"enter_type"
 extern NSString *const UT_ELEMENT_FROM; //@"element_from"
+extern NSString *const UT_ELEMENT_TYPE; //@"element_type"
 extern NSString *const UT_ENTER_CATEOGRY; //@"enter_category"
 extern NSString *const UT_SEARCH_ID; //@"search_id"
 extern NSString *const UT_ORIGIN_SEARCH_ID; //@"origin_search_id"
@@ -59,6 +60,9 @@ extern NSString *const UT_OF_MINE_OLD; //@"minetab_old"
 extern NSString *const UT_OF_MINE_NEIGHBORHOOD; //@"minetab_neighborhood"
 
 extern NSString *const UT_OF_PUSH; //@"push"
+
+
+extern NSString *const UT_OF_ELEMENT_SHOW;
 
 /*
  

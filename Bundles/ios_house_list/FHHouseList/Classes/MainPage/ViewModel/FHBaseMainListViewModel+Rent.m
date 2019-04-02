@@ -11,6 +11,8 @@
 #import <FHHouseBase/FHHouseRentModel.h>
 #import <TTRoute/TTRoute.h>
 #import <FHHouseBase/FHBaseViewController.h>
+#import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 @implementation FHBaseMainListViewModel (Rent)
 
@@ -92,6 +94,38 @@
 -(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration inController:(UIViewController *)controller
 {
     [self gotoCommuteList:controller];
+}
+
+
+-(void)tryAddCommuteShowLog
+{
+    if (self.houseType != FHHouseTypeRentHouse) {
+        return;
+    }
+    
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataRentOpDataModel *rentModel = dataModel.rentOpData;
+    CGFloat bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
+    if (bannerHeight < 1) {
+        return;
+    }
+    /*
+     "1. event_type ：house_app2c_v2
+     2. page_type（页面类型）：rent_list
+     3. element_type（组件类型）：commuter_info（通勤找房）
+     4. origin_from:renting_list
+     6. origin_search_id
+     7.log_pb"
+     */
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = [self pageTypeString];
+    param[UT_ELEMENT_TYPE] = @"commuter_info";
+    param[UT_ORIGIN_FROM] = self.originFrom;
+    param[UT_LOG_PB] = self.tracerModel.logPb;
+        
+    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
+    
 }
 
 @end

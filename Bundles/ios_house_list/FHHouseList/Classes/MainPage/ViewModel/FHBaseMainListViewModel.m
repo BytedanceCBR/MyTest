@@ -185,20 +185,9 @@
         [self.tableView reloadData];
         [_errorMaskView showEmptyWithType:type];
         _errorMaskView.retryButton.enabled = enableTap;
-        
-        //        CGRect frame = self.tableView.frame;
-        //        frame.origin = CGPointZero;
-        //        self.errorMaskView.frame = frame;
-        //        self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-                
+
         CGFloat top = _topView.height; //self.tableView.contentOffset.y;
-//        if (!_tableView.window) {
-//            //还未显示
-//            top = - _topView.height;
-//        }
-//        if (top > 0) {
-//            top = 0;
-//        }
+
         [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(top);
         }];
@@ -452,6 +441,7 @@
             if (self.searchId.length > 0 ) {
                 SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
             }
+            [self tryAddCommuteShowLog];
         }
         
         self.showPlaceHolder = NO;
