@@ -12,16 +12,31 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import "FHHouseFindHelpViewModel.h"
 #import "FHHouseFindHelpSubmitCell.h"
+#import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "FHHouseFindRecommendModel.h"
 
 @interface FHHouseFindHelpViewController ()
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) UICollectionView *contentView;
 @property (nonatomic , strong) FHHouseFindHelpViewModel *viewModel;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @end
 
 @implementation FHHouseFindHelpViewController
+
+- (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
+{
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+        NSDictionary *recommendDict = [paramObj.allParams tt_dictionaryValueForKey:@"recommend_house"];
+        if (recommendDict.count > 0) {
+            _recommendModel = [[FHHouseFindRecommendDataModel alloc]initWithDictionary:recommendDict error:nil];
+        }
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,6 +59,16 @@
 //    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
 //    [self tt_resetStayTime];
     
+}
+
+- (FHHouseFindRecommendDataModel *)getRecommendModel
+{
+    return self.viewModel.recommendModel;
+}
+
+- (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
+{
+    self.viewModel.recommendModel = recommendModel;
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -78,18 +103,15 @@
     layout.minimumInteritemSpacing = 13;
 
     _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
-//    _contentView.pagingEnabled = NO;
-//    _contentView.scrollsToTop = NO;
     if (@available(iOS 11.0, *)) {
         _contentView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     
     [self.view addSubview:_contentView];
 
-    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView];
+    _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView recommendModel:self.recommendModel];
     _viewModel.viewController = self;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
         if (noData) {

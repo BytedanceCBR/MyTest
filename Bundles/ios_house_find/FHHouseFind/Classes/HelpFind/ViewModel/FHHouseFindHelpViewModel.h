@@ -6,17 +6,21 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHHouseFindRecommendModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+
+@class FHBaseViewController;
 @interface FHHouseFindHelpViewModel : NSObject
 
 //屏蔽TTNavigationViewController带来的键盘变化
 @property(nonatomic , assign) BOOL isHideKeyBoard;
 @property(nonatomic , copy) void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
-@property(nonatomic, weak) UIViewController *viewController;
+@property(nonatomic, weak) FHBaseViewController *viewController;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
--(instancetype)initWithCollectionView:(UICollectionView *)collectionView;
+- (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel;
 
 @end
 

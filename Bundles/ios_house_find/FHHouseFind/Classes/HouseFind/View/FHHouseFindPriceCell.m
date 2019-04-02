@@ -89,6 +89,18 @@
     }];
 }
 
+-(void)updateWithLowerPlaceholder:(NSString *)lowPrice higherPlaceholder:(NSString *)highPrice
+{
+    self.lowerTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:lowPrice
+                                                                                      attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],
+                                                                                                   NSForegroundColorAttributeName:[UIColor themeGray4]
+                                                                                                   }];
+    self.higherTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:highPrice
+                                                                                attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],
+                                                                                             NSForegroundColorAttributeName:[UIColor themeGray4]
+                                                                                             }];
+}
+
 -(void)updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice
 {
 
