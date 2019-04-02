@@ -252,6 +252,8 @@ extern NSString *const kFHToastCountKey;
         if(success && !error){
             [wself.view hideEvaluateView];
             [[ToastManager manager] showToast:@"感谢您的反馈"];
+        }else{
+            [[ToastManager manager] showToast:@"网络异常"];
         }
     }];
 }
