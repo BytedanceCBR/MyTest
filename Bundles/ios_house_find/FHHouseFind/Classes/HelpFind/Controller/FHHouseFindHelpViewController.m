@@ -93,11 +93,8 @@
     layout.minimumInteritemSpacing = 13;
 
     _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
-//    _contentView.pagingEnabled = NO;
-//    _contentView.scrollsToTop = NO;
     if (@available(iOS 11.0, *)) {
         _contentView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
