@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailTracerPlaceHolder.h"
-#import "TTTrackerWrapper.h"
+#import "FHUserTracker.h"
 @implementation FHDetailTracerPlaceHolder
 
 - (instancetype)init
@@ -32,7 +32,7 @@
     theParams[@"rank"] = @"be_null";
     theParams[@"origin_from"] = @"city_market";
     theParams[@"origin_search_id"] = _tracer[@"origin_search_id"] ? : @"be_null";
-    [TTTrackerWrapper eventV3:@"element_show" params:theParams];
+    [FHUserTracker writeEvent:@"element_show" params:theParams];
 }
 
 @end

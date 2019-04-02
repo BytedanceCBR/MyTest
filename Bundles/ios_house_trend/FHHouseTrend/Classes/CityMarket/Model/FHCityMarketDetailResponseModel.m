@@ -141,6 +141,8 @@
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
+    @"moreOpenUrl": @"more_open_url",
+    @"bottomText": @"bottomText",
     @"moreBtnText": @"more_btn_text",
     @"openUrl": @"open_url",
     @"rankOpenUrl": @"rank_open_url",

@@ -92,6 +92,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCityMarketDetailResponseDataHotListModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *itemType;
+@property (nonatomic, copy , nullable) NSString *moreOpenUrl;
+@property (nonatomic, copy , nullable) NSString *bottomText;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *moreBtnText;
 @property (nonatomic, copy , nullable) NSString *type;

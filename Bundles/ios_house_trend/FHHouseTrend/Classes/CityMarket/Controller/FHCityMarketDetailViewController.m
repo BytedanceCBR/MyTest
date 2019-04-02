@@ -44,7 +44,7 @@
 
 @end
 
-@interface FHCityMarketDetailViewController ()<FHCityMarketRecommendViewModelDataChangedListener>
+@interface FHCityMarketDetailViewController ()<FHCityMarketRecommendViewModelDataChangedListener, FHCityMarketTrendHeaderViewModelDelegate>
 {
     NSMutableArray<FHCityOpenUrlJumpAction*>* _actions;
 }
@@ -118,6 +118,7 @@
     CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
     // 这里设置tableView底部滚动的区域，保证内容可以完全露出
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
+    [self addDefaultEmptyViewFullScreen];
     [self setupSections];
     [self bindHeaderView];
     [self logGoDetail];
@@ -179,6 +180,7 @@
                 [self.listViewModel notifyCellDisplay];
             });
         });
+        [self endLoading];
     }];
 
     RAC(_chatSectionCellPlaceHolder, marketTrendList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
@@ -207,6 +209,7 @@
     RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
     [self bindStatusBarObv];
+    [self startLoading];
     [_headerViewModel requestData];
 }
 
@@ -226,13 +229,16 @@
 
 -(void)setupSections {
     self.chatSectionCellPlaceHolder = [[FHChatSectionCellPlaceHolder alloc] init];
+    self.chatSectionCellPlaceHolder.tracer = self.tracerDict;
     [_listViewModel addSectionPlaceHolder:_chatSectionCellPlaceHolder];
     FHCityMarketRecommendViewModel* viewModel = [[FHCityMarketRecommendViewModel alloc] init];
     viewModel.listener = self;
     self.recommendSectionPlaceHolder = [[FHCityMarketRecommendSectionPlaceHolder alloc] initWithViewModel:viewModel];
+    self.recommendSectionPlaceHolder.tracer = self.tracerDict;
     [_listViewModel addSectionPlaceHolder:_recommendSectionPlaceHolder];
 
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
+    self.areaItemSectionCellPlaceHolder.tracer = self.tracerDict;
     [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
 
 //    [self.tableView reloadData];
@@ -296,6 +302,19 @@
 -(void)onDataArrived {
     [self.listViewModel adjustSectionOffset];
     [_tableView reloadData];
+}
+
+
+-(void)onNetworkError {
+    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+}
+
+-(void)onNoNetwork {
+    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+}
+
+- (void)retryLoadData {
+    [_headerViewModel requestData];
 }
 
 @end

@@ -112,6 +112,10 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
+
+        STTableViewCellItem *logViewItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证" target:self action:@selector(_openLogViewSetting)];
+        logViewItem.switchStyle = NO;
+        [itemArray addObject:logViewItem];
     
         STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
         clientABDebugItem.switchStyle = NO;
