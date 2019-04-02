@@ -69,7 +69,9 @@
 
     [self.view bringSubviewToFront:_bottomBarView];
     // 这里设置tableView底部滚动的区域，保证内容可以完全露出
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
+    CGFloat bottomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
+
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, bottomBarHeight, 0);
 
     [self setupSections];
     [self traceEnterCategory];
@@ -121,6 +123,9 @@
 }
 
 -(void)jumpTo {
+    if (self.model.moreOpenUrl == nil || [self.model.moreOpenUrl length] == 0) {
+        return;
+    }
     NSURL* theUrl = [[NSURL alloc] initWithString:self.model.moreOpenUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:theUrl];
 }

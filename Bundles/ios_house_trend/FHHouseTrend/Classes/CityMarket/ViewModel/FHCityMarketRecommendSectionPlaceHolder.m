@@ -180,6 +180,10 @@
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", item.hid];
         if (urlStr.length > 0) {
             NSMutableDictionary* dict = [self.tracer mutableCopy];
+            dict[@"enter_from"] = @"bangdan_list";
+            dict[@"element_from"] = _recommendViewModel.type;
+            dict[@"rank"] = @(indexPath.row);
+            dict[@"log_pb"] = @"be_null";
             TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": dict}];
             NSURL *url = [NSURL URLWithString:urlStr];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
@@ -210,10 +214,19 @@
 }
 
 -(void)onClickMore:(id)sender {
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:self.recommendViewModel.openUrl]];
+    NSMutableDictionary *queryP = [NSMutableDictionary new];
+    [queryP addEntriesFromDictionary:paramObj.allParams];
+    NSString* url = queryP[@"url"];
+    NSString *reportParams = [self getEvaluateWebParams:self.tracer];
+    NSString *jumpUrl = @"sslocal://webview";
+    NSMutableString *urlS = [[NSMutableString alloc] init];
+    [urlS appendString: queryP[@"url"]];
+    [urlS appendFormat:@"&report_params=%@", reportParams];
+    queryP[@"url"] = urlS;
 
-    NSString* theUrl = [NSString stringWithFormat:@"%@%@", self.recommendViewModel.openUrl, [self paramsFromDict:self.tracer]];
-    NSURL* url = [NSURL URLWithString:theUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:url];
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:queryP];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
     [self traceClickLoadMore:self.recommendViewModel.type];
 }
 
@@ -228,15 +241,6 @@
         return temp;
     }
     return nil;
-}
-
--(NSString*)paramsFromDict:(NSDictionary*)dict {
-    NSError* error;
-    NSData* data = [NSJSONSerialization dataWithJSONObject:dict options:nil error:&error];
-    if (error == nil) {
-        return [NSString stringWithFormat:@"&report_params=%@", [self getEvaluateWebParams:dict]];
-    }
-    return @"";
 }
 
 @end
