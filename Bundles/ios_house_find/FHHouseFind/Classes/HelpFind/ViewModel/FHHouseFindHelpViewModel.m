@@ -24,9 +24,12 @@
 #import "FHHouseFindHelpMainViewModel.h"
 #import "FHMainApi+HouseFind.h"
 #import <FHHouseBase/FHBaseViewController.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
+#define HELP_ITEM_HOR_INSET 13
+
 #define HELP_MAIN_CELL_ID @"main_cell_id"
 #define HELP_REGION_CELL_ID @"region_cell_id"
 #define HELP_PRICE_CELL_ID @"price_cell_id"
@@ -578,6 +581,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
             }else {
                 
                 FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
+                tcell.titleFont = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:10];
                 NSString *text = nil;
                 
                 FHSearchFilterConfigOption *options = [item.options firstObject];
@@ -620,6 +624,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }else {
 
             FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
+            tcell.titleFont = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:10];
             NSString *text = nil;
 
             FHSearchFilterConfigOption *options = [item.options firstObject];
@@ -668,7 +673,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     return pcell;
 }
 
--(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
     FHHouseFindHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:HELP_HEADER_ID forIndexPath:indexPath];
     NSInteger section = indexPath.section;
@@ -690,18 +695,20 @@ extern NSString *const kFHPhoneNumberCacheKey;
     FHHouseType ht = _houseType;
     NSInteger section = indexPath.section;
     NSArray *filter = [self filterOfHouseType:ht];
+    CGFloat itemWidth = floor((collectionView.frame.size.width - 2 * HELP_ITEM_HOR_MARGIN - 3 * HELP_ITEM_HOR_INSET) / 4);
+
     if (filter.count > section) {
         FHSearchFilterConfigItem *item =  filter[section];
         if ([item.tabId integerValue] == FHSearchTabIdTypePrice) {
             if (indexPath.item == 0) {
-                return CGSizeMake(collectionView.frame.size.width - 2*HELP_ITEM_HOR_MARGIN, 36);
+                return CGSizeMake(collectionView.frame.size.width - 2 * HELP_ITEM_HOR_MARGIN, 36);
             }else {
-                return CGSizeMake(74, 30);
+                return CGSizeMake(itemWidth, 30);
             }
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             return CGSizeMake(collectionView.frame.size.width, 36);
         }else {
-            return CGSizeMake(74, 30);
+            return CGSizeMake(itemWidth, 30);
         }
     }
     if (indexPath.item == 0) {
