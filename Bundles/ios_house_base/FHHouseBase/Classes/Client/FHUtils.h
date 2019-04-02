@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)stringFromNSDate:(NSDate *)date;
 
++ (UIImage*)createImageWithColor:(UIColor*)color;
+
 @end
 
 NS_ASSUME_NONNULL_END

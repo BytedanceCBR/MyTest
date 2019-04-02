@@ -22,8 +22,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHBannerViewIndexProtocol <NSObject>
+
+@optional
+- (void)currentIndexChanged:(NSInteger)currentIndex;
+- (void)clickBannerWithIndex:(NSInteger)currentIndex;
+
+@end
+
+// ScrollView
 @interface FHBannerScrollView : UIScrollView
 
+- (void)setContent:(CGFloat)wid height:(CGFloat)hei;
+
+- (void)setLeftImage:(NSString *)url;
+
+- (void)setMidImage:(NSString *)url;
+
+- (void)setRightImage:(NSString *)url;
+    
 @end
 
 // 指示器view
