@@ -22,4 +22,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHBannerScrollView : UIScrollView
+
+@end
+
+// 指示器view
+@interface FHBannerIndexView : UIView
+
+- (void)setIndexCount:(NSInteger)count size:(CGFloat)size;
+- (void)setCurrentIndex:(NSInteger)index;
+
+@end
+
 NS_ASSUME_NONNULL_END
