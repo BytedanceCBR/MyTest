@@ -16,6 +16,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import "TTReachability.h"
 #import "FHUserTracker.h"
+#import "FHEnvContext.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -102,6 +103,7 @@ extern NSString *const kFHToastCountKey;
         params[@"decoration_type"] = self.viewController.infoModel.decorationType;
         params[@"built_year"] = self.viewController.infoModel.builtYear;
         params[@"building_type"] = self.viewController.infoModel.buildingType;
+        params[@"city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
     }
     
     return params;
