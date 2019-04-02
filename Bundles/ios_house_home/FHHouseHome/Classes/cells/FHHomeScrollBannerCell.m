@@ -71,6 +71,8 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     }
     [_bannerView setURLs:imageUrls];
      */
+    // 重新-添加show埋点
+    // 一定要重写过一遍逻辑，add by zyk
 }
 
 @end

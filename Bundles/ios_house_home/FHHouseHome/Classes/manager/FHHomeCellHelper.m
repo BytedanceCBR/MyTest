@@ -52,6 +52,7 @@ static NSMutableArray  * _Nullable identifierArr;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
+        manager.isConfigDataUpate = YES;
     });
     return manager;
 }
@@ -578,7 +579,10 @@ static NSMutableArray  * _Nullable identifierArr;
 // 首页轮播banner
 + (void)fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model {
     // 更新cell数据
-    [cell updateWithModel:model];
+    if ([FHHomeCellHelper sharedInstance].isConfigDataUpate) {
+         [cell updateWithModel:model];
+        [FHHomeCellHelper sharedInstance].isConfigDataUpate = NO;
+    }
 }
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {

@@ -22,6 +22,7 @@
 #import <MJRefresh.h>
 #import <FHRefreshCustomFooter.h>
 #import <TTArticleCategoryManager.h>
+#import "FHHomeCellHelper.h"
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
@@ -137,7 +138,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         __block BOOL isShowLocalTest = NO;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
-            
+            // 标记config数据刷新了
+            [FHHomeCellHelper sharedInstance].isConfigDataUpate = YES;
             self.tableViewV.hidden = NO;
             
             //切换城市先隐藏error页

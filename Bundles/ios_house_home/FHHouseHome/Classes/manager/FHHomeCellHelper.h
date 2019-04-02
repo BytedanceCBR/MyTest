@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 @interface FHHomeCellHelper : NSObject
 
 @property(nonatomic , assign) FHHomeHeaderCellPositionType headerType;
+@property (nonatomic, assign)   BOOL       isConfigDataUpate;// config数据是否刷新了
 
  + (instancetype)sharedInstance;
 
