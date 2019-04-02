@@ -17,8 +17,11 @@
 #import <TTHttpTask.h>
 #import "FHHouseFindResultViewController.h"
 #import "FHHouseFindResultTopHeader.h"
+#import "FHHouseFindResultViewController.h"
+#import <FHUtils.h>
 
 #define kBaseCellId @"kBaseCellId"
+#define kBaseErrorCellId @"kErrorCell"
 
 static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
@@ -34,22 +37,31 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) FHHouseFindResultTopHeader *topHeader;
 @property(nonatomic , weak) TTHttpTask * requestTask;
-@property (nonatomic , strong) FHHouseFindRecommendModel *recommendModel;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
+@property(nonatomic , assign) BOOL isShowErrorPage;
+@property (nonatomic, weak) FHHouseFindResultViewController *currentViewController;
+@property (nonatomic , strong) UIView *bottomView;
+@property (nonatomic , strong) UIButton *buttonOpenMore;
 
 @end
 
 @implementation FHHouseFindResultViewModel
 
--(instancetype)initWithTableView:(UITableView *)tableView routeParam:(TTRouteParamObj *)paramObj {
-    
+- (instancetype)initWithTableView:(UITableView *)tableView viewController:(FHHouseFindResultViewController *)viewController routeParam:(TTRouteParamObj *)paramObj
+{
+
     self = [super init];
     if (self) {
         
         self.houseList = [NSMutableArray array];
         self.tableView = tableView;
         
-        _topHeader = [[FHHouseFindResultTopHeader alloc] initWithFrame:CGRectZero];
-        [_topHeader setBackgroundColor:[UIColor redColor]];
+        _topHeader = [[FHHouseFindResultTopHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 191)];
+        [_topHeader setBackgroundColor:[UIColor whiteColor]];
+        
+        self.isShowErrorPage = NO;
+        
+        _currentViewController = viewController;
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = FHHouseTypeSecondHandHouse;
@@ -61,23 +73,48 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         //            self.originFrom = self.tracerModel.originFrom;
         //        }
         
-        NSDictionary *recommendDict = @{ @"bottom_open_url": @"sslocal://house_list?",
-                                         @"district_title": @"浦口/玄武/建邺",
-                                         @"find_house_number": @(2977),
-                                         @"open_url": @"sslocal://house_list?",
-                                         @"price_title": @"400000000-500000000万",
-                                         @"room_num_title": @"2室/3室",
-                                         @"used": @(YES) };
-        _recommendModel = [[FHHouseFindRecommendModel alloc] initWithDictionary:recommendDict error:nil];
+        NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
+        
+        if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
+            _recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
+        }
         
         [_topHeader refreshUI:_recommendModel];
         
-        [self requestErshouHouseListData:YES query:@"xxx" offset:50 searchId:_searchId];
-
+        if ([_recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& _recommendModel.openUrl) {
+            TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:_recommendModel.openUrl]];
+            NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
+            
+            [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
+        }
+        [self configBottomFooter];
         [self configTableView];
         
     }
     return self;
+}
+
+- (void)configBottomFooter
+{
+    self.bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 60)];
+    
+    [self.bottomView setBackgroundColor:[UIColor whiteColor]];
+    self.bottomView.hidden = YES;
+    
+    _buttonOpenMore = [UIButton new];
+    [_buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
+    [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
+    [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
+    
+    
+    [self.bottomView addSubview:_buttonOpenMore];
+    [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(40);
+    }];
 }
 
 -(void)configTableView
@@ -86,13 +123,15 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     self.tableView.dataSource = self;
     
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kBaseErrorCellId];
+    
 }
 
 -(void)requestErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId{
     
-        [_requestTask cancel];
+    [_requestTask cancel];
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
-    [paramsRequest setValue:@(2) forKey:@"house_type"];
+    [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
     
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -108,7 +147,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 }
 
 -(void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error {
-    if (model) {
+    if (model && !error) {
         
         NSMutableArray *itemArray = [NSMutableArray new];
         BOOL hasMore = NO;
@@ -130,9 +169,30 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             }
             
         }];
-        NSLog(@"count = %d",_houseList.count);
+
+        if (itemArray.count > 0) {
+            [self.topHeader setTitleStr:itemArray.count];
+            
+            [self.currentViewController refreshContentOffset:CGPointMake(0, 0)];
+            [self.currentViewController setNaviBarTitle:[NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count]];
+            
+            [self.tableView reloadData];
+            self.bottomView.hidden = NO;
+        }else
+        {
+            [self.topHeader setTitleStr:0];
+            self.isShowErrorPage = YES;
+            
+            [self.tableView reloadData];
+            self.bottomView.hidden = YES;
+        }
         
+    }else
+    {
+        [self.topHeader setTitleStr:0];
+        self.isShowErrorPage = YES;
         [self.tableView reloadData];
+        self.bottomView.hidden = YES;
     }
     
 }
@@ -207,12 +267,43 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  
+    if (self.isShowErrorPage) {
+        return 1;
+    }
     return _houseList.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    if (self.isShowErrorPage) {
+        UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:kBaseErrorCellId];
+        for (UIView *subView in cellError.contentView.subviews) {
+            [subView removeFromSuperview];
+        }
+
+        FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.6)];
+//        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+        [cellError.contentView addSubview:noDataErrorView];
+
+        noDataErrorView.retryBlock = ^{
+
+        };
+        [noDataErrorView showEmptyWithTip:@"没有找到符合要求的二手房源" errorImageName:@"group-9"
+                                showRetry:YES];
+        [noDataErrorView.retryButton setTitle:@"查看其他房源" forState:UIControlStateNormal];
+        [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(104, 30));
+        }];
+//
+//        [noDataErrorView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.top.left.right.equalTo(cellError.contentView);
+//            make.height.mas_equalTo([UIScreen mainScreen].bounds.size.height * 0.6);
+//        }];
+//
+        return cellError;
+    }
+    
     FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
     if (indexPath.row < self.houseList.count) {
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -241,16 +332,19 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.isShowErrorPage) {
+        return [UIScreen mainScreen].bounds.size.width * 0.6;
+    }
+    
     if (indexPath.row < self.houseList.count) {
         FHSingleImageInfoCellModel *cellModel  = nil;
         BOOL isLastCell = NO;
         
-        
         cellModel = self.houseList[indexPath.row];
         
         isLastCell = (indexPath.row == self.houseList.count - 1);
-        
-        return (isLastCell ? 125 : 105);
+        return 105;
+//        return (isLastCell ? 125 : 105);
     }
     return 105;
 }
@@ -260,6 +354,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     return _topHeader;
 }// custom view for header. will be adjusted to default or specified header height
 
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    return _bottomView;
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 191;
@@ -267,7 +367,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return CGFLOAT_MIN;
+    return 60;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -386,7 +486,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         NSURL *url = [NSURL URLWithString:urlStr];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
-    
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.currentViewController refreshContentOffset:scrollView.contentOffset];
 }
 
 #pragma mark - 埋点相关

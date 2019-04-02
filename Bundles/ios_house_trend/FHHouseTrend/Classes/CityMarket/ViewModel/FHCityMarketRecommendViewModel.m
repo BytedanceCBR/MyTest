@@ -8,6 +8,7 @@
 #import "FHCityMarketRecommendViewModel.h"
 #import "FHCityMarketDetailResponseModel.h"
 #import "FHHouseSearcher.h"
+#import "RXCollection.h"
 #import "extobjc.h"
 @interface FHCityMarketRecommendViewModel ()
 @property (nonatomic, strong) NSMutableDictionary<NSString*, FHSearchHouseDataModel*>* dataCache;
@@ -33,12 +34,17 @@
 }
 
 -(void)resetDatas {
+
+    if ([_specialOldHouseList count] == 0) {
+        return;
+    }
     self.selectedIndex = 0;
     self.title = _specialOldHouseList[_selectedIndex].title;
     self.question = _specialOldHouseList[_selectedIndex].questionText;
     self.answoer = _specialOldHouseList[_selectedIndex].answerText;
     self.footerTitle = _specialOldHouseList[_selectedIndex].moreBtnText;
     self.openUrl = _specialOldHouseList[_selectedIndex].openUrl;
+    self.type = _specialOldHouseList[_selectedIndex].type;
 }
 
 -(void)onCategoryChange:(NSInteger)categoryIndex {
@@ -52,6 +58,7 @@
     self.answoer = _specialOldHouseList[_selectedIndex].answerText;
     self.footerTitle = _specialOldHouseList[_selectedIndex].moreBtnText;
     self.openUrl = _specialOldHouseList[_selectedIndex].openUrl;
+    self.type = _specialOldHouseList[_selectedIndex].type;
     if ([_dataCache count] != 0) {
         //下一mainLoop更新，避免首次加载页面时，有白屏现象
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -62,9 +69,9 @@
 
 -(void)requestData {
     [self.specialOldHouseList enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataSpecialOldHouseListModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSDictionary* param = @{@"order_by[]": @"10"};
+        NSString* queryString = [NSString stringWithFormat:@"%@", obj.rankOpenUrl];
         @weakify(self);
-        [FHHouseSearcher houseSearchWithQuery:@"house_type=2" param:param offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable model) {
+        [FHHouseSearcher houseSearchWithQuery:queryString param:nil offset:0 needCommonParams:YES callback:^(NSError * _Nullable error, FHSearchHouseDataModel * _Nullable model) {
             @strongify(self);
             if (error == nil) {
                 self.dataCache[obj.title] = model;
@@ -98,9 +105,14 @@
 
 -(void)notifyDataArrived {
     if ([_dataCache count] == [_specialOldHouseList count]) {
-        NSLog(@"notifyDataArrived");
         [_listener onDataArrived];
     }
+}
+
+-(NSUInteger)arrivedDataCount {
+    return [[[_dataCache allValues] rx_filterWithBlock:^BOOL(FHSearchHouseDataModel* each) {
+        return [each.items count] > 0;
+    }] count];
 }
 
 @end

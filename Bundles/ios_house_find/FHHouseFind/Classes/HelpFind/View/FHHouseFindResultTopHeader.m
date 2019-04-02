@@ -8,13 +8,15 @@
 #import "FHHouseFindResultTopHeader.h"
 #import <Masonry.h>
 #import <UIFont+House.h>
+#import <UIColor+Theme.h>
+#import <FHUtils.h>
 
 @interface FHHouseFindResultTopHeader ()
 
 @property(nonatomic , strong) UIImageView *backImageView;
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIView *iconContainerView;
-@property (nonatomic , strong) FHHouseFindRecommendModel *recommendModel;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @end
 
@@ -35,8 +37,10 @@
         
         _titleLabel = [UILabel new];
         _titleLabel.font = [UIFont themeFontMedium:20];
+        _titleLabel.textColor = [UIColor whiteColor];
         [self addSubview:_titleLabel];
         _titleLabel.text = @"未能找到符合条件房源";
+        _titleLabel.hidden = YES;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -46,32 +50,102 @@
         }];
         
         _iconContainerView = [UIView new];
+        _iconContainerView.layer.masksToBounds = YES;
+        _iconContainerView.layer.cornerRadius = 4;
         [_iconContainerView setBackgroundColor:[UIColor whiteColor]];
         [self addSubview:_iconContainerView];
-        
         
         [_iconContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self).offset(20);
             make.right.equalTo(self).offset(-20);
-            make.bottom.equalTo(self);
+            make.bottom.equalTo(self).offset(-5);
             make.height.mas_equalTo(80);
         }];
+        [self layoutIfNeeded];
+
+        [FHUtils addShadowToView:self.iconContainerView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
+        
     }
     return self;
 }
 
-- (void)refreshUI:(FHHouseFindRecommendModel *)model
+- (void)refreshUI:(FHHouseFindRecommendDataModel *)model
 {
+    if(![model isKindOfClass:[FHHouseFindRecommendDataModel class]])
+    {
+        return;
+    }
+    
     for (NSInteger i = 0; i < 3; i++) {
         UIView *itemView = [UIView new];
         [_iconContainerView addSubview:itemView];
-
+        [itemView setBackgroundColor:[UIColor whiteColor]];
+        
+        
         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self).offset(20 + ([UIScreen mainScreen].bounds.size.width - 40)/3);
-            make.top.bottom.equalTo(self.iconContainerView);
+            make.left.mas_equalTo(([UIScreen mainScreen].bounds.size.width - 40)/3 * i);
             make.height.mas_equalTo(80);
+            make.width.mas_equalTo(([UIScreen mainScreen].bounds.size.width - 40)/3);
+            make.top.mas_equalTo(0);
         }];
+        
+        UIImageView *imageIcon = [UIImageView new];
+        NSString *stringImageName = [NSString stringWithFormat:@"house_find_help_icon%ld",i+1];
+        imageIcon.image = [UIImage imageNamed:stringImageName];
+        [itemView addSubview:imageIcon];
+        
+        [imageIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(itemView);
+            make.width.height.mas_equalTo(24);
+            make.top.mas_equalTo(20);
+        }];
+        
+        
+        UILabel *subTitleLabel = [[UILabel alloc] init];
+        [itemView addSubview:subTitleLabel];
+        subTitleLabel.textAlignment = NSTextAlignmentCenter;
+        subTitleLabel.font = [UIFont themeFontRegular:12];
+        subTitleLabel.textColor = [UIColor themeGray1];
+        
+        [subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(itemView);
+            make.left.right.equalTo(itemView);
+            make.top.mas_equalTo(48);
+        }];
+        
+        switch (i) {
+            case 0:
+            {
+                subTitleLabel.text = model.priceTitle;
+            }
+                break;
+            case 1:
+            {
+                subTitleLabel.text = model.districtTitle;
+            }
+                break;
+            case 2:
+            {
+                subTitleLabel.text = model.roomNumTitle;
+            }
+                break;
+            default:
+                break;
+        }
     }
+    
+
+}
+
+- (void)setTitleStr:(NSInteger)houseCount
+{
+    if (houseCount != 0) {
+        _titleLabel.text = [NSString stringWithFormat:@"为您找到%ld套二手房",houseCount];
+    }else
+    {
+        _titleLabel.text = @"未能找到符合条件房源";
+    }
+    _titleLabel.hidden = NO;
 }
 
 /*
