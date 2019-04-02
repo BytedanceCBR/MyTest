@@ -18,6 +18,7 @@
 #import "BDWebImage.h"
 #import "TTRoute.h"
 #import "FHCityMarketRecommendFooterView.h"
+#import "FHUserTracker.h"
 
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
@@ -48,11 +49,12 @@
 }
 
 - (BOOL)isDisplayData {
-    return _specialOldHouseList != nil;
+    return [_recommendViewModel arrivedDataCount] >= 2;
+//    return _specialOldHouseList != nil;
 }
 
 - (NSUInteger)numberOfSection {
-    if ([_specialOldHouseList count] != 0) {
+    if ([_recommendViewModel arrivedDataCount] >= 2) {
         return 1;
     } else {
         return 0;
@@ -134,11 +136,36 @@
 //        RAC(_headerView.titleLabel, text) = RACObserve(_recommendViewModel, title);
         RAC(_headerView.questionLabel, text) = RACObserve(_recommendViewModel, question);
         RAC(_headerView.answerLabel, text) = RACObserve(_recommendViewModel, answoer);
+        @weakify(self);
         [RACObserve(_headerView.segment, selectedSegmentIndex) subscribeNext:^(id  _Nullable x) {
+            @strongify(self);
             [_recommendViewModel onCategoryChange:[x integerValue]];
+            NSString* type = _specialOldHouseList[[x integerValue]].type;
+            [self traceSwitchList:type];
         }];
     }
     return _headerView;
+}
+
+-(void)traceSwitchList:(NSString*)type {
+    NSParameterAssert(type);
+    [FHUserTracker writeEvent:@"click_switch_list"
+                       params:@{
+                                @"event_type": @"house_app2c_v2",
+                                @"page_type": @"city_market",
+                                @"click_position": type ? : @"be_null",
+                                }];
+}
+
+-(void)traceClickLoadMore:(NSString*)type {
+    NSParameterAssert(type);
+
+    [FHUserTracker writeEvent:@"click_loadmore"
+                       params:@{
+                                @"page_type": @"city_market",
+                                @"event_type": @"house_app2c_v2",
+                                @"click_position": type ? : @"be_null",
+                                }];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -160,7 +187,8 @@
 - (void)traceCellDisplayAtIndexPath:(NSIndexPath*)indexPath {
     NSIndexPath* indexPathWithOffset = [self indexPathWithOffset:indexPath];
     if (![self.traceCache containsObject:indexPathWithOffset]) {
-        
+        [self traceElementShow:@{@"element_type": @"special_old"}];
+        [self.traceCache addObject:indexPath];
     }
 }
 
@@ -181,6 +209,7 @@
 -(void)onClickMore:(id)sender {
     NSURL* url = [NSURL URLWithString:self.recommendViewModel.openUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:url];
+    [self traceClickLoadMore:self.recommendViewModel.type];
 }
 
 @end

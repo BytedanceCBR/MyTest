@@ -14,6 +14,7 @@
 #import "UIView+House.h"
 #import "FHDetailPriceMarkerView.h"
 #import "FHEnvContext.h"
+#import "FHUtils.h"
 
 @interface FHPriceValuationResultView()<PNChartDelegate>
 
@@ -110,10 +111,14 @@
     CGFloat fontSize = CGRectGetWidth([UIScreen mainScreen].bounds) > 320 ? 14 : 11;
     self.avgPriceLabel = [self LabelWithFont:[UIFont themeFontRegular:fontSize] textColor:[UIColor themeGray3]];
     _avgPriceLabel.textAlignment = NSTextAlignmentRight;
+//    _avgPriceLabel.adjustsFontSizeToFitWidth = YES;
+//    _avgPriceLabel.minimumScaleFactor = 0.9;
     [self.cardView addSubview:_avgPriceLabel];
     
     self.toLastMonthLabel = [self LabelWithFont:[UIFont themeFontRegular:fontSize] textColor:[UIColor themeGray3]];
     _toLastMonthLabel.textAlignment = NSTextAlignmentLeft;
+//    _toLastMonthLabel.adjustsFontSizeToFitWidth = YES;
+//    _toLastMonthLabel.minimumScaleFactor = 0.9;
     [self.cardView addSubview:_toLastMonthLabel];
     
     self.moreInfoBtn = [[UIButton alloc] init];
@@ -129,16 +134,6 @@
     self.evaluateLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
     _evaluateLabel.text = @"估价结果是否符合您的预期？";
     [self.evaluateView addSubview:_evaluateLabel];
-    
-    self.evaluateDownBtn = [[UIButton alloc] init];
-    _moreInfoBtn.backgroundColor = [UIColor themeRed1];
-    [_moreInfoBtn setTitle:@"补全信息，结果更精确" forState:UIControlStateNormal];
-    [_moreInfoBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _moreInfoBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    _moreInfoBtn.layer.cornerRadius = 4;
-    _moreInfoBtn.layer.masksToBounds = YES;
-    [_moreInfoBtn addTarget:self action:@selector(moreInfo) forControlEvents:UIControlEventTouchUpInside];
-    [self.cardView addSubview:_moreInfoBtn];
     
     self.evaluateDownBtn = [self buttonWithText:@"比预期低" imageName:@"price_valuation_down" tag:3];
     [self.evaluateView addSubview:_evaluateDownBtn];
@@ -384,7 +379,7 @@
     }];
 
     [self layoutIfNeeded];
-    [self addShadowToView:self.cardView withOpacity:0.1 shadowRadius:8 andCornerRadius:4];
+    [FHUtils addShadowToView:self.cardView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -410,65 +405,22 @@
     return btn;
 }
 
-/*
- 周边加阴影，并且同时圆角，注意这个方法必须在view已经布局完成能够获得frame的情况下使用
- */
-- (void)addShadowToView:(UIView *)view
-            withOpacity:(float)shadowOpacity
-           shadowRadius:(CGFloat)shadowRadius
-        andCornerRadius:(CGFloat)cornerRadius {
-    //////// shadow /////////
-    CALayer *shadowLayer = [CALayer layer];
-    shadowLayer.frame = view.layer.frame;
-    
-    shadowLayer.shadowColor = [UIColor blackColor].CGColor;//shadowColor阴影颜色
-    shadowLayer.shadowOffset = CGSizeMake(2, 6);//shadowOffset阴影偏移，默认(0, -3),这个跟shadowRadius配合使用
-    shadowLayer.shadowOpacity = shadowOpacity;//0.8;//阴影透明度，默认0
-    shadowLayer.shadowRadius = shadowRadius;//8;//阴影半径，默认3
-    
-    //路径阴影
-    UIBezierPath *path = [UIBezierPath bezierPath];
-    
-    float width = shadowLayer.bounds.size.width;
-    float height = shadowLayer.bounds.size.height;
-    float x = shadowLayer.bounds.origin.x;
-    float y = shadowLayer.bounds.origin.y;
-    
-    CGPoint topLeft      = shadowLayer.bounds.origin;
-    CGPoint topRight     = CGPointMake(x + width, y);
-    CGPoint bottomRight  = CGPointMake(x + width, y + height);
-    CGPoint bottomLeft   = CGPointMake(x, y + height);
-    
-    CGFloat offset = -1.f;
-    [path moveToPoint:CGPointMake(topLeft.x - offset, topLeft.y + cornerRadius)];
-    [path addArcWithCenter:CGPointMake(topLeft.x + cornerRadius, topLeft.y + cornerRadius) radius:(cornerRadius + offset) startAngle:M_PI endAngle:M_PI_2 * 3 clockwise:YES];
-    [path addLineToPoint:CGPointMake(topRight.x - cornerRadius, topRight.y - offset)];
-    [path addArcWithCenter:CGPointMake(topRight.x - cornerRadius, topRight.y + cornerRadius) radius:(cornerRadius + offset) startAngle:M_PI_2 * 3 endAngle:M_PI * 2 clockwise:YES];
-    [path addLineToPoint:CGPointMake(bottomRight.x + offset, bottomRight.y - cornerRadius)];
-    [path addArcWithCenter:CGPointMake(bottomRight.x - cornerRadius, bottomRight.y - cornerRadius) radius:(cornerRadius + offset) startAngle:0 endAngle:M_PI_2 clockwise:YES];
-    [path addLineToPoint:CGPointMake(bottomLeft.x + cornerRadius, bottomLeft.y + offset)];
-    [path addArcWithCenter:CGPointMake(bottomLeft.x + cornerRadius, bottomLeft.y - cornerRadius) radius:(cornerRadius + offset) startAngle:M_PI_2 endAngle:M_PI clockwise:YES];
-    [path addLineToPoint:CGPointMake(topLeft.x - offset, topLeft.y + cornerRadius)];
-    
-    //设置阴影路径
-    shadowLayer.shadowPath = path.CGPath;
-    
-    //////// cornerRadius /////////
-    view.layer.cornerRadius = cornerRadius;
-    view.layer.masksToBounds = YES;
-    view.layer.shouldRasterize = YES;
-    view.layer.rasterizationScale = [UIScreen mainScreen].scale;
-    
-    [view.superview.layer insertSublayer:shadowLayer below:view.layer];
-}
-
 - (void)updateView:(FHPriceValuationEvaluateModel *)model infoModel:(FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel *)infoModel {
     if(model){
         NSString *priceStr = [NSString stringWithFormat:@"%.0f",round([model.data.estimatePrice doubleValue]/self.unitPerSquare)];
         self.priceLabel.attributedText = [self getPriceStr:priceStr];
         self.avgPriceLabel.attributedText = [self getAtributeStr:@"房屋均价 " content:model.data.estimatePricingPersqmStr];
         self.toLastMonthLabel.attributedText = [self getAtributeStr:@"环比上月 " content:model.data.estimatePriceRateStr];
+        
+        //这里字号会根据文字长度改变，计算出最小字号
+//        CGFloat fontSizeAvg = [self getApproximateAdjustedFontSizeWithLabel:self.avgPriceLabel];
+//        CGFloat fontSizeToLast = [self getApproximateAdjustedFontSizeWithLabel:self.toLastMonthLabel];
+//
+//        CGFloat fontSizeMin = fontSizeAvg > fontSizeToLast ? fontSizeToLast : fontSizeAvg;
+//        self.avgPriceLabel.font = [UIFont themeFontRegular:fontSizeMin];
+//        self.toLastMonthLabel.font = [UIFont themeFontRegular:fontSizeMin];
     }
+    
     if(infoModel){
         [_titleBtn setTitle:infoModel.neighborhoodName forState:UIControlStateNormal];
         [_titleBtn sizeToFit];
@@ -504,6 +456,7 @@
         NSAttributedString *contentAstr = [[NSAttributedString alloc] initWithString:content attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1]}];
         [aStr appendAttributedString:contentAstr];
     }
+    
     return aStr;
 }
 
@@ -516,6 +469,19 @@
         [aStr appendAttributedString:unitAstr];
     }
     return aStr;
+}
+
+- (CGFloat)getApproximateAdjustedFontSizeWithLabel:(UILabel *)label {
+    UIFont *currentFont = label.font;
+    CGFloat originalFontSize = currentFont.pointSize;
+    CGSize currentSize = [label.text sizeWithAttributes:@{NSFontAttributeName:currentFont}];
+    
+    while(currentSize.width > label.frame.size.width && currentFont.pointSize > (originalFontSize * label.minimumScaleFactor)){
+        currentFont = [currentFont fontWithSize:currentFont.pointSize  -  1];
+        currentSize = [label.text sizeWithAttributes:@{NSFontAttributeName:currentFont}];
+    }
+    
+    return currentFont.pointSize;
 }
 
 - (NSDateFormatter *)monthFormatter {
