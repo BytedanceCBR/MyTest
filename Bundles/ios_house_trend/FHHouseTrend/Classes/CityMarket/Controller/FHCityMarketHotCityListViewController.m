@@ -91,6 +91,7 @@
 -(void)setupSections {
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemListSectionPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
+    _areaItemSectionCellPlaceHolder.tracer = self.tracerDict;
     _areaItemSectionCellPlaceHolder.hotList = @[_model];
     [self.tableView reloadData];
 }

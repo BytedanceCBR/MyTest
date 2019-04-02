@@ -111,9 +111,16 @@
 
 -(void)jumpToListPage:(NSInteger)index {
     FHCityMarketDetailResponseDataHotListModel* model = _hotList[index];
+    NSMutableDictionary* dict = [self.tracer mutableCopy];
+    dict[@"enter_type"] = @"click";
+    dict[@"element_from"] = model.type;
+    dict[@"search_id"] = @"be_null";
+    dict[@"log_pb"] = @"be_null";
+    dict[@"page_type"] = @"city_market";
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{
                                                                     @"model": model,
-                                                                    @"title": model.title
+                                                                    @"title": model.title,
+                                                                    @"tracer": dict,
                                                                     }];
     NSURL* url = [NSURL URLWithString:@"sslocal://city_market_hot_list"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
@@ -125,6 +132,7 @@
         FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - self.sectionOffset].items[indexPath.row];
         NSURL* url = [NSURL URLWithString:model.openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url];
+        [self traceClickItem:model atIndexPath:indexPath];
     }
 }
 
@@ -140,8 +148,16 @@
 
 }
 
--(void)traceClickItem:(FHCityMarketDetailResponseDataHotListModel*)model {
-    [FHUserTracker writeEvent:@"click_house_deal" params:nil];
+-(void)traceClickItem:(FHCityMarketDetailResponseDataHotListItemsModel*)model atIndexPath:(NSIndexPath*)indexPath {
+    NSMutableDictionary* dict = [self.tracer mutableCopy];
+    dict[@"group_id"] = model.groupId ? : @"be_null";
+    dict[@"rank"] = @(indexPath.row);
+    dict[@"search_id"] = @"be_null";
+    dict[@"log_pb"] = @"be_null";
+    dict[@"page_type"] = @"city_market";
+    dict[@"enter_from"] = nil;
+    dict[@"element_from"] = nil;
+    [FHUserTracker writeEvent:@"click_house_deal" params:dict];
 }
 
 

@@ -19,6 +19,7 @@
 #import "TTRoute.h"
 #import "FHCityMarketRecommendFooterView.h"
 #import "FHUserTracker.h"
+#import "NSString+URLEncoding.h"
 
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
@@ -164,7 +165,7 @@
                        params:@{
                                 @"page_type": @"city_market",
                                 @"event_type": @"house_app2c_v2",
-                                @"click_position": type ? : @"be_null",
+                                @"element_from": @"special_old",
                                 }];
 }
 
@@ -188,7 +189,7 @@
     NSIndexPath* indexPathWithOffset = [self indexPathWithOffset:indexPath];
     if (![self.traceCache containsObject:indexPathWithOffset]) {
         [self traceElementShow:@{@"element_type": @"special_old"}];
-        [self.traceCache addObject:indexPath];
+        [self.traceCache addObject:indexPathWithOffset];
     }
 }
 
@@ -207,9 +208,20 @@
 }
 
 -(void)onClickMore:(id)sender {
-    NSURL* url = [NSURL URLWithString:self.recommendViewModel.openUrl];
+
+    NSString* theUrl = [NSString stringWithFormat:@"%@%@", self.recommendViewModel.openUrl, [self paramsFromDict:self.tracer]];
+    NSURL* url = [NSURL URLWithString:theUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:url];
     [self traceClickLoadMore:self.recommendViewModel.type];
+}
+
+-(NSString*)paramsFromDict:(NSDictionary*)dict {
+    NSError* error;
+    NSData* data = [NSJSONSerialization dataWithJSONObject:dict options:nil error:&error];
+    if (error == nil) {
+        return [[NSString stringWithFormat:@"&report_params=%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]] URLEncodedString];
+    }
+    return @"";
 }
 
 @end

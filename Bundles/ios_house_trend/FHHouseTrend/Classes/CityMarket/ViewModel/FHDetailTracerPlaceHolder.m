@@ -13,7 +13,7 @@
 {
     self = [super init];
     if (self) {
-
+        self.traceCache = [NSMutableSet new];
     }
     return self;
 }

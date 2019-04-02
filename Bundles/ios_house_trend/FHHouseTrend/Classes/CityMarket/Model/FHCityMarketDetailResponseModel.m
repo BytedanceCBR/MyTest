@@ -126,6 +126,7 @@
     @"neighborhoodName": @"neighborhood_name",
     @"openUrl": @"open_url",
     @"houseCount": @"house_count",
+    @"groupId": @"group_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

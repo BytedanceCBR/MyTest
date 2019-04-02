@@ -45,7 +45,7 @@
         [_marketDetailRequest cancel];
         _marketDetailRequest = [CityMarketDetailAPI
                                 requestCityMarketWithCompletion:^(FHCityMarketDetailResponseModel * _Nullable model, NSError * _Nullable error) {
-                                    if (error != nil) {
+                                    if (error == nil) {
                                         self.model = model;
                                     } else {
                                         [_delegate onNetworkError];

@@ -140,7 +140,8 @@
     [TTTrackerWrapper eventV3:@"go_detail" params:@{
                                                     @"event_type": @"house_app2c_v2",
                                                     @"page_type": @"city_market",
-                                                    @"enter_from": self.tracerDict[@"enter_from"] ? : @"be_null",
+//                                                    @"enter_from": self.tracerDict[@"enter_from"] ? : @"be_null",
+                                                    @"enter_from": @"maintab_operation",
                                                     }];
 }
 

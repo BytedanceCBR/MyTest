@@ -87,6 +87,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *neighborhoodName;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *houseCount;
+@property (nonatomic, copy , nullable) NSString *groupId;
 @end
 
 @interface FHCityMarketDetailResponseDataHotListModel : JSONModel 

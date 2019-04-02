@@ -194,11 +194,11 @@
     NSIndexPath* offset = [self indexPathWithOffset:indexPath];
     FHCityMarketDetailResponseDataMarketTrendListModel* model = _marketTrendList[offset.row];
 
-    if ([self.traceCache containsObject:indexPath]) {
+    if (![self.traceCache containsObject:offset]) {
         FHCityMarketTrendChatViewModel* result = _chartViewModels[@(indexPath.row)];
-        if (result == nil) {
+        if (result != nil) {
             [self traceElementShow:@{@"element_type": model.type}];
-            [[self traceCache] addObject:indexPath];
+            [[self traceCache] addObject:offset];
         }
     }
 }
