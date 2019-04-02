@@ -180,7 +180,7 @@
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", item.hid];
         if (urlStr.length > 0) {
             NSMutableDictionary* dict = [self.tracer mutableCopy];
-            dict[@"enter_from"] = @"bangdan_list";
+            dict[@"enter_from"] = @"city_market";
             dict[@"element_from"] = _recommendViewModel.type;
             dict[@"rank"] = @(indexPath.row);
             dict[@"log_pb"] = @"be_null";
@@ -214,11 +214,16 @@
 }
 
 -(void)onClickMore:(id)sender {
+    NSMutableDictionary* dict = [self.tracer mutableCopy];
+    dict[@"enter_from"] = @"city_market";
+    dict[@"element_from"] = @"special_old";
+    dict[@"log_pb"] = @"be_null";
+
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:self.recommendViewModel.openUrl]];
     NSMutableDictionary *queryP = [NSMutableDictionary new];
     [queryP addEntriesFromDictionary:paramObj.allParams];
     NSString* url = queryP[@"url"];
-    NSString *reportParams = [self getEvaluateWebParams:self.tracer];
+    NSString *reportParams = [self getEvaluateWebParams:dict];
     NSString *jumpUrl = @"sslocal://webview";
     NSMutableString *urlS = [[NSMutableString alloc] init];
     [urlS appendString: queryP[@"url"]];

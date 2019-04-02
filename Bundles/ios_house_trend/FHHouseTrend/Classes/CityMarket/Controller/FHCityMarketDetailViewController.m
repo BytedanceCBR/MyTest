@@ -263,7 +263,7 @@
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
-    item.titleLabel.text = @"买房估价";
+    item.titleLabel.text = @"卖房估价";
     item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
     FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
     if (_headerViewModel.model.data.bottomOpenUrl.count >= 1) {
