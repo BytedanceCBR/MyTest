@@ -245,6 +245,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                 self.searchId = houseModel.searchId;
             }
             
+            self.isShowErrorPage = NO;
+            
             [self addEnterCategoryLog];
 
             [self.topHeader setTitleStr:itemArray.count];
