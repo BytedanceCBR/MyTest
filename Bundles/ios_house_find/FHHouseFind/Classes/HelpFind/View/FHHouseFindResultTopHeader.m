@@ -9,6 +9,7 @@
 #import <Masonry.h>
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
+#import <FHUtils.h>
 
 @interface FHHouseFindResultTopHeader ()
 
@@ -39,6 +40,7 @@
         _titleLabel.textColor = [UIColor whiteColor];
         [self addSubview:_titleLabel];
         _titleLabel.text = @"未能找到符合条件房源";
+        _titleLabel.hidden = YES;
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         
         [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -53,13 +55,16 @@
         [_iconContainerView setBackgroundColor:[UIColor whiteColor]];
         [self addSubview:_iconContainerView];
         
-        
         [_iconContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self).offset(20);
             make.right.equalTo(self).offset(-20);
-            make.bottom.equalTo(self);
+            make.bottom.equalTo(self).offset(-5);
             make.height.mas_equalTo(80);
         }];
+        [self layoutIfNeeded];
+
+        [FHUtils addShadowToView:self.iconContainerView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
+        
     }
     return self;
 }
@@ -128,6 +133,19 @@
                 break;
         }
     }
+    
+
+}
+
+- (void)setTitleStr:(NSInteger)houseCount
+{
+    if (houseCount != 0) {
+        _titleLabel.text = [NSString stringWithFormat:@"为您找到%ld套二手房",houseCount];
+    }else
+    {
+        _titleLabel.text = @"未能找到符合条件房源";
+    }
+    _titleLabel.hidden = NO;
 }
 
 /*

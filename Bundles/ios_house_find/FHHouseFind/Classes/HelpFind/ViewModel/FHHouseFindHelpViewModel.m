@@ -93,8 +93,11 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
 
-        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
-        [self refreshHouseFindItems:routeParamObj.queryParams];
+        if (self.recommendModel.openUrl) {
+            TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
+            [self refreshHouseFindItems:routeParamObj.queryParams];
+        }
+
 //        RACDisposable *disposable = [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(FHConfigDataModel * _Nullable x) {
 //            if (x) {
 //                dispatch_async(dispatch_get_main_queue(), ^{

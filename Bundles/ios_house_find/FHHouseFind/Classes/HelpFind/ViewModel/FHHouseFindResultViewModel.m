@@ -18,6 +18,7 @@
 #import "FHHouseFindResultViewController.h"
 #import "FHHouseFindResultTopHeader.h"
 #import "FHHouseFindResultViewController.h"
+#import <FHUtils.h>
 
 #define kBaseCellId @"kBaseCellId"
 #define kBaseErrorCellId @"kErrorCell"
@@ -38,7 +39,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , weak) TTHttpTask * requestTask;
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 @property(nonatomic , assign) BOOL isShowErrorPage;
-@property (nonatomic, strong) FHHouseFindResultViewController *currentViewController;
+@property (nonatomic, weak) FHHouseFindResultViewController *currentViewController;
+@property (nonatomic , strong) UIView *bottomView;
+@property (nonatomic , strong) UIButton *buttonOpenMore;
+
 @end
 
 @implementation FHHouseFindResultViewModel
@@ -52,10 +56,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.houseList = [NSMutableArray array];
         self.tableView = tableView;
         
-        _topHeader = [[FHHouseFindResultTopHeader alloc] initWithFrame:CGRectZero];
+        _topHeader = [[FHHouseFindResultTopHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 191)];
         [_topHeader setBackgroundColor:[UIColor whiteColor]];
         
-        self.isShowErrorPage = YES;
+        self.isShowErrorPage = NO;
         
         _currentViewController = viewController;
         
@@ -77,16 +81,40 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         [_topHeader refreshUI:_recommendModel];
         
-        NSString *queryString = [self getNoneFilterQueryWithParams:paramObj.queryParams];
-        NSLog(@"query str:%@",queryString);
-        
-        [self requestErshouHouseListData:YES query:@"xxx" offset:50 searchId:_searchId];
-
+        if ([_recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& _recommendModel.openUrl) {
+            TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:_recommendModel.openUrl]];
+            NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
+            
+            [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
+        }
+        [self configBottomFooter];
         [self configTableView];
-        
         
     }
     return self;
+}
+
+- (void)configBottomFooter
+{
+    self.bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 60)];
+    
+    [self.bottomView setBackgroundColor:[UIColor whiteColor]];
+    self.bottomView.hidden = YES;
+    
+    _buttonOpenMore = [UIButton new];
+    [_buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
+    [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
+    [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
+    
+    
+    [self.bottomView addSubview:_buttonOpenMore];
+    [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(40);
+    }];
 }
 
 -(void)configTableView
@@ -96,15 +124,14 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kBaseErrorCellId];
-
     
 }
 
 -(void)requestErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId{
     
-        [_requestTask cancel];
+    [_requestTask cancel];
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
-    [paramsRequest setValue:@(2) forKey:@"house_type"];
+    [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
     
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -120,7 +147,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 }
 
 -(void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error {
-    if (model) {
+    if (model && !error) {
         
         NSMutableArray *itemArray = [NSMutableArray new];
         BOOL hasMore = NO;
@@ -142,9 +169,30 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             }
             
         }];
-        NSLog(@"count = %d",_houseList.count);
+
+        if (itemArray.count > 0) {
+            [self.topHeader setTitleStr:itemArray.count];
+            
+            [self.currentViewController refreshContentOffset:CGPointMake(0, 0)];
+            [self.currentViewController setNaviBarTitle:[NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count]];
+            
+            [self.tableView reloadData];
+            self.bottomView.hidden = NO;
+        }else
+        {
+            [self.topHeader setTitleStr:0];
+            self.isShowErrorPage = YES;
+            
+            [self.tableView reloadData];
+            self.bottomView.hidden = YES;
+        }
         
+    }else
+    {
+        [self.topHeader setTitleStr:0];
+        self.isShowErrorPage = YES;
         [self.tableView reloadData];
+        self.bottomView.hidden = YES;
     }
     
 }
@@ -248,8 +296,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
 //
-        [self.currentViewController hideBottomView];
-
 //        [noDataErrorView mas_remakeConstraints:^(MASConstraintMaker *make) {
 //            make.top.left.right.equalTo(cellError.contentView);
 //            make.height.mas_equalTo([UIScreen mainScreen].bounds.size.height * 0.6);
@@ -294,12 +340,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         FHSingleImageInfoCellModel *cellModel  = nil;
         BOOL isLastCell = NO;
         
-        
         cellModel = self.houseList[indexPath.row];
         
         isLastCell = (indexPath.row == self.houseList.count - 1);
-        
-        return (isLastCell ? 125 : 105);
+        return 105;
+//        return (isLastCell ? 125 : 105);
     }
     return 105;
 }
@@ -309,6 +354,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     return _topHeader;
 }// custom view for header. will be adjusted to default or specified header height
 
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    return _bottomView;
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 191;
@@ -316,7 +367,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return CGFLOAT_MIN;
+    return 60;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -435,7 +486,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         NSURL *url = [NSURL URLWithString:urlStr];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
-    
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.currentViewController refreshContentOffset:scrollView.contentOffset];
 }
 
 #pragma mark - 埋点相关

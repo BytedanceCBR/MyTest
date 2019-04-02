@@ -15,8 +15,7 @@
 @property (nonatomic , strong) FHHouseFindResultViewModel *viewModel;
 @property (nonatomic , strong) UITableView* tableView;
 @property (nonatomic , strong) UIView *containerView;
-@property (nonatomic , strong) UIView *bottomView;
-@property (nonatomic , strong) UIButton *buttonOpenMore;
+
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
@@ -63,7 +62,9 @@
         make.top.equalTo(self.view);
         make.bottom.mas_equalTo(- bottomHeight);
     }];
-        
+    
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, -20, 0);
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
 
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
@@ -82,10 +83,8 @@
         // Fallback on earlier versions
     }
     
-    self.tableView.sectionFooterHeight = 0;
-    self.tableView.sectionHeaderHeight = 0;
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.001)]; //to do:设置header0.1，防止系统自动设置高度
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.001)]; //to do:设置header0.1，防止系统自动设置高度
   
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.bounces = NO;
@@ -93,53 +92,28 @@
     [_containerView addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.containerView);
-        make.bottom.mas_equalTo(bottomHeight != 0 ? -bottomHeight - 16 : -70);
+        make.bottom.mas_equalTo(0);
     }];
     
     [_tableView setBackgroundColor:[UIColor whiteColor]];
     
     
-    self.bottomView = [UIView new];
-    [_containerView addSubview:self.bottomView];
-    [self.bottomView setBackgroundColor:[UIColor whiteColor]];
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(bottomHeight != 0 ? bottomHeight + 16 : 70);
-        make.bottom.equalTo(self.containerView).offset(0);
-    }];
-    
-    
-    _buttonOpenMore = [UIButton new];
-    [_buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
-    [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
-    [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
-    
-    [self.bottomView addSubview:_buttonOpenMore];
-    [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(10);
-        make.height.mas_equalTo(40);
-    }];
-    
-
     //error view
     self.errorMaskView = [[FHErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
 }
 
-- (void)hideBottomView
-{
-    _buttonOpenMore.hidden = YES;
-}
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"查房价";
     [self setNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
+}
+
+- (void)setNaviBarTitle:(NSString *)stringTitle
+{
+    self.customNavBarView.title.text = stringTitle;
 }
 
 - (void)setNavBar:(BOOL)error {
@@ -163,10 +137,14 @@
         alpha = 1;
     }
     if (alpha > 0) {
+        if (alpha > 0.98) {
+            self.customNavBarView.title.hidden = NO;
+        }
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
     }else {
+        self.customNavBarView.title.hidden = YES;
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
@@ -189,11 +167,7 @@
 }
 
 
-#pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self refreshContentOffset:scrollView.contentOffset];
-}
 
 
 
