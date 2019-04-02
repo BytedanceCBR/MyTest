@@ -43,6 +43,7 @@
 
 
 extern NSString *const kFHPhoneNumberCacheKey;
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
@@ -198,6 +199,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 //            [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
             [wself reloadCollectionViewSection:[wself.collectionView indexPathForCell:wself.contactCell].section];
             [wself submitAction];
         }else{
@@ -229,7 +231,15 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
     }
 //    NSLog(@"zjing query : %@",query);
-    [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:@"" completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+
+    NSString *phoneNum = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    if (phoneNum.length < 1) {
+        TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
+        phoneNum = userInfo.mobile;
+    }
+    
+    [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNum completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
                 wself.recommendModel = model.data;
