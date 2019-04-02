@@ -402,7 +402,7 @@
     tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
     tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
     tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
-    [FHUserTracker writeEvent:@"element_show" params:tracerDic];
+    [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
 }
 
 #pragma mark TTShareManagerDelegate
