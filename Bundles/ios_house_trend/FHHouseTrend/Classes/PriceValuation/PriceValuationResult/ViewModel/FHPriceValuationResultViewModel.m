@@ -16,7 +16,6 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import "TTReachability.h"
 #import "FHUserTracker.h"
-#import "FHEnvContext.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -103,7 +102,6 @@ extern NSString *const kFHToastCountKey;
         params[@"decoration_type"] = self.viewController.infoModel.decorationType;
         params[@"built_year"] = self.viewController.infoModel.builtYear;
         params[@"building_type"] = self.viewController.infoModel.buildingType;
-        params[@"city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
     }
     
     return params;
@@ -254,6 +252,8 @@ extern NSString *const kFHToastCountKey;
         if(success && !error){
             [wself.view hideEvaluateView];
             [[ToastManager manager] showToast:@"感谢您的反馈"];
+        }else{
+            [[ToastManager manager] showToast:@"网络异常"];
         }
     }];
 }
@@ -305,12 +305,7 @@ extern NSString *const kFHToastCountKey;
     [FHPriceValuationAPI requestSubmitPhoneWithParams:params completion:^(BOOL success, NSError * _Nonnull error) {
        if(success && !error){
             [wself.alertView dismiss];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-            if (toastCount >= 3) {
-                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            }
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
         }else {
             [[ToastManager manager] showToast:@"提交失败"];
         }

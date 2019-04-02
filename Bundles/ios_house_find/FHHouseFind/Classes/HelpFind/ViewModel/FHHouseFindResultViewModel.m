@@ -94,7 +94,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
         NSLog(@"zjing query:%@",queryString);
-        [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
+        [self requestErshouHouseListData:YES query:queryString offset:50 searchId:nil];
     }
 }
 
@@ -240,8 +240,13 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }];
 
         if (itemArray.count > 0) {
-            [self addEnterCategoryLog];
+            if (houseModel.searchId) {
+                self.originSearchId = houseModel.searchId;
+                self.searchId = houseModel.searchId;
+            }
             
+            [self addEnterCategoryLog];
+
             [self.topHeader setTitleStr:itemArray.count];
             
             [self.currentViewController refreshContentOffset:CGPointMake(0, 0)];
