@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshContentOffset:(CGPoint)contentOffset;
 
+- (void)setNaviBarTitle:(NSString *)stringTitle;
+
 @end
 
 NS_ASSUME_NONNULL_END

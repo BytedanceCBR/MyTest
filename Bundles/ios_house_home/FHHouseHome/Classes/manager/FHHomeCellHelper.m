@@ -567,17 +567,17 @@ static NSMutableArray  * _Nullable identifierArr;
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
 
         if (model.openUrl.length > 0) {
-            
+
             NSMutableString *urlStr = [NSMutableString stringWithString:model.openUrl];
             [urlStr appendString:@"?"];
             if (![urlStr containsString:@"enter_from"]) {
-                [urlStr appendString:@"&enter_from=city_market"];
+                [urlStr appendString:@"&enter_from=maintab_operation"];
             }
             if (![urlStr containsString:@"search_id"]) {
                 [urlStr appendString:@"&search_id=be_null"];
             }
             if (![urlStr containsString:@"origin_from"]) {
-                [urlStr appendString:@"&origin_from=city_market"];
+                [urlStr appendString:@"&origin_from=maintab_operation"];
             }
             if (![urlStr containsString:@"origin_search_id"]) {
                 [urlStr appendString:@"&origin_search_id=be_null"];

@@ -44,7 +44,7 @@
 
 @end
 
-@interface FHCityMarketDetailViewController ()<FHCityMarketRecommendViewModelDataChangedListener>
+@interface FHCityMarketDetailViewController ()<FHCityMarketRecommendViewModelDataChangedListener, FHCityMarketTrendHeaderViewModelDelegate>
 {
     NSMutableArray<FHCityOpenUrlJumpAction*>* _actions;
 }
@@ -57,6 +57,7 @@
 @property (nonatomic, strong) FHCityMarketRecommendSectionPlaceHolder* recommendSectionPlaceHolder;
 @property (nonatomic, strong) FHCityMarketBottomBarView* bottomBarView;
 @property (nonatomic, strong) FHImmersionNavBarViewModel* navBarViewModel;
+@property (nonatomic, strong) RACDisposable* disposable;
 @end
 
 @implementation FHCityMarketDetailViewController
@@ -70,8 +71,6 @@
         self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
         self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
         self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
-        NSDictionary* dict = paramObj.allParams[@"tracer"];
-        NSLog(@"%@", dict);
     }
     return self;
 }
@@ -119,6 +118,7 @@
     CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
     // 这里设置tableView底部滚动的区域，保证内容可以完全露出
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
+    [self addDefaultEmptyViewFullScreen];
     [self setupSections];
     [self bindHeaderView];
     [self logGoDetail];
@@ -127,10 +127,21 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self bindStatusBarObv];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [_disposable dispose];
+    _disposable = nil;
 }
 
 -(void)logGoDetail {
-    [TTTrackerWrapper eventV3:@"go_detail" params:@{@"page_type": @"city_market"}];
+    [TTTrackerWrapper eventV3:@"go_detail" params:@{
+                                                    @"event_type": @"house_app2c_v2",
+                                                    @"page_type": @"city_market",
+                                                    @"enter_from": self.tracerDict[@"enter_from"] ? : @"be_null",
+                                                    }];
 }
 
 -(void)initNavBar {
@@ -169,6 +180,7 @@
                 [self.listViewModel notifyCellDisplay];
             });
         });
+        [self endLoading];
     }];
 
     RAC(_chatSectionCellPlaceHolder, marketTrendList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
@@ -196,25 +208,37 @@
     }];
     RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
-    [RACObserve(_navBarViewModel, statusBarStyle) subscribeNext:^(id  _Nullable x) {
+    [self bindStatusBarObv];
+    [self startLoading];
+    [_headerViewModel requestData];
+}
+
+-(void)bindStatusBarObv {
+    if (_disposable != nil) {
+        [_disposable dispose];
+        _disposable = nil;
+    }
+    _disposable = [RACObserve(_navBarViewModel, statusBarStyle) subscribeNext:^(id  _Nullable x) {
         if ([x integerValue] == 0) {
             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
         } else {
             [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         }
     }];
-    [_headerViewModel requestData];
 }
 
 -(void)setupSections {
     self.chatSectionCellPlaceHolder = [[FHChatSectionCellPlaceHolder alloc] init];
+    self.chatSectionCellPlaceHolder.tracer = self.tracerDict;
     [_listViewModel addSectionPlaceHolder:_chatSectionCellPlaceHolder];
     FHCityMarketRecommendViewModel* viewModel = [[FHCityMarketRecommendViewModel alloc] init];
     viewModel.listener = self;
     self.recommendSectionPlaceHolder = [[FHCityMarketRecommendSectionPlaceHolder alloc] initWithViewModel:viewModel];
+    self.recommendSectionPlaceHolder.tracer = self.tracerDict;
     [_listViewModel addSectionPlaceHolder:_recommendSectionPlaceHolder];
 
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
+    self.areaItemSectionCellPlaceHolder.tracer = self.tracerDict;
     [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
 
 //    [self.tableView reloadData];
@@ -242,7 +266,11 @@
     item.titleLabel.text = @"买房估价";
     item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
     FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
-    action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
+    if (_headerViewModel.model.data.bottomOpenUrl.count >= 1) {
+        action.openUrl = [NSURL URLWithString:_headerViewModel.model.data.bottomOpenUrl[0]];
+    } else {
+        action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
+    }
     action.userInfo = info;
     [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     [_actions addObject:action];
@@ -250,17 +278,44 @@
     FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
     item2.titleLabel.text = @"帮我找房";
     item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
+
+    action = [[FHCityOpenUrlJumpAction alloc] init];
+    if (_headerViewModel.model.data.bottomOpenUrl.count >= 2) {
+        action.openUrl = [NSURL URLWithString:_headerViewModel.model.data.bottomOpenUrl[1]];
+    } else {
+        action.openUrl = [NSURL URLWithString:@"sslocal://house_find"];
+    }
+    action.userInfo = info;
+
+    [item2 addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
+    [_actions addObject:action];
+
     [_bottomBarView setBottomBarItems:@[item, item2]];
 }
 
 -(NSDictionary*)traceParams {
     self.tracerDict[@"enter_from"] = @"city_market";
     self.tracerDict[@"origin_from"] = @"city_market";
-    return [self.tracerDict copy];
+    NSDictionary *tracer = @{@"tracer":[self.tracerDict copy]};
+    return tracer;
 }
 
 -(void)onDataArrived {
+    [self.listViewModel adjustSectionOffset];
     [_tableView reloadData];
+}
+
+
+-(void)onNetworkError {
+    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+}
+
+-(void)onNoNetwork {
+    [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+}
+
+- (void)retryLoadData {
+    [_headerViewModel requestData];
 }
 
 @end

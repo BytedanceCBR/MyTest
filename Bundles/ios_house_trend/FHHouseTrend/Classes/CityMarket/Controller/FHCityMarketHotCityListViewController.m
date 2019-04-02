@@ -11,6 +11,7 @@
 #import "FHAreaItemListSectionPlaceHolder.h"
 #import "TTDeviceHelper.h"
 #import "FHCityMarketBottomBarView.h"
+#import "FHUserTracker.h"
 @interface FHCityMarketHotCityListViewController ()
 @property (nonatomic, strong) FHCityMarketDetailResponseDataHotListModel* model;
 @property (nonatomic, strong) FHDetailListViewModel* listViewModel;
@@ -71,8 +72,14 @@
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
 
     [self setupSections];
+    [self traceEnterCategory];
 }
 
+-(void)traceEnterCategory {
+    NSMutableDictionary* dict = [self.tracerDict mutableCopy];
+    dict[@"category_name"] = @"neighborhood_trade_list";
+    [FHUserTracker writeEvent:@"enter_category" params:dict];
+}
 
 -(void)initNavBar {
     [self setupDefaultNavBar:NO];
@@ -105,10 +112,16 @@
     }];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
-    item.titleLabel.text = @"查看更多小区";
+    item.titleLabel.text = self.model.bottomText;
     item.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
-
+    [item addTarget:self action:@selector(jumpTo) forControlEvents:UIControlEventTouchUpInside];
     [_bottomBarView setBottomBarItems:@[item]];
+
+}
+
+-(void)jumpTo {
+    NSURL* theUrl = [[NSURL alloc] initWithString:self.model.moreOpenUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:theUrl];
 }
 
 @end

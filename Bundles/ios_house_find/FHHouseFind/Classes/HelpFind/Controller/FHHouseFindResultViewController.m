@@ -15,10 +15,11 @@
 @property (nonatomic , strong) FHHouseFindResultViewModel *viewModel;
 @property (nonatomic , strong) UITableView* tableView;
 @property (nonatomic , strong) UIView *containerView;
-@property (nonatomic , strong) UIView *bottomView;
+
+
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
-@property (nonatomic , strong) FHHouseFindRecommendModel *recommendModel;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @end
 
@@ -29,17 +30,11 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         _paramObj = paramObj;
-        NSDictionary *recommendDict = @{ @"bottom_open_url": @"sslocal://house_list?",
-            @"district_title": @"浦口/玄武/建邺",
-            @"find_house_number": @(2977),
-            @"open_url": @"sslocal://house_list?",
-            @"price_title": @"400000000-500000000万",
-            @"room_num_title": @"2室/3室",
-            @"used": @(YES) };
-        _recommendModel = [[FHHouseFindRecommendModel alloc] initWithDictionary:recommendDict error:nil];
+        NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
         
-        
-//     NSDictionary *recommendDict = paramObj.allParams[@"recommend_house"];
+        if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
+            _recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
+        }
     }
     return self;
 }
@@ -49,7 +44,7 @@
 
     _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_containerView];
-    self.customNavBarView.title.text = @"帮我找房";
+//    self.customNavBarView.title.text = @"帮我找房";
    
     CGFloat bottomHeight = 0;
     if (@available(iOS 11.0, *)) {
@@ -68,7 +63,7 @@
         make.bottom.mas_equalTo(- bottomHeight);
     }];
     
-    [_containerView setBackgroundColor:[UIColor redColor]];
+    self.tableView.contentInset = UIEdgeInsetsMake(0, 0, -20, 0);
     
     self.automaticallyAdjustsScrollViewInsets = NO;
 
@@ -88,10 +83,8 @@
         // Fallback on earlier versions
     }
     
-    self.tableView.sectionFooterHeight = 0;
-    self.tableView.sectionHeaderHeight = 0;
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.001)]; //to do:设置header0.1，防止系统自动设置高度
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 0.001)]; //to do:设置header0.1，防止系统自动设置高度
   
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.bounces = NO;
@@ -99,48 +92,28 @@
     [_containerView addSubview:self.tableView];
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.containerView);
-        make.bottom.mas_equalTo(bottomHeight != 0 ? -bottomHeight - 16 : -70);
+        make.bottom.mas_equalTo(0);
     }];
     
     [_tableView setBackgroundColor:[UIColor whiteColor]];
     
     
-    self.bottomView = [UIView new];
-    [_containerView addSubview:self.bottomView];
-    [self.bottomView setBackgroundColor:[UIColor whiteColor]];
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(bottomHeight != 0 ? bottomHeight + 16 : 70);
-        make.bottom.equalTo(self.containerView).offset(0);
-    }];
-    
-    
-    UIButton *buttonOpenMore = [UIButton new];
-    [buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
-    [buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
-    [buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
-    
-    [self.bottomView addSubview:buttonOpenMore];
-    [buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.top.mas_equalTo(10);
-        make.height.mas_equalTo(40);
-    }];
-    
-
     //error view
     self.errorMaskView = [[FHErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
 }
 
+
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"查房价";
     [self setNavBar:NO];
     [self.customNavBarView setNaviBarTransparent:YES];
+}
+
+- (void)setNaviBarTitle:(NSString *)stringTitle
+{
+    self.customNavBarView.title.text = stringTitle;
 }
 
 - (void)setNavBar:(BOOL)error {
@@ -164,10 +137,14 @@
         alpha = 1;
     }
     if (alpha > 0) {
+        if (alpha > 0.98) {
+            self.customNavBarView.title.hidden = NO;
+        }
         self.customNavBarView.title.textColor = [UIColor themeGray1];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return"] forState:UIControlStateHighlighted];
     }else {
+        self.customNavBarView.title.hidden = YES;
         self.customNavBarView.title.textColor = [UIColor whiteColor];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateNormal];
         [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"icon-return-white"] forState:UIControlStateHighlighted];
@@ -185,16 +162,12 @@
     [super viewDidLoad];
     
     [self setupUI];
-    _viewModel = [[FHHouseFindResultViewModel alloc] initWithTableView:self.tableView routeParam:_paramObj];
+    _viewModel = [[FHHouseFindResultViewModel alloc] initWithTableView:self.tableView viewController:self routeParam:_paramObj];
     // Do any additional setup after loading the view.
 }
 
 
-#pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self refreshContentOffset:scrollView.contentOffset];
-}
 
 
 

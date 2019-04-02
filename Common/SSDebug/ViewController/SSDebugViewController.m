@@ -68,7 +68,7 @@
 #import "TTClientABTestBrowserViewController.h"
 #import "FHUtils.h"
 #import "FHClientABTestDebugViewController.h"
-
+#import "LogViewerSettingViewController.h"
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
@@ -112,6 +112,10 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
+
+        STTableViewCellItem *logViewItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证" target:self action:@selector(_openLogViewSetting)];
+        logViewItem.switchStyle = NO;
+        [itemArray addObject:logViewItem];
     
         STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
         clientABDebugItem.switchStyle = NO;
@@ -658,8 +662,8 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 
 - (void)_openLogViewSetting {
     NSLog(@"_openLogViewSetting");
-//    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
-//    [self.navigationController pushViewController:controller animated:YES];
+    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)_openHtmlBridge
