@@ -45,6 +45,7 @@ extern NSString *const kFHToastCountKey;
     if(self.viewController.model){
         self.view.hidden = NO;
         [self.view updateView:self.viewController.model infoModel:self.viewController.infoModel];
+        [self addGoDetailTracer];
     }else{
         [self requestEvaluateData];
     }
