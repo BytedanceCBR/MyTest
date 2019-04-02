@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindResultTopHeader : UIView
 
-- (void)refreshUI:(FHHouseFindRecommendModel *)model;
+- (void)refreshUI:(FHHouseFindRecommendDataModel *)model;
 
 @end
 

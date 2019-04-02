@@ -16,9 +16,11 @@
 @property (nonatomic , strong) UITableView* tableView;
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIView *bottomView;
+@property (nonatomic , strong) UIButton *buttonOpenMore;
+
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
-@property (nonatomic , strong) FHHouseFindRecommendModel *recommendModel;
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 
 @end
 
@@ -29,17 +31,11 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         _paramObj = paramObj;
-        NSDictionary *recommendDict = @{ @"bottom_open_url": @"sslocal://house_list?",
-            @"district_title": @"浦口/玄武/建邺",
-            @"find_house_number": @(2977),
-            @"open_url": @"sslocal://house_list?",
-            @"price_title": @"400000000-500000000万",
-            @"room_num_title": @"2室/3室",
-            @"used": @(YES) };
-        _recommendModel = [[FHHouseFindRecommendModel alloc] initWithDictionary:recommendDict error:nil];
+        NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
         
-        
-//     NSDictionary *recommendDict = paramObj.allParams[@"recommend_house"];
+        if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
+            _recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
+        }
     }
     return self;
 }
@@ -49,7 +45,7 @@
 
     _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_containerView];
-    self.customNavBarView.title.text = @"帮我找房";
+//    self.customNavBarView.title.text = @"帮我找房";
    
     CGFloat bottomHeight = 0;
     if (@available(iOS 11.0, *)) {
@@ -67,9 +63,7 @@
         make.top.equalTo(self.view);
         make.bottom.mas_equalTo(- bottomHeight);
     }];
-    
-    [_containerView setBackgroundColor:[UIColor redColor]];
-    
+        
     self.automaticallyAdjustsScrollViewInsets = NO;
 
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
@@ -115,14 +109,14 @@
     }];
     
     
-    UIButton *buttonOpenMore = [UIButton new];
-    [buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
-    [buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
-    [buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
+    _buttonOpenMore = [UIButton new];
+    [_buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
+    [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
+    [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
     
-    [self.bottomView addSubview:buttonOpenMore];
-    [buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.bottomView addSubview:_buttonOpenMore];
+    [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
         make.top.mas_equalTo(10);
@@ -134,6 +128,11 @@
     self.errorMaskView = [[FHErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
+}
+
+- (void)hideBottomView
+{
+    _buttonOpenMore.hidden = YES;
 }
 
 - (void)initNavbar {
@@ -185,7 +184,7 @@
     [super viewDidLoad];
     
     [self setupUI];
-    _viewModel = [[FHHouseFindResultViewModel alloc] initWithTableView:self.tableView routeParam:_paramObj];
+    _viewModel = [[FHHouseFindResultViewModel alloc] initWithTableView:self.tableView viewController:self routeParam:_paramObj];
     // Do any additional setup after loading the view.
 }
 

@@ -17,8 +17,10 @@
 #import <TTHttpTask.h>
 #import "FHHouseFindResultViewController.h"
 #import "FHHouseFindResultTopHeader.h"
+#import "FHHouseFindResultViewController.h"
 
 #define kBaseCellId @"kBaseCellId"
+#define kBaseErrorCellId @"kErrorCell"
 
 static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
@@ -34,14 +36,16 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property(nonatomic , strong) NSString *searchId;
 @property(nonatomic , strong) FHHouseFindResultTopHeader *topHeader;
 @property(nonatomic , weak) TTHttpTask * requestTask;
-@property (nonatomic , strong) FHHouseFindRecommendModel *recommendModel;
-
+@property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
+@property(nonatomic , assign) BOOL isShowErrorPage;
+@property (nonatomic, strong) FHHouseFindResultViewController *currentViewController;
 @end
 
 @implementation FHHouseFindResultViewModel
 
--(instancetype)initWithTableView:(UITableView *)tableView routeParam:(TTRouteParamObj *)paramObj {
-    
+- (instancetype)initWithTableView:(UITableView *)tableView viewController:(FHHouseFindResultViewController *)viewController routeParam:(TTRouteParamObj *)paramObj
+{
+
     self = [super init];
     if (self) {
         
@@ -49,7 +53,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.tableView = tableView;
         
         _topHeader = [[FHHouseFindResultTopHeader alloc] initWithFrame:CGRectZero];
-        [_topHeader setBackgroundColor:[UIColor redColor]];
+        [_topHeader setBackgroundColor:[UIColor whiteColor]];
+        
+        self.isShowErrorPage = YES;
+        
+        _currentViewController = viewController;
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = FHHouseTypeSecondHandHouse;
@@ -61,20 +69,21 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         //            self.originFrom = self.tracerModel.originFrom;
         //        }
         
-        NSDictionary *recommendDict = @{ @"bottom_open_url": @"sslocal://house_list?",
-                                         @"district_title": @"浦口/玄武/建邺",
-                                         @"find_house_number": @(2977),
-                                         @"open_url": @"sslocal://house_list?",
-                                         @"price_title": @"400000000-500000000万",
-                                         @"room_num_title": @"2室/3室",
-                                         @"used": @(YES) };
-        _recommendModel = [[FHHouseFindRecommendModel alloc] initWithDictionary:recommendDict error:nil];
+        NSDictionary *recommendHouseParam = paramObj.allParams[@"recommend_house"];
+        
+        if (recommendHouseParam && [recommendHouseParam isKindOfClass:[NSDictionary class]]) {
+            _recommendModel = [[FHHouseFindRecommendDataModel alloc] initWithDictionary:recommendHouseParam error:nil];
+        }
         
         [_topHeader refreshUI:_recommendModel];
+        
+        NSString *queryString = [self getNoneFilterQueryWithParams:paramObj.queryParams];
+        NSLog(@"query str:%@",queryString);
         
         [self requestErshouHouseListData:YES query:@"xxx" offset:50 searchId:_searchId];
 
         [self configTableView];
+        
         
     }
     return self;
@@ -86,6 +95,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     self.tableView.dataSource = self;
     
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kBaseCellId];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kBaseErrorCellId];
+
+    
 }
 
 -(void)requestErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId{
@@ -207,12 +219,45 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  
+    if (self.isShowErrorPage) {
+        return 1;
+    }
     return _houseList.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    if (self.isShowErrorPage) {
+        UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:kBaseErrorCellId];
+        for (UIView *subView in cellError.contentView.subviews) {
+            [subView removeFromSuperview];
+        }
+
+        FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.6)];
+//        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+        [cellError.contentView addSubview:noDataErrorView];
+
+        noDataErrorView.retryBlock = ^{
+
+        };
+        [noDataErrorView showEmptyWithTip:@"没有找到符合要求的二手房源" errorImageName:@"group-9"
+                                showRetry:YES];
+        [noDataErrorView.retryButton setTitle:@"查看其他房源" forState:UIControlStateNormal];
+        [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.size.mas_equalTo(CGSizeMake(104, 30));
+        }];
+//
+        [self.currentViewController hideBottomView];
+
+//        [noDataErrorView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.top.left.right.equalTo(cellError.contentView);
+//            make.height.mas_equalTo([UIScreen mainScreen].bounds.size.height * 0.6);
+//        }];
+//
+        return cellError;
+    }
+    
     FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
     if (indexPath.row < self.houseList.count) {
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
@@ -241,6 +286,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.isShowErrorPage) {
+        return [UIScreen mainScreen].bounds.size.width * 0.6;
+    }
+    
     if (indexPath.row < self.houseList.count) {
         FHSingleImageInfoCellModel *cellModel  = nil;
         BOOL isLastCell = NO;
