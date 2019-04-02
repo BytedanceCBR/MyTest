@@ -308,10 +308,12 @@ def appPods
     'HMDConfig',
     'HMDStore',
     'ALog',
-    'FMDB'
-#    'CloudCommand',
+    'FMDB' ,
+    'CloudCommand'
 #    'DiskManager'
     ]
+    
+    pod_source 'AWECloudCommand' , '1.0.7'
 
     pod 'BDALog' , '0.1.12'
     pod 'BDAlogProtocol', '0.1.6'
