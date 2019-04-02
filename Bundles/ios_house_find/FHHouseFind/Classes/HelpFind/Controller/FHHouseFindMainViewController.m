@@ -7,18 +7,18 @@
 
 #import "FHHouseFindMainViewController.h"
 #import "FHHouseFindHelpMainViewModel.h"
-#import "FHHouseFindHelpViewController.h"
+#import "FHHouseFindHelpBaseViewController.h"
 #import "FHHouseFindResultViewController.h"
 #import <TTReachability/TTReachability.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "FHHouseFindHelpViewController.h"
 
 @interface FHHouseFindMainViewController ()
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) FHHouseFindHelpMainViewModel *viewModel;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
-@property (nonatomic , strong) FHHouseFindHelpViewController *helpVC;
-@property (nonatomic , strong) FHHouseFindResultViewController *resultVC;
+@property (nonatomic , strong) FHHouseFindHelpBaseViewController *childVC;
 
 @end
 
@@ -81,9 +81,9 @@
     }
     infoDict[@"recommend_house"] = recommendDict;
     paramObj.userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
-    _helpVC = [[FHHouseFindHelpViewController alloc]initWithRouteParamObj:paramObj];
-    [self addChildViewController:_helpVC];
-    [self.view addSubview:_helpVC.view];
+    _childVC = [[FHHouseFindHelpViewController alloc]initWithRouteParamObj:paramObj];
+    [self addChildViewController:_childVC];
+    [self.view addSubview:_childVC.view];
     [self.view bringSubviewToFront:self.emptyView];
 }
 
@@ -97,56 +97,45 @@
     }
     infoDict[@"recommend_house"] = recommendDict;
     paramObj.userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
-    _resultVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:paramObj];
-    [self addChildViewController:_resultVC];
-    [self.view addSubview:_resultVC.view];
+    _childVC = [[FHHouseFindResultViewController alloc]initWithRouteParamObj:paramObj];
+    [self addChildViewController:_childVC];
+    [self.view addSubview:_childVC.view];
     [self.view bringSubviewToFront:self.emptyView];
 }
 
 - (void)jump2HouseFindHelpVC
 {
-    NSString *openUrl = [NSString stringWithFormat:@"sslocal://house_find"];
     NSDictionary *recommendDict = nil;
     NSMutableDictionary *infoDict = @{}.mutableCopy;
-    if ([self.resultVC getRecommendModel]) {
-        FHHouseFindRecommendDataModel *recommendModel = [self.resultVC getRecommendModel];
+    FHHouseFindRecommendDataModel *recommendModel = [self.childVC getRecommendModel];
+    if (recommendModel) {
         recommendModel.used = NO;
         recommendDict = [recommendModel toDictionary];
     }
     infoDict[@"recommend_house"] = recommendDict;
-    
-    if (self.helpDelegate != nil) {
-        
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-        // 回传数据，外部pop 页面
-        TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:openUrl] userInfo:userInfo];
-        if ([self.helpDelegate respondsToSelector:@selector(suggestionSelected:)]) {
-            [self.helpDelegate suggestionSelected:obj];// 部分-内部有页面跳转逻辑
-        }
-        if (self.backListVC) {
-            [self.navigationController popToViewController:self.backListVC animated:YES];
-        }
-    } else {
-        // 不需要回传sug数据，以及自己控制页面跳转和移除逻辑
-        // 跳转页面之后需要移除当前页面，如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-        
-        NSURL *url = [NSURL URLWithString:openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
+    [self jump2ChildVC:infoDict];
 }
 - (void)jump2HouseFindResultVC
 {
     NSString *openUrl = [NSString stringWithFormat:@"sslocal://house_find"];
     NSMutableDictionary *infoDict = @{}.mutableCopy;
     NSDictionary *recommendDict = nil;
-    if ([self.helpVC getRecommendModel]) {
-        FHHouseFindRecommendDataModel *recommendModel = [self.helpVC getRecommendModel];
+    FHHouseFindRecommendDataModel *recommendModel = [self.childVC getRecommendModel];
+    if (recommendModel) {
         recommendModel.used = YES;
         recommendDict = [recommendModel toDictionary];
     }
     infoDict[@"recommend_house"] = recommendDict;
-    
+    [self jump2ChildVC:infoDict];
+}
+
+- (void)jump2ChildVC:(NSDictionary *)dict
+{
+    NSString *openUrl = [NSString stringWithFormat:@"sslocal://house_find"];
+    NSMutableDictionary *infoDict = @{}.mutableCopy;
+    if (dict.count > 0) {
+        [infoDict addEntriesFromDictionary:dict];
+    }
     if (self.helpDelegate != nil) {
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
@@ -159,13 +148,29 @@
             [self.navigationController popToViewController:self.backListVC animated:YES];
         }
     } else {
-        // 不需要回传sug数据，以及自己控制页面跳转和移除逻辑
-        // 跳转页面之后需要移除当前页面，如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         
+        NSHashTable *helpDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        [helpDelegateTable addObject:self];
+        infoDict[@"help_delegate"] = helpDelegateTable;
+        NSHashTable *tempTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        [tempTable addObject:self];
+        infoDict[@"need_back_vc"] = tempTable;
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
         NSURL *url = [NSURL URLWithString:openUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
+}
+
+#pragma mark - help delegate
+-(void)suggestionSelected:(TTRouteObject *)routeObject
+{
+    NSMutableDictionary *allInfo = [routeObject.paramObj.userInfo.allInfo mutableCopy];
+    NSDictionary *recommendDict = [routeObject.paramObj.allParams tt_dictionaryValueForKey:@"recommend_house"];
+    if (recommendDict.count > 0) {
+        _viewModel.recommendModel = [[FHHouseFindRecommendDataModel alloc]initWithDictionary:recommendDict error:nil];
+    }
+    [_childVC refreshRecommendModel:_viewModel.recommendModel];
 }
 
 - (void)startLoadData
