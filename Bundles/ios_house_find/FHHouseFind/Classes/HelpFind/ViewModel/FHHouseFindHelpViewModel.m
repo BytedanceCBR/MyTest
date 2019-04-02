@@ -25,6 +25,7 @@
 #import "FHMainApi+HouseFind.h"
 #import <FHHouseBase/FHBaseViewController.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <FHHouseBase/FHUserTracker.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -43,7 +44,7 @@
 
 extern NSString *const kFHPhoneNumberCacheKey;
 
-@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate>
+@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property (nonatomic , strong) NSArray<FHSearchFilterConfigItem *> *secondFilter;
@@ -91,6 +92,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         collectionView.dataSource = self;
         _collectionView.allowsMultipleSelection = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
+        tapGesture.delegate = self;
         tapGesture.cancelsTouchesInView = NO;
         [_collectionView addGestureRecognizer:tapGesture];
         
@@ -103,6 +105,20 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
     }
     return self;
+}
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([touch.view isKindOfClass:[UIButton class]]) {
+        return NO;
+    }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
 }
 
 - (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
@@ -128,13 +144,15 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [itemModel.selectIndexes removeAllObjects];
     }
     [self.collectionView reloadData];
+    [self addClickOptionsLog:@"reset"];
 }
 
 - (void)confirmBtnDidClick
 {
     [self.collectionView endEditing:YES];
     __weak typeof(self) wself = self;
-    
+    [self addClickOptionsLog:@"confirm"];
+
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
@@ -173,6 +191,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"验证码为空"];
         return;
     }
+    [self addClickLoginLog];
+    
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
 //            [[ToastManager manager] showToast:@"登录成功"];
@@ -445,45 +465,43 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
     }];
     if (item.tabId.integerValue == FHSearchTabIdTypePrice && selectItem.selectIndexes.count < 1 && priceItem) {
-        NSString *item = nil;
-        if ([priceItem isKindOfClass:[NSArray class]]) {
-            NSArray *items = (NSArray*)priceItem;
-            if (items.count < 1) {
-                return;
-            }
-            item = items.firstObject;
-        }else {
-            item = (NSString *)priceItem;
-        }
-        if ([item isKindOfClass:[NSString class]]) {
-            if ([item hasPrefix:@"["]) {
-                item = [item substringFromIndex:1];
-            }
-            if ([item hasSuffix:@"]"]) {
-                item = [item substringToIndex:item.length - 1];
-            }
-            NSArray *array = [item componentsSeparatedByString:@","];
-            if (array.count > 0) {
-                if (rate != nil && rate.integerValue != 0) {
-                    NSInteger lowerPrice = [array.firstObject integerValue] / rate.integerValue;
-                    selectItem.lowerPrice = [NSString stringWithFormat:@"%ld",lowerPrice];
-                }
-            }
-            if (array.count > 1) {
-                NSInteger higherPrice = [array[1] integerValue] / rate.integerValue;
-                selectItem.higherPrice = [NSString stringWithFormat:@"%ld",higherPrice];
-            }
-        }
+
+        [self fillPriceItem:item selectItem:selectItem priceItem:priceItem rate:rate];
 //        NSLog(@"zjing %@",selectItem);
     }
 }
 
-- (NSString *)encodingIfNeeded:(NSString *)queryCondition
+- (void)fillPriceItem:(FHSearchFilterConfigItem *)configItem selectItem:(FHHouseFindSelectItemModel *)selectItem priceItem:(id)priceItem rate:(NSNumber *)rate
 {
-    if (![queryCondition containsString:@"%"]) {
-        return [[queryCondition stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding] mutableCopy];
+    NSString *item = nil;
+    if ([priceItem isKindOfClass:[NSArray class]]) {
+        NSArray *items = (NSArray*)priceItem;
+        if (items.count < 1) {
+            return;
+        }
+        item = items.firstObject;
+    }else {
+        item = (NSString *)priceItem;
     }
-    return queryCondition;
+    if ([item isKindOfClass:[NSString class]]) {
+        if ([item hasPrefix:@"["]) {
+            item = [item substringFromIndex:1];
+        }
+        if ([item hasSuffix:@"]"]) {
+            item = [item substringToIndex:item.length - 1];
+        }
+        NSArray *array = [item componentsSeparatedByString:@","];
+        if (array.count > 0) {
+            if (rate != nil && rate.integerValue != 0) {
+                NSInteger lowerPrice = [array.firstObject integerValue] / rate.integerValue;
+                selectItem.lowerPrice = [NSString stringWithFormat:@"%ld",lowerPrice];
+            }
+        }
+        if (array.count > 1) {
+            NSInteger higherPrice = [array[1] integerValue] / rate.integerValue;
+            selectItem.higherPrice = [NSString stringWithFormat:@"%ld",higherPrice];
+        }
+    }
 }
 
 #pragma mark - price cell delegate
@@ -496,20 +514,23 @@ extern NSString *const kFHPhoneNumberCacheKey;
 }
 -(void)updateLowerPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
+//    NSLog(@"[FIND] pcell is: %@  lower price",cell);
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
     priceItem.lowerPrice = price;
     [priceItem.selectIndexes removeAllObjects];
-    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
+    
+//    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
 }
 
 -(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
+//    NSLog(@"[FIND] pcell is: %@  higher price",cell);
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
     priceItem.higherPrice = price;
     [priceItem.selectIndexes removeAllObjects];
-    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
+//    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
 }
 -(FHHouseFindSelectItemModel *)priceItemWithHouseType:(FHHouseType)ht
 {
@@ -559,6 +580,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
             if (indexPath.item == 0) {
                 
                 FHHouseFindPriceCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_PRICE_CELL_ID forIndexPath:indexPath];
+//                NSLog(@"[FIND] pcell is: %@ indexpath section: %ld item: %ld",pcell,indexPath.section,indexPath.item);
                 pcell.tag = ht;
                 pcell.delegate = self;
                 
@@ -802,7 +824,10 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 //- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 //{
-//    [self.collectionView endEditing:YES];
+//    if (scrollView == self.collectionView) {
+//        [self.collectionView endEditing:YES];
+//    }
+//
 //}
 
 - (void)registerCell:(UICollectionView *)collectionview
@@ -1134,6 +1159,39 @@ extern NSString *const kFHPhoneNumberCacheKey;
         [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
     }
     return _timer;
+}
+
+#pragma mark - 埋点相关
+
+#pragma mark - 埋点
+- (void)addGoDetailLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"go_detail" params:params];
+}
+
+- (void)addClickLoginLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"page_type"] = [self pageTypeString];
+    [FHUserTracker writeEvent:@"click_login" params:params];
+}
+
+- (void)addClickOptionsLog:(NSString *)position
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"page_type"] = [self pageTypeString];
+    params[@"click_position"] = position;
+    [FHUserTracker writeEvent:@"click_options" params:params];
+}
+
+- (NSString *)pageTypeString
+{
+    return @"driving_find_house";
 }
 
 -(void)dealloc
