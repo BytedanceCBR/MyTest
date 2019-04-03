@@ -316,6 +316,8 @@
         self.selectCategory = _categorys[indexPath.row];
     }
     [_selectorCollectionView reloadData];
+
+    [collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
 }
 
 #pragma mark UICollectionViewDataSource

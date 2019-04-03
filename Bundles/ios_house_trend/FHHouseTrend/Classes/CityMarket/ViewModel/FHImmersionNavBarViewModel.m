@@ -11,6 +11,7 @@
 @interface FHImmersionNavBarViewModel ()
 {
     CGFloat _throttle;
+    CGFloat _currentOffset;
 }
 @end
 
@@ -22,6 +23,7 @@
     self = [super init];
     if (self) {
         _throttle = 44;
+        self.isHasData = YES;
         self.statusBarStyle = UIStatusBarStyleDefault;
     }
     return self;
@@ -44,24 +46,37 @@
 }
 
 -(void)resetAlphaByOffset:(CGFloat)offset {
+    _currentOffset = offset;
     CGFloat theAlpha = 0;
-    if (offset == 0) {
-        theAlpha = 0;
-        self.titleColor = [UIColor whiteColor];
-        self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
-        self.statusBarStyle = UIStatusBarStyleLightContent;
-    } else if (offset > _throttle) {
+    if (!_isHasData) {
         theAlpha = 1;
         self.titleColor = [UIColor blackColor];
         self.backButtonImage = [UIImage imageNamed:@"icon-return"];
         self.statusBarStyle = UIStatusBarStyleDefault;
-    } else if (_throttle - offset > 0) {
-        theAlpha = 0.5;
-        self.titleColor = [UIColor whiteColor];
-        self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
-        self.statusBarStyle = UIStatusBarStyleLightContent;
+    } else {
+        if (offset == 0) {
+            theAlpha = 0;
+            self.titleColor = [UIColor whiteColor];
+            self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
+            self.statusBarStyle = UIStatusBarStyleLightContent;
+        } else if (offset > _throttle) {
+            theAlpha = 1;
+            self.titleColor = [UIColor blackColor];
+            self.backButtonImage = [UIImage imageNamed:@"icon-return"];
+            self.statusBarStyle = UIStatusBarStyleDefault;
+        } else if (_throttle - offset > 0) {
+            theAlpha = 0.5;
+            self.titleColor = [UIColor whiteColor];
+            self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
+            self.statusBarStyle = UIStatusBarStyleLightContent;
+        }
     }
     self.alpha = theAlpha;
+}
+
+-(void)setIsHasData:(BOOL)isHasData {
+    _isHasData = isHasData;
+    [self resetAlphaByOffset:_currentOffset];
 }
 
 @end
