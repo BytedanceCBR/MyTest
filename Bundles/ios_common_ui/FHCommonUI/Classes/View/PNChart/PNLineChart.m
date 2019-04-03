@@ -257,15 +257,17 @@
     [self touchKeyPoint:touches withEvent:event];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self touchKeyPoint:touches withEvent:event];
-}
+//去掉这个事件，解决长按时候导致弹窗一直打开和关闭的问题
+//- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [self touchKeyPoint:touches withEvent:event];
+//}
 
 
 - (void)touchKeyPoint:(NSSet *)touches withEvent:(UIEvent *)event {
     // Get the point user touched
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+    
     if (_pathPoints.count < 1) {
         return;
     }

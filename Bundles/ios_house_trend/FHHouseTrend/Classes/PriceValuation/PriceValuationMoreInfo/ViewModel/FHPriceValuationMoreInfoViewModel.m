@@ -9,6 +9,8 @@
 #import "FHPriceValuationDataPickerView.h"
 #import "TTDeviceUIUtils.h"
 #import "FHUserTracker.h"
+#import "ToastManager.h"
+#import "TTReachability.h"
 
 @interface FHPriceValuationMoreInfoViewModel()<FHPriceValuationMoreInfoViewDelegate>
 
@@ -228,15 +230,19 @@
 #pragma mark - FHPriceValuationMoreInfoViewDelegate
 
 - (void)confirm {
-    self.viewController.infoModel.builtYear = self.buildYear;
-    self.viewController.infoModel.facingType = self.faceType;
-    self.viewController.infoModel.floor = self.floor;
-    self.viewController.infoModel.totalFloor = self.totalFloor;
-    self.viewController.infoModel.buildingType = self.buildType;
-    self.viewController.infoModel.decorationType = self.decorateType;
-    
-    [self.viewController.navigationController popViewControllerAnimated:YES];
-    [self.viewController.delegate callBackDataInfo:nil];
+    if ([TTReachability isNetworkConnected]) {
+        self.viewController.infoModel.builtYear = self.buildYear;
+        self.viewController.infoModel.facingType = self.faceType;
+        self.viewController.infoModel.floor = self.floor;
+        self.viewController.infoModel.totalFloor = self.totalFloor;
+        self.viewController.infoModel.buildingType = self.buildType;
+        self.viewController.infoModel.decorationType = self.decorateType;
+        
+        [self.viewController.navigationController popViewControllerAnimated:YES];
+        [self.viewController.delegate callBackDataInfo:nil];
+    }else{
+        [[ToastManager manager] showToast:@"网络异常"];
+    }
 }
 
 - (void)chooseBuildYear {

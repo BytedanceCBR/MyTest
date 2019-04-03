@@ -119,10 +119,18 @@
                 if (isHaveDian) {//存在小数点
                     //判断小数点的位数
                     NSRange ran = [textField.text rangeOfString:@"."];
-                    if (range.location - ran.location <= 2){
-                        return YES;
+                    if(range.location > ran.location){
+                        if ([textField.text length] - ran.location <= 2){
+                            return YES;
+                        }else{
+                            return NO;
+                        }
                     }else{
-                        return NO;
+                        if (ran.location < 6){
+                            return YES;
+                        }else{
+                            return NO;
+                        }
                     }
                 }else{
                     //控制小数点前面的字符数不大于6个

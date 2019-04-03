@@ -496,6 +496,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (!selectItem.configOption) {
         selectItem.configOption = [item.options firstObject];
     }
+    selectItem.lowerPrice = nil;
+    selectItem.higherPrice = nil;
     [model clearAddSelecteItem:selectItem withIndex:3];
     
     item = self.roomConfigItem;
@@ -564,7 +566,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
     priceItem.lowerPrice = price;
-    [priceItem.selectIndexes removeAllObjects];
 }
 
 -(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
@@ -572,7 +573,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
     priceItem.higherPrice = price;
-    [priceItem.selectIndexes removeAllObjects];
 }
 -(FHHouseFindSelectItemModel *)priceItemWithHouseType:(FHHouseType)ht
 {
@@ -584,6 +584,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     priceItem.fromType = FHHouseFindPriceFromTypeHelp;
     return priceItem;
+}
+
+- (void)resetPriceSelectItems
+{
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
+    [priceItem.selectIndexes removeAllObjects];
+    NSMutableArray *indexPaths = @[].mutableCopy;
+    for (NSInteger index = 1; index < priceItem.configOption.options.count; index++) {
+        
+        [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection:0]];
+    }
+    [_collectionView reloadItemsAtIndexPaths:indexPaths];
 }
 
 #pragma mark - UICollectionView delegate
@@ -1071,7 +1084,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 - (void)textFieldDidChange:(NSNotification *)notification
 {
     UITextField *textField = (UITextField *)notification.object;
+
     if (textField != self.contactCell.phoneInput && textField != self.contactCell.varifyCodeInput) {
+        
+        [self resetPriceSelectItems];
         return;
     }
     NSString *text = textField.text;
