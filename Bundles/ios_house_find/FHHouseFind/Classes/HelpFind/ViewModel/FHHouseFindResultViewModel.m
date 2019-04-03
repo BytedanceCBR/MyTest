@@ -404,7 +404,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         for (UIView *subView in cellError.contentView.subviews) {
             [subView removeFromSuperview];
         }
-
+        cellError.selectionStyle = UITableViewCellSelectionStyleNone;
         FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.6)];
 //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
         [cellError.contentView addSubview:noDataErrorView];
