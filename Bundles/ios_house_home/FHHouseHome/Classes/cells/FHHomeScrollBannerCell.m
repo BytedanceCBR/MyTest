@@ -14,6 +14,7 @@
 static CGFloat kFHScrollBannerTopMargin = 10;
 static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
+static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
 @interface FHHomeScrollBannerCell ()
 
 @property (nonatomic, strong)   FHHomeScrollBannerView       *bannerView;
@@ -53,12 +54,13 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
 // 注意cell的刷新频率问题
 -(void)updateWithModel:(FHConfigDataMainPageBannerOpDataModel *)model {
-    if (model) {
-        
+    if (kFHLastHomeScrollBannerCell) {
+        // 移除之前banner的定时器
+        [kFHLastHomeScrollBannerCell.bannerView removeTimer];
     }
+    kFHLastHomeScrollBannerCell = self;
     _model = model;
     // 获取图片数据数组
-    /*
     NSMutableArray *imageUrls = [NSMutableArray new];
     for (int i = 0; i < model.items.count; i++) {
         FHConfigDataRentOpDataItemsModel *opData = model.items[i];
@@ -70,9 +72,10 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         }
     }
     [_bannerView setURLs:imageUrls];
-     */
+     
     // 重新-添加show埋点
     // 一定要重写过一遍逻辑，add by zyk
+    // 验证 图片 拉伸情况 image mode
 }
 
 @end
@@ -142,6 +145,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
 // 设置图片
 - (void)setURLs:(NSArray *)urls {
+    [self removeTimer];
     if (urls.count > 0) {
         self.currentIndex = 0;
         self.totalCount = urls.count;
@@ -159,6 +163,9 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
             [self changeCurrentImageToMid];
             [self addTimer];
         }
+    } else {
+        self.bannerScrollView.scrollEnabled = NO;
+        self.indexView.hidden = YES;
     }
 }
 
@@ -256,6 +263,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 {
     [self removeGestureRecognizer:_tapGes];
 }
+
 // scrollViewWillBeginDragging
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self removeTimer];

@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setContent:(CGFloat)wid height:(CGFloat)hei;
 - (void)setURLs:(NSArray *)urls;
+- (void)removeTimer;
 
 @end
 
