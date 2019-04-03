@@ -68,7 +68,8 @@ extern NSString *const kFHToastCountKey;
         if (error) {
             //TODO: show handle error
             [wself.viewController setNavBar:YES];
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            wself.viewController.model = nil;
+            [wself.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
             return;
         }
 
@@ -310,9 +311,11 @@ extern NSString *const kFHToastCountKey;
     params[@"phone"] = phoneNum;
     
     [FHPriceValuationAPI requestSubmitPhoneWithParams:params completion:^(BOOL success, NSError * _Nonnull error) {
-       if(success && !error){
+        if(success && !error){
             [wself.alertView dismiss];
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
         }else {
             [[ToastManager manager] showToast:@"提交失败"];
         }

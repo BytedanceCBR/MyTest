@@ -111,6 +111,10 @@
     }
 }
 
+- (void)retryLoadData {
+    [_viewModel requestData];
+}
+
 #pragma mark - UIViewControllerErrorHandler
 
 - (BOOL)tt_hasValidateData {
