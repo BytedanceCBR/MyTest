@@ -20,19 +20,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHHomeScrollBannerView : UIView
-
-- (void)setContent:(CGFloat)wid height:(CGFloat)hei;
-- (void)setURLs:(NSArray *)urls;
-- (void)removeTimer;
-
-@end
-
 @protocol FHBannerViewIndexProtocol <NSObject>
 
 @optional
 - (void)currentIndexChanged:(NSInteger)currentIndex;
 - (void)clickBannerWithIndex:(NSInteger)currentIndex;
+
+@end
+
+@interface FHHomeScrollBannerView : UIView
+
+@property (nonatomic, weak)     id<FHBannerViewIndexProtocol>      delegate;
+
+- (void)setContent:(CGFloat)wid height:(CGFloat)hei;
+- (void)setURLs:(NSArray *)urls;
+- (void)removeTimer;
 
 @end
 

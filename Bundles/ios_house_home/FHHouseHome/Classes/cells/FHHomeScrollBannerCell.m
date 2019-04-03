@@ -10,15 +10,17 @@
 #import "UIColor+Theme.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUtils.h"
+#import "FHUserTracker.h"
 
 static CGFloat kFHScrollBannerTopMargin = 10;
 static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
 static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
-@interface FHHomeScrollBannerCell ()
+@interface FHHomeScrollBannerCell ()<FHBannerViewIndexProtocol>
 
 @property (nonatomic, strong)   FHHomeScrollBannerView       *bannerView;
 @property (nonatomic, strong)   FHConfigDataMainPageBannerOpDataModel       *model;
+@property (nonatomic, strong)   NSMutableDictionary       *tracerDic;
 
 @end
 
@@ -40,6 +42,7 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
 }
 
 - (void)setupUI {
+    _tracerDic = [NSMutableDictionary new];
     _bannerView = [[FHHomeScrollBannerView alloc] init];
     _bannerView.backgroundColor = [UIColor redColor];
     [self.contentView addSubview:_bannerView];
@@ -49,6 +52,7 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
         make.bottom.mas_equalTo(self.contentView);// 下面的降价房cell之前布局有问题
         make.height.mas_equalTo(kFHScrollBannerHeight);
     }];
+    _bannerView.delegate = self;
     [_bannerView setContent:[UIScreen mainScreen].bounds.size.width - 40 height:kFHScrollBannerHeight];
 }
 
@@ -61,6 +65,7 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
     kFHLastHomeScrollBannerCell = self;
     _model = model;
     // 获取图片数据数组
+    NSMutableArray *opDatas = [[NSMutableArray alloc] init];
     NSMutableArray *imageUrls = [NSMutableArray new];
     for (int i = 0; i < model.items.count; i++) {
         FHConfigDataRentOpDataItemsModel *opData = model.items[i];
@@ -68,14 +73,59 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
             FHConfigDataRentOpDataItemsImageModel *opImage = opData.image[0];
             if (opImage.url.length > 0) {
                 [imageUrls addObject:opImage.url];
+                [opDatas addObject:opData];
             }
         }
     }
     [_bannerView setURLs:imageUrls];
-     
-    // 重新-添加show埋点
-    // 一定要重写过一遍逻辑，add by zyk
+    [self.tracerDic removeAllObjects];
     // 验证 图片 拉伸情况 image mode
+}
+
+- (void)addTracerShow:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
+    NSString *opId = opData.id;
+    if (opId.length > 0) {
+        if (self.tracerDic[opId]) {
+            return;
+        }
+        self.tracerDic[opId] = @(1);
+    } else {
+        opId = @"be_null";
+    }
+    // 添加埋点
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = @"maintab";
+    params[@"enter_from"] = @"maintab_ad";
+    params[@"rank"] = @(index);
+    params[@"item_id_id"] = opId;
+    params[@"item_tittle"] = opData.title.length > 0 ? opData.title : @"be_null";
+    params[@"description"] = opData.description.length > 0 ? opData.description : @"be_null";
+    NSString *origin_from = @"be_null";
+    if (opData.logPb && [opData.logPb isKindOfClass:[NSDictionary class]]) {
+        origin_from = opData.logPb[@"origin_from"];
+    }
+    params[@"origin_from"] = origin_from;
+  
+    [FHUserTracker writeEvent:@"banner_show" params:params];
+}
+
+- (void)clickBanner:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index  {
+    
+}
+
+#pragma mark - FHBannerViewIndexProtocol
+
+- (void)currentIndexChanged:(NSInteger)currentIndex {
+    if (currentIndex >= 0 && currentIndex < self.model.items.count) {
+        FHConfigDataRentOpDataItemsModel *opData = self.model.items[currentIndex];
+        [self addTracerShow:opData index:currentIndex];
+    }
+}
+- (void)clickBannerWithIndex:(NSInteger)currentIndex {
+    if (currentIndex >= 0 && currentIndex < self.model.items.count) {
+        FHConfigDataRentOpDataItemsModel *opData = self.model.items[currentIndex];
+        [self clickBanner:opData index:currentIndex];
+    }
 }
 
 @end
@@ -93,7 +143,6 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
 @property (nonatomic, assign)   NSTimeInterval       timeDuration;
 @property (nonatomic, strong)   NSTimer       *timer;
 @property (nonatomic, assign)   BOOL       enableTimer;
-@property (nonatomic, weak)     id<FHBannerViewIndexProtocol>      delegate;
 @property (nonatomic, strong)   FHBannerIndexView       *indexView;
 @property (nonatomic, assign)   CGFloat       indexViewSize;
 @property (nonatomic, strong)   UITapGestureRecognizer       *tapGes;
@@ -157,6 +206,9 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
             [self.bannerScrollView setLeftImage:self.imageURLs[0]];
             self.bannerScrollView.scrollEnabled = NO;
             self.indexView.hidden = YES;
+            if (self.delegate != nil) {
+                [self.delegate currentIndexChanged:self.currentIndex];
+            }
         } else {
             self.indexView.hidden = NO;
             self.bannerScrollView.scrollEnabled = YES;
