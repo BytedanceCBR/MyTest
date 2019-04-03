@@ -569,14 +569,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    priceItem.lowerPrice = price;
+    if (priceItem.selectIndexes.count < 1) {
+        priceItem.lowerPrice = price;
+    }
 }
 
 -(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    priceItem.higherPrice = price;
+    if (priceItem.selectIndexes.count < 1) {
+        priceItem.higherPrice = price;
+    }
 }
 -(FHHouseFindSelectItemModel *)priceItemWithHouseType:(FHHouseType)ht
 {
@@ -834,23 +838,24 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                     [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
                     selectItem.lowerPrice = nil;
                     selectItem.higherPrice = nil;
+                    
                 }else if (item.tabId.integerValue == FHSearchTabIdTypeRoom) {
                     if (selectItem.selectIndexes.count >= ROOM_MAX_COUNT) {
                         [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld种户型",ROOM_MAX_COUNT]];
                         return;
                     }
+                    //添加选择
+                    FHSearchFilterConfigOption *option = nil;
+                    if (item.options.count > 0) {
+                        option = [item.options firstObject];
+                    }
+                    if ([option.supportMulti boolValue]) {
+                        [model addSelecteItem:selectItem withIndex:indexPath.item];
+                    }else{
+                        [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
+                    }
                 }
                 
-                //添加选择
-                FHSearchFilterConfigOption *option = nil;
-                if (item.options.count > 0) {
-                    option = [item.options firstObject];
-                }
-                if ([option.supportMulti boolValue]) {
-                    [model addSelecteItem:selectItem withIndex:indexPath.item];
-                }else{
-                    [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
-                }
             }
         }
         
