@@ -267,9 +267,13 @@
             make.height.mas_equalTo(64);
         }
     }];
-
-    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
-
+    
+    NSMutableDictionary *traceParams = [[self traceParams] mutableCopy];
+    NSMutableDictionary *tracer = [traceParams[@"tracer"] mutableCopy];
+    tracer[@"element_from"] = @"sale_value";
+    traceParams[@"tracer"] = tracer;
+    TTRouteUserInfo* infoValue = [[TTRouteUserInfo alloc] initWithInfo:traceParams];
+    
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
     item.titleLabel.text = @"卖房估价";
     item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
@@ -279,9 +283,11 @@
     } else {
         action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
     }
-    action.userInfo = info;
+    action.userInfo = infoValue;
     [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     [_actions addObject:action];
+    
+    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
 
     FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
     item2.titleLabel.text = @"帮我找房";
