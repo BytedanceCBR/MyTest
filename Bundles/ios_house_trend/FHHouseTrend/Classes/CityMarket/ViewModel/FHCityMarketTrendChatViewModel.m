@@ -94,7 +94,13 @@
         FHDetailPriceMarkerItem* item = [[FHDetailPriceMarkerItem alloc] init];
         item.name = each.shortDesc;
         FHDetailPriceTrendValuesModel* m = [[FHDetailPriceTrendValuesModel alloc] init];
-        m.price = each.values[pointIndex];
+
+        if ([each.values[pointIndex] isKindOfClass:[NSNull class]]) {
+            return nil;
+        } else {
+            m.price = each.values[pointIndex];
+        }
+
         FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTimeLineModel* time = self.selectedInfoListModel.timeLine[pointIndex];
         m.timeStr = [NSString stringWithFormat:@"%@%@", time.year, time.month];
         item.priceModel = m;

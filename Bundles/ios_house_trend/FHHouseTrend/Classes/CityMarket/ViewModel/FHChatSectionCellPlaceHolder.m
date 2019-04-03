@@ -121,12 +121,20 @@
     }];
     @weakify(cell);
     @weakify(self);
-    [RACObserve(model, selectedInfoListModel) subscribeNext:^(id  _Nullable x) {
+    [RACObserve(model, selectedInfoListModel) subscribeNext:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*  _Nullable x) {
         @strongify(cell);
         @strongify(self);
         [self setupChat:x ofChartView:cell.chatView];
         cell.chatView.lineChart.delegate = model;
         model.chartView = cell.chatView.lineChart;
+        
+        NSArray<FHCityMarketTrendChatViewInfoItem*>* items = [x.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
+            FHCityMarketTrendChatViewInfoItem* item = [[FHCityMarketTrendChatViewInfoItem alloc] init];
+            item.name = each.desc;
+            item.color = each.color;
+            return item;
+        }];
+        [cell.chatView.banner setItems:items];
     }];
 }
 
@@ -138,18 +146,17 @@
     [values.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         return [array addObjectsFromArray:obj.values];
     }];
-
+    __block NSUInteger lineIndex = 0;
     BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
         UIColor* color = [UIColor colorWithHexString:each.color];
         data01.color = color;
         data01.alpha = 1;
-        data01.highlightedImg = [self highlightImgNameByIndex:index];
+        data01.highlightedImg = [self highlightImgNameByIndex:lineIndex];
         data01.showPointLabel = NO; // 是否显示坐标点的值
         data01.itemCount = [each.values count];
         data01.inflexionPointColor = color;
-        data01.inflexionPointColor = [self lineColorByIndex:index];
         data01.inflexionPointStyle = PNLineChartPointStyleCircle;
         data01.lineWidth = 1;
         data01.inflexionPointWidth = 4; // inflexionPoint 圆圈圈
@@ -166,6 +173,7 @@
                 return [PNLineChartDataItem dataItemWithY:theValue];
             }
         };
+        lineIndex += 1;
         return data01;
     }];
 
@@ -188,10 +196,10 @@
 {
     switch (index) {
         case 0:
-            return @"detail_circle_red";
+            return @"detail_circle_dark";
             break;
         case 1:
-            return @"detail_circle_dark";
+            return @"detail_circle_red";
             break;
         case 2:
             return @"detail_circle_gray";
@@ -206,10 +214,10 @@
 {
     switch (index) {
         case 0:
-            return [UIColor themeRed1];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         case 1:
-            return [UIColor colorWithHexString:@"#bebebe"];
+            return [UIColor themeRed1];
             break;
         case 2:
             return [UIColor themeGray5];

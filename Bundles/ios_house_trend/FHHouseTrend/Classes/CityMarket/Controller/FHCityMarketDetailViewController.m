@@ -85,6 +85,7 @@
     [_tableView setHidden:YES];
     _listViewModel = [[FHDetailListViewModel alloc] init];
     _listViewModel.tableView = _tableView;
+    _tableView.showsVerticalScrollIndicator = NO;
     _tableView.delegate = _listViewModel;
     _tableView.dataSource = _listViewModel;
 

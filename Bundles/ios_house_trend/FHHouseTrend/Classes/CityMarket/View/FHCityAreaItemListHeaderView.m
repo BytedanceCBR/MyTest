@@ -29,6 +29,7 @@
     _headerNameLabel.text = @"小区名称";
     [self addSubview:_headerNameLabel];
     [_headerNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(15);
         make.left.mas_equalTo(20);
         make.height.mas_equalTo(20);
         make.bottom.mas_equalTo(-3);
