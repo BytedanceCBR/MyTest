@@ -82,7 +82,7 @@
     [self.contentView addSubview:_titleLabel];
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.numberIconView.mas_right).mas_offset(5);
-        make.right.lessThanOrEqualTo(self.priceLabel.mas_left).mas_offset(18);
+        make.right.lessThanOrEqualTo(self.priceLabel.mas_left).mas_offset(-18);
         make.height.mas_equalTo(20);
         make.centerY.mas_equalTo(self.contentView);
     }];

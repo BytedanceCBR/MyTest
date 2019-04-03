@@ -169,7 +169,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displaySameNeighborhoodTitle;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsHouseImageTagModel *houseImageTag ;
 @property (nonatomic, copy , nullable) NSString *originPrice;
-@property (nonatomic, strong) NSArray<FHSearchHouseDataItemsModelBottomText>* bottomText;
+@property (nonatomic, strong) NSArray* bottomText;
 @end
 
 @protocol FHRecommendSecondhandHouseTitleModel<NSObject>
