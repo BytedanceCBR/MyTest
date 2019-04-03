@@ -71,6 +71,7 @@
 - (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
 {
     self.viewModel.recommendModel = recommendModel;
+    [self.contentView reloadData];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context

@@ -196,11 +196,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
-            //            [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-            [wself reloadCollectionViewSection:[wself.collectionView indexPathForCell:wself.contactCell].section];
             [wself submitAction];
         }else{
             NSString *errorMessage = [wself errorMessageByErrorCode:error];
