@@ -23,6 +23,7 @@
 @property (nonatomic, assign)   BOOL       isFirstViewDidAppear;
 /* 需要移除之前的某个页面 */
 @property (nonatomic, assign)   BOOL       onlyNeedRemoveLastVC; // 直接移除当前VC导航控制器跳转当前页面之前最上面一个VC，此时needRemoveLastVC不生效
+@property (nonatomic, copy) NSString *onlyRemoveVCName;
 @property (nonatomic, assign)   BOOL       needRemoveLastVC;// fh_needRemoveLastVC_key @(YES)
 @property (nonatomic, copy)     NSArray       *needRemovedVCNameStringArrs; // 类名数组key：fh_needRemoveedVCNamesString_key
 
@@ -42,6 +43,7 @@
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
         if (paramObj.allParams[@"fh_onlyNeedRemoveLastVC_key"]) {
             self.onlyNeedRemoveLastVC = [paramObj.allParams[@"fh_onlyNeedRemoveLastVC_key"] boolValue];
+            self.onlyRemoveVCName = paramObj.allParams[@"fh_onlyNeedRemoveLastVC_name"];
         }
         if (!self.onlyNeedRemoveLastVC) {
             if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
@@ -217,10 +219,13 @@
     if (self.isFirstViewDidAppear && self.onlyNeedRemoveLastVC) {
         self.isFirstViewDidAppear = NO;
         self.onlyNeedRemoveLastVC = NO;
-        if (self.navigationController && self.navigationController.viewControllers.count > 1) {
+        if (self.navigationController && self.navigationController.viewControllers.count > 1 && self.onlyRemoveVCName.length > 0) {
+            
             NSMutableArray *arrVCs = [[NSMutableArray alloc] initWithArray:self.navigationController.viewControllers];
-            [arrVCs removeObjectAtIndex:self.navigationController.viewControllers.count - 2];
-            self.navigationController.viewControllers = arrVCs;
+            if ([NSStringFromClass([arrVCs[self.navigationController.viewControllers.count - 2] class]) isEqualToString:self.onlyRemoveVCName]) {
+                [arrVCs removeObjectAtIndex:self.navigationController.viewControllers.count - 2];
+                self.navigationController.viewControllers = arrVCs;
+            }
         }
     } else if (self.isFirstViewDidAppear && self.needRemoveLastVC && self.needRemovedVCNameStringArrs.count > 0) {
         self.isFirstViewDidAppear = NO;

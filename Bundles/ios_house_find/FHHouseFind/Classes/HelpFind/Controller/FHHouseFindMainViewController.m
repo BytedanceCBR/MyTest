@@ -140,6 +140,8 @@
     if (isHelp) {
         
         infoDict[@"fh_onlyNeedRemoveLastVC_key"] = @(YES);
+        infoDict[@"fh_onlyNeedRemoveLastVC_name"] = NSStringFromClass([self class]);
+        
     }
     if (self.helpDelegate != nil) {
         
