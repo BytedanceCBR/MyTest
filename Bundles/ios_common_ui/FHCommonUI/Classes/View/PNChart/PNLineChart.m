@@ -505,7 +505,9 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 
             NSValue *from = nil;
             NSValue *to = nil;
-
+            if (chartData.getData(i).isEmpty) {
+                continue;
+            }
             yValue = chartData.getData(i).y;
 
             CGFloat x = (i * _xLabelWidth + _chartMarginLeft + _yAxisOffset + _yAxisLeftOffset);

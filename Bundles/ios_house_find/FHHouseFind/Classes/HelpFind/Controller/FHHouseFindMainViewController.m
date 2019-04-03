@@ -48,7 +48,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    //解决跳到结果页后在ios9下面顶部出现白条的问题
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     if (_viewModel.recommendModel != nil) {
         
