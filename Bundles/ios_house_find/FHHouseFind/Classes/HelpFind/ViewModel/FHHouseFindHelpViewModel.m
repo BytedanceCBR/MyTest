@@ -183,6 +183,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSString *phoneNumber = self.contactCell.phoneInput.text;
     NSString *smsCode = self.contactCell.varifyCodeInput.text;
     
+    if (phoneNumber.length < 1) {
+        [[ToastManager manager] showToast:@"请填写并验证手机号"];
+        return;
+    }
     if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
         [[ToastManager manager] showToast:@"手机号错误"];
         return;

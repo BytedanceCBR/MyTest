@@ -42,6 +42,7 @@
     [self.contentView addSubview:self.singleLine2];
     [self.contentView addSubview:self.tipLabel];
     [self.sendVerifyCodeBtn addTarget:self action:@selector(sendVerifyCode) forControlEvents:UIControlEventTouchUpInside];
+    self.sendVerifyCodeBtn.enabled = NO;
     [self.phoneInput mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
         make.left.mas_equalTo(20);
