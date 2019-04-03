@@ -84,7 +84,7 @@
                 @strongify(self);
                 [self jumpToListPage:section - self.sectionOffset];
             }];
-            [self traceElementShow:@{@"element_type": model.type}];
+            [self traceElementShow:@{@"element_type": model.type ? : @"be_null"}];
         }
         _headerViews[@(section)] = result;
         

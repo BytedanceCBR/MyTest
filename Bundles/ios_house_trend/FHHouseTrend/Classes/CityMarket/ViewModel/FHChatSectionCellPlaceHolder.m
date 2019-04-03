@@ -142,13 +142,16 @@
         data01.inflexionPointWidth = 4; // inflexionPoint 圆圈圈
         data01.pointLabelFormat = @"%.2f";
         data01.getData = ^PNLineChartDataItem *(NSUInteger index) {
-            NSNumber* value = each.values[index];
-
-            CGFloat theValue = [value floatValue];
-            if (shouldUseTenThousandUnit) {
-                theValue /= 10000.0;
+            id theNumber = each.values[index];
+            if ([theNumber isKindOfClass:[NSNull class]]) {
+                return [PNLineChartDataItem empty];
+            } else if ([theNumber isKindOfClass:[NSNumber class]]) {
+                CGFloat theValue = [theNumber floatValue];
+                if (shouldUseTenThousandUnit) {
+                    theValue /= 10000.0;
+                }
+                return [PNLineChartDataItem dataItemWithY:theValue];
             }
-            return [PNLineChartDataItem dataItemWithY:theValue];
         };
         return data01;
     }];
@@ -215,7 +218,7 @@
     if (![self.traceCache containsObject:offset]) {
         FHCityMarketTrendChatViewModel* result = _chartViewModels[@(indexPath.row)];
         if (result != nil) {
-            [self traceElementShow:@{@"element_type": model.type}];
+            [self traceElementShow:@{@"element_type": model.type ? : @"be_null"}];
             [[self traceCache] addObject:offset];
         }
     }
