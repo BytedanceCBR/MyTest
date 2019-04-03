@@ -13,7 +13,7 @@
 @implementation FHRowsView
 
 - (instancetype)initWithRowCount:(NSInteger)rowCount {
-    self = [self initWithRowCount:rowCount withRowHight:70];
+    self = [self initWithRowCount:rowCount withRowHight:60];
     if (self) {
         
     }

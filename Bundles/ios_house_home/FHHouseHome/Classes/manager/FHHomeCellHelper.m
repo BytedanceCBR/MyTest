@@ -189,7 +189,8 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 countValue = 8;
             }
-            CGFloat heightPadding = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews ? 62 : 47;
+//            CGFloat heightPadding = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews ? 55 : 20;
+            CGFloat heightPadding = 20;
             height += ((countValue - 1)/kFHHomeIconRowCount + 1) * (kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
         }
         
@@ -266,11 +267,11 @@ static NSMutableArray  * _Nullable identifierArr;
     for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
         if (isNeedAllocNewItems) {
-            if ([FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews) {
-                itemView = [[FHSpringboardIconItemView alloc] init];
+            if (index < 4) {
+                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-17];
             }else
             {
-                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-27];
+                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-20];
             }
         }else
         {
@@ -278,12 +279,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
             }else
             {
-                if ([FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews) {
-                    itemView = [[FHSpringboardIconItemView alloc] init];
-                }else
-                {
-                    itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-27];
-                }
+                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-20];
             }
         }
         
@@ -309,17 +305,9 @@ static NSMutableArray  * _Nullable identifierArr;
             itemView.nameLabel.text = itemModel.title;
             itemView.nameLabel.textColor = [UIColor themeGray2];
             
-            if (index < 4) {
-                [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(0);
-                }];
-            }else
-            {
-                [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.mas_equalTo(itemView).mas_offset(-10);
-                }];
-            }
-
+            [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(0);
+            }];
         }
         
         if (isNeedAllocNewItems)
@@ -423,11 +411,15 @@ static NSMutableArray  * _Nullable identifierArr;
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            CGFloat isHasCityTrend = 0;
+            CGFloat isHasCityTrend = 5;
             
-            if (![FHHomeConfigManager sharedInstance].currentDataModel.cityStats && [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse) {
+            if ([FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse) {
+                isHasCityTrend = -5;
+            }else
+            {
                 isHasCityTrend = 5;
             }
+
             
             if (index%kFHHomeBannerRowCount == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -449,7 +441,7 @@ static NSMutableArray  * _Nullable identifierArr;
             }
         }
 
-        BOOL isFindHouse = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse;
+        BOOL isFindHouse = YES;
 
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.titleLabel.textColor = [UIColor themeGray1];
