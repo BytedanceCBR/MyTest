@@ -150,6 +150,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     paramsSearch[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     paramsSearch[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     [paramsSearch setValue:@"driving_find_house" forKey:@"page_type"];
+    [paramsSearch setValue:@"driving_find_house" forKey:@"query_type"];
+    
     // enter_query 判空
     NSString *enter_query = self.houseSearchDic[@"enter_query"];
     if (enter_query && [enter_query isKindOfClass:[NSString class]]) {
