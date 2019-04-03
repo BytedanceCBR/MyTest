@@ -62,7 +62,20 @@
         return item;
     }];
     FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* trendLine = infoList.trendLines.firstObject;
-    cell.chatView.banner.unitLabel.text = trendLine.valueUnit;
+
+
+    //计算是否应该增加万单位
+    NSMutableArray* array = [[NSMutableArray alloc] init];
+    [infoList.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [array addObjectsFromArray:obj.values];
+    }];
+
+    BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
+    if (shouldUseTenThousandUnit) {
+        cell.chatView.banner.unitLabel.text = [NSString stringWithFormat:@"万%@", trendLine.valueUnit];
+    } else {
+        cell.chatView.banner.unitLabel.text = trendLine.valueUnit;
+    }
     cell.chatView.sourceLabel.text = [NSString stringWithFormat:@"%@ 更新时间: %@", model.dataSource, model.updateTime];
     [cell.chatView.banner setItems:items];
 
