@@ -42,8 +42,8 @@
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
         if (paramObj.allParams[@"fh_onlyNeedRemoveLastVC_key"]) {
             self.onlyNeedRemoveLastVC = [paramObj.allParams[@"fh_onlyNeedRemoveLastVC_key"] boolValue];
-        }else {
-            
+        }
+        if (!self.onlyNeedRemoveLastVC) {
             if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
                 self.needRemoveLastVC = [paramObj.allParams[@"fh_needRemoveLastVC_key"] boolValue];
                 self.needRemovedVCNameStringArrs = paramObj.allParams[@"fh_needRemoveedVCNamesString_key"];
