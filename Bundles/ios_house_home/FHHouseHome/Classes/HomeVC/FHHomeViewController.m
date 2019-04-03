@@ -20,6 +20,7 @@
 #import <HMDTTMonitor.h>
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
+#import "FHHomeScrollBannerCell.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -229,6 +230,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didAppear
 {
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
+    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView addTimer];
 }
 
 - (void)willDisappear
@@ -242,6 +244,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
     self.homeListViewModel.stayTime = 0;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView removeTimer];
 }
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom

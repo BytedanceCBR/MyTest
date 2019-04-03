@@ -11,10 +11,11 @@
 #import "FHConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class FHHomeScrollBannerView;
 // 首页轮播banner
 @interface FHHomeScrollBannerCell : FHHomeBaseTableCell
 
+@property (nonatomic, strong)   FHHomeScrollBannerView       *bannerView;
 + (CGFloat)cellHeight;
 -(void)updateWithModel:(FHConfigDataMainPageBannerOpDataModel *)model;
 
@@ -35,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setContent:(CGFloat)wid height:(CGFloat)hei;
 - (void)setURLs:(NSArray *)urls;
 - (void)removeTimer;
+- (void)addTimer;
 
 @end
 

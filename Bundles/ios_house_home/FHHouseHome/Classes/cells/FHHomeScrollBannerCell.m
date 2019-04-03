@@ -12,14 +12,13 @@
 #import "FHUtils.h"
 #import "FHUserTracker.h"
 #import "TTRoute.h"
+#import "FHHomeCellHelper.h"
 
 static CGFloat kFHScrollBannerTopMargin = 10;
 static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
-static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
 @interface FHHomeScrollBannerCell ()<FHBannerViewIndexProtocol>
 
-@property (nonatomic, strong)   FHHomeScrollBannerView       *bannerView;
 @property (nonatomic, strong)   FHConfigDataMainPageBannerOpDataModel       *model;
 @property (nonatomic, strong)   NSMutableDictionary       *tracerDic;
 
@@ -59,11 +58,11 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
 
 // 注意cell的刷新频率问题
 -(void)updateWithModel:(FHConfigDataMainPageBannerOpDataModel *)model {
-    if (kFHLastHomeScrollBannerCell) {
+    if ([FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell) {
         // 移除之前banner的定时器
-        [kFHLastHomeScrollBannerCell.bannerView removeTimer];
+        [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView removeTimer];
     }
-    kFHLastHomeScrollBannerCell = self;
+    [FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell = self;
     _model = model;
     // 获取图片数据数组
     NSMutableArray *opDatas = [[NSMutableArray alloc] init];
@@ -329,6 +328,9 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
         return;
     }
     if (self.timer != nil) {
+        return;
+    }
+    if (self.totalCount <= 1) {
         return;
     }
     self.timer = [NSTimer timerWithTimeInterval:self.timeDuration target:self selector:@selector(timerRun) userInfo:nil repeats:YES];
