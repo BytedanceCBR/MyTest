@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *descriptionStr;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsImageModel> *image;
 @property (nonatomic, copy , nullable) NSString *textColor;

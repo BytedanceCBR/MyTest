@@ -100,7 +100,7 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
     params[@"rank"] = @(index);
     params[@"item_id_id"] = opId;
     params[@"item_tittle"] = opData.title.length > 0 ? opData.title : @"be_null";
-    params[@"description"] = opData.description.length > 0 ? opData.description : @"be_null";
+    params[@"description"] = opData.descriptionStr.length > 0 ? opData.descriptionStr : @"be_null";
     NSString *origin_from = @"be_null";
     if (opData.logPb && [opData.logPb isKindOfClass:[NSDictionary class]]) {
         origin_from = opData.logPb[@"origin_from"];
@@ -122,7 +122,7 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
     params[@"rank"] = @(index);
     params[@"item_id_id"] = opId;
     params[@"item_tittle"] = opData.title.length > 0 ? opData.title : @"be_null";
-    params[@"description"] = opData.description.length > 0 ? opData.description : @"be_null";
+    params[@"description"] = opData.descriptionStr.length > 0 ? opData.descriptionStr : @"be_null";
     NSString *origin_from = @"be_null";
     if (opData.logPb && [opData.logPb isKindOfClass:[NSDictionary class]]) {
         origin_from = opData.logPb[@"origin_from"];
