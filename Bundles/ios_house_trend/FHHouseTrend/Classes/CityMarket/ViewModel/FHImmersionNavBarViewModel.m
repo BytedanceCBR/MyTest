@@ -64,10 +64,10 @@
             self.titleColor = [UIColor blackColor];
             self.backButtonImage = [UIImage imageNamed:@"icon-return"];
             self.statusBarStyle = UIStatusBarStyleDefault;
-        } else if (_throttle - offset > 0) {
-            theAlpha = 0.5;
-            self.titleColor = [UIColor whiteColor];
-            self.backButtonImage = [UIImage imageNamed:@"icon-return-white"];
+        } else if (_throttle - offset >= 0) {
+            theAlpha = offset / _throttle;
+            self.titleColor = [UIColor blackColor];
+            self.backButtonImage = [UIImage imageNamed:@"icon-return"];
             self.statusBarStyle = UIStatusBarStyleLightContent;
         }
     }

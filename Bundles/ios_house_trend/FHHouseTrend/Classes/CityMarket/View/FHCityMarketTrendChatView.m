@@ -271,7 +271,7 @@
     _selectorCollectionView.backgroundColor = [UIColor whiteColor];
     _selectorCollectionView.dataSource = self;
     _selectorCollectionView.delegate = self;
-    _selectorCollectionView.contentInset = UIEdgeInsetsMake(0, 20, 0, 0);
+    _selectorCollectionView.contentInset = UIEdgeInsetsMake(0, 20, 0, 20);
 }
 
 -(void)resetChatView {
@@ -313,6 +313,9 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if ([_categorys count] > indexPath.row) {
+        if ([self.selectCategory isEqualToString:_categorys[indexPath.row]]) {
+            return;
+        }
         self.selectCategory = _categorys[indexPath.row];
     }
     [_selectorCollectionView reloadData];
