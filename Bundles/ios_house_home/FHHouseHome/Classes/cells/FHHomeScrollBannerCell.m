@@ -44,7 +44,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 - (void)setupUI {
     _tracerDic = [NSMutableDictionary new];
     _bannerView = [[FHHomeScrollBannerView alloc] init];
-    _bannerView.backgroundColor = [UIColor redColor];
+    _bannerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_bannerView];
     [_bannerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
@@ -79,7 +79,6 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     }
     [_bannerView setURLs:imageUrls];
     [self.tracerDic removeAllObjects];
-    // 验证 图片 拉伸情况 image mode
 }
 
 - (void)addTracerShow:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index {
@@ -134,6 +133,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     if (opData.openUrl.length > 0) {
         NSMutableDictionary *trace_params = [NSMutableDictionary new];
         trace_params[@"origin_from"] = origin_from;
+        trace_params[@"enter_from"] = @"maintab_ad";
         
         NSDictionary *infoDict = @{@"tracer":trace_params};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
