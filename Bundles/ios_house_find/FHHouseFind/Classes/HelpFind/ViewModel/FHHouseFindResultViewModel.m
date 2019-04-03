@@ -42,6 +42,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property (nonatomic , strong) UIView *bottomView;
 @property (nonatomic , strong) UIButton *buttonOpenMore;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
+@property (nonatomic , strong) NSDictionary *houseSearchDic;
 
 @end
 
@@ -65,7 +66,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = FHHouseTypeSecondHandHouse;
-
+        self.houseSearchDic = [NSMutableDictionary new];
+        
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
@@ -93,7 +95,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     if ([recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& recommendModel.openUrl) {
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
-        NSLog(@"zjing query:%@",queryString);
+        
+        [self.houseSearchDic setValue:queryString forKey:@"search_query"];
         [self requestErshouHouseListData:YES query:queryString offset:50 searchId:nil];
     }
 }
@@ -139,6 +142,40 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     
 }
 
+- (void)addHouseSearchLog {
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    if (self.houseSearchDic) {
+        [params addEntriesFromDictionary:self.houseSearchDic];
+    } else {
+        // house_search 上报时机是通过搜索（搜索页面）进入的搜索列表页，而通过搜索点击tab进入的不上报当前埋点，过滤器重新选择后也上报
+        return;
+    }
+    params[@"house_type"] = @"old";
+    params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
+    params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    // enter_query 判空
+    NSString *enter_query = params[@"enter_query"];
+    if (enter_query && [enter_query isKindOfClass:[NSString class]]) {
+        if (enter_query.length <= 0) {
+            params[@"enter_query"] = @"be_null";
+        }
+    } else {
+        params[@"enter_query"] = @"be_null";
+    }
+    // search_query 判空
+    NSString *search_query = params[@"search_query"];
+    if (search_query && [search_query isKindOfClass:[NSString class]]) {
+        if (search_query.length <= 0) {
+            params[@"search_query"] = @"be_null";
+        }
+    } else {
+        params[@"search_query"] = @"be_null";
+    }
+    
+    [FHUserTracker writeEvent:@"house_search" params:params];
+}
+
 -(NSDictionary *)categoryLogDict {
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
@@ -176,6 +213,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 - (void)openMoreClick
 {
+    NSMutableDictionary *categoryDict = [NSMutableDictionary new];
+    [categoryDict setValue:@"old_list" forKey:@"page_type"];
+    [categoryDict setValue:@"driving_find_house" forKey:@"element_from"];
+    [FHUserTracker writeEvent:@"click_loadmore" params:categoryDict];
+
+    
     if (self.recommendModel && self.recommendModel.bottomOpenUrl) {
         NSURL *url1 = [NSURL URLWithString:self.recommendModel.bottomOpenUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
@@ -249,6 +292,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             self.isShowErrorPage = NO;
             
             [self addEnterCategoryLog];
+            
+            [self addHouseSearchLog];
 
             [self.topHeader setTitleStr:itemArray.count];
             
@@ -367,6 +412,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         __weak typeof(self) weakSelf = self;
         noDataErrorView.retryBlock = ^{
+                NSMutableDictionary *categoryDict = [NSMutableDictionary new];
+                [categoryDict setValue:@"old_list" forKey:@"page_type"];
+                [categoryDict setValue:@"driving_find_house" forKey:@"element_from"];
+                [FHUserTracker writeEvent:@"click_loadmore" params:categoryDict];
+            
                 NSURL *url1 = [NSURL URLWithString:@"sslocal://house_list?house_type=2"];
                 [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
         };
