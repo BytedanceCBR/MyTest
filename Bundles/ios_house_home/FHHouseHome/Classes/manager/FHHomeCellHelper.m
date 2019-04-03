@@ -298,7 +298,12 @@ static NSMutableArray  * _Nullable identifierArr;
 
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.top.mas_equalTo(5);
+                    if (index < 4) {
+                        make.top.mas_equalTo(8);
+                    }else
+                    {
+                        make.top.mas_equalTo(5);
+                    }
                     make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                 }];
             }
