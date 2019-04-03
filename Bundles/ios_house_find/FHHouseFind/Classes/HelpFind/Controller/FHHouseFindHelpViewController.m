@@ -14,6 +14,7 @@
 #import "FHHouseFindHelpSubmitCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseFindRecommendModel.h"
+#import "FHHouseFindCollectionView.h"
 
 @interface FHHouseFindHelpViewController ()
 
@@ -103,8 +104,8 @@
     layout.minimumLineSpacing = 13;
     layout.minimumInteritemSpacing = 13;
 
-    _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
-    _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    _contentView = [[FHHouseFindCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+//    _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
     if (@available(iOS 11.0, *)) {
