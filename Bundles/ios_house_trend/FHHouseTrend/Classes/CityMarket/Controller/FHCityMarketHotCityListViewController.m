@@ -33,6 +33,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+
     // Do any additional setup after loading the view.
     [self initNavBar];
     [self setupBottomBar];
@@ -69,7 +71,9 @@
 
     [self.view bringSubviewToFront:_bottomBarView];
     // 这里设置tableView底部滚动的区域，保证内容可以完全露出
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
+    CGFloat bottomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
+
+    _tableView.contentInset = UIEdgeInsetsMake(0, 0, bottomBarHeight, 0);
 
     [self setupSections];
     [self traceEnterCategory];
@@ -91,6 +95,7 @@
 -(void)setupSections {
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemListSectionPlaceHolder alloc] init];
     [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
+    _areaItemSectionCellPlaceHolder.tracer = self.tracerDict;
     _areaItemSectionCellPlaceHolder.hotList = @[_model];
     [self.tableView reloadData];
 }
@@ -120,6 +125,9 @@
 }
 
 -(void)jumpTo {
+    if (self.model.moreOpenUrl == nil || [self.model.moreOpenUrl length] == 0) {
+        return;
+    }
     NSURL* theUrl = [[NSURL alloc] initWithString:self.model.moreOpenUrl];
     [[TTRoute sharedRoute] openURLByPushViewController:theUrl];
 }

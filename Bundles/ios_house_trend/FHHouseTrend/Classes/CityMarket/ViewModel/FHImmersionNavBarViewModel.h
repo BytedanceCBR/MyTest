@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIColor* titleColor;
 @property (nonatomic, strong) UIImage* backButtonImage;
 @property (nonatomic, assign) UIStatusBarStyle statusBarStyle;
+@property (nonatomic, assign) BOOL isHasData;
 @end
 
 NS_ASSUME_NONNULL_END

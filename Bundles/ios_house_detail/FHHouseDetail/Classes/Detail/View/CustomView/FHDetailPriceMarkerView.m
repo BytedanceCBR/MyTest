@@ -13,13 +13,6 @@
 #import "UIView+House.h"
 
 @interface FHDetailPriceMarkerView ()
-
-@property(nonatomic , strong) UILabel *titleLabel;
-@property(nonatomic , strong) UILabel *firstLabel;
-@property(nonatomic , strong) UILabel *secondLabel;
-@property(nonatomic , strong) UILabel *thirdLabel;
-
-@property(nonatomic, assign) NSInteger selectIndex;
 @property(nonatomic, assign) double unitPerSquare;
 
 @end

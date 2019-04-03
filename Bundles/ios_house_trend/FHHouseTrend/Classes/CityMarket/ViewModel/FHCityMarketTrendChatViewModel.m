@@ -10,6 +10,7 @@
 #import "RXCollection.h"
 #import "FHDetailPriceMarkerView.h"
 #import "UIView+House.h"
+#import "FHCityMarketDetailPriceMarkerView.h"
 
 @interface FHCityMarketTrendChatViewModel ()
 @property (nonatomic, assign) NSUInteger selectIndex;
@@ -61,7 +62,7 @@
                   selectPoint:(CGPoint)selectPoint
 {
 
-    FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
+    FHCityMarketDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
     if (pointIndex == self.selectIndex && self.hideMarker) {
         [view removeFromSuperview];
         view = nil;
@@ -72,24 +73,28 @@
     self.hideMarker = YES;
 
     if (!view) {
-        view = [[FHDetailPriceMarkerView alloc] init];
+        view = [[FHCityMarketDetailPriceMarkerView alloc] init];
         view.tag = 200;
         [self.chartView addSubview:view];
     }
-    if (![view isKindOfClass:[FHDetailPriceMarkerView class]]) {
+    if (![view isKindOfClass:[FHCityMarketDetailPriceMarkerView class]]) {
         return;
     }
     FHDetailPriceMarkerData *markData = [[FHDetailPriceMarkerData alloc] init];
-    NSArray *priceTrends = self.selectedInfoListModel.trendLines;
+    NSArray *priceTrends = [[self.selectedInfoListModel.trendLines reverseObjectEnumerator] allObjects];
     if (priceTrends.count < 1) {
         return;
     }
     FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* infoList = priceTrends.firstObject;
+    if ([priceTrends count] > _sectionIndex) {
+        infoList = priceTrends[_sectionIndex];
+        view.unitText = infoList.valueUnit;
+    }
     markData.trendItems = [priceTrends rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         FHDetailPriceMarkerItem* item = [[FHDetailPriceMarkerItem alloc] init];
         item.name = each.shortDesc;
         FHDetailPriceTrendValuesModel* m = [[FHDetailPriceTrendValuesModel alloc] init];
-        m.price = [@([each.values[pointIndex] floatValue] * 1000000.00f) stringValue];
+        m.price = each.values[pointIndex];
         FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTimeLineModel* time = self.selectedInfoListModel.timeLine[pointIndex];
         m.timeStr = [NSString stringWithFormat:@"%@%@", time.year, time.month];
         item.priceModel = m;
