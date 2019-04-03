@@ -294,7 +294,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             [self.topHeader setTitleStr:itemArray.count];
             
-            [self.currentViewController refreshContentOffset:CGPointMake(0, 0)];
             [self.currentViewController setNaviBarTitle:[NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count]];
             
             [self.tableView reloadData];
@@ -303,7 +302,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         {
             [self.topHeader setTitleStr:0];
             self.isShowErrorPage = YES;
-            
+
             [self.tableView reloadData];
             self.bottomView.hidden = YES;
         }

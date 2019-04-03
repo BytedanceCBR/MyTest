@@ -18,6 +18,8 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
     FHHomeCellViewTypeCityTrend,         //城市行情
 };
 
+#define kFHHomeIconDefaultHeight 57.0 //icon高度
+
 @interface FHHomeCellHelper : NSObject
 
 @property(nonatomic , assign) FHHomeHeaderCellPositionType headerType;

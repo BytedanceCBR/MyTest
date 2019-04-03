@@ -28,8 +28,6 @@
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
-#define kFHHomeIconDefaultHeight 52.0 //icon高度
-
 #define kFHHomeIconRowCount 4 //每行icon个数
 
 #define kFHHomeBannerRowCount 2 //每行banner个数
@@ -297,9 +295,8 @@ static NSMutableArray  * _Nullable identifierArr;
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
 
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
-
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.top.mas_equalTo(20);
+                    make.top.mas_equalTo(5);
                     make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                 }];
             }
@@ -312,9 +309,17 @@ static NSMutableArray  * _Nullable identifierArr;
             itemView.nameLabel.text = itemModel.title;
             itemView.nameLabel.textColor = [UIColor themeGray2];
             
-            [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(8);
-            }];
+            if (index < 4) {
+                [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(0);
+                }];
+            }else
+            {
+                [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.bottom.mas_equalTo(itemView).mas_offset(-10);
+                }];
+            }
+
         }
         
         if (isNeedAllocNewItems)

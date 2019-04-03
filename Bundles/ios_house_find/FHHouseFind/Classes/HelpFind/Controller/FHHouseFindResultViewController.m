@@ -42,6 +42,14 @@
     return self;
 }
 
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self refreshContentOffset:self.tableView.contentOffset];
+}
+
 -(void)setupUI {
     [self initNavbar];
 
