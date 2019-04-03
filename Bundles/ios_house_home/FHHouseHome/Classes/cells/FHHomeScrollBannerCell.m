@@ -11,6 +11,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHUtils.h"
 #import "FHUserTracker.h"
+#import "TTRoute.h"
 
 static CGFloat kFHScrollBannerTopMargin = 10;
 static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
@@ -110,7 +111,37 @@ static FHHomeScrollBannerCell *kFHLastHomeScrollBannerCell = nil;
 }
 
 - (void)clickBanner:(FHConfigDataRentOpDataItemsModel *)opData index:(NSInteger)index  {
+    NSString *opId = opData.id;
+    if (opId.length > 0) {
+    } else {
+        opId = @"be_null";
+    }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    params[@"page_type"] = @"maintab";
+    params[@"enter_from"] = @"maintab_ad";
+    params[@"rank"] = @(index);
+    params[@"item_id_id"] = opId;
+    params[@"item_tittle"] = opData.title.length > 0 ? opData.title : @"be_null";
+    params[@"description"] = opData.description.length > 0 ? opData.description : @"be_null";
+    NSString *origin_from = @"be_null";
+    if (opData.logPb && [opData.logPb isKindOfClass:[NSDictionary class]]) {
+        origin_from = opData.logPb[@"origin_from"];
+    }
+    params[@"origin_from"] = origin_from;
     
+    [FHUserTracker writeEvent:@"banner_click" params:params];
+    
+    // 页面跳转，origin_from：服务端下方，如果进入到房源相关页面需要透传
+    if (opData.openUrl.length > 0) {
+        NSMutableDictionary *trace_params = [NSMutableDictionary new];
+        trace_params[@"origin_from"] = origin_from;
+        
+        NSDictionary *infoDict = @{@"tracer":trace_params};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
+        NSMutableString *openUrl = [[NSMutableString alloc] initWithString:opData.openUrl];
+        NSURL *url = [NSURL URLWithString:openUrl];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 #pragma mark - FHBannerViewIndexProtocol
