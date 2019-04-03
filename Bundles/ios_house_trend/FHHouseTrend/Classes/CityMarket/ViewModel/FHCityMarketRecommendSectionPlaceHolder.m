@@ -76,17 +76,76 @@
     if (model != nil && [model.items count] > indexPath.row) {
         FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
         FHSearchHouseDataItemsHouseImageModel* imageModel = item.houseImage.firstObject;
-        if (imageModel != nil && !isEmptyString(imageModel.url)) {
-            [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+        if ([@"zhidemai" isEqualToString:_recommendViewModel.type]) {
+            [self fillWorthCell:cell useModel:item atIndexPath:indexPath];
+        } else {
+            if (imageModel != nil && !isEmptyString(imageModel.url)) {
+                    [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            }
+            cell.titleLabel.text = item.displayTitle;
+            cell.subTitleLabel.text = item.displaySubtitle;
+            cell.priceLabel.text = item.displayPrice;
+            cell.oldPriceLabel.attributedText = [self getOldPriceAttribute:item.originPrice];
+            cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:item.bottomText.firstObject];
+            [cell setIndex:indexPath.row];
         }
-        cell.titleLabel.text = item.displayTitle;
-        cell.subTitleLabel.text = item.displaySubtitle;
-        cell.priceLabel.text = item.displayPrice;
-        cell.oldPriceLabel.attributedText = [self getOldPriceAttribute:item.originPrice];
-        cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:item.bottomText];
-        [cell setIndex:indexPath.row];
     }
     return cell;
+}
+
+-(void)fillWorthCell:(FHCityMarketRecomandHouseCell*)cell useModel:(FHSearchHouseDataItemsModel*)model atIndexPath:(NSIndexPath*)indexPath {
+    FHSearchHouseDataItemsHouseImageModel* imageModel = model.houseImage.firstObject;
+    if (imageModel != nil && !isEmptyString(imageModel.url)) {
+        [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+    }
+    cell.titleLabel.text = model.displayTitle;
+    cell.oldPriceLabel.text = nil;
+    cell.oldPriceLabel.attributedText = nil;
+    NSString* roomSpace = nil;
+    if ([model.coreInfo count] >= 3) {
+        FHSearchHouseDataItemsCoreInfoModel* value = model.coreInfo[2];
+        roomSpace = value.value;
+    }
+    cell.subTitleLabel.attributedText = [self getWorthPriceAttribute:model.displayPrice oldPrice:roomSpace];
+    if ([model.bottomText count] >= 1) {
+        cell.priceLabel.attributedText = [self getPriceChangeAttribute:model.bottomText[0]];
+    }
+
+    if ([model.bottomText count] >= 2) {
+        cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:model.bottomText[1]];
+    }
+    [cell setIndex:indexPath.row];
+}
+
+-(NSAttributedString*)getWorthPriceAttribute:(NSString*)price oldPrice:(NSString*)oldPrice {
+    NSMutableAttributedString* sttrString = [[NSMutableAttributedString alloc] init];
+    if (!isEmptyString(price)) {
+        [sttrString appendAttributedString:[[NSAttributedString alloc]
+                                            initWithString:price
+                                            attributes:@{
+                                                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"ff5b4c"],
+                                                         NSFontAttributeName: [UIFont themeFontMedium:16],
+                                                         }]];
+    }
+
+    if (!isEmptyString(price) && !isEmptyString(oldPrice)) {
+        [sttrString appendAttributedString:[[NSAttributedString alloc]
+                                            initWithString:@" | "
+                                            attributes:@{
+                                                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
+                                                         NSFontAttributeName: [UIFont themeFontRegular:12],
+                                                         }]];
+    }
+
+    if (!isEmptyString(oldPrice)) {
+        [sttrString appendAttributedString:[[NSAttributedString alloc]
+                                            initWithString:oldPrice
+                                            attributes:@{
+                                                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
+                                                         NSFontAttributeName: [UIFont themeFontRegular:12],
+                                                         }]];
+    }
+    return sttrString;
 }
 
 -(NSAttributedString*)getOldPriceAttribute:(NSString*)text {
@@ -104,11 +163,11 @@
 }
 
 -(NSAttributedString*)getPriceChangeAttribute:(NSArray<FHSearchHouseDataItemsModelBottomText*>*)texts {
-    NSArray<NSAttributedString*>* items = [texts rx_mapWithBlock:^id(FHSearchHouseDataItemsModelBottomText* each) {
+    NSArray<NSAttributedString*>* items = [texts rx_mapWithBlock:^id(NSDictionary* each) {
         return [[NSAttributedString alloc]
-                initWithString:each.text
+                initWithString:each[@"text"] ? : @""
                 attributes:@{
-                             NSForegroundColorAttributeName: [UIColor colorWithHexString:each.color],
+                             NSForegroundColorAttributeName: [UIColor colorWithHexString:each[@"color"] ? : @"999999ni"],
                              NSFontAttributeName: [UIFont themeFontRegular:12],
                              }];
     }];

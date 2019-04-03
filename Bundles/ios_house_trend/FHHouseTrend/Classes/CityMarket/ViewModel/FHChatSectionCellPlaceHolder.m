@@ -62,7 +62,20 @@
         return item;
     }];
     FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* trendLine = infoList.trendLines.firstObject;
-    cell.chatView.banner.unitLabel.text = trendLine.valueUnit;
+
+
+    //计算是否应该增加万单位
+    NSMutableArray* array = [[NSMutableArray alloc] init];
+    [infoList.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [array addObjectsFromArray:obj.values];
+    }];
+
+    BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
+    if (shouldUseTenThousandUnit) {
+        cell.chatView.banner.unitLabel.text = [NSString stringWithFormat:@"万%@", trendLine.valueUnit];
+    } else {
+        cell.chatView.banner.unitLabel.text = trendLine.valueUnit;
+    }
     cell.chatView.sourceLabel.text = [NSString stringWithFormat:@"%@ 更新时间: %@", model.dataSource, model.updateTime];
     [cell.chatView.banner setItems:items];
 
@@ -142,13 +155,16 @@
         data01.inflexionPointWidth = 4; // inflexionPoint 圆圈圈
         data01.pointLabelFormat = @"%.2f";
         data01.getData = ^PNLineChartDataItem *(NSUInteger index) {
-            NSNumber* value = each.values[index];
-
-            CGFloat theValue = [value floatValue];
-            if (shouldUseTenThousandUnit) {
-                theValue /= 10000.0;
+            id theNumber = each.values[index];
+            if ([theNumber isKindOfClass:[NSNull class]]) {
+                return [PNLineChartDataItem empty];
+            } else if ([theNumber isKindOfClass:[NSNumber class]]) {
+                CGFloat theValue = [theNumber floatValue];
+                if (shouldUseTenThousandUnit) {
+                    theValue /= 10000.0;
+                }
+                return [PNLineChartDataItem dataItemWithY:theValue];
             }
-            return [PNLineChartDataItem dataItemWithY:theValue];
         };
         return data01;
     }];
@@ -215,7 +231,7 @@
     if (![self.traceCache containsObject:offset]) {
         FHCityMarketTrendChatViewModel* result = _chartViewModels[@(indexPath.row)];
         if (result != nil) {
-            [self traceElementShow:@{@"element_type": model.type}];
+            [self traceElementShow:@{@"element_type": model.type ? : @"be_null"}];
             [[self traceCache] addObject:offset];
         }
     }
