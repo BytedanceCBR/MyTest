@@ -10,6 +10,7 @@
 #import <TTRoute.h>
 #import "FHPriceValuationEvaluateModel.h"
 #import "FHPriceValuationAPI.h"
+#import "FHUserTracker.h"
 
 #define kCellId @"FHPriceValuationHistoryCell_id"
 
@@ -55,6 +56,7 @@
             return;
         }
         
+        [wself addEnterCategoryTracer];
         [wself.viewController.emptyView hideEmptyView];
         
         if(model){
@@ -68,6 +70,24 @@
             }
         }
     }];
+}
+
+- (NSString *)categoryName {
+    return @"value_history_list";
+}
+
+- (void)addEnterCategoryTracer {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"category_name"] = [self categoryName];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"enter_type"] = @"click";
+    tracer[@"element_from"] = @"be_null";
+    tracer[@"search_id"] = @"be_null";
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
+    TRACK_EVENT(@"enter_category", tracer);
 }
 
 - (FHPriceValuationEvaluateModel *)covert:(FHPriceValuationHistoryDataHistoryHouseListModel *)model {
@@ -107,6 +127,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"enter_from"] = [self categoryName];
+    
     FHPriceValuationHistoryDataHistoryHouseListModel *listModel = self.dataList[indexPath.row];
     FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel *infoModel = listModel.houseInfo.houseInfoDict;
     infoModel.neighborhoodName = listModel.houseInfo.neiborhoodNameStr;
@@ -114,6 +137,7 @@
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"model"] = model;
     dict[@"infoModel"] = infoModel;
+    dict[@"tracer"] = tracerDict;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_result"];

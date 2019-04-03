@@ -140,6 +140,8 @@ extern NSString *const kFHToastCountKey;
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"go_detail", tracer);
 }
 
@@ -151,6 +153,8 @@ extern NSString *const kFHToastCountKey;
     tracer[@"page_type"] = [self pageType];
     tracer[@"click_position"] = @"sale";
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(key, tracer);
 }
 
@@ -162,6 +166,8 @@ extern NSString *const kFHToastCountKey;
     tracer[@"page_type"] = [self pageType];
     tracer[@"click_type"] = result;
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"click_expected", tracer);
 }
 

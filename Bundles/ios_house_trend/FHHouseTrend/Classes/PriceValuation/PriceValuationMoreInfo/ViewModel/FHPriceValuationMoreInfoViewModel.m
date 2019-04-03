@@ -57,6 +57,8 @@
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.infoModel.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"go_detail", tracer);
 }
 
@@ -68,6 +70,8 @@
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.infoModel.estimateId;
     tracer[@"click_position"] = position;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"click_options", tracer);
 }
 
