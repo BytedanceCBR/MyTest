@@ -74,6 +74,11 @@
     self.priceValuationView = [[FHPriceValuationView alloc] initWithFrame:self.view.bounds naviBarHeight:CGRectGetHeight(self.customNavBarView.frame)];
     [self.view addSubview:_priceValuationView];
     _priceValuationView.scrollView.delegate = self;
+    
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    [_priceValuationView addGestureRecognizer:tap];
+    tap.delegate = self;
+    tap.cancelsTouchesInView = NO;
 }
 
 - (void)initConstraints {
@@ -101,5 +106,14 @@
 - (void)goToHistory {
     [self.viewModel goToHistory];
 }
+
+-(void)handleSingleTap:(UITapGestureRecognizer *)sender {
+    [self.view endEditing:YES];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
 
 @end

@@ -374,10 +374,12 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     [wSelf updateAllConfig:model isNeedDiff:NO];
                 }
                 
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-                    
-                }];
-                
+                if (self.isShowHomeViewController) {
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
+                        
+                    }];
+                }
+   
                 wSelf.retryConfigCount = 3;
             }];
         }

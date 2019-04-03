@@ -27,7 +27,6 @@
         _viewController = viewController;
         _paramObj = paramObj;
         _houseType = FHHouseTypeSecondHandHouse;
-
     }
     return self;
 }
@@ -44,9 +43,8 @@
 - (void)startLoadData
 {
     __weak typeof(self)wSelf = self;
-    [FHMainApi requestHFHelpUsedByHouseType:[@(_houseType) description] completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
+    [FHMainApi requestHFHelpUsedByHouseType:[NSString stringWithFormat:@"%ld",_houseType] completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         
-        wSelf.viewController.isLoadingData = NO;
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processData:model.data];
