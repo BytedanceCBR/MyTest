@@ -243,11 +243,11 @@
     viewModel.listener = self;
     self.recommendSectionPlaceHolder = [[FHCityMarketRecommendSectionPlaceHolder alloc] initWithViewModel:viewModel];
     self.recommendSectionPlaceHolder.tracer = self.tracerDict;
-//    [_listViewModel addSectionPlaceHolder:_recommendSectionPlaceHolder];
+    [_listViewModel addSectionPlaceHolder:_recommendSectionPlaceHolder];
 
     self.areaItemSectionCellPlaceHolder = [[FHAreaItemSectionPlaceHolder alloc] init];
     self.areaItemSectionCellPlaceHolder.tracer = self.tracerDict;
-//    [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
+    [_listViewModel addSectionPlaceHolder:_areaItemSectionCellPlaceHolder];
 
 //    [self.tableView reloadData];
 }
