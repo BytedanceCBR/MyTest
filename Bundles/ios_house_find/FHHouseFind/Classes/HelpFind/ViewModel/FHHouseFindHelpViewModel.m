@@ -763,7 +763,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHHouseFindHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:HELP_HEADER_ID forIndexPath:indexPath];
     NSInteger section = indexPath.section;
     if (self.titlesArray.count > section) {
-        [headerView updateTitle:self.titlesArray[section] showDelete:NO];
+        
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.titlesArray[section] attributes:@{NSFontAttributeName:[UIFont themeFontMedium:18], NSForegroundColorAttributeName:[UIColor themeGray1]}];
+        [attributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"(必填)" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14], NSForegroundColorAttributeName:[UIColor themeGray4]}]];
+        [headerView updateAttrTitle:attributedString showDelete:NO];
     }else {
         [headerView updateTitle:@"您的联系方式？" showDelete:NO];
     }
