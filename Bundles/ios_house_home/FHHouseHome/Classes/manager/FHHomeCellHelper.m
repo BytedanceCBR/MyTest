@@ -277,6 +277,12 @@ static NSMutableArray  * _Nullable identifierArr;
         {
             if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
                 itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
+                if (index < 4) {
+                    itemView.iconBottomPadding = -17;
+                }else
+                {
+                    itemView.iconBottomPadding = -20;
+                }
             }else
             {
                 itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-20];

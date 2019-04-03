@@ -356,23 +356,10 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
-                    [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                    [wSelf updateAllConfig:model isNeedDiff:NO];
-                }else
-                {
-                    NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
-                    if ([currentCityid isEqualToString:model.data.currentCityId] || !currentCityid) {
-                        //更新config
-                        [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                        [wSelf updateAllConfig:model isNeedDiff:NO];
-                    }
                 }
-                
-                FHConfigDataModel *configCache = [[FHEnvContext sharedInstance] getConfigFromCache];
-                if (!configCache) {
-                    [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                    [wSelf updateAllConfig:model isNeedDiff:NO];
-                }
+
+                [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
+                [wSelf updateAllConfig:model isNeedDiff:NO];
                 
                 if (self.isShowHomeViewController) {
                     [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
