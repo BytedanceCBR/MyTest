@@ -19,8 +19,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^showNoDataBlock)(BOOL noData,BOOL isAvaiable);
 @property(nonatomic, weak) FHBaseViewController *viewController;
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
+@property(nonatomic , strong) NSMutableDictionary *tracerDict;
 
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView recommendModel:(FHHouseFindRecommendDataModel *)recommendModel;
+- (void)addGoDetailLog;
 
 @end
 

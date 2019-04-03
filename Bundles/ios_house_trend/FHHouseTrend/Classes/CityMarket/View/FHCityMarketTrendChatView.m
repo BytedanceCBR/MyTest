@@ -260,7 +260,7 @@
     UICollectionViewFlowLayout* layout = [[UICollectionViewFlowLayout alloc] init];
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.selectorCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-    [_selectorCollectionView registerClass:[FHCityMarketSelectItemCollectionViewCell class] forSupplementaryViewOfKind:@"cell" withReuseIdentifier:@"item"];
+    [_selectorCollectionView registerClass:[FHCityMarketSelectItemCollectionViewCell class] forCellWithReuseIdentifier:@"item"];
     [self addSubview:_selectorCollectionView];
     [_selectorCollectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(_titleLable.mas_bottom).mas_offset(10);
@@ -316,6 +316,8 @@
         self.selectCategory = _categorys[indexPath.row];
     }
     [_selectorCollectionView reloadData];
+
+    [collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
 }
 
 #pragma mark UICollectionViewDataSource
@@ -329,7 +331,7 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    FHCityMarketSelectItemCollectionViewCell * cell = [collectionView dequeueReusableSupplementaryViewOfKind:@"cell" withReuseIdentifier:@"item" forIndexPath:indexPath];
+    FHCityMarketSelectItemCollectionViewCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"item" forIndexPath:indexPath];
     cell.nameLabel.text = _categorys[indexPath.row];
     if ([_categorys[indexPath.row] isEqualToString:_selectCategory]) {
         [cell setItemSelected:YES];

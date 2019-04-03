@@ -120,6 +120,13 @@
 -(void)setupChat:(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*)values
       ofChartView:(FHCityMarketTrendChatView*) chartView {
     [chartView resetChatView];
+    
+    NSMutableArray* array = [[NSMutableArray alloc] init];
+    [values.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [array addObjectsFromArray:obj.values];
+    }];
+
+    BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
         UIColor* color = [UIColor colorWithHexString:each.color];
@@ -136,7 +143,12 @@
         data01.pointLabelFormat = @"%.2f";
         data01.getData = ^PNLineChartDataItem *(NSUInteger index) {
             NSNumber* value = each.values[index];
-            return [PNLineChartDataItem dataItemWithY:[value doubleValue]];
+
+            CGFloat theValue = [value floatValue];
+            if (shouldUseTenThousandUnit) {
+                theValue /= 10000.0;
+            }
+            return [PNLineChartDataItem dataItemWithY:theValue];
         };
         return data01;
     }];
@@ -148,6 +160,12 @@
         return each.month;
     }];
     [chartView.lineChart setXLabels:xLabels];
+}
+
+-(BOOL)shouldUseTenThousandunit:(NSArray<NSNumber*>*)values {
+    return [values rx_detectWithBlock:^BOOL(NSNumber* each) {
+        return [each doubleValue] > 10000;
+    }];
 }
 
 - (NSString *)highlightImgNameByIndex:(NSInteger)index
@@ -194,11 +212,11 @@
     NSIndexPath* offset = [self indexPathWithOffset:indexPath];
     FHCityMarketDetailResponseDataMarketTrendListModel* model = _marketTrendList[offset.row];
 
-    if ([self.traceCache containsObject:indexPath]) {
+    if (![self.traceCache containsObject:offset]) {
         FHCityMarketTrendChatViewModel* result = _chartViewModels[@(indexPath.row)];
-        if (result == nil) {
+        if (result != nil) {
             [self traceElementShow:@{@"element_type": model.type}];
-            [[self traceCache] addObject:indexPath];
+            [[self traceCache] addObject:offset];
         }
     }
 }

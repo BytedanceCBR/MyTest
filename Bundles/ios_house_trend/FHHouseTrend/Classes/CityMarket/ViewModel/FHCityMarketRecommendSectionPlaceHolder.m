@@ -19,6 +19,7 @@
 #import "TTRoute.h"
 #import "FHCityMarketRecommendFooterView.h"
 #import "FHUserTracker.h"
+#import "NSString+URLEncoding.h"
 
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
@@ -164,7 +165,7 @@
                        params:@{
                                 @"page_type": @"city_market",
                                 @"event_type": @"house_app2c_v2",
-                                @"click_position": type ? : @"be_null",
+                                @"element_from": @"special_old",
                                 }];
 }
 
@@ -178,8 +179,14 @@
         FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", item.hid];
         if (urlStr.length > 0) {
+            NSMutableDictionary* dict = [self.tracer mutableCopy];
+            dict[@"enter_from"] = @"city_market";
+            dict[@"element_from"] = _recommendViewModel.type;
+            dict[@"rank"] = @(indexPath.row);
+            dict[@"log_pb"] = @"be_null";
+            TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": dict}];
             NSURL *url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
         }
     }
 }
@@ -188,7 +195,7 @@
     NSIndexPath* indexPathWithOffset = [self indexPathWithOffset:indexPath];
     if (![self.traceCache containsObject:indexPathWithOffset]) {
         [self traceElementShow:@{@"element_type": @"special_old"}];
-        [self.traceCache addObject:indexPath];
+        [self.traceCache addObject:indexPathWithOffset];
     }
 }
 
@@ -207,9 +214,38 @@
 }
 
 -(void)onClickMore:(id)sender {
-    NSURL* url = [NSURL URLWithString:self.recommendViewModel.openUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:url];
+    NSMutableDictionary* dict = [self.tracer mutableCopy];
+    dict[@"enter_from"] = @"city_market";
+    dict[@"element_from"] = @"special_old";
+    dict[@"log_pb"] = @"be_null";
+
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:self.recommendViewModel.openUrl]];
+    NSMutableDictionary *queryP = [NSMutableDictionary new];
+    [queryP addEntriesFromDictionary:paramObj.allParams];
+    NSString* url = queryP[@"url"];
+    NSString *reportParams = [self getEvaluateWebParams:dict];
+    NSString *jumpUrl = @"sslocal://webview";
+    NSMutableString *urlS = [[NSMutableString alloc] init];
+    [urlS appendString: queryP[@"url"]];
+    [urlS appendFormat:@"&report_params=%@", reportParams];
+    queryP[@"url"] = urlS;
+
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:queryP];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
     [self traceClickLoadMore:self.recommendViewModel.type];
+}
+
+
+- (NSString *)getEvaluateWebParams:(NSDictionary *)dic
+{
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+    if (data && !error) {
+        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        return temp;
+    }
+    return nil;
 }
 
 @end

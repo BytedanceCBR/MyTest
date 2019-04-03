@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHCityMarketDetailResponseDataMarketTrendListModel* model;
 @property (nonatomic, strong) FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel* selectedInfoListModel;
 @property (nonatomic, weak) UIView* chartView;
+@property (nonatomic, assign) NSUInteger sectionIndex;
 -(void)changeCategory:(NSString*)category;
 @end
 

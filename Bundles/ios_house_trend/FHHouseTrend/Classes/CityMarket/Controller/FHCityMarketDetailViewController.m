@@ -77,14 +77,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self initNavBar];
+    self.automaticallyAdjustsScrollViewInsets = NO;
 
+    [self initNavBar];
     [self setupBottomBar];
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    [_tableView setHidden:YES];
     _listViewModel = [[FHDetailListViewModel alloc] init];
     _listViewModel.tableView = _tableView;
     _tableView.delegate = _listViewModel;
     _tableView.dataSource = _listViewModel;
+
     if (@available(iOS 7.0, *)) {
         self.tableView.estimatedSectionFooterHeight = 0;
         self.tableView.estimatedSectionHeaderHeight = 0;
@@ -140,7 +143,8 @@
     [TTTrackerWrapper eventV3:@"go_detail" params:@{
                                                     @"event_type": @"house_app2c_v2",
                                                     @"page_type": @"city_market",
-                                                    @"enter_from": self.tracerDict[@"enter_from"] ? : @"be_null",
+//                                                    @"enter_from": self.tracerDict[@"enter_from"] ? : @"be_null",
+                                                    @"enter_from": @"maintab_operation",
                                                     }];
 }
 
@@ -155,7 +159,7 @@
 
 -(void)bindHeaderView {
     _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
-
+    _headerViewModel.delegate = self;
     RAC(_headerView.titleLabel, text) = RACObserve(_headerViewModel, title);
     RAC(_headerView.priceLabel, text) = RACObserve(_headerViewModel, price);
     RAC(_headerView.sourceLabel, text) = RACObserve(_headerViewModel, source);
@@ -170,7 +174,7 @@
             return itemView;
         }];
         return result;
-    }] subscribeNext:^(id  _Nullable x) {
+    }] subscribeNext:^(NSArray*  _Nullable x) {
         @strongify(self);
         [self.headerView.propertyBar setPropertyItem:x];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -180,7 +184,11 @@
                 [self.listViewModel notifyCellDisplay];
             });
         });
+        _navBarViewModel.isHasData = YES;
         [self endLoading];
+        if ([x count] > 0) {
+            [self.tableView setHidden:NO];
+        }
     }];
 
     RAC(_chatSectionCellPlaceHolder, marketTrendList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
@@ -263,7 +271,7 @@
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
 
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
-    item.titleLabel.text = @"买房估价";
+    item.titleLabel.text = @"卖房估价";
     item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
     FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
     if (_headerViewModel.model.data.bottomOpenUrl.count >= 1) {
@@ -307,10 +315,14 @@
 
 
 -(void)onNetworkError {
+    [self endLoading];
+    _navBarViewModel.isHasData = NO;
     [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
 }
 
 -(void)onNoNetwork {
+    _navBarViewModel.isHasData = NO;
+    [self endLoading];
     [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
 }
 
