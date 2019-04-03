@@ -114,7 +114,7 @@
         recommendDict = [recommendModel toDictionary];
     }
     infoDict[@"recommend_house"] = recommendDict;
-    [self jump2ChildVC:infoDict];
+    [self jump2ChildVC:infoDict isHelp:NO];
 }
 - (void)jump2HouseFindResultVC
 {
@@ -127,15 +127,19 @@
         recommendDict = [recommendModel toDictionary];
     }
     infoDict[@"recommend_house"] = recommendDict;
-    [self jump2ChildVC:infoDict];
+    [self jump2ChildVC:infoDict isHelp:YES];
 }
 
-- (void)jump2ChildVC:(NSDictionary *)dict
+- (void)jump2ChildVC:(NSDictionary *)dict isHelp:(BOOL)isHelp
 {
     NSString *openUrl = [NSString stringWithFormat:@"sslocal://house_find"];
     NSMutableDictionary *infoDict = @{}.mutableCopy;
     if (dict.count > 0) {
         [infoDict addEntriesFromDictionary:dict];
+    }
+    if (isHelp) {
+        
+        infoDict[@"fh_onlyNeedRemoveLastVC_key"] = @(YES);
     }
     if (self.helpDelegate != nil) {
         
