@@ -388,7 +388,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
         NSDictionary *tracer = subPageParams[@"tracer"];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        if (tracer) {
+        if ([tracer isKindOfClass:[NSDictionary class]]) {
             [traceParam addEntriesFromDictionary:tracer];
         }
         traceParam[@"card_type"] = @"left_pic";

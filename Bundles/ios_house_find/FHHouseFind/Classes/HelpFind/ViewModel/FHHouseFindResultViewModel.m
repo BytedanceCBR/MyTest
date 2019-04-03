@@ -97,7 +97,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
         [self.houseSearchDic setValue:queryString forKey:@"search_query"];
-        [self requestErshouHouseListData:YES query:queryString offset:50 searchId:nil];
+        [self requestErshouHouseListData:YES query:queryString offset:0 searchId:nil];
     }
 }
 
@@ -242,6 +242,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_requestTask cancel];
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
+    [paramsRequest setValue:@(50) forKey:@"count"];
     
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -403,7 +404,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         for (UIView *subView in cellError.contentView.subviews) {
             [subView removeFromSuperview];
         }
-
+        cellError.selectionStyle = UITableViewCellSelectionStyleNone;
         FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.6)];
 //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
         [cellError.contentView addSubview:noDataErrorView];

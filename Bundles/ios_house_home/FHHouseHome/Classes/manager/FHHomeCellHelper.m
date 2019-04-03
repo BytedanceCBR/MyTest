@@ -24,6 +24,7 @@
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <TTArticleCategoryManager.h>
+#import <UIFont+House.h>
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
@@ -306,12 +307,11 @@ static NSMutableArray  * _Nullable identifierArr;
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.nameLabel.textColor = [UIColor themeGray1];
-            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
-            if (!font) {
-                font = [UIFont systemFontOfSize:14];
-            }
+            UIFont *font = [UIFont themeFontRegular:12];
             itemView.nameLabel.font = font;
             itemView.nameLabel.text = itemModel.title;
+            itemView.nameLabel.textColor = [UIColor themeGray2];
+            
             [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(8);
             }];

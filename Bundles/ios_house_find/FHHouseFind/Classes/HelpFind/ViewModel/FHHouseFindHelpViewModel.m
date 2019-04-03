@@ -129,6 +129,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         [self refreshHouseFindItems:routeParamObj.queryParams];
+    }else {
+        [self selectDefaultItems];
     }
 }
 
@@ -144,6 +146,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     for (FHHouseFindSelectItemModel *itemModel in model.items) {
         [itemModel.selectIndexes removeAllObjects];
     }
+    [self selectDefaultItems];
     [self.collectionView reloadData];
     [self addClickOptionsLog:@"reset"];
 }
@@ -196,11 +199,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
-            //            [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-            [wself reloadCollectionViewSection:[wself.collectionView indexPathForCell:wself.contactCell].section];
             [wself submitAction];
         }else{
             NSString *errorMessage = [wself errorMessageByErrorCode:error];
@@ -478,6 +479,42 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         [self fillPriceItem:item selectItem:selectItem priceItem:priceItem rate:rate];
         //        NSLog(@"zjing %@",selectItem);
+    }
+}
+
+- (void)selectDefaultItems
+{
+    FHHouseType ht = _houseType;
+    NSArray *filter = [self filterOfHouseType:ht];
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    FHSearchFilterConfigItem *item = self.priceConfigItem;
+    FHSearchFilterConfigOption *options = [item.options firstObject];
+    FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+    if (!selectItem) {
+        selectItem = [model makeItemWithTabId:item.tabId.integerValue];
+    }
+    if (!selectItem.configOption) {
+        selectItem.configOption = [item.options firstObject];
+    }
+    [model clearAddSelecteItem:selectItem withIndex:3];
+    
+    item = self.roomConfigItem;
+    options = [item.options firstObject];
+    selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+    if (!selectItem) {
+        selectItem = [model makeItemWithTabId:item.tabId.integerValue];
+    }
+    if (!selectItem.configOption) {
+        selectItem.configOption = [item.options firstObject];
+    }
+    FHSearchFilterConfigOption *option = nil;
+    if (item.options.count > 0) {
+        option = [item.options firstObject];
+    }
+    if ([option.supportMulti boolValue]) {
+        [model addSelecteItem:selectItem withIndex:1];
+    }else {
+        [model clearAddSelecteItem:selectItem withIndex:1];
     }
 }
 
