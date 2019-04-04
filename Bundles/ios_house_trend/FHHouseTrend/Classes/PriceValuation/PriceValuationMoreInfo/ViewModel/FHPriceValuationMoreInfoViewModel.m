@@ -9,8 +9,7 @@
 #import "FHPriceValuationDataPickerView.h"
 #import "TTDeviceUIUtils.h"
 #import "FHUserTracker.h"
-#import "ToastManager.h"
-#import "TTReachability.h"
+#import "FHNotificationDefines.h"
 
 @interface FHPriceValuationMoreInfoViewModel()<FHPriceValuationMoreInfoViewDelegate>
 
@@ -227,10 +226,18 @@
     }
 }
 
+- (BOOL)isChanged {
+    if(![self.viewController.infoModel.builtYear isEqualToString:self.buildYear] || ![self.viewController.infoModel.facingType isEqualToString:self.faceType] || ![self.viewController.infoModel.floor isEqualToString:self.floor] || ![self.viewController.infoModel.totalFloor isEqualToString:self.totalFloor] || ![self.viewController.infoModel.buildingType isEqualToString:self.buildType] || ![self.viewController.infoModel.decorationType isEqualToString:self.decorateType]){
+        return YES;
+    }
+    
+    return NO;
+}
+
 #pragma mark - FHPriceValuationMoreInfoViewDelegate
 
 - (void)confirm {
-    if ([TTReachability isNetworkConnected]) {
+    if([self isChanged]){
         self.viewController.infoModel.builtYear = self.buildYear;
         self.viewController.infoModel.facingType = self.faceType;
         self.viewController.infoModel.floor = self.floor;
@@ -238,11 +245,10 @@
         self.viewController.infoModel.buildingType = self.buildType;
         self.viewController.infoModel.decorationType = self.decorateType;
         
-        [self.viewController.navigationController popViewControllerAnimated:YES];
         [self.viewController.delegate callBackDataInfo:nil];
-    }else{
-        [[ToastManager manager] showToast:@"网络异常"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kPriceValuationMoreInfoChangedNotification object:nil];
     }
+    [self.viewController.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)chooseBuildYear {
