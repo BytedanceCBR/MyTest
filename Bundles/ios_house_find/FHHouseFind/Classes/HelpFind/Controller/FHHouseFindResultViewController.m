@@ -240,4 +240,8 @@
     // Do any additional setup after loading the view.
 }
 
+- (void)endEditing:(BOOL)isHideKeyBoard {
+    
+}
+
 @end
