@@ -374,7 +374,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                     [wSelf updateAllConfig:model isNeedDiff:NO];
                 }
                 
-                [[TTArticleCategoryManager sharedManager] startGetCategory];
+                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
+                    
+                }];
                 
                 wSelf.retryConfigCount = 3;
             }];
