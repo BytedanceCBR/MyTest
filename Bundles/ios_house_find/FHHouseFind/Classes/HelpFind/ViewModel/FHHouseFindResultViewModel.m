@@ -90,6 +90,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 - (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
 {
+    self.tableView.scrollsToTop = NO;
     _recommendModel = recommendModel;
     __weak typeof(self) wself = self;
     _topHeader.clickCallBack = ^{
