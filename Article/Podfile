@@ -43,9 +43,9 @@ def appPods
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
 
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git', :branch => 'feature/develop'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e51ab1182a51823c41b69bf4ac7399529aaad508' #:branch => 'feature/develop'
 
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :branch => 'feature/develop'
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9c5ef3144d54acc6f0203df98cb38bf5f38f075d' #:branch => 'feature/develop'
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
 
     pod 'SecGuard', '0.8.10.1'
@@ -308,10 +308,12 @@ def appPods
     'HMDConfig',
     'HMDStore',
     'ALog',
-    'FMDB'
-#    'CloudCommand',
+    'FMDB' ,
+    'CloudCommand'
 #    'DiskManager'
     ]
+    
+    pod_source 'AWECloudCommand' , '1.0.7'
 
     pod 'BDALog' , '0.1.12'
     pod 'BDAlogProtocol', '0.1.6'
@@ -540,7 +542,7 @@ def appPods
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
     # ab test sdk
-    pod  'BDABTestSDK', '1.0.1'
+    pod  'BDABTestSDK', '1.0.2-rc.3'
     #pod 'BDABTestSDK', '1.0.0'
 
 
