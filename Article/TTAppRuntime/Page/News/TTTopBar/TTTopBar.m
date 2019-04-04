@@ -114,20 +114,36 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         if ([TTDeviceHelper isIPhoneXDevice]) {
             padingTop = 20;
         }
+        BOOL isLarge320 = [TTDeviceHelper isScreenWidthLarge320];
+        CGFloat tipsFontSize = 14.0;
+        CGFloat leftOffset = 14;
+        // 适配小屏幕
+        if (!isLarge320) {
+            leftOffset = 10;
+            tipsFontSize = 12;
+        }
+        CGFloat widthOffset = leftOffset * 2;
+        UILabel *cityLabel = [[UILabel alloc] init];
+        cityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        cityLabel.text = dataModel.currentCityName;
+        cityLabel.font = [UIFont themeFontRegular:14];
+        
         UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.topUnAvalibleCityContainer addSubview:citySwichButton];
-        citySwichButton.layer.masksToBounds = YES;
-        citySwichButton.layer.cornerRadius = 12;
-        [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:12]];
-        citySwichButton.backgroundColor = [UIColor tt_themedColorForKey:kFHColorCoral];;
-        [citySwichButton setTitle:dataModel.currentCityName forState:UIControlStateNormal];
+        citySwichButton.layer.cornerRadius = 20;
+        citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
+        citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
+        citySwichButton.layer.shadowRadius = 6.f;
+        citySwichButton.layer.shadowOpacity = 1.f;
+        [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:14]];
+        citySwichButton.backgroundColor = [UIColor whiteColor];
         [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.topUnAvalibleCityContainer).offset(20);
-            make.height.mas_equalTo(24);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
-            make.width.mas_equalTo(dataModel.currentCityName.length * 15 + 24);
+            make.height.mas_equalTo(40);
+            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(-12);
+            make.width.mas_equalTo(dataModel.currentCityName.length * 14 + 24 + widthOffset); // button width
         }];
-        [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
+        [citySwichButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 22, 0, 0)];
         [citySwichButton addTarget:self withActionBlock:^{
             NSURL *url = [[NSURL alloc] initWithString:@"sslocal://city_list"];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
@@ -135,37 +151,44 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         
         UIImageView *imageButtonLeftIcon = [UIImageView new];
         [citySwichButton addSubview:imageButtonLeftIcon];
-        [imageButtonLeftIcon setImage:[UIImage imageNamed:@"fhhome_topbar_buttonicon"]];
+        [imageButtonLeftIcon setImage:[UIImage imageNamed:@"combined-shape-1"]];
         [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(citySwichButton).offset(5);
-            make.height.mas_equalTo(16);
+            make.left.equalTo(citySwichButton).offset(leftOffset);
+            make.height.mas_equalTo(18);
             make.centerY.equalTo(citySwichButton);
-            make.width.mas_equalTo(16);
+            make.width.mas_equalTo(18);
         }];
         
+        [citySwichButton addSubview:cityLabel];
+        [cityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(imageButtonLeftIcon.mas_right).offset(2);
+            make.height.mas_equalTo(21);
+            make.centerY.mas_equalTo(imageButtonLeftIcon);
+        }];
         
         UIImageView *imageRightView = [UIImageView new];
         [self.topUnAvalibleCityContainer addSubview:imageRightView];
+        imageRightView.layer.opacity = 0.3;
         
         [imageRightView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self.topUnAvalibleCityContainer).offset(0);
             make.height.mas_equalTo(52);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
+            make.bottom.equalTo(self.topUnAvalibleCityContainer.mas_bottom).offset(0);
             make.width.mas_equalTo(108);
         }];
         
         
         UILabel *topTipForCityLabel = [UILabel new];
-        topTipForCityLabel.text = @"找房服务即将开通,敬请期待";
-        topTipForCityLabel.font = [UIFont themeFontRegular:14];
+        topTipForCityLabel.text = @"找房服务即将开通，敬请期待";
+        topTipForCityLabel.font = [UIFont themeFontRegular:tipsFontSize];
         topTipForCityLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         [self.topUnAvalibleCityContainer addSubview:topTipForCityLabel];
         
         [topTipForCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(citySwichButton.mas_right).offset(10);
             make.height.mas_equalTo(20);
-            make.centerY.equalTo(self.topUnAvalibleCityContainer).offset(padingTop);
-            make.width.mas_equalTo(182);
+            make.centerY.equalTo(citySwichButton);
+            make.width.mas_equalTo(183);
         }];
         
         
@@ -325,11 +348,10 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     
     
     [_pageSearchPanel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        CGFloat offset = kSearchImageBackLeft;
-        make.left.equalTo(self).offset(offset);
-        make.centerY.mas_equalTo(_backgroundImageView.mas_bottom).offset(-kNavBarHeight / 2 - 3);
-        make.right.equalTo(self).offset(-offset);
-        make.height.mas_equalTo(52.0f);
+        make.left.equalTo(self);
+        make.bottom.mas_equalTo(_backgroundImageView.mas_bottom);
+        make.right.equalTo(self);
+        make.height.mas_equalTo(64.0f);
     }];
    
     [_pageSearchPanel setBackgroundColor:[UIColor whiteColor]];
