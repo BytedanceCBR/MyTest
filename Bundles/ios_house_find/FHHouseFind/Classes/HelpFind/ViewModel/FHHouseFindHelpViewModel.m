@@ -1042,7 +1042,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     CGFloat keyboardTop = [self.viewController.view convertPoint:keyBoardBounds.origin fromView:self.viewController.view].y;
     CGFloat top = self.viewController.view.height - keyboardTop ;
     
-    NSLog(@"zjing offset:%f  top is: %f",offset,top);
+//    NSLog(@"zjing offset:%f  top is: %f",offset,top);
     if (offset > 0) {
         
         self.collectionView.scrollEnabled = NO;
@@ -1276,7 +1276,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-    params[@"enter_type"] = [self pageTypeString];
+    params[@"page_type"] = [self pageTypeString];
     params[@"click_position"] = position;
     [FHUserTracker writeEvent:@"click_options" params:params];
 }
