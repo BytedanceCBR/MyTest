@@ -201,6 +201,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+    
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
@@ -243,7 +248,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
         phoneNum = userInfo.mobile;
     }
-    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
     [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNum completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
@@ -1034,7 +1042,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
-    CGFloat screenY = [self.commitCell convertPoint:CGPointMake(0, self.commitCell.height) toView:self.collectionView].y;
+    CGFloat screenY = [self.contactCell convertPoint:CGPointMake(0, self.contactCell.height + 60) toView:self.collectionView].y;
     CGFloat offset = 0;
     offset = screenY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
     self.lastContentInset = self.collectionView.contentInset;
