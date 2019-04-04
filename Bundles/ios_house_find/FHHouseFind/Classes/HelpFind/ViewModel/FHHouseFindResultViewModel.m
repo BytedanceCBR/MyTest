@@ -488,8 +488,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         cellModel = self.houseList[indexPath.row];
         
         isLastCell = (indexPath.row == self.houseList.count - 1);
-        return 105;
-//        return (isLastCell ? 125 : 105);
+        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+        return (isLastCell ? 125 : 105) + reasonHeight;
     }
     return 105;
 }
@@ -537,9 +537,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSString *originFrom = self.originFrom ? : @"be_null";
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"house_type"] = @"be_null";
+    tracerDict[@"house_type"] = [self houseTypeString];
     tracerDict[@"card_type"] = @"left_pic";
-    tracerDict[@"page_type"] = @"be_null";
+    tracerDict[@"page_type"] = [self pageTypeString];
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
     tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
@@ -552,8 +552,29 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [FHUserTracker writeEvent:@"house_show" params:tracerDict];
 }
 
--(NSString *)pageTypeString {
-    
+- (NSString *)houseTypeString
+{
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+- (NSString *)pageTypeString
+{
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
             return @"new_list";

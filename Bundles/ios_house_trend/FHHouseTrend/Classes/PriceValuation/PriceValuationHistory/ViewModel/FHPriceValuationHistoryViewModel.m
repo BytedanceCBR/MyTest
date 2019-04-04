@@ -39,11 +39,15 @@
     return self;
 }
 
-- (void)requestData {
+- (void)requestData:(BOOL)isFirst {
     __weak typeof(self) wself = self;
-    [self.viewController startLoading];
+    if(isFirst){
+        [self.viewController startLoading];
+    }
     [FHPriceValuationAPI requestHistoryListWithCompletion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        [self.viewController endLoading];
+        if(isFirst){
+            [self.viewController endLoading];
+        }
         FHPriceValuationHistoryModel *historyModel = (FHPriceValuationHistoryModel *)model;
         
         if (!wself) {
@@ -63,6 +67,7 @@
             wself.model = historyModel;
             if(historyModel.data.historyHouseList.count > 0){
                 wself.viewController.hasValidateData = YES;
+                [wself.dataList removeAllObjects];
                 [wself.dataList addObjectsFromArray:historyModel.data.historyHouseList];
                 [wself.tableView reloadData];
             }else{

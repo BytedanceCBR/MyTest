@@ -11,11 +11,13 @@
 #import "FHPriceValuationHistoryModel.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import <TTReachability/TTReachability.h>
+#import "FHNotificationDefines.h"
 
 @interface FHPriceValuationHistoryController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
 @property(nonatomic, strong) FHPriceValuationHistoryViewModel *viewModel;
 @property(nonatomic ,strong) UITableView *tableView;
+@property(nonatomic ,assign) BOOL needRequestData;
 
 @end
 
@@ -24,9 +26,7 @@
 - (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
-        NSDictionary *params = paramObj.allParams;
-//        self.tracerModel = [[FHTracerModel alloc] init];
-//        self.tracerModel.enterFrom = params[@"enter_from"];
+
     }
     return self;
 }
@@ -35,10 +35,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
+    self.needRequestData = NO;
+    
     [self initNavbar];
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [self initNotification];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    if(self.needRequestData){
+        [_viewModel requestData:NO];
+        self.needRequestData = NO;
+    }
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)initNavbar {
@@ -92,9 +107,13 @@
     [self startLoadData];
 }
 
+- (void)initNotification {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moreInfoChanged) name:kPriceValuationMoreInfoChangedNotification object:nil];
+}
+
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        [_viewModel requestData];
+        [_viewModel requestData:YES];
     } else {
         if(!self.hasValidateData){
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -104,6 +123,10 @@
 
 - (void)retryLoadData {
     [self startLoadData];
+}
+
+- (void)moreInfoChanged {
+    self.needRequestData = YES;
 }
 
 #pragma mark - UIViewControllerErrorHandler

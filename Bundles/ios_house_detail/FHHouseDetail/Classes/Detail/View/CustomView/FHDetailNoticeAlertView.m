@@ -225,6 +225,14 @@
     }
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *destString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if(destString.length > 11){
+        return NO;
+    }
+    return YES;
+}
+
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     // 有手机号，显示原来的手机号
