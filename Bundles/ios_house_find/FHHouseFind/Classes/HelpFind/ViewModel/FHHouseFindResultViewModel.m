@@ -478,8 +478,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         cellModel = self.houseList[indexPath.row];
         
         isLastCell = (indexPath.row == self.houseList.count - 1);
-        return 105;
-//        return (isLastCell ? 125 : 105);
+        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+        return (isLastCell ? 125 : 105) + reasonHeight;
     }
     return 105;
 }
