@@ -305,7 +305,7 @@
 -(NSDictionary*)traceParams {
     self.tracerDict[@"enter_from"] = @"city_market";
     self.tracerDict[@"origin_from"] = @"city_market";
-    NSDictionary *tracer = @{@"tracer":[self.tracerDict copy]};
+    NSDictionary *tracer = @{@"tracer":[self.tracerDict copy] ? : @{}};
     return tracer;
 }
 

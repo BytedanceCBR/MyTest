@@ -84,7 +84,7 @@
                 @strongify(self);
                 [self jumpToListPage:section - self.sectionOffset];
             }];
-            [self traceElementShow:@{@"element_type": model.type ? : @"be_null"}];
+            [self traceElementShow:@{@"element_type": model.type ? : @""}];
         }
         _headerViews[@(section)] = result;
         
@@ -117,6 +117,13 @@
     dict[@"search_id"] = @"be_null";
     dict[@"log_pb"] = @"be_null";
     dict[@"page_type"] = @"city_market";
+    if (model == nil) {
+        return;
+    }
+
+    if (model.title == nil) {
+        model.title = @"";
+    }
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{
                                                                     @"model": model,
                                                                     @"title": model.title,

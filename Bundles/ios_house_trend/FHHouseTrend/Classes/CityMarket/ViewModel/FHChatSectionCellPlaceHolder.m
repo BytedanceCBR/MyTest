@@ -141,13 +141,20 @@
 -(void)setupChat:(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*)values
       ofChartView:(FHCityMarketTrendChatView*) chartView {
     [chartView resetChatView];
-    
     NSMutableArray* array = [[NSMutableArray alloc] init];
     [values.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         return [array addObjectsFromArray:obj.values];
     }];
     __block NSUInteger lineIndex = 0;
     BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
+
+    __block CGFloat maxValue = CGFLOAT_MIN;
+    __block CGFloat minValue = CGFLOAT_MIN;
+    [array enumerateObjectsUsingBlock:^(NSNumber*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        maxValue = MAX(maxValue, [obj floatValue]);
+        minValue = MIN(minValue, [obj floatValue]);
+    }];
+
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
         UIColor* color = [UIColor colorWithHexString:each.color];
