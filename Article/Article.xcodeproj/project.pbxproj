@@ -317,6 +317,9 @@
 		3D721A9E218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
+		3D741F2F2255FF5D00E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
+		3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
+		3D741F312255FF8600E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
 		3DB7A71C21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
 		3DB7A71D21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
 		3DB7A71E21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
@@ -6816,6 +6819,7 @@
 		3D4736F8222D3369001899BA /* TTOpenURLTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTOpenURLTask.m; sourceTree = "<group>"; };
 		3D5BD565222440EB0037E8E3 /* NewsInHouse.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = NewsInHouse.entitlements; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
+		3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseCellsBridgeImp.h; sourceTree = "<group>"; };
 		3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseCellsBridgeImp.m; sourceTree = "<group>"; };
 		3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BubbleImages.xcassets; sourceTree = "<group>"; };
@@ -9384,6 +9388,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D741F2F2255FF5D00E62B4C /* AddressBookUI.framework in Frameworks */,
 				B373CEDC2174587A008F9905 /* libresolv.tbd in Frameworks */,
 				B373CEDD2174587A008F9905 /* libbz2.tbd in Frameworks */,
 				B373CEDE2174587A008F9905 /* WebKit.framework in Frameworks */,
@@ -9431,6 +9436,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D741F312255FF8600E62B4C /* AddressBookUI.framework in Frameworks */,
 				D47957E321ECC94E00548965 /* libresolv.tbd in Frameworks */,
 				D47957E421ECC94E00548965 /* libbz2.tbd in Frameworks */,
 				D47957E521ECC94E00548965 /* WebKit.framework in Frameworks */,
@@ -9477,6 +9483,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */,
 				FEFA5A26205FB1A8001F50D8 /* libresolv.tbd in Frameworks */,
 				FEFA5A27205FB1A8001F50D8 /* libbz2.tbd in Frameworks */,
 				FEFA5A28205FB1A8001F50D8 /* WebKit.framework in Frameworks */,
@@ -10699,6 +10706,7 @@
 		3AA5028315876A1F00EB27FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */,
 				4EB6EE50212A823B00EC2148 /* StoreKit.framework */,
 				D013795E1DFE8BEF0020C6BD /* libresolv.tbd */,
 				B119472C1CF7FF4700561B49 /* libbz2.tbd */,

@@ -46,20 +46,19 @@ def appPods
     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e51ab1182a51823c41b69bf4ac7399529aaad508' #:branch => 'feature/develop'
 
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9c5ef3144d54acc6f0203df98cb38bf5f38f075d' #:branch => 'feature/develop'
-#    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
 
-    pod 'SecGuard', '0.8.10.1'
+    pod_binary 'SecGuard', '0.8.10.5'#'0.8.10.1'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
 #    #-----安全组sdk-----#
 #    pod 'IESSafeGuard', '0.6.5'
 
-    pod 'TTRNKit', '0.3.3'
-    pod 'IESGeckoKit', '0.4.0'
-    pod 'IESWebKit', '0.1.4'
+    pod_binary 'TTRNKit', '0.3.3'
+    pod_source 'IESGeckoKit', '0.4.0'
+    pod_binary 'IESWebKit', '0.1.5'
 #    pod 'IESWebKit/Falcon', :git => 'git@code.byted.org:ugc/IESWebKit.git', :branch => 'master'
-    pod 'React', '0.55.9-alpha.22', :subspecs => [ #可根据需要选择相应子库以减少包大小
+    pod_binary 'React', '0.55.9-alpha.22', :subspecs => [ #可根据需要选择相应子库以减少包大小
     'Core',
     'CxxBridge',
     'RCTActionSheet',
@@ -119,7 +118,7 @@ def appPods
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     pod 'BDTArticle', '0.2.3'
-    pod 'BDTExploreOrderedData', '0.1.6'
+    pod 'BDTExploreOrderedData', '0.1.7'
 
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 #    pod_binary 'BDTBasePlayer' , '0.3.78'
@@ -182,8 +181,8 @@ def appPods
 #    pod_binary 'AWEVideoPlayer', '0.3.20'
 #    pod 'Mantle' , '2.1.2'
     pod 'IESVideoPlayer', '0.1.16'
-    pod 'AWEVideoPlayer', '0.3.20'
-    pod 'Mantle' , '2.1.2'
+    pod_binary 'AWEVideoPlayer', '0.3.20'
+    pod_binary 'Mantle','2.1.0-rc2'
     pod_binary 'CocoaLumberjack' , '3.4.2'
     
 
@@ -196,7 +195,7 @@ def appPods
     #----头条webview库-----
 #    pod 'TTWebViewBundle', '0.8.15'
     pod 'AKWebViewBundlePlugin', :path => '../AKPlugins/AKWebViewBundlePlugin', :inhibit_warnings => false
-    pod 'TTRexxar', '0.8.1', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
+    pod_binary 'TTRexxar', '0.8.10', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
     pod 'TTServiceProtocols', :path => '../AKPlugins/AKServiceProtocols', :inhibit_warnings => false
@@ -217,12 +216,12 @@ def appPods
     pod 'TTReporter', '0.2.1'
     #-----头条号---
     pod 'TTAdModule', :path => '../AKPlugins/TTAdModule' #'0.1.25'
-    pod 'TTAdSplashSDK', '0.4.4'
+    pod_binary 'TTAdSplashSDK', '0.4.4'
 #    pod 'TTAdSplashSDK', :git=> 'git@code.byted.org:TTIOS/tt_splash_sdk.git', :branch=> 'feature_multi_log_version_tgq'
 
     pod_binary 'TTEntry', '0.1.7'
     
-    pod 'TTBridgeUnify', '0.3.19',:subspecs => [
+    pod_binary 'TTBridgeUnify', '0.3.19',:subspecs => [
     'TTBridge',#核心模块，必须引入
     'WebView',#默认实现的 webview engine,具体可参考此文档的 engine 的使用姿势一节
     # 'React', #默认的 RN engine, 如果业务没有使用 RN，可以不用依赖
@@ -244,7 +243,7 @@ def appPods
     #----头条Settihngs----
     pod 'TTSettingsManager', '0.3.1'
     #-----手机通讯录操作库---
-    pod 'TTAddressBookService', '0.1.4'
+    pod_binary 'TTAddressBookService', '0.1.4'
     #-----电信取号服务---
 #    pod 'TTTelecomGettingMobile', '0.2.0'
 
@@ -288,7 +287,7 @@ def appPods
     #-----头条端监控库-----
 #    pod 'TTMonitor', '0.7.9.42'
     pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
-    pod 'Heimdallr','0.6.27', :subspecs => [
+    pod_binary 'Heimdallr','0.6.27-rc.0', :subspecs => [
     'Core',
     'Monitors',
     'TTMonitor',
@@ -313,7 +312,7 @@ def appPods
 #    'DiskManager'
     ]
     
-    pod_source 'AWECloudCommand' , '1.0.7'
+    pod_binary 'AWECloudCommand' , '1.0.7'
 
     pod 'BDALog' , '0.1.12'
     pod 'BDAlogProtocol', '0.1.6'
@@ -325,11 +324,11 @@ def appPods
     pod_binary 'TTReachability', '0.1.8'
     pod 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
-    pod 'TTPersistence', '0.2.3'
+    pod_binary 'TTPersistence', '0.2.3'
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod 'BDWebImage', '0.2.2',:subspecs => [
+    pod_source 'BDWebImage', '0.2.2',:subspecs => [
     'Core',
     'Decoder',
     'Download',
@@ -343,7 +342,7 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod 'TTTracker', '1.0.6-rc.2'
+    pod_binary 'TTTracker', '1.0.6-rc.2'
     #-----头条推送SDK----
     pod_binary 'TTPushSDK', '0.1.1'
     #-----路由-----
@@ -359,7 +358,7 @@ def appPods
     #-----平台化UIModel库-----
     pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
     #-----音频相关库---
-    pod 'TTAudio', '0.1.5'
+    pod_binary 'TTAudio', '0.1.6'
     #----热修复库---
 #    pod 'TTSparkRescue','2.3.1'
 
@@ -377,7 +376,7 @@ def appPods
     ]
 
     #----内测升级弹窗----
-    pod 'TTAppUpdateHelper', '1.0.9', :subspecs => [
+    pod_binary 'TTAppUpdateHelper', '1.0.9', :subspecs => [
     'TTUpdateHelper',
     'TTUpdateView'
     ]
@@ -435,12 +434,12 @@ def appPods
     pod_binary 'libwebp' , '0.6.1'
 #    pod 'MBProgressHUD'
     pod_binary 'TTTAttributedLabel', '1.13.3'
-    pod 'UMengAnalytics', '4.1.4'
-    pod 'JSONModel', '1.7.0-private'
-    pod 'Fabric', '1.6.7'
+    pod_binary 'UMengAnalytics', '4.1.4'
+    pod_binary 'JSONModel','1.7.0-private'
+    pod_binary 'Fabric','1.9.0'
     pod_binary 'MJExtension', '3.0.12'
     pod_binary 'MJRefresh' , '3.1.15.7'
-    pod 'Crashlytics', '3.7.2'
+    pod_binary 'Crashlytics','3.12.0'
     pod_binary 'KVOController', '1.2.0'
     pod_binary 'RSSwizzle', '0.1.1'
     #pod 'AMapSearch', '3.0.1'
@@ -455,7 +454,7 @@ def appPods
     #pod 'ProtocolBuffers', '1.9.11'
 #    pod 'libextobjc', '0.4.1'
     pod_binary 'ReactiveObjC', '3.0.0'
-    pod 'SDWebImage', '4.4.1', :subspecs => [
+    pod_binary 'SDWebImage', '4.4.1', :subspecs => [
     'Core',
     'GIF',
     'WebP'
@@ -513,17 +512,17 @@ def appPods
     'Bridges'
     ]
     
-    pod 'IGListKit'
-    pod 'Bolts'
-    pod 'ToutiaoFrontierWebSocket'
+    pod_binary 'IGListKit','3.4.0'
+    pod_binary 'Bolts', '1.9.0'
+    pod_binary 'ToutiaoFrontierWebSocket' , '0.2.5'
     pod_binary 'WCDB', '1.0.7.5'
     pod_binary 'SQLiteRepairKit' , '1.2.1'
     pod_binary 'WCDBOptimizedSQLCipher' , '1.2.1'
-    pod 'SocketRocket', '0.5.1'
+    pod_binary 'SocketRocket', '0.5.1'
     
     
-    pod 'TTFileUploadClient', '1.7.6.3'
-    pod 'RXCollections'
+    pod_binary 'TTFileUploadClient', '1.7.6.8'
+    pod 'RXCollections' , '1.0'
 
     pod_binary 'MBProgressHUD' , '1.1.0'
     
@@ -531,9 +530,9 @@ def appPods
     
     pod_binary 'Godzippa' , '1.1.0'
     
-    pod        'OpenSSL-Universal' , '1.0.1.20'
+    pod_binary 'OpenSSL-Universal' , '1.0.1.20'
     
-    pod         'boringssl' , '0.0.7'
+    pod_source 'boringssl' , '0.0.7'
     
     pod_binary 'AFNetworking' , '2.5.1'
     
@@ -542,7 +541,7 @@ def appPods
     pod_binary 'AFgzipRequestSerializer' , '0.0.2'
     
     # ab test sdk
-    pod  'BDABTestSDK', '1.0.2-rc.3'
+    pod_binary  'BDABTestSDK', '1.0.2-rc.3'
     #pod 'BDABTestSDK', '1.0.0'
 
 
