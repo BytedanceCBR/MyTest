@@ -74,7 +74,7 @@
     [self.contentView reloadData];
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
         if([change[@"new"] boolValue]){
@@ -148,6 +148,11 @@
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
         make.bottom.mas_equalTo(-bottomHeight);
     }];
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleDefault;
 }
 
 - (void)dealloc

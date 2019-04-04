@@ -179,7 +179,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self submitAction];
         return;
     }
-    
+    [self addClickLoginLog];
+
     NSString *phoneNumber = self.contactCell.phoneInput.text;
     NSString *smsCode = self.contactCell.varifyCodeInput.text;
     
@@ -199,7 +200,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"验证码为空"];
         return;
     }
-    [self addClickLoginLog];
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
     
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
@@ -243,7 +248,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
         phoneNum = userInfo.mobile;
     }
-    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
     [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNum completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
@@ -1034,7 +1042,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
-    CGFloat screenY = [self.commitCell convertPoint:CGPointMake(0, self.commitCell.height) toView:self.collectionView].y;
+    CGFloat screenY = [self.contactCell convertPoint:CGPointMake(0, self.contactCell.height + 60) toView:self.collectionView].y;
     CGFloat offset = 0;
     offset = screenY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
     self.lastContentInset = self.collectionView.contentInset;
@@ -1042,7 +1050,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     CGFloat keyboardTop = [self.viewController.view convertPoint:keyBoardBounds.origin fromView:self.viewController.view].y;
     CGFloat top = self.viewController.view.height - keyboardTop ;
     
-    NSLog(@"zjing offset:%f  top is: %f",offset,top);
+//    NSLog(@"zjing offset:%f  top is: %f",offset,top);
     if (offset > 0) {
         
         self.collectionView.scrollEnabled = NO;
@@ -1076,7 +1084,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
     CGFloat offset = 0;
     //    offset = self.lastY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
-    NSLog(@"zjing hide offset:%f",offset);
+//    NSLog(@"zjing hide offset:%f",offset);
     
     //    offset = self.collectionView.contentSize.height - self.collectionView.height;
     //    if (offset > 0) {
@@ -1276,7 +1284,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-    params[@"enter_type"] = [self pageTypeString];
+    params[@"page_type"] = [self pageTypeString];
     params[@"click_position"] = position;
     [FHUserTracker writeEvent:@"click_options" params:params];
 }
