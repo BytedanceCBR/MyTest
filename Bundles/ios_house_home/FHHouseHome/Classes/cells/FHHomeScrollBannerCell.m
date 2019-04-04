@@ -173,6 +173,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 @property (nonatomic, assign)   NSTimeInterval       timeDuration;
 @property (nonatomic, strong)   NSTimer       *timer;
 @property (nonatomic, assign)   BOOL       enableTimer;
+@property (nonatomic, assign)   BOOL       hasPausedTimer;
 @property (nonatomic, strong)   FHBannerIndexView       *indexView;
 @property (nonatomic, assign)   CGFloat       indexViewSize;
 @property (nonatomic, strong)   UITapGestureRecognizer       *tapGes;
@@ -192,6 +193,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         _imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
         _imageHeight = kFHScrollBannerHeight;
         _enableTimer = YES;
+        _hasPausedTimer = NO;
         _timeDuration = 3.0;
         _indexViewSize = 5;
         [self setupUI];
@@ -224,6 +226,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
 
 // 设置图片
 - (void)setURLs:(NSArray *)urls {
+    self.hasPausedTimer = NO;
     [self removeTimer];
     if (urls.count > 0) {
         self.currentIndex = 0;
@@ -355,7 +358,11 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     if (self.totalCount <= 1) {
         return;
     }
-    [self.timer setFireDate:[NSDate distantPast]];
+    // 是暂停了定时器
+    if (self.hasPausedTimer) {
+        [self.timer setFireDate:[NSDate distantPast]];
+        self.hasPausedTimer = NO;
+    }
 }
 
 // 暂停定时器
@@ -365,6 +372,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     }
     if (self.timer != nil) {
         [self.timer setFireDate:[NSDate distantFuture]];
+        self.hasPausedTimer = YES;
     }
 }
 
