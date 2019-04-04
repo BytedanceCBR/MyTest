@@ -954,14 +954,7 @@ TTRefreshViewDelegate
             }
         }
     }
-    
-    BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
-    if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-        [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-                
-        }];
-    }
-    
+        
     
     self.listView.backgroundColor = [UIColor whiteColor];
 }

@@ -113,7 +113,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     self.bottomView.hidden = YES;
     
     _buttonOpenMore = [UIButton new];
-    [_buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
+    [_buttonOpenMore setTitle:@"查看更多符合条件房源" forState:UIControlStateNormal];
     [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
     [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
@@ -248,10 +248,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
     [paramsRequest setValue:@(50) forKey:@"count"];
     
-    
-    if ([self.tableView numberOfSections] && [self.tableView numberOfRowsInSection:0]) {
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    }
+    [self.tableView setContentOffset:CGPointMake(0, 0)];
+//    if ([self.tableView numberOfSections] && [self.tableView numberOfRowsInSection:0]) {
+//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//    }
     
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -308,6 +308,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
             
             [self.tableView reloadData];
             self.bottomView.hidden = NO;
+            
+            self.tableView.scrollEnabled = YES;
         }else
         {
             [self.topHeader setTitleStr:0];
@@ -315,6 +317,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
             [self.tableView reloadData];
             self.bottomView.hidden = YES;
+            self.tableView.scrollEnabled = NO;
         }
         
     }else
@@ -323,6 +326,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.isShowErrorPage = YES;
         [self.tableView reloadData];
         self.bottomView.hidden = YES;
+        self.tableView.scrollEnabled = NO;
     }
     
     [self addHouseSearchLog];

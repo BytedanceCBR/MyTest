@@ -200,7 +200,7 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 opData2CountValue = 4;
             }
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
@@ -266,7 +266,7 @@ static NSMutableArray  * _Nullable identifierArr;
     for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
         if (isNeedAllocNewItems) {
-            if (index < 4) {
+            if (index < kFHHomeIconRowCount) {
                 itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-17];
             }else
             {
@@ -276,7 +276,7 @@ static NSMutableArray  * _Nullable identifierArr;
         {
             if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
                 itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
-                if (index < 4) {
+                if (index < kFHHomeIconRowCount) {
                     itemView.iconBottomPadding = -17;
                 }else
                 {
@@ -297,7 +297,7 @@ static NSMutableArray  * _Nullable identifierArr;
 
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    if (index < 4) {
+                    if (index < kFHHomeIconRowCount) {
                         make.top.mas_equalTo(8);
                     }else
                     {
@@ -421,31 +421,31 @@ static NSMutableArray  * _Nullable identifierArr;
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            CGFloat isHasCityTrend = 5;
-            
-            if ([FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse) {
-                isHasCityTrend = -5;
-            }else
-            {
-                isHasCityTrend = 5;
-            }
-
-            
             if (index%kFHHomeBannerRowCount == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
-                    make.top.mas_equalTo(5 + isHasCityTrend);
-                    make.bottom.mas_equalTo(-5 + isHasCityTrend);
-                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    if (index/kFHHomeBannerRowCount == 0) {
+                        make.top.mas_equalTo(12);
+                        make.bottom.mas_equalTo(-2);
+                    }else
+                    {
+                        make.top.mas_equalTo(6);
+                        make.bottom.mas_equalTo(-8);
+                    }
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
                 }];
             }else if (index%kFHHomeBannerRowCount == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
-                    make.top.mas_equalTo(5 + isHasCityTrend);
-                    make.bottom.mas_equalTo(-5 + isHasCityTrend);
-                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    if (index/kFHHomeBannerRowCount == 0) {
+                        make.top.mas_equalTo(12);
+                        make.bottom.mas_equalTo(-2);
+                    }else
+                    {
+                        make.top.mas_equalTo(6);
+                        make.bottom.mas_equalTo(-8);
+                    }
                     make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
                 }];
             }
