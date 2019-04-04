@@ -606,8 +606,18 @@
     self.priceLabel.text = model.pricing;
     self.pricePerSqmLabel.text = nil;
     
-    BOOL isCommute = YES;
-    if (isCommute) {
+    NSArray *firstRow = [model.bottomText firstObject];
+    NSDictionary *bottomText = nil;
+    if ([firstRow isKindOfClass:[NSArray class]]) {
+        NSDictionary *info = [firstRow firstObject];
+        if ([info isKindOfClass:[NSDictionary class]]) {
+            bottomText = info;
+        }
+    }
+    
+    NSString *infoText = bottomText[@"text"];
+    
+    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
         
         NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
         
@@ -620,8 +630,10 @@
         
         [commuteAttr appendAttributedString:clockAttr];
         
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray3]};
-        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:@" 公交30分钟" attributes:attr];
+        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
+        
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
+        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"  %@",infoText] attributes:attr];
         
         [commuteAttr appendAttributedString:timeAttr];
         
@@ -715,9 +727,9 @@
     [self.originPriceLabel.yoga markDirty];
     [self.pricePerSqmLabel.yoga markDirty];
     
-    if (self.priceBgView.yoga.marginTop.value != (showTags?PRICE_BG_TOP_MARGIN:0)) {
+    if (self.priceBgView.yoga.marginTop.value != (showTags?PRICE_BG_TOP_MARGIN:2)) {
         [self.priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.marginTop = YGPointValue(showTags?PRICE_BG_TOP_MARGIN:0);
+            layout.marginTop = YGPointValue(showTags?PRICE_BG_TOP_MARGIN:2);
         }];
         [self.priceBgView.yoga markDirty];
     }

@@ -39,6 +39,7 @@
 #import "FHSuggestionSubscribCell.h"
 #import "FHCommutePOISearchViewController.h"
 #import "FHCommuteManager.h"
+#import <FHHouseBase/FHEnvContext.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -277,6 +278,10 @@
     
     NSString *searchId = self.searchId;
 
+    if (self.isCommute) {
+        [self requestCommute:isRefresh offset:offset searchId:searchId];
+        return;
+    }
     
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
@@ -391,6 +396,40 @@
     }];
     
     self.requestTask = task;
+}
+
+-(void)requestCommute:(BOOL)isRefresh offset:(NSInteger)offset searchId:(NSString *)searchId {
+    
+    [_requestTask cancel];
+    
+    
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    CLLocationCoordinate2D location = CLLocationCoordinate2DMake(manager.latitude, manager.longitude);
+    CGFloat duration = manager.duration.floatValue*60;
+    NSMutableDictionary *param = nil;
+    if (searchId.length > 0) {
+        param = @{@"search_id":searchId};
+//    }else{
+//        //for test
+//
+//        param = @{@"search_id":@"123",@"logid":@"123"};
+//
+//
+//
+//
+//
+    }
+    
+    
+    __weak typeof(self) wself = self;
+    TTHttpTask *task = [FHHouseListAPI requestCommute:cityId location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
+        if (!wself) {
+            return ;
+        }
+        [wself processData:model error:error];
+        
+    }];
 }
 
 - (void)requestAddSubScribe:(NSString *)text
@@ -612,7 +651,7 @@
 
         }
         // 二手房、租房应该有 houseListOpenUrl
-        if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
+        if (self.houseType == FHHouseTypeSecondHandHouse || (self.houseType == FHHouseTypeRentHouse && !self.isCommute)) {
             if (self.houseListOpenUrl.length <= 0) {
                 NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
                 // device_id
@@ -630,7 +669,6 @@
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
    
-
             self.isFirstLoad = NO;
             if (self.searchId.length > 0 ) {
                 SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
@@ -884,10 +922,19 @@
 
 -(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController
 {
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    manager.latitude = poi.location.latitude;
+    manager.longitude = poi.location.longitude;
+    manager.destLocation = poi.name;
+    [manager sync];
+    
     if (self.commuteSugSelectBlock) {
         self.commuteSugSelectBlock(poi.name);
     }
     [viewController.navigationController popViewControllerAnimated:YES];
+    
+    [self loadData:YES fromRecommend:NO];
+    
 }
 
 -(void)userCanced:(UIViewController *)viewController

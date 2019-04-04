@@ -60,9 +60,4 @@
     
 }
 
--(void)showCommuteInView:(UIView *)view
-{
-    
-}
-
 @end

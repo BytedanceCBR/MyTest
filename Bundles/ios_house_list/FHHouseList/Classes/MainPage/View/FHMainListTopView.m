@@ -86,6 +86,24 @@
 //    NSLog(@"[SCROLL] topview set frame : %@",NSStringFromCGRect(frame));
 //}
 
+-(CGRect)relayout
+{
+    CGFloat top = 0;
+    _bannerView.top = top;
+    top = _bannerView.bottom;
+    _filterBarView.top = _bannerView.bottom;
+    top = _filterBarView.bottom;
+
+    CGRect bottomFrame = _bottomLine.frame;
+    bottomFrame.origin.y = top - ONE_PIXEL;
+    _bottomLine.frame = bottomFrame;
+    
+    CGRect frame = self.frame;
+    frame.size.height = _filterBarView.bottom;
+    self.frame = frame;
+    return frame;
+}
+
 -(void)willMoveToSuperview:(UIView *)newSuperview
 {
     if ([newSuperview isKindOfClass:[UIScrollView class]]) {

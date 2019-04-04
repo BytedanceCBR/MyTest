@@ -49,10 +49,25 @@
     return 0;
 }
 
++(UIImage *)cacheImageForRentBanner:(FHConfigDataRentBannerModel *)rentBannerModel
+{
+    if (rentBannerModel.items.count == 0) {
+        return nil;
+    }
+    FHConfigDataRentBannerItemsModel *model = [rentBannerModel.items firstObject];
+    FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
+    if (!img) {
+        return nil;
+    }
+    return  [[BDWebImageManager sharedManager].imageCache imageForKey:img.url];
+}
+
 -(instancetype)initWithFrame:(CGRect)frame banner:(FHConfigDataRentBannerModel *)rentBanner
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        self.clipsToBounds = YES;
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -64,12 +79,15 @@
         CGFloat bannerHeight = [self.class bannerHeight:rentBanner];
         BOOL needShowBanner = rentBanner && rentBanner.items.count > 0 ;
         FHConfigDataRentBannerItemsModel *model = [rentBanner.items firstObject];
+        FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
+        UIImage *image  = [[BDWebImageManager sharedManager].imageCache imageForKey:img.url];
+
         if (bannerHeight == 0) {
             needShowBanner = NO;
         }
         
         f.size.height -= BOTTOM_PADDING;
-        if (needShowBanner) {
+        if (needShowBanner && image) {
             f.size.height -= bannerHeight;
         }
         //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
@@ -83,12 +101,23 @@
         
         [self addSubview:_collectionView];
         if (needShowBanner) {
-            
-            FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
             _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(BANNER_HOR_MARGIN, CGRectGetMaxY(_collectionView.frame), f.size.width - 2*BANNER_HOR_MARGIN, bannerHeight)];
             [self addSubview:_bannerView];
-            
-            [_bannerView bd_setImageWithURL:[NSURL URLWithString:img.url] placeholder:nil];
+
+            if (image) {
+                _bannerView.image = image;
+            }else{
+                
+                __weak typeof(self) wself = self;
+                [_bannerView bd_setImageWithURL:[NSURL URLWithString:img.url] placeholder:nil options:BDImageRequestHighPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+                    if (!wself) {
+                        return ;
+                    }
+                    if ([wself.delegate respondsToSelector:@selector(rentBannerLoaded:)]) {
+                        [wself.delegate rentBannerLoaded:wself.bannerView];
+                    }                                        
+                }];
+            }
             
             UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClickAction)];
             [_bannerView addGestureRecognizer:tapGesture];

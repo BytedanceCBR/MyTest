@@ -78,6 +78,9 @@
         self.hidesBottomBarWhenPushed = YES;
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
+        if (houseTypeStr.length == 0 && [paramObj.sourceURL.host isEqualToString:@"commute_list"]) {
+            self.houseType = FHHouseTypeRentHouse;
+        }
         if (self.houseType <= 0 || self.houseType > 4) {
             // 目前4种房源：1，2，3，4
             NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
@@ -146,6 +149,11 @@
     if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
         type = FHFakeInputNavbarTypeMap;
     }
+    if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
+        //通勤找房不显示地图
+        type = FHFakeInputNavbarTypeDefault;
+    }
+    
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
     if (self.associationalWord.length > 0) {
         
@@ -559,6 +567,10 @@
         [self initCommuteTip];
         [self.view addSubview:_commuteTipView];
         [self.view addSubview:_commuteChooseBgView];
+        
+        if ([[self placeholderByHouseType:self.houseType] isEqualToString: self.associationalWord] && [FHCommuteManager sharedInstance].destLocation) {
+            self.navbar.placeHolder = [FHCommuteManager sharedInstance].destLocation;
+        }
     }
 
 }

@@ -234,11 +234,24 @@
         }
         
         [self.searchPois addObjectsFromArray:response.pois];
+        
+        if (self.searchPois.count == response.count) {
+            //没有数据了
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+        }
+        
         [self.tableView reloadData];
         if (self.searchPois.count > 0) {
             self.tableView.tableHeaderView = self.defaultHeader;
         }else{
             self.tableView.tableHeaderView = _locationHeaderView;
+        }
+        
+        if (self.keywordRequest.keywords.length > 0 && self.searchPois.count == 0) {
+            //无结果
+            [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
+        }else{
+            [self.viewController.emptyView hideEmptyView];
         }
         
     }else if (request == self.aroundRequest){
@@ -260,6 +273,21 @@
 - (void)onReGeocodeSearchDone:(AMapReGeocodeSearchRequest *)request response:(AMapReGeocodeSearchResponse *)response
 {
     if (response.regeocode) {
+        
+        AMapAddressComponent *addr =  response.regeocode.addressComponent;
+        NSString *chooseCity = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        BOOL sameCity = NO;
+        if (chooseCity.length > 0 && ( [addr.city hasPrefix:chooseCity] || [chooseCity hasPrefix:addr.city])) {
+            sameCity = YES;
+        }
+        
+        if (!sameCity) {
+            if (_tableView.tableHeaderView != _defaultHeader) {
+                _tableView.tableHeaderView = _defaultHeader;
+            }
+            return;
+        }
+        
         AMapPOI *poi = nil;
         if (response.regeocode.aois.count > 0) {
            poi = [response.regeocode.aois firstObject];
@@ -270,12 +298,15 @@
         
         if (poi) {
             name = poi.name;
+        }else if (addr.building.length > 0){
+            name = addr.building;
         }else{
             name = response.regeocode.formattedAddress;
         }
         self.locationHeaderView.location = name;
         _tableView.tableHeaderView = _locationHeaderView;
         self.locationHeaderView.loading = NO;
+        self.locationHeaderView.showRefresh = NO;
     }
 }
 
@@ -407,7 +438,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 10;//CGFLOAT_MIN;
+    return CGFLOAT_MIN;
     
 }
 
@@ -446,7 +477,6 @@
 
 -(BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-//    self.lastSugDate = [NSDate date];
     return YES;
 }
 

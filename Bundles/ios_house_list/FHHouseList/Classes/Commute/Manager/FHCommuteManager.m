@@ -8,10 +8,13 @@
 #import "FHCommuteManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
-#define COMMUTE_CONFIG   @"_COMMUTE_CONFIG_"
-#define COMMUTE_LOCATION @"LOCATION"
-#define COMMUTE_DUARTION @"DURATION"
-#define COMMUTE_TYPE     @"type"
+#define COMMUTE_CONFIG    @"_COMMUTE_CONFIG_"
+#define COMMUTE_LOCATION  @"LOCATION"
+#define COMMUTE_DUARTION  @"DURATION"
+#define COMMUTE_TYPE      @"type"
+#define COMMUTE_LATITUDE  @"LATITUDE"
+#define COMMUTE_LONGITUDE @"LONGITUDE"
+
 
 @interface FHCommuteManager ()
 
@@ -52,6 +55,26 @@
 -(void)setDestLocation:(NSString *)destLocation
 {
     _configDict[COMMUTE_LOCATION] = destLocation;
+}
+
+-(void)setLatitude:(CGFloat)latitude
+{
+    _configDict[COMMUTE_LATITUDE] = @(latitude);
+}
+
+-(CGFloat)latitude
+{
+    return [_configDict[COMMUTE_LATITUDE] floatValue];
+}
+
+-(void)setLongitude:(CGFloat)longitude
+{
+    _configDict[COMMUTE_LONGITUDE] = @(longitude);
+}
+
+-(CGFloat)longitude
+{
+    return [_configDict[COMMUTE_LONGITUDE] floatValue];
 }
 
 -(void)setDuration:(NSString *)duration

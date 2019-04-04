@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(CGFloat)bannerHeight:(FHConfigDataRentBannerModel *)rentBannerModel;
 
++(UIImage *)cacheImageForRentBanner:(FHConfigDataRentBannerModel *)rentBannerModel;
+
 -(instancetype)initWithFrame:(CGRect)frame banner:(FHConfigDataRentBannerModel *)rentBanner;
 
 @end
@@ -27,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)selecteRentItem:(FHConfigDataRentOpDataItemsModel *)item;
 
 -(void)tapRentBanner;
+
+-(void)rentBannerLoaded:(UIView *)bannerView;
 
 @end
 

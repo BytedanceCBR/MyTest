@@ -7,9 +7,10 @@
 
 #import <Foundation/Foundation.h>
 #import <TTNetworkManager.h>
-#import "FHURLSettings.h"
-#import "FHHouseType.h"
-#import "FHMainApi.h"
+#import <FHHouseBase/FHURLSettings.h>
+#import <FHHouseBase/FHHouseType.h>
+#import <FHHouseBase/FHMainApi.h>
+#import "FHCommuteType.h"
 
 @class TTHttpTask;
 
@@ -92,6 +93,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 // delete订阅信息
 + (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
+//通勤找房
++(TTHttpTask *)requestCommute:(NSInteger)cityId location:(CLLocationCoordinate2D)location houseType:(FHHouseType)houseType duration:(CGFloat)duration type:(FHCommuteType)type param:(NSDictionary *_Nonnull)param offset:(NSInteger)offset completion:(void(^_Nullable)(FHHouseRentModel* _Nullable model , NSError * _Nullable error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

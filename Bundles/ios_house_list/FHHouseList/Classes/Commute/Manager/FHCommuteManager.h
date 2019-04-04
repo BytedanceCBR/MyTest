@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 //通勤找房manager
 @interface FHCommuteManager : NSObject
 
+@property (nonatomic, assign) CGFloat latitude;///纬度
+@property (nonatomic, assign) CGFloat longitude;///经度
 @property(nonatomic , strong) NSString *destLocation;//通勤目的地
 @property(nonatomic , assign) FHCommuteType commuteType;
 @property(nonatomic , copy)   NSString * duration;

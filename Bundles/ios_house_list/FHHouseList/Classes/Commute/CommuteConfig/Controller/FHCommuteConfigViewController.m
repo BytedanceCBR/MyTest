@@ -31,7 +31,6 @@
 @property(nonatomic , strong) UIView *inputBgView;
 @property(nonatomic , strong) UILabel *inputLabel;
 @property(nonatomic , strong) AMapAOI *choosePOI;
-@property(nonatomic , strong) NSString *chooseLocation;
 
 @end
 
@@ -139,7 +138,7 @@
     _filterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200) insets:UIEdgeInsetsMake(57, 0, 10, 0) type:FHCommuteTypeDrive];
     __weak typeof(self) wself = self;
     _filterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
-        if (wself.chooseLocation.length == 0) {
+        if (wself.choosePOI.name.length == 0) {
             SHOW_TOAST(@"请选择目的地");
             return ;
         }
@@ -221,7 +220,8 @@
 {
     self.inputLabel.text = poi.name;
     [viewController.navigationController popViewControllerAnimated:YES];
-    self.chooseLocation = poi.name;
+    self.choosePOI.name = poi.name;
+    self.choosePOI = poi;
 }
 
 -(void)userCanced:(FHCommutePOISearchViewController *)viewController
@@ -235,11 +235,13 @@
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
     manager.duration = duration;
     manager.commuteType = type;
-    manager.destLocation = self.chooseLocation;
+    manager.destLocation = self.choosePOI.name;
+    manager.latitude = self.choosePOI.location.latitude;
+    manager.longitude = self.choosePOI.location.longitude;
     [manager sync];
     
     if ([self.delegate respondsToSelector:@selector(commuteWithDest:type:duration:inController:)]) {
-        [self.delegate commuteWithDest:self.chooseLocation type:type duration:duration inController:self];
+        [self.delegate commuteWithDest:self.choosePOI.name type:type duration:duration inController:self];
     }else{        
         [self.navigationController popViewControllerAnimated:YES ];
     }
@@ -288,7 +290,7 @@
     param[@"query_type"] = @"mutiple";
     param[@"enter_query"] = UT_BE_NULL;
     param[UT_SEARCH_ID] = @"be_null";
-    param[@"search_query"] = self.chooseLocation ?:UT_BE_NULL;
+    param[@"search_query"] = self.choosePOI.name ?:UT_BE_NULL;
     param[UT_ORIGIN_FROM] = self.tracerModel.originFrom?:UT_BE_NULL;
     param[UT_ORIGIN_SEARCH_ID] = self.tracerModel.originSearchId?:UT_BE_NULL;
 
@@ -303,7 +305,7 @@
     param[UT_PAGE_TYPE] = [self pageType];
     param[UT_ORIGIN_SEARCH_ID] = self.tracerModel.originSearchId?:UT_BE_NULL;
     param[UT_ORIGIN_FROM] = self.tracerModel.originFrom?:@"commuter";
-    param[@"selected_word"] = self.chooseLocation?:UT_BE_NULL;
+    param[@"selected_word"] = self.choosePOI.name?:UT_BE_NULL;
     
     TRACK_EVENT(@"click_house_search", param);
 }

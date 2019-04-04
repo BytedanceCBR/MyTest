@@ -135,7 +135,11 @@
     if (_houseType == FHHouseTypeRentHouse) {
         FHConfigDataRentOpDataModel *rentModel = dataModel.rentOpData;
         if (rentModel.items.count > 0) {
-            CGFloat bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
+            
+            CGFloat bannerHeight = 0;
+            if ([FHMainRentTopView cacheImageForRentBanner:dataModel.rentBanner]) {
+                bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
+            }
             FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight) banner:dataModel.rentBanner];
             topView.items = rentModel.items;
             topView.delegate = self;
@@ -829,6 +833,33 @@
     
     NSDictionary *logpbDict = model.logPb;
     [self addOperationClickLog:logpbDict[@"operation_name"]];
+}
+
+-(void)rentBannerLoaded:(UIView *)bannerView
+{
+    //banner图片加载成功
+    CGFloat bannerHeight = bannerView.height;
+    self.topBannerView.frame = CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight);
+        
+    CGRect frame = [self.topView relayout];
+    UIEdgeInsets insets = self.tableView.contentInset;
+    
+    BOOL scrolled = fabs(self.tableView.contentOffset.y + insets.top) > 1;
+    
+    insets.top = CGRectGetHeight(frame);
+    self.tableView.contentInset = insets;
+    
+    if (self.topView.superview == self.topContainerView) {
+        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
+        }];
+        self.topView.top = -[self.topView filterTop];
+    }else{
+        self.topView.top = -frame.size.height;
+        if (!scrolled) {
+            self.tableView.contentOffset = CGPointMake(0, -insets.top);
+        }
+    }
 }
 
 - (NSString *)getEvaluateWebParams:(NSDictionary *)dic
