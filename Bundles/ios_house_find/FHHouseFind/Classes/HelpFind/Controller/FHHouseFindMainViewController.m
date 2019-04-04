@@ -66,10 +66,6 @@
 - (void)setupUI
 {
     [self addDefaultEmptyViewFullScreen];
-    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.view);
-        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-    }];
 }
 
 - (void)addHouseFindHelpVC
@@ -187,8 +183,14 @@
         [self startLoading];
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
+
     } else {
+        __weak typeof(self)wself = self;
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        if (!self.customNavBarView) {
+            [self setupDefaultNavBar:NO];
+        }
+        [self.emptyView addSubview:self.customNavBarView];
     }
 }
 
