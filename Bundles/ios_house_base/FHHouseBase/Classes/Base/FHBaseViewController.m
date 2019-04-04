@@ -22,6 +22,8 @@
 @property (nonatomic, assign) UIEdgeInsets emptyEdgeInsets;
 @property (nonatomic, assign)   BOOL       isFirstViewDidAppear;
 /* 需要移除之前的某个页面 */
+@property (nonatomic, assign)   BOOL       onlyNeedRemoveLastVC; // 直接移除当前VC导航控制器跳转当前页面之前最上面一个VC，此时needRemoveLastVC不生效
+@property (nonatomic, copy) NSString *onlyRemoveVCName;
 @property (nonatomic, assign)   BOOL       needRemoveLastVC;// fh_needRemoveLastVC_key @(YES)
 @property (nonatomic, copy)     NSArray       *needRemovedVCNameStringArrs; // 类名数组key：fh_needRemoveedVCNamesString_key
 
@@ -35,11 +37,19 @@
     if (self) {
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
+        self.onlyNeedRemoveLastVC = NO;
+
         self.titleName = [paramObj.userInfo.allInfo objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
-        if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
-            self.needRemoveLastVC = [paramObj.allParams[@"fh_needRemoveLastVC_key"] boolValue];
-            self.needRemovedVCNameStringArrs = paramObj.allParams[@"fh_needRemoveedVCNamesString_key"];
+        if (paramObj.allParams[@"fh_onlyNeedRemoveLastVC_key"]) {
+            self.onlyNeedRemoveLastVC = [paramObj.allParams[@"fh_onlyNeedRemoveLastVC_key"] boolValue];
+            self.onlyRemoveVCName = paramObj.allParams[@"fh_onlyNeedRemoveLastVC_name"];
+        }
+        if (!self.onlyNeedRemoveLastVC) {
+            if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
+                self.needRemoveLastVC = [paramObj.allParams[@"fh_needRemoveLastVC_key"] boolValue];
+                self.needRemovedVCNameStringArrs = paramObj.allParams[@"fh_needRemoveedVCNamesString_key"];
+            }
         }
         if ([tracer isKindOfClass:[FHTracerModel class]]) {
             self.tracerModel = (FHTracerModel *)tracer;
@@ -206,7 +216,18 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if (self.isFirstViewDidAppear && self.needRemoveLastVC && self.needRemovedVCNameStringArrs.count > 0) {
+    if (self.isFirstViewDidAppear && self.onlyNeedRemoveLastVC) {
+        self.isFirstViewDidAppear = NO;
+        self.onlyNeedRemoveLastVC = NO;
+        if (self.navigationController && self.navigationController.viewControllers.count > 1 && self.onlyRemoveVCName.length > 0) {
+            
+            NSMutableArray *arrVCs = [[NSMutableArray alloc] initWithArray:self.navigationController.viewControllers];
+            if ([NSStringFromClass([arrVCs[self.navigationController.viewControllers.count - 2] class]) isEqualToString:self.onlyRemoveVCName]) {
+                [arrVCs removeObjectAtIndex:self.navigationController.viewControllers.count - 2];
+                self.navigationController.viewControllers = arrVCs;
+            }
+        }
+    } else if (self.isFirstViewDidAppear && self.needRemoveLastVC && self.needRemovedVCNameStringArrs.count > 0) {
         self.isFirstViewDidAppear = NO;
         self.needRemoveLastVC = NO;
         if (self.navigationController && self.navigationController.viewControllers.count > 0) {

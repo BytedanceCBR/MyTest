@@ -48,7 +48,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
-@property (nonatomic, assign) BOOL isFromLocalTestChange;
 @property(nonatomic, weak)   NSTimer *timer;
 
 @end
@@ -124,11 +123,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         if ([self checkIsHasFindHouse] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
         {
             self.tableViewV.hidden = YES;
-            self.isFromLocalTestChange = YES;
             [self checkCityStatus];
-        }else
-        {
-            self.isFromLocalTestChange = NO;
         }
         
         FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -170,12 +165,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
-                    if ([self.tableViewV numberOfRowsInSection:0] > 0) {
-                        [self.tableViewV beginUpdates];
-                        NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
-                        [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
-                        [self.tableViewV endUpdates];
-                    }
+                    [self.tableViewV reloadData];
                 }];
                 
                 
@@ -183,11 +173,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 {
                     [self checkCityStatus];
                     isShowLocalTest = YES;
-                    self.isFromLocalTestChange = YES;
                 }else
                 {
                     isShowLocalTest = NO;
-                    self.isFromLocalTestChange = NO;
                 }
                 
                 [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = YES;
@@ -425,7 +413,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])
             {
-                self.isFromLocalTestChange = YES;
                 [self checkCityStatus];
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
@@ -439,7 +426,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        self.isFromLocalTestChange = YES;
                         [self checkCityStatus];
                     });
                 });
@@ -488,25 +474,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
-        if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])
-        {
             //过滤多余tip提示
-            if ((((model.data.refreshTip && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote) || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) || (self.isFromLocalTestChange && [FHEnvContext sharedInstance].isRefreshFromCitySwitch)) {
-                [self.homeViewController showNotify:model.data.refreshTip];
-                self.tableViewV.contentOffset = CGPointMake(0, 0);
-                [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-            }
-        }else
-        {
-            //过滤多余tip提示
-            if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch)) {
-                [self.homeViewController showNotify:model.data.refreshTip];
-                self.tableViewV.contentOffset = CGPointMake(0, 0);
-                [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-            }
+        if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch)) {
+            [self.homeViewController showNotify:model.data.refreshTip];
+            self.tableViewV.contentOffset = CGPointMake(0, 0);
+            [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
         }
-        
-        self.isFromLocalTestChange = NO;
         
         [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
         
@@ -576,7 +549,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0 && !error) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                 self.tableViewV.hidden = YES;
-                self.isFromLocalTestChange = NO;
                 [self checkCityStatus];
                 
                 

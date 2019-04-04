@@ -271,4 +271,18 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++ (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString *queryPath = @"/f100/api/get_suggestion";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"city_id"] = @(cityId);
+    paramDic[@"house_type"] = @(houseType);
+    paramDic[@"source"] = @"app";
+    paramDic[@"only_neighborhood"] = @"1";
+    if (query.length > 0) {
+        paramDic[@"query"] = query;
+    }
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

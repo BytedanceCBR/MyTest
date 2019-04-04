@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(UIFont *)themeFontSemibold:(CGFloat)fontSize;
 
++(UIFont *)themeFontDINAlternateBold:(CGFloat)fontSize;
+
 @end
 
 NS_ASSUME_NONNULL_END
