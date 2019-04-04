@@ -50,6 +50,7 @@
     [super viewDidLoad];
     //解决跳到结果页后在ios9下面顶部出现白条的问题
     self.automaticallyAdjustsScrollViewInsets = NO;
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     [self setupUI];
     if (_viewModel.recommendModel != nil) {
         
@@ -200,6 +201,20 @@
     if (!self.isLoadingData) {
         [self startLoadData];
     }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        if([change[@"new"] boolValue]){
+            [self.view endEditing:YES];
+        }
+    }
+}
+
+- (void)dealloc
+{
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 @end
