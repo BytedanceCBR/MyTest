@@ -843,7 +843,9 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             
             if([model selecteItem:selectItem containIndex:indexPath.item]){
                 //反选
-                [model delSelecteItem:selectItem withIndex:indexPath.item];
+                if (item.tabId.integerValue != FHSearchTabIdTypePrice) {
+                    [model delSelecteItem:selectItem withIndex:indexPath.item];
+                }
             }else{
                 if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
                     [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
