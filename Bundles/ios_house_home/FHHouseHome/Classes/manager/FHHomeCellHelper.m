@@ -26,7 +26,6 @@
 #import <TTArticleCategoryManager.h>
 #import <UIFont+House.h>
 
-#define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
 #define kFHHomeIconRowCount 4 //每行icon个数
 

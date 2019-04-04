@@ -6,13 +6,14 @@
 //
 
 #import "FHHomeBannerCell.h"
+#import "FHHomeCellHelper.h"
 
 @implementation FHHomeBannerCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.bannerView = [[FHHomeBannerView alloc] initWithRowCount:2 withRowHight:10 + [UIScreen mainScreen].bounds.size.width / 375.0f * 60.0];
+        self.bannerView = [[FHHomeBannerView alloc] initWithRowCount:2 withRowHight:10 + [UIScreen mainScreen].bounds.size.width / 375.0f * kFHHomeBannerDefaultHeight];
         [self setUpSubViews];
     }
     return self;
