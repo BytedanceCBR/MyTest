@@ -57,10 +57,13 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-//    [self.viewModel viewWillDisappear:animated];
-//    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
-//    [self tt_resetStayTime];
     
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (FHHouseFindRecommendDataModel *)getRecommendModel
