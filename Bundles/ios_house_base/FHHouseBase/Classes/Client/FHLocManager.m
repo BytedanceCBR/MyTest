@@ -360,12 +360,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
 
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
-                
-                if (self.isShowHomeViewController) {
-                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-                        
-                    }];
-                }
    
                 wSelf.retryConfigCount = 3;
             }];
