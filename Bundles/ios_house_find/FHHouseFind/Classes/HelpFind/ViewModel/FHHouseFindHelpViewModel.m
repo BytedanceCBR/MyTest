@@ -179,7 +179,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self submitAction];
         return;
     }
-    
+    [self addClickLoginLog];
+
     NSString *phoneNumber = self.contactCell.phoneInput.text;
     NSString *smsCode = self.contactCell.varifyCodeInput.text;
     
@@ -199,7 +200,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"验证码为空"];
         return;
     }
-    [self addClickLoginLog];
     
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
@@ -1076,7 +1076,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
     CGFloat offset = 0;
     //    offset = self.lastY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
-    NSLog(@"zjing hide offset:%f",offset);
+//    NSLog(@"zjing hide offset:%f",offset);
     
     //    offset = self.collectionView.contentSize.height - self.collectionView.height;
     //    if (offset > 0) {
