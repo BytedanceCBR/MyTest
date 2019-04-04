@@ -148,12 +148,12 @@
     __block NSUInteger lineIndex = 0;
     BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
 
-    __block CGFloat maxValue = CGFLOAT_MIN;
-    __block CGFloat minValue = CGFLOAT_MIN;
-    [array enumerateObjectsUsingBlock:^(NSNumber*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        maxValue = MAX(maxValue, [obj floatValue]);
-        minValue = MIN(minValue, [obj floatValue]);
-    }];
+//    __block CGFloat maxValue = CGFLOAT_MIN;
+//    __block CGFloat minValue = CGFLOAT_MIN;
+//    [array enumerateObjectsUsingBlock:^(NSNumber*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        maxValue = MAX(maxValue, [obj floatValue]);
+//        minValue = MIN(minValue, [obj floatValue]);
+//    }];
 
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
@@ -183,7 +183,10 @@
         lineIndex += 1;
         return data01;
     }];
-
+//    CGFloat padding = (maxValue - minValue) / 10000 / 16;
+//    chartView.lineChart.yFixedValueMax = maxValue / 10000 - padding;
+//    chartView.lineChart.yFixedValueMin = minValue / 10000 - padding;
+    chartView.lineChart.yFixedValueMin = 0;
     chartView.lineChart.chartData = lineDatas;
     [chartView.lineChart strokeChart];
 
