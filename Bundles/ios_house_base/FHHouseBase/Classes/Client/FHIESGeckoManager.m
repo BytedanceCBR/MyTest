@@ -30,7 +30,7 @@ static NSString * const kFHIESGeckoKey = @"7838c7618ea608a0f8ad6b04255b97b9";
 + (void)configIESWebFalcon
 {
     if ([[[FHHouseBridgeManager sharedInstance] envContextBridge] isOpenWebOffline]) {
-        IESFalconManager.interceptionWKHttpScheme = YES;
+        IESFalconManager.interceptionWKHttpScheme = NO;
         IESFalconManager.interceptionEnable = YES;
         
         NSString *pattern = @"^(http|https)://.*.[pstatp.com]/toutiao/";
