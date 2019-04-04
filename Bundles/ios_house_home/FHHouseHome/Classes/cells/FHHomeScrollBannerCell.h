@@ -37,6 +37,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setURLs:(NSArray *)urls;
 - (void)removeTimer;
 - (void)addTimer;
+// 暂停-重启定时器
+- (void)pauseTimer;
+- (void)resetTimer;
 
 @end
 

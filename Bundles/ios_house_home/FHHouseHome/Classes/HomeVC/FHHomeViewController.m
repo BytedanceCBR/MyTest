@@ -230,7 +230,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didAppear
 {
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
-    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView addTimer];
+    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView resetTimer];
 }
 
 - (void)willDisappear
@@ -244,7 +244,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
     self.homeListViewModel.stayTime = 0;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView removeTimer];
+    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView pauseTimer];
 }
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom

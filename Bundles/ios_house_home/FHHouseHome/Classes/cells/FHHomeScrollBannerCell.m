@@ -344,6 +344,30 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     }
 }
 
+// 重启定时器
+- (void)resetTimer {
+    if (!self.enableTimer) {
+        return;
+    }
+    if (self.timer == nil) {
+        return;
+    }
+    if (self.totalCount <= 1) {
+        return;
+    }
+    [self.timer setFireDate:[NSDate distantPast]];
+}
+
+// 暂停定时器
+- (void)pauseTimer {
+    if (!self.enableTimer) {
+        return;
+    }
+    if (self.timer != nil) {
+        [self.timer setFireDate:[NSDate distantFuture]];
+    }
+}
+
 - (void)dealloc
 {
     [self removeGestureRecognizer:_tapGes];
