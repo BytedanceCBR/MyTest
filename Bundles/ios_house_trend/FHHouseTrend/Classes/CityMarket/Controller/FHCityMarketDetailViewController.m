@@ -26,6 +26,7 @@
 #import "FHImmersionNavBarViewModel.h"
 #import "TTTracker.h"
 #import "TTTrackerWrapper.h"
+#import "FHUserTracker.h"
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
 @property (nonatomic, strong) TTRouteUserInfo* userInfo;
@@ -189,6 +190,7 @@
         [self endLoading];
         if ([x count] > 0) {
             [self.tableView setHidden:NO];
+            [self.emptyView setHidden:YES];
         }
     }];
 
@@ -300,6 +302,18 @@
     [_actions addObject:action];
 
     [_bottomBarView setBottomBarItems:@[item, item2]];
+    [self traceElementShow:@"sale_value"];
+    [self traceElementShow:@"driving_find_house"];
+}
+
+-(void)traceElementShow:(NSString*)elementType {
+    NSParameterAssert(elementType);
+    NSMutableDictionary* tracer = [self.tracerDict mutableCopy];
+    tracer[@"rank"] = @"be_null";
+    tracer[@"page_type"] = @"city_market";
+    tracer[@"element_type"] = elementType;
+    tracer[@"enter_from"] = nil;
+    [FHUserTracker writeEvent:@"element_show" params:tracer];
 }
 
 -(NSDictionary*)traceParams {
