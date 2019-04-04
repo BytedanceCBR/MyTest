@@ -40,7 +40,7 @@
     [self initConstraints];
     [self initViewModel];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStateChange:) name:kReachabilityChangedNotification object:nil];
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
+//     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userInfoReload) name:KUSER_UPDATE_NOTIFICATION object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

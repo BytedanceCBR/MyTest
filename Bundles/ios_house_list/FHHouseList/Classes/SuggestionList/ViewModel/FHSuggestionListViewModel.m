@@ -598,7 +598,7 @@
                     [resultText appendAttributedString:text2];
                 }
                 cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeRed1] fontSize:15.0];
-                cell.secondaryLabel.text = [NSString stringWithFormat:@"约%@套", model.count];
+                cell.secondaryLabel.text = model.tips;
                 if (indexPath.row == self.sugListData.count - 1) {
                     // 末尾
                     [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {

@@ -38,7 +38,8 @@
         _retryButton.titleLabel.font = [UIFont themeFontRegular:14];
         _retryButton.layer.borderColor = [[UIColor themeRed1]CGColor];
         _retryButton.layer.borderWidth = 1;
-        _retryButton.backgroundColor = [[UIColor themeRed1] colorWithAlphaComponent:0.1];
+        [_retryButton setBackgroundImage:[self createImageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+        [_retryButton setBackgroundImage:[self createImageWithColor:[[UIColor themeRed1] colorWithAlphaComponent:0.1]] forState:UIControlStateHighlighted];
         _retryButton.layer.masksToBounds = YES;
         [_retryButton addTarget:self action:@selector(retryAction:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -119,6 +120,17 @@
             break;
     }
     [self showEmptyWithTip:tips errorImageName:imageName showRetry:showenRetry];
+}
+
+- (UIImage*)createImageWithColor:(UIColor*)color {
+    CGRect rect = CGRectMake(0.0f,0.0f,1.0f,1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
 }
 
 - (void)showEmptyWithTip:(NSString *)tips errorImageName:(NSString *)imageName showRetry:(BOOL)showen {

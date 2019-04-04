@@ -20,7 +20,7 @@
 #define kLauchProcessLaunchFilePath                  @"/LauchProcess/launchPatch.js"
 #define kLauchProcessActiveFilePath                  @"/LauchProcess/activePatch.js"
 #define kLauchProcessDocumentPath                    @"/LauchProcess"
-#define kLauchProcessServerUrl                       @"https://i.haoduofangs.com/2/misc/sparkrescue/"
+#define kLauchProcessServerUrl                       @"https://i.snssdk.com/2/misc/sparkrescue/"
 
 static TTLauchProcessManager *JSMangager;
 static BOOL _hasSwitchLauchProcessOn;

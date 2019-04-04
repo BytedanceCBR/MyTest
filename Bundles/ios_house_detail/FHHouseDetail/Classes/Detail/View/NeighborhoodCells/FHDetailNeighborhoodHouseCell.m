@@ -362,12 +362,12 @@
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
         if (detailModel.data.neighborhoodInfo.name.length > 0) {
             if (model.sameNeighborhoodErshouHouseData.total.length > 0) {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,model.sameNeighborhoodErshouHouseData.total];
+                userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.sameNeighborhoodErshouHouseData.total];
             } else {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@",detailModel.data.neighborhoodInfo.name];
+                userInfo[@"title"] = @"小区房源";
             }
         } else {
-            userInfo[@"title"] = @"同小区房源";// 默认值
+            userInfo[@"title"] = @"小区房源";// 默认值
         }
         if (neighborhood_id.length > 0) {
             userInfo[@"neighborhood_id"] = neighborhood_id;
@@ -416,12 +416,12 @@
         userInfo[@"house_type"] = @(FHHouseTypeRentHouse);
         if (detailModel.data.neighborhoodInfo.name.length > 0) {
             if (model.sameNeighborhoodRentHouseData.total.length > 0) {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,model.sameNeighborhoodRentHouseData.total];
+                userInfo[@"title"] = [NSString stringWithFormat:@"小区房源(%@)",model.sameNeighborhoodRentHouseData.total];
             } else {
-                userInfo[@"title"] = [NSString stringWithFormat:@"%@",detailModel.data.neighborhoodInfo.name];
+                userInfo[@"title"] = @"小区房源";
             }
         } else {
-            userInfo[@"title"] = @"同小区房源";// 默认值
+            userInfo[@"title"] = @"小区房源";// 默认值
         }
         if (neighborhood_id.length > 0) {
             userInfo[@"neighborhood_id"] = neighborhood_id;

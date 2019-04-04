@@ -18,4 +18,9 @@
 {
     return [super editingRectForBounds:UIEdgeInsetsInsetRect(bounds, self.edgeInsets)];
 }
+
+- (CGRect)placeholderRectForBounds:(CGRect)bounds
+{
+    return [super placeholderRectForBounds:UIEdgeInsetsInsetRect(bounds, self.edgeInsets)];
+}
 @end

@@ -1016,12 +1016,13 @@ TTRefreshViewDelegate
     self.shouldReloadBackAfterLeaveCurrentCategory = [self shouldReloadBackAfterLeaveCurrentCategory];
     
     //唤醒后刷新
-    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0)) {
+    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
         
         [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
     }
 
     for (ExploreCellBase * cell in  [_listView visibleCells]) {
