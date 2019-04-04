@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
            shadowRadius:(CGFloat)shadowRadius
         andCornerRadius:(CGFloat)cornerRadius;
 
++ (UIImage*)createImageWithColor:(UIColor*)color;
+
 @end
 
 NS_ASSUME_NONNULL_END

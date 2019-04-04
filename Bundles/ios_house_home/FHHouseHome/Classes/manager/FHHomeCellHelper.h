@@ -9,6 +9,7 @@
 #import "FHHomeBaseTableCell.h"
 #import "FHHomeTableViewDelegate.h"
 #import "FHHomeConfigManager.h"
+#import "FHHomeScrollBannerCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +26,8 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 @interface FHHomeCellHelper : NSObject
 
 @property(nonatomic , assign) FHHomeHeaderCellPositionType headerType;
+@property (nonatomic, assign)   BOOL       isConfigDataUpate;// config数据是否刷新了
+@property (nonatomic, weak)     FHHomeScrollBannerCell       *fhLastHomeScrollBannerCell;
 
  + (instancetype)sharedInstance;
 
