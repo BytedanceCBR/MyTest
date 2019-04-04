@@ -216,7 +216,7 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 countValue = 8;
             }
-//            CGFloat heightPadding = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews ? 55 : 20;
+
             CGFloat heightPadding = 20;
             height += ((countValue - 1)/kFHHomeIconRowCount + 1) * (kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
         }
@@ -230,6 +230,11 @@ static NSMutableArray  * _Nullable identifierArr;
             }
             height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
+        
+        if (dataModel.mainPageBannerOpData) {
+            height += [FHHomeScrollBannerCell cellHeight];
+        }
+        
         BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {

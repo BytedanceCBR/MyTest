@@ -61,7 +61,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     if (self) {
         [self initItemsCaches];
         
-        self.categoryView = [[FHHomeSectionHeader alloc] init];
+        self.categoryView = [[FHHomeSectionHeader alloc] initWithFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, 40)];
         self.tableViewV = tableView;
         self.homeViewController = homeVC;
         self.dataSource = [FHHomeMainTableViewDataSource new];
