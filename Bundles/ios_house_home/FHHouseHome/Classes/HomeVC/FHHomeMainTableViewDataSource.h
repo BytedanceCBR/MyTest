@@ -12,7 +12,7 @@
 
 static const NSUInteger kFHHomeListHeaderBaseViewSection = 0;
 static const NSUInteger kFHHomeListHouseBaseViewSection = 1;
-static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
+static const NSUInteger kFHHomeHeaderViewSectionHeight = 40;
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -90,7 +90,9 @@
     }
     
     [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.mas_equalTo(self);
+        make.left.mas_equalTo(self).offset(15);
+        make.right.mas_equalTo(self).offset(-15);
+        make.bottom.mas_equalTo(self);
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
 }

@@ -16,7 +16,6 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import "TTReachability.h"
 #import "FHUserTracker.h"
-#import "FHEnvContext.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -46,6 +45,7 @@ extern NSString *const kFHToastCountKey;
     if(self.viewController.model){
         self.view.hidden = NO;
         [self.view updateView:self.viewController.model infoModel:self.viewController.infoModel];
+        [self addGoDetailTracer];
     }else{
         [self requestEvaluateData];
     }
@@ -68,7 +68,8 @@ extern NSString *const kFHToastCountKey;
         if (error) {
             //TODO: show handle error
             [wself.viewController setNavBar:YES];
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            wself.viewController.model = nil;
+            [wself.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
             return;
         }
 
@@ -103,7 +104,6 @@ extern NSString *const kFHToastCountKey;
         params[@"decoration_type"] = self.viewController.infoModel.decorationType;
         params[@"built_year"] = self.viewController.infoModel.builtYear;
         params[@"building_type"] = self.viewController.infoModel.buildingType;
-        params[@"city_id"] = [FHEnvContext getCurrentSelectCityIdFromLocal];
     }
     
     return params;
@@ -141,6 +141,8 @@ extern NSString *const kFHToastCountKey;
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"go_detail", tracer);
 }
 
@@ -152,6 +154,8 @@ extern NSString *const kFHToastCountKey;
     tracer[@"page_type"] = [self pageType];
     tracer[@"click_position"] = @"sale";
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(key, tracer);
 }
 
@@ -163,6 +167,8 @@ extern NSString *const kFHToastCountKey;
     tracer[@"page_type"] = [self pageType];
     tracer[@"click_type"] = result;
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"click_expected", tracer);
 }
 
@@ -254,6 +260,8 @@ extern NSString *const kFHToastCountKey;
         if(success && !error){
             [wself.view hideEvaluateView];
             [[ToastManager manager] showToast:@"感谢您的反馈"];
+        }else{
+            [[ToastManager manager] showToast:@"网络异常"];
         }
     }];
 }
@@ -303,14 +311,11 @@ extern NSString *const kFHToastCountKey;
     params[@"phone"] = phoneNum;
     
     [FHPriceValuationAPI requestSubmitPhoneWithParams:params completion:^(BOOL success, NSError * _Nonnull error) {
-       if(success && !error){
+        if(success && !error){
             [wself.alertView dismiss];
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-            if (toastCount >= 3) {
-                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            }
         }else {
             [[ToastManager manager] showToast:@"提交失败"];
         }

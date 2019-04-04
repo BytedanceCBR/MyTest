@@ -124,12 +124,8 @@ static NSString *lastTabIdentifier;
             houseFindVC = [[FHHouseFindListViewController alloc]init];
 
         }else {
-//           houseFindVC = [[HouseFindVC alloc] init];
             houseFindVC = [[FHHouseFindViewController alloc] init];
         }
-        // add by zjing for test
-//        houseFindVC = [[FHHouseFindViewController alloc] init];
-
         return houseFindVC;
 
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {

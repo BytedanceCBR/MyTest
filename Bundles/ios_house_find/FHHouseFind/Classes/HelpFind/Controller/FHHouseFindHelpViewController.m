@@ -14,6 +14,7 @@
 #import "FHHouseFindHelpSubmitCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHHouseFindRecommendModel.h"
+#import "FHHouseFindCollectionView.h"
 
 @interface FHHouseFindHelpViewController ()
 
@@ -44,6 +45,7 @@
     [self setupUI];
     [self initConstraints];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    [self.viewModel addGoDetailLog];
 
 }
 
@@ -69,6 +71,7 @@
 - (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
 {
     self.viewModel.recommendModel = recommendModel;
+    [self.contentView reloadData];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
@@ -102,7 +105,8 @@
     layout.minimumLineSpacing = 13;
     layout.minimumInteritemSpacing = 13;
 
-    _contentView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    _contentView = [[FHHouseFindCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+//    _contentView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _contentView.backgroundColor = [UIColor whiteColor];
     _contentView.showsHorizontalScrollIndicator = NO;
     if (@available(iOS 11.0, *)) {
@@ -113,6 +117,7 @@
 
     _viewModel = [[FHHouseFindHelpViewModel alloc]initWithCollectionView:_contentView recommendModel:self.recommendModel];
     _viewModel.viewController = self;
+    _viewModel.tracerDict = self.tracerDict;
     _viewModel.showNoDataBlock = ^(BOOL noData,BOOL available) {
         if (noData) {
             [wself.errorMaskView showEmptyWithType:FHEmptyMaskViewTypeNoData];

@@ -58,7 +58,7 @@ static const float kSegementedPadingTop = 5;
 
 - (void)setUpSegmentedControl
 {
-    self.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 35);
+    self.frame = CGRectMake(0, 5, MAIN_SCREEN_WIDTH, 35);
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, kSegementedOneWidth * 3, kSegementedHeight);
     _segmentedControl.sectionTitles = @[@"",@"",@""];

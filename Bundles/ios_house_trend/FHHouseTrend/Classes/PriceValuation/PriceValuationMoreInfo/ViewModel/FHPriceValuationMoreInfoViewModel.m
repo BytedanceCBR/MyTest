@@ -9,6 +9,7 @@
 #import "FHPriceValuationDataPickerView.h"
 #import "TTDeviceUIUtils.h"
 #import "FHUserTracker.h"
+#import "FHNotificationDefines.h"
 
 @interface FHPriceValuationMoreInfoViewModel()<FHPriceValuationMoreInfoViewDelegate>
 
@@ -57,6 +58,8 @@
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.infoModel.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"go_detail", tracer);
 }
 
@@ -68,6 +71,8 @@
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.infoModel.estimateId;
     tracer[@"click_position"] = position;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"click_options", tracer);
 }
 
@@ -221,18 +226,29 @@
     }
 }
 
+- (BOOL)isChanged {
+    if(![self.viewController.infoModel.builtYear isEqualToString:self.buildYear] || ![self.viewController.infoModel.facingType isEqualToString:self.faceType] || ![self.viewController.infoModel.floor isEqualToString:self.floor] || ![self.viewController.infoModel.totalFloor isEqualToString:self.totalFloor] || ![self.viewController.infoModel.buildingType isEqualToString:self.buildType] || ![self.viewController.infoModel.decorationType isEqualToString:self.decorateType]){
+        return YES;
+    }
+    
+    return NO;
+}
+
 #pragma mark - FHPriceValuationMoreInfoViewDelegate
 
 - (void)confirm {
-    self.viewController.infoModel.builtYear = self.buildYear;
-    self.viewController.infoModel.facingType = self.faceType;
-    self.viewController.infoModel.floor = self.floor;
-    self.viewController.infoModel.totalFloor = self.totalFloor;
-    self.viewController.infoModel.buildingType = self.buildType;
-    self.viewController.infoModel.decorationType = self.decorateType;
-    
+    if([self isChanged]){
+        self.viewController.infoModel.builtYear = self.buildYear;
+        self.viewController.infoModel.facingType = self.faceType;
+        self.viewController.infoModel.floor = self.floor;
+        self.viewController.infoModel.totalFloor = self.totalFloor;
+        self.viewController.infoModel.buildingType = self.buildType;
+        self.viewController.infoModel.decorationType = self.decorateType;
+        
+        [self.viewController.delegate callBackDataInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kPriceValuationMoreInfoChangedNotification object:nil];
+    }
     [self.viewController.navigationController popViewControllerAnimated:YES];
-    [self.viewController.delegate callBackDataInfo:nil];
 }
 
 - (void)chooseBuildYear {

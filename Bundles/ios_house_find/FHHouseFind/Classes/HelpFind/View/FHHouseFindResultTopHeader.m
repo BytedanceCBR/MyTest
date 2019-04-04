@@ -76,6 +76,10 @@
         return;
     }
     
+    for (UIView *subView in _iconContainerView.subviews) {
+        [subView removeFromSuperview];
+    }
+    
     for (NSInteger i = 0; i < 3; i++) {
         UIView *itemView = [UIView new];
         [_iconContainerView addSubview:itemView];
@@ -88,6 +92,9 @@
             make.width.mas_equalTo(([UIScreen mainScreen].bounds.size.width - 40)/3);
             make.top.mas_equalTo(0);
         }];
+        
+        UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(itemClick)];
+        [itemView addGestureRecognizer:tapGest];
         
         UIImageView *imageIcon = [UIImageView new];
         NSString *stringImageName = [NSString stringWithFormat:@"house_find_help_icon%ld",i+1];
@@ -133,8 +140,13 @@
                 break;
         }
     }
-    
+}
 
+- (void)itemClick
+{
+    if (self.clickCallBack) {
+        self.clickCallBack();
+    }
 }
 
 - (void)setTitleStr:(NSInteger)houseCount

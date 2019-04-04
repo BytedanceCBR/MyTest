@@ -19,6 +19,7 @@
 #import "TTRoute.h"
 #import "FHCityMarketRecommendFooterView.h"
 #import "FHUserTracker.h"
+#import "NSString+URLEncoding.h"
 
 @interface FHCityMarketRecommendSectionPlaceHolder ()
 @property (nonatomic, strong) FHCityMarketRecommendHeaderView* headerView;
@@ -75,17 +76,76 @@
     if (model != nil && [model.items count] > indexPath.row) {
         FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
         FHSearchHouseDataItemsHouseImageModel* imageModel = item.houseImage.firstObject;
-        if (imageModel != nil && !isEmptyString(imageModel.url)) {
-            [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+        if ([@"zhidemai" isEqualToString:_recommendViewModel.type]) {
+            [self fillWorthCell:cell useModel:item atIndexPath:indexPath];
+        } else {
+            if (imageModel != nil && !isEmptyString(imageModel.url)) {
+                    [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            }
+            cell.titleLabel.text = item.displayTitle;
+            cell.subTitleLabel.text = item.displaySubtitle;
+            cell.priceLabel.text = item.displayPrice;
+            cell.oldPriceLabel.attributedText = [self getOldPriceAttribute:item.originPrice];
+            cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:item.bottomText.firstObject];
+            [cell setIndex:indexPath.row];
         }
-        cell.titleLabel.text = item.displayTitle;
-        cell.subTitleLabel.text = item.displaySubtitle;
-        cell.priceLabel.text = item.displayPrice;
-        cell.oldPriceLabel.attributedText = [self getOldPriceAttribute:item.originPrice];
-        cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:item.bottomText];
-        [cell setIndex:indexPath.row];
     }
     return cell;
+}
+
+-(void)fillWorthCell:(FHCityMarketRecomandHouseCell*)cell useModel:(FHSearchHouseDataItemsModel*)model atIndexPath:(NSIndexPath*)indexPath {
+    FHSearchHouseDataItemsHouseImageModel* imageModel = model.houseImage.firstObject;
+    if (imageModel != nil && !isEmptyString(imageModel.url)) {
+        [cell.houseIconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+    }
+    cell.titleLabel.text = model.displayTitle;
+    cell.oldPriceLabel.text = nil;
+    cell.oldPriceLabel.attributedText = nil;
+    NSString* roomSpace = nil;
+    if ([model.coreInfo count] >= 3) {
+        FHSearchHouseDataItemsCoreInfoModel* value = model.coreInfo[2];
+        roomSpace = value.value;
+    }
+    cell.subTitleLabel.attributedText = [self getWorthPriceAttribute:model.displayPrice oldPrice:roomSpace];
+    if ([model.bottomText count] >= 1) {
+        cell.priceLabel.attributedText = [self getPriceChangeAttribute:model.bottomText[0]];
+    }
+
+    if ([model.bottomText count] >= 2) {
+        cell.priceChangeLabel.attributedText = [self getPriceChangeAttribute:model.bottomText[1]];
+    }
+    [cell setIndex:indexPath.row];
+}
+
+-(NSAttributedString*)getWorthPriceAttribute:(NSString*)price oldPrice:(NSString*)oldPrice {
+    NSMutableAttributedString* sttrString = [[NSMutableAttributedString alloc] init];
+    if (!isEmptyString(price)) {
+        [sttrString appendAttributedString:[[NSAttributedString alloc]
+                                            initWithString:price
+                                            attributes:@{
+                                                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"ff5b4c"],
+                                                         NSFontAttributeName: [UIFont themeFontMedium:16],
+                                                         }]];
+    }
+
+    if (!isEmptyString(price) && !isEmptyString(oldPrice)) {
+        [sttrString appendAttributedString:[[NSAttributedString alloc]
+                                            initWithString:@" | "
+                                            attributes:@{
+                                                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
+                                                         NSFontAttributeName: [UIFont themeFontRegular:12],
+                                                         }]];
+    }
+
+    if (!isEmptyString(oldPrice)) {
+        [sttrString appendAttributedString:[[NSAttributedString alloc]
+                                            initWithString:oldPrice
+                                            attributes:@{
+                                                         NSForegroundColorAttributeName: [UIColor colorWithHexString:@"999999"],
+                                                         NSFontAttributeName: [UIFont themeFontRegular:12],
+                                                         }]];
+    }
+    return sttrString;
 }
 
 -(NSAttributedString*)getOldPriceAttribute:(NSString*)text {
@@ -103,11 +163,11 @@
 }
 
 -(NSAttributedString*)getPriceChangeAttribute:(NSArray<FHSearchHouseDataItemsModelBottomText*>*)texts {
-    NSArray<NSAttributedString*>* items = [texts rx_mapWithBlock:^id(FHSearchHouseDataItemsModelBottomText* each) {
+    NSArray<NSAttributedString*>* items = [texts rx_mapWithBlock:^id(NSDictionary* each) {
         return [[NSAttributedString alloc]
-                initWithString:each.text
+                initWithString:each[@"text"] ? : @""
                 attributes:@{
-                             NSForegroundColorAttributeName: [UIColor colorWithHexString:each.color],
+                             NSForegroundColorAttributeName: [UIColor colorWithHexString:each[@"color"] ? : @"999999ni"],
                              NSFontAttributeName: [UIFont themeFontRegular:12],
                              }];
     }];
@@ -164,7 +224,7 @@
                        params:@{
                                 @"page_type": @"city_market",
                                 @"event_type": @"house_app2c_v2",
-                                @"click_position": type ? : @"be_null",
+                                @"element_from": @"special_old",
                                 }];
 }
 
@@ -178,8 +238,14 @@
         FHSearchHouseDataItemsModel* item = model.items[indexPath.row];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", item.hid];
         if (urlStr.length > 0) {
+            NSMutableDictionary* dict = [self.tracer mutableCopy];
+            dict[@"enter_from"] = @"city_market";
+            dict[@"element_from"] = _recommendViewModel.type;
+            dict[@"rank"] = @(indexPath.row);
+            dict[@"log_pb"] = @"be_null";
+            TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": dict}];
             NSURL *url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
         }
     }
 }
@@ -188,7 +254,7 @@
     NSIndexPath* indexPathWithOffset = [self indexPathWithOffset:indexPath];
     if (![self.traceCache containsObject:indexPathWithOffset]) {
         [self traceElementShow:@{@"element_type": @"special_old"}];
-        [self.traceCache addObject:indexPath];
+        [self.traceCache addObject:indexPathWithOffset];
     }
 }
 
@@ -207,9 +273,38 @@
 }
 
 -(void)onClickMore:(id)sender {
-    NSURL* url = [NSURL URLWithString:self.recommendViewModel.openUrl];
-    [[TTRoute sharedRoute] openURLByPushViewController:url];
+    NSMutableDictionary* dict = [self.tracer mutableCopy];
+    dict[@"enter_from"] = @"city_market";
+    dict[@"element_from"] = @"special_old";
+    dict[@"log_pb"] = @"be_null";
+
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:self.recommendViewModel.openUrl]];
+    NSMutableDictionary *queryP = [NSMutableDictionary new];
+    [queryP addEntriesFromDictionary:paramObj.allParams];
+    NSString* url = queryP[@"url"];
+    NSString *reportParams = [self getEvaluateWebParams:dict];
+    NSString *jumpUrl = @"sslocal://webview";
+    NSMutableString *urlS = [[NSMutableString alloc] init];
+    [urlS appendString: queryP[@"url"]];
+    [urlS appendFormat:@"&report_params=%@", reportParams];
+    queryP[@"url"] = urlS;
+
+    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:queryP];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:jumpUrl] userInfo:info];
     [self traceClickLoadMore:self.recommendViewModel.type];
+}
+
+
+- (NSString *)getEvaluateWebParams:(NSDictionary *)dic
+{
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
+    if (data && !error) {
+        NSString *temp = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        return temp;
+    }
+    return nil;
 }
 
 @end

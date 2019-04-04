@@ -119,10 +119,18 @@
                 if (isHaveDian) {//存在小数点
                     //判断小数点的位数
                     NSRange ran = [textField.text rangeOfString:@"."];
-                    if (range.location - ran.location <= 2){
-                        return YES;
+                    if(range.location > ran.location){
+                        if ([textField.text length] - ran.location <= 2){
+                            return YES;
+                        }else{
+                            return NO;
+                        }
                     }else{
-                        return NO;
+                        if (ran.location < 6){
+                            return YES;
+                        }else{
+                            return NO;
+                        }
                     }
                 }else{
                     //控制小数点前面的字符数不大于6个
@@ -157,9 +165,13 @@
 }
 
 - (void)goToHistory {
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    tracerDict[@"enter_from"] = [self pageType];
+    
     [self.view endEditing:YES];
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"model"] = self.model;
+    dict[@"tracer"] = tracerDict;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
 
     NSURL* url = [NSURL URLWithString:@"sslocal://price_valuation_history"];
@@ -172,6 +184,9 @@
     NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
+    tracer[@"element_from"] = tracerDict[@"element_from"] ? tracerDict[@"element_from"] : @"be_null";
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"go_detail", tracer);
 }
 
@@ -182,6 +197,8 @@
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
     tracer[@"click_position"] = position;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"click_options", tracer);
 }
 

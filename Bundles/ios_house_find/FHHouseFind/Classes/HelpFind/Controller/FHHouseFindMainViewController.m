@@ -48,7 +48,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    //解决跳到结果页后在ios9下面顶部出现白条的问题
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     if (_viewModel.recommendModel != nil) {
         
@@ -113,7 +114,7 @@
         recommendDict = [recommendModel toDictionary];
     }
     infoDict[@"recommend_house"] = recommendDict;
-    [self jump2ChildVC:infoDict];
+    [self jump2ChildVC:infoDict isHelp:NO];
 }
 - (void)jump2HouseFindResultVC
 {
@@ -126,15 +127,22 @@
         recommendDict = [recommendModel toDictionary];
     }
     infoDict[@"recommend_house"] = recommendDict;
-    [self jump2ChildVC:infoDict];
+    [self jump2ChildVC:infoDict isHelp:YES];
 }
 
-- (void)jump2ChildVC:(NSDictionary *)dict
+- (void)jump2ChildVC:(NSDictionary *)dict isHelp:(BOOL)isHelp
 {
     NSString *openUrl = [NSString stringWithFormat:@"sslocal://house_find"];
     NSMutableDictionary *infoDict = @{}.mutableCopy;
+    infoDict[@"tracer"] = self.tracerDict;
     if (dict.count > 0) {
         [infoDict addEntriesFromDictionary:dict];
+    }
+    if (isHelp) {
+        
+        infoDict[@"fh_needRemoveLastVC_key"] = @(YES);
+        infoDict[@"fh_needRemoveedVCNamesString_key"] = @[@"FHHouseFindMainViewController"];
+        
     }
     if (self.helpDelegate != nil) {
         

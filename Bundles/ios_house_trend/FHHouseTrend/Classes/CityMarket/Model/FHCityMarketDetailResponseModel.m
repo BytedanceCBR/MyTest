@@ -22,6 +22,8 @@
   NSDictionary *dict = @{
     @"itemType": @"item_type",
     @"moreBtnText": @"more_btn_text",
+    @"bottomText": @"bottom_text",
+    @"moreOpenUrl": @"more_open_url",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -123,9 +125,9 @@
 {
   NSDictionary *dict = @{
     @"averagePrice": @"average_price",
-    @"neighborhoodName": @"neighborhood_name",
     @"openUrl": @"open_url",
     @"houseCount": @"house_count",
+    @"groupId": @"group_id",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

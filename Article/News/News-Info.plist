@@ -72,7 +72,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.6.3.6</string>
+	<string>6.6.3.8</string>
 	<key>CHANNEL_NAME</key>
 	<string>App Store</string>
 	<key>Fabric</key>
@@ -229,6 +229,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>66300</string>
+	<string>66301</string>
 </dict>
 </plist>

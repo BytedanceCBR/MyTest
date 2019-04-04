@@ -62,7 +62,20 @@
         return item;
     }];
     FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* trendLine = infoList.trendLines.firstObject;
-    cell.chatView.banner.unitLabel.text = trendLine.valueUnit;
+
+
+    //计算是否应该增加万单位
+    NSMutableArray* array = [[NSMutableArray alloc] init];
+    [infoList.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [array addObjectsFromArray:obj.values];
+    }];
+
+    BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
+    if (shouldUseTenThousandUnit) {
+        cell.chatView.banner.unitLabel.text = [NSString stringWithFormat:@"万%@", trendLine.valueUnit];
+    } else {
+        cell.chatView.banner.unitLabel.text = trendLine.valueUnit;
+    }
     cell.chatView.sourceLabel.text = [NSString stringWithFormat:@"%@ 更新时间: %@", model.dataSource, model.updateTime];
     [cell.chatView.banner setItems:items];
 
@@ -108,39 +121,72 @@
     }];
     @weakify(cell);
     @weakify(self);
-    [RACObserve(model, selectedInfoListModel) subscribeNext:^(id  _Nullable x) {
+    [RACObserve(model, selectedInfoListModel) subscribeNext:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*  _Nullable x) {
         @strongify(cell);
         @strongify(self);
         [self setupChat:x ofChartView:cell.chatView];
         cell.chatView.lineChart.delegate = model;
         model.chartView = cell.chatView.lineChart;
+        
+        NSArray<FHCityMarketTrendChatViewInfoItem*>* items = [x.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
+            FHCityMarketTrendChatViewInfoItem* item = [[FHCityMarketTrendChatViewInfoItem alloc] init];
+            item.name = each.desc;
+            item.color = each.color;
+            return item;
+        }];
+        [cell.chatView.banner setItems:items];
     }];
 }
 
 -(void)setupChat:(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListModel*)values
       ofChartView:(FHCityMarketTrendChatView*) chartView {
     [chartView resetChatView];
+    NSMutableArray* array = [[NSMutableArray alloc] init];
+    [values.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        return [array addObjectsFromArray:obj.values];
+    }];
+    __block NSUInteger lineIndex = 0;
+    BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
+
+//    __block CGFloat maxValue = CGFLOAT_MIN;
+//    __block CGFloat minValue = CGFLOAT_MIN;
+//    [array enumerateObjectsUsingBlock:^(NSNumber*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        maxValue = MAX(maxValue, [obj floatValue]);
+//        minValue = MIN(minValue, [obj floatValue]);
+//    }];
+
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
         UIColor* color = [UIColor colorWithHexString:each.color];
         data01.color = color;
         data01.alpha = 1;
-        data01.highlightedImg = [self highlightImgNameByIndex:index];
+        data01.highlightedImg = [self highlightImgNameByIndex:lineIndex];
         data01.showPointLabel = NO; // 是否显示坐标点的值
         data01.itemCount = [each.values count];
         data01.inflexionPointColor = color;
-        data01.inflexionPointColor = [self lineColorByIndex:index];
         data01.inflexionPointStyle = PNLineChartPointStyleCircle;
         data01.lineWidth = 1;
         data01.inflexionPointWidth = 4; // inflexionPoint 圆圈圈
         data01.pointLabelFormat = @"%.2f";
         data01.getData = ^PNLineChartDataItem *(NSUInteger index) {
-            NSNumber* value = each.values[index];
-            return [PNLineChartDataItem dataItemWithY:[value doubleValue]];
+            id theNumber = each.values[index];
+            if ([theNumber isKindOfClass:[NSNull class]]) {
+                return [PNLineChartDataItem empty];
+            } else if ([theNumber isKindOfClass:[NSNumber class]]) {
+                CGFloat theValue = [theNumber floatValue];
+                if (shouldUseTenThousandUnit) {
+                    theValue /= 10000.0;
+                }
+                return [PNLineChartDataItem dataItemWithY:theValue];
+            }
         };
+        lineIndex += 1;
         return data01;
     }];
-
+//    CGFloat padding = (maxValue - minValue) / 10000 / 16;
+//    chartView.lineChart.yFixedValueMax = maxValue / 10000 - padding;
+//    chartView.lineChart.yFixedValueMin = minValue / 10000 - padding;
+    chartView.lineChart.yFixedValueMin = 0;
     chartView.lineChart.chartData = lineDatas;
     [chartView.lineChart strokeChart];
 
@@ -150,14 +196,20 @@
     [chartView.lineChart setXLabels:xLabels];
 }
 
+-(BOOL)shouldUseTenThousandunit:(NSArray<NSNumber*>*)values {
+    return [values rx_detectWithBlock:^BOOL(NSNumber* each) {
+        return [each doubleValue] > 10000;
+    }];
+}
+
 - (NSString *)highlightImgNameByIndex:(NSInteger)index
 {
     switch (index) {
         case 0:
-            return @"detail_circle_red";
+            return @"detail_circle_dark";
             break;
         case 1:
-            return @"detail_circle_dark";
+            return @"detail_circle_red";
             break;
         case 2:
             return @"detail_circle_gray";
@@ -172,10 +224,10 @@
 {
     switch (index) {
         case 0:
-            return [UIColor themeRed1];
+            return [UIColor colorWithHexString:@"#bebebe"];
             break;
         case 1:
-            return [UIColor colorWithHexString:@"#bebebe"];
+            return [UIColor themeRed1];
             break;
         case 2:
             return [UIColor themeGray5];
@@ -194,11 +246,11 @@
     NSIndexPath* offset = [self indexPathWithOffset:indexPath];
     FHCityMarketDetailResponseDataMarketTrendListModel* model = _marketTrendList[offset.row];
 
-    if ([self.traceCache containsObject:indexPath]) {
+    if (![self.traceCache containsObject:offset]) {
         FHCityMarketTrendChatViewModel* result = _chartViewModels[@(indexPath.row)];
-        if (result == nil) {
-            [self traceElementShow:@{@"element_type": model.type}];
-            [[self traceCache] addObject:indexPath];
+        if (result != nil) {
+            [self traceElementShow:@{@"element_type": model.type ? : @"be_null"}];
+            [[self traceCache] addObject:offset];
         }
     }
 }

@@ -79,11 +79,6 @@
 
 -(void)leftBtnDidClick:(UIButton *)btn {
     
-    // add by zjing for test
-    NSURL *url = [[NSURL alloc] initWithString:@"sslocal://house_find"];
-    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:NULL];
-    return;
-    
     if (self.clickedLeftCallback) {
         self.clickedLeftCallback(btn);
     }
@@ -164,7 +159,8 @@
         [self.centerView.icon sizeToFit];
     }else {
         self.centerView.icon.hidden = YES;
-        self.centerView.subtitleLabel.hidden = YES;
+        self.centerView.subtitleLabel.hidden = NO;
+        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.pricingPerSqmDesc];
     }
     
     [self.centerView.titleLabel sizeToFit];

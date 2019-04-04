@@ -19,6 +19,7 @@
 #import "FHHouseFindResultTopHeader.h"
 #import "FHHouseFindResultViewController.h"
 #import <FHUtils.h>
+#import <FHEnvContext.h>
 
 #define kBaseCellId @"kBaseCellId"
 #define kBaseErrorCellId @"kErrorCell"
@@ -42,6 +43,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 @property (nonatomic , strong) UIView *bottomView;
 @property (nonatomic , strong) UIButton *buttonOpenMore;
 @property(nonatomic , strong) FHTracerModel *tracerModel;
+@property (nonatomic , strong) NSMutableDictionary *houseSearchDic;
 
 @end
 
@@ -65,7 +67,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = FHHouseTypeSecondHandHouse;
-
+        self.houseSearchDic = [NSMutableDictionary new];
+        
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:tracerDict];
@@ -88,13 +91,17 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 - (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
 {
     _recommendModel = recommendModel;
+    __weak typeof(self) wself = self;
+    _topHeader.clickCallBack = ^{
+        [wself.currentViewController rightBtnClick];
+    };
     [_topHeader refreshUI:self.recommendModel];
     
     if ([recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& recommendModel.openUrl) {
-        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:self.recommendModel.openUrl]];
+        TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         NSString *queryString = [self getNoneFilterQueryWithParams:routeParamObj.queryParams];
-        
-        [self requestErshouHouseListData:YES query:queryString offset:50 searchId:_searchId];
+        [self.houseSearchDic setValue:queryString forKey:@"search_query"];
+        [self requestErshouHouseListData:YES query:queryString offset:0 searchId:nil];
     }
 }
 
@@ -106,7 +113,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     self.bottomView.hidden = YES;
     
     _buttonOpenMore = [UIButton new];
-    [_buttonOpenMore setTitle:@"查看其他房源" forState:UIControlStateNormal];
+    [_buttonOpenMore setTitle:@"查看更多符合条件房源" forState:UIControlStateNormal];
     [_buttonOpenMore setBackgroundColor:[UIColor themeGray7]];
     [_buttonOpenMore setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     [_buttonOpenMore.titleLabel setFont:[UIFont themeFontRegular:14]];
@@ -139,12 +146,44 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     
 }
 
+- (void)addHouseSearchLog {
+    NSMutableDictionary *paramsSearch = [NSMutableDictionary new];
+    
+    paramsSearch[@"house_type"] = @"old";
+    paramsSearch[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    paramsSearch[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
+    paramsSearch[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+    [paramsSearch setValue:@"old_list" forKey:@"page_type"];
+    [paramsSearch setValue:@"driving_find_house" forKey:@"query_type"];
+    
+    // enter_query 判空
+    NSString *enter_query = self.houseSearchDic[@"enter_query"];
+    if (enter_query && [enter_query isKindOfClass:[NSString class]]) {
+        if (enter_query.length <= 0) {
+            paramsSearch[@"enter_query"] = @"be_null";
+        }
+    } else {
+        paramsSearch[@"enter_query"] = @"be_null";
+    }
+    // search_query 判空
+    NSString *search_query = self.houseSearchDic[@"search_query"];
+    if (search_query && [search_query isKindOfClass:[NSString class]]) {
+        if (search_query.length <= 0) {
+            paramsSearch[@"search_query"] = @"be_null";
+        }
+    } else {
+        paramsSearch[@"search_query"] = @"be_null";
+    }
+    
+    [FHEnvContext recordEvent:paramsSearch andEventKey:@"house_search"];
+}
+
 -(NSDictionary *)categoryLogDict {
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"category_name"] = [self categoryName] ? : @"be_null";
     tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
-    tracerDict[@"enter_type"] = self.tracerModel.enterType ? : @"be_null";
+    tracerDict[@"enter_type"] = @"click";
     tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
     tracerDict[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
@@ -176,6 +215,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 - (void)openMoreClick
 {
+    NSMutableDictionary *categoryDict = [NSMutableDictionary new];
+    [categoryDict setValue:@"old_list" forKey:@"page_type"];
+    [categoryDict setValue:@"driving_find_house" forKey:@"element_from"];
+    [FHUserTracker writeEvent:@"click_loadmore" params:categoryDict];
+
+    
     if (self.recommendModel && self.recommendModel.bottomOpenUrl) {
         NSURL *url1 = [NSURL URLWithString:self.recommendModel.bottomOpenUrl];
         [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
@@ -201,6 +246,12 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_requestTask cancel];
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
+    [paramsRequest setValue:@(50) forKey:@"count"];
+    
+    [self.tableView setContentOffset:CGPointMake(0, 0)];
+//    if ([self.tableView numberOfSections] && [self.tableView numberOfRowsInSection:0]) {
+//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//    }
     
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
@@ -227,7 +278,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         refreshTip = houseModel.refreshTip;
         itemArray = houseModel.items;
         self.searchId = houseModel.searchId;
-        
+        self.houseList = [NSMutableArray array];
+
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
@@ -240,22 +292,32 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         }];
 
         if (itemArray.count > 0) {
+            if (houseModel.searchId) {
+                self.originSearchId = houseModel.searchId;
+                self.searchId = houseModel.searchId;
+            }
+            
+            
+            self.isShowErrorPage = NO;
+            
             [self addEnterCategoryLog];
             
             [self.topHeader setTitleStr:itemArray.count];
             
-            [self.currentViewController refreshContentOffset:CGPointMake(0, 0)];
             [self.currentViewController setNaviBarTitle:[NSString stringWithFormat:@"为您找到%ld套二手房",itemArray.count]];
             
             [self.tableView reloadData];
             self.bottomView.hidden = NO;
+            
+            self.tableView.scrollEnabled = YES;
         }else
         {
             [self.topHeader setTitleStr:0];
             self.isShowErrorPage = YES;
-            
+
             [self.tableView reloadData];
             self.bottomView.hidden = YES;
+            self.tableView.scrollEnabled = NO;
         }
         
     }else
@@ -264,7 +326,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         self.isShowErrorPage = YES;
         [self.tableView reloadData];
         self.bottomView.hidden = YES;
+        self.tableView.scrollEnabled = NO;
     }
+    
+    [self addHouseSearchLog];
     
 }
 
@@ -352,13 +417,18 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         for (UIView *subView in cellError.contentView.subviews) {
             [subView removeFromSuperview];
         }
-
+        cellError.selectionStyle = UITableViewCellSelectionStyleNone;
         FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.6)];
 //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
         [cellError.contentView addSubview:noDataErrorView];
         
         __weak typeof(self) weakSelf = self;
         noDataErrorView.retryBlock = ^{
+                NSMutableDictionary *categoryDict = [NSMutableDictionary new];
+                [categoryDict setValue:@"old_list" forKey:@"page_type"];
+                [categoryDict setValue:@"driving_find_house" forKey:@"element_from"];
+                [FHUserTracker writeEvent:@"click_loadmore" params:categoryDict];
+            
                 NSURL *url1 = [NSURL URLWithString:@"sslocal://house_list?house_type=2"];
                 [[TTRoute sharedRoute] openURLByPushViewController:url1 userInfo:nil];
         };
@@ -396,13 +466,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
             
-//            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//            if (![self.houseShowCache.allKeys containsObject:cellModel]) {
-//
-//                [self addHouseShowLog:cellModel withRank:indexPath.row];
-//                self.houseShowCache[cellModel.houseModel.groupId] = @"1";
-//            }
-            
+            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            if (![self.houseShowCache.allKeys containsObject:cellModel.houseId] && cellModel.houseId) {
+                [self addHouseShowLog:cellModel withRank:indexPath.row];
+                self.houseShowCache[cellModel.houseId] = @"1";
+            }
         }
     }
 }
@@ -420,8 +488,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         cellModel = self.houseList[indexPath.row];
         
         isLastCell = (indexPath.row == self.houseList.count - 1);
-        return 105;
-//        return (isLastCell ? 125 : 105);
+        CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+        return (isLastCell ? 125 : 105) + reasonHeight;
     }
     return 105;
 }
@@ -469,9 +537,9 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSString *originFrom = self.originFrom ? : @"be_null";
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"house_type"] = @"be_null";
+    tracerDict[@"house_type"] = [self houseTypeString];
     tracerDict[@"card_type"] = @"left_pic";
-    tracerDict[@"page_type"] = @"be_null";
+    tracerDict[@"page_type"] = [self pageTypeString];
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"search_id"] = self.searchId ? : @"be_null";
     tracerDict[@"group_id"] = [cellModel groupId] ? : @"be_null";
@@ -484,8 +552,29 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [FHUserTracker writeEvent:@"house_show" params:tracerDict];
 }
 
--(NSString *)pageTypeString {
-    
+- (NSString *)houseTypeString
+{
+    switch (self.houseType) {
+        case FHHouseTypeNewHouse:
+            return @"new";
+            break;
+        case FHHouseTypeSecondHandHouse:
+            return @"old";
+            break;
+        case FHHouseTypeRentHouse:
+            return @"rent";
+            break;
+        case FHHouseTypeNeighborhood:
+            return @"neighborhood";
+            break;
+        default:
+            return @"be_null";
+            break;
+    }
+}
+
+- (NSString *)pageTypeString
+{
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
             return @"new_list";
@@ -512,6 +601,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     traceParam[@"enter_from"] = [self pageTypeString];
     traceParam[@"element_from"] = @"be_null";
     traceParam[@"search_id"] = self.searchId;
+    traceParam[@"card_type"] = @"left_pic";
     traceParam[@"log_pb"] = [cellModel logPb];
     traceParam[@"origin_from"] = self.originFrom;
     traceParam[@"origin_search_id"] = self.originSearchId;
