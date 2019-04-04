@@ -248,6 +248,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
     [paramsRequest setValue:@(50) forKey:@"count"];
     
+    
+    if ([self.tableView numberOfSections] && [self.tableView numberOfRowsInSection:0]) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
+    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI searchErshouHouseList:query params:paramsRequest offset:offset searchId:searchId sugParam:nil class:[FHSearchHouseModel class] completion:^(FHSearchHouseModel *  _Nullable model, NSError * _Nullable error) {
     
@@ -291,6 +296,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
                 self.originSearchId = houseModel.searchId;
                 self.searchId = houseModel.searchId;
             }
+            
             
             self.isShowErrorPage = NO;
             
