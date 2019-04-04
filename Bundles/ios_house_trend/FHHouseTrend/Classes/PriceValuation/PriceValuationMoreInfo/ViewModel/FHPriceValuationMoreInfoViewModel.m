@@ -99,7 +99,7 @@
     NSInteger currentYear=[[formatter stringFromDate:date] integerValue];
     NSInteger startYear = 1960;
     
-    for (NSInteger i = startYear; i <= currentYear; i++) {
+    for (NSInteger i = currentYear; i >= startYear; i--) {
         [yearArray addObject:[NSString stringWithFormat:@"%i",i]];
     }
     
