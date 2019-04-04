@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFindResultTopHeader : UIView
 
+@property(nonatomic,copy)void (^clickCallBack)();
+
 - (void)refreshUI:(FHHouseFindRecommendDataModel *)model;
 
 - (void)setTitleStr:(NSInteger)houseCount;

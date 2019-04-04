@@ -91,6 +91,10 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 - (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
 {
     _recommendModel = recommendModel;
+    __weak typeof(self) wself = self;
+    _topHeader.clickCallBack = ^{
+        [wself.currentViewController rightBtnClick];
+    };
     [_topHeader refreshUI:self.recommendModel];
     
     if ([recommendModel isKindOfClass:[FHHouseFindRecommendDataModel class]]&& recommendModel.openUrl) {
