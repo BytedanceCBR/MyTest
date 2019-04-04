@@ -208,6 +208,9 @@
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
         if([change[@"new"] boolValue]){
             [self.view endEditing:YES];
+            [_childVC endEditing:NO];
+        }else{
+            [_childVC endEditing:YES];
         }
     }
 }

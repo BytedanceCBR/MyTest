@@ -1031,9 +1031,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 #pragma mark - login相关
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification
 {
-    //    if(_isHideKeyBoard){
-    //        return;
-    //    }
+    if(_isHideKeyBoard){
+        return;
+    }
+    
     if (!self.activeTextField) {
         return;
     }

@@ -160,4 +160,9 @@
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
+- (void)endEditing:(BOOL)isHideKeyBoard {
+    [self.view endEditing:YES];
+    _viewModel.isHideKeyBoard = isHideKeyBoard;
+}
+
 @end
