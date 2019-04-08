@@ -319,6 +319,7 @@
     NSDictionary *params = @{@"a:c_del": conv.lastMessageIdentifier};
     [conv setSyncExtEntry:params completion:^(id  _Nullable response, NSError * _Nullable error) {
         if (error == nil) {
+            [conv setDraft:nil];
             NSDictionary *params = @{@"event_type": @"house_app2c_v2",
                                      @"page_type": _pageType,
                                      @"conversation_id" : conversationId,
