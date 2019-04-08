@@ -277,6 +277,7 @@
     dict[@"enter_from"] = @"city_market";
     dict[@"element_from"] = @"special_old";
     dict[@"log_pb"] = @"be_null";
+    dict[@"element_type"] = _recommendViewModel.type ? : @"be_null";
 
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:self.recommendViewModel.openUrl]];
     NSMutableDictionary *queryP = [NSMutableDictionary new];
