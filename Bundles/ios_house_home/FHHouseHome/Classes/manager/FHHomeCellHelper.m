@@ -583,7 +583,11 @@ static NSMutableArray  * _Nullable identifierArr;
                 [urlStr appendString:@"&origin_search_id=be_null"];
             }
             NSURL *url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            TTRouteUserInfo* info = nil;
+            if (model.logPb != nil) {
+                info = [[TTRouteUserInfo alloc] initWithInfo:model.logPb];
+            }
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
         }
         [wself addHomeCityMarketClickLog];
     };

@@ -276,7 +276,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *monthUp;
 @property (nonatomic, copy , nullable) NSString *cityTitleDesc;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmUnit;
-
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @end
 
 @interface  FHConfigDataAvailabilityModel  : JSONModel
