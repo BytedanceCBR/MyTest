@@ -101,7 +101,7 @@ static NSMutableArray  * _Nullable identifierArr;
             NSMutableArray *tModelArray = [NSMutableArray new];
             for (int i = 0; i < dataModel.mainPageBannerOpData.items.count; i++) {
                 FHConfigDataRentOpDataItemsModel *tModel = dataModel.mainPageBannerOpData.items[i];
-                if (tModel.openUrl.length > 0 && tModel.image.count > 0) {
+                if (tModel.openUrl.length > 0 && tModel.image.count > 0 && tModel.id.length > 0) {
                     NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
                     // 是否有效的openUrl
                     if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
