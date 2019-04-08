@@ -284,7 +284,7 @@ def appPods
     #-----播放器SDK相关-----
     pod 'TTPlayerSDK', '2.9.9.10'
     pod 'TTFFmpeg', '1.4.3'
-    pod 'TTVideoEngine', '1.9.3.24'
+    pod_binary 'TTVideoEngine', '1.9.3.24'
     pod 'TTPreloaderSDK', '1.4.20-rc.0'
 #    pod 'TTFileUploadClient', '1.5.1.1'
 
@@ -340,7 +340,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_source 'BDWebImage', '0.2.2',:subspecs => [
+    pod_binary 'BDWebImage', '0.2.2',:subspecs => [
     'Core',
     'Decoder',
     'Download',
@@ -544,7 +544,7 @@ def appPods
     
     pod_binary 'OpenSSL-Universal' , '1.0.1.20'
     
-    pod_source 'boringssl' , '0.0.7'
+    pod        'boringssl' , '0.0.7'
     
     pod_binary 'AFNetworking' , '2.5.1'
     
@@ -568,16 +568,18 @@ target 'f100' do
 end
 
 target 'NewsLiteInHouse' do
-    pod 'TTDebugAssistant', '0.2.31'
-    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    pod_binary 'TTDebugAssistant', '0.2.33'
+    pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    pod_binary 'TTSettingsManager/Debug' 
     appPods
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 
 end
 
 target 'NewsLiteChannel' do
-    pod 'TTDebugAssistant', '0.2.31'
-    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    pod_binary 'TTDebugAssistant', '0.2.33'
+    pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    pod_binary 'TTSettingsManager/Debug'
     appPods
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
     
