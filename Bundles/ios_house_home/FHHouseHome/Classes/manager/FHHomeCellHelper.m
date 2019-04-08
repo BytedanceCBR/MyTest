@@ -25,6 +25,7 @@
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <TTArticleCategoryManager.h>
 #import <UIFont+House.h>
+#import "FHHomeScrollBannerCell.h"
 
 
 #define kFHHomeIconRowCount 4 //每行icon个数
@@ -49,6 +50,7 @@ static NSMutableArray  * _Nullable identifierArr;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
+        manager.isConfigDataUpate = YES;
     });
     return manager;
 }
@@ -66,6 +68,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
     
     [tableView registerClass:[FHHomeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBannerCell class])];
+    
+    [tableView registerClass:[FHHomeScrollBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeScrollBannerCell class])];
     
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
 }
@@ -89,6 +93,30 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         if (dataModel.opData.items.count != 0) {
             [modelsArray addObject:dataModel.opData];
+        }
+        // 首页轮播banner，数据封装的时候判断是否是有效的数据
+        if (dataModel.mainPageBannerOpData.items.count > 0) {
+            FHConfigDataMainPageBannerOpDataModel *tempOpData = [[FHConfigDataMainPageBannerOpDataModel alloc] init];
+            tempOpData.opStyle = dataModel.mainPageBannerOpData.opStyle;
+            NSMutableArray *tModelArray = [NSMutableArray new];
+            for (int i = 0; i < dataModel.mainPageBannerOpData.items.count; i++) {
+                FHConfigDataRentOpDataItemsModel *tModel = dataModel.mainPageBannerOpData.items[i];
+                if (tModel.openUrl.length > 0 && tModel.image.count > 0) {
+                    NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
+                    // 是否有效的openUrl
+                    if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
+                        FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
+                        if (imageModel.url.length > 0) {
+                            // 有图片url
+                            [tModelArray addObject:tModel];
+                        }
+                    }
+                }
+            }
+            if (tModelArray.count > 0) {
+                tempOpData.items = tModelArray;
+                [modelsArray addObject:tempOpData];
+            }
         }
         //不同频道cell顺序不同
         if (type == FHHomeHeaderCellPositionTypeForNews) {
@@ -188,7 +216,7 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 countValue = 8;
             }
-//            CGFloat heightPadding = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews ? 55 : 20;
+
             CGFloat heightPadding = 20;
             height += ((countValue - 1)/kFHHomeIconRowCount + 1) * (kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
         }
@@ -200,8 +228,13 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 opData2CountValue = 4;
             }
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
+        
+        if (dataModel.mainPageBannerOpData) {
+            height += [FHHomeScrollBannerCell cellHeight];
+        }
+        
         BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
@@ -266,7 +299,7 @@ static NSMutableArray  * _Nullable identifierArr;
     for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
         if (isNeedAllocNewItems) {
-            if (index < 4) {
+            if (index < kFHHomeIconRowCount) {
                 itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-17];
             }else
             {
@@ -276,7 +309,7 @@ static NSMutableArray  * _Nullable identifierArr;
         {
             if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
                 itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
-                if (index < 4) {
+                if (index < kFHHomeIconRowCount) {
                     itemView.iconBottomPadding = -17;
                 }else
                 {
@@ -297,7 +330,7 @@ static NSMutableArray  * _Nullable identifierArr;
 
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    if (index < 4) {
+                    if (index < kFHHomeIconRowCount) {
                         make.top.mas_equalTo(8);
                     }else
                     {
@@ -421,31 +454,31 @@ static NSMutableArray  * _Nullable identifierArr;
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            CGFloat isHasCityTrend = 5;
-            
-            if ([FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse) {
-                isHasCityTrend = -5;
-            }else
-            {
-                isHasCityTrend = 5;
-            }
-
-            
             if (index%kFHHomeBannerRowCount == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
-                    make.top.mas_equalTo(5 + isHasCityTrend);
-                    make.bottom.mas_equalTo(-5 + isHasCityTrend);
-                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    if (index/kFHHomeBannerRowCount == 0) {
+                        make.top.mas_equalTo(12);
+                        make.bottom.mas_equalTo(-2);
+                    }else
+                    {
+                        make.top.mas_equalTo(6);
+                        make.bottom.mas_equalTo(-8);
+                    }
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
                 }];
             }else if (index%kFHHomeBannerRowCount == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
-                    make.top.mas_equalTo(5 + isHasCityTrend);
-                    make.bottom.mas_equalTo(-5 + isHasCityTrend);
-                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    if (index/kFHHomeBannerRowCount == 0) {
+                        make.top.mas_equalTo(12);
+                        make.bottom.mas_equalTo(-2);
+                    }else
+                    {
+                        make.top.mas_equalTo(6);
+                        make.bottom.mas_equalTo(-8);
+                    }
                     make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
                 }];
             }
@@ -555,6 +588,15 @@ static NSMutableArray  * _Nullable identifierArr;
     
 }
 
+// 首页轮播banner
++ (void)fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model {
+    // 更新cell数据
+    if ([FHHomeCellHelper sharedInstance].isConfigDataUpate) {
+         [cell updateWithModel:model];
+        [FHHomeCellHelper sharedInstance].isConfigDataUpate = NO;
+    }
+}
+
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
     
     WeakSelf;
@@ -618,6 +660,10 @@ static NSMutableArray  * _Nullable identifierArr;
         cell.fd_enforceFrameLayout = YES;
         [self fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model];
     }
+    
+    if ([cell isKindOfClass:[FHHomeScrollBannerCell class]] && [model isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        [self fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model];
+    }
 }
 
 
@@ -654,6 +700,10 @@ static NSMutableArray  * _Nullable identifierArr;
     
     if ([model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
         return NSStringFromClass([FHHomeCityTrendCell class]);
+    }
+    
+    if ([model isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        return NSStringFromClass([FHHomeScrollBannerCell class]);
     }
     
     return NSStringFromClass([FHHomeBaseTableCell class]);
