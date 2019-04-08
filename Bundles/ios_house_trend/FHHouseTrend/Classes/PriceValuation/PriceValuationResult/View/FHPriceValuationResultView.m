@@ -601,7 +601,7 @@
         NSArray *data01Array = priceTrend.values;
         PNLineChartData *data01 = [PNLineChartData new];
         data01.color = [self lineColorByIndex:index];
-        data01.highlightedImg = [self highlightImgNameByIndex:index];
+        data01.highlightedImage = [self highlightImgNameByIndex:index];
         data01.alpha = 1;
         data01.showPointLabel = NO; // 是否显示坐标点的值
         data01.itemCount = data01Array.count;
