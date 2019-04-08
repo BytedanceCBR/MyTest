@@ -117,6 +117,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 tempOpData.items = tModelArray;
                 [modelsArray addObject:tempOpData];
             }
+            dataModel.mainPageBannerOpData = tempOpData;
         }
         //不同频道cell顺序不同
         if (type == FHHomeHeaderCellPositionTypeForNews) {
@@ -231,7 +232,7 @@ static NSMutableArray  * _Nullable identifierArr;
             height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         
-        if (dataModel.mainPageBannerOpData) {
+        if (dataModel.mainPageBannerOpData.items.count > 0) {
             height += [FHHomeScrollBannerCell cellHeight];
         }
         
