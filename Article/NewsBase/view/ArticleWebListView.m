@@ -129,6 +129,16 @@
             callback(TTRJSBMsgSuccess, @{@"code": @(_isVisible)});
         }
     } forMethodName:@"is_visible"];
+    
+    [self.webContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
+            [self.delegate listViewStopLoading:self];
+        }
+        [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+        if (callback) {
+            callback(TTRJSBMsgSuccess, @{@"code": @(1)});
+        }
+    } forMethodName:@"hideLoading"];
 }
 
 - (void)setIsVisible:(BOOL)isVisible
@@ -165,6 +175,7 @@
 - (void)refreshListViewForCategory:(TTCategory *)category isDisplayView:(BOOL)display fromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote reloadFromType:(ListDataOperationReloadFromType)fromType
 {
     BOOL needReload = NO;
+    _webContainer.ssWebView.scrollView.bounces = NO;
     if (![self.currentCategory.categoryID isEqualToString:category.categoryID] || fromRemote) {
         needReload = YES;
     }
@@ -207,6 +218,15 @@
         //记录用户下拉刷新时间
         [[NewsListLogicManager shareManager] saveHasReloadForCategoryID:self.currentCategory.categoryID];
     }
+    
+}
+
+- (void)finishLoadingWeb
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
+        [self.delegate listViewStopLoading:self];
+    }
+    [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
 }
 
 - (void)willAppear
@@ -241,8 +261,12 @@
 
 - (void)pullAndRefresh
 {
+//      [_webContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"window.TouTiao && TouTiao.update()" completionHandler:nil];
     //[_webContainer.ssWebView reload];
-    [_webContainer.ssWebView.scrollView triggerPullDown];
+//    [_webContainer.ssWebView.scrollView triggerPullDown];
+    
+    [ _webContainer.ssWebView ttr_fireEvent:@"update" data:nil];
+
 }
 
 
@@ -256,10 +280,14 @@
 
 - (void)webViewDidFinishLoad:(YSWebView *)webView
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
-        [self.delegate listViewStopLoading:self];
-    }
+//    if (self.currentRequestUrl) {
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
+//            [self.delegate listViewStopLoading:self];
+//        }
+//        [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+//    }
     [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+
 }
 
 - (void)webViewDidStartLoad:(YSWebView *)webView

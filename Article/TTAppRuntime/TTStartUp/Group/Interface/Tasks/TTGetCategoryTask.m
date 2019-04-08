@@ -44,7 +44,12 @@ static BOOL kTTHasReceivedGotCategoryNotification = NO;
     });
 }
 
-- (void)categoryGotFinished:(NSNotification *)notification {
+- (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
+    [super startWithApplication:application options:launchOptions];
+    [[TTArticleCategoryManager sharedManager] startGetCategory];
+}
+
+- (void)categoryGotFinished:(NSNotification *)notfication {
     if (!kTTHasReceivedGotCategoryNotification) {
         kTTHasReceivedGotCategoryNotification = YES;
 

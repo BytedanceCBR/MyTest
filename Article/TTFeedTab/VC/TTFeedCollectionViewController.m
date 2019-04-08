@@ -256,6 +256,9 @@ TTFeedCollectionCellDelegate>
             }
             
             if (!cell) {
+                if (category.categoryID) {
+                    [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:category.categoryID];
+                }
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
             }
             

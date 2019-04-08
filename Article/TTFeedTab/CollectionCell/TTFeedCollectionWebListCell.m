@@ -110,11 +110,12 @@
 
 - (void)triggerPullRefresh
 {
-//    [self.listView pullAndRefresh];
+    [self.listView pullAndRefresh];
 }
 
 - (void)refreshDataWithType:(ListDataOperationReloadFromType)refreshType
 {
+    [self.listView pullAndRefresh];
 //    [self triggerPullRefresh];
 }
 

@@ -194,6 +194,12 @@ static NSMutableArray  * _Nullable identifierArr;
 
 - (CGFloat)heightForFHHomeHeaderCellViewType
 {
+    //未开通城市返回
+    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
+    {
+        return 0;
+    }
+    
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!dataModel) {
         dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
