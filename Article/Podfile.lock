@@ -689,7 +689,7 @@ DEPENDENCIES:
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
-  - TTPlatformBaseLib (from `git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git`, branch `dev_bubble`)
+  - TTPlatformBaseLib (from `git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git`, commit `be740facc849bf022c4265a19bea8d6657de0741`, branch `dev_bubble`)
   - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
   - TTPlayerSDK (= 2.9.9.10)
   - TTPreloaderSDK (= 1.4.20-rc.0)
@@ -815,6 +815,7 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTPhotoScrollVC
   TTPlatformBaseLib:
     :branch: dev_bubble
+    :commit: be740facc849bf022c4265a19bea8d6657de0741
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTPlatformUIModel:
     :path: ../AKPlugins/AKPlatformUIModel
@@ -848,7 +849,7 @@ CHECKOUT OPTIONS:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTPlatformBaseLib:
-    :commit: 49bc68f0b533295611619e12234719da02a66de4
+    :commit: a50fb0b6d98721353148904544701aef2ae6f027
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
@@ -1010,6 +1011,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 1284766952d4fb9c57d4686281415b87663a028a
+PODFILE CHECKSUM: f95730ee7f167a69db0b42df33c6adf26e6c93f8
 
 COCOAPODS: 1.4.0
