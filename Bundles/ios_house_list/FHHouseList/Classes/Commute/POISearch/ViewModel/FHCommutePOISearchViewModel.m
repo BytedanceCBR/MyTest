@@ -138,6 +138,10 @@
                 wself.locationHeaderView.loading = NO;
             }else{
                 SHOW_TOAST(@"定位失败");
+                if (wself.tableView.tableHeaderView != wself.defaultHeader ) {
+                    wself.locationHeaderView.location = @"定位失败";
+                    wself.locationHeaderView.showRefresh = YES;
+                }
             }
         }];
     }
@@ -244,7 +248,7 @@
         if (self.searchPois.count > 0) {
             self.tableView.tableHeaderView = self.defaultHeader;
         }else{
-            self.tableView.tableHeaderView = _locationHeaderView;
+            self.tableView.tableHeaderView = self.locationHeaderView;
         }
         
         if (self.keywordRequest.keywords.length > 0 && self.searchPois.count == 0) {

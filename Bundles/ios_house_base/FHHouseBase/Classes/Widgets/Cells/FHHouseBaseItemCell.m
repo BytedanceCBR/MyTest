@@ -650,6 +650,7 @@
         [self.priceBgView addSubview:self.distanceLabel];
         
         _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
+        [self.distanceLabel.yoga markDirty];
     }else{
         [_distanceLabel removeFromSuperview];
     }

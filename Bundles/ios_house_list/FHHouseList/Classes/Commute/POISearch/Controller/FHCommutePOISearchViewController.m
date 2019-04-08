@@ -66,8 +66,7 @@
     [_inputBar becomeFirstResponder];
     
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    self.emptyView.hidden = NO;
-    
+    self.emptyView.hidden = YES;
     
 }
 

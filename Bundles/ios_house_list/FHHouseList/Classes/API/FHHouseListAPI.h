@@ -95,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask *)requestDeleteSugSubscribe:(NSString *)subscribeId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
 //通勤找房
-+(TTHttpTask *)requestCommute:(NSInteger)cityId location:(CLLocationCoordinate2D)location houseType:(FHHouseType)houseType duration:(CGFloat)duration type:(FHCommuteType)type param:(NSDictionary *_Nonnull)param offset:(NSInteger)offset completion:(void(^_Nullable)(FHHouseRentModel* _Nullable model , NSError * _Nullable error))completion;
++(TTHttpTask *)requestCommute:(NSInteger)cityId query:(NSString *_Nullable)query location:(CLLocationCoordinate2D)location houseType:(FHHouseType)houseType duration:(CGFloat)duration type:(FHCommuteType)type param:(NSDictionary *_Nonnull)param offset:(NSInteger)offset completion:(void(^_Nullable)(FHHouseRentModel* _Nullable model , NSError * _Nullable error))completion;
 @end
 
 NS_ASSUME_NONNULL_END

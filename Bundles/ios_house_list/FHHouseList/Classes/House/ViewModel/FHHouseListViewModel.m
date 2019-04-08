@@ -279,7 +279,7 @@
     NSString *searchId = self.searchId;
 
     if (self.isCommute) {
-        [self requestCommute:isRefresh offset:offset searchId:searchId];
+        [self requestCommute:isRefresh query:query offset:offset searchId:searchId];
         return;
     }
     
@@ -398,32 +398,22 @@
     self.requestTask = task;
 }
 
--(void)requestCommute:(BOOL)isRefresh offset:(NSInteger)offset searchId:(NSString *)searchId {
+-(void)requestCommute:(BOOL)isRefresh query:(NSString *)query offset:(NSInteger)offset searchId:(NSString *)searchId {
     
     [_requestTask cancel];
-    
     
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
     CLLocationCoordinate2D location = CLLocationCoordinate2DMake(manager.latitude, manager.longitude);
     CGFloat duration = manager.duration.floatValue*60;
-    NSMutableDictionary *param = nil;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[@"page_type"] = @"rent_list";
     if (searchId.length > 0) {
-        param = @{@"search_id":searchId};
-//    }else{
-//        //for test
-//
-//        param = @{@"search_id":@"123",@"logid":@"123"};
-//
-//
-//
-//
-//
+        param[@"search_id"] = searchId;
     }
     
-    
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseListAPI requestCommute:cityId location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *task = [FHHouseListAPI requestCommute:cityId query:query location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
         if (!wself) {
             return ;
         }
