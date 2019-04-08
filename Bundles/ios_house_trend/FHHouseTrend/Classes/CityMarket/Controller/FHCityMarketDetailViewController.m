@@ -72,6 +72,10 @@
         self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
         self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
         self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
+
+        _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
+        _headerViewModel.delegate = self;
+        [_headerViewModel requestData];
     }
     return self;
 }
@@ -160,14 +164,14 @@
 }
 
 -(void)bindHeaderView {
-    _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
-    _headerViewModel.delegate = self;
     RAC(_headerView.titleLabel, text) = RACObserve(_headerViewModel, title);
     RAC(_headerView.priceLabel, text) = RACObserve(_headerViewModel, price);
     RAC(_headerView.sourceLabel, text) = RACObserve(_headerViewModel, source);
     RAC(_headerView.unitLabel, text) = RACObserve(_headerViewModel, unit);
     @weakify(self);
-    [[[RACObserve(_headerViewModel, properties) skip:1] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
+    [[[RACObserve(_headerViewModel, properties) filter:^BOOL(id  _Nullable value) {
+        return value != nil;
+    }] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
         NSArray* result = [value rx_mapWithBlock:^id(FHCityMarketDetailResponseDataSummaryItemListModel* each) {
             FHCityMarketHeaderPropertyItemView* itemView = [[FHCityMarketHeaderPropertyItemView alloc] init];
             itemView.nameLabel.text = each.desc;
@@ -220,8 +224,10 @@
     RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
     [self bindStatusBarObv];
-    [self startLoading];
-    [_headerViewModel requestData];
+    if (_headerViewModel.model == nil) {
+        [self startLoading];
+    }
+//    [_headerViewModel requestData];
 }
 
 -(void)bindStatusBarObv {
