@@ -160,6 +160,7 @@
         UIColor* color = [UIColor colorWithHexString:each.color];
         data01.color = color;
         data01.alpha = 1;
+//        data01.highlightedImage = [[self class] dotImageByColor:color];
         data01.highlightedImg = [self highlightImgNameByIndex:lineIndex];
         data01.showPointLabel = NO; // 是否显示坐标点的值
         data01.itemCount = [each.values count];
@@ -262,6 +263,27 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return CGFLOAT_MIN;
+}
+
++(UIImage*)dotImageByColor:(UIColor*)color {
+    CGFloat whiteRadius = 4;
+    CGFloat colorRadius = 2;
+    CGPoint centerPoint = CGPointMake(9, 9);
+    UIImage* result = nil;
+    UIGraphicsBeginImageContext(CGSizeMake(18, 18));
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
+    CGContextSetShadow(context, CGSizeMake(0.0, 0.1), 0.1);
+    CGContextSetFillColorWithColor(context, [[UIColor whiteColor] CGColor]);
+    CGContextFillEllipseInRect(context, CGRectMake(centerPoint.x - whiteRadius, centerPoint.y - whiteRadius, whiteRadius * 2, whiteRadius * 2));
+
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillEllipseInRect(context, CGRectMake(centerPoint.x - colorRadius, centerPoint.y - colorRadius, colorRadius * 2, colorRadius * 2));
+
+
+    result = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return result;
 }
 
 @end

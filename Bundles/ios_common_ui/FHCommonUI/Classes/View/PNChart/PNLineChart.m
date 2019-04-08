@@ -315,7 +315,11 @@
             [selectPointsArray addObject:linePointsArray[selectIndex]];
             
             PNLineChartData *chartData = self.chartData[p];
-            icon.image = [UIImage imageNamed:chartData.highlightedImg];
+            if (chartData.highlightedImage != nil) {
+                icon.image = chartData.highlightedImage;
+            } else {
+                icon.image = [UIImage imageNamed:chartData.highlightedImg];
+            }
             icon.tag = 1000 + p;
             [icon sizeToFit];
             
