@@ -300,7 +300,7 @@
     if (!_agencyLabel) {
         _agencyLabel = [[UILabel alloc]init];
         _agencyLabel.font = [UIFont themeFontRegular:12];
-        _agencyLabel.textColor = [UIColor themeGray1];
+        _agencyLabel.textColor = [UIColor themeGray3];
     }
     return _agencyLabel;
 }
