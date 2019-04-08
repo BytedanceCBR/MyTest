@@ -56,6 +56,7 @@
         _webContainer.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _webContainer.ssWebView.opaque = NO;
         _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
+        _webContainer.disableEndRefresh = YES;
         
         if ([TTDeviceHelper isPadDevice]) {
             TTViewWrapper *wrapperView = [[TTViewWrapper alloc] initWithFrame:self.bounds];
@@ -99,13 +100,16 @@
             NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:url]];
             self.currentRequestUrl = url;
              [self.webContainer.ssWebView loadRequest:request];
-
+             if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
+                 [self.delegate listViewStartLoading:self];
+             }
         }];
         
         [_webContainer setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
         [_webContainer.ssWebView.scrollView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
         
         [self registerIsVisibleJSBridgeHandler];
+        
     }
     return self;
 }
@@ -134,10 +138,12 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
             [self.delegate listViewStopLoading:self];
         }
+        [_webContainer tt_endUpdataData];
         [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
         if (callback) {
             callback(TTRJSBMsgSuccess, @{@"code": @(1)});
         }
+        
     } forMethodName:@"hideLoading"];
 }
 
@@ -176,7 +182,7 @@
 {
     BOOL needReload = NO;
     _webContainer.ssWebView.scrollView.bounces = NO;
-    if (![self.currentCategory.categoryID isEqualToString:category.categoryID] || fromRemote) {
+    if (![self.currentCategory.categoryID isEqualToString:category.categoryID] || fromRemote || ![self.currentCategory.webURLStr isEqualToString:category.webURLStr]) {
         needReload = YES;
     }
     [super refreshListViewForCategory:category isDisplayView:display fromLocal:fromLocal fromRemote:fromRemote reloadFromType:fromType];
@@ -212,6 +218,10 @@
         
         if(![self.currentRequestUrl isEqualToString:url])
         {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
+                [self.delegate listViewStartLoading:self];
+            }
+            [_webContainer tt_startUpdate];
             [_webContainer.ssWebView loadRequest:request];
         }
         self.currentRequestUrl = url;
@@ -286,19 +296,19 @@
 //        }
 //        [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
 //    }
-    [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+//    [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
 
 }
 
 - (void)webViewDidStartLoad:(YSWebView *)webView
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
-        [self.delegate listViewStartLoading:self];
-    }
+//    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
+//        [self.delegate listViewStartLoading:self];
+//    }
 }
 
 - (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
-
+    [_webContainer tt_endUpdataData];
     [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
 }
 
