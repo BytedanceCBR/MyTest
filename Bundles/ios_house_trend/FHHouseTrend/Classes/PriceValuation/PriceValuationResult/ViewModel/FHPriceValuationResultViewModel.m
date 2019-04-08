@@ -69,6 +69,7 @@ extern NSString *const kFHToastCountKey;
             //TODO: show handle error
             [wself.viewController setNavBar:YES];
             wself.viewController.model = nil;
+            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
             [wself.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
             return;
         }
