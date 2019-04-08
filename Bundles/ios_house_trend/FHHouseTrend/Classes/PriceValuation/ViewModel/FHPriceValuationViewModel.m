@@ -120,12 +120,14 @@
                     //判断小数点的位数
                     NSRange ran = [textField.text rangeOfString:@"."];
                     if(range.location > ran.location){
+                        //控制小数点后面的字符数不大于2个
                         if ([textField.text length] - ran.location <= 2){
                             return YES;
                         }else{
                             return NO;
                         }
                     }else{
+                        //控制小数点前面的字符数不大于6个
                         if (ran.location < 6){
                             return YES;
                         }else{
@@ -133,9 +135,8 @@
                         }
                     }
                 }else{
-                    //控制小数点前面的字符数不大于6个
-                    NSUInteger loc = range.location;
-                    if(range.location >= 6){
+                    //控制无小数点时字符数不大于6个
+                    if([textField.text length] >= 6){
                         return NO;
                     }
                     return YES;
@@ -184,7 +185,6 @@
     NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
-    tracer[@"element_from"] = tracerDict[@"element_from"] ? tracerDict[@"element_from"] : @"be_null";
     tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
     tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"go_detail", tracer);
