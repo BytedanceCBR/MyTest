@@ -271,11 +271,7 @@
         }
     }];
     
-    NSMutableDictionary *traceParams = [[self traceParams] mutableCopy];
-    NSMutableDictionary *tracer = [traceParams[@"tracer"] mutableCopy];
-    tracer[@"element_from"] = @"sale_value";
-    traceParams[@"tracer"] = tracer;
-    TTRouteUserInfo* infoValue = [[TTRouteUserInfo alloc] initWithInfo:traceParams];
+    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
     
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
     item.titleLabel.text = @"卖房估价";
@@ -286,11 +282,9 @@
     } else {
         action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
     }
-    action.userInfo = infoValue;
+    action.userInfo = info;
     [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     [_actions addObject:action];
-    
-    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
 
     FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
     item2.titleLabel.text = @"帮我找房";
