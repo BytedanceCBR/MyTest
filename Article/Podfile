@@ -144,7 +144,7 @@ def appPods
 #    pod 'TTShareService', '0.6.15'
     pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin', :inhibit_warnings => false
 
-    pod_binary 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspects => [  # '0.3.3'
+    pod 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspects => [  # '0.3.3'
     'TTShareBusiness/TTShareWeChatBusiness',
     'TTShareBusiness/TTShareQQBusiness',
     'TTShareBusiness/TTShareCopyBusiness',
