@@ -46,10 +46,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if(self.needRequestData){
+    if(self.needRequestData && [TTReachability isNetworkConnected]){
         [_viewModel requestData:NO];
-        self.needRequestData = NO;
     }
+    self.needRequestData = NO;
 }
 
 - (void)dealloc {

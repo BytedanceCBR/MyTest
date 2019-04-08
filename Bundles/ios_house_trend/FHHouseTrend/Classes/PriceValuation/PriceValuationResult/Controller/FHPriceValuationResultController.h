@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic ,strong) FHPriceValuationEvaluateModel *model;
 @property(nonatomic ,strong) FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel *infoModel;
+@property(nonatomic ,assign) BOOL *hasError;
 
 - (void)setNavBar:(BOOL)error;
 
