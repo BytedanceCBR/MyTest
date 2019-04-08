@@ -13,7 +13,7 @@
 @implementation FHRowsView
 
 - (instancetype)initWithRowCount:(NSInteger)rowCount {
-    self = [self initWithRowCount:rowCount withRowHight:70];
+    self = [self initWithRowCount:rowCount withRowHight:60];
     if (self) {
         
     }
@@ -37,7 +37,8 @@
         
         [rows mas_distributeViewsAlongAxis:MASAxisTypeVertical withFixedSpacing:0 leadSpacing:0 tailSpacing:0];
         [rows mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self);
+            make.left.mas_equalTo(self).offset(13);
+            make.right.mas_equalTo(self).offset(13);
             //            make.height.mas_equalTo(_rowHight);
         }];
     } else {
@@ -48,7 +49,9 @@
         if ([view isKindOfClass:[UIView class]]) {
             UIView* theView = (UIView*)view;
             [theView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.right.top.bottom.mas_equalTo(self);
+                make.top.bottom.mas_equalTo(self);
+                make.left.mas_equalTo(self).offset(13);
+                make.right.mas_equalTo(self).offset(13);
             }];
         }
     }

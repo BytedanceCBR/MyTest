@@ -159,7 +159,8 @@
         [self.centerView.icon sizeToFit];
     }else {
         self.centerView.icon.hidden = YES;
-        self.centerView.subtitleLabel.hidden = YES;
+        self.centerView.subtitleLabel.hidden = NO;
+        self.centerView.subtitleLabel.text = [NSString stringWithFormat:@"%@",model.pricingPerSqmDesc];
     }
     
     [self.centerView.titleLabel sizeToFit];

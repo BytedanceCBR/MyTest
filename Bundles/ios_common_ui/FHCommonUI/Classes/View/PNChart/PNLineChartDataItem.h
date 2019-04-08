@@ -10,8 +10,10 @@
 
 + (PNLineChartDataItem *)dataItemWithY:(CGFloat)y;
 + (PNLineChartDataItem *)dataItemWithY:(CGFloat)y andRawY:(CGFloat)rawY;
++ (instancetype)empty;
 
 @property (readonly) CGFloat y; // should be within the y range
 @property (readonly) CGFloat rawY; // this is the raw value, used for point label.
+@property (readonly) BOOL isEmpty;
 
 @end

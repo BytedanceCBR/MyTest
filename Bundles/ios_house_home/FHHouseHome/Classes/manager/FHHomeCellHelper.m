@@ -24,11 +24,9 @@
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <TTArticleCategoryManager.h>
+#import <UIFont+House.h>
 #import "FHHomeScrollBannerCell.h"
 
-#define kFHHomeBannerDefaultHeight 60.0 //banner高度
-
-#define kFHHomeIconDefaultHeight 52.0 //icon高度
 
 #define kFHHomeIconRowCount 4 //每行icon个数
 
@@ -218,7 +216,8 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 countValue = 8;
             }
-            CGFloat heightPadding = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews ? 62 : 47;
+
+            CGFloat heightPadding = 20;
             height += ((countValue - 1)/kFHHomeIconRowCount + 1) * (kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
         }
         
@@ -229,8 +228,13 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 opData2CountValue = 4;
             }
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (10 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
+        
+        if (dataModel.mainPageBannerOpData) {
+            height += [FHHomeScrollBannerCell cellHeight];
+        }
+        
         BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
@@ -295,24 +299,25 @@ static NSMutableArray  * _Nullable identifierArr;
     for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
         if (isNeedAllocNewItems) {
-            if ([FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews) {
-                itemView = [[FHSpringboardIconItemView alloc] init];
+            if (index < kFHHomeIconRowCount) {
+                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-17];
             }else
             {
-                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-27];
+                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-20];
             }
         }else
         {
             if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
                 itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
-            }else
-            {
-                if ([FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews) {
-                    itemView = [[FHSpringboardIconItemView alloc] init];
+                if (index < kFHHomeIconRowCount) {
+                    itemView.iconBottomPadding = -17;
                 }else
                 {
-                    itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-27];
+                    itemView.iconBottomPadding = -20;
                 }
+            }else
+            {
+                itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-20];
             }
         }
         
@@ -324,9 +329,13 @@ static NSMutableArray  * _Nullable identifierArr;
             if (imageModel.url && [imageModel.url isKindOfClass:[NSString class]]) {
 
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
-
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.top.mas_equalTo(20);
+                    if (index < kFHHomeIconRowCount) {
+                        make.top.mas_equalTo(8);
+                    }else
+                    {
+                        make.top.mas_equalTo(5);
+                    }
                     make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                 }];
             }
@@ -334,14 +343,13 @@ static NSMutableArray  * _Nullable identifierArr;
         
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.nameLabel.textColor = [UIColor themeGray1];
-            UIFont *font = [UIFont fontWithName:@"PingFangSC-Regular" size:14];
-            if (!font) {
-                font = [UIFont systemFontOfSize:14];
-            }
+            UIFont *font = [UIFont themeFontRegular:12];
             itemView.nameLabel.font = font;
             itemView.nameLabel.text = itemModel.title;
+            itemView.nameLabel.textColor = [UIColor themeGray2];
+            
             [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(8);
+                make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(0);
             }];
         }
         
@@ -446,33 +454,37 @@ static NSMutableArray  * _Nullable identifierArr;
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            CGFloat isHasCityTrend = 0;
-            
-            if (![FHHomeConfigManager sharedInstance].currentDataModel.cityStats && [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse) {
-                isHasCityTrend = 5;
-            }
-            
             if (index%kFHHomeBannerRowCount == 0) {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-6.5);
-                    make.top.mas_equalTo(5 + isHasCityTrend);
-                    make.bottom.mas_equalTo(-5 + isHasCityTrend);
-                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    if (index/kFHHomeBannerRowCount == 0) {
+                        make.top.mas_equalTo(12);
+                        make.bottom.mas_equalTo(-2);
+                    }else
+                    {
+                        make.top.mas_equalTo(6);
+                        make.bottom.mas_equalTo(-8);
+                    }
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
                 }];
             }else if (index%kFHHomeBannerRowCount == 1)
             {
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(6.5);
-                    make.top.mas_equalTo(5 + isHasCityTrend);
-                    make.bottom.mas_equalTo(-5 + isHasCityTrend);
-                    make.height.mas_equalTo(kFHHomeBannerDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    if (index/kFHHomeBannerRowCount == 0) {
+                        make.top.mas_equalTo(12);
+                        make.bottom.mas_equalTo(-2);
+                    }else
+                    {
+                        make.top.mas_equalTo(6);
+                        make.bottom.mas_equalTo(-8);
+                    }
                     make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
                 }];
             }
         }
 
-        BOOL isFindHouse = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse;
+        BOOL isFindHouse = YES;
 
         if (itemModel.title && [itemModel.title isKindOfClass:[NSString class]]) {
             itemView.titleLabel.textColor = [UIColor themeGray1];
@@ -603,17 +615,18 @@ static NSMutableArray  * _Nullable identifierArr;
         [contextBridge setTraceValue:@"city_market" forKey:@"origin_from"];
         [contextBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
 
-        if (model.mapOpenUrl.length > 0) {
-            
-            NSMutableString *urlStr = [NSMutableString stringWithString:model.mapOpenUrl];
+        if (model.openUrl.length > 0) {
+
+            NSMutableString *urlStr = [NSMutableString stringWithString:model.openUrl];
+            [urlStr appendString:@"?"];
             if (![urlStr containsString:@"enter_from"]) {
-                [urlStr appendString:@"&enter_from=city_market"];
+                [urlStr appendString:@"&enter_from=maintab_operation"];
             }
             if (![urlStr containsString:@"search_id"]) {
                 [urlStr appendString:@"&search_id=be_null"];
             }
             if (![urlStr containsString:@"origin_from"]) {
-                [urlStr appendString:@"&origin_from=city_market"];
+                [urlStr appendString:@"&origin_from=maintab_operation"];
             }
             if (![urlStr containsString:@"origin_search_id"]) {
                 [urlStr appendString:@"&origin_search_id=be_null"];
