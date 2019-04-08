@@ -4,7 +4,7 @@ source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码�
 source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
 source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
 source 'git@code.byted.org:ugc/UGCSpecs.git'
-source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+#source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
 
 source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
 
