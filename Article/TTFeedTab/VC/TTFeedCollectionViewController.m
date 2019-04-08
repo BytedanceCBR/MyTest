@@ -31,6 +31,9 @@
 //#import "Bubble-Swift.h"
 #import "FHHomeConfigManager.h"
 #import "FHEnvContext.h"
+#import "TTFeedCollectionWebListCell.h"
+#import <FHUtils.h>
+
 @interface MyCollectionView : UICollectionView
 
 @end
@@ -239,7 +242,34 @@ TTFeedCollectionCellDelegate>
         }
         
         NSString *reuseIdentifier = NSStringFromClass(cellClass);
-        cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+        if ([reuseIdentifier isEqualToString:@"TTFeedCollectionWebListCell"]) {
+            @try {
+                // 可能会出现崩溃的代码
+                cell = [collectionView dequeueReusableCellWithReuseIdentifier:category.categoryID forIndexPath:indexPath];
+            }
+            
+            @catch (NSException *exception) {
+                // 捕获到的异常exception
+            }
+            @finally {
+                // 结果处理
+            }
+            
+            if (!cell) {
+                cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+            }
+            
+            if (category.categoryID) {
+                [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:category.categoryID withClean:YES];
+                NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",category.categoryID];
+                [FHUtils setContent:@"1" forKey:categoryRedKey];
+            }
+            self.collectionView.bounces = NO;
+        }else
+        {
+            self.collectionView.bounces = YES;
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+        }
         
         cell.delegate = self;
         
@@ -604,6 +634,18 @@ TTFeedCollectionCellDelegate>
                 [_collectionView registerClass:cellClass forCellWithReuseIdentifier:NSStringFromClass(cellClass)];
             }
         }];
+        
+        NSArray *webCategorys = [[TTArticleCategoryManager sharedManager] webCategories];
+        
+        for (TTCategory *categorySub in webCategorys) {
+            if ([categorySub isKindOfClass:[TTCategory class]]) {
+                [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:categorySub.categoryID];
+                NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",categorySub.categoryID];
+                if (![FHUtils contentForKey:categoryRedKey]) {
+                    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:categorySub.categoryID withClean:NO];
+                }
+            }
+        }
         
         [_collectionView registerClass:[TTFeedCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([TTFeedCollectionCell class])];
         

@@ -22,6 +22,8 @@
 @interface ArticleWebListView()<YSWebViewDelegate>
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
 @property(nonatomic, copy)NSString * categoryID;  // 频道ID
+@property(nonatomic, copy)NSString * currentRequestUrl;  // 当前频道链接
+@property(nonatomic, strong)NSMutableDictionary *webContainerCache;
 @end
 
 @implementation ArticleWebListView
@@ -95,7 +97,8 @@
                 }
             }
             NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:url]];
-            [self.webContainer.ssWebView loadRequest:request];
+            self.currentRequestUrl = url;
+             [self.webContainer.ssWebView loadRequest:request];
 
         }];
         
@@ -195,9 +198,12 @@
         }
         
         NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:url]];
-        [_webContainer.ssWebView loadRequest:request];
         
-        
+        if(![self.currentRequestUrl isEqualToString:url])
+        {
+            [_webContainer.ssWebView loadRequest:request];
+        }
+        self.currentRequestUrl = url;
         //记录用户下拉刷新时间
         [[NewsListLogicManager shareManager] saveHasReloadForCategoryID:self.currentCategory.categoryID];
     }
