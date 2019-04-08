@@ -26,6 +26,7 @@
 #import <FHHouseBase/FHBaseViewController.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHUserTracker.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -69,8 +70,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
 //是否重新是重新发送验证码
 @property(nonatomic , assign) BOOL isVerifyCodeRetry;
-@property(nonatomic , assign) UIEdgeInsets lastContentInset;
 @property(nonatomic , assign) CGPoint lastContentOffset;
+@property(nonatomic , assign) BOOL isKeyboardShow;
 
 @end
 
@@ -901,12 +902,14 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-//    NSLog(@"zjing bounds is: %@",NSStringFromCGRect(scrollView.bounds));
-    
+//    NSLog(@"zjing scrollViewDidScroll bounds is: %@,isDragging %ld, decelerating %ld",NSStringFromCGRect(scrollView.bounds),scrollView.isDragging,scrollView.isDecelerating);
+
+//    if (scrollView == self.collectionView && !_isKeyboardShow && (scrollView.isDragging || scrollView.isDecelerating)) {
     if (scrollView == self.collectionView && scrollView.isDragging) {
+
+//        NSLog(@"zjing isDragging bounds is: %@",NSStringFromCGRect(scrollView.bounds));
         [self.collectionView endEditing:YES];
     }
-
 }
 
 - (void)registerCell:(UICollectionView *)collectionview
@@ -1041,39 +1044,49 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         return;
     }
     
-    _lastContentOffset =  self.collectionView.contentOffset ;
-    
+    _lastContentOffset =  self.collectionView.contentOffset;
+    _isKeyboardShow = YES;
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
     CGFloat screenY = [self.contactCell convertPoint:CGPointMake(0, self.contactCell.height + 60) toView:self.collectionView].y;
     CGFloat offset = 0;
     offset = screenY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
-    self.lastContentInset = self.collectionView.contentInset;
     
     CGFloat keyboardTop = [self.viewController.view convertPoint:keyBoardBounds.origin fromView:self.viewController.view].y;
-    CGFloat top = self.viewController.view.height - keyboardTop ;
-    
-//    NSLog(@"zjing offset:%f  top is: %f",offset,top);
+    CGFloat top = self.viewController.view.height - keyboardTop;
+//    NSLog(@"zjing screenY:%f offset is : %f \n",screenY,offset);
+//    NSLog(@"zjing top is: %f keyboardTop is: %f  _lastContentOffset is %@",top,keyboardTop,[NSValue valueWithCGPoint:_lastContentOffset]);
+    self.collectionView.scrollEnabled = NO;
     if (offset > 0) {
-        
-        self.collectionView.scrollEnabled = NO;
-        
         NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
         NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
         CGFloat cheight =  keyboardTop - CGRectGetMinY(self.collectionView.frame);
-        
-        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
-            
-            CGRect bounds = self.collectionView.bounds;
-            bounds.origin.y = self.collectionView.contentSize.height - cheight;
-            
-            self.collectionView.bounds = bounds;
-            
-            
-        } completion:^(BOOL finished) {
+        CGRect bounds = self.collectionView.bounds;
 
-        }];
+//        NSLog(@"zjing cheight:%f,bounds:%@, collectionView is : %@",cheight,[NSValue valueWithCGRect:bounds],self.collectionView);
+        bounds.origin.y = self.collectionView.contentSize.height - cheight;
+        BOOL shouldDelay = SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"11.0");
+        if (shouldDelay) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateCollectionViewBounds:bounds duration:duration curve:curve];
+            });
+        }else {
+            [self updateCollectionViewBounds:bounds duration:duration curve:curve];
+        }
     }
+}
+
+- (void)updateCollectionViewBounds:(CGRect)bounds duration:(NSNumber *)duration curve:(NSNumber *)curve
+{
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+        
+        self.collectionView.bounds = bounds;
+//        NSLog(@"zjing after bounds:%@, collectionView is : %@",[NSValue valueWithCGRect:bounds],self.collectionView);
+        
+    } completion:^(BOOL finished) {
+//        NSLog(@"zjing finished bounds:%@, collectionView is : %@",[NSValue valueWithCGRect:bounds],self.collectionView);
+    }];
 }
 
 - (void)keyboardWillHideNotifiction:(NSNotification *)notification
@@ -1081,27 +1094,23 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (!self.activeTextField) {
         return;
     }
+    _isKeyboardShow = NO;
     NSDictionary *userInfo = notification.userInfo;
     NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
     CGFloat offset = 0;
-    //    offset = self.lastY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
-//    NSLog(@"zjing hide offset:%f",offset);
-    
-    //    offset = self.collectionView.contentSize.height - self.collectionView.height;
-    //    if (offset > 0) {
-    
     self.collectionView.scrollEnabled = YES;
-    
+    offset = self.collectionView.contentSize.height - self.collectionView.height;
+    if (offset < 0) {
+        offset = 0;
+    }
+//    NSLog(@"zjing hide offset:%f",offset);
     [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
 
-        self.collectionView.contentOffset = CGPointMake(0, self.collectionView.contentSize.height - self.collectionView.height);
-        
+        self.collectionView.contentOffset = CGPointMake(0, offset);
     } completion:^(BOOL finished) {
-        
     }];
-    //    }
 }
 
 - (void)textFieldDidChange:(NSNotification *)notification
@@ -1109,7 +1118,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     UITextField *textField = (UITextField *)notification.object;
 
     if (textField != self.contactCell.phoneInput && textField != self.contactCell.varifyCodeInput) {
-        
         [self resetPriceSelectItems];
         return;
     }
@@ -1240,7 +1248,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     self.verifyCodeRetryTime--;
     
     // add by zjing for test
-    NSLog(@"zjing verifyCodeRetryTime:%ld",self.verifyCodeRetryTime);
+//    NSLog(@"zjing verifyCodeRetryTime:%ld",self.verifyCodeRetryTime);
 }
 
 - (void)startTimer
