@@ -1,0 +1,12 @@
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+#use_frameworks!
+
+target 'TTShare_Example' do
+  pod 'TTShare', :path => '../'
+
+  target 'TTShare_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

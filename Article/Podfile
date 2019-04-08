@@ -4,7 +4,7 @@ source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码�
 source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
 source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
 source 'git@code.byted.org:ugc/UGCSpecs.git'
-
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
 
 source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
 
@@ -117,8 +117,8 @@ def appPods
 #    ]
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
-    pod 'BDTArticle', '0.2.3'
-    pod 'BDTExploreOrderedData', '0.1.7'
+    pod 'BDTArticle', :path => '../AKPlugins/BDTArticle' #'0.2.3'
+    pod 'BDTExploreOrderedData', :path => '../AKPlugins/BDTExploreOrderedData' #'0.1.7'
 
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 #    pod_binary 'BDTBasePlayer' , '0.3.78'
@@ -128,11 +128,14 @@ def appPods
     #-----支付封装库-----  modified 6.2.1 alipay加回来
 #    pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
     #-----三方服务封装库-----  modified 6.2.1 alipay加回来
-    pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
-    pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
-#    pod 'TTThirdPartySDKs/AlipaySDK', '0.0.4'
-    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
-#    pod 'TTThirdPartySDKs/DingDingSDK', '0.0.4'
+    pod 'TTThirdPartySDKs' , :path => '../AKPlugins/TTThirdPartySDKs' , :subspects => [
+        'QQSDK',
+        'WeChatSDK',
+        'WeiboSDK'
+    ]
+#    pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
+#    pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
+#    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.0.10'
     #----- 新分享库 -----
@@ -141,17 +144,26 @@ def appPods
 #    pod 'TTShareService', '0.6.15'
     pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin', :inhibit_warnings => false
 
-    pod 'TTShare/TTShareBusiness', '0.3.3', :subspecs => [
-    'TTShareWeChatBusiness',
-    'TTShareQQBusiness',
-    'TTShareCopyBusiness',
-    'TTActivity'
+    pod_binary 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspects => [  # '0.3.3'
+    'TTShareBusiness/TTShareWeChatBusiness',
+    'TTShareBusiness/TTShareQQBusiness',
+    'TTShareBusiness/TTShareCopyBusiness',
+    'TTShareBusiness/TTActivity',
+    'TTShareBasic/TTWeChatShare',
+    'TTShareBasic/TTQQShare'
     ]
-    
-    pod 'TTShare/TTShareBasic', '0.3.3', :subspecs => [
-    'TTWeChatShare',
-    'TTQQShare'
-    ]
+
+#    pod 'TTShare/TTShareBusiness', '0.3.3', :subspecs => [
+#    'TTShareWeChatBusiness',
+#    'TTShareQQBusiness',
+#    'TTShareCopyBusiness',
+#    'TTActivity'
+#    ]
+#
+#    pod 'TTShare/TTShareBasic', '0.3.3', :subspecs => [
+#    'TTWeChatShare',
+#    'TTQQShare'
+#    ]
 
     #-----头条视频播放器库，依赖自研播放器库，还包含系统播放器-----
     pod_binary 'TTVideo', '1.1.1'
@@ -213,7 +225,7 @@ def appPods
     #-----头条加v认证工具-----
     pod_binary 'TTVerifyKit',  '0.3.0'
     #-----举报-----
-    pod 'TTReporter', '0.2.1'
+    pod_binary 'TTReporter', '0.2.1'
     #-----头条号---
     pod 'TTAdModule', :path => '../AKPlugins/TTAdModule' #'0.1.25'
     pod_binary 'TTAdSplashSDK', '0.4.4'
@@ -241,7 +253,7 @@ def appPods
     pod 'TTPushAuthorizationManager', :path => '../AKPlugins/AKPushAuthorizationManager', :inhibit_warnings => false
     
     #----头条Settihngs----
-    pod 'TTSettingsManager', '0.3.1'
+    pod_binary 'TTSettingsManager', '0.4.1'
     #-----手机通讯录操作库---
     pod_binary 'TTAddressBookService', '0.1.4'
     #-----电信取号服务---
@@ -314,8 +326,8 @@ def appPods
     
     pod_binary 'AWECloudCommand' , '1.0.7'
 
-    pod 'BDALog' , '0.1.12'
-    pod 'BDAlogProtocol', '0.1.6'
+    pod_binary 'BDALog' , '0.1.12'
+    pod        'BDAlogProtocol', '0.1.6'
     
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
@@ -353,7 +365,7 @@ def appPods
     #-----平台化基础库-----
     #pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :commit => '36ce9794e63c3aa58bb2cc125453c68dec035e18'
     
-    pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble'
+    pod 'TTPlatformBaseLib', :path => '../AKPlugins/TTPlatformBaseLib' #git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble'
 
     #-----平台化UIModel库-----
     pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
