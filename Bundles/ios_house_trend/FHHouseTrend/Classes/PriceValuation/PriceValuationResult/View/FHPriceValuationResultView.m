@@ -436,6 +436,7 @@
         view = nil;
         self.hideMarker = NO;
     }
+    [self.chartView resetChart];
     self.priceTrends = detailModel.data.priceTrend;
 }
 
