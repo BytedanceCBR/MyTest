@@ -22,6 +22,8 @@
 @interface ArticleWebListView()<YSWebViewDelegate>
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
 @property(nonatomic, copy)NSString * categoryID;  // 频道ID
+@property(nonatomic, copy)NSString * currentRequestUrl;  // 当前频道链接
+@property(nonatomic, strong)NSMutableDictionary *webContainerCache;
 @end
 
 @implementation ArticleWebListView
@@ -95,7 +97,8 @@
                 }
             }
             NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:url]];
-            [self.webContainer.ssWebView loadRequest:request];
+            self.currentRequestUrl = url;
+             [self.webContainer.ssWebView loadRequest:request];
 
         }];
         
@@ -126,6 +129,16 @@
             callback(TTRJSBMsgSuccess, @{@"code": @(_isVisible)});
         }
     } forMethodName:@"is_visible"];
+    
+    [self.webContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
+            [self.delegate listViewStopLoading:self];
+        }
+        [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+        if (callback) {
+            callback(TTRJSBMsgSuccess, @{@"code": @(1)});
+        }
+    } forMethodName:@"hideLoading"];
 }
 
 - (void)setIsVisible:(BOOL)isVisible
@@ -162,6 +175,7 @@
 - (void)refreshListViewForCategory:(TTCategory *)category isDisplayView:(BOOL)display fromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote reloadFromType:(ListDataOperationReloadFromType)fromType
 {
     BOOL needReload = NO;
+    _webContainer.ssWebView.scrollView.bounces = NO;
     if (![self.currentCategory.categoryID isEqualToString:category.categoryID] || fromRemote) {
         needReload = YES;
     }
@@ -195,12 +209,24 @@
         }
         
         NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:url]];
-        [_webContainer.ssWebView loadRequest:request];
         
-        
+        if(![self.currentRequestUrl isEqualToString:url])
+        {
+            [_webContainer.ssWebView loadRequest:request];
+        }
+        self.currentRequestUrl = url;
         //记录用户下拉刷新时间
         [[NewsListLogicManager shareManager] saveHasReloadForCategoryID:self.currentCategory.categoryID];
     }
+    
+}
+
+- (void)finishLoadingWeb
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
+        [self.delegate listViewStopLoading:self];
+    }
+    [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
 }
 
 - (void)willAppear
@@ -235,8 +261,12 @@
 
 - (void)pullAndRefresh
 {
+//      [_webContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"window.TouTiao && TouTiao.update()" completionHandler:nil];
     //[_webContainer.ssWebView reload];
-    [_webContainer.ssWebView.scrollView triggerPullDown];
+//    [_webContainer.ssWebView.scrollView triggerPullDown];
+    
+    [ _webContainer.ssWebView ttr_fireEvent:@"update" data:nil];
+
 }
 
 
@@ -250,10 +280,14 @@
 
 - (void)webViewDidFinishLoad:(YSWebView *)webView
 {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
-        [self.delegate listViewStopLoading:self];
-    }
+//    if (self.currentRequestUrl) {
+//        if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
+//            [self.delegate listViewStopLoading:self];
+//        }
+//        [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+//    }
     [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+
 }
 
 - (void)webViewDidStartLoad:(YSWebView *)webView

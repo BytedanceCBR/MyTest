@@ -36,6 +36,9 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
  */
 @property (nonatomic, assign) BOOL disableTTUserAgent;
 
+@property (nonatomic, assign) BOOL disableEndRefresh;
+
+
 - (instancetype)initWithFrame:(CGRect)frame baseCondition:(NSDictionary *)baseCondition NS_DESIGNATED_INITIALIZER;
 
 /**
