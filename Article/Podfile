@@ -354,7 +354,7 @@ def appPods
     #-----平台化基础库-----
     #pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :commit => '36ce9794e63c3aa58bb2cc125453c68dec035e18'
     
-    pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble'
+    pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble',:commit => 'be740facc849bf022c4265a19bea8d6657de0741'
 
     #-----平台化UIModel库-----
     pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
