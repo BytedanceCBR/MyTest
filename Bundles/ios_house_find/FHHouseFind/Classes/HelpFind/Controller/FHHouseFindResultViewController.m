@@ -16,7 +16,7 @@
 @property (nonatomic , strong) UITableView* tableView;
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UIButton *rightBtn;
-
+@property (nonatomic, assign)   BOOL     isViewDidDisapper;
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
@@ -46,8 +46,13 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    self.isViewDidDisapper = NO;
     [self refreshContentOffset:self.tableView.contentOffset];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isViewDidDisapper = YES;
 }
 
 -(void)setupUI {
@@ -55,8 +60,8 @@
 
     _containerView = [[UIView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:_containerView];
-//    self.customNavBarView.title.text = @"帮我找房";
-   
+    self.isViewDidDisapper = NO;
+    
     CGFloat bottomHeight = 0;
     if (@available(iOS 11.0, *)) {
         bottomHeight = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
@@ -79,6 +84,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
 
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    self.tableView.showsVerticalScrollIndicator = NO;
     if (@available(iOS 7.0, *)) {
         self.tableView.estimatedSectionFooterHeight = 0;
         self.tableView.estimatedSectionHeaderHeight = 0;
@@ -199,11 +205,13 @@
         [_rightBtn setImage:[UIImage imageNamed:@"house_find_help_right_btn_white"] forState:UIControlStateNormal];
     }
     [self.customNavBarView refreshAlpha:alpha];
-    
-    if (contentOffset.y > 0) {
-        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-    }else {
-        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+    if (!self.isViewDidDisapper) {
+        
+        if (contentOffset.y > 0) {
+            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
+        }else {
+            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+        }
     }
 }
 
@@ -233,6 +241,10 @@
     [self setupUI];
     _viewModel = [[FHHouseFindResultViewModel alloc] initWithTableView:self.tableView viewController:self routeParam:_paramObj];
     // Do any additional setup after loading the view.
+}
+
+- (void)endEditing:(BOOL)isHideKeyBoard {
+    
 }
 
 @end

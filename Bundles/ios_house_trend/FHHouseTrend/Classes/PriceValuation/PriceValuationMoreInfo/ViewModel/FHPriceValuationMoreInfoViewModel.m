@@ -99,7 +99,7 @@
     NSInteger currentYear=[[formatter stringFromDate:date] integerValue];
     NSInteger startYear = 1960;
     
-    for (NSInteger i = startYear; i <= currentYear; i++) {
+    for (NSInteger i = currentYear; i >= startYear; i--) {
         [yearArray addObject:[NSString stringWithFormat:@"%i",i]];
     }
     
@@ -237,17 +237,15 @@
 #pragma mark - FHPriceValuationMoreInfoViewDelegate
 
 - (void)confirm {
-    if([self isChanged]){
-        self.viewController.infoModel.builtYear = self.buildYear;
-        self.viewController.infoModel.facingType = self.faceType;
-        self.viewController.infoModel.floor = self.floor;
-        self.viewController.infoModel.totalFloor = self.totalFloor;
-        self.viewController.infoModel.buildingType = self.buildType;
-        self.viewController.infoModel.decorationType = self.decorateType;
-        
-        [self.viewController.delegate callBackDataInfo:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kPriceValuationMoreInfoChangedNotification object:nil];
-    }
+    self.viewController.infoModel.builtYear = self.buildYear;
+    self.viewController.infoModel.facingType = self.faceType;
+    self.viewController.infoModel.floor = self.floor;
+    self.viewController.infoModel.totalFloor = self.totalFloor;
+    self.viewController.infoModel.buildingType = self.buildType;
+    self.viewController.infoModel.decorationType = self.decorateType;
+    
+    [self.viewController.delegate callBackDataInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPriceValuationMoreInfoChangedNotification object:nil];
     [self.viewController.navigationController popViewControllerAnimated:YES];
 }
 

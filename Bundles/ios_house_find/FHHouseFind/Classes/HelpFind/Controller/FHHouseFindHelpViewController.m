@@ -57,10 +57,13 @@
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-//    [self.viewModel viewWillDisappear:animated];
-//    [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
-//    [self tt_resetStayTime];
     
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 - (FHHouseFindRecommendDataModel *)getRecommendModel
@@ -74,7 +77,7 @@
     [self.contentView reloadData];
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
         if([change[@"new"] boolValue]){
@@ -150,9 +153,19 @@
     }];
 }
 
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleDefault;
+}
+
 - (void)dealloc
 {
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+}
+
+- (void)endEditing:(BOOL)isHideKeyBoard {
+    [self.view endEditing:YES];
+    _viewModel.isHideKeyBoard = isHideKeyBoard;
 }
 
 @end

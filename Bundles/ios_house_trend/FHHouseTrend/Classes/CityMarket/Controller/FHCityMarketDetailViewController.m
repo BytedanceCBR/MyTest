@@ -26,6 +26,7 @@
 #import "FHImmersionNavBarViewModel.h"
 #import "TTTracker.h"
 #import "TTTrackerWrapper.h"
+#import "FHUserTracker.h"
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
 @property (nonatomic, strong) TTRouteUserInfo* userInfo;
@@ -71,6 +72,10 @@
         self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
         self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
         self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
+
+        _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
+        _headerViewModel.delegate = self;
+        [_headerViewModel requestData];
     }
     return self;
 }
@@ -159,14 +164,14 @@
 }
 
 -(void)bindHeaderView {
-    _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
-    _headerViewModel.delegate = self;
     RAC(_headerView.titleLabel, text) = RACObserve(_headerViewModel, title);
     RAC(_headerView.priceLabel, text) = RACObserve(_headerViewModel, price);
     RAC(_headerView.sourceLabel, text) = RACObserve(_headerViewModel, source);
     RAC(_headerView.unitLabel, text) = RACObserve(_headerViewModel, unit);
     @weakify(self);
-    [[[RACObserve(_headerViewModel, properties) skip:1] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
+    [[[RACObserve(_headerViewModel, properties) filter:^BOOL(id  _Nullable value) {
+        return value != nil;
+    }] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
         NSArray* result = [value rx_mapWithBlock:^id(FHCityMarketDetailResponseDataSummaryItemListModel* each) {
             FHCityMarketHeaderPropertyItemView* itemView = [[FHCityMarketHeaderPropertyItemView alloc] init];
             itemView.nameLabel.text = each.desc;
@@ -189,6 +194,7 @@
         [self endLoading];
         if ([x count] > 0) {
             [self.tableView setHidden:NO];
+            [self.emptyView setHidden:YES];
         }
     }];
 
@@ -218,8 +224,10 @@
     RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
     [self bindStatusBarObv];
-    [self startLoading];
-    [_headerViewModel requestData];
+    if (_headerViewModel.model == nil) {
+        [self startLoading];
+    }
+//    [_headerViewModel requestData];
 }
 
 -(void)bindStatusBarObv {
@@ -269,11 +277,7 @@
         }
     }];
     
-    NSMutableDictionary *traceParams = [[self traceParams] mutableCopy];
-    NSMutableDictionary *tracer = [traceParams[@"tracer"] mutableCopy];
-    tracer[@"element_from"] = @"sale_value";
-    traceParams[@"tracer"] = tracer;
-    TTRouteUserInfo* infoValue = [[TTRouteUserInfo alloc] initWithInfo:traceParams];
+    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
     
     FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
     item.titleLabel.text = @"卖房估价";
@@ -284,11 +288,9 @@
     } else {
         action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
     }
-    action.userInfo = infoValue;
+    action.userInfo = info;
     [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
     [_actions addObject:action];
-    
-    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
 
     FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
     item2.titleLabel.text = @"帮我找房";
@@ -306,6 +308,18 @@
     [_actions addObject:action];
 
     [_bottomBarView setBottomBarItems:@[item, item2]];
+    [self traceElementShow:@"sale_value"];
+    [self traceElementShow:@"driving_find_house"];
+}
+
+-(void)traceElementShow:(NSString*)elementType {
+    NSParameterAssert(elementType);
+    NSMutableDictionary* tracer = [self.tracerDict mutableCopy];
+    tracer[@"rank"] = @"be_null";
+    tracer[@"page_type"] = @"city_market";
+    tracer[@"element_type"] = elementType;
+    tracer[@"enter_from"] = nil;
+    [FHUserTracker writeEvent:@"element_show" params:tracer];
 }
 
 -(NSDictionary*)traceParams {

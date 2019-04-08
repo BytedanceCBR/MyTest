@@ -36,6 +36,7 @@
                            @"addedNumToday": @"added_num_today",
                            @"monthUp": @"month_up",
                            @"pricingPerSqmUnit": @"pricing_per_sqm_unit",
+                           @"logPb": @"log_pb",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
