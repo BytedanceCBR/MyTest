@@ -109,6 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *text;
 @property (nonatomic, copy , nullable) NSString *color;
+@property (nonatomic, copy , nullable) NSString *type;
 @end
 
 @interface FHCityMarketDetailResponseDataModel : JSONModel 
