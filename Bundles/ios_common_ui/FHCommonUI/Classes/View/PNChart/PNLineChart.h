@@ -76,8 +76,6 @@
  * Block formatter for custom string in y-axis labels. If not set, defaults to yLabelFormat
  */
 @property (nonatomic, copy) NSString* (^yLabelBlockFormatter)(CGFloat);
-
-
 /**
  * Controls whether to curve the line chart or not
  */
@@ -90,6 +88,8 @@
  */
 
 - (void)updateChartData:(NSArray *)data;
+
+- (void)resetChart;
 
 
 /**
