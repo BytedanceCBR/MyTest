@@ -69,6 +69,26 @@
 }
 @end
 
+@implementation FHCityMarketDetailResponseBottomButton
+
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHCityMarketDetailResponseDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -81,6 +101,7 @@
     @"summaryItemList": @"summary_item_list",
     @"pricePerSqm": @"price_per_sqm",
     @"hotList": @"hot_list",
+    @"bottomButtons": @"bottom_buttons",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
