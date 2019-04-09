@@ -43,50 +43,96 @@ extern NSString *const kFHToastCountKey;
 
 - (void)requestData {
     if(self.viewController.model){
-        self.view.hidden = NO;
-        [self.view updateView:self.viewController.model infoModel:self.viewController.infoModel];
         [self addGoDetailTracer];
+        [self requestChartData];
     }else{
-        [self requestEvaluateData];
+        [self requestEvaluateResultData];
     }
-    [self requestChartData];
 }
 
 - (void)requestEvaluateData {
     __weak typeof(self) wself = self;
     NSDictionary *params = [self getEvaluateParams];
-    
+
     [self.viewController startLoading];
     [FHPriceValuationAPI requestEvaluateWithParams:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        [self.viewController endLoading];
-        FHPriceValuationEvaluateModel *eModel = (FHPriceValuationEvaluateModel *)model;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wself.viewController endLoading];
+            FHPriceValuationEvaluateModel *eModel = (FHPriceValuationEvaluateModel *)model;
+            
+            if (!wself) {
+                return;
+            }
+            
+            if (error) {
+                //TODO: show handle error
+                [wself.viewController setNavBar:YES];
+                wself.viewController.model = nil;
+                [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
+                [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+                return;
+            }
+            
+            [wself.viewController refreshContentOffset:self.view.scrollView.contentOffset];
+            [wself.viewController.emptyView hideEmptyView];
+            wself.view.hidden = NO;
+            
+            if(model){
+                wself.viewController.model = eModel;
+                //仅仅为了同步一下回传的参数数据
+                FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel *infoModel = eModel.data.houseInfoDict;
+                infoModel.neighborhoodName = wself.viewController.infoModel.neighborhoodName;
+                wself.viewController.infoModel = infoModel;
+                
+                [wself.view updateView:eModel infoModel:wself.viewController.infoModel];
+                [wself addGoDetailTracer];
+            }
+        });
+    }];
+}
 
+- (void)requestEvaluateResultData {
+    __weak typeof(self) wself = self;
+    NSDictionary *params = [self getEvaluateParams];
+    
+    [self.viewController startLoading];
+    [FHPriceValuationAPI requestEvaluateResultWithParams:params neighborhoodId:self.viewController.infoModel.neighborhoodId completion:^(NSDictionary * _Nonnull response, NSError * _Nonnull error) {
+        [wself.viewController endLoading];
+        
+        FHPriceValuationEvaluateModel *eModel = (FHPriceValuationEvaluateModel *)response[@"evaluateData"];
+        FHDetailNeighborhoodModel *cModel = (FHPriceValuationEvaluateModel *)response[@"chartData"];
+        
         if (!wself) {
             return;
         }
-
+        
         if (error) {
             //TODO: show handle error
             [wself.viewController setNavBar:YES];
             wself.viewController.model = nil;
             [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-            [wself.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             return;
         }
-
-        [wself.viewController refreshContentOffset:self.view.scrollView.contentOffset];
+        
+        [wself.viewController refreshContentOffset:wself.view.scrollView.contentOffset];
         [wself.viewController.emptyView hideEmptyView];
         self.view.hidden = NO;
-
-        if(model){
+        
+        if(eModel){
             wself.viewController.model = eModel;
             //仅仅为了同步一下回传的参数数据
             FHPriceValuationHistoryDataHistoryHouseListHouseInfoHouseInfoDictModel *infoModel = eModel.data.houseInfoDict;
-            infoModel.neighborhoodName = self.viewController.infoModel.neighborhoodName;
-            self.viewController.infoModel = infoModel;
-
+            infoModel.neighborhoodName = wself.viewController.infoModel.neighborhoodName;
+            wself.viewController.infoModel = infoModel;
+            
             [wself.view updateView:eModel infoModel:wself.viewController.infoModel];
-            [self addGoDetailTracer];
+            [wself addGoDetailTracer];
+        }
+        
+        if(cModel){
+            wself.neighborhoodDetailModel = cModel;
+            [wself.view updateChart:cModel];
         }
     }];
 }
@@ -113,10 +159,20 @@ extern NSString *const kFHToastCountKey;
 - (void)requestChartData {
     __weak typeof(self) wself = self;
     //图表数据
+    [self.viewController startLoading];
     [FHHouseDetailAPI requestNeighborhoodDetail:self.viewController.infoModel.neighborhoodId logPB:nil query:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+        [wself.viewController endLoading];
         if (model && !error) {
+            wself.view.hidden = NO;
+            [wself.view updateView:wself.viewController.model infoModel:wself.viewController.infoModel];
+            [wself.viewController refreshContentOffset:wself.view.scrollView.contentOffset];
+            [wself.viewController.emptyView hideEmptyView];
             _neighborhoodDetailModel = model;
             [wself.view updateChart:model];
+        }else{
+            [wself.viewController setNavBar:YES];
+            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         }
     }];
 }

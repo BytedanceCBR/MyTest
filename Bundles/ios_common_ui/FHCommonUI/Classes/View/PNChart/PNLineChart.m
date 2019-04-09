@@ -31,8 +31,8 @@
 @property(nonatomic, assign) CGFloat yAxisLeftOffset;
 @property(nonatomic, assign) CGFloat yAxisRightOffset;
 
-@property(nonatomic, assign) CGPoint selectPoint;
-@property(nonatomic, assign) BOOL hideMarker;
+@property (nonatomic, assign) BOOL hideMarker;
+@property (nonatomic, assign) CGPoint selectPoint;
 
 @end
 
@@ -361,6 +361,19 @@
     if ([_delegate respondsToSelector:@selector(userClickedOnKeyPoint:lineIndex:pointIndex:selectPoint:)]) {
         [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
     }
+}
+
+- (void)clearPathIcon {
+    for (NSUInteger p = 0; p < _pathPoints.count; p++) {
+        UIImageView *icon = [self viewWithTag:1000 + p];
+        icon.hidden = YES;
+    }
+}
+
+- (void)resetChart {
+    self.hideMarker = YES;
+    self.selectPoint = CGPointZero;
+    [self clearPathIcon];
 }
 
 #pragma mark - Draw Chart
