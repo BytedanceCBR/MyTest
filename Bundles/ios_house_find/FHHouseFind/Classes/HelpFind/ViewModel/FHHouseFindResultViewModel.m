@@ -124,7 +124,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(0);
+        make.centerY.equalTo(self.buttonOpenMore);
         make.height.mas_equalTo(40);
     }];
 }
