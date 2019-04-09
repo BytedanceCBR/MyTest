@@ -82,6 +82,11 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  */
 + (void)handleCellShowLogWithModel:(JSONModel *)model;
 
+/**
+ * 清空showcache
+ */
+- (void)clearShowCache;
+
 @end 
 
 NS_ASSUME_NONNULL_END
