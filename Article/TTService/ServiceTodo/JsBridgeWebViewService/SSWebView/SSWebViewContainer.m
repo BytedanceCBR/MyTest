@@ -123,6 +123,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
         _loadTime = 0;
+        
+        self.disableEndRefresh = NO;
     }
     return self;
 }
@@ -276,7 +278,9 @@
 
 - (void)webViewDidFinishLoad:(YSWebView *)webView {
     _longPressGesture.enabled = YES;
-    [self tt_endUpdataData];
+    if (!self.disableEndRefresh) {
+        [self tt_endUpdataData];
+    }
     // 发送统计事件
     self.webStayStat = SSWebViewStayStatLoadFinish;
     [self _sendStatEvent:SSWebViewStayStatLoadFinish error:nil];
@@ -295,7 +299,9 @@
     }
     
     if (!webView.isLoading) {
-        [self tt_endUpdataData];
+        if (!self.disableEndRefresh) {
+            [self tt_endUpdataData];
+        }
     }
 }
 

@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , weak) id<FHHouseFindPriceCellDelegate> delegate;
 
--(void) updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice;
+-(void)updateWithLowerPlaceholder:(NSString *)lowPrice higherPlaceholder:(NSString *)highPrice;
+-(void)updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice;
 
 @end
 

@@ -357,6 +357,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     [@"webview" isEqualToString:host] ||
     [@"realtor_detail" isEqualToString:host] ||
     [@"second_house_main" isEqualToString:host] ||
+    [@"house_find" isEqualToString:host] ||
     [@"main" isEqualToString:host];
 }
 

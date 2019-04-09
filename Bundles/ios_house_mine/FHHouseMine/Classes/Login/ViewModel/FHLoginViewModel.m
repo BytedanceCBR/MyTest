@@ -17,6 +17,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 @interface FHLoginViewModel()<FHLoginViewDelegate>
 
@@ -184,6 +185,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
             [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
             if (strongSelf.needPopVC) {
                 [strongSelf popViewController];
             }

@@ -954,6 +954,7 @@ TTRefreshViewDelegate
             }
         }
     }
+        
     
     self.listView.backgroundColor = [UIColor whiteColor];
 }
