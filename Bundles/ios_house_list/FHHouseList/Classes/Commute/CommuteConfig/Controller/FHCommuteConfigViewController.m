@@ -14,10 +14,12 @@
 #import <TTRoute/TTRoute.h>
 #import "FHCommutePOISearchViewController.h"
 #import <AMapSearchKit/AMapCommonObj.h>
+#import <AMapLocationKit/AMapLocationKit.h>
 #import <FHCommonUI/ToastManager.h>
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 #define BANNER_HEIGHT SCREEN_WIDTH*(224/375.0)
 #define INPUT_BG_HEIGHT 46
@@ -31,6 +33,8 @@
 @property(nonatomic , strong) UIView *inputBgView;
 @property(nonatomic , strong) UILabel *inputLabel;
 @property(nonatomic , strong) AMapAOI *choosePOI;
+@property(nonatomic , strong) AMapLocationReGeocode *chooseRegeoCode; //选择当前的反GEO定位
+@property(nonatomic , strong) CLLocation *chooseLocation; //选择当前的反GEO定位
 
 @end
 
@@ -138,7 +142,7 @@
     _filterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200) insets:UIEdgeInsetsMake(57, 0, 10, 0) type:FHCommuteTypeDrive];
     __weak typeof(self) wself = self;
     _filterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
-        if (wself.choosePOI.name.length == 0) {
+        if (wself.inputLabel.text.length == 0) {
             SHOW_TOAST(@"请选择目的地");
             return ;
         }
@@ -220,8 +224,16 @@
 {
     self.inputLabel.text = poi.name;
     [viewController.navigationController popViewControllerAnimated:YES];
-    self.choosePOI.name = poi.name;
     self.choosePOI = poi;
+}
+
+-(void)userChooseLocation:( CLLocation * )location geoCode:(AMapLocationReGeocode *)geoCode inViewController:(UIViewController *)viewController
+{
+    self.inputLabel.text = geoCode.AOIName;
+    [viewController.navigationController popViewControllerAnimated:YES];
+    self.chooseRegeoCode = geoCode;
+    self.chooseLocation = location;
+    
 }
 
 -(void)userCanced:(FHCommutePOISearchViewController *)viewController
@@ -235,9 +247,16 @@
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
     manager.duration = duration;
     manager.commuteType = type;
-    manager.destLocation = self.choosePOI.name;
-    manager.latitude = self.choosePOI.location.latitude;
-    manager.longitude = self.choosePOI.location.longitude;
+    manager.destLocation = self.inputLabel.text;
+    if (self.choosePOI) {
+        manager.latitude = self.choosePOI.location.latitude;
+        manager.longitude = self.choosePOI.location.longitude;
+    }else{
+        manager.latitude = self.chooseLocation.coordinate.latitude;
+        manager.longitude = self.chooseLocation.coordinate.longitude;
+    }
+    
+    manager.cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
     [manager sync];
     
     if ([self.delegate respondsToSelector:@selector(commuteWithDest:type:duration:inController:)]) {

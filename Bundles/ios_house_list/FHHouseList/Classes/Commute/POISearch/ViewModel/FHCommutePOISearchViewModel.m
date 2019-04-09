@@ -14,6 +14,7 @@
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import <FHCommonUI/ToastManager.h>
 #import <FHHouseBase/FHEnvContext.h>
+#import <TTReachability/TTReachability.h>
 
 #import "FHCommutePOIInputBar.h"
 #import "FHCommutePOIInfoCell.h"
@@ -80,13 +81,16 @@
         if ([FHEnvContext isSameLocCityToUserSelect]) {
             //定位地和选择地是同一城市才选择
             _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+            _currentReGeocode = nil;
+
+
             if (_currentReGeocode) {
                 self.locationHeaderView.location = _currentReGeocode.AOIName;
                 tableView.tableHeaderView = _locationHeaderView;
             }else{
                 [self reGeoSearch];
             }
-            
+
             [self nearBySearch:YES];
         }else {
             CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
@@ -97,11 +101,17 @@
             }
             [self nearBySearch:NO];
         }
-        
-        
+    
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
     }
     return self;
     
+}
+
+-(void)dealloc
+{
+    [_searchAPI cancelAllRequests];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
 }
 
 #pragma mark - search
@@ -114,6 +124,11 @@
  120202    商务住宅    楼宇    工业大厦建筑物
  120203    商务住宅    楼宇    商住两用楼宇
  */
+
+-(NSString *)searchTypes
+{
+    return @"060000|060100|060101|060300|060301|060302|060303|060304|090100|090101|120000|120100|120200|120201|120202|120203|141200|141201|150300|150500|150600|170100";
+}
 
 -(void)reGeoSearch
 {
@@ -138,10 +153,7 @@
                 wself.locationHeaderView.loading = NO;
             }else{
                 SHOW_TOAST(@"定位失败");
-                if (wself.tableView.tableHeaderView != wself.defaultHeader ) {
-                    wself.locationHeaderView.location = @"定位失败";
-                    wself.locationHeaderView.showRefresh = YES;
-                }
+                [wself resetLocationFail];
             }
         }];
     }
@@ -150,7 +162,7 @@
 -(void)nearBySearch:(BOOL)sameCity
 {
     AMapPOIAroundSearchRequest *request = [[AMapPOIAroundSearchRequest alloc] init];
-    request.types = @"120000|120100|120200|120201|120202|120203";
+    request.types = [self searchTypes];
     
     CLLocation *location = nil;
     if (sameCity) {
@@ -163,7 +175,7 @@
         geo.longitude = location.coordinate.longitude;
         request.location = geo;
         request.city = _currentReGeocode.city;
-        request.radius = 1000;
+        request.radius = 3000;
     }else{
         request.city = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
     }
@@ -187,6 +199,8 @@
     request.keywords = keyword;
     request.city = cityName;
     request.cityLimit = YES;
+    request.types = [self searchTypes];
+    request.offset = 20;//每页20个
     self.keywordRequest = request;
     
     [_searchAPI AMapPOIKeywordsSearch:request];
@@ -198,6 +212,15 @@
     [_searchAPI AMapPOIKeywordsSearch:self.keywordRequest];
 }
 
+-(void)resetLocationFail
+{
+    if (self.tableView.tableHeaderView != self.defaultHeader ) {
+        self.locationHeaderView.location = @"定位失败";
+        self.locationHeaderView.showRefresh = YES;
+        self.locationHeaderView.loading = NO;
+    }
+}
+
 #pragma mark - search delegate
 /**
  * @brief 当请求发生错误时，会调用代理的此方法.
@@ -206,7 +229,10 @@
  */
 - (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error
 {
-    NSLog(@"[POI] request is: %@ error is: %@",request,error);
+//    NSLog(@"[POI] request is: %@ error is: %@",request,error);
+    if ([request isKindOfClass:[AMapReGeocodeSearchRequest class]]) {
+        [self resetLocationFail];
+    }
 }
 
 /**
@@ -247,6 +273,9 @@
         [self.tableView reloadData];
         if (self.searchPois.count > 0) {
             self.tableView.tableHeaderView = self.defaultHeader;
+            if (request.page == 1) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            }
         }else{
             self.tableView.tableHeaderView = self.locationHeaderView;
         }
@@ -314,15 +343,6 @@
     }
 }
 
-/**
- * @brief 附近搜索回调
- * @param request  发起的请求，具体字段参考 AMapNearbySearchRequest 。
- * @param response 响应结果，具体字段参考 AMapNearbySearchResponse 。
- */
-- (void)onNearbySearchDone:(AMapNearbySearchRequest *)request response:(AMapNearbySearchResponse *)response
-{
-    
-}
 #pragma mark - ui
 
 -(FHCommuteItemHeader *)itemHeader
@@ -342,6 +362,10 @@
         __weak typeof(self) wself = self;
         _locationHeaderView.refreshBlock = ^{
             [wself tryRequestAuthority];
+        };
+        
+        _locationHeaderView.locationTapBlock = ^{
+            [wself tryUseLocation];
         };
     }
     return _locationHeaderView;
@@ -374,6 +398,15 @@
     [alert addAction:config];
     
     [self.viewController presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)tryUseLocation
+{
+    
+    if (self.currentReGeocode && [self.viewController.sugDelegate respondsToSelector:@selector(userChooseLocation:geoCode:inViewController:)]) {
+        CLLocation *location = [FHLocManager sharedInstance].currentLocaton;
+        [self.viewController.sugDelegate userChooseLocation:location geoCode:self.currentReGeocode inViewController:self.viewController];
+    }
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -486,7 +519,8 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [self.inputBar showClear:NO];
+    BOOL show = textField.text.length > 0;
+    [self.inputBar showClear:show];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -545,6 +579,20 @@
     [self.tableView setContentOffset:CGPointZero animated:YES];
     [self.tableView reloadData];
     self.tableView.tableHeaderView = _locationHeaderView;
+}
+
+
+#pragma mark - network changed
+-(void)connectionChanged:(NSNotification *)notification
+{
+    TTReachability *reachability = (TTReachability *)notification.object;
+    NetworkStatus status = [reachability currentReachabilityStatus];
+    if (status != NotReachable) {
+        //有网络了，重新请求
+        if (self.aroundPois.count == 0) {
+            [self nearBySearch:[FHEnvContext isSameLocCityToUserSelect]];
+        }
+    }
 }
 
 

@@ -800,7 +800,10 @@
 -(void)tapRentBanner
 {
     NSString *destLocation = [[FHCommuteManager sharedInstance] destLocation];
-    if (destLocation.length == 0) {
+    NSString *cityId = [[FHCommuteManager sharedInstance] cityId];
+    NSString *currentCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if (cityId.length == 0 || ![cityId isEqualToString:currentCityId] || destLocation.length == 0) {
+        [[FHCommuteManager sharedInstance] clear];
         [self showCommuteConfigPage];
     }else{
         [self gotoCommuteList:nil];

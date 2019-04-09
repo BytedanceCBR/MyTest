@@ -728,9 +728,10 @@
     [self.originPriceLabel.yoga markDirty];
     [self.pricePerSqmLabel.yoga markDirty];
     
-    if (self.priceBgView.yoga.marginTop.value != (showTags?PRICE_BG_TOP_MARGIN:2)) {
+    CGFloat priceBgTopMargin = showTags?PRICE_BG_TOP_MARGIN:(oneRow?6:2);
+    if (self.priceBgView.yoga.marginTop.value != priceBgTopMargin) {
         [self.priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.marginTop = YGPointValue(showTags?PRICE_BG_TOP_MARGIN:2);
+            layout.marginTop = YGPointValue(priceBgTopMargin);
         }];
         [self.priceBgView.yoga markDirty];
     }

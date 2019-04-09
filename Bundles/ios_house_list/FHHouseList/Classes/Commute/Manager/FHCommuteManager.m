@@ -14,6 +14,7 @@
 #define COMMUTE_TYPE      @"type"
 #define COMMUTE_LATITUDE  @"LATITUDE"
 #define COMMUTE_LONGITUDE @"LONGITUDE"
+#define COMMUTE_CITY_ID   @"CITY_ID"
 
 
 @interface FHCommuteManager ()
@@ -116,6 +117,22 @@
             break;
     }
     return @"公交";    
+}
+
+-(NSString *)cityId
+{
+    return _configDict[COMMUTE_CITY_ID];
+}
+
+-(void)setCityId:(NSString *)cityId
+{
+    _configDict[COMMUTE_CITY_ID] = cityId;
+}
+
+-(void)clear
+{
+    [_configDict removeAllObjects];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:COMMUTE_CONFIG];
 }
 
 -(void)sync

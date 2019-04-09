@@ -40,6 +40,7 @@
 #import "FHCommutePOISearchViewController.h"
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHEnvContext.h>
+#import <AMapLocationKit/AMapLocationKit.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -927,6 +928,22 @@
     
 }
 
+-(void)userChooseLocation:( CLLocation * )location geoCode:(AMapLocationReGeocode *)geoCode inViewController:(UIViewController *)viewController
+{
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    manager.latitude = location.coordinate.latitude;
+    manager.longitude = location.coordinate.longitude;
+    manager.destLocation = geoCode.AOIName;
+    [manager sync];
+    
+    if (self.commuteSugSelectBlock) {
+        self.commuteSugSelectBlock(geoCode.AOIName);
+    }
+    [viewController.navigationController popViewControllerAnimated:YES];
+    
+    [self loadData:YES fromRecommend:NO];
+}
+
 -(void)userCanced:(UIViewController *)viewController
 {
     [viewController.navigationController popViewControllerAnimated:YES];
@@ -1329,6 +1346,7 @@
 #pragma mark - commute
 -(void)commuteFilterUpdated
 {
+    self.isRefresh = YES;
     [self loadData:YES fromRecommend:NO];
     [self addCommuteSearchLog];
 }

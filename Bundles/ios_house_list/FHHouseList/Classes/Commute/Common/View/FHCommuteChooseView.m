@@ -39,7 +39,8 @@
         
         _type = type;
         _items = items;
-                
+        _chooseTime = [items firstObject];
+        
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.font = [UIFont themeFontRegular:16];

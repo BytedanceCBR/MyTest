@@ -41,6 +41,10 @@
         _locationLabel.font = [UIFont themeFontRegular:14];
         _locationLabel.textColor = [UIColor themeGray1];
         
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTitleTap:)];
+        [_locationLabel addGestureRecognizer:tapGesture];
+        _locationLabel.userInteractionEnabled = YES;
+        
         _bottomLine = [[UIView alloc] init];
         _bottomLine.backgroundColor = [UIColor themeGray6];
 
@@ -146,6 +150,13 @@
         [_loadingView stopAnimating];
     }
     self.refreshButton.hidden = loading;
+}
+
+-(void)onTitleTap:(id)sender
+{
+    if (_locationTapBlock) {
+        _locationTapBlock();
+    }
 }
 
 /*

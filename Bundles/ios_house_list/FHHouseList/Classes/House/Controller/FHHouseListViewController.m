@@ -513,7 +513,7 @@
 
 -(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder {
     
-    if (houseType == FHHouseTypeRentHouse || houseType == FHHouseTypeSecondHandHouse) {
+    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute )|| houseType == FHHouseTypeSecondHandHouse) {
         
         [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
     }else {

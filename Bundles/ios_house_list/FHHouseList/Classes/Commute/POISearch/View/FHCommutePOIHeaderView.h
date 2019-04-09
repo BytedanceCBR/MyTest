@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong) NSString *location;
 @property(nonatomic , copy)   void (^refreshBlock)(void);
+@property(nonatomic , copy)   void (^locationTapBlock)(void);
 @property(nonatomic , assign) BOOL showRefresh;
 @property(nonatomic , assign) BOOL loading;
 

@@ -19,10 +19,13 @@ extern NSString *const COMMUTE_POI_DELEGATE_KEY;
 
 @end
 
+@class AMapLocationReGeocode;
 @protocol FHCommutePOISearchDelegate <NSObject>
 
 @required
 -(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController;
+
+-(void)userChooseLocation:( CLLocation * )location geoCode:(AMapLocationReGeocode *)geoCode inViewController:(UIViewController *)viewController;
 
 -(void)userCanced:(UIViewController *)viewController;
 
