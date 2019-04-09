@@ -80,6 +80,33 @@ static NSMutableArray  * _Nullable identifierArr;
     tableView.dataSource = delegate;
 }
 
+- (void)processMainPageBannerOpData:(FHConfigDataModel *)dataModel {
+    // 首页轮播banner，数据封装的时候判断是否是有效的数据
+    if (dataModel.mainPageBannerOpData.items.count > 0) {
+        FHConfigDataMainPageBannerOpDataModel *tempOpData = [[FHConfigDataMainPageBannerOpDataModel alloc] init];
+        tempOpData.opStyle = dataModel.mainPageBannerOpData.opStyle;
+        NSMutableArray *tModelArray = [NSMutableArray new];
+        for (int i = 0; i < dataModel.mainPageBannerOpData.items.count; i++) {
+            FHConfigDataRentOpDataItemsModel *tModel = dataModel.mainPageBannerOpData.items[i];
+            if (tModel.openUrl.length > 0 && tModel.image.count > 0 && tModel.id.length > 0) {
+                NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
+                // 是否有效的openUrl
+                if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
+                    FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
+                    if (imageModel.url.length > 0) {
+                        // 有图片url
+                        [tModelArray addObject:tModel];
+                    }
+                }
+            }
+        }
+        if (tModelArray.count > 0) {
+            tempOpData.items = tModelArray;
+        }
+        dataModel.mainPageBannerOpData = tempOpData;
+    }
+}
+
 - (void)refreshFHHomeTableUI:(UITableView *)tableView andType:(FHHomeHeaderCellPositionType)type
 {
     self.headerType = type;
@@ -96,26 +123,10 @@ static NSMutableArray  * _Nullable identifierArr;
         }
         // 首页轮播banner，数据封装的时候判断是否是有效的数据
         if (dataModel.mainPageBannerOpData.items.count > 0) {
-            FHConfigDataMainPageBannerOpDataModel *tempOpData = [[FHConfigDataMainPageBannerOpDataModel alloc] init];
-            tempOpData.opStyle = dataModel.mainPageBannerOpData.opStyle;
-            NSMutableArray *tModelArray = [NSMutableArray new];
-            for (int i = 0; i < dataModel.mainPageBannerOpData.items.count; i++) {
-                FHConfigDataRentOpDataItemsModel *tModel = dataModel.mainPageBannerOpData.items[i];
-                if (tModel.openUrl.length > 0 && tModel.image.count > 0) {
-                    NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
-                    // 是否有效的openUrl
-                    if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
-                        FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
-                        if (imageModel.url.length > 0) {
-                            // 有图片url
-                            [tModelArray addObject:tModel];
-                        }
-                    }
-                }
-            }
-            if (tModelArray.count > 0) {
-                tempOpData.items = tModelArray;
-                [modelsArray addObject:tempOpData];
+            // 经过一层逻辑处理
+            [self processMainPageBannerOpData:dataModel];
+            if (dataModel.mainPageBannerOpData.items.count > 0) {
+                [modelsArray addObject:dataModel.mainPageBannerOpData];
             }
         }
         //不同频道cell顺序不同
@@ -194,6 +205,12 @@ static NSMutableArray  * _Nullable identifierArr;
 
 - (CGFloat)heightForFHHomeHeaderCellViewType
 {
+    //未开通城市返回
+    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
+    {
+        return 0;
+    }
+    
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!dataModel) {
         dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
@@ -231,8 +248,12 @@ static NSMutableArray  * _Nullable identifierArr;
             height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         
-        if (dataModel.mainPageBannerOpData) {
-            height += [FHHomeScrollBannerCell cellHeight];
+        if (dataModel.mainPageBannerOpData.items.count > 0) {
+            // 经过一层逻辑处理
+            [self processMainPageBannerOpData:dataModel];
+            if (dataModel.mainPageBannerOpData.items.count > 0) {
+                height += [FHHomeScrollBannerCell cellHeight];
+            }
         }
         
         BOOL hasCity = NO;
@@ -632,7 +653,11 @@ static NSMutableArray  * _Nullable identifierArr;
                 [urlStr appendString:@"&origin_search_id=be_null"];
             }
             NSURL *url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            TTRouteUserInfo* info = nil;
+            if (model.logPb != nil) {
+                info = [[TTRouteUserInfo alloc] initWithInfo:model.logPb];
+            }
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
         }
         [wself addHomeCityMarketClickLog];
     };

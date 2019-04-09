@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseFindResultTopHeader : UIView
 
 @property(nonatomic,copy)void (^clickCallBack)();
+@property(nonatomic , strong) UILabel *titleLabel;
 
 - (void)refreshUI:(FHHouseFindRecommendDataModel *)model;
 

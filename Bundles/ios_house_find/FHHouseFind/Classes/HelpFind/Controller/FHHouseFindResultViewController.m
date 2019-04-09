@@ -119,6 +119,8 @@
     self.errorMaskView = [[FHErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
+    
+    [self startLoading];
 }
 
 
