@@ -102,7 +102,7 @@
     lineView.backgroundColor = [UIColor themeGray6];
     [self addSubview:lineView];
     [lineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
         make.bottom.mas_equalTo(self);
