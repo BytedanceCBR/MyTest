@@ -183,7 +183,6 @@ static NSMutableArray  * _Nullable identifierArr;
     
     FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
     FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
-    FHConfigDataMainPageBannerOpDataModel *bannerModel = [FHHomeConfigManager sharedInstance].currentDataModel.banners;
     
     if (modelOpdata2.items > 0)
     {
@@ -209,10 +208,6 @@ static NSMutableArray  * _Nullable identifierArr;
     if(cityStatsModel)
     {
         [self addHomeCityMarketShowLog];
-    }
-    
-    if (bannerModel) {
-        
     }
     
 }
