@@ -124,9 +124,7 @@
     self.headerView = [[FHCityMarketHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 195 + navBarHeight)]; //174
     _tableView.tableHeaderView = _headerView;
     [self.view bringSubviewToFront:_bottomBarView];
-    CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
-    // 这里设置tableView底部滚动的区域，保证内容可以完全露出
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
+
     [self addDefaultEmptyViewFullScreen];
     [self setupSections];
     [self bindHeaderView];
@@ -279,37 +277,33 @@
 
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
 
-    FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
-    item.titleLabel.text = @"卖房估价";
-    item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
-    FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
-    if (_headerViewModel.model.data.bottomOpenUrl.count >= 1) {
-        action.openUrl = [NSURL URLWithString:_headerViewModel.model.data.bottomOpenUrl[0]];
+
+    NSArray<FHCityMarketBottomBarItem*>* items = [_headerViewModel.model.data.bottomButtons rx_mapWithBlock:^id(FHCityMarketDetailResponseBottomButton* each) {
+        FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
+        item.titleLabel.text = each.text;
+        item.backgroundColor = [UIColor colorWithHexString:each.color];
+
+        FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
+        if (each.openUrl != nil) {
+            action.openUrl = [NSURL URLWithString:each.openUrl];
+        }
+        action.userInfo = info;
+        [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
+        [_actions addObject:action];
+        return item;
+    }];
+
+    if (items.count == 0) {
+        _bottomBarView.hidden = YES;
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     } else {
-        action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
+        CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
+        // 这里设置tableView底部滚动的区域，保证内容可以完全露出
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
+        [_bottomBarView setBottomBarItems:items];
+        [self traceElementShow:@"sale_value"];
+        [self traceElementShow:@"driving_find_house"];
     }
-    action.userInfo = info;
-    [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
-    [_actions addObject:action];
-
-    FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
-    item2.titleLabel.text = @"帮我找房";
-    item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
-
-    action = [[FHCityOpenUrlJumpAction alloc] init];
-    if (_headerViewModel.model.data.bottomOpenUrl.count >= 2) {
-        action.openUrl = [NSURL URLWithString:_headerViewModel.model.data.bottomOpenUrl[1]];
-    } else {
-        action.openUrl = [NSURL URLWithString:@"sslocal://house_find"];
-    }
-    action.userInfo = info;
-
-    [item2 addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
-    [_actions addObject:action];
-
-    [_bottomBarView setBottomBarItems:@[item, item2]];
-    [self traceElementShow:@"sale_value"];
-    [self traceElementShow:@"driving_find_house"];
 }
 
 -(void)traceElementShow:(NSString*)elementType {
