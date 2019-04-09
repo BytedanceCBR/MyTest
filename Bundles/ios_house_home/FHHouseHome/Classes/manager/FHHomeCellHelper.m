@@ -246,7 +246,7 @@ static NSMutableArray  * _Nullable identifierArr;
                 opData2CountValue = 4;
             }
     
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + (opData2CountValue > 2 ? 0 : 4) + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (18 + (opData2CountValue > 2 ? 0 : 4) + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         
         if (dataModel.mainPageBannerOpData.items.count > 0) {
@@ -476,34 +476,25 @@ static NSMutableArray  * _Nullable identifierArr;
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            if (index%kFHHomeBannerRowCount == 0) {
-                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+            [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+                if (index%kFHHomeBannerRowCount == 0) {
                     make.right.mas_equalTo(-6.5);
-                    if (index/kFHHomeBannerRowCount == 0) {
-                        make.top.mas_equalTo(12);
-                        make.bottom.mas_equalTo(-2);
-                    }else
-                    {
-                        make.top.mas_equalTo(6);
-                        make.bottom.mas_equalTo(-8);
-                    }
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
-                }];
-            }else if (index%kFHHomeBannerRowCount == 1)
-            {
-                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+                }else
+                {
                     make.left.mas_equalTo(6.5);
-                    if (index/kFHHomeBannerRowCount == 0) {
-                        make.top.mas_equalTo(12);
-                        make.bottom.mas_equalTo(-2);
-                    }else
-                    {
-                        make.top.mas_equalTo(6);
-                        make.bottom.mas_equalTo(-8);
-                    }
                     make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
-                }];
-            }
+                }
+                
+                if (index/kFHHomeBannerRowCount == 0) {
+                    make.top.mas_equalTo(12);
+                    make.bottom.mas_equalTo(-2);
+                }else
+                {
+                    make.top.mas_equalTo(8);
+                    make.bottom.mas_equalTo(-6);
+                }
+            }];
         }
 
         BOOL isFindHouse = YES;
