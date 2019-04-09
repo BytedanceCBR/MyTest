@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) void (^deleteBlock)(FHHouseFindHeaderView *headerView);
 
--(void)updateTitle:(NSString *)title showDelete:(BOOL)showDelete;
-
+- (void)updateTitle:(NSString *)title showDelete:(BOOL)showDelete;
+- (void)updateAttrTitle:(NSAttributedString *)attrTitle showDelete:(BOOL)showDelete;
 @end
 
 NS_ASSUME_NONNULL_END

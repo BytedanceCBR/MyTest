@@ -42,29 +42,30 @@
     [self.contentView addSubview:self.singleLine2];
     [self.contentView addSubview:self.tipLabel];
     [self.sendVerifyCodeBtn addTarget:self action:@selector(sendVerifyCode) forControlEvents:UIControlEventTouchUpInside];
+    self.sendVerifyCodeBtn.enabled = NO;
     [self.phoneInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(5);
+        make.top.mas_equalTo(0);
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(30);
     }];
     
     [self.singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(11);
+        make.top.mas_equalTo(self.phoneInput.mas_bottom).mas_offset(5);
         make.left.mas_equalTo(self.phoneInput);
         make.right.mas_equalTo(self.phoneInput);
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
     
     [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(43);
+        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(30);
         make.left.mas_equalTo(self.phoneInput);
         make.right.mas_equalTo(self.phoneInput);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(30);
     }];
     
     [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.varifyCodeInput.mas_bottom).offset(11);
+        make.top.mas_equalTo(self.varifyCodeInput.mas_bottom);
         make.left.mas_equalTo(self.phoneInput);
         make.right.mas_equalTo(self.phoneInput);
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);

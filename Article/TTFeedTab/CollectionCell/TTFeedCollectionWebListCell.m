@@ -115,7 +115,8 @@
 
 - (void)refreshDataWithType:(ListDataOperationReloadFromType)refreshType
 {
-    [self triggerPullRefresh];
+    [self.listView pullAndRefresh];
+//    [self triggerPullRefresh];
 }
 
 #pragma mark - ArticleBaseListViewDelegate

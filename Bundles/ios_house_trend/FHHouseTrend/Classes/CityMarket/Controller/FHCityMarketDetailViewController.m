@@ -282,7 +282,6 @@
 }
 
 -(void)fillDataToBottomBar {
-
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
     NSArray<FHCityMarketBottomBarItem*>* items = [_headerViewModel.model.data.bottomButtons rx_mapWithBlock:^id(FHCityMarketDetailResponseBottomButton* each) {
         FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];

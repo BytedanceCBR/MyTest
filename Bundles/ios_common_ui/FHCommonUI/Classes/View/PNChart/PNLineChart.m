@@ -31,8 +31,8 @@
 @property(nonatomic, assign) CGFloat yAxisLeftOffset;
 @property(nonatomic, assign) CGFloat yAxisRightOffset;
 
-@property(nonatomic, assign) CGPoint selectPoint;
-@property(nonatomic, assign) BOOL hideMarker;
+@property (nonatomic, assign) BOOL hideMarker;
+@property (nonatomic, assign) CGPoint selectPoint;
 
 @end
 
@@ -257,15 +257,17 @@
     [self touchKeyPoint:touches withEvent:event];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self touchKeyPoint:touches withEvent:event];
-}
+//去掉这个事件，解决长按时候导致弹窗一直打开和关闭的问题
+//- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [self touchKeyPoint:touches withEvent:event];
+//}
 
 
 - (void)touchKeyPoint:(NSSet *)touches withEvent:(UIEvent *)event {
     // Get the point user touched
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+    
     if (_pathPoints.count < 1) {
         return;
     }
@@ -359,6 +361,19 @@
     if ([_delegate respondsToSelector:@selector(userClickedOnKeyPoint:lineIndex:pointIndex:selectPoint:)]) {
         [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
     }
+}
+
+- (void)clearPathIcon {
+    for (NSUInteger p = 0; p < _pathPoints.count; p++) {
+        UIImageView *icon = [self viewWithTag:1000 + p];
+        icon.hidden = YES;
+    }
+}
+
+- (void)resetChart {
+    self.hideMarker = YES;
+    self.selectPoint = CGPointZero;
+    [self clearPathIcon];
 }
 
 #pragma mark - Draw Chart

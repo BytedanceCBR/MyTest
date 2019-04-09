@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHPriceValuationHistoryController *)viewController;
 
-- (void)requestData;
+- (void)requestData:(BOOL)isFirst;
 
 @end
 

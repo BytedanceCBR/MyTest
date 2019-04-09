@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (FHHouseFindRecommendDataModel *)getRecommendModel;
 - (void)refreshRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel;
+- (void)endEditing:(BOOL)isHideKeyBoard;
 
 @end
 

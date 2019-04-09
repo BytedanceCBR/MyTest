@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setNaviBarTitle:(NSString *)stringTitle;
 
+- (void)rightBtnClick;
+
 @end
 
 NS_ASSUME_NONNULL_END

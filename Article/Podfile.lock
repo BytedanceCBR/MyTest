@@ -20,6 +20,13 @@ PODS:
   - AMapLocation (2.6.0.1-binary)
   - AMapSearch (6.1.1.1-binary)
   - Aspects (1.4.1.1-binary)
+  - AWECloudCommand (1.0.7.1-binary):
+    - AWECloudCommand/Core (= 1.0.7.1-binary)
+    - AWECloudCommand/NetDiagnose (= 1.0.7.1-binary)
+    - AWECloudCommand/Utilities (= 1.0.7.1-binary)
+  - AWECloudCommand/Core (1.0.7.1-binary)
+  - AWECloudCommand/NetDiagnose (1.0.7.1-binary)
+  - AWECloudCommand/Utilities (1.0.7.1-binary)
   - AWEVideoPlayer (0.3.20)
   - BDABTestSDK (1.0.2-rc.3):
     - BDABTestSDK/Core (= 1.0.2-rc.3)
@@ -85,6 +92,7 @@ PODS:
   - FMDB/standard (2.6.2.1-binary)
   - Godzippa (1.1.0.1-binary)
   - Heimdallr/ALog (0.6.27)
+  - Heimdallr/CloudCommand (0.6.27)
   - Heimdallr/Core (0.6.27)
   - Heimdallr/CrashDetector (0.6.27)
   - Heimdallr/DeviceInfo (0.6.27)
@@ -492,6 +500,7 @@ DEPENDENCIES:
   - AMapLocation (= 2.6.0.1-binary)
   - AMapSearch (= 6.1.1.1-binary)
   - Aspects (= 1.4.1.1-binary)
+  - AWECloudCommand (= 1.0.7.1-binary)
   - AWEVideoPlayer (= 0.3.20)
   - BDABTestSDK (= 1.0.2-rc.3)
   - BDAccount/Account (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
@@ -540,6 +549,7 @@ DEPENDENCIES:
   - FMDB (= 2.6.2.1-binary)
   - Godzippa (= 1.1.0.1-binary)
   - Heimdallr/ALog (= 0.6.27)
+  - Heimdallr/CloudCommand (= 0.6.27)
   - Heimdallr/Core (= 0.6.27)
   - Heimdallr/CrashDetector (= 0.6.27)
   - Heimdallr/DeviceInfo (= 0.6.27)
@@ -564,8 +574,8 @@ DEPENDENCIES:
   - IESVideoPlayer (= 0.1.16)
   - IESWebKit (= 0.1.4)
   - IGListKit
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, branch `feature/develop`)
+  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9c5ef3144d54acc6f0203df98cb38bf5f38f075d`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `e51ab1182a51823c41b69bf4ac7399529aaad508`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -679,7 +689,7 @@ DEPENDENCIES:
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
-  - TTPlatformBaseLib (from `git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git`, branch `dev_bubble`)
+  - TTPlatformBaseLib (from `git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git`, commit `be740facc849bf022c4265a19bea8d6657de0741`, branch `dev_bubble`)
   - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
   - TTPlayerSDK (= 2.9.9.10)
   - TTPreloaderSDK (= 1.4.20-rc.0)
@@ -773,10 +783,10 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
-    :branch: feature/develop
+    :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :branch: feature/develop
+    :commit: e51ab1182a51823c41b69bf4ac7399529aaad508
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -805,6 +815,7 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTPhotoScrollVC
   TTPlatformBaseLib:
     :branch: dev_bubble
+    :commit: be740facc849bf022c4265a19bea8d6657de0741
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTPlatformUIModel:
     :path: ../AKPlugins/AKPlatformUIModel
@@ -838,7 +849,7 @@ CHECKOUT OPTIONS:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTPlatformBaseLib:
-    :commit: 49bc68f0b533295611619e12234719da02a66de4
+    :commit: a50fb0b6d98721353148904544701aef2ae6f027
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
@@ -856,6 +867,7 @@ SPEC CHECKSUMS:
   AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
   AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
+  AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
   AWEVideoPlayer: 07ffe01239d24b1010d95b074c002dc7a54b04fc
   BDABTestSDK: eb7cdb2ce2887b35f44cc374ee01372e77278530
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
@@ -999,6 +1011,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 75457406965cffa3fa34b2fa8f9608614f3e9ded
+PODFILE CHECKSUM: f95730ee7f167a69db0b42df33c6adf26e6c93f8
 
 COCOAPODS: 1.4.0

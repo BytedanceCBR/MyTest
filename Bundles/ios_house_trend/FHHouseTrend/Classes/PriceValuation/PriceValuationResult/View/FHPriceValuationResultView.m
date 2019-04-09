@@ -430,6 +430,13 @@
 }
 
 - (void)updateChart:(FHDetailNeighborhoodModel *)detailModel {
+    FHDetailPriceMarkerView *view = [self.chartView viewWithTag:200];
+    if (view) {
+        [view removeFromSuperview];
+        view = nil;
+        self.hideMarker = NO;
+    }
+    [self.chartView resetChart];
     self.priceTrends = detailModel.data.priceTrend;
 }
 

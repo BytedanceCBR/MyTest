@@ -26,6 +26,7 @@
 #import <FHHouseBase/FHBaseViewController.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHUserTracker.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -69,7 +70,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 @property(nonatomic , assign) NSInteger verifyCodeRetryTime;
 //是否重新是重新发送验证码
 @property(nonatomic , assign) BOOL isVerifyCodeRetry;
-@property(nonatomic , assign) CGFloat lastY;
+@property(nonatomic , assign) CGPoint lastContentOffset;
+@property(nonatomic , assign) BOOL isKeyboardShow;
 
 @end
 
@@ -88,22 +90,21 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         _collectionView = collectionView;
         [self registerCell:collectionView];
-        _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         collectionView.delegate = self;
         collectionView.dataSource = self;
         _collectionView.allowsMultipleSelection = YES;
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
-        tapGesture.delegate = self;
-        tapGesture.cancelsTouchesInView = NO;
-        [_collectionView addGestureRecognizer:tapGesture];
+//        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
+//        tapGesture.delegate = self;
+//        tapGesture.cancelsTouchesInView = NO;
+//        [_collectionView addGestureRecognizer:tapGesture];
         
         [self setupHouseContent:nil];
         self.recommendModel = recommendModel;
-
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillShowNotifiction:) name:UIKeyboardWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardWillHideNotifiction:) name:UIKeyboardWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
-
+        
     }
     return self;
 }
@@ -129,6 +130,8 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         
         TTRouteParamObj *routeParamObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:recommendModel.openUrl]];
         [self refreshHouseFindItems:routeParamObj.queryParams];
+    }else {
+        [self selectDefaultItems];
     }
 }
 
@@ -144,6 +147,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     for (FHHouseFindSelectItemModel *itemModel in model.items) {
         [itemModel.selectIndexes removeAllObjects];
     }
+    [self selectDefaultItems];
     [self.collectionView reloadData];
     [self addClickOptionsLog:@"reset"];
 }
@@ -153,7 +157,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.collectionView endEditing:YES];
     __weak typeof(self) wself = self;
     [self addClickOptionsLog:@"confirm"];
-
+    
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:FHSearchTabIdTypePrice];
@@ -176,10 +180,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self submitAction];
         return;
     }
-    
+    [self addClickLoginLog];
+
     NSString *phoneNumber = self.contactCell.phoneInput.text;
     NSString *smsCode = self.contactCell.varifyCodeInput.text;
-
+    
+    if (phoneNumber.length < 1) {
+        [[ToastManager manager] showToast:@"请填写并验证手机号"];
+        return;
+    }
     if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
         [[ToastManager manager] showToast:@"手机号错误"];
         return;
@@ -192,15 +201,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [[ToastManager manager] showToast:@"验证码为空"];
         return;
     }
-    [self addClickLoginLog];
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
     
     [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
         if(!error){
-//            [[ToastManager manager] showToast:@"登录成功"];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
             [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-            [wself reloadCollectionViewSection:[wself.collectionView indexPathForCell:wself.contactCell].section];
             [wself submitAction];
         }else{
             NSString *errorMessage = [wself errorMessageByErrorCode:error];
@@ -230,15 +241,18 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [query appendString:q];
         }
     }
-//    NSLog(@"zjing query : %@",query);
+    //    NSLog(@"zjing query : %@",query);
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-
+    
     NSString *phoneNum = [sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
     if (phoneNum.length < 1) {
         TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
         phoneNum = userInfo.mobile;
     }
-    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
     [FHMainApi saveHFHelpFindByHouseType:[NSString stringWithFormat:@"%ld",_houseType] query:query phoneNum:phoneNum completion:^(FHHouseFindRecommendModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
@@ -290,7 +304,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         FHSearchFilterConfigItem *roomItem = nil;
         FHSearchFilterConfigItem *regionItem = nil;
         NSInteger sectionNum = 1;
-
+        
         for (NSInteger index = 0; index < configData.filter.count; index++) {
             FHSearchFilterConfigItem *configItem = configData.filter[index];
             if ([configItem.tabId integerValue] == FHSearchTabIdTypeRegion) {
@@ -316,7 +330,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         self.priceConfigItem = priceItem;
         self.regionConfigItem = regionItem;
         self.roomConfigItem = roomItem;
-
+        
         self.secondFilter = filterArray;
         self.titlesArray = titles;
         [self.collectionView reloadData];
@@ -382,7 +396,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (_selectRegionItem.selectIndexes.count > 0) {
         [selectItem.selectIndexes addObjectsFromArray:_selectRegionItem.selectIndexes];
     }
-
+    
     [self reloadCollectionViewSection:section];
 }
 
@@ -410,7 +424,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHHouseType ht = _houseType;
     NSArray *filter = [self filterOfHouseType:ht];
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
-
+    
     FHSearchFilterConfigOption *options = [item.options firstObject];
     NSString *optionType = options.type;
     FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
@@ -475,9 +489,47 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         }
     }];
     if (item.tabId.integerValue == FHSearchTabIdTypePrice && selectItem.selectIndexes.count < 1 && priceItem) {
-
+        
         [self fillPriceItem:item selectItem:selectItem priceItem:priceItem rate:rate];
-//        NSLog(@"zjing %@",selectItem);
+        //        NSLog(@"zjing %@",selectItem);
+    }
+}
+
+- (void)selectDefaultItems
+{
+    FHHouseType ht = _houseType;
+    NSArray *filter = [self filterOfHouseType:ht];
+    FHHouseFindSelectModel *model = [self selectModelWithType:ht];
+    FHSearchFilterConfigItem *item = self.priceConfigItem;
+    FHSearchFilterConfigOption *options = [item.options firstObject];
+    FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+    if (!selectItem) {
+        selectItem = [model makeItemWithTabId:item.tabId.integerValue];
+    }
+    if (!selectItem.configOption) {
+        selectItem.configOption = [item.options firstObject];
+    }
+    selectItem.lowerPrice = nil;
+    selectItem.higherPrice = nil;
+    [model clearAddSelecteItem:selectItem withIndex:3];
+    
+    item = self.roomConfigItem;
+    options = [item.options firstObject];
+    selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
+    if (!selectItem) {
+        selectItem = [model makeItemWithTabId:item.tabId.integerValue];
+    }
+    if (!selectItem.configOption) {
+        selectItem.configOption = [item.options firstObject];
+    }
+    FHSearchFilterConfigOption *option = nil;
+    if (item.options.count > 0) {
+        option = [item.options firstObject];
+    }
+    if ([option.supportMulti boolValue]) {
+        [model addSelecteItem:selectItem withIndex:1];
+    }else {
+        [model clearAddSelecteItem:selectItem withIndex:1];
     }
 }
 
@@ -524,23 +576,20 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 }
 -(void)updateLowerPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
-//    NSLog(@"[FIND] pcell is: %@  lower price",cell);
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    priceItem.lowerPrice = price;
-    [priceItem.selectIndexes removeAllObjects];
-    
-//    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
+    if (priceItem.selectIndexes.count < 1) {
+        priceItem.lowerPrice = price;
+    }
 }
 
 -(void)updateHigherPrice:(NSString *)price inCell:(FHHouseFindPriceCell *)cell
 {
-//    NSLog(@"[FIND] pcell is: %@  higher price",cell);
     FHHouseType ht = cell.tag;
     FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
-    priceItem.higherPrice = price;
-    [priceItem.selectIndexes removeAllObjects];
-//    [self reloadCollectionViewSection:[self.collectionView indexPathForCell:cell].section];
+    if (priceItem.selectIndexes.count < 1) {
+        priceItem.higherPrice = price;
+    }
 }
 -(FHHouseFindSelectItemModel *)priceItemWithHouseType:(FHHouseType)ht
 {
@@ -552,6 +601,19 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     }
     priceItem.fromType = FHHouseFindPriceFromTypeHelp;
     return priceItem;
+}
+
+- (void)resetPriceSelectItems
+{
+    FHHouseType ht = _houseType;
+    FHHouseFindSelectItemModel *priceItem = [self priceItemWithHouseType:ht];
+    [priceItem.selectIndexes removeAllObjects];
+    NSMutableArray *indexPaths = @[].mutableCopy;
+    for (NSInteger index = 1; index < priceItem.configOption.options.count; index++) {
+        
+        [indexPaths addObject:[NSIndexPath indexPathForItem:index inSection:0]];
+    }
+    [_collectionView reloadItemsAtIndexPaths:indexPaths];
 }
 
 #pragma mark - UICollectionView delegate
@@ -582,15 +644,15 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHHouseType ht = _houseType;
     NSArray *filter = [self filterOfHouseType:ht];
     if (filter.count > section) {
-
+        
         FHHouseFindSelectModel *model = [self selectModelWithType:ht];
         FHSearchFilterConfigItem *item = filter[section];
         if ([item.tabId integerValue] == FHSearchTabIdTypePrice) {
-
+            
             if (indexPath.item == 0) {
                 
                 FHHouseFindPriceCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_PRICE_CELL_ID forIndexPath:indexPath];
-//                NSLog(@"[FIND] pcell is: %@ indexpath section: %ld item: %ld",pcell,indexPath.section,indexPath.item);
+                //                NSLog(@"[FIND] pcell is: %@ indexpath section: %ld item: %ld",pcell,indexPath.section,indexPath.item);
                 pcell.tag = ht;
                 pcell.delegate = self;
                 
@@ -630,7 +692,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 [tcell updateWithTitle:text highlighted:selected];
                 return tcell;
             }
-
+            
         }else if ([item.tabId integerValue] == FHSearchTabIdTypeRegion) {
             
             FHHouseFindHelpRegionCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_REGION_CELL_ID forIndexPath:indexPath];
@@ -654,11 +716,11 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             [pcell updateWithTitle:titleString];
             return pcell;
         }else {
-
+            
             FHHouseFindTextItemCell *tcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_NORMAL_CELL_ID forIndexPath:indexPath];
             tcell.titleFont = [TTDeviceHelper isScreenWidthLarge320] ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:10];
             NSString *text = nil;
-
+            
             FHSearchFilterConfigOption *options = [item.options firstObject];
             if (options.options.count > indexPath.item) {
                 FHSearchFilterConfigOption *option = options.options[indexPath.item];
@@ -683,7 +745,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         pcell.varifyCodeInput.delegate = self;
         pcell.delegate = self;
         self.contactCell = pcell;
-
+        
         if([TTAccount sharedAccount].isLogin){
             
             TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
@@ -710,7 +772,10 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     FHHouseFindHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:HELP_HEADER_ID forIndexPath:indexPath];
     NSInteger section = indexPath.section;
     if (self.titlesArray.count > section) {
-        [headerView updateTitle:self.titlesArray[section] showDelete:NO];
+        
+        NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self.titlesArray[section] attributes:@{NSFontAttributeName:[UIFont themeFontMedium:18], NSForegroundColorAttributeName:[UIColor themeGray1]}];
+        [attributedString appendAttributedString:[[NSMutableAttributedString alloc] initWithString:@"(必填)" attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14], NSForegroundColorAttributeName:[UIColor themeGray4]}]];
+        [headerView updateAttrTitle:attributedString showDelete:NO];
     }else {
         [headerView updateTitle:@"您的联系方式？" showDelete:NO];
     }
@@ -719,7 +784,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -728,7 +793,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     NSInteger section = indexPath.section;
     NSArray *filter = [self filterOfHouseType:ht];
     CGFloat itemWidth = floor((collectionView.frame.size.width - 2 * HELP_ITEM_HOR_MARGIN - 3 * HELP_ITEM_HOR_INSET) / 4);
-
+    
     if (filter.count > section) {
         FHSearchFilterConfigItem *item =  filter[section];
         if ([item.tabId integerValue] == FHSearchTabIdTypePrice) {
@@ -757,13 +822,13 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     FHHouseType ht = _houseType;
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
-
+    
     NSArray *filter = [self filterOfHouseType:ht];
     NSInteger section = indexPath.section;
     if (filter.count > section) {
-
+        
         FHSearchFilterConfigItem *item = filter[section];
-
+        
         FHHouseFindSelectItemModel *selectItem = [model selectItemWithTabId:[item.tabId integerValue]];
         if (!selectItem) {
             selectItem = [model makeItemWithTabId:item.tabId.integerValue];
@@ -779,32 +844,35 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
             
             if([model selecteItem:selectItem containIndex:indexPath.item]){
                 //反选
-                [model delSelecteItem:selectItem withIndex:indexPath.item];
+                if (item.tabId.integerValue != FHSearchTabIdTypePrice) {
+                    [model delSelecteItem:selectItem withIndex:indexPath.item];
+                }
             }else{
                 if (item.tabId.integerValue == FHSearchTabIdTypePrice) {
                     [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
                     selectItem.lowerPrice = nil;
                     selectItem.higherPrice = nil;
+                    
                 }else if (item.tabId.integerValue == FHSearchTabIdTypeRoom) {
                     if (selectItem.selectIndexes.count >= ROOM_MAX_COUNT) {
                         [[ToastManager manager]showToast:[NSString stringWithFormat:@"最多选择%ld种户型",ROOM_MAX_COUNT]];
                         return;
                     }
+                    //添加选择
+                    FHSearchFilterConfigOption *option = nil;
+                    if (item.options.count > 0) {
+                        option = [item.options firstObject];
+                    }
+                    if ([option.supportMulti boolValue]) {
+                        [model addSelecteItem:selectItem withIndex:indexPath.item];
+                    }else{
+                        [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
+                    }
                 }
-
-                //添加选择
-                FHSearchFilterConfigOption *option = nil;
-                if (item.options.count > 0) {
-                    option = [item.options firstObject];
-                }
-                if ([option.supportMulti boolValue]) {
-                    [model addSelecteItem:selectItem withIndex:indexPath.item];
-                }else{
-                    [model clearAddSelecteItem:selectItem withIndex:indexPath.item];
-                }
+                
             }
         }
-
+        
         [self reloadCollectionViewSection:indexPath.section];
     }
     
@@ -832,13 +900,17 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     return CGSizeMake(collectionView.frame.size.width - 2*HELP_ITEM_HOR_MARGIN, height);
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    if (scrollView == self.collectionView) {
-//        [self.collectionView endEditing:YES];
-//    }
-//
-//}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//    NSLog(@"zjing scrollViewDidScroll bounds is: %@,isDragging %ld, decelerating %ld",NSStringFromCGRect(scrollView.bounds),scrollView.isDragging,scrollView.isDecelerating);
+
+//    if (scrollView == self.collectionView && !_isKeyboardShow && (scrollView.isDragging || scrollView.isDecelerating)) {
+    if (scrollView == self.collectionView && scrollView.isDragging) {
+
+//        NSLog(@"zjing isDragging bounds is: %@",NSStringFromCGRect(scrollView.bounds));
+        [self.collectionView endEditing:YES];
+    }
+}
 
 - (void)registerCell:(UICollectionView *)collectionview
 {
@@ -932,7 +1004,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         row += 1;
     }
     if (row < count) {
-
+        
         if ([selectItem.selectIndexes containsObject:@(row)]) {
             [selectItem.selectIndexes removeObject:@(row)];
         }else {
@@ -942,7 +1014,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
                 return;
             }
             [selectItem.selectIndexes addObject:@(row)];
-
+            
             FHSearchFilterConfigOption *option = nil;
             if (_regionConfigItem.options.count > 0) {
                 option = [_regionConfigItem.options firstObject];
@@ -964,32 +1036,57 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 #pragma mark - login相关
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification
 {
-//    if(_isHideKeyBoard){
-//        return;
-//    }
+    if(_isHideKeyBoard){
+        return;
+    }
+    
     if (!self.activeTextField) {
         return;
     }
+    
+    _lastContentOffset =  self.collectionView.contentOffset;
+    _isKeyboardShow = YES;
     NSDictionary *userInfo = notification.userInfo;
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
-    CGFloat screenY = [self.commitCell convertPoint:CGPointMake(0, self.commitCell.height) toView:self.viewController.view].y;
-
+    CGFloat screenY = [self.contactCell convertPoint:CGPointMake(0, self.contactCell.height + 60) toView:self.collectionView].y;
     CGFloat offset = 0;
     offset = screenY + keyBoardBounds.size.height - [UIScreen mainScreen].bounds.size.height;
+    
+    CGFloat keyboardTop = [self.viewController.view convertPoint:keyBoardBounds.origin fromView:self.viewController.view].y;
+    CGFloat top = self.viewController.view.height - keyboardTop;
+//    NSLog(@"zjing screenY:%f offset is : %f \n",screenY,offset);
+//    NSLog(@"zjing top is: %f keyboardTop is: %f  _lastContentOffset is %@",top,keyboardTop,[NSValue valueWithCGPoint:_lastContentOffset]);
+    self.collectionView.scrollEnabled = NO;
     if (offset > 0) {
-        
         NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
         NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
-        
-        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+        CGFloat cheight =  keyboardTop - CGRectGetMinY(self.collectionView.frame);
+        CGRect bounds = self.collectionView.bounds;
+
+//        NSLog(@"zjing cheight:%f,bounds:%@, collectionView is : %@",cheight,[NSValue valueWithCGRect:bounds],self.collectionView);
+        bounds.origin.y = self.collectionView.contentSize.height - cheight;
+        BOOL shouldDelay = SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"11.0");
+        if (shouldDelay) {
             
-            [UIView setAnimationBeginsFromCurrentState:YES];
-            self.collectionView.contentOffset = CGPointMake(0, offset + self.collectionView.contentOffset.y);
-            
-        } completion:^(BOOL finished) {
-            
-        }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateCollectionViewBounds:bounds duration:duration curve:curve];
+            });
+        }else {
+            [self updateCollectionViewBounds:bounds duration:duration curve:curve];
+        }
     }
+}
+
+- (void)updateCollectionViewBounds:(CGRect)bounds duration:(NSNumber *)duration curve:(NSNumber *)curve
+{
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+        
+        self.collectionView.bounds = bounds;
+//        NSLog(@"zjing after bounds:%@, collectionView is : %@",[NSValue valueWithCGRect:bounds],self.collectionView);
+        
+    } completion:^(BOOL finished) {
+//        NSLog(@"zjing finished bounds:%@, collectionView is : %@",[NSValue valueWithCGRect:bounds],self.collectionView);
+    }];
 }
 
 - (void)keyboardWillHideNotifiction:(NSNotification *)notification
@@ -997,27 +1094,31 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     if (!self.activeTextField) {
         return;
     }
+    _isKeyboardShow = NO;
     NSDictionary *userInfo = notification.userInfo;
     NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
     CGRect keyBoardBounds = [userInfo[UIKeyboardFrameEndUserInfoKey]CGRectValue];
     CGFloat offset = 0;
+    self.collectionView.scrollEnabled = YES;
     offset = self.collectionView.contentSize.height - self.collectionView.height;
-    if (offset > 0) {
-        
-        [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
-            [UIView setAnimationBeginsFromCurrentState:YES];
-            self.collectionView.contentOffset = CGPointMake(0, offset);
-        } completion:^(BOOL finished) {
-            
-        }];
+    if (offset < 0) {
+        offset = 0;
     }
+//    NSLog(@"zjing hide offset:%f",offset);
+    [UIView animateWithDuration:[duration floatValue] delay:0 options:(UIViewAnimationOptions)[curve integerValue] animations:^{
+
+        self.collectionView.contentOffset = CGPointMake(0, offset);
+    } completion:^(BOOL finished) {
+    }];
 }
 
 - (void)textFieldDidChange:(NSNotification *)notification
 {
     UITextField *textField = (UITextField *)notification.object;
+
     if (textField != self.contactCell.phoneInput && textField != self.contactCell.varifyCodeInput) {
+        [self resetPriceSelectItems];
         return;
     }
     NSString *text = textField.text;
@@ -1055,7 +1156,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [self.collectionView endEditing:YES];
     __weak typeof(self) weakSelf = self;
     NSString *phoneNumber = self.contactCell.phoneInput.text;
-
+    
     if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
         [[ToastManager manager] showToast:@"手机号错误"];
         return;
@@ -1147,7 +1248,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     self.verifyCodeRetryTime--;
     
     // add by zjing for test
-    NSLog(@"zjing verifyCodeRetryTime:%ld",self.verifyCodeRetryTime);
+//    NSLog(@"zjing verifyCodeRetryTime:%ld",self.verifyCodeRetryTime);
 }
 
 - (void)startTimer
@@ -1186,7 +1287,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-    params[@"page_type"] = [self pageTypeString];
+    params[@"enter_type"] = [self pageTypeString];
     [FHUserTracker writeEvent:@"click_login" params:params];
 }
 
