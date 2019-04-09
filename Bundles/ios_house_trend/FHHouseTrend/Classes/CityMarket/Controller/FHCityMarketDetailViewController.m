@@ -300,7 +300,9 @@
 
     if (items.count == 0) {
         _bottomBarView.hidden = YES;
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 30 : 10;
+
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
     } else {
         CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
         // 这里设置tableView底部滚动的区域，保证内容可以完全露出
