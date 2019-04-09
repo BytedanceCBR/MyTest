@@ -66,11 +66,18 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 - (void)onStartAppGeneralCache
 {
-    self.configCache = [self getGeneralConfigFromLocal];
-    if (self.configCache) {
+//    self.configCache = [self getGeneralConfigFromLocal];
+    if (_configCache) {
         [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = NO;
         [[FHEnvContext sharedInstance] acceptConfigDataModel:self.configCache];
     }
+}
+
+- (FHConfigDataModel *)configCache {
+    if (_configCache == nil) {
+        self.configCache = [self getGeneralConfigFromLocal];
+    }
+    return _configCache;
 }
 
 - (void)updataCurrentConfigCache
