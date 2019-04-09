@@ -254,6 +254,11 @@ TTFeedCollectionCellDelegate>
         
         NSString *reuseIdentifier = NSStringFromClass(cellClass);
         if ([reuseIdentifier isEqualToString:@"TTFeedCollectionWebListCell"]) {
+            
+            if (category.categoryID) {
+                [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:category.categoryID];
+            }
+            
             @try {
                 // 可能会出现崩溃的代码
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier:category.categoryID forIndexPath:indexPath];
