@@ -273,11 +273,6 @@ TTFeedCollectionCellDelegate>
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
             } 
             
-            if (category.categoryID) {
-                [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:category.categoryID withClean:YES];
-                NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",category.categoryID];
-                [FHUtils setContent:@"1" forKey:categoryRedKey];
-            }
             self.collectionView.bounces = NO;
         }else
         {
@@ -416,6 +411,11 @@ TTFeedCollectionCellDelegate>
     // 切换频道时停止视频播放
     [ExploreMovieView removeAllExploreMovieView];
     
+    if (self.currentCategory.categoryID) {
+        [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:self.currentCategory.categoryID withClean:YES];
+        NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",self.currentCategory.categoryID];
+        [FHUtils setContent:@"1" forKey:categoryRedKey];
+    }
 }
 
 - (void)handleHomeTabBar
@@ -569,6 +569,7 @@ TTFeedCollectionCellDelegate>
     if (self.isAutoLocateUserLastSelectCategory) {
         self.isAutoLocateUserLastSelectCategory = NO;
     }
+    
 }
 
 #pragma mark -
