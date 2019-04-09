@@ -176,6 +176,17 @@ TTFeedCollectionCellDelegate>
     [[TTLocationManager sharedManager] processLocationCommandIfNeeded];
     // 返回feed发送关联时长
     [[TTRelevantDurationTracker sharedTracker] sendRelevantDuration];
+    
+    NSArray *webCategorys = [[TTArticleCategoryManager sharedManager] webCategories];
+    for (TTCategory *categorySub in webCategorys) {
+        if ([categorySub isKindOfClass:[TTCategory class]]) {
+            [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:categorySub.categoryID];
+            NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",categorySub.categoryID];
+            if (![FHUtils contentForKey:categoryRedKey]) {
+                [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:categorySub.categoryID withClean:NO];
+            }
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -260,7 +271,7 @@ TTFeedCollectionCellDelegate>
                     [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:category.categoryID];
                 }
                 cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-            }
+            } 
             
             if (category.categoryID) {
                 [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:category.categoryID withClean:YES];

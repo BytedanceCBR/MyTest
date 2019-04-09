@@ -245,7 +245,8 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 opData2CountValue = 4;
             }
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+    
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + (opData2CountValue > 2 ? 0 : 4) + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         
         if (dataModel.mainPageBannerOpData.items.count > 0) {
