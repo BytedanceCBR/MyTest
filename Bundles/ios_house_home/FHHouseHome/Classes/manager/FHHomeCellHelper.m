@@ -38,6 +38,7 @@ static NSMutableArray  * _Nullable identifierArr;
 
 @property(nonatomic , strong) FHConfigDataModel *previousDataModel;
 @property(nonatomic , assign) CGFloat headerHeight;
+@property(nonatomic , strong) NSMutableDictionary *traceShowCache;
 
 @end
 
@@ -51,6 +52,7 @@ static NSMutableArray  * _Nullable identifierArr;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
         manager.isConfigDataUpate = YES;
+        manager.traceShowCache = [NSMutableDictionary new];
     });
     return manager;
 }
@@ -168,7 +170,11 @@ static NSMutableArray  * _Nullable identifierArr;
         ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
         [tableView reloadData];
         
+    }
+    
+    if (![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && [FHHomeConfigManager sharedInstance].currentDataModel) {
         [FHHomeCellHelper sendCellShowTrace];
+        [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
 }
 
@@ -176,6 +182,7 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     
     FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
     
     if (modelOpdata2.items > 0)
     {
@@ -194,13 +201,20 @@ static NSMutableArray  * _Nullable identifierArr;
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
-            
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
     
-    [identifierArr removeAllObjects];
+    if(cityStatsModel)
+    {
+        [self addHomeCityMarketShowLog];
+    }
     
+}
+
+- (void)clearShowCache
+{
+    [self.traceShowCache removeAllObjects];
 }
 
 - (CGFloat)heightForFHHomeHeaderCellViewType

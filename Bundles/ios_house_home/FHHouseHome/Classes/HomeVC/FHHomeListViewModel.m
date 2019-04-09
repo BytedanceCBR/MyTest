@@ -143,6 +143,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //更新切换
             [self updateCategoryViewSegmented:self.isFirstChange];
             
+            //清空首页show埋点
+            if(!self.isFirstChange && [FHEnvContext sharedInstance].isRefreshFromCitySwitch)
+            {
+                [[FHHomeCellHelper sharedInstance] clearShowCache];
+            }
             
             if ([FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 
@@ -199,6 +204,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             //请求推荐房源
             [self requestOriginData:self.isFirstChange];
+            
+
             
         }];
         
