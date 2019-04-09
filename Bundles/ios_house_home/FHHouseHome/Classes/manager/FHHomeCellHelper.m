@@ -169,10 +169,9 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]] && ![modelsArray isEqualToArray:((FHHomeTableViewDelegate *)tableView.delegate).modelsArray]) {
         ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
         [tableView reloadData];
-        
     }
     
-    if (![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && [FHHomeConfigManager sharedInstance].currentDataModel) {
+    if (![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && [FHHomeConfigManager sharedInstance].currentDataModel && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
