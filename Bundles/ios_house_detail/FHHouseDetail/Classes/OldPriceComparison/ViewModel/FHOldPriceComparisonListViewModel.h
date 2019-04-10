@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setMaskView:(FHErrorView *)maskView;
 -(void)viewWillAppear:(BOOL)animated;
 -(void)viewWillDisappear:(BOOL)animated;
-// 周边小区
-//- (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId searchId:(nullable NSString *)searchId offset:(NSString *)offset;
 - (void)requestErshouHouseListData:(BOOL)isRefresh query:(NSString *)query offset:(NSInteger)offset searchId:(nullable NSString *)searchId;
 -(void)addCategoryRefreshLog;
 -(void)addStayCategoryLog;

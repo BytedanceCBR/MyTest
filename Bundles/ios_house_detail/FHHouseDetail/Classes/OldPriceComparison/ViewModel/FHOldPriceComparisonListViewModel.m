@@ -44,18 +44,17 @@
 
 @implementation FHOldPriceComparisonListViewModel
 
--(void)setMaskView:(FHErrorView *)maskView {
+- (void)setMaskView:(FHErrorView *)maskView {
     
     __weak typeof(self)wself = self;
     _maskView = maskView;
     _maskView.retryBlock = ^{
         wself.isRefresh = YES;
-//        [wself requestRelatedNeighborhoodSearch:wself.neighborhoodId searchId:wself.searchId offset:@(1)];
         [wself requestErshouHouseListData:NO query:self.query offset:0 searchId:self.searchId];
     };
 }
 
--(instancetype)initWithController:(FHOldPriceComparisonListController *)viewController tableView:(UITableView *)tableView {
+- (instancetype)initWithController:(FHOldPriceComparisonListController *)viewController tableView:(UITableView *)tableView {
     self = [super init];
     if (self) {
         _houseList = [NSMutableArray new];
@@ -97,7 +96,6 @@
 
 - (void)loadMore {
     [self addCategoryRefreshLog];
-//    [self requestRelatedNeighborhoodSearch:self.neighborhoodId searchId:self.searchId offset:[NSString stringWithFormat:@"%ld",self.houseList.count]];
     [self requestErshouHouseListData:NO query:self.query offset:self.houseList.count searchId:self.searchId];
 }
 
@@ -195,7 +193,7 @@
     [self updateTableViewWithMoreData:self.hasMore];
 }
 
--(void)jump2DetailPage:(NSIndexPath *)indexPath {
+- (void)jump2DetailPage:(NSIndexPath *)indexPath {
     if (indexPath.row >= self.houseList.count) {
         return;
     }
@@ -203,7 +201,6 @@
     if (cellModel) {
         NSString *origin_from = self.listController.tracerDict[@"origin_from"];
         NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
-        NSString *page_type = self.listController.tracerDict[@"category_name"];
         NSString *urlStr = NULL;
         FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
         if (theModel) {
@@ -211,7 +208,7 @@
             
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"card_type"] = @"left_pic";
-            traceParam[@"enter_from"] = page_type ? : @"be_null";
+            traceParam[@"enter_from"] = [self categoryName];
             traceParam[@"element_from"] = @"be_null";
             traceParam[@"log_pb"] = [cellModel logPb];
             traceParam[@"origin_from"] = origin_from ? : @"be_null";
@@ -236,8 +233,7 @@
     return 1;
 }
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (self.listController.hasValidateData == YES) {
         return _houseList.count;
     } else {
@@ -247,12 +243,9 @@
     return 0;
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.listController.hasValidateData == YES) {
         FHOldPriceComparisonCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-//        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//        id model = _houseList[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
         [cell refreshTopMargin: 20];
         [cell updateWithHouseCellModel:cellModel];
@@ -265,8 +258,7 @@
     return [[UITableViewCell alloc] init];
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.listController.hasValidateData == YES && indexPath.row < self.houseList.count) {
         NSInteger rank = indexPath.row - 1;
         NSString *recordKey = [NSString stringWithFormat:@"%ld",rank];
@@ -278,28 +270,23 @@
     }
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.listController.hasValidateData) {
-        
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         return isLastCell ? 106 : 86;
     }
-    
     return 86;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return CGFLOAT_MIN;
-}
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return CGFLOAT_MIN;
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return CGFLOAT_MIN;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self jump2DetailPage:indexPath];
 }
@@ -328,9 +315,9 @@
     NSString *page_type = self.listController.tracerDict[@"category_name"];
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"house_type"] = @"neighborhood";
+    tracerDict[@"house_type"] = @"old";
     tracerDict[@"card_type"] = @"left_pic";
-    tracerDict[@"page_type"] = page_type ? : @"be_null";
+    tracerDict[@"page_type"] = [self categoryName];
     tracerDict[@"element_type"] = @"be_null";
     tracerDict[@"group_id"] = groupId ? : @"be_null";
     tracerDict[@"impr_id"] = imprId ? : @"be_null";
@@ -340,61 +327,57 @@
     tracerDict[@"origin_search_id"] = origin_search_id ? : @"be_null";
     tracerDict[@"log_pb"] = logPb ? : @"be_null";
     
-    [FHUserTracker writeEvent:@"house_show" params:tracerDict];
+    TRACK_EVENT(@"house_show", tracerDict);
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [self addStayCategoryLog];
 }
 
--(void)addEnterCategoryLog
-{
+- (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
+    TRACK_EVENT(@"enter_category", tracerDict);
 }
 
--(void)addCategoryRefreshLog
-{
+- (void)addCategoryRefreshLog {
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"refresh_type"] = @"pre_load_more";
-    [FHUserTracker writeEvent:@"category_refresh" params:tracerDict];
+    TRACK_EVENT(@"category_refresh", tracerDict);
 }
 
--(void)addStayCategoryLog
-{
+- (void)addStayCategoryLog {
     NSTimeInterval duration = self.listController.ttTrackStayTime * 1000.0;
     if (duration == 0) {
         return;
     }
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
-    [FHUserTracker writeEvent:@"stay_category" params:tracerDict];
+    TRACK_EVENT(@"stay_category", tracerDict);
     [self.listController tt_resetStayTime];
 }
 
--(NSDictionary *)categoryLogDict
-{
+- (NSDictionary *)categoryLogDict {
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     NSString *origin_from = self.listController.tracerDict[@"origin_from"];
     tracerDict[@"origin_from"] = origin_from.length > 0 ? origin_from : @"be_null";
     NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
     tracerDict[@"origin_search_id"] = origin_search_id.length > 0 ? origin_search_id : @"be_null";
     tracerDict[@"search_id"] = self.searchId.length > 0 ? self.searchId : @"be_null";
-    NSString *enter_type = self.listController.tracerDict[@"enter_type"];
-    tracerDict[@"enter_type"] = enter_type.length > 0 ? enter_type : @"be_null";
-    NSString *category_name = self.listController.tracerDict[@"category_name"];
-    tracerDict[@"category_name"] = category_name.length > 0 ? category_name : @"be_null";
-    NSString *enter_from = self.listController.tracerDict[@"enter_from"];
+    tracerDict[@"enter_type"] = @"click";
+    tracerDict[@"category_name"] = [self categoryName];
+    NSString *enter_from = self.listController.tracerDict[@"page_type"];
     tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
     NSString *element_from = self.listController.tracerDict[@"element_from"];
     tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
     return tracerDict;
+}
+
+- (NSString *)categoryName {
+    return @"price_analysis_list";
 }
 
 

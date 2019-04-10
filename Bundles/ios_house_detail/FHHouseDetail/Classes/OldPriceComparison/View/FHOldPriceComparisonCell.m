@@ -35,16 +35,14 @@
 @property(nonatomic, strong) UIImageView *mainImageView;
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
-
 @property(nonatomic, strong) UIView *rightInfoView;
-@property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
+//@property(nonatomic, strong) UILabel *mainTitleLabel; //主title lable
 @property(nonatomic, strong) UILabel *subTitleLabel; // sub title lable
 @property(nonatomic, strong) UILabel *statInfoLabel; //新房状态信息
 @property(nonatomic, strong) YYLabel *tagLabel; // 标签 label
 @property(nonatomic, strong) UILabel *priceLabel; //总价
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
-
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 
 @end
@@ -112,15 +110,15 @@
     return _imageTagLabelBgView;
 }
 
-- (UILabel *)mainTitleLabel {
-    if (!_mainTitleLabel) {
-        _mainTitleLabel = [[UILabel alloc]init];
-        _mainTitleLabel.font = [UIFont themeFontRegular:16];
-        _mainTitleLabel.textColor = [UIColor themeGray1];
-        _mainTitleLabel.hidden = YES;
-    }
-    return _mainTitleLabel;
-}
+//- (UILabel *)mainTitleLabel {
+//    if (!_mainTitleLabel) {
+//        _mainTitleLabel = [[UILabel alloc]init];
+//        _mainTitleLabel.font = [UIFont themeFontRegular:16];
+//        _mainTitleLabel.textColor = [UIColor themeGray1];
+//        _mainTitleLabel.hidden = YES;
+//    }
+//    return _mainTitleLabel;
+//}
 
 - (UILabel *)subTitleLabel {
     if (!_subTitleLabel) {
@@ -258,37 +256,24 @@
     
     [_priceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        //        layout.height = YGPointValue(20);
         layout.maxWidth = YGPointValue(130);
-        //        layout.alignSelf = YGAlignFlexEnd;
-        //        layout.marginBottom = YGPointValue(-1);
     }];
     
     [_originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(6);
         layout.isIncludedInLayout = NO;
-        //        layout.marginBottom = YGPointValue(0);
     }];
     
     [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginLeft = YGPointValue(10);
         layout.flexGrow = 1;
-        //        layout.marginBottom = YGPointValue(0);
     }];
     
-//    [_rightInfoView addSubview:self.mainTitleLabel];
     [_rightInfoView addSubview:self.subTitleLabel];
     [_rightInfoView addSubview:self.statInfoLabel];
     [_rightInfoView addSubview:self.tagLabel];
-    
-//    [_mainTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//        layout.isEnabled = YES;
-//        layout.marginTop = YGPointValue(-2);
-//        layout.height = YGPointValue(22);
-//        layout.maxWidth = YGPointValue([self contentMaxWidth]);
-//    }];
     
     [_subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -343,7 +328,7 @@
     
     [self updateImageTopLeft];
     
-    self.mainTitleLabel.text = model.displayTitle;
+//    self.mainTitleLabel.text = model.displayTitle;
     self.subTitleLabel.text = [self getSubTitle:model];
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
     

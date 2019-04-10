@@ -9,6 +9,7 @@
 #import "UILabel+House.h"
 #import "FHDetailHeaderView.h"
 #import "TTRoute.h"
+#import "FHUserTracker.h"
 
 @interface FHDetailAveragePriceComparisonCell()
 
@@ -246,17 +247,33 @@
 
 // 查看更多
 - (void)moreButtonClick:(UIButton *)button {
+    
+    [self addClickLoadMoreTracer];
+    
     FHDetailAveragePriceComparisonModel *model = (FHDetailAveragePriceComparisonModel *)self.currentData;
+    
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    tracerDic[@"element_from"] = [self elementTypeString:FHHouseTypeSecondHandHouse];
     
     NSMutableDictionary *userDic = [NSMutableDictionary dictionary];
     userDic[@"neighborhood_id"] = model.neighborhoodId;
     userDic[@"neighborhood_name"] = model.neighborhoodName;
     userDic[@"houseRoomType"] = model.analyzeModel.houseType;
+    userDic[@"tracer"] = tracerDic;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userDic];
     NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_price_comparison_list"];
     NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+}
+
+- (void)addClickLoadMoreTracer {
+    NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"page_type"] = tracerDic[@"page_type"];
+    tracer[@"element_from"] = [self elementTypeString:FHHouseTypeSecondHandHouse];
+   
+    TRACK_EVENT(@"click_loadmore", tracer);
 }
 
 @end
