@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 //通勤找房
 @property (nonatomic , assign, getter=isCommute) BOOL commute; //是否是通勤找房
+@property (nonatomic , copy) NSString *commutePoi;//用户进入sug选择后显示的内容
 @property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
 
 -(void)setRedirectTipView:(FHHouseListRedirectTipView *)redirectTipView;

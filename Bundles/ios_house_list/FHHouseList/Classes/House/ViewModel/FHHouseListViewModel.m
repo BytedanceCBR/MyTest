@@ -865,13 +865,12 @@
         self.closeConditionFilter();
     }
     
+    [self addClickHouseSearchLog];
+    
     if (self.isCommute) {
         [self showPoiSearch];
         return;
     }
-    
-    
-    [self addClickHouseSearchLog];
     
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //house_search
@@ -921,6 +920,7 @@
     
     if (self.commuteSugSelectBlock) {
         self.commuteSugSelectBlock(poi.name);
+        self.commutePoi = poi.name;
     }
     [viewController.navigationController popViewControllerAnimated:YES];
     
@@ -938,6 +938,7 @@
     
     if (self.commuteSugSelectBlock) {
         self.commuteSugSelectBlock(geoCode.AOIName);
+        self.commutePoi = geoCode.AOIName;
     }
     [viewController.navigationController popViewControllerAnimated:YES];
     
@@ -1541,16 +1542,21 @@
 - (void)addClickHouseSearchLog {
     NSMutableDictionary *params = [NSMutableDictionary new];
     if (self.fromFindTab) {
-        
         params[@"page_type"] = [self pageTypeStringByFindTab];
     }else {
-        
         params[@"page_type"] = [self pageTypeString];
     }
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
-    params[@"hot_word"] = @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
-    
+    if (self.isCommute) {
+        if (self.commutePoi.length == 0) {
+            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+            self.commutePoi = manager.destLocation;
+        }
+        params[@"selected_word"] = self.commutePoi?:UT_BE_NULL;
+    }else{
+        params[@"hot_word"] = @"be_null";
+    }
     TRACK_EVENT(@"click_house_search",params);
 }
 
@@ -1608,6 +1614,9 @@
 
 -(void)addModifyCommuteLog:(BOOL)isShow
 {
+    if (isShow) {
+        [self addCommuteGoDetailLog];
+    }
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[UT_PAGE_TYPE] = [self pageTypeString];
     param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
@@ -1636,6 +1645,27 @@
     
     TRACK_EVENT(@"house_search", param);
     
+}
+
+-(void)addCommuteGoDetailLog
+{
+    /*
+     "1.event_type:house_app2c_v2
+     2.page_type:commuter_detail(通勤选项页）
+     3.enter_from:renting(从租房icon进入),rent_list（从修改进入）
+     4.element_from:commuter_info（从租房icon进入），be_null（从修改进入）
+     5.origin_from:commuter（通勤找房）
+     6. origin_search_id"
+     */
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = @"commuter_detail";
+    param[UT_ENTER_FROM] = [self pageTypeString];
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ?: UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    
+    TRACK_EVENT(@"go_detail", param);
 }
 
 -(NSDictionary *)categoryLogDict {

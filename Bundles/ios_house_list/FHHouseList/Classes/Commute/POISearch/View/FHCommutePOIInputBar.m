@@ -33,7 +33,7 @@
     if (self) {
         _searechField = [[UITextField alloc] init];
         _searechField.delegate = self;
-        _searechField.backgroundColor =  [UIColor themeGray6];
+        _searechField.backgroundColor =  [UIColor themeGray7];
         _searechField.borderStyle = UITextBorderStyleNone;
         _searechField.layer.cornerRadius = 4;
         _searechField.layer.masksToBounds = YES;

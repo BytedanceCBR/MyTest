@@ -322,7 +322,7 @@
     
     _viewModel.commuteSugSelectBlock = ^(NSString * _Nonnull poi) {
       
-        [wself refreshNavBar:wself.houseType placeholder:poi];
+        [wself refreshNavBar:wself.houseType placeholder:nil inputText:poi];
     };
     
 }
@@ -369,7 +369,7 @@
         
         placeholder = displayText;
     }
-    [self refreshNavBar:self.houseType placeholder:placeholder];
+    [self refreshNavBar:self.houseType placeholder:placeholder inputText:nil];
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
     
@@ -511,7 +511,7 @@
 
 }
 
--(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder {
+-(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
     if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute )|| houseType == FHHouseTypeSecondHandHouse) {
         
@@ -521,6 +521,7 @@
         [self.navbar refreshNavbarType:FHFakeInputNavbarTypeDefault];
     }
     self.navbar.placeHolder = placeholder;
+    self.navbar.inputText = inputText;
     self.associationalWord = placeholder;
 }
 
@@ -569,7 +570,7 @@
         [self.view addSubview:_commuteChooseBgView];
         
         if ([[self placeholderByHouseType:self.houseType] isEqualToString: self.associationalWord] && [FHCommuteManager sharedInstance].destLocation) {
-            self.navbar.placeHolder = [FHCommuteManager sharedInstance].destLocation;
+            self.navbar.inputText = [FHCommuteManager sharedInstance].destLocation;
         }
     }
 

@@ -96,7 +96,7 @@
             CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
             if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined) {
                 self.locationHeaderView.location = @"无法获取当前位置";
-                self.locationHeaderView.showRefresh = YES;
+//                self.locationHeaderView.showRefresh = YES;
                 tableView.tableHeaderView = _locationHeaderView;
             }
             [self nearBySearch:NO];
@@ -216,7 +216,7 @@
 {
     if (self.tableView.tableHeaderView != self.defaultHeader ) {
         self.locationHeaderView.location = @"定位失败";
-        self.locationHeaderView.showRefresh = YES;
+//        self.locationHeaderView.showRefresh = YES;
         self.locationHeaderView.loading = NO;
     }
 }
@@ -339,7 +339,7 @@
         self.locationHeaderView.location = name;
         _tableView.tableHeaderView = _locationHeaderView;
         self.locationHeaderView.loading = NO;
-        self.locationHeaderView.showRefresh = NO;
+//        self.locationHeaderView.showRefresh = NO;
     }
 }
 

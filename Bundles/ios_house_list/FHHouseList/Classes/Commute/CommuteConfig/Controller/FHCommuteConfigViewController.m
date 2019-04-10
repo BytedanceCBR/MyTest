@@ -20,6 +20,7 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHEnvContext.h>
+#import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 
 #define BANNER_HEIGHT SCREEN_WIDTH*(224/375.0)
 #define INPUT_BG_HEIGHT 46
@@ -31,6 +32,7 @@
 @property(nonatomic , strong) UILabel *bannerSubtitleLabel;
 @property(nonatomic , strong) FHCommuteFilterView *filterView;
 @property(nonatomic , strong) UIView *inputBgView;
+@property(nonatomic , strong) UIView *inputBgShadowView;
 @property(nonatomic , strong) UILabel *inputLabel;
 @property(nonatomic , strong) AMapAOI *choosePOI;
 @property(nonatomic , strong) AMapLocationReGeocode *chooseRegeoCode; //选择当前的反GEO定位
@@ -87,15 +89,16 @@
     clayer.cornerRadius = 4;
     clayer.masksToBounds = YES;
     
-    CALayer *slayer = [CALayer layer];
+    _inputBgShadowView = [[UIView alloc]init];
+    _inputBgShadowView.layer.cornerRadius = 4;
+    
+    CALayer *slayer = _inputBgShadowView.layer;
     slayer.frame = clayer.frame;
-    slayer.backgroundColor = [[UIColor whiteColor] CGColor];
     slayer.shadowColor = [[UIColor blackColor]CGColor];
     slayer.shadowRadius = 5;
     slayer.shadowOpacity = 0.1;
     slayer.shadowOffset = CGSizeMake(2, 6);
-
-    [_inputBgView.layer addSublayer:slayer];
+    
     [_inputBgView.layer addSublayer:clayer];
     
     _inputLabel = [[UILabel alloc] init];
@@ -106,6 +109,7 @@
     
     [_inputBgView addSubview:_inputLabel];
     
+    [self.view addSubview:_inputBgShadowView];
     [self.view addSubview:_inputBgView];
     
  
@@ -139,7 +143,12 @@
           forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_backButton];
     
-    _filterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200) insets:UIEdgeInsetsMake(57, 0, 10, 0) type:FHCommuteTypeDrive];
+    UIEdgeInsets insets = UIEdgeInsetsMake(57, 0, 10, 0);
+    if (@available(iOS 11.0 , *)) {
+       insets.bottom += [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+    }
+    
+    _filterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200) insets:insets type:FHCommuteTypeDrive];
     __weak typeof(self) wself = self;
     _filterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
         if (wself.inputLabel.text.length == 0) {
@@ -163,6 +172,8 @@
     [_filterView updateType:manager.commuteType time:manager.duration];
     
     [self addGoDetailLog];
+
+    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
 }
 
 
@@ -217,12 +228,17 @@
         make.right.mas_equalTo(-14);
         make.centerY.mas_equalTo(self.inputBgView);
     }];
+    
+    [_inputBgShadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.inputBgView);
+    }];
 }
 
 
 -(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController
 {
     self.inputLabel.text = poi.name;
+    self.inputLabel.textColor = [UIColor themeGray1];
     [viewController.navigationController popViewControllerAnimated:YES];
     self.choosePOI = poi;
 }
@@ -230,6 +246,7 @@
 -(void)userChooseLocation:( CLLocation * )location geoCode:(AMapLocationReGeocode *)geoCode inViewController:(UIViewController *)viewController
 {
     self.inputLabel.text = geoCode.AOIName;
+    self.inputLabel.textColor = [UIColor themeGray1];
     [viewController.navigationController popViewControllerAnimated:YES];
     self.chooseRegeoCode = geoCode;
     self.chooseLocation = location;

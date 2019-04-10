@@ -54,7 +54,7 @@
         
         _loadingView = [[UIActivityIndicatorView alloc] init];
         _loadingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-        _refreshButton.hidden = YES;
+//        _refreshButton.hidden = YES;
         
         [self addSubview:_tipLabel];
         [self addSubview:_iconImageView];
@@ -87,7 +87,7 @@
     [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(2);
         make.top.mas_equalTo(self.mas_centerY);
-        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN);
+        make.right.mas_lessThanOrEqualTo(-50);//一直显示刷新
         make.height.mas_equalTo(20);
     }];
     
@@ -126,20 +126,20 @@
     }
 }
 
--(void)setShowRefresh:(BOOL)showRefresh
-{
-    if (_refreshButton.hidden == showRefresh) {
-        _refreshButton.hidden = !showRefresh;
-        [_locationLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(showRefresh?-40:-HOR_MARGIN);
-        }];
-    }    
-}
-
--(BOOL)showRefresh
-{
-    return !_refreshButton.hidden;
-}
+//-(void)setShowRefresh:(BOOL)showRefresh
+//{
+//    if (_refreshButton.hidden == showRefresh) {
+//        _refreshButton.hidden = !showRefresh;
+//        [_locationLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.right.mas_equalTo(self).offset(showRefresh?-40:-HOR_MARGIN);
+//        }];
+//    }    
+//}
+//
+//-(BOOL)showRefresh
+//{
+//    return !_refreshButton.hidden;
+//}
 
 -(void)setLoading:(BOOL)loading
 {

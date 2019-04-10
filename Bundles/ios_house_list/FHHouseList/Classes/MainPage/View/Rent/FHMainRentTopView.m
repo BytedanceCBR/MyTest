@@ -25,7 +25,7 @@
 #define TOP_PADDING    15
 #define BOTTOM_PADDING 6
 
-#define BANNER_HEIGHT  102
+#define BANNER_HEIGHT  (102-BOTTOM_PADDING)
 #define BANNER_HOR_MARGIN 14
 
 
@@ -41,7 +41,7 @@
             CGFloat imgWidth = img.width.floatValue;
             CGFloat imgHeight = img.height.floatValue;
             if (imgWidth > 0 && imgHeight > 0) {
-                bannerHeight = (SCREEN_WIDTH - BANNER_HOR_MARGIN*2)*imgHeight/imgWidth;
+                bannerHeight = (SCREEN_WIDTH - BANNER_HOR_MARGIN*2)*imgHeight/imgWidth - BOTTOM_PADDING;
             }
             return ceil(bannerHeight);
         }
@@ -101,7 +101,7 @@
         
         [self addSubview:_collectionView];
         if (needShowBanner) {
-            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(BANNER_HOR_MARGIN, CGRectGetMaxY(_collectionView.frame), f.size.width - 2*BANNER_HOR_MARGIN, bannerHeight)];
+            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(BANNER_HOR_MARGIN, CGRectGetMaxY(_collectionView.frame), f.size.width - 2*BANNER_HOR_MARGIN, bannerHeight+BOTTOM_PADDING)];
             [self addSubview:_bannerView];
 
             if (image) {
