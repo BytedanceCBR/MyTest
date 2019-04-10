@@ -34,6 +34,7 @@
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailListEntranceCell.h"
 #import "FHDetailHouseSubscribeCell.h"
+#import "FHDetailAveragePriceComparisonCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
 
@@ -75,6 +76,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
+    [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonCell class])];
 
 }
 // cell class
@@ -161,6 +163,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 订阅房源动态
     if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
         return [FHDetailHouseSubscribeCell class];
+    }
+    // 均价对比
+    if ([model isKindOfClass:[FHDetailAveragePriceComparisonModel class]]) {
+        return [FHDetailAveragePriceComparisonCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -412,6 +418,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     priceTrendModel.hasSuggestion = (model.data.housePricingRank.buySuggestion.content.length > 0) ? YES : NO;
     priceTrendModel.tableView = self.tableView;
     [self.items addObject:priceTrendModel];
+    
+    // 均价对比
+    if(model.data.housePriceRange){
+        FHDetailAveragePriceComparisonModel *infoModel = [[FHDetailAveragePriceComparisonModel alloc] init];
+        infoModel.neighborhoodId = model.data.neighborhoodInfo.id;
+        infoModel.neighborhoodName = model.data.neighborhoodInfo.name;
+        infoModel.analyzeModel = model.data.priceAnalyze;
+        infoModel.rangeModel = model.data.housePriceRange;
+        [self.items addObject:infoModel];
+    }
     
     // 购房小建议
     if (model.data.housePricingRank.buySuggestion.content.length > 0) {
