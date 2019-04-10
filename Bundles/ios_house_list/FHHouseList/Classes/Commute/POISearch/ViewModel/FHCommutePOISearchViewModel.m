@@ -15,6 +15,8 @@
 #import <FHCommonUI/ToastManager.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import <TTReachability/TTReachability.h>
+#import <FHHouseBase/NSString+Emoji.h>
+
 
 #import "FHCommutePOIInputBar.h"
 #import "FHCommutePOIInfoCell.h"
@@ -95,6 +97,9 @@
                 self.locationHeaderView.location = @"无法获取当前位置";
 //                self.locationHeaderView.showRefresh = YES;
                 tableView.tableHeaderView = _locationHeaderView;
+            }else{
+                tableView.tableHeaderView = self.locationHeaderView;
+                _locationHeaderView.showNotInCityTip = YES;
             }
             [self nearBySearch:NO];
         }
@@ -129,40 +134,32 @@
 
 -(void)reGeoSearch
 {
-    CLLocation *location = [FHLocManager sharedInstance].currentLocaton;
-    if (location) {
-        AMapReGeocodeSearchRequest *request = [[AMapReGeocodeSearchRequest alloc] init];
-        AMapGeoPoint *geo = [[AMapGeoPoint alloc] init];
-        geo.latitude = location.coordinate.latitude;
-        geo.longitude = location.coordinate.longitude;
-        request.location = geo;
-        [_searchAPI AMapReGoecodeSearch:request];
-    }else{
-        self.locationHeaderView.loading = YES;
-        __weak typeof(self) wself = self;
-        [[FHLocManager sharedInstance] requestCurrentLocation:NO completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
-            if (!wself) {
-                return ;
-            }
-            if (reGeocode) {
-                wself.locationHeaderView.location = reGeocode.AOIName;
-                wself.currentReGeocode = reGeocode;
-                wself.locationHeaderView.loading = NO;
-                
-                NSString *chooseCity = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-                if ([reGeocode.city hasPrefix:chooseCity] || [chooseCity hasPrefix:reGeocode.city]) {
-                    //不是同一城市
-                    wself.locationHeaderView.showNotInCityTip = YES;
-                }else{
-                    wself.locationHeaderView.showNotInCityTip = NO;
-                }
-                
+    self.locationHeaderView.loading = YES;
+    __weak typeof(self) wself = self;
+    [[FHLocManager sharedInstance] requestCurrentLocation:NO completion:^(AMapLocationReGeocode * _Nonnull reGeocode) {
+        if (!wself) {
+            return ;
+        }
+        if (reGeocode) {
+            wself.locationHeaderView.location = reGeocode.AOIName;
+            wself.currentReGeocode = reGeocode;
+            wself.locationHeaderView.loading = NO;
+            
+            NSString *chooseCity = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+            if ([reGeocode.city hasPrefix:chooseCity] || [chooseCity hasPrefix:reGeocode.city]) {
+                wself.locationHeaderView.showNotInCityTip = NO;
+                [wself nearBySearch:YES];
             }else{
-                SHOW_TOAST(@"定位失败");
-                [wself resetLocationFail];
+                //不是同一城市
+                wself.locationHeaderView.showNotInCityTip = YES;
+                [wself nearBySearch:NO];
             }
-        }];
-    }
+        }else{
+            SHOW_TOAST(@"定位失败");
+            [wself resetLocationFail];
+        }
+    }];
+
 }
 
 -(void)nearBySearch:(BOOL)sameCity
@@ -181,9 +178,12 @@
         geo.longitude = location.coordinate.longitude;
         request.location = geo;
         request.city = _currentReGeocode.city;
-        request.radius = 3000;
+//        request.radius = 3000;
     }else{
         request.city = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        if ([request.city hasSuffix:@"市"]) {
+            request.city = [request.city stringByAppendingString:@"市"];
+        }
     }
     
     self.aroundRequest = request;
@@ -201,8 +201,12 @@
     if (![cityName hasSuffix:@"市"]) {
         cityName = [cityName stringByAppendingString:@"市"];
     }
+    
+    keyword = [keyword stringByRemoveEmoji];
+    
     AMapPOIKeywordsSearchRequest *request = [[AMapPOIKeywordsSearchRequest alloc] init];
     request.keywords = keyword;
+    request.sortrule = 1;
     request.city = cityName;
     request.cityLimit = YES;
     request.types = [self searchTypes];
@@ -537,6 +541,7 @@
             [self poiSearch:result];
         }
     }
+    [textField resignFirstResponder];
     
     return YES;
 }
@@ -556,8 +561,7 @@
         [self poiSearch:result];
     }else{
         //reset to history mode
-        self.keywordRequest = nil;
-        [self.tableView reloadData];
+        [self textFieldClear];
     }
     
     return YES;
@@ -565,7 +569,7 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-    
+    [textField resignFirstResponder];
 }
 
 -(void)inputBarCancel
@@ -583,7 +587,11 @@
     [self.searchPois removeAllObjects];
     [self.tableView setContentOffset:CGPointZero animated:YES];
     [self.tableView reloadData];
-    self.tableView.tableHeaderView = _locationHeaderView;
+    if (!_locationHeaderView.showNotInCityTip && [FHEnvContext isSameLocCityToUserSelect]) {
+        self.tableView.tableHeaderView = _locationHeaderView;
+    }else{
+        self.tableView.tableFooterView = self.defaultHeader;
+    }
 }
 
 

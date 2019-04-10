@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) void (^changeOrHideBlock)(BOOL showHide);
 
--(void)updateTime:(NSString *)time tip:(NSString *)tip;
+-(void)updateTime:(NSString *)time tip:(NSString *)tip highlightTime:(BOOL)highlightTime;
 
 @end
 

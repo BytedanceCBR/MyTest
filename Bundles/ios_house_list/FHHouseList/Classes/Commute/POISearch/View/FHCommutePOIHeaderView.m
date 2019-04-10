@@ -103,7 +103,7 @@
     [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(2);
         make.top.mas_equalTo(self.mas_centerY);
-        make.right.mas_lessThanOrEqualTo(-50);//一直显示刷新
+        make.right.mas_equalTo(-50);//一直显示刷新
         make.height.mas_equalTo(20);
     }];
     
@@ -132,7 +132,7 @@
         make.left.mas_equalTo(HOR_MARGIN);
         make.right.mas_equalTo(-HOR_MARGIN);
         make.top.mas_equalTo(20);
-        make.bottom.mas_equalTo(self.notInCityBgView);
+        make.bottom.mas_lessThanOrEqualTo(self.notInCityBgView);
     }];
     
 }

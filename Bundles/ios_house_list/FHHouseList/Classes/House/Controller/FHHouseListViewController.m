@@ -216,17 +216,19 @@
             [wself.viewModel addModifyCommuteLog:NO];
             wself.commuteChooseBgView.hidden = YES;
         }else{
-            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
-            [wself.commuteFilterView updateType:manager.commuteType time:manager.duration];
             [wself.view bringSubviewToFront:wself.commuteChooseBgView];
             [wself.commuteChooseBgView addSubview:wself.commuteFilterView];
             wself.commuteChooseBgView.hidden = NO;
             [wself.viewModel addModifyCommuteLog:YES];
+            [wself.houseFilterBridge closeConditionFilterPanel];
         }
         wself.commuteTipView.showHide = !showHide;
     };
     
     [self updateCommuteTip];
+    
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    [self.commuteFilterView updateType:manager.commuteType time:manager.duration];
     
     _commuteChooseBgView = [[UIControl alloc] init];
     _commuteChooseBgView.backgroundColor =  RGBA(0, 0, 0, 0.4);
@@ -245,11 +247,14 @@
         __weak typeof(self) wself = self;
         _commuteFilterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
             FHCommuteManager *manager = [FHCommuteManager sharedInstance];
-            manager.duration = time;
-            manager.commuteType = type;
-            [manager sync];
-            [wself updateCommuteTip];
-            [wself.viewModel commuteFilterUpdated];
+            if (!([time isEqualToString:manager.duration] && type == manager.commuteType)) {
+                //选择发送改变
+                manager.duration = time;
+                manager.commuteType = type;
+                [manager sync];
+                [wself updateCommuteTip];
+                [wself.viewModel commuteFilterUpdated];
+            }
             
             [wself onCommuteBgTap];
         };
@@ -262,7 +267,8 @@
 {
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
     NSString *tip = [NSString stringWithFormat:@" 通过%@%@分钟内到达",[manager commuteTypeName],manager.duration];
-    [_commuteTipView updateTime:@"早高峰" tip:tip];
+    BOOL highlight = manager.commuteType != FHCommuteTypeWalk && manager.commuteType != FHCommuteTypeRide;
+    [_commuteTipView updateTime:@"早高峰" tip:tip highlightTime:highlight];
     
 }
 

@@ -37,7 +37,7 @@
         _searechField.borderStyle = UITextBorderStyleNone;
         _searechField.layer.cornerRadius = 4;
         _searechField.layer.masksToBounds = YES;
-        _searechField.returnKeyType = UIReturnKeySearch;
+        _searechField.returnKeyType = UIReturnKeyDone;
         _searechField.textColor = [UIColor themeGray1];
         _searechField.font = [UIFont themeFontRegular:14];
         

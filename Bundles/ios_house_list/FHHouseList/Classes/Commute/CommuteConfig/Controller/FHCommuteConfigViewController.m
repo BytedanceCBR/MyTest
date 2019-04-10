@@ -21,6 +21,8 @@
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHEnvContext.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
+#import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/FHLocManager.h>
 
 #define BANNER_HEIGHT SCREEN_WIDTH*(224/375.0)
 #define INPUT_BG_HEIGHT 46
@@ -167,6 +169,17 @@
     
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
     NSString *destLocation = manager.destLocation;
+    if (destLocation.length == 0) {
+        if ([FHEnvContext isSameLocCityToUserSelect]) {
+            AMapLocationReGeocode *currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+            self.chooseLocation = [FHLocManager sharedInstance].currentLocaton;
+            if (currentReGeocode && self.chooseLocation) {
+                destLocation = currentReGeocode.AOIName;
+                self.chooseRegeoCode = currentReGeocode;                
+            }
+        }
+    }
+    
     if (destLocation.length > 0) {
         _inputLabel.text = destLocation;
     }else{
@@ -178,7 +191,6 @@
 
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
 }
-
 
 -(void)initConstraints
 {

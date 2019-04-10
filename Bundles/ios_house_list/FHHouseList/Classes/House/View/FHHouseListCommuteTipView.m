@@ -83,12 +83,12 @@
     }
 }
 
--(void)updateTime:(NSString *)time tip:(NSString *)tip
+-(void)updateTime:(NSString *)time tip:(NSString *)tip highlightTime:(BOOL)highlightTime
 {
     NSMutableAttributedString *info = [NSMutableAttributedString new];
     if (time.length > 0) {
         NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:14],
-                               NSForegroundColorAttributeName:[UIColor themeRed1]
+                               NSForegroundColorAttributeName:(highlightTime?[UIColor themeRed1]:[UIColor themeGray2])
                                };
         NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:time attributes:attr ];
         [info appendAttributedString:timeAttr];

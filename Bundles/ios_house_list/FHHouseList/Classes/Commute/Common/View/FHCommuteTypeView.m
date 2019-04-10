@@ -103,6 +103,7 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
 
     button.titleLabel.font = [UIFont themeFontRegular:12];
