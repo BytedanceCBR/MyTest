@@ -212,10 +212,10 @@
     bottomPadding = 44;
     
     if ([TTDeviceHelper isIPhoneXDevice]){
-        topPadding = 50 + kTopSearchButtonHeight + kSelectorViewHeight ;
+        topPadding = 54 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }else if ([TTDeviceHelper is667Screen])
     {
-        topPadding = 36 + kTopSearchButtonHeight + kSelectorViewHeight ;
+        topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }
     
     self.topInset = topPadding;

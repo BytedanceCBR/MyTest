@@ -27,18 +27,29 @@
     return [FHMainApi queryData:queryPath params:paramDic class:[FHFHClearHistoryModel class] completion:completion];
 }
 
-/*
- let url = "\(EnvContext.networkConfig.host)/f100/api/clear_history?"
- 
- return TTNetworkManager.shareInstance().rx
- .requestForBinary(
- url: url,
- params: ["house_type":houseType],
- method: "GET",
- needCommonParams: true)
- .map({ (data) -> NSString? in
- NSString(data: data, encoding: String.Encoding.utf8.rawValue)
- })
- */
++ (TTHttpTask *)requestHFHelpUsedByHouseType:(NSString *)houseType completion:(void(^_Nullable)(FHHouseFindRecommendModel * model , NSError *error))completion
+{
+    NSString *queryPath = @"/f100/api/help_find_is_used?";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"house_type"] = houseType;
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:completion];
+}
+
++ (TTHttpTask *)saveHFHelpFindByHouseType:(NSString *)houseType query:(NSString *)query phoneNum:(NSString *)phoneNum completion:(void(^_Nullable)(FHHouseFindRecommendModel * model , NSError *error))completion
+{
+    NSString *queryPath = @"/f100/api/save_help_find";
+    
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"house_type"] = houseType;
+    if (phoneNum.length > 0) {
+        paramDic[@"tel_num"] = phoneNum;
+    }
+    return [FHMainApi queryData:queryPath params:paramDic class:[FHHouseFindRecommendModel class] completion:completion];
+}
 
 @end

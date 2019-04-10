@@ -85,7 +85,7 @@
 #import "TTSettingMineTabManager.h"
 #import "TTTabBarProvider.h"
 #import "TTURLUtils.h"
-#import <FHEnvContext.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 //爱看
 #import "AKTaskSettingHelper.h"
@@ -164,6 +164,7 @@ typedef NS_ENUM(NSUInteger, ArticleSettingViewCacheStatus) {
 };
 
 static NSString *const TTVideoTrafficTipSettingKey = @"TTVideoTrafficTipSettingKey";
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 #pragma mark - SettingView
 
@@ -840,7 +841,7 @@ TTEditUserProfileViewControllerDelegate
 {
     TTSettingSectionType sectionType = [self sectionTypeAtSection:indexpath.section];
     NSArray *cellTypeList = [self supportSettingCellTypeArrayWithSectionType:sectionType];
-    if (cellTypeList.count < indexpath.row) {
+    if (cellTypeList.count <= indexpath.row) {
         return SettingCellTypeNone;
     }
     NSNumber *cellType = cellTypeList[indexpath.row];
@@ -1437,6 +1438,9 @@ TTEditUserProfileViewControllerDelegate
                 wrapperTrackEvent(@"login", @"exit_password_setting_success");
             }
             self.resetPasswordAlertShowed = NO;
+            
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
         }
     }];
 }

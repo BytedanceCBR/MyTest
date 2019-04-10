@@ -38,13 +38,18 @@ static BOOL kTTHasReceivedGotCategoryNotification = NO;
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if ([SSCommonLogic couldRequestForKey:SSCommonLogicTimeDictRequestCategoryKey]) {
-            [[TTArticleCategoryManager sharedManager] startGetCategory];
+//            [[TTArticleCategoryManager sharedManager] startGetCategory];
             [SSCommonLogic updateRequestTimeForKey:SSCommonLogicTimeDictRequestCategoryKey];
         }
     });
 }
 
-- (void)categoryGotFinished:(NSNotification *)notification {
+- (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
+    [super startWithApplication:application options:launchOptions];
+    [[TTArticleCategoryManager sharedManager] startGetCategory];
+}
+
+- (void)categoryGotFinished:(NSNotification *)notfication {
     if (!kTTHasReceivedGotCategoryNotification) {
         kTTHasReceivedGotCategoryNotification = YES;
 

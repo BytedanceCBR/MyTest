@@ -15,6 +15,7 @@ static NSString *const kGeneralKey = @"config";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
 static NSString *const kUserDefaultCityNamePre05_Key = @"currentcitytext"; // 0.5版本之前保存的当前城市名称
 NSString *const kFHPhoneNumberCacheKey = @"phonenumber";
+NSString *const kFHPLoginhoneNumberCacheKey = @"loginPhoneNumber";
 static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 
