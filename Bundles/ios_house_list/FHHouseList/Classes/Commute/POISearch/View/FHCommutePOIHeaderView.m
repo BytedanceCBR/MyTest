@@ -20,6 +20,9 @@
 @property(nonatomic , strong) UIButton *refreshButton;
 @property(nonatomic , strong) UIActivityIndicatorView *loadingView;
 
+@property(nonatomic , strong) UIView *notInCityBgView;
+@property(nonatomic , strong) UILabel *notInCityLabel;
+
 @end
 
 @implementation FHCommutePOIHeaderView
@@ -56,13 +59,26 @@
         _loadingView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
 //        _refreshButton.hidden = YES;
         
+        _notInCityBgView = [[UIView alloc] init];
+        _notInCityBgView.backgroundColor = [UIColor whiteColor];
+        
+        _notInCityLabel = [[UILabel alloc]init];
+        _notInCityLabel.text = @"当前位置不在(选择城市)市内，请直接搜索或返回首页更改城市";
+        _notInCityLabel.textColor = [UIColor themeGray3];
+        _notInCityLabel.font = [UIFont themeFontRegular:12];
+        _notInCityLabel.numberOfLines = 0;
+        
+        [_notInCityBgView addSubview:_notInCityLabel];
+        _notInCityBgView.hidden = YES;
+        
         [self addSubview:_tipLabel];
         [self addSubview:_iconImageView];
         [self addSubview:_locationLabel];
         [self addSubview:_refreshButton];
         [self addSubview:_loadingView];
         [self addSubview:_bottomLine];
-
+        [self addSubview:_notInCityBgView];
+        
         [self initConstraints];
     }
     return self;
@@ -107,6 +123,18 @@
     [_loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self.refreshButton);
     }];
+    
+    [_notInCityBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self);
+    }];
+    
+    [_notInCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(HOR_MARGIN);
+        make.right.mas_equalTo(-HOR_MARGIN);
+        make.top.mas_equalTo(20);
+        make.bottom.mas_equalTo(self.notInCityBgView);
+    }];
+    
 }
 
 -(void)setLocation:(NSString *)location
@@ -124,6 +152,16 @@
     if (_refreshBlock) {
         _refreshBlock();
     }
+}
+
+-(void)setShowNotInCityTip:(BOOL)showNotInCityTip
+{
+    _notInCityBgView.hidden = !showNotInCityTip;
+}
+
+-(BOOL)showNotInCityTip
+{
+    return !_notInCityBgView.hidden;
 }
 
 //-(void)setShowRefresh:(BOOL)showRefresh

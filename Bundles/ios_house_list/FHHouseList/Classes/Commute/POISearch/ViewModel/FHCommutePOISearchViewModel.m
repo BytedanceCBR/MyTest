@@ -83,7 +83,6 @@
             _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
             _currentReGeocode = nil;
 
-
             if (_currentReGeocode) {
                 self.locationHeaderView.location = _currentReGeocode.AOIName;
                 tableView.tableHeaderView = _locationHeaderView;
@@ -151,6 +150,15 @@
                 wself.locationHeaderView.location = reGeocode.AOIName;
                 wself.currentReGeocode = reGeocode;
                 wself.locationHeaderView.loading = NO;
+                
+                NSString *chooseCity = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+                if ([reGeocode.city hasPrefix:chooseCity] || [chooseCity hasPrefix:reGeocode.city]) {
+                    //不是同一城市
+                    wself.locationHeaderView.showNotInCityTip = YES;
+                }else{
+                    wself.locationHeaderView.showNotInCityTip = NO;
+                }
+                
             }else{
                 SHOW_TOAST(@"定位失败");
                 [wself resetLocationFail];
@@ -315,9 +323,8 @@
         }
         
         if (!sameCity) {
-            if (_tableView.tableHeaderView != _defaultHeader) {
-                _tableView.tableHeaderView = _defaultHeader;
-            }
+            self.locationHeaderView.showNotInCityTip = YES;
+            self.tableView.tableHeaderView = self.locationHeaderView;
             return;
         }
         

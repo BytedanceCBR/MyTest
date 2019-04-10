@@ -267,6 +267,8 @@
 {
     self.commuteTipView.showHide = NO;
     self.commuteChooseBgView.hidden = YES;
+    
+    [self.viewModel addModifyCommuteLog:NO];
 }
 
 

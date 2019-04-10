@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy)   void (^locationTapBlock)(void);
 //@property(nonatomic , assign) BOOL showRefresh;
 @property(nonatomic , assign) BOOL loading;
+@property(nonatomic , assign) BOOL showNotInCityTip;
 
 @end
 

@@ -1630,20 +1630,17 @@
 
 -(void)addCommuteSearchLog
 {
-
     NSString *location = [FHCommuteManager sharedInstance].destLocation;
     
     NSMutableDictionary *param = [NSMutableDictionary new];
-    param[UT_PAGE_TYPE] = [self pageTypeString];
+    param[UT_PAGE_TYPE] = @"commuter_detail";
     param[UT_HOUSE_TYPE] = @"rent";
-    param[@"query_type"] = @"mutiple";
-    param[@"enter_query"] = UT_BE_NULL;
-    param[UT_SEARCH_ID] = @"be_null";
-    param[@"search_query"] = location ?:UT_BE_NULL;
+    param[UT_ENTER_FROM] = [self pageTypeString];
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
     param[UT_ORIGIN_FROM] = self.tracerModel.originFrom?:UT_BE_NULL;
     param[UT_ORIGIN_SEARCH_ID] = self.tracerModel.originSearchId?:UT_BE_NULL;
     
-    TRACK_EVENT(@"house_search", param);
+    TRACK_EVENT(@"start_commute", param);
     
 }
 

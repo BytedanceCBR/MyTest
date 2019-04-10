@@ -309,29 +309,24 @@
 -(void)addStartSearchLog
 {
     /*
-     "1. event_type：house_app2c_v2
+     1. event_type：house_app2c_v2
      2. page_type：commuter_detail(通勤选项页）
      3. house_type：rent(租房)
-     4. query_type：mutiple(多种搜索方式混合）
-     5. enter_query：be_null
-     5. search_query：
-     6. search_id
-     7. origin_from:commuter(通勤找房）
-     8. origin_search_id"
+     4.enter_from:renting(从租房icon进入),rent_list（从修改进入）
+     5.element_from:commuter_info（从租房icon进入），be_null（从修改进入）
+     6. origin_from:commuter(通勤找房）
+     7. origin_search_id
      */
     
     NSMutableDictionary *param = [NSMutableDictionary new];
     param[UT_PAGE_TYPE] = [self pageType];
     param[UT_HOUSE_TYPE] = @"rent";
-    param[@"query_type"] = @"mutiple";
-    param[@"enter_query"] = UT_BE_NULL;
-    param[UT_SEARCH_ID] = @"be_null";
-    param[@"search_query"] = self.choosePOI.name ?:UT_BE_NULL;
+    param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+    param[UT_ELEMENT_FROM] = @"commuter_info";
     param[UT_ORIGIN_FROM] = self.tracerModel.originFrom?:UT_BE_NULL;
     param[UT_ORIGIN_SEARCH_ID] = self.tracerModel.originSearchId?:UT_BE_NULL;
-
     
-    TRACK_EVENT(@"house_search", param);
+    TRACK_EVENT(@"start_commute", param);
     
 }
 
