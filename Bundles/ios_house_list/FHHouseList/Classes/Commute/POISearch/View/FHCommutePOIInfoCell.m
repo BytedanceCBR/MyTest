@@ -12,7 +12,7 @@
 #import <Masonry/Masonry.h>
 
 #define TOP_MARGIN      20
-#define ITEM_VER_MARGIN 4
+#define ITEM_VER_MARGIN 2
 
 @interface FHCommutePOIInfoCell ()
 
@@ -67,10 +67,10 @@
     
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
-        make.top.mas_equalTo(TOP_MARGIN);
+//        make.top.mas_equalTo(TOP_MARGIN);
         make.right.mas_lessThanOrEqualTo(-HOR_MARGIN);
         make.height.mas_equalTo(20);
-//        make.bottom.mas_equalTo(self.addressLabel.mas_top).offset(-ITEM_VER_MARGIN);
+        make.bottom.mas_equalTo(self.addressLabel.mas_top).offset(-ITEM_VER_MARGIN);
     }];
     
     [_addressLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,7 +98,16 @@
     }
     
     _nameLabel.attributedText = titleAttr;
-    _addressLabel.text = address;
+    
+    _addressLabel.text = address?:@"";
+        
+    CGFloat offset = -ITEM_VER_MARGIN;
+    if (address.length == 0) {
+        offset -= 6;
+    }
+    [_nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+       make.bottom.mas_equalTo(self.addressLabel.mas_top).offset(-ITEM_VER_MARGIN);
+    }];
             
 }
 

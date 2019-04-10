@@ -193,13 +193,16 @@
     
     [bridge showBottomLine:NO];
     
-    UIView *bottomLine = [[UIView alloc] init];
-    bottomLine.backgroundColor = [UIColor themeGray6];
-    [self.filterPanel addSubview:bottomLine];
-    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-    }];
+    if (!self.viewModel.isCommute) {
+        //非通勤找房下才显示分隔线
+        UIView *bottomLine = [[UIView alloc] init];
+        bottomLine.backgroundColor = [UIColor themeGray6];
+        [self.filterPanel addSubview:bottomLine];
+        [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
+            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        }];
+    }
 
 
 }

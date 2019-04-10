@@ -267,7 +267,7 @@
             }
         }else if (self.isCommute && self.houseSearchDic.count <= 0){
              NSString *searchKey = [FHCommuteManager sharedInstance].destLocation;
-            self.houseSearchDic = @{@"query_type":@"mutiple",@"search_query":searchKey?:UT_BE_NULL,UT_PAGE_TYPE:[self pageTypeString]};
+            self.houseSearchDic = @{@"query_type":@"mutiple",UT_PAGE_TYPE:[self pageTypeString]};
         }
         self.tableView.mj_footer.hidden = YES;
         [self.houseShowCache removeAllObjects];
@@ -921,8 +921,6 @@
     manager.destLocation = poi.name;
     [manager sync];
     
-    self.houseSearchDic = @{@"query_type":@"mutiple",@"search_query":poi.name?:UT_BE_NULL,UT_PAGE_TYPE:[self pageTypeString]};
-    
     if (self.commuteSugSelectBlock) {
         self.commuteSugSelectBlock(poi.name);
         self.commutePoi = poi.name;
@@ -940,7 +938,6 @@
     manager.longitude = location.coordinate.longitude;
     manager.destLocation = geoCode.AOIName;
     [manager sync];
-    self.houseSearchDic = @{@"query_type":@"mutiple",@"search_query":geoCode.AOIName?:UT_BE_NULL,UT_PAGE_TYPE:[self pageTypeString]};
     
     if (self.commuteSugSelectBlock) {
         self.commuteSugSelectBlock(geoCode.AOIName);
@@ -1142,7 +1139,13 @@
                         }
                     }
                     
-                    [cell refreshTopMargin: 20];
+                    CGFloat topMargin = 20;
+                    if (self.isCommute && indexPath.row == 0) {
+                        //通勤找房 筛选器没有底部线
+                        topMargin = 10;
+                    }
+                    
+                    [cell refreshTopMargin: topMargin];
                     [cell updateWithHouseCellModel:cellModel];
                 }
                 return cell;
@@ -1224,29 +1227,18 @@
                 }
                 
                 isLastCell = (indexPath.row == self.houseList.count - 1);
-                
-//                if (indexPath.row < self.houseList.count) {
-//
-//                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-//                    if (height < 1) {
-//                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-//
-//                            [cell updateWithHouseCellModel:cellModel];
-//                            [cell refreshTopMargin: 20];
-//                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
-//
-//                        }];
-//                    }
-//                    return height;
-//                }
             } else {
                 isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 cellModel = self.sugesstHouseList[indexPath.row];
             }
             
+            CGFloat normalHeight = 105;
+            if (self.isCommute && indexPath.row == 0) {
+                normalHeight = 95;//通勤找房第一个缩小间距
+            }
+            
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-            return (isLastCell ? 125 : 105)+reasonHeight;
+            return (isLastCell ? 125 : normalHeight)+reasonHeight;
         }
     }
 
