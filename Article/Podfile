@@ -42,6 +42,8 @@ def appPods
     pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
+    pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush'#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
+#    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
 
     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e51ab1182a51823c41b69bf4ac7399529aaad508' #:branch => 'feature/develop'
 

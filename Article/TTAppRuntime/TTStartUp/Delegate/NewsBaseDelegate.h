@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ArticleAPNsManager.h"
+#import <FHCHousePush/FHCHandleAPNSTask.h>
+#import <FHCHousePush/ArticleAPNsManager.h>
+//#import "ArticleAPNsManager.h"
 
 #import "TTExploreMainViewController.h"
 

@@ -74,6 +74,7 @@ PODS:
   - CocoaLumberjack/Extensions (3.4.2.1-binary)
   - Crashlytics (3.7.2)
   - Fabric (1.6.7)
+  - FHCHousePush (0.1.0)
   - FHCommonUI (0.1.0)
   - FHHouseBase (0.1.0)
   - FHHouseDetail (0.1.0)
@@ -533,6 +534,7 @@ DEPENDENCIES:
   - CocoaLumberjack (= 3.4.2.1-binary)
   - Crashlytics (= 3.7.2)
   - Fabric (= 1.6.7)
+  - FHCHousePush (from `../Bundles/FHCHousePush`)
   - FHCommonUI (from `../Bundles/ios_common_ui`)
   - FHHouseBase (from `../Bundles/ios_house_base`)
   - FHHouseDetail (from `../Bundles/ios_house_detail`)
@@ -758,6 +760,8 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/BDTBasePlayer
   BDTSharedHeaders:
     :path: ../Vendor/BDTSharedHeaders
+  FHCHousePush:
+    :path: ../Bundles/FHCHousePush
   FHCommonUI:
     :path: ../Bundles/ios_common_ui
   FHHouseBase:
@@ -885,6 +889,7 @@ SPEC CHECKSUMS:
   CocoaLumberjack: c0d821ecf553b7ee2a8da704cb4543027f3d0c5e
   Crashlytics: e8d670ff63c1e763895c931923ea0898fcfe7db0
   Fabric: 3de301be1322b3f233b8aac4612f78c0e9a8c72e
+  FHCHousePush: d093dcbec0573b5864389f4b43d3b52210763c04
   FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
   FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
@@ -1011,6 +1016,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: f95730ee7f167a69db0b42df33c6adf26e6c93f8
+PODFILE CHECKSUM: b03515d6f9d009c5da1e05e1504d7d206878312f
 
 COCOAPODS: 1.4.0

@@ -13,7 +13,7 @@
 #import "SSSimpleCache.h"
 #import "TTInstallIDManager.h"
 #import "TTNetworkManager.h"
-#import "TTHandleAPNSTask.h"
+#import <FHCHousePush/FHCHandleAPNSTask.h>
 #import <TTNetworkManager/TTDefaultHTTPRequestSerializer.h>
 #import "TouTiaoPushSDK.h"
 
@@ -104,7 +104,7 @@ static NSUInteger reportTryCount = 0;
             [params setValue:[TTSandBoxHelper getCurrentChannel] forKey:@"channel"];
         }
         
-        NSString *deviceToken = [TTHandleAPNSTask deviceTokenString];
+        NSString *deviceToken = [FHCHandleAPNSTask deviceTokenString];
         if (!isEmptyString(deviceToken)) {
             [params setValue:deviceToken forKey:@"token"];
         }
@@ -124,7 +124,7 @@ static NSUInteger reportTryCount = 0;
         }];
     } else {
         TTUploadTokenRequestParam *param = [TTUploadTokenRequestParam requestParam];
-        param.token = [TTHandleAPNSTask deviceTokenString];
+        param.token = [FHCHandleAPNSTask deviceTokenString];
         [TouTiaoPushSDK sendRequestWithParam:param completionHandler:^(TTBaseResponse *response) {
             if(!response.error && [[response.jsonObj valueForKey:@"message"] isEqualToString:@"success"]) {
                 reportTryCount = 0;

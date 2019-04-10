@@ -57,7 +57,7 @@
 #import "TTCategorySelectorView.h"
 #import "TTAuthorizeManager.h"
 
-#import "revision.h"
+//#import "revision.h"
 #import <TTNetBusiness/TTRouteSelectionServerConfig.h>
 #import "TTOpenInSafariWindow.h"
 #import "TTLauchProcessManager.h"

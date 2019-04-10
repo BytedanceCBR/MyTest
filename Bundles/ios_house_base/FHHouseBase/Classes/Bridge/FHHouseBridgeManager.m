@@ -12,6 +12,7 @@
 @property(nonatomic , strong) id envContextBridge;
 @property(nonatomic , strong) id cellsBridge;
 @property(nonatomic , strong) id cityListBridge;
+@property(nonatomic , strong) id pushBridge;
 
 @end
 
@@ -51,12 +52,22 @@
     return _cellsBridge;
 }
 
--(id<FHHouseSwitchCityDelegate>)cityListModelBridge {
+-(id<FHHouseSwitchCityDelegate>)cityListModelBridge
+{
     if (!_cityListBridge) {
         Class clazz = NSClassFromString(@"FHCityListViewModel");
         _cityListBridge = [[clazz alloc] init];
     }
     return _cityListBridge;
+}
+
+-(id<FHCHousePushDelegate>)pushBridge
+{
+    if (!_pushBridge) {
+        Class clazz = NSClassFromString(@"FHCHousePushBridgeImp");
+        _pushBridge = [[clazz alloc] init];
+    }
+    return _pushBridge;
 }
 
 @end

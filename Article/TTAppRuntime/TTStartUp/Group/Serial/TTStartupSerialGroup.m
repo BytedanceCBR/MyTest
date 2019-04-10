@@ -20,7 +20,7 @@
 #import "TTHandleShorcutItemTask.h"
 #import "TTHandleFirstLauchTask.h"
 #import "TTNetworkNotifyTask.h"
-#import "TTHandleAPNSTask.h"
+#import <FHCHousePush/FHCHandleAPNSTask.h>
 #import "TTWatchConnectionTask.h"
 #import "TTOrientationTask.h"
 #import "TTFabricSDKRegister.h"
@@ -127,7 +127,7 @@
             return [[TTNetworkNotifyTask alloc] init];
             break;
         case TTSerialStartupTypeHanleAPNS:
-            return [[TTHandleAPNSTask alloc] init];
+            return [[FHCHandleAPNSTask alloc] init];
             break;
         case TTSerialStartupTypeWatchConnetion:
             return [[TTWatchConnectionTask alloc] init];

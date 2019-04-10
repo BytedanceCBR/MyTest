@@ -20,7 +20,8 @@
 #import <TTAccountBusiness.h>
 #import "TTAccountLoginViewControllerGuide.h"
 
-#import "NewFeedbackAlertManager.h"
+#import <FHCHousePush/NewFeedbackAlertManager.h>
+//#import "NewFeedbackAlertManager.h"
 #import "TTLocationManager.h"
 #import "SSFeedbackManager.h"
 #import "ExploreExtenstionDataHelper.h"

@@ -7,9 +7,9 @@
 
 #import "TSVTabManager.h"
 #import "TSVMonitorManager.h"
-#import "TTHTSTabViewController.h"
+//#import "TTHTSTabViewController.h"
 #import "TSVStartupTabManager.h"
-#import "TSVTabViewController.h"
+//#import "TSVTabViewController.h"
 #import "SSCommonLogic.h"
 #import "TTTabBarManager.h"
 
@@ -51,9 +51,9 @@
 
 - (BOOL)isShortVideoTabForViewController:(UIViewController *)viewController
 {
-    if ([viewController isKindOfClass:[TTHTSTabViewController class]] || [viewController isKindOfClass:[TSVTabViewController class]]) {
-        return YES;
-    }
+//    if ([viewController isKindOfClass:[TTHTSTabViewController class]] || [viewController isKindOfClass:[TSVTabViewController class]]) {
+//        return YES;
+//    }
     return NO;
 }
 
