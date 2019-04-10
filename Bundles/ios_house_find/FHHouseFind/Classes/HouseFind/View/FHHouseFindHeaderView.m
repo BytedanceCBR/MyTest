@@ -57,6 +57,12 @@
     self.deleteButton.hidden = !showDelete;
 }
 
+-(void)updateAttrTitle:(NSAttributedString *)attrTitle showDelete:(BOOL)showDelete
+{
+    self.titleLabel.attributedText = attrTitle;
+    self.deleteButton.hidden = !showDelete;
+}
+
 -(void)deleteAction
 {
     if (_deleteBlock) {

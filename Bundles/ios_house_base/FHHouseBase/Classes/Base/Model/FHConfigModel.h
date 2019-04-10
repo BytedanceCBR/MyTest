@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *descriptionStr;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsImageModel> *image;
 @property (nonatomic, copy , nullable) NSString *textColor;
@@ -140,6 +140,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface  FHConfigDataRentOpDataModel  : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsModel> *items;
+@property (nonatomic, copy , nullable) NSString *opStyle;
+
+@end
+
+@interface  FHConfigDataMainPageBannerOpDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *opStyle;
@@ -262,6 +269,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface  FHConfigDataCityStatsModel  : JSONModel
 
+@property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *mapOpenUrl;
 @property (nonatomic, copy , nullable) NSString *addedNumToday;
 @property (nonatomic, copy , nullable) NSString *cityDetailDesc;
@@ -275,7 +283,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *monthUp;
 @property (nonatomic, copy , nullable) NSString *cityTitleDesc;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmUnit;
-
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @end
 
 @interface  FHConfigDataAvailabilityModel  : JSONModel
@@ -294,6 +302,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHConfigDataEntranceSwitchModel : JSONModel
+
+@property (nonatomic, assign) BOOL isPriceValuationShowHouseTrend;
+@end
+
 @interface  FHConfigDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
@@ -301,6 +314,7 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *rentOpData ;
+@property (nonatomic, strong , nullable) FHConfigDataMainPageBannerOpDataModel *mainPageBannerOpData ;
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *houseOpData ;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataEntryInfoModel> *entryInfo;
 @property (nonatomic, copy , nullable) NSString *currentCityId;
@@ -314,6 +328,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *userPhone;
 @property (nonatomic, strong, nullable) FHConfigDataAvailabilityModel *cityAvailability;
 @property (nonatomic, strong, nullable) FHConfigDataCitySwitchModel *citySwitch;
+@property (nonatomic, strong , nullable) FHConfigDataEntranceSwitchModel *entranceSwitch ;
 
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabNeighborhoodFilter;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilterOrder;

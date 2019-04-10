@@ -367,8 +367,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     
-//    [FHIESGeckoManager configGeckoInfo];
-//    [FHIESGeckoManager configIESWebFalcon];
+    [FHIESGeckoManager configGeckoInfo];
+    [FHIESGeckoManager configIESWebFalcon];
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
@@ -492,6 +492,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
 {
     [FHUtils setContent:cityId forKey:kUserDefaultCityId];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHSwitchGetLightFinishedNotification object:nil];
+}
+
+/*
+ 判断在房屋估价结果页中是否显示查看城市行情的按钮
+ */
++ (BOOL)isPriceValuationShowHouseTrend
+{
+    return [[FHEnvContext sharedInstance] getConfigFromCache].entranceSwitch.isPriceValuationShowHouseTrend;
 }
 
 - (TTReachability *)reachability

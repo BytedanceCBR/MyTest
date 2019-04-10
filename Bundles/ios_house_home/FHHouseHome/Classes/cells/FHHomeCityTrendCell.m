@@ -124,7 +124,7 @@
     [super layoutSubviews];
     self.trendView.size = CGSizeMake(self.contentView.bounds.size.width, 64);
     self.trendView.left = 0;
-    self.trendView.top = 10;
+    self.trendView.top = 14;
 }
 
 -(FHHomeTrendBubbleView *)bubbleView {

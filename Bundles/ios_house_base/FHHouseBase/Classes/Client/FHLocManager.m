@@ -336,7 +336,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
             }
             [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-                if (!model) {
+                if (!model || error) {
                     wSelf.retryConfigCount -= 1;
                     if (wSelf.retryConfigCount >= 0)
                     {
@@ -356,28 +356,15 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
-                    [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                    [wSelf updateAllConfig:model isNeedDiff:YES];
-                }else
-                {
-                    NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
-                    if ([currentCityid isEqualToString:model.data.currentCityId] || !currentCityid) {
-                        //更新config
-                        [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                        [wSelf updateAllConfig:model isNeedDiff:YES];
-                    }
                 }
-                
-                FHConfigDataModel *configCache = [[FHEnvContext sharedInstance] getConfigFromCache];
-                if (!configCache) {
-                    [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                    [wSelf updateAllConfig:model isNeedDiff:NO];
-                }
-                
+
+                [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
+                [wSelf updateAllConfig:model isNeedDiff:NO];
+   
                 [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
                     
                 }];
-                
+
                 wSelf.retryConfigCount = 3;
             }];
         }

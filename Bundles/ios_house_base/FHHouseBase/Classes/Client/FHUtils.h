@@ -33,6 +33,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)stringFromNSDate:(NSDate *)date;
 
+/*
+ 周边加阴影，并且同时圆角，注意这个方法必须在view已经布局完成能够获得frame的情况下使用
+ */
++ (void)addShadowToView:(UIView *)view
+            withOpacity:(float)shadowOpacity
+            shadowColor:(UIColor *)shadowColor
+           shadowOffset:(CGSize)shadowOffset
+           shadowRadius:(CGFloat)shadowRadius
+        andCornerRadius:(CGFloat)cornerRadius;
+
++ (UIImage*)createImageWithColor:(UIColor*)color;
+
 @end
 
 NS_ASSUME_NONNULL_END

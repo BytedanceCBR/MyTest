@@ -239,6 +239,7 @@
                            @"hid":@"id",
                            @"originPrice":@"origin_price",
                            @"subscribeInfo": @"subscribe_info",
+                           @"bottomText": @"bottom_text",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -294,6 +295,14 @@
 
 @end
 
+@implementation FHSearchHouseDataItemsModelBottomText
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
 
 @implementation  FHSearchHouseDataItemsNeighborhoodInfoModel
 
