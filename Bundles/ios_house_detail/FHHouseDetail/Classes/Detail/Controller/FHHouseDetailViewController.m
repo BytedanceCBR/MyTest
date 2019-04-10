@@ -37,6 +37,7 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
+@property (nonatomic, assign)   BOOL     isViewDidDisapper;
 
 @end
 
@@ -117,7 +118,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
     [self startLoadData];
-    
+    self.isViewDidDisapper = NO;
     
     if (!self.isDisableGoDetail) {
         [self.viewModel addGoDetailLog];
@@ -138,6 +139,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    self.isViewDidDisapper = NO;
     [self refreshContentOffset:self.tableView.contentOffset];
     [self.view endEditing:YES];
 }
@@ -148,6 +150,11 @@
     [self.viewModel addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.isViewDidDisapper = YES;
 }
 
 #pragma mark - for keyboard show
@@ -406,10 +413,12 @@
     CGFloat alpha = contentOffset.y / 139 * 2;
     [self.navBar refreshAlpha:alpha];
 
-    if (contentOffset.y > 0) {
-        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
-    }else {
-        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+    if (!self.isViewDidDisapper) {
+        if (contentOffset.y > 0) {
+            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
+        }else {
+            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
+        }
     }
 }
 

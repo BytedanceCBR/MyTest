@@ -141,7 +141,7 @@
 }
 
 -(void)layoutItems:(NSArray<FHSpringboardIconItemView*>*)items {
-    CGFloat itemWidth = [[UIScreen mainScreen] bounds].size.width / _count;
+    CGFloat itemWidth = ([[UIScreen mainScreen] bounds].size.width - 26) / _count;
     [items enumerateObjectsUsingBlock:^(FHSpringboardIconItemView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(idx * itemWidth);

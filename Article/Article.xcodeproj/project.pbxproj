@@ -2615,6 +2615,10 @@
 		B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
 		B388CD042142652C00653188 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B388CB142142652900653188 /* Info.plist */; };
 		B388CD052142652C00653188 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B388CB142142652900653188 /* Info.plist */; };
+		B396C58D2252197200E675D8 /* LogViewerSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B396C58B2252197100E675D8 /* LogViewerSettingViewController.m */; };
+		B396C5912252371D00E675D8 /* LogViewerSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B396C58B2252197100E675D8 /* LogViewerSettingViewController.m */; };
+		B396C5922252371E00E675D8 /* LogViewerSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B396C58B2252197100E675D8 /* LogViewerSettingViewController.m */; };
+		B396C5932252371E00E675D8 /* LogViewerSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B396C58B2252197100E675D8 /* LogViewerSettingViewController.m */; };
 		B3A735912150AA52001A3953 /* TTLaunchTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A735902150AA52001A3953 /* TTLaunchTracer.m */; };
 		B3A735922150AEE2001A3953 /* TTLaunchTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = B3A735902150AA52001A3953 /* TTLaunchTracer.m */; };
 		C2036D7E1F288E5300ECFA51 /* TTQQSDKRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = C2036D7D1F288E5300ECFA51 /* TTQQSDKRegister.m */; };
@@ -8340,6 +8344,8 @@
 		B388C9E62142652800653188 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B388CB142142652900653188 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B388CB152142652900653188 /* Article-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article-Bridging-Header.h"; sourceTree = "<group>"; };
+		B396C58B2252197100E675D8 /* LogViewerSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewerSettingViewController.m; sourceTree = "<group>"; };
+		B396C58C2252197100E675D8 /* LogViewerSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewerSettingViewController.h; sourceTree = "<group>"; };
 		B3A7358F2150AA52001A3953 /* TTLaunchTracer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTLaunchTracer.h; sourceTree = "<group>"; };
 		B3A735902150AA52001A3953 /* TTLaunchTracer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTLaunchTracer.m; sourceTree = "<group>"; };
 		B588B88BFE860C0DB4D92ED9 /* Pods-NewsLite.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLite.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite.release.xcconfig"; sourceTree = "<group>"; };
@@ -9530,6 +9536,8 @@
 		038D9ADE1F41A1C900E90F73 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				B396C58C2252197100E675D8 /* LogViewerSettingViewController.h */,
+				B396C58B2252197100E675D8 /* LogViewerSettingViewController.m */,
 				6103463122433C3000DB33D0 /* FHClientABTestDebugViewController.h */,
 				6103463222433C3100DB33D0 /* FHClientABTestDebugViewController.m */,
 				038D9ADF1F41A1C900E90F73 /* SSDebugUserDefaultsViewController.h */,
@@ -18007,13 +18015,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18095,13 +18099,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18114,13 +18114,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18182,6 +18178,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/HouseFind.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
@@ -18269,6 +18266,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseFind.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
@@ -18424,6 +18422,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/HouseFind.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
@@ -18511,6 +18510,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseFind.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
@@ -18608,6 +18608,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/HouseFind.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
@@ -18694,6 +18695,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseFind.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
@@ -18891,13 +18893,9 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19091,6 +19089,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_common_ui/FHCommonUI/Assets/CommonUI.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_base/FHHouseBase/Assets/HouseBase.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_detail/FHHouseDetail/Assets/HouseDetail.xcassets",
+				"${PODS_ROOT}/../../Bundles/ios_house_find/FHHouseFind/Assets/HouseFind.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
@@ -19177,6 +19176,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/CommonUI.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseBase.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseDetail.xcassets",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseFind.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
@@ -20571,6 +20571,7 @@
 				D5041F44205802A400BAEE7F /* AKProfileHeaderBeneficialButton.m in Sources */,
 				2DB9A6001F20B01D005E4A06 /* TTAdVideoRelateTopImageView.m in Sources */,
 				ABBEA6491F33350B005DAD27 /* SSWebViewController.m in Sources */,
+				B396C58D2252197200E675D8 /* LogViewerSettingViewController.m in Sources */,
 				A97DBBDB1F1332E30002B455 /* TTStartupNotificationGroup.m in Sources */,
 				9C4136721D65C104003E29F8 /* TTArticleCellConst.m in Sources */,
 				4813D9EB198F904000AE12FD /* NewsFetchListRefreshTipManager.m in Sources */,
@@ -22009,6 +22010,7 @@
 				B373CDEA2174587A008F9905 /* SSWebViewController.m in Sources */,
 				B373CDEB2174587A008F9905 /* TTStartupNotificationGroup.m in Sources */,
 				B373CDEC2174587A008F9905 /* TTArticleCellConst.m in Sources */,
+				B396C5922252371E00E675D8 /* LogViewerSettingViewController.m in Sources */,
 				B373CDEF2174587A008F9905 /* NewsFetchListRefreshTipManager.m in Sources */,
 				B373CDF02174587A008F9905 /* NewsBaseDelegate+SDKs.m in Sources */,
 				B373CDF12174587A008F9905 /* TTVideoPasterADTracker.m in Sources */,
@@ -23429,6 +23431,7 @@
 				D47956ED21ECC94E00548965 /* SSWebViewController.m in Sources */,
 				D47956EE21ECC94E00548965 /* TTStartupNotificationGroup.m in Sources */,
 				D47956EF21ECC94E00548965 /* TTArticleCellConst.m in Sources */,
+				B396C5932252371E00E675D8 /* LogViewerSettingViewController.m in Sources */,
 				D47956F221ECC94E00548965 /* NewsFetchListRefreshTipManager.m in Sources */,
 				D47956F321ECC94E00548965 /* NewsBaseDelegate+SDKs.m in Sources */,
 				D47956F421ECC94E00548965 /* TTVideoPasterADTracker.m in Sources */,
@@ -24849,6 +24852,7 @@
 				FEFA591A205FB1A8001F50D8 /* SSWebViewController.m in Sources */,
 				FEFA591D205FB1A8001F50D8 /* TTStartupNotificationGroup.m in Sources */,
 				FEFA591F205FB1A8001F50D8 /* TTArticleCellConst.m in Sources */,
+				B396C5912252371D00E675D8 /* LogViewerSettingViewController.m in Sources */,
 				FEFA5921205FB1A8001F50D8 /* NewsFetchListRefreshTipManager.m in Sources */,
 				FEFA5923205FB1A8001F50D8 /* NewsBaseDelegate+SDKs.m in Sources */,
 				FEFA5924205FB1A8001F50D8 /* TTVideoPasterADTracker.m in Sources */,

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 //分屏情况
 typedef NS_ENUM(NSUInteger, TTSplitScreenMode) {

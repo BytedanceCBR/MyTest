@@ -22,6 +22,7 @@
     NSString *stringVersion = [FHEnvContext getToutiaoVersionCode];
     
     [IESGeckoKit registerAccessKey:kFHIESGeckoKey appVersion:stringVersion channels:@[@"fe_app_c",@"test_ios"]];
+     
     [IESGeckoKit syncResourcesIfNeeded];// 同步资源文件
 }
 

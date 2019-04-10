@@ -258,6 +258,9 @@
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
+    if (neighborhoodId.length < 1) {
+        return;
+    }
     // 周边小区
     [self requestRelatedNeighborhoodSearch:neighborhoodId];
     // 同小区房源-二手房

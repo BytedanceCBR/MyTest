@@ -35,6 +35,7 @@
     if (self) {
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
+
         self.titleName = [paramObj.userInfo.allInfo objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
         if (paramObj.allParams[@"fh_needRemoveLastVC_key"]) {
@@ -216,12 +217,15 @@
             [self.needRemovedVCNameStringArrs enumerateObjectsUsingBlock:^(NSString *  _Nonnull clsName, NSUInteger idx, BOOL * _Nonnull stop1) {
                 if (clsName.length > 0) {
                     NSArray *reversedArray = [[arrVCs reverseObjectEnumerator] allObjects];
-                    [reversedArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop2) {
-                        if ([NSStringFromClass([obj class]) isEqualToString:clsName]) {
-                            if ([arrVCs containsObject:obj]) {
-                                [arrVCs removeObject:obj];
-                                hasChanged = YES;
-                                *stop2 = YES;
+                    [reversedArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger index, BOOL * _Nonnull stop2) {
+                        if (index != 0) {
+                            
+                            if ([NSStringFromClass([obj class]) isEqualToString:clsName]) {
+                                if ([arrVCs containsObject:obj]) {
+                                    [arrVCs removeObject:obj];
+                                    hasChanged = YES;
+                                    *stop2 = YES;
+                                }
                             }
                         }
                     }];
