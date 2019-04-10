@@ -87,7 +87,7 @@
         roomType = [self.houseRoomType substringToIndex:self.houseRoomType.length - 1];
     }
     NSString *room = [NSString stringWithFormat:@"[%@,%@]",roomType,roomType];
-    NSString* conditionQueryString = [NSString stringWithFormat:@"&house_type=2&neighborhood_id=%@&room_num[]=%@",self.neighborhoodId,room];
+    NSString* conditionQueryString = [NSString stringWithFormat:@"&house_type=2&order_by[]=2&neighborhood_id=%@&room_num[]=%@",self.neighborhoodId,room];
     conditionQueryString = [conditionQueryString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     return conditionQueryString;
@@ -96,15 +96,10 @@
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
         [self.viewModel requestErshouHouseListData:NO query:self.viewModel.query offset:0 searchId:nil];
-//        [self.viewModel requestRelatedNeighborhoodSearch:self.neighborhoodId searchId:nil offset:@(0)];
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
 }
-
-//- (void)retryLoadData {
-//    [self startLoadData];
-//}
 
 #pragma mark - TTUIViewControllerTrackProtocol
 

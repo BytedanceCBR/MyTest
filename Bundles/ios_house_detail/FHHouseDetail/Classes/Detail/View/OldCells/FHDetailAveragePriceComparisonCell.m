@@ -40,6 +40,10 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"price_analysis";
+}
+
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailAveragePriceComparisonModel class]]) {
         return;
@@ -96,10 +100,6 @@
         [self setupUI];
     }
     return self;
-}
-
-- (NSString *)elementTypeString:(FHHouseType)houseType {
-    return @"trade_tips";
 }
 
 - (void)setupUI {
