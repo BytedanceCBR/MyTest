@@ -16,6 +16,8 @@
 #import "TTStringHelper.h"
 #import "TTDeviceHelper.h"
 #import "UIView+Refresh_ErrorHandler.h"
+#import <FHErrorView.h>
+#import <FHEnvContext.h>
 
 #import "NewsListLogicManager.h"
 
@@ -57,7 +59,7 @@
         _webContainer.ssWebView.opaque = NO;
         _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
         _webContainer.disableEndRefresh = YES;
-        
+        _webContainer.disableConnectCheck = YES;
         if ([TTDeviceHelper isPadDevice]) {
             TTViewWrapper *wrapperView = [[TTViewWrapper alloc] initWithFrame:self.bounds];
             [wrapperView addSubview:self.webContainer];
@@ -103,6 +105,7 @@
              if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
                  [self.delegate listViewStartLoading:self];
              }
+                                 
         }];
         
         [_webContainer setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
@@ -110,6 +113,31 @@
         
         [self registerIsVisibleJSBridgeHandler];
         
+        
+        if (![FHEnvContext isNetworkConnected]) {
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.7)];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [self addSubview:noDataErrorView];
+            
+            __weak typeof(self) weakSelf = self;
+            FHErrorView * noDataErrorViewWeak = noDataErrorView;
+            noDataErrorView.retryBlock = ^{
+                if (weakSelf.webContainer.ssWebView.request && [FHEnvContext isNetworkConnected]) {
+                    [noDataErrorViewWeak hideEmptyView];
+                    [weakSelf.webContainer.ssWebView loadRequest:weakSelf.webContainer.ssWebView.request];
+                }
+            };
+            
+            [noDataErrorView showEmptyWithTip:@"网络异常,请检查网络链接" errorImageName:@"group-4"
+                                    showRetry:YES];
+            noDataErrorView.retryButton.userInteractionEnabled = YES;
+            [noDataErrorView.retryButton setTitle:@"刷新" forState:UIControlStateNormal];
+            [noDataErrorView setBackgroundColor:self.backgroundColor];
+            [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(CGSizeMake(104, 30));
+            }];
+        }
+
     }
     return self;
 }
@@ -223,11 +251,13 @@
             }
             [_webContainer tt_startUpdate];
             [_webContainer.ssWebView loadRequest:request];
+            [ _webContainer.ssWebView ttr_fireEvent:@"update" data:nil];
         }
         self.currentRequestUrl = url;
         //记录用户下拉刷新时间
         [[NewsListLogicManager shareManager] saveHasReloadForCategoryID:self.currentCategory.categoryID];
     }
+    
     
 }
 
