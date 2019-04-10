@@ -450,13 +450,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
-        
-//
-//        [noDataErrorView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.top.left.right.equalTo(cellError.contentView);
-//            make.height.mas_equalTo([UIScreen mainScreen].bounds.size.height * 0.6);
-//        }];
-//
+
         return cellError;
     }
     
