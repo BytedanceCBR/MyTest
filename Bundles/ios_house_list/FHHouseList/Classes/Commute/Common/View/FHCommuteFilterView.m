@@ -53,7 +53,7 @@
         [_searchButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_searchButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_searchButton];
-        
+        _enableSearch = YES;
         self.backgroundColor = [UIColor whiteColor];
         
     }
@@ -62,6 +62,9 @@
 
 -(void)searchAction:(id)sender
 {
+    if (!self.enableSearch) {
+        return;
+    }
     if (_chooseBlock) {
         _chooseBlock(self.time,self.type);
     }
@@ -86,6 +89,12 @@
 {
     return _timeChooseView.chooseTime;
     
+}
+
+-(void)setEnableSearch:(BOOL)enableSearch
+{
+    _enableSearch = enableSearch;
+    _searchButton.backgroundColor = enableSearch?[UIColor themeRed1]:RGBA(0xff, 0x58, 0x69,0.3);
 }
 
 

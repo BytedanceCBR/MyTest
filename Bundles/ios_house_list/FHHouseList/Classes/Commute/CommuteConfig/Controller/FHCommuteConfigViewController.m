@@ -91,6 +91,7 @@
     
     _inputBgShadowView = [[UIView alloc]init];
     _inputBgShadowView.layer.cornerRadius = 4;
+    _inputBgShadowView.backgroundColor = [UIColor whiteColor];
     
     CALayer *slayer = _inputBgShadowView.layer;
     slayer.frame = clayer.frame;
@@ -151,7 +152,7 @@
     _filterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200) insets:insets type:FHCommuteTypeDrive];
     __weak typeof(self) wself = self;
     _filterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
-        if (wself.inputLabel.text.length == 0) {
+        if (!wself.choosePOI && !wself.chooseRegeoCode) {
             SHOW_TOAST(@"请选择目的地");
             return ;
         }
@@ -168,6 +169,8 @@
     NSString *destLocation = manager.destLocation;
     if (destLocation.length > 0) {
         _inputLabel.text = destLocation;
+    }else{
+        _filterView.enableSearch = NO;
     }
     [_filterView updateType:manager.commuteType time:manager.duration];
     
@@ -241,6 +244,7 @@
     self.inputLabel.textColor = [UIColor themeGray1];
     [viewController.navigationController popViewControllerAnimated:YES];
     self.choosePOI = poi;
+    _filterView.enableSearch = YES;
 }
 
 -(void)userChooseLocation:( CLLocation * )location geoCode:(AMapLocationReGeocode *)geoCode inViewController:(UIViewController *)viewController
@@ -250,7 +254,7 @@
     [viewController.navigationController popViewControllerAnimated:YES];
     self.chooseRegeoCode = geoCode;
     self.chooseLocation = location;
-    
+    _filterView.enableSearch = YES;
 }
 
 -(void)userCanced:(FHCommutePOISearchViewController *)viewController

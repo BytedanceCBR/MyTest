@@ -81,8 +81,6 @@
         if ([FHEnvContext isSameLocCityToUserSelect]) {
             //定位地和选择地是同一城市才选择
             _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
-            _currentReGeocode = nil;
-
             if (_currentReGeocode) {
                 self.locationHeaderView.location = _currentReGeocode.AOIName;
                 tableView.tableHeaderView = _locationHeaderView;
