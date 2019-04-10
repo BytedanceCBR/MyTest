@@ -13,7 +13,7 @@
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 35;
-static const float kSegementedPadingTop = 10;
+static const float kSegementedPadingTop = 6;
 
 @interface FHHomeSectionHeader ()
 @property (nonatomic, strong) UILabel * categoryLabel;
@@ -34,7 +34,7 @@ static const float kSegementedPadingTop = 10;
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 20, 100, 20);
+        self.categoryLabel.frame = CGRectMake(20, 17, 100, 20);
         [self setUpSegmentedControl];
     }
     return self;

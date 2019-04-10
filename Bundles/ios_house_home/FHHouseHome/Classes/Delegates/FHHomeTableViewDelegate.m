@@ -62,9 +62,6 @@
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    JSONModel *model = [_modelsArray objectAtIndex:indexPath.row];
-    [FHHomeCellHelper handleCellShowLogWithModel:model];
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

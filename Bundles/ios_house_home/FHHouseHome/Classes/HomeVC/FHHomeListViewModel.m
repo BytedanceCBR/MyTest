@@ -131,6 +131,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         //       __block NSString *previousCityId = configDataModel.currentCityId;
         //订阅config变化发送网络请求
         __block BOOL isShowLocalTest = NO;
+        [FHHomeCellHelper sharedInstance].isFirstLanuch = YES;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             // 标记config数据刷新了
@@ -143,6 +144,11 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //更新切换
             [self updateCategoryViewSegmented:self.isFirstChange];
             
+            //清空首页show埋点
+            if(!self.isFirstChange && [FHEnvContext sharedInstance].isRefreshFromCitySwitch)
+            {
+                [[FHHomeCellHelper sharedInstance] clearShowCache];
+            }
             
             if ([FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
                 
@@ -164,7 +170,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
-                
+                [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
+
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
                     [self.tableViewV reloadData];
@@ -199,6 +206,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             //请求推荐房源
             [self requestOriginData:self.isFirstChange];
+            
+
             
         }];
         

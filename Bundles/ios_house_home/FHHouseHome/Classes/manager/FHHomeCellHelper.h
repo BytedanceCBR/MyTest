@@ -27,6 +27,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 
 @property(nonatomic , assign) FHHomeHeaderCellPositionType headerType;
 @property (nonatomic, assign)   BOOL       isConfigDataUpate;// config数据是否刷新了
+@property (nonatomic, assign)   BOOL       isFirstLanuch;// 是否是第一次
 @property (nonatomic, weak)     FHHomeScrollBannerCell       *fhLastHomeScrollBannerCell;
 
  + (instancetype)sharedInstance;
@@ -81,6 +82,11 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
  * 处理cell展示的埋点
  */
 + (void)handleCellShowLogWithModel:(JSONModel *)model;
+
+/**
+ * 清空showcache
+ */
+- (void)clearShowCache;
 
 @end 
 

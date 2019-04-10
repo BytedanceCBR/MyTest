@@ -38,6 +38,7 @@ static NSMutableArray  * _Nullable identifierArr;
 
 @property(nonatomic , strong) FHConfigDataModel *previousDataModel;
 @property(nonatomic , assign) CGFloat headerHeight;
+@property(nonatomic , strong) NSMutableDictionary *traceShowCache;
 
 @end
 
@@ -51,6 +52,7 @@ static NSMutableArray  * _Nullable identifierArr;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
         manager.isConfigDataUpate = YES;
+        manager.traceShowCache = [NSMutableDictionary new];
     });
     return manager;
 }
@@ -167,8 +169,11 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]] && ![modelsArray isEqualToArray:((FHHomeTableViewDelegate *)tableView.delegate).modelsArray]) {
         ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
         [tableView reloadData];
-        
+    }
+    
+    if (![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && [FHHomeConfigManager sharedInstance].currentDataModel && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
+        [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
 }
 
@@ -176,6 +181,7 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     
     FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
     
     if (modelOpdata2.items > 0)
     {
@@ -194,13 +200,20 @@ static NSMutableArray  * _Nullable identifierArr;
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
-            
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
     
-    [identifierArr removeAllObjects];
+    if(cityStatsModel)
+    {
+        [self addHomeCityMarketShowLog];
+    }
     
+}
+
+- (void)clearShowCache
+{
+    [self.traceShowCache removeAllObjects];
 }
 
 - (CGFloat)heightForFHHomeHeaderCellViewType
@@ -245,7 +258,8 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 opData2CountValue = 4;
             }
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+    
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (18 + (opData2CountValue > 2 ? 0 : 4) + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
         
         if (dataModel.mainPageBannerOpData.items.count > 0) {
@@ -475,34 +489,25 @@ static NSMutableArray  * _Nullable identifierArr;
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            if (index%kFHHomeBannerRowCount == 0) {
-                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+            [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+                if (index%kFHHomeBannerRowCount == 0) {
                     make.right.mas_equalTo(-6.5);
-                    if (index/kFHHomeBannerRowCount == 0) {
-                        make.top.mas_equalTo(12);
-                        make.bottom.mas_equalTo(-2);
-                    }else
-                    {
-                        make.top.mas_equalTo(6);
-                        make.bottom.mas_equalTo(-8);
-                    }
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
-                }];
-            }else if (index%kFHHomeBannerRowCount == 1)
-            {
-                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+                }else
+                {
                     make.left.mas_equalTo(6.5);
-                    if (index/kFHHomeBannerRowCount == 0) {
-                        make.top.mas_equalTo(12);
-                        make.bottom.mas_equalTo(-2);
-                    }else
-                    {
-                        make.top.mas_equalTo(6);
-                        make.bottom.mas_equalTo(-8);
-                    }
                     make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
-                }];
-            }
+                }
+                
+                if (index/kFHHomeBannerRowCount == 0) {
+                    make.top.mas_equalTo(12);
+                    make.bottom.mas_equalTo(-2);
+                }else
+                {
+                    make.top.mas_equalTo(8);
+                    make.bottom.mas_equalTo(-6);
+                }
+            }];
         }
 
         BOOL isFindHouse = YES;
