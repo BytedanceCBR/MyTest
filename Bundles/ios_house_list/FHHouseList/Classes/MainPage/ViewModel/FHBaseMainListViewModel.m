@@ -885,7 +885,7 @@
     
     NSMutableDictionary *param = [[self baseLogParam]mutableCopy];
     param[UT_ENTER_TYPE] = @"click";
-    param[UT_ENTER_FROM] = @"commuter_detail";
+    param[UT_ENTER_FROM] = popController? @"commuter_detail" :@"rent_list";
     param[UT_ELEMENT_FROM] = UT_BE_NULL;
     param[UT_SEARCH_ID] = self.searchId;
     

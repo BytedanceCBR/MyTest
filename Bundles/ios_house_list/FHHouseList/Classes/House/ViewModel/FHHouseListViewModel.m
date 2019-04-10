@@ -265,6 +265,9 @@
                 dic[@"query_type"] = @"filter";
                 self.houseSearchDic = dic;
             }
+        }else if (self.isCommute && self.houseSearchDic.count <= 0){
+             NSString *searchKey = [FHCommuteManager sharedInstance].destLocation;
+            self.houseSearchDic = @{@"query_type":@"mutiple",@"search_query":searchKey?:UT_BE_NULL,UT_PAGE_TYPE:[self pageTypeString]};
         }
         self.tableView.mj_footer.hidden = YES;
         [self.houseShowCache removeAllObjects];
@@ -918,6 +921,8 @@
     manager.destLocation = poi.name;
     [manager sync];
     
+    self.houseSearchDic = @{@"query_type":@"mutiple",@"search_query":poi.name?:UT_BE_NULL,UT_PAGE_TYPE:[self pageTypeString]};
+    
     if (self.commuteSugSelectBlock) {
         self.commuteSugSelectBlock(poi.name);
         self.commutePoi = poi.name;
@@ -935,6 +940,7 @@
     manager.longitude = location.coordinate.longitude;
     manager.destLocation = geoCode.AOIName;
     [manager sync];
+    self.houseSearchDic = @{@"query_type":@"mutiple",@"search_query":geoCode.AOIName?:UT_BE_NULL,UT_PAGE_TYPE:[self pageTypeString]};
     
     if (self.commuteSugSelectBlock) {
         self.commuteSugSelectBlock(geoCode.AOIName);
