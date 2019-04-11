@@ -97,12 +97,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *plotRatio;
 @end
 
+@interface FHDetailOldDataNeighborhoodPriceRangeModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *maxPricePsm;
+@property (nonatomic, copy , nullable) NSString *curPricePsm;
+@property (nonatomic, copy , nullable) NSString *unit;
+@property (nonatomic, copy , nullable) NSString *minPricePsm;
+@end
+
 @interface FHDetailOldDataHousePriceRangeModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *curPrice;
 @property (nonatomic, copy , nullable) NSString *priceMax;
 @property (nonatomic, copy , nullable) NSString *priceMin;
-@property (nonatomic, copy , nullable) NSString *unit;
 @end
 
 @interface FHDetailOldDataHousePricingRankBuySuggestionModel : JSONModel
@@ -210,7 +217,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataListEntranceItemModel> *listEntrance;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborEvalModel *neighborEval ;
 @property (nonatomic, strong , nullable) FHDetailOldDataPriceAnalyzeModel *priceAnalyze ;
-@property (nonatomic, strong , nullable) FHDetailOldDataComfortInfoModel *comfortInfo ;  
+@property (nonatomic, strong , nullable) FHDetailOldDataComfortInfoModel *comfortInfo ;
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodPriceRangeModel *neighborhoodPriceRange ;
 
 @end
 

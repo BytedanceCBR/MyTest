@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;
 @property (nonatomic, copy , nullable) NSString *neighborhoodName;
 @property (nonatomic, strong , nullable) FHDetailOldDataPriceAnalyzeModel *analyzeModel;
-@property (nonatomic, strong , nullable) FHDetailOldDataHousePriceRangeModel *rangeModel;
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodPriceRangeModel *rangeModel;
 
 @end
 

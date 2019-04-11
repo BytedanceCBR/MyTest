@@ -12,9 +12,11 @@
 #import <PNChart.h>
 #import "FHDetailPriceMarkerView.h"
 #import "UIView+House.h"
+#import "FHDetailHeaderView.h"
 
 @interface FHDetailErshouPriceChartCell () <PNChartDelegate>
 
+@property(nonatomic , strong) FHDetailHeaderView *headerView;
 @property(nonatomic , strong) UIImageView *bgView;
 @property(nonatomic , strong) UIView *line;
 @property(nonatomic , strong) UILabel *priceUpValueLabel;
@@ -221,11 +223,19 @@
 }
 
 - (void)setupUI {
+
+    _headerView = [[FHDetailHeaderView alloc] init];
+    _headerView.label.text = @"价格分析";
+    [self.contentView addSubview:_headerView];
+    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(46);
+    }];
     
     [self.contentView addSubview:self.priceView];
     [self.priceView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.contentView);
-        make.top.mas_equalTo(0);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(20);
         make.height.mas_equalTo(138);
     }];
     [self.priceView addSubview:self.bgView];
@@ -299,7 +309,7 @@
     [self.bottomBgView addSubview:self.chartBgView];
     [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(138);
+        make.top.mas_equalTo(self.priceView.mas_bottom);
         make.height.mas_equalTo(58);
         make.bottom.mas_equalTo(0);
     }];

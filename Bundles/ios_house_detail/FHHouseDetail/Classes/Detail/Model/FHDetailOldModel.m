@@ -153,6 +153,24 @@
 }
 @end
 
+@implementation FHDetailOldDataNeighborhoodPriceRangeModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"maxPricePsm": @"max_price_psm",
+                           @"curPricePsm": @"cur_price_psm",
+                           @"minPricePsm": @"min_price_psm",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailOldDataHousePriceRangeModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -219,7 +237,9 @@
                            @"listEntrance": @"list_entrance",
                            @"neighborEval": @"neighbor_eval",
                            @"priceAnalyze": @"price_analyze",
-                           
+                           @"neighborhoodPriceRange": @"neighborhood_price_range",
+                           @"comfortInfo": @"comfort_info",
+            
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

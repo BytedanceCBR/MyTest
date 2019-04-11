@@ -379,13 +379,21 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     // 小区评测
     if (model.data.neighborhoodInfo.evaluationInfo) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
-        infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
-        infoModel.log_pb = model.data.neighborhoodInfo.logPb;
-        [self.items addObject:infoModel];
+        
+        NSString *title = model.data.neighborhoodInfo.evaluationInfo.title;
+        if(title && ![title isEqualToString:@""]){
+            //abtest实验组
+            
+        }else{
+            //abtest对照组
+            // 添加分割线--当存在某个数据的时候在顶部添加分割线
+            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+            [self.items addObject:grayLine];
+            FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+            infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
+            infoModel.log_pb = model.data.neighborhoodInfo.logPb;
+            [self.items addObject:infoModel];
+        }
     }
     // 地图
     if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
@@ -398,18 +406,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:infoModel];
     }
 
-    if (model.data.housePricingRank.analyseDetail.length > 0) {
-        
-        // 价格分析
-        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
-        titleModel.title = @"价格分析";
-        [self.items addObject:titleModel];
-        if (model.data.housePricingRank.analyseDetail.length > 0) {
-            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
-            priceRankModel.priceRank = model.data.housePricingRank;
-            [self.items addObject:priceRankModel];
-        }
-    }
+//    if (model.data.housePricingRank.analyseDetail.length > 0) {
+//        
+//        // 价格分析
+//        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
+//        titleModel.title = @"价格分析";
+//        [self.items addObject:titleModel];
+//        if (model.data.housePricingRank.analyseDetail.length > 0) {
+//            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
+//            priceRankModel.priceRank = model.data.housePricingRank;
+//            [self.items addObject:priceRankModel];
+//        }
+//    }
     // 均价走势
     FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
     priceTrendModel.priceTrends = model.data.priceTrend;
@@ -425,7 +433,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.neighborhoodId = model.data.neighborhoodInfo.id;
         infoModel.neighborhoodName = model.data.neighborhoodInfo.name;
         infoModel.analyzeModel = model.data.priceAnalyze;
-        infoModel.rangeModel = model.data.housePriceRange;
+        infoModel.rangeModel = model.data.neighborhoodPriceRange;
         [self.items addObject:infoModel];
     }
     

@@ -53,9 +53,9 @@
     
     FHDetailAveragePriceComparisonModel *model = (FHDetailAveragePriceComparisonModel *)data;
     
-    NSString *curPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.curPrice floatValue]/100];
-    NSString *minPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.priceMin floatValue]/100];
-    NSString *maxPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.priceMax floatValue]/100];
+    NSString *curPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.curPricePsm floatValue]];
+    NSString *minPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.minPricePsm floatValue]];
+    NSString *maxPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.maxPricePsm floatValue]];
     NSString *unit = model.rangeModel.unit;
     NSString *houseType = model.analyzeModel.houseType;
     
