@@ -612,9 +612,12 @@
                 if (did.length == 0) {
                     did = @"null";
                 }
+                NSString *currentBundleStr = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+                // 房源类型-did-channel-版本号
+                NSString *info_detail = [NSString stringWithFormat:@"%@-%@-%@-%@",res,did,[[TTInstallIDManager sharedInstance] channel],currentBundleStr];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
                                                         metric:nil
-                                                      category:@{@"status":@(0),@"house_type":res}
+                                                      category:@{@"status":@(0),@"house_type":res,@"info_detail":info_detail}
                                                          extra:@{@"device_id":did}];
             }
         }
