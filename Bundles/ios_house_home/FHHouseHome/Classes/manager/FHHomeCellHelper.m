@@ -163,7 +163,6 @@ static NSMutableArray  * _Nullable identifierArr;
                 [modelsArray addObject:dataModel.opData2];
             }
         }
-
     }
     
     if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]] && ![modelsArray isEqualToArray:((FHHomeTableViewDelegate *)tableView.delegate).modelsArray]) {
@@ -171,7 +170,7 @@ static NSMutableArray  * _Nullable identifierArr;
         [tableView reloadData];
     }
     
-    if (dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && [FHHomeConfigManager sharedInstance].currentDataModel && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
+    if ([FHHomeConfigManager sharedInstance].currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }

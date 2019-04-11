@@ -53,7 +53,7 @@
     //
     FHDetailNeighborhoodNameModel *model = (FHDetailNeighborhoodNameModel *)data;
     if (model) {
-        self.nameLabel.text  = model.name;
+        self.nameLabel.text  = model.neighborhoodInfo.name;
         self.subNameLabel.text = model.neighborhoodInfo.address;
         self.priceLabel.text = model.neighborhoodInfo.pricingPerSqm;
         if (model.neighborhoodInfo.monthUp.length > 0) {

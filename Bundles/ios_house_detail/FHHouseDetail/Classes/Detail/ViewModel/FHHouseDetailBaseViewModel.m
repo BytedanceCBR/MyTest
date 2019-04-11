@@ -319,6 +319,7 @@
     NSMutableDictionary *attr = @{}.mutableCopy;
     NSInteger status = 0;
     if ([self isMissTitle]) {
+        attr[@"title"] = @(1);
         attr[@"house_id"] = self.houseId;
         status |= FHDetailCoreInfoErrorTypeTitle;
     }
