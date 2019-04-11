@@ -89,7 +89,19 @@
     }];
 }
 
--(void) updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice
+-(void)updateWithLowerPlaceholder:(NSString *)lowPrice higherPlaceholder:(NSString *)highPrice
+{
+    self.lowerTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:lowPrice
+                                                                                      attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],
+                                                                                                   NSForegroundColorAttributeName:[UIColor themeGray4]
+                                                                                                   }];
+    self.higherTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:highPrice
+                                                                                attributes:@{NSFontAttributeName:[UIFont themeFontRegular:14],
+                                                                                             NSForegroundColorAttributeName:[UIColor themeGray4]
+                                                                                             }];
+}
+
+-(void)updateWithLowerPrice:(NSString *)lowPrice higherPrice:(NSString *)highPrice
 {
 
     if (!(lowPrice && highPrice)) {
@@ -132,7 +144,7 @@
             number = textField.text;//@(textField.text integerValue]);
         }
         
-        if (textField == self.lowerTextField) {            
+        if (textField == self.lowerTextField) {
             [self.delegate updateLowerPrice:number inCell:self];
         }
         if (textField == self.higherTextField) {

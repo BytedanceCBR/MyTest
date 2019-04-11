@@ -17,6 +17,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailPriceMarkerView : UIView
 
+@property(nonatomic , strong) UILabel *titleLabel;
+@property(nonatomic , strong) UILabel *firstLabel;
+@property(nonatomic , strong) UILabel *secondLabel;
+@property(nonatomic , strong) UILabel *thirdLabel;
+
+@property(nonatomic, assign) NSInteger selectIndex;
 @property(nonatomic, copy, nullable) FHDetailPriceMarkerData *markData;
 
 - (void)refreshContent:(FHDetailPriceMarkerData *)markData;

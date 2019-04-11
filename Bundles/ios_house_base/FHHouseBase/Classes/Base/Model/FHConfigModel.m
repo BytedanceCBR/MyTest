@@ -22,6 +22,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
                            @"mapOpenUrl": @"map_open_url",
                            @"cityDetailDesc": @"city_detail_desc",
                            @"pricingPerSqm": @"pricing_per_sqm",
@@ -35,6 +36,7 @@
                            @"addedNumToday": @"added_num_today",
                            @"monthUp": @"month_up",
                            @"pricingPerSqmUnit": @"pricing_per_sqm_unit",
+                           @"logPb": @"log_pb",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -128,6 +130,22 @@
 
 @end
 
+@implementation FHConfigDataEntranceSwitchModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"isPriceValuationShowHouseTrend": @"is_price_valuation_show_house_trend",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 
 @implementation  FHConfigDataModel
 
@@ -138,6 +156,7 @@
                            @"opData2": @"op_data_2",
                            @"opData": @"op_data",
                            @"rentOpData": @"rent_op_data",
+                           @"mainPageBannerOpData": @"main_page_banner",
                            @"houseOpData": @"house_op_data",
                            @"entryInfo": @"entry_info",
                            @"currentCityId": @"current_city_id",
@@ -164,6 +183,7 @@
                            @"diffCode": @"diff_code",
                            @"saleHistoryFilter": @"sale_history_filter",
                            @"rentBanner": @"rent_banner",
+                           @"entranceSwitch": @"entrance_switch",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -199,6 +219,25 @@
 
 
 @implementation  FHConfigDataRentOpDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"opStyle": @"op_style",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHConfigDataMainPageBannerOpDataModel
 
 + (JSONKeyMapper*)keyMapper
 {

@@ -96,6 +96,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 //通勤找房
 +(TTHttpTask *)requestCommute:(NSInteger)cityId query:(NSString *_Nullable)query location:(CLLocationCoordinate2D)location houseType:(FHHouseType)houseType duration:(CGFloat)duration type:(FHCommuteType)type param:(NSDictionary *_Nonnull)param offset:(NSInteger)offset completion:(void(^_Nullable)(FHHouseRentModel* _Nullable model , NSError * _Nullable error))completion;
+
+//仅仅给小区使用的sug建议
++ (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

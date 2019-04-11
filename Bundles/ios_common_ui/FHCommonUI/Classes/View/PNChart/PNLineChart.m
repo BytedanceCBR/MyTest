@@ -31,8 +31,8 @@
 @property(nonatomic, assign) CGFloat yAxisLeftOffset;
 @property(nonatomic, assign) CGFloat yAxisRightOffset;
 
-@property(nonatomic, assign) CGPoint selectPoint;
-@property(nonatomic, assign) BOOL hideMarker;
+@property (nonatomic, assign) BOOL hideMarker;
+@property (nonatomic, assign) CGPoint selectPoint;
 
 @end
 
@@ -257,15 +257,17 @@
     [self touchKeyPoint:touches withEvent:event];
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self touchKeyPoint:touches withEvent:event];
-}
+//去掉这个事件，解决长按时候导致弹窗一直打开和关闭的问题
+//- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [self touchKeyPoint:touches withEvent:event];
+//}
 
 
 - (void)touchKeyPoint:(NSSet *)touches withEvent:(UIEvent *)event {
     // Get the point user touched
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
+    
     if (_pathPoints.count < 1) {
         return;
     }
@@ -313,7 +315,11 @@
             [selectPointsArray addObject:linePointsArray[selectIndex]];
             
             PNLineChartData *chartData = self.chartData[p];
-            icon.image = [UIImage imageNamed:chartData.highlightedImg];
+            if (chartData.highlightedImage != nil) {
+                icon.image = chartData.highlightedImage;
+            } else {
+                icon.image = [UIImage imageNamed:chartData.highlightedImg];
+            }
             icon.tag = 1000 + p;
             [icon sizeToFit];
             
@@ -352,7 +358,22 @@
     }
     self.selectPoint = CGPointMake(lineX, minY);
     [self setNeedsDisplay];
-    [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
+    if ([_delegate respondsToSelector:@selector(userClickedOnKeyPoint:lineIndex:pointIndex:selectPoint:)]) {
+        [_delegate userClickedOnKeyPoint:touchPoint lineIndex:selectLine pointIndex:selectIndex selectPoint:CGPointMake(lineX, minY)];
+    }
+}
+
+- (void)clearPathIcon {
+    for (NSUInteger p = 0; p < _pathPoints.count; p++) {
+        UIImageView *icon = [self viewWithTag:1000 + p];
+        icon.hidden = YES;
+    }
+}
+
+- (void)resetChart {
+    self.hideMarker = YES;
+    self.selectPoint = CGPointZero;
+    [self clearPathIcon];
 }
 
 #pragma mark - Draw Chart
@@ -397,7 +418,7 @@
     // set the chart will be misplaced
     [self resetCavanHeight];
     [self prepareYLabelsWithData:_chartData];
-
+    [_pathPoints removeAllObjects];
     _chartPath = [[NSMutableArray alloc] init];
     _pointPath = [[NSMutableArray alloc] init];
     _gradeStringPaths = [NSMutableArray array];
@@ -427,20 +448,20 @@
 
         pointLayer.path = pointPath.CGPath;
 
-        [CATransaction begin];
+//        [CATransaction begin];
         for (NSUInteger index = 0; index < progressLines.count; index++) {
             CAShapeLayer *chartLine = chartLines[index];
             //chartLine strokeColor is already set. no need to override here
-            [chartLine addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
+//            [chartLine addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
             chartLine.strokeEnd = 1.0;
         }
 
         // if you want cancel the point animation, comment this code, the point will show immediately
-        if (chartData.inflexionPointStyle != PNLineChartPointStyleNone) {
-            [pointLayer addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
-        }
+//        if (chartData.inflexionPointStyle != PNLineChartPointStyleNone) {
+//            [pointLayer addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
+//        }
 
-        [CATransaction commit];
+//        [CATransaction commit];
 
         NSMutableArray *textLayerArray = self.gradeStringPaths[lineIndex];
         for (CATextLayer *textLayer in textLayerArray) {
@@ -503,7 +524,9 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 
             NSValue *from = nil;
             NSValue *to = nil;
-
+            if (chartData.getData(i).isEmpty) {
+                continue;
+            }
             yValue = chartData.getData(i).y;
 
             CGFloat x = (i * _xLabelWidth + _chartMarginLeft + _yAxisOffset + _yAxisLeftOffset);
@@ -1070,6 +1093,8 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 
     // do not create curved line chart by default
     _showSmoothLines = NO;
+    //默认设为YES，否则最左侧会有一条虚线显示出来
+    _hideMarker = YES;
 
 }
 
@@ -1381,7 +1406,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 - (CABasicAnimation *)pathAnimation {
     if (self.displayAnimated && !_pathAnimation) {
         _pathAnimation = [CABasicAnimation animationWithKeyPath:@"strokeEnd"];
-        _pathAnimation.duration = 1.0;
+        _pathAnimation.duration = 0.0;
         _pathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         _pathAnimation.fromValue = @0.0f;
         _pathAnimation.toValue = @1.0f;

@@ -12,6 +12,7 @@
 #import "UIViewController+TTMovieUtil.h"
 #import "UIViewController+Tree.h"
 #import "FHEnvContext.h"
+#import <TTArticleCategoryManager.h>
 
 @interface FHHomePageRoute() <TTRouteInitializeProtocol>
 
@@ -34,6 +35,7 @@
         
         [[FHHomeConfigManager sharedInstance] openCategoryFeedStart];
         
+        [TTArticleCategoryManager sharedManager].completionRequest = nil;
     }
     return self;
 }

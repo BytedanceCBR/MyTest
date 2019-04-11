@@ -169,43 +169,58 @@
     }
 }
 
-- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle
+- (void)refreshBottomBar:(FHDetailContactModel *)contactPhone contactTitle:(NSString *)contactTitle chatTitle:(NSString *)chatTitle
 {
     [self.contactBtn setTitle:contactTitle forState:UIControlStateNormal];
     [self.contactBtn setTitle:contactTitle forState:UIControlStateHighlighted];
+    
+    [self.imChatBtn setTitle:chatTitle forState:UIControlStateNormal];
+    [self.imChatBtn setTitle:chatTitle forState:UIControlStateHighlighted];
 
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     self.imChatBtn.hidden = !isEmptyString(contactPhone.imOpenUrl) ? NO : YES;
     
-    CGFloat offset = 228;
-    if ([TTDeviceHelper is568Screen]) {
-        offset = 178;
-    }
-    
-    CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? [UIScreen mainScreen].bounds.size.width - offset : 0;
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
+    NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
         if (contactPhone.realtorName.length > 4) {
-            NSString *realtorName = [NSString stringWithFormat:@"%@...",[contactPhone.realtorName substringToIndex:4]];
+            realtorName = [NSString stringWithFormat:@"%@...",[contactPhone.realtorName substringToIndex:4]];
             self.nameLabel.text = realtorName;
         }else {
-            self.nameLabel.text = contactPhone.realtorName;
+            self.nameLabel.text = realtorName;
         }
     }else {
         self.nameLabel.text = @"经纪人";
     }
+    CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width;
+    NSMutableArray *licenseViews = @[].mutableCopy;
+    if (contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0) {
+        [self displayLicense:YES];
+        nameLabelwidth += 24;
+    }else {
+        [self displayLicense:NO];
+    }
+    
     if (contactPhone.agencyName.length > 0) {
         self.agencyLabel.text = contactPhone.agencyName;
         self.agencyLabel.hidden = NO;
     }else {
         self.agencyLabel.hidden = YES;
     }
-    NSMutableArray *licenseViews = @[].mutableCopy;
-    if (contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0) {
-        [self displayLicense:YES];
-    }else {
-        [self displayLicense:NO];
+    CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 300;
+    CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width;
+    CGFloat realtorContentWidth = 0;
+    if ([TTDeviceHelper is568Screen]) {
+        realtorContentWidth = [UIScreen mainScreen].bounds.size.width - 178;
+    } else {
+        CGFloat labelWidth = MAX(nameLabelwidth, agencyLabelWidth);
+        CGFloat avatarWidth = 42;
+        CGFloat avatarLeftMargin = 20;
+        CGFloat avatarLabelMargin = 10;
+        realtorContentWidth = labelWidth + avatarWidth + avatarLabelMargin + avatarLeftMargin;
     }
+    
+    CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? realtorContentWidth : 0;
     [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(leftWidth);
     }];
@@ -216,7 +231,7 @@
             if ([TTDeviceHelper is568Screen]) {
                 _imBtnWidth = 74;
             } else {
-                _imBtnWidth = 94;
+                _imBtnWidth = ([UIScreen mainScreen].bounds.size.width - leftWidth - leftMargin - 30) / 2;
             }
             [self.imChatBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(_imBtnWidth);
@@ -288,7 +303,7 @@
     if (!_agencyLabel) {
         _agencyLabel = [[UILabel alloc]init];
         _agencyLabel.font = [UIFont themeFontRegular:12];
-        _agencyLabel.textColor = [UIColor themeGray1];
+        _agencyLabel.textColor = [UIColor themeGray3];
     }
     return _agencyLabel;
 }
