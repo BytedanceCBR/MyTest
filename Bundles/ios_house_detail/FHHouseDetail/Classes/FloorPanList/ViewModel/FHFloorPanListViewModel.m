@@ -176,6 +176,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     if (_currentItems.count == 0) {
         [[ToastManager manager] showToast:@"暂无相关房型~"];
     }
+    _floorListTable.contentOffset = CGPointMake(0, 0);
     [_floorListTable reloadData];
 }
 
