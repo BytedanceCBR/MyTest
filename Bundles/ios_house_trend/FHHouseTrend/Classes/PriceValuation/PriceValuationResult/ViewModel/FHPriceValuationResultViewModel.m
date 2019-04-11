@@ -181,6 +181,7 @@ extern NSString *const kFHToastCountKey;
     NSString *buildYear = self.viewController.infoModel.builtYear;
     if([buildYear isEqualToString:@"0"]){
         buildYear = @"";
+        self.viewController.infoModel.builtYear = buildYear;
     }
     
     if((!buildYear || [buildYear isEqualToString:@""]) && _neighborhoodDetailModel){
