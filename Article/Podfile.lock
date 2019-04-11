@@ -575,7 +575,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.1.4)
   - IGListKit
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9c5ef3144d54acc6f0203df98cb38bf5f38f075d`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `e51ab1182a51823c41b69bf4ac7399529aaad508`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `715cf800433c8f936238e41713743730b9dbafe9`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -786,7 +786,7 @@ EXTERNAL SOURCES:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: e51ab1182a51823c41b69bf4ac7399529aaad508
+    :commit: 715cf800433c8f936238e41713743730b9dbafe9
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -843,7 +843,7 @@ CHECKOUT OPTIONS:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: e51ab1182a51823c41b69bf4ac7399529aaad508
+    :commit: 715cf800433c8f936238e41713743730b9dbafe9
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
@@ -907,7 +907,7 @@ SPEC CHECKSUMS:
   IESWebKit: e13a10709fb324b827ecf099f650064cc7cdc4b9
   IGListKit: 684b7cbb1b0192538d29483080e2280b037882dc
   ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
-  ios_house_im: 747afa2b18c70371e8d937c8ea6eef927261d2bf
+  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
   JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1011,6 +1011,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: f95730ee7f167a69db0b42df33c6adf26e6c93f8
+PODFILE CHECKSUM: 700355cbdfdf9d93dc309071bcf1997428dabe9a
 
 COCOAPODS: 1.4.0
