@@ -19,6 +19,7 @@
 @interface FHPriceValuationResultView()<PNChartDelegate>
 
 @property(nonatomic, assign) CGFloat naviBarHeight;
+@property(nonatomic, strong) UIImageView *beforeHeaderView;
 @property(nonatomic, strong) UIImageView *headerImageView;
 @property(nonatomic, strong) UIView *cardView;
 @property(nonatomic, strong) UIButton *titleBtn;
@@ -77,10 +78,16 @@
     }
     [self addSubview:_scrollView];
     
+    UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image"];
     self.headerImageView = [[UIImageView alloc] init];
-    _headerImageView.image = [UIImage imageNamed:@"price_valuation_result_header_image"];
+    _headerImageView.image = headerImage;
     _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.scrollView addSubview:_headerImageView];
+    
+    self.beforeHeaderView = [[UIImageView alloc] init];
+    _beforeHeaderView.image = [self ct_imageFromImage:headerImage inRect:CGRectMake(0,0, headerImage.size.width, 1)];
+//    _beforeHeaderView.contentMode = UIViewContentModeScaleAspectFill;
+    [self.scrollView addSubview:_beforeHeaderView];
     
     self.evaluateView = [[UIView alloc] init];
     _evaluateView.backgroundColor = [UIColor whiteColor];
@@ -204,11 +211,25 @@
 }
 
 - (void)initConstraints {
+//    [self.headerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.scrollView).offset(self.naviBarHeight - 64 - 224);
+//        make.left.mas_equalTo(self.scrollView);
+//        make.right.mas_equalTo(self);
+//        make.height.mas_equalTo(448);
+//    }];
+    
     [self.headerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.scrollView).offset(self.naviBarHeight - 64 - 224);
+        make.top.mas_equalTo(self.scrollView);
         make.left.mas_equalTo(self.scrollView);
         make.right.mas_equalTo(self);
-        make.height.mas_equalTo(448);
+        make.height.mas_equalTo(224);
+    }];
+    
+    [self.beforeHeaderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.headerImageView.mas_top);
+        make.left.mas_equalTo(self.scrollView);
+        make.right.mas_equalTo(self);
+        make.height.mas_equalTo(500);
     }];
     
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -675,6 +696,20 @@
             return @"detail_circle_gray";
             break;
     }
+}
+
+- (UIImage *)ct_imageFromImage:(UIImage *)image inRect:(CGRect)rect{
+    
+    //把像 素rect 转化为 点rect（如无转化则按原图像素取部分图片）
+    CGFloat scale = [UIScreen mainScreen].scale;
+    CGFloat x= rect.origin.x*scale,y=rect.origin.y*scale,w=rect.size.width*scale,h=rect.size.height*scale;
+    CGRect dianRect = CGRectMake(x, y, w, h);
+    
+    //截取部分图片并生成新图片
+    CGImageRef sourceImageRef = [image CGImage];
+    CGImageRef newImageRef = CGImageCreateWithImageInRect(sourceImageRef, dianRect);
+    UIImage *newImage = [UIImage imageWithCGImage:newImageRef scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+    return newImage;
 }
 
 #pragma mark delegate

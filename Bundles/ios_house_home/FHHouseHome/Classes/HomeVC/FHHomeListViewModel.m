@@ -49,6 +49,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
+@property (nonatomic, assign) BOOL isRequestFromSwitch;
 @property(nonatomic, weak)   NSTimer *timer;
 
 @end
@@ -74,7 +75,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.hasShowedData = NO;
         self.isHasCallBackForFirstTime = NO;
         self.isFirstChange = YES;
-        
+        self.isRequestFromSwitch = NO;
         
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
@@ -137,7 +138,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             // 标记config数据刷新了
             [FHHomeCellHelper sharedInstance].isConfigDataUpate = YES;
             self.tableViewV.hidden = NO;
-            
+            self.isRequestFromSwitch = NO;
+
             //切换城市先隐藏error页
             [self.homeViewController.emptyView hideEmptyView];
             
@@ -233,6 +235,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     self.currentHouseType = [numberType integerValue];
                 }
             }
+            
+            self.isRequestFromSwitch = YES;
             
             NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
             
@@ -486,7 +490,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
             //过滤多余tip提示
-        if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch)) {
+        if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) && !self.isRequestFromSwitch) {
             [self.homeViewController showNotify:model.data.refreshTip];
             self.tableViewV.contentOffset = CGPointMake(0, 0);
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
