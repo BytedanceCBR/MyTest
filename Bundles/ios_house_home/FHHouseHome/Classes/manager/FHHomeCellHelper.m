@@ -171,7 +171,7 @@ static NSMutableArray  * _Nullable identifierArr;
         [tableView reloadData];
     }
     
-    if (![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && [FHHomeConfigManager sharedInstance].currentDataModel && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
+    if (dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && [FHHomeConfigManager sharedInstance].currentDataModel && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
