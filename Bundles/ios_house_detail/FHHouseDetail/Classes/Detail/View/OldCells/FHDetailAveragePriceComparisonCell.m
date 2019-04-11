@@ -56,8 +56,8 @@
     NSString *curPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.curPricePsm floatValue]];
     NSString *minPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.minPricePsm floatValue]];
     NSString *maxPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.maxPricePsm floatValue]];
-    NSString *unit = model.rangeModel.unit;
-    NSString *houseType = model.analyzeModel.houseType;
+    NSString *unit = model.rangeModel.unit ?: @"";
+    NSString *houseType = model.analyzeModel.houseType ?: @"";
     
     NSString *minPriceStr = [NSString stringWithFormat:@"%@%@",minPrice,unit];
     NSString *maxPriceStr = [NSString stringWithFormat:@"%@%@",maxPrice,unit];
