@@ -179,7 +179,11 @@ extern NSString *const kFHToastCountKey;
 
 - (void)setDefaultBuildYear {
     NSString *buildYear = self.viewController.infoModel.builtYear;
-    if((!buildYear || [buildYear isEqualToString:@""] || [buildYear isEqualToString:@"0"]) && _neighborhoodDetailModel){
+    if([buildYear isEqualToString:@"0"]){
+        buildYear = @"";
+    }
+    
+    if((!buildYear || [buildYear isEqualToString:@""]) && _neighborhoodDetailModel){
         NSArray *baseInfos = _neighborhoodDetailModel.data.baseInfo;
         for (FHDetailNeighborhoodDataBaseInfoModel *model in baseInfos) {
             if([model.attr isEqualToString:@"建造年代"]){
