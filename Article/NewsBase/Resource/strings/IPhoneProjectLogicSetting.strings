@@ -9,6 +9,7 @@
 
 // f100
 "house_list"            = "FHHouseListViewController";
+"neighborhood_deal_list"            = "FHHouseListViewController"; // 查成交列表页
 "flogin"                = "FHLoginViewController";
 "aboutUs"               = "FHAboutUsViewController";
 "old_house_detail"      = "FHHouseDetailViewController";

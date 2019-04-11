@@ -169,7 +169,7 @@
  *  @param: searchId 请求id
  *  @param: sugParam  suggestion params
  */
-+(TTHttpTask *)searchNeighborhoodList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion;
++(TTHttpTask *)searchNeighborhoodList:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId sugParam:(NSString *_Nullable)sugParam class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
 {
     NSString *queryPath = @"/f100/api/search_neighborhood?";
 
@@ -188,6 +188,27 @@
     
     return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
 
+}
+
+/*
+ *  查成交请求
+ *  @param: sugParam  suggestion params
+ */
++(TTHttpTask *)searchNeighborhoodDealList:(NSString *_Nullable)query searchType:(NSString *)searchType offset:(NSInteger)offset searchId:(NSString *_Nullable)searchId class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> _Nullable model , NSError * _Nullable error))completion
+{
+    NSString *queryPath = @"/f100/api/search_neighborhood_deal?";
+    
+    NSMutableDictionary *qparam = [NSMutableDictionary new];
+    if (query.length > 0) {
+        queryPath = [NSString stringWithFormat:@"%@?%@",queryPath,query];
+    }
+    qparam[@"offset"] = @(offset);
+    qparam[@"search_id"] = searchId?:@"";
+    if (searchType.length > 0) {
+        qparam[@"search_type"] = searchType;
+    }
+    return [FHMainApi queryData:queryPath params:qparam class:cls completion:completion];
+    
 }
 
 + (TTHttpTask *)requestGuessYouWant:(NSInteger)cityId houseType:(NSInteger)houseType class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
