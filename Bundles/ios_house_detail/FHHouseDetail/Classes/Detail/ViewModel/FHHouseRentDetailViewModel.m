@@ -198,7 +198,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
-    [self addDetailCoreInfoExcetionLog];
+    if (model.data.status != -1) {
+        [self addDetailCoreInfoExcetionLog];
+    }
 
     // 清空数据源
     [self.items removeAllObjects];
