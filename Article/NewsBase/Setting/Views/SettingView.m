@@ -841,7 +841,7 @@ TTEditUserProfileViewControllerDelegate
 {
     TTSettingSectionType sectionType = [self sectionTypeAtSection:indexpath.section];
     NSArray *cellTypeList = [self supportSettingCellTypeArrayWithSectionType:sectionType];
-    if (cellTypeList.count < indexpath.row) {
+    if (cellTypeList.count <= indexpath.row) {
         return SettingCellTypeNone;
     }
     NSNumber *cellType = cellTypeList[indexpath.row];

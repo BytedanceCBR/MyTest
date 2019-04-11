@@ -124,7 +124,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(0);
+        make.centerY.equalTo(self.buttonOpenMore);
         make.height.mas_equalTo(40);
     }];
 }
@@ -450,13 +450,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
-        
-//
-//        [noDataErrorView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.top.left.right.equalTo(cellError.contentView);
-//            make.height.mas_equalTo([UIScreen mainScreen].bounds.size.height * 0.6);
-//        }];
-//
+
         return cellError;
     }
     
