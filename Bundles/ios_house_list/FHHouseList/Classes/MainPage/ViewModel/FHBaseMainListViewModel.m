@@ -501,7 +501,12 @@
         
         [self.tableView reloadData];
         
-        self.tableView.mj_footer.hidden = NO;
+        if (self.houseList.count > 10) {
+            self.tableView.mj_footer.hidden = NO;
+        }else{
+            self.tableView.mj_footer.hidden = YES;
+        }
+        
         if (hasMore == NO) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }else {
