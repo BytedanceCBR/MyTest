@@ -193,6 +193,8 @@
 
 -(void)poiSearch:(NSString *)keyword
 {
+    keyword = [keyword stringByRemoveEmoji]; //输入表情 高德地图可能会crash
+    
     if ([self.keywordRequest.keywords isEqualToString:keyword]) {
         return;
     }
@@ -201,8 +203,6 @@
     if (![cityName hasSuffix:@"市"]) {
         cityName = [cityName stringByAppendingString:@"市"];
     }
-    
-    keyword = [keyword stringByRemoveEmoji];
     
     AMapPOIKeywordsSearchRequest *request = [[AMapPOIKeywordsSearchRequest alloc] init];
     request.keywords = keyword;
@@ -226,7 +226,6 @@
 {
     if (self.tableView.tableHeaderView != self.defaultHeader ) {
         self.locationHeaderView.location = @"定位失败";
-//        self.locationHeaderView.showRefresh = YES;
         self.locationHeaderView.loading = NO;
     }
 }

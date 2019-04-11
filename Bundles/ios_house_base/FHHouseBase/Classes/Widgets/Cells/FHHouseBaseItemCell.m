@@ -640,7 +640,7 @@
         self.distanceLabel.attributedText = commuteAttr;
         
         if (!_distanceLabel){
-            [_distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
                 layout.isEnabled = YES;
                 layout.marginLeft = YGPointValue(10);
                 layout.alignSelf = YGAlignCount;
@@ -653,6 +653,7 @@
         [self.distanceLabel.yoga markDirty];
     }else{
         [_distanceLabel removeFromSuperview];
+        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     }
     
     FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];

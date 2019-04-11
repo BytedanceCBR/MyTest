@@ -12,7 +12,7 @@
 #define LINE_HEIGHT  4
 
 
-@interface FHCommuteSlider ()
+@interface FHCommuteSlider ()<UIGestureRecognizerDelegate>
 
 @property(nonatomic , strong) CALayer *minLineLayer;
 @property(nonatomic , strong) CALayer *maxLineLayer;
@@ -46,10 +46,12 @@
         [self.layer addSublayer:_maxLineLayer];
         [self addSubview:_trackerImageView];
         
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];        
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+        pan.delegate = self;
         [self addGestureRecognizer:pan];
         
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+        tap.delegate = self;
         [self addGestureRecognizer:tap];
         
     }
@@ -183,6 +185,19 @@
     
     return [UIImage imageNamed:name];
     
+}
+
+#pragma gesture delegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ([gestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]) {
+        UITapGestureRecognizer *tapGesture = (UITapGestureRecognizer *)gestureRecognizer;
+        CGPoint location = [tapGesture locationInView:_trackerImageView];
+        if (CGRectContainsPoint(_trackerImageView.bounds, location)) {
+            return NO;
+        }
+    }
+    return YES;
 }
 
 /*

@@ -840,29 +840,40 @@
 
 -(void)rentBannerLoaded:(UIView *)bannerView
 {
-    //banner图片加载成功
-    CGFloat bannerHeight = bannerView.height;
-    self.topBannerView.frame = CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight);
+    self.showNotifyDoneBlock = ^{
+        //banner图片加载成功
+        CGFloat bannerHeight = bannerView.height;
+        self.topBannerView.frame = CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight);
         
-    CGRect frame = [self.topView relayout];
-    UIEdgeInsets insets = self.tableView.contentInset;
-    
-    BOOL scrolled = fabs(self.tableView.contentOffset.y + insets.top) > 1;
-    
-    insets.top = CGRectGetHeight(frame);
-    self.tableView.contentInset = insets;
-    
-    if (self.topView.superview == self.topContainerView) {
-        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
-        }];
-        self.topView.top = -[self.topView filterTop];
-    }else{
-        self.topView.top = -frame.size.height;
-        if (!scrolled) {
-            self.tableView.contentOffset = CGPointMake(0, -insets.top);
+        CGRect frame = [self.topView relayout];
+        UIEdgeInsets insets = self.tableView.contentInset;
+        
+        BOOL scrolled = fabs(self.tableView.contentOffset.y + insets.top) > 1;
+        
+        insets.top = CGRectGetHeight(frame);
+        self.tableView.contentInset = insets;
+        
+        if (self.topView.superview == self.topContainerView) {
+            [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
+            }];
+            self.topView.top = -[self.topView filterTop];
+        }else{
+            self.topView.top = -frame.size.height;
+            if (!scrolled) {
+                self.tableView.contentOffset = CGPointMake(0, -insets.top);
+            }
         }
+    };
+    
+    if (self.animateShowNotify) {        
+        return;
     }
+    
+    self.showNotifyDoneBlock();
+    self.showNotifyDoneBlock = nil;
+    
+
 }
 
 - (NSString *)getEvaluateWebParams:(NSDictionary *)dic
@@ -1185,6 +1196,7 @@
 
 -(void)showNotifyMessage:(NSString *)message
 {
+    self.animateShowNotify = YES;
     __weak typeof(self) wself = self;
     CGFloat height =  [_topView showNotify:message willCompletion:^{
         
@@ -1195,13 +1207,16 @@
             
         } completion:^(BOOL finished) {
             wself.tableView.scrollEnabled = YES;
-            
+            if (wself.showNotifyDoneBlock) {
+                wself.showNotifyDoneBlock();
+                wself.showNotifyDoneBlock = nil;
+            }
+            wself.animateShowNotify = NO;
         }];
         
     }];
     
     [self configNotifyInfo:height isShow:YES];
-    
     
 }
 

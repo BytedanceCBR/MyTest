@@ -301,7 +301,6 @@
             break;
             
         case FHHouseTypeRentHouse:
-            
             [self requestRentHouseListData:isRefresh query:query offset:offset searchId:searchId];
             break;
             
@@ -416,17 +415,15 @@
         param[@"search_id"] = searchId;
     }
     
-    NSLog(@"[COMMUTE] send commute request");
-    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseListAPI requestCommute:cityId query:query location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
         if (!wself) {
             return ;
         }
-        NSLog(@"[COMMUTE] request done");
         [wself processData:model error:error];
-        
     }];
+    
+    _requestTask = task;
 }
 
 - (void)requestAddSubScribe:(NSString *)text
