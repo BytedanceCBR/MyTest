@@ -81,12 +81,10 @@
     UIImage *headerImage = [UIImage imageNamed:@"price_valuation_result_header_image"];
     self.headerImageView = [[UIImageView alloc] init];
     _headerImageView.image = headerImage;
-    _headerImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.scrollView addSubview:_headerImageView];
     
     self.beforeHeaderView = [[UIImageView alloc] init];
     _beforeHeaderView.image = [self ct_imageFromImage:headerImage inRect:CGRectMake(0,0, headerImage.size.width, 1)];
-//    _beforeHeaderView.contentMode = UIViewContentModeScaleAspectFill;
     [self.scrollView addSubview:_beforeHeaderView];
     
     self.evaluateView = [[UIView alloc] init];
