@@ -16,12 +16,20 @@
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
 #import <TTDeviceHelper.h>
+#import <FHHouseBase/FHHouseBridgeManager.h>
+#import "FHConditionFilterViewModel.h"
 
 @interface FHTransactionHistoryController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol>
 
 @property(nonatomic, strong) FHTransactionHistoryViewModel *viewModel;
 @property(nonatomic, copy) NSString *neighborhoodId;
 @property(nonatomic, strong) UITableView *tableView;
+
+@property (nonatomic , strong) UIView *filterContainerView;
+@property (nonatomic , strong) UIView *filterPanel;
+@property (nonatomic , strong) UIControl *filterBgControl;
+@property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
+@property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
 
 @end
 
@@ -48,6 +56,38 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [self initFilter];
+}
+
+- (void)initFilter {
+    id<FHHouseFilterBridge> bridge = [[FHHouseBridgeManager sharedInstance] filterBridge];
+    self.houseFilterBridge = bridge;
+    
+    self.houseFilterViewModel = [bridge filterSaleHistoryViewModelWithType:FHHouseTypeSecondHandHouse];
+    self.filterPanel = [bridge filterPannel:self.houseFilterViewModel];
+    self.filterBgControl = [bridge filterBgView:self.houseFilterViewModel];
+    [self.view addSubview:self.filterPanel];
+    [self.view addSubview:self.filterBgControl];
+    [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(44);
+        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
+    }];
+    [self.filterBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.bottom.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.filterPanel.mas_bottom);
+    }];
+    // bottom line
+    [bridge showBottomLine:NO];
+    
+    UIView *bottomLine = [[UIView alloc] init];
+    bottomLine.backgroundColor = [UIColor themeGray6];
+    [self.filterPanel addSubview:bottomLine];
+    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
+        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+    }];
+    [self.view bringSubviewToFront:self.filterBgControl];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,7 +133,7 @@
 
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
+        make.top.mas_equalTo(self.customNavBarView.mas_bottom).offset(44);
         make.left.right.bottom.mas_equalTo(self.view);
     }];
 }
