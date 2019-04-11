@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce;
 
 -(NSInteger)getTotalUnreadMessageCount;
+
+-(void)setUnreadSystemMsgCount:(NSUInteger)count;
 @end
 
 NS_ASSUME_NONNULL_END
