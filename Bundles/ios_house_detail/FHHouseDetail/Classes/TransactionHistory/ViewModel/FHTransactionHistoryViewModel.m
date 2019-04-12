@@ -16,6 +16,7 @@
 #import "FHTransactionHistoryModel.h"
 #import "FHRefreshCustomFooter.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
+#import "TTReachability.h"
 
 #define kCellId @"cell_id"
 
@@ -71,23 +72,19 @@
 - (void)requestData:(BOOL)isHead {
     [self.requestTask cancel];
     
-    if(isHead){
+    if(isHead) {
         self.page = 0;
         self.searchId = nil;
         [self.dataList removeAllObjects];
         [self.clientShowDict removeAllObjects];
-    }
-    
-    if(self.isFirstLoad){
         [self.viewController tt_startUpdate];
     }
     
     __weak typeof(self) wself = self;
     
     self.requestTask = [FHHouseDetailAPI requestNeighborhoodTransactionHistoryByNeighborhoodId:self.neighborhoodId searchId:self.searchId page:self.page count:15 query:self.condition completion:^(FHTransactionHistoryModel * _Nullable model, NSError * _Nullable error) {
-        
-        if(wself.isFirstLoad){
-            [wself.viewController tt_endUpdataData];
+        if(isHead) {
+             [wself.viewController tt_endUpdataData];
         }
         
         [wself.tableView.mj_footer endRefreshing];
@@ -121,7 +118,7 @@
                 [wself.viewController.emptyView hideEmptyView];
                 [wself.tableView reloadData];
             }else{
-                [wself.viewController.emptyView showEmptyWithTip:@"暂无小区成交历史" errorImageName:@"group-9" showRetry:NO];
+                [wself.viewController.emptyView showEmptyWithTip:@"暂无搜索结果" errorImageName:@"group-9" showRetry:NO];
             }
             
             if(wself.isFirstLoad){
@@ -129,8 +126,12 @@
                 [wself addEnterCategoryLog];
             }
             
-            if(!isHead){
+            if(!isHead) {
                 [wself trackRefresh];
+            } else {
+                if(wself.dataList.count > 0) {
+                    [wself.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+                }
             }
         }
     }];
@@ -182,7 +183,11 @@
 // filter条件改变
 - (void)onConditionChanged:(NSString *)condition {
     self.condition = condition;
-    [self requestData:YES];
+    if (![TTReachability isNetworkConnected] && self.dataList.count <= 0) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    } else {
+        [self requestData:YES];
+    }
 }
 
 #pragma mark - UITableViewDataSource
