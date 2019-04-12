@@ -25,6 +25,8 @@
 #import "TTDeviceHelper.h"
 #import "TTSandBoxHelper.h"
 
+#import <TTAccountSDK/TTAccountAuthWeChat.h>
+
 typedef enum {
     FriendSection = 0,
     InSiteUserSection

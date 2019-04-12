@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import <TTAccountSDK/TTAccountUserAuditSet.h>
 
 
 typedef NS_ENUM(NSUInteger, TTEditingUserItemType) {

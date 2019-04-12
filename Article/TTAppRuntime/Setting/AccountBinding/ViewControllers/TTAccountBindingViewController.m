@@ -28,7 +28,7 @@
 
 #import "TTArticleCategoryManager.h"
 #import <TTCategoryDefine.h>
-
+#import <TTAccountSDK/TTAccountAuthWeChat.h>
 
 
 typedef NS_ENUM(NSUInteger, TTSectionType) {

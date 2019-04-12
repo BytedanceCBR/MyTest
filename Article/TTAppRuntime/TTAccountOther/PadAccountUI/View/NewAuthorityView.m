@@ -23,6 +23,8 @@
 #import "TTTrackerWrapper.h"
 #import "TTDeviceHelper.h"
 
+#import <TTAccountSDK/TTAccountAuthWeChat.h>
+
 #define kBottomPadding ([TTDeviceHelper is568Screen] ? 60 : 37)
 #define kBottomPaddingHK ([TTDeviceHelper is568Screen] ? 70 : 30)
 #define kIntroduceImageViewTopPadding ([TTDeviceHelper is568Screen] ? 22 : 0)

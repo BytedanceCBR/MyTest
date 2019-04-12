@@ -304,6 +304,10 @@
 		3ABB8DB2158783E700F29B4D /* SSBaseAlertModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */; };
 		3AC30B87158A233A00DE6B4D /* SSLoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
+		3D20F72C225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
+		3D20F72D225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
+		3D20F72E225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
+		3D20F72F225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
 		3D2D488321A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
 		3D2D488421A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
 		3D2D488521A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
@@ -6808,6 +6812,8 @@
 		3ABB8C7E158783E700F29B4D /* SSBaseAlertModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSBaseAlertModel.m; sourceTree = "<group>"; };
 		3AC30B85158A233A00DE6B4D /* SSLoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLoadMoreCell.h; sourceTree = "<group>"; };
 		3AC30B86158A233A00DE6B4D /* SSLoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLoadMoreCell.m; sourceTree = "<group>"; };
+		3D20F72A225F6F21007168F2 /* FHAccountBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHAccountBridgeImp.h; sourceTree = "<group>"; };
+		3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHAccountBridgeImp.m; sourceTree = "<group>"; };
 		3D2D487F21A28E590011A0EC /* FHHouseFilterBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseFilterBridgeImp.h; sourceTree = "<group>"; };
 		3D2D488021A28E590011A0EC /* FHHouseEvnContextBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseEvnContextBridgeImp.h; sourceTree = "<group>"; };
 		3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHouseFilterBridgeImp.m; sourceTree = "<group>"; };
@@ -11007,6 +11013,8 @@
 				3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */,
 				3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */,
 				3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */,
+				3D20F72A225F6F21007168F2 /* FHAccountBridgeImp.h */,
+				3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */,
 			);
 			path = Bridge;
 			sourceTree = "<group>";
@@ -18137,8 +18145,7 @@
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/TTJSBAuthInfo.plist",
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_ROOT}/BDAccount/BDAccount/Assets/BDAccountAssets.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccount/SessionCheck.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccountSessionSDK/SessionCheck.bundle",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
@@ -18191,6 +18198,7 @@
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountSDK/TTAccountSDKResource.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
@@ -18225,7 +18233,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTJSBAuthInfo.plist",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
@@ -18279,6 +18286,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountSDKResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
@@ -18381,8 +18389,7 @@
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/TTJSBAuthInfo.plist",
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_ROOT}/BDAccount/BDAccount/Assets/BDAccountAssets.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccount/SessionCheck.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccountSessionSDK/SessionCheck.bundle",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
@@ -18435,6 +18442,7 @@
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountSDK/TTAccountSDKResource.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
@@ -18469,7 +18477,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTJSBAuthInfo.plist",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
@@ -18523,6 +18530,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountSDKResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
@@ -18567,8 +18575,7 @@
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/TTJSBAuthInfo.plist",
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_ROOT}/BDAccount/BDAccount/Assets/BDAccountAssets.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccount/SessionCheck.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccountSessionSDK/SessionCheck.bundle",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
@@ -18621,6 +18628,7 @@
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountSDK/TTAccountSDKResource.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
@@ -18654,7 +18662,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTJSBAuthInfo.plist",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
@@ -18708,6 +18715,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountSDKResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
@@ -19048,8 +19056,7 @@
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/TTJSBAuthInfo.plist",
 				"${PODS_ROOT}/../../AKPlugins/AKWebViewBundlePlugin/Classes/Resources/vconsole.js",
 				"${PODS_ROOT}/AMap3DMap/MAMapKit.framework/AMap.bundle",
-				"${PODS_ROOT}/BDAccount/BDAccount/Assets/BDAccountAssets.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccount/SessionCheck.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/BDAccountSessionSDK/SessionCheck.bundle",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/back_video@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/BottomShadow@2x.png",
@@ -19102,6 +19109,7 @@
 				"${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/SecGuard/JNiuNiu.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountLogin/TTAccountLogin.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTAccountSDK/TTAccountSDKResource.bundle",
 				"${PODS_ROOT}/../../AKPlugins/TTAdModule/TTAdModule/Assets/Images.xcassets",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
 				"${PODS_ROOT}/../../AKPlugins/AKImagePicker/TTImagePicker/Assets.xcassets",
@@ -19135,7 +19143,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTJSBAuthInfo.plist",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/vconsole.js",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AMap.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BDAccountAssets.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SessionCheck.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/back_video@3x.png",
@@ -19189,6 +19196,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MJRefresh.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/JNiuNiu.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountLogin.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTAccountSDKResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Images.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Assets.xcassets",
@@ -19980,6 +19988,7 @@
 				3F765B2016DB563F0037C3E3 /* ArticleInsertDataOperation.m in Sources */,
 				F87694A01F31D0D500D59CA5 /* TTVFeedListVideoAdItem.m in Sources */,
 				A97DBC7F1F1332E50002B455 /* TTBackgroundModeTask.m in Sources */,
+				3D20F72C225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
 				6BB148A11C75CEBA0028DA64 /* TTCellBridge.m in Sources */,
 				C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */,
 				3F765B2316DB563F0037C3E3 /* ArticlePostSaveOperation.m in Sources */,
@@ -21419,6 +21428,7 @@
 				B373CB2F2174587A008F9905 /* TTTopBarManager.m in Sources */,
 				B373CB302174587A008F9905 /* TTHotNewsCellView.m in Sources */,
 				B373CB322174587A008F9905 /* ArticleInsertDataOperation.m in Sources */,
+				3D20F72E225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
 				B373CB352174587A008F9905 /* TTVFeedListVideoAdItem.m in Sources */,
 				B373CB362174587A008F9905 /* TTBackgroundModeTask.m in Sources */,
 				B373CB372174587A008F9905 /* TTCellBridge.m in Sources */,
@@ -22840,6 +22850,7 @@
 				D479541221ECC94E00548965 /* TTTopBarManager.m in Sources */,
 				D479541321ECC94E00548965 /* TTHotNewsCellView.m in Sources */,
 				D479541521ECC94E00548965 /* ArticleInsertDataOperation.m in Sources */,
+				3D20F72F225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
 				D479541721ECC94E00548965 /* TTVFeedListVideoAdItem.m in Sources */,
 				D479541821ECC94E00548965 /* TTBackgroundModeTask.m in Sources */,
 				D479541921ECC94E00548965 /* TTCellBridge.m in Sources */,
@@ -24261,6 +24272,7 @@
 				FEFA5608205FB1A8001F50D8 /* TTTopBarManager.m in Sources */,
 				FEFA5609205FB1A8001F50D8 /* TTHotNewsCellView.m in Sources */,
 				FEFA560A205FB1A8001F50D8 /* ArticleInsertDataOperation.m in Sources */,
+				3D20F72D225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
 				FEFA560C205FB1A8001F50D8 /* TTVFeedListVideoAdItem.m in Sources */,
 				FEFA560F205FB1A8001F50D8 /* TTBackgroundModeTask.m in Sources */,
 				FEFA5610205FB1A8001F50D8 /* TTCellBridge.m in Sources */,

@@ -19,7 +19,7 @@
 #import "TTEditUserProfileViewModel+Network.h"
 //#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
-
+#import <TTAccountSDK/TTAccount.h>
 
 
 
@@ -119,12 +119,12 @@
     void (^didCompletedBlock)(TTAccountUserEntity *, NSError *) = ^(TTAccountUserEntity *userEntity, NSError *error) {
         __strong typeof(wself) sself = wself;
 
-        BDAccountUser* user = [[BDAccount sharedAccount] user];
+        TTAccountUserEntity* user = [[TTAccount sharedAccount] user];
         if (user != nil) {
             user.name = userEntity.name;
             user.screenName = userEntity.screenName;
             user.userDescription = userEntity.userDescription;
-            [[BDAccount sharedAccount] setUser:user];
+            [[TTAccount sharedAccount] setUser:user];
 //            [[[EnvContext shared] client] setUserInfoWithUser:user];
         }
 
@@ -272,10 +272,10 @@
                     NSString *imageURL = avatarOrBg ? [userEntity.auditInfoSet userAvatarURLString] : userEntity.bgImgURL;
                     if (!isEmptyString(imageURL)) {
                         if (avatarOrBg) {
-                            BDAccountUser* user = [[BDAccount sharedAccount] user];
+                            TTAccountUserEntity* user = [[TTAccount sharedAccount] user];
                             if (user != nil) {
                                 user.avatarURL = imageURL;
-                                [[BDAccount sharedAccount] setUser:user];
+                                [[TTAccount sharedAccount] setUser:user];
 //                                [[[EnvContext shared] client] setUserInfoWithUser:user];
                             }
                             sself2.editableAuditInfo.avatarURL = imageURL;

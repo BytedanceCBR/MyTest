@@ -31,15 +31,7 @@ PODS:
   - BDABTestSDK (1.0.2-rc.3):
     - BDABTestSDK/Core (= 1.0.2-rc.3)
   - BDABTestSDK/Core (1.0.2-rc.3)
-  - BDAccount/Account (0.1.0)
-  - BDAccount/AccountCore (0.1.0)
-  - BDAccount/Flow (0.1.0)
-  - BDAccount/NetWorkCore (0.1.0)
-  - BDAccount/PlatformCore (0.1.0)
-  - BDAccount/PlatformCustomAuth (0.1.0)
-  - BDAccount/SinaWeibo (0.1.0)
-  - BDAccount/TencentQQ (0.1.0)
-  - BDAccount/WeChat (0.1.0)
+  - BDAccountSessionSDK (0.1.11.1-binary)
   - BDALog (0.1.12)
   - BDAlogProtocol (0.1.6)
   - BDTArticle (0.2.3)
@@ -249,14 +241,14 @@ PODS:
   - TTAccountLogin (0.1.0):
     - TTAccountLogin/AccountLoginUIKit (= 0.1.0)
   - TTAccountLogin/AccountLoginUIKit (0.1.0)
-  - TTAccountSDK/Account (3.0.6)
-  - TTAccountSDK/Logger (3.0.6)
-  - TTAccountSDK/ThirdPartyAccountFoundation (3.0.6):
-    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 3.0.6)
-    - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (= 3.0.6)
-  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (3.0.6)
-  - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (3.0.6)
-  - TTAccountSDK/WeChatAccount (3.0.6)
+  - TTAccountSDK/Account (4.2.0)
+  - TTAccountSDK/Logger (4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation (4.2.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 4.2.0)
+    - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (= 4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (4.2.0)
+  - TTAccountSDK/WeChatAccount (4.2.0)
   - TTAddressBookService (0.1.4):
     - TTAddressBookService/AddressBook (= 0.1.4)
     - TTAddressBookService/DeprecatedAddressBook (= 0.1.4)
@@ -503,15 +495,7 @@ DEPENDENCIES:
   - AWECloudCommand (= 1.0.7.1-binary)
   - AWEVideoPlayer (= 0.3.20)
   - BDABTestSDK (= 1.0.2-rc.3)
-  - BDAccount/Account (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/AccountCore (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/Flow (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/NetWorkCore (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/PlatformCore (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/PlatformCustomAuth (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/SinaWeibo (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/TencentQQ (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
-  - BDAccount/WeChat (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
+  - BDAccountSessionSDK (= 0.1.11.1-binary)
   - BDALog (= 0.1.12)
   - BDAlogProtocol (= 0.1.6)
   - BDTArticle (= 0.2.3)
@@ -575,7 +559,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.1.4)
   - IGListKit
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9c5ef3144d54acc6f0203df98cb38bf5f38f075d`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `715cf800433c8f936238e41713743730b9dbafe9`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `4b730fd2b839b80b8975cadd066c7f4041ae362c`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -626,10 +610,10 @@ DEPENDENCIES:
   - TSVToolkit (= 0.1.2.1-binary)
   - TTABManager (= 0.0.7.1-binary)
   - TTAccountLogin (from `../AKPlugins/AKAccountLogin`)
-  - TTAccountSDK/Account (from `../AKPlugins/TTAccountSDK`)
-  - TTAccountSDK/Logger (from `../AKPlugins/TTAccountSDK`)
-  - TTAccountSDK/ThirdPartyAccountFoundation (from `../AKPlugins/TTAccountSDK`)
-  - TTAccountSDK/WeChatAccount (from `../AKPlugins/TTAccountSDK`)
+  - TTAccountSDK/Account (= 4.2.0)
+  - TTAccountSDK/Logger (= 4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation (= 4.2.0)
+  - TTAccountSDK/WeChatAccount (= 4.2.0)
   - TTAddressBookService (= 0.1.4)
   - TTAdModule (from `../AKPlugins/TTAdModule`)
   - TTAdSplashSDK (= 0.4.4)
@@ -751,9 +735,6 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/AKWDPlugin
   AKWebViewBundlePlugin:
     :path: ../AKPlugins/AKWebViewBundlePlugin
-  BDAccount:
-    :git: git@code.byted.org:iOS_Library/BDAccount.git
-    :tag: fixAvatarURL
   BDTBasePlayer:
     :path: ../AKPlugins/BDTBasePlayer
   BDTSharedHeaders:
@@ -786,12 +767,10 @@ EXTERNAL SOURCES:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 715cf800433c8f936238e41713743730b9dbafe9
+    :commit: 4b730fd2b839b80b8975cadd066c7f4041ae362c
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
-  TTAccountSDK:
-    :path: ../AKPlugins/TTAccountSDK
   TTAdModule:
     :path: ../AKPlugins/TTAdModule
   TTAvatar:
@@ -836,14 +815,11 @@ EXTERNAL SOURCES:
     :path: ../ReactCommon/yoga
 
 CHECKOUT OPTIONS:
-  BDAccount:
-    :git: git@code.byted.org:iOS_Library/BDAccount.git
-    :tag: fixAvatarURL
   ios_house_filter:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 715cf800433c8f936238e41713743730b9dbafe9
+    :commit: 4b730fd2b839b80b8975cadd066c7f4041ae362c
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
@@ -870,7 +846,7 @@ SPEC CHECKSUMS:
   AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
   AWEVideoPlayer: 07ffe01239d24b1010d95b074c002dc7a54b04fc
   BDABTestSDK: eb7cdb2ce2887b35f44cc374ee01372e77278530
-  BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
+  BDAccountSessionSDK: 1b21928204da418d25fb12d6a51e81587264fd6d
   BDALog: 989a655db0f8ec62a4a56970a462eb1a83d75645
   BDAlogProtocol: 3079beb0afd725ea0e209a617dc4381158aa151f
   BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
@@ -936,7 +912,7 @@ SPEC CHECKSUMS:
   TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
   TTAccountLogin: d064f182eccc55ebef79216feff43dd2b8c9decf
-  TTAccountSDK: f190978cb0db94f923c70da6c0d16de8327aff97
+  TTAccountSDK: cf30d5473af172a54279d2c22937ab3b3f0f33ab
   TTAddressBookService: f06522284222f3da5705a47c38565d6ada715b97
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: bcbf6e94de76b9f200a52d549a6096afdb7a3726
@@ -1011,6 +987,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 700355cbdfdf9d93dc309071bcf1997428dabe9a
+PODFILE CHECKSUM: a53be263868779b63c35d48f4cb41acc6a70aceb
 
 COCOAPODS: 1.4.0

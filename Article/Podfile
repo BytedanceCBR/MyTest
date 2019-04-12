@@ -389,18 +389,7 @@ def appPods
 #    ]
 
     #-----TTAccountSDK-----
-#    pod 'TTAccountSDK', '3.0.5', :subspecs => [
-#    'Account',
-#    'WeChatAccount'
-##    'SinaWeiboAccount',
-##    'TencentQQAccount',
-##    'TencentWBAccount',
-##    'RenRenAccount',
-##    'TianYiAccount',
-##    'TTAwemeAccount',
-##    'TTHotsoonAccount'
-#    ]
-    pod 'TTAccountSDK', :path => '../AKPlugins/TTAccountSDK', :inhibit_warnings => false, :subspecs => [
+    pod 'TTAccountSDK', '4.2.0', :inhibit_warnings => false, :subspecs => [
         'Account',
         'Logger',
         'WeChatAccount',
@@ -467,17 +456,7 @@ def appPods
     #-----测试  内存泄漏时开启-----
 #    pod 'MLeaksFinder', '0.2.0'
 
-    pod 'BDAccount', :git => 'git@code.byted.org:iOS_Library/BDAccount.git', :tag => 'fixAvatarURL', :subspecs => [
-        'Account',
-        'AccountCore',
-        'NetWorkCore',
-        'Flow',
-        'PlatformCore',
-        'PlatformCustomAuth',
-        'WeChat',
-        'TencentQQ',
-        'SinaWeibo'
-    ]
+    pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.0'
     pod_source 'AMap3DMap', '6.2.0'
