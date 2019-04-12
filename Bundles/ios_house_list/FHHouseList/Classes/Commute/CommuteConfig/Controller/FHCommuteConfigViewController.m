@@ -194,9 +194,12 @@
 
 -(void)initConstraints
 {
-    CGFloat topMargin = 20;
+    CGFloat topMargin = 29;
     if (@available(iOS 11.0 , *)) {
-        topMargin += [UIApplication sharedApplication].delegate.window.safeAreaInsets.top;
+        CGFloat safeTop = [UIApplication sharedApplication].delegate.window.safeAreaInsets.top;
+        if (safeTop > 0) {
+            topMargin = safeTop+9 ;
+        }
     }
     
     [_backButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -234,7 +237,7 @@
     [_inputBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
         make.right.mas_equalTo(self.view).offset(-HOR_MARGIN);
-        make.top.mas_equalTo(_topBanner.mas_bottom).offset(-10);
+        make.top.mas_equalTo(_topBanner.mas_bottom).offset(-19);
         make.height.mas_equalTo(INPUT_BG_HEIGHT);
     }];
     
