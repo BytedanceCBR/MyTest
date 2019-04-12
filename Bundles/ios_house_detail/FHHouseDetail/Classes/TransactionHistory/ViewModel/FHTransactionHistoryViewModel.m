@@ -62,6 +62,7 @@
         }];
         [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
         self.tableView.mj_footer = self.refreshFooter;
+        self.tableView.mj_footer.hidden = YES;
         
         self.viewController = viewController;
         
