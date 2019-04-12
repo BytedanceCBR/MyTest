@@ -14,6 +14,8 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <React/RCTRootView.h>
 #import <React/RCTBridge.h>
+#import "FHRNBaseViewController.h"
+#import "FHRNKitMacro.h"
 
 @interface FHRNDebugViewController ()
 @property (nonatomic, strong) UITextField *textField,*moduleField;
@@ -106,7 +108,7 @@
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
     if (!self.contentViewController) {
-        self.contentViewController = [[TTRNKitBaseViewController alloc] initWithParams:@{RNHideBar:@(1)} viewWrapper:wrapper];
+        self.contentViewController = [[FHRNBaseViewController alloc] initWithParams:@{RNHideBar:@(1),FHRN_DEBUG:@(YES)} viewWrapper:wrapper];
     }
     if ([self.contentViewController respondsToSelector:@selector(addViewWrapper:)]) {
         [self.contentViewController addViewWrapper:wrapper];
@@ -116,8 +118,8 @@
     UIViewController *contentVC = self.contentViewController;
     [self createRNView:initParams bundleURL:jsCodeLocation inWrapper:wrapper];
     [self.navigationController pushViewController:contentVC animated:YES];
-    [contentVC.navigationController setNavigationBarHidden:YES animated:NO];
-    [contentVC.navigationItem setHidesBackButton:YES];
+//    [contentVC.navigationController setNavigationBarHidden:YES animated:NO];
+//    [contentVC.navigationItem setHidesBackButton:YES];
     
 }
 

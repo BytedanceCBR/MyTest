@@ -8,12 +8,15 @@
 #import "FHBaseViewController.h"
 #import "TTRNKit.h"
 #import "TTRNKitViewWrapper.h"
+#import "TTRNKit.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHRNBaseViewController : FHBaseViewController
+@interface FHRNBaseViewController : FHBaseViewController <TTRNKitObserverProtocol>
 
 - (instancetype)initWithParams:(NSDictionary *)params viewWrapper:(TTRNKitViewWrapper *)viewWrapper;
+
+- (void)addViewWrapper:(TTRNKitViewWrapper *)viewWrapper;
 
 @end
 
