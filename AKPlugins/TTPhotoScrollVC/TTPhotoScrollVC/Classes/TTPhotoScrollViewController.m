@@ -19,6 +19,7 @@
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "FHFloorPanPicShowViewController.h"
 
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
@@ -117,7 +118,7 @@
         _longPressToSave = YES;
         
         self.ttHideNavigationBar = YES;
-        
+        self.isShowAlbumAndCloseButton = NO;
         _addedToContainer = NO;
         
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
@@ -327,6 +328,68 @@
         self.animateManager.panDelegate = self;
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
+    }
+    
+    
+    if (self.isShowAlbumAndCloseButton) {
+        CGFloat height = 0;
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            height = 64;
+        }else
+        {
+            height = 44;
+        }
+        
+        UIButton *clonseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [clonseBtn setTitle:@"关闭" forState:UIControlStateNormal];
+        [clonseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [clonseBtn setFrame:CGRectMake(20, height, 48, 48)];
+        [clonseBtn addTarget:self action:@selector(closeBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:clonseBtn];
+        
+        
+        UIButton *albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
+        [albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
+        [albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:albumBtn];
+    }
+    
+}
+
+- (void)closeBtnClick
+{
+    [self finished];
+}
+
+
+- (void)albumBtnClick
+{
+    if (self.albumImageBtnClickBlock) {
+        self.albumImageBtnClickBlock(self.currentIndex);
+    }
+    
+    FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+    showVC.pictsArray = _smallImageInfosModels;
+    __weak TTPhotoScrollViewController * weakSelf = self;
+    showVC.albumImageBtnClickBlock = ^(NSInteger index){
+        if (index >= 0) {
+            weakSelf.photoScrollView.contentOffset = CGPointMake(self.view.frame.size.width * index, 0);
+        }
+    };
+    
+    showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+        [self stayCallBack:stayTime];
+    };
+    
+    [self presentViewController:showVC animated:NO completion:nil];
+}
+
+- (void)stayCallBack:(NSInteger)stayTime
+{
+    if (self.albumImageStayBlock) {
+        self.albumImageStayBlock(self.currentIndex,stayTime);
     }
 }
 
