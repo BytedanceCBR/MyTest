@@ -15,10 +15,11 @@
 #import "FHUserTracker.h"
 #import "FHTransactionHistoryModel.h"
 #import "FHRefreshCustomFooter.h"
+#import <FHHouseBase/FHHouseBridgeManager.h>
 
 #define kCellId @"cell_id"
 
-@interface FHTransactionHistoryViewModel()<UITableViewDelegate,UITableViewDataSource>
+@interface FHTransactionHistoryViewModel()<UITableViewDelegate,UITableViewDataSource,FHHouseFilterDelegate>
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHTransactionHistoryController *viewController;
@@ -83,7 +84,7 @@
     
     __weak typeof(self) wself = self;
     
-    self.requestTask = [FHHouseDetailAPI requestNeighborhoodTransactionHistoryByNeighborhoodId:self.neighborhoodId searchId:self.searchId page:self.page count:15 completion:^(FHTransactionHistoryModel * _Nullable model, NSError * _Nullable error) {
+    self.requestTask = [FHHouseDetailAPI requestNeighborhoodTransactionHistoryByNeighborhoodId:self.neighborhoodId searchId:self.searchId page:self.page count:15 query:self.condition completion:^(FHTransactionHistoryModel * _Nullable model, NSError * _Nullable error) {
         
         if(wself.isFirstLoad){
             [wself.viewController tt_endUpdataData];
@@ -176,6 +177,12 @@
     dict[@"refresh_type"] = @"pre_load_more";
     dict[@"search_id"] = self.searchId ? self.searchId : @"be_null";
     TRACK_EVENT(@"category_refresh", dict);
+}
+#pragma mark - FHHouseFilterDelegate
+// filter条件改变
+- (void)onConditionChanged:(NSString *)condition {
+    self.condition = condition;
+    [self requestData:YES];
 }
 
 #pragma mark - UITableViewDataSource

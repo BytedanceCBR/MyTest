@@ -77,6 +77,7 @@
         make.left.bottom.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.filterPanel.mas_bottom);
     }];
+    [bridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
     // bottom line
     [bridge showBottomLine:NO];
     
@@ -128,7 +129,7 @@
     _tableView.tableHeaderView = headerView;
     
     [self.view addSubview:_tableView];
-    [self addDefaultEmptyViewFullScreen];
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(44, 0, 0, 0)];
 }
 
 - (void)initConstraints {
@@ -147,9 +148,7 @@
     if ([TTReachability isNetworkConnected]) {
         [_viewModel requestData:YES];
     } else {
-        if(!self.hasValidateData){
-            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-        }
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
 }
 
