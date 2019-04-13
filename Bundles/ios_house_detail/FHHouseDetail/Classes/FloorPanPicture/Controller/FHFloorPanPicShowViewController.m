@@ -12,7 +12,7 @@
 #import <TTDeviceHelper.h>
 #import <UIViewController+Track.h>
 
-#define FH_FLOOR_PIC_HEADER_HEIGHT 36
+#define FH_FLOOR_PIC_HEADER_HEIGHT 30
 
 @interface FHFloorPanPicShowViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -184,10 +184,10 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if([groupModel.name length] > 0)
                     {
-                        labelTitle.text = groupModel.name;
+                        labelTitle.text = [NSString stringWithFormat:@"%@(%ld)",groupModel.name,groupModel.images.count];
                     }else
                     {
-                        labelTitle.text = [NSString stringWithFormat:@"%ld",groupModel.images.count];
+                        labelTitle.text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
                     }
                 });
                 labelTitle.tag = 10010;

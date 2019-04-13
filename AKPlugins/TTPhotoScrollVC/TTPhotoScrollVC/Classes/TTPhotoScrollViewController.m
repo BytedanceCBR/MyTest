@@ -347,13 +347,14 @@
         [clonseBtn addTarget:self action:@selector(closeBtnClick) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clonseBtn];
         
-        
-        UIButton *albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
-        [albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
-        [albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:albumBtn];
+        if (self.smallImageInfosModels.count != 0) {
+            UIButton *albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
+            [albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
+            [albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:albumBtn];
+        }
     }
     
 }
@@ -366,6 +367,10 @@
 
 - (void)albumBtnClick
 {
+    if (self.smallImageInfosModels.count == 0) {
+        return;
+    }
+    
     if (self.albumImageBtnClickBlock) {
         self.albumImageBtnClickBlock(self.currentIndex);
     }

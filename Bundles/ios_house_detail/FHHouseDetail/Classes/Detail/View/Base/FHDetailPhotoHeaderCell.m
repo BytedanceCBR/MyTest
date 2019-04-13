@@ -258,7 +258,7 @@
 //埋点
 - (void)stayPictureShowPictureWithIndex:(NSInteger)index andTime:(NSInteger)stayTime {
     NSMutableDictionary *dict = [self traceParamsForGallery:index];
-    dict[@"stay_time"] = [NSString stringWithFormat:@"%d",stayTime * 1000];
+    dict[@"stay_time"] = [NSNumber numberWithInteger:stayTime * 1000];
     TRACK_EVENT(@"picture_gallery_stay", dict);
 }
 
