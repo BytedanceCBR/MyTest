@@ -28,7 +28,7 @@
 #import <KVOController/KVOController.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
-
+@property(nonatomic,strong)NSDictionary *reportParamsH5;
 @end
 
 @implementation TTDetailContainerViewController
@@ -40,8 +40,36 @@
     if (self) {
         TTDetailContainerViewModel * viewModel = [[TTDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
         self.viewModel = viewModel;
+        
+        NSString *report_params = paramObj.allParams[@"report_params"];
+
+        if (paramObj.allParams[@"category"]) {
+            self.viewModel.detailModel.categoryID = paramObj.allParams[@"category"];
+        }
+        
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            if (report_params_dic) {
+                self.viewModel.detailModel.reportParams = report_params_dic;
+            }
+        }
     }
     return self;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 + (TTRouteUserInfo *)reassginedUserInfoWithParamObj:(TTRouteParamObj *)paramObj {

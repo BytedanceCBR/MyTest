@@ -460,7 +460,11 @@
     
     [_detailView didDisappear];
     NSDictionary *commentDic = @{@"stay_comment_time":[[NSNumber numberWithDouble:round(self.commentShowTimeTotal)] stringValue]};
-    [self.detailModel.sharedDetailManager extraTrackerDic:commentDic];
+    NSMutableDictionary *commentMutiDict = [[NSMutableDictionary alloc] initWithDictionary:commentDic];
+    if ([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]) {
+        [commentMutiDict addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    [self.detailModel.sharedDetailManager extraTrackerDic:commentMutiDict];
     [self.detailModel.sharedDetailManager endStayTracker];
     _isAppearing = NO;
     [self.natantContainerView resetAllRelatedItemsWhenNatantDisappear];
@@ -2309,8 +2313,9 @@
     if (![@"push" isEqualToString: enterFrom]) {
         [dic setValue:[self categoryName] forKey:@"category_name"];
     }
+    
     [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
-//    [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
+//     [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
 
     [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 //    id value = self.detailModel.article.groupModel.groupID;
