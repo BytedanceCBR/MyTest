@@ -183,7 +183,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
 
-                [TTSandBoxHelper setAppFirstLaunch];
+                [TTSandBoxHelper setAppFirstLaunchForAd];
 
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
