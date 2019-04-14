@@ -35,7 +35,6 @@
 @interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate>
 
 @property (nonatomic, strong)   UIImageView       *mapImageView;
-@property (nonatomic, strong)   UIImageView       *mapAnnotionImageView;
 @property (nonatomic, weak)     MAMapView       *mapView;
 @property (nonatomic, assign)   CGFloat       mapHightScale;
 @property (nonatomic, assign)   CLLocationCoordinate2D       centerPoint;
@@ -87,18 +86,14 @@
     self.mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 160)];
     self.mapView.delegate = self;
     
-    _mapImageView = [[UIImageView alloc] init];
+    _mapImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 160)];
     _mapImageView.backgroundColor = [UIColor themeGray7];
-    _mapAnnotionImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200)];
    
     self.mapImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.contentView addSubview:self.mapImageView];
     [self.mapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(floor(SCREEN_WIDTH * self.mapHightScale));
         make.edges.equalTo(self.contentView);
     }];
-    self.mapAnnotionImageView.backgroundColor = UIColor.clearColor;
-    [self.mapImageView addSubview:self.mapAnnotionImageView];
     
     CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, 160);
     __weak typeof(self) weakSelf = self;
@@ -109,8 +104,8 @@
     //3秒如果截图失败则重试一次
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.mapImageView.image == nil) {
-                [self setUpMapViewSetting:YES];
+            if (weakSelf.mapImageView.image == nil) {
+                [weakSelf setUpMapViewSetting:YES];
             }
         });
     });
@@ -130,8 +125,6 @@
     if (model.gaodeLat && model.gaodeLng) {
         [self setLocation:model.gaodeLat lng:model.gaodeLng];
     }
-
-//    [self layoutIfNeeded];
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -148,6 +141,7 @@
 }
 
 - (void)addUserAnnotation {
+    [[FHDetailMapView sharedInstance] clearAnnotationDatas];
     MAPointAnnotation *pointAnnotation = [[MAPointAnnotation alloc] init];
     pointAnnotation.coordinate = self.centerPoint;
     self.mapView.delegate = self;
@@ -160,9 +154,9 @@
     UIView *annotionView = [self.mapView viewForAnnotation:self.pointAnnotation];
     UIView *superAnnotionView = annotionView.superview;
     if ([superAnnotionView isKindOfClass:[UIView class]]) {
-        self.mapAnnotionImageView.image = [self getImageFromView:superAnnotionView];
+        self.mapImageView.image = [self getImageFromView:superAnnotionView];
     } else {
-        self.mapAnnotionImageView.image = nil;
+        self.mapImageView.image = nil;
     }
 }
 

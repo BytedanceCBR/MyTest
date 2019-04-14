@@ -198,10 +198,11 @@ static const float kSegementedPadingTop = 5;
     _mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:mapRect];
     
     //3秒如果截图失败则重试一次
+     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.mapImageView.image == nil) {
-                [self setUpMapViewSetting:YES];
+            if (weakSelf.mapImageView.image == nil) {
+                [weakSelf setUpMapViewSetting:YES];
             }
         });
     });
@@ -374,6 +375,7 @@ static const float kSegementedPadingTop = 5;
 
 - (void)setUpAnnotations
 {
+    [[FHDetailMapView sharedInstance] clearAnnotationDatas];
     self.mapView.delegate = self;
     for (NSInteger i = 0; i < _poiAnnotations.count; i++) {
         [self.mapView addAnnotation:_poiAnnotations[i]];
