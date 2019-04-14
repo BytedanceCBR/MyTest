@@ -45,9 +45,9 @@ def appPods
 
     pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '715cf800433c8f936238e41713743730b9dbafe9' #:branch => 'feature/develop'
 #    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
-    # pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9c5ef3144d54acc6f0203df98cb38bf5f38f075d' #:branch => 'feature/develop'
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '93c25d2eb89fd2bcf4e4cb0cefc0f09e8f1c8214' #:branch => 'feature/develop'
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
-    pod 'ios_house_filter' , :path => '../../ios_house_filter'
+#    pod 'ios_house_filter' , :path => '../../ios_house_filter'
 
     pod 'SecGuard', '0.8.10.1'
 
