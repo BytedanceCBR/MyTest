@@ -505,6 +505,7 @@ static const float kSegementedPadingTop = 5;
         
         if ([((FHMyMAAnnotation *)annotation).type isEqualToString:@"user"]) {
             annotationV.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
+            annotationV.centerOffset = CGPointMake(0, -18);
         }else
         {
             UIImageView *backImageView = [UIImageView new];
@@ -541,9 +542,8 @@ static const float kSegementedPadingTop = 5;
             [backImageView addSubview:bottomArrowView];
             bottomArrowView.backgroundColor = [UIColor clearColor];
             bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);
+            annotationV.centerOffset = CGPointMake(-backImageView.frame.size.width / 2.0, -40);
         }
-        
-        annotationV.centerOffset = CGPointMake(0, -18);
         
         return annotationV ? annotationV : [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
     }
