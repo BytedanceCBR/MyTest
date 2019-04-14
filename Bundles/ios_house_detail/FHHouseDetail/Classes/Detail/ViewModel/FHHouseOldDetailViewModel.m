@@ -235,7 +235,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (void)processDetailData:(FHDetailOldModel *)model {
     
     self.detailData = model;
-    [self addDetailCoreInfoExcetionLog];
+    if (model.data.status != -1) {
+        [self addDetailCoreInfoExcetionLog];
+    }
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
@@ -437,10 +439,12 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
-    // 同小区房源
-    [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
-    // 周边小区
-    [self requestRelatedNeighborhoodSearch:neighborhoodId];
+    if (neighborhoodId.length > 0) {
+        // 同小区房源
+        [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
+        // 周边小区
+        [self requestRelatedNeighborhoodSearch:neighborhoodId];
+    }
     // 周边房源
     [self requestRelatedHouseSearch];
 }

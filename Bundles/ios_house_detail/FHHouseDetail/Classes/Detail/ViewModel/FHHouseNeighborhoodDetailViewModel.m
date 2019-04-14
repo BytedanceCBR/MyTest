@@ -258,6 +258,9 @@
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
+    if (neighborhoodId.length < 1) {
+        return;
+    }
     // 周边小区
     [self requestRelatedNeighborhoodSearch:neighborhoodId];
     // 同小区房源-二手房
@@ -337,7 +340,7 @@
 - (BOOL)isMissTitle
 {
     FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.name.length < 1;
+    return model.data.neighborhoodInfo.name.length < 1;
 }
 
 - (BOOL)isMissImage
@@ -349,7 +352,7 @@
 - (BOOL)isMissCoreInfo
 {
     FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.coreInfo.count < 1;
+    return model.data.neighborhoodInfo != nil;
 }
 
 @end

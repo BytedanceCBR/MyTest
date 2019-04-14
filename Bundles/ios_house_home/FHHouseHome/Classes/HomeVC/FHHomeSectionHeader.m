@@ -13,7 +13,7 @@
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 35;
-static const float kSegementedPadingTop = 5;
+static const float kSegementedPadingTop = 6;
 
 @interface FHHomeSectionHeader ()
 @property (nonatomic, strong) UILabel * categoryLabel;
@@ -23,22 +23,6 @@ static const float kSegementedPadingTop = 5;
 @end
 
 @implementation FHHomeSectionHeader
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.categoryLabel = [UILabel new];
-        self.categoryLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 16 : 14];
-        self.categoryLabel.textColor = [UIColor themeGray1];
-        self.categoryLabel.text = @"为你推荐";
-        self.backgroundColor = [UIColor whiteColor];
-        [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 15, 100, 20);
-        [self setUpSegmentedControl];
-    }
-    return self;
-}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -50,7 +34,7 @@ static const float kSegementedPadingTop = 5;
         self.categoryLabel.text = @"为你推荐";
         self.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.categoryLabel];
-        self.categoryLabel.frame = CGRectMake(20, 15, 100, 20);
+        self.categoryLabel.frame = CGRectMake(20, 17, 100, 20);
         [self setUpSegmentedControl];
     }
     return self;
@@ -58,7 +42,6 @@ static const float kSegementedPadingTop = 5;
 
 - (void)setUpSegmentedControl
 {
-    self.frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 35);
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.frame = CGRectMake(MAIN_SCREEN_WIDTH - (kSegementedOneWidth + 5) * 3, kSegementedPadingTop, kSegementedOneWidth * 3, kSegementedHeight);
     _segmentedControl.sectionTitles = @[@"",@"",@""];

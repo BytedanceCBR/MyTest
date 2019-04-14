@@ -105,7 +105,7 @@
         self.maskTitleLabel = [[TTGlowLabel alloc] initWithFrame:_titleLabel.frame];
         self.maskTitleLabel.backgroundColor = [UIColor clearColor];
         
-        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 3, 20, 3)];
+        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 6, 20, 3)];
         self.bottomSelectView.backgroundColor = [UIColor themeRed1];
         self.bottomSelectView.alpha = 0;
         self.bottomSelectView.layer.cornerRadius = 1.5;
@@ -271,7 +271,7 @@
         bottomLeft = 0;
         bottomWidth = rect.size.width;
     }
-    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 3, bottomWidth, 3);
+    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 6, bottomWidth, 3);
 }
 
 - (void)layoutSubviews
@@ -1070,7 +1070,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         [categoryButton updateBottomSelectFrame];
         [self.scrollView addSubview:categoryButton];
         
-        offsetX = categoryButton.right + 10;
+        offsetX = categoryButton.right + 5;
         
         NSString *startCategoryID = kTTMainCategoryID;
         if (!_lastSelectedButton && [SSCommonLogic firstCategoryStyle] > 0) {

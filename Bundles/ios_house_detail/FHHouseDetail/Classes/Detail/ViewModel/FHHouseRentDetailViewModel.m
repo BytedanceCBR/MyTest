@@ -198,7 +198,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
-    [self addDetailCoreInfoExcetionLog];
+    if (model.data.status != -1) {
+        [self addDetailCoreInfoExcetionLog];
+    }
 
     // 清空数据源
     [self.items removeAllObjects];
@@ -313,8 +315,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
     self.requestRelatedCount = 0;
-    // 同小区房源
-    [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
+    if (neighborhoodId.length > 0) {
+        // 同小区房源
+        [self requestHouseInSameNeighborhoodSearch:neighborhoodId];
+    }
     // 周边房源
     [self requestRelatedHouseSearch];
 }

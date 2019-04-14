@@ -23,14 +23,14 @@ static NSString * const kFHIESGeckoKey = @"7838c7618ea608a0f8ad6b04255b97b9";
 + (void)configGeckoInfo
 {
     [IESGeckoKit setDeviceID:[[TTInstallIDManager sharedInstance] deviceID]];
-    [IESGeckoKit registerAccessKey:kFHIESGeckoKey appVersion:@"6.6.1" channels:@[@"fe_app_c"]];
+    [IESGeckoKit registerAccessKey:kFHIESGeckoKey appVersion:@"6.6.3" channels:@[@"fe_app_c"]];
     [IESGeckoKit syncResourcesIfNeeded];// 同步资源文件
 }
 
 + (void)configIESWebFalcon
 {
     if ([[[FHHouseBridgeManager sharedInstance] envContextBridge] isOpenWebOffline]) {
-        IESFalconManager.interceptionWKHttpScheme = YES;
+        IESFalconManager.interceptionWKHttpScheme = NO;
         IESFalconManager.interceptionEnable = YES;
         
         NSString *pattern = @"^(http|https)://.*.[pstatp.com]/toutiao/";

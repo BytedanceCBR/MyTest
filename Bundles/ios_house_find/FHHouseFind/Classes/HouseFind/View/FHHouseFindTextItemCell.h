@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 默认显示的cell
 @interface FHHouseFindTextItemCell : UICollectionViewCell
 
+@property(nonatomic , strong) UIFont *titleFont;
 -(void)updateWithTitle:(NSString *)title highlighted:(BOOL)highlighted;
 
 @end
