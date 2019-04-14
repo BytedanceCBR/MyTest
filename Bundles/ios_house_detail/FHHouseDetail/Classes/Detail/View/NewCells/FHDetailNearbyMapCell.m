@@ -370,7 +370,9 @@ static const float kSegementedPadingTop = 5;
     [[FHDetailMapView sharedInstance] clearAnnotationDatas];
     self.mapView.delegate = self;
     for (NSInteger i = 0; i < _poiAnnotations.count; i++) {
-        [self.mapView addAnnotation:_poiAnnotations[i]];
+        if (i < 3) {
+            [self.mapView addAnnotation:_poiAnnotations[i]];
+        }
     }
     FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
     userAnna.type = @"user";
