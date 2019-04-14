@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithTableView:(UITableView *)tableView inputBar:(FHCommutePOIInputBar *)inputBar;
 
+-(void)tryReload;
+
 @end
 
 NS_ASSUME_NONNULL_END

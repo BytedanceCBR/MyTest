@@ -10,6 +10,8 @@
 #import "FHCommutePOIInputBar.h"
 #import <Masonry/Masonry.h>
 #import <FHCommonUI/FHFakeInputNavbar.h>
+#import <TTReachability/TTReachability.h>
+
 
 @interface FHCommutePOISearchViewController ()
 
@@ -68,7 +70,17 @@
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     self.emptyView.hidden = YES;
     
+    if (![TTReachability isNetworkConnected]) {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
+    
 }
+
+- (void)retryLoadData {
+    // 重新加载数据
+    [self.viewModel tryReload];
+}
+
 
 -(void)initConstraints
 {

@@ -40,6 +40,7 @@
 @property(nonatomic , strong) AMapSearchAPI *searchAPI;
 @property(nonatomic , strong) AMapLocationReGeocode * currentReGeocode;
 @property(nonatomic , strong) AMapPOIKeywordsSearchRequest *keywordRequest;
+//@property(nonatomic , strong) AMapPOIKeywordsSearchRequest *arroundPOIRequest;//当没有定位时获取所在城市的poi数据
 @property(nonatomic , strong) AMapPOIAroundSearchRequest *aroundRequest;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , strong) UIView *defaultHeader;
@@ -83,10 +84,11 @@
         if ([FHEnvContext isSameLocCityToUserSelect]) {
             //定位地和选择地是同一城市才选择
             _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
-            if (_currentReGeocode) {
-                self.locationHeaderView.location = _currentReGeocode.AOIName;
-                tableView.tableHeaderView = _locationHeaderView;
-            }else{
+            
+            self.locationHeaderView.location = _currentReGeocode.AOIName;
+            tableView.tableHeaderView = _locationHeaderView;
+            if(!_currentReGeocode){
+                _locationHeaderView.location =  @"无法获取当前位置";
                 [self reGeoSearch];
             }
 
@@ -98,13 +100,15 @@
 //                self.locationHeaderView.showRefresh = YES;
                 tableView.tableHeaderView = _locationHeaderView;
             }else{
+                wself.locationHeaderView.showNotInCityTip = YES;
                 tableView.tableHeaderView = self.locationHeaderView;
-                _locationHeaderView.showNotInCityTip = YES;
+                
             }
             [self nearBySearch:NO];
         }
     
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];        
     }
     return self;
     
@@ -114,6 +118,7 @@
 {
     [_searchAPI cancelAllRequests];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
 }
 
 #pragma mark - search
@@ -148,14 +153,16 @@
             NSString *chooseCity = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
             if ([reGeocode.city hasPrefix:chooseCity] || [chooseCity hasPrefix:reGeocode.city]) {
                 wself.locationHeaderView.showNotInCityTip = NO;
+                wself.tableView.tableHeaderView = wself.locationHeaderView;
                 [wself nearBySearch:YES];
             }else{
                 //不是同一城市
                 wself.locationHeaderView.showNotInCityTip = YES;
+                wself.tableView.tableHeaderView = wself.locationHeaderView;
                 [wself nearBySearch:NO];
             }
         }else{
-            SHOW_TOAST(@"定位失败");
+//            SHOW_TOAST(@"定位失败");
             [wself resetLocationFail];
         }
     }];
@@ -179,23 +186,43 @@
         request.location = geo;
         request.city = _currentReGeocode.city;
 //        request.radius = 3000;
-    }else{
-        request.city = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-        if ([request.city hasSuffix:@"市"]) {
-            request.city = [request.city stringByAppendingString:@"市"];
-        }
+        self.aroundRequest = request;
+        [_searchAPI AMapPOIAroundSearch:request];
+        
+//    }else{
+//        NSString *cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal ];
+//        if (![cityName hasSuffix:@"市"]) {
+//            cityName = [cityName stringByAppendingString:@"市"];
+//        }
+//        AMapPOIKeywordsSearchRequest *request = [[AMapPOIKeywordsSearchRequest alloc] init];
+//        request.keywords = nil;
+//        request.sortrule = 1;
+//        request.city = cityName;
+//        request.cityLimit = YES;
+//        request.types = [self searchTypes];
+//        request.offset = 20;//每页20个
+//        self.arroundPOIRequest = request;
+//
+//        [_searchAPI AMapPOIKeywordsSearch:request];
     }
-    
-    self.aroundRequest = request;
-    [_searchAPI AMapPOIAroundSearch:request];
-    
 }
 
--(void)poiSearch:(NSString *)keyword
+-(void)tryReload
 {
+    self.keywordRequest.page = 1;
+    [self poiSearch:self.keywordRequest.keywords force:YES];
+}
+
+-(void)poiSearch:(NSString *)keyword force:(BOOL)force
+{
+    if (![TTReachability isNetworkConnected]) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
+    
     keyword = [keyword stringByRemoveEmoji]; //输入表情 高德地图可能会crash
     
-    if ([self.keywordRequest.keywords isEqualToString:keyword]) {
+    if (!force && [self.keywordRequest.keywords isEqualToString:keyword]) {
         return;
     }
     
@@ -304,6 +331,7 @@
             self.aroundPois = response.pois;
 //        }
         [self.tableView reloadData];
+        self.aroundRequest = nil;        
     }
 }
 
@@ -537,7 +565,7 @@
         NSString *content =  [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         NSString *result  =  [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         if (result.length > 0) {
-            [self poiSearch:result];
+            [self poiSearch:result force:NO];
         }
     }
     [textField resignFirstResponder];
@@ -557,7 +585,7 @@
     
     NSString *result  =  [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     if (result.length > 0) {
-        [self poiSearch:result];
+        [self poiSearch:result force:NO];
     }else{
         //reset to history mode
         [self textFieldClear];
@@ -584,7 +612,7 @@
     self.keywordRequest = nil;
     self.tableView.mj_footer.hidden = YES;
     [self.searchPois removeAllObjects];
-    [self.tableView setContentOffset:CGPointZero animated:YES];
+    self.tableView.contentOffset = CGPointZero;
     [self.tableView reloadData];
     if (!_locationHeaderView.showNotInCityTip && [FHEnvContext isSameLocCityToUserSelect]) {
         self.tableView.tableHeaderView = _locationHeaderView;
@@ -607,5 +635,12 @@
     }
 }
 
+-(void)applicationWillResignActive:(NSNotification *)notification
+{
+    //当用户下滑到屏幕底部时上滑显示 设置网络等的页面时 tableview手势会断开
+    if (self.tableView.contentOffset.y < 0) {
+        self.tableView.contentOffset = CGPointZero;
+    }
+}
 
 @end

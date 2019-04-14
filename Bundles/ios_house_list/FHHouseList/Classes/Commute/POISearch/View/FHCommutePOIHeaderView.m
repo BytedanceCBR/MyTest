@@ -157,6 +157,9 @@
 -(void)setShowNotInCityTip:(BOOL)showNotInCityTip
 {
     _notInCityBgView.hidden = !showNotInCityTip;
+    CGRect frame = self.frame;
+    frame.size.height = showNotInCityTip?57:76;
+    self.frame = frame;
 }
 
 -(BOOL)showNotInCityTip
