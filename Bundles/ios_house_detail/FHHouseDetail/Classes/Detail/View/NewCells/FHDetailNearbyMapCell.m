@@ -25,6 +25,7 @@
 #import "UIColor+Theme.h"
 #import "TTRoute.h"
 #import <HMDTTMonitor.h>
+#import "FHDetailMapView.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -46,7 +47,7 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) AMapSearchAPI *searchApi;
 @property (nonatomic , strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
-@property (nonatomic , strong) MAMapView *mapView;
+@property (nonatomic , weak)   MAMapView *mapView;
 @property (nonatomic , strong) NSString * searchCategory;
 @property (nonatomic , strong) NSArray * nameArray;
 @property (nonatomic , assign) BOOL isFirst;
@@ -173,12 +174,6 @@ static const float kSegementedPadingTop = 5;
 
 - (void)setUpMapViewSetting:(BOOL)isRetry
 {
-    _mapView.runLoopMode = NSDefaultRunLoopMode;
-    _mapView.showsCompass = NO;
-    _mapView.showsScale = NO;
-    _mapView.zoomEnabled = NO;
-    _mapView.scrollEnabled = NO;
-    _mapView.zoomLevel = 14;
     _mapView.delegate = self;
     [_mapView forceRefresh];
     
@@ -194,27 +189,18 @@ static const float kSegementedPadingTop = 5;
     if (self.centerPoint.latitude && self.centerPoint.longitude) {
         [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
     }
-    if (isRetry) {
-        [self.mapImageView addSubview:_mapView];
-        _mapView.hidden = YES;
-    }
 }
 
 - (void)setUpMapImageView
 {
     CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
     
-    _mapView = [[MAMapView alloc] initWithFrame:mapRect];
+    _mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:mapRect];
     
     //3秒如果截图失败则重试一次
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.mapImageView.image == nil) {
-                if (_mapView) {
-                    [_mapView removeFromSuperview];
-                    _mapView = nil;
-                }
-                _mapView = [[MAMapView alloc] initWithFrame:mapRect];
                 [self setUpMapViewSetting:YES];
             }
         });
@@ -388,10 +374,10 @@ static const float kSegementedPadingTop = 5;
 
 - (void)setUpAnnotations
 {
+    self.mapView.delegate = self;
     for (NSInteger i = 0; i < _poiAnnotations.count; i++) {
         [self.mapView addAnnotation:_poiAnnotations[i]];
     }
-    
     FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
     userAnna.type = @"user";
     

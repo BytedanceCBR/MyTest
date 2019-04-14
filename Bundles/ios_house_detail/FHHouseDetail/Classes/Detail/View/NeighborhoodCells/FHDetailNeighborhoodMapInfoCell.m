@@ -30,12 +30,13 @@
 #import "UIColor+Theme.h"
 #import <FHEnvContext.h>
 #import <HMDTTMonitor.h>
+#import "FHDetailMapView.h"
 
 @interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate>
 
 @property (nonatomic, strong)   UIImageView       *mapImageView;
 @property (nonatomic, strong)   UIImageView       *mapAnnotionImageView;
-@property (nonatomic, strong)   MAMapView       *mapView;
+@property (nonatomic, weak)     MAMapView       *mapView;
 @property (nonatomic, assign)   CGFloat       mapHightScale;
 @property (nonatomic, assign)   CLLocationCoordinate2D       centerPoint;
 @property (nonatomic, strong)   MAPointAnnotation       *pointAnnotation;
@@ -62,12 +63,6 @@
 
 - (void)setUpMapViewSetting:(BOOL)isRetry
 {
-    _mapView.runLoopMode = NSDefaultRunLoopMode;
-    _mapView.showsCompass = NO;
-    _mapView.showsScale = NO;
-    _mapView.zoomEnabled = NO;
-    _mapView.scrollEnabled = NO;
-    _mapView.zoomLevel = 14;
     _mapView.delegate = self;
     [_mapView forceRefresh];
     
@@ -83,24 +78,13 @@
     if (self.centerPoint.latitude && self.centerPoint.longitude) {
         [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
     }
-    if (isRetry) {
-        [self.mapImageView addSubview:_mapView];
-        _mapView.hidden = YES;
-    }
 }
 
 - (void)setupUI {
     _mapHightScale = 0.36;
 
     //
-    self.mapView = [[MAMapView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 200)];
-    self.mapView.runLoopMode = NSDefaultRunLoopMode;
-    self.mapView.showsCompass = NO;
-    self.mapView.showsScale = NO;
-    self.mapView.zoomEnabled = NO;
-    self.mapView.scrollEnabled = NO;
-    self.mapView.zoomLevel = 14;
-    self.mapView.showsUserLocation = NO;
+    self.mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 160)];
     self.mapView.delegate = self;
     
     _mapImageView = [[UIImageView alloc] init];
@@ -116,7 +100,7 @@
     self.mapAnnotionImageView.backgroundColor = UIColor.clearColor;
     [self.mapImageView addSubview:self.mapAnnotionImageView];
     
-    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, floor(SCREEN_WIDTH * self.mapHightScale));
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, 160);
     __weak typeof(self) weakSelf = self;
     [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
         weakSelf.mapImageView.image = resultImage;
@@ -126,11 +110,6 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.mapImageView.image == nil) {
-                if (_mapView) {
-                    [_mapView removeFromSuperview];
-                    _mapView = nil;
-                }
-                _mapView = [[MAMapView alloc] initWithFrame:frame];
                 [self setUpMapViewSetting:YES];
             }
         });
@@ -171,6 +150,7 @@
 - (void)addUserAnnotation {
     MAPointAnnotation *pointAnnotation = [[MAPointAnnotation alloc] init];
     pointAnnotation.coordinate = self.centerPoint;
+    self.mapView.delegate = self;
     [self.mapView addAnnotation:pointAnnotation];
     self.pointAnnotation = pointAnnotation;
     [self snapshotMap];
