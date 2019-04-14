@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHHouseBase/FHCommonDefines.h>
 #import <Masonry/Masonry.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 @interface FHCommutePOIHeaderView ()
 
@@ -63,7 +64,8 @@
         _notInCityBgView.backgroundColor = [UIColor whiteColor];
         
         _notInCityLabel = [[UILabel alloc]init];
-        _notInCityLabel.text = @"当前位置不在(选择城市)市内，请直接搜索或返回首页更改城市";
+        NSString *cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        _notInCityLabel.text = [NSString stringWithFormat:@"当前位置不在%@市内，请直接搜索或返回首页更改城市",cityName];
         _notInCityLabel.textColor = [UIColor themeGray3];
         _notInCityLabel.font = [UIFont themeFontRegular:12];
         _notInCityLabel.numberOfLines = 0;

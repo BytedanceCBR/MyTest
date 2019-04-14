@@ -639,7 +639,11 @@
     if (status != NotReachable) {
         //有网络了，重新请求
         if (self.aroundPois.count == 0) {
-            [self nearBySearch:[FHEnvContext isSameLocCityToUserSelect]];
+            NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+            _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+            if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
+                [self nearBySearch:YES];
+            }            
         }
     }
 }
