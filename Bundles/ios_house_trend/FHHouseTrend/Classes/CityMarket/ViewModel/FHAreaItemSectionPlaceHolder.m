@@ -79,6 +79,15 @@
         if ([_hotList count] > section - self.sectionOffset) {
             FHCityMarketDetailResponseDataHotListModel* model = _hotList[section - self.sectionOffset];
             result.nameLabel.text = model.title;
+            if (model.subTitle.count > 0) {
+                result.headerNameLabel.text = model.subTitle[0];
+            }
+            if (model.subTitle.count > 1) {
+                result.headerPriceLabel.text = model.subTitle[1];
+            }
+            if (model.subTitle.count > 2) {
+                result.headerCountLabel.text = model.subTitle[2];
+            }
             @weakify(self);
             [[result.openMore rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
                 @strongify(self);

@@ -603,24 +603,6 @@
             redirectTips = houseModel.redirectTips;
 
         }
-        // 二手房、租房应该有 houseListOpenUrl
-        if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
-            if (self.houseListOpenUrl.length <= 0) {
-                NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
-                // device_id
-                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
-                if (did.length == 0) {
-                    did = @"null";
-                }
-                NSString *currentBundleStr = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-                // 房源类型-did-channel-版本号
-                NSString *info_detail = [NSString stringWithFormat:@"%@-%@-%@-%@",res,did,[[TTInstallIDManager sharedInstance] channel],currentBundleStr];
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
-                                                        metric:nil
-                                                      category:@{@"status":@(0),@"house_type":res,@"info_detail":info_detail}
-                                                         extra:@{@"device_id":did}];
-            }
-        }
         
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
