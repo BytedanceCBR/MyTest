@@ -23,6 +23,7 @@
 #import <FHRefreshCustomFooter.h>
 #import <TTArticleCategoryManager.h>
 #import "FHHomeCellHelper.h"
+#import <TTSandBoxHelper.h>
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
@@ -140,6 +141,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             self.tableViewV.hidden = NO;
             self.isRequestFromSwitch = NO;
 
+            
+            //更新冷启动默认选项
+            if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {
+                [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
+                self.currentHouseType = configDataModel.houseTypeDefault.integerValue;
+            }
+//
+           
             //切换城市先隐藏error页
             [self.homeViewController.emptyView hideEmptyView];
             
@@ -173,6 +182,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
+
+                [TTSandBoxHelper setAppFirstLaunch];
 
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
@@ -208,9 +219,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             //请求推荐房源
             [self requestOriginData:self.isFirstChange];
-            
-
-            
+                        
         }];
         
         //切换推荐房源类型
@@ -506,6 +515,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self checkLoadingAndEmpty];
         
         self.categoryView.segmentedControl.userInteractionEnabled = YES;
+        
     }];
 }
 

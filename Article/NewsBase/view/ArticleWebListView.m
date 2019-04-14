@@ -151,7 +151,8 @@
 
 - (BOOL)needTrackVisibleInvisibleByJS
 {
-    return [self.currentCategory.categoryID isEqualToString:kTTTeMaiCategoryID];
+    return YES;
+//    return [self.currentCategory.categoryID isEqualToString:kTTTeMaiCategoryID];
 }
 
 - (void)registerIsVisibleJSBridgeHandler
