@@ -211,7 +211,8 @@
 -(void)tryReload
 {
     self.keywordRequest.page = 1;
-    [self poiSearch:self.keywordRequest.keywords force:YES];
+//    self.keywordRequest.keywords = self.inputBar.text;
+    [self poiSearch:self.inputBar.text force:YES];
 }
 
 -(void)poiSearch:(NSString *)keyword force:(BOOL)force

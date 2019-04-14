@@ -11,7 +11,7 @@
 #import <Masonry/Masonry.h>
 #import <FHCommonUI/FHFakeInputNavbar.h>
 #import <TTReachability/TTReachability.h>
-
+#import <TTUIWidget/TTNavigationController.h>
 
 @interface FHCommutePOISearchViewController ()
 
@@ -34,6 +34,11 @@
         }
     }
     return self;
+}
+
+-(void)dealloc
+{
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 - (void)viewDidLoad {
@@ -62,7 +67,7 @@
     
     [self.view addSubview:_tableView];
     [self.view addSubview:_inputBar];
-    
+
     [self initConstraints];
     
     [_inputBar becomeFirstResponder];
@@ -73,6 +78,12 @@
     if (![TTReachability isNetworkConnected]) {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
+    
+    __weak typeof(self) wself = self;
+    self.panBeginAction = ^{
+        [wself.inputBar resignFirstResponder];
+    };
     
 }
 
@@ -96,19 +107,6 @@
         make.top.mas_equalTo(self.inputBar.mas_bottom);
     }];
     
-}
-
--(void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:animated];
-    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
