@@ -37,7 +37,6 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , assign) NSInteger requestIndex;
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) UIImageView *mapImageView;
-@property (nonatomic , strong) UIImageView *mapAnnotionImageView;
 @property (nonatomic , strong) UITableView *locationList;
 @property (nonatomic , strong) UIView *bottomLine;
 @property (nonatomic , strong) UILabel *emptyInfoLabel;
@@ -220,13 +219,6 @@ static const float kSegementedPadingTop = 5;
         make.height.mas_equalTo(160);
     }];
     
-    _mapAnnotionImageView = [[UIImageView alloc] initWithFrame:mapRect];
-    [_mapImageView addSubview:_mapAnnotionImageView];
-    [_mapAnnotionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(_mapImageView);
-    }];
-    
-    
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtn];
 
@@ -388,7 +380,6 @@ static const float kSegementedPadingTop = 5;
     self.pointCenterAnnotation = userAnna;
     
     [self.mapView setCenterCoordinate:self.centerPoint];
-//    [self performSelector:@selector(snapShotAnnotationImage) withObject:nil afterDelay:0.1];
     [self snapShotAnnotationImage];
     //改变显示的tableview数据
     [self changePoiData];
@@ -625,16 +616,14 @@ static const float kSegementedPadingTop = 5;
 
 - (void)snapShotAnnotationImage
 {
-    UIView *annotationView = [self.mapView viewForAnnotation:self.pointCenterAnnotation];
-    if (annotationView) {
-        UIView *superAnnotationView = [annotationView superview];
-        if ([superAnnotationView isKindOfClass:[UIView class]]) {
-            self.mapAnnotionImageView.image = [self getImageFromView:superAnnotationView];
+    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
+    WeakSelf;
+    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        StrongSelf;
+        if (resultImage) {
+            self.mapImageView.image = resultImage;
         }
-    }else
-    {
-        self.mapAnnotionImageView.image = nil;
-    }
+    }];
 }
 
 - (UIImage *)getImageFromView:(UIView *)view
