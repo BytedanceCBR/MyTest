@@ -378,7 +378,6 @@
     
     if (model) {
         
-        
         NSMutableArray *items = nil;
         NSArray *recommendItems = nil;
         BOOL hasMore = NO;
@@ -935,8 +934,6 @@
     if ([self.conditionFilter isEqualToString:condition]) {
         return;
     }
-    
-    self.tableView.scrollEnabled = YES;
     
     self.conditionFilter = condition;
     

@@ -265,6 +265,7 @@ static NSMutableArray  * _Nullable identifierArr;
             // 经过一层逻辑处理
             [self processMainPageBannerOpData:dataModel];
             if (dataModel.mainPageBannerOpData.items.count > 0) {
+                [FHHomeCellHelper sharedInstance].isConfigDataUpate = YES;
                 height += [FHHomeScrollBannerCell cellHeight];
             }
         }
