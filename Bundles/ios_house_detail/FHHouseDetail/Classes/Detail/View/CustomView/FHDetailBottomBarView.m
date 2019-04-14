@@ -177,9 +177,14 @@
     [self.imChatBtn setTitle:chatTitle forState:UIControlStateNormal];
     [self.imChatBtn setTitle:chatTitle forState:UIControlStateHighlighted];
 
-    self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
-    self.imChatBtn.hidden = !isEmptyString(contactPhone.imOpenUrl) ? NO : YES;
+    BOOL showIM = NO;
+    if ((contactPhone.unregistered && contactPhone.reportButtonText.length > 0) || !isEmptyString(contactPhone.imOpenUrl) ){
+        showIM = YES;
+    }
     
+    self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
+    self.imChatBtn.hidden = !showIM;
+     
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
     NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
@@ -225,7 +230,7 @@
         make.width.mas_equalTo(leftWidth);
     }];
 
-    if (!isEmptyString(contactPhone.imOpenUrl)) {
+    if (showIM) {
         CGFloat leftMargin = 10;
         if (contactPhone.showRealtorinfo == 1) {
             if ([TTDeviceHelper is568Screen]) {
