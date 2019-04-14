@@ -47,10 +47,22 @@
             self.viewModel.detailModel.categoryID = paramObj.allParams[@"category"];
         }
         
+        if (paramObj.allParams[@"from_gid"]) {
+            self.viewModel.detailModel.relateReadFromGID = paramObj.allParams[@"from_gid"];
+        }
+        
         if ([report_params isKindOfClass:[NSString class]]) {
             NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            NSMutableDictionary *reportResultDict = [NSMutableDictionary new];
+            if ([report_params_dic isKindOfClass:[NSDictionary class]]) {
+                [reportResultDict addEntriesFromDictionary:report_params_dic];
+            }
+            if ([paramObj.allParams isKindOfClass:[NSDictionary class]]) {
+                [reportResultDict addEntriesFromDictionary:paramObj.allParams];
+            }
+            
             if (report_params_dic) {
-                self.viewModel.detailModel.reportParams = report_params_dic;
+                self.viewModel.detailModel.reportParams = reportResultDict;
             }
         }
     }

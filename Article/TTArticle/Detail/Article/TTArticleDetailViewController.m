@@ -2314,9 +2314,13 @@
         [dic setValue:[self categoryName] forKey:@"category_name"];
     }
     
+    if (self.detailModel.reportParams) {
+        [dic setValue:self.detailModel.reportParams[@"enter_from"] forKey:@"enter_from"];
+    }
+    
     [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
 //     [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
-
+    
     [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
 //    id value = self.detailModel.article.groupModel.groupID;
 //    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
