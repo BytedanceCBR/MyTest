@@ -615,13 +615,13 @@
     self.keywordRequest = nil;
     self.tableView.mj_footer.hidden = YES;
     [self.searchPois removeAllObjects];
-    self.tableView.contentOffset = CGPointZero;
     [self.tableView reloadData];
     if (!_locationHeaderView.showNotInCityTip && [FHEnvContext isSameLocCityToUserSelect]) {
         self.tableView.tableHeaderView = _locationHeaderView;
     }else{
         self.tableView.tableFooterView = self.defaultHeader;
     }
+    self.tableView.contentOffset = CGPointZero;
     
     if ([TTReachability isNetworkConnected]) {
         [self.viewController.emptyView hideEmptyView];
