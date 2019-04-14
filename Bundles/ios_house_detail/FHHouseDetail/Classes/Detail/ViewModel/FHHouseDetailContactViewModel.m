@@ -240,7 +240,10 @@
         contactTitle = contactPhone.callButtonText;
     }
     
-    if(contactPhone.imLabel && ![contactPhone.imLabel isEqualToString:@""]){
+    //TODO: test
+    if (contactPhone.unregistered && contactPhone.reportButtonText.length > 0) {
+        chatTitle = contactPhone.reportButtonText;
+    }else if(contactPhone.imLabel && ![contactPhone.imLabel isEqualToString:@""]){
         chatTitle = contactPhone.imLabel;
     }
     
@@ -308,6 +311,12 @@
 
 
 - (void)imAction {
+    
+    if (self.contactPhone.unregistered) {
+        [[ToastManager manager] showToast:@"该经纪人暂未开通该服务，请使用其他联系方式" duration:3 isUserInteraction:YES];
+        return;
+    }
+    
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:@"detail_button"];
 }
 
