@@ -266,9 +266,14 @@
 -(void)updateCommuteTip
 {
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
-    NSString *tip = [NSString stringWithFormat:@" 通过%@%@分钟内到达",[manager commuteTypeName],manager.duration];
+    NSString *tip = [NSString stringWithFormat:@"通过%@%@分钟内到达",[manager commuteTypeName],manager.duration];
     BOOL highlight = manager.commuteType != FHCommuteTypeWalk && manager.commuteType != FHCommuteTypeRide;
-    [_commuteTipView updateTime:@"早高峰" tip:tip highlightTime:highlight];
+    NSString *time = nil;
+    if (highlight) {
+        time = @"早高峰";
+        tip = [@" " stringByAppendingString:tip];
+    }
+    [_commuteTipView updateTime:time tip:tip highlightTime:highlight];
     
 }
 

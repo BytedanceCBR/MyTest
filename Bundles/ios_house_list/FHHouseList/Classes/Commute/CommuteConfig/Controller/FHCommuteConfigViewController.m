@@ -182,6 +182,7 @@
     
     if (destLocation.length > 0) {
         _inputLabel.text = destLocation;
+        self.inputLabel.textColor = [UIColor themeGray1];
     }else{
         _filterView.enableSearch = NO;
     }

@@ -27,7 +27,7 @@
 
 #define CELL_ID @"cell_id"
 #define LOCATION_HEADER_HEIGHT 76
-#define MAX_AROUND_BUILD_COUNT 5
+#define MAX_AROUND_BUILD_COUNT 8
 
 @interface FHCommutePOISearchViewModel ()<UITableViewDelegate,UITableViewDataSource,AMapSearchDelegate,FHCommutePOIInputBarDelegate>
 
@@ -81,10 +81,11 @@
         _searchAPI = [[AMapSearchAPI alloc] init];
         _searchAPI.delegate = self;
         //
-        if ([FHEnvContext isSameLocCityToUserSelect]) {
+        NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+        
+        if ([FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
             //定位地和选择地是同一城市才选择
-            _currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
-            
             self.locationHeaderView.location = _currentReGeocode.AOIName;
             tableView.tableHeaderView = _locationHeaderView;
             if(!_currentReGeocode){
@@ -95,7 +96,7 @@
             [self nearBySearch:YES];
         }else {
             CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-            if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined) {
+            if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined || !_currentReGeocode) {
                 self.locationHeaderView.location = @"无法获取当前位置";
 //                self.locationHeaderView.showRefresh = YES;
                 tableView.tableHeaderView = _locationHeaderView;
@@ -310,7 +311,9 @@
         if (self.searchPois.count > 0) {
             self.tableView.tableHeaderView = self.defaultHeader;
             if (request.page == 1) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                });
             }
         }else{
             self.tableView.tableHeaderView = self.locationHeaderView;
@@ -325,11 +328,11 @@
         
     }else if (request == self.aroundRequest){
         
-//        if (response.count > MAX_AROUND_BUILD_COUNT) {
-//            self.aroundPois = [response.pois subarrayWithRange:NSMakeRange(0, MAX_AROUND_BUILD_COUNT)];
-//        }else{
+        if (response.count > MAX_AROUND_BUILD_COUNT) {
+            self.aroundPois = [response.pois subarrayWithRange:NSMakeRange(0, MAX_AROUND_BUILD_COUNT)];
+        }else{
             self.aroundPois = response.pois;
-//        }
+        }
         [self.tableView reloadData];
         self.aroundRequest = nil;        
     }
@@ -540,7 +543,7 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView.isDragging) {
+    if (scrollView.isDragging && scrollView.isTracking) {
         [self.inputBar resignFirstResponder];
     }
 }
@@ -619,6 +622,11 @@
     }else{
         self.tableView.tableFooterView = self.defaultHeader;
     }
+    
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewController.emptyView hideEmptyView];
+    }
+    
 }
 
 

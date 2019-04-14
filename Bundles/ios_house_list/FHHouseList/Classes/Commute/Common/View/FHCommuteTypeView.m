@@ -103,8 +103,6 @@
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
 
     button.titleLabel.font = [UIFont themeFontRegular:12];
     
@@ -150,6 +148,7 @@
     for (NSInteger i = 0 ; i < _buttons.count ; i++) {
         button = _buttons[i];
         button.selected = (_currentType == i);
+        [button setTitleColor:button.selected?[UIColor whiteColor]:[UIColor themeGray1] forState:UIControlStateNormal];
         button.backgroundColor = (button.selected?[UIColor themeRed1]:[UIColor themeGray7]);
     }
 }

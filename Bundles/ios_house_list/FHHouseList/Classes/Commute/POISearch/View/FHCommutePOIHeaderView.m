@@ -90,7 +90,7 @@
  
     [_tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN);
+        make.right.mas_lessThanOrEqualTo(-HOR_MARGIN).priorityLow();
         make.bottom.mas_equalTo(self.mas_centerY).offset(-4);
     }];
     
@@ -103,19 +103,19 @@
     [_locationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.iconImageView.mas_right).offset(2);
         make.top.mas_equalTo(self.mas_centerY);
-        make.right.mas_equalTo(-50);//一直显示刷新
+        make.right.mas_equalTo(-50).priorityLow();//一直显示刷新
         make.height.mas_equalTo(20);
     }];
     
     [_bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left. mas_equalTo(HOR_MARGIN);
-        make.right.mas_equalTo(-HOR_MARGIN);
+        make.right.mas_equalTo(-HOR_MARGIN).priorityLow();
         make.bottom.mas_equalTo(self);
         make.height.mas_equalTo(ONE_PIXEL);
     }];
     
     [_refreshButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-HOR_MARGIN);
+        make.right.mas_equalTo(-HOR_MARGIN).priorityLow();
         make.centerY.mas_equalTo(_locationLabel);
         make.size.mas_equalTo(CGSizeMake(20, 20));
     }];
@@ -130,7 +130,7 @@
     
     [_notInCityLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(HOR_MARGIN);
-        make.right.mas_equalTo(-HOR_MARGIN);
+        make.right.mas_equalTo(-HOR_MARGIN).priorityLow();
         make.top.mas_equalTo(20);
         make.bottom.mas_lessThanOrEqualTo(self.notInCityBgView);
     }];
