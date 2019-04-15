@@ -192,7 +192,7 @@
                 [self.listViewModel notifyCellDisplay];
             });
         });
-        _navBarViewModel.isHasData = YES;
+        self.navBarViewModel.isHasData = YES;
         [self endLoading];
         if ([x count] > 0) {
             [self.tableView setHidden:NO];

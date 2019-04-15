@@ -178,17 +178,33 @@ extern NSString *const kFHToastCountKey;
 }
 
 - (void)setDefaultBuildYear {
+    //兼容android的逻辑
+    if([self.viewController.infoModel.builtYear isEqualToString:@"0"]){
+        self.viewController.infoModel.builtYear = @"";
+    }
+    
     NSString *buildYear = self.viewController.infoModel.builtYear;
-    if((!buildYear || [buildYear isEqualToString:@""] || [buildYear isEqualToString:@"0"]) && _neighborhoodDetailModel){
+    
+    if((!buildYear || [buildYear isEqualToString:@""]) && _neighborhoodDetailModel){
         NSArray *baseInfos = _neighborhoodDetailModel.data.baseInfo;
         for (FHDetailNeighborhoodDataBaseInfoModel *model in baseInfos) {
             if([model.attr isEqualToString:@"建造年代"]){
-                buildYear = [model.value substringToIndex:model.value.length - 1];
-                self.viewController.infoModel.builtYear = buildYear;
+                if(model.value.length >= 4){
+                    buildYear = [model.value substringToIndex:4];
+                    if([self isPureInt:buildYear]){
+                        self.viewController.infoModel.builtYear = buildYear;
+                    }
+                }
                 return;
             }
         }
     }
+}
+
+- (BOOL)isPureInt:(NSString*)string{
+    NSScanner* scan = [NSScanner scannerWithString:string];
+    int val;
+    return[scan scanInt:&val] && [scan isAtEnd];
 }
 
 - (void)addGoDetailTracer {

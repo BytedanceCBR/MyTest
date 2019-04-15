@@ -132,6 +132,10 @@ NS_ASSUME_NONNULL_BEGIN
 // */
 //+ (nullable NSString *)installID;
 
++ (BOOL)isAPPFirstLaunchForAd;
+
++ (void)setAppFirstLaunchForAd;
+
 /**
  *  判断APP是否第一次Launch
  *
