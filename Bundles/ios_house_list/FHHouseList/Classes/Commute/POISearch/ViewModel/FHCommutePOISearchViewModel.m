@@ -98,7 +98,7 @@
                 tableView.tableHeaderView = _locationHeaderView;
             }else{
                 self.locationHeaderView.showNotInCityTip = YES;
-                tableView.tableHeaderView = self.defaultHeader;                
+                tableView.tableHeaderView = self.locationHeaderView;
             }
             [self nearBySearch:NO];
         }
@@ -377,7 +377,6 @@
         self.locationHeaderView.location = name;
         _tableView.tableHeaderView = _locationHeaderView;
         self.locationHeaderView.loading = NO;
-//        self.locationHeaderView.showRefresh = NO;
     }
 }
 
@@ -635,12 +634,12 @@
     self.tableView.mj_footer.hidden = YES;
     [self.searchPois removeAllObjects];
     [self.tableView reloadData];
-    NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-    if (!self.locationHeaderView.showNotInCityTip &&[FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
-        self.tableView.tableHeaderView = _locationHeaderView;
-    }else{
-        self.tableView.tableFooterView = self.defaultHeader;
-    }
+//    NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+//    if (!self.locationHeaderView.showNotInCityTip &&[FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
+    self.tableView.tableHeaderView = _locationHeaderView;
+//    }else{
+//        self.tableView.tableFooterView = self.defaultHeader;
+//    }
     self.tableView.contentOffset = CGPointZero;
     
     if ([TTReachability isNetworkConnected]) {
