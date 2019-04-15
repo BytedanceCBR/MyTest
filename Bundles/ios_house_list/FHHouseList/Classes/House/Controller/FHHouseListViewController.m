@@ -216,6 +216,8 @@
             [wself.viewModel addModifyCommuteLog:NO];
             wself.commuteChooseBgView.hidden = YES;
         }else{
+            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+            [wself.commuteFilterView updateType:manager.commuteType time:manager.duration];
             [wself.view bringSubviewToFront:wself.commuteChooseBgView];
             [wself.commuteChooseBgView addSubview:wself.commuteFilterView];
             wself.commuteChooseBgView.hidden = NO;
