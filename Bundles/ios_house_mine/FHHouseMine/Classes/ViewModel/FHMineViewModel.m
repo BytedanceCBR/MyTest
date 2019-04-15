@@ -93,6 +93,12 @@
                                      @"page_type":@"setting",
                                      },
                              },
+                         @{
+                             @"name":@"视频测试",
+                             @"url":@"snssdk1370://video_test",
+                             @"cellId":@"settingCellId",
+                             @"cellClassName":@"FHMineSettingCell",
+                             },
                          ];
     [self.dataList addObjectsFromArray:self.defaultList];
     

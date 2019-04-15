@@ -36,6 +36,7 @@
 #import "FHDetailHouseSubscribeCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHDetailMediaHeaderCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -54,7 +55,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 // 注册cell类型
 - (void)registerCellClasses {
-    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    [self.tableView registerClass:[FHDetailMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCell class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoCell class])];
@@ -81,7 +82,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (Class)cellClassForEntity:(id)model {
     // 头部滑动图片
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-        return [FHDetailPhotoHeaderCell class];
+        return [FHDetailMediaHeaderCell class];
     }
     // 标题
     if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {

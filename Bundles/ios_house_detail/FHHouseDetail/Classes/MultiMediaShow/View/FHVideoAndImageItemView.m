@@ -66,6 +66,10 @@
 }
 
 - (void)initViews {
+    for (UIButton *btn in self.btnArray) {
+        [btn removeFromSuperview];
+    }
+    [self.btnArray removeAllObjects];
     UIView *lastView = self;
     for (NSInteger i = 0; i < _titleArray.count; i++) {
         UIButton *button = [self buttonWithTitle:_titleArray[i] tag:i];

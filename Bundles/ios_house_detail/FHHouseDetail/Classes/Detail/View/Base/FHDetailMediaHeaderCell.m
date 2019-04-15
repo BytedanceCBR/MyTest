@@ -1,38 +1,61 @@
 //
-//  VideoTestViewController.m
-//  FHHouseMine
+//  FHDetailMediaHeaderCell.m
+//  FHHouseDetail
 //
-//  Created by 谢思铭 on 2019/4/11.
+//  Created by 谢思铭 on 2019/4/15.
 //
 
-#import "VideoTestViewController.h"
+#import "FHDetailMediaHeaderCell.h"
 #import "FHMultiMediaScrollView.h"
 #import "FHMultiMediaModel.h"
 
-@interface VideoTestViewController ()
+#define kHEIGHT 300
 
-@property(nonatomic, strong) FHMultiMediaScrollView *mediaView;
-@property(nonatomic, strong) FHMultiMediaModel *model;
+@interface FHDetailMediaHeaderCell ()
+
+@property(nonatomic , strong) FHMultiMediaScrollView *mediaView;
+@property(nonatomic , strong) FHMultiMediaModel *model;
 
 @end
 
-@implementation VideoTestViewController
+@implementation FHDetailMediaHeaderCell
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor whiteColor];
-    
-    [self generateModel];
-    
-    self.mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 200)];
-    [self.view addSubview:_mediaView];
-    
-    [_mediaView updateWithModel:self.model];
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+    
+    // Configure the view for the selected state
+}
+
+- (void)refreshWithData:(id)data {
+//    if (self.currentData == data || ![data isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+//        return;
+//    }
+//    self.currentData = data;
+//    id images = ((FHDetailPhotoHeaderModel *)data).houseImage;
+    [self generateModel];
+    [self.mediaView updateWithModel:self.model];
+    
+}
+
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style
+                reuseIdentifier:reuseIdentifier];
+    if (self) {
+        _mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kHEIGHT)];
+        [self.contentView addSubview:_mediaView];
+        
+        [_mediaView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self.contentView);
+            make.height.mas_equalTo(kHEIGHT);
+        }];
+    }
+    return self;
 }
 
 - (void)generateModel {
@@ -76,3 +99,5 @@
 }
 
 @end
+
+
