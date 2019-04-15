@@ -351,8 +351,8 @@
 
 - (BOOL)isMissCoreInfo
 {
-    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.neighborhoodInfo != nil;
+    // 小区详情页不必判断信息缺失
+    return NO;
 }
 
 @end
