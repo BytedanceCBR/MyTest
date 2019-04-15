@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SDWebImageDownloaderOperation.h"
+#import <SDWebImage/SDWebImageDownloaderOperation.h>
 
 @interface SDWebImageDownloaderOperationBugFix : NSOperation <SDWebImageDownloaderOperationInterface, SDWebImageOperation, NSURLSessionTaskDelegate, NSURLSessionDataDelegate>
 
