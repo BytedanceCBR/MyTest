@@ -171,15 +171,23 @@
         
         UICollectionReusableView *view = (UICollectionReusableView *)[collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"reusableView" forIndexPath:indexPath];
         view.backgroundColor = [UIColor whiteColor];
-//        UIView *titleView = [view viewWithTag:10010];
+        UIView *titleView = [view viewWithTag:10010];
         if (self.pictsArray.count > indexPath.section) {
 
            FHDetailNewDataSmallImageGroupModel *groupModel = self.pictsArray[indexPath.section];
 
-//            if ([titleView isKindOfClass:[UILabel class]]) {
-//                ((UILabel *)titleView).text = groupModel.name;
-//            }else
-//            {
+            if ([titleView isKindOfClass:[UILabel class]]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if([groupModel.name length] > 0)
+                    {
+                       ((UILabel *)titleView).text = [NSString stringWithFormat:@"%@(%ld)",groupModel.name,groupModel.images.count];
+                    }else
+                    {
+                        ((UILabel *)titleView).text = [NSString stringWithFormat:@"(%ld)",groupModel.images.count];
+                    }
+                });
+            }else
+            {
                 UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 0.0, 100, FH_FLOOR_PIC_HEADER_HEIGHT)];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if([groupModel.name length] > 0)
@@ -194,7 +202,7 @@
                 labelTitle.font = [UIFont themeFontRegular:14];
                 [labelTitle setTextColor:[UIColor themeGray1]];
                 [view addSubview:labelTitle];
-//            }
+            }
             
         }
 
