@@ -284,11 +284,11 @@
 {
     if (request == self.keywordRequest) {
         
-        if (response.count == 0) {
-            [self.tableView.mj_footer endRefreshingWithNoMoreData];
-        }else{
-            [self.tableView.mj_footer endRefreshing];
-        }
+//        if (response.count == 0) {
+//            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+//        }else{
+//            [self.tableView.mj_footer endRefreshing];
+//        }
         
         if (request.page == 1) {
             [self.searchPois removeAllObjects];
@@ -297,25 +297,32 @@
             }
         }
         
-        if (request.page == 1 && response.count == 0) {
-            self.tableView.mj_footer.hidden = YES;
-        }else{
-            self.tableView.mj_footer.hidden = NO;
-        }
+//        if (request.page == 1 && response.count == 0) {
+//            self.tableView.mj_footer.hidden = YES;
+//        }else{
+//            self.tableView.mj_footer.hidden = NO;
+//        }
         
         [self.searchPois addObjectsFromArray:response.pois];
         
-        if (self.searchPois.count == response.count) {
-            //没有数据了
-            [self.tableView.mj_footer endRefreshingWithNoMoreData];
-        }
+//        if (self.searchPois.count == response.count) {
+//            //没有数据了
+//            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+//        }
         
         [self.tableView reloadData];
         if (self.searchPois.count > 0) {
             self.tableView.tableHeaderView = self.defaultHeader;
             if (request.page == 1) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                    @try {
+                        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                    } @catch (NSException *exception) {
+                        
+                    } @finally {
+                        
+                    }
+
                 });
             }
         }else{

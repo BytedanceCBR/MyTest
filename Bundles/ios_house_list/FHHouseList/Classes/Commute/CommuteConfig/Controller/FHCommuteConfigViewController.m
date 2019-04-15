@@ -39,7 +39,7 @@
 @property(nonatomic , strong) AMapAOI *choosePOI;
 @property(nonatomic , strong) AMapLocationReGeocode *chooseRegeoCode; //选择当前的反GEO定位
 @property(nonatomic , strong) CLLocation *chooseLocation; //选择当前的反GEO定位
-
+@property(nonatomic , assign) BOOL useLocation;//是否使用定位
 @end
 
 @implementation FHCommuteConfigViewController
@@ -179,7 +179,8 @@
             self.chooseLocation = [FHLocManager sharedInstance].currentLocaton;
             if (currentReGeocode && self.chooseLocation) {
                 destLocation = currentReGeocode.AOIName;
-                self.chooseRegeoCode = currentReGeocode;                
+                self.chooseRegeoCode = currentReGeocode;
+                self.useLocation = YES;
             }
         }
     }
@@ -195,6 +196,15 @@
     [self addGoDetailLog];
 
     self.ttStatusBarStyle = UIStatusBarStyleLightContent;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (self.useLocation && _chooseRegeoCode != [FHLocManager sharedInstance].currentReGeocode ) {
+        _chooseRegeoCode = [FHLocManager sharedInstance].currentReGeocode;
+        _inputLabel.text = _chooseRegeoCode.AOIName;
+    }
 }
 
 -(void)initConstraints
@@ -260,6 +270,7 @@
 
 -(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController
 {
+    self.useLocation = NO;
     self.inputLabel.text = poi.name;
     self.inputLabel.textColor = [UIColor themeGray1];
     [viewController.navigationController popViewControllerAnimated:YES];
@@ -268,7 +279,7 @@
 }
 
 -(void)userChooseLocation:( CLLocation * )location geoCode:(AMapLocationReGeocode *)geoCode inViewController:(UIViewController *)viewController
-{
+{    
     self.inputLabel.text = geoCode.AOIName;
     self.inputLabel.textColor = [UIColor themeGray1];
     [viewController.navigationController popViewControllerAnimated:YES];
