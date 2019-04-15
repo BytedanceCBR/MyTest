@@ -315,7 +315,7 @@
 
 - (void)imAction {
     
-    if (self.contactPhone.unregistered) {
+    if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         [self addFakeImClickLog];
         [[ToastManager manager] showToast:@"该经纪人暂未开通该服务，请使用其他联系方式" duration:3 isUserInteraction:NO];
         return;

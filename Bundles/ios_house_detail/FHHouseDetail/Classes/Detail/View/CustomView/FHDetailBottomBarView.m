@@ -178,7 +178,7 @@
     [self.imChatBtn setTitle:chatTitle forState:UIControlStateHighlighted];
 
     BOOL showIM = NO;
-    if (contactPhone.unregistered || !isEmptyString(contactPhone.imOpenUrl) ){
+    if ((contactPhone.unregistered && contactPhone.imLabel.length > 0) || !isEmptyString(contactPhone.imOpenUrl) ){
         showIM = YES;
     }
     
