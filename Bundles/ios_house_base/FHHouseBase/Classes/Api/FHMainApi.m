@@ -11,6 +11,7 @@
 #import "FHHouseType.h"
 #import "FHCommonDefines.h"
 #import <TTSandBoxHelper.h>
+#import "TTSandBoxHelper.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -56,7 +57,12 @@
         requestParam[@"city_name"] = nil;
     }
     
-    requestParam[@"app_first_start"] = @(1);
+    if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
+        requestParam[@"app_first_start"] = @(1);
+    }else
+    {
+        requestParam[@"app_first_start"] = @(0);
+    }
 
     double longitude = location.longitude;
     double latitude = location.latitude;
