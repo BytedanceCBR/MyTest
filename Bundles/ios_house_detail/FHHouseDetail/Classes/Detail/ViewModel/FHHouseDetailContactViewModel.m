@@ -35,7 +35,9 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
-
+#import "FHIMShareActivity.h"
+#import "FHIMShareItem.h"
+#import "TTAccountManager.h"
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
@@ -194,6 +196,15 @@
     NSString *webPageUrl = self.shareInfo.shareUrl ? : @"";
 
     NSMutableArray *shareContentItems = @[].mutableCopy;
+    if(TTAccountManager.isLogin &&
+       (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) &&
+       self.imShareInfo != nil) {
+        FHIMShareItem* fhImShareItem = [[FHIMShareItem alloc] init];
+        fhImShareItem.imShareInfo = self.imShareInfo;
+        fhImShareItem.tracer = self.tracerDict;
+        [shareContentItems addObject:fhImShareItem];
+    }
+
     TTWechatContentItem *wechatItem = [[TTWechatContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
     [shareContentItems addObject:wechatItem];
     TTWechatTimelineContentItem *timeLineItem = [[TTWechatTimelineContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
@@ -207,6 +218,7 @@
         TTQQZoneContentItem *qqZoneItem = [[TTQQZoneContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage imageUrl:@"" shareTye:TTShareWebPage];
         [shareContentItems addObject:qqZoneItem];
     }
+
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
 }
 
@@ -417,6 +429,8 @@
         platform = @"qq";
     }else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
         platform = @"qzone";
+    }else if ([activity isKindOfClass:[FHIMShareActivity class]]) {
+        platform = @"realtor";
     }
     [self addShareFormLog:platform];
 }
@@ -431,6 +445,8 @@
     if (!_shareManager) {
         _shareManager = [[TTShareManager alloc]init];
         _shareManager.delegate = self;
+        FHIMShareActivity* activity = [[FHIMShareActivity alloc] init];
+        [TTShareManager addUserDefinedActivity:activity];
     }
     return _shareManager;
 }

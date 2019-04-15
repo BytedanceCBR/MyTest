@@ -187,6 +187,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
+                wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;

@@ -177,7 +177,7 @@
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"listEntrance": @"list_entrance",
-                           
+                           @"imShareInfo": @"im_share_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -266,6 +266,26 @@
 }
 @end
 
+@implementation FHDetailImShareInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"coverImage": @"cover_image",
+                           @"shareUrl": @"share_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailOldDataHouseOverreviewListModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -283,6 +303,7 @@
         return dict[keyName]?:keyName;
     }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
