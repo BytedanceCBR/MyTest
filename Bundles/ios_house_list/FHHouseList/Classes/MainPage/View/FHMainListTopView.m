@@ -94,6 +94,10 @@
     _filterBarView.top = _bannerView.bottom;
     top = _filterBarView.bottom;
 
+    CGRect notifyBarFrame = _notifyBarView.frame;
+    notifyBarFrame.origin.y = top;
+    _notifyBarView.frame = notifyBarFrame;
+    
     CGRect bottomFrame = _bottomLine.frame;
     bottomFrame.origin.y = top - ONE_PIXEL;
     _bottomLine.frame = bottomFrame;

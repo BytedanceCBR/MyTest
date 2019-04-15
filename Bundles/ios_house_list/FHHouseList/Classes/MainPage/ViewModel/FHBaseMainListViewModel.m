@@ -1237,12 +1237,16 @@
             self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
         }
     }else{
-        //
-        if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
-            if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
-                self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+        //        
+        if (isTop) {
+            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+        }else{
+            if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
+                if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
+                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+                }
             }
-        }                       
+        }
     }
     
     if (_topView.superview == self.topContainerView) {
