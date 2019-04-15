@@ -15,6 +15,7 @@
 #import <FHEnvContext.h>
 #import <TTAccountSDK.h>
 #import <FHHomeConfigManager.h>
+//#import <TTAccountSDK/TTAccountCookie.h>
 
 @implementation TTRNavi
 
@@ -303,10 +304,10 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         
         NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
         // 注销登录
-        [TTAccount logoutAndClearCookie:^(BOOL success, NSError * _Nullable error) {
+//        [TTAccountCookie clearAccountCookie];
+        [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
             callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
         }];
-        
         
         [FHEnvContext openLogoutSuccessURL:url completion:^(BOOL isSuccess) {
         

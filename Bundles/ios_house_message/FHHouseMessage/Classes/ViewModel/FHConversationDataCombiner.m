@@ -12,6 +12,9 @@
 #import "IMConversation+Comparable.h"
 
 #import "FHUnreadMsgDataUnreadModel+Comparable.h"
+#import "RXCollection.h"
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
 
 @interface FHConversationDataCombiner ()
 @property (nonatomic, strong) NSArray<IMConversation*>* conversations;
@@ -39,6 +42,11 @@
 
 -(void)resetSystemChannels:(NSArray<FHUnreadMsgDataUnreadModel*>*)channels {
     self.channels = channels;
+    NSNumber* count = [channels rx_foldInitialValue:@(0) block:^id(id memo, FHUnreadMsgDataUnreadModel* each) {
+        NSInteger count = [memo unsignedIntegerValue];
+        return @(count += [each.unread integerValue]);
+    }];
+    [[FHEnvContext sharedInstance].messageManager setUnreadSystemMsgCount:[count integerValue]];
     [self resetAllItems];
 }
 

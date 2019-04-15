@@ -14,7 +14,6 @@
 @interface FHHouseFindResultTopHeader ()
 
 @property(nonatomic , strong) UIImageView *backImageView;
-@property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) UIView *iconContainerView;
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
 

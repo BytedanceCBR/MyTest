@@ -14,7 +14,7 @@
 #import "NSTimer+TTNoRetainRef.h"
 #import "TTAccountLoginConfLogic.h"
 #import "TTAccountLoginManager.h"
-
+#import <TTAccountSDK/TTAccountAuthLoginManager.h>
 
 
 @interface TTAccountLoginBaseViewController ()
@@ -279,7 +279,7 @@ TTAccountMulticastProtocol
 {
     [self uMengPlatform:keyName];
     
-    TTAccountAuthType authPlatformType = [TTAccount accountAuthTypeForPlatform:keyName];
+    TTAccountAuthType authPlatformType = [TTAccountAuthLoginManager accountAuthTypeForPlatform:keyName];
     [TTAccountLoginManager requestLoginPlatformByType:authPlatformType completion:^(BOOL success, NSError *error) {
         
         [self respondsToAccountAuthLoginWithError:error forPlatform:keyName];

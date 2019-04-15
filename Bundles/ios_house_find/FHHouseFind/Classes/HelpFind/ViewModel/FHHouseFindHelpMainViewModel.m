@@ -51,6 +51,9 @@
 
                 wSelf.viewController.hasValidateData = YES;
                 [wSelf.viewController.emptyView hideEmptyView];
+                wSelf.viewController.customNavBarView.hidden = YES;
+                [wSelf.viewController.customNavBarView removeFromSuperview];
+
             } else {
                 wSelf.viewController.hasValidateData = NO;
                 [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];

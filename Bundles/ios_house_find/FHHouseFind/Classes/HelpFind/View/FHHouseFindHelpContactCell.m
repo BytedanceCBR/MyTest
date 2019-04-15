@@ -51,7 +51,7 @@
     }];
     
     [self.singleLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom);
+        make.top.mas_equalTo(self.phoneInput.mas_bottom).mas_offset(5);
         make.left.mas_equalTo(self.phoneInput);
         make.right.mas_equalTo(self.phoneInput);
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);

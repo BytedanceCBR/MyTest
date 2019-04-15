@@ -19,7 +19,7 @@
 #import "ArticleMobilePasswordViewController.h"
 #import "ArticleMobileChangeViewController.h"
 #import "TTEditUserProfileViewController.h"
-#import "BDAccountSDK.h"
+#import <TTAccountSDK/TTAccountSDK.h>
 
 
 
@@ -83,7 +83,7 @@ TTEditUserProfileViewDelegate
 - (void)refreshEditableUserInfo
 {
     TTAccountUserAuditSet *newAuditInfo = [[TTAccountManager currentUser].auditInfoSet copy];
-    BDAccountUser* userInfo = [[BDAccount sharedAccount] user];
+    TTAccountUserEntity* userInfo = [[TTAccount sharedAccount] user];
     if (!newAuditInfo && !userInfo) return;
     
     if (!_editableAuditInfo) {

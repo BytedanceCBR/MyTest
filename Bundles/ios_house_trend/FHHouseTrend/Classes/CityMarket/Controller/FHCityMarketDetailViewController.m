@@ -26,6 +26,7 @@
 #import "FHImmersionNavBarViewModel.h"
 #import "TTTracker.h"
 #import "TTTrackerWrapper.h"
+#import "FHUserTracker.h"
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
 @property (nonatomic, strong) TTRouteUserInfo* userInfo;
@@ -71,6 +72,10 @@
         self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
         self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
         self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
+
+        _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
+        _headerViewModel.delegate = self;
+        [_headerViewModel requestData];
     }
     return self;
 }
@@ -114,14 +119,16 @@
         make.left.right.bottom.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view);
     }];
+    UIView* tableBgView = [[UIView alloc] init];
+    tableBgView.backgroundColor = [UIColor whiteColor];
+    _tableView.backgroundColor = [UIColor whiteColor];
+    _tableView.backgroundView = tableBgView;
     CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
 
     self.headerView = [[FHCityMarketHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 195 + navBarHeight)]; //174
     _tableView.tableHeaderView = _headerView;
     [self.view bringSubviewToFront:_bottomBarView];
-    CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
-    // 这里设置tableView底部滚动的区域，保证内容可以完全露出
-    _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
+
     [self addDefaultEmptyViewFullScreen];
     [self setupSections];
     [self bindHeaderView];
@@ -159,14 +166,14 @@
 }
 
 -(void)bindHeaderView {
-    _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
-    _headerViewModel.delegate = self;
     RAC(_headerView.titleLabel, text) = RACObserve(_headerViewModel, title);
     RAC(_headerView.priceLabel, text) = RACObserve(_headerViewModel, price);
     RAC(_headerView.sourceLabel, text) = RACObserve(_headerViewModel, source);
     RAC(_headerView.unitLabel, text) = RACObserve(_headerViewModel, unit);
     @weakify(self);
-    [[[RACObserve(_headerViewModel, properties) skip:1] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
+    [[[RACObserve(_headerViewModel, properties) filter:^BOOL(id  _Nullable value) {
+        return value != nil;
+    }] map:^id _Nullable(NSArray<FHCityMarketDetailResponseDataSummaryItemListModel*>*  _Nullable value) {
         NSArray* result = [value rx_mapWithBlock:^id(FHCityMarketDetailResponseDataSummaryItemListModel* each) {
             FHCityMarketHeaderPropertyItemView* itemView = [[FHCityMarketHeaderPropertyItemView alloc] init];
             itemView.nameLabel.text = each.desc;
@@ -189,7 +196,9 @@
         [self endLoading];
         if ([x count] > 0) {
             [self.tableView setHidden:NO];
+            [self.emptyView setHidden:YES];
         }
+        [self fillDataToBottomBar];
     }];
 
     RAC(_chatSectionCellPlaceHolder, marketTrendList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
@@ -218,8 +227,10 @@
     RAC(self.customNavBarView.title, textColor) = RACObserve(_navBarViewModel, titleColor);
     RAC(_navBarViewModel, currentContentOffset) = RACObserve(_tableView, contentOffset);
     [self bindStatusBarObv];
-    [self startLoading];
-    [_headerViewModel requestData];
+    if (_headerViewModel.model == nil) {
+        [self startLoading];
+    }
+//    [_headerViewModel requestData];
 }
 
 -(void)bindStatusBarObv {
@@ -268,44 +279,51 @@
             make.height.mas_equalTo(64);
         }
     }];
-    
-    NSMutableDictionary *traceParams = [[self traceParams] mutableCopy];
-    NSMutableDictionary *tracer = [traceParams[@"tracer"] mutableCopy];
-    tracer[@"element_from"] = @"sale_value";
-    traceParams[@"tracer"] = tracer;
-    TTRouteUserInfo* infoValue = [[TTRouteUserInfo alloc] initWithInfo:traceParams];
-    
-    FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
-    item.titleLabel.text = @"卖房估价";
-    item.backgroundColor = [UIColor colorWithHexString:@"ff8151"];
-    FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
-    if (_headerViewModel.model.data.bottomOpenUrl.count >= 1) {
-        action.openUrl = [NSURL URLWithString:_headerViewModel.model.data.bottomOpenUrl[0]];
-    } else {
-        action.openUrl = [NSURL URLWithString:@"sslocal://price_valuation"];
-    }
-    action.userInfo = infoValue;
-    [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
-    [_actions addObject:action];
-    
+}
+
+-(void)fillDataToBottomBar {
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
+    NSArray<FHCityMarketBottomBarItem*>* items = [_headerViewModel.model.data.bottomButtons rx_mapWithBlock:^id(FHCityMarketDetailResponseBottomButton* each) {
+        FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
+        item.titleLabel.text = each.text;
+        item.backgroundColor = [UIColor colorWithHexString:each.color];
 
-    FHCityMarketBottomBarItem* item2 = [[FHCityMarketBottomBarItem alloc] init];
-    item2.titleLabel.text = @"帮我找房";
-    item2.backgroundColor = [UIColor colorWithHexString:@"ff5869"];
+        FHCityOpenUrlJumpAction* action = [[FHCityOpenUrlJumpAction alloc] init];
+        if (each.openUrl != nil) {
+            action.openUrl = [NSURL URLWithString:each.openUrl];
+        }
+        action.userInfo = info;
+        [item addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
+        [_actions addObject:action];
+        return item;
+    }];
 
-    action = [[FHCityOpenUrlJumpAction alloc] init];
-    if (_headerViewModel.model.data.bottomOpenUrl.count >= 2) {
-        action.openUrl = [NSURL URLWithString:_headerViewModel.model.data.bottomOpenUrl[1]];
+    if (items.count == 0) {
+        _bottomBarView.hidden = YES;
+        CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 30 : 10;
+
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
     } else {
-        action.openUrl = [NSURL URLWithString:@"sslocal://house_find"];
+        CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
+        // 这里设置tableView底部滚动的区域，保证内容可以完全露出
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
+        [_bottomBarView setBottomBarItems:items];
+        [_headerViewModel.model.data.bottomButtons enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseBottomButton*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.type != nil) {
+                [self traceElementShow:obj.type];
+            }
+        }];
     }
-    action.userInfo = info;
+}
 
-    [item2 addTarget:action action:@selector(jump) forControlEvents:UIControlEventTouchUpInside];
-    [_actions addObject:action];
-
-    [_bottomBarView setBottomBarItems:@[item, item2]];
+-(void)traceElementShow:(NSString*)elementType {
+    NSParameterAssert(elementType);
+    NSMutableDictionary* tracer = [self.tracerDict mutableCopy];
+    tracer[@"rank"] = @"be_null";
+    tracer[@"page_type"] = @"city_market";
+    tracer[@"element_type"] = elementType;
+    tracer[@"enter_from"] = nil;
+    [FHUserTracker writeEvent:@"element_show" params:tracer];
 }
 
 -(NSDictionary*)traceParams {

@@ -56,7 +56,7 @@
 
 - (void)initConstaints {
     [_icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-14);
+        make.right.mas_equalTo(-20);
         make.top.mas_equalTo(39);
         make.width.height.mas_equalTo(62);
     }];

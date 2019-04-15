@@ -340,7 +340,7 @@
 - (BOOL)isMissTitle
 {
     FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.name.length < 1;
+    return model.data.neighborhoodInfo.name.length < 1;
 }
 
 - (BOOL)isMissImage
@@ -352,7 +352,7 @@
 - (BOOL)isMissCoreInfo
 {
     FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.coreInfo.count < 1;
+    return model.data.neighborhoodInfo != nil;
 }
 
 @end

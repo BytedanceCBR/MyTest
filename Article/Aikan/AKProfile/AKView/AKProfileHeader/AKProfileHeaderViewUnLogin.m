@@ -8,6 +8,7 @@
 #import "AKProfileLoginButton.h"
 #import "AKProfileHeaderViewUnLogin.h"
 #import <UIColor+TTThemeExtension.h>
+#import <TTAccountSDK/TTAccountAuthWeChat.h>
 
 #define kPaddingProfileHeaderViewTopButtonsRegion            [TTDeviceUIUtils tt_newPadding:16.f]
 

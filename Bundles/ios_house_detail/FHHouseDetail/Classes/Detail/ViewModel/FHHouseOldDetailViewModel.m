@@ -235,7 +235,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (void)processDetailData:(FHDetailOldModel *)model {
     
     self.detailData = model;
-    [self addDetailCoreInfoExcetionLog];
+    if (model.data.status != -1) {
+        [self addDetailCoreInfoExcetionLog];
+    }
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片

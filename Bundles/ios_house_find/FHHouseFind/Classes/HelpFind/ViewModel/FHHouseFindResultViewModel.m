@@ -90,6 +90,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
 
 - (void)setRecommendModel:(FHHouseFindRecommendDataModel *)recommendModel
 {
+    self.tableView.scrollsToTop = NO;
     _recommendModel = recommendModel;
     __weak typeof(self) wself = self;
     _topHeader.clickCallBack = ^{
@@ -123,7 +124,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     [_buttonOpenMore mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(0);
+        make.centerY.equalTo(self.buttonOpenMore);
         make.height.mas_equalTo(40);
     }];
 }
@@ -247,6 +248,15 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     NSMutableDictionary *paramsRequest = [NSMutableDictionary new];
     [paramsRequest setValue:@(self.houseType) forKey:@"house_type"];
     [paramsRequest setValue:@(50) forKey:@"count"];
+    [self.currentViewController startLoading];
+    
+    self.houseList = [NSMutableArray array];
+    self.bottomView.hidden = YES;
+    self.topHeader.titleLabel.text = @"";
+    if (self.isShowErrorPage) {
+        self.isShowErrorPage = NO;
+    }
+    [self.tableView reloadData];
     
     [self.tableView setContentOffset:CGPointMake(0, 0)];
 //    if ([self.tableView numberOfSections] && [self.tableView numberOfRowsInSection:0]) {
@@ -278,7 +288,6 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         refreshTip = houseModel.refreshTip;
         itemArray = houseModel.items;
         self.searchId = houseModel.searchId;
-        self.houseList = [NSMutableArray array];
 
         [itemArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
@@ -331,6 +340,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
     
     [self addHouseSearchLog];
     
+    [self.currentViewController endLoading];
 }
 
 -(FHSingleImageInfoCellModel *)houseItemByModel:(id)obj {
@@ -440,13 +450,7 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 35;
         [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
-        
-//
-//        [noDataErrorView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.top.left.right.equalTo(cellError.contentView);
-//            make.height.mas_equalTo([UIScreen mainScreen].bounds.size.height * 0.6);
-//        }];
-//
+
         return cellError;
     }
     

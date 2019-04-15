@@ -12,8 +12,10 @@
 #import "YYCache.h"
 #import "FHLocManager.h"
 #import "TTInstallIDManager.h"
-#import "BDAccountConfiguration.h"
-#import "BDAccount+Configuration.h"
+#import <TTAccountSDK/TTAccount.h>
+#import <TTAccountSDK/TTAccountConfiguration.h>
+#import <TTNewsAccountBusiness/TTAccountService.h>
+#import <TTNewsAccountBusiness/SSCookieManager.h>
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
@@ -77,6 +79,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
+            
+            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+            
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            
             if (isSuccess) {
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 FHConfigDataModel *configModel = model.data;
@@ -102,6 +109,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         [[TTArticleCategoryManager sharedManager] startGetCategory];
                     }
                 }];
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];
             }else
             {
                 if(completion)
@@ -112,11 +121,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 [[ToastManager manager] showToast:@"切换城市失败"];
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
-                NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
-                
-                [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-                
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" metric:nil category:params extra:paramsExtra];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
@@ -338,23 +343,29 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:channelName finishBlock:^(NSString *deviceID, NSString *installID) {
         
-        BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
+        TTAccountConfiguration *conf = [TTAccount accountConf];
         conf.domain = [FHURLSettings baseURL];
-        conf.getDeviceIdBlock = ^NSString * _Nonnull{
-            return deviceID;
+        conf.appRequiredParamsHandler = ^NSDictionary * _Nonnull{
+            NSMutableDictionary *requiredDict = [NSMutableDictionary dictionaryWithCapacity:4];
+            [requiredDict setValue:installID forKey:TTAccountInstallIdKey];
+            [requiredDict setValue:deviceID forKey:TTAccountDeviceIdKey];
+            [requiredDict setValue:nil forKey:TTAccountSessionKeyKey];
+            [requiredDict setValue:@"1370" forKey:TTAccountSSAppIdKey];
+            return [requiredDict copy];
+        };
+
+        [TTAccount accountConf].networkParamsHandler = ^NSDictionary *() {
+            return [[TTNetworkUtilities commonURLParameters] copy]?:@{};
         };
         
-        conf.getInstallIdBlock = ^NSString * _Nonnull{
-            return installID;
-        };
+        [TTAccount accountConf].accountMessageFirstResponder = [TTAccountService sharedAccountService];
         
-        conf.SSAppId = @"1370";
+        //TODO: 待头条库下沉后替换成真正的类
+        id delegateImp = [[[FHHouseBridgeManager sharedInstance] accountBridge] accountLoggerImp];
+        [TTAccount accountConf].loggerDelegate  = delegateImp;
+        [TTAccount accountConf].monitorDelegate = delegateImp;
         
-        conf.networkParamsHandler = ^NSDictionary * _Nonnull{
-            return [NSDictionary new];
-        };
-        
-        [BDAccount sharedAccount].accountConf = conf;
+        [SSCookieManager setSessionIDToCookie:[[TTAccount sharedAccount] sessionKey]];
     }];
     //更新公共参数
     [self updateRequestCommonParams];

@@ -129,7 +129,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *openUrl;
-@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *descriptionStr;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsImageModel> *image;
 @property (nonatomic, copy , nullable) NSString *textColor;
@@ -140,6 +140,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 @interface  FHConfigDataRentOpDataModel  : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsModel> *items;
+@property (nonatomic, copy , nullable) NSString *opStyle;
+
+@end
+
+@interface  FHConfigDataMainPageBannerOpDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataRentOpDataItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *opStyle;
@@ -276,7 +283,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *monthUp;
 @property (nonatomic, copy , nullable) NSString *cityTitleDesc;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmUnit;
-
+@property (nonatomic, strong , nullable) NSDictionary *logPb;
 @end
 
 @interface  FHConfigDataAvailabilityModel  : JSONModel
@@ -307,6 +314,7 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *rentOpData ;
+@property (nonatomic, strong , nullable) FHConfigDataMainPageBannerOpDataModel *mainPageBannerOpData ;
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *houseOpData ;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataEntryInfoModel> *entryInfo;
 @property (nonatomic, copy , nullable) NSString *currentCityId;

@@ -6,7 +6,7 @@
 //
 //
 
-#import <TTAccountSDK/TTAccountSDK.h>
+#import <TTAccountSDK/TTAccountUserAuditSet.h>
 
 
 

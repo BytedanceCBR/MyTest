@@ -1,0 +1,1052 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.2.1-binary)
+  - AFNetworking (2.5.1.1-binary):
+    - AFNetworking/NSURLConnection (= 2.5.1.1-binary)
+    - AFNetworking/NSURLSession (= 2.5.1.1-binary)
+    - AFNetworking/Reachability (= 2.5.1.1-binary)
+    - AFNetworking/Security (= 2.5.1.1-binary)
+    - AFNetworking/Serialization (= 2.5.1.1-binary)
+  - AFNetworking/NSURLConnection (2.5.1.1-binary)
+  - AFNetworking/NSURLSession (2.5.1.1-binary)
+  - AFNetworking/Reachability (2.5.1.1-binary)
+  - AFNetworking/Security (2.5.1.1-binary)
+  - AFNetworking/Serialization (2.5.1.1-binary)
+  - AKCommentPlugin (0.1.0)
+  - AKShareServicePlugin (0.1.0)
+  - AKWDPlugin (0.1.0)
+  - AKWebViewBundlePlugin (0.1.0)
+  - AMap3DMap (6.2.0.1-binary)
+  - AMapFoundation (1.5.2.1-binary)
+  - AMapLocation (2.6.0.1-binary)
+  - AMapSearch (6.1.1.1-binary)
+  - Aspects (1.4.1.1-binary)
+  - AWECloudCommand (1.0.7.1-binary):
+    - AWECloudCommand/Core (= 1.0.7.1-binary)
+    - AWECloudCommand/NetDiagnose (= 1.0.7.1-binary)
+    - AWECloudCommand/Utilities (= 1.0.7.1-binary)
+  - AWECloudCommand/Core (1.0.7.1-binary)
+  - AWECloudCommand/NetDiagnose (1.0.7.1-binary)
+  - AWECloudCommand/Utilities (1.0.7.1-binary)
+  - AWEVideoPlayer (0.3.20.1-binary)
+  - BDABTestSDK (1.0.2-rc.3.1.binary):
+    - BDABTestSDK/Core (= 1.0.2-rc.3.1.binary)
+  - BDABTestSDK/Core (1.0.2-rc.3.1.binary)
+  - BDAccountSessionSDK (0.1.11.1-binary)
+  - BDALog (0.1.12.1-binary)
+  - BDAlogProtocol (0.1.6)
+  - BDTArticle (0.2.3)
+  - BDTBasePlayer (0.3.47)
+  - BDTExploreOrderedData (0.1.7)
+  - BDTFactoryConfigurator (0.1.0.1-binary)
+  - BDTSharedHeaders (0.1.0)
+  - BDWebImage/Core (0.2.2.1-binary)
+  - BDWebImage/Decoder (0.2.2.1-binary)
+  - BDWebImage/Download (0.2.2.1-binary):
+    - BDWebImage/Download/Chromium (= 0.2.2.1-binary)
+    - BDWebImage/Download/DownloadBase (= 0.2.2.1-binary)
+    - BDWebImage/Download/URLSession (= 0.2.2.1-binary)
+  - BDWebImage/Download/Chromium (0.2.2.1-binary)
+  - BDWebImage/Download/DownloadBase (0.2.2.1-binary)
+  - BDWebImage/Download/URLSession (0.2.2.1-binary)
+  - BDWebImage/Monitor (0.2.2.1-binary)
+  - BDWebImage/SDAdapter (0.2.2.1-binary)
+  - Bolts (1.9.0.1-binary):
+    - Bolts/AppLinks (= 1.9.0.1-binary)
+    - Bolts/Tasks (= 1.9.0.1-binary)
+  - Bolts/AppLinks (1.9.0.1-binary)
+  - Bolts/Tasks (1.9.0.1-binary)
+  - boringssl (0.0.7)
+  - CHTCollectionViewWaterfallLayout (0.9.5.1-binary):
+    - CHTCollectionViewWaterfallLayout/ObjC (= 0.9.5.1-binary)
+  - CHTCollectionViewWaterfallLayout/ObjC (0.9.5.1-binary)
+  - CocoaLumberjack (3.4.2.1-binary):
+    - CocoaLumberjack/Default (= 3.4.2.1-binary)
+    - CocoaLumberjack/Extensions (= 3.4.2.1-binary)
+  - CocoaLumberjack/Default (3.4.2.1-binary)
+  - CocoaLumberjack/Extensions (3.4.2.1-binary)
+  - Crashlytics (3.12.0.1-binary)
+  - Fabric (1.9.0.1-binary)
+  - FHCommonUI (0.1.0)
+  - FHHouseBase (0.1.0)
+  - FHHouseDetail (0.1.0)
+  - FHHouseFind (0.1.0)
+  - FHHouseHome (0.1.1)
+  - FHHouseList (0.1.0)
+  - FHHouseMessage (0.1.0)
+  - FHHouseMine (0.1.0)
+  - FHHouseRent (0.1.0)
+  - FHHouseTrend (0.1.0)
+  - FHMapSearch (0.1.0)
+  - FLAnimatedImage (1.0.12.1-binary)
+  - FLEX (2.1.1.1-binary)
+  - FMDB (2.6.2.1-binary):
+    - FMDB/standard (= 2.6.2.1-binary)
+  - FMDB/standard (2.6.2.1-binary)
+  - Godzippa (1.1.0.1-binary)
+  - Heimdallr/ALog (0.6.27-rc.0.1.binary)
+  - Heimdallr/CloudCommand (0.6.27-rc.0.1.binary)
+  - Heimdallr/Core (0.6.27-rc.0.1.binary)
+  - Heimdallr/CrashDetector (0.6.27-rc.0.1.binary)
+  - Heimdallr/DeviceInfo (0.6.27-rc.0.1.binary)
+  - Heimdallr/FMDB (0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDANR (0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDConfig (0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDOOM (0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDSession (0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDStart (0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDStore (0.6.27-rc.0.1.binary)
+  - Heimdallr/Log (0.6.27-rc.0.1.binary)
+  - Heimdallr/Mach (0.6.27-rc.0.1.binary)
+  - Heimdallr/MemorySnapshot (0.6.27-rc.0.1.binary)
+  - Heimdallr/Monitors (0.6.27-rc.0.1.binary)
+  - Heimdallr/TTMonitor (0.6.27-rc.0.1.binary)
+  - Heimdallr/TTNet (0.6.27-rc.0.1.binary)
+  - Heimdallr/UITracker (0.6.27-rc.0.1.binary)
+  - Heimdallr/Upload (0.6.27-rc.0.1.binary)
+  - Heimdallr/Utility (0.6.27-rc.0.1.binary)
+  - HTSVideoPlay (0.3.9):
+    - HTSVideoPlay/Yoga (= 0.3.9)
+    - HTSVideoPlay/YogaKit (= 0.3.9)
+  - HTSVideoPlay/Yoga (0.3.9)
+  - HTSVideoPlay/YogaKit (0.3.9)
+  - IESGeckoKit (0.4.0.1-binary):
+    - IESGeckoKit/Core (= 0.4.0.1-binary)
+  - IESGeckoKit/Core (0.4.0.1-binary)
+  - IESVideoPlayer (0.1.16)
+  - IESWebKit (0.1.5.1-binary):
+    - IESWebKit/Core (= 0.1.5.1-binary)
+    - IESWebKit/Falcon (= 0.1.5.1-binary)
+    - IESWebKit/JSBridge (= 0.1.5.1-binary)
+    - IESWebKit/WebP (= 0.1.5.1-binary)
+    - IESWebKit/WebView (= 0.1.5.1-binary)
+  - IESWebKit/Core (0.1.5.1-binary):
+    - IESWebKit/Core/Utils (= 0.1.5.1-binary)
+  - IESWebKit/Core/Utils (0.1.5.1-binary)
+  - IESWebKit/Falcon (0.1.5.1-binary)
+  - IESWebKit/JSBridge (0.1.5.1-binary)
+  - IESWebKit/WebP (0.1.5.1-binary)
+  - IESWebKit/WebView (0.1.5.1-binary)
+  - IGListKit (3.4.0.1-binary):
+    - IGListKit/Default (= 3.4.0.1-binary)
+    - IGListKit/Diffing (= 3.4.0.1-binary)
+  - IGListKit/Default (3.4.0.1-binary)
+  - IGListKit/Diffing (3.4.0.1-binary)
+  - ios_house_filter (0.1.0)
+  - ios_house_im (0.1.0)
+  - JSONModel (1.7.0-private.1-binary)
+  - KVOController (1.2.0.1-binary)
+  - libextobjc (0.4.1.1-binary):
+    - libextobjc/EXTADT (= 0.4.1.1-binary)
+    - libextobjc/EXTConcreteProtocol (= 0.4.1.1-binary)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1.1-binary)
+    - libextobjc/EXTNil (= 0.4.1.1-binary)
+    - libextobjc/EXTSafeCategory (= 0.4.1.1-binary)
+    - libextobjc/EXTScope (= 0.4.1.1-binary)
+    - libextobjc/EXTSelectorChecking (= 0.4.1.1-binary)
+    - libextobjc/EXTSynthesize (= 0.4.1.1-binary)
+    - libextobjc/NSInvocation+EXT (= 0.4.1.1-binary)
+    - libextobjc/NSMethodSignature+EXT (= 0.4.1.1-binary)
+    - libextobjc/RuntimeExtensions (= 0.4.1.1-binary)
+    - libextobjc/UmbrellaHeader (= 0.4.1.1-binary)
+  - libextobjc/EXTADT (0.4.1.1-binary)
+  - libextobjc/EXTConcreteProtocol (0.4.1.1-binary)
+  - libextobjc/EXTKeyPathCoding (0.4.1.1-binary)
+  - libextobjc/EXTNil (0.4.1.1-binary)
+  - libextobjc/EXTSafeCategory (0.4.1.1-binary)
+  - libextobjc/EXTScope (0.4.1.1-binary)
+  - libextobjc/EXTSelectorChecking (0.4.1.1-binary)
+  - libextobjc/EXTSynthesize (0.4.1.1-binary)
+  - libextobjc/NSInvocation+EXT (0.4.1.1-binary)
+  - libextobjc/NSMethodSignature+EXT (0.4.1.1-binary)
+  - libextobjc/RuntimeExtensions (0.4.1.1-binary)
+  - libextobjc/UmbrellaHeader (0.4.1.1-binary)
+  - libwebp (0.6.1.1-binary):
+    - libwebp/core (= 0.6.1.1-binary)
+    - libwebp/dec (= 0.6.1.1-binary)
+    - libwebp/demux (= 0.6.1.1-binary)
+    - libwebp/dsp (= 0.6.1.1-binary)
+    - libwebp/enc (= 0.6.1.1-binary)
+    - libwebp/mux (= 0.6.1.1-binary)
+    - libwebp/utils (= 0.6.1.1-binary)
+    - libwebp/webp (= 0.6.1.1-binary)
+  - libwebp/core (0.6.1.1-binary)
+  - libwebp/dec (0.6.1.1-binary)
+  - libwebp/demux (0.6.1.1-binary)
+  - libwebp/dsp (0.6.1.1-binary)
+  - libwebp/enc (0.6.1.1-binary)
+  - libwebp/mux (0.6.1.1-binary)
+  - libwebp/utils (0.6.1.1-binary)
+  - libwebp/webp (0.6.1.1-binary)
+  - lottie-ios (2.1.5.1-binary)
+  - Mantle (2.1.0-rc2.1-binary):
+    - Mantle/extobjc (= 2.1.0-rc2.1-binary)
+  - Mantle/extobjc (2.1.0-rc2.1-binary)
+  - Masonry (1.0.1.1-binary)
+  - MBProgressHUD (1.1.0.1-binary)
+  - MJExtension (3.0.12.1-binary)
+  - MJRefresh (3.1.15.7.1-binary)
+  - OHHTTPStubs (4.2.1.1-binary):
+    - OHHTTPStubs/Core (= 4.2.1.1-binary)
+    - OHHTTPStubs/Default (= 4.2.1.1-binary)
+    - OHHTTPStubs/HTTPMessage (= 4.2.1.1-binary)
+    - OHHTTPStubs/JSON (= 4.2.1.1-binary)
+    - OHHTTPStubs/Mocktail (= 4.2.1.1-binary)
+    - OHHTTPStubs/NSURLSession (= 4.2.1.1-binary)
+    - OHHTTPStubs/OHPathHelpers (= 4.2.1.1-binary)
+  - OHHTTPStubs/Core (4.2.1.1-binary)
+  - OHHTTPStubs/Default (4.2.1.1-binary)
+  - OHHTTPStubs/HTTPMessage (4.2.1.1-binary)
+  - OHHTTPStubs/JSON (4.2.1.1-binary)
+  - OHHTTPStubs/Mocktail (4.2.1.1-binary)
+  - OHHTTPStubs/NSURLSession (4.2.1.1-binary)
+  - OHHTTPStubs/OHPathHelpers (4.2.1.1-binary)
+  - OpenSSL-Universal (1.0.1.20.1-binary)
+  - OpenUDID (0.1.0.1-binary)
+  - Protobuf (3.0.1-ttv)
+  - React/base (0.55.9-alpha.22.1.binary)
+  - React/Core (0.55.9-alpha.22.1.binary)
+  - React/CxxBridge (0.55.9-alpha.22.1.binary)
+  - React/cxxreact (0.55.9-alpha.22.1.binary)
+  - React/DevSupport (0.55.9-alpha.22.1.binary)
+  - React/Extra (0.55.9-alpha.22.1.binary)
+  - React/fishhook (0.55.9-alpha.22.1.binary)
+  - React/jschelpers (0.55.9-alpha.22.1.binary)
+  - React/jsinspector (0.55.9-alpha.22.1.binary)
+  - React/PrivateDatabase (0.55.9-alpha.22.1.binary)
+  - React/RCTActionSheet (0.55.9-alpha.22.1.binary)
+  - React/RCTAnimation (0.55.9-alpha.22.1.binary)
+  - React/RCTBlob (0.55.9-alpha.22.1.binary)
+  - React/RCTImage (0.55.9-alpha.22.1.binary)
+  - React/RCTLinkingIOS (0.55.9-alpha.22.1.binary)
+  - React/RCTNetwork (0.55.9-alpha.22.1.binary)
+  - React/RCTText (0.55.9-alpha.22.1.binary)
+  - React/RCTWebSocket (0.55.9-alpha.22.1.binary)
+  - React/RNFetchBlob (0.55.9-alpha.22.1.binary)
+  - React/runtime (0.55.9-alpha.22.1.binary)
+  - React/third-party (0.55.9-alpha.22.1.binary)
+  - ReactiveObjC (3.0.0.1-binary)
+  - RNCryptor-objc (3.0.5.1-binary)
+  - RSSwizzle (0.1.1.1-binary)
+  - RXCollections (1.0)
+  - SDWebImage/Core (4.4.1.1-binary)
+  - SDWebImage/GIF (4.4.1.1-binary)
+  - SDWebImage/WebP (4.4.1.1-binary)
+  - SecGuard (0.8.10.5.1-binary)
+  - SocketRocket (0.5.1.1-binary)
+  - SQLiteRepairKit (1.2.1.1-binary)
+  - SSZipArchive (1.6.3.1-binary)
+  - ToutiaoFrontierWebSocket (0.2.5.1-binary):
+    - ToutiaoFrontierWebSocket/Main (= 0.2.5.1-binary)
+    - ToutiaoFrontierWebSocket/PB (= 0.2.5.1-binary)
+  - ToutiaoFrontierWebSocket/Main (0.2.5.1-binary)
+  - ToutiaoFrontierWebSocket/PB (0.2.5.1-binary)
+  - TSVToolkit (0.1.2.1-binary)
+  - TTABManager (0.0.7.1-binary)
+  - TTAccountLogin (0.1.0):
+    - TTAccountLogin/AccountLoginUIKit (= 0.1.0)
+  - TTAccountLogin/AccountLoginUIKit (0.1.0)
+  - TTAccountSDK/Account (4.2.0)
+  - TTAccountSDK/Logger (4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation (4.2.0):
+    - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (= 4.2.0)
+    - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (= 4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (4.2.0)
+  - TTAccountSDK/WeChatAccount (4.2.0)
+  - TTAddressBookService (0.1.4.1-binary):
+    - TTAddressBookService/AddressBook (= 0.1.4.1-binary)
+    - TTAddressBookService/DeprecatedAddressBook (= 0.1.4.1-binary)
+  - TTAddressBookService/AddressBook (0.1.4.1-binary)
+  - TTAddressBookService/DeprecatedAddressBook (0.1.4.1-binary)
+  - TTAdModule (0.1.25)
+  - TTAdSplashSDK (0.4.4.1-binary)
+  - TTAppUpdateHelper/TTUpdateHelper (1.0.9.1-binary)
+  - TTAppUpdateHelper/TTUpdateView (1.0.9.1-binary)
+  - TTAudio (0.1.6.1-binary)
+  - TTAvatar (0.1.0)
+  - TTBaseLib (0.1.0):
+    - TTBaseLib/TTBaseTool (= 0.1.0)
+    - TTBaseLib/TTBusinessManager (= 0.1.0)
+    - TTBaseLib/TTCategory (= 0.1.0)
+    - TTBaseLib/TTDeviceHelper (= 0.1.0)
+    - TTBaseLib/TTNetworkHelper (= 0.1.0)
+    - TTBaseLib/TTRobust (= 0.1.0)
+    - TTBaseLib/TTSandBoxHelper (= 0.1.0)
+    - TTBaseLib/TTUIResponderHelper (= 0.1.0)
+  - TTBaseLib/TTBaseTool (0.1.0)
+  - TTBaseLib/TTBusinessManager (0.1.0)
+  - TTBaseLib/TTCategory (0.1.0)
+  - TTBaseLib/TTDeviceHelper (0.1.0)
+  - TTBaseLib/TTNetworkHelper (0.1.0)
+  - TTBaseLib/TTRobust (0.1.0)
+  - TTBaseLib/TTSandBoxHelper (0.1.0)
+  - TTBaseLib/TTUIResponderHelper (0.1.0)
+  - TTBatchItemAction (0.1.8.1-binary)
+  - TTBridgeUnify/TTBridge (0.3.19.1-binary)
+  - TTBridgeUnify/TTBridgeAuthManager (0.3.19.1-binary)
+  - TTBridgeUnify/WebView (0.3.19.1-binary)
+  - TTDebugAssistant (0.2.33.1-binary)
+  - TTDialogDirector/Camera (0.1.2)
+  - TTDialogDirector/Contacts (0.1.2)
+  - TTDialogDirector/Core (0.1.2)
+  - TTDialogDirector/Microphone (0.1.2)
+  - TTDialogDirector/PhotoLibrary (0.1.2)
+  - TTDialogDirector/UserNotification (0.1.2)
+  - TTDiggButton (0.1.1)
+  - TTEntityBase (0.2.4.1-binary)
+  - TTEntry (0.1.7.1-binary)
+  - TTFFmpeg (1.4.3):
+    - TTFFmpeg/libavcodec (= 1.4.3)
+    - TTFFmpeg/libavdevice (= 1.4.3)
+    - TTFFmpeg/libavfilter (= 1.4.3)
+    - TTFFmpeg/libavformat (= 1.4.3)
+    - TTFFmpeg/libavresample (= 1.4.3)
+    - TTFFmpeg/libavutil (= 1.4.3)
+    - TTFFmpeg/libpostproc (= 1.4.3)
+    - TTFFmpeg/libswresample (= 1.4.3)
+    - TTFFmpeg/libswscale (= 1.4.3)
+  - TTFFmpeg/libavcodec (1.4.3)
+  - TTFFmpeg/libavdevice (1.4.3)
+  - TTFFmpeg/libavfilter (1.4.3)
+  - TTFFmpeg/libavformat (1.4.3)
+  - TTFFmpeg/libavresample (1.4.3)
+  - TTFFmpeg/libavutil (1.4.3)
+  - TTFFmpeg/libpostproc (1.4.3)
+  - TTFFmpeg/libswresample (1.4.3)
+  - TTFFmpeg/libswscale (1.4.3)
+  - TTFileUploadClient (1.7.6.8.1-binary)
+  - TTFlowStatisticsManager (0.0.10.1-binary)
+  - TTFriendRelation (0.2.10)
+  - TTImage (0.8.4.1-binary):
+    - TTImage/Model (= 0.8.4.1-binary)
+    - TTImage/Others (= 0.8.4.1-binary)
+  - TTImage/Model (0.8.4.1-binary)
+  - TTImage/Others (0.8.4.1-binary)
+  - TTImagePicker (1.1.6):
+    - TTImagePicker/Category (= 1.1.6)
+    - TTImagePicker/Model (= 1.1.6)
+  - TTImagePicker/Category (1.1.6)
+  - TTImagePicker/Model (1.1.6)
+  - TTImagePreviewAnimateManager (1.0.13.1-binary)
+  - TTImpression (0.0.26.1-binary)
+  - TTIMSDK/Bridges (0.7.7)
+  - TTIMSDK/Feature_ApplicationStatus (0.7.7)
+  - TTIMSDK/Feature_Core (0.7.7)
+  - TTIMSDK/Feature_Core_Config (0.7.7)
+  - TTIMSDK/Feature_Core_ConversationInfo (0.7.7)
+  - TTIMSDK/Feature_Core_CurrentUser (0.7.7)
+  - TTIMSDK/Feature_Core_ErrorHandler (0.7.7)
+  - TTIMSDK/Feature_Core_Logger (0.7.7)
+  - TTIMSDK/Feature_Core_Notifier (0.7.7)
+  - TTIMSDK/Feature_Core_Puller (0.7.7)
+  - TTIMSDK/Feature_Core_Sender (0.7.7)
+  - TTIMSDK/Feature_Core_Store (0.7.7)
+  - TTIMSDK/Feature_Essential (0.7.7)
+  - TTIMSDK/Feature_Essential_PB (0.7.7)
+  - TTIMSDK/Feature_WebSocket (0.7.7)
+  - TTIMSDK/Foundation (0.7.7)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (0.7.7)
+  - TTIMSDK/IMKit (0.7.7)
+  - TTIMSDK/IMKit_Core (0.7.7)
+  - TTIMSDK/IMKit_WebSocket (0.7.7)
+  - TTInstallService (1.0.0.6.1-binary)
+  - TTKitchen (1.0.2.1-binary)
+  - TTLCSService (0.1.1.1-binary)
+  - TTMonitor (0.7.9.44)
+  - TTNetBusiness (0.0.10.1-binary)
+  - TTNetworkManager (2.2.8.55-rc.1.1.binary)
+  - TTNewsAccountBusiness (0.2.4):
+    - TTNewsAccountBusiness/Classes (= 0.2.4)
+    - TTNewsAccountBusiness/SSCookieManager (= 0.2.4)
+  - TTNewsAccountBusiness/Classes (0.2.4)
+  - TTNewsAccountBusiness/SSCookieManager (0.2.4)
+  - TTPersistence (0.2.3.1-binary)
+  - TTPhotoScrollVC (0.1.6)
+  - TTPlatformBaseLib (0.2.13):
+    - TTPlatformBaseLib/ArticleJSManager (= 0.2.13)
+    - TTPlatformBaseLib/TTCategoryManager (= 0.2.13)
+    - TTPlatformBaseLib/TTIconFontDefine (= 0.2.13)
+    - TTPlatformBaseLib/TTKeyChainStorage (= 0.2.13)
+    - TTPlatformBaseLib/TTPlatformSwitcher (= 0.2.13)
+    - TTPlatformBaseLib/TTPostDataSerializer (= 0.2.13)
+    - TTPlatformBaseLib/TTProfileFillManager (= 0.2.13)
+    - TTPlatformBaseLib/TTTAssetCountHelper (= 0.2.13)
+    - TTPlatformBaseLib/TTTrackerWrapper (= 0.2.13)
+    - TTPlatformBaseLib/TTURLDomainHelper (= 0.2.13)
+  - TTPlatformBaseLib/ArticleJSManager (0.2.13)
+  - TTPlatformBaseLib/TTCategoryManager (0.2.13)
+  - TTPlatformBaseLib/TTIconFontDefine (0.2.13)
+  - TTPlatformBaseLib/TTKeyChainStorage (0.2.13)
+  - TTPlatformBaseLib/TTPlatformSwitcher (0.2.13)
+  - TTPlatformBaseLib/TTPostDataSerializer (0.2.13)
+  - TTPlatformBaseLib/TTProfileFillManager (0.2.13)
+  - TTPlatformBaseLib/TTTAssetCountHelper (0.2.13)
+  - TTPlatformBaseLib/TTTrackerWrapper (0.2.13)
+  - TTPlatformBaseLib/TTURLDomainHelper (0.2.13)
+  - TTPlatformUIModel (0.2.39):
+    - TTPlatformUIModel/HPGrowingTextView (= 0.2.39)
+    - TTPlatformUIModel/TTActionSheet (= 0.2.39)
+    - TTPlatformUIModel/TTAssetView (= 0.2.39)
+    - TTPlatformUIModel/TTBackButtonView (= 0.2.39)
+    - TTPlatformUIModel/TTBubbleView (= 0.2.39)
+    - TTPlatformUIModel/TTCategory (= 0.2.39)
+    - TTPlatformUIModel/TTDetailViewController (= 0.2.39)
+    - TTPlatformUIModel/TTFeedDislikeView (= 0.2.39)
+    - TTPlatformUIModel/TTHeaderScrollView (= 0.2.39)
+    - TTPlatformUIModel/TTImageDetectorViewController (= 0.2.39)
+    - TTPlatformUIModel/TTLabel (= 0.2.39)
+    - TTPlatformUIModel/TTModel (= 0.2.39)
+    - TTPlatformUIModel/TTSeachBarView (= 0.2.39)
+  - TTPlatformUIModel/HPGrowingTextView (0.2.39)
+  - TTPlatformUIModel/TTActionSheet (0.2.39)
+  - TTPlatformUIModel/TTAssetView (0.2.39)
+  - TTPlatformUIModel/TTBackButtonView (0.2.39)
+  - TTPlatformUIModel/TTBubbleView (0.2.39)
+  - TTPlatformUIModel/TTCategory (0.2.39)
+  - TTPlatformUIModel/TTDetailViewController (0.2.39)
+  - TTPlatformUIModel/TTFeedDislikeView (0.2.39)
+  - TTPlatformUIModel/TTHeaderScrollView (0.2.39)
+  - TTPlatformUIModel/TTImageDetectorViewController (0.2.39)
+  - TTPlatformUIModel/TTLabel (0.2.39)
+  - TTPlatformUIModel/TTModel (0.2.39)
+  - TTPlatformUIModel/TTSeachBarView (0.2.39)
+  - TTPlayerSDK (2.9.9.10)
+  - TTPreloaderSDK (1.4.20-rc.0)
+  - TTPushAuthorizationManager (0.1.3)
+  - TTPushManager (0.0.13.4)
+  - TTPushSDK (0.1.1.1-binary)
+  - TTReachability (0.1.8.1-binary)
+  - TTReporter (0.2.1.1-binary)
+  - TTRexxar/Core (0.8.10.1-binary)
+  - TTRexxar/PackageApp (0.8.10.1-binary)
+  - TTRexxar/Plugins (0.8.10.1-binary)
+  - TTRexxar/WebView (0.8.10.1-binary)
+  - TTRNKit (0.3.3.1-binary):
+    - TTRNKit/Core (= 0.3.3.1-binary)
+    - TTRNKit/WebViewBridge (= 0.3.3.1-binary)
+  - TTRNKit/Core (0.3.3.1-binary)
+  - TTRNKit/WebViewBridge (0.3.3.1-binary)
+  - TTRoute (0.2.25.1)
+  - TTServiceKit (0.4.1.1-binary)
+  - TTServiceProtocols (0.0.5)
+  - TTSettingsManager (0.4.1.1-binary):
+    - TTSettingsManager/Core (= 0.4.1.1-binary)
+  - TTSettingsManager/Core (0.4.1.1-binary)
+  - TTSettingsManager/Debug (0.4.1.1-binary)
+  - TTShare (0.3.3):
+    - TTShare/TTShareBasic (= 0.3.3)
+    - TTShare/TTShareBusiness (= 0.3.3)
+    - TTShare/TTShareService (= 0.3.3)
+  - TTShare/TTShareBasic (0.3.3):
+    - TTShare/TTShareBasic/TTAliShare (= 0.3.3)
+    - TTShare/TTShareBasic/TTDingTalkShare (= 0.3.3)
+    - TTShare/TTShareBasic/TTMailShare (= 0.3.3)
+    - TTShare/TTShareBasic/TTMessageShare (= 0.3.3)
+    - TTShare/TTShareBasic/TTQQShare (= 0.3.3)
+    - TTShare/TTShareBasic/TTWeChatShare (= 0.3.3)
+    - TTShare/TTShareBasic/TTWeiboShare (= 0.3.3)
+  - TTShare/TTShareBasic/TTAliShare (0.3.3)
+  - TTShare/TTShareBasic/TTDingTalkShare (0.3.3)
+  - TTShare/TTShareBasic/TTMailShare (0.3.3)
+  - TTShare/TTShareBasic/TTMessageShare (0.3.3)
+  - TTShare/TTShareBasic/TTQQShare (0.3.3)
+  - TTShare/TTShareBasic/TTWeChatShare (0.3.3)
+  - TTShare/TTShareBasic/TTWeiboShare (0.3.3)
+  - TTShare/TTShareBusiness (0.3.3):
+    - TTShare/TTShareBusiness/TTActivity (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareAliBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareCopyBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareDingTalkBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareEmailBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareQQBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareSMSBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareSystemBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareWeChatBusiness (= 0.3.3)
+    - TTShare/TTShareBusiness/TTShareWeiboBusiness (= 0.3.3)
+  - TTShare/TTShareBusiness/TTActivity (0.3.3)
+  - TTShare/TTShareBusiness/TTShareAliBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareCopyBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareDingTalkBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareEmailBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareQQBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareSMSBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareSystemBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareWeChatBusiness (0.3.3)
+  - TTShare/TTShareBusiness/TTShareWeiboBusiness (0.3.3)
+  - TTShare/TTShareService (0.3.3)
+  - TTTAttributedLabel (1.13.3.1-binary)
+  - TTThemed (0.1.0)
+  - TTThirdPartySDKs (0.0.4):
+    - TTThirdPartySDKs/AlipaySDK (= 0.0.4)
+    - TTThirdPartySDKs/AliShareSDK (= 0.0.4)
+    - TTThirdPartySDKs/DingDingSDK (= 0.0.4)
+    - TTThirdPartySDKs/QQSDK (= 0.0.4)
+    - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
+    - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
+  - TTThirdPartySDKs/AlipaySDK (0.0.4)
+  - TTThirdPartySDKs/AliShareSDK (0.0.4)
+  - TTThirdPartySDKs/DingDingSDK (0.0.4)
+  - TTThirdPartySDKs/QQSDK (0.0.4)
+  - TTThirdPartySDKs/WeChatSDK (0.0.4)
+  - TTThirdPartySDKs/WeiboSDK (0.0.4)
+  - TTTracker (1.0.6-rc.2.1.binary)
+  - TTUGCFoundation (0.1.3):
+    - TTUGCFoundation/RequestMonitor (= 0.1.3)
+    - TTUGCFoundation/TTUGCActionDataService (= 0.1.3)
+    - TTUGCFoundation/TTUGCApiModel (= 0.1.3)
+    - TTUGCFoundation/TTUGCRichText (= 0.1.3)
+  - TTUGCFoundation/RequestMonitor (0.1.3)
+  - TTUGCFoundation/TTUGCActionDataService (0.1.3)
+  - TTUGCFoundation/TTUGCApiModel (0.1.3)
+  - TTUGCFoundation/TTUGCRichText (0.1.3)
+  - TTUIWidget (0.1.0):
+    - TTUIWidget/TTIndicatorView (= 0.1.0)
+  - TTUIWidget/TTIndicatorView (0.1.0)
+  - TTUserSettings (0.3.4.1-binary)
+  - TTVContainerScrollView (0.1.2.1-binary)
+  - TTVerifyKit (0.3.0.1-binary)
+  - TTVideo (1.1.1.1-binary)
+  - TTVideoEngine (1.9.3.24.1-binary)
+  - TTVideoService (0.1.71.1-binary):
+    - TTVideoService/Core (= 0.1.71.1-binary)
+    - TTVideoService/TTBusinessService (= 0.1.71.1-binary)
+  - TTVideoService/Core (0.1.71.1-binary)
+  - TTVideoService/TTBusinessService (0.1.71.1-binary)
+  - TTVTableViewItem (0.1.0.1-binary)
+  - TTVTableViewProtocolInterceptor (0.1.2.1-binary):
+    - TTVTableViewProtocolInterceptor/Core (= 0.1.2.1-binary)
+    - TTVTableViewProtocolInterceptor/UIViewControllerCategory (= 0.1.2.1-binary)
+  - TTVTableViewProtocolInterceptor/Core (0.1.2.1-binary)
+  - TTVTableViewProtocolInterceptor/UIViewControllerCategory (0.1.2.1-binary)
+  - TTVTLIndexPathTools (0.4.4.1-binary)
+  - UITableView+FDTemplateLayoutCell (1.6.1-binary)
+  - UMengAnalytics (4.1.4.1-binary)
+  - WCDB (1.0.7.5.1-binary)
+  - WCDBOptimizedSQLCipher (1.2.1.1-binary)
+  - yoga (0.0.1.React)
+  - YYCache (1.0.4.1-binary)
+  - YYImage (1.0.3.1-binary):
+    - YYImage/Core (= 1.0.3.1-binary)
+  - YYImage/Core (1.0.3.1-binary)
+  - YYModel (1.0.4.1-binary)
+  - YYText (1.0.7.1-binary)
+  - YYWebImage (1.0.4.1-binary)
+
+DEPENDENCIES:
+  - AFgzipRequestSerializer (= 0.0.2.1-binary)
+  - AFNetworking (= 2.5.1.1-binary)
+  - AKCommentPlugin (from `../AKPlugins/AKCommentPlugin`)
+  - AKShareServicePlugin (from `../AKPlugins/AKShareServicePlugin`)
+  - AKWDPlugin (from `../AKPlugins/AKWDPlugin`)
+  - AKWebViewBundlePlugin (from `../AKPlugins/AKWebViewBundlePlugin`)
+  - AMap3DMap (= 6.2.0.1-binary)
+  - AMapFoundation (= 1.5.2.1-binary)
+  - AMapLocation (= 2.6.0.1-binary)
+  - AMapSearch (= 6.1.1.1-binary)
+  - Aspects (= 1.4.1.1-binary)
+  - AWECloudCommand (= 1.0.7.1-binary)
+  - AWEVideoPlayer (= 0.3.20.1-binary)
+  - BDABTestSDK (= 1.0.2-rc.3.1.binary)
+  - BDAccountSessionSDK (= 0.1.11.1-binary)
+  - BDALog (= 0.1.12.1-binary)
+  - BDAlogProtocol (= 0.1.6)
+  - BDTArticle (from `../AKPlugins/BDTArticle`)
+  - BDTBasePlayer (from `../AKPlugins/BDTBasePlayer`)
+  - BDTExploreOrderedData (from `../AKPlugins/BDTExploreOrderedData`)
+  - BDTFactoryConfigurator (= 0.1.0.1-binary)
+  - BDTSharedHeaders (from `../Vendor/BDTSharedHeaders`)
+  - BDWebImage/Core (= 0.2.2.1-binary)
+  - BDWebImage/Decoder (= 0.2.2.1-binary)
+  - BDWebImage/Download (= 0.2.2.1-binary)
+  - BDWebImage/Download/Chromium (= 0.2.2.1-binary)
+  - BDWebImage/Download/DownloadBase (= 0.2.2.1-binary)
+  - BDWebImage/Download/URLSession (= 0.2.2.1-binary)
+  - BDWebImage/Monitor (= 0.2.2.1-binary)
+  - BDWebImage/SDAdapter (= 0.2.2.1-binary)
+  - Bolts (= 1.9.0.1-binary)
+  - boringssl (= 0.0.7)
+  - CHTCollectionViewWaterfallLayout (= 0.9.5.1-binary)
+  - CocoaLumberjack (= 3.4.2.1-binary)
+  - Crashlytics (= 3.12.0.1-binary)
+  - Fabric (= 1.9.0.1-binary)
+  - FHCommonUI (from `../Bundles/ios_common_ui`)
+  - FHHouseBase (from `../Bundles/ios_house_base`)
+  - FHHouseDetail (from `../Bundles/ios_house_detail`)
+  - FHHouseFind (from `../Bundles/ios_house_find`)
+  - FHHouseHome (from `../Bundles/ios_house_home`)
+  - FHHouseList (from `../Bundles/ios_house_list`)
+  - FHHouseMessage (from `../Bundles/ios_house_message`)
+  - FHHouseMine (from `../Bundles/ios_house_mine`)
+  - FHHouseRent (from `../Bundles/ios_house_rent`)
+  - FHHouseTrend (from `../Bundles/ios_house_trend`)
+  - FHMapSearch (from `../Bundles/ios_map_search`)
+  - FLAnimatedImage (= 1.0.12.1-binary)
+  - FLEX (= 2.1.1.1-binary)
+  - FMDB (= 2.6.2.1-binary)
+  - Godzippa (= 1.1.0.1-binary)
+  - Heimdallr/ALog (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/CloudCommand (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/Core (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/CrashDetector (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/DeviceInfo (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/FMDB (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDANR (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDConfig (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDOOM (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDSession (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDStart (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/HMDStore (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/Log (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/Mach (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/MemorySnapshot (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/Monitors (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/TTMonitor (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/TTNet (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/UITracker (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/Upload (= 0.6.27-rc.0.1.binary)
+  - Heimdallr/Utility (= 0.6.27-rc.0.1.binary)
+  - HTSVideoPlay (from `../Vendor/ShortVideo`)
+  - IESGeckoKit (= 0.4.0.1-binary)
+  - IESVideoPlayer (= 0.1.16)
+  - IESWebKit (= 0.1.5.1-binary)
+  - IGListKit (= 3.4.0.1-binary)
+  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9c5ef3144d54acc6f0203df98cb38bf5f38f075d`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `4b730fd2b839b80b8975cadd066c7f4041ae362c`)
+  - JSONModel (= 1.7.0-private.1-binary)
+  - KVOController (= 1.2.0.1-binary)
+  - libextobjc (= 0.4.1.1-binary)
+  - libwebp (= 0.6.1.1-binary)
+  - lottie-ios (= 2.1.5.1-binary)
+  - Mantle (= 2.1.0-rc2.1-binary)
+  - Masonry (= 1.0.1.1-binary)
+  - MBProgressHUD (= 1.1.0.1-binary)
+  - MJExtension (= 3.0.12.1-binary)
+  - MJRefresh (= 3.1.15.7.1-binary)
+  - OHHTTPStubs (= 4.2.1.1-binary)
+  - OpenSSL-Universal (= 1.0.1.20.1-binary)
+  - OpenUDID (= 0.1.0.1-binary)
+  - Protobuf (= 3.0.1-ttv)
+  - React/base (= 0.55.9-alpha.22.1.binary)
+  - React/Core (= 0.55.9-alpha.22.1.binary)
+  - React/CxxBridge (= 0.55.9-alpha.22.1.binary)
+  - React/cxxreact (= 0.55.9-alpha.22.1.binary)
+  - React/DevSupport (= 0.55.9-alpha.22.1.binary)
+  - React/Extra (= 0.55.9-alpha.22.1.binary)
+  - React/fishhook (= 0.55.9-alpha.22.1.binary)
+  - React/jschelpers (= 0.55.9-alpha.22.1.binary)
+  - React/jsinspector (= 0.55.9-alpha.22.1.binary)
+  - React/PrivateDatabase (= 0.55.9-alpha.22.1.binary)
+  - React/RCTActionSheet (= 0.55.9-alpha.22.1.binary)
+  - React/RCTAnimation (= 0.55.9-alpha.22.1.binary)
+  - React/RCTBlob (= 0.55.9-alpha.22.1.binary)
+  - React/RCTImage (= 0.55.9-alpha.22.1.binary)
+  - React/RCTLinkingIOS (= 0.55.9-alpha.22.1.binary)
+  - React/RCTNetwork (= 0.55.9-alpha.22.1.binary)
+  - React/RCTText (= 0.55.9-alpha.22.1.binary)
+  - React/RCTWebSocket (= 0.55.9-alpha.22.1.binary)
+  - React/RNFetchBlob (= 0.55.9-alpha.22.1.binary)
+  - React/runtime (= 0.55.9-alpha.22.1.binary)
+  - React/third-party (= 0.55.9-alpha.22.1.binary)
+  - ReactiveObjC (= 3.0.0.1-binary)
+  - RNCryptor-objc (= 3.0.5.1-binary)
+  - RSSwizzle (= 0.1.1.1-binary)
+  - RXCollections (= 1.0)
+  - SDWebImage/Core (= 4.4.1.1-binary)
+  - SDWebImage/GIF (= 4.4.1.1-binary)
+  - SDWebImage/WebP (= 4.4.1.1-binary)
+  - SecGuard (= 0.8.10.5.1-binary)
+  - SocketRocket (= 0.5.1.1-binary)
+  - SQLiteRepairKit (= 1.2.1.1-binary)
+  - SSZipArchive (= 1.6.3.1-binary)
+  - ToutiaoFrontierWebSocket (= 0.2.5.1-binary)
+  - TSVToolkit (= 0.1.2.1-binary)
+  - TTABManager (= 0.0.7.1-binary)
+  - TTAccountLogin (from `../AKPlugins/AKAccountLogin`)
+  - TTAccountSDK/Account (= 4.2.0)
+  - TTAccountSDK/Logger (= 4.2.0)
+  - TTAccountSDK/ThirdPartyAccountFoundation (= 4.2.0)
+  - TTAccountSDK/WeChatAccount (= 4.2.0)
+  - TTAddressBookService (= 0.1.4.1-binary)
+  - TTAdModule (from `../AKPlugins/TTAdModule`)
+  - TTAdSplashSDK (= 0.4.4.1-binary)
+  - TTAppUpdateHelper/TTUpdateHelper (= 1.0.9.1-binary)
+  - TTAppUpdateHelper/TTUpdateView (= 1.0.9.1-binary)
+  - TTAudio (= 0.1.6.1-binary)
+  - TTAvatar (from `../AKPlugins/TTAvatar`)
+  - TTBaseLib (from `../AKPlugins/TTBaseLib`)
+  - TTBatchItemAction (= 0.1.8.1-binary)
+  - TTBridgeUnify/TTBridge (= 0.3.19.1-binary)
+  - TTBridgeUnify/TTBridgeAuthManager (= 0.3.19.1-binary)
+  - TTBridgeUnify/WebView (= 0.3.19.1-binary)
+  - TTDebugAssistant (= 0.2.33.1-binary)
+  - TTDialogDirector/Camera (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDialogDirector/Contacts (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDialogDirector/Core (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDialogDirector/Microphone (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDialogDirector/PhotoLibrary (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDialogDirector/UserNotification (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
+  - TTDiggButton (from `../AKPlugins/AKDiggButton`)
+  - TTEntityBase (= 0.2.4.1-binary)
+  - TTEntry (= 0.1.7.1-binary)
+  - TTFFmpeg (= 1.4.3)
+  - TTFileUploadClient (= 1.7.6.8.1-binary)
+  - TTFlowStatisticsManager (= 0.0.10.1-binary)
+  - TTFriendRelation (from `../AKPlugins/TTFriendRelation`)
+  - TTImage (= 0.8.4.1-binary)
+  - TTImagePicker (from `../AKPlugins/AKImagePicker`)
+  - TTImagePreviewAnimateManager (= 1.0.13.1-binary)
+  - TTImpression (= 0.0.26.1-binary)
+  - TTIMSDK/Bridges (= 0.7.7)
+  - TTIMSDK/Feature_ApplicationStatus (= 0.7.7)
+  - TTIMSDK/Feature_Core (= 0.7.7)
+  - TTIMSDK/Feature_Core_Config (= 0.7.7)
+  - TTIMSDK/Feature_Core_ConversationInfo (= 0.7.7)
+  - TTIMSDK/Feature_Core_CurrentUser (= 0.7.7)
+  - TTIMSDK/Feature_Core_ErrorHandler (= 0.7.7)
+  - TTIMSDK/Feature_Core_Logger (= 0.7.7)
+  - TTIMSDK/Feature_Core_Notifier (= 0.7.7)
+  - TTIMSDK/Feature_Core_Puller (= 0.7.7)
+  - TTIMSDK/Feature_Core_Sender (= 0.7.7)
+  - TTIMSDK/Feature_Core_Store (= 0.7.7)
+  - TTIMSDK/Feature_Essential (= 0.7.7)
+  - TTIMSDK/Feature_Essential_PB (= 0.7.7)
+  - TTIMSDK/Feature_WebSocket (= 0.7.7)
+  - TTIMSDK/Foundation (= 0.7.7)
+  - TTIMSDK/Foundation_Plugin_TTNetwork (= 0.7.7)
+  - TTIMSDK/IMKit (= 0.7.7)
+  - TTIMSDK/IMKit_Core (= 0.7.7)
+  - TTIMSDK/IMKit_WebSocket (= 0.7.7)
+  - TTInstallService (= 1.0.0.6.1-binary)
+  - TTKitchen (= 1.0.2.1-binary)
+  - TTLCSService (= 0.1.1.1-binary)
+  - TTMonitor (from `../AKPlugins/TTMonitor`)
+  - TTNetBusiness (= 0.0.10.1-binary)
+  - TTNetworkManager (= 2.2.8.55-rc.1.1.binary)
+  - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
+  - TTPersistence (= 0.2.3.1-binary)
+  - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
+  - TTPlatformBaseLib (from `../AKPlugins/TTPlatformBaseLib`)
+  - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
+  - TTPlayerSDK (= 2.9.9.10)
+  - TTPreloaderSDK (= 1.4.20-rc.0)
+  - TTPushAuthorizationManager (from `../AKPlugins/AKPushAuthorizationManager`)
+  - TTPushManager (= 0.0.13.4)
+  - TTPushSDK (= 0.1.1.1-binary)
+  - TTReachability (= 0.1.8.1-binary)
+  - TTReporter (= 0.2.1.1-binary)
+  - TTRexxar/Core (= 0.8.10.1-binary)
+  - TTRexxar/PackageApp (= 0.8.10.1-binary)
+  - TTRexxar/Plugins (= 0.8.10.1-binary)
+  - TTRexxar/WebView (= 0.8.10.1-binary)
+  - TTRNKit (= 0.3.3.1-binary)
+  - TTRoute (from `git@code.byted.org:TTIOS/tt_pods_route.git`, branch `array_type_query`)
+  - TTServiceKit (= 0.4.1.1-binary)
+  - TTServiceProtocols (from `../AKPlugins/AKServiceProtocols`)
+  - TTSettingsManager (= 0.4.1.1-binary)
+  - TTSettingsManager/Debug
+  - TTShare (from `../AKPlugins/TTShare`)
+  - TTTAttributedLabel (= 1.13.3.1-binary)
+  - TTThemed (from `../AKPlugins/AKThemed`)
+  - TTThirdPartySDKs (from `../AKPlugins/TTThirdPartySDKs`)
+  - TTTracker (= 1.0.6-rc.2.1.binary)
+  - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
+  - TTUIWidget (from `../AKPlugins/TTUIWidget`)
+  - TTUserSettings (= 0.3.4.1-binary)
+  - TTVContainerScrollView (= 0.1.2.1-binary)
+  - TTVerifyKit (= 0.3.0.1-binary)
+  - TTVideo (= 1.1.1.1-binary)
+  - TTVideoEngine (= 1.9.3.24.1-binary)
+  - TTVideoService (= 0.1.71.1-binary)
+  - TTVideoService/TTBusinessService (= 0.1.71.1-binary)
+  - TTVTableViewItem (= 0.1.0.1-binary)
+  - TTVTableViewProtocolInterceptor (= 0.1.2.1-binary)
+  - TTVTLIndexPathTools (= 0.4.4.1-binary)
+  - UITableView+FDTemplateLayoutCell (= 1.6.1-binary)
+  - UMengAnalytics (= 4.1.4.1-binary)
+  - WCDB (= 1.0.7.5.1-binary)
+  - WCDBOptimizedSQLCipher (= 1.2.1.1-binary)
+  - yoga (from `../ReactCommon/yoga`)
+  - YYCache (= 1.0.4.1-binary)
+  - YYImage (= 1.0.3.1-binary)
+  - YYModel (= 1.0.4.1-binary)
+  - YYText (= 1.0.7.1-binary)
+  - YYWebImage (= 1.0.4.1-binary)
+
+EXTERNAL SOURCES:
+  AKCommentPlugin:
+    :path: ../AKPlugins/AKCommentPlugin
+  AKShareServicePlugin:
+    :path: ../AKPlugins/AKShareServicePlugin
+  AKWDPlugin:
+    :path: ../AKPlugins/AKWDPlugin
+  AKWebViewBundlePlugin:
+    :path: ../AKPlugins/AKWebViewBundlePlugin
+  BDTArticle:
+    :path: ../AKPlugins/BDTArticle
+  BDTBasePlayer:
+    :path: ../AKPlugins/BDTBasePlayer
+  BDTExploreOrderedData:
+    :path: ../AKPlugins/BDTExploreOrderedData
+  BDTSharedHeaders:
+    :path: ../Vendor/BDTSharedHeaders
+  FHCommonUI:
+    :path: ../Bundles/ios_common_ui
+  FHHouseBase:
+    :path: ../Bundles/ios_house_base
+  FHHouseDetail:
+    :path: ../Bundles/ios_house_detail
+  FHHouseFind:
+    :path: ../Bundles/ios_house_find
+  FHHouseHome:
+    :path: ../Bundles/ios_house_home
+  FHHouseList:
+    :path: ../Bundles/ios_house_list
+  FHHouseMessage:
+    :path: ../Bundles/ios_house_message
+  FHHouseMine:
+    :path: ../Bundles/ios_house_mine
+  FHHouseRent:
+    :path: ../Bundles/ios_house_rent
+  FHHouseTrend:
+    :path: ../Bundles/ios_house_trend
+  FHMapSearch:
+    :path: ../Bundles/ios_map_search
+  HTSVideoPlay:
+    :path: ../Vendor/ShortVideo
+  ios_house_filter:
+    :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
+    :git: git@code.byted.org:fproject/ios_house_filter.git
+  ios_house_im:
+    :commit: 4b730fd2b839b80b8975cadd066c7f4041ae362c
+    :git: git@code.byted.org:fproject/ios_house_im.git
+  TTAccountLogin:
+    :path: ../AKPlugins/AKAccountLogin
+  TTAdModule:
+    :path: ../AKPlugins/TTAdModule
+  TTAvatar:
+    :path: ../AKPlugins/TTAvatar
+  TTBaseLib:
+    :path: ../AKPlugins/TTBaseLib
+  TTDialogDirector:
+    :commit: 8ed5beb
+    :git: git@code.byted.org:TTIOS/TTDialogDirector.git
+  TTDiggButton:
+    :path: ../AKPlugins/AKDiggButton
+  TTFriendRelation:
+    :path: ../AKPlugins/TTFriendRelation
+  TTImagePicker:
+    :path: ../AKPlugins/AKImagePicker
+  TTMonitor:
+    :path: ../AKPlugins/TTMonitor
+  TTNewsAccountBusiness:
+    :path: ../AKPlugins/TTNewsAccountBusiness
+  TTPhotoScrollVC:
+    :path: ../AKPlugins/TTPhotoScrollVC
+  TTPlatformBaseLib:
+    :path: ../AKPlugins/TTPlatformBaseLib
+  TTPlatformUIModel:
+    :path: ../AKPlugins/AKPlatformUIModel
+  TTPushAuthorizationManager:
+    :path: ../AKPlugins/AKPushAuthorizationManager
+  TTRoute:
+    :branch: array_type_query
+    :git: git@code.byted.org:TTIOS/tt_pods_route.git
+  TTServiceProtocols:
+    :path: ../AKPlugins/AKServiceProtocols
+  TTShare:
+    :path: ../AKPlugins/TTShare
+    :subspects:
+      - TTShareBasic/TTQQShare
+      - TTShareBasic/TTWeChatShare
+      - TTShareBusiness/TTActivity
+      - TTShareBusiness/TTShareCopyBusiness
+      - TTShareBusiness/TTShareQQBusiness
+      - TTShareBusiness/TTShareWeChatBusiness
+  TTThemed:
+    :path: ../AKPlugins/AKThemed
+  TTThirdPartySDKs:
+    :path: ../AKPlugins/TTThirdPartySDKs
+    :subspects:
+      - QQSDK
+      - WeChatSDK
+      - WeiboSDK
+  TTUGCFoundation:
+    :path: ../Vendor/TTUGCFoundation
+  TTUIWidget:
+    :path: ../AKPlugins/TTUIWidget
+  yoga:
+    :path: ../ReactCommon/yoga
+
+CHECKOUT OPTIONS:
+  ios_house_filter:
+    :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
+    :git: git@code.byted.org:fproject/ios_house_filter.git
+  ios_house_im:
+    :commit: 4b730fd2b839b80b8975cadd066c7f4041ae362c
+    :git: git@code.byted.org:fproject/ios_house_im.git
+  TTDialogDirector:
+    :commit: 8ed5beb
+    :git: git@code.byted.org:TTIOS/TTDialogDirector.git
+  TTRoute:
+    :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
+    :git: git@code.byted.org:TTIOS/tt_pods_route.git
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: 8a35a5d6d82dbb4b4d175e07cc4e4984edc4e6e8
+  AFNetworking: fac3e1b64a9a165c0c7ac9de2d62660b3e875c7e
+  AKCommentPlugin: 5ad084d3f5a4e3b0da26477aedd952dc0d4f1634
+  AKShareServicePlugin: 7f4273d1d25b641a6d3c97537d6c57e8ceb999fc
+  AKWDPlugin: 578ff2a20b6d16a523e2b1e96512e77e5c6b6fd3
+  AKWebViewBundlePlugin: 684255bc41391dae352b786c0ef7b7e8cc4b794a
+  AMap3DMap: ade5ca8605a03833fb799fdd6e7b489e83963941
+  AMapFoundation: bc8d29843a0d4e0f83a175a77729d2b623c26026
+  AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
+  AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
+  Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
+  AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
+  AWEVideoPlayer: 79aef06155256984da6189dba3ac966c63b55098
+  BDABTestSDK: 8d0452c001637b0922644d4a9aee347a29d34bd0
+  BDAccountSessionSDK: 1b21928204da418d25fb12d6a51e81587264fd6d
+  BDALog: 2c34fe6b9e0f7107abb36d41ca3baf1ee33113bb
+  BDAlogProtocol: 3079beb0afd725ea0e209a617dc4381158aa151f
+  BDTArticle: d71c80bbd1cc7dd9f40b0a0590462178197770d4
+  BDTBasePlayer: eed47dd8f845dde6c955f2d527b255a823d40665
+  BDTExploreOrderedData: 96bb150a05e560a5e927a7ee53bda56690571a61
+  BDTFactoryConfigurator: c14af7870fcd1fa9c52142d0c01635775543e42d
+  BDTSharedHeaders: 7ce2d05979120782a343993b31287684065e06a8
+  BDWebImage: cb9435b175d994f7156ffdc736477d794db576dd
+  Bolts: 1432a62b82e8d832c6fceaa3cce9ddbc18d91893
+  boringssl: 8ea6d11d670e5e18687bc53a5d6f02741bdd5967
+  CHTCollectionViewWaterfallLayout: 8a33ea9e60a246d71a3b04d4350c70de4caf1d24
+  CocoaLumberjack: c0d821ecf553b7ee2a8da704cb4543027f3d0c5e
+  Crashlytics: bf08c2834d9231328142ef5588ee1ae5b78229a9
+  Fabric: ecf0d69c8b5cd1c6330c8cd7ae413e6d4aa12af2
+  FHCommonUI: 1e7ade5d70c9bb8feb54857f3cca45a4e5dcca0c
+  FHHouseBase: c3b414517c0e6c2e012691129e9bacfc0af79fba
+  FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
+  FHHouseFind: b0e40221ad76cc8455c4da2d7dae61adf480a2a1
+  FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
+  FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
+  FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
+  FHHouseMine: c0c197cb55d97e3357427d2a1731a7ab4225d94b
+  FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
+  FHHouseTrend: feb4c9736617882d2bd7181262e6a3e2d4ebad4f
+  FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
+  FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
+  FLEX: 41f5c73df50a2c8100e3c38f2eba75fdacf788e2
+  FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
+  Godzippa: d9e858886267fa9026eb4eb1e2e4ce5e0df2d680
+  Heimdallr: 6f61359ac15e725ddc5a421bd679c98bf855c7f5
+  HTSVideoPlay: dbb7513cd7dd172a37a98d1a7e9f11c7f6294479
+  IESGeckoKit: e6cca571ecaf0b5a9af925cd34eda889aa9311de
+  IESVideoPlayer: 0a9545d8099059b332ebc587924df0f066800d54
+  IESWebKit: 48eebb52da8019794c5bbb98e76c94308eba36e1
+  IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
+  ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
+  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
+  JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
+  KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
+  libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
+  libwebp: c184f52cefe46b52c753216233ac467ba8f61730
+  lottie-ios: 35dd57473fff703c4a9c9c4d4d1ad7c2e2c84a4d
+  Mantle: caa35a4d8f55f5561b0202d08c5d2edf06429ecc
+  Masonry: e7568c8ebfa71397954e471aa5afa2bc4cc73cf4
+  MBProgressHUD: 3dcb01b57ae9af405717a0e338566a0087cca22a
+  MJExtension: da69d633398f365e84e052720b7943206f467935
+  MJRefresh: 0163f5b55692ab35b37f1d11c094f98218b93a5e
+  OHHTTPStubs: 8fe4a9bac9386d3450c6cdaeca77e5d07d0f6cf4
+  OpenSSL-Universal: 7bd04be21cd79882c6b2e4afd9433b3e94f88ac0
+  OpenUDID: 2104d6613d4207bd1a0f5538698007442bc1856d
+  Protobuf: e97b6e7b829ac5b4be715db957917a1ba10c4a9a
+  React: d5707a221547497a307b5fc2347665017824b20f
+  ReactiveObjC: 9a729148e44c2ad1e5fdea0c2cf8e540bc4f189b
+  RNCryptor-objc: b6a343f810b240ef24306cad444959b7d577c7f7
+  RSSwizzle: 9b7cf78908bc6b249f1403926c168f730f840e91
+  RXCollections: ef46a1c3b1f25711117ece94c48d9beae9f143a6
+  SDWebImage: abd373dadf531cf5d1738f6a8e9487f7f4a12f14
+  SecGuard: 0c9ebebd0992c9efd94a3a026832eb721ae0cc15
+  SocketRocket: 221a2593dca966c75d0d88450837711b03e3c5d0
+  SQLiteRepairKit: 272cadce05957d8b36df6ac573dc8a596649ed28
+  SSZipArchive: cc2e2411672daf4be9f5f61d4184ba66f15bcd2b
+  ToutiaoFrontierWebSocket: 96f0257673f42edfffdf379681341854b1195937
+  TSVToolkit: deb654f65a887a0c314aa70183681f25a8b0d75d
+  TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
+  TTAccountLogin: d064f182eccc55ebef79216feff43dd2b8c9decf
+  TTAccountSDK: cf30d5473af172a54279d2c22937ab3b3f0f33ab
+  TTAddressBookService: dd811a1a2e57ea21a21a5006761eb1e7e1cef2ad
+  TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
+  TTAdSplashSDK: f02f0b22a03a06783ff6e1473f895fd8563c9333
+  TTAppUpdateHelper: d0e770676b263dfc1f8a0a6b07c280a760574b44
+  TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
+  TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
+  TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
+  TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
+  TTBridgeUnify: 05f19c2c316f7f70fe7c2ff77b4b5a0be4fed769
+  TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
+  TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
+  TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
+  TTEntityBase: 9036725e63faa0661eaf01bfe3b9626825f6560b
+  TTEntry: 0da2ac49bb4705a3d228f721b9f307798ecb2d6e
+  TTFFmpeg: 1a5b5e93f8868aee3df04ca762db8ef77aea6095
+  TTFileUploadClient: 974455ed11ab6fe13cf29b5ad3032d1816ac5751
+  TTFlowStatisticsManager: 6589b320762fe753556fa2058d0e3e0c42f16ae0
+  TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
+  TTImage: 8c4ddc40fd78a992571042abdbd7a80642e0bfdc
+  TTImagePicker: 728917a7f6b46e1029ec5fcd755ce7a62f311166
+  TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
+  TTImpression: d2d80c26abef863c5be6dc8b6fe10ebef3331b84
+  TTIMSDK: bc920322f0cb1a542bc0f6c7cfdef1f8576dbc3c
+  TTInstallService: e4d70620bc4b61384861f9a1f74de5225b27adfc
+  TTKitchen: e82fe1cb9fae8b5ea96284a6971f52f4d11bad0c
+  TTLCSService: d9fc936bba13993ecc454b486a15a403a9fdbdc4
+  TTMonitor: 2677003dc3428a13b1fbbc93a0c49344c1adc1b1
+  TTNetBusiness: e436bc6d648bf01946cc01756c86adfd0d718e5c
+  TTNetworkManager: 6afdda81f4f04c85b9d38c22d1d542d24b5d9141
+  TTNewsAccountBusiness: 50125377b67c11155b3677cf0e6d3d02ed718a03
+  TTPersistence: e0685fe3f0cfd826ccf6917ab5e8227fd6331947
+  TTPhotoScrollVC: f34664f26861dbfbf617e47385a2522ba8bf1755
+  TTPlatformBaseLib: 4d690f459522050397f6ca58188c617ffa453fad
+  TTPlatformUIModel: 42e1baaadf68615bd4911b3a0fce24683b955105
+  TTPlayerSDK: 64564c57c01b3448059203e9fe48d6d07520d641
+  TTPreloaderSDK: d18e1ecc02df22fd71f76cd99964d8d8930b4254
+  TTPushAuthorizationManager: 97925f80e95c63085f31471d5faa744261a0b5f2
+  TTPushManager: f82d55c74093c87498b6c58fecd6d1ac0ef5d338
+  TTPushSDK: 3302f3e57c39cf8e14233769b28cb07d5f403966
+  TTReachability: 4e06b9cf45c975780366c8cacd2250b15c5caa5f
+  TTReporter: 55c6785c79fb8b35a44105d760ac3493cc2ed365
+  TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
+  TTRNKit: 3e07b1f23c8f64f2359184d42c1f4f9287ed6048
+  TTRoute: 20e9092cabb90f759cc2e7c6f5ab3acb075d9d86
+  TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
+  TTServiceProtocols: 155d69fde3ee30af409edd22f53735c75f5b77ad
+  TTSettingsManager: c44994859a5c05bf29fc2d9b852007e8ffcc36c5
+  TTShare: e5faa4ed799189e7dec34372f61794c6a011c2a6
+  TTTAttributedLabel: dc7f8eada1e3d7fa25244fb05f50615d692d8d3e
+  TTThemed: c441f202fc9c8833863bf6f8473fd833cd5e3ac6
+  TTThirdPartySDKs: 0c0f991cd09a2839cbc372659f68c21bc0d05d07
+  TTTracker: 8fdfc910c2a593f625d8dce8b045b3b6aedc6ddd
+  TTUGCFoundation: 38878721f4ea5eecaa985eda71e933a8dded1fe5
+  TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
+  TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
+  TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
+  TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
+  TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
+  TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
+  TTVideoService: 24104b18dd058cf284d1c5dff0af9a5d55f604a0
+  TTVTableViewItem: edf61da588fddd2f8dcc6e1ed0796b764241fcfd
+  TTVTableViewProtocolInterceptor: b40445eb84a3de5ded2f9869c4f6c946df4898e7
+  TTVTLIndexPathTools: 2f6c23b4990f3aee6e7ceb867f632d4d02ea5384
+  UITableView+FDTemplateLayoutCell: a2662e078962600e17f9e090cc09b5f49f3e4762
+  UMengAnalytics: 03d571efddd70d2a64a58f35c23dcf9732344b5b
+  WCDB: f443005ee9bc01706ff0f67bb1ad890e875d6f8c
+  WCDBOptimizedSQLCipher: cea840096ebeefae3116ffd2262ebc489e089b1c
+  yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
+  YYCache: 1bdae9b04229f8308be4af1d2ddfc6c6ac8ce9dc
+  YYImage: 523305b179309a584fcaef25f6ad78143f365c96
+  YYModel: 1550bbf27e71d98465ed087de879e31d852e7742
+  YYText: d15f70a8b9abac84a5e87099655c377982445a9a
+  YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
+
+PODFILE CHECKSUM: ca133bb094835aa318ac88a139602a3982081a65
+
+COCOAPODS: 1.4.0

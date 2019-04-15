@@ -179,7 +179,7 @@
 }
 
 - (CGFloat)tableView:(nonnull UITableView *)tableView estimatedHeightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    return 122;
+    return 142;
 }
 
 - (nonnull UIView *)tableView:(nonnull UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -229,7 +229,8 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 28 + 69 + 77;
+//    return 28 + 69 + 77;
+    return 174;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -277,6 +278,7 @@
     dict[@"enter_from"] = @"city_market";
     dict[@"element_from"] = @"special_old";
     dict[@"log_pb"] = @"be_null";
+    dict[@"element_type"] = _recommendViewModel.type ? : @"be_null";
 
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:self.recommendViewModel.openUrl]];
     NSMutableDictionary *queryP = [NSMutableDictionary new];

@@ -43,8 +43,8 @@ def appPods
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
 
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'e51ab1182a51823c41b69bf4ac7399529aaad508' #:branch => 'feature/develop'
-
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '4b730fd2b839b80b8975cadd066c7f4041ae362c' #:branch => 'feature/develop'
+#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9c5ef3144d54acc6f0203df98cb38bf5f38f075d' #:branch => 'feature/develop'
 
     pod_binary 'SecGuard', '0.8.10.5'#'0.8.10.1'
@@ -400,18 +400,7 @@ def appPods
 #    ]
 
     #-----TTAccountSDK-----
-#    pod 'TTAccountSDK', '3.0.5', :subspecs => [
-#    'Account',
-#    'WeChatAccount'
-##    'SinaWeiboAccount',
-##    'TencentQQAccount',
-##    'TencentWBAccount',
-##    'RenRenAccount',
-##    'TianYiAccount',
-##    'TTAwemeAccount',
-##    'TTHotsoonAccount'
-#    ]
-    pod 'TTAccountSDK', :path => '../AKPlugins/TTAccountSDK', :inhibit_warnings => false, :subspecs => [
+    pod 'TTAccountSDK', '4.2.0', :inhibit_warnings => false, :subspecs => [
         'Account',
         'Logger',
         'WeChatAccount',
@@ -478,17 +467,7 @@ def appPods
     #-----测试  内存泄漏时开启-----
 #    pod 'MLeaksFinder', '0.2.0'
 
-    pod 'BDAccount', :git => 'git@code.byted.org:iOS_Library/BDAccount.git', :tag => 'fixAvatarURL', :subspecs => [
-        'Account',
-        'AccountCore',
-        'NetWorkCore',
-        'Flow',
-        'PlatformCore',
-        'PlatformCustomAuth',
-        'WeChat',
-        'TencentQQ',
-        'SinaWeibo'
-    ]
+    pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.0'
     pod_source 'AMap3DMap', '6.2.0'

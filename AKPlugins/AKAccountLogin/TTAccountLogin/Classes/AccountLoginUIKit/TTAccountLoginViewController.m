@@ -19,7 +19,8 @@
 #import "TTAccountLoginManager.h"
 #import "TTUserPrivacyView.h"
 #import "TTSandBoxHelper.h"
-
+#import <TTAccountSDK/TTAccountAuthLoginManager.h>
+#import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 
 
 #define DEVICE_SYS_FLOAT_VERSION ([[[UIDevice currentDevice] systemVersion] floatValue])

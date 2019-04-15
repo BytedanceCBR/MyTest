@@ -25,6 +25,7 @@
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import <TTArticleCategoryManager.h>
 #import <UIFont+House.h>
+#import "FHHomeScrollBannerCell.h"
 
 
 #define kFHHomeIconRowCount 4 //每行icon个数
@@ -37,6 +38,7 @@ static NSMutableArray  * _Nullable identifierArr;
 
 @property(nonatomic , strong) FHConfigDataModel *previousDataModel;
 @property(nonatomic , assign) CGFloat headerHeight;
+@property(nonatomic , strong) NSMutableDictionary *traceShowCache;
 
 @end
 
@@ -49,6 +51,8 @@ static NSMutableArray  * _Nullable identifierArr;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeCellHelper alloc] init];
+        manager.isConfigDataUpate = YES;
+        manager.traceShowCache = [NSMutableDictionary new];
     });
     return manager;
 }
@@ -67,6 +71,8 @@ static NSMutableArray  * _Nullable identifierArr;
     
     [tableView registerClass:[FHHomeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBannerCell class])];
     
+    [tableView registerClass:[FHHomeScrollBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeScrollBannerCell class])];
+    
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
 }
 
@@ -74,6 +80,33 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     tableView.delegate = delegate;
     tableView.dataSource = delegate;
+}
+
+- (void)processMainPageBannerOpData:(FHConfigDataModel *)dataModel {
+    // 首页轮播banner，数据封装的时候判断是否是有效的数据
+    if (dataModel.mainPageBannerOpData.items.count > 0) {
+        FHConfigDataMainPageBannerOpDataModel *tempOpData = [[FHConfigDataMainPageBannerOpDataModel alloc] init];
+        tempOpData.opStyle = dataModel.mainPageBannerOpData.opStyle;
+        NSMutableArray *tModelArray = [NSMutableArray new];
+        for (int i = 0; i < dataModel.mainPageBannerOpData.items.count; i++) {
+            FHConfigDataRentOpDataItemsModel *tModel = dataModel.mainPageBannerOpData.items[i];
+            if (tModel.openUrl.length > 0 && tModel.image.count > 0 && tModel.id.length > 0) {
+                NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
+                // 是否有效的openUrl
+                if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
+                    FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
+                    if (imageModel.url.length > 0) {
+                        // 有图片url
+                        [tModelArray addObject:tModel];
+                    }
+                }
+            }
+        }
+        if (tModelArray.count > 0) {
+            tempOpData.items = tModelArray;
+        }
+        dataModel.mainPageBannerOpData = tempOpData;
+    }
 }
 
 - (void)refreshFHHomeTableUI:(UITableView *)tableView andType:(FHHomeHeaderCellPositionType)type
@@ -89,6 +122,14 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         if (dataModel.opData.items.count != 0) {
             [modelsArray addObject:dataModel.opData];
+        }
+        // 首页轮播banner，数据封装的时候判断是否是有效的数据
+        if (dataModel.mainPageBannerOpData.items.count > 0) {
+            // 经过一层逻辑处理
+            [self processMainPageBannerOpData:dataModel];
+            if (dataModel.mainPageBannerOpData.items.count > 0) {
+                [modelsArray addObject:dataModel.mainPageBannerOpData];
+            }
         }
         //不同频道cell顺序不同
         if (type == FHHomeHeaderCellPositionTypeForNews) {
@@ -122,14 +163,16 @@ static NSMutableArray  * _Nullable identifierArr;
                 [modelsArray addObject:dataModel.opData2];
             }
         }
-
     }
     
     if ([tableView.delegate isKindOfClass:[FHHomeTableViewDelegate class]] && ![modelsArray isEqualToArray:((FHHomeTableViewDelegate *)tableView.delegate).modelsArray]) {
         ((FHHomeTableViewDelegate *)tableView.delegate).modelsArray = modelsArray;
         [tableView reloadData];
-        
+    }
+    
+    if ([FHHomeConfigManager sharedInstance].currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
+        [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
 }
 
@@ -137,6 +180,7 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     
     FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
     
     if (modelOpdata2.items > 0)
     {
@@ -155,17 +199,30 @@ static NSMutableArray  * _Nullable identifierArr;
             
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
             
-            
             [TTTracker eventV3:@"operation_show" params:dictTraceParams];
         }];
     }
     
-    [identifierArr removeAllObjects];
+    if(cityStatsModel)
+    {
+        [self addHomeCityMarketShowLog];
+    }
     
+}
+
+- (void)clearShowCache
+{
+    [self.traceShowCache removeAllObjects];
 }
 
 - (CGFloat)heightForFHHomeHeaderCellViewType
 {
+    //未开通城市返回
+    if (![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
+    {
+        return 0;
+    }
+    
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!dataModel) {
         dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
@@ -188,7 +245,7 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 countValue = 8;
             }
-//            CGFloat heightPadding = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForNews ? 55 : 20;
+
             CGFloat heightPadding = 20;
             height += ((countValue - 1)/kFHHomeIconRowCount + 1) * (kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
         }
@@ -200,8 +257,18 @@ static NSMutableArray  * _Nullable identifierArr;
             {
                 opData2CountValue = 4;
             }
-            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (14 + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
+    
+            height += ((opData2CountValue - 1)/kFHHomeBannerRowCount + 1) * (18 + (opData2CountValue > 2 ? 0 : 4) + [TTDeviceHelper scaleToScreen375] * kFHHomeBannerDefaultHeight);
         }
+        
+        if (dataModel.mainPageBannerOpData.items.count > 0) {
+            // 经过一层逻辑处理
+            [self processMainPageBannerOpData:dataModel];
+            if (dataModel.mainPageBannerOpData.items.count > 0) {
+                height += [FHHomeScrollBannerCell cellHeight];
+            }
+        }
+        
         BOOL hasCity = NO;
         if (dataModel.cityStats.count > 0) {
             for (FHConfigDataCityStatsModel *model in dataModel.cityStats) {
@@ -421,34 +488,25 @@ static NSMutableArray  * _Nullable identifierArr;
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
             
-            if (index%kFHHomeBannerRowCount == 0) {
-                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+            [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+                if (index%kFHHomeBannerRowCount == 0) {
                     make.right.mas_equalTo(-6.5);
-                    if (index/kFHHomeBannerRowCount == 0) {
-                        make.top.mas_equalTo(12);
-                        make.bottom.mas_equalTo(-2);
-                    }else
-                    {
-                        make.top.mas_equalTo(6);
-                        make.bottom.mas_equalTo(-8);
-                    }
                     make.left.mas_equalTo([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10);
-                }];
-            }else if (index%kFHHomeBannerRowCount == 1)
-            {
-                [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
+                }else
+                {
                     make.left.mas_equalTo(6.5);
-                    if (index/kFHHomeBannerRowCount == 0) {
-                        make.top.mas_equalTo(12);
-                        make.bottom.mas_equalTo(-2);
-                    }else
-                    {
-                        make.top.mas_equalTo(6);
-                        make.bottom.mas_equalTo(-8);
-                    }
                     make.right.mas_equalTo(-([TTDeviceHelper isScreenWidthLarge320] ? 20 : 10));
-                }];
-            }
+                }
+                
+                if (index/kFHHomeBannerRowCount == 0) {
+                    make.top.mas_equalTo(12);
+                    make.bottom.mas_equalTo(-2);
+                }else
+                {
+                    make.top.mas_equalTo(8);
+                    make.bottom.mas_equalTo(-6);
+                }
+            }];
         }
 
         BOOL isFindHouse = YES;
@@ -555,6 +613,15 @@ static NSMutableArray  * _Nullable identifierArr;
     
 }
 
+// 首页轮播banner
++ (void)fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model {
+    // 更新cell数据
+    if ([FHHomeCellHelper sharedInstance].isConfigDataUpate) {
+         [cell updateWithModel:model];
+        [FHHomeCellHelper sharedInstance].isConfigDataUpate = NO;
+    }
+}
+
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
     
     WeakSelf;
@@ -590,7 +657,11 @@ static NSMutableArray  * _Nullable identifierArr;
                 [urlStr appendString:@"&origin_search_id=be_null"];
             }
             NSURL *url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            TTRouteUserInfo* info = nil;
+            if (model.logPb != nil) {
+                info = [[TTRouteUserInfo alloc] initWithInfo:model.logPb];
+            }
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
         }
         [wself addHomeCityMarketClickLog];
     };
@@ -617,6 +688,10 @@ static NSMutableArray  * _Nullable identifierArr;
     if ([cell isKindOfClass:[FHHomeCityTrendCell class]] && [model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
         cell.fd_enforceFrameLayout = YES;
         [self fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model];
+    }
+    
+    if ([cell isKindOfClass:[FHHomeScrollBannerCell class]] && [model isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        [self fillFHHomeScrollBannerCell:(FHHomeScrollBannerCell *)cell withModel:(FHConfigDataMainPageBannerOpDataModel *)model];
     }
 }
 
@@ -654,6 +729,10 @@ static NSMutableArray  * _Nullable identifierArr;
     
     if ([model isKindOfClass:[FHConfigDataCityStatsModel class]]) {
         return NSStringFromClass([FHHomeCityTrendCell class]);
+    }
+    
+    if ([model isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        return NSStringFromClass([FHHomeScrollBannerCell class]);
     }
     
     return NSStringFromClass([FHHomeBaseTableCell class]);

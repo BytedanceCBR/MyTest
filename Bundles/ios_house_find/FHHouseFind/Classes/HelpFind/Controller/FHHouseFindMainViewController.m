@@ -50,6 +50,7 @@
     [super viewDidLoad];
     //解决跳到结果页后在ios9下面顶部出现白条的问题
     self.automaticallyAdjustsScrollViewInsets = NO;
+    [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
     [self setupUI];
     if (_viewModel.recommendModel != nil) {
         
@@ -66,10 +67,6 @@
 - (void)setupUI
 {
     [self addDefaultEmptyViewFullScreen];
-    [self.emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.view);
-        make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-    }];
 }
 
 - (void)addHouseFindHelpVC
@@ -187,8 +184,14 @@
         [self startLoading];
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
+
     } else {
+        __weak typeof(self)wself = self;
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        if (!self.customNavBarView) {
+            [self setupDefaultNavBar:NO];
+        }
+        [self.emptyView addSubview:self.customNavBarView];
     }
 }
 
@@ -198,6 +201,23 @@
     if (!self.isLoadingData) {
         [self startLoadData];
     }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"userInteractionEnabled"]) {
+        if([change[@"new"] boolValue]){
+            [self.view endEditing:YES];
+            [_childVC endEditing:NO];
+        }else{
+            [_childVC endEditing:YES];
+        }
+    }
+}
+
+- (void)dealloc
+{
+    [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
 }
 
 @end
