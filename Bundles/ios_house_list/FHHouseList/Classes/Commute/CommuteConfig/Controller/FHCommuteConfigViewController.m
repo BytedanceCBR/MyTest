@@ -171,7 +171,10 @@
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
     NSString *destLocation = manager.destLocation;
     if (destLocation.length == 0) {
-        if ([FHEnvContext isSameLocCityToUserSelect]) {
+        NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        AMapLocationReGeocode * currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
+        
+        if ([FHEnvContext isSameLocCityToUserSelect] && currentReGeocode &&([currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:currentReGeocode.city])) {
             AMapLocationReGeocode *currentReGeocode =  [FHLocManager sharedInstance].currentReGeocode;
             self.chooseLocation = [FHLocManager sharedInstance].currentLocaton;
             if (currentReGeocode && self.chooseLocation) {

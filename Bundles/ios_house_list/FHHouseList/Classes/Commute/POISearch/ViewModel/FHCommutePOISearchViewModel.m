@@ -68,15 +68,16 @@
         
         tableView.delegate = self;
         tableView.dataSource = self;
-        
-        __weak typeof(self)wself = self;
-        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-            wself.keywordRequest.page++;
-            [wself.searchAPI AMapPOIKeywordsSearch:wself.keywordRequest];
-        }];
-        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
-        self.tableView.mj_footer = self.refreshFooter;
-        self.tableView.mj_footer.hidden = YES;
+  
+        //TODO: android 没有实现该功能，先关闭翻页
+//        __weak typeof(self)wself = self;
+//        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+//            wself.keywordRequest.page++;
+//            [wself.searchAPI AMapPOIKeywordsSearch:wself.keywordRequest];
+//        }];
+//        [self.refreshFooter setUpNoMoreDataText:@"没有更多信息了"];
+//        self.tableView.mj_footer = self.refreshFooter;
+//        self.tableView.mj_footer.hidden = YES;
         
         _searchAPI = [[AMapSearchAPI alloc] init];
         _searchAPI.delegate = self;
@@ -96,7 +97,7 @@
                 self.locationHeaderView.location = @"无法获取当前位置";
                 tableView.tableHeaderView = _locationHeaderView;
             }else{
-                //有定位且不在同一城市时不显示提示
+                self.locationHeaderView.showNotInCityTip = YES;
                 tableView.tableHeaderView = self.defaultHeader;                
             }
             [self nearBySearch:NO];
@@ -206,7 +207,14 @@
 {
     self.keywordRequest.page = 1;
 //    self.keywordRequest.keywords = self.inputBar.text;
-    [self poiSearch:self.inputBar.text force:YES];
+    if (self.inputBar.text.length > 0) {
+        [self poiSearch:self.inputBar.text force:YES];
+    }else{
+        [self.searchPois removeAllObjects];
+        [self.tableView reloadData];
+        [self.viewController.emptyView hideEmptyView];
+    }
+    
 }
 
 -(void)poiSearch:(NSString *)keyword force:(BOOL)force
@@ -323,11 +331,7 @@
         
     }else if (request == self.aroundRequest){
         
-        if (response.count > MAX_AROUND_BUILD_COUNT) {
-            self.aroundPois = [response.pois subarrayWithRange:NSMakeRange(0, MAX_AROUND_BUILD_COUNT)];
-        }else{
-            self.aroundPois = response.pois;
-        }
+        [self handleAroundPois:response.pois];
         [self.tableView reloadData];
         self.aroundRequest = nil;        
     }
@@ -374,6 +378,26 @@
         _tableView.tableHeaderView = _locationHeaderView;
         self.locationHeaderView.loading = NO;
 //        self.locationHeaderView.showRefresh = NO;
+    }
+}
+
+-(void)handleAroundPois:(NSArray<AMapPOI *> *)pois
+{
+    NSMutableArray *hpois = [NSMutableArray new];
+    if (!self.currentReGeocode) {
+        [hpois addObjectsFromArray:pois];
+    }else{
+        for (AMapAOI *poi in pois) {
+            if (![poi.name isEqualToString:self.currentReGeocode.AOIName]) {
+                [hpois addObject:poi];
+            }
+        }
+    }
+    
+    if (hpois.count > MAX_AROUND_BUILD_COUNT) {
+        self.aroundPois = [hpois subarrayWithRange:NSMakeRange(0, MAX_AROUND_BUILD_COUNT)];
+    }else{
+        self.aroundPois = hpois;
     }
 }
 
@@ -611,7 +635,8 @@
     self.tableView.mj_footer.hidden = YES;
     [self.searchPois removeAllObjects];
     [self.tableView reloadData];
-    if (!_locationHeaderView.showNotInCityTip && [FHEnvContext isSameLocCityToUserSelect]) {
+    NSString *selectCityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+    if (!self.locationHeaderView.showNotInCityTip &&[FHEnvContext isSameLocCityToUserSelect] && _currentReGeocode &&([_currentReGeocode.city hasPrefix:selectCityName] || [selectCityName hasPrefix:_currentReGeocode.city])) {
         self.tableView.tableHeaderView = _locationHeaderView;
     }else{
         self.tableView.tableFooterView = self.defaultHeader;
