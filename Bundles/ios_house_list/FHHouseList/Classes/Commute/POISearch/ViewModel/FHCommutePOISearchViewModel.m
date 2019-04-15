@@ -88,22 +88,16 @@
             //定位地和选择地是同一城市才选择
             self.locationHeaderView.location = _currentReGeocode.AOIName;
             tableView.tableHeaderView = _locationHeaderView;
-            if(!_currentReGeocode){
-                _locationHeaderView.location =  @"无法获取当前位置";
-                [self reGeoSearch];
-            }
 
             [self nearBySearch:YES];
         }else {
             CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
             if (status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined || !_currentReGeocode) {
                 self.locationHeaderView.location = @"无法获取当前位置";
-//                self.locationHeaderView.showRefresh = YES;
                 tableView.tableHeaderView = _locationHeaderView;
             }else{
-                wself.locationHeaderView.showNotInCityTip = YES;
-                tableView.tableHeaderView = self.locationHeaderView;
-                
+                //有定位且不在同一城市时不显示提示
+                tableView.tableHeaderView = self.defaultHeader;                
             }
             [self nearBySearch:NO];
         }

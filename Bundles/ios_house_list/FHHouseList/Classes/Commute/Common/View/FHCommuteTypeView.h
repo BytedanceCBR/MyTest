@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommuteTypeView : UIView
 
 @property(nonatomic , copy) void (^updateType)(FHCommuteType type);
+@property(nonatomic , assign) BOOL boldTitle;
 
 -(void)chooseType:(FHCommuteType)type;
 

@@ -160,6 +160,7 @@
         }
         [wself startSearch:time type:type];                
     };
+    _filterView.boldTitle = YES;
     
     [self.view addSubview:_filterView];
     

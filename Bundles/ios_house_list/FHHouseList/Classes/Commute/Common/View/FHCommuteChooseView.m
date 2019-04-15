@@ -71,6 +71,15 @@
     
 }
 
+-(void)setBoldTitle:(BOOL)boldTitle
+{
+    _boldTitle = boldTitle;
+    if (boldTitle) {
+        _titleLabel.font = [UIFont themeFontMedium:16];
+    }else{
+       _titleLabel.font = [UIFont themeFontRegular:16];
+    }
+}
 
 -(void)initConstraints
 {

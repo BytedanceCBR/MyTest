@@ -97,6 +97,12 @@
     _searchButton.backgroundColor = enableSearch?[UIColor themeRed1]:RGBA(0xff, 0x58, 0x69,0.3);
 }
 
+-(void)setBoldTitle:(BOOL)boldTitle
+{
+    _boldTitle = boldTitle;
+    _timeChooseView.boldTitle = boldTitle;
+    _typeView.boldTitle = boldTitle;
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.

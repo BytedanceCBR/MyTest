@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHCommuteChooseView : UIView
 
 @property(nonatomic , copy) NSString *chooseTime;
+@property(nonatomic , assign) BOOL boldTitle;
 
 -(instancetype)initWithFrame:(CGRect)frame type:(FHCommuteType)type durationItems:(NSArray<NSString *>*)items;
 
