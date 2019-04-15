@@ -437,7 +437,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])
             {
-                [self checkCityStatus];
+                [self.homeViewController.view sendSubviewToBack:self.tableViewV];
+                [self showCityUnAvalibleStatus];
+        
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
                 if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
