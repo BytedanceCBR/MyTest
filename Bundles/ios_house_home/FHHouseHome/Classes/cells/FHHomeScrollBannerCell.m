@@ -431,7 +431,7 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
         self.pagingEnabled = YES;
         self.showsVerticalScrollIndicator = false;
         self.showsHorizontalScrollIndicator = false;
-        UIColor *color = [UIColor themeGray6];
+        UIColor *color = [UIColor themeGray7];
         self.placeholderImage = [FHUtils createImageWithColor:color];
         [self setupUI];
     }

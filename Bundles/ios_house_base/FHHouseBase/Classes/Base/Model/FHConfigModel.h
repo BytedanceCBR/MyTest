@@ -329,6 +329,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHConfigDataAvailabilityModel *cityAvailability;
 @property (nonatomic, strong, nullable) FHConfigDataCitySwitchModel *citySwitch;
 @property (nonatomic, strong , nullable) FHConfigDataEntranceSwitchModel *entranceSwitch ;
+@property (nonatomic, copy , nullable) NSNumber *houseTypeDefault;
 
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *searchTabNeighborhoodFilter;
 @property (nonatomic, strong , nullable) NSArray<FHSearchFilterConfigItem> *rentFilterOrder;

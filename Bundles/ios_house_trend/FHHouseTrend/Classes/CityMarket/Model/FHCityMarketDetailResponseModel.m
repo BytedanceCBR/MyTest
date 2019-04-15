@@ -24,6 +24,7 @@
     @"moreBtnText": @"more_btn_text",
     @"bottomText": @"bottom_text",
     @"moreOpenUrl": @"more_open_url",
+    @"subTitle": @"sub_title",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

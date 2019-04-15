@@ -144,4 +144,9 @@
     [self refreshBadgeNumber];
 }
 
+-(void)setUnreadSystemMsgCount:(NSUInteger) count {
+    _unreadSystemMsgCount = count;
+    [self refreshBadgeNumber];
+}
+
 @end
