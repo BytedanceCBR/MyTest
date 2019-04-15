@@ -944,7 +944,11 @@
 
 -(void)onConditionPanelWillDisplay
 {
-    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
+    if (self.topView.superview != self.topContainerView){
+        //筛选器不在顶部时 才上移
+        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
+    }
+    
     //只显示筛选器
     [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.topView filterBottom] - [self.topView filterTop]);

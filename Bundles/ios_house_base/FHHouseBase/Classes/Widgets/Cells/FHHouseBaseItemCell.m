@@ -648,7 +648,11 @@
             }];
         }
         [self.priceBgView addSubview:self.distanceLabel];
-        
+        //因为有表情 强制计算宽度
+        [self.distanceLabel sizeToFit];
+        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(self.distanceLabel.frame.size.width);
+        }];
         _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
         [self.distanceLabel.yoga markDirty];
     }else{
