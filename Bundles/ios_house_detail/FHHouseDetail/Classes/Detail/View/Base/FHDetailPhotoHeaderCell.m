@@ -360,9 +360,9 @@
     }
     __weak typeof(self) weakSelf = self;
 
-    FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
+    TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
     vc.dragToCloseDisabled = YES;
-//    vc.mode = PhotosScrollViewSupportBrowse;
+    vc.mode = PhotosScrollViewSupportBrowse;
     vc.startWithIndex = index;
     vc.albumImageBtnClickBlock = ^(NSInteger index){
         [weakSelf enterPictureShowPictureWithIndex:index];
@@ -371,11 +371,11 @@
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
     
-//    if ([self.currentData isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-//        FHDetailPhotoHeaderModel *model = (FHDetailPhotoHeaderModel *)self.currentData;
-//        vc.isShowAlbumAndCloseButton =  model.isNewHouse;
-//        vc.smallImageInfosModels = model.smallImageGroup;
-//    }
+    if ([self.currentData isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+        FHDetailPhotoHeaderModel *model = (FHDetailPhotoHeaderModel *)self.currentData;
+        vc.isShowAlbumAndCloseButton =  model.isNewHouse;
+        vc.smallImageInfosModels = model.smallImageGroup;
+    }
     
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
     for(id<FHDetailPhotoHeaderModelProtocol> imgModel in images)
