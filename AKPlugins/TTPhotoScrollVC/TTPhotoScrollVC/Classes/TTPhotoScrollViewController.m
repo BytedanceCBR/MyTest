@@ -73,6 +73,9 @@
 @property(nonatomic, strong)UILabel * selectCountLabel;
 @property(nonatomic, strong)UIButton * bottomBarRightButton;
 
+@property(nonatomic, strong)UIButton *clonseBtn;
+@property(nonatomic, strong)UIButton *albumBtn;
+
 @property(nonatomic, assign)NSUInteger selectCount;
 
 //@property(nonatomic, copy)FinishCompletion finishCompletion;
@@ -340,20 +343,21 @@
             height = 44;
         }
         
-        UIButton *clonseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [clonseBtn setTitle:@"关闭" forState:UIControlStateNormal];
-        [clonseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [clonseBtn setFrame:CGRectMake(20, height, 48, 48)];
-        [clonseBtn addTarget:self action:@selector(closeBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:clonseBtn];
+        _clonseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_clonseBtn setTitle:@"关闭" forState:UIControlStateNormal];
+        [_clonseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_clonseBtn setFrame:CGRectMake(20, height, 48, 48)];
+        [_clonseBtn addTarget:self action:@selector(closeBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:_clonseBtn];
+        
         
         if (self.smallImageInfosModels.count != 0) {
-            UIButton *albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
-            [albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
-            [albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:albumBtn];
+            _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
+            [_albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [_albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
+            [_albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:_albumBtn];
         }
     }
     
@@ -1479,6 +1483,8 @@ static BOOL staticPhotoBrowserAtTop = NO;
             imageView.hidden = YES;
             break;
         case TTPreviewAnimateStateChange:
+            _clonseBtn.hidden = YES;
+            _albumBtn.hidden = YES;
             self.containerView.alpha = MAX(0,(scale*14-13 - _animateManager.minScale)/(1 - _animateManager.minScale));
             break;
         case TTPreviewAnimateStateDidFinish:
@@ -1533,10 +1539,14 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)ttPreviewPanBackFinishAnimationCompletion{
     self.containerView.alpha = 0;
+    _clonseBtn.hidden = NO;
+    _albumBtn.hidden = NO;
 }
 
 - (void)ttPreviewPanBackCancelAnimationCompletion{
     self.containerView.alpha = 1;
+    _clonseBtn.hidden = NO;
+    _albumBtn.hidden = NO;
 }
 
 - (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
