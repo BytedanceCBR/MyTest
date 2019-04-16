@@ -651,7 +651,7 @@
         //因为有表情 强制计算宽度
         [self.distanceLabel sizeToFit];
         [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.width = YGPointValue(self.distanceLabel.frame.size.width);
+            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
         }];
         _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
         [self.distanceLabel.yoga markDirty];
