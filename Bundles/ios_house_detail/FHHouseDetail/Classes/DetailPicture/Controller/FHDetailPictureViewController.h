@@ -41,9 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, assign)PhotosScrollViewMode mode;
 @property (nonatomic, strong)NSArray * images;
 @property (nonatomic, strong)NSArray * assetsImages;
-@property (nonatomic, strong)NSMutableArray * isSelecteds;
-@property (nonatomic, assign)NSUInteger selectLimit;
-@property (nonatomic, assign)BOOL autoSelectImageWhenClickDone;
 
 /** 是否支持长按保存，默认YES */
 @property (nonatomic, assign)BOOL longPressToSave;
