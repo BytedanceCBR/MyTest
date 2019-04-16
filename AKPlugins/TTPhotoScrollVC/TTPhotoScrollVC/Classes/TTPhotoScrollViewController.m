@@ -1483,8 +1483,12 @@ static BOOL staticPhotoBrowserAtTop = NO;
             imageView.hidden = YES;
             break;
         case TTPreviewAnimateStateChange:
-            _clonseBtn.hidden = YES;
-            _albumBtn.hidden = YES;
+            if (_clonseBtn) {
+                _clonseBtn.hidden = YES;
+            }
+            if (_albumBtn) {
+                _albumBtn.hidden = YES;
+            }
             self.containerView.alpha = MAX(0,(scale*14-13 - _animateManager.minScale)/(1 - _animateManager.minScale));
             break;
         case TTPreviewAnimateStateDidFinish:
@@ -1539,14 +1543,16 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)ttPreviewPanBackFinishAnimationCompletion{
     self.containerView.alpha = 0;
-    _clonseBtn.hidden = NO;
-    _albumBtn.hidden = NO;
 }
 
 - (void)ttPreviewPanBackCancelAnimationCompletion{
     self.containerView.alpha = 1;
-    _clonseBtn.hidden = NO;
-    _albumBtn.hidden = NO;
+    if (_clonseBtn) {
+        _clonseBtn.hidden = NO;
+    }
+    if (_albumBtn) {
+        _albumBtn.hidden = NO;
+    }
 }
 
 - (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
