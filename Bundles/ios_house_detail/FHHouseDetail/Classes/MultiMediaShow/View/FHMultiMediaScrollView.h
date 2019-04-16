@@ -10,9 +10,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHMultiMediaScrollViewDelegate <NSObject>
+
+- (void)didSelectItemAtIndex:(NSInteger)index;
+
+@end
+
 @interface FHMultiMediaScrollView : UIView
 
 - (void)updateWithModel:(FHMultiMediaModel *)model;
+
+@property(nonatomic , weak) id<FHMultiMediaScrollViewDelegate> delegate;
 
 @end
 

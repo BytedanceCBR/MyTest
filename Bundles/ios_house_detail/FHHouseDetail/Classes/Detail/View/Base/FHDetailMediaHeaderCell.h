@@ -6,6 +6,7 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import "FHDetailOldModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,3 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+@interface FHDetailMediaHeaderModel : FHDetailBaseModel
+@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
+@end
