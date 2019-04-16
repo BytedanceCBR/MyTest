@@ -20,14 +20,6 @@
 #import "UIFont+House.h"
 #import "FHFloorPanPicShowViewController.h"
 
-#define indexPromptLabelTextSize 16.f
-#define indexPromptLabelBottomPadding 5.f
-#define indexPormptLabelLeftPadding 5.f
-#define indexPormptLabelWidth 60.f
-#define indexPormptLabelHeight 28.f
-
-#define indexTitleLabelTextSize 17.f
-
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 40.f
 
@@ -51,14 +43,10 @@
 @property(nonatomic, assign, readwrite)NSInteger photoCount;
 
 @property(nonatomic, strong)NSMutableSet * photoViewPools;
-@property(nonatomic, strong)UILabel * indexPromptLabel;
 
 @property(nonatomic, strong)UIView * topBar;
 
 @property(nonatomic, strong)UIView * bottomBar;
-@property(nonatomic, strong)UILabel * selectCountLabel;
-
-@property(nonatomic, assign)NSUInteger selectCount;
 
 @property(nonatomic, strong)UIPanGestureRecognizer * panGestureRecognizer;
 @property(nonatomic, strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
@@ -149,20 +137,6 @@
     
     [self.view addSubview:_photoScrollView];
     
-    // indexPromptLabel
-    _indexPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding, indexPormptLabelWidth, indexPormptLabelHeight)];
-    _indexPromptLabel.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
-    [_indexPromptLabel setTextColor:[UIColor tt_defaultColorForKey:kColorBackground4]];
-    [_indexPromptLabel setFont:[UIFont themeFontRegular:indexPromptLabelTextSize]];
-    _indexPromptLabel.layer.cornerRadius = 6.f;
-    _indexPromptLabel.textAlignment = NSTextAlignmentCenter;
-    _indexPromptLabel.clipsToBounds = YES;
-    _indexPromptLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-    [self.view addSubview:_indexPromptLabel];
-
-    _indexPromptLabel.centerX = self.view.width/2;
-    _indexPromptLabel.autoresizingMask  = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
-    
     _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, kFHDPTopBarHeight)];
     _topBar.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_topBar];
@@ -216,12 +190,6 @@
     }
     self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
     self.topBar.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
-    if (self.indexPromptLabel.frame.size.width <= indexPormptLabelWidth) {
-        self.indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, indexPormptLabelWidth, indexPormptLabelHeight);
-    } else {
-        self.indexPromptLabel.frame = CGRectMake(self.indexPromptLabel.frame.origin.x, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, self.indexPromptLabel.frame.size.width, indexPormptLabelHeight);
-    }
-   self.indexPromptLabel.centerX = self.view.width/2;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -280,7 +248,6 @@
     }
     
     [self scrollToIndex:_currentIndex];
-    [self refreshIndexPromptLabel];
 }
 
 
@@ -367,18 +334,6 @@
     }
 }
 
-- (void)setSelectCount:(NSUInteger)selectCount
-{
-    if (_selectCount != selectCount && _selectCountLabel)
-    {
-        _selectCountLabel.text = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)selectCount, (unsigned long)_selectLimit];
-        [_selectCountLabel sizeToFit];
-        _selectCountLabel.origin = CGPointMake(((_bottomBar.width) - (_selectCountLabel.width)) / 2, ((_bottomBar.height) - (_selectCountLabel.height)) / 2);
-    }
-    
-    _selectCount = selectCount;
-}
-
 - (TTImagePreviewAnimateManager *)animateManager{
     if (_animateManager == nil){
         _animateManager = [[TTImagePreviewAnimateManager alloc] init];
@@ -444,36 +399,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
 }
 
-- (void)refreshIndexTitleLabel
-{
-    if (_currentIndex < 0 || _photoCount < 0) {
-        return;
-    }
-}
-
-- (void)refreshIndexPromptLabel
-{
-    if (_indexPromptLabel.hidden)
-    {
-        return;
-    }
-    
-    if (_currentIndex < 0 || _photoCount < 0) {
-        _indexPromptLabel.hidden = YES;
-        return;
-    }
-    else {
-        _indexPromptLabel.hidden = NO;
-    }
-    
-    NSString * text = [NSString stringWithFormat:@"%li/%li", (long)_currentIndex + 1, (long)_photoCount];
-    [_indexPromptLabel setText:text];
-    
-    CGFloat width = [text boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: _indexPromptLabel.font} context:nil].size.width;
-    _indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, _indexPromptLabel.frame.origin.y, width + 10, _indexPromptLabel.frame.size.height);
-    self.indexPromptLabel.centerX = self.view.width/2;
-}
-
 - (CGRect)frameForPagingScrollView
 {
     return self.view.bounds;
@@ -505,7 +430,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     _currentIndex = newIndex;
     
-    [self refreshIndexPromptLabel];
     [self setSelectedAtIndex:_currentIndex];
     
     [self unloadPhoto:_currentIndex + 2];
@@ -621,7 +545,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     showImageView.loadingCompletedAnimationBlock = nil;
     [self setUpShowImageView:showImageView atIndex:index];
     showImageView.visible = visible;
-    //[showImageView refreshUI];
     
     [_photoScrollView addSubview:showImageView];
 }
@@ -700,37 +623,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     kFHStaticPhotoBrowserAtTop = NO;
     alreadyFinished = YES;
-}
-
-- (void)selectButtonClicked:(id)sender
-{
-    BOOL isSelected = [[_isSelecteds objectAtIndex:_currentIndex] boolValue];
-    
-    if (_selectCount >= _selectLimit && !isSelected)
-    {
-        return;
-    }
-    
-    isSelected = !isSelected;
-    [_isSelecteds replaceObjectAtIndex:_currentIndex withObject:@(isSelected)];
-    
-    [self setSelectedAtIndex:_currentIndex];
-    
-    self.selectCount = _selectCount + (isSelected ? 1 : -1);
-}
-
-- (void)selectDoneButtonClicked:(id)sender
-{
-    if (_autoSelectImageWhenClickDone && _selectCount == 0) {
-        BOOL isSelected = [[_isSelecteds objectAtIndex:_currentIndex] boolValue];
-        if (_selectCount < _selectLimit && !isSelected) {
-            [self selectButtonClicked:nil];
-        }
-    }
-    if (_delegate && [_delegate respondsToSelector:@selector(TTPhotoScrollViewControllerDidFinishSelect:)])
-    {
-        [_delegate TTPhotoScrollViewControllerDidFinishSelect:self];
-    }
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -953,7 +845,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                                             withAnimation:NO];
     self.containerView.alpha = (1 - yFraction * 2 / 3);
     [UIView animateWithDuration:0.15 animations:^{
-        self.indexPromptLabel.alpha = 0;
+//        self.indexPromptLabel.alpha = 0;
     }];
 }
 
@@ -965,7 +857,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     self.photoScrollView.frame = [self frameForPagingScrollView];
     self.containerView.alpha = 1;
     [UIView animateWithDuration:0.15 animations:^{
-        self.indexPromptLabel.alpha = 1;
+//        self.indexPromptLabel.alpha = 1;
     }];
 }
 
@@ -1191,7 +1083,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         case TTPreviewAnimateStateWillBegin:
             [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
                                                     withAnimation:NO];
-            self.indexPromptLabel.alpha = 0;
+//            self.indexPromptLabel.alpha = 0;
             self.topBar.alpha = 0;
             self.bottomBar.alpha = 0;
             imageView.hidden = YES;
@@ -1211,7 +1103,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             break;
         case TTPreviewAnimateStateDidCancel:
             self.containerView.alpha = 1;
-            self.indexPromptLabel.alpha = 1;
+//            self.indexPromptLabel.alpha = 1;
             self.topBar.alpha = 1;
             self.bottomBar.alpha = 1;
             imageView.hidden = NO;
