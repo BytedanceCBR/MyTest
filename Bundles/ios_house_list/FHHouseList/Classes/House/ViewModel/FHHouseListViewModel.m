@@ -405,6 +405,10 @@
     
     [_requestTask cancel];
     
+    if (isRefresh) {
+        self.isRefresh = isRefresh;
+    }
+    
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
     FHCommuteManager *manager = [FHCommuteManager sharedInstance];
     CLLocationCoordinate2D location = CLLocationCoordinate2DMake(manager.latitude, manager.longitude);
