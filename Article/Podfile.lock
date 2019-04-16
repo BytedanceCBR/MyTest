@@ -575,7 +575,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.1.4)
   - IGListKit
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9c5ef3144d54acc6f0203df98cb38bf5f38f075d`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `7c7adafb098844223c3aa54e2d26d5e2153f9ade`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `db5d2ee9517419ff8926f5d635f67c9e9313dde1`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -786,7 +786,7 @@ EXTERNAL SOURCES:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 7c7adafb098844223c3aa54e2d26d5e2153f9ade
+    :commit: db5d2ee9517419ff8926f5d635f67c9e9313dde1
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -843,7 +843,7 @@ CHECKOUT OPTIONS:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 7c7adafb098844223c3aa54e2d26d5e2153f9ade
+    :commit: db5d2ee9517419ff8926f5d635f67c9e9313dde1
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
@@ -1011,6 +1011,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 5d2a930675b3a9eba1a8687547a439483ad9dda6
+PODFILE CHECKSUM: a4bcba949ee8266561ade95567110f07ff5c27f1
 
 COCOAPODS: 1.4.0
