@@ -66,7 +66,8 @@
                            @"imOpenUrl" : @"chat_openurl",
                            @"imLabel" : @"chat_button_text",
                            @"callButtonText" : @"call_button_text",
-                           @"realtorDetailUrl" : @"main_page_info"
+                           @"realtorDetailUrl" : @"main_page_info",
+                           @"reportButtonText":@"report_button_text"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -72,6 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
+@property (nonatomic, copy , nullable) NSString *reportButtonText;
+
+@property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
 

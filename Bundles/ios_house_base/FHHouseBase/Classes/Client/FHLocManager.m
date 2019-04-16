@@ -372,9 +372,14 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
    
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-                    
-                }];
+                
+                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+                
+                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
+                        
+                    }];
+                }
 
                 wSelf.retryConfigCount = 3;
             }];
