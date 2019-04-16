@@ -205,6 +205,10 @@
 
 -(void)tryReload
 {
+    if (![TTReachability isNetworkConnected]) {
+        return;
+    }
+    
     self.keywordRequest.page = 1;
 //    self.keywordRequest.keywords = self.inputBar.text;
     if (self.inputBar.text.length > 0) {
