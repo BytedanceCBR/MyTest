@@ -66,6 +66,8 @@
     if (_itemModel.schoolItem.schoolList.count < 1) {
         return;
     }
+    self.clipsToBounds = YES;
+
     FHDetailDataNeighborhoodInfoSchoolInfoModel *schoolInfo = _itemModel.schoolItem.schoolList[0];
     NSString *schoolTypeName = _itemModel.schoolItem.schoolTypeName;
     NSString *schoolName = schoolInfo.schoolName;
@@ -113,7 +115,6 @@
     
     UIView *schoolView = [[UIView alloc]init];
     schoolView.backgroundColor = [UIColor whiteColor];
-    schoolView.clipsToBounds = YES;
     self.schoolView = schoolView;
     [self addSubview:schoolView];
     
@@ -134,6 +135,7 @@
         self.schoolHeight = schoolHeight;
         [schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(foldBtn.mas_left).mas_offset(-4);
+            make.height.mas_equalTo(self.schoolHeight);
         }];
     }else {
         self.foldBtn.hidden = YES;
@@ -141,7 +143,6 @@
             make.right.mas_equalTo(foldBtn.mas_left).mas_offset(20);
         }];
     }
-    [self updateSchoolConstraints:NO];
 }
 
 - (void)foldBtnDidClick
@@ -154,7 +155,6 @@
         [self.foldBtn setImage:[UIImage imageNamed:@"detail_fold_up"] forState:UIControlStateNormal];
         [self.foldBtn setImage:[UIImage imageNamed:@"detail_fold_up"] forState:UIControlStateHighlighted];
     }
-    [self updateSchoolConstraints:YES];
 
     if (self.foldBlock) {
     
@@ -168,23 +168,6 @@
 {
     CGFloat height = _itemModel.isFold ? self.schoolLabel.bottom : self.schoolHeight + self.schoolLabel.bottom;
     return height;
-}
-
-- (void)updateSchoolConstraints:(BOOL)animated
-{
-    if (_itemModel.isFold) {
-        
-        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-     }];
-        self.schoolView.hidden = YES;
-    } else {
-        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(self.schoolHeight);
-        }];
-        self.schoolView.hidden = NO;
-    }
-    [self setNeedsUpdateConstraints];
 }
 
 @end

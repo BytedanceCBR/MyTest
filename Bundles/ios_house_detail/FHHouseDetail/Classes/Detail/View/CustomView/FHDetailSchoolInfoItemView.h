@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithSchoolInfoModel:(FHDetailSchoolInfoItemModel *)itemModel;
 - (CGFloat)viewHeight;
-
 @end
 
 @interface FHDetailSchoolInfoItemModel : NSObject

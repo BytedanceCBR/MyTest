@@ -31,7 +31,7 @@
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *topView;
 @property (nonatomic, assign)   CGFloat       topHeight;
-@property (nonatomic, strong)   UIView       *bottomView;
+//@property (nonatomic, strong)   UIView       *bottomView;
 @property (nonatomic, strong)   UIView       *schoolView;
 
 @end
@@ -149,36 +149,49 @@
         __weak typeof(self)wself = self;
         itemView.foldBlock = ^(FHDetailSchoolInfoItemView *theItemView, CGFloat height) {
             
-            [model.tableView beginUpdates];
-            [theItemView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(height);
+            [UIView animateWithDuration:0.3 animations:^{
+                
+                [wself refreshItemsView];
+
+            } completion:^(BOOL finished) {
             }];
+            
+            [model.tableView beginUpdates];
             [wself refreshSchoolViewFrame];
-//            [theItemView setNeedsUpdateConstraints];
+            CGFloat currentHeight = theItemView.height;
+
             [wself setNeedsUpdateConstraints];
             [model.tableView endUpdates];
+  
         };
         
         [self.schoolView addSubview:itemView];
-        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.mas_equalTo(self.schoolView);
-            if (lastItemView) {
-                make.top.mas_equalTo(lastItemView.mas_bottom);
-            }else {
-                make.top.mas_equalTo(0);
-            }
-            make.height.mas_equalTo(itemView.bottomY);
-        }];
+        itemView.frame = CGRectMake(0, lastItemView.bottom, SCREEN_WIDTH, itemView.bottomY);
         lastItemView = itemView;
     }
     [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(sumHeight);
     }];
 }
+- (void)refreshItemsView
+{
+    CGFloat viewHeight = 0;
+    __block UIView *lastView = nil;
+    for (FHDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
+        if (![itemView isKindOfClass:[FHDetailSchoolInfoItemView class]]) {
+            continue;
+        }
+        itemView.height = [itemView viewHeight];
+        itemView.top = viewHeight;
+        viewHeight += itemView.viewHeight;
+        lastView = itemView;
+    }
+}
 
 - (void)refreshSchoolViewFrame
 {
     CGFloat viewHeight = 0;
+    __block UIView *lastView = nil;
     for (FHDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
         if (![itemView isKindOfClass:[FHDetailSchoolInfoItemView class]]) {
             continue;
@@ -232,35 +245,28 @@
         make.left.top.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(46);
     }];
-    [self.headerView addTarget:self  action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addTarget:self action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
     
     _topView = [[UIView alloc] init];
     _topView.backgroundColor = [UIColor whiteColor];
-    _bottomView = [[UIView alloc] init];
-    _bottomView.backgroundColor = [UIColor whiteColor];
     _schoolView = [[UIView alloc] init];
     _schoolView.backgroundColor = [UIColor whiteColor];
-    _schoolView.clipsToBounds = YES;
 
     [self.contentView addSubview:_schoolView];
     [self.contentView addSubview:_topView];
-    [self.contentView addSubview:_bottomView];
     
     [_topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.height.mas_equalTo(0);
     }];
-    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.schoolView.mas_bottom);
-        make.height.mas_equalTo(20);
-        make.bottom.mas_equalTo(0);
-    }];
     [_schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(self.topView.mas_bottom);
-        make.bottom.mas_equalTo(self.bottomView.mas_top);
+        make.height.mas_equalTo(0);
+//        make.bottom.mas_equalTo(self.bottomView.mas_top);
+        make.bottom.mas_equalTo(-20);
+
     }];
 }
 
