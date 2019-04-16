@@ -65,7 +65,7 @@
         
         _notInCityLabel = [[UILabel alloc]init];
         NSString *cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
-        _notInCityLabel.text = [NSString stringWithFormat:@"当前位置不在%@市内，请直接搜索或返回首页更改城市",cityName];
+        _notInCityLabel.text = [NSString stringWithFormat:@"当前位置不在「%@」市内，请直接搜索或返回首页更改城市",cityName];
         _notInCityLabel.textColor = [UIColor themeGray3];
         _notInCityLabel.font = [UIFont themeFontRegular:12];
         _notInCityLabel.numberOfLines = 0;
