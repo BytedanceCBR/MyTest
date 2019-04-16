@@ -215,7 +215,7 @@
         layout.position = YGPositionTypeAbsolute;
         layout.left = YGPointValue(0);
         layout.top = YGPointValue(0);
-        layout.width = YGPointValue(48);
+        layout.width = YGPointValue(50);
         layout.height = YGPointValue(16);
     }];
     
@@ -380,8 +380,12 @@
     }
     
     if(![roomType isEqualToString:@""]){
-        str = [str stringByAppendingString:roomType];
-        str = [str stringByAppendingString:@"/"];
+        NSRange range = [roomType rangeOfString:@"[0-9]*室[0-9]*厅" options:NSRegularExpressionSearch];
+        if (range.location != NSNotFound) {
+            roomType = [roomType substringWithRange:range];
+            str = [str stringByAppendingString:roomType];
+            str = [str stringByAppendingString:@"/"];
+        }
     }
     
     if(![area isEqualToString:@""]){
@@ -407,11 +411,29 @@
 }
 
 - (void)updateImageTopLeft {
+    
+    CGSize size = [self.imageTagLabel sizeThatFits:CGSizeZero];
+    CGFloat labelWidth = ceil(size.width);
+    
+    if(labelWidth < MAIN_TAG_WIDTH){
+        labelWidth = MAIN_TAG_WIDTH;
+    }
+    
+    if(labelWidth > MAIN_IMG_WIDTH - 8){
+        labelWidth = MAIN_IMG_WIDTH - 8;
+    }
+    
     if (self.imageTagLabelBgView.yoga.isIncludedInLayout != self.imageTagLabelBgView.isHidden) {
         [self.imageTagLabelBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
             layout.isIncludedInLayout = !self.imageTagLabelBgView.isHidden;
+            layout.width = YGPointValue(labelWidth + 8);
         }];
         [self.imageTagLabelBgView.yoga markDirty];
+        
+        [_imageTagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(labelWidth);
+        }];
+        [self.imageTagLabel.yoga markDirty];
     }
 }
 
