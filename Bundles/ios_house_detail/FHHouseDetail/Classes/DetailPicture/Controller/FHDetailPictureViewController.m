@@ -31,6 +31,7 @@
     BOOL _addedToContainer;
     BOOL _navBarHidden;
     BOOL _statusBarHidden;
+    UIStatusBarStyle _lastStatusBarStyle;
     BOOL _isRotating;
     BOOL _reachDismissCondition; //是否满足关闭图片控件条件
     BOOL _reachDragCondition; //是否满足过一次触发手势条件
@@ -85,12 +86,17 @@
         _isRotating = NO;
         
         _whiteMaskViewEnable = YES;
+
+        _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
+        _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
+        [self setCurrentStatusStyle];
     }
     return self;
 }
 
 - (void)dealloc
 {
+    [self resetStatusStyle];
     @try {
         [self removeObserver:self forKeyPath:@"self.view.frame"];
     }
@@ -102,6 +108,18 @@
     }
 }
 
+- (void)setCurrentStatusStyle {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO
+                                            withAnimation:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
+- (void)resetStatusStyle {
+    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
+                                            withAnimation:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:_lastStatusBarStyle];
+}
+
 #pragma mark - View Life Cycle
 - (void)loadView
 {
@@ -110,15 +128,16 @@
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self addObserver:self forKeyPath:@"self.view.frame" options:NSKeyValueObservingOptionNew context:nil];
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setCurrentStatusStyle];
     
     // 修复iOS7下，photoScrollView 子视图初始化位置不正确的问题
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
-    
     // self.view
     self.view.backgroundColor = [UIColor clearColor];
     _containerView = [[UIView alloc] initWithFrame:self.view.frame];
@@ -194,22 +213,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO
-                                            withAnimation:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self setCurrentStatusStyle];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
-                                            withAnimation:NO];
-}
-
-- (BOOL)prefersStatusBarHidden
-{
-    return NO;
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+   
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -829,8 +838,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 //添加顶部和底部的动画
 - (void)addAnimatedViewToContainerView:(CGFloat)yFraction
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
-                                            withAnimation:NO];
+    [self resetStatusStyle];
     self.containerView.alpha = (1 - yFraction * 2 / 3);
     [UIView animateWithDuration:0.15 animations:^{
 //        self.indexPromptLabel.alpha = 0;
@@ -840,12 +848,11 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 //移除顶部和底部的动画
 - (void)removeAnimatedViewToContainerView
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:NO
-                                            withAnimation:NO];
     self.photoScrollView.frame = [self frameForPagingScrollView];
     self.containerView.alpha = 1;
     [UIView animateWithDuration:0.15 animations:^{
 //        self.indexPromptLabel.alpha = 1;
+        [self setCurrentStatusStyle];
     }];
 }
 
@@ -860,7 +867,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 {
     kFHStaticPhotoBrowserAtTop = YES;
     
-    _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
+    [self setCurrentStatusStyle];
+    
     _enterOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     self.dismissBlock = block;
     
@@ -912,29 +920,27 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 weakSelf.view.alpha = 1;
                 weakShowImageView.loadingCompletedAnimationBlock = nil;
                 [weakShowImageView showGifIfNeeded];
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
                 
-                [[UIApplication sharedApplication] setStatusBarHidden:NO
-                                                        withAnimation:NO];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             }];
         };
         
     } else {
-        
         UIView *containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
         containerView.backgroundColor = [UIColor clearColor];
         [rootViewController.view addSubview:containerView];
         [rootViewController.view addSubview:self.view];
         
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-        [[UIApplication sharedApplication] setStatusBarHidden:NO
-                                                withAnimation:NO];
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         
         [UIView animateWithDuration:.3f animations:^{
             self.view.alpha = 1; //本地加载图片，淡入动画
             containerView.backgroundColor = [UIColor blackColor];
         } completion:^(BOOL finished) {
             [containerView removeFromSuperview];
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         }];
     }
@@ -1078,18 +1084,23 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             break;
         case TTPreviewAnimateStateChange:
             self.containerView.alpha = MAX(0,(scale*14-13 - _animateManager.minScale)/(1 - _animateManager.minScale));
+            if (self.containerView.alpha < 0.5) {
+                [self resetStatusStyle];
+            } else {
+                [self setCurrentStatusStyle];
+            }
             break;
         case TTPreviewAnimateStateDidFinish:
             _reachDismissCondition = YES;
             self.containerView.alpha = 0;
+            [self resetStatusStyle];
             [self finished];
             [TTTracker ttTrackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
-            [[UIApplication sharedApplication] setStatusBarHidden:NO
-                                                    withAnimation:NO];
             break;
         case TTPreviewAnimateStateDidCancel:
+            [self setCurrentStatusStyle];
             self.containerView.alpha = 1;
 //            self.indexPromptLabel.alpha = 1;
             self.topBar.alpha = 1;
@@ -1152,6 +1163,5 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
-
 
 @end

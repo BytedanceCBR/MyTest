@@ -429,8 +429,6 @@
     };
     
     [vc presentPhotoScrollViewWithDismissBlock:^{
-        CGPoint offset = weakSelf.baseViewModel.tableView.contentOffset;
-        [weakSelf.baseViewModel.detailController refreshContentOffset:offset];
         weakSelf.isLarge = NO;
         [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
