@@ -409,11 +409,12 @@
         bottomHeight = 58 - 20;
     }
     [self.chartBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.mas_equalTo(0);
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(10);
         make.height.mas_equalTo(207 + 50);
     }];
     [self.bottomBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(315 - bottomHeight);
+        make.height.mas_equalTo(325 - bottomHeight);
     }];
 }
 

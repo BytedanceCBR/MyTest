@@ -112,7 +112,8 @@
     
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).offset(10);
+        make.left.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(46);
     }];
     
@@ -122,7 +123,7 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
     
     _bgView = [[UIImageView alloc] init];
