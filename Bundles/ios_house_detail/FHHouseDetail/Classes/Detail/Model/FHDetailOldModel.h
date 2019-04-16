@@ -39,15 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataNeighborhoodInfoEvaluationInfoSubScoresModel> *subScores;
 @end
 
-@protocol FHDetailOldDataNeighborhoodInfoSchoolInfoModel<NSObject>
-@end
-
-@interface FHDetailOldDataNeighborhoodInfoSchoolInfoModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *schoolType;
-@property (nonatomic, copy , nullable) NSString *schoolId;
-@property (nonatomic, copy , nullable) NSString *schoolName;
-@end
 
 @interface FHDetailOldDataNeighborhoodInfoModel : JSONModel
 
@@ -70,8 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataNeighborhoodInfoSchoolInfoModel> *schoolInfo;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
 @end
 
 @interface FHDetailOldDataHousePriceRangeModel : JSONModel

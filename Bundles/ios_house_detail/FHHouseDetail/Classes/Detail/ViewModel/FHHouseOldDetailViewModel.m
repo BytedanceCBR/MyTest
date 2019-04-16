@@ -371,6 +371,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
     // 小区评测
