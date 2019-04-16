@@ -14,19 +14,11 @@
 
 @property(nonatomic, strong) AWEVideoPlayerController *playerController;
 @property(nonatomic, strong) FHVideoView *videoView;
+@property(nonatomic, strong) FHVideoModel *model;
 
 @end
 
 @implementation FHVideoViewController
-
-//- (instancetype)init {
-//    self = [super init];
-//    if (self) {
-//        [self initViews];
-//        [self initConstaints];
-//    }
-//    return self;
-//}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -46,8 +38,9 @@
     }];
 }
 
-- (void)updateData {
-    [self.videoView updateData];
+- (void)updateData:(FHVideoModel *)model {
+    self.model = model;
+    [self.videoView updateData:model];
 }
 
 @end

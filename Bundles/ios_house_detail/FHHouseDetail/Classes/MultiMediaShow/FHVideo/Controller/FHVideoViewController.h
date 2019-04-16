@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHVideoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHVideoViewController : UIViewController
 
-- (void)updateData;
+- (void)updateData:(FHVideoModel *)model;
 
 @end
 
