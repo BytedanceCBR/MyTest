@@ -152,6 +152,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *entranceUrl;
 @end
 
+@protocol FHDetailOldDataHouseImageDictListModel<NSObject>
+@end
+
+@interface FHDetailOldDataHouseImageDictListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *houseImageTypeName;
+@property (nonatomic, copy , nullable) NSString *houseImageType;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImageList;
+@end
+
 
 @interface FHDetailOldDataModel : JSONModel
 
@@ -174,6 +184,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;

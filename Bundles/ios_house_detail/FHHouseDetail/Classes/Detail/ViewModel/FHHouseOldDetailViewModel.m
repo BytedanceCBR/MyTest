@@ -55,6 +55,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 // 注册cell类型
 - (void)registerCellClasses {
+    [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
     [self.tableView registerClass:[FHDetailMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCell class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
@@ -80,8 +81,12 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
-    // 头部滑动图片
+    // 兼容旧版本 头部滑动图片
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+        return [FHDetailPhotoHeaderCell class];
+    }
+    // 新版本 头部滑动图片
+    if ([model isKindOfClass:[FHDetailMediaHeaderModel class]]) {
         return [FHDetailMediaHeaderCell class];
     }
     // 标题
@@ -242,10 +247,17 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
-    if (model.data.houseImage) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-        headerCellModel.houseImage = model.data.houseImage;
+    if (model.data.houseImageDictList) {
+        FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
+        headerCellModel.houseImageDictList = model.data.houseImageDictList;
         [self.items addObject:headerCellModel];
+    }else{
+        // 添加头滑动图片
+        if (model.data.houseImage) {
+            FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+            headerCellModel.houseImage = model.data.houseImage;
+            [self.items addObject:headerCellModel];
+        }
     }
     // 添加标题
     if (model.data) {

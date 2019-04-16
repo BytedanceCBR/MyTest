@@ -167,8 +167,10 @@
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    //    NSInteger index = [self indexForIndexPath:indexPath];
-    //    [self showImages:self.images currentIndex:index];
+    NSInteger index = [self indexForIndexPath:indexPath];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(didSelectItemAtIndex:)]){
+        [self.delegate didSelectItemAtIndex:index];
+    }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
