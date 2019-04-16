@@ -105,6 +105,7 @@
         [self addSubview:_ssWebView];
         
         self.disableTTUserAgent = NO;
+        self.disableConnectCheck = NO;
         
         _progressView = [[TTRWebViewProgressView alloc] initWithFrame:self.bounds];
         _progressView.height = 2.f;
@@ -230,7 +231,7 @@
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
     NSLog(@"call back request url = %@",request.URL.absoluteString);
     
-    if(!TTNetworkConnected())
+    if(!TTNetworkConnected() && !self.disableConnectCheck)
     {
         [self tt_endUpdataData:NO error:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
         

@@ -23,6 +23,7 @@
 #import <FHRefreshCustomFooter.h>
 #import <TTArticleCategoryManager.h>
 #import "FHHomeCellHelper.h"
+#import <TTSandBoxHelper.h>
 
 typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     FHHomePullTriggerTypePullUp = 1, //上拉刷新
@@ -49,6 +50,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
+@property (nonatomic, assign) BOOL isRequestFromSwitch;
 @property(nonatomic, weak)   NSTimer *timer;
 
 @end
@@ -74,7 +76,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.hasShowedData = NO;
         self.isHasCallBackForFirstTime = NO;
         self.isFirstChange = YES;
-        
+        self.isRequestFromSwitch = NO;
         
         self.tableViewV.hasMore = YES;
         self.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
@@ -137,7 +139,16 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             // 标记config数据刷新了
             [FHHomeCellHelper sharedInstance].isConfigDataUpate = YES;
             self.tableViewV.hidden = NO;
+            self.isRequestFromSwitch = NO;
+
             
+            //更新冷启动默认选项
+            if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {
+                [[FHEnvContext sharedInstance].generalBizConfig updateUserSelectDiskCacheIndex:configDataModel.houseTypeDefault];
+                self.currentHouseType = configDataModel.houseTypeDefault.integerValue;
+            }
+//
+           
             //切换城市先隐藏error页
             [self.homeViewController.emptyView hideEmptyView];
             
@@ -171,6 +182,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             //非首次只刷新头部
             if ((!self.isFirstChange && [FHEnvContext sharedInstance].isSendConfigFromFirstRemote) && ![FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch && !isShowLocalTest) {
                 [FHHomeCellHelper sharedInstance].isFirstLanuch = NO;
+
+                [TTSandBoxHelper setAppFirstLaunchForAd];
 
                 [self resetAllOthersCacheData];
                 [UIView performWithoutAnimation:^{
@@ -206,9 +219,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             //请求推荐房源
             [self requestOriginData:self.isFirstChange];
-            
-
-            
+                        
         }];
         
         //切换推荐房源类型
@@ -233,6 +244,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     self.currentHouseType = [numberType integerValue];
                 }
             }
+            
+            self.isRequestFromSwitch = YES;
             
             NSString *cacheKey = [self getCurrentHouseTypeChacheKey];
             
@@ -424,7 +437,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             
             if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])
             {
-                [self checkCityStatus];
+                [self.homeViewController.view sendSubviewToBack:self.tableViewV];
+                [self showCityUnAvalibleStatus];
+        
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
                 [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
                 if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
@@ -486,7 +501,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
         
             //过滤多余tip提示
-        if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch)) {
+        if ((model.data.refreshTip && (![FHEnvContext sharedInstance].isRefreshFromCitySwitch) || ![FHEnvContext sharedInstance].isSendConfigFromFirstRemote || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) && !self.isRequestFromSwitch) {
             [self.homeViewController showNotify:model.data.refreshTip];
             self.tableViewV.contentOffset = CGPointMake(0, 0);
             [self.tableViewV scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
@@ -502,6 +517,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [self checkLoadingAndEmpty];
         
         self.categoryView.segmentedControl.userInteractionEnabled = YES;
+        
     }];
 }
 

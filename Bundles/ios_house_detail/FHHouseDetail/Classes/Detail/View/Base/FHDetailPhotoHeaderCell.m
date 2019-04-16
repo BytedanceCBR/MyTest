@@ -13,6 +13,7 @@
 #import <TTShareManager.h>
 #import <TTPhotoScrollViewController.h>
 #import "FHUserTracker.h"
+#import "FHFloorPanPicShowViewController.h"
 
 #define K_PhotoHeader_HEIGHT 300
 #define K_CELLID @"cell_id"
@@ -229,6 +230,37 @@
     }
 }
 
+- (NSDictionary *)traceParamsForGallery:(NSInteger)index
+{
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    
+    if (_images.count > index) {
+        id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
+        if(!dict){
+            dict = [NSMutableDictionary dictionary];
+        }
+        
+        if([dict isKindOfClass:[NSDictionary class]]){
+            [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+            dict[@"picture_id"] = img.url;
+            dict[@"show_type"] = @"large";
+        }
+    }
+    return dict;
+}
+
+//埋点
+- (void)enterPictureShowPictureWithIndex:(NSInteger)index {
+    NSMutableDictionary *dict = [self traceParamsForGallery:index];
+    TRACK_EVENT(@"picture_gallery", dict);
+}
+
+//埋点
+- (void)stayPictureShowPictureWithIndex:(NSInteger)index andTime:(NSInteger)stayTime {
+    NSMutableDictionary *dict = [self traceParamsForGallery:index];
+    dict[@"stay_time"] = [NSNumber numberWithInteger:stayTime * 1000];
+    TRACK_EVENT(@"picture_gallery_stay", dict);
+}
 
 -(NSInteger)indexForIndexPath:(NSIndexPath *)indexPath
 {
@@ -319,16 +351,30 @@
     }
 }
 
+
 -(void)showImages:(NSArray<FHDetailPhotoHeaderModelProtocol>*)images currentIndex:(NSInteger)index
 {
     if (images.count == 0) {
         return;
     }
-    
+    __weak typeof(self) weakSelf = self;
+
     TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
     vc.dragToCloseDisabled = YES;
     vc.mode = PhotosScrollViewSupportBrowse;
     vc.startWithIndex = index;
+    vc.albumImageBtnClickBlock = ^(NSInteger index){
+        [weakSelf enterPictureShowPictureWithIndex:index];
+    };
+    vc.albumImageStayBlock = ^(NSInteger index,NSInteger stayTime) {
+        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
+    };
+    
+    if ([self.currentData isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+        FHDetailPhotoHeaderModel *model = (FHDetailPhotoHeaderModel *)self.currentData;
+        vc.isShowAlbumAndCloseButton =  model.isNewHouse;
+        vc.smallImageInfosModels = model.smallImageGroup;
+    }
     
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
     for(id<FHDetailPhotoHeaderModelProtocol> imgModel in images)
@@ -372,7 +418,6 @@
     }
     vc.placeholderSourceViewFrames = frames;
     vc.placeholders = placeholders;
-    __weak typeof(self) weakSelf = self;
     vc.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
         if (currentIndex >= 0 && currentIndex < weakSelf.images.count) {
             weakSelf.currentIndex = currentIndex;

@@ -21,6 +21,7 @@
 #import <UIViewAdditions.h>
 #import "FHRNBridgePlugin.h"
 #import <TTUIResponderHelper.h>
+#import <UIViewController+Refresh_ErrorHandler.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -155,6 +156,8 @@
     {
         [self loadJSbundleAndShowWithIp:nil port:nil moduleName:nil];
     }
+    
+    [self tt_startUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

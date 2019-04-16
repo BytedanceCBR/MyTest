@@ -18,6 +18,7 @@
 #import "TTDeviceHelper.h"
 #import <TTUIResponderHelper.h>
 #import <FHRNBaseViewController.h>
+#import <UIViewController+Refresh_ErrorHandler.h>
 
 @implementation FHRNBridgePlugin
 
@@ -26,9 +27,62 @@
 }
 
 + (void)load {
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, log_v3), @"app.log_v3");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, close), @"app.close");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, load_finish), @"app.load_finish");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, enable_swipe), @"app.enable_swipe");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, disable_swipe), @"app.disable_swipe");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, monitor_common_log), @"monitor_common_log");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, monitor_duration), @"monitor_duration");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, call_phone), @"call_phone");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
+}
+
+- (void)call_phoneWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
+}
+
+- (void)monitor_durationWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
+}
+
+- (void)monitor_common_logWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
+}
+
+- (void)disable_swipeWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
+}
+
+- (void)enable_swipeWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
+}
+
+- (void)load_finishWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    UINavigationController *topVC = [TTUIResponderHelper correctTopNavigationControllerFor:controller];
+    UIViewController *currentVC = nil;
+    if ([[topVC.viewControllers lastObject] isKindOfClass:[FHRNBaseViewController class]]) {
+        currentVC = [topVC.viewControllers lastObject];
+        [currentVC tt_endUpdataData];
+    }
+}
+
+- (void)log_v3WithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
+}
+
+- (void)closeWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
 }
 
 - (void)fetchWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -106,7 +160,6 @@
 
 - (void)openWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    
     UINavigationController *topVC = [TTUIResponderHelper correctTopNavigationControllerFor:controller];
     UIViewController *currentVC = nil;
     if ([[topVC.viewControllers lastObject] isKindOfClass:[FHRNBaseViewController class]]) {

@@ -340,7 +340,7 @@
 - (BOOL)isMissTitle
 {
     FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.name.length < 1;
+    return model.data.neighborhoodInfo.name.length < 1;
 }
 
 - (BOOL)isMissImage
@@ -351,8 +351,8 @@
 
 - (BOOL)isMissCoreInfo
 {
-    FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.detailData;
-    return model.data.coreInfo.count < 1;
+    // 小区详情页不必判断信息缺失
+    return NO;
 }
 
 @end

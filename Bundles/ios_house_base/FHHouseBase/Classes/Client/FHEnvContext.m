@@ -77,6 +77,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
+            
+            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+            
+            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            
             if (isSuccess) {
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 FHConfigDataModel *configModel = model.data;
@@ -102,6 +107,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         [[TTArticleCategoryManager sharedManager] startGetCategory];
                     }
                 }];
+                
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];
             }else
             {
                 if(completion)
@@ -112,11 +119,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 [[ToastManager manager] showToast:@"切换城市失败"];
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
-                NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
-                
-                [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-                
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" metric:nil category:params extra:paramsExtra];
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];

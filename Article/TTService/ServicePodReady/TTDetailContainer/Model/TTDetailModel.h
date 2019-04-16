@@ -97,6 +97,10 @@ NS_ASSUME_NONNULL_BEGIN
 //透传到具体详情页
 @property (nonatomic,strong) NSDictionary *baseCondition;
 
+//外部埋点
+@property (nonatomic,strong) NSDictionary *reportParams;
+
+
 @property (nonatomic, copy, nullable) NSString *originalGroupID;
 @property (nonatomic, copy, nullable) NSString *rid;
 
