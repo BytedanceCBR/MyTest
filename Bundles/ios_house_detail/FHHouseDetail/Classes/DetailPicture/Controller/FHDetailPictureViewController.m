@@ -72,7 +72,6 @@
         _startWithIndex = 0;
         _currentIndex = -1;
         _photoCount = 0;
-        _autoSelectImageWhenClickDone = NO;
         _longPressToSave = YES;
         
         self.ttHideNavigationBar = YES;
@@ -196,8 +195,9 @@
 {
     [super viewWillAppear:animated];
     _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES
+    [[UIApplication sharedApplication] setStatusBarHidden:NO
                                             withAnimation:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -209,7 +209,7 @@
 
 - (BOOL)prefersStatusBarHidden
 {
-    return YES;
+    return NO;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -430,8 +430,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     _currentIndex = newIndex;
     
-    [self setSelectedAtIndex:_currentIndex];
-    
     [self unloadPhoto:_currentIndex + 2];
     [self unloadPhoto:_currentIndex - 2];
     
@@ -439,16 +437,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     [[self showImageViewAtIndex:_currentIndex] restartGifIfNeeded];
     [self loadPhoto:_currentIndex + 1 visible:NO];
     [self loadPhoto:_currentIndex - 1 visible:NO];
-}
-
-- (void)setSelectedAtIndex:(NSInteger)index
-{
-    if ([[_isSelecteds objectAtIndex:index] boolValue])
-    {
-        
-    } else {
-
-    }
 }
 
 - (void)scrollToIndex:(NSInteger)index
@@ -852,7 +840,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 //移除顶部和底部的动画
 - (void)removeAnimatedViewToContainerView
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:YES
+    [[UIApplication sharedApplication] setStatusBarHidden:NO
                                             withAnimation:NO];
     self.photoScrollView.frame = [self frameForPagingScrollView];
     self.containerView.alpha = 1;
@@ -925,7 +913,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 weakShowImageView.loadingCompletedAnimationBlock = nil;
                 [weakShowImageView showGifIfNeeded];
                 
-                [[UIApplication sharedApplication] setStatusBarHidden:YES
+                [[UIApplication sharedApplication] setStatusBarHidden:NO
                                                         withAnimation:NO];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             }];
@@ -939,7 +927,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         [rootViewController.view addSubview:self.view];
         
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-        [[UIApplication sharedApplication] setStatusBarHidden:YES
+        [[UIApplication sharedApplication] setStatusBarHidden:NO
                                                 withAnimation:NO];
         
         [UIView animateWithDuration:.3f animations:^{
@@ -1098,7 +1086,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             [TTTracker ttTrackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
-            [[UIApplication sharedApplication] setStatusBarHidden:YES
+            [[UIApplication sharedApplication] setStatusBarHidden:NO
                                                     withAnimation:NO];
             break;
         case TTPreviewAnimateStateDidCancel:

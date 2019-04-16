@@ -14,6 +14,7 @@
 #import <TTPhotoScrollViewController.h>
 #import "FHUserTracker.h"
 #import "FHFloorPanPicShowViewController.h"
+#import "FHDetailPictureViewController.h"
 
 #define K_PhotoHeader_HEIGHT 300
 #define K_CELLID @"cell_id"
@@ -359,9 +360,9 @@
     }
     __weak typeof(self) weakSelf = self;
 
-    TTPhotoScrollViewController *vc = [[TTPhotoScrollViewController alloc] init];
+    FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.dragToCloseDisabled = YES;
-    vc.mode = PhotosScrollViewSupportBrowse;
+//    vc.mode = PhotosScrollViewSupportBrowse;
     vc.startWithIndex = index;
     vc.albumImageBtnClickBlock = ^(NSInteger index){
         [weakSelf enterPictureShowPictureWithIndex:index];
@@ -370,11 +371,11 @@
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
     
-    if ([self.currentData isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
-        FHDetailPhotoHeaderModel *model = (FHDetailPhotoHeaderModel *)self.currentData;
-        vc.isShowAlbumAndCloseButton =  model.isNewHouse;
-        vc.smallImageInfosModels = model.smallImageGroup;
-    }
+//    if ([self.currentData isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
+//        FHDetailPhotoHeaderModel *model = (FHDetailPhotoHeaderModel *)self.currentData;
+//        vc.isShowAlbumAndCloseButton =  model.isNewHouse;
+//        vc.smallImageInfosModels = model.smallImageGroup;
+//    }
     
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
     for(id<FHDetailPhotoHeaderModelProtocol> imgModel in images)
@@ -428,6 +429,8 @@
     };
     
     [vc presentPhotoScrollViewWithDismissBlock:^{
+        CGPoint offset = weakSelf.baseViewModel.tableView.contentOffset;
+        [weakSelf.baseViewModel.detailController refreshContentOffset:offset];
         weakSelf.isLarge = NO;
         [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
