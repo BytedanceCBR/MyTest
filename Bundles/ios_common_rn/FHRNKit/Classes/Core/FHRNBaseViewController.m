@@ -19,6 +19,8 @@
 #import <TTRNKitViewWrapper.h>
 #import <TTRNKitViewWrapper+Private.h>
 #import <UIViewAdditions.h>
+#import "FHRNBridgePlugin.h"
+#import <TTUIResponderHelper.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -34,6 +36,7 @@
 @property (nonatomic, assign) BOOL isDebug;
 @property (nonatomic, strong) TTRouteParamObj *paramCurrentObj;
 @property (nonatomic, strong) TTRNKit *ttRNKit;
+@property (nonatomic, strong) FHRNBridgePlugin *fhRNPlugin;
 @property (nonatomic, strong) UIView *container;
 
 @end
@@ -86,7 +89,6 @@
         _viewWrapper = viewWrapper;
         _isDebug = [params tt_boolValueForKey:FHRN_DEBUG];
         _moduleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_MODULE_NAME];
-        
     }
     return self;
 }
@@ -165,6 +167,11 @@
     [[UIApplication sharedApplication] setStatusBarHidden:_hideStatusBar];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     [self.navigationController setNavigationBarHidden:self.originHideNavigationBar animated:NO];
@@ -233,6 +240,7 @@
     }
     NSMutableDictionary *initParams = [NSMutableDictionary dictionaryWithDictionary:_paramCurrentObj.allParams];
     initParams[RNModuleName] = moduleName ?: _moduleNameStr;
+    [initParams setValue:self forKey:@"sourcevc"];
     
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
@@ -249,6 +257,11 @@
                          moduleName:initParams[RNModuleName] ?: @""];
 }
 
+#pragma mark TTBridgeEngine
+
+- (UIViewController *)sourceController {
+    return self;
+}
 /*
 #pragma mark - Navigation
 

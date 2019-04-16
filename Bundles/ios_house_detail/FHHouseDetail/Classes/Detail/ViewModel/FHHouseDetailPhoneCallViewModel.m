@@ -23,6 +23,7 @@
 #import <FHHouseBase/FHEnvContext.h>
 #import "IMManager.h"
 #import <HMDTTMonitor.h>
+#import <FHUtils.h>
 
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
@@ -188,6 +189,7 @@ typedef enum : NSUInteger {
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed realtorId:realtorId errorCode:0 message:nil];
         return;
     }
+    
     [self.bottomBar startLoading];
     [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
@@ -433,8 +435,20 @@ typedef enum : NSUInteger {
     info[@"house_id"] = _houseId;
     info[@"house_type"] = @(_houseType);
 
+    
+//    NSURL *openUrlRn = [NSURL URLWithString:@"sslocal://old_house_detail?house_id=6677801611777016076&house_type=2&realtor_id=443834881285051&report_params=undefined"];
+
+    NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&channelName=FHRNAgentDetailModule&debug=1&report_params=%@&im_params=%@",contactPhone.realtorId,[FHUtils getJsonStrFrom:self.tracerDict],[FHUtils getJsonStrFrom:imParams]]];
+    
+
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
-    [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
+//    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];
+//
+    TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
+    if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
+        [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+    }
+    
 }
 
 

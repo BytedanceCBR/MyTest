@@ -13,6 +13,11 @@
 #import "FHRNHTTPRequestSerializer.h"
 #import <TTBridgeUnify/TTBridgeRegister.h>
 #import <TTBridgeUnify/TTBridgeDefines.h>
+#import <TTRoute.h>
+#import <TTStringHelper.h>
+#import "TTDeviceHelper.h"
+#import <TTUIResponderHelper.h>
+#import <FHRNBaseViewController.h>
 
 @implementation FHRNBridgePlugin
 
@@ -21,6 +26,7 @@
 }
 
 + (void)load {
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
 }
@@ -61,39 +67,75 @@
         }
     }
     
-//    NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
-//    if ([method isEqualToString:@"GET"]) {
-//        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
-//            NSString *result = @"";
-//
-//            if([obj isKindOfClass:[NSData class]]){
-//                result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
-//            }
-//            if (callback) {
-//                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
-//                                                          @"status": @(response.statusCode),
-//                                                          @"code": error?@(0): @(1),
-//                                                          @"beginReqNetTime": startTime
-//                                                          });
-//            }
-//        }];
-//    }else
-//    {
-//        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHRNHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
-//            if (callback) {
-//                NSString *result = @"";
-//                if([obj isKindOfClass:[NSData class]]){
-//                    result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
-//                }
-//                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
-//                                                          @"response": result,
-//                                                          @"status": @(response.statusCode),
-//                                                          @"code": error?@(0): @(1),
-//                                                          @"beginReqNetTime":startTime
-//                                                          });
-//            }
-//        }];
-//    }
+    NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
+    if ([method isEqualToString:@"GET"]) {
+        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
+            NSString *result = @"";
+
+            if([obj isKindOfClass:[NSData class]]){
+                result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+            }
+            
+//            callback(TTBridgeMsgSuccess,nil);
+            if (callback) {
+                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
+                                                          @"status": @(response.statusCode),
+                                                          @"code": error?@(0): @(1),
+                                                          @"beginReqNetTime": startTime
+                                                          });
+            }
+        }];
+    }else
+    {
+        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHRNHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+            if (callback) {
+                NSString *result = @"";
+                if([obj isKindOfClass:[NSData class]]){
+                    result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
+                }
+                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
+                                                          @"response": result,
+                                                          @"status": @(response.statusCode),
+                                                          @"code": error?@(0): @(1),
+                                                          @"beginReqNetTime":startTime
+                                                          });
+            }
+        }];
+    }
+}
+
+- (void)openWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    
+    UINavigationController *topVC = [TTUIResponderHelper correctTopNavigationControllerFor:controller];
+    UIViewController *currentVC = nil;
+    if ([[topVC.viewControllers lastObject] isKindOfClass:[FHRNBaseViewController class]]) {
+        currentVC = [topVC.viewControllers lastObject];
+    }
+
+    NSMutableString * openURL = param[@"url"];
+    NSString * type = [param objectForKey:@"type"];
+    if([type isEqualToString:@"webview"]) {
+        NSString * urlStr = openURL;
+        if (!isEmptyString(urlStr)) {
+            openURL = [NSMutableString stringWithFormat:@"sslocal://webview?url=%@", urlStr];
+            BOOL rotate = [[[param objectForKey:@"args"] objectForKey:@"rotate"] boolValue];
+            if (rotate) {
+                [openURL appendString:@"&supportRotate=1"];
+            }
+        }
+    }
+
+    if (!isEmptyString(openURL)) {
+        NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        if(openUrlResultUTF8)
+        {
+            [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
+        }
+        return;
+    }
+    
+    callback(TTBridgeMsgSuccess, @{@"code": @0});
 }
 
 - (void)alertTestWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
