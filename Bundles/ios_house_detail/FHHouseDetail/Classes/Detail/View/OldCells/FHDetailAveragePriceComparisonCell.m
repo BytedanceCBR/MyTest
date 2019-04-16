@@ -65,8 +65,8 @@
     NSString *titleStr = [NSString stringWithFormat:@"本小区%@均价对比",houseType];
     
     self.headerView.label.text = titleStr;
-    self.minLabel.attributedText = [self getAtributeStr:@"最低价 " content:minPriceStr];
-    self.maxLabel.attributedText = [self getAtributeStr:@"最高价 " content:maxPriceStr];
+    self.minLabel.attributedText = [self getAtributeStr:@"最低参考价 " content:minPriceStr];
+    self.maxLabel.attributedText = [self getAtributeStr:@"最高参考价 " content:maxPriceStr];
     self.curPriceLabel.text = curPriceStr;
     [self updateCurPricePosition:[curPrice floatValue] minPrice:[minPrice floatValue] maxPrice:[maxPrice floatValue]];
 }
