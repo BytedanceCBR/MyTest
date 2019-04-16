@@ -93,7 +93,7 @@
         } else if (districtName.length > 0) {
             topHeight = [self showLabelWithKey:@"所属区域" value:districtName parentView:self.topView bottomY:topHeight];
         }
-        self.topHeight = topHeight;
+        self.topHeight = topHeight > 0 ? 30 : 0;
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
         }];
@@ -120,7 +120,7 @@
         }else {
             topHeight = 0;
         }
-        self.topHeight = topHeight;
+        self.topHeight = topHeight > 0 ? 30 : 0;
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
         }];
@@ -135,6 +135,7 @@
     }
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     __block UIView *lastItemView = nil;
+    CGFloat sumHeight = 0;
     for (NSInteger index = 0; index < schoolDictList.count; index++) {
         FHDetailDataNeighborhoodInfoSchoolItemModel *item = schoolDictList[index];
         if (item.schoolList.count < 1) {
@@ -144,6 +145,19 @@
         schoolInfoModel.schoolItem = item;
         schoolInfoModel.tableView = model.tableView;
         FHDetailSchoolInfoItemView *itemView = [[FHDetailSchoolInfoItemView alloc]initWithSchoolInfoModel:schoolInfoModel];
+        sumHeight += itemView.bottomY;
+        __weak typeof(self)wself = self;
+        itemView.foldBlock = ^(FHDetailSchoolInfoItemView *theItemView, CGFloat height) {
+            
+            [model.tableView beginUpdates];
+            [theItemView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(height);
+            }];
+            [wself refreshSchoolViewFrame];
+//            [theItemView setNeedsUpdateConstraints];
+            [wself setNeedsUpdateConstraints];
+            [model.tableView endUpdates];
+        };
         
         [self.schoolView addSubview:itemView];
         [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -153,12 +167,27 @@
             }else {
                 make.top.mas_equalTo(0);
             }
-            if (index == schoolDictList.count - 1) {
-                make.bottom.mas_equalTo(0);
-            }
+            make.height.mas_equalTo(itemView.bottomY);
         }];
         lastItemView = itemView;
     }
+    [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(sumHeight);
+    }];
+}
+
+- (void)refreshSchoolViewFrame
+{
+    CGFloat viewHeight = 0;
+    for (FHDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
+        if (![itemView isKindOfClass:[FHDetailSchoolInfoItemView class]]) {
+            continue;
+        }
+        viewHeight += itemView.viewHeight;
+    }
+    [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(viewHeight);
+    }];
 }
 
 - (CGFloat)showLabelWithKey:(NSString *)key value:(NSString *)value parentView:(UIView *)parentView bottomY:(CGFloat)bottomY
@@ -183,14 +212,6 @@
     bottomY = nameValue.bottom;
     return bottomY;
 }
-
-//- (void)layoutSubviews
-//{
-//    [super layoutSubviews];
-//    NSLog(@"zjing topView:%@",self.topView);
-//    NSLog(@"zjing schoolView:%@",self.schoolView);
-//    NSLog(@"zjing bottomView:%@",self.bottomView);
-//}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -289,7 +310,6 @@
 {
     self = [super init];
     if (self) {
-        _isFold = YES;
     }
     return self;
 }

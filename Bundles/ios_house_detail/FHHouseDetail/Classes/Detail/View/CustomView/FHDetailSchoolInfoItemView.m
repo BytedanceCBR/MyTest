@@ -22,7 +22,6 @@
 @property (nonatomic, strong)   UIView       *schoolView;
 @property (nonatomic, strong)   UILabel       *schoolKey;
 @property (nonatomic, strong)   UILabel       *schoolLabel;
-@property (nonatomic, assign)   CGFloat       schoolHeight;
 
 @end
 
@@ -87,10 +86,14 @@
     [foldBtn setImage:[UIImage imageNamed:@"detail_fold_down"] forState:UIControlStateNormal];
     [foldBtn setImage:[UIImage imageNamed:@"detail_fold_down"] forState:UIControlStateHighlighted];
     [foldBtn setHitTestEdgeInsets:UIEdgeInsetsMake(-10, -20, -20, -10)];
-    [foldBtn addTarget:self action:@selector(foldBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [foldBtn addTarget:self action:@selector(foldBtnDidClick) forControlEvents:UIControlEventTouchUpInside];
     self.foldBtn = foldBtn;
     [self addSubview:foldBtn];
-
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(foldBtnDidClick)];
+    self.userInteractionEnabled = YES;
+    [self addGestureRecognizer:tap];
+    
     [schoolKey sizeToFit];
     schoolKey.left = 20;
     schoolKey.top = 10;
@@ -106,8 +109,8 @@
     [schoolLabel sizeToFit];
     schoolLabel.left = schoolKey.right + 12;
     schoolLabel.top = schoolKey.top;
-    schoolLabel.height = ceil(schoolLabel.height);
-
+    self.bottomY = self.schoolLabel.bottom;
+    
     UIView *schoolView = [[UIView alloc]init];
     schoolView.backgroundColor = [UIColor whiteColor];
     schoolView.clipsToBounds = YES;
@@ -119,7 +122,6 @@
         make.right.mas_equalTo(foldBtn.mas_left).mas_offset(-4);
         make.top.mas_equalTo(schoolLabel.mas_bottom);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(0);
     }];
     if (_itemModel.schoolItem.schoolList.count > 1) {
 
@@ -130,25 +132,19 @@
             schoolHeight = [self showSchoolItem:schoolInfo parentView:self.schoolView bottomY:schoolHeight];
         }
         self.schoolHeight = schoolHeight;
-        [schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(foldBtn.mas_left).mas_offset(-4);
         }];
     }else {
         self.foldBtn.hidden = YES;
-        [schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
+        [schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(foldBtn.mas_left).mas_offset(20);
         }];
     }
+    [self updateSchoolConstraints:NO];
 }
 
-//- (void)layoutSubviews
-//{
-//    [super layoutSubviews];
-//    NSLog(@"zjing layoutSubviews schoolView:%@",self.schoolView);
-//    NSLog(@"zjing layoutSubviews self:%@",self);
-//}
-
-- (void)foldBtnDidClick:(UIButton *)btn
+- (void)foldBtnDidClick
 {
     _itemModel.isFold = !_itemModel.isFold;
     if (_itemModel.isFold) {
@@ -159,13 +155,23 @@
         [self.foldBtn setImage:[UIImage imageNamed:@"detail_fold_up"] forState:UIControlStateHighlighted];
     }
     [self updateSchoolConstraints:YES];
+
+    if (self.foldBlock) {
+    
+        CGFloat height = [self viewHeight];
+        self.foldBlock(self, height);
+    }
+
+}
+
+- (CGFloat)viewHeight
+{
+    CGFloat height = _itemModel.isFold ? self.schoolLabel.bottom : self.schoolHeight + self.schoolLabel.bottom;
+    return height;
 }
 
 - (void)updateSchoolConstraints:(BOOL)animated
 {
-    if (animated) {
-        [_itemModel.tableView beginUpdates];
-    }
     if (_itemModel.isFold) {
         
         [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -179,10 +185,6 @@
         self.schoolView.hidden = NO;
     }
     [self setNeedsUpdateConstraints];
-    
-    if (animated) {
-        [_itemModel.tableView endUpdates];
-    }
 }
 
 @end

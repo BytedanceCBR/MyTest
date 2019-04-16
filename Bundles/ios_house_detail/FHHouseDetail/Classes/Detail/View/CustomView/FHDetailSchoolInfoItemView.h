@@ -13,7 +13,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailSchoolInfoItemView : UIView
 
+@property (nonatomic, assign)   CGFloat       schoolHeight;
+@property (nonatomic, assign)   CGFloat       bottomY;
+@property(nonatomic, copy) void(^foldBlock)(FHDetailSchoolInfoItemView *itemView, CGFloat height);
+
 - (instancetype)initWithSchoolInfoModel:(FHDetailSchoolInfoItemModel *)itemModel;
+- (CGFloat)viewHeight;
 
 @end
 
