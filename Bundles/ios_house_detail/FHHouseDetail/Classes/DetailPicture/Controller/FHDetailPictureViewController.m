@@ -28,16 +28,10 @@
 
 #define indexTitleLabelTextSize 17.f
 
-#define saveButtonTextSize 14.f
-#define saveButtonBottomPadding 5.f
-#define saveButtonRightPadding 5.f
-#define saveButtonWidth 50.f
-#define saveButtonHeight 28.f
+#define kFHDPTopBarHeight 44.f
+#define kFHDPBottomBarHeight 40.f
 
-#define topBarHeight 44.f
-#define bottomBarHeight 40.f
-
-#define moveDirectionStartOffset 20.f
+#define kFHDPMoveDirectionStartOffset 20.f
 
 @interface FHDetailPictureViewController ()<UIScrollViewDelegate, TTShowImageViewDelegate,TTPreviewPanBackDelegate,UIGestureRecognizerDelegate>
 {
@@ -57,22 +51,14 @@
 @property(nonatomic, assign, readwrite)NSInteger photoCount;
 
 @property(nonatomic, strong)NSMutableSet * photoViewPools;
-@property(nonatomic, strong)UILabel * titleLabel;
 @property(nonatomic, strong)UILabel * indexPromptLabel;
-@property(nonatomic, strong)UIButton * closeButton;
 
-// PhotosScrollViewSupportSelectMode
 @property(nonatomic, strong)UIView * topBar;
-@property(nonatomic, strong)UIButton * topBarLeftButton;
-@property(nonatomic, strong)UIButton * topBarRightButton;
 
 @property(nonatomic, strong)UIView * bottomBar;
 @property(nonatomic, strong)UILabel * selectCountLabel;
-@property(nonatomic, strong)UIButton * bottomBarRightButton;
 
 @property(nonatomic, assign)NSUInteger selectCount;
-
-@property(nonatomic, strong)UIButton * saveButton;
 
 @property(nonatomic, strong)UIPanGestureRecognizer * panGestureRecognizer;
 @property(nonatomic, strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
@@ -102,7 +88,7 @@
         _longPressToSave = YES;
         
         self.ttHideNavigationBar = YES;
-        self.isShowAlbumAndCloseButton = NO;
+
         _addedToContainer = NO;
         
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
@@ -163,15 +149,6 @@
     
     [self.view addSubview:_photoScrollView];
     
-    // closeButon
-    _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _closeButton.frame = _photoScrollView.bounds;
-    _closeButton.backgroundColor = [UIColor clearColor];
-    _closeButton.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [_closeButton addTarget:self action:@selector(closeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_photoScrollView addSubview:_closeButton];
-    
     // indexPromptLabel
     _indexPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding, indexPormptLabelWidth, indexPormptLabelHeight)];
     _indexPromptLabel.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
@@ -182,39 +159,14 @@
     _indexPromptLabel.clipsToBounds = YES;
     _indexPromptLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.view addSubview:_indexPromptLabel];
-    
-    // saveButton
-    _saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_saveButton addTarget:self action:@selector(saveButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    _saveButton.frame = CGRectMake(self.view.width - saveButtonRightPadding - saveButtonWidth, self.view.height - saveButtonHeight - saveButtonBottomPadding, saveButtonWidth, saveButtonHeight);
-    _saveButton.hitTestEdgeInsets = UIEdgeInsetsMake((saveButtonHeight - 44) / 2, 0, (saveButtonHeight - 44) / 2, 0);
-    _saveButton.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
-    [_saveButton setTitle:@"保存" forState:UIControlStateNormal];
-    [_saveButton setTitle:@"保存" forState:UIControlStateHighlighted];
-    [_saveButton setTitleColor:[UIColor tt_defaultColorForKey:kColorBackground4] forState:UIControlStateNormal];
-    [_saveButton setTitleColor:[UIColor tt_defaultColorForKey:kColorBackground4Highlighted] forState:UIControlStateHighlighted];
-    [_saveButton.titleLabel setFont:[UIFont systemFontOfSize:14.f]];
-    _saveButton.layer.cornerRadius = 6.f;
-    _saveButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-    [self.view addSubview:_saveButton];
-    _saveButton.hidden = YES;
+
     _indexPromptLabel.centerX = self.view.width/2;
     _indexPromptLabel.autoresizingMask  = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
     
-    if(_imageTitles){
-        _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, topBarHeight)];
-        _topBar.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:_topBar];
-        // titleLabel
-        _titleLabel = [[UILabel alloc] initWithFrame:_topBar.bounds];
-        _titleLabel.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
-        [_titleLabel setTextColor:[UIColor tt_defaultColorForKey:kColorBackground4]];
-        [_titleLabel setFont:[UIFont themeFontRegular:indexTitleLabelTextSize]];
-        _titleLabel.textAlignment = NSTextAlignmentCenter;
-        _titleLabel.clipsToBounds = YES;
-        _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-        [self.topBar addSubview:_titleLabel];
-    }
+    _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, kFHDPTopBarHeight)];
+    _topBar.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_topBar];
+    
     // layout
     NSInteger maxIndex = MAX(MAX([_imageInfosModels count], [_imageURLs count]), MAX([_images count], [_assetsImages count]))-1;
     _startWithIndex = MAX(0, MIN(maxIndex, _startWithIndex));
@@ -236,66 +188,11 @@
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
     }
-    
-    
-    if (self.isShowAlbumAndCloseButton) {
-        CGFloat height = 0;
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            height = 64;
-        }else
-        {
-            height = 44;
-        }
-        
-        UIButton *clonseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [clonseBtn setTitle:@"关闭" forState:UIControlStateNormal];
-        [clonseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [clonseBtn setFrame:CGRectMake(20, height, 48, 48)];
-        [clonseBtn addTarget:self action:@selector(closeBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:clonseBtn];
-        
-        if (self.smallImageInfosModels.count != 0) {
-            UIButton *albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
-            [albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
-            [albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:albumBtn];
-        }
-    }
-    
 }
 
 - (void)closeBtnClick
 {
     [self finished];
-}
-
-
-- (void)albumBtnClick
-{
-    if (self.smallImageInfosModels.count == 0) {
-        return;
-    }
-    
-    if (self.albumImageBtnClickBlock) {
-        self.albumImageBtnClickBlock(self.currentIndex);
-    }
-    
-    FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
-    showVC.pictsArray = _smallImageInfosModels;
-    __weak FHDetailPictureViewController * weakSelf = self;
-    showVC.albumImageBtnClickBlock = ^(NSInteger index){
-        if (index >= 0) {
-            weakSelf.photoScrollView.contentOffset = CGPointMake(self.view.frame.size.width * index, 0);
-        }
-    };
-    
-    showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-        [self stayCallBack:stayTime];
-    };
-    
-    [self presentViewController:showVC animated:NO completion:nil];
 }
 
 - (void)stayCallBack:(NSInteger)stayTime
@@ -317,9 +214,8 @@
         topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
-    self.bottomBar.frame = CGRectMake(0, self.view.height - bottomBarHeight - bottomInset, self.view.width, bottomBarHeight);
-    self.topBar.frame = CGRectMake(0, topInset, self.view.width, topBarHeight);
-    self.saveButton.frame = CGRectMake(self.view.width - saveButtonRightPadding - saveButtonWidth, self.view.height - saveButtonHeight - saveButtonBottomPadding - bottomInset, saveButtonWidth, saveButtonHeight);
+    self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
+    self.topBar.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
     if (self.indexPromptLabel.frame.size.width <= indexPormptLabelWidth) {
         self.indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, indexPormptLabelWidth, indexPormptLabelHeight);
     } else {
@@ -385,9 +281,6 @@
     
     [self scrollToIndex:_currentIndex];
     [self refreshIndexPromptLabel];
-    if(self.imageTitles){
-        [self refreshIndexTitleLabel];
-    }
 }
 
 
@@ -554,16 +447,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 - (void)refreshIndexTitleLabel
 {
     if (_currentIndex < 0 || _photoCount < 0) {
-        _titleLabel.hidden = YES;
         return;
-    }
-    
-    if(_currentIndex < self.imageTitles.count){
-        _titleLabel.hidden = NO;
-        [_titleLabel setText:self.imageTitles[_currentIndex]];
-    }else{
-        _titleLabel.hidden = YES;
-        [_titleLabel setText:@""];
     }
 }
 
@@ -621,9 +505,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     _currentIndex = newIndex;
     
-    if(self.imageTitles){
-        [self refreshIndexTitleLabel];
-    }
     [self refreshIndexPromptLabel];
     [self setSelectedAtIndex:_currentIndex];
     
@@ -640,17 +521,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 {
     if ([[_isSelecteds objectAtIndex:index] boolValue])
     {
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview_press"] forState:UIControlStateNormal];
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview_press"] forState:UIControlStateHighlighted];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_press"] forState:UIControlStateNormal];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_press"] forState:UIControlStateHighlighted];
-    }
-    else
-    {
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview"] forState:UIControlStateNormal];
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview"] forState:UIControlStateHighlighted];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo"] forState:UIControlStateNormal];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo"] forState:UIControlStateHighlighted];
+        
+    } else {
+
     }
 }
 
@@ -791,11 +664,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             [subView removeFromSuperview];
         }
     }
-}
-
-- (void)closeButtonClicked
-{
-    [self finished];
 }
 
 - (void)finished
@@ -967,8 +835,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            NSLog(@"longpress");
-            [self saveButtonClicked:self.saveButton];
+            [self saveButtonClicked:nil];
             break;
         default:
             break;
@@ -981,18 +848,18 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 {
     if (self.direction == TTPhotoScrollViewMoveDirectionNone) {
         //刚开始识别方向
-        if (translation.y > moveDirectionStartOffset) {
+        if (translation.y > kFHDPMoveDirectionStartOffset) {
             self.direction = TTPhotoScrollViewMoveDirectionVerticalBottom;
         }
-        if (translation.y < -moveDirectionStartOffset) {
+        if (translation.y < -kFHDPMoveDirectionStartOffset) {
             self.direction = TTPhotoScrollViewMoveDirectionVerticalTop;
         }
     } else {
         //重新识别方向
         TTPhotoScrollViewMoveDirection currentDirection = TTPhotoScrollViewMoveDirectionNone;
-        if (translation.y > moveDirectionStartOffset) {
+        if (translation.y > kFHDPMoveDirectionStartOffset) {
             currentDirection = TTPhotoScrollViewMoveDirectionVerticalBottom;
-        } else if (translation.y < -moveDirectionStartOffset) {
+        } else if (translation.y < -kFHDPMoveDirectionStartOffset) {
             currentDirection = TTPhotoScrollViewMoveDirectionVerticalTop;
         } else {
             currentDirection = TTPhotoScrollViewMoveDirectionNone;
@@ -1006,9 +873,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         BOOL verticle = (self.direction == TTPhotoScrollViewMoveDirectionVerticalBottom || self.direction == TTPhotoScrollViewMoveDirectionVerticalTop);
         CGFloat y = 0;
         if (self.direction == TTPhotoScrollViewMoveDirectionVerticalTop) {
-            y = translation.y + moveDirectionStartOffset;
+            y = translation.y + kFHDPMoveDirectionStartOffset;
         } else if (self.direction == TTPhotoScrollViewMoveDirectionVerticalBottom){
-            y = translation.y - moveDirectionStartOffset;
+            y = translation.y - kFHDPMoveDirectionStartOffset;
         }
         
         CGFloat yFraction = fabs(translation.y / CGRectGetHeight(self.photoScrollView.frame));
@@ -1086,7 +953,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                                             withAnimation:NO];
     self.containerView.alpha = (1 - yFraction * 2 / 3);
     [UIView animateWithDuration:0.15 animations:^{
-        self.saveButton.alpha = 0;
         self.indexPromptLabel.alpha = 0;
     }];
 }
@@ -1099,7 +965,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     self.photoScrollView.frame = [self frameForPagingScrollView];
     self.containerView.alpha = 1;
     [UIView animateWithDuration:0.15 animations:^{
-        self.saveButton.alpha = 1;
         self.indexPromptLabel.alpha = 1;
     }];
 }
@@ -1326,7 +1191,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         case TTPreviewAnimateStateWillBegin:
             [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
                                                     withAnimation:NO];
-            self.saveButton.alpha = 0;
             self.indexPromptLabel.alpha = 0;
             self.topBar.alpha = 0;
             self.bottomBar.alpha = 0;
@@ -1347,7 +1211,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             break;
         case TTPreviewAnimateStateDidCancel:
             self.containerView.alpha = 1;
-            self.saveButton.alpha = 1;
             self.indexPromptLabel.alpha = 1;
             self.topBar.alpha = 1;
             self.bottomBar.alpha = 1;
