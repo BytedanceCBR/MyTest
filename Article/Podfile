@@ -43,8 +43,8 @@ def appPods
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
 
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '1921c593e6e6686e4a50e38f479874b491c3e854' #:branch => 'feature/develop'
-#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '7c7adafb098844223c3aa54e2d26d5e2153f9ade' #:branch => 'feature/develop'
+#    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9c5ef3144d54acc6f0203df98cb38bf5f38f075d' #:branch => 'feature/develop'
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
 
