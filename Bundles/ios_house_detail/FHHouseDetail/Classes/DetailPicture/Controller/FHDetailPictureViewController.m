@@ -591,7 +591,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     showImageView.frame = [self frameForPageAtIndex:index];
     
-    showImageView.loadingCompletedAnimationBlock = nil;
+    showImageView.loadingCompletedAnimationBlock = ^{
+        // nothing
+    };
     [self setUpShowImageView:showImageView atIndex:index];
     showImageView.visible = visible;
     
