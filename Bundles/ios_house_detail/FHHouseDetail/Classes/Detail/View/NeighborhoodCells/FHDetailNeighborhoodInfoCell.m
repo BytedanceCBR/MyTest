@@ -93,7 +93,7 @@
         } else if (districtName.length > 0) {
             topHeight = [self showLabelWithKey:@"所属区域" value:districtName parentView:self.topView bottomY:topHeight];
         }
-        self.topHeight = topHeight > 0 ? 30 : 0;
+        self.topHeight = topHeight;
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
         }];
@@ -120,7 +120,7 @@
         }else {
             topHeight = 0;
         }
-        self.topHeight = topHeight > 0 ? 30 : 0;
+        self.topHeight = topHeight;
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
         }];
@@ -149,17 +149,13 @@
         __weak typeof(self)wself = self;
         itemView.foldBlock = ^(FHDetailSchoolInfoItemView *theItemView, CGFloat height) {
             
+            [model.tableView beginUpdates];
             [UIView animateWithDuration:0.3 animations:^{
-                
                 [wself refreshItemsView];
-
             } completion:^(BOOL finished) {
             }];
             
-            [model.tableView beginUpdates];
             [wself refreshSchoolViewFrame];
-            CGFloat currentHeight = theItemView.height;
-
             [wself setNeedsUpdateConstraints];
             [model.tableView endUpdates];
   
@@ -170,6 +166,7 @@
         lastItemView = itemView;
     }
     [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(46 + self.topHeight);
         make.height.mas_equalTo(sumHeight);
     }];
 }
@@ -257,12 +254,12 @@
     
     [_topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.top.mas_equalTo(46);
         make.height.mas_equalTo(0);
     }];
     [_schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(self.topView.mas_bottom);
+//        make.top.mas_equalTo(self.topView.mas_bottom);
         make.height.mas_equalTo(0);
 //        make.bottom.mas_equalTo(self.bottomView.mas_top);
         make.bottom.mas_equalTo(-20);
