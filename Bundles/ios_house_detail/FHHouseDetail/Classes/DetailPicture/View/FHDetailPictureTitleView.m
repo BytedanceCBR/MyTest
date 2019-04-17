@@ -27,6 +27,7 @@
 }
 
 - (void)setupUI {
+    _selectIndex = -1;
     _tempLabel = [[UILabel alloc] init];
     _tempLabel.hidden = YES;
     _tempLabel.font = [UIFont themeFontRegular:16];
@@ -50,6 +51,40 @@
     _colletionView.dataSource = self;
     
     [self addSubview:_colletionView];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+}
+
+- (void)setSelectIndex:(NSInteger)selectIndex {
+    if (_selectIndex != selectIndex) {
+        [self.colletionView reloadData];
+    }
+    _selectIndex = selectIndex; // 图片索引
+}
+
+- (NSInteger)titleIndexBySelectIndex {
+    NSInteger count = 0;
+    NSInteger titleIndex = 0;
+    for (int i = 0; i < self.titleNums.count; i++) {
+        NSNumber *num = self.titleNums[i];
+        NSInteger tempCount = [num integerValue];
+        count += tempCount;
+        if (_selectIndex < count) {
+            titleIndex = i;
+            break;
+        }
+    }
+    return titleIndex;
 }
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -89,7 +124,8 @@
         NSString *title = self.titleNames[index];
         cell.titleLabel.text = title;
     }
-    
+    NSInteger titleIndex = [self titleIndexBySelectIndex];
+    cell.hasSelected = (titleIndex == index);
     return cell;
 }
 

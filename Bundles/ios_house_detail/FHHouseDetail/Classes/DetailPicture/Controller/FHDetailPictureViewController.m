@@ -485,7 +485,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     _currentIndex = newIndex;
     self.pictureTitleView.selectIndex = newIndex;
-    [self.pictureTitleView.colletionView reloadData];
     [self unloadPhoto:_currentIndex + 2];
     [self unloadPhoto:_currentIndex - 2];
     
@@ -766,6 +765,15 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 - (void)longPress:(UILongPressGestureRecognizer *)recognizer
 {
     if (!_longPressToSave || self.interfaceOrientation != UIInterfaceOrientationPortrait) {
+        return;
+    }
+    
+    TTShowImageView * currentImageView = [self showImageViewAtIndex:_currentIndex];
+    CGRect frame = [currentImageView currentImageView].frame;
+    UIView * touchView = recognizer.view;
+    
+    CGPoint point = [recognizer locationInView:touchView];
+    if (!CGRectContainsPoint(frame, point)) {
         return;
     }
     
