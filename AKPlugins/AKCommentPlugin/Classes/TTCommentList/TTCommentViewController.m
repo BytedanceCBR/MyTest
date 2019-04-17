@@ -379,7 +379,9 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
             rect.size.height = kCommentViewEmptyMinHeight;
         }
     }
-
+    if ([self.commentViewModel tt_curCommentModels].count == 0) {
+        rect.size = CGSizeMake(rect.size.width, 200);
+    }
     return rect;
 }
 
@@ -651,7 +653,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     }
     CGRect frame = [self p_frameForFooterInSection:section];
     if (!_emptyView) {
-        self.emptyView = [[TTCommentEmptyView alloc] initWithFrame:frame];
+        self.emptyView = [[TTCommentEmptyView alloc] initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height / 2)];
         self.emptyView.delegate = self;
         self.emptyView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
@@ -675,7 +677,10 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     if (![self p_shouldShowFooterViewInSection:section]) {
         return CGFLOAT_MIN;
     }
-    return [self p_frameForFooterInSection:section].size.height;
+    if ([self.commentViewModel tt_curCommentModels].count == 0) {
+        return 200;
+    }
+    return [self p_frameForFooterInSection:section].size.height/2;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

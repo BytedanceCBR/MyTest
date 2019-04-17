@@ -9,6 +9,8 @@
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
 
+@class FHDetailNewDataSmallImageGroupModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHDetailPhotoHeaderModelProtocol <AbstractJSONModelProtocol>
@@ -36,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
+@property (nonatomic,assign)BOOL isNewHouse;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *houseImage;
 @end
 
@@ -68,6 +72,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
 @property (nonatomic, copy , nullable) NSString *callButtonText;
+@property (nonatomic, copy , nullable) NSString *reportButtonText;
+
+@property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
 
