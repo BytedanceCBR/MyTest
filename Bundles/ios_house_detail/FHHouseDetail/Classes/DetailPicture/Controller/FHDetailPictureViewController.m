@@ -20,6 +20,7 @@
 #import "UIFont+House.h"
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureNavView.h"
+#import "FHDetailPictureTitleView.h"
 
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 40.f
@@ -48,6 +49,9 @@
 
 @property(nonatomic, strong)UIView * topBar;
 @property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
+@property (nonatomic, strong)   FHDetailPictureTitleView       *pictureTitleView;
+@property (nonatomic, strong)   NSArray       *pictureTitles;
+@property (nonatomic, strong)   NSArray       *pictureNumbers;
 
 @property(nonatomic, strong)UIView * bottomBar;
 
@@ -167,6 +171,12 @@
     };
     [_topBar addSubview:_naviView];
     
+    _pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, 64, self.view.width, 42)];
+    _pictureTitleView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_pictureTitleView];
+    self.pictureTitleView.titleNames = self.pictureTitles;
+    self.pictureTitleView.titleNums = self.pictureNumbers;
+    
     // layout
     NSInteger maxIndex = MAX(MAX([_imageInfosModels count], [_imageURLs count]), MAX([_images count], [_assetsImages count]))-1;
     _startWithIndex = MAX(0, MIN(maxIndex, _startWithIndex));
@@ -216,6 +226,8 @@
     }
     self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
     self.topBar.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
+    self.pictureTitleView.frame = CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42);
+    [self.pictureTitleView.colletionView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -273,7 +285,26 @@
 - (void)setMediaHeaderModel:(FHDetailMediaHeaderModel *)mediaHeaderModel {
     if (_mediaHeaderModel != mediaHeaderModel) {
         _mediaHeaderModel = mediaHeaderModel;
-        
+        NSMutableArray *titles = [NSMutableArray new];
+        NSMutableArray *numbers = [NSMutableArray new];
+        for (FHDetailOldDataHouseImageDictListModel *listModel in mediaHeaderModel.houseImageDictList) {
+            if (listModel.houseImageTypeName.length > 0) {
+                NSInteger tempCount = 0;
+                for (FHDetailHouseDataItemsHouseImageModel *imageModel in listModel.houseImageList) {
+                    if (imageModel.url.length > 0) {
+                        tempCount += 1;
+                    }
+                }
+                if (tempCount > 0) {
+                    [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,tempCount]];
+                    [numbers addObject:@(tempCount)];
+                }
+            }
+        }
+        if (titles.count > 0) {
+            self.pictureTitles = titles;
+            self.pictureNumbers = numbers;
+        }
     }
 }
 
@@ -453,7 +484,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     
     _currentIndex = newIndex;
-    
+    self.pictureTitleView.selectIndex = newIndex;
+    [self.pictureTitleView.colletionView reloadData];
     [self unloadPhoto:_currentIndex + 2];
     [self unloadPhoto:_currentIndex - 2];
     

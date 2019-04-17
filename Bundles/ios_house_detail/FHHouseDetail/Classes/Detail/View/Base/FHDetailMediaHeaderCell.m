@@ -78,20 +78,24 @@
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
 
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
-        NSString *groupType = nil;
-        if([listModel.houseImageTypeName isEqualToString:@"户型"] ){
-            groupType = @"户型";
-        }else{
-            groupType = @"图片";
-        }
-        
-        for (FHDetailHouseDataItemsHouseImageModel *imageModel in listModel.houseImageList) {
-            FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
-            itemModel.mediaType = FHMultiMediaTypePicture;
-            itemModel.imageUrl = imageModel.url;
-            itemModel.groupType = groupType;
-            [itemArray addObject:itemModel];
-            [self.imageList addObject:imageModel];
+        if (listModel.houseImageTypeName.length > 0) {
+            NSString *groupType = nil;
+            if(listModel.houseImageType == FHDetailHouseImageTypeApartment){
+                groupType = @"户型";
+            }else{
+                groupType = @"图片";
+            }
+            
+            for (FHDetailHouseDataItemsHouseImageModel *imageModel in listModel.houseImageList) {
+                if (imageModel.url.length > 0) {
+                    FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
+                    itemModel.mediaType = FHMultiMediaTypePicture;
+                    itemModel.imageUrl = imageModel.url;
+                    itemModel.groupType = groupType;
+                    [itemArray addObject:itemModel];
+                    [self.imageList addObject:imageModel];
+                }
+            }
         }
     }
     
