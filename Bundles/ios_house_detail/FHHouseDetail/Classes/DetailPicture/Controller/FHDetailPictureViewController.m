@@ -1140,7 +1140,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         case TTPreviewAnimateStateWillBegin:
             [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
                                                     withAnimation:NO];
-//            self.indexPromptLabel.alpha = 0;
+            self.pictureTitleView.alpha = 0;
             self.topBar.alpha = 0;
             self.bottomBar.alpha = 0;
             imageView.hidden = YES;
@@ -1165,7 +1165,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         case TTPreviewAnimateStateDidCancel:
             [self setCurrentStatusStyle];
             self.containerView.alpha = 1;
-//            self.indexPromptLabel.alpha = 1;
+            self.pictureTitleView.alpha = 1;
             self.topBar.alpha = 1;
             self.bottomBar.alpha = 1;
             imageView.hidden = NO;

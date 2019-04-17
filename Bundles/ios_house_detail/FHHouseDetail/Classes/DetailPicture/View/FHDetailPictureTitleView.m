@@ -55,7 +55,15 @@
 
 - (void)setSelectIndex:(NSInteger)selectIndex {
     if (_selectIndex != selectIndex) {
+        _selectIndex = selectIndex; // 图片索引
         [self.colletionView reloadData];
+        NSInteger titleIndex = [self titleIndexBySelectIndex];
+        if (titleIndex >= 0 && titleIndex < self.titleNames.count) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:titleIndex inSection:0];
+            if (indexPath) {
+                [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+            }
+        }
     }
     _selectIndex = selectIndex; // 图片索引
 }
