@@ -575,7 +575,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.1.4)
   - IGListKit
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9c5ef3144d54acc6f0203df98cb38bf5f38f075d`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `09dd88a4f04bb82d610783fc0b9c22126c7eac41`)
+  - ios_house_im (from `../../lab/ios_house_im`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -786,8 +786,7 @@ EXTERNAL SOURCES:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 09dd88a4f04bb82d610783fc0b9c22126c7eac41
-    :git: git@code.byted.org:fproject/ios_house_im.git
+    :path: ../../lab/ios_house_im
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAccountSDK:
@@ -842,9 +841,6 @@ CHECKOUT OPTIONS:
   ios_house_filter:
     :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
     :git: git@code.byted.org:fproject/ios_house_filter.git
-  ios_house_im:
-    :commit: 09dd88a4f04bb82d610783fc0b9c22126c7eac41
-    :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
@@ -907,7 +903,7 @@ SPEC CHECKSUMS:
   IESWebKit: e13a10709fb324b827ecf099f650064cc7cdc4b9
   IGListKit: 684b7cbb1b0192538d29483080e2280b037882dc
   ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
-  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
+  ios_house_im: bff4c982d4baf0938adadeae3712e66e4ec0e324
   JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1011,6 +1007,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: ce764f77a5470fc77280b5e5f38e7f7a5116ae2e
+PODFILE CHECKSUM: d459482e56673ba8ef4875dea181c229ef081bc4
 
 COCOAPODS: 1.4.0
