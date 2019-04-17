@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
 #import "TTPhotoScrollViewController.h"
+#import "FHDetailMediaHeaderCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 // 支持房源图片以及视频相关功能
@@ -30,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
 
+/** 图片数据 */
+@property (nonatomic, strong)   FHDetailMediaHeaderModel       *mediaHeaderModel;
 
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos

@@ -84,7 +84,7 @@
             itemModel.imageUrl = imageModel.url;
             itemModel.groupType = groupType;
             [itemArray addObject:itemModel];
-            [self.imageList addObject:itemModel];
+            [self.imageList addObject:imageModel];
         }
     }
     
@@ -122,9 +122,10 @@
     self.model.medias = itemArray;
 }
 
--(void)showImages:(NSArray<FHDetailPhotoHeaderModelProtocol>*)images currentIndex:(NSInteger)index
+-(void)showImagesWithCurrentIndex:(NSInteger)index
 {
-    if (images.count == 0) {
+    NSArray *images = self.imageList;
+    if (images.count == 0 || index < 0 || index >= images.count) {
         return;
     }
     __weak typeof(self) weakSelf = self;
@@ -153,13 +154,6 @@
                 [dictUrlList addObject:url];
             }
         }
-        // 兼容租房逻辑
-        if (dictUrlList.count == 0) {
-            NSString *url = dict[@"url"];
-            if (url.length > 0) {
-                [dictUrlList addObject:@{@"url":url}];
-            }
-        }
         dict[@"url_list"] = dictUrlList;
         
         TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
@@ -168,7 +162,8 @@
             [models addObject:model];
         }
     }
-    vc.imageInfosModels = models;
+    vc.mediaHeaderModel = (FHDetailMediaHeaderModel *)self.currentData;
+    vc.imageInfosModels = models;// 图片展示模型
     
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
@@ -212,7 +207,7 @@
 - (void)didSelectItemAtIndex:(NSInteger)index {
     // 图片逻辑
     if (index >= 0 && index < self.imageList.count) {
-        [self showImages:self.imageList currentIndex:index];
+        [self showImagesWithCurrentIndex:index];
     }
 }
 

@@ -262,6 +262,13 @@
 
 #pragma mark - Setter & Getter
 
+- (void)setMediaHeaderModel:(FHDetailMediaHeaderModel *)mediaHeaderModel {
+    if (_mediaHeaderModel != mediaHeaderModel) {
+        _mediaHeaderModel = mediaHeaderModel;
+        
+    }
+}
+
 - (void)setImageURLs:(NSArray *)imageURLs
 {
     if (_imageURLs != imageURLs) {

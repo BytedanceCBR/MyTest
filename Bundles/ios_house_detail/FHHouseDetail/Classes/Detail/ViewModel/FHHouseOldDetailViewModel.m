@@ -247,13 +247,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
-    if (model.data.houseImageDictList) {
+    if (model.data.houseImageDictList.count > 0) {
         FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
+        headerCellModel.vedioModel = nil;// 添加视频模型数据
         [self.items addObject:headerCellModel];
     }else{
         // 添加头滑动图片
-        if (model.data.houseImage) {
+        if (model.data.houseImage.count > 0) {
             FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
             headerCellModel.houseImage = model.data.houseImage;
             [self.items addObject:headerCellModel];
