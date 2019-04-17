@@ -68,6 +68,13 @@
     self.model = [[FHMultiMediaModel alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
     
+//    FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
+//    itemModel.mediaType = FHMultiMediaTypeVideo;
+//    itemModel.videoUrl = @"https://aweme.snssdk.com/aweme/v1/play/?video_id=v03033c20000bbvd7nlehji8cghrbb20&line=0&ratio=default&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0";
+//    itemModel.imageUrl = @"https://p3.pstatp.com/origin/f100-image/RM9th6BUofQQc";
+//    itemModel.groupType = @"视频";
+//    [itemArray addObject:itemModel];
+    
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
 
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
@@ -88,12 +95,6 @@
         }
     }
     
-//    FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
-//    itemModel.mediaType = FHMultiMediaTypeVideo;
-//    itemModel.videoUrl = @"https://aweme.snssdk.com/aweme/v1/play/?video_id=v03033c20000bbvd7nlehji8cghrbb20&line=0&ratio=default&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0";
-//    itemModel.imageUrl = @"https://p3.pstatp.com/origin/f100-image/RM9th6BUofQQc";
-//    itemModel.groupType = @"视频";
-//    [itemArray addObject:itemModel];
 //
 //    FHMultiMediaItemModel *itemModel2 = [[FHMultiMediaItemModel alloc] init];
 //    itemModel2.mediaType = FHMultiMediaTypePicture;

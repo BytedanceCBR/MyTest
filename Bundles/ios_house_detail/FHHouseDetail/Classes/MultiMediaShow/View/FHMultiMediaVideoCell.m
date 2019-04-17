@@ -7,6 +7,8 @@
 
 #import "FHMultiMediaVideoCell.h"
 #import "FHVideoViewController.h"
+#import "FHVideoModel.h"
+#import "UIImageView+BDWebImage.h"
 
 @interface FHMultiMediaVideoCell ()
 
@@ -34,17 +36,31 @@
     _videoVC.view.frame = self.bounds;
     [self.contentView addSubview:_videoVC.view];
     
-//    _coverView = [[UIImageView alloc] initWithFrame:self.bounds];
-//    _coverView.contentMode = UIViewContentModeScaleAspectFill;
-//    _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-//    [self.contentView addSubview:_coverView];
+    self.coverView = [[UIImageView alloc] initWithFrame:self.bounds];
+    _coverView.contentMode = UIViewContentModeScaleAspectFill;
+    _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    [self.contentView addSubview:_coverView];
+    
+    self.startBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
+    _startBtn.center = self.center;
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
+    [self.contentView addSubview:_startBtn];
 }
 
 - (void)updateViewModel:(FHMultiMediaItemModel *)model {
-    [self.videoVC updateData];
-//    NSString *imgStr = model.imageUrl;
-//    NSURL *url = [NSURL URLWithString:imgStr];
-//    [self.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
+    
+    FHVideoModel *videoModel = [[FHVideoModel alloc] init];
+    videoModel.contentUrl = model.videoUrl;
+    videoModel.muted = YES;
+    videoModel.useCache = YES;
+    videoModel.repeated = YES;
+    videoModel.scalingMode = AWEVideoScaleModeAspectFit;
+    
+    [self.videoVC updateData:videoModel];
+    
+    NSString *imgStr = model.imageUrl;
+    NSURL *url = [NSURL URLWithString:imgStr];
+    [self.coverView bd_setImageWithURL:url placeholder:self.placeHolder];
 }
 
 @end

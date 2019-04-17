@@ -8,6 +8,7 @@
 #import "FHVideoView.h"
 #import "AWEVideoPlayerController.h"
 
+
 @interface FHVideoView ()
 
 @property(nonatomic, strong) AWEVideoPlayerController *playerController;
@@ -36,21 +37,17 @@
     _playerController.view.frame = self.bounds;
 }
 
-- (void)updateData {
-    if(_playerController.isPlaying){
-        return;
-    }
+- (void)updateData:(FHVideoModel *)model {
     // 加载、播放
-    [_playerController setContentURLString:@"https://aweme.snssdk.com/aweme/v1/play/?video_id=v03033c20000bbvd7nlehji8cghrbb20&line=0&ratio=default&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0"];
-    
+    [_playerController setContentURLString:model.contentUrl];
     // 其他配置
-    _playerController.muted = YES;
-    _playerController.useCache = YES;
-    _playerController.repeated = YES;  // 设置以后自动循环播放
-    _playerController.scalingMode = AWEVideoScaleModeAspectFit;
+    _playerController.muted = model.muted;
+    _playerController.useCache = model.useCache;
+    _playerController.repeated = model.repeated;
+    _playerController.scalingMode = model.scalingMode;
     
-    [_playerController prepareToPlay];
-    [_playerController play];
+//    [_playerController prepareToPlay];
+//    [_playerController play];
 }
 
 
