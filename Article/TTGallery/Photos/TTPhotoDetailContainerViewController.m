@@ -527,7 +527,7 @@ static NSInteger screenshotViewTag = 1119;
 
 - (void)p_cleanPhotoDetailViewControllersInNavIfNeed
 {
-    if (_hasCleanPreviousVCIfNeed) {
+    if (!_hasCleanPreviousVCIfNeed) {
         return;
     }
     

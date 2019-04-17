@@ -527,6 +527,7 @@ extern NSString *const kFHDetailFollowUpNotification;
             [self cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
                 if(error){
                     [wself.tableView setEditing:NO animated:YES];
+                    [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [wself deleteFocusCell:indexPath.row];
@@ -554,6 +555,7 @@ extern NSString *const kFHDetailFollowUpNotification;
             [self cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
                 if(error){
                     [wself.tableView setEditing:NO animated:YES];
+                    [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [wself deleteFocusCell:indexPath.row];

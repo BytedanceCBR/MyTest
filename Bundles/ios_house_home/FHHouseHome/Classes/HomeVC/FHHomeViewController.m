@@ -207,6 +207,12 @@ static CGFloat const kSectionHeaderHeight = 38;
     [super viewWillAppear:animated];
     
     [self scrollToTopEnable:YES];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)pullAndRefresh
@@ -233,7 +239,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)willDisappear
 {
-    
+    [FHLocManager sharedInstance].isShowHomeViewController = NO;
 }
 
 

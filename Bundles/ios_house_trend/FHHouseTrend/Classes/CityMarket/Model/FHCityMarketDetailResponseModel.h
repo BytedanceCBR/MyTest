@@ -102,6 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *moreBtnText;
 @property (nonatomic, copy , nullable) NSString *type;
+@property (nonatomic, strong, nullable) NSArray<NSString*>* subTitle;
 @property (nonatomic, strong , nullable) NSArray<FHCityMarketDetailResponseDataHotListItemsModel> *items;
 @end
 

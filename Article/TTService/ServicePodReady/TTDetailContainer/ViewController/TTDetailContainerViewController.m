@@ -28,7 +28,7 @@
 #import <KVOController/KVOController.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
-
+@property(nonatomic,strong)NSDictionary *reportParamsH5;
 @end
 
 @implementation TTDetailContainerViewController
@@ -40,8 +40,48 @@
     if (self) {
         TTDetailContainerViewModel * viewModel = [[TTDetailContainerViewModel alloc] initWithRouteParamObj:paramObj];
         self.viewModel = viewModel;
+        
+        NSString *report_params = paramObj.allParams[@"report_params"];
+
+        if (paramObj.allParams[@"category"]) {
+            self.viewModel.detailModel.categoryID = paramObj.allParams[@"category"];
+        }
+        
+        if (paramObj.allParams[@"from_gid"]) {
+            self.viewModel.detailModel.relateReadFromGID = paramObj.allParams[@"from_gid"];
+        }
+        
+        if ([report_params isKindOfClass:[NSString class]]) {
+            NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+            NSMutableDictionary *reportResultDict = [NSMutableDictionary new];
+            if ([report_params_dic isKindOfClass:[NSDictionary class]]) {
+                [reportResultDict addEntriesFromDictionary:report_params_dic];
+            }
+            if ([paramObj.allParams isKindOfClass:[NSDictionary class]]) {
+                [reportResultDict addEntriesFromDictionary:paramObj.allParams];
+            }
+            
+            if (report_params_dic) {
+                self.viewModel.detailModel.reportParams = reportResultDict;
+            }
+        }
     }
     return self;
+}
+
+- (NSDictionary *)getDictionaryFromJSONString:(NSString *)jsonString {
+    NSMutableDictionary *retDic = nil;
+    if (jsonString.length > 0) {
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *error = nil;
+        retDic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
+        if ([retDic isKindOfClass:[NSDictionary class]] && error == nil) {
+            return retDic;
+        } else {
+            return nil;
+        }
+    }
+    return retDic;
 }
 
 + (TTRouteUserInfo *)reassginedUserInfoWithParamObj:(TTRouteParamObj *)paramObj {
