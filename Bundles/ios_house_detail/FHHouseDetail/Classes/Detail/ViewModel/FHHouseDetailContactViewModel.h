@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshMessageDot;
 - (void)hideFollowBtn;
 
+- (void)destroyRNPreLoadCache;
 @end
 
 NS_ASSUME_NONNULL_END

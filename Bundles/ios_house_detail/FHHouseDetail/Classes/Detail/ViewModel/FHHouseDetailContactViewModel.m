@@ -174,7 +174,7 @@
 //todo 增加埋点的东西
 - (void)jump2RealtorDetail
 {
-    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone];
+    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES];
 }
 
 - (void)licenseAction
@@ -263,6 +263,8 @@
         [self addElementShowLog:contactPhone];
     }
     [self addLeadShowLog:contactPhone];
+    
+    [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES];
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
@@ -452,6 +454,10 @@
     return _shareManager;
 }
 
+- (void)destroyRNPreLoadCache
+{
+    [self.phoneCallViewModel destoryRNPreloadCache];
+}
 
 - (void)dealloc
 {

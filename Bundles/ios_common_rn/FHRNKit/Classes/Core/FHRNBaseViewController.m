@@ -22,6 +22,8 @@
 #import "FHRNBridgePlugin.h"
 #import <TTUIResponderHelper.h>
 #import <UIViewController+Refresh_ErrorHandler.h>
+#import "RCTRootView.h"
+#import <RCTDevLoadingView.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -35,6 +37,7 @@
 @property (nonatomic, strong) NSString *channelStr;
 @property (nonatomic, strong) NSString *moduleNameStr;
 @property (nonatomic, assign) BOOL isDebug;
+@property (nonatomic, assign) BOOL canPreLoad;
 @property (nonatomic, strong) TTRouteParamObj *paramCurrentObj;
 @property (nonatomic, strong) TTRNKit *ttRNKit;
 @property (nonatomic, strong) FHRNBridgePlugin *fhRNPlugin;
@@ -82,18 +85,17 @@
 
 - (instancetype)initWithParams:(NSDictionary *)params viewWrapper:(TTRNKitViewWrapper *)viewWrapper {
     if (self = [super init]) {
-        _originHideStatusBar = [UIApplication sharedApplication].statusBarHidden;
-        _originHideNavigationBar = self.navigationController.navigationBarHidden;
-        _hideBar = [params tt_intValueForKey:RNHideBar] == 1;
-        _hideStatusBar = [params tt_intValueForKey:RNHideStatusBar] == 1;
-        self.title = [params tt_stringValueForKey:RNTitle];
+        if ([params isKindOfClass:[NSDictionary class]]) {
+            [self processParams:params];
+        }
         _viewWrapper = viewWrapper;
-        _isDebug = [params tt_boolValueForKey:FHRN_DEBUG];
-        _moduleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_MODULE_NAME];
+        
+        if (_canPreLoad) {
+            [self processPreloadAction];
+        }
     }
     return self;
 }
-
 - (void)initRNKit
 {
     self.ttRNKit = [self extracted];
@@ -105,20 +107,50 @@
         if ([paramObj.sourceURL respondsToSelector:@selector(absoluteString)]) {
             _shemeUrlStr = [paramObj.sourceURL absoluteString];
         }
-        _titleStr = paramObj.allParams[@"title"];
-        _channelStr = paramObj.allParams[@"channelName"];
-        if ([paramObj.allParams[@"debug"] respondsToSelector:@selector(boolValue)]) {
-            _isDebug = [paramObj.allParams[@"debug"] boolValue];
-        }else
-        {
-            _isDebug = NO;
-        }
         _paramCurrentObj = paramObj;
-        _moduleNameStr = [paramObj.allParams tt_stringValueForKey:FHRN_BUNDLE_MODULE_NAME];
+        
+        if ([paramObj.allParams isKindOfClass:[NSDictionary class]]) {
+            [self processParams:paramObj.allParams];
+        }
+        
         [self initRNKit];
+        
+        if (_canPreLoad) {
+            [self processPreloadAction];
+        }
     }
     return self;
 }
+
+- (void)processParams:(NSDictionary *)params
+{
+    _titleStr = [params tt_stringValueForKey:@"title"];
+    _channelStr = [params tt_stringValueForKey:@"channelName"];
+    _originHideStatusBar = [UIApplication sharedApplication].statusBarHidden;
+    _originHideNavigationBar = self.navigationController.navigationBarHidden;
+    _hideBar = [params tt_intValueForKey:RNHideBar] == 1;
+    _hideStatusBar = [params tt_intValueForKey:RNHideStatusBar] == 1;
+    self.title = [params tt_stringValueForKey:RNTitle];
+    _isDebug = [params tt_boolValueForKey:FHRN_DEBUG];
+    _moduleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_MODULE_NAME];
+    _canPreLoad = [params tt_boolValueForKey:FHRN_CAN_PRE_LOAD];
+}
+
+- (void)processPreloadAction
+{
+    if (!_isDebug) {
+        // Do any additional setup after loading the view.
+        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
+        
+        self.ttRNKit.delegate = self;
+        [self.ttRNKit handleUrl:url];
+    }else
+    {
+        [self loadJSbundleAndShowWithIp:nil port:nil moduleName:nil];
+        [((RCTRootView *)_viewWrapper.rnView).bridge moduleForClass:[RCTDevLoadingView class]];
+    }
+}
+
 
 - (void)setupUI
 {
@@ -145,19 +177,11 @@
     }];
     
     [self.view layoutIfNeeded];
-
-    if (!_isDebug) {
-        // Do any additional setup after loading the view.
-        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
-        
-        self.ttRNKit.delegate = self;
-        [self.ttRNKit handleUrl:url];
-    }else
-    {
-        [self loadJSbundleAndShowWithIp:nil port:nil moduleName:nil];
-    }
     
-    [self tt_startUpdate];
+    if (!_canPreLoad) {
+        [self tt_startUpdate];
+        [self processPreloadAction];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -173,6 +197,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if (_viewWrapper) {
+        if (_canPreLoad) {
+            [self tt_endUpdataData];
+            [_viewWrapper dismissLoadingView];
+        }
+        [self addViewWrapper:_viewWrapper];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -181,12 +212,50 @@
     [[UIApplication sharedApplication] setStatusBarHidden:self.originHideStatusBar];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+}
+
+- (void)destroyRNView
+{
+    ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
+    [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+    [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
+    _viewWrapper.rnView = nil;
+    [_viewWrapper removeFromSuperview];
+    self.viewWrapper = nil;
+}
+
 - (BOOL)prefersStatusBarHidden {
     return _hideStatusBar;
 }
 
 - (void)onClose {
     [TTRNKitHelper closeViewController:self];
+}
+
+- (void)willMoveToParentViewController:(UIViewController*)parent{
+    [super willMoveToParentViewController:parent];
+}
+- (void)didMoveToParentViewController:(UIViewController*)parent{
+    [super didMoveToParentViewController:parent];
+    if(!parent && !_canPreLoad){
+        [self destroyRNView];
+    }
+}
+
+- (void)goBack
+{
+    UIViewController *popVC = [self.navigationController popViewControllerAnimated:YES];
+    if (!_canPreLoad) {
+        [self destroyRNView];
+    }
+    if (nil == popVC) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    }
 }
 
 #pragma mark - DebugProtocol
@@ -247,11 +316,8 @@
     
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
-    
-    [self addViewWrapper:wrapper];
-    
+    _viewWrapper = wrapper;
     [self createRNView:initParams bundleURL:jsCodeLocation inWrapper:wrapper];
-    
 }
 
 - (void)createRNView:(NSDictionary *)initParams bundleURL:(NSURL *)jsCodeLocation inWrapper:(TTRNKitViewWrapper *)wrapper {
@@ -274,5 +340,13 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+
+- (void)dealloc
+{
+    NSLog(@"FHRN VC dealloc");
+}
+
 
 @end

@@ -468,4 +468,28 @@
     return YES;
 }
 
+#pragma mark 监听返回
+
+- (void)goBack
+{
+    UIViewController *popVC = [self.navigationController popViewControllerAnimated:YES];
+    [self.viewModel.contactViewModel destroyRNPreLoadCache];
+    if (nil == popVC) {
+        [self dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    }
+}
+
+- (void)willMoveToParentViewController:(UIViewController*)parent{
+    [super willMoveToParentViewController:parent];
+}
+
+- (void)didMoveToParentViewController:(UIViewController*)parent{
+    [super didMoveToParentViewController:parent];
+    if (!parent) {
+        [self.viewModel.contactViewModel destroyRNPreLoadCache];
+    }
+}
+
 @end

@@ -41,6 +41,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, weak) FHDetailNoticeAlertView *alertView;
 @property (nonatomic, strong) NSMutableDictionary *imParams; //用于IM跟前端交互的字段
+@property (nonatomic, strong) TTRouteObject *routeAgentObj; //预加载经纪人详情页
 
 @end
 
@@ -365,15 +366,30 @@ typedef enum : NSUInteger {
 }
 
 
-- (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone
+- (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre
+{
+    if (isPre) {
+        if ([self.routeAgentObj.instance isKindOfClass:[UIViewController class]]) {
+            [self.belongsVC.navigationController pushViewController:self.routeAgentObj.instance animated:YES];
+        }
+    }else
+    {
+        TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO];
+        if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
+             [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+        }
+    }
+}
+
+- (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre
 {
     if (contactPhone.realtorId.length < 1) {
-        return;
+        return nil;
     }
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-//    NSString *host = @"http://10.1.15.29:8889";
+    //    NSString *host = @"http://10.1.15.29:8889";
     NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
-    
+
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
     dict[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
@@ -399,15 +415,15 @@ typedef enum : NSUInteger {
     } else {
         dict[@"conversation_id"] = conv.identifier ?: @"be_null";
     }
-    
-    
+
+
     NSError *parseError = nil;
     NSString *reportParams = nil;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&parseError];
     if (!parseError) {
         reportParams = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     }
-    
+
     NSMutableDictionary *imdic = [NSMutableDictionary dictionaryWithDictionary:_imParams];
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
@@ -418,14 +434,14 @@ typedef enum : NSUInteger {
         imParams = [[NSString alloc] initWithData:imJsonData encoding:NSUTF8StringEncoding];
     }
     NSString *realtorDeUrl = contactPhone.realtorDetailUrl;
-//    realtorDeUrl = [realtorDeUrl stringByReplacingOccurrencesOfString:@"https://i.haoduofangs.com" withString:@"http://10.1.15.29:8889"];
+    //    realtorDeUrl = [realtorDeUrl stringByReplacingOccurrencesOfString:@"https://i.haoduofangs.com" withString:@"http://10.1.15.29:8889"];
     NSString *jumpUrl =@"";
     if (isEmptyString(realtorDeUrl)) {
         jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     } else {
         jumpUrl = [NSString stringWithFormat:@"%@&report_params=%@",realtorDeUrl,reportParams ? : @""];
     }
-//    jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
+    //    jumpUrl = [NSString stringWithFormat:@"%@/f100/client/realtor_detail?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     NSMutableDictionary *info = @{}.mutableCopy;
     info[@"url"] = jumpUrl;
     info[@"title"] = @"经纪人主页";
@@ -435,22 +451,31 @@ typedef enum : NSUInteger {
     info[@"house_id"] = _houseId;
     info[@"house_type"] = @(_houseType);
 
-    
-//    NSURL *openUrlRn = [NSURL URLWithString:@"sslocal://old_house_detail?house_id=6677801611777016076&house_type=2&realtor_id=443834881285051&report_params=undefined"];
 
-    NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&channelName=FHRNAgentDetailModule&debug=1&report_params=%@&im_params=%@",contactPhone.realtorId,[FHUtils getJsonStrFrom:self.tracerDict],[FHUtils getJsonStrFrom:imParams]]];
-    
+    //    NSURL *openUrlRn = [NSURL URLWithString:@"sslocal://old_house_detail?house_id=6677801611777016076&house_type=2&realtor_id=443834881285051&report_params=undefined"];
+
+    NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&can_multi_preload=1&channelName=FHRNAgentDetailModule&debug=1&report_params=%@&im_params=%@",contactPhone.realtorId,[FHUtils getJsonStrFrom:self.tracerDict],[FHUtils getJsonStrFrom:imParams]]];
+
 
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
-//    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];
-//
+    //    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];
+    //
     TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
-    if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
-        [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+    if (isPre) {
+        self.routeAgentObj = routeObj;
+        return nil;
+    }else
+    {
+        return routeObj;
     }
-    
 }
 
+- (void)destoryRNPreloadCache
+{
+    if ([self.routeAgentObj.instance respondsToSelector:@selector(destroyRNView)]) {
+        [self.routeAgentObj.instance performSelector:@selector(destroyRNView) withObject:nil];
+    }
+}
 
 - (void)callPhone:(NSString *)phone
 {
@@ -574,6 +599,9 @@ typedef enum : NSUInteger {
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 
-
+- (void)dealloc
+{
+    NSLog(@"phonecall model dealloc");
+}
 
 @end

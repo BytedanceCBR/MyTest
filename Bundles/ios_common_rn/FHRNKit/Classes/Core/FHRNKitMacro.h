@@ -22,6 +22,7 @@
 #define FHRN_BUNDLE_NATIVE_TITLE @"bundle_native_title"
 #define FHRN_BUNDLE_SUPPORT_ANIM @"support_local_anim"
 #define FHRN_BUNDLE_NEED_TOOLBAR @"bundle_need_toolbar"
+#define FHRN_CAN_PRE_LOAD @"can_multi_preload"
 
 
 #endif /* FHRNKitMacro_h */

@@ -23,7 +23,7 @@
 @implementation FHRNBridgePlugin
 
 + (TTBridgeInstanceType)instanceType {
-    return TTBridgeInstanceTypeAssociated;
+    return TTBridgeInstanceTypeNormal;
 }
 
 + (void)load {
@@ -181,10 +181,13 @@
 
     if (!isEmptyString(openURL)) {
         NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        if(openUrlResultUTF8)
-        {
-            [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
-        }
+        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlResultUTF8 userInfo:nil];
+        [currentVC.navigationController pushViewController:routeObj.instance animated:YES];
+ 
+//        if(openUrlResultUTF8)
+//        {
+//            [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
+//        }
         return;
     }
     
