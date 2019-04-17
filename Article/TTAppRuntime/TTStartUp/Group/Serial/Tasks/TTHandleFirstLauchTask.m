@@ -49,6 +49,8 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
      [TTSandBoxHelper setAppFirstLaunch];
+    [TTSandBoxHelper setAppFirstLaunchForAd];
+
 }
 
 @end

@@ -37,8 +37,12 @@
 #import "TTInstallIDManager.h"
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
+#import "FHCommutePOISearchViewController.h"
+#import "FHCommuteManager.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import <AMapLocationKit/AMapLocationKit.h>
 
-@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate>
+@interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
 @property(nonatomic , weak) FHErrorView *maskView;
 @property (nonatomic , weak) FHHouseListRedirectTipView *redirectTipView;
@@ -80,6 +84,7 @@
 @property (nonatomic , strong) NSString * subScribeQuery;
 @property (nonatomic , strong) NSDictionary * subScribeShowDict;
 @property (nonatomic , assign) BOOL isShowSubscribeCell;
+
 
 @end
 
@@ -180,6 +185,11 @@
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
 
+        if ([paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
+            self.houseType = FHHouseTypeRentHouse;
+            self.commute = YES;
+        }
+        
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
@@ -255,6 +265,9 @@
                 dic[@"query_type"] = @"filter";
                 self.houseSearchDic = dic;
             }
+        }else if (self.isCommute && self.houseSearchDic.count <= 0){
+             NSString *searchKey = [FHCommuteManager sharedInstance].destLocation;
+            self.houseSearchDic = @{@"query_type":@"mutiple",UT_PAGE_TYPE:[self pageTypeString]};
         }
         self.tableView.mj_footer.hidden = YES;
         [self.houseShowCache removeAllObjects];
@@ -269,6 +282,10 @@
     
     NSString *searchId = self.searchId;
 
+    if (self.isCommute) {
+        [self requestCommute:isRefresh query:query offset:offset searchId:searchId];
+        return;
+    }
     
     switch (self.houseType) {
         case FHHouseTypeNewHouse:
@@ -284,7 +301,6 @@
             break;
             
         case FHHouseTypeRentHouse:
-            
             [self requestRentHouseListData:isRefresh query:query offset:offset searchId:searchId];
             break;
             
@@ -383,6 +399,35 @@
     }];
     
     self.requestTask = task;
+}
+
+-(void)requestCommute:(BOOL)isRefresh query:(NSString *)query offset:(NSInteger)offset searchId:(NSString *)searchId {
+    
+    [_requestTask cancel];
+    
+    if (isRefresh) {
+        self.isRefresh = isRefresh;
+    }
+    
+    NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    CLLocationCoordinate2D location = CLLocationCoordinate2DMake(manager.latitude, manager.longitude);
+    CGFloat duration = manager.duration.floatValue*60;
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[@"page_type"] = @"rent_list";
+    if (searchId.length > 0) {
+        param[@"search_id"] = searchId;
+    }
+    
+    __weak typeof(self) wself = self;
+    TTHttpTask *task = [FHHouseListAPI requestCommute:cityId query:query location:location houseType:_houseType duration:duration type:manager.commuteType param:param offset:offset completion:^(FHHouseRentModel * _Nullable model, NSError * _Nullable error) {
+        if (!wself) {
+            return ;
+        }
+        [wself processData:model error:error];
+    }];
+    
+    _requestTask = task;
 }
 
 - (void)requestAddSubScribe:(NSString *)text
@@ -603,29 +648,10 @@
             redirectTips = houseModel.redirectTips;
 
         }
-        // 二手房、租房应该有 houseListOpenUrl
-        if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
-            if (self.houseListOpenUrl.length <= 0) {
-                NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
-                // device_id
-                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
-                if (did.length == 0) {
-                    did = @"null";
-                }
-                NSString *currentBundleStr = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-                // 房源类型-did-channel-版本号
-                NSString *info_detail = [NSString stringWithFormat:@"%@-%@-%@-%@",res,did,[[TTInstallIDManager sharedInstance] channel],currentBundleStr];
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
-                                                        metric:nil
-                                                      category:@{@"status":@(0),@"house_type":res,@"info_detail":info_detail}
-                                                         extra:@{@"device_id":did}];
-            }
-        }
         
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
    
-
             self.isFirstLoad = NO;
             if (self.searchId.length > 0 ) {
                 SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
@@ -830,7 +856,13 @@
     if (self.closeConditionFilter) {
         self.closeConditionFilter();
     }
+    
     [self addClickHouseSearchLog];
+    
+    if (self.isCommute) {
+        [self showPoiSearch];
+        return;
+    }
     
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //house_search
@@ -853,6 +885,63 @@
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }
+
+-(void)showPoiSearch {
+    
+    //commute_poi
+    
+    NSURL *url = [NSURL URLWithString:@"sslocal://commute_poi"];
+    
+    NSHashTable *delegate = WRAP_WEAK(self);
+    NSDictionary *param = @{COMMUTE_POI_DELEGATE_KEY:delegate};
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
+    
+    [[TTRoute sharedRoute]openURLByViewController:url userInfo:userInfo];
+    
+}
+
+#pragma mark - poi search delegate
+
+-(void)userChoosePoi:(AMapAOI *)poi inViewController:(UIViewController *)viewController
+{
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    manager.latitude = poi.location.latitude;
+    manager.longitude = poi.location.longitude;
+    manager.destLocation = poi.name;
+    [manager sync];
+    
+    if (self.commuteSugSelectBlock) {
+        self.commuteSugSelectBlock(poi.name);
+        self.commutePoi = poi.name;
+    }
+    [viewController.navigationController popViewControllerAnimated:YES];
+    
+    [self loadData:YES fromRecommend:NO];
+    
+}
+
+-(void)userChooseLocation:( CLLocation * )location geoCode:(AMapLocationReGeocode *)geoCode inViewController:(UIViewController *)viewController
+{
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    manager.latitude = location.coordinate.latitude;
+    manager.longitude = location.coordinate.longitude;
+    manager.destLocation = geoCode.AOIName;
+    [manager sync];
+    
+    if (self.commuteSugSelectBlock) {
+        self.commuteSugSelectBlock(geoCode.AOIName);
+        self.commutePoi = geoCode.AOIName;
+    }
+    [viewController.navigationController popViewControllerAnimated:YES];
+    
+    [self loadData:YES fromRecommend:NO];
+}
+
+-(void)userCanced:(UIViewController *)viewController
+{
+    [viewController.navigationController popViewControllerAnimated:YES];
+}
+
 
 #pragma mark 地图找房
 -(void)showMapSearch {
@@ -973,6 +1062,9 @@
     }
 }
 
+
+#pragma mark -
+
 -(void)resetCondition {
     //    self.resetConditionBlock(nil);
 }
@@ -1036,7 +1128,13 @@
                         }
                     }
                     
-                    [cell refreshTopMargin: 20];
+                    CGFloat topMargin = 20;
+                    if (self.isCommute && indexPath.row == 0) {
+                        //通勤找房 筛选器没有底部线
+                        topMargin = 10;
+                    }
+                    
+                    [cell refreshTopMargin: topMargin];
                     [cell updateWithHouseCellModel:cellModel];
                 }
                 return cell;
@@ -1118,29 +1216,18 @@
                 }
                 
                 isLastCell = (indexPath.row == self.houseList.count - 1);
-                
-//                if (indexPath.row < self.houseList.count) {
-//
-//                    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-//                    CGFloat height = [[tableView fd_indexPathHeightCache] heightForIndexPath:indexPath];
-//                    if (height < 1) {
-//                        height = [tableView fd_heightForCellWithIdentifier:kFHHouseListCellId cacheByIndexPath:indexPath configuration:^(FHSingleImageInfoCell *cell) {
-//
-//                            [cell updateWithHouseCellModel:cellModel];
-//                            [cell refreshTopMargin: 20];
-//                            [cell refreshBottomMargin:isLastCell ? 20 : 0];
-//
-//                        }];
-//                    }
-//                    return height;
-//                }
             } else {
                 isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
                 cellModel = self.sugesstHouseList[indexPath.row];
             }
             
+            CGFloat normalHeight = 105;
+            if (self.isCommute && indexPath.row == 0) {
+                normalHeight = 95;//通勤找房第一个缩小间距
+            }
+            
             CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-            return (isLastCell ? 125 : 105)+reasonHeight;
+            return (isLastCell ? 125 : normalHeight)+reasonHeight;
         }
     }
 
@@ -1243,6 +1330,15 @@
     }
     
 }
+
+#pragma mark - commute
+-(void)commuteFilterUpdated
+{
+    self.isRefresh = YES;
+    [self loadData:YES fromRecommend:NO];
+    [self addCommuteSearchLog];
+}
+
 
 #pragma mark - 埋点相关
 -(NSMutableDictionary *)houseShowCache {
@@ -1433,16 +1529,21 @@
 - (void)addClickHouseSearchLog {
     NSMutableDictionary *params = [NSMutableDictionary new];
     if (self.fromFindTab) {
-        
         params[@"page_type"] = [self pageTypeStringByFindTab];
     }else {
-        
         params[@"page_type"] = [self pageTypeString];
     }
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
-    params[@"hot_word"] = @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
-    
+    if (self.isCommute) {
+        if (self.commutePoi.length == 0) {
+            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+            self.commutePoi = manager.destLocation;
+        }
+        params[@"selected_word"] = self.commutePoi?:UT_BE_NULL;
+    }else{
+        params[@"hot_word"] = @"be_null";
+    }
     TRACK_EVENT(@"click_house_search",params);
 }
 
@@ -1496,6 +1597,59 @@
     params[@"search_id"] =  self.searchId.length > 0 ? self.searchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
     TRACK_EVENT(@"house_rank",params);
+}
+
+-(void)addModifyCommuteLog:(BOOL)isShow
+{
+    if (isShow) {
+        [self addCommuteGoDetailLog];
+    }
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = [self pageTypeString];
+    param[UT_ENTER_FROM] = self.tracerModel.enterFrom;
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ?: UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    
+    TRACK_EVENT(isShow?@"click_modification":@"click_close", param);
+    
+}
+
+-(void)addCommuteSearchLog
+{
+    NSString *location = [FHCommuteManager sharedInstance].destLocation;
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = @"commuter_detail";
+    param[UT_HOUSE_TYPE] = @"rent";
+    param[UT_ENTER_FROM] = [self pageTypeString];
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom?:UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.tracerModel.originSearchId?:UT_BE_NULL;
+    
+    TRACK_EVENT(@"start_commute", param);
+    
+}
+
+-(void)addCommuteGoDetailLog
+{
+    /*
+     "1.event_type:house_app2c_v2
+     2.page_type:commuter_detail(通勤选项页）
+     3.enter_from:renting(从租房icon进入),rent_list（从修改进入）
+     4.element_from:commuter_info（从租房icon进入），be_null（从修改进入）
+     5.origin_from:commuter（通勤找房）
+     6. origin_search_id"
+     */
+    
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = @"commuter_detail";
+    param[UT_ENTER_FROM] = [self pageTypeString];
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ?: UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    
+    TRACK_EVENT(@"go_detail", param);
 }
 
 -(NSDictionary *)categoryLogDict {

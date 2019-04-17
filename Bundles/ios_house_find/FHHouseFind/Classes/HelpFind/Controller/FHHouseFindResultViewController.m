@@ -68,11 +68,7 @@
     } else {
         // Fallback on earlier versions
     }
-    //    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-    //        make.left.right.mas_equalTo(self.view);
-    //        make.height.mas_equalTo(60);
-    //        make.bottom.mas_equalTo(self.view).offset(-bottomHeight);
-    //    }];
+
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.equalTo(self.view);

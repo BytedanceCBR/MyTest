@@ -309,10 +309,19 @@
         {
             NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
             if (report_params_dic) {
-                if (report_params_dic[@"log_pb"]) {
-                    NSDictionary *logPb = [self getDictionaryFromJSONString:report_params_dic[@"log_pb"]];
-                    if (logPb) {
-                        self.tracerDict[@"log_pb"] = logPb;
+                NSDictionary *report_params_dic = [self getDictionaryFromJSONString:report_params];
+                if (report_params_dic) {
+                    NSString *log_pb = report_params_dic[@"log_pb"];
+                    if (log_pb) {
+                        if ([log_pb isKindOfClass:[NSString class]]) {
+                            NSDictionary *logPb = [self getDictionaryFromJSONString:log_pb];
+                            if (logPb) {
+                                self.tracerDict[@"log_pb"] = logPb;
+                            }
+                        }else if ([log_pb isKindOfClass:[NSDictionary class]])
+                        {
+                            self.tracerDict[@"log_pb"] = log_pb;
+                        }
                     }
                 }
             }
