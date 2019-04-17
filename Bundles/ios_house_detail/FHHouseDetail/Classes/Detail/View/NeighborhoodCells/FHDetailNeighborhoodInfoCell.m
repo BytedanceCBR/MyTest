@@ -97,6 +97,9 @@
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
         }];
+        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(46 + self.topHeight);
+        }];
         [self updateSchoolView:model.rent_neighborhoodInfo.schoolDictList];
     }
 }
@@ -123,6 +126,9 @@
         self.topHeight = topHeight;
         [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topHeight);
+        }];
+        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(46 + self.topHeight);
         }];
         [self updateSchoolView:model.neighborhoodInfo.schoolDictList];
     }
