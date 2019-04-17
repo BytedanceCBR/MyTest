@@ -19,6 +19,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFloorPanPicShowViewController.h"
+#import "FHDetailPictureNavView.h"
 
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 40.f
@@ -46,6 +47,7 @@
 @property(nonatomic, strong)NSMutableSet * photoViewPools;
 
 @property(nonatomic, strong)UIView * topBar;
+@property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
 
 @property(nonatomic, strong)UIView * bottomBar;
 
@@ -158,6 +160,12 @@
     _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, kFHDPTopBarHeight)];
     _topBar.backgroundColor = [UIColor clearColor];
     [self.view addSubview:_topBar];
+    __weak typeof(self) weakSelf = self;
+    _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight)];
+    _naviView.backActionBlock = ^{
+        [weakSelf finished];
+    };
+    [_topBar addSubview:_naviView];
     
     // layout
     NSInteger maxIndex = MAX(MAX([_imageInfosModels count], [_imageURLs count]), MAX([_images count], [_assetsImages count]))-1;
