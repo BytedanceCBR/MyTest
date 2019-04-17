@@ -54,15 +54,22 @@
             //json字符串
             NSData *jsonData = [stringJson dataUsingEncoding:NSUTF8StringEncoding];
             NSError *err;
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                                options:NSJSONReadingMutableContainers
-                                                                  error:&err];
-            if(!err){
-                params = dic;
+           
+            @try {
+                NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                    options:NSJSONReadingMutableContainers
+                                                                      error:&err];
+                if(!err){
+                    params = dic;
+                }
+            } @catch (NSException *exception) {
+                
+            } @finally {
+                
             }
         }else
         {
-            return;
+            params = nil;
         }
     }
     

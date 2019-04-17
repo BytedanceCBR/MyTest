@@ -184,6 +184,7 @@
                            @"saleHistoryFilter": @"sale_history_filter",
                            @"rentBanner": @"rent_banner",
                            @"entranceSwitch": @"entrance_switch",
+                           @"houseTypeDefault":@"house_type_default",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
