@@ -198,7 +198,8 @@
     NSMutableArray *shareContentItems = @[].mutableCopy;
     if(TTAccountManager.isLogin &&
        (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) &&
-       self.imShareInfo != nil) {
+       self.imShareInfo != nil &&
+       [self hasImUser]) {
         FHIMShareItem* fhImShareItem = [[FHIMShareItem alloc] init];
         fhImShareItem.imShareInfo = self.imShareInfo;
         fhImShareItem.tracer = self.tracerDict;
@@ -220,6 +221,10 @@
     }
 
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
+}
+
+-(BOOL)hasImUser {
+    return [[IMManager shareInstance].chatService numberOfItems] > 0;
 }
 
 - (void)messageAction {
