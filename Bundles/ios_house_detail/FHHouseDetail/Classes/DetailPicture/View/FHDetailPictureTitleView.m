@@ -53,18 +53,6 @@
     [self addSubview:_colletionView];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-}
-
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesCancelled:touches withEvent:event];
-}
-
 - (void)setSelectIndex:(NSInteger)selectIndex {
     if (_selectIndex != selectIndex) {
         [self.colletionView reloadData];
@@ -85,6 +73,18 @@
         }
     }
     return titleIndex;
+}
+
+- (NSInteger)currentSelectIndexByTitleIndex:(NSInteger)titleIndex {
+    NSInteger currentSelectIndex = 0;
+    if (titleIndex >= 0 && titleIndex < self.titleNums.count) {
+        for (int i = 0; i < titleIndex; i++) {
+            NSNumber *num = self.titleNums[i];
+            NSInteger tempCount = [num integerValue];
+            currentSelectIndex += tempCount;
+        }
+    }
+    return currentSelectIndex;
 }
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -131,7 +131,15 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    NSInteger index = indexPath.row;
+    if (index >= 0 && index < self.titleNums.count) {
+        NSInteger currentSelectIndex = [self currentSelectIndexByTitleIndex:index];
+        self.selectIndex = currentSelectIndex;
+        // 回传给VC
+        if (self.currentIndexBlock) {
+            self.currentIndexBlock(currentSelectIndex);
+        }
+    }
 }
 
 

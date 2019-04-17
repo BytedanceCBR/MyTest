@@ -176,6 +176,12 @@
     [self.view addSubview:_pictureTitleView];
     self.pictureTitleView.titleNames = self.pictureTitles;
     self.pictureTitleView.titleNums = self.pictureNumbers;
+    self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
+        if (currentIndex >= 0 && currentIndex < weakSelf.photoCount) {
+            CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
+            [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * currentIndex, 0) animated:NO];
+        }
+    };
     
     // layout
     NSInteger maxIndex = MAX(MAX([_imageInfosModels count], [_imageURLs count]), MAX([_images count], [_assetsImages count]))-1;

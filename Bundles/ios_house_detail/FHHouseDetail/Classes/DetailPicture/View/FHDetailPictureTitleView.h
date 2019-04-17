@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign)   NSInteger       selectIndex;// 选中的索引
 
+@property(nonatomic, copy) void (^currentIndexBlock)(NSInteger currentIndex);
+
 @end
 
 @interface FHDetailPictureTitleCell : UICollectionViewCell
