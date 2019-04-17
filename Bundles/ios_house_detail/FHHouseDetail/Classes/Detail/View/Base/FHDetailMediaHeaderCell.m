@@ -18,6 +18,8 @@
 @property(nonatomic , strong) FHMultiMediaScrollView *mediaView;
 @property(nonatomic , strong) FHMultiMediaModel *model;
 @property (nonatomic, strong)   NSMutableArray       *imageList;
+@property(nonatomic, assign) BOOL isLarge;
+@property(nonatomic, assign) NSInteger currentIndex;
 
 @end
 
@@ -183,12 +185,13 @@
     vc.placeholderSourceViewFrames = frames;
     vc.placeholders = placeholders;
     vc.indexUpdatedBlock = ^(NSInteger lastIndex, NSInteger currentIndex) {
-//        if (currentIndex >= 0 && currentIndex < weakSelf.images.count) {
-//            weakSelf.currentIndex = currentIndex;
-//            weakSelf.isLarge = YES;
-//            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
-//            [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-//        }
+        if (currentIndex >= 0 && currentIndex < weakSelf.model.medias.count) {
+            weakSelf.currentIndex = currentIndex;
+            weakSelf.isLarge = YES;
+            NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
+            [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            [weakSelf.mediaView updateItemAndInfoLabel];
+        }
     };
     
     [vc presentPhotoScrollViewWithDismissBlock:^{

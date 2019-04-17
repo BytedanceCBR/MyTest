@@ -135,6 +135,10 @@
     return index;
 }
 
+- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
+    [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+}
+
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
@@ -189,7 +193,11 @@
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    NSInteger curPage = (NSInteger)(scrollView.contentOffset.x / scrollView.frame.size.width);
+    [self updateItemAndInfoLabel];
+}
+
+- (void)updateItemAndInfoLabel {
+    NSInteger curPage = (NSInteger)(self.colletionView.contentOffset.x / self.colletionView.frame.size.width);
     if (_medias.count > 1) {
         NSIndexPath *indexPath = nil;
         if (curPage == 0) {
