@@ -202,7 +202,9 @@
        [self hasImUser]) {
         FHIMShareItem* fhImShareItem = [[FHIMShareItem alloc] init];
         fhImShareItem.imShareInfo = self.imShareInfo;
-        fhImShareItem.tracer = self.tracerDict;
+        NSMutableDictionary* dict = [self.tracerDict mutableCopy];
+        dict[@"enter_from"] = dict[@"page_type"];
+        fhImShareItem.tracer = dict;
         [shareContentItems addObject:fhImShareItem];
     }
 
