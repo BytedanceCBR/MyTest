@@ -18,9 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMultiMediaScrollView : UIView
 
+@property(nonatomic , weak) id<FHMultiMediaScrollViewDelegate> delegate;
+
 - (void)updateWithModel:(FHMultiMediaModel *)model;
 
-@property(nonatomic , weak) id<FHMultiMediaScrollViewDelegate> delegate;
+- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
+
+- (void)updateItemAndInfoLabel;
 
 @end
 
