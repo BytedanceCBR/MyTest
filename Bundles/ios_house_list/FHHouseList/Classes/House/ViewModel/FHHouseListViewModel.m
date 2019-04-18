@@ -1304,6 +1304,7 @@
         if (indexPath.row < self.houseList.count) {
 
             FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            [self addDealGoDetailLog:cellModel withRank:indexPath.row];
             [self jump2NeighborhoodDealPage:cellModel];
         }
         return;
@@ -1621,6 +1622,9 @@
 
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime {
     
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        return;
+    }
     NSTimeInterval duration = stayTime * 1000.0;
     if (duration == 0) {//当前页面没有在展示过
         return;
@@ -1640,6 +1644,7 @@
     }
     params[@"origin_search_id"] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     params[@"origin_from"] = self.originFrom.length > 0 ? self.originFrom : @"be_null";
+
     if (self.isCommute) {
         if (self.commutePoi.length == 0) {
             FHCommuteManager *manager = [FHCommuteManager sharedInstance];
@@ -1648,6 +1653,10 @@
         params[@"selected_word"] = self.commutePoi?:UT_BE_NULL;
     }else{
         params[@"hot_word"] = @"be_null";
+    }
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        params[@"selected_word"] = nil;
+        params[@"hot_word"] = nil;
     }
     TRACK_EVENT(@"click_house_search",params);
 }
@@ -1706,6 +1715,9 @@
 
 -(void)addModifyCommuteLog:(BOOL)isShow
 {
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        return;
+    }
     if (isShow) {
         [self addCommuteGoDetailLog];
     }
@@ -1755,6 +1767,30 @@
     param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
     
     TRACK_EVENT(@"go_detail", param);
+}
+
+- (void)addDealGoDetailLog:(FHSingleImageInfoCellModel *)cellModel withRank: (NSInteger) rank
+{
+    /*
+     "event_type": "house_app2c_v2",
+     "group_id"
+     "origin_from": "neighborhood_trade",
+     "origin_search_id"
+     "page_type": "neighborhood_trade_list",
+     "rank":
+     "search_id"
+     "log_pb": "
+     */
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_GROUP_ID] = cellModel.groupId ? : @"be_null";
+    param[UT_ORIGIN_FROM] = self.tracerModel.originFrom ?: UT_BE_NULL;
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId.length > 0 ? self.originSearchId : @"be_null";
+    param[UT_PAGE_TYPE] = [self pageTypeString];
+    param[UT_RANK] = @(rank);
+    param[UT_SEARCH_ID] = cellModel.neighborModel.searchId ? : @"be_null";
+    param[UT_LOG_PB] = cellModel.logPb ? : @"be_null";
+    TRACK_EVENT(@"click_house_deal", param);
+    
 }
 
 -(NSDictionary *)categoryLogDict {

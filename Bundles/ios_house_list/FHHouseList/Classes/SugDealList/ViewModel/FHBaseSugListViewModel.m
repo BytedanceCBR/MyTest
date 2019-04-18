@@ -136,7 +136,24 @@
                 NSString *neigbordId = model.info.neigbordId;
                 [self cellDidClick:originText neigbordId:neigbordId];
             }else if (self.searchType == FHSugListSearchTypeNeighborDealList) {
-                [self jumpToDealListVCByUrl:model.openUrl infoDict:nil];
+                NSString *pageType = [self pageTypeString];
+                NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
+                NSString *queryType = @"associate"; // 订阅搜索
+                NSDictionary *houseSearchParams = @{
+                                                    @"enter_query":queryText,
+                                                    @"search_query":queryText,
+                                                    @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                                    @"query_type":queryType
+                                                    };
+                NSMutableDictionary *infos = [NSMutableDictionary new];
+                infos[@"houseSearch"] = houseSearchParams;
+                
+                NSMutableDictionary *tracer = [NSMutableDictionary new];
+                if (self.listController.tracerDict[@"origin_from"]) {
+                    tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
+                }
+                infos[@"tracer"] = tracer;
+                [self jumpToDealListVCByUrl:model.openUrl infoDict:infos];
             }
         }
     }
@@ -318,5 +335,12 @@
     }
 }
 
+- (NSString *)pageTypeString
+{
+    if (self.searchType == FHSugListSearchTypeNeighborDealList) {
+        return @"neighborhood_trade_list";
+    }
+    return @"be_null";
+}
 
 @end
