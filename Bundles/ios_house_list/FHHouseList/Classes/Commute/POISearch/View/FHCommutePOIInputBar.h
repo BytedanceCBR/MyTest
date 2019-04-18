@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 -(void)inputBarCancel;
 -(void)textFieldClear;
+-(void)textFieldChanged:(NSString *)value;
 
 @end
 
