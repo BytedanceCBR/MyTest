@@ -23,7 +23,7 @@
 #import "FHDetailPictureTitleView.h"
 
 #define kFHDPTopBarHeight 44.f
-#define kFHDPBottomBarHeight 40.f
+#define kFHDPBottomBarHeight 54.f
 
 #define kFHDPMoveDirectionStartOffset 20.f
 
@@ -54,6 +54,8 @@
 @property (nonatomic, strong)   NSArray       *pictureNumbers;
 
 @property(nonatomic, strong)UIView * bottomBar;
+@property (nonatomic, strong)   UIButton       *onlineBtn;
+@property (nonatomic, strong)   UIButton       *contactBtn;
 
 @property(nonatomic, strong)UIPanGestureRecognizer * panGestureRecognizer;
 @property(nonatomic, strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
@@ -183,6 +185,46 @@
         }
     };
     
+    _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
+    _bottomBar.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_bottomBar];
+    
+    if (self.mediaHeaderModel.contactViewModel) {
+        CGFloat itemWidth = self.view.width - 40;
+        BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
+        if (showenOnline) {
+            itemWidth = (itemWidth - 15) / 2.0;
+            // 在线联系
+            UIButton *online = self.onlineBtn;
+            if (self.mediaHeaderModel.contactViewModel.onLineName.length > 0) {
+                NSString *title = self.mediaHeaderModel.contactViewModel.onLineName;
+                [online setTitle:title forState:UIControlStateNormal];
+                [online setTitle:title forState:UIControlStateHighlighted];
+            }
+            online.frame = CGRectMake(20, 0, itemWidth, 44);
+            [self.bottomBar addSubview:online];
+            // 电话咨询
+            UIButton *contact = self.contactBtn;
+            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                [contact setTitle:title forState:UIControlStateNormal];
+                [contact setTitle:title forState:UIControlStateHighlighted];
+            }
+            contact.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
+            [self.bottomBar addSubview:contact];
+        } else {
+            // 电话咨询
+            UIButton *contact = self.contactBtn;
+            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                [contact setTitle:title forState:UIControlStateNormal];
+                [contact setTitle:title forState:UIControlStateHighlighted];
+            }
+            contact.frame = CGRectMake(20, 0, itemWidth, 44);
+            [self.bottomBar addSubview:contact];
+        }
+    }
+    
     // layout
     NSInteger maxIndex = MAX(MAX([_imageInfosModels count], [_imageURLs count]), MAX([_images count], [_assetsImages count]))-1;
     _startWithIndex = MAX(0, MIN(maxIndex, _startWithIndex));
@@ -216,6 +258,34 @@
     if (self.albumImageStayBlock) {
         self.albumImageStayBlock(self.currentIndex,stayTime);
     }
+}
+
+- (UIButton *)onlineBtn {
+    if (!_onlineBtn) {
+        _onlineBtn = [[UIButton alloc] init];
+        _onlineBtn.layer.cornerRadius = 4;
+        _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _onlineBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
+        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
+        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        [_onlineBtn setTitle:@"在线联系" forState:UIControlStateNormal];
+        [_onlineBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
+    }
+    return _onlineBtn;
+}
+
+- (UIButton *)contactBtn {
+    if (!_contactBtn) {
+        _contactBtn = [[UIButton alloc] init];
+        _contactBtn.layer.cornerRadius = 4;
+        _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
+        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
+        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
+        [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
+    }
+    return _contactBtn;
 }
 
 - (void)viewWillLayoutSubviews
