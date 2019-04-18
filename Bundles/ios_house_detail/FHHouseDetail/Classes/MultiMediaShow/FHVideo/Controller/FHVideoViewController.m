@@ -43,4 +43,8 @@
     [self.videoView updateData:model];
 }
 
+- (void)play {
+    [self.videoView play];
+}
+
 @end

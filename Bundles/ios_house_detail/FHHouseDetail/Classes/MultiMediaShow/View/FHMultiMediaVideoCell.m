@@ -40,10 +40,11 @@
     _coverView.contentMode = UIViewContentModeScaleAspectFill;
     _coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     [self.contentView addSubview:_coverView];
-    
-    self.startBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
-    _startBtn.center = self.center;
+
+    self.startBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.bounds.size.width/2 - 30, self.bounds.size.height/2 - 30, 60, 60)];
     [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
+    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateHighlighted];
+    [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_startBtn];
 }
 
@@ -61,6 +62,12 @@
     NSString *imgStr = model.imageUrl;
     NSURL *url = [NSURL URLWithString:imgStr];
     [self.coverView bd_setImageWithURL:url placeholder:self.placeHolder];
+}
+
+- (void)playVideo {
+    self.coverView.hidden = YES;
+    self.startBtn.hidden = YES;
+    [self.videoVC play];
 }
 
 @end

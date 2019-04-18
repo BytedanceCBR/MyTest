@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index;
 
+- (void)selectItem:(NSString *)title;
+
 @end
 
 @interface FHMultiMediaScrollView : UIView
