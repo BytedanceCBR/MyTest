@@ -162,12 +162,17 @@
     _photoScrollView.showsHorizontalScrollIndicator = YES;
     
     [self.view addSubview:_photoScrollView];
-    
-    _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, kFHDPTopBarHeight)];
-    _topBar.backgroundColor = [UIColor clearColor];
+    CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
+    _topBar.backgroundColor = [UIColor colorWithHexStr:@"#151515"]; // [UIColor clearColor];
     [self.view addSubview:_topBar];
     __weak typeof(self) weakSelf = self;
-    _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight)];
+    _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
     _naviView.backActionBlock = ^{
         [weakSelf finished];
     };
@@ -334,7 +339,8 @@
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
     self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
-    self.topBar.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
+    self.topBar.frame = CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset);
+    self.naviView.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
     self.pictureTitleView.frame = CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42);
     [self.pictureTitleView.colletionView reloadData];
 }
@@ -343,6 +349,16 @@
 {
     [super viewWillAppear:animated];
     [self setCurrentStatusStyle];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self setCurrentStatusStyle];
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf setCurrentStatusStyle];
+    });
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
