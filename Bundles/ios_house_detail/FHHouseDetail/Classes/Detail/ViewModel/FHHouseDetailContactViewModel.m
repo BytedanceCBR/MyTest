@@ -441,7 +441,7 @@
     } else if ([activity isKindOfClass:[FHIMShareActivity class]]) {
         platform = @"realtor";
     } else if ([activity isKindOfClass:[TTCopyContentItem class]]) {
-        platform = @"link";
+        platform = @"copy";
     }
     [self addShareFormLog:platform];
 }

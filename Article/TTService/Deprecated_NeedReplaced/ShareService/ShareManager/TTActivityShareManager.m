@@ -1731,7 +1731,8 @@ static BOOL isMovieFullScreen;
         return @"share_twitter";
     }
     else if (activityType == TTActivityTypeCopy) {
-        return @"share_copy_link";
+        return @"copy";
+//        return @"share_copy_link";
     }
     else if (activityType == TTActivityTypeWeixinShare) {
         return @"weixin";
