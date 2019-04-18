@@ -162,6 +162,7 @@
 {
     _belongsVC = belongsVC;
     _phoneCallViewModel.belongsVC = belongsVC;
+    _followUpViewModel.topVC = belongsVC;
 }
 
 - (void)followAction
