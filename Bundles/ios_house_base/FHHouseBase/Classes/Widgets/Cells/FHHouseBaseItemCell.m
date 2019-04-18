@@ -25,7 +25,7 @@
 #define MAIN_IMG_HEIGHT     85
 #define MAIN_TAG_BG_WIDTH   48
 #define MAIN_TAG_BG_HEIGHT  16
-#define MAIN_TAG_WIDTH      40
+#define MAIN_TAG_WIDTH      46
 #define MAIN_TAG_HEIGHT     10
 #define INFO_TO_ICON_MARGIN 12
 #define PRICE_BG_TOP_MARGIN 5
