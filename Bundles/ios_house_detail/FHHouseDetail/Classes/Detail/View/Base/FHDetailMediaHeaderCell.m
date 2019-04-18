@@ -11,6 +11,7 @@
 #import "FHDetailOldModel.h"
 #import "FHDetailPictureViewController.h"
 #import "FHUserTracker.h"
+#import "UIViewController+NavigationBarStyle.h"
 
 #define kHEIGHT 300
 
@@ -141,7 +142,7 @@
         return;
     }
     __weak typeof(self) weakSelf = self;
-    
+    self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.topVC = self.baseViewModel.detailController;
     vc.dragToCloseDisabled = YES;
