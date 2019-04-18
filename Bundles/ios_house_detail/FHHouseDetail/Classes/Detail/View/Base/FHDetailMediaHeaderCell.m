@@ -10,6 +10,7 @@
 #import "FHMultiMediaModel.h"
 #import "FHDetailOldModel.h"
 #import "FHDetailPictureViewController.h"
+#import "FHUserTracker.h"
 
 #define kHEIGHT 300
 
@@ -18,8 +19,10 @@
 @property(nonatomic , strong) FHMultiMediaScrollView *mediaView;
 @property(nonatomic , strong) FHMultiMediaModel *model;
 @property (nonatomic, strong)   NSMutableArray       *imageList;
+@property(nonatomic, strong) NSMutableDictionary *pictureShowDict;
 @property(nonatomic, assign) BOOL isLarge;
 @property(nonatomic, assign) NSInteger currentIndex;
+@property(nonatomic, assign) NSTimeInterval enterTimestamp;
 
 @end
 
@@ -53,6 +56,8 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _pictureShowDict = [NSMutableDictionary dictionary];
+        
         _imageList = [[NSMutableArray alloc] init];
         _mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kHEIGHT)];
         _mediaView.delegate = self;
@@ -143,10 +148,10 @@
     //    vc.mode = PhotosScrollViewSupportBrowse;
     vc.startWithIndex = index;
     vc.albumImageBtnClickBlock = ^(NSInteger index){
-//        [weakSelf enterPictureShowPictureWithIndex:index];
+        [weakSelf enterPictureShowPictureWithIndex:index];
     };
     vc.albumImageStayBlock = ^(NSInteger index,NSInteger stayTime) {
-//        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
+        [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
     
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
@@ -196,18 +201,127 @@
     };
     
     [vc presentPhotoScrollViewWithDismissBlock:^{
-//        weakSelf.isLarge = NO;
-//        [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
-//        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+        weakSelf.isLarge = NO;
+        [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
+        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
     
     vc.saveImageBlock = ^(NSInteger currentIndex) {
-//        [weakSelf trackSavePictureWithIndex:currentIndex];
+        [weakSelf trackSavePictureWithIndex:currentIndex];
     };
     
-//    self.isLarge = YES;
-//    [self trackPictureShowWithIndex:index];
-//    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+    self.isLarge = YES;
+    [self trackPictureShowWithIndex:index];
+    self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+}
+
+//埋点
+- (void)trackPictureShowWithIndex:(NSInteger)index {
+    FHMultiMediaItemModel *itemModel = _model.medias[index];
+    NSString *showType = self.isLarge ? @"large" : @"small";
+    NSString *row = [NSString stringWithFormat:@"%@_%i",showType,index];
+    self.isLarge = NO;
+    if (_pictureShowDict[row]) {
+        return;
+    }
+    
+    _pictureShowDict[row] = row;
+    
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = itemModel.imageUrl;
+        dict[@"show_type"] = showType;
+        TRACK_EVENT(@"picture_show", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
+    }
+}
+
+//埋点
+- (void)trackPictureLargeStayWithIndex:(NSInteger)index {
+    FHMultiMediaItemModel *itemModel = _model.medias[index];
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = itemModel.imageUrl;
+        dict[@"show_type"] = @"large";
+        
+        NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+        if (duration <= 0) {
+            return;
+        }
+        
+        dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+        self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+        TRACK_EVENT(@"picture_large_stay", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
+    }
+}
+
+//埋点
+- (void)trackSavePictureWithIndex:(NSInteger)index {
+    FHMultiMediaItemModel *itemModel = _model.medias[index];
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+        dict[@"picture_id"] = itemModel.imageUrl;
+        dict[@"show_type"] = @"large";
+        
+        NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTimestamp;
+        if (duration <= 0) {
+            return;
+        }
+        
+        dict[@"stay_time"] = [NSString stringWithFormat:@"%.0f",(duration*1000)];
+        TRACK_EVENT(@"picture_save", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
+    }
+}
+
+- (NSDictionary *)traceParamsForGallery:(NSInteger)index
+{
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    
+    if (_model.medias.count > index) {
+        FHMultiMediaItemModel *itemModel = _model.medias[index];
+        if(!dict){
+            dict = [NSMutableDictionary dictionary];
+        }
+        
+        if([dict isKindOfClass:[NSDictionary class]]){
+            [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from"]];
+            dict[@"picture_id"] = itemModel.imageUrl;
+            dict[@"show_type"] = @"large";
+        }
+    }
+    return dict;
+}
+
+//埋点
+- (void)enterPictureShowPictureWithIndex:(NSInteger)index {
+    NSMutableDictionary *dict = [self traceParamsForGallery:index];
+    TRACK_EVENT(@"picture_gallery", dict);
+}
+
+//埋点
+- (void)stayPictureShowPictureWithIndex:(NSInteger)index andTime:(NSInteger)stayTime {
+    NSMutableDictionary *dict = [self traceParamsForGallery:index];
+    dict[@"stay_time"] = [NSNumber numberWithInteger:stayTime * 1000];
+    TRACK_EVENT(@"picture_gallery_stay", dict);
 }
 
 
@@ -218,6 +332,10 @@
     if (index >= 0 && index < self.imageList.count) {
         [self showImagesWithCurrentIndex:index];
     }
+}
+
+- (void)willDisplayCellForItemAtIndex:(NSInteger)index {
+    [self trackPictureShowWithIndex:index];
 }
 
 @end
