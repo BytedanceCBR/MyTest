@@ -50,6 +50,10 @@
 
 - (void)requestSuggestion:(NSString *)text
 {
+    if (![TTReachability isNetworkConnected]) {
+        [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+        return;
+    }
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
     if (cityId) {
         // 小区搜索
@@ -177,7 +181,11 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    //
+    NSMutableString *content = [[NSMutableString alloc] initWithString:textField.text];
+    [content replaceCharactersInRange:range withString:string];
+    if (content.length > MAX_INPUT) {
+        return NO;
+    }
     return YES;
 }
 
@@ -185,8 +193,11 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    
-    [self requestSuggestion:textField.text];
+    NSString *content =  [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *result  =  [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (result.length > 0 && ![result isEqualToString:self.highlightedText]) {
+        [self requestSuggestion:textField.text];
+    }
     return YES;
 }
 
