@@ -40,6 +40,7 @@
         _searechField.returnKeyType = UIReturnKeyDone;
         _searechField.textColor = [UIColor themeGray1];
         _searechField.font = [UIFont themeFontRegular:14];
+        [_searechField addTarget:self action:@selector(textFieldChanged) forControlEvents:UIControlEventEditingChanged];
         
         UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
         UIImage * img = SYS_IMG(@"search_delete");
@@ -155,6 +156,13 @@
 {
     if ([self.delegate respondsToSelector:@selector(inputBarCancel)]) {
         [self.delegate inputBarCancel];
+    }
+}
+
+-(void)textFieldChanged
+{
+    if ([self.delegate respondsToSelector:@selector(textFieldChanged:)]) {
+        [self.delegate textFieldChanged:self.searechField.text];
     }
 }
 
