@@ -38,7 +38,7 @@
 #import "FHIMShareActivity.h"
 #import "FHIMShareItem.h"
 #import "TTAccountManager.h"
-
+#import "TTCopyContentItem.h"
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -222,6 +222,8 @@
         [shareContentItems addObject:qqZoneItem];
     }
 
+    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:webPageUrl];
+    [shareContentItems addObject:copyContentItem];
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
 }
 
@@ -430,14 +432,16 @@
     NSString *platform = @"be_null";
     if ([activity isKindOfClass:[TTWechatTimelineActivity class]]) {
         platform = @"weixin_moments";
-    }else if ([activity isKindOfClass:[TTWechatActivity class]]) {
+    } else if ([activity isKindOfClass:[TTWechatActivity class]]) {
         platform = @"weixin";
-    }else if ([activity isKindOfClass:[TTQQFriendActivity class]]) {
+    } else if ([activity isKindOfClass:[TTQQFriendActivity class]]) {
         platform = @"qq";
-    }else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
+    } else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
         platform = @"qzone";
-    }else if ([activity isKindOfClass:[FHIMShareActivity class]]) {
+    } else if ([activity isKindOfClass:[FHIMShareActivity class]]) {
         platform = @"realtor";
+    } else if ([activity isKindOfClass:[TTCopyContentItem class]]) {
+        platform = @"link";
     }
     [self addShareFormLog:platform];
 }

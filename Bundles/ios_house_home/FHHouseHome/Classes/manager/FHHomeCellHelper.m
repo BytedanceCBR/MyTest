@@ -623,7 +623,7 @@ static NSMutableArray  * _Nullable identifierArr;
 }
 
 + (void)fillFHHomeCityTrendCell:(FHHomeCityTrendCell *)cell withModel:(FHConfigDataCityStatsModel *)model {
-    
+    model.openUrl = @"sslocal://mapfind_house?center_latitude=34.7579750000&center_longitude=113.6654120000&house_type=2&resize_level=10&rm=a";
     WeakSelf;
     BOOL isFindHouse = [FHHomeCellHelper sharedInstance].headerType == FHHomeHeaderCellPositionTypeForFindHouse;
 

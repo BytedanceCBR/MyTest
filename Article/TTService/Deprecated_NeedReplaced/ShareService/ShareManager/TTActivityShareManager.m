@@ -288,7 +288,6 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     self.copyText = nil;
     self.facebookText = nil;
     self.twitterText = nil;
-    self.copyText = nil;
     self.copyContent = nil;
     self.hasImg = NO;
     self.itemTag = nil;
@@ -416,11 +415,11 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [_customActivities addObject:copyActivity];
     }
     //复制链接
-    if (!isEmptyString(_copyText)) {
+//    if (!isEmptyString(_copyText)) {
         TTActivity * copyActivity = [TTActivity activityOfCopy];
         [_customActivities addObject:copyActivity];
-    }
-    
+//    }
+
     if (!isAccountUser) {
         //举报
         TTActivity *reportActivity = [TTActivity activityOfReport];
@@ -616,11 +615,11 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [_customActivities addObject:copyActivity];
     }
     //复制链接
-    if (!isEmptyString(_copyText)) {
+//    if (!isEmptyString(_copyText)) {
         TTActivity * copyActivity = [TTActivity activityOfCopy];
         [_customActivities addObject:copyActivity];
-    }
-    
+//    }
+
     if (containReport) {
         //举报
         TTActivity * reportActivity = [TTActivity activityOfReport];

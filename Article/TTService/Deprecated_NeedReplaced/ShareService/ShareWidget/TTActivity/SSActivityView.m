@@ -547,7 +547,7 @@
  */
 - (NSArray *)groupedItemsUseShareGroupOnly:(BOOL)useShareGroupOnly
 {
-    TTActivityType splitType = TTActivityTypeSystem;
+    TTActivityType splitType = TTActivityTypePGC;
     for (TTActivity * activity in self.activityItems) {
         if (activity.activityType >= TTActivityTypePGC && activity.activityType != TTActivityTypeReport && activity.activityType != TTActivityTypeDetele) {
             splitType = TTActivityTypePGC;
@@ -741,7 +741,7 @@
         case TTActivityTypeQQWeibo:
         case TTActivityTypeSinaWeibo:
         case TTActivityTypeSystem:
-        case TTActivityTypeCopy:
+//        case TTActivityTypeCopy:
         case TTActivityTypeMessage:
         case TTActivityTypeCommodity:
         case TTActivityTypePromotion:
