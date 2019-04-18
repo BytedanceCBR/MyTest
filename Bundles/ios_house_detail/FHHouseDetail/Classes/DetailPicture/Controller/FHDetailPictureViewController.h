@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 // 支持房源图片以及视频相关功能
 @interface FHDetailPictureViewController : FHBaseViewController
 
+@property (nonatomic, weak)     UIViewController       *topVC;
 /** 当前index */
 @property(nonatomic, assign, readonly)NSInteger currentIndex;
 /** 打开的时候需要展示的index */

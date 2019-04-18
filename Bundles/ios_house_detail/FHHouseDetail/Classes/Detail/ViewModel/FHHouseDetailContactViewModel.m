@@ -35,7 +35,8 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
-
+#import <TTAccountSDK/TTAccount.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
@@ -59,6 +60,9 @@
         
         _houseType = houseType;
         _houseId = houseId;
+        _showenOnline = NO;
+        _onLineName = @"在线联系";
+        _phoneCallName = @"电话咨询";
         
         _followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
@@ -248,10 +252,17 @@
         if (self.houseType == FHHouseTypeNeighborhood) {
             contactTitle = @"咨询经纪人";
         }else {
-            contactTitle = @"询底价";
+            if (contactPhone.unregistered && contactPhone.reportButtonText.length > 0) {
+                contactTitle = contactPhone.reportButtonText;
+            }else{
+                contactTitle = @"询底价";
+            }
         }
     }
+    self.onLineName = chatTitle;
+    self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
+    self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
     [self tryTraceImElementShow];
     if (contactPhone.showRealtorinfo) {
         [self addRealtorShowLog:contactPhone];
@@ -265,10 +276,11 @@
 }
 
 - (void)tryTraceImElementShow {
-    if (!isEmptyString(_contactPhone.imOpenUrl)) {
+    if (!isEmptyString(_contactPhone.imOpenUrl) || _contactPhone.unregistered) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        NSString *elementType = _contactPhone.unregistered ? @"online":@"im";
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
-        [params setValue:@"im" forKey:@"element_type"];
+        [params setValue:elementType forKey:@"element_type"];
         [params setValue:[_tracerDict objectForKey:@"page_type"]  forKey:@"page_type"];
         [params setValue:[_tracerDict objectForKey:@"rank"] forKey:@"rank"];
         [params setValue:[_tracerDict objectForKey:@"origin_from"] forKey:@"origin_from"];
@@ -308,6 +320,13 @@
 
 
 - (void)imAction {
+    
+    if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
+        [self addFakeImClickLog];
+        [[ToastManager manager] showToast:@"该经纪人暂未开通该服务，请使用其他联系方式" duration:3 isUserInteraction:NO];
+        return;
+    }
+    
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:@"detail_button"];
 }
 
@@ -343,16 +362,6 @@
 
 - (void)addRealtorShowLog:(FHDetailContactModel *)contactPhone
 {
-    //    1. event_type ：house_app2c_v2
-    //    2. page_type（页面类型）：old_detail（二手房详情页）
-    //    3. element_type（组件类型）：底部button：old_detail_button，详情页推荐经纪人：old_detail_related
-    //    4. rank
-    //    5. origin_from
-    //    6. origin_search_id
-    //    7.log_pb
-    //    8.realtor_id
-    //    9.realtor_rank:经纪人推荐位置，从0开始，在底部button的为0
-    //    10.realtor_position ：detail_button，detail_related
     NSMutableDictionary *tracerDic = @{}.mutableCopy;
     tracerDic[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
     tracerDic[@"element_type"] = @"old_detail_button";
@@ -402,8 +411,22 @@
     tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
     tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
     tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+    tracerDic[@"is_online"] = _contactPhone.unregistered?@"1":@"0";
     [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
 }
+
+-(void)addFakeImClickLog
+{
+    NSMutableDictionary *tracerDic = [self baseParams].mutableCopy;
+    tracerDic[@"is_login"] = [TTAccount sharedAccount].isLogin?@"1":@"0";
+    tracerDic[@"conversation_id"] = @"be_null";
+    tracerDic[@"realtor_id"] = _contactPhone.realtorId?:@"be_null";
+    tracerDic[@"realtor_rank"] = @"be_null";
+    tracerDic[@"realtor_position"] = @"online";
+    
+    TRACK_EVENT(@"click_online", tracerDic);
+}
+
 
 #pragma mark TTShareManagerDelegate
 - (void)shareManager:(TTShareManager *)shareManager clickedWith:(id<TTActivityProtocol>)activity sharePanel:(id<TTActivityPanelControllerProtocol>)panelController

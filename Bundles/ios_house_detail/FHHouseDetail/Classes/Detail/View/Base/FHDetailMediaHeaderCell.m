@@ -143,6 +143,7 @@
     __weak typeof(self) weakSelf = self;
     
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
+    vc.topVC = self.baseViewModel.detailController;
     vc.dragToCloseDisabled = YES;
     //    vc.mode = PhotosScrollViewSupportBrowse;
     vc.startWithIndex = index;

@@ -40,6 +40,7 @@
 
 - (void)setupUI
 {
+    _showIM = NO;
     UIView *topLine = [[UIView alloc]init];
     topLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:topLine];
@@ -177,9 +178,15 @@
     [self.imChatBtn setTitle:chatTitle forState:UIControlStateNormal];
     [self.imChatBtn setTitle:chatTitle forState:UIControlStateHighlighted];
 
-    self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
-    self.imChatBtn.hidden = !isEmptyString(contactPhone.imOpenUrl) ? NO : YES;
+    BOOL showIM = NO;
+    if ((contactPhone.unregistered && contactPhone.imLabel.length > 0) || !isEmptyString(contactPhone.imOpenUrl) ){
+        showIM = YES;
+    }
+    self.showIM = showIM;
     
+    self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
+    self.imChatBtn.hidden = !showIM;
+     
     [self.avatarView bd_setImageWithURL:[NSURL URLWithString:contactPhone.avatarUrl] placeholder:[UIImage imageNamed:@"detail_default_avatar"]];
     NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
@@ -192,7 +199,7 @@
     }else {
         self.nameLabel.text = @"经纪人";
     }
-    CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width;
+    CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width + 1;
     NSMutableArray *licenseViews = @[].mutableCopy;
     if (contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0) {
         [self displayLicense:YES];
@@ -208,7 +215,7 @@
         self.agencyLabel.hidden = YES;
     }
     CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 300;
-    CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width;
+    CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width + 1;
     CGFloat realtorContentWidth = 0;
     if ([TTDeviceHelper is568Screen]) {
         realtorContentWidth = [UIScreen mainScreen].bounds.size.width - 178;
@@ -225,7 +232,7 @@
         make.width.mas_equalTo(leftWidth);
     }];
 
-    if (!isEmptyString(contactPhone.imOpenUrl)) {
+    if (showIM) {
         CGFloat leftMargin = 10;
         if (contactPhone.showRealtorinfo == 1) {
             if ([TTDeviceHelper is568Screen]) {

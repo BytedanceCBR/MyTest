@@ -136,8 +136,6 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [FHHomeCellHelper sharedInstance].isFirstLanuch = YES;
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
-            // 标记config数据刷新了
-            [FHHomeCellHelper sharedInstance].isConfigDataUpate = YES;
             self.tableViewV.hidden = NO;
             self.isRequestFromSwitch = NO;
 

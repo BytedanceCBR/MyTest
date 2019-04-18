@@ -939,6 +939,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     while (rootViewController.presentedViewController) {
         rootViewController = rootViewController.presentedViewController;
     }
+    if (self.topVC) {
+        rootViewController = self.topVC;
+    }
     [rootViewController addChildViewController:self];
     
     self.view.alpha = 0;
@@ -1059,6 +1062,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
             while (rootViewController.presentedViewController) {
                 rootViewController = rootViewController.presentedViewController;
+            }
+            if (self.topVC) {
+                rootViewController = self.topVC;
             }
             UIView * containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
             containerView.backgroundColor = [UIColor blackColor];
