@@ -251,6 +251,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
         headerCellModel.vedioModel = nil;// 添加视频模型数据
+        headerCellModel.contactViewModel = self.contactViewModel;
         [self.items addObject:headerCellModel];
     }else{
         // 添加头滑动图片

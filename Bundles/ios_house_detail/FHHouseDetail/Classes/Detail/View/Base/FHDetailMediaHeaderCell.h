@@ -8,6 +8,7 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailOldModel.h"
 #import "FHMultiMediaModel.h"
+#import "FHHouseDetailContactViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -20,4 +21,6 @@ NS_ASSUME_NONNULL_END
 @interface FHDetailMediaHeaderModel : FHDetailBaseModel
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;// 图片数据
 @property (nonatomic, strong, nullable)   FHMultiMediaItemModel       *vedioModel;// 视频模型
+@property (nonatomic, weak) FHHouseDetailContactViewModel *contactViewModel;
+
 @end

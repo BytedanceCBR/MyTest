@@ -60,6 +60,9 @@
         
         _houseType = houseType;
         _houseId = houseId;
+        _showenOnline = NO;
+        _onLineName = @"在线联系";
+        _phoneCallName = @"电话咨询";
         
         _followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
@@ -256,7 +259,10 @@
             }
         }
     }
+    self.onLineName = chatTitle;
+    self.phoneCallName = contactTitle;
     [self.bottomBar refreshBottomBar:contactPhone contactTitle:contactTitle chatTitle:chatTitle];
+    self.showenOnline = self.bottomBar.showIM;// 显示在线联系（详情图册页面）
     [self tryTraceImElementShow];
     if (contactPhone.showRealtorinfo) {
         [self addRealtorShowLog:contactPhone];
