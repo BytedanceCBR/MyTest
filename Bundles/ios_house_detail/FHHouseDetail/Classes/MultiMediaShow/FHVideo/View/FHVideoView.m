@@ -50,6 +50,11 @@
 //    [_playerController play];
 }
 
+- (void)play {
+    [_playerController prepareToPlay];
+    [_playerController play];
+}
+
 
 
 @end

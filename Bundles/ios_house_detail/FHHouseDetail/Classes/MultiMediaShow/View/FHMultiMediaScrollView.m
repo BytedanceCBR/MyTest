@@ -26,6 +26,7 @@
 @property(nonatomic, strong) NSArray *medias;
 @property(nonatomic, strong) FHVideoAndImageItemView *itemView;
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
+@property(nonatomic, strong) NSMutableArray *itemArray;
 
 @end
 
@@ -110,6 +111,9 @@
         NSInteger item = [self.itemIndexArray[index] integerValue] + 1;
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
         [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+        if(self.delegate && [self.delegate respondsToSelector:@selector(selectItem:)]){
+            [self.delegate selectItem:self.itemArray[index]];
+        }
     }
 }
 
@@ -247,25 +251,25 @@
         }
     }
     
-    NSMutableArray *itemArray = [NSMutableArray array];
+    self.itemArray = [NSMutableArray array];
     self.itemIndexArray = [NSMutableArray array];
     
     for (NSInteger i = 0; i < self.medias.count; i++) {
         FHMultiMediaItemModel *itemModel = self.medias[i];
-        if(![itemArray containsObject:itemModel.groupType]){
-            [itemArray addObject:itemModel.groupType];
+        if(![_itemArray containsObject:itemModel.groupType]){
+            [_itemArray addObject:itemModel.groupType];
             [self.itemIndexArray addObject:@(i)];
         }
     }
     
-    if(itemArray.count > 1){
+    if(_itemArray.count > 1){
         self.itemView.hidden = NO;
-        self.itemView.titleArray = itemArray;
-        [self.itemView selectedItem:itemArray[0]];
+        self.itemView.titleArray = _itemArray;
+        [self.itemView selectedItem:_itemArray[0]];
         
         CGFloat itemViewWidth = 0;
-        if(itemArray.count > 0){
-            itemViewWidth = 44 * itemArray.count + 10 * (itemArray.count - 1);
+        if(_itemArray.count > 0){
+            itemViewWidth = 44 * _itemArray.count + 10 * (_itemArray.count - 1);
         }
         
         [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {

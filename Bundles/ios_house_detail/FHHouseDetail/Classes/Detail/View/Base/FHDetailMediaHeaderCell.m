@@ -292,6 +292,26 @@
     }
 }
 
+//埋点
+- (void)trackClickOptions:(NSString *)str {
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
+    
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from",@"origin_search_id",@"log_pb",@"origin_from"]];
+        
+//        NSString 
+        dict[@"click_position"] = str;
+        dict[@"rank"] = @"be_null";
+        
+        TRACK_EVENT(@"click_options", dict);
+    }else{
+        NSAssert(NO, @"传入的detailTracerDic不是字典");
+    }
+}
+
 - (NSDictionary *)traceParamsForGallery:(NSInteger)index
 {
     NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
@@ -336,6 +356,10 @@
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index {
     [self trackPictureShowWithIndex:index];
+}
+
+- (void)selectItem:(NSString *)title {
+    [self trackClickOptions:title];
 }
 
 @end
