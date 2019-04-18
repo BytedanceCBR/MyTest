@@ -260,6 +260,24 @@
     }
 }
 
+// 在线联系点击
+- (void)onlineButtonClick:(UIButton *)btn {
+    if (self.mediaHeaderModel.contactViewModel) {
+        NSDictionary *extraDic = @{@"realtor_position":@"online",
+                                   @"position":@"online"};
+        [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
+    }
+}
+
+// 电话咨询点击
+- (void)contactButtonClick:(UIButton *)btn {
+    if (self.mediaHeaderModel.contactViewModel) {
+        NSDictionary *extraDic = @{@"realtor_position":@"phone_button",
+                                   @"position":@"report_button"};
+        [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
+    }
+}
+
 - (UIButton *)onlineBtn {
     if (!_onlineBtn) {
         _onlineBtn = [[UIButton alloc] init];
@@ -270,6 +288,7 @@
         [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateNormal];
         [_onlineBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
+        [_onlineBtn addTarget:self action:@selector(onlineButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _onlineBtn;
 }
@@ -284,6 +303,7 @@
         [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
+        [_contactBtn addTarget:self action:@selector(contactButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _contactBtn;
 }
