@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(CGFloat)filterBottom;
 
+-(CGRect)relayout;
+
 @end
 
 NS_ASSUME_NONNULL_END

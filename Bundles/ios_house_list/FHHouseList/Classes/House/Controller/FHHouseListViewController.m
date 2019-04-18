@@ -24,12 +24,21 @@
 #import "HMDTTMonitor.h"
 #import "FHEnvContext.h"
 #import "TTInstallIDManager.h"
+#import "FHHouseListCommuteTipView.h"
+#import "FHCommuteFilterView.h"
+#import "FHCommuteManager.h"
 
 #define kFilterBarHeight 44
+#define COMMUTE_TOP_MARGIN 6
+#define COMMUTE_HEIGHT     42
 
 @interface FHHouseListViewController ()<TTRouteInitializeProtocol, FHHouseListViewModelDelegate>
 
 @property (nonatomic , strong) FHFakeInputNavbar *navbar;
+@property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
+@property (nonatomic , strong) UIControl *commuteChooseBgView;
+@property (nonatomic , strong) FHCommuteFilterView *commuteFilterView;
+
 @property (nonatomic , strong) UIView *containerView;
 @property (nonatomic , strong) UITableView* tableView;
 
@@ -73,6 +82,9 @@
 
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
+        if (houseTypeStr.length == 0 && [paramObj.sourceURL.host isEqualToString:@"commute_list"]) {
+            self.houseType = FHHouseTypeRentHouse;
+        }
         if (self.houseType <= 0 || self.houseType > 4) {
             // 目前4种房源：1，2，3，4
             NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
@@ -111,6 +123,7 @@
             self.associationalWord = displayText;
         }
         self.ttTrackStayEnable = YES;
+        self.ttHideNavigationBar = YES;
     }
     return self;
 }
@@ -147,6 +160,11 @@
     if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) {
         type = FHFakeInputNavbarTypeMap;
     }
+    if ([self.paramObj.sourceURL.host rangeOfString:@"commute_list"].location != NSNotFound) {
+        //通勤找房不显示地图
+        type = FHFakeInputNavbarTypeDefault;
+    }
+    
     _navbar = [[FHFakeInputNavbar alloc] initWithType:type];
     if (self.associationalWord.length > 0) {
         
@@ -186,16 +204,100 @@
     
     [bridge showBottomLine:NO];
     
-    UIView *bottomLine = [[UIView alloc] init];
-    bottomLine.backgroundColor = [UIColor themeGray6];
-    [self.filterPanel addSubview:bottomLine];
-    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
-    }];
+    if (!self.viewModel.isCommute) {
+        //非通勤找房下才显示分隔线
+        UIView *bottomLine = [[UIView alloc] init];
+        bottomLine.backgroundColor = [UIColor themeGray6];
+        [self.filterPanel addSubview:bottomLine];
+        [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.and.right.and.bottom.mas_equalTo(self.filterPanel);
+            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        }];
+    }
 
 
 }
+
+-(void)initCommuteTip
+{
+    _commuteTipView = [[FHHouseListCommuteTipView alloc] init];
+    __weak typeof(self) wself = self;
+    _commuteTipView.changeOrHideBlock = ^(BOOL showHide) {
+        if (showHide) {
+            [wself.viewModel addModifyCommuteLog:NO];
+            wself.commuteChooseBgView.hidden = YES;
+        }else{
+            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+            [wself.commuteFilterView updateType:manager.commuteType time:manager.duration];
+            [wself.view bringSubviewToFront:wself.commuteChooseBgView];
+            [wself.commuteChooseBgView addSubview:wself.commuteFilterView];
+            wself.commuteChooseBgView.hidden = NO;
+            [wself.viewModel addModifyCommuteLog:YES];
+            [wself.houseFilterBridge closeConditionFilterPanel];
+        }
+        wself.commuteTipView.showHide = !showHide;
+    };
+    
+    [self updateCommuteTip];
+    
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    [self.commuteFilterView updateType:manager.commuteType time:manager.duration];
+    
+    _commuteChooseBgView = [[UIControl alloc] init];
+    _commuteChooseBgView.backgroundColor =  RGBA(0, 0, 0, 0.4);
+    _commuteChooseBgView.hidden = YES;
+    [_commuteChooseBgView addTarget:self action:@selector(onCommuteBgTap) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(FHCommuteFilterView *)commuteFilterView
+{
+    if (!_commuteFilterView) {
+        FHCommuteType type = [[FHCommuteManager sharedInstance] commuteType];
+        if (type < 0) {
+            type = FHCommuteTypeDrive;
+        }
+        _commuteFilterView = [[FHCommuteFilterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, 298) insets:UIEdgeInsetsMake(20, 0,  20, 0) type:type];
+        __weak typeof(self) wself = self;
+        _commuteFilterView.chooseBlock = ^(NSString * _Nonnull time, FHCommuteType type) {
+            FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+            if (!([time isEqualToString:manager.duration] && type == manager.commuteType)) {
+                //选择发送改变
+                manager.duration = time;
+                manager.commuteType = type;
+                [manager sync];
+                [wself updateCommuteTip];
+                [wself.viewModel commuteFilterUpdated];
+            }
+            
+            [wself onCommuteBgTap];
+        };
+    }
+    return _commuteFilterView;
+    
+}
+
+-(void)updateCommuteTip
+{
+    FHCommuteManager *manager = [FHCommuteManager sharedInstance];
+    NSString *tip = [NSString stringWithFormat:@"通过%@%@分钟内到达",[manager commuteTypeName],manager.duration];
+    BOOL highlight = manager.commuteType != FHCommuteTypeWalk && manager.commuteType != FHCommuteTypeRide;
+    NSString *time = nil;
+    if (highlight) {
+        time = @"早高峰";
+        tip = [@" " stringByAppendingString:tip];
+    }
+    [_commuteTipView updateTime:time tip:tip highlightTime:highlight];
+    
+}
+
+-(void)onCommuteBgTap
+{
+    self.commuteTipView.showHide = NO;
+    self.commuteChooseBgView.hidden = YES;
+    
+    [self.viewModel addModifyCommuteLog:NO];
+}
+
 
 -(void)setupViewModelBlock {
     
@@ -206,6 +308,7 @@
     
     _viewModel.closeConditionFilter = ^{
         [wself.houseFilterBridge closeConditionFilterPanel];
+        [wself onCommuteBgTap];
     };
     
     _viewModel.clearSortCondition = ^{
@@ -244,6 +347,11 @@
     
     _viewModel.showNotify = ^(NSString * _Nonnull message) {
         //        [wself showNotify:message];
+    };
+    
+    _viewModel.commuteSugSelectBlock = ^(NSString * _Nonnull poi) {
+      
+        [wself refreshNavBar:wself.houseType placeholder:nil inputText:poi];
     };
     
 }
@@ -290,7 +398,7 @@
         
         placeholder = displayText;
     }
-    [self refreshNavBar:self.houseType placeholder:placeholder];
+    [self refreshNavBar:self.houseType placeholder:placeholder inputText:nil];
     
     [self.houseFilterBridge setFilterConditions:paramObj.queryParams];
     
@@ -315,6 +423,7 @@
 {
     [super viewWillAppear:animated];
     [self.viewModel viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
 
 }
@@ -359,9 +468,26 @@
         make.edges.mas_equalTo(self.tableView);
     }];
     
+    if (_commuteTipView) {
+        [self.commuteTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.navbar.mas_bottom);
+            make.height.mas_equalTo(COMMUTE_HEIGHT);
+        }];
+        
+        [self.commuteChooseBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.mas_equalTo(self.view);
+            make.top.mas_equalTo(self.commuteTipView.mas_bottom);
+        }];
+    }
+    
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.bottom.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.navbar.mas_bottom);
+        if (self.commuteTipView) {
+            make.top.mas_equalTo(self.commuteTipView.mas_bottom);
+        }else{
+            make.top.mas_equalTo(self.navbar.mas_bottom);
+        }
     }];
     
     [self.filterContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -396,6 +522,7 @@
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
     
+    
     [self initNavbar];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
@@ -414,9 +541,9 @@
 
 }
 
--(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder {
+-(void)refreshNavBar:(FHHouseType)houseType placeholder:(NSString *)placeholder inputText:(NSString *)inputText{
     
-    if (houseType == FHHouseTypeRentHouse || houseType == FHHouseTypeSecondHandHouse) {
+    if ((houseType == FHHouseTypeRentHouse && !self.viewModel.isCommute )|| houseType == FHHouseTypeSecondHandHouse) {
         
         [self.navbar refreshNavbarType:FHFakeInputNavbarTypeMap];
     }else {
@@ -424,6 +551,7 @@
         [self.navbar refreshNavbarType:FHFakeInputNavbarTypeDefault];
     }
     self.navbar.placeHolder = placeholder;
+    self.navbar.inputText = inputText;
     self.associationalWord = placeholder;
 }
 
@@ -463,6 +591,18 @@
 
     [_filterContainerView addSubview:self.filterPanel];
     [self.view bringSubviewToFront:self.filterBgControl];
+    
+    
+    if (_viewModel.isCommute) {
+        //
+        [self initCommuteTip];
+        [self.view addSubview:_commuteTipView];
+        [self.view addSubview:_commuteChooseBgView];
+        
+        if ([[self placeholderByHouseType:self.houseType] isEqualToString: self.associationalWord] && [FHCommuteManager sharedInstance].destLocation) {
+            self.navbar.inputText = [FHCommuteManager sharedInstance].destLocation;
+        }
+    }
 
 }
 
@@ -478,9 +618,6 @@
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
-            
-//            UIEdgeInsets inset = self.tableView.contentInset;
-//            inset.top = 0;
             self.tableView.contentInset = UIEdgeInsetsZero;
         }];
     });

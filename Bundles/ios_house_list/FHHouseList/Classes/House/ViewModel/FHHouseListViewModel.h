@@ -21,21 +21,28 @@ NS_ASSUME_NONNULL_BEGIN
  */
 
 @class FHHouseListRedirectTipView;
-
+@class FHHouseListCommuteTipView;
 @interface FHHouseListViewModel : FHBaseHouseListViewModel <FHHouseSuggestionDelegate>
 
-@property (nonatomic, copy) NSString *houseListOpenUrl;
+@property (nonatomic , copy) NSString *houseListOpenUrl;
 @property (nonatomic , assign) FHHouseType houseType;
 @property (nonatomic , assign) FHHouseListSearchType searchType;
 
-@property(nonatomic, weak) UIViewController *listVC;
+@property (nonatomic , weak) UIViewController *listVC;
 
-@property(nonatomic , copy) void (^sugSelectBlock)(TTRouteParamObj *paramObj);
-@property(nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj, BOOL isFromMap);
+@property (nonatomic , copy) void (^sugSelectBlock)(TTRouteParamObj *paramObj);
+@property (nonatomic , copy) void (^houseListOpenUrlUpdateBlock)(TTRouteParamObj *paramObj, BOOL isFromMap);
 
-@property(nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
+@property (nonatomic , copy) void (^commuteSugSelectBlock)(NSString *poi);
+
+@property (nonatomic , assign) BOOL isEnterCategory; // 是否算enter_category
 @property (nonatomic , assign) BOOL showRedirectTip;
 @property (nonatomic , assign) BOOL fromFindTab;
+
+//通勤找房
+@property (nonatomic , assign, getter=isCommute) BOOL commute; //是否是通勤找房
+@property (nonatomic , copy) NSString *commutePoi;//用户进入sug选择后显示的内容
+@property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
 
 -(void)setRedirectTipView:(FHHouseListRedirectTipView *)redirectTipView;
 
@@ -45,6 +52,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)updateHouseSearchDict:(NSDictionary *)houseSearchDic;
 -(NSDictionary *)categoryLogDict;
 - (void)addClickHouseSearchLog;
+
+//通勤找房 点击 修改、收起 埋点
+-(void)addModifyCommuteLog:(BOOL)showOrHide;
+
+-(void)commuteFilterUpdated;
 
 @end
 

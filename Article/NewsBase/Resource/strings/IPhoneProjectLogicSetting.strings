@@ -120,6 +120,11 @@
 
 "second_house_main"   = "FHBaseMainListViewController";
 
+//通勤找房
+"commute_config" = "FHCommuteConfigViewController";
+"commute_poi" = "FHCommutePOISearchViewController";
+"commute_list" = "FHHouseListViewController";
+
 // 帮我找房中转页
 "house_find"   = "FHHouseFindMainViewController";
 
@@ -134,5 +139,4 @@
 //房屋估价补充信息
 "price_valuation_more_info" = "FHPriceValuationMoreInfoController";
 "house_search_deal_neighborhood" = "FHBaseSugListViewController";
-
 
