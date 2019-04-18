@@ -79,7 +79,7 @@
         
         __weak typeof(self)wself = self;
         _bottomBar.bottomBarContactBlock = ^{
-            [wself contactAction];
+            [wself contactActionWithExtraDict:nil];
         };
         _bottomBar.bottomBarLicenseBlock = ^{
             [wself licenseAction];
@@ -162,6 +162,7 @@
 {
     _belongsVC = belongsVC;
     _phoneCallViewModel.belongsVC = belongsVC;
+    _followUpViewModel.topVC = belongsVC;
 }
 
 - (void)followAction
@@ -290,44 +291,52 @@
     }
 }
 
-- (void)contactAction
-{
+// 拨打电话 + 询底价填表单
+- (void)contactActionWithExtraDict:(NSDictionary *)extraDict {
     if (self.contactPhone.phone.length < 1) {
         // 填表单
-        [self fillFormAction];
+        [self fillFormActionWithExtraDict:extraDict];
     }else {
         // 拨打电话
-        [self callAction];
+        [self callActionWithExtraDict:extraDict];
     }
 }
 
-- (void)fillFormAction
-{
-    [self.phoneCallViewModel fillFormActionWithCustomHouseId:self.customHouseId fromStr:self.fromStr];
-}
-
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
-{
-    [self.phoneCallViewModel fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle];
-}
-
-- (void)callAction
-{
-    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone realtorId:self.contactPhone.realtorId searchId:self.searchId imprId:self.imprId];
-    // 静默关注功能
-    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
-}
-
-
-- (void)imAction {
-    
+// 在线联系点击
+- (void)onlineActionWithExtraDict:(NSDictionary *)extraDict {
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         [self addFakeImClickLog];
         [[ToastManager manager] showToast:@"该经纪人暂未开通该服务，请使用其他联系方式" duration:3 isUserInteraction:NO];
         return;
     }
-    
-    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:@"detail_button"];
+    NSString *realtor_pos = @"detail_button";
+    if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
+        realtor_pos = extraDict[@"realtor_position"] ? : @"detail_button";
+    }
+    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:realtor_pos];
+}
+
+- (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
+{
+    [self.phoneCallViewModel fillFormActionWithCustomHouseId:self.customHouseId fromStr:self.fromStr withExtraDict:extraDict];
+}
+
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+{
+    [self.phoneCallViewModel fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle withExtraDict:nil];
+}
+
+// 拨打电话
+- (void)callActionWithExtraDict:(NSDictionary *)extraDict {
+    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone realtorId:self.contactPhone.realtorId searchId:self.searchId imprId:self.imprId extraDict:extraDict];
+    // 静默关注功能
+    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+}
+
+- (void)imAction {
+    NSDictionary *extraDic = @{@"realtor_position":@"detail_button",
+                               @"position":@"button"};
+    [self onlineActionWithExtraDict:extraDic];
 }
 
 #pragma mark 埋点相关

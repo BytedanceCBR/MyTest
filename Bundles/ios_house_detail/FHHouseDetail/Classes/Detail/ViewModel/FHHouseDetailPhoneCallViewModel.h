@@ -24,9 +24,9 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr;
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
-- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr;
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle withExtraDict:(NSDictionary *)extraDict;
+- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone;
 

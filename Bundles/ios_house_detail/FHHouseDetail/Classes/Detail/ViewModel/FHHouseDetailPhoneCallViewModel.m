@@ -55,7 +55,7 @@ typedef enum : NSUInteger {
     return self;
 }
 
-- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr
+- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
 {
     NSString *title = @"询底价";
     NSString *subtitle = @"提交后将安排专业经纪人与您联系";
@@ -64,15 +64,15 @@ typedef enum : NSUInteger {
         title = @"咨询经纪人";
         btnTitle = @"提交";
     }
-    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:customHouseId fromStr:fromStr];
+    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:customHouseId fromStr:fromStr withExtraDict:extraDict];
 }
 
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle withExtraDict:(NSDictionary *)extraDict
 {
-    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:nil fromStr:nil];
+    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:nil fromStr:nil withExtraDict:extraDict];
 }
 
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
 {
     [self addInformShowLog];
     __weak typeof(self)wself = self;
@@ -81,7 +81,7 @@ typedef enum : NSUInteger {
     alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     alertView.confirmClickBlock = ^(NSString *phoneNum){
         [wself fillFormRequest:phoneNum customHouseId:customHouseId fromStr:fromStr];
-        [wself addClickConfirmLog];
+        [wself addClickConfirmLogWithExtra:extraDict];
     };
     alertView.tipClickBlock = ^{
         
@@ -553,10 +553,15 @@ typedef enum : NSUInteger {
 }
 
 // 表单提交
-- (void)addClickConfirmLog
+- (void)addClickConfirmLogWithExtra:(NSDictionary *)extraDict
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
+    if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
+        params[@"position"] = extraDict[@"position"] ? : @"button";
+    } else {
+        params[@"position"] = @"button";
+    }
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 

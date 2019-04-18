@@ -31,6 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
+// 在线联系点击
+- (void)onlineActionWithExtraDict:(NSDictionary *)extraDict;
+// 拨打电话 + 询底价填表单
+- (void)contactActionWithExtraDict:(NSDictionary *)extraDict;
+// 基本埋点数据
+- (NSDictionary *)baseParams;
 
 - (void)fillFormAction;
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
