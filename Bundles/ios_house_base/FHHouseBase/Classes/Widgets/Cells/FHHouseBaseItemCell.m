@@ -25,7 +25,7 @@
 #define MAIN_IMG_HEIGHT     85
 #define MAIN_TAG_BG_WIDTH   48
 #define MAIN_TAG_BG_HEIGHT  16
-#define MAIN_TAG_WIDTH      40
+#define MAIN_TAG_WIDTH      46
 #define MAIN_TAG_HEIGHT     10
 #define INFO_TO_ICON_MARGIN 12
 #define PRICE_BG_TOP_MARGIN 5
@@ -47,6 +47,7 @@
 @property(nonatomic, strong) UILabel *priceLabel; //总价
 @property(nonatomic, strong) UILabel *originPriceLabel;
 @property(nonatomic, strong) UILabel *pricePerSqmLabel; // 价格/平米
+@property(nonatomic, strong) UILabel *distanceLabel; // 30 分钟到达
 
 @property(nonatomic, strong) UIView *priceBgView; //底部 包含 价格 分享
 
@@ -196,6 +197,15 @@
         _pricePerSqmLabel.textColor = [UIColor themeGray3];
     }
     return _pricePerSqmLabel;
+}
+
+-(UILabel *)distanceLabel
+{
+    if (!_distanceLabel) {
+        _distanceLabel = [[UILabel alloc] init];
+        _distanceLabel.textAlignment = NSTextAlignmentRight;
+    }
+    return _distanceLabel;
 }
 
 -(FHHouseRecommendReasonView *)recReasonView {
@@ -439,6 +449,7 @@
 
 - (void)updateWithNeighborModel:(FHHouseNeighborDataItemsModel *)model
 {
+    _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
@@ -471,6 +482,7 @@
 #pragma mark 新房
 -(void)updateWithNewHouseModel:(FHNewHouseItemModel *)model {
     
+    _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
@@ -530,6 +542,7 @@
 #pragma mark 二手房
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model
 {
+    _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
     
@@ -592,6 +605,60 @@
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
     self.priceLabel.text = model.pricing;
     self.pricePerSqmLabel.text = nil;
+    
+    NSArray *firstRow = [model.bottomText firstObject];
+    NSDictionary *bottomText = nil;
+    if ([firstRow isKindOfClass:[NSArray class]]) {
+        NSDictionary *info = [firstRow firstObject];
+        if ([info isKindOfClass:[NSDictionary class]]) {
+            bottomText = info;
+        }
+    }
+    
+    NSString *infoText = bottomText[@"text"];
+    
+    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
+        
+        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
+        
+        UIImage *clockImg =  SYS_IMG(@"clock_small");
+        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+        attachment.image = clockImg;
+        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
+        
+        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
+        
+        [commuteAttr appendAttributedString:clockAttr];
+        
+        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
+        
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
+        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
+        
+        [commuteAttr appendAttributedString:timeAttr];
+        
+        self.distanceLabel.attributedText = commuteAttr;
+        
+        if (!_distanceLabel){
+            [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+                layout.isEnabled = YES;
+                layout.marginLeft = YGPointValue(10);
+                layout.alignSelf = YGAlignCount;
+                layout.flexGrow = 1;
+            }];
+        }
+        [self.priceBgView addSubview:self.distanceLabel];
+        //因为有表情 强制计算宽度
+        [self.distanceLabel sizeToFit];
+        [self.distanceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.width = YGPointValue(ceil(self.distanceLabel.frame.size.width));//x 设备上会出现因为小数计算显示不全的，改为上取整
+        }];
+        _priceBgView.yoga.justifyContent = YGJustifySpaceBetween;
+        [self.distanceLabel.yoga markDirty];
+    }else{
+        [_distanceLabel removeFromSuperview];
+        _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
+    }
     
     FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
@@ -666,9 +733,10 @@
     [self.originPriceLabel.yoga markDirty];
     [self.pricePerSqmLabel.yoga markDirty];
     
-    if (self.priceBgView.yoga.marginTop.value != (showTags?PRICE_BG_TOP_MARGIN:0)) {
+    CGFloat priceBgTopMargin = showTags?PRICE_BG_TOP_MARGIN:(oneRow?6:2);
+    if (self.priceBgView.yoga.marginTop.value != priceBgTopMargin) {
         [self.priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-            layout.marginTop = YGPointValue(showTags?PRICE_BG_TOP_MARGIN:0);
+            layout.marginTop = YGPointValue(priceBgTopMargin);
         }];
         [self.priceBgView.yoga markDirty];
     }

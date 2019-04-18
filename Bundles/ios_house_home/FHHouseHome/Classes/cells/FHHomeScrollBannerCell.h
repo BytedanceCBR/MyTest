@@ -18,7 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   FHHomeScrollBannerView       *bannerView;
 + (CGFloat)cellHeight;
 -(void)updateWithModel:(FHConfigDataMainPageBannerOpDataModel *)model;
-
++ (BOOL)hasValidModel:(FHConfigDataMainPageBannerOpDataModel *)mainPageOpData;
++ (BOOL)isValidModel:(FHConfigDataRentOpDataItemsModel *)tModel;
 @end
 
 @protocol FHBannerViewIndexProtocol <NSObject>
