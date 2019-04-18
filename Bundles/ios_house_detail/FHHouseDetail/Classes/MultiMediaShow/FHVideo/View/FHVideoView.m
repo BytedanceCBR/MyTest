@@ -7,11 +7,13 @@
 
 #import "FHVideoView.h"
 #import "AWEVideoPlayerController.h"
+#import "FHVideoMiniSliderView.h"
 
 
 @interface FHVideoView ()
 
 @property(nonatomic, strong) AWEVideoPlayerController *playerController;
+@property(nonatomic, strong) FHVideoMiniSliderView *miniSliderView;
 
 @end
 
@@ -30,11 +32,17 @@
     _playerController = [[AWEVideoPlayerController alloc] init];
     _playerController.view.backgroundColor = [UIColor blackColor];
     [self addSubview:_playerController.view];
+    
+    self.miniSliderView = [[FHVideoMiniSliderView alloc] initWithFrame:CGRectZero];
+    [_miniSliderView setWatchedProgress:30];
+    [_miniSliderView setCacheProgress:50];
+    [self addSubview:_miniSliderView];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     _playerController.view.frame = self.bounds;
+    _miniSliderView.frame = CGRectMake(0, self.bounds.size.height - 2, self.bounds.size.width, 2);
 }
 
 - (void)updateData:(FHVideoModel *)model {
