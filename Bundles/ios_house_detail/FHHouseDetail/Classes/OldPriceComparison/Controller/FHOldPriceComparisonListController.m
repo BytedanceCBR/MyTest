@@ -16,7 +16,9 @@
 @property (nonatomic, strong) FHOldPriceComparisonListViewModel *viewModel;
 @property (nonatomic, copy) NSString *neighborhoodId;
 @property (nonatomic, copy) NSString *neighborhoodName;
-@property (nonatomic, copy) NSString *houseRoomType;
+@property (nonatomic, copy) NSString *houseType;
+@property (nonatomic, copy) NSString *orderBy;
+@property (nonatomic, copy) NSString *roomNum;
 @property (nonatomic, strong) UITableView *tableView;
 
 @end
@@ -27,8 +29,10 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         self.neighborhoodId = paramObj.allParams[@"neighborhood_id"];
-        self.houseRoomType = paramObj.allParams[@"houseRoomType"];
-        self.neighborhoodName = paramObj.allParams[@"neighborhood_name"];
+        self.houseType = paramObj.allParams[@"house_type"];
+        self.orderBy = [paramObj.allParams[@"order_by%5B%5D"] firstObject];
+        self.roomNum = [paramObj.allParams[@"room_num%5B%5D"] firstObject];
+        self.title = paramObj.allParams[@"title"];
         self.ttTrackStayEnable = YES;
     }
     return self;
@@ -53,7 +57,7 @@
 
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = [NSString stringWithFormat:@"%@%@",self.neighborhoodName,self.houseRoomType];
+    self.customNavBarView.title.text = self.title;
     [self configTableView];
     self.viewModel = [[FHOldPriceComparisonListViewModel alloc] initWithController:self tableView:_tableView];
     self.viewModel.query = [self getQueryStr];
@@ -82,12 +86,7 @@
 }
 
 - (NSString *)getQueryStr {
-    NSString *roomType = @"";
-    if(self.houseRoomType.length > 1){
-        roomType = [self.houseRoomType substringToIndex:self.houseRoomType.length - 1];
-    }
-    NSString *room = [NSString stringWithFormat:@"[%@,%@]",roomType,roomType];
-    NSString* conditionQueryString = [NSString stringWithFormat:@"&house_type=2&order_by[]=2&neighborhood_id=%@&room_num[]=%@",self.neighborhoodId,room];
+    NSString* conditionQueryString = [NSString stringWithFormat:@"&house_type=%@&order_by[]=%@&neighborhood_id=%@&room_num[]=%@",self.houseType,self.orderBy,self.neighborhoodId,self.roomNum];
     conditionQueryString = [conditionQueryString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     return conditionQueryString;

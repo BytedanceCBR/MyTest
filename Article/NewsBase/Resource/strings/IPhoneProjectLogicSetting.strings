@@ -134,4 +134,4 @@
 "price_valuation_more_info" = "FHPriceValuationMoreInfoController";
 
 //房源详情价格对比房源列表
-"old_price_comparison_list" = "FHOldPriceComparisonListController";
+"house_search_result_list" = "FHOldPriceComparisonListController";

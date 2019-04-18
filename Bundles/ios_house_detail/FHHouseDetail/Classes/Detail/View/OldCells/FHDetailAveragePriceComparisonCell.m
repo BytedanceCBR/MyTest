@@ -57,14 +57,12 @@
     NSString *minPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.minPricePsm floatValue]];
     NSString *maxPrice = [NSString stringWithFormat:@"%0.0f",[model.rangeModel.maxPricePsm floatValue]];
     NSString *unit = model.rangeModel.unit ?: @"";
-    NSString *houseType = model.analyzeModel.houseType ?: @"";
     
     NSString *minPriceStr = [NSString stringWithFormat:@"%@%@",minPrice,unit];
     NSString *maxPriceStr = [NSString stringWithFormat:@"%@%@",maxPrice,unit];
     NSString *curPriceStr = [NSString stringWithFormat:@"%@%@",curPrice,unit];
-    NSString *titleStr = [NSString stringWithFormat:@"本小区%@均价对比",houseType];
     
-    self.headerView.label.text = titleStr;
+    self.headerView.label.text = model.rangeModel.title;
     self.minLabel.attributedText = [self getAtributeStr:@"最低参考价 " content:minPriceStr];
     self.maxLabel.attributedText = [self getAtributeStr:@"最高参考价 " content:maxPriceStr];
     self.curPriceLabel.text = curPriceStr;
@@ -257,13 +255,15 @@
     tracerDic[@"element_from"] = [self elementTypeString:FHHouseTypeSecondHandHouse];
     
     NSMutableDictionary *userDic = [NSMutableDictionary dictionary];
-    userDic[@"neighborhood_id"] = model.neighborhoodId;
-    userDic[@"neighborhood_name"] = model.neighborhoodName;
-    userDic[@"houseRoomType"] = model.analyzeModel.houseType;
+//    userDic[@"neighborhood_id"] = model.neighborhoodId;
+//    userDic[@"neighborhood_name"] = model.neighborhoodName;
+//    userDic[@"houseRoomType"] = model.analyzeModel.houseType;
     userDic[@"tracer"] = tracerDic;
     
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userDic];
-    NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_price_comparison_list"];
+//    NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_price_comparison_list"];
+    NSString * urlStr = model.rangeModel.sameNeighborhoodRoomsSchema;
+
     NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
 }

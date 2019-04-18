@@ -103,6 +103,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *curPricePsm;
 @property (nonatomic, copy , nullable) NSString *unit;
 @property (nonatomic, copy , nullable) NSString *minPricePsm;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *sameNeighborhoodRoomsSchema;
 @end
 
 @interface FHDetailOldDataHousePriceRangeModel : JSONModel

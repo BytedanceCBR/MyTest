@@ -160,6 +160,7 @@
                            @"maxPricePsm": @"max_price_psm",
                            @"curPricePsm": @"cur_price_psm",
                            @"minPricePsm": @"min_price_psm",
+                           @"sameNeighborhoodRoomsSchema": @"same_neighborhood_rooms_schema"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
