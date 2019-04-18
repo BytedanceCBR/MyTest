@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)didSelectItemAtIndex:(NSInteger)index;
 
+- (void)willDisplayCellForItemAtIndex:(NSInteger)index;
+
 @end
 
 @interface FHMultiMediaScrollView : UIView

@@ -151,8 +151,10 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    //    NSInteger index = [self indexForIndexPath:indexPath];
-    //    [self trackPictureShowWithIndex:index];
+    NSInteger index = [self indexForIndexPath:indexPath];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(willDisplayCellForItemAtIndex:)]){
+        [self.delegate willDisplayCellForItemAtIndex:index];
+    }
 }
 
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
