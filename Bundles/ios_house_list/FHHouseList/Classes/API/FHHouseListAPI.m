@@ -306,4 +306,20 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
+// 查成交小区搜索
++ (TTHttpTask *)requestDealSuggestionCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query searchType:(NSString *)searchType class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
+    NSString *queryPath = @"/f100/api/get_suggestion";
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    paramDic[@"city_id"] = @(cityId);
+    paramDic[@"house_type"] = @(houseType);
+    paramDic[@"source"] = @"app";
+    paramDic[@"search_type"] = searchType;
+
+    if (query.length > 0) {
+        paramDic[@"query"] = query;
+    }
+    
+    return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+}
+
 @end

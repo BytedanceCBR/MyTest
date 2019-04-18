@@ -101,6 +101,9 @@ NS_ASSUME_NONNULL_BEGIN
 //仅仅给小区使用的sug建议
 + (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
+// 查成交小区搜索
++ (TTHttpTask *)requestDealSuggestionCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query searchType:(NSString *)searchType class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

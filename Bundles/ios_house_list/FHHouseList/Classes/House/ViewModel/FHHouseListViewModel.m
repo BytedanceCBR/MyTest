@@ -858,7 +858,7 @@
         self.closeConditionFilter();
     }
     [self addClickHouseSearchLog];
-    
+
     NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
     //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -875,8 +875,13 @@
         dictInfo[@"need_back_vc"] = tempTable;
     }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dictInfo];
-    
-    NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
+    NSString *urlStr = nil;
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        urlStr = [NSString stringWithFormat:@"sslocal://house_search_deal_neighborhood"];
+    }else {
+       urlStr = [NSURL URLWithString:@"sslocal://house_search"];
+    }
+    NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     
 }

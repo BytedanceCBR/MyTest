@@ -133,3 +133,6 @@
 "price_valuation_result" = "FHPriceValuationResultController";
 //房屋估价补充信息
 "price_valuation_more_info" = "FHPriceValuationMoreInfoController";
+"house_search_deal_neighborhood" = "FHBaseSugListViewController";
+
+
