@@ -190,6 +190,7 @@
     [self.view addSubview:_bottomBar];
     
     if (self.mediaHeaderModel.contactViewModel) {
+        [self addLeadShowLog:self.mediaHeaderModel.contactViewModel.contactPhone baseParams:[self.mediaHeaderModel.contactViewModel baseParams]];
         CGFloat itemWidth = self.view.width - 40;
         BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
         if (showenOnline) {
@@ -245,6 +246,18 @@
         self.animateManager.panDelegate = self;
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
+    }
+}
+
+- (void)addLeadShowLog:(FHDetailContactModel *)contactPhone baseParams:(NSDictionary *)dic
+{
+    if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tracerDic = dic.mutableCopy;
+        tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
+        tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
+        tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+        tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
+        [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
 }
 
