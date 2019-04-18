@@ -75,8 +75,8 @@
 
 - (void)setupUI
 {
-    self.suggestTableView = [self createTableView];
     [self setupNaviBar];
+    self.suggestTableView = [self createTableView];
     self.viewModel = [[FHBaseSugListViewModel alloc] initWithTableView:self.suggestTableView paramObj:_paramObj];
     self.viewModel.houseType = self.houseType;
     self.viewModel.searchType = self.searchType;

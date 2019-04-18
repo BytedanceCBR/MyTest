@@ -48,6 +48,11 @@
     return self;
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
 - (void)requestSuggestion:(NSString *)text
 {
     if (![TTReachability isNetworkConnected]) {
