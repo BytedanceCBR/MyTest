@@ -9,6 +9,10 @@
 #import "FHBaseMainListViewModel+Internal.h"
 #import <FHHouseBase/FHMainApi.h>
 #import <FHHouseBase/FHHouseRentModel.h>
+#import <TTRoute/TTRoute.h>
+#import <FHHouseBase/FHBaseViewController.h>
+#import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 @implementation FHBaseMainListViewModel (Rent)
 
@@ -74,6 +78,66 @@
         }
     }
     return FHHouseRentFilterTypeNone;
+}
+
+-(void)showCommuteConfigPage
+{    
+    id delegate = WRAP_WEAK(self);
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[COMMUTE_CONFIG_DELEGATE] = delegate;
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary new];
+    tracer[UT_ENTER_FROM] = @"renting";
+    tracer[UT_ELEMENT_FROM] = @"commuter_info";
+    tracer[UT_ORIGIN_FROM] = UT_OF_COMMUTE;
+    tracer[UT_ORIGIN_SEARCH_ID] = self.originSearchId;
+    
+    param[TRACER_KEY] = tracer;
+        
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+    
+    NSURL *url = [NSURL URLWithString:@"sslocal://commute_config"];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+    
+}
+
+-(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration inController:(UIViewController *)controller
+{
+    [self gotoCommuteList:controller];
+}
+
+
+-(void)tryAddCommuteShowLog
+{
+    if (self.houseType != FHHouseTypeRentHouse) {
+        return;
+    }
+    
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataRentOpDataModel *rentModel = dataModel.rentOpData;
+    CGFloat bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
+    if (bannerHeight < 1) {
+        return;
+    }
+    /*
+     "1. event_type ：house_app2c_v2
+     2. page_type（页面类型）：rent_list
+     3. element_type（组件类型）：commuter_info（通勤找房）
+     4. origin_from:renting_list
+     6. origin_search_id
+     7.log_pb"
+     */
+    FHConfigDataRentOpDataItemsModel *item = [rentModel.items firstObject];
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[UT_PAGE_TYPE] = @"rent_list";
+    param[UT_ELEMENT_TYPE] = @"commuter_info";
+    param[UT_ORIGIN_FROM] = self.originFrom;
+    param[UT_LOG_PB] = self.tracerModel.logPb;
+    param[UT_ORIGIN_SEARCH_ID] = self.originSearchId?:UT_BE_NULL;
+    param[UT_LOG_PB] = item.logPb?:UT_BE_NULL;
+        
+    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
+    
 }
 
 @end

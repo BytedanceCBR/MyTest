@@ -442,6 +442,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
+        model.data.contact.unregistered = YES;
         self.contactViewModel.contactPhone = model.data.contact;
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;
