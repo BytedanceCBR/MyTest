@@ -478,6 +478,8 @@ typedef enum : NSUInteger {
     if ([self.routeAgentObj.instance respondsToSelector:@selector(destroyRNView)]) {
         [self.routeAgentObj.instance performSelector:@selector(destroyRNView) withObject:nil];
     }
+    self.routeAgentObj.instance = nil;
+    self.routeAgentObj = nil;
 }
 
 - (void)callPhone:(NSString *)phone

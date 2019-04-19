@@ -25,6 +25,7 @@
 #import <RCTDevLoadingView.h>
 #import <UIView+BridgeModule.h>
 #import <TTRNBridgeEngine.h>
+#import "FHRNCacheManager.h"
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -41,7 +42,6 @@
 @property (nonatomic, assign) BOOL canPreLoad;
 @property (nonatomic, strong) TTRouteParamObj *paramCurrentObj;
 @property (nonatomic, strong) TTRNKit *ttRNKit;
-@property (nonatomic, strong) FHRNBridgePlugin *fhRNPlugin;
 @property (nonatomic, strong) UIView *container;
 
 @end
@@ -99,6 +99,7 @@
 }
 - (void)initRNKit
 {
+    [[FHRNCacheManager sharedInstance] addObjectCountforChannel:_channelStr];
     self.ttRNKit = [self extracted];
 }
 
@@ -193,11 +194,14 @@
     [self.view layoutIfNeeded];
     
     if (!_canPreLoad) {
-        [self tt_startUpdate];
         [self processPreloadAction];
     }
     
+    [self tt_startUpdate];
+    
     [self registerObserver];
+    
+    _container.hidden = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -209,20 +213,21 @@
     }
     [[UIApplication sharedApplication] setStatusBarHidden:_hideStatusBar];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            _container.hidden = NO;
+            if (_viewWrapper && _canPreLoad) {
+                [self tt_endUpdataData];
+            }
         });
     });
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     if (_viewWrapper) {
-        if (_canPreLoad) {
-            [self tt_endUpdataData];
-            [_viewWrapper dismissLoadingView];
-        }
         [self addViewWrapper:_viewWrapper];
     }
 }
@@ -254,12 +259,23 @@
 
 - (void)destroyRNView
 {
-    ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
-    [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+    [[FHRNCacheManager sharedInstance] removeCountChannel:_channelStr];
+
+    if ([[FHRNCacheManager sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
+        ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
+        [self.ttRNKit clearRNResourceForChannel:_channelStr];
+        [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+    }
+    
+    self.ttRNKit.delegate = nil;
+    self.ttRNKit = nil;
+    [_container removeFromSuperview];
+    self.container = nil;
     [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
     _viewWrapper.rnView = nil;
     [_viewWrapper removeFromSuperview];
     self.viewWrapper = nil;
+
 }
 
 - (BOOL)prefersStatusBarHidden {
@@ -340,10 +356,7 @@
                   context:(TTRNKit *)context {
     if (wrapper) {
         if (_container && [self.view.subviews containsObject:_container]) {
-            [_container addSubview:wrapper];
-            [(UIView *)wrapper mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.edges.equalTo(_container);
-            }];
+            [self addViewWrapper:wrapper];
         }
         _viewWrapper = wrapper;
     } else if (specialHost) {
