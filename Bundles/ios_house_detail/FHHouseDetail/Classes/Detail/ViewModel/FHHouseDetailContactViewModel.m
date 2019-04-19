@@ -38,7 +38,7 @@
 #import "FHIMShareActivity.h"
 #import "FHIMShareItem.h"
 #import "TTAccountManager.h"
-#import "TTCopyContentItem.h"
+#import "TTCopyActivity.h"
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -440,7 +440,7 @@
         platform = @"qzone";
     } else if ([activity isKindOfClass:[FHIMShareActivity class]]) {
         platform = @"realtor";
-    } else if ([activity isKindOfClass:[TTCopyContentItem class]]) {
+    } else if ([activity isKindOfClass:[TTCopyActivity class]]) {
         platform = @"copy";
     }
     [self addShareFormLog:platform];
