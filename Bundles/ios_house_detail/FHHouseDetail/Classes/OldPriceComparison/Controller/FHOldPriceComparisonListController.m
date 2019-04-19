@@ -41,12 +41,6 @@
     return self;
 }
 
--(void)dealloc
-{
-    [_tableView removeObserver:self forKeyPath:@"contentInset"];
-    [_tableView removeObserver:self forKeyPath:@"contentOffset"];
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -103,11 +97,6 @@
     if ([TTDeviceHelper isIPhoneXDevice]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
-    
-    
-    [_tableView addObserver:self forKeyPath:@"contentInset" options:NSKeyValueObservingOptionNew context:nil];
-    [_tableView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
-    
 }
 
 - (NSString *)getQueryStr {
@@ -131,16 +120,10 @@
     UIEdgeInsets inset = self.tableView.contentInset;
     inset.top = self.notifyBarView.height;
     self.tableView.contentInset = inset;
-    NSLog(@"_TABLE_ before show tableview is: %@",self.tableView);
     [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSLog(@"top_tableview_%f",self.tableView.contentInset.top);
-        NSLog(@"off_tableview_%f",self.tableView.contentOffset);
         [UIView animateWithDuration:0.3 animations:^{
-            
-            //            UIEdgeInsets inset = self.tableView.contentInset;
-            //            inset.top = 0;
             self.tableView.contentInset = UIEdgeInsetsZero;
         }];
     });
@@ -157,16 +140,5 @@
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
-{
-    
-    if ([keyPath isEqualToString:@"contentInset"]) {
-        NSLog(@"_TABLE_ content inset is: %@",change);
-    }else if ([keyPath isEqualToString:@"contentOffset"]){
-        NSLog(@"_TABLE_ content offset is: %@",change);
-    }
-}
-
 
 @end
