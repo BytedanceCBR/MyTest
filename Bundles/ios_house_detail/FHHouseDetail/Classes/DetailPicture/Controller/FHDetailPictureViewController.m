@@ -169,7 +169,7 @@
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
     _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
-    _topBar.backgroundColor = [UIColor colorWithHexStr:@"#151515"]; // [UIColor clearColor];
+    _topBar.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.3]; // [UIColor clearColor];
     [self.view addSubview:_topBar];
     __weak typeof(self) weakSelf = self;
     _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
