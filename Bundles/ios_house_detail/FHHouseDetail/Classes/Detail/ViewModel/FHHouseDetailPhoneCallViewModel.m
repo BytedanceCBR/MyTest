@@ -91,7 +91,12 @@ typedef enum : NSUInteger {
         [self addReservationShowLog];
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle leftBtnTitle:leftBtnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum){
-            [wself callWithPhone:phoneNum realtorId:contactPhone.realtorId searchId:contactPhone.searchId imprId:contactPhone.imprId extraDict:extraDict];
+            NSMutableDictionary *params = @{}.mutableCopy;
+            if (extraDict) {
+                [params addEntriesFromDictionary:extraDict];
+                params[@"show_loading"] = @(NO);
+            }
+            [wself callWithPhone:phoneNum realtorId:contactPhone.realtorId searchId:contactPhone.searchId imprId:contactPhone.imprId extraDict:params];
             [wself.alertView dismiss];
         };
         alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum) {
@@ -177,10 +182,18 @@ typedef enum : NSUInteger {
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed realtorId:realtorId errorCode:0 message:nil];
         return;
     }
-    [self.bottomBar startLoading];
+    BOOL showLoading = YES;
+    if (extraDict[@"show_loading"]) {
+        showLoading = [extraDict[@"show_loading"]boolValue];
+    }
+    if (showLoading) {
+        [self.bottomBar startLoading];
+    }
     [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
-        [wself.bottomBar stopLoading];
+        if (showLoading) {
+            [wself.bottomBar stopLoading];
+        }
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         NSInteger isVirtual = model.data.isVirtual;
         if (!error && model.data.virtualNumber.length > 0) {
