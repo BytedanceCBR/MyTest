@@ -169,7 +169,7 @@
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.hidden = NO;
         _titleLabel.font = [UIFont themeFontRegular:16];
-        _titleLabel.textColor = [UIColor themeGray2];
+        _titleLabel.textColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
         self.contentView.backgroundColor = [UIColor clearColor];
         
         [self.contentView addSubview:_titleLabel];
@@ -186,7 +186,7 @@
     if (hasSelected) {
         _titleLabel.textColor = [UIColor whiteColor];
     } else {
-        _titleLabel.textColor = [UIColor themeGray2];
+        _titleLabel.textColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
     }
 }
 
