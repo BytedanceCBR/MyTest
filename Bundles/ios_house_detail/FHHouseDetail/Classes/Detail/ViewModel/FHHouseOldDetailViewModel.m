@@ -376,6 +376,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
     // 小区评测
@@ -441,6 +442,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
+        model.data.contact.unregistered = YES;
         self.contactViewModel.contactPhone = model.data.contact;
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;

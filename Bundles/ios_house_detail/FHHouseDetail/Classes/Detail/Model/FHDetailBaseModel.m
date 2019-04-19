@@ -66,7 +66,8 @@
                            @"imOpenUrl" : @"chat_openurl",
                            @"imLabel" : @"chat_button_text",
                            @"callButtonText" : @"call_button_text",
-                           @"realtorDetailUrl" : @"main_page_info"
+                           @"realtorDetailUrl" : @"main_page_info",
+                           @"reportButtonText":@"report_button_text"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -218,3 +219,43 @@
     return YES;
 }
 @end
+
+@implementation FHDetailDataNeighborhoodInfoSchoolInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"schoolType": @"school_type",
+                           @"schoolId": @"school_id",
+                           @"schoolName": @"school_name",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataNeighborhoodInfoSchoolItemModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"schoolTypeName": @"school_type_name",
+                           @"schoolList": @"school_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
+
+
+

@@ -21,34 +21,45 @@
 #import "FHDetailStarsCountView.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
+#import <FHCommonUI/UIView+House.h>
+#import <FHCommonDefines.h>
+#import <TTBaseLib/UIButton+TTAdditions.h>
+#import "FHDetailSchoolInfoItemView.h"
 
 @interface FHDetailNeighborhoodInfoCell ()
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
-
-@property (nonatomic, strong)   UILabel       *nameKey;
-@property (nonatomic, strong)   UILabel       *nameValue;
-@property (nonatomic, strong)   UILabel       *schoolKey;
-@property (nonatomic, strong)   UILabel       *schoolLabel;
+@property (nonatomic, strong)   UIView       *topView;
+@property (nonatomic, assign)   CGFloat       topHeight;
+//@property (nonatomic, strong)   UIView       *bottomView;
+@property (nonatomic, strong)   UIView       *schoolView;
 
 @end
 
 @implementation FHDetailNeighborhoodInfoCell
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     [super awakeFromNib];
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
     [super setSelected:selected animated:animated];
 }
 
-- (void)refreshWithData:(id)data {
+- (void)refreshWithData:(id)data
+{
     if (self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodInfoModel class]]) {
         return;
     }
     self.currentData = data;
-    //
+    for (UIView *subview in self.topView.subviews) {
+        [subview removeFromSuperview];
+    }
+    for (UIView *subview in self.schoolView.subviews) {
+        [subview removeFromSuperview];
+    }
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)data;
     // 二手房
     if (model.neighborhoodInfo) {
@@ -58,73 +69,164 @@
     if (model.rent_neighborhoodInfo) {
         [self updateRentCellData];
     }
-    [self layoutIfNeeded];
 }
 
 // 小区信息
-- (NSString *)elementTypeString:(FHHouseType)houseType {
+- (NSString *)elementTypeString:(FHHouseType)houseType
+{
     return @"neighborhood_detail";
 }
 
 // 租房
-- (void)updateRentCellData {
+- (void)updateRentCellData
+{
+    CGFloat topHeight = 0;
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {
         NSString *headerName = [NSString stringWithFormat:@"小区 %@",model.rent_neighborhoodInfo.name];
         self.headerView.label.text = headerName;
         NSString *districtName = model.rent_neighborhoodInfo.districtName;
         NSString *areaName = model.rent_neighborhoodInfo.areaName;
+        UIView *lastView = nil;
         if (areaName.length > 0 && districtName.length > 0) {
-            self.nameValue.text = [NSString stringWithFormat:@"%@-%@",districtName,areaName];
-        } else {
-            self.nameValue.text = districtName;
+            topHeight = [self showLabelWithKey:@"所属区域" value:[NSString stringWithFormat:@"%@-%@",districtName,areaName] parentView:self.topView bottomY:topHeight];
+        } else if (districtName.length > 0) {
+            topHeight = [self showLabelWithKey:@"所属区域" value:districtName parentView:self.topView bottomY:topHeight];
         }
-        NSString *schoolName = @"";
-        if (model.rent_neighborhoodInfo.schoolInfo.count > 0) {
-            FHRentDetailResponseDataSchoolInfoModel *schoolInfo = model.rent_neighborhoodInfo.schoolInfo[0];
-            schoolName = schoolInfo.schoolName;
-        }
-        [self updateSchoolName:schoolName];
+        self.topHeight = topHeight;
+        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.topHeight);
+        }];
+        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(46 + self.topHeight);
+        }];
+        [self updateSchoolView:model.rent_neighborhoodInfo.schoolDictList];
     }
 }
 
 // 二手房
-- (void)updateErshouCellData {
+- (void)updateErshouCellData
+{
+    CGFloat topHeight = 0;
     FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
     if (model) {
         NSString *headerName = [NSString stringWithFormat:@"小区 %@",model.neighborhoodInfo.name];
         self.headerView.label.text = headerName;
         NSString *areaName = model.neighborhoodInfo.areaName;
         NSString *districtName = model.neighborhoodInfo.districtName;
+        UIView *lastView = nil;
         if (areaName.length > 0 && districtName.length > 0) {
-            self.nameValue.text = [NSString stringWithFormat:@"%@-%@",districtName,areaName];
-        } else {
-            self.nameValue.text = districtName;
+            topHeight = [self showLabelWithKey:@"所属区域" value:[NSString stringWithFormat:@"%@-%@",districtName,areaName] parentView:self.topView bottomY:topHeight];
+
+        } else if (districtName.length > 0) {
+            topHeight = [self showLabelWithKey:@"所属区域" value:districtName parentView:self.topView bottomY:topHeight];
+        }else {
+            topHeight = 0;
         }
-        NSString *schoolName = @"";
-        if (model.neighborhoodInfo.schoolInfo.count > 0) {
-            FHDetailOldDataNeighborhoodInfoSchoolInfoModel *schoolInfo = model.neighborhoodInfo.schoolInfo[0];
-            schoolName = schoolInfo.schoolName;
-        }
-        [self updateSchoolName:schoolName];
+        self.topHeight = topHeight;
+        [self.topView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.topHeight);
+        }];
+        [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(46 + self.topHeight);
+        }];
+        [self updateSchoolView:model.neighborhoodInfo.schoolDictList];
     }
 }
 
-- (void)updateSchoolName:(NSString *)schoolName {
-    self.schoolLabel.text = schoolName;
-    if (schoolName.length > 0) {
-        [self.nameKey mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(-51);
-        }];
-        self.schoolKey.hidden = NO;
-        self.schoolLabel.hidden = NO;
-    } else {
-        [self.nameKey mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(-20);
-        }];
-        self.schoolKey.hidden = YES;
-        self.schoolLabel.hidden = YES;
+- (void)updateSchoolView:(NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel>*)schoolDictList
+{
+    if (schoolDictList.count < 1) {
+        return;
     }
+    FHDetailNeighborhoodInfoModel *model = (FHDetailNeighborhoodInfoModel *)self.currentData;
+    __block UIView *lastItemView = nil;
+    CGFloat sumHeight = 0;
+    for (NSInteger index = 0; index < schoolDictList.count; index++) {
+        FHDetailDataNeighborhoodInfoSchoolItemModel *item = schoolDictList[index];
+        if (item.schoolList.count < 1) {
+            continue;
+        }
+        FHDetailSchoolInfoItemModel *schoolInfoModel = [[FHDetailSchoolInfoItemModel alloc]init];
+        schoolInfoModel.schoolItem = item;
+        schoolInfoModel.tableView = model.tableView;
+        FHDetailSchoolInfoItemView *itemView = [[FHDetailSchoolInfoItemView alloc]initWithSchoolInfoModel:schoolInfoModel];
+        sumHeight += itemView.bottomY;
+        __weak typeof(self)wself = self;
+        itemView.foldBlock = ^(FHDetailSchoolInfoItemView *theItemView, CGFloat height) {
+            
+            [model.tableView beginUpdates];
+            [UIView animateWithDuration:0.3 animations:^{
+                [wself refreshItemsView];
+            } completion:^(BOOL finished) {
+            }];
+            
+            [wself refreshSchoolViewFrame];
+            [wself setNeedsUpdateConstraints];
+            [model.tableView endUpdates];
+  
+        };
+        
+        [self.schoolView addSubview:itemView];
+        itemView.frame = CGRectMake(0, lastItemView.bottom, SCREEN_WIDTH, itemView.bottomY);
+        lastItemView = itemView;
+    }
+    [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(46 + self.topHeight);
+        make.height.mas_equalTo(sumHeight);
+    }];
+}
+- (void)refreshItemsView
+{
+    CGFloat viewHeight = 0;
+    __block UIView *lastView = nil;
+    for (FHDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
+        if (![itemView isKindOfClass:[FHDetailSchoolInfoItemView class]]) {
+            continue;
+        }
+        itemView.height = [itemView viewHeight];
+        itemView.top = viewHeight;
+        viewHeight += itemView.viewHeight;
+        lastView = itemView;
+    }
+}
+
+- (void)refreshSchoolViewFrame
+{
+    CGFloat viewHeight = 0;
+    __block UIView *lastView = nil;
+    for (FHDetailSchoolInfoItemView *itemView in self.schoolView.subviews) {
+        if (![itemView isKindOfClass:[FHDetailSchoolInfoItemView class]]) {
+            continue;
+        }
+        viewHeight += itemView.viewHeight;
+    }
+    [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(viewHeight);
+    }];
+}
+
+- (CGFloat)showLabelWithKey:(NSString *)key value:(NSString *)value parentView:(UIView *)parentView bottomY:(CGFloat)bottomY
+{
+    UILabel *nameKey = [UILabel createLabel:key textColor:@"" fontSize:15];
+    nameKey.textColor = [UIColor themeGray3];
+    UILabel *nameValue = [UILabel createLabel:value textColor:@"" fontSize:14];
+    nameValue.numberOfLines = 0;
+    nameValue.textColor = [UIColor themeGray1];
+    [parentView addSubview:nameKey];
+    [parentView addSubview:nameValue];
+    [nameKey sizeToFit];
+    nameKey.left = 20;
+    nameKey.top = bottomY + 10;
+    nameKey.height = 20;
+    
+    nameValue.width = SCREEN_WIDTH - 20 - nameKey.right - 12;
+    [nameValue sizeToFit];
+    nameValue.left = nameKey.right + 12;
+    nameValue.top = nameKey.top;
+    
+    bottomY = nameValue.bottom;
+    return bottomY;
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -146,44 +248,28 @@
         make.left.top.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(46);
     }];
-    [self.headerView addTarget:self  action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addTarget:self action:@selector(gotoNeighborhood) forControlEvents:UIControlEventTouchUpInside];
     
-    _nameKey = [UILabel createLabel:@"所属区域" textColor:@"" fontSize:15];
-    _nameKey.textColor = [UIColor themeGray3];
+    _topView = [[UIView alloc] init];
+    _topView.backgroundColor = [UIColor whiteColor];
+    _schoolView = [[UIView alloc] init];
+    _schoolView.backgroundColor = [UIColor whiteColor];
+
+    [self.contentView addSubview:_schoolView];
+    [self.contentView addSubview:_topView];
     
-    _nameValue = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _nameValue.textColor = [UIColor themeGray1];
-    
-    _schoolKey = [UILabel createLabel:@"教育资源" textColor:@"" fontSize:15];
-    _schoolKey.textColor = [UIColor themeGray3];
-    
-    _schoolLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _schoolLabel.textColor = [UIColor themeGray1];
-    
-    [self.contentView addSubview:_nameKey];
-    [self.nameKey mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(10);
-        make.height.mas_equalTo(20);
-        make.bottom.mas_equalTo(-51);// 一定有区域名称
+    [_topView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(46);
+        make.height.mas_equalTo(0);
     }];
-    [self.contentView addSubview:self.nameValue];
-    [self.nameValue mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.nameKey.mas_right).offset(12);
-        make.top.mas_equalTo(self.nameKey);
-        make.height.mas_equalTo(20);
-    }];
-    [self.contentView addSubview:_schoolKey];
-    [self.schoolKey mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.nameKey);
-        make.top.mas_equalTo(self.nameKey.mas_bottom).offset(10);
-        make.height.mas_equalTo(20);
-    }];
-    [self.contentView addSubview:self.schoolLabel];
-    [self.schoolLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.schoolKey.mas_right).offset(12);
-        make.top.mas_equalTo(self.schoolKey);
-        make.height.mas_equalTo(20);
+    [_schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+//        make.top.mas_equalTo(self.topView.mas_bottom);
+        make.height.mas_equalTo(0);
+//        make.bottom.mas_equalTo(self.bottomView.mas_top);
+        make.bottom.mas_equalTo(-20);
+
     }];
 }
 
@@ -229,5 +315,12 @@
 // FHDetailNeighborhoodInfoModel
 @implementation FHDetailNeighborhoodInfoModel
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+    }
+    return self;
+}
 
 @end
