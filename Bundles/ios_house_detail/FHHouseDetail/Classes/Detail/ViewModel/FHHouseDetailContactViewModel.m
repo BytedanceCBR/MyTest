@@ -304,14 +304,36 @@
 
 // 在线联系点击
 - (void)onlineActionWithExtraDict:(NSDictionary *)extraDict {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (extraDict.count > 0) {
+        [params addEntriesFromDictionary:extraDict];
+    }
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         [self addFakeImClickLog];
-        [[ToastManager manager] showToast:@"该经纪人暂未开通该服务，请使用其他联系方式" duration:3 isUserInteraction:NO];
+
+        FHHouseDetailFormAlertModel *alertModel = [[FHHouseDetailFormAlertModel alloc]init];
+        alertModel.title = @"预约看房";
+        alertModel.subtitle = @"很抱歉，该经纪人暂未开通该服务，请留下您的联系方式，我们会立即短信告知对方，方便与您联系！";
+        NSString *fromStr = nil;
+        if (self.houseType == FHHouseTypeSecondHandHouse) {
+            fromStr = @"app_oldhouse_chat";
+        }else if (self.houseType == FHHouseTypeRentHouse) {
+            fromStr = @"app_renthouse_chat";
+        }
+        if (self.contactPhone.phone.length > 0) {
+            alertModel.btnTitle = @"电话咨询";
+            alertModel.leftBtnTitle = @"立即预约";
+        }else {
+            alertModel.btnTitle = @"立即预约";
+        }
+        self.contactPhone.searchId = self.searchId;
+        self.contactPhone.imprId = self.imprId;
+        [self.phoneCallViewModel fillFormAction:alertModel contactPhone:self.contactPhone customHouseId:nil fromStr:fromStr withExtraDict:params];
         return;
     }
     NSString *realtor_pos = @"detail_button";
-    if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
-        realtor_pos = extraDict[@"realtor_position"] ? : @"detail_button";
+    if (params && [params isKindOfClass:[NSDictionary class]]) {
+        realtor_pos = params[@"realtor_position"] ? : @"detail_button";
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:realtor_pos];
 }
@@ -334,8 +356,12 @@
 }
 
 - (void)imAction {
-    NSDictionary *extraDic = @{@"realtor_position":@"detail_button",
-                               @"position":@"button"};
+    NSMutableDictionary *extraDic = @{@"realtor_position":@"detail_button",
+                               @"position":@"button"}.mutableCopy;
+    if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
+        extraDic[@"position"] = @"online";
+        extraDic[@"realtor_position"] = @"online";
+    }
     [self onlineActionWithExtraDict:extraDic];
 }
 
@@ -430,7 +456,7 @@
     tracerDic[@"is_login"] = [TTAccount sharedAccount].isLogin?@"1":@"0";
     tracerDic[@"conversation_id"] = @"be_null";
     tracerDic[@"realtor_id"] = _contactPhone.realtorId?:@"be_null";
-    tracerDic[@"realtor_rank"] = @"be_null";
+    tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"online";
     
     TRACK_EVENT(@"click_online", tracerDic);

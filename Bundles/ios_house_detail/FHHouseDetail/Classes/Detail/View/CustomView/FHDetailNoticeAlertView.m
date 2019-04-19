@@ -23,6 +23,7 @@
 @property(nonatomic , strong) UITextField *phoneTextField;
 @property(nonatomic , strong) UIView *seperateLine;
 @property(nonatomic , strong) UILabel *errorTextLabel;
+@property(nonatomic , strong) UIButton *leftBtn;
 @property(nonatomic , strong) UIButton *submitBtn;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , copy) NSString *originPhoneNumber;
@@ -45,6 +46,34 @@
     return self;
 }
 
+- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle
+{
+    self = [self initWithFrame:[UIScreen mainScreen].bounds];
+    if (self) {
+        [self setupUI];
+        self.titleLabel.text = title;
+        self.subtitleLabel.text = subtitle;
+        [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
+        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
+        if (leftBtnTitle.length > 0) {
+            
+            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateNormal];
+            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateHighlighted];
+            [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.width.height.centerY.mas_equalTo(self.submitBtn);
+            }];
+            [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(40);
+                make.top.mas_equalTo(self.seperateLine.mas_bottom).mas_offset(20.5);
+                make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
+                make.right.mas_equalTo(-20);
+            }];
+        }
+    }
+    return self;
+}
+
 - (void)setPhoneNum:(NSString *)phoneNum
 {
     _phoneNum = phoneNum;
@@ -57,11 +86,9 @@
         }
         self.phoneTextField.text = tempPhone;
         if (self.phoneTextField.text.length > 0) {
-            self.submitBtn.enabled = YES;
-            self.submitBtn.alpha = 1;
+            [self refreshBtnState:YES];
         }else {
-            self.submitBtn.enabled = NO;
-            self.submitBtn.alpha = 0.6;
+            [self refreshBtnState:NO];
         }
     }
     // 有手机号，不弹出弹窗
@@ -104,6 +131,7 @@
     [self.contentView addSubview:self.phoneTextField];
     [self.contentView addSubview:self.seperateLine];
     [self.contentView addSubview:self.errorTextLabel];
+    [self.contentView addSubview:self.leftBtn];
     [self.contentView addSubview:self.submitBtn];
     [self.contentView addSubview:self.tipLabel];
     
@@ -153,6 +181,7 @@
     }];
     [self.closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
     [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.leftBtn addTarget:self action:@selector(leftBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
     UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tipBtnDidClick)];
     self.tipLabel.userInteractionEnabled = YES;
@@ -217,11 +246,24 @@
     if (self.phoneTextField.text.length > 0) {
         self.errorTextLabel.hidden = YES;
         self.seperateLine.backgroundColor = [UIColor themeGray6];
+        [self refreshBtnState:YES];
+    }else {
+        [self refreshBtnState:NO];
+    }
+}
+
+- (void)refreshBtnState:(BOOL)isEnabled
+{
+    if (isEnabled) {
         self.submitBtn.enabled = YES;
         self.submitBtn.alpha = 1;
+        self.leftBtn.enabled = YES;
+        self.leftBtn.alpha = 1;
     }else {
         self.submitBtn.enabled = NO;
         self.submitBtn.alpha = 0.6;
+        self.leftBtn.enabled = NO;
+        self.leftBtn.alpha = 0.6;
     }
 }
 
@@ -270,6 +312,18 @@
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
         if (self.confirmClickBlock) {
             self.confirmClickBlock(phoneNum);
+        }
+    }else {
+        [self showErrorText];
+    }
+}
+
+- (void)leftBtnDidClick:(UIButton *)btn
+{
+    NSString *phoneNum = [self currentInputPhoneNumber];
+    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+        if (self.leftClickBlock) {
+            self.leftClickBlock(phoneNum);
         }
     }else {
         [self showErrorText];
@@ -411,6 +465,21 @@
         _submitBtn.enabled = NO;
     }
     return _submitBtn;
+}
+
+- (UIButton *)leftBtn
+{
+    if (!_leftBtn) {
+        _leftBtn = [[UIButton alloc]init];
+        [_leftBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_leftBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        _leftBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _leftBtn.layer.cornerRadius = 4;
+        _leftBtn.backgroundColor = [UIColor themeRed3];
+        _leftBtn.alpha = 0.6;
+        _leftBtn.enabled = NO;
+    }
+    return _leftBtn;
 }
 
 - (UILabel *)tipLabel

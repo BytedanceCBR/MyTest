@@ -13,9 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *phoneNum;
 @property(nonatomic, copy)void(^confirmClickBlock)(NSString *phoneNum);
+@property(nonatomic, copy)void(^leftClickBlock)(NSString *phoneNum);
 @property(nonatomic, copy)void(^tipClickBlock)(void);
 
 - (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
+- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle;
 - (void)showFrom:(UIView *)parentView;
 - (void)dismiss;
 @end

@@ -34,6 +34,12 @@ typedef enum : NSUInteger {
     FHPhoneCallTypeRequestFailed,
 } FHPhoneCallType;
 
+
+@implementation FHHouseDetailFormAlertModel
+
+@end
+
+
 @interface FHHouseDetailPhoneCallViewModel () <FHRealtorDetailWebViewControllerDelegate>
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -72,17 +78,36 @@ typedef enum : NSUInteger {
     [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:nil fromStr:nil withExtraDict:extraDict];
 }
 
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
+- (void)fillFormAction:(FHHouseDetailFormAlertModel *)alertModel contactPhone:(FHDetailContactModel *)contactPhone customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
 {
-    [self addInformShowLog];
+    NSString *title = alertModel.title ? : @"询底价";
+    NSString *subtitle = alertModel.subtitle ? : @"提交后将安排专业经纪人与您联系";
+    NSString *btnTitle = alertModel.btnTitle ? : @"获取底价";
+    NSString *leftBtnTitle = alertModel.leftBtnTitle;
+
     __weak typeof(self)wself = self;
-    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    FHDetailNoticeAlertView *alertView = nil;
+    if (leftBtnTitle.length > 0) {
+        [self addReservationShowLog];
+        alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle leftBtnTitle:leftBtnTitle];
+        alertView.confirmClickBlock = ^(NSString *phoneNum){
+            [wself callWithPhone:phoneNum realtorId:contactPhone.realtorId searchId:contactPhone.searchId imprId:contactPhone.imprId extraDict:extraDict];
+            [wself.alertView dismiss];
+        };
+        alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum) {
+            [wself fillFormRequest:phoneNum customHouseId:customHouseId fromStr:fromStr];
+            [wself addClickConfirmLogWithExtra:extraDict];
+        };
+    }else {
+        [self addInformShowLog];
+        alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+        alertView.confirmClickBlock = ^(NSString *phoneNum){
+            [wself fillFormRequest:phoneNum customHouseId:customHouseId fromStr:fromStr];
+            [wself addClickConfirmLogWithExtra:extraDict];
+        };
+    }
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    alertView.confirmClickBlock = ^(NSString *phoneNum){
-        [wself fillFormRequest:phoneNum customHouseId:customHouseId fromStr:fromStr];
-        [wself addClickConfirmLogWithExtra:extraDict];
-    };
     alertView.tipClickBlock = ^{
         
         NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
@@ -92,6 +117,17 @@ typedef enum : NSUInteger {
     };
     [alertView showFrom:self.belongsVC.view];
     self.alertView = alertView;
+    
+}
+
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
+{
+    FHHouseDetailFormAlertModel *alertModel = [[FHHouseDetailFormAlertModel alloc]init];
+    alertModel.title = title;
+    alertModel.subtitle = subtitle;
+    alertModel.btnTitle = btnTitle;
+
+    [self fillFormAction:alertModel contactPhone:nil customHouseId:customHouseId fromStr:fromStr withExtraDict:extraDict];
 }
 - (void)addDetailCallExceptionLog:(NSInteger)status realtorId:(NSString *)realtorId errorCode:(NSInteger)errorCode message:(NSString *)message
 {
@@ -551,6 +587,26 @@ typedef enum : NSUInteger {
     [params addEntriesFromDictionary:[self baseParams]];
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
+
+// 表单展示
+- (void)addReservationShowLog
+{
+//    1. event_type：house_app2c_v2
+//    2. page_type：old_detail（二手房详情页），rent_detail（租房详情页）
+//    3. card_type
+//    4. enter_from
+//    5. element_from
+//    6. rank
+//    7. origin_from
+//    8. origin_search_id
+//    9.log_pb
+//    10.position:通过在线联系点击立即预约：online
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:[self baseParams]];
+    params[@"position"] = @"online";
+    [FHUserTracker writeEvent:@"reservation_show" params:params];
+}
+
 
 // 表单提交
 - (void)addClickConfirmLogWithExtra:(NSDictionary *)extraDict
