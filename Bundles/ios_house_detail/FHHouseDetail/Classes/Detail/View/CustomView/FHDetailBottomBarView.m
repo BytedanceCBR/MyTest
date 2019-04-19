@@ -40,6 +40,7 @@
 
 - (void)setupUI
 {
+    _showIM = NO;
     UIView *topLine = [[UIView alloc]init];
     topLine.backgroundColor = [UIColor themeGray6];
     [self addSubview:topLine];
@@ -181,6 +182,7 @@
     if ((contactPhone.unregistered && contactPhone.imLabel.length > 0) || !isEmptyString(contactPhone.imOpenUrl) ){
         showIM = YES;
     }
+    self.showIM = showIM;
     
     self.leftView.hidden = contactPhone.showRealtorinfo == 1 ? NO : YES;
     self.imChatBtn.hidden = !showIM;
