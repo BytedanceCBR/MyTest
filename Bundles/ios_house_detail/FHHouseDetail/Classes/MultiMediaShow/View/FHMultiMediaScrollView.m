@@ -96,9 +96,9 @@
     
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self).offset(-10);
+        make.bottom.mas_equalTo(self);
         make.width.mas_equalTo(self.bounds.size.width);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(40);
     }];
     
     [self.noDataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -110,7 +110,21 @@
     if(index < self.itemIndexArray.count){
         NSInteger item = [self.itemIndexArray[index] integerValue] + 1;
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
-        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
+        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        
+        NSInteger curPage = (NSInteger)(_colletionView.contentOffset.x / _colletionView.frame.size.width);
+        if (_medias.count > 1) {
+            if (curPage == 0) {
+                curPage = _medias.count;
+            }else if (curPage == _medias.count + 1){
+                curPage = 0;
+            }
+        }
+        if (curPage == 0 ){
+            curPage = 1;
+        }
+        self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+        
         if(self.delegate && [self.delegate respondsToSelector:@selector(selectItem:)]){
             [self.delegate selectItem:self.itemArray[index]];
         }
@@ -269,7 +283,7 @@
         
         CGFloat itemViewWidth = 0;
         if(_itemArray.count > 0){
-            itemViewWidth = 44 * _itemArray.count + 10 * (_itemArray.count - 1);
+            itemViewWidth = 10 + 44 * _itemArray.count + 10 * (_itemArray.count - 1);
         }
         
         [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {

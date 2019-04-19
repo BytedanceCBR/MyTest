@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) CGFloat itemWidth;
 @property(nonatomic, assign) CGFloat itemHeight;
 @property(nonatomic, assign) CGFloat itemPadding;
+@property(nonatomic, assign) CGFloat topMargin;
+@property(nonatomic, assign) CGFloat leftMargin;
 @property(nonatomic, strong) UIColor *bgColor;
 @property(nonatomic, strong) UIColor *textColor;
 @property(nonatomic, strong) UIColor *selectedBgColor;

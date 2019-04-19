@@ -6,11 +6,11 @@
 //
 
 #import "FHVideoAndImageItemView.h"
-
-#import "FHVideoAndImageItemView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import <Masonry.h>
+#import "UIButton+TTAdditions.h"
+
 
 @interface FHVideoAndImageItemView ()
 
@@ -31,6 +31,8 @@
         _itemWidth = 44.0f;
         _itemHeight = 20.0f;
         _itemPadding = 10.0f;
+        _topMargin = 10.0f;
+        _leftMargin = 5.0f;
         _bgColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
         _textColor = [UIColor themeGray1];
         _selectedBgColor = [UIColor themeRed1];
@@ -77,11 +79,11 @@
         
         [button mas_makeConstraints:^(MASConstraintMaker *make) {
             if(i%self.row == 0){
-                make.left.mas_equalTo(self);
+                make.left.mas_equalTo(self).offset(_leftMargin);
             }else{
                 make.left.mas_equalTo(lastView.mas_right).offset(self.itemPadding);
             }
-            make.top.mas_equalTo(self).offset(i/self.row * (self.itemHeight + self.itemPadding));
+            make.top.mas_equalTo(self).offset(_topMargin + i/self.row * (self.itemHeight + self.itemPadding));
             make.width.mas_equalTo(self.itemWidth);
             make.height.mas_equalTo(self.itemHeight);
         }];
@@ -103,6 +105,7 @@
     btn.layer.cornerRadius = self.itemHeight/2;
     btn.layer.masksToBounds = YES;
     btn.tag = tag;
+    btn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -5, -10, -5);
     return btn;
 }
 
