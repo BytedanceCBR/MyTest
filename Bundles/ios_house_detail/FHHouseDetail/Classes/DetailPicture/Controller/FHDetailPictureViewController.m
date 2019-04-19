@@ -168,6 +168,9 @@
         topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
+    if (topInset < 1) {
+        topInset = 20;
+    }
     _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
     _topBar.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.3]; // [UIColor clearColor];
     [self.view addSubview:_topBar];
@@ -337,6 +340,9 @@
     if (@available(iOS 11.0, *)) {
         topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    if (topInset < 1) {
+        topInset = 20;
     }
     self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
     self.topBar.frame = CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset);
