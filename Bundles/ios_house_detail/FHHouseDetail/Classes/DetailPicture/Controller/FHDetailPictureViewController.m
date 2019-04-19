@@ -912,10 +912,27 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            [self saveButtonClicked:nil];
+            [self alertSheetShow];
             break;
         default:
             break;
+    }
+}
+
+- (void)alertSheetShow {
+    if (self.topVC) {
+        __weak typeof(self) weakSelf = self;
+        UIAlertController *alertController = [[UIAlertController alloc] init];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }]];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"保存图片到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [weakSelf saveButtonClicked:nil];
+        }]];
+        
+        [self.topVC presentViewController:alertController animated:YES completion:nil];
     }
 }
 
@@ -1076,7 +1093,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (!startShowImageView.isDownloading && self.placeholderSourceViewFrames.count > _startWithIndex && [self.placeholderSourceViewFrames objectAtIndex:_startWithIndex] != [NSNull null]) {
         
         __weak TTShowImageView * weakShowImageView = startShowImageView;
-        __weak TTPhotoScrollViewController * weakSelf = self;
+        __weak FHDetailPictureViewController * weakSelf = self;
         
         startShowImageView.loadingCompletedAnimationBlock = ^() {
             
