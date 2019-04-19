@@ -34,7 +34,9 @@ NSString *const TTThemeManagerThemeModeChangedNotification = @"TTThemeManagerThe
 - (instancetype)init {
     if (self = [super init]) {
         
-        self.currentThemeMode = (TTThemeMode)[[NSUserDefaults standardUserDefaults] integerForKey:TTThemeModeStorageKey];
+        //永远日间模式
+//        self.currentThemeMode = (TTThemeMode)[[NSUserDefaults standardUserDefaults] integerForKey:TTThemeModeStorageKey];
+        self.currentThemeMode = TTThemeModeDay;
         
         if (!self.currentThemeMode) {
             self.currentThemeMode = TTThemeModeDay;
@@ -157,7 +159,7 @@ NSString *const TTThemeManagerThemeModeChangedNotification = @"TTThemeManagerThe
 }
 
 - (BOOL)switchThemeModeto:(TTThemeMode)themeMode needBroadcast:(BOOL)needBroadcast {
-    self.currentThemeMode = themeMode;
+    self.currentThemeMode = TTThemeModeDay;
     [[NSUserDefaults standardUserDefaults] setInteger:self.currentThemeMode forKey:TTThemeModeStorageKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     if (themeMode == TTThemeModeDay) {
