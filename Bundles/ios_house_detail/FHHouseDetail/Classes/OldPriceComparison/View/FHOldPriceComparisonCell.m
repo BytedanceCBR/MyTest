@@ -329,7 +329,7 @@
     [self updateImageTopLeft];
     
 //    self.mainTitleLabel.text = model.displayTitle;
-    self.subTitleLabel.text = [self getSubTitle:model];
+    self.subTitleLabel.text = model.displaySubtitle;
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
     
     self.priceLabel.text = model.displayPrice;
