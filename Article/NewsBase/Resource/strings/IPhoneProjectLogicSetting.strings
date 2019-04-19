@@ -119,8 +119,12 @@
 
 "second_house_main"   = "FHBaseMainListViewController";
 
-
 "react" = "FHRNBaseViewController";
+
+//通勤找房
+"commute_config" = "FHCommuteConfigViewController";
+"commute_poi" = "FHCommutePOISearchViewController";
+"commute_list" = "FHHouseListViewController";
 
 // 帮我找房中转页
 "house_find"   = "FHHouseFindMainViewController";

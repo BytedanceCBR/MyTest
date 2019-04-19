@@ -271,6 +271,33 @@
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
 }
 
++(TTHttpTask *)requestCommute:(NSInteger)cityId query:(NSString *_Nullable)query location:(CLLocationCoordinate2D)location houseType:(FHHouseType)houseType duration:(CGFloat)duration type:(FHCommuteType)type param:(NSDictionary *_Nonnull)param offset:(NSInteger)offset completion:(void(^_Nullable)(FHHouseRentModel* _Nullable model , NSError * _Nullable error))completion
+{
+    //10.224.5.226:6789/f100/api/commuting?city_id=122&aim_longitude=116.307512&aim_latitude=39.982717&duration=900&commutingway=2&house_type=3'
+    NSString *path = @"/f100/api/commuting";
+    NSMutableDictionary *mparam = [NSMutableDictionary new];
+    mparam[@"city_id"] = @(cityId);
+    mparam[@"aim_longitude"] = @(location.longitude);
+    mparam[@"aim_latitude"] = @(location.latitude);
+    mparam[@"duration_sec"] = @(duration);
+    mparam[@"house_type"] = @(houseType);
+    mparam[@"commuting_way"] = @(type+1);
+    mparam[@"offset"] = @(offset);
+    mparam[@"count"] = @"20";
+    if (param) {
+        [mparam addEntriesFromDictionary:param];
+    }
+    if (query.length > 0) {
+        path = [NSString stringWithFormat:@"%@?%@",path,query];
+    }
+    
+    return [FHMainApi queryData:path params:mparam class:[FHHouseRentModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if (completion) {
+            completion(model , error);
+        }
+    }];
+}
+
 + (TTHttpTask *)requestSuggestionOnlyNeiborhoodCityId:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query class:(Class)cls completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
     NSString *queryPath = @"/f100/api/get_suggestion";
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
@@ -283,6 +310,7 @@
     }
     
     return [FHMainApi queryData:queryPath params:paramDic class:cls completion:completion];
+
 }
 
 @end

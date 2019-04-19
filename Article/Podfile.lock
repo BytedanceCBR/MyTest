@@ -82,10 +82,8 @@ PODS:
   - FHHouseList (0.1.0)
   - FHHouseMessage (0.1.0)
   - FHHouseMine (0.1.0)
-  - FHHouseRent (0.1.0)
   - FHHouseTrend (0.1.0)
   - FHMapSearch (0.1.0)
-  - FHRNKit (0.1.0)
   - FLAnimatedImage (1.0.12.1-binary)
   - FLEX (2.1.1)
   - FMDB (2.6.2.1-binary):
@@ -287,6 +285,9 @@ PODS:
   - TTBaseLib/TTSandBoxHelper (0.1.0)
   - TTBaseLib/TTUIResponderHelper (0.1.0)
   - TTBatchItemAction (0.1.8.1-binary)
+  - TTBridgeUnify/TTBridge (0.3.19)
+  - TTBridgeUnify/TTBridgeAuthManager (0.3.19)
+  - TTBridgeUnify/WebView (0.3.19)
   - TTDebugAssistant (0.2.31)
   - TTDialogDirector/Camera (0.1.2)
   - TTDialogDirector/Contacts (0.1.2)
@@ -423,6 +424,11 @@ PODS:
   - TTRexxar/PackageApp (0.8.1)
   - TTRexxar/Plugins (0.8.1)
   - TTRexxar/WebView (0.8.1)
+  - TTRNKit (0.3.3):
+    - TTRNKit/Core (= 0.3.3)
+    - TTRNKit/WebViewBridge (= 0.3.3)
+  - TTRNKit/Core (0.3.3)
+  - TTRNKit/WebViewBridge (0.3.3)
   - TTRoute (0.2.25.1)
   - TTServiceKit (0.4.1.1-binary)
   - TTServiceProtocols (0.0.5)
@@ -534,10 +540,8 @@ DEPENDENCIES:
   - FHHouseList (from `../Bundles/ios_house_list`)
   - FHHouseMessage (from `../Bundles/ios_house_message`)
   - FHHouseMine (from `../Bundles/ios_house_mine`)
-  - FHHouseRent (from `../Bundles/ios_house_rent`)
   - FHHouseTrend (from `../Bundles/ios_house_trend`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
-  - FHRNKit (from `../Bundles/ios_common_rn`)
   - FLAnimatedImage (= 1.0.12.1-binary)
   - FLEX (= 2.1.1)
   - FMDB (= 2.6.2.1-binary)
@@ -633,6 +637,9 @@ DEPENDENCIES:
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
   - TTBatchItemAction (= 0.1.8.1-binary)
+  - TTBridgeUnify/TTBridge (= 0.3.19)
+  - TTBridgeUnify/TTBridgeAuthManager (= 0.3.19)
+  - TTBridgeUnify/WebView (= 0.3.19)
   - TTDebugAssistant (= 0.2.31)
   - TTDialogDirector/Camera (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
   - TTDialogDirector/Contacts (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
@@ -693,6 +700,7 @@ DEPENDENCIES:
   - TTRexxar/PackageApp (= 0.8.1)
   - TTRexxar/Plugins (= 0.8.1)
   - TTRexxar/WebView (= 0.8.1)
+  - TTRNKit (= 0.3.3)
   - TTRoute (from `git@code.byted.org:TTIOS/tt_pods_route.git`, branch `array_type_query`)
   - TTServiceKit (= 0.4.1.1-binary)
   - TTServiceProtocols (from `../AKPlugins/AKServiceProtocols`)
@@ -764,14 +772,10 @@ EXTERNAL SOURCES:
     :path: ../Bundles/ios_house_message
   FHHouseMine:
     :path: ../Bundles/ios_house_mine
-  FHHouseRent:
-    :path: ../Bundles/ios_house_rent
   FHHouseTrend:
     :path: ../Bundles/ios_house_trend
   FHMapSearch:
     :path: ../Bundles/ios_map_search
-  FHRNKit:
-    :path: ../Bundles/ios_common_rn
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
@@ -882,13 +886,11 @@ SPEC CHECKSUMS:
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: b0e40221ad76cc8455c4da2d7dae61adf480a2a1
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
-  FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
+  FHHouseList: 02ebfe64a848d2ac54a0f4fa72603813b70190f3
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
   FHHouseMine: c0c197cb55d97e3357427d2a1731a7ab4225d94b
-  FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
   FHHouseTrend: feb4c9736617882d2bd7181262e6a3e2d4ebad4f
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
-  FHRNKit: b8966b198eb601696630a3fd4bc72aac277258be
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
   FLEX: b30872f2be292005f4f6cec85b045940f35f8026
   FMDB: 20748cf597d147c452903c32d101953e46dcb4b5
@@ -938,6 +940,7 @@ SPEC CHECKSUMS:
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
+  TTBridgeUnify: 386fa527a843cbbb1a0436bd55a2d837999261b1
   TTDebugAssistant: 33defeaa56e80776a781e5ffbe149cae2fb44e52
   TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
@@ -971,6 +974,7 @@ SPEC CHECKSUMS:
   TTReachability: 4e06b9cf45c975780366c8cacd2250b15c5caa5f
   TTReporter: a20ffa45bbfcc4dbb23c0f1dedc3a3407b83c26d
   TTRexxar: 0a6e1457af82dff4c7dcf1af84c2f2e41530afe1
+  TTRNKit: fff0001a475f716e3de345890516a6685ecaafb4
   TTRoute: 20e9092cabb90f759cc2e7c6f5ab3acb075d9d86
   TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
   TTServiceProtocols: 155d69fde3ee30af409edd22f53735c75f5b77ad
@@ -1002,6 +1006,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 0f3c8417cd0a24101310b24806c2f0b41675bceb
+PODFILE CHECKSUM: a67a17cc57a5e4e4c97ed2f5e689f7a06671cc9c
 
 COCOAPODS: 1.4.0
