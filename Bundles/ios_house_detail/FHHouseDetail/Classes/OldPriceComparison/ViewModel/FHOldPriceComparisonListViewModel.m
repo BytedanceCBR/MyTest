@@ -151,6 +151,13 @@
             if (!hasMore && self.houseList.count < 10) {
                 self.refreshFooter.hidden = YES;
             }
+            
+            NSString *refreshTip = houseModel.refreshTip;
+            if (self.isRefresh && self.houseList.count > 0) {
+                [self.listController showNotify:refreshTip];
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
+            
         } else {
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
         }

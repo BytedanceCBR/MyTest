@@ -332,8 +332,8 @@
     self.subTitleLabel.text = model.displaySubtitle;
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
     
-    self.priceLabel.text = model.displayPrice;
-    self.pricePerSqmLabel.text = model.displayPricePerSqm;
+    self.priceLabel.text = model.displayPricePerSqm;
+    self.pricePerSqmLabel.text = model.displayPrice;
     
     BOOL originPriceEnable = self.cellModel.originPriceAttrStr.string.length > 0;
     if (originPriceEnable || ( self.originPriceLabel.yoga.isIncludedInLayout != originPriceEnable)) {
