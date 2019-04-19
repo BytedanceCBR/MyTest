@@ -42,6 +42,7 @@
         self.subtitleLabel.text = subtitle;
         [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
         [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
+        [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -69,6 +70,9 @@
                 make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
                 make.right.mas_equalTo(-20);
             }];
+            [self.submitBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
         }
     }
     return self;
@@ -180,7 +184,6 @@
         make.centerX.mas_equalTo(self.contentView);
     }];
     [self.closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
-    [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.leftBtn addTarget:self action:@selector(leftBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
     UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tipBtnDidClick)];
@@ -254,17 +257,10 @@
 
 - (void)refreshBtnState:(BOOL)isEnabled
 {
-    if (isEnabled) {
-        self.submitBtn.enabled = YES;
-        self.submitBtn.alpha = 1;
-        self.leftBtn.enabled = YES;
-        self.leftBtn.alpha = 1;
-    }else {
-        self.submitBtn.enabled = NO;
-        self.submitBtn.alpha = 0.6;
-        self.leftBtn.enabled = NO;
-        self.leftBtn.alpha = 0.6;
-    }
+    self.submitBtn.enabled = YES;
+    self.submitBtn.alpha = 1;
+    self.leftBtn.enabled = YES;
+    self.leftBtn.alpha = 1;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -327,6 +323,14 @@
         }
     }else {
         [self showErrorText];
+    }
+}
+
+- (void)rightBtnDidClick:(UIButton *)btn
+
+{    NSString *phoneNum = [self currentInputPhoneNumber];
+    if (self.confirmClickBlock) {
+        self.confirmClickBlock(phoneNum);
     }
 }
 

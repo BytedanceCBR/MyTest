@@ -96,7 +96,7 @@ typedef enum : NSUInteger {
                 [params addEntriesFromDictionary:extraDict];
                 params[@"show_loading"] = @(NO);
             }
-            [wself callWithPhone:phoneNum realtorId:contactPhone.realtorId searchId:contactPhone.searchId imprId:contactPhone.imprId extraDict:params];
+            [wself callWithPhone:contactPhone.phone realtorId:contactPhone.realtorId searchId:contactPhone.searchId imprId:contactPhone.imprId extraDict:params];
             [wself.alertView dismiss];
         };
         alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum) {
