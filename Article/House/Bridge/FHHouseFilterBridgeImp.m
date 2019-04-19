@@ -76,6 +76,25 @@
                       safeBottomPandding:safeBottomPandding];
 }
 
+-(id)filterSaleHistoryViewModelWithType:(FHHouseType)houseType {
+    FHConditionFilterFactory* factory = [[FHConditionFilterFactory alloc] init];
+    CGFloat safeBottomPandding = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        if (@available(iOS 11.0, *)) {
+            safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    factory.safeBottomPandding = safeBottomPandding;
+    NSArray<FHFilterNodeModel*>* configs = [FHFilterModelParser getSaleHistoryConfig];
+    _houseFilterViewModel = [factory createFilterPanelViewModel:houseType
+                                                   allCondition:YES
+                                                     sortConfig:[NSArray new]
+                                                         config:configs];
+    return _houseFilterViewModel;
+}
+
 -(UIView *)filterPannel:(id)viewModel
 {
     return [_houseFilterViewModel filterBar];
