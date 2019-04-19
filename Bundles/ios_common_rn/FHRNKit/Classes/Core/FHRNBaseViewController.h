@@ -10,15 +10,17 @@
 #import "TTRNKitViewWrapper.h"
 #import "TTRNKit.h"
 #import <TTBridgeEngine.h>
+#import "FHRNBridgePlugin.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHRNBaseViewController : FHBaseViewController <TTRNKitObserverProtocol,TTBridgeEngine>
+@interface FHRNBaseViewController : FHBaseViewController <TTRNKitObserverProtocol,TTBridgeEngine,FHRNBridgePluginExtension>
 
 - (instancetype)initWithParams:(NSDictionary *)params viewWrapper:(TTRNKitViewWrapper *)viewWrapper;
 
 - (void)addViewWrapper:(TTRNKitViewWrapper *)viewWrapper;
 
+- (void)sendEventName:(NSString *)stringName andParams:(NSDictionary *)params;
 
 - (void)destroyRNView;
 

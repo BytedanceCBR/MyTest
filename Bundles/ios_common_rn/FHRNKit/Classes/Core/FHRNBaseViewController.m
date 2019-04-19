@@ -19,11 +19,12 @@
 #import <TTRNKitViewWrapper.h>
 #import <TTRNKitViewWrapper+Private.h>
 #import <UIViewAdditions.h>
-#import "FHRNBridgePlugin.h"
 #import <TTUIResponderHelper.h>
 #import <UIViewController+Refresh_ErrorHandler.h>
 #import "RCTRootView.h"
 #import <RCTDevLoadingView.h>
+#import <UIView+BridgeModule.h>
+#import <TTRNBridgeEngine.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -113,7 +114,9 @@
             [self processParams:paramObj.allParams];
         }
         
-        [self initRNKit];
+        if (!_isDebug) {
+            [self initRNKit];
+        }
         
         if (_canPreLoad) {
             [self processPreloadAction];
@@ -128,8 +131,8 @@
     _channelStr = [params tt_stringValueForKey:@"channelName"];
     _originHideStatusBar = [UIApplication sharedApplication].statusBarHidden;
     _originHideNavigationBar = self.navigationController.navigationBarHidden;
-    _hideBar = [params tt_intValueForKey:RNHideBar] == 1;
-    _hideStatusBar = [params tt_intValueForKey:RNHideStatusBar] == 1;
+    _hideBar = [params tt_intValueForKey:FHRN_BUNDLE_NATIVE_BAR] == 1;
+    _hideStatusBar = [params tt_intValueForKey:FHRN_HIDE_STATUS_BAR] == 1;
     self.title = [params tt_stringValueForKey:RNTitle];
     _isDebug = [params tt_boolValueForKey:FHRN_DEBUG];
     _moduleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_MODULE_NAME];
@@ -167,14 +170,25 @@
 
     _container = [[UIView alloc] init];
     [self.view addSubview:_container];
-    [_container mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self.view);
-        if (@available(iOS 11.0 , *)) {
-            make.top.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
-        } else {
-            make.top.mas_equalTo(65);
-        }
-    }];
+    
+    if (_hideBar) {
+        self.customNavBarView.hidden = YES;
+        [_container mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.view);
+        }];
+    }else
+    {
+        [_container mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self.view);
+            if (@available(iOS 11.0 , *)) {
+                make.top.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
+            } else {
+                make.top.mas_equalTo(65);
+            }
+        }];
+    }
+    
+
     
     [self.view layoutIfNeeded];
     
@@ -182,6 +196,8 @@
         [self tt_startUpdate];
         [self processPreloadAction];
     }
+    
+    [self registerObserver];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -192,6 +208,11 @@
         [self.navigationController setNavigationBarHidden:NO animated:NO];
     }
     [[UIApplication sharedApplication] setStatusBarHidden:_hideStatusBar];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+        });
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -210,6 +231,20 @@
     [super viewDidDisappear:animated];
     [self.navigationController setNavigationBarHidden:self.originHideNavigationBar animated:NO];
     [[UIApplication sharedApplication] setStatusBarHidden:self.originHideStatusBar];
+}
+
+- (void)sendEventName:(NSString *)stringName andParams:(NSDictionary *)params
+{
+    if (((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine) {
+        TTRNBridgeEngine *bridgeEngine = ((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine;
+        if (![bridgeEngine.events containsObject:stringName]) {
+            if (stringName) {
+                [bridgeEngine.events addObject:stringName];
+                [bridgeEngine addListener:stringName];
+            }
+        }
+        [bridgeEngine sendEventWithName:stringName body:params];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -240,8 +275,14 @@
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
     [super didMoveToParentViewController:parent];
-    if(!parent && !_canPreLoad){
-        [self destroyRNView];
+    if(!parent){
+        if(!_canPreLoad)
+        {
+            [self destroyRNView];
+        }else
+        {
+            [self sendEventName:@"host_destroy" andParams:nil];
+        }
     }
 }
 
@@ -251,6 +292,7 @@
     if (!_canPreLoad) {
         [self destroyRNView];
     }
+    
     if (nil == popVC) {
         [self dismissViewControllerAnimated:YES completion:^{
             
@@ -258,11 +300,30 @@
     }
 }
 
+
+// 注册全局通知监听器
+- (void)registerObserver {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
+    [self sendEventName:@"host_pause" andParams:nil];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification {
+    [self sendEventName:@"host_resume" andParams:nil];
+}
+
+#pragma mark
+
 #pragma mark - DebugProtocol
 - (void)addViewWrapper:(TTRNKitViewWrapper *)viewWrapper
 {
-    [_container addSubview:viewWrapper];
-    [viewWrapper setFrame:self.container.bounds];
+    if (![_container.subviews containsObject:viewWrapper]) {
+        [_container addSubview:viewWrapper];
+        [viewWrapper setFrame:self.container.bounds];
+    }
 }
 
 # pragma mark - TTRNKitProtocol
@@ -278,10 +339,13 @@
             sourceWrapper:(TTRNKitViewWrapper *)sourceWrapper
                   context:(TTRNKit *)context {
     if (wrapper) {
-        [_container addSubview:wrapper];
-        [(UIView *)wrapper mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(_container);
-        }];
+        if (_container && [self.view.subviews containsObject:_container]) {
+            [_container addSubview:wrapper];
+            [(UIView *)wrapper mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(_container);
+            }];
+        }
+        _viewWrapper = wrapper;
     } else if (specialHost) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:specialHost message:nil preferredStyle:UIAlertControllerStyleAlert];
         [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -326,6 +390,13 @@
                          moduleName:initParams[RNModuleName] ?: @""];
 }
 
+- (void)callPhone:(void (^)(NSDictionary * _Nonnull))excute
+{
+//    if (excute) {
+//        excute()
+//    }
+}
+
 #pragma mark TTBridgeEngine
 
 - (UIViewController *)sourceController {
@@ -340,7 +411,6 @@
     // Pass the selected object to the new view controller.
 }
 */
-
 
 
 - (void)dealloc

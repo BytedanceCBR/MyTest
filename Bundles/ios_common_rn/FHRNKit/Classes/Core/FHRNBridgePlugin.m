@@ -11,19 +11,28 @@
 #import <FHEnvContext.h>
 #import <NSDictionary+TTAdditions.h>
 #import "FHRNHTTPRequestSerializer.h"
-#import <TTBridgeUnify/TTBridgeRegister.h>
-#import <TTBridgeUnify/TTBridgeDefines.h>
+#import "TTBridgeRegister.h"
+#import "TTBridgeDefines.h"
 #import <TTRoute.h>
 #import <TTStringHelper.h>
 #import "TTDeviceHelper.h"
 #import <TTUIResponderHelper.h>
 #import <FHRNBaseViewController.h>
 #import <UIViewController+Refresh_ErrorHandler.h>
+#import <FHEnvContext.h>
+#import <NSDictionary+TTAdditions.h>
+#import <FHUtils.h>
+#import <HMDTTMonitor.h>
+#import <UIViewController+NavigationBarStyle.h>
+
+@interface FHRNBridgePlugin ()
+@property (nonatomic, strong) NSMutableArray<NSString *> *events;
+@end
 
 @implementation FHRNBridgePlugin
 
 + (TTBridgeInstanceType)instanceType {
-    return TTBridgeInstanceTypeNormal;
+    return TTBridgeInstanceTypeAssociated;
 }
 
 + (void)load {
@@ -34,7 +43,7 @@
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, disable_swipe), @"app.disable_swipe");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, monitor_common_log), @"monitor_common_log");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, monitor_duration), @"monitor_duration");
-    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, call_phone), @"call_phone");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, call_phone), @"app.call_phone");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
@@ -42,7 +51,10 @@
 
 - (void)call_phoneWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    
+    NSString *houseType = [param tt_stringValueForKey:@"houseType"];
+    NSString *realtorId = [param tt_stringValueForKey:@"realtorId"];
+    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
+
 }
 
 - (void)monitor_durationWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -52,17 +64,30 @@
 
 - (void)monitor_common_logWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    
+    NSString *logService = [param tt_stringValueForKey:@"name"];
+    if (logService) {
+        [[HMDTTMonitor defaultManager] hmdTrackService:logService status:0 extra:param];
+    }
 }
 
 - (void)disable_swipeWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    
+    UINavigationController *topVC = [TTUIResponderHelper correctTopNavigationControllerFor:controller];
+    UIViewController *currentVC = nil;
+    if ([[topVC.viewControllers lastObject] isKindOfClass:[FHRNBaseViewController class]]) {
+        currentVC = [topVC.viewControllers lastObject];
+        currentVC.ttDisableDragBack = YES;
+    }
 }
 
 - (void)enable_swipeWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    
+    UINavigationController *topVC = [TTUIResponderHelper correctTopNavigationControllerFor:controller];
+    UIViewController *currentVC = nil;
+    if ([[topVC.viewControllers lastObject] isKindOfClass:[FHRNBaseViewController class]]) {
+        currentVC = [topVC.viewControllers lastObject];
+        currentVC.ttDisableDragBack = NO;
+    }
 }
 
 - (void)load_finishWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -77,7 +102,18 @@
 
 - (void)log_v3WithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    
+    NSString *paramsEvent = [param tt_stringValueForKey:@"event"];
+    if (paramsEvent) {
+        NSString *paramsTrace = param[@"params"];
+        if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
+            [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];
+        }else if ([paramsTrace isKindOfClass:[NSString class]]) {
+           NSDictionary *dictTrace =  [FHUtils dictionaryWithJsonString:paramsTrace];
+           if (dictTrace) {
+               [FHEnvContext recordEvent:dictTrace andEventKey:paramsEvent];
+           }
+        }
+    }
 }
 
 - (void)closeWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -180,14 +216,15 @@
     }
 
     if (!isEmptyString(openURL)) {
+//        NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlResultUTF8 userInfo:nil];
-        [currentVC.navigationController pushViewController:routeObj.instance animated:YES];
- 
-//        if(openUrlResultUTF8)
-//        {
-//            [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
-//        }
+//        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlResultUTF8 userInfo:nil];
+//        [currentVC.navigationController pushViewController:routeObj.instance animated:YES];
+//
+        if(openUrlResultUTF8)
+        {
+            [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
+        }
         return;
     }
     

@@ -436,6 +436,7 @@ typedef enum : NSUInteger {
     NSString *realtorDeUrl = contactPhone.realtorDetailUrl;
     //    realtorDeUrl = [realtorDeUrl stringByReplacingOccurrencesOfString:@"https://i.haoduofangs.com" withString:@"http://10.1.15.29:8889"];
     NSString *jumpUrl =@"";
+
     if (isEmptyString(realtorDeUrl)) {
         jumpUrl = [NSString stringWithFormat:@"%@?realtor_id=%@&report_params=%@&im_params=%@",host,contactPhone.realtorId,reportParams ? : @"", imParams ?: @""];
     } else {
@@ -453,9 +454,11 @@ typedef enum : NSUInteger {
 
 
     //    NSURL *openUrlRn = [NSURL URLWithString:@"sslocal://old_house_detail?house_id=6677801611777016076&house_type=2&realtor_id=443834881285051&report_params=undefined"];
+//    contactPhone.realtorId = @"106121068208";
 
-    NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&can_multi_preload=1&channelName=FHRNAgentDetailModule&debug=1&report_params=%@&im_params=%@",contactPhone.realtorId,[FHUtils getJsonStrFrom:self.tracerDict],[FHUtils getJsonStrFrom:imParams]]];
+    NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&can_multi_preload=1&channelName=f_rn_agent_detail&debug=1&report_params=%@&im_params=%@",contactPhone.realtorId,[FHUtils getJsonStrFrom:self.tracerDict],[FHUtils getJsonStrFrom:imdic]]];
 
+    NSLog(@"current thread = %ld",[[NSThread currentThread] isMainThread]);
 
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
     //    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];

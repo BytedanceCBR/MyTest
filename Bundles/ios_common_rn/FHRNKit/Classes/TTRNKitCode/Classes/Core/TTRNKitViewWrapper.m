@@ -95,8 +95,21 @@
         _schemeUrl = schemeUrl;
         _host = host;
         _channel = channel;
-        _moduleName = urlParams[RNModuleName];
-        _urlParams = urlParams;
+        if (urlParams[RNModuleName]) {
+            _moduleName = urlParams[RNModuleName];
+        }else
+        {
+            _moduleName = urlParams[@"module_name"];
+        }
+        NSMutableDictionary *urlParamsProcess = [NSMutableDictionary new];
+        if (urlParams) {
+            [urlParamsProcess addEntriesFromDictionary:urlParams];
+        }
+        if (_moduleName) {
+            [urlParamsProcess setValue:_moduleName forKey:RNModuleName];
+        }
+        _urlParams = urlParamsProcess;
+
         _bundleUrl = bundleUrl;
         _sourceWrapper = sourceWrapper;
     }
