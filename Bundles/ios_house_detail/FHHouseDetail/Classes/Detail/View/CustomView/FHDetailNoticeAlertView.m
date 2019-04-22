@@ -427,7 +427,7 @@
         _phoneTextField.keyboardType = UIKeyboardTypePhonePad;
         _phoneTextField.font = [UIFont themeFontRegular:14];
         _phoneTextField.textColor = [UIColor themeGray1];
-        _phoneTextField.placeholder = @"请输入手机号";
+        _phoneTextField.placeholder = @"请输入您的手机号";
         _phoneTextField.delegate = self;
     }
     return _phoneTextField;
@@ -465,8 +465,6 @@
         [_submitBtn setTitle:@"提交" forState:UIControlStateHighlighted];
         _submitBtn.layer.cornerRadius = 4;
         _submitBtn.backgroundColor = [UIColor themeRed1];
-        _submitBtn.alpha = 0.6;
-        _submitBtn.enabled = NO;
     }
     return _submitBtn;
 }
@@ -480,8 +478,6 @@
         _leftBtn.titleLabel.font = [UIFont themeFontRegular:16];
         _leftBtn.layer.cornerRadius = 4;
         _leftBtn.backgroundColor = [UIColor themeRed3];
-        _leftBtn.alpha = 0.6;
-        _leftBtn.enabled = NO;
     }
     return _leftBtn;
 }
