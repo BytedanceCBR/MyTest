@@ -1,4 +1,3 @@
-//
 //  FHRNCacheManager.h
 //  AKCommentPlugin
 //
@@ -9,7 +8,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHRNCacheManager : NSObject
+@interface FHRNHelper : NSObject
 
 @property(nonatomic,strong)NSMutableDictionary *channelCache;
 
@@ -21,6 +20,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (BOOL)isNeedCleanCacheForChannel:(NSString *)channel;
 
+//打开经纪人详情请页
++ (void)openRealtorModule:(NSString *)realtorId andReportParams:(NSDictionary *)reportParams andImPrams:(NSDictionary *)imParams;
+
+//Gecko Channels
++ (NSArray *)fhGeckoChannels;
+//预加载的渠道
++ (NSArray *)fhRNPreLoadChannels;
+//可用的渠道
++ (NSArray *)fhRNEnableChannels;
 @end
 
 NS_ASSUME_NONNULL_END

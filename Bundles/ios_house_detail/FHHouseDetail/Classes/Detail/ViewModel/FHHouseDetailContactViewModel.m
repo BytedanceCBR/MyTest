@@ -264,7 +264,9 @@
     }
     [self addLeadShowLog:contactPhone];
     
-    [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES];
+    if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"]) {
+        [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
+    }
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {

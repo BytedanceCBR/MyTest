@@ -29,7 +29,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
 - (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr;
 
-- (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre;
+- (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre;
 
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone;
@@ -42,6 +42,13 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 - (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict;
 
 - (void)destoryRNPreloadCache;
+
+//Gecko Channels
++ (NSArray *)fhGeckoChannels;
+//预加载的渠道
++ (NSArray *)fhRNPreLoadChannels;
+//可用的渠道
++ (NSArray *)fhRNEnableChannels;
 @end
 
 NS_ASSUME_NONNULL_END

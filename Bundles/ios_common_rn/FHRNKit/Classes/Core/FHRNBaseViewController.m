@@ -25,7 +25,8 @@
 #import <RCTDevLoadingView.h>
 #import <UIView+BridgeModule.h>
 #import <TTRNBridgeEngine.h>
-#import "FHRNCacheManager.h"
+#import "FHRNHelper.h"
+ #import "RCTDevLoadingView.h"
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -38,6 +39,7 @@
 @property (nonatomic, strong) NSString *titleStr;
 @property (nonatomic, strong) NSString *channelStr;
 @property (nonatomic, strong) NSString *moduleNameStr;
+@property (nonatomic, strong) NSString *bundleNameStr;
 @property (nonatomic, assign) BOOL isDebug;
 @property (nonatomic, assign) BOOL canPreLoad;
 @property (nonatomic, strong) TTRouteParamObj *paramCurrentObj;
@@ -70,16 +72,16 @@
     
     NSMutableDictionary *defaultBundlePath = [NSMutableDictionary new];
     if (_channelStr) {
-        [defaultBundlePath setValue:@"index.bundle" forKey:_channelStr];
+        [defaultBundlePath setValue:_bundleNameStr forKey:_channelStr];
     }
     [rnKitParams setValue:defaultBundlePath forKey:TTRNKitDefaultBundlePath];
     
-    [rnKitParams setValue:@"index.bundle" forKey:TTRNKitBundleName];
+    [rnKitParams setValue:_bundleNameStr forKey:TTRNKitBundleName];
     
     NSDictionary *rnAinimateParams = @{TTRNKitLoadingViewClass : @"loading",
                                        TTRNKitLoadingViewSize : [NSValue valueWithCGSize:CGSizeMake(100, 100)]
                                        };
-    
+    [RCTDevLoadingView setEnabled:NO];
     return [[TTRNKit alloc] initWithGeckoParams:rnKitParams
                                 animationParams:rnAinimateParams];
 }
@@ -99,7 +101,7 @@
 }
 - (void)initRNKit
 {
-    [[FHRNCacheManager sharedInstance] addObjectCountforChannel:_channelStr];
+    [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
     self.ttRNKit = [self extracted];
 }
 
@@ -138,6 +140,7 @@
     _isDebug = [params tt_boolValueForKey:FHRN_DEBUG];
     _moduleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_MODULE_NAME];
     _canPreLoad = [params tt_boolValueForKey:FHRN_CAN_PRE_LOAD];
+    _bundleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_NAME];
 }
 
 - (void)processPreloadAction
@@ -189,8 +192,6 @@
         }];
     }
     
-
-    
     [self.view layoutIfNeeded];
     
     if (!_canPreLoad) {
@@ -213,7 +214,8 @@
     }
     [[UIApplication sharedApplication] setStatusBarHidden:_hideStatusBar];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             _container.hidden = NO;
             if (_viewWrapper && _canPreLoad) {
@@ -259,9 +261,9 @@
 
 - (void)destroyRNView
 {
-    [[FHRNCacheManager sharedInstance] removeCountChannel:_channelStr];
+    [[FHRNHelper sharedInstance] removeCountChannel:_channelStr];
 
-    if ([[FHRNCacheManager sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
+    if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
         ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
         [self.ttRNKit clearRNResourceForChannel:_channelStr];
         [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
@@ -345,6 +347,11 @@
 # pragma mark - TTRNKitProtocol
 - (UIViewController *)presentor {
     return self;
+}
+
+- (BOOL)openUrl:(NSString *)url
+{
+    return NO;
 }
 
 - (void)handleWithWrapper:(TTRNKitViewWrapper *)wrapper

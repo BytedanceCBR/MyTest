@@ -24,6 +24,7 @@
 #import "IMManager.h"
 #import <HMDTTMonitor.h>
 #import <FHUtils.h>
+#import <NSDictionary+TTAdditions.h>
 
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
@@ -368,20 +369,32 @@ typedef enum : NSUInteger {
 
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre
 {
-    if (isPre) {
-        if ([self.routeAgentObj.instance isKindOfClass:[UIViewController class]]) {
-            [self.belongsVC.navigationController pushViewController:self.routeAgentObj.instance animated:YES];
+    
+    if ([FHHouseDetailPhoneCallViewModel isEnableCurrentChannel]) {
+        if (isPre) {
+            if ([self.routeAgentObj.instance isKindOfClass:[UIViewController class]]) {
+                [self.belongsVC.navigationController pushViewController:self.routeAgentObj.instance animated:YES];
+            }else
+            {
+                TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO];
+                if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
+                    [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+                }
+            }
+        }else
+        {
+            TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO];
+            if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
+                [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+            }
         }
     }else
     {
-        TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO];
-        if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
-             [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
-        }
+        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
     }
 }
 
-- (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre
+- (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen
 {
     if (contactPhone.realtorId.length < 1) {
         return nil;
@@ -453,25 +466,29 @@ typedef enum : NSUInteger {
     info[@"house_type"] = @(_houseType);
 
 
-    //    NSURL *openUrlRn = [NSURL URLWithString:@"sslocal://old_house_detail?house_id=6677801611777016076&house_type=2&realtor_id=443834881285051&report_params=undefined"];
-//    contactPhone.realtorId = @"106121068208";
-
-    NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&can_multi_preload=1&channelName=f_rn_agent_detail&debug=1&report_params=%@&im_params=%@",contactPhone.realtorId,[FHUtils getJsonStrFrom:self.tracerDict],[FHUtils getJsonStrFrom:imdic]]];
-
-    NSLog(@"current thread = %ld",[[NSThread currentThread] isMainThread]);
-
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
-    //    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];
-    //
-    TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
-    if (isPre) {
-        self.routeAgentObj = routeObj;
+    if (isOpen) {
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+        [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
         return nil;
     }else
     {
-        return routeObj;
+        NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:_tracerDict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle"]];
+        
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+        //    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];
+        //
+        TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
+        if (isPre) {
+            self.routeAgentObj = routeObj;
+            return nil;
+        }else
+        {
+            return routeObj;
+        }
     }
+
 }
+
 
 - (void)destoryRNPreloadCache
 {
@@ -603,6 +620,59 @@ typedef enum : NSUInteger {
     [params addEntriesFromDictionary:[self baseParams]];
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
+
+#pragma mark 判读setting
+
++ (BOOL)isPreLoadCurrentChannel
+{
+    if([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"])
+    {
+        return YES;
+    }else
+    {
+        return NO;
+    }
+}
+
++ (BOOL)isEnableCurrentChannel
+{
+    if([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"])
+    {
+        return YES;
+    }else
+    {
+        return NO;
+    }
+}
+
++ (NSArray *)fhRNPreLoadChannels
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSArray * f_rn_preload_channels = [fhSettings tt_arrayValueForKey:@"f_rn_preload_channels"];
+    if ([f_rn_preload_channels isKindOfClass:[NSArray class]]) {
+        return f_rn_preload_channels;
+    }
+    return @[];
+}
+
++ (NSArray *)fhRNEnableChannels
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSArray * f_rn_enable = [fhSettings tt_arrayValueForKey:@"f_rn_enable"];
+    if ([f_rn_enable isKindOfClass:[NSArray class]]) {
+        return f_rn_enable;
+    }
+    return @[];
+}
+
++ (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"kFHSettingsKey"];
+    } else {
+        return nil;
+    }
+}
+
 
 - (void)dealloc
 {
