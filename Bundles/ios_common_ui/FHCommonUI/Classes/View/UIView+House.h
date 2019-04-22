@@ -118,7 +118,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) NSString *desc_safeAreaInsets;
 
-@property(nonatomic, assign) UIEdgeInsets hitTestEdgeInsets;
+//@property(nonatomic, assign) UIEdgeInsets hitTestEdgeInsets;
 
 @end
 

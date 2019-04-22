@@ -1246,9 +1246,6 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
         [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
     }
     self.verifyCodeRetryTime--;
-    
-    // add by zjing for test
-//    NSLog(@"zjing verifyCodeRetryTime:%ld",self.verifyCodeRetryTime);
 }
 
 - (void)startTimer

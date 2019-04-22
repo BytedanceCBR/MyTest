@@ -190,4 +190,24 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@protocol FHDetailDataNeighborhoodInfoSchoolInfoModel<NSObject>
+@end
+
+@interface FHDetailDataNeighborhoodInfoSchoolInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *schoolType;
+@property (nonatomic, copy , nullable) NSString *schoolId;
+@property (nonatomic, copy , nullable) NSString *schoolName;
+@end
+
+@protocol FHDetailDataNeighborhoodInfoSchoolItemModel<NSObject>
+@end
+
+@interface FHDetailDataNeighborhoodInfoSchoolItemModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *schoolTypeName;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolInfoModel> *schoolList;
+@end
+
+
 NS_ASSUME_NONNULL_END

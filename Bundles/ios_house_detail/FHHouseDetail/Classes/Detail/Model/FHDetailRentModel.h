@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataEvaluationInfo* evaluationInfo;
-@property (nonatomic, strong, nullable) NSArray<FHRentDetailResponseDataSchoolInfoModel>* schoolInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
 
 @end
 

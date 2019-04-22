@@ -185,22 +185,22 @@
     return NSStringFromUIEdgeInsets(self.tt_safeAreaInsets);
 }
 
-static const NSString *FH_HIT_TEST_EDGE_INSETS = @"HitTestEdgeInsets";
-
-@dynamic hitTestEdgeInsets;
-
--(void)setHitTestEdgeInsets:(UIEdgeInsets)hitTestEdgeInsets {
-    NSValue *value = [NSValue value:&hitTestEdgeInsets withObjCType:@encode(UIEdgeInsets)];
-    objc_setAssociatedObject(self, &FH_HIT_TEST_EDGE_INSETS, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
--(UIEdgeInsets)hitTestEdgeInsets {
-    NSValue *value = objc_getAssociatedObject(self, &FH_HIT_TEST_EDGE_INSETS);
-    if(value) {
-        UIEdgeInsets edgeInsets; [value getValue:&edgeInsets]; return edgeInsets;
-    }else {
-        return UIEdgeInsetsZero;
-    }
-}
+//static const NSString *FH_HIT_TEST_EDGE_INSETS = @"HitTestEdgeInsets";
+//
+//@dynamic hitTestEdgeInsets;
+//
+//-(void)setHitTestEdgeInsets:(UIEdgeInsets)hitTestEdgeInsets {
+//    NSValue *value = [NSValue value:&hitTestEdgeInsets withObjCType:@encode(UIEdgeInsets)];
+//    objc_setAssociatedObject(self, &FH_HIT_TEST_EDGE_INSETS, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+//}
+//
+//-(UIEdgeInsets)hitTestEdgeInsets {
+//    NSValue *value = objc_getAssociatedObject(self, &FH_HIT_TEST_EDGE_INSETS);
+//    if(value) {
+//        UIEdgeInsets edgeInsets; [value getValue:&edgeInsets]; return edgeInsets;
+//    }else {
+//        return UIEdgeInsetsZero;
+//    }
+//}
 
 @end

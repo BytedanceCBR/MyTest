@@ -271,6 +271,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
+        infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
     // 地图
