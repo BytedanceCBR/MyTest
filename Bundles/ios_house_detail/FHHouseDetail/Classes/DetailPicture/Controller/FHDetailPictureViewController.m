@@ -274,6 +274,7 @@
         tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
         tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
+        tracerDic[@"element_from"] = @"large";
         [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
 }
