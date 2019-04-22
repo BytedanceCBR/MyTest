@@ -25,6 +25,7 @@
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
 #import "FHIESGeckoManager.h"
+#import "TimePerformanceTracer.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -319,23 +320,23 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //开始网络监听通知
     [self.reachability startNotifier];
-    
+
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
-    
+
+
     //开始定位
     [self startLocation];
     
     //检测是否需要打开城市列表
     [self check2CityList];
-    
-    [self.messageManager startSyncMessage];
-    
+
+
     NSString * channelName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];
     if (!channelName) {
         channelName = @"App Store";
     }
-    
+
     [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:channelName finishBlock:^(NSString *deviceID, NSString *installID) {
         
         BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
@@ -356,9 +357,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
         
         [BDAccount sharedAccount].accountConf = conf;
     }];
+
     //更新公共参数
     [self updateRequestCommonParams];
-    
+
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
 
     if (![startFeedCatgegory isEqualToString:@"f_house_news"] && startFeedCatgegory != nil) {
@@ -366,9 +368,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
     }
     
-    
-    [FHIESGeckoManager configGeckoInfo];
-    [FHIESGeckoManager configIESWebFalcon];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self.messageManager startSyncMessage];
+    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [FHIESGeckoManager configGeckoInfo];
+        [FHIESGeckoManager configIESWebFalcon];
+    });
+
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict

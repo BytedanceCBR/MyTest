@@ -20,7 +20,7 @@
 #import <HMDTTMonitor.h>
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
-
+#import "TimePerformanceTracer.h"
 static CGFloat const kShowTipViewHeight = 32;
 
 static CGFloat const kSectionHeaderHeight = 38;
@@ -70,8 +70,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     self.view.backgroundColor = [UIColor whiteColor];
     self.mainTableView.backgroundColor = [UIColor whiteColor];
-    
+    [[TimePerformanceTracer shareInstance] startTrace:@"configTrace"];
     FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
+    [[TimePerformanceTracer shareInstance] traceTimeDuration:@"configTrace" withEvent:@"load"];
     if (!configModel) {
         self.mainTableView.hidden = YES;
         [self tt_startUpdate];
