@@ -10,6 +10,7 @@
 #import "FHURLSettings.h"
 #import "FHHouseType.h"
 #import "FHMainApi.h"
+#import "FHHouseContactDefines.h"
 
 @class TTHttpTask,FHDetailNewModel,FHDetailNeighborhoodModel,FHDetailOldModel,FHRentDetailResponseModel,FHDetailFloorPanDetailInfoModel,FHDetailFloorPanListResponseModel;
 @class FHDetailRelatedHouseResponseModel,FHDetailRelatedNeighborhoodResponseModel,FHDetailSameNeighborhoodHouseResponseModel,FHDetailRelatedCourtModel,FHDetailNewTimeLineResponseModel,FHDetailNewCoreDetailModel;
@@ -18,15 +19,6 @@
 @class FHTransactionHistoryModel;
 
 NS_ASSUME_NONNULL_BEGIN
-
-typedef enum : NSUInteger {
-    FHFollowActionTypeNew = 1,
-    FHFollowActionTypeOld = 2,
-    FHFollowActionTypeRent = 3,
-    FHFollowActionTypeNeighborhood = 4,
-    FHFollowActionTypePriceChanged = 5,
-    FHFollowActionTypeFloorPan = 6,
-} FHFollowActionType;
 
 @interface FHHouseDetailAPI : NSObject
 
