@@ -47,6 +47,20 @@ def appPods
 #    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9c5ef3144d54acc6f0203df98cb38bf5f38f075d' #:branch => 'feature/develop'
 
+    #---------------------------------------------------头条业务源码库--------------------------------------------------#
+    pod 'TTAD', :path => '../TTBundles/ios_tt_ad'
+    pod 'TTAiKan', :path => '../TTBundles/ios_tt_aikan'
+    pod 'TTAppRuntime', :path => '../TTBundles/ios_tt_appruntime'
+    pod 'TTArticle', :path => '../TTBundles/ios_tt_article'
+    pod 'TTArticleBase', :path => '../TTBundles/ios_tt_articlebase'
+    pod 'TTFeedTab', :path => '../TTBundles/ios_tt_feedtab'
+    pod 'TTGallery', :path => '../TTBundles/ios_tt_gallery'
+    pod 'TTHTSVideo', :path => '../TTBundles/ios_tt_htsvideo'
+    pod 'TTSearch', :path => '../TTBundles/ios_tt_search'
+    pod 'TTService', :path => '../TTBundles/ios_tt_service'
+    pod 'TTUserProfile', :path => '../TTBundles/ios_tt_userprofile'
+    pod 'TTArticleVideo', :path => '../TTBundles/ios_tt_article_video'
+    
     pod_binary 'SecGuard', '0.8.10.5'#'0.8.10.1'
 
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'

@@ -253,6 +253,7 @@ PODS:
   - TTAccountSDK/ThirdPartyAccountFoundation/CustomAuthLoginUI (4.2.0)
   - TTAccountSDK/ThirdPartyAccountFoundation/PlatformLoginCore (4.2.0)
   - TTAccountSDK/WeChatAccount (4.2.0)
+  - TTAD (0.1.0)
   - TTAddressBookService (0.1.4.1-binary):
     - TTAddressBookService/AddressBook (= 0.1.4.1-binary)
     - TTAddressBookService/DeprecatedAddressBook (= 0.1.4.1-binary)
@@ -260,8 +261,13 @@ PODS:
   - TTAddressBookService/DeprecatedAddressBook (0.1.4.1-binary)
   - TTAdModule (0.1.25)
   - TTAdSplashSDK (0.4.4.1-binary)
+  - TTAiKan (0.1.0)
+  - TTAppRuntime (0.1.0)
   - TTAppUpdateHelper/TTUpdateHelper (1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (1.0.9.1-binary)
+  - TTArticle (0.1.0)
+  - TTArticleBase (0.1.0)
+  - TTArticleVideo (0.1.0)
   - TTAudio (0.1.6.1-binary)
   - TTAvatar (0.1.0)
   - TTBaseLib (0.1.0):
@@ -295,6 +301,7 @@ PODS:
   - TTDiggButton (0.1.1)
   - TTEntityBase (0.2.4.1-binary)
   - TTEntry (0.1.7.1-binary)
+  - TTFeedTab (0.1.0)
   - TTFFmpeg (1.4.3):
     - TTFFmpeg/libavcodec (= 1.4.3)
     - TTFFmpeg/libavdevice (= 1.4.3)
@@ -317,6 +324,8 @@ PODS:
   - TTFileUploadClient (1.7.6.8.1-binary)
   - TTFlowStatisticsManager (0.0.10.1-binary)
   - TTFriendRelation (0.2.10)
+  - TTGallery (0.1.0)
+  - TTHTSVideo (0.1.0)
   - TTImage (0.8.4.1-binary):
     - TTImage/Model (= 0.8.4.1-binary)
     - TTImage/Others (= 0.8.4.1-binary)
@@ -427,6 +436,8 @@ PODS:
   - TTRNKit/Core (0.3.3.1-binary)
   - TTRNKit/WebViewBridge (0.3.3.1-binary)
   - TTRoute (0.2.25.1)
+  - TTSearch (0.1.0)
+  - TTService (0.1.0)
   - TTServiceKit (0.4.1.1-binary)
   - TTServiceProtocols (0.0.5)
   - TTSettingsManager (0.4.1.1-binary):
@@ -502,6 +513,7 @@ PODS:
   - TTUIWidget (0.1.0):
     - TTUIWidget/TTIndicatorView (= 0.1.0)
   - TTUIWidget/TTIndicatorView (0.1.0)
+  - TTUserProfile (0.1.0)
   - TTUserSettings (0.3.4.1-binary)
   - TTVContainerScrollView (0.1.2.1-binary)
   - TTVerifyKit (0.3.0.1-binary)
@@ -666,11 +678,17 @@ DEPENDENCIES:
   - TTAccountSDK/Logger (= 4.2.0)
   - TTAccountSDK/ThirdPartyAccountFoundation (= 4.2.0)
   - TTAccountSDK/WeChatAccount (= 4.2.0)
+  - TTAD (from `../TTBundles/ios_tt_ad`)
   - TTAddressBookService (= 0.1.4.1-binary)
   - TTAdModule (from `../AKPlugins/TTAdModule`)
   - TTAdSplashSDK (= 0.4.4.1-binary)
+  - TTAiKan (from `../TTBundles/ios_tt_aikan`)
+  - TTAppRuntime (from `../TTBundles/ios_tt_appruntime`)
   - TTAppUpdateHelper/TTUpdateHelper (= 1.0.9.1-binary)
   - TTAppUpdateHelper/TTUpdateView (= 1.0.9.1-binary)
+  - TTArticle (from `../TTBundles/ios_tt_article`)
+  - TTArticleBase (from `../TTBundles/ios_tt_articlebase`)
+  - TTArticleVideo (from `../TTBundles/ios_tt_article_video`)
   - TTAudio (= 0.1.6.1-binary)
   - TTAvatar (from `../AKPlugins/TTAvatar`)
   - TTBaseLib (from `../AKPlugins/TTBaseLib`)
@@ -688,10 +706,13 @@ DEPENDENCIES:
   - TTDiggButton (from `../AKPlugins/AKDiggButton`)
   - TTEntityBase (= 0.2.4.1-binary)
   - TTEntry (= 0.1.7.1-binary)
+  - TTFeedTab (from `../TTBundles/ios_tt_feedtab`)
   - TTFFmpeg (= 1.4.3)
   - TTFileUploadClient (= 1.7.6.8.1-binary)
   - TTFlowStatisticsManager (= 0.0.10.1-binary)
   - TTFriendRelation (from `../AKPlugins/TTFriendRelation`)
+  - TTGallery (from `../TTBundles/ios_tt_gallery`)
+  - TTHTSVideo (from `../TTBundles/ios_tt_htsvideo`)
   - TTImage (= 0.8.4.1-binary)
   - TTImagePicker (from `../AKPlugins/AKImagePicker`)
   - TTImagePreviewAnimateManager (= 1.0.13.1-binary)
@@ -740,6 +761,8 @@ DEPENDENCIES:
   - TTRexxar/WebView (= 0.8.10.1-binary)
   - TTRNKit (= 0.3.3.1-binary)
   - TTRoute (from `git@code.byted.org:TTIOS/tt_pods_route.git`, branch `array_type_query`)
+  - TTSearch (from `../TTBundles/ios_tt_search`)
+  - TTService (from `../TTBundles/ios_tt_service`)
   - TTServiceKit (= 0.4.1.1-binary)
   - TTServiceProtocols (from `../AKPlugins/AKServiceProtocols`)
   - TTSettingsManager (= 0.4.1.1-binary)
@@ -751,6 +774,7 @@ DEPENDENCIES:
   - TTTracker (= 1.0.6-rc.2.1.binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
   - TTUIWidget (from `../AKPlugins/TTUIWidget`)
+  - TTUserProfile (from `../TTBundles/ios_tt_userprofile`)
   - TTUserSettings (= 0.3.4.1-binary)
   - TTVContainerScrollView (= 0.1.2.1-binary)
   - TTVerifyKit (= 0.3.0.1-binary)
@@ -821,8 +845,20 @@ EXTERNAL SOURCES:
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
+  TTAD:
+    :path: ../TTBundles/ios_tt_ad
   TTAdModule:
     :path: ../AKPlugins/TTAdModule
+  TTAiKan:
+    :path: ../TTBundles/ios_tt_aikan
+  TTAppRuntime:
+    :path: ../TTBundles/ios_tt_appruntime
+  TTArticle:
+    :path: ../TTBundles/ios_tt_article
+  TTArticleBase:
+    :path: ../TTBundles/ios_tt_articlebase
+  TTArticleVideo:
+    :path: ../TTBundles/ios_tt_article_video
   TTAvatar:
     :path: ../AKPlugins/TTAvatar
   TTBaseLib:
@@ -832,8 +868,14 @@ EXTERNAL SOURCES:
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTDiggButton:
     :path: ../AKPlugins/AKDiggButton
+  TTFeedTab:
+    :path: ../TTBundles/ios_tt_feedtab
   TTFriendRelation:
     :path: ../AKPlugins/TTFriendRelation
+  TTGallery:
+    :path: ../TTBundles/ios_tt_gallery
+  TTHTSVideo:
+    :path: ../TTBundles/ios_tt_htsvideo
   TTImagePicker:
     :path: ../AKPlugins/AKImagePicker
   TTMonitor:
@@ -851,6 +893,10 @@ EXTERNAL SOURCES:
   TTRoute:
     :branch: array_type_query
     :git: git@code.byted.org:TTIOS/tt_pods_route.git
+  TTSearch:
+    :path: ../TTBundles/ios_tt_search
+  TTService:
+    :path: ../TTBundles/ios_tt_service
   TTServiceProtocols:
     :path: ../AKPlugins/AKServiceProtocols
   TTShare:
@@ -874,6 +920,8 @@ EXTERNAL SOURCES:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
     :path: ../AKPlugins/TTUIWidget
+  TTUserProfile:
+    :path: ../TTBundles/ios_tt_userprofile
   yoga:
     :path: ../ReactCommon/yoga
 
@@ -973,10 +1021,16 @@ SPEC CHECKSUMS:
   TTABManager: b22ef5bd7f829192b72ec71d6e5f761e66428b5d
   TTAccountLogin: d064f182eccc55ebef79216feff43dd2b8c9decf
   TTAccountSDK: cf30d5473af172a54279d2c22937ab3b3f0f33ab
+  TTAD: 313a03c77994b6f073932f9bc19912a1ff3224af
   TTAddressBookService: dd811a1a2e57ea21a21a5006761eb1e7e1cef2ad
   TTAdModule: ad44c332b54415255f5dafc451e91b0e677b9be3
   TTAdSplashSDK: f02f0b22a03a06783ff6e1473f895fd8563c9333
+  TTAiKan: 642649f0c4848130171604fa36db684ecbff7648
+  TTAppRuntime: 950cd779a9ea11d64aa82e5c0899bd849c38799b
   TTAppUpdateHelper: d0e770676b263dfc1f8a0a6b07c280a760574b44
+  TTArticle: 40401054fc58b1744b37a8ecb054b90dda774702
+  TTArticleBase: 6835d657cfa21e00137fda5c088824bbb380feb0
+  TTArticleVideo: 6f1853b56a61152991807c7c07d5474b4667aa80
   TTAudio: e9a692e3b6387c2c5efa5a74b44d7f73712fdc1e
   TTAvatar: 0597c06ae590ba35230e1c092f1cf0faa5d0b841
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
@@ -987,10 +1041,13 @@ SPEC CHECKSUMS:
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
   TTEntityBase: 9036725e63faa0661eaf01bfe3b9626825f6560b
   TTEntry: 0da2ac49bb4705a3d228f721b9f307798ecb2d6e
+  TTFeedTab: b5be492cd23ad03a0197d40e047fdd41c76ef07d
   TTFFmpeg: 1a5b5e93f8868aee3df04ca762db8ef77aea6095
   TTFileUploadClient: 974455ed11ab6fe13cf29b5ad3032d1816ac5751
   TTFlowStatisticsManager: 6589b320762fe753556fa2058d0e3e0c42f16ae0
   TTFriendRelation: 376685f5cb6e25bd3960b0a245eb59761c3b576d
+  TTGallery: 694e0873aa6423012bd0a4f8ffd85747e0a60193
+  TTHTSVideo: 84859e259f16d792cd01ab4cecc052dec9af21bc
   TTImage: 8c4ddc40fd78a992571042abdbd7a80642e0bfdc
   TTImagePicker: 728917a7f6b46e1029ec5fcd755ce7a62f311166
   TTImagePreviewAnimateManager: 89284791379992856207b5b92662037d07cb08eb
@@ -1017,6 +1074,8 @@ SPEC CHECKSUMS:
   TTRexxar: 40c20cd090918e9816f74b0decced7094f000647
   TTRNKit: 3e07b1f23c8f64f2359184d42c1f4f9287ed6048
   TTRoute: 20e9092cabb90f759cc2e7c6f5ab3acb075d9d86
+  TTSearch: 812276e1b1c7f1d1fce932fe766e9a75359d18d3
+  TTService: 61600ce842ad99be7776dbbf3e614301ef706f7b
   TTServiceKit: 94210c3f54f65e5ba8ddde3e498837fa04649d57
   TTServiceProtocols: 155d69fde3ee30af409edd22f53735c75f5b77ad
   TTSettingsManager: c44994859a5c05bf29fc2d9b852007e8ffcc36c5
@@ -1027,6 +1086,7 @@ SPEC CHECKSUMS:
   TTTracker: 8fdfc910c2a593f625d8dce8b045b3b6aedc6ddd
   TTUGCFoundation: 38878721f4ea5eecaa985eda71e933a8dded1fe5
   TTUIWidget: d6b9ff5d35146e048c206d45a8362c2e490b7025
+  TTUserProfile: e9f6d23e86b3c1232b15a79a239e5d3a27e5b2f3
   TTUserSettings: ae3d4a3efeb987e7a2fe528545cfdb87a7798c72
   TTVContainerScrollView: 47b54d9eef20ee8c062f64e98a094d53db117932
   TTVerifyKit: 6043790bd8baa07857e93e07abb4ccbf3cb87c82
@@ -1047,6 +1107,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: ca133bb094835aa318ac88a139602a3982081a65
+PODFILE CHECKSUM: 131ea489e022b0aef4a627c6ac3b0b1fc01280be
 
 COCOAPODS: 1.4.0
