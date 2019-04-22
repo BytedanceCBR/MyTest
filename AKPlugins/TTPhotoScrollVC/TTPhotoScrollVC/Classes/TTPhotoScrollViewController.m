@@ -1103,12 +1103,26 @@ static BOOL staticPhotoBrowserAtTop = NO;
     
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            NSLog(@"longpress");
-            [self saveButtonClicked:self.saveButton];
+            [self alertSheetShow];
             break;
         default:
             break;
     }
+}
+
+- (void)alertSheetShow {
+    __weak typeof(self) weakSelf = self;
+    UIAlertController *alertController = [[UIAlertController alloc] init];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"保存图片到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [weakSelf saveButtonClicked:weakSelf.saveButton];
+    }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Pan close gesture
