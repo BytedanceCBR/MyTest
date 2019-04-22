@@ -21,6 +21,7 @@
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureNavView.h"
 #import "FHDetailPictureTitleView.h"
+#import "TTNavigationController.h"
 
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 54.f
@@ -104,6 +105,10 @@
 
 - (void)dealloc
 {
+    TTNavigationController *navi = self.topVC.navigationController;
+    if (navi) {
+        navi.panRecognizer.enabled = YES;
+    }
     [self resetStatusStyle];
     @try {
         [self removeObserver:self forKeyPath:@"self.view.frame"];
@@ -254,6 +259,10 @@
         self.animateManager.panDelegate = self;
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
+    }
+    TTNavigationController *navi = self.topVC.navigationController;
+    if (navi) {
+        navi.panRecognizer.enabled = NO;
     }
 }
 
