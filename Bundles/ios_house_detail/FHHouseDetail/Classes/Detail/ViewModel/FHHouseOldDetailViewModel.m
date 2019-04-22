@@ -34,6 +34,7 @@
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailListEntranceCell.h"
 #import "FHDetailHouseSubscribeCell.h"
+#import "FHDetailAveragePriceComparisonCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHDetailMediaHeaderCell.h"
@@ -77,6 +78,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
+    [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonCell class])];
 
 }
 // cell class
@@ -167,6 +169,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 订阅房源动态
     if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
         return [FHDetailHouseSubscribeCell class];
+    }
+    // 均价对比
+    if ([model isKindOfClass:[FHDetailAveragePriceComparisonModel class]]) {
+        return [FHDetailAveragePriceComparisonCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -378,7 +384,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
-    
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -386,6 +391,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
     // 小区评测
@@ -409,18 +415,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:infoModel];
     }
 
-    if (model.data.housePricingRank.analyseDetail.length > 0) {
-        
-        // 价格分析
-        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
-        titleModel.title = @"价格分析";
-        [self.items addObject:titleModel];
-        if (model.data.housePricingRank.analyseDetail.length > 0) {
-            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
-            priceRankModel.priceRank = model.data.housePricingRank;
-            [self.items addObject:priceRankModel];
-        }
-    }
+//    if (model.data.housePricingRank.analyseDetail.length > 0) {
+//        
+//        // 价格分析
+//        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
+//        titleModel.title = @"价格分析";
+//        [self.items addObject:titleModel];
+//        if (model.data.housePricingRank.analyseDetail.length > 0) {
+//            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
+//            priceRankModel.priceRank = model.data.housePricingRank;
+//            [self.items addObject:priceRankModel];
+//        }
+//    }
     // 均价走势
     FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
     priceTrendModel.priceTrends = model.data.priceTrend;
@@ -429,7 +435,15 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     priceTrendModel.hasSuggestion = (model.data.housePricingRank.buySuggestion.content.length > 0) ? YES : NO;
     priceTrendModel.tableView = self.tableView;
     [self.items addObject:priceTrendModel];
-    
+    // 均价对比
+    if(model.data.neighborhoodPriceRange && model.data.priceAnalyze){
+        FHDetailAveragePriceComparisonModel *infoModel = [[FHDetailAveragePriceComparisonModel alloc] init];
+        infoModel.neighborhoodId = model.data.neighborhoodInfo.id;
+        infoModel.neighborhoodName = model.data.neighborhoodInfo.name;
+        infoModel.analyzeModel = model.data.priceAnalyze;
+        infoModel.rangeModel = model.data.neighborhoodPriceRange;
+        [self.items addObject:infoModel];
+    }
     // 购房小建议
     if (model.data.housePricingRank.buySuggestion.content.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
