@@ -34,6 +34,7 @@
 - (BOOL)isAdShowing;
 - (BOOL)shouldShowIntroductionView;
 - (BOOL)logicBoolForKey:(NSString *)key;
+- (NSString *)logicStringForKey:(NSString *)key;
 
 @end
 

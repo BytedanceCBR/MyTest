@@ -343,24 +343,28 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 }
 
 + (BOOL)isF100PushUrl:(NSString*) host {
-    return [@"old_house_detail" isEqualToString:host] ||
-    [@"neighborhood_detail" isEqualToString:host] ||
-    [@"new_house_detail" isEqualToString:host] ||
-    [@"floor_plan_detail" isEqualToString:host] ||
-    [@"message_detail_list" isEqualToString:host] ||
-    [@"message_system_list" isEqualToString:host] ||
-    [@"house_list" isEqualToString:host] ||
-    [@"rent_detail" isEqualToString:host] ||
-    [@"renthouse_main" isEqualToString:host] ||
-    [@"mapfind_house" isEqualToString:host] ||
-    [@"mapfind_rent" isEqualToString:host] ||
-    [@"rent_main" isEqualToString:host] ||
-    [@"second_house_main" isEqualToString:host] ||
-    [@"webview" isEqualToString:host] ||
-    [@"realtor_detail" isEqualToString:host] ||
-    [@"second_house_main" isEqualToString:host] ||
-    [@"house_find" isEqualToString:host] ||
-    [@"main" isEqualToString:host];
+    
+    NSString *result = [[FHHouseBridgeManager sharedInstance].pushBridge logicStringForKey:host];
+    return result.length > 0;
+    
+    //    return [@"old_house_detail" isEqualToString:host] ||
+//    [@"neighborhood_detail" isEqualToString:host] ||
+//    [@"new_house_detail" isEqualToString:host] ||
+//    [@"floor_plan_detail" isEqualToString:host] ||
+//    [@"message_detail_list" isEqualToString:host] ||
+//    [@"message_system_list" isEqualToString:host] ||
+//    [@"house_list" isEqualToString:host] ||
+//    [@"rent_detail" isEqualToString:host] ||
+//    [@"renthouse_main" isEqualToString:host] ||
+//    [@"mapfind_house" isEqualToString:host] ||
+//    [@"mapfind_rent" isEqualToString:host] ||
+//    [@"rent_main" isEqualToString:host] ||
+//    [@"second_house_main" isEqualToString:host] ||
+//    [@"webview" isEqualToString:host] ||
+//    [@"realtor_detail" isEqualToString:host] ||
+//    [@"second_house_main" isEqualToString:host] ||
+//    [@"house_find" isEqualToString:host] ||
+//    [@"main" isEqualToString:host];
 }
 
 + (void)showF100PushNotificationInAppAlert:(NSDictionary *)dict {

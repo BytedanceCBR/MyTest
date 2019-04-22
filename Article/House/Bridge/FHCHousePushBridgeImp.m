@@ -136,7 +136,10 @@
     return [[TTProjectLogicManager sharedInstance_tt] logicBoolForKey:key defaultValue:NO];
 }
 
-
+- (NSString *)logicStringForKey:(NSString *)key
+{
+    return [[TTProjectLogicManager sharedInstance_tt] logicStringForKey:key];
+}
 
 
 
