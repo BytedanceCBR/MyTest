@@ -65,6 +65,39 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
 @end
 
+@interface FHDetailOldDataNeighborEvalModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *score;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDetailOldDataPriceAnalyzeModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *houseType;
+@property (nonatomic, copy , nullable) NSString *score;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHDetailOldDataComfortInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *propertyFee;
+@property (nonatomic, copy , nullable) NSString *houseCount;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *score;
+@property (nonatomic, copy , nullable) NSString *buildingAge;
+@property (nonatomic, copy , nullable) NSString *plotRatio;
+@end
+
+@interface FHDetailOldDataNeighborhoodPriceRangeModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *maxPricePsm;
+@property (nonatomic, copy , nullable) NSString *curPricePsm;
+@property (nonatomic, copy , nullable) NSString *unit;
+@property (nonatomic, copy , nullable) NSString *minPricePsm;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *sameNeighborhoodRoomsSchema;
+@end
+
 @interface FHDetailOldDataHousePriceRangeModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *curPrice;
@@ -76,6 +109,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *content;
 @property (nonatomic, copy , nullable) NSString *type;//(1 建议,2普通,3不建议)
+@property (nonatomic, copy , nullable) NSString *score;
 @end
 
 @interface FHDetailOldDataHousePricingRankModel : JSONModel
@@ -174,6 +208,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
 @property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataListEntranceItemModel> *listEntrance;
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborEvalModel *neighborEval ;
+@property (nonatomic, strong , nullable) FHDetailOldDataPriceAnalyzeModel *priceAnalyze ;
+@property (nonatomic, strong , nullable) FHDetailOldDataComfortInfoModel *comfortInfo ;
+@property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodPriceRangeModel *neighborhoodPriceRange ;
 
 @end
 
