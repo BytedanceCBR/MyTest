@@ -162,12 +162,12 @@ NSString *const TTThemeManagerThemeModeChangedNotification = @"TTThemeManagerThe
     self.currentThemeMode = TTThemeModeDay;
     [[NSUserDefaults standardUserDefaults] setInteger:self.currentThemeMode forKey:TTThemeModeStorageKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    if (themeMode == TTThemeModeDay) {
+//    if (themeMode == TTThemeModeDay) {
         self.currentTheme = [self dictionaryForBundle:nil theme:@"default"];
-    }
-    else {
-        self.currentTheme = [self dictionaryForBundle:nil theme:@"night"];
-    }
+//    }
+//    else {
+//        self.currentTheme = [self dictionaryForBundle:nil theme:@"night"];
+//    }
     
     if (needBroadcast) {
         dispatch_async(dispatch_get_main_queue(), ^{
