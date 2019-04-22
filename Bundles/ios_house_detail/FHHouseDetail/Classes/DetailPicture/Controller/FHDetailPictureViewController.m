@@ -105,10 +105,6 @@
 
 - (void)dealloc
 {
-    TTNavigationController *navi = self.topVC.navigationController;
-    if (navi) {
-        navi.panRecognizer.enabled = YES;
-    }
     [self resetStatusStyle];
     @try {
         [self removeObserver:self forKeyPath:@"self.view.frame"];
@@ -261,7 +257,7 @@
         [self frameTransform];
     }
     TTNavigationController *navi = self.topVC.navigationController;
-    if (navi) {
+    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
         navi.panRecognizer.enabled = NO;
     }
 }
@@ -274,7 +270,7 @@
         tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
         tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
-        tracerDic[@"element_from"] = @"large";
+        // tracerDic[@"element_from"] = @"large"; // 后续版本需要放开
         [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
 }
@@ -374,6 +370,10 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    TTNavigationController *navi = self.topVC.navigationController;
+    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
+        navi.panRecognizer.enabled = NO;
+    }
     [self setCurrentStatusStyle];
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -383,7 +383,10 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-   
+    TTNavigationController *navi = self.topVC.navigationController;
+    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
+        navi.panRecognizer.enabled = YES;
+    }
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
