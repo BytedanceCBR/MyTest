@@ -25,6 +25,7 @@
 #import "UIColor+Theme.h"
 #import "TTRoute.h"
 #import <HMDTTMonitor.h>
+#import "FHDetailMapView.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -36,7 +37,6 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , assign) NSInteger requestIndex;
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) UIImageView *mapImageView;
-@property (nonatomic , strong) UIImageView *mapAnnotionImageView;
 @property (nonatomic , strong) UITableView *locationList;
 @property (nonatomic , strong) UIView *bottomLine;
 @property (nonatomic , strong) UILabel *emptyInfoLabel;
@@ -46,7 +46,7 @@ static const float kSegementedPadingTop = 5;
 @property (nonatomic , strong) AMapSearchAPI *searchApi;
 @property (nonatomic , strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
-@property (nonatomic , strong) MAMapView *mapView;
+@property (nonatomic , weak)   MAMapView *mapView;
 @property (nonatomic , strong) NSString * searchCategory;
 @property (nonatomic , strong) NSArray * nameArray;
 @property (nonatomic , assign) BOOL isFirst;
@@ -173,12 +173,6 @@ static const float kSegementedPadingTop = 5;
 
 - (void)setUpMapViewSetting:(BOOL)isRetry
 {
-    _mapView.runLoopMode = NSDefaultRunLoopMode;
-    _mapView.showsCompass = NO;
-    _mapView.showsScale = NO;
-    _mapView.zoomEnabled = NO;
-    _mapView.scrollEnabled = NO;
-    _mapView.zoomLevel = 14;
     _mapView.delegate = self;
     [_mapView forceRefresh];
     
@@ -194,28 +188,20 @@ static const float kSegementedPadingTop = 5;
     if (self.centerPoint.latitude && self.centerPoint.longitude) {
         [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
     }
-    if (isRetry) {
-        [self.mapImageView addSubview:_mapView];
-        _mapView.hidden = YES;
-    }
 }
 
 - (void)setUpMapImageView
 {
     CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
     
-    _mapView = [[MAMapView alloc] initWithFrame:mapRect];
+    _mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:mapRect];
     
     //3秒如果截图失败则重试一次
+     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (self.mapImageView.image == nil) {
-                if (_mapView) {
-                    [_mapView removeFromSuperview];
-                    _mapView = nil;
-                }
-                _mapView = [[MAMapView alloc] initWithFrame:mapRect];
-                [self setUpMapViewSetting:YES];
+            if (weakSelf.mapImageView.image == nil) {
+                [weakSelf setUpMapViewSetting:YES];
             }
         });
     });
@@ -232,13 +218,6 @@ static const float kSegementedPadingTop = 5;
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(160);
     }];
-    
-    _mapAnnotionImageView = [[UIImageView alloc] initWithFrame:mapRect];
-    [_mapImageView addSubview:_mapAnnotionImageView];
-    [_mapAnnotionImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(_mapImageView);
-    }];
-    
     
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtn];
@@ -388,10 +367,13 @@ static const float kSegementedPadingTop = 5;
 
 - (void)setUpAnnotations
 {
+    [[FHDetailMapView sharedInstance] clearAnnotationDatas];
+    self.mapView.delegate = self;
     for (NSInteger i = 0; i < _poiAnnotations.count; i++) {
-        [self.mapView addAnnotation:_poiAnnotations[i]];
+        if (i < 3) {
+            [self.mapView addAnnotation:_poiAnnotations[i]];
+        }
     }
-    
     FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
     userAnna.type = @"user";
     
@@ -400,7 +382,6 @@ static const float kSegementedPadingTop = 5;
     self.pointCenterAnnotation = userAnna;
     
     [self.mapView setCenterCoordinate:self.centerPoint];
-//    [self performSelector:@selector(snapShotAnnotationImage) withObject:nil afterDelay:0.1];
     [self snapShotAnnotationImage];
     //改变显示的tableview数据
     [self changePoiData];
@@ -524,6 +505,7 @@ static const float kSegementedPadingTop = 5;
         
         if ([((FHMyMAAnnotation *)annotation).type isEqualToString:@"user"]) {
             annotationV.image = [self getIconImageFromCategory:((FHMyMAAnnotation *)annotation).type];
+            annotationV.centerOffset = CGPointMake(0, -18);
         }else
         {
             UIImageView *backImageView = [UIImageView new];
@@ -560,9 +542,8 @@ static const float kSegementedPadingTop = 5;
             [backImageView addSubview:bottomArrowView];
             bottomArrowView.backgroundColor = [UIColor clearColor];
             bottomArrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);
+            annotationV.centerOffset = CGPointMake(-backImageView.frame.size.width / 2.0, -40);
         }
-        
-        annotationV.centerOffset = CGPointMake(0, -18);
         
         return annotationV ? annotationV : [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
     }
@@ -637,16 +618,14 @@ static const float kSegementedPadingTop = 5;
 
 - (void)snapShotAnnotationImage
 {
-    UIView *annotationView = [self.mapView viewForAnnotation:self.pointCenterAnnotation];
-    if (annotationView) {
-        UIView *superAnnotationView = [annotationView superview];
-        if ([superAnnotationView isKindOfClass:[UIView class]]) {
-            self.mapAnnotionImageView.image = [self getImageFromView:superAnnotationView];
+    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
+    WeakSelf;
+    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        StrongSelf;
+        if (resultImage) {
+            self.mapImageView.image = resultImage;
         }
-    }else
-    {
-        self.mapAnnotionImageView.image = nil;
-    }
+    }];
 }
 
 - (UIImage *)getImageFromView:(UIView *)view

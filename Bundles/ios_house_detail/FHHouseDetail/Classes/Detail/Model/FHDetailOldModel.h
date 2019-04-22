@@ -39,15 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataNeighborhoodInfoEvaluationInfoSubScoresModel> *subScores;
 @end
 
-@protocol FHDetailOldDataNeighborhoodInfoSchoolInfoModel<NSObject>
-@end
-
-@interface FHDetailOldDataNeighborhoodInfoSchoolInfoModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *schoolType;
-@property (nonatomic, copy , nullable) NSString *schoolId;
-@property (nonatomic, copy , nullable) NSString *schoolName;
-@end
 
 @interface FHDetailOldDataNeighborhoodInfoModel : JSONModel
 
@@ -70,8 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *id;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
-@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataNeighborhoodInfoSchoolInfoModel> *schoolInfo;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
 @end
 
 @interface FHDetailOldDataHousePriceRangeModel : JSONModel
@@ -152,6 +143,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *entranceUrl;
 @end
 
+@protocol FHDetailOldDataHouseImageDictListModel<NSObject>
+@end
+
+// 房源详情图片类型
+typedef enum : NSInteger {
+    FHDetailHouseImageTypeOther             = 0, // 其他
+    FHDetailHouseImageTypeApartment         = 2, // 户型
+    FHDetailHouseImageTypeLivingroom        = 3, // 客厅
+    FHDetailHouseImageTypeBedroom           = 4, // 卧室
+    FHDetailHouseImageTypeKitchen           = 5, // 厨房
+    FHDetailHouseImageTypeBathroom          = 6, // 卫生间
+} FHDetailHouseImageType;
+
+@interface FHDetailOldDataHouseImageDictListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *houseImageTypeName;
+@property (nonatomic, assign) FHDetailHouseImageType houseImageType;
+@property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImageList;
+@end
+
 
 @interface FHDetailOldDataModel : JSONModel
 
@@ -174,6 +185,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
+@property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;

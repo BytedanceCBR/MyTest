@@ -17,6 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^FHHouseDetailPhoneCallSuccessBlock)(BOOL success);
 typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 
+@interface FHHouseDetailFormAlertModel : NSObject
+
+@property (nonatomic, copy) NSString *title; // 非必填
+@property (nonatomic, copy) NSString *subtitle;// 非必填
+@property (nonatomic, copy) NSString *btnTitle;// 非必填
+@property (nonatomic, copy) NSString *leftBtnTitle;// 非必填
+
+@end
+
 @interface FHHouseDetailPhoneCallViewModel : NSObject
 
 @property (nonatomic, weak) FHHouseDetailFollowUpViewModel *followUpViewModel;
@@ -25,10 +34,11 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr;
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
-- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr;
 
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
+- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle withExtraDict:(NSDictionary *)extraDict;
+- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
+- (void)fillFormAction:(FHHouseDetailFormAlertModel *)alertModel contactPhone:(FHDetailContactModel *)contactPhone customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
 - (TTRouteObject *)creatJump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre andIsOpen:(BOOL)isOpen;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre;
 

@@ -1092,7 +1092,15 @@ static BOOL staticPhotoBrowserAtTop = NO;
     if (!_longPressToSave || self.interfaceOrientation != UIInterfaceOrientationPortrait) {
         return;
     }
-
+    TTShowImageView * currentImageView = [self showImageViewAtIndex:_currentIndex];
+    CGRect frame = [currentImageView currentImageView].frame;
+    UIView * touchView = recognizer.view;
+    
+    CGPoint point = [recognizer locationInView:touchView];
+    if (!CGRectContainsPoint(frame, point)) {
+        return;
+    }
+    
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
             NSLog(@"longpress");

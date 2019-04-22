@@ -16,8 +16,11 @@
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/FHUserTracker.h>
 
-NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
-NSString *const kFHToastCountKey = @"kFHToastCountKey";
+extern NSString *const kFHToastCountKey;
+extern NSString *const kFHDetailFollowUpNotification;
+
+//NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
+//NSString *const kFHToastCountKey = @"kFHToastCountKey";
 
 @implementation FHHouseDetailFollowUpViewModel
 
@@ -27,31 +30,35 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
+    __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (!error) {
             if (model.status.integerValue == 0) {
                 if (model.data.followStatus == 0) {
-        
-                    NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-                    if (toastCount < 3) {
-                        CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
-                        style.cornerRadius = 12;
-                        style.messageAlignment = NSTextAlignmentCenter;
-                        style.messageColor = [UIColor whiteColor];
-                        style.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.96];
-                        style.messageFont = [UIFont themeFontRegular:10];
-                        style.verticalPadding = 5;
-                        style.horizontalPadding = 6;
-                        style.isCustomPosition = YES;
-                        style.customX = [UIScreen mainScreen].bounds.size.width - 20;
-                        style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
-                        toastCount += 1;
-                        [[TTUIResponderHelper topmostViewController].view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
-                        [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
-                        [[NSUserDefaults standardUserDefaults]synchronize];
+                    if (wSelf.topVC && wSelf.topVC.childViewControllers.count == 0) {
+                        
+                        NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
+                        if (toastCount < 3) {
+                            CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
+                            style.cornerRadius = 12;
+                            style.messageAlignment = NSTextAlignmentCenter;
+                            style.messageColor = [UIColor whiteColor];
+                            style.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.96];
+                            style.messageFont = [UIFont themeFontRegular:10];
+                            style.verticalPadding = 5;
+                            style.horizontalPadding = 6;
+                            style.isCustomPosition = YES;
+                            style.customX = [UIScreen mainScreen].bounds.size.width - 20;
+                            style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
+                            toastCount += 1;
+                            UIViewController *temp = [TTUIResponderHelper topmostViewController];
+                            UIView *v = temp.view;
+                            [wSelf.topVC.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
+                            [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
+                            [[NSUserDefaults standardUserDefaults]synchronize];
+                        }
                     }
-
                 }else {
                     NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
                     if (toastCount < 3 && showTip) {
