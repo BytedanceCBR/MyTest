@@ -295,7 +295,9 @@
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
         NSDictionary *extraDic = @{@"realtor_position":@"online",
-                                   @"position":@"online"};
+                                   @"position":@"online",
+                                   @"element_from":@"large"
+                                   };
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }
@@ -304,7 +306,9 @@
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
         NSDictionary *extraDic = @{@"realtor_position":@"phone_button",
-                                   @"position":@"report_button"};
+                                   @"position":@"report_button",
+                                   @"element_from":@"large"
+                                   };
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }
