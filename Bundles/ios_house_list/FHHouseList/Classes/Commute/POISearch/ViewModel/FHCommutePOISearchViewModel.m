@@ -631,6 +631,13 @@
     [textField resignFirstResponder];
 }
 
+-(void)textFieldChanged:(NSString *)text
+{
+    if (text.length > 0 && ![text isEqualToString:self.keywordRequest.keywords]) {
+        [self poiSearch:text force:YES];
+    }
+}
+
 -(void)inputBarCancel
 {
     if ([self.viewController.sugDelegate respondsToSelector:@selector(userCanced:)]) {

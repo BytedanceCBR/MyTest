@@ -16,6 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^FHHouseDetailPhoneCallSuccessBlock)(BOOL success);
 typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 
+@interface FHHouseDetailFormAlertModel : NSObject
+
+@property (nonatomic, copy) NSString *title; // 非必填
+@property (nonatomic, copy) NSString *subtitle;// 非必填
+@property (nonatomic, copy) NSString *btnTitle;// 非必填
+@property (nonatomic, copy) NSString *leftBtnTitle;// 非必填
+
+@end
+
 @interface FHHouseDetailPhoneCallViewModel : NSObject
 
 @property (nonatomic, weak) FHHouseDetailFollowUpViewModel *followUpViewModel;
@@ -27,6 +36,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle withExtraDict:(NSDictionary *)extraDict;
 - (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
+- (void)fillFormAction:(FHHouseDetailFormAlertModel *)alertModel contactPhone:(FHDetailContactModel *)contactPhone customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict;
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone;
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone;
 

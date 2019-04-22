@@ -23,6 +23,7 @@
 @property(nonatomic , strong) UITextField *phoneTextField;
 @property(nonatomic , strong) UIView *seperateLine;
 @property(nonatomic , strong) UILabel *errorTextLabel;
+@property(nonatomic , strong) UIButton *leftBtn;
 @property(nonatomic , strong) UIButton *submitBtn;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , copy) NSString *originPhoneNumber;
@@ -41,6 +42,38 @@
         self.subtitleLabel.text = subtitle;
         [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
         [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
+        [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return self;
+}
+
+- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle
+{
+    self = [self initWithFrame:[UIScreen mainScreen].bounds];
+    if (self) {
+        [self setupUI];
+        self.titleLabel.text = title;
+        self.subtitleLabel.text = subtitle;
+        [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
+        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
+        if (leftBtnTitle.length > 0) {
+            
+            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateNormal];
+            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateHighlighted];
+            [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(20);
+                make.width.height.centerY.mas_equalTo(self.submitBtn);
+            }];
+            [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(40);
+                make.top.mas_equalTo(self.seperateLine.mas_bottom).mas_offset(20.5);
+                make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
+                make.right.mas_equalTo(-20);
+            }];
+            [self.submitBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     return self;
 }
@@ -57,11 +90,9 @@
         }
         self.phoneTextField.text = tempPhone;
         if (self.phoneTextField.text.length > 0) {
-            self.submitBtn.enabled = YES;
-            self.submitBtn.alpha = 1;
+            [self refreshBtnState:YES];
         }else {
-            self.submitBtn.enabled = NO;
-            self.submitBtn.alpha = 0.6;
+            [self refreshBtnState:NO];
         }
     }
     // 有手机号，不弹出弹窗
@@ -104,6 +135,7 @@
     [self.contentView addSubview:self.phoneTextField];
     [self.contentView addSubview:self.seperateLine];
     [self.contentView addSubview:self.errorTextLabel];
+    [self.contentView addSubview:self.leftBtn];
     [self.contentView addSubview:self.submitBtn];
     [self.contentView addSubview:self.tipLabel];
     
@@ -152,7 +184,7 @@
         make.centerX.mas_equalTo(self.contentView);
     }];
     [self.closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
-    [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.leftBtn addTarget:self action:@selector(leftBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
     UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tipBtnDidClick)];
     self.tipLabel.userInteractionEnabled = YES;
@@ -217,12 +249,18 @@
     if (self.phoneTextField.text.length > 0) {
         self.errorTextLabel.hidden = YES;
         self.seperateLine.backgroundColor = [UIColor themeGray6];
-        self.submitBtn.enabled = YES;
-        self.submitBtn.alpha = 1;
+        [self refreshBtnState:YES];
     }else {
-        self.submitBtn.enabled = NO;
-        self.submitBtn.alpha = 0.6;
+        [self refreshBtnState:NO];
     }
+}
+
+- (void)refreshBtnState:(BOOL)isEnabled
+{
+    self.submitBtn.enabled = YES;
+    self.submitBtn.alpha = 1;
+    self.leftBtn.enabled = YES;
+    self.leftBtn.alpha = 1;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -273,6 +311,26 @@
         }
     }else {
         [self showErrorText];
+    }
+}
+
+- (void)leftBtnDidClick:(UIButton *)btn
+{
+    NSString *phoneNum = [self currentInputPhoneNumber];
+    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
+        if (self.leftClickBlock) {
+            self.leftClickBlock(phoneNum);
+        }
+    }else {
+        [self showErrorText];
+    }
+}
+
+- (void)rightBtnDidClick:(UIButton *)btn
+
+{    NSString *phoneNum = [self currentInputPhoneNumber];
+    if (self.confirmClickBlock) {
+        self.confirmClickBlock(phoneNum);
     }
 }
 
@@ -369,7 +427,7 @@
         _phoneTextField.keyboardType = UIKeyboardTypePhonePad;
         _phoneTextField.font = [UIFont themeFontRegular:14];
         _phoneTextField.textColor = [UIColor themeGray1];
-        _phoneTextField.placeholder = @"请输入手机号";
+        _phoneTextField.placeholder = @"请输入您的手机号";
         _phoneTextField.delegate = self;
     }
     return _phoneTextField;
@@ -407,10 +465,21 @@
         [_submitBtn setTitle:@"提交" forState:UIControlStateHighlighted];
         _submitBtn.layer.cornerRadius = 4;
         _submitBtn.backgroundColor = [UIColor themeRed1];
-        _submitBtn.alpha = 0.6;
-        _submitBtn.enabled = NO;
     }
     return _submitBtn;
+}
+
+- (UIButton *)leftBtn
+{
+    if (!_leftBtn) {
+        _leftBtn = [[UIButton alloc]init];
+        [_leftBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_leftBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        _leftBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _leftBtn.layer.cornerRadius = 4;
+        _leftBtn.backgroundColor = [UIColor themeRed3];
+    }
+    return _leftBtn;
 }
 
 - (UILabel *)tipLabel
