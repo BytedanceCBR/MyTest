@@ -65,7 +65,6 @@
 		0C5F16D51FCC127900766323 /* YYDispatchQueuePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5F16D11FCC127500766323 /* YYDispatchQueuePool.m */; };
 		0C5F16D91FCC127900766323 /* FeedOptimizeImageSizeHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C5F16D31FCC127700766323 /* FeedOptimizeImageSizeHelper.m */; };
 		0C980BC01F7382C700D9FC77 /* TTOpenURLFeedBackLogTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C980BBF1F7382C700D9FC77 /* TTOpenURLFeedBackLogTask.m */; };
-		0CB003071EE7A4370040BA76 /* TTWebImageDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */; };
 		1B0C7E8E1B3D439D00361F3E /* ArticleCategoryWAPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B0C7E8D1B3D439D00361F3E /* ArticleCategoryWAPViewController.m */; };
 		1B5B58B41A1F1C7400A74773 /* ExploreSubscribeDataListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B58B31A1F1C7400A74773 /* ExploreSubscribeDataListManager.m */; };
 		1B5B58BD1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1B5B58BC1A1F31AA00A74773 /* ExploreSubscribeLocalListManager.m */; };
@@ -1897,7 +1896,6 @@
 		B373CBEB2174587A008F9905 /* TTFollowedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2BE1F1333600002B455 /* TTFollowedCell.m */; };
 		B373CBEC2174587A008F9905 /* TTMessageNotificationBaseCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D501683F2089EC4A00B8F1C7 /* TTMessageNotificationBaseCellView.m */; };
 		B373CBED2174587A008F9905 /* TTRImpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5E8CF1F15CCAA006D0CC7 /* TTRImpression.m */; };
-		B373CBEE2174587A008F9905 /* TTWebImageDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */; };
 		B373CBEF2174587A008F9905 /* TTVBuryAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F876920A1F31D0D200D59CA5 /* TTVBuryAction.m */; };
 		B373CBF02174587A008F9905 /* ArticleCategorySubscribeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EFA5998019C5997F00322447 /* ArticleCategorySubscribeCell.m */; };
 		B373CBF22174587A008F9905 /* UIView+SupportFullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = F876934E1F31D0D300D59CA5 /* UIView+SupportFullScreen.m */; };
@@ -2594,7 +2592,7 @@
 		C3B883081F71422D0039B73F /* TTAdFeedDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = C3B883071F71422B0039B73F /* TTAdFeedDefine.m */; };
 		C3D29B4F1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D29B4E1F96FA5F00A500E2 /* ExploreOrderedData+TTAd.m */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
 		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
 		CB9C225A176981FD00970E5D /* ArticleCityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB9C2259176981FD00970E5D /* ArticleCityManager.m */; };
@@ -3452,7 +3450,6 @@
 		D47954D221ECC94E00548965 /* TTFollowedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2BE1F1333600002B455 /* TTFollowedCell.m */; };
 		D47954D321ECC94E00548965 /* TTMessageNotificationBaseCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = D501683F2089EC4A00B8F1C7 /* TTMessageNotificationBaseCellView.m */; };
 		D47954D421ECC94E00548965 /* TTRImpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5E8CF1F15CCAA006D0CC7 /* TTRImpression.m */; };
-		D47954D521ECC94E00548965 /* TTWebImageDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */; };
 		D47954D621ECC94E00548965 /* TTVBuryAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F876920A1F31D0D200D59CA5 /* TTVBuryAction.m */; };
 		D47954D721ECC94E00548965 /* ArticleCategorySubscribeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EFA5998019C5997F00322447 /* ArticleCategorySubscribeCell.m */; };
 		D47954D921ECC94E00548965 /* UIView+SupportFullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = F876934E1F31D0D300D59CA5 /* UIView+SupportFullScreen.m */; };
@@ -5350,7 +5347,6 @@
 		FEFA56D3205FB1A8001F50D8 /* ArticleMobileChangeCaptchaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D3316FE1F305308009D2936 /* ArticleMobileChangeCaptchaViewController.m */; };
 		FEFA56D4205FB1A8001F50D8 /* TTFollowedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A97DC2BE1F1333600002B455 /* TTFollowedCell.m */; };
 		FEFA56D7205FB1A8001F50D8 /* TTRImpression.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BD5E8CF1F15CCAA006D0CC7 /* TTRImpression.m */; };
-		FEFA56D8205FB1A8001F50D8 /* TTWebImageDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */; };
 		FEFA56D9205FB1A8001F50D8 /* TTVBuryAction.m in Sources */ = {isa = PBXBuildFile; fileRef = F876920A1F31D0D200D59CA5 /* TTVBuryAction.m */; };
 		FEFA56DA205FB1A8001F50D8 /* ArticleCategorySubscribeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EFA5998019C5997F00322447 /* ArticleCategorySubscribeCell.m */; };
 		FEFA56DB205FB1A8001F50D8 /* UIView+SupportFullScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = F876934E1F31D0D300D59CA5 /* UIView+SupportFullScreen.m */; };
@@ -6184,8 +6180,6 @@
 		0C5F16D41FCC127800766323 /* FeedOptimizeImageSizeHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedOptimizeImageSizeHelper.h; sourceTree = "<group>"; };
 		0C980BBE1F7382C700D9FC77 /* TTOpenURLFeedBackLogTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOpenURLFeedBackLogTask.h; sourceTree = "<group>"; };
 		0C980BBF1F7382C700D9FC77 /* TTOpenURLFeedBackLogTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOpenURLFeedBackLogTask.m; sourceTree = "<group>"; };
-		0CB003051EE7A4370040BA76 /* TTWebImageDownloaderOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTWebImageDownloaderOperation.h; sourceTree = "<group>"; };
-		0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTWebImageDownloaderOperation.m; sourceTree = "<group>"; };
 		1A8B41FAA0807136CDC8EDBD /* Pods-NewsLiteInHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteInHouse.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse.release.xcconfig"; sourceTree = "<group>"; };
 		1B0C7E8C1B3D439D00361F3E /* ArticleCategoryWAPViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArticleCategoryWAPViewController.h; sourceTree = "<group>"; };
 		1B0C7E8D1B3D439D00361F3E /* ArticleCategoryWAPViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArticleCategoryWAPViewController.m; sourceTree = "<group>"; };
@@ -9143,7 +9137,7 @@
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
 				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -10522,8 +10516,6 @@
 				327AFBCC1F59480C00AD464B /* SDWebImageDownloaderOperationBugFix.m */,
 				329F2C7F1F5F943C00F476ED /* SDWebImageManager+TTHook.h */,
 				329F2C801F5F943C00F476ED /* SDWebImageManager+TTHook.m */,
-				0CB003051EE7A4370040BA76 /* TTWebImageDownloaderOperation.h */,
-				0CB003061EE7A4370040BA76 /* TTWebImageDownloaderOperation.m */,
 				32EA49231F9309720027471E /* UIImage+GIFBugFix.h */,
 				32EA49241F9309720027471E /* UIImage+GIFBugFix.m */,
 				0C5F16D21FCC127600766323 /* YYDispatchQueuePool.h */,
@@ -17208,6 +17200,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				"zh-Hans",
 				Base,
@@ -17693,8 +17686,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@2x.png",
@@ -17705,8 +17696,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@2x.png",
@@ -17781,8 +17770,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@2x.png",
@@ -17793,8 +17780,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@2x.png",
@@ -17937,8 +17922,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@2x.png",
@@ -17949,8 +17932,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@2x.png",
@@ -18025,8 +18006,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@2x.png",
@@ -18037,8 +18016,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@2x.png",
@@ -18123,8 +18100,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@2x.png",
@@ -18135,8 +18110,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@2x.png",
@@ -18210,8 +18183,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@2x.png",
@@ -18222,8 +18193,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@2x.png",
@@ -18604,8 +18573,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/FullPlay_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Fullscreen_exit@2x.png",
@@ -18616,8 +18583,6 @@
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Pause@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play@3x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@2x.png",
-				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Play_night@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@2x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/pre_play@3x.png",
 				"${PODS_ROOT}/../../AKPlugins/BDTBasePlayer/BDTBasePlayer/Assets/Replay@2x.png",
@@ -18691,8 +18656,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FullPlay_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fullscreen_exit@2x.png",
@@ -18703,8 +18666,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Pause@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play@3x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@2x.png",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Play_night@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/pre_play@3x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Replay@2x.png",
@@ -19660,7 +19621,6 @@
 				A97DC4261F1333630002B455 /* TTFollowedCell.m in Sources */,
 				D501685E2089EC4B00B8F1C7 /* TTMessageNotificationBaseCellView.m in Sources */,
 				6BD5E8D01F15CCAA006D0CC7 /* TTRImpression.m in Sources */,
-				0CB003071EE7A4370040BA76 /* TTWebImageDownloaderOperation.m in Sources */,
 				F87695081F31D0D600D59CA5 /* TTVBuryAction.m in Sources */,
 				EFA5998119C5997F00322447 /* ArticleCategorySubscribeCell.m in Sources */,
 				F876970C1F31D0DA00D59CA5 /* UIView+SupportFullScreen.m in Sources */,
@@ -21069,7 +21029,6 @@
 				B373CBEB2174587A008F9905 /* TTFollowedCell.m in Sources */,
 				B373CBEC2174587A008F9905 /* TTMessageNotificationBaseCellView.m in Sources */,
 				B373CBED2174587A008F9905 /* TTRImpression.m in Sources */,
-				B373CBEE2174587A008F9905 /* TTWebImageDownloaderOperation.m in Sources */,
 				B373CBEF2174587A008F9905 /* TTVBuryAction.m in Sources */,
 				B373CBF02174587A008F9905 /* ArticleCategorySubscribeCell.m in Sources */,
 				B373CBF22174587A008F9905 /* UIView+SupportFullScreen.m in Sources */,
@@ -22460,7 +22419,6 @@
 				D47954D221ECC94E00548965 /* TTFollowedCell.m in Sources */,
 				D47954D321ECC94E00548965 /* TTMessageNotificationBaseCellView.m in Sources */,
 				D47954D421ECC94E00548965 /* TTRImpression.m in Sources */,
-				D47954D521ECC94E00548965 /* TTWebImageDownloaderOperation.m in Sources */,
 				D47954D621ECC94E00548965 /* TTVBuryAction.m in Sources */,
 				D47954D721ECC94E00548965 /* ArticleCategorySubscribeCell.m in Sources */,
 				D47954D921ECC94E00548965 /* UIView+SupportFullScreen.m in Sources */,
@@ -23851,7 +23809,6 @@
 				FEFA56D4205FB1A8001F50D8 /* TTFollowedCell.m in Sources */,
 				D501685F2089EC4B00B8F1C7 /* TTMessageNotificationBaseCellView.m in Sources */,
 				FEFA56D7205FB1A8001F50D8 /* TTRImpression.m in Sources */,
-				FEFA56D8205FB1A8001F50D8 /* TTWebImageDownloaderOperation.m in Sources */,
 				FEFA56D9205FB1A8001F50D8 /* TTVBuryAction.m in Sources */,
 				FEFA56DA205FB1A8001F50D8 /* ArticleCategorySubscribeCell.m in Sources */,
 				FEFA56DB205FB1A8001F50D8 /* UIView+SupportFullScreen.m in Sources */,

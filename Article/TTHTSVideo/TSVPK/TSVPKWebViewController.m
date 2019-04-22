@@ -140,7 +140,7 @@
     [RACObserve(self, webView.ttLoadingView) subscribeNext:^(id  _Nullable x) {
         @strongify(self);
         if ([self.webView.ttLoadingView isKindOfClass:[SSThemedView class]]) {
-            ((SSThemedView *)self.webView.ttLoadingView).themeMode = SSThemeModeAlwaysNight;
+            ((SSThemedView *)self.webView.ttLoadingView).themeMode = SSThemeModeAlwaysDay;
         }
     }];
 }

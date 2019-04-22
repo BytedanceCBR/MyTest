@@ -275,6 +275,18 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         
         [wSelf sendLocationAuthorizedTrace];
         
+        NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+        
+        [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        
+        NSInteger statusNum = 1;
+        if (![self isHaveLocationAuthorization]) {
+            statusNum = 2;
+        }else if (![FHEnvContext isNetworkConnected])
+        {
+            statusNum = 3;
+        }
+        
         if (error.code == AMapLocationErrorLocateFailed) {
             
             NSNumber *statusNumber = [NSNumber numberWithInteger:[self isHaveLocationAuthorization] ? 1 : 0];
@@ -286,11 +298,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             [uploadParams setValue:statusNumber forKey:@"location_status"];
             [uploadParams setValue:netStatusNumber forKey:@"network_status"];
             
-            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
-            
-            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-            
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" metric:nil category:uploadParams extra:paramsExtra];
+
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:statusNum extra:paramsExtra];
             
             NSLog(@"定位错误:%@",error.localizedDescription);
         }else if (error.code == AMapLocationErrorReGeocodeFailed || error.code == AMapLocationErrorTimeOut || error.code == AMapLocationErrorCannotFindHost || error.code == AMapLocationErrorBadURL || error.code == AMapLocationErrorNotConnectedToInternet || error.code == AMapLocationErrorCannotConnectToHost)
@@ -298,7 +307,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             NSLog(@"逆地理错误:%@",error.localizedDescription);
         }else
         {
-            
+            if (regeocode) {
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:0 extra:paramsExtra];
+            }
         }
         
         NSMutableDictionary * amapInfo = [NSMutableDictionary new];
@@ -361,9 +372,14 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 [wSelf updateAllConfig:model isNeedDiff:NO];
    
-                [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
-                    
-                }];
+                
+                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+                
+                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
+                    [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
+                        
+                    }];
+                }
 
                 wSelf.retryConfigCount = 3;
             }];

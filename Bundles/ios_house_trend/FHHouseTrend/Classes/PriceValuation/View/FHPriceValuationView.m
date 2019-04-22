@@ -21,7 +21,7 @@
 @property(nonatomic, strong) UIView *inputView;
 @property(nonatomic, strong) UIButton *evaluateBtn;
 @property(nonatomic, assign) CGFloat naviBarHeight;
-@property(nonatomic, strong) YYLabel *agreementLabel;
+//@property(nonatomic, strong) YYLabel *agreementLabel;
 @property(nonatomic, strong) UILabel *descLabel;
 
 @end
@@ -98,12 +98,12 @@
     [_evaluateBtn addTarget:self action:@selector(evaluate) forControlEvents:UIControlEventTouchUpInside];
     [self.scrollView addSubview:_evaluateBtn];
     
-    self.agreementLabel = [[YYLabel alloc] init];
-    _agreementLabel.numberOfLines = 0;
-    _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    _agreementLabel.textColor = [UIColor themeGray3];
-    _agreementLabel.font = [UIFont themeFontRegular:12];
-    [self.scrollView addSubview:_agreementLabel];
+//    self.agreementLabel = [[YYLabel alloc] init];
+//    _agreementLabel.numberOfLines = 0;
+//    _agreementLabel.lineBreakMode = NSLineBreakByWordWrapping;
+//    _agreementLabel.textColor = [UIColor themeGray3];
+//    _agreementLabel.font = [UIFont themeFontRegular:12];
+//    [self.scrollView addSubview:_agreementLabel];
     
     self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:11] textColor:[UIColor themeGray4]];
     _descLabel.textAlignment = NSTextAlignmentCenter;
@@ -162,7 +162,7 @@
         make.height.mas_equalTo(44);
     }];
     
-    [self setAgreementContent];
+//    [self setAgreementContent];
     
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self);
@@ -184,23 +184,23 @@
     [FHUtils addShadowToView:self.inputView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(2, 6) shadowRadius:8 andCornerRadius:4];
 }
 
-- (void)setAgreementContent {
-    __weak typeof(self) weakSelf = self;
-    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:@"提交即视为同意《个人信息保护声明》"];
-    [attrText addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:1] range:NSMakeRange(7, 10)];
-    [attrText addAttributes:[self commonTextStyle] range:NSMakeRange(0, attrText.length)];
-    [attrText yy_setTextHighlightRange:NSMakeRange(7, 10) color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        [weakSelf goToUserProtocol];
-    }];
-
-    self.agreementLabel.attributedText = attrText;
-    
-    [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self);
-        make.top.mas_equalTo(self.evaluateBtn.mas_bottom).offset(6);
-        make.height.mas_equalTo(17);
-    }];
-}
+//- (void)setAgreementContent {
+//    __weak typeof(self) weakSelf = self;
+//    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:@"提交即视为同意《个人信息保护声明》"];
+//    [attrText addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:1] range:NSMakeRange(7, 10)];
+//    [attrText addAttributes:[self commonTextStyle] range:NSMakeRange(0, attrText.length)];
+//    [attrText yy_setTextHighlightRange:NSMakeRange(7, 10) color:[UIColor themeGray3] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+//        [weakSelf goToUserProtocol];
+//    }];
+//
+//    self.agreementLabel.attributedText = attrText;
+//    
+//    [self.agreementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerX.mas_equalTo(self);
+//        make.top.mas_equalTo(self.evaluateBtn.mas_bottom).offset(6);
+//        make.height.mas_equalTo(17);
+//    }];
+//}
 
 - (void)setEvaluateBtnEnabled:(BOOL)enabled {
     if(self.evaluateBtn.enabled != enabled){

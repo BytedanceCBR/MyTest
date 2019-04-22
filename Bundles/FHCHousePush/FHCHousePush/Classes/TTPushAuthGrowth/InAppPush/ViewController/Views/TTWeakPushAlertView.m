@@ -16,6 +16,7 @@
 #import "TTPushAlertModel.h"
 #import "UILabel+SizeToTextParagraphStyle.h"
 #import <FHCommonUI/UIView+House.h>
+#import <TTBaseLib/UIButton+TTAdditions.h>
 
 
 #define kTTWeakPushAlertViewToMarginBottom      (44 + [TTDeviceUIUtils tt_padding:8])

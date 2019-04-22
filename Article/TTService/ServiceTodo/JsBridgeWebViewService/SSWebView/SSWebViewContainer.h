@@ -38,6 +38,8 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
 
 @property (nonatomic, assign) BOOL disableEndRefresh;
 
+@property (nonatomic, assign) BOOL disableConnectCheck;
+
 
 - (instancetype)initWithFrame:(CGRect)frame baseCondition:(NSDictionary *)baseCondition NS_DESIGNATED_INITIALIZER;
 
