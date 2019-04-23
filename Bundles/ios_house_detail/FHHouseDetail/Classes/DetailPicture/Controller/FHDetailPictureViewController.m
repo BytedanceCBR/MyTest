@@ -1,12 +1,11 @@
 //
-//  TTPhotoScrollViewController.m
-//  Article
+//  FHDetailPictureViewController.m
+//  FHHouseDetail
 //
-//  Created by Zhang Leonardo on 12-12-4.
-//  Edited by Cao Hua from 13-10-12.
+//  Created by 张元科 on 2019/4/15.
 //
 
-#import "TTPhotoScrollViewController.h"
+#import "FHDetailPictureViewController.h"
 #import "TTShowImageView.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIColor+TTThemeExtension.h"
@@ -20,34 +19,21 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFloorPanPicShowViewController.h"
+#import "FHDetailPictureNavView.h"
+#import "FHDetailPictureTitleView.h"
 
-#define indexPromptLabelTextSize 16.f
-#define indexPromptLabelBottomPadding 5.f
-#define indexPormptLabelLeftPadding 5.f
-#define indexPormptLabelWidth 60.f
-#define indexPormptLabelHeight 28.f
+#define kFHDPTopBarHeight 44.f
+#define kFHDPBottomBarHeight 54.f
 
-#define indexTitleLabelTextSize 17.f
+#define kFHDPMoveDirectionStartOffset 20.f
 
-#define saveButtonTextSize 14.f
-#define saveButtonBottomPadding 5.f
-#define saveButtonRightPadding 5.f
-#define saveButtonWidth 50.f
-#define saveButtonHeight 28.f
-
-#define topBarHeight 44.f
-#define bottomBarHeight 40.f
-
-#define moveDirectionStartOffset 20.f
-
-//typedef void(^FinishCompletion)(void);
-
-@interface TTPhotoScrollViewController ()<UIScrollViewDelegate, TTShowImageViewDelegate,TTPreviewPanBackDelegate,UIGestureRecognizerDelegate>
+@interface FHDetailPictureViewController ()<UIScrollViewDelegate, TTShowImageViewDelegate,TTPreviewPanBackDelegate,UIGestureRecognizerDelegate>
 {
     BOOL alreadyFinished;// 防止多次点击回调造成多次popController
     BOOL _addedToContainer;
     BOOL _navBarHidden;
     BOOL _statusBarHidden;
+    UIStatusBarStyle _lastStatusBarStyle;
     BOOL _isRotating;
     BOOL _reachDismissCondition; //是否满足关闭图片控件条件
     BOOL _reachDragCondition; //是否满足过一次触发手势条件
@@ -60,33 +46,20 @@
 @property(nonatomic, assign, readwrite)NSInteger photoCount;
 
 @property(nonatomic, strong)NSMutableSet * photoViewPools;
-@property(nonatomic, strong)UILabel * titleLabel;
-@property(nonatomic, strong)UILabel * indexPromptLabel;
-@property(nonatomic, strong)UIButton * closeButton;
 
-// PhotosScrollViewSupportSelectMode
 @property(nonatomic, strong)UIView * topBar;
-@property(nonatomic, strong)UIButton * topBarLeftButton;
-@property(nonatomic, strong)UIButton * topBarRightButton;
+@property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
+@property (nonatomic, strong)   FHDetailPictureTitleView       *pictureTitleView;
+@property (nonatomic, strong)   NSArray       *pictureTitles;
+@property (nonatomic, strong)   NSArray       *pictureNumbers;
 
 @property(nonatomic, strong)UIView * bottomBar;
-@property(nonatomic, strong)UILabel * selectCountLabel;
-@property(nonatomic, strong)UIButton * bottomBarRightButton;
-
-@property(nonatomic, strong)UIButton *clonseBtn;
-@property(nonatomic, strong)UIButton *albumBtn;
-
-@property(nonatomic, assign)NSUInteger selectCount;
-
-//@property(nonatomic, copy)FinishCompletion finishCompletion;
-
-@property(nonatomic, strong)UIButton * saveButton;
+@property (nonatomic, strong)   UIButton       *onlineBtn;
+@property (nonatomic, strong)   UIButton       *contactBtn;
 
 @property(nonatomic, strong)UIPanGestureRecognizer * panGestureRecognizer;
 @property(nonatomic, strong)UILongPressGestureRecognizer *longPressGestureRecognizer;
 
-//统计extra
-@property (nonatomic, strong) NSDictionary *trackerDic;
 //手势识别方向
 @property (nonatomic, assign) TTPhotoScrollViewMoveDirection direction;
 //进入的设备方向，如果与点击退出不同，则使用渐隐动画
@@ -98,15 +71,7 @@
 @property (nonatomic, copy) NSString *locationStr;
 @end
 
-@implementation TTPhotoScrollViewController
-
-#pragma mark - Init & Memory Management
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+@implementation FHDetailPictureViewController
 
 - (id)init
 {
@@ -116,12 +81,10 @@
         _startWithIndex = 0;
         _currentIndex = -1;
         _photoCount = 0;
-        _mode = PhotosScrollViewSupportDownloadMode;
-        _autoSelectImageWhenClickDone = NO;
         _longPressToSave = YES;
         
         self.ttHideNavigationBar = YES;
-        self.isShowAlbumAndCloseButton = NO;
+
         _addedToContainer = NO;
         
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
@@ -131,23 +94,17 @@
         _isRotating = NO;
         
         _whiteMaskViewEnable = YES;
-    }
-    return self;
-}
 
-- (instancetype)initWithTrackDictionary:(NSDictionary *)trackerDic
-{
-    self = [self init];
-    
-    if (self) {
-        self.trackerDic = trackerDic;
+        _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
+        _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
+        [self setCurrentStatusStyle];
     }
-    
     return self;
 }
 
 - (void)dealloc
 {
+    [self resetStatusStyle];
     @try {
         [self removeObserver:self forKeyPath:@"self.view.frame"];
     }
@@ -159,6 +116,18 @@
     }
 }
 
+- (void)setCurrentStatusStyle {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO
+                                            withAnimation:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
+
+- (void)resetStatusStyle {
+    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
+                                            withAnimation:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:_lastStatusBarStyle];
+}
+
 #pragma mark - View Life Cycle
 - (void)loadView
 {
@@ -167,15 +136,16 @@
     self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self addObserver:self forKeyPath:@"self.view.frame" options:NSKeyValueObservingOptionNew context:nil];
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setCurrentStatusStyle];
     
     // 修复iOS7下，photoScrollView 子视图初始化位置不正确的问题
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
         self.edgesForExtendedLayout = UIRectEdgeNone;
     }
-    
     // self.view
     self.view.backgroundColor = [UIColor clearColor];
     _containerView = [[UIView alloc] initWithFrame:self.view.frame];
@@ -192,62 +162,75 @@
     _photoScrollView.showsHorizontalScrollIndicator = YES;
     
     [self.view addSubview:_photoScrollView];
+    CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    if (topInset < 1) {
+        topInset = 20;
+    }
+    _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset)];
+    _topBar.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.3]; // [UIColor clearColor];
+    [self.view addSubview:_topBar];
+    __weak typeof(self) weakSelf = self;
+    _naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
+    _naviView.backActionBlock = ^{
+        [weakSelf finished];
+    };
+    [_topBar addSubview:_naviView];
     
-    if (_mode != PhotosScrollViewSupportSelectMode)
-    {
-        // closeButon
-        _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _closeButton.frame = _photoScrollView.bounds;
-        _closeButton.backgroundColor = [UIColor clearColor];
-        _closeButton.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [_closeButton addTarget:self action:@selector(closeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-        
-        [_photoScrollView addSubview:_closeButton];
-        
-        // indexPromptLabel
-        _indexPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding, indexPormptLabelWidth, indexPormptLabelHeight)];
-        _indexPromptLabel.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
-        [_indexPromptLabel setTextColor:[UIColor tt_defaultColorForKey:kColorBackground4]];
-        [_indexPromptLabel setFont:[UIFont themeFontRegular:indexPromptLabelTextSize]];
-        _indexPromptLabel.layer.cornerRadius = 6.f;
-        _indexPromptLabel.textAlignment = NSTextAlignmentCenter;
-        _indexPromptLabel.clipsToBounds = YES;
-        _indexPromptLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-        [self.view addSubview:_indexPromptLabel];
-        
-        // saveButton
-        _saveButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_saveButton addTarget:self action:@selector(saveButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _saveButton.frame = CGRectMake(self.view.width - saveButtonRightPadding - saveButtonWidth, self.view.height - saveButtonHeight - saveButtonBottomPadding, saveButtonWidth, saveButtonHeight);
-        _saveButton.hitTestEdgeInsets = UIEdgeInsetsMake((saveButtonHeight - 44) / 2, 0, (saveButtonHeight - 44) / 2, 0);
-        _saveButton.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
-        [_saveButton setTitle:@"保存" forState:UIControlStateNormal];
-        [_saveButton setTitle:@"保存" forState:UIControlStateHighlighted];
-        [_saveButton setTitleColor:[UIColor tt_defaultColorForKey:kColorBackground4] forState:UIControlStateNormal];
-        [_saveButton setTitleColor:[UIColor tt_defaultColorForKey:kColorBackground4Highlighted] forState:UIControlStateHighlighted];
-        [_saveButton.titleLabel setFont:[UIFont systemFontOfSize:14.f]];
-        _saveButton.layer.cornerRadius = 6.f;
-        _saveButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-        [self.view addSubview:_saveButton];
-        if (self.mode == PhotosScrollViewSupportBrowse) {
-            _saveButton.hidden = YES;
-            _indexPromptLabel.centerX = self.view.width/2;
-            _indexPromptLabel.autoresizingMask  = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin;
+    _pictureTitleView = [[FHDetailPictureTitleView alloc] initWithFrame:CGRectMake(0, 64, self.view.width, 42)];
+    _pictureTitleView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_pictureTitleView];
+    self.pictureTitleView.titleNames = self.pictureTitles;
+    self.pictureTitleView.titleNums = self.pictureNumbers;
+    self.pictureTitleView.currentIndexBlock = ^(NSInteger currentIndex) {
+        if (currentIndex >= 0 && currentIndex < weakSelf.photoCount) {
+            CGFloat pageWidth = weakSelf.photoScrollView.frame.size.width;
+            [weakSelf.photoScrollView setContentOffset:CGPointMake(pageWidth * currentIndex, 0) animated:NO];
         }
-        
-        if(_imageTitles){
-            _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.width, topBarHeight)];
-            _topBar.backgroundColor = [UIColor clearColor];
-            [self.view addSubview:_topBar];
-            // titleLabel
-            _titleLabel = [[UILabel alloc] initWithFrame:_topBar.bounds];
-            _titleLabel.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground9];
-            [_titleLabel setTextColor:[UIColor tt_defaultColorForKey:kColorBackground4]];
-            [_titleLabel setFont:[UIFont themeFontRegular:indexTitleLabelTextSize]];
-            _titleLabel.textAlignment = NSTextAlignmentCenter;
-            _titleLabel.clipsToBounds = YES;
-            _titleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin;
-            [self.topBar addSubview:_titleLabel];
+    };
+    
+    _bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - kFHDPBottomBarHeight, self.view.width, kFHDPBottomBarHeight)];
+    _bottomBar.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_bottomBar];
+    
+    if (self.mediaHeaderModel.contactViewModel) {
+        [self addLeadShowLog:self.mediaHeaderModel.contactViewModel.contactPhone baseParams:[self.mediaHeaderModel.contactViewModel baseParams]];
+        CGFloat itemWidth = self.view.width - 40;
+        BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
+        if (showenOnline) {
+            itemWidth = (itemWidth - 15) / 2.0;
+            // 在线联系
+            UIButton *online = self.onlineBtn;
+            if (self.mediaHeaderModel.contactViewModel.onLineName.length > 0) {
+                NSString *title = self.mediaHeaderModel.contactViewModel.onLineName;
+                [online setTitle:title forState:UIControlStateNormal];
+                [online setTitle:title forState:UIControlStateHighlighted];
+            }
+            online.frame = CGRectMake(20, 0, itemWidth, 44);
+            [self.bottomBar addSubview:online];
+            // 电话咨询
+            UIButton *contact = self.contactBtn;
+            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                [contact setTitle:title forState:UIControlStateNormal];
+                [contact setTitle:title forState:UIControlStateHighlighted];
+            }
+            contact.frame = CGRectMake(20 + itemWidth + 10, 0, itemWidth, 44);
+            [self.bottomBar addSubview:contact];
+        } else {
+            // 电话咨询
+            UIButton *contact = self.contactBtn;
+            if (self.mediaHeaderModel.contactViewModel.phoneCallName.length > 0) {
+                NSString *title = self.mediaHeaderModel.contactViewModel.phoneCallName;
+                [contact setTitle:title forState:UIControlStateNormal];
+                [contact setTitle:title forState:UIControlStateHighlighted];
+            }
+            contact.frame = CGRectMake(20, 0, itemWidth, 44);
+            [self.bottomBar addSubview:contact];
         }
     }
     
@@ -258,66 +241,6 @@
     
     [self setCurrentIndex:_startWithIndex];
     [self scrollToIndex:_startWithIndex];
-    
-    if (_mode == PhotosScrollViewSupportSelectMode)
-    {
-        _topBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, topBarHeight)];
-        _topBar.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground11];
-        [self.view addSubview:_topBar];
-        
-        self.topBarLeftButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_topBarLeftButton setImage:[UIImage themedImageNamed:@"leftbackbutton_titlebar_photo_preview"] forState:UIControlStateNormal];
-        [_topBarLeftButton setImage:[UIImage themedImageNamed:@"leftbackbutton_titlebar_photo_preview_press"] forState:UIControlStateHighlighted];
-        _topBarLeftButton.backgroundColor = [UIColor clearColor];
-        [_topBarLeftButton addTarget:self action:@selector(backButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-        [_topBarLeftButton sizeToFit];
-        _topBarLeftButton.origin = CGPointMake( 0, ((_topBar.height) - (_topBarLeftButton.height)) / 2);
-        [_topBar addSubview:_topBarLeftButton];
-        
-        self.topBarRightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        NSAssert([_isSelecteds count] == MAX(MAX([_imageInfosModels count], [_imageURLs count]), MAX([_images count], [_assetsImages count])), @"error!");
-        [self setSelectedAtIndex:_startWithIndex];
-        [_topBarRightButton addTarget:self action:@selector(selectButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _topBarRightButton.backgroundColor = [UIColor clearColor];
-        _topBarRightButton.origin = CGPointMake((_topBar.width) - (_topBarRightButton.width) - 15, ((_topBar.height) - (_topBarRightButton.height)) / 2);
-        CGFloat width = _topBarRightButton.currentImage.size.width + 15.f * 2;
-        _topBarRightButton.frame = CGRectMake((_topBar.width) - width, 0, width, (_topBar.height));
-        [_topBar addSubview:_topBarRightButton];
-        
-        self.bottomBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - bottomBarHeight, self.view.width, bottomBarHeight)];
-        _bottomBar.backgroundColor = [UIColor tt_defaultColorForKey:kColorBackground11];
-        [self.view addSubview:_bottomBar];
-        
-        NSUInteger selectCount = 0;
-        _selectCount = NSUIntegerMax;
-        for (id isSelected in _isSelecteds)
-        {
-            if ([isSelected boolValue]) {
-                ++selectCount;
-            }
-        }
-        NSAssert(selectCount <= _selectLimit, @"_selectLimit can not be less than selectCount");
-        self.selectCountLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _selectCountLabel.font = [UIFont systemFontOfSize:16];
-        _selectCountLabel.textColor = [UIColor tt_defaultColorForKey:kColorText3];
-        self.selectCount = selectCount;
-        [_selectCountLabel sizeToFit];
-        _selectCountLabel.backgroundColor = [UIColor clearColor];
-        _selectCountLabel.origin = CGPointMake(((_bottomBar.width) - (_selectCountLabel.width)) / 2, ((_bottomBar.height) - (_selectCountLabel.height)) / 2);
-        [_bottomBar addSubview:_selectCountLabel];
-        
-        self.bottomBarRightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_bottomBarRightButton setTitle:@"完成" forState:UIControlStateNormal];
-        [_bottomBarRightButton setTitle:@"完成" forState:UIControlStateHighlighted];
-        [_bottomBarRightButton setTitleColor:[UIColor tt_defaultColorForKey:kColorText4] forState:UIControlStateNormal];
-        [_bottomBarRightButton setTitleColor:[UIColor tt_defaultColorForKey:kColorText4Highlighted] forState:UIControlStateHighlighted];
-        
-        _bottomBarRightButton.titleLabel.font = [UIFont systemFontOfSize:16];
-        [_bottomBarRightButton addTarget:self action:@selector(selectDoneButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [_bottomBarRightButton sizeToFit];
-        _bottomBarRightButton.origin = CGPointMake((_bottomBar.width) - (_bottomBarRightButton.width) - 15, ((_bottomBar.height) - (_bottomBarRightButton.height)) / 2);
-        [_bottomBar addSubview:_bottomBarRightButton];
-    }
     
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
     self.panGestureRecognizer.delegate = self;
@@ -332,35 +255,18 @@
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
     }
-    
-    
-    if (self.isShowAlbumAndCloseButton) {
-        CGFloat height = 0;
-        if ([TTDeviceHelper isIPhoneXDevice]) {
-            height = 64;
-        }else
-        {
-            height = 44;
-        }
-        
-        _clonseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_clonseBtn setTitle:@"关闭" forState:UIControlStateNormal];
-        [_clonseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_clonseBtn setFrame:CGRectMake(20, height, 48, 48)];
-        [_clonseBtn addTarget:self action:@selector(closeBtnClick) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:_clonseBtn];
-        
-        
-        if (self.smallImageInfosModels.count != 0) {
-            _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
-            [_albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [_albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
-            [_albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:_albumBtn];
-        }
+}
+
+- (void)addLeadShowLog:(FHDetailContactModel *)contactPhone baseParams:(NSDictionary *)dic
+{
+    if (dic && [dic isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *tracerDic = dic.mutableCopy;
+        tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
+        tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
+        tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+        tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
+        [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
-    
 }
 
 - (void)closeBtnClick
@@ -368,38 +274,59 @@
     [self finished];
 }
 
-
-- (void)albumBtnClick
-{
-    if (self.smallImageInfosModels.count == 0) {
-        return;
-    }
-    
-    if (self.albumImageBtnClickBlock) {
-        self.albumImageBtnClickBlock(self.currentIndex);
-    }
-    
-    FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
-    showVC.pictsArray = _smallImageInfosModels;
-    __weak TTPhotoScrollViewController * weakSelf = self;
-    showVC.albumImageBtnClickBlock = ^(NSInteger index){
-        if (index >= 0) {
-            weakSelf.photoScrollView.contentOffset = CGPointMake(self.view.frame.size.width * index, 0);
-        }
-    };
-    
-    showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
-        [self stayCallBack:stayTime];
-    };
-    
-    [self presentViewController:showVC animated:NO completion:nil];
-}
-
 - (void)stayCallBack:(NSInteger)stayTime
 {
     if (self.albumImageStayBlock) {
         self.albumImageStayBlock(self.currentIndex,stayTime);
     }
+}
+
+// 在线联系点击
+- (void)onlineButtonClick:(UIButton *)btn {
+    if (self.mediaHeaderModel.contactViewModel) {
+        NSDictionary *extraDic = @{@"realtor_position":@"online",
+                                   @"position":@"online"};
+        [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
+    }
+}
+
+// 电话咨询点击
+- (void)contactButtonClick:(UIButton *)btn {
+    if (self.mediaHeaderModel.contactViewModel) {
+        NSDictionary *extraDic = @{@"realtor_position":@"phone_button",
+                                   @"position":@"report_button"};
+        [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
+    }
+}
+
+- (UIButton *)onlineBtn {
+    if (!_onlineBtn) {
+        _onlineBtn = [[UIButton alloc] init];
+        _onlineBtn.layer.cornerRadius = 4;
+        _onlineBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _onlineBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
+        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
+        [_onlineBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        [_onlineBtn setTitle:@"在线联系" forState:UIControlStateNormal];
+        [_onlineBtn setTitle:@"在线联系" forState:UIControlStateHighlighted];
+        [_onlineBtn addTarget:self action:@selector(onlineButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _onlineBtn;
+}
+
+- (UIButton *)contactBtn {
+    if (!_contactBtn) {
+        _contactBtn = [[UIButton alloc] init];
+        _contactBtn.layer.cornerRadius = 4;
+        _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
+        _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#151515"];
+        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateNormal];
+        [_contactBtn setTitleColor:[UIColor themeGray5] forState:UIControlStateHighlighted];
+        [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
+        [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
+        [_contactBtn addTarget:self action:@selector(contactButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _contactBtn;
 }
 
 - (void)viewWillLayoutSubviews
@@ -414,38 +341,35 @@
         topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
-    self.bottomBar.frame = CGRectMake(0, self.view.height - bottomBarHeight - bottomInset, self.view.width, bottomBarHeight);
-    self.topBar.frame = CGRectMake(0, topInset, self.view.width, topBarHeight);
-    self.saveButton.frame = CGRectMake(self.view.width - saveButtonRightPadding - saveButtonWidth, self.view.height - saveButtonHeight - saveButtonBottomPadding - bottomInset, saveButtonWidth, saveButtonHeight);
-    if (self.indexPromptLabel.frame.size.width <= indexPormptLabelWidth) {
-        self.indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, indexPormptLabelWidth, indexPormptLabelHeight);
-    } else {
-        self.indexPromptLabel.frame = CGRectMake(self.indexPromptLabel.frame.origin.x, self.view.height - indexPormptLabelHeight - indexPromptLabelBottomPadding - bottomInset, self.indexPromptLabel.frame.size.width, indexPormptLabelHeight);
+    if (topInset < 1) {
+        topInset = 20;
     }
-    if (self.mode == PhotosScrollViewSupportBrowse) {
-        self.indexPromptLabel.centerX = self.view.width/2;
-    }
-
+    self.bottomBar.frame = CGRectMake(0, self.view.height - kFHDPBottomBarHeight - bottomInset, self.view.width, kFHDPBottomBarHeight);
+    self.topBar.frame = CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset);
+    self.naviView.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
+    self.pictureTitleView.frame = CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42);
+    [self.pictureTitleView.colletionView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES
-                                            withAnimation:NO];
+    [self setCurrentStatusStyle];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
-                                            withAnimation:NO];
+    [super viewDidAppear:animated];
+    [self setCurrentStatusStyle];
+    __weak typeof(self) weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf setCurrentStatusStyle];
+    });
 }
 
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+   
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -484,14 +408,36 @@
     }
     
     [self scrollToIndex:_currentIndex];
-    [self refreshIndexPromptLabel];
-    if(self.imageTitles){
-        [self refreshIndexTitleLabel];
-    }
 }
 
 
 #pragma mark - Setter & Getter
+
+- (void)setMediaHeaderModel:(FHDetailMediaHeaderModel *)mediaHeaderModel {
+    if (_mediaHeaderModel != mediaHeaderModel) {
+        _mediaHeaderModel = mediaHeaderModel;
+        NSMutableArray *titles = [NSMutableArray new];
+        NSMutableArray *numbers = [NSMutableArray new];
+        for (FHDetailOldDataHouseImageDictListModel *listModel in mediaHeaderModel.houseImageDictList) {
+            if (listModel.houseImageTypeName.length > 0) {
+                NSInteger tempCount = 0;
+                for (FHDetailHouseDataItemsHouseImageModel *imageModel in listModel.houseImageList) {
+                    if (imageModel.url.length > 0) {
+                        tempCount += 1;
+                    }
+                }
+                if (tempCount > 0) {
+                    [titles addObject:[NSString stringWithFormat:@"%@（%ld）",listModel.houseImageTypeName,tempCount]];
+                    [numbers addObject:@(tempCount)];
+                }
+            }
+        }
+        if (titles.count > 0) {
+            self.pictureTitles = titles;
+            self.pictureNumbers = numbers;
+        }
+    }
+}
 
 - (void)setImageURLs:(NSArray *)imageURLs
 {
@@ -574,18 +520,6 @@
     }
 }
 
-- (void)setSelectCount:(NSUInteger)selectCount
-{
-    if (_selectCount != selectCount && _selectCountLabel)
-    {
-        _selectCountLabel.text = [NSString stringWithFormat:@"%lu / %lu", (unsigned long)selectCount, (unsigned long)_selectLimit];
-        [_selectCountLabel sizeToFit];
-        _selectCountLabel.origin = CGPointMake(((_bottomBar.width) - (_selectCountLabel.width)) / 2, ((_bottomBar.height) - (_selectCountLabel.height)) / 2);
-    }
-    
-    _selectCount = selectCount;
-}
-
 - (TTImagePreviewAnimateManager *)animateManager{
     if (_animateManager == nil){
         _animateManager = [[TTImagePreviewAnimateManager alloc] init];
@@ -614,10 +548,10 @@
 
 #pragma mark - Public
 
-static BOOL staticPhotoBrowserAtTop = NO;
+static BOOL kFHStaticPhotoBrowserAtTop = NO;
 + (BOOL)photoBrowserAtTop
 {
-    return staticPhotoBrowserAtTop;
+    return kFHStaticPhotoBrowserAtTop;
 }
 
 #pragma mark - Private
@@ -651,47 +585,6 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }
 }
 
-- (void)refreshIndexTitleLabel
-{
-    if (_currentIndex < 0 || _photoCount < 0) {
-        _titleLabel.hidden = YES;
-        return;
-    }
-    
-    if(_currentIndex < self.imageTitles.count){
-         _titleLabel.hidden = NO;
-        [_titleLabel setText:self.imageTitles[_currentIndex]];
-    }else{
-        _titleLabel.hidden = YES;
-        [_titleLabel setText:@""];
-    }
-}
-
-- (void)refreshIndexPromptLabel
-{
-    if (_indexPromptLabel.hidden)
-    {
-        return;
-    }
-    
-    if (_currentIndex < 0 || _photoCount < 0) {
-        _indexPromptLabel.hidden = YES;
-        return;
-    }
-    else {
-        _indexPromptLabel.hidden = NO;
-    }
-    
-    NSString * text = [NSString stringWithFormat:@"%li/%li", (long)_currentIndex + 1, (long)_photoCount];
-    [_indexPromptLabel setText:text];
-    
-    CGFloat width = [text boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: _indexPromptLabel.font} context:nil].size.width;
-    _indexPromptLabel.frame = CGRectMake(indexPormptLabelLeftPadding, _indexPromptLabel.frame.origin.y, width + 10, _indexPromptLabel.frame.size.height);
-    if (self.mode == PhotosScrollViewSupportBrowse) {
-        self.indexPromptLabel.centerX = self.view.width/2;
-    }
-}
-
 - (CGRect)frameForPagingScrollView
 {
     return self.view.bounds;
@@ -722,13 +615,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }
     
     _currentIndex = newIndex;
-    
-    if(self.imageTitles){
-        [self refreshIndexTitleLabel];
-    }
-    [self refreshIndexPromptLabel];
-    [self setSelectedAtIndex:_currentIndex];
-    
+    self.pictureTitleView.selectIndex = newIndex;
     [self unloadPhoto:_currentIndex + 2];
     [self unloadPhoto:_currentIndex - 2];
     
@@ -736,24 +623,6 @@ static BOOL staticPhotoBrowserAtTop = NO;
     [[self showImageViewAtIndex:_currentIndex] restartGifIfNeeded];
     [self loadPhoto:_currentIndex + 1 visible:NO];
     [self loadPhoto:_currentIndex - 1 visible:NO];
-}
-
-- (void)setSelectedAtIndex:(NSInteger)index
-{
-    if ([[_isSelecteds objectAtIndex:index] boolValue])
-    {
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview_press"] forState:UIControlStateNormal];
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview_press"] forState:UIControlStateHighlighted];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_press"] forState:UIControlStateNormal];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_press"] forState:UIControlStateHighlighted];
-    }
-    else
-    {
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview"] forState:UIControlStateNormal];
-        //        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo_preview"] forState:UIControlStateHighlighted];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo"] forState:UIControlStateNormal];
-        [_topBarRightButton setImage:[UIImage themedImageNamed:@"hookicon_photo"] forState:UIControlStateHighlighted];
-    }
 }
 
 - (void)scrollToIndex:(NSInteger)index
@@ -847,10 +716,11 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }
     showImageView.frame = [self frameForPageAtIndex:index];
     
-    showImageView.loadingCompletedAnimationBlock = nil;
+    showImageView.loadingCompletedAnimationBlock = ^{
+        // nothing
+    };
     [self setUpShowImageView:showImageView atIndex:index];
     showImageView.visible = visible;
-    //[showImageView refreshUI];
     
     [_photoScrollView addSubview:showImageView];
 }
@@ -895,11 +765,6 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }
 }
 
-- (void)closeButtonClicked
-{
-    [self finished];
-}
-
 - (void)finished
 {
     if (_dismissBlock) {
@@ -932,74 +797,17 @@ static BOOL staticPhotoBrowserAtTop = NO;
     {
         [self dismissViewControllerAnimated:animated completion:NULL];
     }
-    staticPhotoBrowserAtTop = NO;
+    kFHStaticPhotoBrowserAtTop = NO;
     alreadyFinished = YES;
-}
-
-- (void)selectButtonClicked:(id)sender
-{
-    BOOL isSelected = [[_isSelecteds objectAtIndex:_currentIndex] boolValue];
-    
-    if (_selectCount >= _selectLimit && !isSelected)
-    {
-        return;
-    }
-    
-    isSelected = !isSelected;
-    [_isSelecteds replaceObjectAtIndex:_currentIndex withObject:@(isSelected)];
-    
-    [self setSelectedAtIndex:_currentIndex];
-    
-    self.selectCount = _selectCount + (isSelected ? 1 : -1);
-}
-
-- (void)selectDoneButtonClicked:(id)sender
-{
-    if (_autoSelectImageWhenClickDone && _selectCount == 0) {
-        BOOL isSelected = [[_isSelecteds objectAtIndex:_currentIndex] boolValue];
-        if (_selectCount < _selectLimit && !isSelected) {
-            [self selectButtonClicked:nil];
-        }
-    }
-    if (_delegate && [_delegate respondsToSelector:@selector(TTPhotoScrollViewControllerDidFinishSelect:)])
-    {
-        [_delegate TTPhotoScrollViewControllerDidFinishSelect:self];
-    }
 }
 
 #pragma mark - UIScrollViewDelegate
 //When you flick quickly and continuously, scrollViewDidEndDecelerating method will not receive any message,which means not be called, while scrollViewDidEndDragging:willDecelerate still receive the message. because the dragging is so quick that the previous decelerating be ignored.
 //From: http://stackoverflow.com/questions/12002853/how-to-determine-if-uiscrollview-flicks-to-next-page-when-paging
 
-/*
- - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
- {
- if (_mode == PhotosScrollViewSupportSelectMode) {
- ssTrackEvent(self.umengEventName, @"flip");
- }
- 
- CGFloat pageWidth = scrollView.frame.size.width;
- 
- float fractionalPage = (scrollView.contentOffset.x + pageWidth / 2) / pageWidth;
- 
- NSInteger page = floor(fractionalPage);
- if (page != _currentIndex) {
- [self setCurrentIndex:page];
- }
- }
- */
-
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (_mode == PhotosScrollViewSupportSelectMode) {
-        [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"flip" value:nil source:nil extraDic:self.trackerDic];
-    }
-    //统计
-    else if (_mode == PhotosScrollViewSupportDownloadMode) {
-        if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_slipe" value:nil source:nil extraDic:self.trackerDic];
-        }
-    }
+
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -1092,6 +900,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
     if (!_longPressToSave || self.interfaceOrientation != UIInterfaceOrientationPortrait) {
         return;
     }
+    
     TTShowImageView * currentImageView = [self showImageViewAtIndex:_currentIndex];
     CGRect frame = [currentImageView currentImageView].frame;
     UIView * touchView = recognizer.view;
@@ -1103,8 +912,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
     
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            NSLog(@"longpress");
-            [self saveButtonClicked:self.saveButton];
+            [self saveButtonClicked:nil];
             break;
         default:
             break;
@@ -1117,18 +925,18 @@ static BOOL staticPhotoBrowserAtTop = NO;
 {
     if (self.direction == TTPhotoScrollViewMoveDirectionNone) {
         //刚开始识别方向
-        if (translation.y > moveDirectionStartOffset) {
+        if (translation.y > kFHDPMoveDirectionStartOffset) {
             self.direction = TTPhotoScrollViewMoveDirectionVerticalBottom;
         }
-        if (translation.y < -moveDirectionStartOffset) {
+        if (translation.y < -kFHDPMoveDirectionStartOffset) {
             self.direction = TTPhotoScrollViewMoveDirectionVerticalTop;
         }
     } else {
         //重新识别方向
         TTPhotoScrollViewMoveDirection currentDirection = TTPhotoScrollViewMoveDirectionNone;
-        if (translation.y > moveDirectionStartOffset) {
+        if (translation.y > kFHDPMoveDirectionStartOffset) {
             currentDirection = TTPhotoScrollViewMoveDirectionVerticalBottom;
-        } else if (translation.y < -moveDirectionStartOffset) {
+        } else if (translation.y < -kFHDPMoveDirectionStartOffset) {
             currentDirection = TTPhotoScrollViewMoveDirectionVerticalTop;
         } else {
             currentDirection = TTPhotoScrollViewMoveDirectionNone;
@@ -1142,9 +950,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
         BOOL verticle = (self.direction == TTPhotoScrollViewMoveDirectionVerticalBottom || self.direction == TTPhotoScrollViewMoveDirectionVerticalTop);
         CGFloat y = 0;
         if (self.direction == TTPhotoScrollViewMoveDirectionVerticalTop) {
-            y = translation.y + moveDirectionStartOffset;
+            y = translation.y + kFHDPMoveDirectionStartOffset;
         } else if (self.direction == TTPhotoScrollViewMoveDirectionVerticalBottom){
-            y = translation.y - moveDirectionStartOffset;
+            y = translation.y - kFHDPMoveDirectionStartOffset;
         }
         
         CGFloat yFraction = fabs(translation.y / CGRectGetHeight(self.photoScrollView.frame));
@@ -1218,35 +1026,21 @@ static BOOL staticPhotoBrowserAtTop = NO;
 //添加顶部和底部的动画
 - (void)addAnimatedViewToContainerView:(CGFloat)yFraction
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
-                                            withAnimation:NO];
+    [self resetStatusStyle];
     self.containerView.alpha = (1 - yFraction * 2 / 3);
     [UIView animateWithDuration:0.15 animations:^{
-        if (_mode != PhotosScrollViewSupportSelectMode) {
-            self.saveButton.alpha = 0;
-            self.indexPromptLabel.alpha = 0;
-        } else {
-            self.topBar.alpha = 0;
-            self.bottomBar.alpha = 0;
-        }
+//        self.indexPromptLabel.alpha = 0;
     }];
 }
 
 //移除顶部和底部的动画
 - (void)removeAnimatedViewToContainerView
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:YES
-                                            withAnimation:NO];
     self.photoScrollView.frame = [self frameForPagingScrollView];
     self.containerView.alpha = 1;
     [UIView animateWithDuration:0.15 animations:^{
-        if (_mode != PhotosScrollViewSupportSelectMode) {
-            self.saveButton.alpha = 1;
-            self.indexPromptLabel.alpha = 1;
-        } else {
-            self.topBar.alpha = 1;
-            self.bottomBar.alpha = 1;
-        }
+//        self.indexPromptLabel.alpha = 1;
+        [self setCurrentStatusStyle];
     }];
 }
 
@@ -1259,21 +1053,19 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)presentPhotoScrollViewWithDismissBlock:(TTPhotoScrollViewDismissBlock)block
 {
-    staticPhotoBrowserAtTop = YES;
-    //统计
-    if (_mode == PhotosScrollViewSupportDownloadMode) {
-        if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_click" value:nil source:nil extraDic:self.trackerDic];
-        }
-    }
+    kFHStaticPhotoBrowserAtTop = YES;
     
-    _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
+    [self setCurrentStatusStyle];
+    
     _enterOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     self.dismissBlock = block;
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     while (rootViewController.presentedViewController) {
         rootViewController = rootViewController.presentedViewController;
+    }
+    if (self.topVC) {
+        rootViewController = self.topVC;
     }
     [rootViewController addChildViewController:self];
     
@@ -1319,29 +1111,27 @@ static BOOL staticPhotoBrowserAtTop = NO;
                 weakSelf.view.alpha = 1;
                 weakShowImageView.loadingCompletedAnimationBlock = nil;
                 [weakShowImageView showGifIfNeeded];
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
                 
-                [[UIApplication sharedApplication] setStatusBarHidden:YES
-                                                        withAnimation:NO];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             }];
         };
         
     } else {
-        
         UIView *containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
         containerView.backgroundColor = [UIColor clearColor];
         [rootViewController.view addSubview:containerView];
         [rootViewController.view addSubview:self.view];
         
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-        [[UIApplication sharedApplication] setStatusBarHidden:YES
-                                                withAnimation:NO];
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         
         [UIView animateWithDuration:.3f animations:^{
             self.view.alpha = 1; //本地加载图片，淡入动画
             containerView.backgroundColor = [UIColor blackColor];
         } completion:^(BOOL finished) {
             [containerView removeFromSuperview];
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         }];
     }
@@ -1349,12 +1139,6 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)dismissSelf
 {
-    //统计
-    if (_mode == PhotosScrollViewSupportDownloadMode) {
-        if (self.trackerDic) {
-            [TTTracker ttTrackEventWithCustomKeys:self.umengEventName label:@"pic_back" value:nil source:nil extraDic:self.trackerDic];
-        }
-    }
     [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
                                             withAnimation:NO];
     //下拉关闭
@@ -1364,7 +1148,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
         [UIView animateWithDuration:.25f animations:^{
             self.view.layer.opacity = 0.0f;
         } completion:^(BOOL finished) {
-            staticPhotoBrowserAtTop = NO;
+            kFHStaticPhotoBrowserAtTop = NO;
             [self.view removeFromSuperview];
             [self removeFromParentViewController];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1380,7 +1164,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
                 [UIView animateWithDuration:.35f animations:^{
                     self.view.alpha = 0.0f;
                 } completion:^(BOOL finished) {
-                    staticPhotoBrowserAtTop = NO;
+                    kFHStaticPhotoBrowserAtTop = NO;
                     [self.view removeFromSuperview];
                     [self removeFromParentViewController];
                     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1403,6 +1187,9 @@ static BOOL staticPhotoBrowserAtTop = NO;
             UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
             while (rootViewController.presentedViewController) {
                 rootViewController = rootViewController.presentedViewController;
+            }
+            if (self.topVC) {
+                rootViewController = self.topVC;
             }
             UIView * containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
             containerView.backgroundColor = [UIColor blackColor];
@@ -1446,7 +1233,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
             } else {
                 [containerView addSubview:largeImageView];
             }
-            staticPhotoBrowserAtTop = NO;
+            kFHStaticPhotoBrowserAtTop = NO;
             [self.view removeFromSuperview];
             [self removeFromParentViewController];
             
@@ -1467,7 +1254,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
             [UIView animateWithDuration:.35f animations:^{
                 self.view.alpha = 0.0f;
             } completion:^(BOOL finished) {
-                staticPhotoBrowserAtTop = NO;
+                kFHStaticPhotoBrowserAtTop = NO;
                 [self.view removeFromSuperview];
                 [self removeFromParentViewController];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1484,35 +1271,32 @@ static BOOL staticPhotoBrowserAtTop = NO;
         case TTPreviewAnimateStateWillBegin:
             [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
                                                     withAnimation:NO];
-            self.saveButton.alpha = 0;
-            self.indexPromptLabel.alpha = 0;
+            self.pictureTitleView.alpha = 0;
             self.topBar.alpha = 0;
             self.bottomBar.alpha = 0;
             imageView.hidden = YES;
             break;
         case TTPreviewAnimateStateChange:
-            if (_clonseBtn) {
-                _clonseBtn.hidden = YES;
-            }
-            if (_albumBtn) {
-                _albumBtn.hidden = YES;
-            }
             self.containerView.alpha = MAX(0,(scale*14-13 - _animateManager.minScale)/(1 - _animateManager.minScale));
+            if (self.containerView.alpha < 0.5) {
+                [self resetStatusStyle];
+            } else {
+                [self setCurrentStatusStyle];
+            }
             break;
         case TTPreviewAnimateStateDidFinish:
             _reachDismissCondition = YES;
             self.containerView.alpha = 0;
+            [self resetStatusStyle];
             [self finished];
             [TTTracker ttTrackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
-            [[UIApplication sharedApplication] setStatusBarHidden:YES
-                                                    withAnimation:NO];
             break;
         case TTPreviewAnimateStateDidCancel:
+            [self setCurrentStatusStyle];
             self.containerView.alpha = 1;
-            self.saveButton.alpha = 1;
-            self.indexPromptLabel.alpha = 1;
+            self.pictureTitleView.alpha = 1;
             self.topBar.alpha = 1;
             self.bottomBar.alpha = 1;
             imageView.hidden = NO;
@@ -1555,12 +1339,6 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)ttPreviewPanBackCancelAnimationCompletion{
     self.containerView.alpha = 1;
-    if (_clonseBtn) {
-        _clonseBtn.hidden = NO;
-    }
-    if (_albumBtn) {
-        _albumBtn.hidden = NO;
-    }
 }
 
 - (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
@@ -1581,4 +1359,3 @@ static BOOL staticPhotoBrowserAtTop = NO;
 }
 
 @end
-

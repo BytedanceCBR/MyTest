@@ -14,6 +14,7 @@
 #import <TTPhotoScrollViewController.h>
 #import "FHUserTracker.h"
 #import "FHFloorPanPicShowViewController.h"
+#import "FHDetailPictureViewController.h"
 
 #define K_PhotoHeader_HEIGHT 300
 #define K_CELLID @"cell_id"
