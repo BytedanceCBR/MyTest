@@ -42,7 +42,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     }
     NSString *followId = configModel.followId;
     FHHouseType houseType = configModel.houseType;
-    FHFollowActionType actionType = configModel.actionType;
+    FHFollowActionType actionType = configModel.actionType ? :configModel.houseType;
     UIViewController *topVC = configModel.topVC;
     BOOL showTip = configModel.showTip;
 
