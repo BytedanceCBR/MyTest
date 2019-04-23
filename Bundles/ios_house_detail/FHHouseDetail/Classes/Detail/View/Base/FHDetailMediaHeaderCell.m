@@ -271,7 +271,12 @@
     if([dict isKindOfClass:[NSDictionary class]]){
         [dict removeObjectsForKeys:@[@"card_type",@"rank",@"element_from",@"origin_search_id",@"log_pb",@"origin_from"]];
         
-        dict[@"click_position"] = str;
+        if([str isEqualToString:@"图片"]){
+            dict[@"click_position"] = @"picture";
+        }else if([str isEqualToString:@"户型"]){
+            dict[@"click_position"] = @"house_model";
+        }
+
         dict[@"rank"] = @"be_null";
         
         TRACK_EVENT(@"click_options", dict);
