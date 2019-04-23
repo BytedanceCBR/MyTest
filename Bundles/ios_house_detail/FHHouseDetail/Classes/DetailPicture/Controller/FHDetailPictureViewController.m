@@ -451,7 +451,8 @@
                 }
             }
         }
-        if (titles.count > 0) {
+        // 只有一个分类时隐藏
+        if (titles.count > 1) {
             self.pictureTitles = titles;
             self.pictureNumbers = numbers;
         }
