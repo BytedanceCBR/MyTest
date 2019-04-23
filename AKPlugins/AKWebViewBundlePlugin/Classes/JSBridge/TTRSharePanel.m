@@ -22,7 +22,7 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTImage/TTWebImageManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-
+#import "TTCopyContentItem.h"
 @interface TTRSharePanel()<TTShareManagerDelegate>
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, strong) NSSet *shareActivityContentItemTypes;
@@ -132,9 +132,9 @@
 //    TTEmailContentItem *mailContentItem = [[TTEmailContentItem alloc] initWithTitle:title desc:[NSString stringWithFormat:@"%@\n%@", shareDescribe.length? shareDescribe: @"", webPageURL]];
 //    [shareActivityContentItemTypes addObject:TTActivityContentItemTypeEmail];
 //
-//    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:[NSString stringWithFormat:@"%@\n%@\n%@", title.length? title: @"", shareDescribe.length? shareDescribe: @"", webPageURL]];
-//    [shareActivityContentItemTypes addObject:TTActivityContentItemTypeCopy];
-    
+    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:[NSString stringWithFormat:@"%@\n%@\n%@", title.length? title: @"", shareDescribe.length? shareDescribe: @"", webPageURL]];
+    [shareActivityContentItemTypes addObject:TTActivityContentItemTypeCopy];
+
     self.shareActivityContentItemTypes = shareActivityContentItemTypes.copy;
     
     NSMutableArray *SeqArray = @[].mutableCopy;
@@ -142,10 +142,10 @@
         [SeqArray addObject: wcContentItem];
         [SeqArray addObject: qqContentItem];
         [SeqArray addObject: qqZoneContentItem];
-//        [SeqArray addObject:ddContentItem];
-    
+        [SeqArray addObject: copyContentItem];
+
 //    return @[@[wctlContentItem, wcContentItem, qqContentItem, qqZoneContentItem, ddContentItem], @[sysContentItem, smsContentItem, mailContentItem, copyContentItem]];
-    return @[@[wctlContentItem, wcContentItem, qqContentItem, qqZoneContentItem]];
+    return @[@[wctlContentItem, wcContentItem, qqContentItem, qqZoneContentItem, copyContentItem]];
 }
 
 - (NSString *)platformWithContentItemType:(NSString *)itemType {
