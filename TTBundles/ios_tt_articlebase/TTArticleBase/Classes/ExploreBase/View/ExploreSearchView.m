@@ -520,13 +520,21 @@
     if (hasText) {
         [[TTDebugConsoleManager sharedTTDebugConsoleManager] processCommand:text];
         
-#if INHOUSE
-        if (!isEmptyString(text)) {
-            if ([[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:text]]) {
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:text]];
+        if ([TTSandBoxHelper isInHouseApp]) {
+            if (!isEmptyString(text)) {
+                if ([[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:text]]) {
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:text]];
+                }
             }
         }
-#endif
+        
+//#if INHOUSE
+//        if (!isEmptyString(text)) {
+//            if ([[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:text]]) {
+//                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:text]];
+//            }
+//        }
+//#endif
 
         NSDictionary *parameters = [self _defaultSearchParameters];
         NSMutableDictionary *mParameters = [parameters mutableCopy];

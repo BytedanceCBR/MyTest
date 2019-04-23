@@ -11,7 +11,7 @@
 #import "SSNavigationBar.h"
 #import "SSDebugViewController.h"
 #import "TTNavigationController.h"
-
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 
 @interface SettingViewController ()
@@ -69,14 +69,14 @@
     self.navigationItem.titleView = [SSNavigationBar navigationTitleViewWithTitle: NSLocalizedString(@"设置", nil)];
 
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView: [SSNavigationBar navigationBackButtonWithTarget:self action:@selector(goBack:)]];
-    
-#if INHOUSE
-    if ([SSDebugViewController supportDebugItem:SSDebugItemController]) {
-        
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"高级调试" target:self action:@selector(_debugModeActionFired:)]];
-
+    if ([TTSandBoxHelper isInHouseApp] && NSClassFromString(@"SSDebugViewController")) {
+//        if ([SSDebugViewController supportDebugItem:SSDebugItemController]) {
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"高级调试" target:self action:@selector(_debugModeActionFired:)]];
+//        }
     }
-#endif
+//#if INHOUSE
+//
+//#endif
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -101,15 +101,19 @@
     }
 }
 
-#if INHOUSE
+//#if INHOUSE
 - (void)_debugModeActionFired:(id)sender
 {
-    SSDebugViewController *debugViewController = [[SSDebugViewController alloc] init];
+    if (![TTSandBoxHelper isInHouseApp]) {
+        return;
+    }
+    Class clazz = NSClassFromString(@"SSDebugViewController");
+    UIViewController *debugViewController = [[clazz alloc] init];
     TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:debugViewController];
     navigationController.ttDefaultNavBarStyle = @"White";
     
     [self presentViewController:navigationController animated:YES completion:NULL];
 }
-#endif
+//#endif
 
 @end

@@ -16,6 +16,7 @@
 #import "TTTestCommonLogicModule.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 #define SSLogRemoteFailureTimes @"SSLogRemoteFailureTimes"
 
@@ -26,13 +27,13 @@
 @implementation TTTestManager
 
 + (void)load {
-#if INHOUSE
-    __block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-        [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        [TTTestManager buildUpTest];
-        observer = nil; // 避免 observer 和 block 循环引用导致泄漏问题
-    }];
-#endif
+    if ([TTSandBoxHelper isInHouseApp]) {
+        __block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            [[NSNotificationCenter defaultCenter] removeObserver:observer];
+            [TTTestManager buildUpTest];
+            observer = nil; // 避免 observer 和 block 循环引用导致泄漏问题
+        }];
+    }
 }
 
 + (void)buildUpTest {

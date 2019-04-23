@@ -16,6 +16,7 @@
 #import "TTMomentProfileShareHelper.h"
 #import <TTArticleBase/CommonURLSetting.h>
 #import <TTArticleBase/SSCommonLogic.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 typedef enum {
     TTPersonalHomeActionSheetStateNone,
@@ -38,14 +39,16 @@ extern const CGFloat kSegmentBottomViewHeight;
 
 @implementation TTPersonalHomeCommonWebViewController
 
-#if INHOUSE
+//#if INHOUSE
 + (void)load {
-    NSString *fePersonalTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEPersonalTestHost"];
-    if (!fePersonalTestHost) {
-        [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"FEPersonalTestHost"];
+    if ([TTSandBoxHelper isInHouseApp]) {
+        NSString *fePersonalTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEPersonalTestHost"];
+        if (!fePersonalTestHost) {
+            [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"FEPersonalTestHost"];
+        }
     }
 }
-#endif
+//#endif
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -194,12 +197,12 @@ extern const CGFloat kSegmentBottomViewHeight;
 - (void)loadRequestWithType:(NSString *)type uri:(NSString *)uri isDefault:(BOOL)isDefault
 {
     NSString *host = [CommonURLSetting baseURL];
-#if INHOUSE
-    NSString *fePersonalTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEPersonalTestHost"];
-    if (!isEmptyString(fePersonalTestHost)) {
-        host = fePersonalTestHost;
+    if ([TTSandBoxHelper isInHouseApp]) {
+        NSString *fePersonalTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEPersonalTestHost"];
+        if (!isEmptyString(fePersonalTestHost)) {
+            host = fePersonalTestHost;
+        }
     }
-#endif
     NSString *tmpUrl = [NSString stringWithFormat:@"%@%@",host,uri];
     NSURL *url = [TTURLUtils URLWithString:tmpUrl queryItems:[self paramStringWithType:type isDefault:isDefault]];
     [self.webView.webViewContainer loadRequest:[NSURLRequest requestWithURL:url]];

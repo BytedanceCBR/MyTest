@@ -12,7 +12,7 @@
 #import "ArticleFriend.h"
 #import "TTRoute.h"
 #import "ListDataHeader.h"
-#import "TTRelationshipDefine.h"
+#import <TTUserProfile/TTRelationshipDefine.h>
 #import <TTBaseLib/NSStringAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
 

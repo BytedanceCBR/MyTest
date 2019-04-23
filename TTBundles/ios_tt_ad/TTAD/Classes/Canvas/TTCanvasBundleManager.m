@@ -14,6 +14,7 @@
 #import "TTStringHelper.h"
 #import <CommonCrypto/CommonDigest.h>
 #import <TTNetworkManager/TTNetworkDefine.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 static NSString *const kCanvasBundleRoot = @"com.bytedance.canvasbundles";
 static NSString *const kCanvasBundleZip = @"canvasbundle.zip";
@@ -232,13 +233,14 @@ static NSString *const kCanvasAppBundleInfo = @"kCanvasAppBundleInfo";
 
 - (BOOL)isZipFileMD5EqualTo:(NSString *)md5
 {
-    
-#ifdef INHOUSE
-    if (self.isDebug) {
-        self.isDebug = NO;
-        return YES;
+    if ([TTSandBoxHelper isInHouseApp]) {
+//#ifdef INHOUSE
+        if (self.isDebug) {
+            self.isDebug = NO;
+            return YES;
+        }
+//#endif
     }
-#endif
     
     NSString *zipFile = [kCanvasBundleZip stringCachePath];
     NSData *fileData = [NSData dataWithContentsOfFile:zipFile];

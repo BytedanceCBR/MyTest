@@ -2897,15 +2897,26 @@ NSString * const SSCommonLogicCheckLogKey = @"SSCommonLogicCheckLogKey";
 NSString * const SSCommonLogicCrasMonitorKey = @"SSCommonLogicCrasMonitorKey";
 
 + (BOOL)enableCrashMonitor{
-#if INHOUSE
-    return YES;
-#else
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:SSCommonLogicCrasMonitorKey]) {
-        return [[userDefaults objectForKey:SSCommonLogicCrasMonitorKey] boolValue];
+    
+    if ([TTSandBoxHelper isInHouseApp]) {
+        return YES;
+    }else{
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        if ([userDefaults objectForKey:SSCommonLogicCrasMonitorKey]) {
+            return [[userDefaults objectForKey:SSCommonLogicCrasMonitorKey] boolValue];
+        }
+        return NO;
     }
-    return NO;
-#endif
+    
+//#if INHOUSE
+//    return YES;
+//#else
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    if ([userDefaults objectForKey:SSCommonLogicCrasMonitorKey]) {
+//        return [[userDefaults objectForKey:SSCommonLogicCrasMonitorKey] boolValue];
+//    }
+//    return NO;
+//#endif
 }
 
 + (void)setEnableCrashMonitor:(BOOL)enableCrashMonitor{
@@ -2915,15 +2926,26 @@ NSString * const SSCommonLogicCrasMonitorKey = @"SSCommonLogicCrasMonitorKey";
 
 NSString * const SSCommonLogicDebugRealMonitorKey = @"SSCommonLogicDebugRealMonitorKey";
 + (BOOL)enableDebugRealMonitor{
-#if INHOUSE
-    return YES;
-#else
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:SSCommonLogicDebugRealMonitorKey]) {
-        return [[userDefaults objectForKey:SSCommonLogicDebugRealMonitorKey] boolValue];
+    
+    if ([TTSandBoxHelper isInHouseApp]) {
+        return YES;
+    }else{
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        if ([userDefaults objectForKey:SSCommonLogicDebugRealMonitorKey]) {
+            return [[userDefaults objectForKey:SSCommonLogicDebugRealMonitorKey] boolValue];
+        }
+        return NO;
     }
-    return NO;
-#endif
+    
+//#if INHOUSE
+//    return YES;
+//#else
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    if ([userDefaults objectForKey:SSCommonLogicDebugRealMonitorKey]) {
+//        return [[userDefaults objectForKey:SSCommonLogicDebugRealMonitorKey] boolValue];
+//    }
+//    return NO;
+//#endif
 }
 
 + (void)setEnableDebugRealMonitor:(BOOL)enableDebuguReal{

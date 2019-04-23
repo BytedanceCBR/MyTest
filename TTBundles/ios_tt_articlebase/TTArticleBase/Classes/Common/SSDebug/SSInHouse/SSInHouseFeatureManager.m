@@ -7,6 +7,7 @@
 //
 
 #import "SSInHouseFeatureManager.h"
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 static NSString *const kTTSSCommonLogicInHouseSettingsServerKey = @"kTTSSCommonLogicInHouseSettingsServer";
 static NSString *const kTTSSCommonLogicInHouseSettingsUserKey = @"kTTSSCommonLogicInHouseSettingsKeyUser";
@@ -75,14 +76,14 @@ static SSInHouseFeatureManager *_instance;
 
 - (void)resetDiskCacheWithSettings:(NSDictionary *)settings forKey:(NSString *)key
 {
-#if INHOUSE
-    if (settings) {
-        [[NSUserDefaults standardUserDefaults] setObject:settings forKey:key];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    } else {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    if ([TTSandBoxHelper isInHouseApp]) {
+        if (settings) {
+            [[NSUserDefaults standardUserDefaults] setObject:settings forKey:key];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        } else {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+        }
     }
-#endif
 }
 
 - (void)resetServerDiskCacheWithSettings:(NSDictionary *)settings

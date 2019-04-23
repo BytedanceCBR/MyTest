@@ -1,5 +1,0 @@
-#use_frameworks!
-
-target 'TTThirdPartySDKs_Example' do
-  pod 'TTThirdPartySDKs', :path => '../'
-end

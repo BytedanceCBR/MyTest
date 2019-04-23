@@ -23,6 +23,8 @@
 extern NSString * const SSCommonLogicSettingWebViewQueryStringEnableKey;
 extern NSString * const SSCommonLogicSettingWebViewQueryStringListKey;
 
+const char * build_rev() ;
+
 #if APPSEE_ENABLE
 #import "Appsee/Appsee.h"
 #endif

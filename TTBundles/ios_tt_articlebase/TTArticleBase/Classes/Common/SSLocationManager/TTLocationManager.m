@@ -34,6 +34,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 NSString *const TTLocationManagerCityDidChangedNotification = @"kArticleCityDidChangedNotification";
 
@@ -342,17 +343,17 @@ static TTLocationManager *_sharedManager;
         }];
     };
     CLLocationCoordinate2D coordinate = [SSLocationPickerController cachedFakeLocationCoordinate];
-#if INHOUSE
-    if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFakeLocation] && coordinate.longitude * coordinate.latitude != 0) {
-        CLLocation *location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
-        [self _reverseLocation:location completionHandler:completionHandler];
-    }
-    else {
+    if ([TTSandBoxHelper isInHouseApp] && NSClassFromString(@"SSDebugViewController") && [NSClassFromString(@"SSDebugViewController") performSelector:@selector(supportDebugSubitem:) withObject:@(1 << 4)]) {        
+        if ( coordinate.longitude * coordinate.latitude != 0) {
+            CLLocation *location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+            [self _reverseLocation:location completionHandler:completionHandler];
+        }
+        else {
+            [self regeocodeWithCompletionHandler:completionHandler];
+        }
+    }else{
         [self regeocodeWithCompletionHandler:completionHandler];
     }
-#else
-    [self regeocodeWithCompletionHandler:completionHandler];
-#endif
 }
 
 - (NSMutableDictionary *)_feedbackParameters

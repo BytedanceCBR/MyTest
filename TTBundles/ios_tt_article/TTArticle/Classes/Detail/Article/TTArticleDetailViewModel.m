@@ -34,6 +34,7 @@
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 @interface TTArticleDetailViewModel ()
 
@@ -44,14 +45,16 @@
 
 @implementation TTArticleDetailViewModel
 
-#if INHOUSE
+//#if INHOUSE
 + (void)load {
-    NSString *feArticleTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEArticleTestHost"];
-    if (!feArticleTestHost) {
-        [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"FEArticleTestHost"];
+    if ([TTSandBoxHelper isInHouseApp]) {
+        NSString *feArticleTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEArticleTestHost"];
+        if (!feArticleTestHost) {
+            [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"FEArticleTestHost"];
+        }
     }
 }
-#endif
+//#endif
 
 - (instancetype)initWithDetailModel:(TTDetailModel *)detailModel
 {
@@ -343,12 +346,14 @@
     
     NSString *subRoot = [NSString stringWithFormat:@"./%@", kV55Folder];
     
-#if INHOUSE
-    NSString *feArticleTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEArticleTestHost"];
-    if (!isEmptyString(feArticleTestHost)) {
-        subRoot = [NSString stringWithFormat:@"%@/%@", feArticleTestHost, kV55Folder];
+    if ([TTSandBoxHelper isInHouseApp]) {
+//#if INHOUSE
+        NSString *feArticleTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEArticleTestHost"];
+        if (!isEmptyString(feArticleTestHost)) {
+            subRoot = [NSString stringWithFormat:@"%@/%@", feArticleTestHost, kV55Folder];
+        }
+//#endif
     }
-#endif
     
     [head appendFormat:@"<link type=\"text/css\" rel=\"stylesheet\" href=\"%@/css/iphone.css\">", subRoot];
     
@@ -417,12 +422,14 @@
 + (NSString *)tt_sharedHTMLTemplate {
     NSString *subRoot = [NSString stringWithFormat:@"./%@", kV60Folder];
     
-#if INHOUSE
-    NSString *feArticleTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEArticleTestHost"];
-    if (!isEmptyString(feArticleTestHost)) {
-        subRoot = [NSString stringWithFormat:@"%@/%@", feArticleTestHost, kV60Folder];
+    if ([TTSandBoxHelper isInHouseApp]) {
+//#if INHOUSE
+        NSString *feArticleTestHost = [[NSUserDefaults standardUserDefaults] valueForKey:@"FEArticleTestHost"];
+        if (!isEmptyString(feArticleTestHost)) {
+            subRoot = [NSString stringWithFormat:@"%@/%@", feArticleTestHost, kV60Folder];
+        }
+//#endif
     }
-#endif
 
     NSString *template = [NSString stringWithFormat:
     @"<!DOCTYPE html>"

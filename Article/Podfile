@@ -142,20 +142,18 @@ def appPods
     #-----支付封装库-----  modified 6.2.1 alipay加回来
 #    pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
     #-----三方服务封装库-----  modified 6.2.1 alipay加回来
-    pod 'TTThirdPartySDKs' , :path => '../AKPlugins/TTThirdPartySDKs' , :subspects => [
-        'QQSDK',
-        'WeChatSDK',
-        'WeiboSDK'
-    ]
-#    pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
-#    pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
-#    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
+#    pod 'TTThirdPartySDKs' , :path => '../AKPlugins/TTThirdPartySDKs' , :subspects => [
+#        'QQSDK',
+#        'WeChatSDK',
+#        'WeiboSDK'
+#    ]
+
+    pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
+    pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
+    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.0.10'
     #----- 新分享库 -----
-#    pod 'TTShare', '0.3.3'
-    ## subspects
-#    pod 'TTShareService', '0.6.15'
     pod 'AKShareServicePlugin', :path => '../AKPlugins/AKShareServicePlugin', :inhibit_warnings => false
 
     pod 'TTShare' , :path => '../AKPlugins/TTShare'  , :subspects => [  # '0.3.3'
@@ -166,18 +164,6 @@ def appPods
     'TTShareBasic/TTWeChatShare',
     'TTShareBasic/TTQQShare'
     ]
-
-#    pod 'TTShare/TTShareBusiness', '0.3.3', :subspecs => [
-#    'TTShareWeChatBusiness',
-#    'TTShareQQBusiness',
-#    'TTShareCopyBusiness',
-#    'TTActivity'
-#    ]
-#
-#    pod 'TTShare/TTShareBasic', '0.3.3', :subspecs => [
-#    'TTWeChatShare',
-#    'TTQQShare'
-#    ]
 
     #-----头条视频播放器库，依赖自研播放器库，还包含系统播放器-----
     pod_binary 'TTVideo', '1.1.1'
@@ -203,9 +189,6 @@ def appPods
 #    pod 'HTSLiveRoomSDK/Player', :git => 'git@code.byted.org:ugc/HTSLiveRoom.git', :branch => 'update_KVOController'
 #    pod 'HTSStore', '0.2.3'
     #-----火山播放器 ----
-#    pod_binary 'IESVideoPlayer', '0.2.22.1'
-#    pod_binary 'AWEVideoPlayer', '0.3.20'
-#    pod 'Mantle' , '2.1.2'
     pod 'IESVideoPlayer', '0.1.16'
     pod_binary 'AWEVideoPlayer', '0.3.20'
     pod_binary 'Mantle','2.1.0-rc2'
@@ -557,13 +540,16 @@ end
 
 target 'f100' do
     appPods
+    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine'
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 end
 
 target 'NewsLiteInHouse' do
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
-    pod_binary 'TTSettingsManager/Debug' 
+    pod_binary 'TTSettingsManager/Debug'
+    pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
+    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
     appPods
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 
@@ -573,6 +559,8 @@ target 'NewsLiteChannel' do
     pod_binary 'TTDebugAssistant', '0.2.33'
     pod_binary 'FLEX', '2.1.1'#, :configurations=>['Debug']
     pod_binary 'TTSettingsManager/Debug'
+    pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
+    #pod 'TTMacroDefine' , :path => '../TTBundles/ios_tt_macrodefine_inhouse'
     appPods
     script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
     
@@ -623,6 +611,11 @@ post_install do |installer|
 
         #INHOUSE宏,生效条件为业务库：问答、视频等
         if target.name == "TTVideoService" || target.name == "TTWenda"  || target.name == "TTUGCFeature"|| target.name == "TTUGCFoundation"
+            target.build_configurations.each do |config|
+                config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
+            end
+        end
+        if target.name == "TTDebug"
             target.build_configurations.each do |config|
                 config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)','INHOUSE=1']
             end

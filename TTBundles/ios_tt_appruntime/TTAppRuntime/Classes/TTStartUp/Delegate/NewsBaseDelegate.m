@@ -35,7 +35,7 @@
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTPostDataHttpRequestSerializer.h"
 
-#import <DTShareKit/DTOpenKit.h>
+//#import <DTShareKit/DTOpenKit.h>//钉钉talk
 #import "TTShareConstants.h"
 //#import "SSPayManager.h"
 

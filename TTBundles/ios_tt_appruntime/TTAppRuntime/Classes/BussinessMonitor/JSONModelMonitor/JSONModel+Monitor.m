@@ -10,6 +10,7 @@
 #import "JSONModel+Monitor.h"
 #import "SSCommonLogic.h"
 #import <TTArticleBase/Log.h>
+#import <TTMonitor/TTMonitor.h>
 
 @implementation JSONModel (Monitor)
 

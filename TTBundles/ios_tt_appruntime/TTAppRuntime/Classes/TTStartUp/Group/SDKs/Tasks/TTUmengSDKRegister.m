@@ -43,16 +43,20 @@
     {
         [[DebugUmengIndicator sharedIndicator] stopDisplay];
     }
-#elif INHOUSE
-    if([DebugUmengIndicator displayUmengISOn])
-    {
-        [[DebugUmengIndicator sharedIndicator] startDisplay];
-    }
-    else
-    {
-        [[DebugUmengIndicator sharedIndicator] stopDisplay];
+#else
+//#elif INHOUSE
+    if ([TTSandBoxHelper isInHouseApp]) {
+        if([DebugUmengIndicator displayUmengISOn])
+        {
+            [[DebugUmengIndicator sharedIndicator] startDisplay];
+        }
+        else
+        {
+            [[DebugUmengIndicator sharedIndicator] stopDisplay];
+        }
     }
 #endif
+    
 }
 
 @end

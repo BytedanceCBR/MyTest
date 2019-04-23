@@ -74,6 +74,7 @@
 #import <TTMonitor/TTMonitor.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import "SSCommonLogic.h"
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 #define kPlayerOverTrackUrlList @"playover_track_url_list"
 #define kPlayerEffectiveTrackUrlList @"effective_play_track_url_list"
@@ -2181,11 +2182,17 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
         return YES;
     }
     
-#if INHOUSE
-    if ([ExploreCellHelper getSourceImgTest]) {
-        return YES;
+    if ([TTSandBoxHelper isInHouseApp]) {
+        if ([ExploreCellHelper getSourceImgTest]) {
+            return YES;
+        }
     }
-#endif
+    
+//#if INHOUSE
+//    if ([ExploreCellHelper getSourceImgTest]) {
+//        return YES;
+//    }
+//#endif
     
     return NO;
 }
@@ -2210,12 +2217,18 @@ extern NSInteger ttvs_autoPlayModeServerSetting(void);
 - (BOOL)isFeedUGC
 {
     if (self.isInCard) return NO;
-#if INHOUSE
-    //用户在高级设置中修改过FeedUGC开关，则不需判断服务器下发开关
-    if ([ExploreCellHelper userDidSetFeedUGCTest]) {
-        return [ExploreCellHelper getFeedUGCTest];
+    if ([TTSandBoxHelper isInHouseApp]) {
+        //用户在高级设置中修改过FeedUGC开关，则不需判断服务器下发开关
+        if ([ExploreCellHelper userDidSetFeedUGCTest]) {
+            return [ExploreCellHelper getFeedUGCTest];
+        }
     }
-#endif
+//#if INHOUSE
+//    //用户在高级设置中修改过FeedUGC开关，则不需判断服务器下发开关
+//    if ([ExploreCellHelper userDidSetFeedUGCTest]) {
+//        return [ExploreCellHelper getFeedUGCTest];
+//    }
+//#endif
     return ((self.cellFlag & ExploreOrderedDataCellFlagSourceAtTop) != 0);
 }
 

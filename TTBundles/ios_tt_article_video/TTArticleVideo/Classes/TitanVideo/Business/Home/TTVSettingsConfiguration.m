@@ -12,6 +12,7 @@
 #import "NetworkUtilities.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTAccountSDK/TTAccount.h>
 
@@ -113,11 +114,11 @@ extern NSString * ttvs_playerFinishedRelatedType(void)
 
 BOOL ttvs_isVideoDetailPlayLastEnabled(void)
 {
-#if INHOUSE
-    return YES;
-#else
-    return [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_detail_playlast_enable" defaultValue:@NO freeze:NO] boolValue];
-#endif
+    if ([TTSandBoxHelper isInHouseApp]) {
+        return YES;
+    }else{
+        return [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_detail_playlast_enable" defaultValue:@NO freeze:NO] boolValue];
+    }
 }
 
 NSDictionary *ttvs_videoMidInsertADDict(void) {

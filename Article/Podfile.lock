@@ -291,6 +291,7 @@ PODS:
   - TTBridgeUnify/TTBridge (0.3.19.1-binary)
   - TTBridgeUnify/TTBridgeAuthManager (0.3.19.1-binary)
   - TTBridgeUnify/WebView (0.3.19.1-binary)
+  - TTDebug (0.1.0)
   - TTDebugAssistant (0.2.33.1-binary)
   - TTDialogDirector/Camera (0.1.2)
   - TTDialogDirector/Contacts (0.1.2)
@@ -487,16 +488,6 @@ PODS:
   - TTShare/TTShareService (0.3.3)
   - TTTAttributedLabel (1.13.3.1-binary)
   - TTThemed (0.1.0)
-  - TTThirdPartySDKs (0.0.4):
-    - TTThirdPartySDKs/AlipaySDK (= 0.0.4)
-    - TTThirdPartySDKs/AliShareSDK (= 0.0.4)
-    - TTThirdPartySDKs/DingDingSDK (= 0.0.4)
-    - TTThirdPartySDKs/QQSDK (= 0.0.4)
-    - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
-    - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
-  - TTThirdPartySDKs/AlipaySDK (0.0.4)
-  - TTThirdPartySDKs/AliShareSDK (0.0.4)
-  - TTThirdPartySDKs/DingDingSDK (0.0.4)
   - TTThirdPartySDKs/QQSDK (0.0.4)
   - TTThirdPartySDKs/WeChatSDK (0.0.4)
   - TTThirdPartySDKs/WeiboSDK (0.0.4)
@@ -696,6 +687,7 @@ DEPENDENCIES:
   - TTBridgeUnify/TTBridge (= 0.3.19.1-binary)
   - TTBridgeUnify/TTBridgeAuthManager (= 0.3.19.1-binary)
   - TTBridgeUnify/WebView (= 0.3.19.1-binary)
+  - TTDebug (from `../TTBundles/ios_tt_debug`)
   - TTDebugAssistant (= 0.2.33.1-binary)
   - TTDialogDirector/Camera (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
   - TTDialogDirector/Contacts (from `git@code.byted.org:TTIOS/TTDialogDirector.git`, commit `8ed5beb`)
@@ -770,7 +762,9 @@ DEPENDENCIES:
   - TTShare (from `../AKPlugins/TTShare`)
   - TTTAttributedLabel (= 1.13.3.1-binary)
   - TTThemed (from `../AKPlugins/AKThemed`)
-  - TTThirdPartySDKs (from `../AKPlugins/TTThirdPartySDKs`)
+  - TTThirdPartySDKs/QQSDK (= 0.0.4)
+  - TTThirdPartySDKs/WeChatSDK (= 0.0.4)
+  - TTThirdPartySDKs/WeiboSDK (= 0.0.4)
   - TTTracker (= 1.0.6-rc.2.1.binary)
   - TTUGCFoundation (from `../Vendor/TTUGCFoundation`)
   - TTUIWidget (from `../AKPlugins/TTUIWidget`)
@@ -863,6 +857,8 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTAvatar
   TTBaseLib:
     :path: ../AKPlugins/TTBaseLib
+  TTDebug:
+    :path: ../TTBundles/ios_tt_debug
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
@@ -910,12 +906,6 @@ EXTERNAL SOURCES:
       - TTShareBusiness/TTShareWeChatBusiness
   TTThemed:
     :path: ../AKPlugins/AKThemed
-  TTThirdPartySDKs:
-    :path: ../AKPlugins/TTThirdPartySDKs
-    :subspects:
-      - QQSDK
-      - WeChatSDK
-      - WeiboSDK
   TTUGCFoundation:
     :path: ../Vendor/TTUGCFoundation
   TTUIWidget:
@@ -1036,6 +1026,7 @@ SPEC CHECKSUMS:
   TTBaseLib: 5cda2ea4c4b58c39ee63f139397a27755b029299
   TTBatchItemAction: 6e6ed79565823fe6f3ee77d66d6e3ec5fec4d52f
   TTBridgeUnify: 05f19c2c316f7f70fe7c2ff77b4b5a0be4fed769
+  TTDebug: b8ba18669b70deaf52dbd0775578e2163cf07c45
   TTDebugAssistant: c1c106b1cef486fb07833e7a9a6316cf2711df5d
   TTDialogDirector: 2b7e322ec7ea0632b91b1fe025320203e14e9ddb
   TTDiggButton: cf6762b9f675e4aa59eeea083150ac781d59eb2e
@@ -1107,6 +1098,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 131ea489e022b0aef4a627c6ac3b0b1fc01280be
+PODFILE CHECKSUM: 6090ab1246c179947b08c8063cb539acc97b57ea
 
 COCOAPODS: 1.4.0

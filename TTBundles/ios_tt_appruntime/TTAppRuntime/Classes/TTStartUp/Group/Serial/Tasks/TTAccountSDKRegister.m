@@ -57,11 +57,16 @@
     [SSCookieManager setSessionIDToCookie:[[TTAccount sharedAccount] sessionKey]];
     
     [TTAccount accountConf].multiThreadSafeEnabled = [TTAccountTestSettings threadSafeSupported];
-#if defined(INHOUSE)
-    [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.ss.iphone.InHouse.article.News";
-#else
-    [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.bytedance.keychainshare";
-#endif
+    if ([TTSandBoxHelper isInHouseApp]) {
+        [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.ss.iphone.InHouse.article.News";
+    }else{
+        [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.bytedance.keychainshare";
+    }
+//#if defined(INHOUSE)
+//    [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.ss.iphone.InHouse.article.News";
+//#else
+//    [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.bytedance.keychainshare";
+//#endif
     
     [TTAccount accountConf].networkParamsHandler = ^NSDictionary *() {
         return [[TTNetworkUtilities commonURLParameters] copy];
@@ -98,11 +103,11 @@
     wechatConf.platformType = TTAccountAuthTypeWeChat;
     wechatConf.consumerKey  = WXAppID;
     wechatConf.platformName = PLATFORM_WEIXIN;
-#ifdef INHOUSE
+//#ifdef INHOUSE
     if ([TTSandBoxHelper isInHouseApp]) {
         wechatConf.platformAppId = @"52";
     }
-#endif
+//#endif
     [TTAccount registerPlatform:wechatConf];
     
     TTAccountPlatformConfiguration *QQConf = [TTAccountPlatformConfiguration new];

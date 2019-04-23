@@ -31,10 +31,12 @@
 {
     self = [super init];
     if (self) {
+#if DEBUG
         self.stubArray = [NSMutableArray array];
         [OHHTTPStubs onStubActivation:^(NSURLRequest *request, id<OHHTTPStubsDescriptor> stub) {
             NSLog(@"[OHHTTPStubs] Request to %@ has been stubbed with %@", request.URL, stub.name);
         }];
+#endif
     }
     return self;
 }
@@ -43,11 +45,14 @@
 #pragma mark - Public Methods
 + (void)setEnabled:(BOOL)enabled
 {
+#if DEBUG
     [OHHTTPStubs setEnabled:enabled];
+#endif
 }
 
 - (void)setupStub:(NSString *)stubName withConfigArray:(NSArray *)configArray
 {
+#if DEBUG
     __block NSString *matchedFile = nil;
     id<OHHTTPStubsDescriptor> stub = [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         if ([request.HTTPMethod isEqualToString:@"GET"]) {
@@ -115,10 +120,12 @@
     
     stub.name = stubName;
     [self.stubArray addObject:stub];
+#endif
 }
 
 - (void)removeStub:(NSString *)stubName
 {
+#if DEBUG
     for (id<OHHTTPStubsDescriptor> stub in self.stubArray) {
         if ([stub.name isEqualToString:stubName]) {
             [OHHTTPStubs removeStub:stub];
@@ -126,6 +133,8 @@
             return;
         }
     }
+#endif
+    
 }
 
 - (void)restoreAllStubs

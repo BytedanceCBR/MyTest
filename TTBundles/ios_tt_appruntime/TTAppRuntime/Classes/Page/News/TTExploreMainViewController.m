@@ -59,6 +59,7 @@
 #import <TTArticleBase/Log.h>
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -121,9 +122,11 @@
     self.ttStatusBarStyle = UIStatusBarStyleDefault;
     
     //如果是inhouse的，弹升级弹窗
-    #if INHOUSE
-    [self checkLocalTestUpgradeVersionAlert];
-    #endif
+    if ([TTSandBoxHelper isInHouseApp]) {
+//#if INHOUSE
+        [self checkLocalTestUpgradeVersionAlert];
+//#endif
+    }
     
 }
 
