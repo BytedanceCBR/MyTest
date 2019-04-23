@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHRNBaseViewController : FHBaseViewController <TTRNKitObserverProtocol,TTBridgeEngine,FHRNBridgePluginExtension>
 
+@property(nonatomic,assign)BOOL isLoadFinish;
+
 - (instancetype)initWithParams:(NSDictionary *)params viewWrapper:(TTRNKitViewWrapper *)viewWrapper;
 
 - (void)addViewWrapper:(TTRNKitViewWrapper *)viewWrapper;

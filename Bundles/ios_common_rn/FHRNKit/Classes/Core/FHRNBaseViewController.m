@@ -112,6 +112,7 @@
             _shemeUrlStr = [paramObj.sourceURL absoluteString];
         }
         _paramCurrentObj = paramObj;
+        _isLoadFinish = NO;
         
         if ([paramObj.allParams isKindOfClass:[NSDictionary class]]) {
             [self processParams:paramObj.allParams];
@@ -218,7 +219,7 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         dispatch_async(dispatch_get_main_queue(), ^{
             _container.hidden = NO;
-            if (_viewWrapper && _canPreLoad) {
+            if (_viewWrapper && _canPreLoad && _isLoadFinish) {
                 [self tt_endUpdataData];
             }
         });

@@ -140,6 +140,7 @@
     UIViewController *currentVC = nil;
     if ([[topVC.viewControllers lastObject] isKindOfClass:[FHRNBaseViewController class]]) {
         currentVC = [topVC.viewControllers lastObject];
+        ((FHRNBaseViewController *)currentVC).isLoadFinish = YES;
         [currentVC tt_endUpdataData];
     }
 }
