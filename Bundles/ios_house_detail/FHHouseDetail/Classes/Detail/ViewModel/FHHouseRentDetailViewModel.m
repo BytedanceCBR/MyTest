@@ -194,6 +194,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 处理详情页数据
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
 
+    //当前IM全是非B端注册经纪人
+    model.data.contact.unregistered = YES;
     self.contactViewModel.contactPhone = model.data.contact;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
@@ -270,6 +272,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
+        infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
     // 地图

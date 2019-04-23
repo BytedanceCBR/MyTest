@@ -95,7 +95,7 @@
 }
 
 + (UIColor *)colorWithHexStr:(NSString *)hexString {
-    [UIColor colorWithHexString:hexString];
+   return  [UIColor colorWithHexString:hexString];
 }
 
 + (UIColor *)colorWithHexString:(NSString *)hexString {

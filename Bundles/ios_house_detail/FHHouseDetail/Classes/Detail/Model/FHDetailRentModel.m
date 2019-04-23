@@ -24,7 +24,7 @@
                            @"gaodeLng": @"gaode_lng",
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"evaluationInfo": @"evaluation_info",
-                           @"schoolInfo": @"school_info",
+                           @"schoolDictList": @"school_dict_list",
                            @"searchId": @"search_id",
                            @"imprId": @"impr_id",
                            };

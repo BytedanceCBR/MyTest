@@ -56,6 +56,38 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     [_bannerView setContent:[UIScreen mainScreen].bounds.size.width - 40 height:kFHScrollBannerHeight];
 }
 
+
++ (BOOL)hasValidModel:(FHConfigDataMainPageBannerOpDataModel *)mainPageOpData {
+    if (mainPageOpData && [mainPageOpData isKindOfClass:[FHConfigDataMainPageBannerOpDataModel class]]) {
+        for (int i = 0; i < mainPageOpData.items.count; i++) {
+            FHConfigDataRentOpDataItemsModel *tModel = mainPageOpData.items[i];
+            if ([self isValidModel:tModel]) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
++ (BOOL)isValidModel:(FHConfigDataRentOpDataItemsModel *)tModel {
+    if (tModel == nil) {
+        return NO;
+    }
+    BOOL retFlag = NO;
+    if (tModel.openUrl.length > 0 && tModel.image.count > 0 && tModel.id.length > 0) {
+        NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
+        // 是否有效的openUrl
+        if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
+            FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
+            if (imageModel.url.length > 0) {
+                // 有图片url
+                retFlag = YES;
+            }
+        }
+    }
+    return retFlag;
+}
+
 // 注意cell的刷新频率问题
 -(void)updateWithModel:(FHConfigDataMainPageBannerOpDataModel *)model {
     if ([FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell) {
@@ -69,11 +101,13 @@ static CGFloat kFHScrollBannerHeight = 58.0; // 轮播图的高度
     NSMutableArray *imageUrls = [NSMutableArray new];
     for (int i = 0; i < model.items.count; i++) {
         FHConfigDataRentOpDataItemsModel *opData = model.items[i];
-        if (opData.image.count > 0) {
-            FHConfigDataRentOpDataItemsImageModel *opImage = opData.image[0];
-            if (opImage.url.length > 0) {
-                [imageUrls addObject:opImage.url];
-                [opDatas addObject:opData];
+        if ([FHHomeScrollBannerCell isValidModel:opData]) {
+            if (opData.image.count > 0) {
+                FHConfigDataRentOpDataItemsImageModel *opImage = opData.image[0];
+                if (opImage.url.length > 0) {
+                    [imageUrls addObject:opImage.url];
+                    [opDatas addObject:opData];
+                }
             }
         }
     }

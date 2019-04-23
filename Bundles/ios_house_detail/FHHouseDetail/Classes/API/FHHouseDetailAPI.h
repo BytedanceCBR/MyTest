@@ -80,6 +80,7 @@ typedef enum : NSUInteger {
                                                       searchId:(NSString*)searchId
                                                         page:(NSInteger)page
                                                          count:(NSInteger)count
+                                                         query:(NSString *)query
                                                     completion:(void(^)(FHTransactionHistoryModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 二手房（小区）-同小区房源

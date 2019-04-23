@@ -518,7 +518,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             if (error.code != NSURLErrorCancelled) {
                 //请求取消
                 [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
+                if ([TTReachability isNetworkConnected]) {
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
+                }
             }
             return;
         }
@@ -925,7 +927,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 - (void)mapViewDidFailLoadingMap:(MAMapView *)mapView withError:(NSError *)error
 {
-    [[HMDTTMonitor defaultManager] hmdTrackService:@"map_load_failed" attributes:@{@"desc":error.localizedDescription?:@"",@"reason":error.localizedFailureReason?:@""}];
+    if ([TTReachability isNetworkConnected]) { //有网再报
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"map_load_failed" attributes:@{@"desc":error.localizedDescription?:@"",@"reason":error.localizedFailureReason?:@""}];
+    }
 }
 
 -(BOOL)shouldRequest:(CLLocationCoordinate2D )currentCenter
@@ -1102,7 +1106,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     [strUrl appendFormat:@"&house_type=4"]; // 小区
-    [strUrl appendFormat:@"&source=rent_detail"]; // 租房半屏列表进入小区
+    if (_configModel.houseType == FHHouseTypeRentHouse) {
+        [strUrl appendFormat:@"&source=rent_detail"]; // 租房半屏列表进入小区
+    }    
     
     NSURL *url =[NSURL URLWithString:strUrl];
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];

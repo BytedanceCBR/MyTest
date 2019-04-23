@@ -37,8 +37,7 @@
 #import "FHMainRentTopView.h"
 #import "FHMainOldTopView.h"
 
-#import <FHHouseRent/FHHouseRentFilterType.h>
-#import <FHHouseRent/FHHouseRentCell.h>
+#import <FHHouseBase/FHHouseRentFilterType.h>
 #import <BDWebImage/BDWebImage.h>
 #import "FHBaseMainListViewModel+Internal.h"
 #import "FHBaseMainListViewModel+Old.h"
@@ -47,6 +46,7 @@
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
 #import "FHHouseListAPI.h"
+#import "FHCommuteManager.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -55,6 +55,7 @@
 #define kFilterBarHeight 44
 #define MAX_ICON_COUNT 4
 #define ICON_HEADER_HEIGHT 115
+#define RENT_BANNER_HEIGHT 102
 #define OLD_ICON_HEADER_HEIGHT 80
 
 @implementation FHBaseMainListViewModel
@@ -134,7 +135,12 @@
     if (_houseType == FHHouseTypeRentHouse) {
         FHConfigDataRentOpDataModel *rentModel = dataModel.rentOpData;
         if (rentModel.items.count > 0) {
-            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT)];
+            
+            CGFloat bannerHeight = 0;
+            if ([FHMainRentTopView cacheImageForRentBanner:dataModel.rentBanner]) {
+                bannerHeight = [FHMainRentTopView bannerHeight:dataModel.rentBanner];
+            }
+            FHMainRentTopView *topView = [[FHMainRentTopView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight) banner:dataModel.rentBanner];
             topView.items = rentModel.items;
             topView.delegate = self;
             self.topBannerView = topView;
@@ -183,20 +189,9 @@
         [self.tableView reloadData];
         [_errorMaskView showEmptyWithType:type];
         _errorMaskView.retryButton.enabled = enableTap;
-        
-        //        CGRect frame = self.tableView.frame;
-        //        frame.origin = CGPointZero;
-        //        self.errorMaskView.frame = frame;
-        //        self.errorMaskView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-                
+
         CGFloat top = _topView.height; //self.tableView.contentOffset.y;
-//        if (!_tableView.window) {
-//            //还未显示
-//            top = - _topView.height;
-//        }
-//        if (top > 0) {
-//            top = 0;
-//        }
+
         [_errorMaskView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(top);
         }];
@@ -383,7 +378,6 @@
     
     if (model) {
         
-        
         NSMutableArray *items = nil;
         NSArray *recommendItems = nil;
         BOOL hasMore = NO;
@@ -450,6 +444,7 @@
             if (self.searchId.length > 0 ) {
                 SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
             }
+            [self tryAddCommuteShowLog];
         }
         
         self.showPlaceHolder = NO;
@@ -501,7 +496,12 @@
         
         [self.tableView reloadData];
         
-        self.tableView.mj_footer.hidden = NO;
+        if (self.houseList.count > 10) {
+            self.tableView.mj_footer.hidden = NO;
+        }else{
+            self.tableView.mj_footer.hidden = YES;
+        }
+        
         if (hasMore == NO) {
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }else {
@@ -694,10 +694,6 @@
 
 -(NSString *)navbarPlaceholder
 {
-//    if (self.topView && _houseType == FHHouseTypeRentHouse) {
-//        //大类页
-//        return @"你想住哪里？";
-//    }
     switch (_houseType) {
             case FHHouseTypeNewHouse:
                 return @"请输入楼盘名/地址";
@@ -805,6 +801,19 @@
     
 }
 
+-(void)tapRentBanner
+{
+    NSString *destLocation = [[FHCommuteManager sharedInstance] destLocation];
+    NSString *cityId = [[FHCommuteManager sharedInstance] cityId];
+    NSString *currentCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if (cityId.length == 0 || ![cityId isEqualToString:currentCityId] || destLocation.length == 0) {
+        [[FHCommuteManager sharedInstance] clear];
+        [self showCommuteConfigPage];
+    }else{
+        [self gotoCommuteList:nil];
+    }
+}
+
 -(void)selecteOldItem:(FHConfigDataOpData2ItemsModel *)model
 {
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:model.openUrl]];
@@ -833,6 +842,44 @@
     [self addOperationClickLog:logpbDict[@"operation_name"]];
 }
 
+-(void)rentBannerLoaded:(UIView *)bannerView
+{
+    self.showNotifyDoneBlock = ^{
+        //banner图片加载成功
+        CGFloat bannerHeight = bannerView.height;
+        self.topBannerView.frame = CGRectMake(0, 0,SCREEN_WIDTH , ICON_HEADER_HEIGHT + bannerHeight);
+        
+        CGRect frame = [self.topView relayout];
+        UIEdgeInsets insets = self.tableView.contentInset;
+        
+        BOOL scrolled = fabs(self.tableView.contentOffset.y + insets.top) > 1;
+        
+        insets.top = CGRectGetHeight(frame);
+        self.tableView.contentInset = insets;
+        
+        if (self.topView.superview == self.topContainerView) {
+            [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
+            }];
+            self.topView.top = -[self.topView filterTop];
+        }else{
+            self.topView.top = -frame.size.height;
+            if (!scrolled) {
+                self.tableView.contentOffset = CGPointMake(0, -insets.top);
+            }
+        }
+    };
+    
+    if (self.animateShowNotify) {        
+        return;
+    }
+    
+    self.showNotifyDoneBlock();
+    self.showNotifyDoneBlock = nil;
+    
+
+}
+
 - (NSString *)getEvaluateWebParams:(NSDictionary *)dic
 {
     NSError *error = nil;
@@ -845,6 +892,40 @@
     return nil;
 }
 
+-(void)gotoCommuteList:(UIViewController *)popController
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataRentBannerItemsModel *item = [dataModel.rentBanner.items firstObject];
+    NSURL *url = [NSURL URLWithString:item.openUrl];
+    
+    NSMutableDictionary *param = [[self baseLogParam]mutableCopy];
+    param[UT_ENTER_TYPE] = @"click";
+    param[UT_ENTER_FROM] = popController? @"commuter_detail" :@"rent_list";
+    param[UT_ELEMENT_FROM] = UT_BE_NULL;
+    param[UT_SEARCH_ID] = self.searchId;
+    
+    param[UT_ORIGIN_FROM] = UT_OF_COMMUTE;
+    if (!param[UT_ORIGIN_SEARCH_ID]) {
+        param[UT_ORIGIN_SEARCH_ID] = @"be_null";
+    }
+    
+    NSMutableDictionary *userInfoDict = [NSMutableDictionary new];
+    userInfoDict[TRACER_KEY] = param;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:userInfoDict];
+    if (popController) {
+        __weak typeof(self) wself = self;
+        [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+            NSMutableArray *controllers = [[NSMutableArray alloc] initWithArray:nav.viewControllers];
+            [controllers removeObject:popController];
+            [controllers addObject:routeObj.instance];
+            [nav setViewControllers:controllers animated:YES];
+        }];
+    }else{
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
 
 #pragma mark - filter delegate
 
@@ -853,8 +934,6 @@
     if ([self.conditionFilter isEqualToString:condition]) {
         return;
     }
-    
-    self.tableView.scrollEnabled = YES;
     
     self.conditionFilter = condition;
     
@@ -865,7 +944,11 @@
 
 -(void)onConditionPanelWillDisplay
 {
-    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
+    if (self.topView.superview != self.topContainerView){
+        //筛选器不在顶部时 才上移
+        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - self.topView.height);
+    }
+    
     //只显示筛选器
     [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([self.topView filterBottom] - [self.topView filterTop]);
@@ -1119,6 +1202,7 @@
 
 -(void)showNotifyMessage:(NSString *)message
 {
+    self.animateShowNotify = YES;
     __weak typeof(self) wself = self;
     CGFloat height =  [_topView showNotify:message willCompletion:^{
         
@@ -1129,13 +1213,16 @@
             
         } completion:^(BOOL finished) {
             wself.tableView.scrollEnabled = YES;
-            
+            if (wself.showNotifyDoneBlock) {
+                wself.showNotifyDoneBlock();
+                wself.showNotifyDoneBlock = nil;
+            }
+            wself.animateShowNotify = NO;
         }];
         
     }];
     
     [self configNotifyInfo:height isShow:YES];
-    
     
 }
 
@@ -1154,12 +1241,16 @@
             self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
         }
     }else{
-        //
-        if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
-            if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
-                self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+        //        
+        if (isTop) {
+            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+        }else{
+            if (self.tableView.contentOffset.y >= -[self.topView filterTop]) {
+                if (self.tableView.contentOffset.y <= ([self.topView filterTop] - topViewHeight)) {
+                    self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+                }
             }
-        }                       
+        }
     }
     
     if (_topView.superview == self.topContainerView) {
