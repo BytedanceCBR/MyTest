@@ -24,7 +24,7 @@
     NSString *stringVersion = [FHEnvContext getToutiaoVersionCode];
     NSArray *geckoChannels = [FHIESGeckoManager fhGeckoChannels];
     if ([geckoChannels isKindOfClass:[NSArray class]] && geckoChannels.count > 0) {
-        [IESGeckoKit registerAccessKey:kFHIESGeckoKey appVersion:stringVersion channels:geckoChannels];
+        [IESGeckoKit registerAccessKey:[FHIESGeckoManager getGeckoKey] appVersion:stringVersion channels:geckoChannels];
         [IESGeckoKit syncResourcesIfNeeded];// 同步资源文件
     }
 }
@@ -36,7 +36,7 @@
         IESFalconManager.interceptionEnable = YES;
         
         NSString *pattern = @"^(http|https)://.*.[pstatp.com]/toutiao/";
-        [IESFalconManager registerPattern:pattern forGeckoAccessKey:kFHIESGeckoKey];
+        [IESFalconManager registerPattern:pattern forGeckoAccessKey:[FHIESGeckoManager getGeckoKey]];
     }
 }
 
@@ -60,9 +60,19 @@
 + (BOOL)isHasCacheForChannel:(NSString *)channel
 {
     if ([channel isKindOfClass:[NSString class]]) {
-      return  [IESGeckoCacheManager hasCacheForPath:nil accessKey:kFHIESGeckoKey channel:channel];
+      return  [IESGeckoCacheManager hasCacheForPath:nil accessKey:[FHIESGeckoManager getGeckoKey] channel:channel];
     }
     return NO;
+}
+
++ (NSString *)getGeckoKey
+{
+    if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"]) {
+        return @"adc27f2b35fb3337a4cb1ea86d05db7a";
+    }else
+    {
+        return @"7838c7618ea608a0f8ad6b04255b97b9";
+    }
 }
 
 @end

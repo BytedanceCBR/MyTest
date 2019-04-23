@@ -67,7 +67,7 @@
     
     [rnKitParams setValue:stringVersion forKey:TTRNKitGeckoAppVersion];
     [rnKitParams setValue:_channelStr forKey:TTRNKitGeckoChannel];//一个ttrnkit实例只对应一个channel
-    [rnKitParams setValue:kFHIESGeckoKey forKey:TTRNKitGeckoKey];
+    [rnKitParams setValue:[FHIESGeckoManager getGeckoKey] forKey:TTRNKitGeckoKey];
     [rnKitParams setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:TTRNKitDeviceId];
     
     NSMutableDictionary *defaultBundlePath = [NSMutableDictionary new];
