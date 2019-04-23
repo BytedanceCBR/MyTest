@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if DEBUG
+#if INHOUSE
 static NSString * const kFHIESGeckoKey = @"adc27f2b35fb3337a4cb1ea86d05db7a";
 #else
 static NSString * const kFHIESGeckoKey = @"7838c7618ea608a0f8ad6b04255b97b9";
