@@ -484,7 +484,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     NSString * versionFirst = @"6";
     NSString * versionMiddle = @"6";
-    NSString * versionEnd = @"1";
+    NSString * versionEnd = @"6";
     
     if ([buildVersionNew isKindOfClass:[NSString class]] && buildVersionNew.length > 3) {
         versionFirst = [buildVersionNew substringWithRange:NSMakeRange(0, 1)];

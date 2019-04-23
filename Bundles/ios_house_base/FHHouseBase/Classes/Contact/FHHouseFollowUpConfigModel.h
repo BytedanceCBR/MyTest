@@ -18,10 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 // 必填
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *followId;
+@property (nonatomic, assign) FHFollowActionType actionType;
 
 // 选填
 @property (nonatomic, assign) BOOL showTip;
-@property (nonatomic, assign) FHFollowActionType actionType;
 @property (nonatomic, weak) UIViewController *topVC;
 
 #pragma mark 埋点

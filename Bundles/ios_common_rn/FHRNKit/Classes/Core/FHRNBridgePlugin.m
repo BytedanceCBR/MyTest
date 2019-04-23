@@ -24,6 +24,8 @@
 #import <FHUtils.h>
 #import <HMDTTMonitor.h>
 #import <UIViewController+NavigationBarStyle.h>
+#import "FHHousePhoneCallUtils.h"
+#import "FHHouseFollowUpHelper.h"
 
 @interface FHRNBridgePlugin ()
 @property (nonatomic, strong) NSMutableArray<NSString *> *events;
@@ -51,10 +53,51 @@
 
 - (void)call_phoneWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
+
     NSString *houseType = [param tt_stringValueForKey:@"houseType"];
     NSString *realtorId = [param tt_stringValueForKey:@"realtorId"];
-    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
+//    NSString *reportParams = [param tt_stringValueForKey:@"report_params"];
+    NSString *reportParamsStr = [param tt_stringValueForKey:@"report_params"];
+    NSMutableString *processString = [NSMutableString stringWithString:reportParamsStr];
+    NSString *character = nil;
+    for (int i = 0; i < processString.length; i ++) {
+        character = [processString substringWithRange:NSMakeRange(i, 1)];
+        
+        if ([character isEqualToString:@"\\"])
+            [processString deleteCharactersInRange:NSMakeRange(i, 1)];
+    }
+    
+    NSDictionary *reportParamsDict = [FHUtils dictionaryWithJsonString:processString];
+    NSMutableDictionary *callParams = [NSMutableDictionary new];
+    if ([reportParamsDict isKindOfClass:[NSDictionary class]]) {
+        [callParams addEntriesFromDictionary:reportParamsDict];
+    }
+    if (realtorId) {
+        [callParams setValue:realtorId forKey:@"realtor_id"];
+    }
+    if (houseType) {
+        [callParams setValue:houseType forKey:@"house_type"];
+    }
+    
+    if(callParams[@"group_id"])
+    {
+        callParams[@"follow_id"] = callParams[@"group_id"];
+    }
+    
+    if(callParams[@"group_id"])
+    {
+        callParams[@"house_id"] = callParams[@"group_id"];
+    }
+    
+//    //二手房打电话
+//    [callParams setValue:@(2) forKey:@"action_type"];
+//
+    [FHHousePhoneCallUtils callWithConfig:callParams];
 
+    [FHHouseFollowUpHelper followHouseWithConfig:callParams];
+    if (callback) {
+        callback(TTBridgeMsgSuccess, nil);
+    }
 }
 
 - (void)monitor_durationWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller

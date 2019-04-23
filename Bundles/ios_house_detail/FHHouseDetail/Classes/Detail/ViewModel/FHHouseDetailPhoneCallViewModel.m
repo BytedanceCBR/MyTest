@@ -25,6 +25,7 @@
 #import <HMDTTMonitor.h>
 #import <FHUtils.h>
 #import <NSDictionary+TTAdditions.h>
+#import <FHIESGeckoManager.h>
 
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
@@ -418,6 +419,11 @@ typedef enum : NSUInteger {
 
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre
 {
+    //如果没有资源，走H5
+    if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
+        [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
+        return;
+    }
     
     if ([FHHouseDetailPhoneCallViewModel isEnableCurrentChannel]) {
         if (isPre) {
@@ -448,6 +454,11 @@ typedef enum : NSUInteger {
     if (contactPhone.realtorId.length < 1) {
         return nil;
     }
+    
+    if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] && !isOpen) {
+        return nil;
+    }
+    
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     //    NSString *host = @"http://10.1.15.29:8889";
     NSURL *openUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://realtor_detail?realtor_id=%@",contactPhone.realtorId]];
@@ -521,7 +532,7 @@ typedef enum : NSUInteger {
         return nil;
     }else
     {
-        NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:_tracerDict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle"]];
+        NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle"]];
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
         //    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];
@@ -545,6 +556,8 @@ typedef enum : NSUInteger {
         [self.routeAgentObj.instance performSelector:@selector(destroyRNView) withObject:nil];
     }
     self.routeAgentObj.instance = nil;
+    self.routeAgentObj.paramObj.userInfo = nil;
+    self.routeAgentObj.paramObj = nil;
     self.routeAgentObj = nil;
 }
 

@@ -13,6 +13,7 @@
 #import "FHHouseBridgeManager.h"
 #import <FHEnvContext.h>
 #import <NSDictionary+TTAdditions.h>
+#import "IESGeckoCacheManager.h"
 
 @implementation FHIESGeckoManager
 
@@ -54,6 +55,14 @@
     } else {
         return nil;
     }
+}
+
++ (BOOL)isHasCacheForChannel:(NSString *)channel
+{
+    if ([channel isKindOfClass:[NSString class]]) {
+      return  [IESGeckoCacheManager hasCacheForPath:nil accessKey:kFHIESGeckoKey channel:channel];
+    }
+    return NO;
 }
 
 @end
