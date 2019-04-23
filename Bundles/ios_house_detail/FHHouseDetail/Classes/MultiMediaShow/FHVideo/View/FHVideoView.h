@@ -16,6 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)play;
 
+- (void)pause;
+//刷新迷你播放进度条
+- (void)refreshMiniSlider;
+
 @end
 
 NS_ASSUME_NONNULL_END

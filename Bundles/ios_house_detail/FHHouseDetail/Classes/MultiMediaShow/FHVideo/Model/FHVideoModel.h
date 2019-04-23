@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL repeated;
 @property(nonatomic, assign) BOOL scalingMode;
 @property(nonatomic, assign) AWEVideoScaleMode mode;
+@property(nonatomic, assign) BOOL isShowMiniSlider;
 
 
 @end

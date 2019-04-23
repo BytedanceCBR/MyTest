@@ -9,12 +9,13 @@
 #import "AWEVideoPlayerController.h"
 #import "FHVideoView.h"
 #import <Masonry.h>
+#import "FHVideoViewModel.h"
 
 @interface FHVideoViewController ()
 
 @property(nonatomic, strong) AWEVideoPlayerController *playerController;
 @property(nonatomic, strong) FHVideoView *videoView;
-@property(nonatomic, strong) FHVideoModel *model;
+@property(nonatomic, strong) FHVideoViewModel *viewModel;
 
 @end
 
@@ -25,6 +26,12 @@
     // Do any additional setup after loading the view.
     [self initViews];
     [self initConstaints];
+    [self initViewModel];
+    
+}
+
+- (void)dealloc {
+    [self.viewModel invalidatePlaybackTimer];
 }
 
 - (void)initViews {
@@ -38,13 +45,22 @@
     }];
 }
 
+- (void)initViewModel {
+    self.viewModel = [[FHVideoViewModel alloc] initWithView:self.videoView controller:self];
+}
+
 - (void)updateData:(FHVideoModel *)model {
     self.model = model;
     [self.videoView updateData:model];
 }
 
 - (void)play {
+    [self.viewModel startPlayBackTimer];
     [self.videoView play];
+}
+
+- (void)pause {
+    [self.videoView pause];
 }
 
 @end
