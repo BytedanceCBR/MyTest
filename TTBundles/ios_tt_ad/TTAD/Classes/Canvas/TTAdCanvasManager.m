@@ -35,7 +35,7 @@
 #import <TTServiceKit/TTServiceCenter.h>
 #import <TTTracker/TTTrackerProxy.h>
 #import "ExploreOrderedData+TTAd.h"
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTStringHelper.h>
 

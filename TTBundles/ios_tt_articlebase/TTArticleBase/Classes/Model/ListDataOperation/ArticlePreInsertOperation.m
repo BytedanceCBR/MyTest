@@ -21,7 +21,7 @@
 #import "NSObject+TTAdditions.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTMonitor/TTMonitor.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTNetworkManager/TTNetworkManager.h>

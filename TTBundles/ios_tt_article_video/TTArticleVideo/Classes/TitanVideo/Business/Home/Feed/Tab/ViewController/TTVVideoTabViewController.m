@@ -47,8 +47,8 @@
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <Masonry/Masonry.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/CommonURLSetting.h>
-#import <TTAppRuntime/SSCommonLogic.H>
+#import <TTArticleBase/CommonURLSetting.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 

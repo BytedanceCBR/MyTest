@@ -10,7 +10,7 @@
 #import "SSWebViewUtil.h"
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTBaseLib/TTStringHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @implementation TTAdSiteWebPreloadManager
 

@@ -14,7 +14,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "ExploreOrderedData.h"
 #import "ExploreOrderedData_Enums.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTBaseMacro.h>
 
 extern NSInteger ttvs_autoPlayModeServerSetting(void);

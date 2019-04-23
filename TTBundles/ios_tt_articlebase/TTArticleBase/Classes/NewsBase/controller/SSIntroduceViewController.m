@@ -13,7 +13,7 @@
 #import "NewsBaseDelegate.h"
 #import "TTDeviceHelper.h"
 #import "TTProjectLogicManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 @import ObjectiveC;
 
 @interface SSIntroduceViewController ()

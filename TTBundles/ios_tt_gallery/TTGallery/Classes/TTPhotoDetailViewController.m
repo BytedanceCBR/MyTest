@@ -49,7 +49,7 @@
 #import "AKHelper.h"
 #import "AKAwardCoinArticleMonitorManager.h"
 #import <TTArticleBase/Log.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <Masonry/Masonry.h>
 #import <TTBaseLib/UIViewAdditions.h>
 

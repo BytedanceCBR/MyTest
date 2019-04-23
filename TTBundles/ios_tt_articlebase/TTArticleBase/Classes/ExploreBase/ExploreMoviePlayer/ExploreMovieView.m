@@ -57,7 +57,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTAPPIdleTime.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>

@@ -28,7 +28,7 @@
 #import "TTServerDateCalibrator.h"
 #import "TTArticleCategoryManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 @interface SSHTTPProcesser ()
 @property (nonatomic, strong) NSMutableArray *handledCommandIds;

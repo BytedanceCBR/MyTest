@@ -30,7 +30,7 @@
 #import "TTTabBarProvider.h"
 #import "TTLocationTransform.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import "CommonURLSetting.h"
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>

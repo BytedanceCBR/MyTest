@@ -13,7 +13,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTEntry/ExploreEntryManager.h>
 //#import "TTRedPacketManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @implementation TTArticleDetailView(JSBridge)
 #pragma mark 订阅的JSBridge

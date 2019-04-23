@@ -21,7 +21,7 @@
 #import "ExploreEntryManager.h"
 #import <JSONModel/JSONModel.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 #define kLastSuggesttedUserTimestampKey     @"kLastSuggesttedUserTimestampKey"          //suggestUser API返回的last_timestamp时间
 

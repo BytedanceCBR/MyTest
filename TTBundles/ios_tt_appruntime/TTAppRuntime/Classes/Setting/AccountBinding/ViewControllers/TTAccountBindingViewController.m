@@ -29,7 +29,7 @@
 #import "TTArticleCategoryManager.h"
 #import <TTCategoryDefine.h>
 #import <TTAccountSDK/TTAccountAuthWeChat.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 typedef NS_ENUM(NSUInteger, TTSectionType) {
     kTTSectionTypeNone,

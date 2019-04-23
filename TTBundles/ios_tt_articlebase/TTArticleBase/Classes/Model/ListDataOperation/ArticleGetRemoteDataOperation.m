@@ -37,7 +37,7 @@
 //#import "TTRNBundleManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "ExploreFetchListManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
 
 @interface ArticleGetRemoteDataOperation ()

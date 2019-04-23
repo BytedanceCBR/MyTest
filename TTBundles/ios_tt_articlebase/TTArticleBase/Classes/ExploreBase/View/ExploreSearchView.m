@@ -39,7 +39,7 @@
 #import "TTTopBar.h"
 #import "TTTopBarManager.h"
 #import "ExploreSearchViewController.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import <Crashlytics/Answers.h>

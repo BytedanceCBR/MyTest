@@ -24,7 +24,7 @@
 #import "TTSettingsManager.h"
 #import "TTASettingConfiguration.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 #define kBottomPaddingViewH [TTDeviceUIUtils tt_newPadding:0]
 

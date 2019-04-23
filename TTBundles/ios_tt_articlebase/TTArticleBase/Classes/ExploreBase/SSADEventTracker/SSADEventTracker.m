@@ -22,7 +22,7 @@
 #import "TTVFeedListItem.h"
 #import "TTADEventTrackerEntity.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
 @interface SSADEventTracker()

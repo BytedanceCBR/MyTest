@@ -16,8 +16,8 @@
 #import "TTAdShortVideoModel.h"
 #import "TTShortVideoModel+TTAdFactory.h"
 #import "TSVMonitorManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 

@@ -74,12 +74,12 @@
 #import "TTASettingConfiguration.h"
 #import "AKTaskSettingHelper.h"
 #import <BDABTestSDK/BDABTestManager.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTAccountSDK/TTAccount.h>
 #import <TTMonitor/TTMonitor.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
 
 #define SSFetchSettingsManagerFetchedDateKey @"SSFetchSettingsManagerFetchedDateKey"

@@ -7,7 +7,7 @@
 
 #import "TTADVideoMZTracker.h"
 #import "MZMonitor.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 @interface TTADVideoMZTracker ()

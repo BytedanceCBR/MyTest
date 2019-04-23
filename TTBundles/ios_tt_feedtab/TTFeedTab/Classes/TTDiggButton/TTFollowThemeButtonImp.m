@@ -15,7 +15,7 @@
 #import <TTKitchen/TTKitchenMgr.h>
 #import <TTKitchen/TTKitchenHeader.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 #define kFollowText NSLocalizedString(@"关注", nil)
 #define kHasFollowText NSLocalizedString(@"已关注", nil)

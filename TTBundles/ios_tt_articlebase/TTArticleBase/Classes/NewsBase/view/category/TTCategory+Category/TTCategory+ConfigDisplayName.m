@@ -7,7 +7,7 @@
 
 #import "TTVideoCategory.h"
 #import "TTCategory+ConfigDisplayName.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 @implementation TTCategory (ConfigDisplayName)

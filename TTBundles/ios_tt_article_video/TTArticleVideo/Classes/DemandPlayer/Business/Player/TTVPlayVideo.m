@@ -24,7 +24,7 @@
 #import "TTVMidInsertADPlayer.h"
 #import "TTVResolutionStore.h"
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTAccountSDK/TTAccount.h>
 

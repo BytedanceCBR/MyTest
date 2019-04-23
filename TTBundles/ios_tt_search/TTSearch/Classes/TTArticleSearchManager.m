@@ -12,7 +12,7 @@
 #import "TTSearchHomeSugModel.h"
 #import "ArticleURLSetting.h"
 #import "JSONAdditions.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTBaseMacro.h>
 
 NSString *const TTArticleSearchRecommendStateChangedNotification = @"TTArticleSearchRecommendStateChangedNotification";

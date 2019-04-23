@@ -32,7 +32,7 @@
 #import "TTSettingsManager.h"
 #import <Lottie/Lottie.h>
 #import "TTTabBarCustomMiddleModel.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
 NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";

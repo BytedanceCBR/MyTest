@@ -19,7 +19,7 @@
 
 #import "ArticleMobileLoginViewController.h"
 #import "ArticleListNotifyBarView.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 
 #define kContainerViewLeftPadding 20

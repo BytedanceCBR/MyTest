@@ -8,7 +8,7 @@
 
 #import "TTAmapGeocoder.h"
 #import "TTLocationTransform.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 @interface TTAmapGeocoder () <AMapSearchDelegate>

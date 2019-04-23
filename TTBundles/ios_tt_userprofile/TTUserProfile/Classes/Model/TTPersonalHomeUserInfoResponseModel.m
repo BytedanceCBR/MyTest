@@ -7,9 +7,9 @@
 //
 
 #import "TTPersonalHomeUserInfoResponseModel.h"
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTBaseMacro.h>
 
 @implementation TTPersonalHomeUserInfoRequestModel

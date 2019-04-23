@@ -34,7 +34,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTTrackerProxy.h"
 #import "TTADEventTrackerEntity.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 

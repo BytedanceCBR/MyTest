@@ -14,7 +14,7 @@
 #import "TTVDetailRelatedRecommendCellViewModel.h"
 #import "TTNetworkManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 
 
 extern CGFloat adBottomContainerViewHeight(void);

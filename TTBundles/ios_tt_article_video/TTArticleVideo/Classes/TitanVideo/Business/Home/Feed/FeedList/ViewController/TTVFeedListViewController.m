@@ -108,7 +108,7 @@
 #import "TTADEventTrackerEntity.h"
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import <Masonry/Masonry.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 extern BOOL ttvs_threeTopBarEnable(void);
 extern BOOL ttsettings_getAutoRefreshIntervalForCategoryID(NSString *categoryID);

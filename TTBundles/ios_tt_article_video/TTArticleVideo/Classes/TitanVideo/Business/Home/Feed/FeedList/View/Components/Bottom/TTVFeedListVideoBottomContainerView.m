@@ -43,7 +43,7 @@
 #import <TTTracker/TTTracker.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 #define kLeftPadding        20
 #define kRightPadding       20

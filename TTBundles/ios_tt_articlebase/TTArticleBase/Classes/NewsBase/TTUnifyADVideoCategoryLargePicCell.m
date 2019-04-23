@@ -18,7 +18,7 @@
 #import "TTLayOutCellDataHelper.h"
 #import "ExploreOrderedData+TTAd.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 #define kTopMaskH 80
 

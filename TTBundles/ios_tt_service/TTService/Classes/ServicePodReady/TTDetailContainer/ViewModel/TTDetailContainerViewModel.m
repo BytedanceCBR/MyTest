@@ -27,7 +27,7 @@
 #import "TTVSettingsConfiguration.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "TTFFantasyTracker.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTMonitor/TTMonitor.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 

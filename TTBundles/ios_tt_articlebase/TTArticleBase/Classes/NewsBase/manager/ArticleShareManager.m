@@ -29,7 +29,7 @@
 #import "Article+TTADComputedProperties.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTBaseLib/UIImageAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 
 extern NSInteger ttvs_isShareTimelineOptimize(void);

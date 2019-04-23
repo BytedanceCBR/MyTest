@@ -20,7 +20,7 @@
 #import "TTTrackerProxy.h"
 #import "TTADEventTrackerEntity.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 #define kLeftPadding        15
 #define kRightPadding       15

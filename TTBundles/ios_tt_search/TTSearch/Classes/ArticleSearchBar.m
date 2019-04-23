@@ -9,7 +9,7 @@
 #import "ArticleSearchBar.h"
 #import "TTDeviceHelper.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @implementation ArticleSearchBar
 

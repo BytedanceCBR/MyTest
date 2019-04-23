@@ -8,7 +8,7 @@
 #import "TTVideoFinishRelatedViewService.h"
 #import <TTNetworkManager/TTNetworkManager.h>
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <TTBaseLib/TTBaseMacro.h>
 
 #define kSchemaDouyin @"snssdk1128"

@@ -22,7 +22,7 @@
 #import "TTNetworkHelper.h"
 #import "TTURLTracker.h"
 #import <TTTracker/TTTrackerProxy.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 
 #define kRequsetTimes 5

@@ -15,7 +15,7 @@
 #import "TTAdThirdPreloader.h"
 #import "TTAdWebResPreloadManager.h"
 #import "TTNetworkManager.h"
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 

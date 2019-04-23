@@ -17,7 +17,7 @@
 #import "LastRead.h"
 #import "TTLayOutCellBaseModel.h"
 #import <TTBaseLib/NSObject+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @interface TTFeedFetchLocalOperation ()
 

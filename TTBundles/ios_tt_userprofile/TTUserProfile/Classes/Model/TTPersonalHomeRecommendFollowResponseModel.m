@@ -7,7 +7,7 @@
 //
 
 #import "TTPersonalHomeRecommendFollowResponseModel.h"
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <TTBaseLib/TTBaseMacro.h>
 
 @implementation TTPersonalHomeRecommendFollowRequestModel

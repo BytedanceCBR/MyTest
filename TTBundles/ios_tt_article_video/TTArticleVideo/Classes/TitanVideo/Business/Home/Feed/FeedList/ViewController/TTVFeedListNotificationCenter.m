@@ -21,7 +21,7 @@
 #import "PBModelHeader.h"
 #import "TTVFeedWebCellContentView.h"
 #import "TTUserSettingsManager+FontSettings.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
 extern NSString *const TTMovieDidExitFullscreenNotification;

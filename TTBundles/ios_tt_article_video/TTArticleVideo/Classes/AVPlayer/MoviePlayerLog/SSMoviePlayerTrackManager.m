@@ -8,7 +8,7 @@
 
 #import "SSMoviePlayerTrackManager.h"
 #import "SSMoviePlayerLogConfig.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 #ifndef isEmptyString
 #define isEmptyString(str) (!str || ![str isKindOfClass:[NSString class]] || str.length == 0)

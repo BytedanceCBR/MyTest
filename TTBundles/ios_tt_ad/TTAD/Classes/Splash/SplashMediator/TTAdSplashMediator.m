@@ -38,7 +38,7 @@
 #import "TTAdSplashManager+request.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTMonitor/TTMonitor.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回最长忍耐时间 30 000ms

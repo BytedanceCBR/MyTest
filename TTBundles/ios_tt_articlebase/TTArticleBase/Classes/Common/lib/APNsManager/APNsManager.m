@@ -31,7 +31,7 @@
 #import "FHHouseBridgeManager.h"
 #import <FHLocManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 @interface APNsManager ()

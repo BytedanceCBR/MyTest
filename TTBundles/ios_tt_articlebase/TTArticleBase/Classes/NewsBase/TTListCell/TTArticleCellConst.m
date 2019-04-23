@@ -14,7 +14,7 @@
 #import "TTThemeConst.h"
 #import "NewsUserSettingManager.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/UIViewAdditions.h>
 
 // MARK: 间距

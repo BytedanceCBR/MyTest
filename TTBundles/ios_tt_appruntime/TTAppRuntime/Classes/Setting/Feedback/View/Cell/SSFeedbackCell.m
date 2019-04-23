@@ -18,7 +18,7 @@
 #import "UILabel+Tapping.h"
 #import "TTURLUtils.h"
 #import "TTRoute.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 

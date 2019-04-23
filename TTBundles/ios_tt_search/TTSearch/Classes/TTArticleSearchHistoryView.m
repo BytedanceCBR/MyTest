@@ -11,7 +11,7 @@
 #import "TTArticleSearchCell.h"
 #import "TTArticleSearchViewModel.h"
 #import "ArticleSearchBar.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 static NSString *const kTTArticleSearchInboxCellIdentifer   = @"TTArticleSearchInboxKeywordsCellIdentifer";
 static NSString *const kTTArticleSearchHeaderCellIdentifer          = @"TTArticleSearchHeaderCell";

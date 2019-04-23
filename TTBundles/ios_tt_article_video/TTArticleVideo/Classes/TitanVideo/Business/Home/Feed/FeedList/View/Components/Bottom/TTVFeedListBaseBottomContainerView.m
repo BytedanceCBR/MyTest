@@ -33,7 +33,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTStringHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 extern NSString * const TTActivityContentItemTypeCommodity;

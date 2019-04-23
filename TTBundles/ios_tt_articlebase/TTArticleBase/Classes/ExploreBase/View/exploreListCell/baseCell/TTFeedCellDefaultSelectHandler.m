@@ -68,7 +68,7 @@
 #import "TTAdFullScreenVideoManager.h"
 #import "TTTabBarProvider.h"
 
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 
 @implementation  TTFeedCellSelectContext

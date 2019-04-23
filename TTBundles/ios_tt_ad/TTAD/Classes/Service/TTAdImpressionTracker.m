@@ -9,7 +9,7 @@
 #import "TTAdImpressionTracker.h"
 #import "KVOController.h"
 #import "TTVAutoPlayManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 
 #define FLOAT_EQUAL(A, B) (fabs((A) - (B)) <= 0.001)

@@ -15,7 +15,7 @@
 #import "ExploreMixedListBaseView.h"
 #import "ExploreMixedListView.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 

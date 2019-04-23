@@ -36,7 +36,7 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 extern BOOL ttvs_isVideoFeedshowDirectShare(void);
 

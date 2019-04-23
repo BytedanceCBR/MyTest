@@ -20,7 +20,7 @@
 #import "TTAdManager.h"
 #import "TTTrackerProxy.h"
 #import "TTADEventTrackerEntity.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 
 @implementation TTVFeedCellAction

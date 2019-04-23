@@ -19,7 +19,7 @@
 //#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 @implementation ExploreMovieViewTracker {
     NSUInteger _watchDurationLogIndex;

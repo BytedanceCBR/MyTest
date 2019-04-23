@@ -26,7 +26,7 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 #define SSFetchSettingsManagerFetchedDefaultInfoKey @"SSFetchSettingsManagerFetchedDefaultInfoKey"
 

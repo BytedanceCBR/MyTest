@@ -10,7 +10,7 @@
 #import "TTCategoryDefine.h"
 #import "ArticleBadgeManager.h"
 #import "TTSettingMineTabManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 #pragma mark - TTCategoryBadgeNumberModel

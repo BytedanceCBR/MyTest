@@ -14,7 +14,7 @@
 #import <TTRoute/TTRoute.h>
 #import "TTHorizontalCardCell.h"
 #import <TTBaseLib/TTStringHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTMonitor/TTMonitor.h>
 
 #define kBottomInfoViewHeight       40

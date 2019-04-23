@@ -8,7 +8,7 @@
 
 #import "TTVideoTip.h"
 #import "ExploreItemActionManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 static NSString * const kVideoTipHasShownKey = @"kVideoTipHasShownKey";
 

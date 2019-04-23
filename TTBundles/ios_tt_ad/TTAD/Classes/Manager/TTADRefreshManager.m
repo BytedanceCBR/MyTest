@@ -21,8 +21,8 @@
 #import <TTAdModule/TTPhotoDetailAdModel.h>
 #import <TTAdModule/TTAdMonitorManager.h>
 #import "TTSettingsManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/SSCommonLogic.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <TTThemed/TTThemeManager.h>
 
 #define TTNewAdRefreshManageFileName @"TTNewAdRefreshManageFileName.plist"

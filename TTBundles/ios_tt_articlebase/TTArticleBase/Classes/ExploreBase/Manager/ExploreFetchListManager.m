@@ -39,7 +39,7 @@
 //#import "TTFollowCategoryFetchExtraManager.h"
 #import <TTMonitor/TTMonitor.h>
 #import "ExploreLogicSetting.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 @interface ExploreFetchListManager()<SSDataOperationDelegate>

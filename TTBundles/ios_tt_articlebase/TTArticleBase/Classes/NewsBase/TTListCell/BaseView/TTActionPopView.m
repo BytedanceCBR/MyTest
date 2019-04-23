@@ -12,7 +12,7 @@
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 // MARK: - Consts
 inline CGFloat kCornerRadius() {

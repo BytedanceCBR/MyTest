@@ -12,7 +12,7 @@
 #import "TTTrackerWrapper.h"
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 @interface NewsListTipsReminderView()
 

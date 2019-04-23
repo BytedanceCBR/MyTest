@@ -19,7 +19,7 @@
 #import "TTRelevantDurationTracker.h"
 //#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <Crashlytics/Answers.h>
 
 @interface ExploreDetailManager()

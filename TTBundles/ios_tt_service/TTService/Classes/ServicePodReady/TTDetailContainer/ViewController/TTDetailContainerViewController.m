@@ -25,7 +25,7 @@
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
 #import <TTInteractExitHelper.h>
 #import <KVOController/KVOController.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTMonitor/TTMonitor.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>

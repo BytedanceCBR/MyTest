@@ -8,7 +8,7 @@
 
 #import "ArticleSearchBaseCell.h"
 #import "TTDeviceHelper.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @implementation ArticleSearchBaseCell
 

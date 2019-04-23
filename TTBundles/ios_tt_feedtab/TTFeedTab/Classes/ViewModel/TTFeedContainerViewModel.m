@@ -15,8 +15,8 @@
 #import "ExploreOrderedData+TTBusiness.h"
 #import "UIView+Refresh_ErrorHandler.h"
 #import <SDWebImage/SDWebImageCompat.h>
-#import <TTAppRuntime/SSCommonLogic.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @interface TTFeedContainerViewModel ()
 

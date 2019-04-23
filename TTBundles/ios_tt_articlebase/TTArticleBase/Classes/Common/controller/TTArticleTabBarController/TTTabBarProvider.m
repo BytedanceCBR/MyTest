@@ -35,7 +35,7 @@
 #import "FHMineViewController.h"
 #import <FHHouseFind/FHHouseFindViewController.h>
 #import <BDABTestSDK/BDABTestManager.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";

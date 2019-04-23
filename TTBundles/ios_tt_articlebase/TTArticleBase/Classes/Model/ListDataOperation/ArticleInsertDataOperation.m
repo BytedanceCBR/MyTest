@@ -17,7 +17,7 @@
 #import "Card+CoreDataClass.h"
 #import "NSObject+TTAdditions.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTNetworkManager/TTNetworkManager.h>
 
 @implementation ArticleInsertDataOperation

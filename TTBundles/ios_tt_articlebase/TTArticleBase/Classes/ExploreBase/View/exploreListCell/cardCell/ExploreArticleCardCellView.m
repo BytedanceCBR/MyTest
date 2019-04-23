@@ -37,7 +37,7 @@
 #import "ExploreOrderedData+TTAd.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 #define kHeaderViewHeight 40
 #define kFooterViewHeight ([TTDeviceHelper isScreenWidthLarge320] ? 40 : 36)

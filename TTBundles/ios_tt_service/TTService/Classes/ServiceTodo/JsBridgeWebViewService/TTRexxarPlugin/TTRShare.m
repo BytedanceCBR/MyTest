@@ -23,7 +23,7 @@
 #import <TTImage/TTImageDownloader.h>
 
 #import "AKShareManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTThemed/TTThemeManager.h>
 

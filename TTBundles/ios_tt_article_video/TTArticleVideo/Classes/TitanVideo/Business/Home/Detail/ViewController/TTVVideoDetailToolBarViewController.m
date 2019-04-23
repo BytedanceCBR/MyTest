@@ -79,7 +79,7 @@
 #import "AKHelper.h"
 
 #import <ReactiveObjC/ReactiveObjC.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 
 extern BOOL ttvs_isShareIndividuatioEnable(void);

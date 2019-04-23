@@ -11,7 +11,7 @@
 #import "TTVDetailRelatedRecommendCellViewModel.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 
 @implementation TTVVideoDetailNatantPGCViewModel
 

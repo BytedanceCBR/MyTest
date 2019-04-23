@@ -8,7 +8,7 @@
 
 #import "TTAdFeedModel.h"
 #import "TTRoute.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 

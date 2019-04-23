@@ -18,7 +18,7 @@
 #import "UIView+Refresh_ErrorHandler.h"
 
 #import "NewsListLogicManager.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 
 @interface ArticleWebListView()<YSWebViewDelegate>

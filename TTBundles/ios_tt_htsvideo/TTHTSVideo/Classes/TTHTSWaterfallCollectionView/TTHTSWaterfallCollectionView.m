@@ -78,7 +78,7 @@
 #import "TTCategoryStayTrackManager.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTStringHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 

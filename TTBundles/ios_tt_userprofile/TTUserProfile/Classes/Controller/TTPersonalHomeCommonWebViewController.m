@@ -14,8 +14,8 @@
 #import "TTFollowThemeButton.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTMomentProfileShareHelper.h"
-#import <TTAppRuntime/CommonURLSetting.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/CommonURLSetting.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 typedef enum {
     TTPersonalHomeActionSheetStateNone,

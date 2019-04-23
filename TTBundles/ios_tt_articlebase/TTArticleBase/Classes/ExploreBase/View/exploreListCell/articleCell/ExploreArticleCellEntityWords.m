@@ -16,7 +16,7 @@
 #import "TTDeviceHelper.h"
 #import "TTStringHelper.h"
 #import "TTFollowNotifyServer.h"
-#import <TTAppRuntime/CommonURLSetting.h>
+#import "CommonURLSetting.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 

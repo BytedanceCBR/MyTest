@@ -15,7 +15,7 @@
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 //最左侧是头像，根据是否是自己，区分为以下两种情况：
 //1、自己 从右往左 编辑资料、申请加V（服务端返回，不一定显示）

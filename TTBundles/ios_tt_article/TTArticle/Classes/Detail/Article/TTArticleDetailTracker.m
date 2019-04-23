@@ -23,7 +23,7 @@
 #import "FHEnvContext.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTMonitor/TTMonitor.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 
 @interface TTArticleDetailTracker ()

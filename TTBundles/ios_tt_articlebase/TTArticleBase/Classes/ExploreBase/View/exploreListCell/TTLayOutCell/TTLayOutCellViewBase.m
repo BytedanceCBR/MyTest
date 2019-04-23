@@ -52,7 +52,7 @@
 #import "ExploreLogicSetting.h"
 #import "JSONAdditions.h"
 #import <TTBaseLib/TTStringHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 
 extern BOOL ttvs_isVideoFeedURLEnabled(void);

@@ -12,7 +12,7 @@
 #import "NetworkUtilities.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTDeviceHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTAccountSDK/TTAccount.h>
 
 static NSNumber *isBusinessRefactor = nil;

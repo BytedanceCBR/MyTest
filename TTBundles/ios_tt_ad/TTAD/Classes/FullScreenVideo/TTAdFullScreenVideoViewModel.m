@@ -38,7 +38,7 @@
 #import <TTBaseLib/TTURLUtils.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import "TTAdFullScreenVideoBottomActionView.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 

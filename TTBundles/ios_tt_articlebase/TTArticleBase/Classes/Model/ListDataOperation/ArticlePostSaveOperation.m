@@ -21,7 +21,7 @@
 #import "NSObject+TTAdditions.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "ArticleExportPrefixBase.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 @implementation ArticlePostSaveOperation
 - (Class)orderedDataClass

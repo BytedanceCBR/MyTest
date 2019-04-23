@@ -34,7 +34,7 @@
 #import "TTFeedCollectionWebListCell.h"
 #import <FHUtils.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <Masonry/Masonry.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTTracker/TTTracker.h>

@@ -22,7 +22,7 @@
 #import "TTVADEventTracker.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
 extern UIColor *tt_ttuisettingHelper_cellViewHighlightedBackgroundColor(void);

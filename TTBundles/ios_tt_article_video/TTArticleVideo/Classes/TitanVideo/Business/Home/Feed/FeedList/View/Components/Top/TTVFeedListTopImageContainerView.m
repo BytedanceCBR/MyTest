@@ -33,7 +33,7 @@
 #import <TTBaseLib/UIImageAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 extern CGFloat ttvs_listVideoMaxHeight(void);
 extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);

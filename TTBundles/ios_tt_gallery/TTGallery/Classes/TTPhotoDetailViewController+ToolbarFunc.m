@@ -55,7 +55,7 @@
 #import "TTShareMethodUtil.h"
 #import "ArticleMomentProfileViewController.h"
 #import "ExploreMomentDefine.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <Crashlytics/Answers.h>
 #import <TTTracker/TTTracker.h>

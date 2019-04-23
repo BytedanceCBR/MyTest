@@ -23,7 +23,7 @@
 #import <TTInteractExitHelper.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <Crashlytics/Answers.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>

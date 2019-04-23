@@ -14,7 +14,7 @@
 #import "TTCategoryStayTrackManager.h"
 #import "TTTopBar.h"
 #import <Masonry/Masonry.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTBaseLib/UIViewAdditions.h>
 

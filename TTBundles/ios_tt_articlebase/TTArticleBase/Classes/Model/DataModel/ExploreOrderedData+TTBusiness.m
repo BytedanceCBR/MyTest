@@ -73,7 +73,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import <TTMonitor/TTMonitor.h>
 #import <BDTSharedHeaders/SSCommonDefines.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 #define kPlayerOverTrackUrlList @"playover_track_url_list"
 #define kPlayerEffectiveTrackUrlList @"effective_play_track_url_list"

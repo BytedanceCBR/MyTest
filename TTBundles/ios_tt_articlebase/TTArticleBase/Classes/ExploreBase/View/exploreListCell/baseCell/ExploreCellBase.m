@@ -44,7 +44,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <Masonry/Masonry.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 

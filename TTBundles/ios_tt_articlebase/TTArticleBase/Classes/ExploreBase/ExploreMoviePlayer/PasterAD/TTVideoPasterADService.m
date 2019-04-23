@@ -10,7 +10,7 @@
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTVideoPasterADModel.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import "CommonURLSetting.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 @interface TTVideoPasterADService()

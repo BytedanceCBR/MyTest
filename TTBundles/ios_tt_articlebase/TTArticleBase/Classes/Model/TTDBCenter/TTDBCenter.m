@@ -19,7 +19,7 @@
 #import <TTAccountSDK.h>
 #import "TTStartupTasksTracker.h"
 #import <TTFriendRelationEntity.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <Crashlytics/Answers.h>
 

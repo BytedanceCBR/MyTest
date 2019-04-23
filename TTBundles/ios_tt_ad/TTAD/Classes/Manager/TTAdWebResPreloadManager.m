@@ -25,7 +25,7 @@
 #import "ExploreOrderedData+TTAd.h"
 #import "TTMonitor.h"
 #import <TTBaseLib/TTBaseMacro.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 
 
 #define kTTAdWebResPreloadModelsPath @"adWebResPreload.plist"

@@ -32,7 +32,7 @@
 #import <TTNetworkManager/TTNetworkManager.h>
 #import <TTABManager/TTABManagerUtil.h>
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 @interface TTArticleDetailViewModel ()

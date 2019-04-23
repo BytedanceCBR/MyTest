@@ -16,7 +16,7 @@
 #import "TTAdResourceDownloader.h"
 #import "TTNetworkManager.h"
 #import "ExploreOrderedData+TTAd.h"
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 static NSString * const canvasPreloadErrorDomain = @"canvas.preload";

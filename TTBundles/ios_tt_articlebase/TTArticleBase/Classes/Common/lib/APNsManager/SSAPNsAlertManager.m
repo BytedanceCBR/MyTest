@@ -23,7 +23,7 @@
 #import "TTAccountManager.h"
 #import "FHHouseBridgeManager.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 

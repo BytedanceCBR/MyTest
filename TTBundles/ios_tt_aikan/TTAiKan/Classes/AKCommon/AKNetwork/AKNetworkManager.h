@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <TTNetworkManager.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 
 typedef void (^AKNetworkJSONResponseFinishBlock)(NSInteger err_no, NSString *err_tips, NSDictionary *dataDict);
 

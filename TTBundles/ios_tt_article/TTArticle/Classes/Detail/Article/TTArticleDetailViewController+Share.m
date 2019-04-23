@@ -41,7 +41,7 @@
 #import "FHTraceEventUtils.h"
 #import <Crashlytics/Answers.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTArticleBase/Log.h>

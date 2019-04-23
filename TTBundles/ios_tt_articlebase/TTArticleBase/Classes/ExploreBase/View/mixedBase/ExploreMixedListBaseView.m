@@ -169,7 +169,7 @@
 #import <FHEnvContext.h>
 #import <FHLocManager.h>
 #import <FHHomeCellHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5

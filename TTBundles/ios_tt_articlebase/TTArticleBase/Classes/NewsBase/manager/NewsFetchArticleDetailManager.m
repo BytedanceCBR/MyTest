@@ -18,7 +18,7 @@
 #import "TTVideoArticleService.h"
 #import "TTVVideoArticle+Extension.h"
 #import <BDTSharedHeaders/SSCommonDefines.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
 

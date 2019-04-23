@@ -16,7 +16,7 @@
 #import "TTVCellPlayMovie.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 @implementation TTVFeedListLiveItem
 

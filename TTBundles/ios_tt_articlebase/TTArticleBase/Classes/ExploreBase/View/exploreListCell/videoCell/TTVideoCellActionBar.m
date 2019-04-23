@@ -30,7 +30,7 @@
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTThemed/TTThemeManager.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 #define kLeftPadding        15
 #define kRightPadding       15

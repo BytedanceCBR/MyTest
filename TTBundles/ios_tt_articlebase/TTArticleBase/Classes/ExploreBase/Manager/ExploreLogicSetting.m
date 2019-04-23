@@ -24,7 +24,7 @@
 #import <BDTBasePlayer/TTVOwnPlayerCacheWrapper.h>
 #import <TTMonitor/TTMonitor.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 //#define kClearCacheTimeInterval     (7 * 24 * 60 * 60) // 7 days
 // CoreData 自动清除时间设置为7day

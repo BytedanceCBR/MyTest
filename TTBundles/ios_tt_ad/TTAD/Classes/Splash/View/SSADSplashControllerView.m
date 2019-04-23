@@ -11,7 +11,7 @@
 #import "SSADManager.h"
 #import "SSADModel.h"
 #import <QuartzCore/QuartzCore.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/UIViewAdditions.h>
 

@@ -10,7 +10,7 @@
 #import "TTNetworkManager.h"
 #import "TTVPlayVideo.h"
 #import "UIView+supportFullScreen.h"
-#import <TTAppRuntime/CommonURLSetting.h>
+#import <TTArticleBase/CommonURLSetting.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>

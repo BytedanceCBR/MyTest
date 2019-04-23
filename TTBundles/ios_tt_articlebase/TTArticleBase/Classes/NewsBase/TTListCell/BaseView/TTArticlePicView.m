@@ -22,7 +22,7 @@
 #import "Article+TTADComputedProperties.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "TTAnimatedImageView.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/UIImage+TTThemeExtension.h>
 

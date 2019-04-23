@@ -95,7 +95,7 @@
 #import <FHEnvContext.h>
 #import <BDABTestSDK/BDABTestManager.h>
 #import <HMDTTMonitor.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import "ExploreLogicSetting.h"
 #import "Log.h"
 

@@ -148,7 +148,7 @@
 #import "FHFeedHouseItemCell.h"
 #import "FHExploreHouseItemData.h"
 #import <TTMonitor/TTMonitor.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>

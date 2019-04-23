@@ -45,7 +45,7 @@
 #import "TTPushAlertManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTTabBarProvider.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 #import <Masonry/Masonry.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTBaseLib/UIViewAdditions.h>

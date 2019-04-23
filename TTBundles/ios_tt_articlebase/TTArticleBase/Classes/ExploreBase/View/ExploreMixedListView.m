@@ -15,7 +15,7 @@
 //#import "ExploreMixedListBaseView+UploadingCell.h"
 #import "TTArticleCategoryManager.h"
 #import "UIView+Refresh_ErrorHandler.h"
-#import <TTAppRuntime/SSCommonLogic.h>
+#import "SSCommonLogic.h"
 
 /**
  *  用于umeng发送逻辑， 记录是否进入过推荐列表

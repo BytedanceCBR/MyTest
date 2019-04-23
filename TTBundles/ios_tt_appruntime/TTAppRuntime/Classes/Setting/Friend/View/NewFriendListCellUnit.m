@@ -22,7 +22,7 @@
 #import "TTFollowThemeButton.h"
 #import <TTThemed/TTThemeManager.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import <TTAppRuntime/SSCommonLogic.h>
+#import <TTArticleBase/SSCommonLogic.h>
 
 #define kRelationButtonHeight         28
 #define kRelationButtonRightPadding   10

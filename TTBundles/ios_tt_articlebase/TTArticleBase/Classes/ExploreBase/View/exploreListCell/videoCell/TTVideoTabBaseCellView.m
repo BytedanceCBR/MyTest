@@ -90,7 +90,7 @@
 #import "TTVideoCellActionBar.h"
 #import "TTVVideoDetailViewController.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
-#import <TTAppRuntime/CommonURLSetting.h>
+#import "CommonURLSetting.h"
 
 #define kVideoTitleX 15
 #define kVideoTitleY 12
