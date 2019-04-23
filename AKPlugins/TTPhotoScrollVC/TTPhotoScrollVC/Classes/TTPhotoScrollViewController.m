@@ -20,6 +20,8 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFloorPanPicShowViewController.h"
+#import <Photos/Photos.h>
+#import "HTSDeviceManager.h"
 
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
@@ -1119,7 +1121,19 @@ static BOOL staticPhotoBrowserAtTop = NO;
     }]];
     
     [alertController addAction:[UIAlertAction actionWithTitle:@"保存图片到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [weakSelf saveButtonClicked:weakSelf.saveButton];
+        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+        if (PHAuthorizationStatusAuthorized == status) {
+            [weakSelf saveButtonClicked:weakSelf.saveButton];
+        } else {
+            // 请求权限
+            [HTSDeviceManager requestPhotoLibraryPermission:^(BOOL success) {
+                if (success) {
+                    [weakSelf saveButtonClicked:weakSelf.saveButton];
+                } else {
+                    [HTSDeviceManager presentPhotoLibraryDeniedAlert];
+                }
+            }];
+        }
     }]];
     
     [self presentViewController:alertController animated:YES completion:nil];

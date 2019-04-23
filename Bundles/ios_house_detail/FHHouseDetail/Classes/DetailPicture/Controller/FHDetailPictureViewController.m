@@ -22,6 +22,8 @@
 #import "FHDetailPictureNavView.h"
 #import "FHDetailPictureTitleView.h"
 #import "TTNavigationController.h"
+#import <Photos/Photos.h>
+#import "HTSDeviceManager.h"
 
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 54.f
@@ -946,7 +948,19 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         }]];
         
         [alertController addAction:[UIAlertAction actionWithTitle:@"保存图片到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf saveButtonClicked:nil];
+            PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+            if (PHAuthorizationStatusAuthorized == status) {
+                [weakSelf saveButtonClicked:nil];
+            } else {
+                // 请求权限
+                [HTSDeviceManager requestPhotoLibraryPermission:^(BOOL success) {
+                    if (success) {
+                        [weakSelf saveButtonClicked:nil];
+                    } else {
+                        [HTSDeviceManager presentPhotoLibraryDeniedAlert];
+                    }
+                }];
+            }
         }]];
         
         [self.topVC presentViewController:alertController animated:YES completion:nil];
