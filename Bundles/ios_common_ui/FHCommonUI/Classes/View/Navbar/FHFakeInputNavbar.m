@@ -163,11 +163,15 @@
 
 -(void)setPlaceHolder:(NSString *)placeHolder
 {
-    NSDictionary *attrDict = @{NSFontAttributeName:[UIFont themeFontRegular:12],
-                               NSForegroundColorAttributeName:[UIColor themeGray3]
-                               };
-    NSAttributedString *attrPlaceHolder = [[NSAttributedString alloc] initWithString:placeHolder attributes:attrDict];
-    _inputTextField.attributedPlaceholder = attrPlaceHolder;
+    if (placeHolder.length > 0) {
+        NSDictionary *attrDict = @{NSFontAttributeName:[UIFont themeFontRegular:12],
+                                   NSForegroundColorAttributeName:[UIColor themeGray3]
+                                   };
+        NSAttributedString *attrPlaceHolder = [[NSAttributedString alloc] initWithString:placeHolder attributes:attrDict];
+        _inputTextField.attributedPlaceholder = attrPlaceHolder;
+    }else{
+        _inputTextField.attributedPlaceholder = nil;
+    }
 }
 
 -(NSString *)placeHolder
