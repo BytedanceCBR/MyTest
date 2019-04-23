@@ -53,10 +53,6 @@
 		3D741F2F2255FF5D00E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
 		3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
 		3D741F312255FF8600E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
-		3D97BE76226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D97BE74226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a */; };
-		3D97BE77226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D97BE74226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a */; };
-		3D97BE78226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D97BE74226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a */; };
-		3D97BE79226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D97BE74226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a */; };
 		3D97BE7D226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE7E226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE7F226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
@@ -208,7 +204,7 @@
 		C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		D01379621DFE8F4A0020C6BD /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D013795E1DFE8BEF0020C6BD /* libresolv.tbd */; };
 		D08BFBDB1B8729AA00E6D9A1 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		D08BFBE01B8729B800E6D9A1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */; };
@@ -540,8 +536,6 @@
 		3D325486226D66630002F0AD /* ios_asset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ios_asset; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		3D97BE74226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a"; sourceTree = "<group>"; };
-		3D97BE75226D6CCA0063C39A /* MZMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MZMonitor.h; sourceTree = "<group>"; };
 		3D97BE7B226D753E0063C39A /* TTNotificationServiceExtensionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNotificationServiceExtensionBase.h; sourceTree = "<group>"; };
 		3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNotificationServiceExtensionBase.m; sourceTree = "<group>"; };
 		3D97BE83226D92A30063C39A /* News.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = News.entitlements; path = News/News.entitlements; sourceTree = SOURCE_ROOT; };
@@ -698,9 +692,8 @@
 				3AA5028915876A1F00EB27FA /* CoreGraphics.framework in Frameworks */,
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
-				3D97BE76226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -758,7 +751,6 @@
 				B373CF012174587A008F9905 /* libz.1.dylib in Frameworks */,
 				B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */,
 				68EA090901E3DB3F74D84CFA /* libPods-f100.a in Frameworks */,
-				3D97BE78226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */,
 				C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -802,7 +794,6 @@
 				D479580621ECC94E00548965 /* libz.1.dylib in Frameworks */,
 				D479580721ECC94E00548965 /* AssetsLibrary.framework in Frameworks */,
 				6F6DFCAD76A181C548065CBB /* libPods-NewsLiteChannel.a in Frameworks */,
-				3D97BE79226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,7 +833,6 @@
 				FEFA5A4D205FB1A8001F50D8 /* Foundation.framework in Frameworks */,
 				FEFA5A4E205FB1A8001F50D8 /* CoreGraphics.framework in Frameworks */,
 				FEFA5A50205FB1A8001F50D8 /* libz.1.dylib in Frameworks */,
-				3D97BE77226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a in Frameworks */,
 				FEFA5A51205FB1A8001F50D8 /* AssetsLibrary.framework in Frameworks */,
 				3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */,
 			);
@@ -854,7 +844,6 @@
 		3AA5027515876A1F00EB27FA = {
 			isa = PBXGroup;
 			children = (
-				3D97BE72226D6CCA0063C39A /* Libs */,
 				3D97BE7A226D753E0063C39A /* NotificationServiceExtensionBase */,
 				3D2D487D21A28E590011A0EC /* House */,
 				B388C9D82142652800653188 /* Bubble */,
@@ -996,23 +985,6 @@
 				3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */,
 			);
 			path = Bridge;
-			sourceTree = "<group>";
-		};
-		3D97BE72226D6CCA0063C39A /* Libs */ = {
-			isa = PBXGroup;
-			children = (
-				3D97BE73226D6CCA0063C39A /* MZSDk */,
-			);
-			path = Libs;
-			sourceTree = "<group>";
-		};
-		3D97BE73226D6CCA0063C39A /* MZSDk */ = {
-			isa = PBXGroup;
-			children = (
-				3D97BE74226D6CCA0063C39A /* Miaozhen_MobileMonitor_iOS_SDK-Toutiao-4.0.2.a */,
-				3D97BE75226D6CCA0063C39A /* MZMonitor.h */,
-			);
-			path = MZSDk;
 			sourceTree = "<group>";
 		};
 		3D97BE7A226D753E0063C39A /* NotificationServiceExtensionBase */ = {
