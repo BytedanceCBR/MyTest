@@ -212,6 +212,7 @@ static APNsManager *_sharedManager = nil;
 //                                                   @"group_id": paramObj.allParams[@"group_id"],
                                                    }};
                 TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                userInfo.animated = @(0);
                 [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
             }
         }
