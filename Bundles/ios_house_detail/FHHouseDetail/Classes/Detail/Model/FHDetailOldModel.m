@@ -218,6 +218,7 @@
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"listEntrance": @"list_entrance",
+                           @"imShareInfo": @"im_share_info",
                            @"neighborEval": @"neighbor_eval",
                            @"priceAnalyze": @"price_analyze",
                            @"neighborhoodPriceRange": @"neighborhood_price_range",
@@ -311,6 +312,26 @@
 }
 @end
 
+@implementation FHDetailImShareInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"coverImage": @"cover_image",
+                           @"shareUrl": @"share_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailOldDataHouseOverreviewListModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -328,6 +349,7 @@
         return dict[keyName]?:keyName;
     }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
