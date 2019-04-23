@@ -93,8 +93,9 @@
 //    [callParams setValue:@(2) forKey:@"action_type"];
 //
     [FHHousePhoneCallUtils callWithConfig:callParams];
-
-    [FHHouseFollowUpHelper followHouseWithConfig:callParams];
+    if (callParams[@"follow_id"]) {
+        [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
+    }
     if (callback) {
         callback(TTBridgeMsgSuccess, nil);
     }
