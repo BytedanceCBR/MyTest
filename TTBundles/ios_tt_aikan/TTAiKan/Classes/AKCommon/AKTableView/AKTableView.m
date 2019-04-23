@@ -8,12 +8,13 @@
 #import "AKTableView.h"
 #import <KVOController.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import <TTNetworkManager/TTNetworkDefine.h>
 
 @implementation AKTableView
 
 - (void)dealloc
 {
-//    LOGD(@"-----[AKTableView] instance deallocated-----");
+    LOGD(@"-----[AKTableView] instance deallocated-----");
 //    [self.KVOController removeObserver:_tableViewModel forKeyPath:@"datasourceArray"];
 }
 

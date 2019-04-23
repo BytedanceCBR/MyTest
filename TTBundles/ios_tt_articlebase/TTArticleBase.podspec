@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'TTArticleBase/Classes/**/*.{h,hpp,m,mm,c,cpp}'
   
-  s.resources = ["TTArticleBase/Assets/*.xcassets","TTArticleBase/Assets/*.bundle","TTArticleBase/Assets/AppAlert/*.png","TTArticleBase/Assets/SSQRCode/*.png"]
+  s.resources = ["TTArticleBase/Assets/*.xcassets","TTArticleBase/Assets/*.bundle","TTArticleBase/Assets/AppAlert/*.png","TTArticleBase/Assets/SSQRCode/*.png","TTArticleBase/Assets/NetworkStubFiles/*"]
 
   s.vendored_libraries = ["TTArticleBase/Classes/**/*.a"]
 
