@@ -73,7 +73,8 @@
      *  [14-12-30 下午2:35:17] 苏 琦: appName字段安卓和iOS的所有版本，都传NewsArticle吧，为了让外面的人用着方便。iOS请@晨龙 再另加一个字段给我们内部区分普通探索专业版
      *  [14-12-30 下午2:36:01] 张晨龙: innerAppName
      */
-    [data setValue:@"NewsArticle" forKey:@"appName"];
+    NSString *appName = [TTSandBoxHelper appName]?:@"f101";
+    [data setValue:appName forKey:@"appName"];
     [data setValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"AppName"] forKey:@"innerAppName"];
     [data setValue:[TTSandBoxHelper versionName] forKey:@"appVersion"];
     [data setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
@@ -88,6 +89,10 @@
         netType = @"MOBILE";
     }
     
+    //无网判断
+    NSString *netAvailable = TTNetworkConnected() ? @"1" : @"0";
+    [data setValue:netAvailable forKey:@"netAvailable"];
+    
     [data setValue:netType forKey:@"netType"];
     
     if([[TTJSBAuthManager sharedManager] engine:webview isAuthorizedMeta:@"device_id" domain:webview.ttr_url.host.lowercaseString]) {
@@ -95,7 +100,11 @@
     }
     
     if([[TTJSBAuthManager sharedManager] engine:webview isAuthorizedMeta:@"user_id" domain:webview.ttr_url.host.lowercaseString]) {
-        [data setValue:[TTAccountManager userID] forKey:@"user_id"];
+        
+        NSString *uid = [[TTAccount sharedAccount] userIdString];
+        if (uid) {
+            [data setValue:uid forKey:@"user_id"];
+        }
     }
     
     NSString *idfaString = [TTDeviceHelper idfaString];

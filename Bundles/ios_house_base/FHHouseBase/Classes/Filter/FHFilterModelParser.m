@@ -53,6 +53,14 @@
     return filters;
 }
 
+// 交易历史
++(NSArray<FHFilterNodeModel*>*)getSaleHistoryConfig {
+    FHConfigDataModel* model = [[FHEnvContext sharedInstance] getConfigFromCache];
+    NSArray<FHSearchFilterConfigItem*>* config = model.saleHistoryFilter;
+    NSArray<FHFilterNodeModel*>* filters = [self convertConfigItemsToModel:config];
+    return filters;
+}
+
 +(NSArray<FHFilterNodeModel*>*)convertConfigItemsToModel:(NSArray<FHSearchFilterConfigItem*>*)items {
     NSMutableArray<FHFilterNodeModel*>* result = [[NSMutableArray alloc] initWithCapacity:[items count]];
     [items enumerateObjectsUsingBlock:^(FHSearchFilterConfigItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

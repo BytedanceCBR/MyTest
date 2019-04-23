@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHTransactionHistoryViewModel : NSObject
 
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property (nonatomic , copy) NSString *condition; // 过滤条件
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHTransactionHistoryController *)viewController neighborhoodId:(NSString *)neighborhoodId;
 
