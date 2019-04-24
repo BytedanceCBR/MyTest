@@ -440,7 +440,6 @@
 
 - (void)dealloc
 {
-    NSLog(@"FHRN VC dealloc");
 }
 
 
