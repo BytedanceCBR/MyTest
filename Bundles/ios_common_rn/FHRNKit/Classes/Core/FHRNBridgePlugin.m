@@ -26,6 +26,10 @@
 #import <UIViewController+NavigationBarStyle.h>
 #import "FHHousePhoneCallUtils.h"
 #import "FHHouseFollowUpHelper.h"
+#import <TTSandBoxHelper.h>
+#import "NetworkUtilities.h"
+#import "TTInstallIDManager.h"
+#import "TTAccount.h"
 
 @interface FHRNBridgePlugin ()
 @property (nonatomic, strong) NSMutableArray<NSString *> *events;
@@ -38,6 +42,7 @@
 }
 
 + (void)load {
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, appInfo), @"app.appInfo");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, log_v3), @"app.log_v3");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, close), @"app.close");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, load_finish), @"app.load_finish");
@@ -49,6 +54,54 @@
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
+}
+
+- (void)appInfoWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+ 
+    NSString *appName = [TTSandBoxHelper appName]?:@"f101";
+    [data setValue:appName forKey:@"appName"];
+    [data setValue:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"AppName"] forKey:@"innerAppName"];
+    [data setValue:[TTSandBoxHelper versionName] forKey:@"appVersion"];
+    [data setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
+    NSString *netType = nil;
+    if(TTNetworkWifiConnected()) {
+        netType = @"WIFI";
+    } else if(TTNetwork4GConnected()) {
+        netType = @"4G";
+    } else if(TTNetwork4GConnected()) {
+        netType = @"3G";
+    } else if(TTNetworkConnected()) {
+        netType = @"MOBILE";
+    }
+    
+    //无网判断
+    NSString *netAvailable = TTNetworkConnected() ? @"1" : @"0";
+    [data setValue:netAvailable forKey:@"netAvailable"];
+    
+    [data setValue:netType forKey:@"netType"];
+    
+    NSString *deviceID  = [[TTInstallIDManager sharedInstance] deviceID];
+    if(!isEmptyString(deviceID)) {
+        [data setValue:deviceID forKey:@"device_id"];
+    }
+    
+    NSString *uid = [[TTAccount sharedAccount] userIdString];
+    if (uid) {
+        [data setValue:uid forKey:@"user_id"];
+    }
+    
+    BOOL isLogin = [[TTAccount sharedAccount] isLogin];
+    [data setValue:isLogin ? @(1) : @(0) forKey:@"is_login"];
+    
+    
+    NSString *idfaString = [TTDeviceHelper idfaString];
+    [data setValue:idfaString forKey:@"idfa"];
+    
+    if (callback) {
+        callback(TTBridgeMsgSuccess, data);
+    }
 }
 
 - (void)call_phoneWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -88,10 +141,7 @@
     {
         callParams[@"house_id"] = callParams[@"group_id"];
     }
-    
-//    //二手房打电话
-//    [callParams setValue:@(2) forKey:@"action_type"];
-//
+
     [FHHousePhoneCallUtils callWithConfig:callParams];
     if (callParams[@"follow_id"]) {
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
