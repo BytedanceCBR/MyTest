@@ -47,6 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)hideFollowBtn;
 
 - (void)destroyRNPreLoadCache;
+
+- (void)updateLoadFinish;
 @end
 
 NS_ASSUME_NONNULL_END

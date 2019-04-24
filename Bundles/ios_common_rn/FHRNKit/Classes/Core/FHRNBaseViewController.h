@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)destroyRNView;
 
+- (void)updateLoadFinish;
+
 @end
 
 NS_ASSUME_NONNULL_END

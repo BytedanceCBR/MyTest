@@ -473,7 +473,6 @@
 - (void)goBack
 {
     UIViewController *popVC = [self.navigationController popViewControllerAnimated:YES];
-    [self.viewModel.contactViewModel destroyRNPreLoadCache];
     if (nil == popVC) {
         [self dismissViewControllerAnimated:YES completion:^{
             
@@ -490,6 +489,11 @@
     if (!parent) {
         [self.viewModel.contactViewModel destroyRNPreLoadCache];
     }
+}
+
+- (void)updateLoadFinish
+{
+    [self.viewModel.contactViewModel updateLoadFinish];
 }
 
 @end

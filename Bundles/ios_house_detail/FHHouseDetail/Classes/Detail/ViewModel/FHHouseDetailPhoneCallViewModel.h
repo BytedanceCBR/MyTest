@@ -53,6 +53,8 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 
 - (void)destoryRNPreloadCache;
 
+- (void)updateLoadFinish;
+
 //Gecko Channels
 + (NSArray *)fhGeckoChannels;
 //预加载的渠道

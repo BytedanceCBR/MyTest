@@ -159,6 +159,10 @@
     }
 }
 
+- (void)updateLoadFinish
+{
+    self.isLoadFinish = YES;
+}
 
 - (void)setupUI
 {

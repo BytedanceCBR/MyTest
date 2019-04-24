@@ -143,6 +143,10 @@
         ((FHRNBaseViewController *)currentVC).isLoadFinish = YES;
         [currentVC tt_endUpdataData];
     }
+    
+    if ([[topVC.viewControllers lastObject] respondsToSelector:@selector(updateLoadFinish)]) {
+        [[topVC.viewControllers lastObject] performSelector:@selector(updateLoadFinish) withObject:nil];
+    }
 }
 
 - (void)log_v3WithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller

@@ -271,12 +271,21 @@
     }
     [self addLeadShowLog:contactPhone];
     
-    if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo) {
-        //保证主线程执行
-        dispatch_async(dispatch_get_main_queue(), ^{
-        [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
-        });
+    @try {
+        // 可能会出现崩溃的代码
+        if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo) {
+            //保证主线程执行
+            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
+        }
     }
+    
+    @catch (NSException *exception) {
+        // 捕获到的异常exception
+    }
+    @finally {
+        // 结果处理
+    }
+
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
@@ -503,6 +512,11 @@
 - (void)destroyRNPreLoadCache
 {
     [self.phoneCallViewModel destoryRNPreloadCache];
+}
+
+- (void)updateLoadFinish
+{
+    [self.phoneCallViewModel updateLoadFinish];
 }
 
 - (void)dealloc

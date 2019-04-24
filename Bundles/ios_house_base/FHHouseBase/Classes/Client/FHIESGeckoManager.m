@@ -58,7 +58,7 @@
 }
 
 + (BOOL)isHasCacheForChannel:(NSString *)channel
-{
+{ 
     if ([channel isKindOfClass:[NSString class]]) {
       return  [IESGeckoCacheManager hasCacheForPath:nil accessKey:[FHIESGeckoManager getGeckoKey] channel:channel];
     }
