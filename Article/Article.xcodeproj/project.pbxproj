@@ -43,6 +43,7 @@
 		3D741F2F2255FF5D00E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
 		3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
 		3D741F312255FF8600E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
+		3D7D2F3622703DE200A95FAF /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B42954E1BA13BB1000B7F10 /* TargetLogicSetting.strings */; };
 		3D97BE7D226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE7E226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE7F226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
@@ -307,7 +308,6 @@
 		FEFA59EE205FB1A8001F50D8 /* PushNotification.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */; };
 		FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
-		FEFA59F4205FB1A8001F50D8 /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295581BA13C61000B7F10 /* TargetLogicSetting.strings */; };
 		FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE71FE007BE0093E05D /* sound3.caf */; };
 		FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
 		FEFA59FC205FB1A8001F50D8 /* sound2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE91FE007C00093E05D /* sound2.caf */; };
@@ -1558,6 +1558,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D7D2F3622703DE200A95FAF /* TargetLogicSetting.strings in Resources */,
 				D5E21F97206F421A000F18C6 /* Icon-72@2x.png in Resources */,
 				FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */,
 				B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */,
@@ -1580,7 +1581,6 @@
 				FEFA59EF205FB1A8001F50D8 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F922265E34900A0780E /* iconfont_new.ttf in Resources */,
 				FEFA59F0205FB1A8001F50D8 /* Weather.xcassets in Resources */,
-				FEFA59F4205FB1A8001F50D8 /* TargetLogicSetting.strings in Resources */,
 				FEFA59F6205FB1A8001F50D8 /* sound3.caf in Resources */,
 				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */,
