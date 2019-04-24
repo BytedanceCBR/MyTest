@@ -286,7 +286,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rootViewWillTransitionToSize:) name:kRootViewWillTransitionToSize object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieViewFullScreenDidChange:) name:kExploreMovieViewDidChangeFullScreenNotifictaion object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(shouldDismiss:)
+                                                     name:@"kSharePanelShouldDismiss"
+                                                   object:nil];
         UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
         
         _backWindow = [[TTNewPanelControllerWindow alloc] init];
@@ -836,6 +839,10 @@
         _bottomSafeAreaView.backgroundColorThemeKey = kColorBackground4;
     }
     return _bottomSafeAreaView;
+}
+
+-(void)shouldDismiss:(NSNotification*)notification {
+    [self cancelWithBlock:_cancelBlock];
 }
 
 @end

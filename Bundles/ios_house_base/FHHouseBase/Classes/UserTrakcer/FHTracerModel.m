@@ -117,7 +117,9 @@
 
 -(void)setLogPbWithNSString:(NSString *)logpb
 {
-    if ([logpb isKindOfClass:[NSString class]]) {
+    if ([@"be_null" isEqualToString:logpb]) {
+        self.logPb = nil;
+    }else if ([logpb isKindOfClass:[NSString class]]) {
         @try {
             NSData *data = [logpb dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];

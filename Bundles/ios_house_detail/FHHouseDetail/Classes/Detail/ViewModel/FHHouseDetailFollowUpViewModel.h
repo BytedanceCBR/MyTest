@@ -16,6 +16,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 @interface FHHouseDetailFollowUpViewModel : NSObject
 
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
+@property (nonatomic, weak)     UIViewController       *topVC;
 
 - (void)silentFollowHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType showTip:(BOOL)showTip;
 - (void)followHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType;

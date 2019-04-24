@@ -111,6 +111,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         actionSheet.delegate = self;
         [actionSheet showInView:self.view];
     }
+    self.activityActionManager.copyText = self.detailModel.article.shareURL;
     wrapperTrackEvent(@"detail", @"preferences");
     TLS_LOG(@"click_preference");
 }
@@ -158,7 +159,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     
     
     self.curShareSourceType = TTShareSourceObjectTypeArticle;
-    
+    self.activityActionManager.copyText = self.detailModel.article.shareURL;
 //    [self.detailModel sendDetailTrackEventWithTag:@"detail" label:@"share_button"];
 }
 

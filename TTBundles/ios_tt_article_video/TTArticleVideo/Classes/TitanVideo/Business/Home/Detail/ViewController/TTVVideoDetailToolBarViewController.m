@@ -1079,6 +1079,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         if ([[_shareSectionAndEventDic valueForKey:ISFULLSCREEN] isKindOfClass:[NSNumber class]]) {
             isFullScreen = [(NSNumber *)[_shareSectionAndEventDic valueForKey:ISFULLSCREEN] boolValue];
         }
+        self.activityActionManager.copyText = self.videoInfo.shareURL;
         
         [self.activityActionManager performActivityActionByType:itemType inViewController:self sourceObjectType:TTShareSourceObjectTypeVideoDetail uniqueId:groupId adID:adId platform:TTSharePlatformTypeOfMain groupFlags:self.detailModel.protocoledArticle.groupFlags isFullScreenShow:isFullScreen];
     }

@@ -23,41 +23,41 @@
 TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 
 - (void)closeWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    UIViewController *topVC = [TTUIResponderHelper topViewControllerFor:webview];
     
     //close page回传上一个bVC
-    if (controller.navigationController.viewControllers.count >= 2) {
-        UIViewController *previousVC = controller.navigationController.viewControllers[controller.navigationController.viewControllers.count - 2];
-        NSMutableDictionary * resultDict = [NSMutableDictionary new];
-        [resultDict setValue:param forKey:@"data"];
-        if ([previousVC respondsToSelector:@selector(getOpenPageTagStr)]) {
-            NSString *tagStr = [previousVC performSelector:@selector(getOpenPageTagStr) withObject:nil];
-            [resultDict setValue:tagStr  forKey:@"tag"];
-        }
-
-        if ([previousVC respondsToSelector:@selector(setupCloseCallBackPreviousVC:)]) {
-            [previousVC performSelector:@selector(setupCloseCallBackPreviousVC:) withObject:resultDict];
-        }
-    }
-
+    //    if (controller.navigationController.viewControllers.count >= 2) {
+    //        UIViewController *previousVC = controller.navigationController.viewControllers[controller.navigationController.viewControllers.count - 2];
+    //        NSMutableDictionary * resultDict = [NSMutableDictionary new];
+    //        [resultDict setValue:param forKey:@"data"];
+    //        if ([previousVC respondsToSelector:@selector(getOpenPageTagStr)]) {
+    //            NSString *tagStr = [previousVC performSelector:@selector(getOpenPageTagStr) withObject:nil];
+    //            [resultDict setValue:tagStr  forKey:@"tag"];
+    //        }
+    //
+    //        if ([previousVC respondsToSelector:@selector(setupCloseCallBackPreviousVC:)]) {
+    //            [previousVC performSelector:@selector(setupCloseCallBackPreviousVC:) withObject:resultDict];
+    //        }
+    //    }
     
-//    for (int i = 0; i < controller.navigationController.viewControllers.count; i++) {
-//
-//    }
-
+    //返回数据给上级native页面
+    if ([controller respondsToSelector:@selector(backAction:)]) {
+        [controller performSelector:@selector(backAction:) withObject:param];
+    }
+    
+    UIViewController *topVC = [TTUIResponderHelper topViewControllerFor:webview];
     __block __strong __typeof(webview)strongWebview = webview;
-        if(topVC.navigationController) {
-            [topVC.navigationController popViewControllerAnimated:YES];
+    if(topVC.navigationController) {
+        [topVC.navigationController popViewControllerAnimated:YES];
+        callback(TTRJSBMsgSuccess, @{@"code": @0});
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            strongWebview = nil;
+        });
+    } else {
+        [topVC dismissViewControllerAnimated:YES completion:^{
             callback(TTRJSBMsgSuccess, @{@"code": @0});
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                strongWebview = nil;
-            });
-        } else {
-            [topVC dismissViewControllerAnimated:YES completion:^{
-                callback(TTRJSBMsgSuccess, @{@"code": @0});
-                strongWebview = nil;
-            }];
-        }
+            strongWebview = nil;
+        }];
+    }
     callback(TTRJSBMsgSuccess, @{@"code": @1});
 }
 
@@ -305,13 +305,9 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         
         NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
         // 注销登录
-        
         [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
             callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
         }];
-//        [TTAccount logoutAndClearCookie:^(BOOL success, NSError * _Nullable error) {
-//            callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
-//        }];
         
         
         [FHEnvContext openLogoutSuccessURL:url completion:^(BOOL isSuccess) {

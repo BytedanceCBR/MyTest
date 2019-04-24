@@ -668,6 +668,7 @@ typedef void(^TTActivityAction)(NSString *type);
 
 - (void)activityView:(SSActivityView *)view didCompleteByItemType:(TTActivityType)itemType
 {
+    self.activityActionManager.copyText = self.model.shareModel.shareURL;
     [self setIsCanFullScreenFromOrientationMonitor:YES];
     if ([AKAwardCoinManager isShareTypeWithActivityType:itemType]) {
         [AKAwardCoinManager requestShareBounsWithGroup:self.model.groupId fromPush:NO completion:nil];

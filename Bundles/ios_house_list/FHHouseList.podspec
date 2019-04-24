@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
 
 
-  s.resources = ['FHHouseList/Assets/*.xcassets']
+  s.resources = ['FHHouseList/Assets/*.xcassets','FHHouseList/Assets/*.jpg']
 
   # s.resource_bundles = {
   #   'FHHouseList' => ['FHHouseList/Assets/*.png']

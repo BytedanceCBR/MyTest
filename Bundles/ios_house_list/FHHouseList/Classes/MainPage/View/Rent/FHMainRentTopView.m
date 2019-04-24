@@ -9,12 +9,15 @@
 #import "FHMainRentTopCell.h"
 #import <FHHouseBase/FHCommonDefines.h>
 #import <FHCommonUI/UIColor+Theme.h>
+#import <BDWebImage/UIImageView+BDWebImage.h>
+#import <FHHouseBase/FHConfigModel.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 @interface FHMainRentTopView ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , strong) UICollectionViewFlowLayout *layout;
-
+@property(nonatomic , strong) UIImageView *bannerView;
 @end
 
 #define kCellId @"cell_id"
@@ -22,12 +25,49 @@
 #define TOP_PADDING    15
 #define BOTTOM_PADDING 6
 
+#define BANNER_HEIGHT  (102-BOTTOM_PADDING)
+#define BANNER_HOR_MARGIN 14
+
+
 @implementation FHMainRentTopView
 
--(instancetype)initWithFrame:(CGRect)frame
++(CGFloat)bannerHeight:(FHConfigDataRentBannerModel *)rentBannerModel
+{
+    if (rentBannerModel.items.count > 0) {
+        FHConfigDataRentBannerItemsModel *item = [rentBannerModel.items firstObject];
+        if (item.image.count > 0) {
+            FHConfigDataRentBannerItemsImageModel *img = [item.image firstObject];
+            CGFloat bannerHeight = BANNER_HEIGHT;
+            CGFloat imgWidth = img.width.floatValue;
+            CGFloat imgHeight = img.height.floatValue;
+            if (imgWidth > 0 && imgHeight > 0) {
+                bannerHeight = (SCREEN_WIDTH - BANNER_HOR_MARGIN*2)*imgHeight/imgWidth - BOTTOM_PADDING;
+            }
+            return ceil(bannerHeight);
+        }
+    }
+    return 0;
+}
+
++(UIImage *)cacheImageForRentBanner:(FHConfigDataRentBannerModel *)rentBannerModel
+{
+    if (rentBannerModel.items.count == 0) {
+        return nil;
+    }
+    FHConfigDataRentBannerItemsModel *model = [rentBannerModel.items firstObject];
+    FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
+    if (!img) {
+        return nil;
+    }
+    return  [[BDWebImageManager sharedManager].imageCache imageForKey:img.url];
+}
+
+-(instancetype)initWithFrame:(CGRect)frame banner:(FHConfigDataRentBannerModel *)rentBanner
 {
     self = [super initWithFrame:frame];
     if (self) {
+        
+        self.clipsToBounds = YES;
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -35,7 +75,21 @@
         layout.footerReferenceSize = CGSizeMake(HOR_MARGIN, 1);
         
         CGRect f = self.bounds;
+        
+        CGFloat bannerHeight = [self.class bannerHeight:rentBanner];
+        BOOL needShowBanner = rentBanner && rentBanner.items.count > 0 ;
+        FHConfigDataRentBannerItemsModel *model = [rentBanner.items firstObject];
+        FHConfigDataRentBannerItemsImageModel *img = [model.image firstObject];
+        UIImage *image  = [[BDWebImageManager sharedManager].imageCache imageForKey:img.url];
+
+        if (bannerHeight == 0) {
+            needShowBanner = NO;
+        }
+        
         f.size.height -= BOTTOM_PADDING;
+        if (needShowBanner && image) {
+            f.size.height -= bannerHeight;
+        }
         //CGRectMake(0, 15, frame.size.width, frame.size.height - BOTTOM_PADDING - 15)
         _collectionView = [[UICollectionView alloc]initWithFrame:f collectionViewLayout:layout];
         _collectionView.delegate = self;
@@ -46,9 +100,37 @@
         _layout = layout;
         
         [self addSubview:_collectionView];
+        if (needShowBanner) {
+            _bannerView = [[UIImageView alloc]initWithFrame:CGRectMake(BANNER_HOR_MARGIN, CGRectGetMaxY(_collectionView.frame), f.size.width - 2*BANNER_HOR_MARGIN, bannerHeight+BOTTOM_PADDING)];
+            [self addSubview:_bannerView];
+
+            if (image) {
+                _bannerView.image = image;
+            }else{
+                
+                __weak typeof(self) wself = self;
+                [_bannerView bd_setImageWithURL:[NSURL URLWithString:img.url] placeholder:nil options:BDImageRequestHighPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+                    if (!wself) {
+                        return ;
+                    }
+                    if ([wself.delegate respondsToSelector:@selector(rentBannerLoaded:)]) {
+                        [wself.delegate rentBannerLoaded:wself.bannerView];
+                    }                                        
+                }];
+            }
+            
+            UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(bannerClickAction)];
+            [_bannerView addGestureRecognizer:tapGesture];
+            _bannerView.userInteractionEnabled = YES;
+            
+            self.backgroundColor = [UIColor whiteColor];
+        }else{
+            self.backgroundColor = [UIColor themeGray7];
+        }
         
-        self.backgroundColor = [UIColor themeGray7];
+        
         _collectionView.backgroundColor = [UIColor whiteColor];
+        _bannerView.backgroundColor = [UIColor whiteColor];
         
     }
     return self;
@@ -58,6 +140,12 @@
 {
     _items = items;
     
+}
+
+-(void)setBannerUrl:(NSString *)bannerUrl
+{
+    _bannerUrl = bannerUrl;
+    [_bannerView bd_setImageWithURL:[NSURL URLWithString:bannerUrl]];
 }
 
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -111,6 +199,13 @@
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
     return UIEdgeInsetsMake(TOP_PADDING, 0, 0, 0);
+}
+
+-(void)bannerClickAction
+{
+    if ([self.delegate respondsToSelector:@selector(tapRentBanner)]) {
+        [self.delegate tapRentBanner];
+    }
 }
 
 /*
