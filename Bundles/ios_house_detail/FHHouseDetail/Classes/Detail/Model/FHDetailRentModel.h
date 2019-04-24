@@ -73,7 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, strong, nullable) FHRentDetailResponseDataEvaluationInfo* evaluationInfo;
-@property (nonatomic, strong, nullable) NSArray<FHRentDetailResponseDataSchoolInfoModel>* schoolInfo;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolItemModel> *schoolDictList;
 
 @end
 
@@ -174,6 +174,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHRentDetailImShareInfoModel <NSObject>
+
+@end
+
+@interface FHRentDetailImShareInfoModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *shareUrl;
+@property (nonatomic, copy , nullable) NSString *coverImage;
+@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
 @interface  FHRentDetailResponseDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
@@ -195,7 +206,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, copy, nullable) NSString *camplaintUrl;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
-
+@property (nonatomic, strong , nullable) FHRentDetailImShareInfoModel *imShareInfo;
 @end
 
 

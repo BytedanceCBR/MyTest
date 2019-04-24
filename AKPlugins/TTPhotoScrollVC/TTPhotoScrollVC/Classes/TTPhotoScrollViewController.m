@@ -20,6 +20,8 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "FHFloorPanPicShowViewController.h"
+#import <Photos/Photos.h>
+#import "HTSDeviceManager.h"
 
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
@@ -1092,15 +1094,49 @@ static BOOL staticPhotoBrowserAtTop = NO;
     if (!_longPressToSave || self.interfaceOrientation != UIInterfaceOrientationPortrait) {
         return;
     }
-
+    TTShowImageView * currentImageView = [self showImageViewAtIndex:_currentIndex];
+    CGRect frame = [currentImageView currentImageView].frame;
+    UIView * touchView = recognizer.view;
+    
+    CGPoint point = [recognizer locationInView:touchView];
+    if (!CGRectContainsPoint(frame, point)) {
+        return;
+    }
+    
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            NSLog(@"longpress");
-            [self saveButtonClicked:self.saveButton];
+            [self alertSheetShow];
             break;
         default:
             break;
     }
+}
+
+- (void)alertSheetShow {
+    __weak typeof(self) weakSelf = self;
+    UIAlertController *alertController = [[UIAlertController alloc] init];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"保存图片到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+        if (PHAuthorizationStatusAuthorized == status) {
+            [weakSelf saveButtonClicked:weakSelf.saveButton];
+        } else {
+            // 请求权限
+            [HTSDeviceManager requestPhotoLibraryPermission:^(BOOL success) {
+                if (success) {
+                    [weakSelf saveButtonClicked:weakSelf.saveButton];
+                } else {
+                    [HTSDeviceManager presentPhotoLibraryDeniedAlert];
+                }
+            }];
+        }
+    }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Pan close gesture

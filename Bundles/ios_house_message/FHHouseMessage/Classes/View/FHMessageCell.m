@@ -172,7 +172,7 @@
     if (!isEmptyString([conv getDraft])) {
         self.subTitleLabel.attributedText = [self getDraftAttributeString:[conv getDraft]];
     } else {
-        self.subTitleLabel.text = [conv lastMessage];
+        self.subTitleLabel.text = [self cutLineBreak:[conv lastMessage]];
     }
     ChatMsg *lastMsg = [conv lastChatMsg];
 
@@ -193,6 +193,15 @@
                                                  NSParagraphStyleAttributeName : paragraphStyle};
     [attrStr addAttributes:attributes range:theRange];
     return attrStr;
+}
+
+-(NSString*)cutLineBreak:(NSString*)content {
+    NSRange range = [content rangeOfString:@"\r"];
+    if (range.location == 0 && content.length > 1) {
+        return [NSString stringWithFormat:@" %@", [self cutLineBreak:[content substringFromIndex:range.location + 1]]];
+    } else {
+        return content;
+    }
 }
 
 

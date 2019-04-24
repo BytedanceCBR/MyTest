@@ -48,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *totalScore;
 @property (nonatomic, copy , nullable) NSString *detailUrl;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoSubScoresModel> *subScores;
+@property (nonatomic, copy , nullable) NSString *title;
 @end
 
 @protocol FHDetailNeighborhoodNeighborhoodInfoSchoolInfoModel<NSObject>

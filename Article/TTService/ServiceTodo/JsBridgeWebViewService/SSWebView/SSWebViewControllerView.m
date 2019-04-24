@@ -39,7 +39,7 @@
 #import "TTVSettingsConfiguration.h"
 #import "SSCommonLogic.h"
 #import <TTKitchen/TTKitchenHeader.h>
-
+#import "TTCopyContentItem.h"
 #define toolBarHeight 40.f
 
 const NSInteger SSWebViewMoreActionSheetTag = 1001;
@@ -214,6 +214,8 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         }
     }
     NSMutableArray * activityItems = [ArticleShareManager shareActivityManager:_activityActionManager setWapConditionWithTitle:self.shareTitle desc:self.shareDesc url:[self currentURLStr] imageUrl:self.shareImageUrl];
+    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:[self currentURLStr]];
+    [activityItems addObject:copyContentItem];
     if (self.navMoreShareView){
         self.navMoreShareView = nil;
     }
