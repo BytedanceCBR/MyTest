@@ -31,6 +31,7 @@ typedef void(^FHHouseDetailPhoneCallFailBlock)(NSError *error);
 @property (nonatomic, weak) FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, weak) UIViewController *belongsVC;
+@property (nonatomic, assign) BOOL rnIsUnAvalable;
 @property(nonatomic , strong) NSDictionary *tracerDict; // 详情页基础埋点数据
 
 - (instancetype)initWithHouseType:(FHHouseType)houseType houseId:(NSString *)houseId;

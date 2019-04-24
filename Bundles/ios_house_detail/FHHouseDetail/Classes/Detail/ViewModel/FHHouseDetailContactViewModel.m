@@ -281,6 +281,9 @@
     
     @catch (NSException *exception) {
         // 捕获到的异常exception
+        if (exception) {
+            self.phoneCallViewModel.rnIsUnAvalable = YES;
+        }
     }
     @finally {
         // 结果处理

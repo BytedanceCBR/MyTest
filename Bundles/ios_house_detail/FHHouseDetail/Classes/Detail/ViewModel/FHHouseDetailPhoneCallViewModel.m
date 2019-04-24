@@ -61,6 +61,7 @@ typedef enum : NSUInteger {
     if (self) {
         _houseType = houseType;
         _houseId = houseId;
+        _rnIsUnAvalable = NO;
     }
     return self;
 }
@@ -420,7 +421,7 @@ typedef enum : NSUInteger {
 - (void)jump2RealtorDetailWithPhone:(FHDetailContactModel *)contactPhone isPreLoad:(BOOL)isPre
 {
     //如果没有资源，走H5
-    if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"]) {
+    if (![FHIESGeckoManager isHasCacheForChannel:@"f_realtor_detail"] || self.rnIsUnAvalable) {
         [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
         return;
     }
