@@ -6,10 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "FHHouseContactConfigModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
-@class FHHouseContactConfigModel;
 
 @interface FHHousePhoneCallUtils : NSObject
 

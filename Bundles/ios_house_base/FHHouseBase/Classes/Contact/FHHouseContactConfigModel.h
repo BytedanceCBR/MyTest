@@ -23,9 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
 
-
 // 选填
-@property (nonatomic , strong) NSDictionary *reportParams;
 
 #pragma mark 埋点
 // 必填
@@ -42,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , strong) NSNumber *realtorRank;
 @property (nonatomic , copy) NSString *realtorPosition;
 @property (nonatomic , copy) NSString *conversationId;
+- (void)setTraceParams:(NSDictionary *)params;
 
 @end
 

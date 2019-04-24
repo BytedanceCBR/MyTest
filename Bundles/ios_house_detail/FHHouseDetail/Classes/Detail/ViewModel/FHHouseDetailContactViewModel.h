@@ -9,15 +9,14 @@
 #import "FHDetailBottomBarView.h"
 #import "FHDetailNavBar.h"
 #import "FHHouseType.h"
+#import <FHHouseBase/FHHouseContactDefines.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHHouseDetailFollowUpViewModel;
 @interface FHHouseDetailContactViewModel : NSObject
 
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 @property (nonatomic, strong) FHDetailShareInfoModel *shareInfo;
-@property (nonatomic, strong, readonly)FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
 @property (nonatomic, assign) NSInteger followStatus;
@@ -38,7 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 基本埋点数据
 - (NSDictionary *)baseParams;
 
-- (void)fillFormAction;
+- (void)fillFormActionWithActionType:(FHFollowActionType)actionType;
+
 - (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
 
 //为IM提供房源卡片

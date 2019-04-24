@@ -61,17 +61,18 @@ static NSString *s_oldAgent = nil;
         NSString *imprId = self.tracerDict[@"impr_id"];
 
         NSDictionary *reportParams = params[@"reportParams"];
-        if (self->_realtorId != nil && phone != nil) {
-            [self.phoneCallViewModel callWithPhone:phone realtorId:self->_realtorId searchId:searchId imprId:imprId reportParams:reportParams successBlock:^(BOOL isSuccess) {
-                completion(TTRJSBMsgSuccess, @{});
-            } failBlock:^(NSError * _Nonnull error) {
-                completion(TTRJSBMsgFailed, @{});
-
-            }];
-            if ([self.delegate respondsToSelector:@selector(followUpActionByFollowId:houseType:)]) {
-                [self.delegate followUpActionByFollowId:self.houseId houseType:self.houseType];
-            }
-        }
+        // add by zjing for test rn to relplace
+//        if (self->_realtorId != nil && phone != nil) {
+//            [self.phoneCallViewModel callWithPhone:phone realtorId:self->_realtorId searchId:searchId imprId:imprId reportParams:reportParams successBlock:^(BOOL isSuccess) {
+//                completion(TTRJSBMsgSuccess, @{});
+//            } failBlock:^(NSError * _Nonnull error) {
+//                completion(TTRJSBMsgFailed, @{});
+//
+//            }];
+//            if ([self.delegate respondsToSelector:@selector(followUpActionByFollowId:houseType:)]) {
+//                [self.delegate followUpActionByFollowId:self.houseId houseType:self.houseType];
+//            }
+//        }
     } forMethodName:@"phoneSwitch"];
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
 }

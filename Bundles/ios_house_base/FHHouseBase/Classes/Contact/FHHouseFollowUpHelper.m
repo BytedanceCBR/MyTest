@@ -6,7 +6,6 @@
 //
 
 #import "FHHouseFollowUpHelper.h"
-#import "FHHouseFollowUpConfigModel.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHDetailBaseModel.h"
@@ -42,9 +41,9 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     }
     NSString *followId = configModel.followId;
     FHHouseType houseType = configModel.houseType;
-    FHFollowActionType actionType = configModel.actionType;
-    UIViewController *topVC = configModel.topVC;
+    FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
     BOOL showTip = configModel.showTip;
+    BOOL hideToast = configModel.hideToast;
 
     [self isFollowUpParamsValid:configModel];
     
@@ -53,7 +52,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
         if (!error) {
             if (model.status.integerValue == 0) {
                 if (model.data.followStatus == 0) {
-                    if (topVC && topVC.childViewControllers.count == 0) {
+                    if (!hideToast) {
                         
                         NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
                         if (toastCount < 3) {
@@ -70,8 +69,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                             style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
                             toastCount += 1;
                             UIViewController *temp = [TTUIResponderHelper topmostViewController];
-                            UIView *v = temp.view;
-                            [topVC.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
+                            [temp.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
                             [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
                             [[NSUserDefaults standardUserDefaults]synchronize];
                         }
@@ -108,7 +106,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     }
     NSString *followId = configModel.followId;
     FHHouseType houseType = configModel.houseType;
-    FHFollowActionType actionType = configModel.actionType;
+    FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
     
     [FHHouseDetailAPI requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         

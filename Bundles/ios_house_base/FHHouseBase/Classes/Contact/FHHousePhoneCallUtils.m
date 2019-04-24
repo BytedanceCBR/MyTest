@@ -6,7 +6,6 @@
 //
 
 #import "FHHousePhoneCallUtils.h"
-#import "FHHouseContactConfigModel.h"
 #import "FHHouseType.h"
 #import "FHHouseDetailAPI.h"
 #import <TTRoute.h>
@@ -54,7 +53,6 @@ typedef enum : NSUInteger {
 
 + (void)callWithConfigModel:(FHHouseContactConfigModel *)configModel 
 {
-    __weak typeof(self)wself = self;
     NSString *phone = configModel.phone;
     NSString *houseId = configModel.houseId;
     FHHouseType houseType = configModel.houseType;
@@ -102,8 +100,8 @@ typedef enum : NSUInteger {
             extraDict[@"house_id"] = houseId;
             [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
         }
-        [wself addClickCallLog:configModel isVirtual:isVirtual];
-        [wself callPhone:urlStr];
+        [self addClickCallLog:configModel isVirtual:isVirtual];
+        [self callPhone:urlStr];
         
     }];
 }

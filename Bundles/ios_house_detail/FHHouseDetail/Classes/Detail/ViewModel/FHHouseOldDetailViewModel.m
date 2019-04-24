@@ -37,6 +37,7 @@
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHDetailMediaHeaderCell.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -360,8 +361,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
@@ -589,8 +590,21 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
         }
     }];
+    // add by zjing for test todo 整合
     // 静默关注功能
-    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+    // 静默关注功能
+//    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }
 
 - (BOOL)isShowSubscribe {

@@ -24,7 +24,7 @@
 #import <TTQQZoneActivity.h>
 #import "FHHouseDetailAPI.h"
 #import "TTReachability.h"
-#import "FHHouseDetailFollowUpViewModel.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import "FHHouseDetailPhoneCallViewModel.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHURLSettings.h"
@@ -37,6 +37,9 @@
 #import "FHMessageManager.h"
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHHousePhoneCallUtils.h>
+#import <FHHouseBase/FHHouseFillFormHelper.h>
+
 
 @interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
 
@@ -46,7 +49,6 @@
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
-@property (nonatomic, strong, readwrite)FHHouseDetailFollowUpViewModel *followUpViewModel;
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
 @end
@@ -64,12 +66,9 @@
         _onLineName = @"在线联系";
         _phoneCallName = @"电话咨询";
         
-        _followUpViewModel = [[FHHouseDetailFollowUpViewModel alloc]init];
         _phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc]initWithHouseType:_houseType houseId:_houseId];
-        _phoneCallViewModel.bottomBar = _bottomBar;
-        _phoneCallViewModel.followUpViewModel = _followUpViewModel;
 
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:kFHDetailFollowUpNotification object:nil];
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshFollowStatus:) name:@"follow_up_did_changed" object:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHMessageUnreadChangedNotification" object:nil];
         
@@ -154,25 +153,37 @@
 {
     _tracerDict = tracerDict;
     _phoneCallViewModel.tracerDict = tracerDict;
-    _followUpViewModel.tracerDict = tracerDict;
-
 }
 
 - (void)setBelongsVC:(UIViewController *)belongsVC
 {
     _belongsVC = belongsVC;
-    _phoneCallViewModel.belongsVC = belongsVC;
-    _followUpViewModel.topVC = belongsVC;
 }
 
 - (void)followAction
 {
-    [self.followUpViewModel followHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType];
+    NSMutableDictionary *extraDict = @{}.mutableCopy;
+//    extraDict[@"realtor_id"] = contact.realtorId;
+//    extraDict[@"realtor_rank"] = @(index);
+//    extraDict[@"realtor_position"] = @"detail_related";
+    if (self.tracerDict) {
+        [extraDict addEntriesFromDictionary:self.tracerDict];
+    }
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    
+    [FHHouseFollowUpHelper followHouseWithConfigModel:configModel];
 }
 
 - (void)cancelFollowAction
 {
-    [self.followUpViewModel cancelFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType];
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]init];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    [FHHouseFollowUpHelper cancelFollowHouseWithConfigModel:configModel];
 }
 
 //todo 增加埋点的东西
@@ -310,25 +321,38 @@
     }
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         [self addFakeImClickLog];
-
-        FHHouseDetailFormAlertModel *alertModel = [[FHHouseDetailFormAlertModel alloc]init];
-        alertModel.title = @"预约看房";
-        alertModel.subtitle = @"很抱歉，该经纪人暂未开通该服务，请留下您的联系方式，我们会立即短信告知对方，方便与您联系！";
         NSString *fromStr = nil;
         if (self.houseType == FHHouseTypeSecondHandHouse) {
             fromStr = @"app_oldhouse_chat";
         }else if (self.houseType == FHHouseTypeRentHouse) {
             fromStr = @"app_renthouse_chat";
         }
-        if (self.contactPhone.phone.length > 0) {
-            alertModel.btnTitle = @"电话咨询";
-            alertModel.leftBtnTitle = @"立即预约";
-        }else {
-            alertModel.btnTitle = @"立即预约";
-        }
         self.contactPhone.searchId = self.searchId;
         self.contactPhone.imprId = self.imprId;
-        [self.phoneCallViewModel fillFormAction:alertModel contactPhone:self.contactPhone customHouseId:nil fromStr:fromStr withExtraDict:params];
+        FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
+        fillFormConfig.houseType = self.houseType;
+        fillFormConfig.houseId = self.houseId;
+        fillFormConfig.topViewController = self.belongsVC;
+        fillFormConfig.title = @"预约看房";
+        fillFormConfig.subtitle = @"很抱歉，该经纪人暂未开通该服务，请留下您的联系方式，我们会立即短信告知对方，方便与您联系！";
+        if (self.contactPhone.phone.length > 0) {
+            fillFormConfig.btnTitle = @"电话咨询";
+            fillFormConfig.leftBtnTitle = @"立即预约";
+        }else {
+            fillFormConfig.btnTitle = @"立即预约";
+        }
+        fillFormConfig.fromStr = fromStr;
+        fillFormConfig.realtorId = self.contactPhone.realtorId;
+        fillFormConfig.phone = self.contactPhone.phone;
+
+        NSMutableDictionary *params = @{}.mutableCopy;
+        if (self.tracerDict) {
+            [params addEntriesFromDictionary:self.tracerDict];
+        }
+        [fillFormConfig setTraceParams:params];
+        fillFormConfig.searchId = self.searchId;
+        fillFormConfig.imprId = self.imprId;
+        [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
         return;
     }
     NSString *realtor_pos = @"detail_button";
@@ -340,19 +364,98 @@
 
 - (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
 {
-    [self.phoneCallViewModel fillFormActionWithCustomHouseId:self.customHouseId fromStr:self.fromStr withExtraDict:extraDict];
+    FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
+    fillFormConfig.houseType = self.houseType;
+    fillFormConfig.houseId = self.houseId;
+    fillFormConfig.topViewController = self.belongsVC;
+    fillFormConfig.fromStr = self.fromStr;
+    fillFormConfig.realtorId = self.contactPhone.realtorId;
+    fillFormConfig.customHouseId = self.customHouseId;
+    if (self.houseType == FHHouseTypeNeighborhood) {
+        fillFormConfig.title = @"咨询经纪人";
+        fillFormConfig.btnTitle = @"提交";
+    }
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.tracerDict) {
+        [params addEntriesFromDictionary:self.tracerDict];
+    }
+    [fillFormConfig setTraceParams:params];
+    fillFormConfig.searchId = self.searchId;
+    fillFormConfig.imprId = self.imprId;
+    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
 
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+- (void)fillFormActionWithActionType:(FHFollowActionType)actionType
 {
-    [self.phoneCallViewModel fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle withExtraDict:nil];
+    NSString *title = nil;
+    NSString *subtitle = nil;
+    NSString *btnTitle = @"提交";
+
+    if (actionType == FHFollowActionTypeFloorPan) {
+        title = @"开盘通知";
+        subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
+        btnTitle = @"提交";
+    }else if (actionType == FHFollowActionTypePriceChanged) {
+        title = @"变价通知";
+        subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
+        btnTitle = @"提交";
+    }
+    FHHouseFillFormConfigModel *fillFormConfig = [[FHHouseFillFormConfigModel alloc]init];
+    fillFormConfig.houseType = self.houseType;
+    fillFormConfig.houseId = self.houseId;
+    fillFormConfig.topViewController = self.belongsVC;
+    if (title.length > 0) {
+        fillFormConfig.title = title;
+    }
+    if (subtitle.length > 0) {
+        fillFormConfig.subtitle = subtitle;
+    }
+    if (btnTitle.length > 0) {
+        fillFormConfig.btnTitle = btnTitle;
+    }
+    fillFormConfig.realtorId = self.contactPhone.realtorId;
+    fillFormConfig.actionType = actionType;
+    fillFormConfig.topViewController = self.belongsVC;
+
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.tracerDict) {
+        [params addEntriesFromDictionary:self.tracerDict];
+    }
+    [fillFormConfig setTraceParams:params];
+    fillFormConfig.searchId = self.searchId;
+    fillFormConfig.imprId = self.imprId;
+    [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
 
 // 拨打电话
 - (void)callActionWithExtraDict:(NSDictionary *)extraDict {
-    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone realtorId:self.contactPhone.realtorId searchId:self.searchId imprId:self.imprId extraDict:extraDict];
+    // add by zjing for test
+//    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone realtorId:self.contactPhone.realtorId searchId:self.searchId imprId:self.imprId extraDict:extraDict];
     // 静默关注功能
-    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+    //    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.tracerDict) {
+        [params addEntriesFromDictionary:self.tracerDict];
+    }
+    
+    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
+    contactConfig.houseType = self.houseType;
+    contactConfig.houseId = self.houseId;
+    contactConfig.phone = self.contactPhone.phone;
+    contactConfig.realtorId = self.contactPhone.realtorId;
+    contactConfig.searchId = self.searchId;
+    contactConfig.imprId = self.imprId;
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig];
+    
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+
 }
 
 - (void)imAction {

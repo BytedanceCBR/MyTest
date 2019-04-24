@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNoticeAlertView : UIView
 
 @property (nonatomic, copy) NSString *phoneNum;
-@property(nonatomic, copy)void(^confirmClickBlock)(NSString *phoneNum);
-@property(nonatomic, copy)void(^leftClickBlock)(NSString *phoneNum);
+@property(nonatomic, copy)void(^confirmClickBlock)(NSString *phoneNum,FHDetailNoticeAlertView *alertView);
+@property(nonatomic, copy)void(^leftClickBlock)(NSString *phoneNum,FHDetailNoticeAlertView *alertView);
 @property(nonatomic, copy)void(^tipClickBlock)(void);
 
 - (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
