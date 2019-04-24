@@ -30,7 +30,7 @@
     }
     
     if (![localChannels containsObject:@"f_realtor_detail"]) {
-        [localChannels addObject:@"localChannels"];
+        [localChannels addObject:@"f_realtor_detail"];
     }
     
     if ([localChannels isKindOfClass:[NSArray class]] && localChannels.count > 0) {
