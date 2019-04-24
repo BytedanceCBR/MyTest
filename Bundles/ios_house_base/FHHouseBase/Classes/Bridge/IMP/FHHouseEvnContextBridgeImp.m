@@ -6,20 +6,20 @@
 //
 
 #import "FHHouseEvnContextBridgeImp.h"
-//#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import "TTTabBarManager.h"
 #import "TTTabBarItem.h"
 #import <FHHomeConfigManager.h>
-#import <FHEnvContext.h>
-#import <FHLocManager.h>
+#import "FHEnvContext.h"
+#import "FHLocManager.h"
 #import <ToastManager.h>
 #import "ArticleURLSetting.h"
 #import "TTArticleCategoryManager.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "TTTabBarProvider.h"
 #import "TTLocationManager.h"
-#import <FHUtils.h>
+#import "FHUtils.h"
+#import <TTArticleBase/SSCommonLogic.h>
 
 @implementation FHHouseEvnContextBridgeImp
 

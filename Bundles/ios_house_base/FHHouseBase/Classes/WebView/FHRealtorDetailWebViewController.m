@@ -13,6 +13,8 @@
 #import <TTTracker/TTTracker.h>
 #import "FHUserTracker.h"
 #import "NetworkUtilities.h"
+#import <ReactiveObjC/ReactiveObjC.h>
+#import <TTBaseLib/TTDeviceHelper.h>
 
 @interface FHRealtorDetailWebViewController ()
 {

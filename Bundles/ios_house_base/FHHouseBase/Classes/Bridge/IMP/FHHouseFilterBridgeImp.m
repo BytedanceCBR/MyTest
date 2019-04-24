@@ -6,12 +6,12 @@
 //
 
 #import "FHHouseFilterBridgeImp.h"
-//#import "Bubble-Swift.h"
 #import "FHConditionFilterFactory.h"
 #import "FHSearchConfigModel.h"
 #import "FHFilterModelParser.h"
 #import "FHEnvContext.h"
-#import <FHHouseType.h>
+#import "FHHouseType.h"
+#import <TTBaseLib/TTDeviceHelper.h>
 
 @interface FHHouseFilterBridgeImp()
 

@@ -33,16 +33,6 @@
 		3AA5059C15876B8C00EB27FA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
 		3AA505A115876B9800EB27FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
-		3D20F72C225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
-		3D20F72D225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
-		3D20F72E225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
-		3D20F72F225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */; };
-		3D2D488321A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
-		3D2D488421A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
-		3D2D488521A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
-		3D2D488621A28E5A0011A0EC /* FHHouseEvnContextBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */; };
-		3D2D488721A28E5A0011A0EC /* FHHouseEvnContextBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */; };
-		3D2D488821A28E5A0011A0EC /* FHHouseEvnContextBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */; };
 		3D325487226D66630002F0AD /* ios_asset in Resources */ = {isa = PBXBuildFile; fileRef = 3D325486226D66630002F0AD /* ios_asset */; };
 		3D325488226D66630002F0AD /* ios_asset in Resources */ = {isa = PBXBuildFile; fileRef = 3D325486226D66630002F0AD /* ios_asset */; };
 		3D325489226D66630002F0AD /* ios_asset in Resources */ = {isa = PBXBuildFile; fileRef = 3D325486226D66630002F0AD /* ios_asset */; };
@@ -75,9 +65,6 @@
 		3DB49F922265E34900A0780E /* iconfont_new.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE42265E34900A0780E /* iconfont_new.ttf */; };
 		3DB49F932265E34900A0780E /* iconfont_new.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE42265E34900A0780E /* iconfont_new.ttf */; };
 		3DB49F942265E34900A0780E /* iconfont_new.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE42265E34900A0780E /* iconfont_new.ttf */; };
-		3DB7A71C21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
-		3DB7A71D21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
-		3DB7A71E21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
 		3DB7A72E21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
@@ -117,9 +104,6 @@
 		A8350A031BB501AC008D8D92 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8350A021BB501AC008D8D92 /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A89B0DCA1C60C3DA00ECC955 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A89B0DC91C60C3DA00ECC955 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B119472D1CF7FF4700561B49 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
-		B30912C021E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
-		B30912C121E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
-		B30912C221E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
 		B362E6F721539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		B362E6F821539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		B373C81C2174587A008F9905 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
@@ -204,26 +188,13 @@
 		C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		CB188F49174E164800764864 /* ArticleAppPageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = CB188F48174E164800764864 /* ArticleAppPageHelper.m */; };
-		CB21A06F170BD6A900CC7302 /* ArticleAPNsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB21A06E170BD6A900CC7302 /* ArticleAPNsManager.m */; };
-		CB631546176DAFD500DF067D /* ArticleCitySelectView.m in Sources */ = {isa = PBXBuildFile; fileRef = CB631545176DAFD500DF067D /* ArticleCitySelectView.m */; };
-		CB9C225A176981FD00970E5D /* ArticleCityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CB9C2259176981FD00970E5D /* ArticleCityManager.m */; };
-		CBA2360B174CA72800F30E23 /* ArticleBaseListView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA235A9174CA71C00F30E23 /* ArticleBaseListView.m */; };
+		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		D01379621DFE8F4A0020C6BD /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D013795E1DFE8BEF0020C6BD /* libresolv.tbd */; };
 		D08BFBDB1B8729AA00E6D9A1 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		D08BFBE01B8729B800E6D9A1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */; };
 		D0A4FC4F1B897287000240C6 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
-		D40CAF0121BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
-		D40CAF0221BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
-		D40CAF0321BFF3250018E256 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
 		D47950E321ECC94E00548965 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
 		D47950EC21ECC94E00548965 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
-		D47952CA21ECC94E00548965 /* FHHomeBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */; };
-		D479539E21ECC94E00548965 /* FHHouseEvnContextBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */; };
-		D47953FB21ECC94E00548965 /* FHHouseFilterBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */; };
-		D479567521ECC94E00548965 /* FHHouseCellsBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */; };
-		D479575021ECC94E00548965 /* FHRealtorDetailWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */; };
 		D479578E21ECC94E00548965 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F92206F4217000F18C6 /* Icon-72@2x.png */; };
 		D479578F21ECC94E00548965 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		D479579021ECC94E00548965 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
@@ -318,10 +289,6 @@
 		EFF33B06162FDB1D00B947F4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF33B05162FDB1D00B947F4 /* CoreLocation.framework */; };
 		EFF33B0D162FEE8600B947F4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF33B0C162FEE8600B947F4 /* MapKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		F8893C811FCE5F4200C76EBB /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
-		FB3224E7221999CD008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
-		FB3224EA2219A08F008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
-		FB3224EB2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
-		FB3224EC2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */ = {isa = PBXBuildFile; fileRef = FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */; };
 		FE700DCA1B8D98F8004A435E /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE700DC91B8D98F8004A435E /* yw_1222.jpg */; };
 		FEE5ED461B26C7EE009F8BA4 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEE5ED451B26C7EE009F8BA4 /* CoreMotion.framework */; };
 		FEFA527D205FB1A8001F50D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
@@ -532,12 +499,6 @@
 		3AA5059D15876B9800EB27FA /* News-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "News-Info.plist"; path = "News/News-Info.plist"; sourceTree = SOURCE_ROOT; };
 		3AA5059E15876B9800EB27FA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = News/main.m; sourceTree = SOURCE_ROOT; };
 		3AA5059F15876B9800EB27FA /* News-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "News-Prefix.pch"; path = "News/News-Prefix.pch"; sourceTree = SOURCE_ROOT; };
-		3D20F72A225F6F21007168F2 /* FHAccountBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHAccountBridgeImp.h; sourceTree = "<group>"; };
-		3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHAccountBridgeImp.m; sourceTree = "<group>"; };
-		3D2D487F21A28E590011A0EC /* FHHouseFilterBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseFilterBridgeImp.h; sourceTree = "<group>"; };
-		3D2D488021A28E590011A0EC /* FHHouseEvnContextBridgeImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHHouseEvnContextBridgeImp.h; sourceTree = "<group>"; };
-		3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHouseFilterBridgeImp.m; sourceTree = "<group>"; };
-		3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHHouseEvnContextBridgeImp.m; sourceTree = "<group>"; };
 		3D325486226D66630002F0AD /* ios_asset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ios_asset; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
@@ -548,8 +509,6 @@
 		3DB49EE22265E34900A0780E /* ProjectDayModeThemeUISetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ProjectDayModeThemeUISetting.strings; sourceTree = "<group>"; };
 		3DB49EE32265E34900A0780E /* ProjectNightModeThemeUISetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ProjectNightModeThemeUISetting.strings; sourceTree = "<group>"; };
 		3DB49EE42265E34900A0780E /* iconfont_new.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont_new.ttf; sourceTree = "<group>"; };
-		3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHouseCellsBridgeImp.h; sourceTree = "<group>"; };
-		3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHouseCellsBridgeImp.m; sourceTree = "<group>"; };
 		3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = BubbleImages.xcassets; sourceTree = "<group>"; };
 		3F4555FA168C4375001B7373 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AuthorizeHintResource.xcassets; sourceTree = "<group>"; };
@@ -610,8 +569,6 @@
 		A89B0DC91C60C3DA00ECC955 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		B119472C1CF7FF4700561B49 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		B1E15E061D77117900B551D9 /* NewsResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewsResource.xcassets; sourceTree = "<group>"; };
-		B30912BE21E3865500E530C3 /* FHRealtorDetailWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRealtorDetailWebViewController.h; sourceTree = "<group>"; };
-		B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRealtorDetailWebViewController.m; sourceTree = "<group>"; };
 		B358140A432F576A8121CD57 /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
 		B373CF102174587A008F9905 /* f100.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -628,8 +585,6 @@
 		D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FrameworkResource.xcassets; sourceTree = "<group>"; };
 		D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonResource.xcassets; sourceTree = "<group>"; };
-		D40CAEFF21BFF3250018E256 /* FHHomeBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHHomeBridgeImp.h; sourceTree = "<group>"; };
-		D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHHomeBridgeImp.m; sourceTree = "<group>"; };
 		D479581521ECC94E00548965 /* NewsLiteChannel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsLiteChannel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E21F92206F4217000F18C6 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		D5E21F93206F4218000F18C6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
@@ -648,8 +603,6 @@
 		EFF33B0C162FEE8600B947F4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		F2C7A4D150C9B3D3F05C0CD5 /* Pods-News.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-News.release.xcconfig"; path = "Pods/Target Support Files/Pods-News/Pods-News.release.xcconfig"; sourceTree = "<group>"; };
 		F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = tt_video_doubleClickApprove.bundle; sourceTree = "<group>"; };
-		FB3224E5221999CD008DFB8D /* FHMessageBridgeImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHMessageBridgeImp.h; sourceTree = "<group>"; };
-		FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHMessageBridgeImp.m; sourceTree = "<group>"; };
 		FE524F681DC9BE4F00CDED36 /* IntentsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IntentsUI.framework; path = System/Library/Frameworks/IntentsUI.framework; sourceTree = SDKROOT; };
 		FE593EA11CFFE3850029EA16 /* libTTBaseLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTTBaseLib.a; path = "Pods/../build/Debug-iphoneos/TTBaseLib/libTTBaseLib.a"; sourceTree = "<group>"; };
 		FE593EA91CFFE5C40029EA16 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Build/Products/Debug-iphonesimulator/libPods.a"; sourceTree = "<group>"; };
@@ -697,8 +650,7 @@
 				3AA5028915876A1F00EB27FA /* CoreGraphics.framework in Frameworks */,
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
-				0AF860F71FA1CB8F00926C1A /* libttheif_dec.a in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -850,11 +802,10 @@
 		3AA5027515876A1F00EB27FA = {
 			isa = PBXGroup;
 			children = (
-				3D97BE7A226D753E0063C39A /* NotificationServiceExtensionBase */,
-				3D2D487D21A28E590011A0EC /* House */,
 				B388C9D82142652800653188 /* Bubble */,
 				A8323FED1B81B59600DD5533 /* Targets-Config */,
 				A8A57F531B16F44D00783AA9 /* Resource */,
+				3D97BE7A226D753E0063C39A /* NotificationServiceExtensionBase */,
 				6198677A2223E8EE0056B2EF /* serviceNofExtension */,
 				6198678C2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */,
 				3AA5028315876A1F00EB27FA /* Frameworks */,
@@ -967,32 +918,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		3D2D487D21A28E590011A0EC /* House */ = {
-			isa = PBXGroup;
-			children = (
-				FB3224E4221999B7008DFB8D /* HouseMessage */,
-				D46DA52321A43B74009D50C7 /* HouseHome */,
-				3D2D487E21A28E590011A0EC /* Bridge */,
-				760CF74221ABE7A00006BE07 /* WebView */,
-			);
-			path = House;
-			sourceTree = "<group>";
-		};
-		3D2D487E21A28E590011A0EC /* Bridge */ = {
-			isa = PBXGroup;
-			children = (
-				3D2D488021A28E590011A0EC /* FHHouseEvnContextBridgeImp.h */,
-				3D2D488221A28E590011A0EC /* FHHouseEvnContextBridgeImp.m */,
-				3D2D487F21A28E590011A0EC /* FHHouseFilterBridgeImp.h */,
-				3D2D488121A28E590011A0EC /* FHHouseFilterBridgeImp.m */,
-				3DB7A71A21A2A41400B4D017 /* FHHouseCellsBridgeImp.h */,
-				3DB7A71B21A2A41400B4D017 /* FHHouseCellsBridgeImp.m */,
-				3D20F72A225F6F21007168F2 /* FHAccountBridgeImp.h */,
-				3D20F72B225F6F21007168F2 /* FHAccountBridgeImp.m */,
-			);
-			path = Bridge;
-			sourceTree = "<group>";
-		};
 		3D97BE7A226D753E0063C39A /* NotificationServiceExtensionBase */ = {
 			isa = PBXGroup;
 			children = (
@@ -1089,15 +1014,6 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
-		760CF74221ABE7A00006BE07 /* WebView */ = {
-			isa = PBXGroup;
-			children = (
-				B30912BE21E3865500E530C3 /* FHRealtorDetailWebViewController.h */,
-				B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */,
-			);
-			path = WebView;
-			sourceTree = "<group>";
-		};
 		A8323FED1B81B59600DD5533 /* Targets-Config */ = {
 			isa = PBXGroup;
 			children = (
@@ -1160,24 +1076,6 @@
 				FE700DC91B8D98F8004A435E /* yw_1222.jpg */,
 			);
 			path = OtherResource;
-			sourceTree = "<group>";
-		};
-		D46DA52321A43B74009D50C7 /* HouseHome */ = {
-			isa = PBXGroup;
-			children = (
-				D40CAEFF21BFF3250018E256 /* FHHomeBridgeImp.h */,
-				D40CAF0021BFF3250018E256 /* FHHomeBridgeImp.m */,
-			);
-			path = HouseHome;
-			sourceTree = "<group>";
-		};
-		FB3224E4221999B7008DFB8D /* HouseMessage */ = {
-			isa = PBXGroup;
-			children = (
-				FB3224E5221999CD008DFB8D /* FHMessageBridgeImp.h */,
-				FB3224E6221999CD008DFB8D /* FHMessageBridgeImp.m */,
-			);
-			path = HouseMessage;
 			sourceTree = "<group>";
 		};
 		FEE188E21FFCB587005310BB /* Recovered References */ = {
@@ -3176,14 +3074,7 @@
 			files = (
 				3AA5059C15876B8C00EB27FA /* AppDelegate.m in Sources */,
 				3AA505A115876B9800EB27FA /* main.m in Sources */,
-				3D2D488621A28E5A0011A0EC /* FHHouseEvnContextBridgeImp.m in Sources */,
-				3D2D488321A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */,
-				3D20F72C225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
-				D40CAF0121BFF3250018E256 /* FHHomeBridgeImp.m in Sources */,
-				FB3224E7221999CD008DFB8D /* FHMessageBridgeImp.m in Sources */,
 				3D97BE7D226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
-				3DB7A71C21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */,
-				B30912C021E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3211,14 +3102,7 @@
 			files = (
 				B373C81C2174587A008F9905 /* AppDelegate.m in Sources */,
 				B373C8252174587A008F9905 /* main.m in Sources */,
-				FB3224EB2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */,
-				D40CAF0321BFF3250018E256 /* FHHomeBridgeImp.m in Sources */,
-				3D2D488821A28E5A0011A0EC /* FHHouseEvnContextBridgeImp.m in Sources */,
-				3D2D488521A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */,
-				3D20F72E225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
 				3D97BE7F226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
-				3DB7A71E21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */,
-				B30912C221E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3228,14 +3112,7 @@
 			files = (
 				D47950E321ECC94E00548965 /* AppDelegate.m in Sources */,
 				D47950EC21ECC94E00548965 /* main.m in Sources */,
-				FB3224EC2219A09A008DFB8D /* FHMessageBridgeImp.m in Sources */,
-				D47952CA21ECC94E00548965 /* FHHomeBridgeImp.m in Sources */,
-				D479539E21ECC94E00548965 /* FHHouseEvnContextBridgeImp.m in Sources */,
-				D47953FB21ECC94E00548965 /* FHHouseFilterBridgeImp.m in Sources */,
-				3D20F72F225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
 				3D97BE80226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
-				D479567521ECC94E00548965 /* FHHouseCellsBridgeImp.m in Sources */,
-				D479575021ECC94E00548965 /* FHRealtorDetailWebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3245,14 +3122,7 @@
 			files = (
 				FEFA527D205FB1A8001F50D8 /* AppDelegate.m in Sources */,
 				FEFA5288205FB1A8001F50D8 /* main.m in Sources */,
-				FB3224EA2219A08F008DFB8D /* FHMessageBridgeImp.m in Sources */,
-				D40CAF0221BFF3250018E256 /* FHHomeBridgeImp.m in Sources */,
-				3D2D488721A28E5A0011A0EC /* FHHouseEvnContextBridgeImp.m in Sources */,
-				3D2D488421A28E5A0011A0EC /* FHHouseFilterBridgeImp.m in Sources */,
-				3D20F72D225F6F21007168F2 /* FHAccountBridgeImp.m in Sources */,
 				3D97BE7E226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
-				3DB7A71D21A2A41400B4D017 /* FHHouseCellsBridgeImp.m in Sources */,
-				B30912C121E3865500E530C3 /* FHRealtorDetailWebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

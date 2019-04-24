@@ -19,6 +19,7 @@
 #import <TTRoute.h>
 #import <FHLocManager.h>
 #import "ArticleURLSetting.h"
+#import <TTArticleBase/SSCommonLogic.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
