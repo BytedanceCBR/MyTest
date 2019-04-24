@@ -23,8 +23,18 @@
 
     NSString *stringVersion = [FHEnvContext getToutiaoVersionCode];
     NSArray *geckoChannels = [FHIESGeckoManager fhGeckoChannels];
-    if ([geckoChannels isKindOfClass:[NSArray class]] && geckoChannels.count > 0) {
-        [IESGeckoKit registerAccessKey:[FHIESGeckoManager getGeckoKey] appVersion:stringVersion channels:geckoChannels];
+    NSMutableArray *localChannels = [NSMutableArray new];
+
+    if ([geckoChannels isKindOfClass:[NSArray class]]) {
+        [localChannels addObjectsFromArray:geckoChannels];
+    }
+    
+    if (![localChannels containsObject:@"f_realtor_detail"]) {
+        [localChannels addObject:@"localChannels"];
+    }
+    
+    if ([localChannels isKindOfClass:[NSArray class]] && localChannels.count > 0) {
+        [IESGeckoKit registerAccessKey:[FHIESGeckoManager getGeckoKey] appVersion:stringVersion channels:localChannels];
         [IESGeckoKit syncResourcesIfNeeded];// 同步资源文件
     }
 }
