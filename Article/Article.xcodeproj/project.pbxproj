@@ -44,6 +44,22 @@
 		3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
 		3D741F312255FF8600E62B4C /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
 		3D7D2F3622703DE200A95FAF /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B42954E1BA13BB1000B7F10 /* TargetLogicSetting.strings */; };
+		3D7D2F3C22704CAA00A95FAF /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3822704CAA00A95FAF /* Icon.png */; };
+		3D7D2F3D22704CAA00A95FAF /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3822704CAA00A95FAF /* Icon.png */; };
+		3D7D2F3E22704CAA00A95FAF /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3822704CAA00A95FAF /* Icon.png */; };
+		3D7D2F3F22704CAA00A95FAF /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3822704CAA00A95FAF /* Icon.png */; };
+		3D7D2F4022704CAA00A95FAF /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3922704CAA00A95FAF /* Icon-72.png */; };
+		3D7D2F4122704CAB00A95FAF /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3922704CAA00A95FAF /* Icon-72.png */; };
+		3D7D2F4222704CAB00A95FAF /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3922704CAA00A95FAF /* Icon-72.png */; };
+		3D7D2F4322704CAB00A95FAF /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3922704CAA00A95FAF /* Icon-72.png */; };
+		3D7D2F4422704CAB00A95FAF /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3A22704CAA00A95FAF /* Icon-72@2x.png */; };
+		3D7D2F4522704CAB00A95FAF /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3A22704CAA00A95FAF /* Icon-72@2x.png */; };
+		3D7D2F4622704CAB00A95FAF /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3A22704CAA00A95FAF /* Icon-72@2x.png */; };
+		3D7D2F4722704CAB00A95FAF /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3A22704CAA00A95FAF /* Icon-72@2x.png */; };
+		3D7D2F4822704CAB00A95FAF /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */; };
+		3D7D2F4922704CAB00A95FAF /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */; };
+		3D7D2F4A22704CAB00A95FAF /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */; };
+		3D7D2F4B22704CAB00A95FAF /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */; };
 		3D97BE7D226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE7E226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
 		3D97BE7F226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
@@ -109,13 +125,10 @@
 		B362E6F821539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		B373C81C2174587A008F9905 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
 		B373C8252174587A008F9905 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
-		B373CE882174587A008F9905 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F92206F4217000F18C6 /* Icon-72@2x.png */; };
 		B373CE892174587A008F9905 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
 		B373CE8E2174587A008F9905 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		B373CE8F2174587A008F9905 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
-		B373CE912174587A008F9905 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F95206F4219000F18C6 /* Icon@2x.png */; };
-		B373CE922174587A008F9905 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F94206F4219000F18C6 /* Icon.png */; };
 		B373CE932174587A008F9905 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694391CF2E5A5009997F0 /* NewsInHouseTodayExtenstion.debug.xcconfig */; };
 		B373CE942174587A008F9905 /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE700DC91B8D98F8004A435E /* yw_1222.jpg */; };
 		B373CE952174587A008F9905 /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
@@ -145,7 +158,6 @@
 		B373CECA2174587A008F9905 /* NewsInHouse.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694381CF2E5A5009997F0 /* NewsInHouse.release.xcconfig */; };
 		B373CECB2174587A008F9905 /* AuthorizeHintResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */; };
 		B373CECC2174587A008F9905 /* default_profile_background_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BD907021DB877E40072138C /* default_profile_background_image.jpg */; };
-		B373CECD2174587A008F9905 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F93206F4218000F18C6 /* Icon-72.png */; };
 		B373CECF2174587A008F9905 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
 		B373CED02174587A008F9905 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		B373CED12174587A008F9905 /* VideoResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */; };
@@ -196,13 +208,10 @@
 		D0A4FC4F1B897287000240C6 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
 		D47950E321ECC94E00548965 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
 		D47950EC21ECC94E00548965 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
-		D479578E21ECC94E00548965 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F92206F4217000F18C6 /* Icon-72@2x.png */; };
 		D479578F21ECC94E00548965 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		D479579021ECC94E00548965 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
 		D479579421ECC94E00548965 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		D479579521ECC94E00548965 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
-		D479579721ECC94E00548965 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F95206F4219000F18C6 /* Icon@2x.png */; };
-		D479579821ECC94E00548965 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F94206F4219000F18C6 /* Icon.png */; };
 		D479579921ECC94E00548965 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694391CF2E5A5009997F0 /* NewsInHouseTodayExtenstion.debug.xcconfig */; };
 		D479579A21ECC94E00548965 /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE700DC91B8D98F8004A435E /* yw_1222.jpg */; };
 		D479579B21ECC94E00548965 /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
@@ -235,7 +244,6 @@
 		D47957D121ECC94E00548965 /* NewsInHouse.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694381CF2E5A5009997F0 /* NewsInHouse.release.xcconfig */; };
 		D47957D221ECC94E00548965 /* AuthorizeHintResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */; };
 		D47957D321ECC94E00548965 /* default_profile_background_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BD907021DB877E40072138C /* default_profile_background_image.jpg */; };
-		D47957D421ECC94E00548965 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F93206F4218000F18C6 /* Icon-72.png */; };
 		D47957D621ECC94E00548965 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
 		D47957D721ECC94E00548965 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		D47957D821ECC94E00548965 /* VideoResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */; };
@@ -273,14 +281,6 @@
 		D479580621ECC94E00548965 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058C15876AE500EB27FA /* libz.1.dylib */; };
 		D479580721ECC94E00548965 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
 		D5CEF9581F356C4900185E7E /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
-		D5E21F96206F421A000F18C6 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F92206F4217000F18C6 /* Icon-72@2x.png */; };
-		D5E21F97206F421A000F18C6 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F92206F4217000F18C6 /* Icon-72@2x.png */; };
-		D5E21F98206F421A000F18C6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F93206F4218000F18C6 /* Icon-72.png */; };
-		D5E21F99206F421A000F18C6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F93206F4218000F18C6 /* Icon-72.png */; };
-		D5E21F9A206F421A000F18C6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F94206F4219000F18C6 /* Icon.png */; };
-		D5E21F9B206F421A000F18C6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F94206F4219000F18C6 /* Icon.png */; };
-		D5E21F9C206F421A000F18C6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F95206F4219000F18C6 /* Icon@2x.png */; };
-		D5E21F9D206F421A000F18C6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E21F95206F4219000F18C6 /* Icon@2x.png */; };
 		D97EB6B01E1CA04200EE4473 /* VideoResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */; };
 		EF3B84B6173BDC690017F4E7 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF3B84B5173BDC690017F4E7 /* Security.framework */; };
 		EF666EEE1962EED100E39BBE /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF666EEB1962EEB700E39BBE /* AddressBook.framework */; };
@@ -502,6 +502,10 @@
 		3D325486226D66630002F0AD /* ios_asset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ios_asset; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		3D7D2F3822704CAA00A95FAF /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		3D7D2F3922704CAA00A95FAF /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		3D7D2F3A22704CAA00A95FAF /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		3D97BE7B226D753E0063C39A /* TTNotificationServiceExtensionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNotificationServiceExtensionBase.h; sourceTree = "<group>"; };
 		3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNotificationServiceExtensionBase.m; sourceTree = "<group>"; };
 		3D97BE83226D92A30063C39A /* News.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = News.entitlements; path = News/News.entitlements; sourceTree = SOURCE_ROOT; };
@@ -586,10 +590,6 @@
 		D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonResource.xcassets; sourceTree = "<group>"; };
 		D479581521ECC94E00548965 /* NewsLiteChannel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NewsLiteChannel.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D5E21F92206F4217000F18C6 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
-		D5E21F93206F4218000F18C6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
-		D5E21F94206F4219000F18C6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		D5E21F95206F4219000F18C6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		EF666EEB1962EEB700E39BBE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
@@ -893,10 +893,6 @@
 			isa = PBXGroup;
 			children = (
 				3D97BE83226D92A30063C39A /* News.entitlements */,
-				D5E21F93206F4218000F18C6 /* Icon-72.png */,
-				D5E21F92206F4217000F18C6 /* Icon-72@2x.png */,
-				D5E21F94206F4219000F18C6 /* Icon.png */,
-				D5E21F95206F4219000F18C6 /* Icon@2x.png */,
 				6B4295571BA13C61000B7F10 /* IPhoneLogicSetting.strings */,
 				6B4295581BA13C61000B7F10 /* TargetLogicSetting.strings */,
 				48F775F9166494DC002FB812 /* en.lproj */,
@@ -917,6 +913,17 @@
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
+		};
+		3D7D2F3722704CAA00A95FAF /* AppIcon */ = {
+			isa = PBXGroup;
+			children = (
+				3D7D2F3822704CAA00A95FAF /* Icon.png */,
+				3D7D2F3922704CAA00A95FAF /* Icon-72.png */,
+				3D7D2F3A22704CAA00A95FAF /* Icon-72@2x.png */,
+				3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */,
+			);
+			path = AppIcon;
+			sourceTree = SOURCE_ROOT;
 		};
 		3D97BE7A226D753E0063C39A /* NotificationServiceExtensionBase */ = {
 			isa = PBXGroup;
@@ -1027,6 +1034,7 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				3D7D2F3722704CAA00A95FAF /* AppIcon */,
 				8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */,
 				01FA60521E9F5D7300CE6FD3 /* area.plist */,
 				4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */,
@@ -1376,18 +1384,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D5E21F96206F421A000F18C6 /* Icon-72@2x.png in Resources */,
 				01FA60531E9F5D7300CE6FD3 /* area.plist in Resources */,
 				B388CB282142652A00653188 /* LaunchScreen.storyboard in Resources */,
 				6BF694541CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
 				2E14CCF11FE007C30093E05D /* sound6.caf in Resources */,
-				D5E21F9C206F421A000F18C6 /* Icon@2x.png in Resources */,
-				D5E21F9A206F421A000F18C6 /* Icon.png in Resources */,
 				6BF694481CF2E5A5009997F0 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */,
 				3D325487226D66630002F0AD /* ios_asset in Resources */,
 				FE700DCA1B8D98F8004A435E /* yw_1222.jpg in Resources */,
 				F8893C811FCE5F4200C76EBB /* tt_video_doubleClickApprove.bundle in Resources */,
 				D08BFBE01B8729B800E6D9A1 /* Images.xcassets in Resources */,
+				3D7D2F4822704CAB00A95FAF /* Icon@2x.png in Resources */,
 				438724821BE32BB500854877 /* Settings.xcassets in Resources */,
 				2E14CCF01FE007C30093E05D /* sound4.caf in Resources */,
 				2E14CCEC1FE007C30093E05D /* sound1.caf in Resources */,
@@ -1404,6 +1410,8 @@
 				D0A4FC4F1B897287000240C6 /* CommonResource.xcassets in Resources */,
 				2E14CCEF1FE007C30093E05D /* sound2.caf in Resources */,
 				6BF6945C1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */,
+				3D7D2F4022704CAA00A95FAF /* Icon-72.png in Resources */,
+				3D7D2F4422704CAB00A95FAF /* Icon-72@2x.png in Resources */,
 				2E14CCEE1FE007C30093E05D /* sound5.caf in Resources */,
 				3D721A9E218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
@@ -1411,6 +1419,7 @@
 				3DB49F8D2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				6BF694401CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig in Resources */,
 				6BF694581CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
+				3D7D2F3C22704CAA00A95FAF /* Icon.png in Resources */,
 				6B42955A1BA13C61000B7F10 /* IPhoneLogicSetting.strings in Resources */,
 				D5CEF9581F356C4900185E7E /* NewsResource.xcassets in Resources */,
 				D08BFBDB1B8729AA00E6D9A1 /* FrameworkResource.xcassets in Resources */,
@@ -1419,7 +1428,6 @@
 				6BF694441CF2E5A5009997F0 /* NewsInHouse.release.xcconfig in Resources */,
 				4175CE3D1D16850900F2CFC2 /* AuthorizeHintResource.xcassets in Resources */,
 				6BD907031DB877E40072138C /* default_profile_background_image.jpg in Resources */,
-				D5E21F98206F421A000F18C6 /* Icon-72.png in Resources */,
 				B388CB262142652A00653188 /* Assets.xcassets in Resources */,
 				B362E6F721539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */,
 				3DB49F892265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
@@ -1446,18 +1454,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B373CE882174587A008F9905 /* Icon-72@2x.png in Resources */,
 				B373CE892174587A008F9905 /* area.plist in Resources */,
 				B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */,
 				B373CE8E2174587A008F9905 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
 				B373CE8F2174587A008F9905 /* sound6.caf in Resources */,
-				B373CE912174587A008F9905 /* Icon@2x.png in Resources */,
-				B373CE922174587A008F9905 /* Icon.png in Resources */,
 				B373CE932174587A008F9905 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */,
 				3D325489226D66630002F0AD /* ios_asset in Resources */,
 				B373CE942174587A008F9905 /* yw_1222.jpg in Resources */,
 				B373CE952174587A008F9905 /* tt_video_doubleClickApprove.bundle in Resources */,
 				B373CE962174587A008F9905 /* Images.xcassets in Resources */,
+				3D7D2F4A22704CAB00A95FAF /* Icon@2x.png in Resources */,
 				B373CE972174587A008F9905 /* Settings.xcassets in Resources */,
 				B373CE992174587A008F9905 /* sound4.caf in Resources */,
 				B373CE9B2174587A008F9905 /* sound1.caf in Resources */,
@@ -1474,6 +1480,8 @@
 				B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */,
 				B373CEB02174587A008F9905 /* sound2.caf in Resources */,
 				B373CEB32174587A008F9905 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */,
+				3D7D2F4222704CAB00A95FAF /* Icon-72.png in Resources */,
+				3D7D2F4622704CAB00A95FAF /* Icon-72@2x.png in Resources */,
 				B373CEB42174587A008F9905 /* sound5.caf in Resources */,
 				3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
@@ -1481,6 +1489,7 @@
 				3DB49F8F2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				B373CEBD2174587A008F9905 /* NewsInHouse.debug.xcconfig in Resources */,
 				B373CEBF2174587A008F9905 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
+				3D7D2F3E22704CAA00A95FAF /* Icon.png in Resources */,
 				B373CEC22174587A008F9905 /* IPhoneLogicSetting.strings in Resources */,
 				B373CEC52174587A008F9905 /* NewsResource.xcassets in Resources */,
 				B373CEC62174587A008F9905 /* FrameworkResource.xcassets in Resources */,
@@ -1489,7 +1498,6 @@
 				B373CECA2174587A008F9905 /* NewsInHouse.release.xcconfig in Resources */,
 				B373CECB2174587A008F9905 /* AuthorizeHintResource.xcassets in Resources */,
 				B373CECC2174587A008F9905 /* default_profile_background_image.jpg in Resources */,
-				B373CECD2174587A008F9905 /* Icon-72.png in Resources */,
 				B373CECF2174587A008F9905 /* Assets.xcassets in Resources */,
 				B373CED02174587A008F9905 /* TTUIWidgetResources.bundle in Resources */,
 				3DB49F8B2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
@@ -1502,18 +1510,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D479578E21ECC94E00548965 /* Icon-72@2x.png in Resources */,
 				D479578F21ECC94E00548965 /* area.plist in Resources */,
 				D479579021ECC94E00548965 /* LaunchScreen.storyboard in Resources */,
 				D479579421ECC94E00548965 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
 				D479579521ECC94E00548965 /* sound6.caf in Resources */,
-				D479579721ECC94E00548965 /* Icon@2x.png in Resources */,
-				D479579821ECC94E00548965 /* Icon.png in Resources */,
 				D479579921ECC94E00548965 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */,
 				3D32548A226D66630002F0AD /* ios_asset in Resources */,
 				D479579A21ECC94E00548965 /* yw_1222.jpg in Resources */,
 				D479579B21ECC94E00548965 /* tt_video_doubleClickApprove.bundle in Resources */,
 				D479579C21ECC94E00548965 /* Images.xcassets in Resources */,
+				3D7D2F4B22704CAB00A95FAF /* Icon@2x.png in Resources */,
 				D479579D21ECC94E00548965 /* Settings.xcassets in Resources */,
 				D479579F21ECC94E00548965 /* sound4.caf in Resources */,
 				D47957A121ECC94E00548965 /* sound1.caf in Resources */,
@@ -1530,6 +1536,8 @@
 				D47957B721ECC94E00548965 /* CommonResource.xcassets in Resources */,
 				D47957B821ECC94E00548965 /* sound2.caf in Resources */,
 				D47957BB21ECC94E00548965 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */,
+				3D7D2F4322704CAB00A95FAF /* Icon-72.png in Resources */,
+				3D7D2F4722704CAB00A95FAF /* Icon-72@2x.png in Resources */,
 				D47957BC21ECC94E00548965 /* sound5.caf in Resources */,
 				D47957BF21ECC94E00548965 /* gaode_map_style.data in Resources */,
 				D47957C321ECC94E00548965 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
@@ -1537,6 +1545,7 @@
 				3DB49F902265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				D47957C521ECC94E00548965 /* NewsInHouse.debug.xcconfig in Resources */,
 				D47957C821ECC94E00548965 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
+				3D7D2F3F22704CAA00A95FAF /* Icon.png in Resources */,
 				D47957CB21ECC94E00548965 /* IPhoneLogicSetting.strings in Resources */,
 				D47957CD21ECC94E00548965 /* NewsResource.xcassets in Resources */,
 				D47957CE21ECC94E00548965 /* FrameworkResource.xcassets in Resources */,
@@ -1545,7 +1554,6 @@
 				D47957D121ECC94E00548965 /* NewsInHouse.release.xcconfig in Resources */,
 				D47957D221ECC94E00548965 /* AuthorizeHintResource.xcassets in Resources */,
 				D47957D321ECC94E00548965 /* default_profile_background_image.jpg in Resources */,
-				D47957D421ECC94E00548965 /* Icon-72.png in Resources */,
 				D47957D621ECC94E00548965 /* Assets.xcassets in Resources */,
 				D47957D721ECC94E00548965 /* TTUIWidgetResources.bundle in Resources */,
 				3DB49F8C2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
@@ -1559,17 +1567,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D7D2F3622703DE200A95FAF /* TargetLogicSetting.strings in Resources */,
-				D5E21F97206F421A000F18C6 /* Icon-72@2x.png in Resources */,
 				FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */,
 				B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */,
 				FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
 				FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */,
-				D5E21F9D206F421A000F18C6 /* Icon@2x.png in Resources */,
-				D5E21F9B206F421A000F18C6 /* Icon.png in Resources */,
 				FEFA59CD205FB1A8001F50D8 /* NewsInHouseTodayExtenstion.debug.xcconfig in Resources */,
 				3D325488226D66630002F0AD /* ios_asset in Resources */,
 				FEFA59CE205FB1A8001F50D8 /* yw_1222.jpg in Resources */,
 				FEFA59CF205FB1A8001F50D8 /* tt_video_doubleClickApprove.bundle in Resources */,
+				3D7D2F4922704CAB00A95FAF /* Icon@2x.png in Resources */,
 				FEFA59D1205FB1A8001F50D8 /* Images.xcassets in Resources */,
 				FEFA59D2205FB1A8001F50D8 /* Settings.xcassets in Resources */,
 				FEFA59D6205FB1A8001F50D8 /* sound4.caf in Resources */,
@@ -1586,6 +1592,8 @@
 				FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */,
 				FEFA59FC205FB1A8001F50D8 /* sound2.caf in Resources */,
 				FEFA5A04205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */,
+				3D7D2F4122704CAB00A95FAF /* Icon-72.png in Resources */,
+				3D7D2F4522704CAB00A95FAF /* Icon-72@2x.png in Resources */,
 				FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */,
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
@@ -1593,6 +1601,7 @@
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */,
 				FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
+				3D7D2F3D22704CAA00A95FAF /* Icon.png in Resources */,
 				FEFA5A1A205FB1A8001F50D8 /* IPhoneLogicSetting.strings in Resources */,
 				FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */,
 				FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */,
@@ -1601,7 +1610,6 @@
 				FEFA5A20205FB1A8001F50D8 /* NewsInHouse.release.xcconfig in Resources */,
 				FEFA5A21205FB1A8001F50D8 /* AuthorizeHintResource.xcassets in Resources */,
 				FEFA5A22205FB1A8001F50D8 /* default_profile_background_image.jpg in Resources */,
-				D5E21F99206F421A000F18C6 /* Icon-72.png in Resources */,
 				B388CB272142652A00653188 /* Assets.xcassets in Resources */,
 				B362E6F821539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */,
 				3DB49F8A2265E34900A0780E /* ProjectDayModeThemeUISetting.strings in Resources */,
