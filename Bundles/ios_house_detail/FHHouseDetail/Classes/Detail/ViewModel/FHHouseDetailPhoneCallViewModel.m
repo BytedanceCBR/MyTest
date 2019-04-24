@@ -428,20 +428,26 @@ typedef enum : NSUInteger {
     
     if ([FHHouseDetailPhoneCallViewModel isEnableCurrentChannel]) {
         if (isPre) {
-            if ([self.routeAgentObj.instance isKindOfClass:[UIViewController class]]) {
+            if ([self.routeAgentObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
                 [self.belongsVC.navigationController pushViewController:self.routeAgentObj.instance animated:YES];
             }else
             {
                 TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO];
-                if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
+                if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
                     [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+                }else
+                {
+                    [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
                 }
             }
         }else
         {
             TTRouteObject *routeObj = [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:NO];
-            if ([routeObj.instance isKindOfClass:[UIViewController class]]) {
-                [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+            if ([routeObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
+                    [self.belongsVC.navigationController pushViewController:routeObj.instance animated:YES];
+            }else
+            {
+                [self creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:NO andIsOpen:YES];
             }
         }
     }else
@@ -534,12 +540,13 @@ typedef enum : NSUInteger {
     }else
     {
         dict[@"page_type"] = @"realtor_detail";
+        BOOL islogin = [[TTAccount sharedAccount] isLogin];
+        [imdic setValue:islogin ? @"1" : @"0" forKey:@"is_login"];
         
-        NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle"]];
+        NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=1&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"]];
         
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
-        //    [[TTRoute sharedRoute]openURLByViewController:openUrlRn userInfo:userInfo];
-        //
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+      
         TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
         if (isPre) {
             self.routeAgentObj = routeObj;
@@ -549,7 +556,6 @@ typedef enum : NSUInteger {
             return routeObj;
         }
     }
-
 }
 
 
