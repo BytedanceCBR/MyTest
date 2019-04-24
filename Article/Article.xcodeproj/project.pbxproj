@@ -30,9 +30,25 @@
 		3AA5059515876B0600EB27FA /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059415876B0600EB27FA /* MessageUI.framework */; };
 		3AA5059715876B0D00EB27FA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059615876B0D00EB27FA /* QuartzCore.framework */; };
 		3AA5059915876B1100EB27FA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059815876B1100EB27FA /* CoreData.framework */; };
-		3AA5059C15876B8C00EB27FA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
-		3AA505A115876B9800EB27FA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
 		3C7A120838D84ECC2975EB7A /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28622207A9EB82A017A0DE01 /* libPods-NewsLiteInHouse.a */; };
+		3D2F39952270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
+		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
+		3D2F39972270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
+		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
+		3D2F39992270545700AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
+		3D2F399A2270545700AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
+		3D2F399B2270545700AE567D /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F39922270545700AE567D /* IPhoneLogicSetting.strings */; };
+		3D2F399C2270545700AE567D /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F39922270545700AE567D /* IPhoneLogicSetting.strings */; };
+		3D2F399D2270545700AE567D /* News-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F39932270545700AE567D /* News-Info.plist */; };
+		3D2F399E2270545700AE567D /* News-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F39932270545700AE567D /* News-Info.plist */; };
+		3D2F399F2270545700AE567D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39942270545700AE567D /* AppDelegate.m */; };
+		3D2F39A02270545700AE567D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39942270545700AE567D /* AppDelegate.m */; };
+		3D2F39A12270546B00AE567D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39942270545700AE567D /* AppDelegate.m */; };
+		3D2F39A22270546C00AE567D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39942270545700AE567D /* AppDelegate.m */; };
+		3D2F39A32270547A00AE567D /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F39922270545700AE567D /* IPhoneLogicSetting.strings */; };
+		3D2F39A42270547C00AE567D /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F39922270545700AE567D /* IPhoneLogicSetting.strings */; };
+		3D2F39A52270547F00AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
+		3D2F39A62270548000AE567D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
 		3D325487226D66630002F0AD /* ios_asset in Resources */ = {isa = PBXBuildFile; fileRef = 3D325486226D66630002F0AD /* ios_asset */; };
 		3D325488226D66630002F0AD /* ios_asset in Resources */ = {isa = PBXBuildFile; fileRef = 3D325486226D66630002F0AD /* ios_asset */; };
 		3D325489226D66630002F0AD /* ios_asset in Resources */ = {isa = PBXBuildFile; fileRef = 3D325486226D66630002F0AD /* ios_asset */; };
@@ -102,10 +118,7 @@
 		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
 		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		68EA090901E3DB3F74D84CFA /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		6B42955A1BA13C61000B7F10 /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295571BA13C61000B7F10 /* IPhoneLogicSetting.strings */; };
-		6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295581BA13C61000B7F10 /* TargetLogicSetting.strings */; };
 		6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
-		6BD02B6D1BA1881900AABF64 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48F775FA166494DC002FB812 /* InfoPlist.strings */; };
 		6BD907031DB877E40072138C /* default_profile_background_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BD907021DB877E40072138C /* default_profile_background_image.jpg */; };
 		6BF694401CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694371CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig */; };
 		6BF694441CF2E5A5009997F0 /* NewsInHouse.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694381CF2E5A5009997F0 /* NewsInHouse.release.xcconfig */; };
@@ -123,8 +136,6 @@
 		B119472D1CF7FF4700561B49 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
 		B362E6F721539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
 		B362E6F821539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */; };
-		B373C81C2174587A008F9905 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
-		B373C8252174587A008F9905 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
 		B373CE892174587A008F9905 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
 		B373CE8E2174587A008F9905 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
@@ -140,17 +151,14 @@
 		B373CEA42174587A008F9905 /* PushNotification.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */; };
 		B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		B373CEA62174587A008F9905 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
-		B373CEA82174587A008F9905 /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295581BA13C61000B7F10 /* TargetLogicSetting.strings */; };
 		B373CEAA2174587A008F9905 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE71FE007BE0093E05D /* sound3.caf */; };
 		B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
 		B373CEB02174587A008F9905 /* sound2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE91FE007C00093E05D /* sound2.caf */; };
 		B373CEB32174587A008F9905 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */; };
 		B373CEB42174587A008F9905 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
 		B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
-		B373CEBC2174587A008F9905 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48F775FA166494DC002FB812 /* InfoPlist.strings */; };
 		B373CEBD2174587A008F9905 /* NewsInHouse.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694371CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig */; };
 		B373CEBF2174587A008F9905 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */; };
-		B373CEC22174587A008F9905 /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295571BA13C61000B7F10 /* IPhoneLogicSetting.strings */; };
 		B373CEC52174587A008F9905 /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
 		B373CEC62174587A008F9905 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		B373CEC82174587A008F9905 /* Account.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */; };
@@ -206,8 +214,6 @@
 		D08BFBDB1B8729AA00E6D9A1 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		D08BFBE01B8729B800E6D9A1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */; };
 		D0A4FC4F1B897287000240C6 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
-		D47950E321ECC94E00548965 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
-		D47950EC21ECC94E00548965 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
 		D479578F21ECC94E00548965 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		D479579021ECC94E00548965 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
 		D479579421ECC94E00548965 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
@@ -224,7 +230,6 @@
 		D47957AA21ECC94E00548965 /* PushNotification.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */; };
 		D47957AB21ECC94E00548965 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		D47957AC21ECC94E00548965 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
-		D47957AE21ECC94E00548965 /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295581BA13C61000B7F10 /* TargetLogicSetting.strings */; };
 		D47957B121ECC94E00548965 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE71FE007BE0093E05D /* sound3.caf */; };
 		D47957B321ECC94E00548965 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
 		D47957B721ECC94E00548965 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
@@ -233,10 +238,8 @@
 		D47957BC21ECC94E00548965 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
 		D47957BF21ECC94E00548965 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
 		D47957C321ECC94E00548965 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
-		D47957C421ECC94E00548965 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48F775FA166494DC002FB812 /* InfoPlist.strings */; };
 		D47957C521ECC94E00548965 /* NewsInHouse.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694371CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig */; };
 		D47957C821ECC94E00548965 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */; };
-		D47957CB21ECC94E00548965 /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295571BA13C61000B7F10 /* IPhoneLogicSetting.strings */; };
 		D47957CD21ECC94E00548965 /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
 		D47957CE21ECC94E00548965 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		D47957CF21ECC94E00548965 /* Account.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */; };
@@ -292,8 +295,6 @@
 		F8893C811FCE5F4200C76EBB /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
 		FE700DCA1B8D98F8004A435E /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE700DC91B8D98F8004A435E /* yw_1222.jpg */; };
 		FEE5ED461B26C7EE009F8BA4 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEE5ED451B26C7EE009F8BA4 /* CoreMotion.framework */; };
-		FEFA527D205FB1A8001F50D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059B15876B8C00EB27FA /* AppDelegate.m */; };
-		FEFA5288205FB1A8001F50D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA5059E15876B9800EB27FA /* main.m */; };
 		FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943C1CF2E5A5009997F0 /* NewsInHouseWatchKitApp.release.xcconfig */; };
 		FEFA59C8205FB1A8001F50D8 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
@@ -314,10 +315,8 @@
 		FEFA5A04205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */; };
 		FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
 		FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
-		FEFA5A14205FB1A8001F50D8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 48F775FA166494DC002FB812 /* InfoPlist.strings */; };
 		FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF694371CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig */; };
 		FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */; };
-		FEFA5A1A205FB1A8001F50D8 /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B4295571BA13C61000B7F10 /* IPhoneLogicSetting.strings */; };
 		FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
 		FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		FEFA5A1E205FB1A8001F50D8 /* Account.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */; };
@@ -494,11 +493,16 @@
 		3AA5059415876B0600EB27FA /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		3AA5059615876B0D00EB27FA /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		3AA5059815876B1100EB27FA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		3AA5059A15876B8C00EB27FA /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = News/AppDelegate.h; sourceTree = SOURCE_ROOT; };
-		3AA5059B15876B8C00EB27FA /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = News/AppDelegate.m; sourceTree = SOURCE_ROOT; };
-		3AA5059D15876B9800EB27FA /* News-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "News-Info.plist"; path = "News/News-Info.plist"; sourceTree = SOURCE_ROOT; };
-		3AA5059E15876B9800EB27FA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = News/main.m; sourceTree = SOURCE_ROOT; };
-		3AA5059F15876B9800EB27FA /* News-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "News-Prefix.pch"; path = "News/News-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		3D2F398B2270545700AE567D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "en.lproj/zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		3D2F398C2270545700AE567D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3D2F398D2270545700AE567D /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3D2F398E2270545700AE567D /* TargetLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = TargetLogicSetting.strings; sourceTree = "<group>"; };
+		3D2F398F2270545700AE567D /* News-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "News-Prefix.pch"; sourceTree = "<group>"; };
+		3D2F39902270545700AE567D /* News.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = News.entitlements; sourceTree = "<group>"; };
+		3D2F39912270545700AE567D /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3D2F39922270545700AE567D /* IPhoneLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = IPhoneLogicSetting.strings; sourceTree = "<group>"; };
+		3D2F39932270545700AE567D /* News-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "News-Info.plist"; sourceTree = "<group>"; };
+		3D2F39942270545700AE567D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3D325486226D66630002F0AD /* ios_asset */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ios_asset; sourceTree = "<group>"; };
 		3D721A9D218FE7FA006C1156 /* gaode_map_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_map_style.data; sourceTree = "<group>"; };
 		3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
@@ -508,7 +512,6 @@
 		3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		3D97BE7B226D753E0063C39A /* TTNotificationServiceExtensionBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTNotificationServiceExtensionBase.h; sourceTree = "<group>"; };
 		3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTNotificationServiceExtensionBase.m; sourceTree = "<group>"; };
-		3D97BE83226D92A30063C39A /* News.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = News.entitlements; path = News/News.entitlements; sourceTree = SOURCE_ROOT; };
 		3DB49EE12265E34900A0780E /* IPhoneProjectLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = IPhoneProjectLogicSetting.strings; sourceTree = "<group>"; };
 		3DB49EE22265E34900A0780E /* ProjectDayModeThemeUISetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ProjectDayModeThemeUISetting.strings; sourceTree = "<group>"; };
 		3DB49EE32265E34900A0780E /* ProjectNightModeThemeUISetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = ProjectNightModeThemeUISetting.strings; sourceTree = "<group>"; };
@@ -526,7 +529,6 @@
 		48AE549C19E4F208005B68B1 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		48C000AF16F7426D00FC365B /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		48EC02941855A4BB0010847F /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		48F775FB166494DC002FB812 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = InfoPlist.strings; sourceTree = "<group>"; };
 		48F7DC0816E9C9140052F809 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		4EB6EE50212A823B00EC2148 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6114B09C21B3E78C00331D12 /* house_refresh.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = house_refresh.json; sourceTree = "<group>"; };
@@ -542,8 +544,6 @@
 		619867982223EF910056B2EF /* com.f100.client.FHNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = com.f100.client.FHNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		64BC5C916255C352F4C2F875 /* Pods-NewsLite.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLite.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLite/Pods-NewsLite.debug.xcconfig"; sourceTree = "<group>"; };
 		6B42954E1BA13BB1000B7F10 /* TargetLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = TargetLogicSetting.strings; sourceTree = "<group>"; };
-		6B4295571BA13C61000B7F10 /* IPhoneLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = IPhoneLogicSetting.strings; path = News/IPhoneLogicSetting.strings; sourceTree = SOURCE_ROOT; };
-		6B4295581BA13C61000B7F10 /* TargetLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = TargetLogicSetting.strings; path = News/TargetLogicSetting.strings; sourceTree = SOURCE_ROOT; };
 		6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Weather.xcassets; sourceTree = "<group>"; };
 		6B9469601BC6846C00FDD128 /* libSDWebImage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDWebImage.a; path = "Pods/../build/Debug-iphoneos/libSDWebImage.a"; sourceTree = "<group>"; };
 		6B9469621BC6847600FDD128 /* liblibwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblibwebp.a; path = "Pods/../build/Debug-iphoneos/liblibwebp.a"; sourceTree = "<group>"; };
@@ -593,7 +593,6 @@
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		EF666EEB1962EEB700E39BBE /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		EFB4CD9219D851A200551B37 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EFB4CD9F19D8528E00551B37 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EFB4CDA119D8529100551B37 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EFB4CDA219D8529800551B37 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
@@ -889,29 +888,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		3AA5028A15876A1F00EB27FA /* News */ = {
+		3D2F39892270545700AE567D /* News */ = {
 			isa = PBXGroup;
 			children = (
-				3D97BE83226D92A30063C39A /* News.entitlements */,
-				6B4295571BA13C61000B7F10 /* IPhoneLogicSetting.strings */,
-				6B4295581BA13C61000B7F10 /* TargetLogicSetting.strings */,
-				48F775F9166494DC002FB812 /* en.lproj */,
-				3AA5059A15876B8C00EB27FA /* AppDelegate.h */,
-				3AA5059B15876B8C00EB27FA /* AppDelegate.m */,
-				3AA5028B15876A1F00EB27FA /* Supporting Files */,
+				3D2F398D2270545700AE567D /* AppDelegate.h */,
+				3D2F39942270545700AE567D /* AppDelegate.m */,
+				3D2F398A2270545700AE567D /* InfoPlist.strings */,
+				3D2F39922270545700AE567D /* IPhoneLogicSetting.strings */,
+				3D2F39912270545700AE567D /* main.m */,
+				3D2F39932270545700AE567D /* News-Info.plist */,
+				3D2F398F2270545700AE567D /* News-Prefix.pch */,
+				3D2F39902270545700AE567D /* News.entitlements */,
+				3D2F398E2270545700AE567D /* TargetLogicSetting.strings */,
 			);
-			name = News;
-			path = Article;
-			sourceTree = "<group>";
-		};
-		3AA5028B15876A1F00EB27FA /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				3AA5059D15876B9800EB27FA /* News-Info.plist */,
-				3AA5059E15876B9800EB27FA /* main.m */,
-				3AA5059F15876B9800EB27FA /* News-Prefix.pch */,
-			);
-			name = "Supporting Files";
+			path = News;
 			sourceTree = "<group>";
 		};
 		3D7D2F3722704CAA00A95FAF /* AppIcon */ = {
@@ -954,15 +944,6 @@
 			);
 			path = NewsInHouse;
 			sourceTree = "<group>";
-		};
-		48F775F9166494DC002FB812 /* en.lproj */ = {
-			isa = PBXGroup;
-			children = (
-				48F775FA166494DC002FB812 /* InfoPlist.strings */,
-			);
-			name = en.lproj;
-			path = News/en.lproj;
-			sourceTree = SOURCE_ROOT;
 		};
 		54DD0068D708A01BB386FC65 /* Pods */ = {
 			isa = PBXGroup;
@@ -1025,7 +1006,7 @@
 			isa = PBXGroup;
 			children = (
 				6BF694361CF2E5A5009997F0 /* Config */,
-				3AA5028A15876A1F00EB27FA /* News */,
+				3D2F39892270545700AE567D /* News */,
 				48AFA48F19D1AB7300198277 /* NewsInHouse */,
 			);
 			name = "Targets-Config";
@@ -1396,6 +1377,7 @@
 				3D7D2F4822704CAB00A95FAF /* Icon@2x.png in Resources */,
 				438724821BE32BB500854877 /* Settings.xcassets in Resources */,
 				2E14CCF01FE007C30093E05D /* sound4.caf in Resources */,
+				3D2F39952270545700AE567D /* InfoPlist.strings in Resources */,
 				2E14CCEC1FE007C30093E05D /* sound1.caf in Resources */,
 				6114B09D21B3E78C00331D12 /* house_refresh.json in Resources */,
 				6BF694501CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
@@ -1404,7 +1386,7 @@
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F912265E34900A0780E /* iconfont_new.ttf in Resources */,
 				6B50C7B51F5D44EF00BF89A1 /* Weather.xcassets in Resources */,
-				6B42955B1BA13C61000B7F10 /* TargetLogicSetting.strings in Resources */,
+				3D2F39972270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				2E14CCED1FE007C30093E05D /* sound3.caf in Resources */,
 				3DB7A72E21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				D0A4FC4F1B897287000240C6 /* CommonResource.xcassets in Resources */,
@@ -1415,18 +1397,18 @@
 				2E14CCEE1FE007C30093E05D /* sound5.caf in Resources */,
 				3D721A9E218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
-				6BD02B6D1BA1881900AABF64 /* InfoPlist.strings in Resources */,
 				3DB49F8D2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
+				3D2F399B2270545700AE567D /* IPhoneLogicSetting.strings in Resources */,
 				6BF694401CF2E5A5009997F0 /* NewsInHouse.debug.xcconfig in Resources */,
 				6BF694581CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
 				3D7D2F3C22704CAA00A95FAF /* Icon.png in Resources */,
-				6B42955A1BA13C61000B7F10 /* IPhoneLogicSetting.strings in Resources */,
 				D5CEF9581F356C4900185E7E /* NewsResource.xcassets in Resources */,
 				D08BFBDB1B8729AA00E6D9A1 /* FrameworkResource.xcassets in Resources */,
 				8416BB2E1C8EAE9A00BB9C97 /* Account.xcassets in Resources */,
 				6BF6944C1CF2E5A5009997F0 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
 				6BF694441CF2E5A5009997F0 /* NewsInHouse.release.xcconfig in Resources */,
 				4175CE3D1D16850900F2CFC2 /* AuthorizeHintResource.xcassets in Resources */,
+				3D2F399D2270545700AE567D /* News-Info.plist in Resources */,
 				6BD907031DB877E40072138C /* default_profile_background_image.jpg in Resources */,
 				B388CB262142652A00653188 /* Assets.xcassets in Resources */,
 				B362E6F721539E0C00BD4DF1 /* TTUIWidgetResources.bundle in Resources */,
@@ -1466,6 +1448,7 @@
 				3D7D2F4A22704CAB00A95FAF /* Icon@2x.png in Resources */,
 				B373CE972174587A008F9905 /* Settings.xcassets in Resources */,
 				B373CE992174587A008F9905 /* sound4.caf in Resources */,
+				3D2F39962270545700AE567D /* InfoPlist.strings in Resources */,
 				B373CE9B2174587A008F9905 /* sound1.caf in Resources */,
 				6114B09F21B3E78C00331D12 /* house_refresh.json in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
@@ -1474,7 +1457,7 @@
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F932265E34900A0780E /* iconfont_new.ttf in Resources */,
 				B373CEA62174587A008F9905 /* Weather.xcassets in Resources */,
-				B373CEA82174587A008F9905 /* TargetLogicSetting.strings in Resources */,
+				3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */,
 				B373CEAA2174587A008F9905 /* sound3.caf in Resources */,
 				3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */,
@@ -1485,18 +1468,18 @@
 				B373CEB42174587A008F9905 /* sound5.caf in Resources */,
 				3D721AA0218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				B373CEBB2174587A008F9905 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
-				B373CEBC2174587A008F9905 /* InfoPlist.strings in Resources */,
 				3DB49F8F2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
+				3D2F399C2270545700AE567D /* IPhoneLogicSetting.strings in Resources */,
 				B373CEBD2174587A008F9905 /* NewsInHouse.debug.xcconfig in Resources */,
 				B373CEBF2174587A008F9905 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
 				3D7D2F3E22704CAA00A95FAF /* Icon.png in Resources */,
-				B373CEC22174587A008F9905 /* IPhoneLogicSetting.strings in Resources */,
 				B373CEC52174587A008F9905 /* NewsResource.xcassets in Resources */,
 				B373CEC62174587A008F9905 /* FrameworkResource.xcassets in Resources */,
 				B373CEC82174587A008F9905 /* Account.xcassets in Resources */,
 				B373CEC92174587A008F9905 /* NewsInHouseTodayExtenstion.release.xcconfig in Resources */,
 				B373CECA2174587A008F9905 /* NewsInHouse.release.xcconfig in Resources */,
 				B373CECB2174587A008F9905 /* AuthorizeHintResource.xcassets in Resources */,
+				3D2F399E2270545700AE567D /* News-Info.plist in Resources */,
 				B373CECC2174587A008F9905 /* default_profile_background_image.jpg in Resources */,
 				B373CECF2174587A008F9905 /* Assets.xcassets in Resources */,
 				B373CED02174587A008F9905 /* TTUIWidgetResources.bundle in Resources */,
@@ -1523,6 +1506,7 @@
 				D479579D21ECC94E00548965 /* Settings.xcassets in Resources */,
 				D479579F21ECC94E00548965 /* sound4.caf in Resources */,
 				D47957A121ECC94E00548965 /* sound1.caf in Resources */,
+				3D2F39A42270547C00AE567D /* IPhoneLogicSetting.strings in Resources */,
 				D47957A221ECC94E00548965 /* house_refresh.json in Resources */,
 				D47957A421ECC94E00548965 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
 				D47957AA21ECC94E00548965 /* PushNotification.xcassets in Resources */,
@@ -1530,7 +1514,6 @@
 				D47957AB21ECC94E00548965 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				3DB49F942265E34900A0780E /* iconfont_new.ttf in Resources */,
 				D47957AC21ECC94E00548965 /* Weather.xcassets in Resources */,
-				D47957AE21ECC94E00548965 /* TargetLogicSetting.strings in Resources */,
 				D47957B121ECC94E00548965 /* sound3.caf in Resources */,
 				D47957B321ECC94E00548965 /* BubbleImages.xcassets in Resources */,
 				D47957B721ECC94E00548965 /* CommonResource.xcassets in Resources */,
@@ -1541,12 +1524,10 @@
 				D47957BC21ECC94E00548965 /* sound5.caf in Resources */,
 				D47957BF21ECC94E00548965 /* gaode_map_style.data in Resources */,
 				D47957C321ECC94E00548965 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
-				D47957C421ECC94E00548965 /* InfoPlist.strings in Resources */,
 				3DB49F902265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				D47957C521ECC94E00548965 /* NewsInHouse.debug.xcconfig in Resources */,
 				D47957C821ECC94E00548965 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
 				3D7D2F3F22704CAA00A95FAF /* Icon.png in Resources */,
-				D47957CB21ECC94E00548965 /* IPhoneLogicSetting.strings in Resources */,
 				D47957CD21ECC94E00548965 /* NewsResource.xcassets in Resources */,
 				D47957CE21ECC94E00548965 /* FrameworkResource.xcassets in Resources */,
 				D47957CF21ECC94E00548965 /* Account.xcassets in Resources */,
@@ -1567,6 +1548,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D7D2F3622703DE200A95FAF /* TargetLogicSetting.strings in Resources */,
+				3D2F39A32270547A00AE567D /* IPhoneLogicSetting.strings in Resources */,
 				FEFA59C3205FB1A8001F50D8 /* area.plist in Resources */,
 				B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */,
 				FEFA59C7205FB1A8001F50D8 /* NewsInHouseWatchKitApp.release.xcconfig in Resources */,
@@ -1597,12 +1579,10 @@
 				FEFA5A06205FB1A8001F50D8 /* sound5.caf in Resources */,
 				3D721A9F218FE7FA006C1156 /* gaode_map_style.data in Resources */,
 				FEFA5A13205FB1A8001F50D8 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */,
-				FEFA5A14205FB1A8001F50D8 /* InfoPlist.strings in Resources */,
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */,
 				FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
 				3D7D2F3D22704CAA00A95FAF /* Icon.png in Resources */,
-				FEFA5A1A205FB1A8001F50D8 /* IPhoneLogicSetting.strings in Resources */,
 				FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */,
 				FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */,
 				FEFA5A1E205FB1A8001F50D8 /* Account.xcassets in Resources */,
@@ -3080,9 +3060,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AA5059C15876B8C00EB27FA /* AppDelegate.m in Sources */,
-				3AA505A115876B9800EB27FA /* main.m in Sources */,
+				3D2F39992270545700AE567D /* main.m in Sources */,
 				3D97BE7D226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
+				3D2F399F2270545700AE567D /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3108,9 +3088,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B373C81C2174587A008F9905 /* AppDelegate.m in Sources */,
-				B373C8252174587A008F9905 /* main.m in Sources */,
+				3D2F399A2270545700AE567D /* main.m in Sources */,
 				3D97BE7F226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
+				3D2F39A02270545700AE567D /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3118,8 +3098,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D47950E321ECC94E00548965 /* AppDelegate.m in Sources */,
-				D47950EC21ECC94E00548965 /* main.m in Sources */,
+				3D2F39A22270546C00AE567D /* AppDelegate.m in Sources */,
+				3D2F39A62270548000AE567D /* main.m in Sources */,
 				3D97BE80226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3128,8 +3108,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FEFA527D205FB1A8001F50D8 /* AppDelegate.m in Sources */,
-				FEFA5288205FB1A8001F50D8 /* main.m in Sources */,
+				3D2F39A12270546B00AE567D /* AppDelegate.m in Sources */,
+				3D2F39A52270547F00AE567D /* main.m in Sources */,
 				3D97BE7E226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3150,11 +3130,11 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		48F775FA166494DC002FB812 /* InfoPlist.strings */ = {
+		3D2F398A2270545700AE567D /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				48F775FB166494DC002FB812 /* en */,
-				EFB4CD9219D851A200551B37 /* zh-Hans */,
+				3D2F398B2270545700AE567D /* zh-Hans */,
+				3D2F398C2270545700AE567D /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
