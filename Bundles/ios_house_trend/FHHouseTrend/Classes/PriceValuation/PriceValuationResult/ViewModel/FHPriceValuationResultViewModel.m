@@ -354,7 +354,6 @@ extern NSString *const kFHToastCountKey;
     [self addInfomationTracer:@"information_show"];
     
     __weak typeof(self)wself = self;
-    // add by zjing for test to 整合
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:@"专业房地产经纪人为您服务" btnTitle:@"提交"];
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];

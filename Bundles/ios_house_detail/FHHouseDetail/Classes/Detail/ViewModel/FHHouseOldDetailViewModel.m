@@ -590,7 +590,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
         }
     }];
-    // add by zjing for test todo 整合
     // 静默关注功能
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.detailTracerDic) {
@@ -601,10 +600,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     configModel.followId = self.houseId;
     configModel.actionType = self.houseType;
     
-    // 静默关注功能
     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-    // 静默关注功能
-//    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
 }
 
 - (BOOL)isShowSubscribe {
