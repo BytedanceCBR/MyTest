@@ -71,7 +71,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.view.backgroundColor = [UIColor whiteColor];
     self.mainTableView.backgroundColor = [UIColor whiteColor];
     [[TimePerformanceTracer shareInstance] startTrace:@"configTrace"];
-    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     [[TimePerformanceTracer shareInstance] traceTimeDuration:@"configTrace" withEvent:@"load"];
     if (!configModel) {
         self.mainTableView.hidden = YES;

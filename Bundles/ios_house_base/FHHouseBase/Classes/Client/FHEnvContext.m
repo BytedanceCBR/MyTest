@@ -382,9 +382,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-        self.generalBizConfig.configCache = dataModel;
+//        self.generalBizConfig.configCache = dataModel;
         [FHEnvContext saveCurrentUserCityId:dataModel.currentCityId];
-        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
+//        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
         [self.configDataReplay sendNext:dataModel];
     }
 }
@@ -392,9 +392,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
 {
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
-        self.generalBizConfig.configCache = configModel;
+//        self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
-        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
+//        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
         [self.configDataReplay sendNext:configModel];
     }
 }
@@ -451,7 +451,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         return self.generalBizConfig.configCache;
     }else
     {
-        return [self readConfigFromLocal];
+        self.generalBizConfig.configCache = [self readConfigFromLocal];
+        return self.generalBizConfig.configCache;
     }
 }
 

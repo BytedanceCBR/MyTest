@@ -10,6 +10,7 @@
 #import "FHUtils.h"
 #import "FHEnvContext.h"
 #import "TimePerformanceTracer.h"
+#import "FHLazyLoadModel.h"
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
 static NSString *const kUserDefaultSelectKey = @"userdefaultselect";
@@ -87,8 +88,8 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 - (void)saveCurrentConfigCache:(FHConfigModel *)configValue
 {
-    self.configCache = configValue.data;
-    
+//    self.configCache = configValuedata;
+
     if([configValue.data isKindOfClass:[FHConfigDataModel class]])
     {
         NSString *configJsonStr = configValue.data.toJSONString;
@@ -100,8 +101,8 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 - (void)saveCurrentConfigDataCache:(FHConfigDataModel *)configValue
 {
-    self.configCache = configValue;
-    
+//    self.configCache = configValue;
+
     if([configValue isKindOfClass:[FHConfigDataModel class]])
     {
         NSString *configJsonStr = configValue.toJSONString;
@@ -136,7 +137,8 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     [[TimePerformanceTracer shareInstance] traceTimeDuration:@"configTrace" withEvent:@"readFromCache"];
 
     if ([configDict isKindOfClass:[NSDictionary class]]) {
-        FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
+        FHConfigDataModel *configModel = [self lazyInitConfig:configDict];
+        self.configCache = configModel;
         if ([configModel isKindOfClass:[FHConfigDataModel class]]) {
             return configModel;
         }else
@@ -147,6 +149,62 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     {
         return nil;
     }
+}
+
+-(FHConfigDataModel*)lazyInitConfig:(NSDictionary*)config {
+    NSMutableDictionary* theConfig = [config mutableCopy];
+    NSDictionary* cityList = theConfig[@"city_list"];
+    theConfig[@"city_list"] = nil;
+
+    NSMutableDictionary* cache = [[NSMutableDictionary alloc] init];
+    NSString* configKey = @"filter";
+    cache[configKey] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"court_filter";
+    cache[@"courtFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+
+    configKey = @"rent_filter";
+    cache[@"rentFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"neighborhood_filter";
+    cache[@"neighborhoodFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"search_tab_neighborhood_filter";
+    cache[@"searchTabNeighborhoodFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"search_tab_court_filter";
+    cache[@"searchTabCourtFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"search_tab_rent_filter";
+    cache[@"searchTabRentFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"search_tab_filter";
+    cache[@"searchTabFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"sale_history_filter";
+    cache[@"saleHistoryFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+    FHConfigDataModel *configModel = [[FHConfigDataModel alloc] initWithDictionary:theConfig error:nil];
+
+    [cache enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        id model = [self modelWithClass:@"FHSearchFilterConfigItem" withData:obj];
+        [configModel setValue:model forKey:key];
+    }];
+    configModel.cityList = [self modelWithClass:@"FHConfigDataCityListModel" withData:cityList];
+    return configModel;
+}
+
+-(FHLazyLoadModel*)modelWithClass:(NSString*)className withData:(NSArray*)data {
+    return [FHLazyLoadModel proxyWithClass:className withData:data];
 }
 
 - (BOOL)isSavedSearchConfig
