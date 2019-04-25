@@ -335,10 +335,7 @@ typedef enum : NSUInteger {
             [wself.alertView dismiss];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-            if (toastCount >= 3) {
-                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            }
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
         }else {
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
         }
