@@ -16,7 +16,7 @@
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHHouseType.h"
-#import "FHHouseDetailAPI.h"
+#import "FHMainApi+Contact.h"
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
@@ -47,7 +47,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 
     [self isFollowUpParamsValid:configModel];
     
-    [FHHouseDetailAPI requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (!error) {
             if (model.status.integerValue == 0) {
@@ -108,7 +108,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     FHHouseType houseType = configModel.houseType;
     FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
     
-    [FHHouseDetailAPI requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (error) {
             [[ToastManager manager] showToast:@"关注失败"];
@@ -146,7 +146,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     FHHouseType houseType = configModel.houseType;
     FHFollowActionType actionType = configModel.actionType;
     
-    [FHHouseDetailAPI requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (error) {
             [[ToastManager manager] showToast:@"取消失败"];

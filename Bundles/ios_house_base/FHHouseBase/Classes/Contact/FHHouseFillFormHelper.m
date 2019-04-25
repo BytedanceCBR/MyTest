@@ -8,7 +8,7 @@
 #import "FHHouseFillFormHelper.h"
 #import "FHDetailNoticeAlertView.h"
 #import "FHHouseType.h"
-#import "FHHouseDetailAPI.h"
+#import "FHMainApi+Contact.h"
 #import <TTRoute.h>
 #import "YYCache.h"
 #import <FHCommonUI/ToastManager.h>
@@ -152,7 +152,7 @@ extern NSString *const kFHToastCountKey;
     }
     NSString *houseId = customHouseId.length > 0 ? customHouseId : configModel.houseId;
     NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:configModel.houseType];
-    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phone from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             

@@ -7,7 +7,7 @@
 
 #import "FHHousePhoneCallUtils.h"
 #import "FHHouseType.h"
-#import "FHHouseDetailAPI.h"
+#import "FHMainApi+Contact.h"
 #import <TTRoute.h>
 #import "YYCache.h"
 #import <FHCommonUI/ToastManager.h>
@@ -83,7 +83,7 @@ typedef enum : NSUInteger {
     
     [self isPhoneCallParamsValid:configModel];
 
-    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
         NSMutableDictionary *userInfo = @{}.mutableCopy;
         userInfo[@"house_id"] = houseId;
