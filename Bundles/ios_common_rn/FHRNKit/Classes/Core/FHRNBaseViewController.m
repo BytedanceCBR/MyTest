@@ -237,6 +237,14 @@
     if (_viewWrapper) {
         [self addViewWrapper:_viewWrapper];
     }
+    
+    [self sendEventName:@"host_resume" andParams:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self sendEventName:@"host_pause" andParams:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -257,11 +265,6 @@
         }
         [bridgeEngine sendEventWithName:stringName body:params];
     }
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
 }
 
 - (void)destroyRNView
