@@ -19,7 +19,7 @@
 #import "TTSettingsManager.h"
 #import "TTAccountAuthWeChat.h"
 #import <TencentOpenAPI/QQApiInterface.h>
-
+#import "TTCopyContentItem.h"
 @interface AWEVideoShareModel ()
 
 @property (nonatomic, copy) NSString *shareTitle;
@@ -78,9 +78,9 @@
         }
         
         if ([model.groupSource isEqualToString:AwemeGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在抖音上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else if ([model.groupSource isEqualToString:HotsoonGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在火山星球上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else if ([model.groupSource isEqualToString:ToutiaoGroupSource]) {
             _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else {
@@ -122,7 +122,7 @@
         [needAddItem addObject: [self qqZoneContentItem]];
     }
 
-    NSArray *topArray = [TSVVideoShareManager synchronizeUserDefaultsWithItemArray:needAddItem];
+    NSMutableArray *topArray = [[TSVVideoShareManager synchronizeUserDefaultsWithItemArray:needAddItem] mutableCopy];
     NSMutableArray *secondArray = [NSMutableArray array];
     NSNumber *shareEnable = @YES;
     switch (_shareType) {
@@ -131,7 +131,7 @@
             /// 底部分享入口
             if (shareEnable.boolValue) {
 //                [secondArray addObject:[self systemContentItem]];
-//                [secondArray addObject:[self copyContentItem]];
+                [topArray addObject:[self copyContentItem]];
 //                if (![self.model isAuthorMyself]) {
 //                    //自己发的小视频不支持保存视频
 //                    [secondArray addObject:[self saveVideoContentItem]];
@@ -160,7 +160,7 @@
                     [secondArray addObject:[self dislikeContentItem]];
                     [secondArray addObject:[self reportContentItem]];
 //                    [secondArray addObject:[self saveVideoContentItem]];
-//                    [secondArray addObject:[self copyContentItem]];
+                    [secondArray addObject:[self copyContentItem]];
                 } else {
                     [secondArray addObject:[self deleteContentItem]];
                 }
@@ -187,11 +187,10 @@
                 shareContentItemsArray = @[
                                            topArray,
                                            @[
-
                                                [self favoriteContentItem],
-                                             [self reportContentItem]
+                                             [self reportContentItem],
 //                                             [self saveVideoContentItem],
-//                                             [self copyContentItem]],
+                                             [self copyContentItem],
                                            ]];
             } else {
                 shareContentItemsArray = @[
@@ -208,7 +207,7 @@
             if (shareEnable.boolValue) {
                 [secondArray addObject:[self dislikeContentItem]];
                 [secondArray addObject:[self reportContentItem]];
-//                [secondArray addObject:[self copyContentItem]];
+                [secondArray addObject:[self copyContentItem]];
                 NSArray *topArray = [TSVVideoShareManager synchronizeUserDefaultsWithItemArray:@[[self wechatMomentsContentItem],
                                                                                                  [self wechatContentItem],
                                                                                                  [self qqContentItem],
@@ -298,13 +297,13 @@
 //    TTSystemContentItem *systemContentItem = [[TTSystemContentItem alloc] initWithDesc:self.shareCopyContent webPageUrl:self.shareURL image:self.shareImage];
 //    return systemContentItem;
 //}
-//
-//- (TTCopyContentItem *)copyContentItem
-//{
-//    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:self.shareCopyContent];
-//    return copyContentItem;
-//}
-//
+
+- (TTCopyContentItem *)copyContentItem
+{
+    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:self.shareCopyContent];
+    return copyContentItem;
+}
+
 //- (TTSaveVideoContentItem *)saveVideoContentItem
 //{
 //    TTSaveVideoContentItem *saveVideoContentItem = [[TTSaveVideoContentItem alloc] init];

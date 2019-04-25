@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(NSArray<FHFilterNodeModel*>*)getSortConfigByHouseType:(FHHouseType)houseType;
 
++(NSArray<FHFilterNodeModel*>*)getSaleHistoryConfig;
+
 @end
 
 NS_ASSUME_NONNULL_END

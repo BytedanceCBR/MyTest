@@ -105,13 +105,15 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         actionSheet.delegate = self;
         [actionSheet showInView:self.view];
     }
+
+    self.activityActionManager.copyText = self.detailModel.article.shareURL;
     wrapperTrackEvent(@"detail", @"preferences");
     TLS_LOG(@"click_preference");
 }
 
 - (void)p_willShowSharePannel
 {
-    
+
     [self.activityActionManager clearCondition];
     if (!self.activityActionManager) {
         self.activityActionManager = [[TTActivityShareManager alloc] init];
@@ -119,7 +121,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         self.activityActionManager.miniProgramEnable = self.detailModel.article.articleType == ArticleTypeNativeContent;
         self.activityActionManager.delegate = self;
     }
-    
+
     NSMutableArray * activityItems = @[].mutableCopy;
     if ([self.articleInfoManager needShowAdShare]) {
         NSMutableDictionary *shareInfo = [self.articleInfoManager makeADShareInfo];
@@ -152,6 +154,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     
     
     self.curShareSourceType = TTShareSourceObjectTypeArticle;
+    self.activityActionManager.copyText = self.detailModel.article.shareURL;
     
 //    [self.detailModel sendDetailTrackEventWithTag:@"detail" label:@"share_button"];
 }

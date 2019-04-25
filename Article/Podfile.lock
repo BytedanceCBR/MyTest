@@ -572,8 +572,8 @@ DEPENDENCIES:
   - IESVideoPlayer (= 0.1.16)
   - IESWebKit (= 0.1.4)
   - IGListKit
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9c5ef3144d54acc6f0203df98cb38bf5f38f075d`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `4b730fd2b839b80b8975cadd066c7f4041ae362c`)
+  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9423cbfa9bb1c30d2b87c1542b862b457b7c141a`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `66541148a531f14f936f4a38a24d012cdfe701ca`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -779,10 +779,10 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
-    :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
+    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 4b730fd2b839b80b8975cadd066c7f4041ae362c
+    :commit: 66541148a531f14f936f4a38a24d012cdfe701ca
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -836,10 +836,10 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
+    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: 4b730fd2b839b80b8975cadd066c7f4041ae362c
+    :commit: 66541148a531f14f936f4a38a24d012cdfe701ca
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
@@ -1006,6 +1006,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: a67a17cc57a5e4e4c97ed2f5e689f7a06671cc9c
+PODFILE CHECKSUM: 7b5d2928352623a4626c83bf33cd4d88fdbe389c
 
 COCOAPODS: 1.4.0

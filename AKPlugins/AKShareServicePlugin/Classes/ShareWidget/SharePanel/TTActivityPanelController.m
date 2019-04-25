@@ -287,6 +287,10 @@ static const CGFloat kTTActivityPanelCancelButtonHeight = 48.f;
                                              selector:@selector(applicationStautsBarDidRotate)
                                                  name:UIApplicationDidChangeStatusBarOrientationNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(shouldDismiss:)
+                                                 name:kSharePanelShouldDismiss
+                                               object:nil];
 }
 
 - (void)removeNotification {
@@ -706,6 +710,10 @@ static const CGFloat kTTActivityPanelCancelButtonHeight = 48.f;
                              completion:nil];
         }];
     }];
+}
+
+-(void)shouldDismiss:(NSNotification*)notification {
+    [self hide];
 }
 
 - (void)hide {
