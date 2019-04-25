@@ -162,6 +162,9 @@
 - (void)updateLoadFinish
 {
     self.isLoadFinish = YES;
+    if (!_canPreLoad) {
+        [self sendEventName:@"host_resume" andParams:nil];
+    }
 }
 
 - (void)setupUI
