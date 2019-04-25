@@ -51,25 +51,15 @@
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
-        if (![configDict isEqualToDictionary:self.currentDictionary]) {
             FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
             self.currentDataModel = dataModel;
-            self.currentDictionary = configDict;
-//            [self.configDataReplay sendNext:dataModel];
-//            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
-        }
     }
 }
 
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
 {
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
-        if (![configModel.toDictionary isEqualToDictionary:self.currentDictionary]) {
             self.currentDataModel = configModel;
-            self.currentDictionary = configModel.toDictionary;
-//            [self.configDataReplay sendNext:configModel];
-//            [self.searchConfigDataReplay sendNext:[[FHEnvContext sharedInstance] getSearchConfigFromCache]];
-        }
     }
 }
 
