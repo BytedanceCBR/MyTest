@@ -25,4 +25,7 @@ TTR_EXPORT_HANDLER(disableDragBack)
 TTR_EXPORT_HANDLER(setNativeTitle)
 TTR_EXPORT_HANDLER(setNativeDividerVisible)
 
+//设置状态栏状态
+TTR_EXPORT_HANDLER(setStatusBarStyle)
+
 @end

@@ -26,7 +26,8 @@
 #import <UIView+BridgeModule.h>
 #import <TTRNBridgeEngine.h>
 #import "FHRNHelper.h"
- #import "RCTDevLoadingView.h"
+#import "RCTDevLoadingView.h"
+#import <HMDTTMonitor.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -213,6 +214,8 @@
     [self registerObserver];
     
     _container.hidden = YES;
+    
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -427,6 +430,16 @@
     [wrapper reloadDataForDebugWith:initParams
                           bundleURL:jsCodeLocation
                          moduleName:initParams[RNModuleName] ?: @""];
+}
+
+/**
+ 接入方处理channel上发生fallback的行为；
+ */
+- (void)fallBackForChannel:(NSString *)channel jsContextIsValid:(BOOL)valid
+{
+    if (!valid) {
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:1 extra:nil];
+    }
 }
 
 - (void)callPhone:(void (^)(NSDictionary * _Nonnull))excute

@@ -9,12 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FHRNBridgePluginExtension <NSObject>
-
-- (void)callPhone:(void (^)(NSDictionary *params))excute;
-
-@end
-
 @interface FHRNBridgePlugin : TTBridgePlugin
 
 TT_BRIDGE_EXPORT_HANDLER(fetch)
