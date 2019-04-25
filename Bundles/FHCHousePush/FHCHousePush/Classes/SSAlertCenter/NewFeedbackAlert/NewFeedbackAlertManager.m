@@ -7,12 +7,13 @@
 //
 
 #import "NewFeedbackAlertManager.h"
-#import <FHHouseBase/FHHouseBridgeManager.h>
 #import "SSAlertCenter.h"
 #import "SSBaseAlertModel.h"
 #import "TTNavigationController.h"
 #import "TTDeviceHelper.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
+#import <TTAppRuntime/SSFeedbackManager.h>
+#import <TTAppRuntime/SSFeedbackViewController.h>
 
 
 @implementation NewFeedbackAlertManager
@@ -30,10 +31,7 @@ static NewFeedbackAlertManager * alertManger;
 
 - (void)startAlert
 {
-    // add by zjing for test
-    if (![[[FHHouseBridgeManager sharedInstance] pushBridge] hasNewFeedback] || [TTDeviceHelper isPadDevice]) {
-
-//    if (![SSFeedbackManager hasNewFeedback] || [TTDeviceHelper isPadDevice]) {
+    if (![SSFeedbackManager hasNewFeedback] || [TTDeviceHelper isPadDevice]) {
         [[SSAlertCenter defaultCenter] removeAlert:self];
         return;
     }
@@ -67,9 +65,7 @@ static NewFeedbackAlertManager * alertManger;
     if (buttonIndex == 0) { //查看
         if (![TTDeviceHelper isPadDevice]) {
             
-            // add by zjing for test
-            UIViewController *feedbackViewController = [[[FHHouseBridgeManager sharedInstance] pushBridge]feedbackViewController];
-//            SSFeedbackViewController * feedbackViewController = [[SSFeedbackViewController alloc] init];
+            SSFeedbackViewController * feedbackViewController = [[SSFeedbackViewController alloc] init];
             
 //            UIViewController * topController = nil;
 //            SEL selector = NSSelectorFromString(@"appTopNavigationController");

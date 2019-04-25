@@ -11,10 +11,8 @@
 //#import "TTDetailContainerViewController.h"
 #import "SSAPNsAlertManager.h"
 //#import "SSADManager.h"
-//#import "TTAdSplashMediator.h"
 //#import "NewsBaseDelegate.h"
 //#import "SSUserSettingManager.h"
-//#import "TTProjectLogicManager.h"
 //#import "TTIntroduceViewTask.h"
 #import "TTAuthorizeManager.h"
 //#import "SettingView.h"
@@ -25,28 +23,32 @@
 //#import "TTArticleTabBarController.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 //#import "TSVPushLaunchManager.h"
-#import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHCHousePushUtils.h"
+#import <TTAppRuntime/NewsBaseDelegate.h>
+#import <TTService/TTDetailContainerViewController.h>
+#import <TTAppRuntime/TTBackgroundModeTask.h>
+#import <TTAdSplashMediator.h>
+#import <TTAppRuntime/SSUserSettingManager.h>
+#import <TTAppRuntime/TTIntroduceViewTask.h>
+#import <TTAppRuntime/TTStartupTasksTracker.h>
+#import <TTAppRuntime/TTProjectLogicManager.h>
+
 
 static NSString * const kTTAPNSRemoteNotificationDict = @"kTTAPNSRemoteNotificationDict";
 static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
 @implementation FHCHandleAPNSTask
 
-// add by zjing for test
 - (void)startAndTrackWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
-    
+    TTOneDevLog *devLog = [[TTStartupTasksTracker sharedTracker] cacheInitializeDevLog:[NSString stringWithFormat:@"%@_begin", [self taskIdentifier]] params:@{@"thread" : @([[[NSThread currentThread] valueForKeyPath:@"private.seqNum"] integerValue])}];
+    int64_t start = [NSObject currentUnixTime];
+    [self startWithApplication:application options:launchOptions];
+    int64_t end = [NSObject currentUnixTime];
+    double millisecond = [NSObject machTimeToSecs:(end - start)] * 1000;
+    [[TTStartupTasksTracker sharedTracker] trackStartupTaskInItsThread:[self taskIdentifier] withInterval:millisecond];
+    [[TTStartupTasksTracker sharedTracker] removeInitializeDevLog:devLog];
 }
-//{
-//    TTOneDevLog *devLog = [[TTStartupTasksTracker sharedTracker] cacheInitializeDevLog:[NSString stringWithFormat:@"%@_begin", [self taskIdentifier]] params:@{@"thread" : @([[[NSThread currentThread] valueForKeyPath:@"private.seqNum"] integerValue])}];
-//    int64_t start = [NSObject currentUnixTime];
-//    [self startWithApplication:application options:launchOptions];
-//    int64_t end = [NSObject currentUnixTime];
-//    double millisecond = [NSObject machTimeToSecs:(end - start)] * 1000;
-//    [[TTStartupTasksTracker sharedTracker] trackStartupTaskInItsThread:[self taskIdentifier] withInterval:millisecond];
-//    [[TTStartupTasksTracker sharedTracker] removeInitializeDevLog:devLog];
-//}
 
 - (void)dealloc
 {
@@ -91,9 +93,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     //如果展示开屏广告时候有弹窗延迟弹出
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(splashViewDisappearAnimationDidFinished:) name:@"kTTAdSplashShowFinish" object:nil];
     
-    // add by zjing for test
-    [[FHHouseBridgeManager sharedInstance].pushBridge setIsColdLaunch:YES];
-//    [SharedAppDelegate setIsColdLaunch:YES];
+    [SharedAppDelegate setIsColdLaunch:YES];
     
     if ([TTDeviceHelper OSVersionNumber] < 10.0 && [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]) {
         double delayInSeconds = 1;
@@ -136,16 +136,12 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         article = [Article objectWithDictionary:@{@"uniqueID":uniqueID}];
         [article save];
     }
-    // add by zjing for test
-    [[[FHHouseBridgeManager sharedInstance].pushBridge appTopNavigationController] popToRootViewControllerAnimated:NO];
-    [[FHHouseBridgeManager sharedInstance].pushBridge push2ArticleDetailPage:article];
+    [[SharedAppDelegate appTopNavigationController] popToRootViewControllerAnimated:NO];
     
-//    [[SharedAppDelegate appTopNavigationController] popToRootViewControllerAnimated:NO];
-    
-//    TTDetailContainerViewController *detailController = [[TTDetailContainerViewController alloc] initWithArticle:article
-//                                                                                                          source:NewsGoDetailFromSourceAPNS
-//                                                                                                       condition:nil];
-//    [[SharedAppDelegate appTopNavigationController] pushViewController:detailController animated:YES];
+    TTDetailContainerViewController *detailController = [[TTDetailContainerViewController alloc] initWithArticle:article
+                                                                                                          source:NewsGoDetailFromSourceAPNS
+                                                                                                       condition:nil];
+    [[SharedAppDelegate appTopNavigationController] pushViewController:detailController animated:YES];
 }
 
 + (NSString *)deviceTokenString
@@ -158,10 +154,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // in case no callbacks are invoked through notification register
-    // add by zjing for test
-    [[FHHouseBridgeManager sharedInstance].pushBridge startRegisterRemoteNotificationAfterDelay:5.f];
-    
-//    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:5.f];
+    [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:5.f];
     [[TTNotificationCenterDelegate sharedNotificationCenterDelegate] applicationDidComeToForeground];
 }
 
@@ -176,9 +169,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     
     [[TTMonitor shareManager] trackService:@"push_get_token" status:0 extra:nil];
     
-    // add by zjing for test
-    [[FHHouseBridgeManager sharedInstance].pushBridge reportDeviceTokenByAppLogout];
-//    [TTBackgroundModeTask reportDeviceTokenByAppLogout];
+    [TTBackgroundModeTask reportDeviceTokenByAppLogout];
     
     NSLog(@"push_device_token = %@", deviceTokenString);
 }
@@ -210,14 +201,9 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         }
     }
     if (userInfo != nil) {
-        //        [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;
-        // add by zjing for test
-        [[FHHouseBridgeManager sharedInstance].pushBridge setSplashADShowTypeHide];
-//        [TTAdSplashMediator shareInstance].splashADShowType = TTAdSplashShowTypeHide;
+        [TTAdSplashMediator shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     }
-    // add by zjing for test
-    [[FHHouseBridgeManager sharedInstance].pushBridge setIsColdLaunch:NO];
-//    [SharedAppDelegate setIsColdLaunch:NO];
+    [SharedAppDelegate setIsColdLaunch:NO];
 
     application.applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
     if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive &&
@@ -258,10 +244,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         //        } else {
         //            [[self class] setRemoteNotificationDict:dict];
         //        }
-        // add by zjing for test
-        if (![[FHHouseBridgeManager sharedInstance].pushBridge isAdShowing]) {
-
-//        if (![[TTAdSplashMediator shareInstance] isAdShowing]) {
+        if (![[TTAdSplashMediator shareInstance] isAdShowing]) {
             [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:dict];
         }else{
             [[self class] setRemoteNotificationDict:dict];
@@ -305,23 +288,16 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
 - (void)splashViewDisappearAnimationDidFinished:(NSNotification *)notification
 {
-    // add by zjing for test
-    BOOL shouldShowIntroductionView = [[FHHouseBridgeManager sharedInstance].pushBridge shouldShowIntroductionView];
-
-//    BOOL shouldShowIntroductionView = [SSUserSettingManager shouldShowIntroductionView];
+    BOOL shouldShowIntroductionView = [SSUserSettingManager shouldShowIntroductionView];
     BOOL isTrying = NO;
-    if (![[FHHouseBridgeManager sharedInstance].pushBridge logicBoolForKey:@"isI18NVersion"]) {
-
-//    if (![[TTProjectLogicManager sharedInstance_tt] logicBoolForKey:@"isI18NVersion" defaultValue:NO]) {
+    if (![[TTProjectLogicManager sharedInstance_tt] logicBoolForKey:@"isI18NVersion" defaultValue:NO]) {
 
 //    if (!TTLogicBool(@"isI18NVersion", NO)) {
         isTrying = [TTAccountManager tryAssignAccountInfoFromKeychain];
     }
     
-    // add by zjing for test
-    if ((shouldShowIntroductionView && !isTrying) && [[FHHouseBridgeManager sharedInstance].pushBridge appTopNavigationController]) {
-        [[FHHouseBridgeManager sharedInstance].pushBridge showIntroductionView];
-//        [TTIntroduceViewTask showIntroductionView];
+    if ((shouldShowIntroductionView && !isTrying) && [SharedAppDelegate appTopNavigationController]) {
+        [TTIntroduceViewTask showIntroductionView];
     }
     
     [[self class] showRemoteNotificationAlertIfNeeded];
@@ -335,11 +311,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     //        [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:remoteDict];
     //        [self setRemoteNotificationDict:nil];
     //    }
-    
-    // add by zjing for test
-    if (remoteDict && ![[FHHouseBridgeManager sharedInstance].pushBridge isAdShowing]) {
-
-//    if (remoteDict && ![[TTAdSplashManager shareInstance] isAdShowing]) {
+    if (remoteDict && ![[TTAdSplashManager shareInstance] isAdShowing]) {
         [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:remoteDict];
         [self setRemoteNotificationDict:nil];
     }

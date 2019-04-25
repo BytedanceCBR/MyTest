@@ -7,7 +7,6 @@
 //
 
 #import "TTPushAlertManager.h"
-#import <FHHouseBase/FHHouseBridgeManager.h>
 #import <TTKeyboardListener.h>
 #import "TTInAppPushSettings.h"
 #import <TTAccountLoginManager.h>
@@ -15,7 +14,8 @@
 //#import "FRPhotoBrowserViewController.h"
 #import <TTDialogDirector/TTDialogDirector.h>
 #import <FHHouseDetail/FHDetailPictureViewController.h>
-
+#import <TTArticleBase/ExploreMovieView.h>
+#import <TTArticleVideo/TTVPlayVideo.h>
 
 NSString * const TTStrongPushHideOnlyResultKey = @"hide_result";
 NSString * const TTStrongPushNotificationWillShowNotification = @"TTStrongPushNotificationWillShowNotification";
@@ -208,17 +208,11 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
 
 + (BOOL)isFullScreenVideoPlaying
 {
-    // add by zjing for test
-    if ([[[FHHouseBridgeManager sharedInstance] pushBridge]isFullScreen]) {
-
-//    if ([ExploreMovieView isFullScreen]) {
+    if ([ExploreMovieView isFullScreen]) {
         return YES;
     }
-    // add by zjing for test
-    if ([[[FHHouseBridgeManager sharedInstance] pushBridge]isTTVPlayVideoFullScreenOrRotating]) {
-
-//    if ([[TTVPlayVideo currentPlayingPlayVideo].player.context isFullScreen] ||
-//        [[TTVPlayVideo currentPlayingPlayVideo].player.context isRotating]) {
+    if ([[TTVPlayVideo currentPlayingPlayVideo].player.context isFullScreen] ||
+        [[TTVPlayVideo currentPlayingPlayVideo].player.context isRotating]) {
         return YES;
     }
     
@@ -226,9 +220,7 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
     if (!subViewsInWindow) return NO;
     
     for (UIView *aView in subViewsInWindow) {
-        // add by zjing for test
-        if ([[[FHHouseBridgeManager sharedInstance] pushBridge]isFullScreenViewClass:aView]) {
-//        if ([aView isKindOfClass:[ExploreMovieView class]] || [aView isKindOfClass:[TTVPlayVideo class]]) {
+        if ([aView isKindOfClass:[ExploreMovieView class]] || [aView isKindOfClass:[TTVPlayVideo class]]) {
             return YES;
         }
     }

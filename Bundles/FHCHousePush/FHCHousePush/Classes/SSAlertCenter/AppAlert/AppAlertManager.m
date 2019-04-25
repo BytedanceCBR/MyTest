@@ -20,8 +20,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTBaseMacro.h>
-#import <FHHouseBase/FHHouseBridgeManager.h>
-
+#import <TTArticleBase/CommonURLSetting.h>
 //#import "TTSingleResponseModel.h"
 
 @interface AppAlertManager ()
@@ -139,9 +138,7 @@ static AppAlertManager *_alertManager = nil;
 {
 //#warning debug code ?test=1
 //    return [NSString stringWithFormat:@"%@?test=1", [CommonURLSetting appAlertURLString]];
-    // add by zjing for test
-    return [[FHHouseBridgeManager sharedInstance].pushBridge appAlertURLString];
-//    return [CommonURLSetting appAlertURLString];
+    return [CommonURLSetting appAlertURLString];
 }
 
 - (NSDictionary *)parameterDict
@@ -317,9 +314,7 @@ static AppAlertManager *_alertManager = nil;
                     }
                 }
             }
-            // add by zjing for test
-            NSString *urlPrefix = [[FHHouseBridgeManager sharedInstance].pushBridge appAlertActionURLString];
-//            NSString *urlPrefix = [CommonURLSetting appAlertActionURLString];
+            NSString *urlPrefix = [CommonURLSetting appAlertActionURLString];
             
             NSMutableDictionary * params = [NSMutableDictionary dictionaryWithDictionary:@{
                                                                                            @"lang" : @"zh-Hans",

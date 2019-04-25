@@ -16,11 +16,10 @@
 #import "TTAuthorizeManager.h"
 //#import "SettingView.h"
 #import "TTLaunchOrientationHelper.h"
-#import <FHHouseBase/FHHouseBridgeManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import "ArticleAPNsManager.h"
-
-//#import "TTAdSplashMediator.h"
+#import <TTAdSplashMediator.h>
+#import <TTAppRuntime/NewsBaseDelegate.h>
 
 static NSString *const kNotificationCategoryIdentifierArticleDetail = @"article_detail";
 static NSString *const kNotificationCategoryIdentifierArticleDetailNoDislike = @"article_detail_no_dislike";
@@ -150,13 +149,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
     // 如果是云端推送通知，路由给 AppDelegate 进行处理
     if ([notification.request.trigger isKindOfClass:[UNPushNotificationTrigger class]]) {
         // TODO: route to AppDelegate
-        
-        // add by zjing for test
-        id appDelegate = [[FHHouseBridgeManager sharedInstance].pushBridge houseAppDelegate];
-        [appDelegate application:[UIApplication sharedApplication]
-          didReceiveRemoteNotification:notification.request.content.userInfo];
-        
-//        [SharedAppDelegate application:[UIApplication sharedApplication] didReceiveRemoteNotification:notification.request.content.userInfo];
+        [SharedAppDelegate application:[UIApplication sharedApplication] didReceiveRemoteNotification:notification.request.content.userInfo];
         completionHandler(UNNotificationPresentationOptionNone);
         return;
     }
@@ -170,19 +163,15 @@ typedef void(^NotificationActionCompletionBlock) (void);
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
 didReceiveNotificationResponse:(UNNotificationResponse *)response
          withCompletionHandler:(void (^)())completionHandler {
-    // add by zjing for test
-    [[[FHHouseBridgeManager sharedInstance]pushBridge] setSplashADShowTypeHide];
-//    [TTAdSplashMediator shareInstance].splashADShowType = TTAdSplashShowTypeHide;
+
+    [TTAdSplashMediator shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     NSDictionary *payload = response.notification.request.content.userInfo;
     if ([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
 
         [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
             wrapperTrackEvent(@"apn", @"click_notification");
-            // add by zjing for test
-            id appDelegate = [[FHHouseBridgeManager sharedInstance].pushBridge apnsManagerDelegate];
-            ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = appDelegate;
-            
-//            ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = SharedAppDelegate;
+ 
+            ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = SharedAppDelegate;
 
             [[APNsManager sharedManager] handleRemoteNotification:payload];
             completionHandler();
@@ -224,10 +213,8 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 //            else {
                 [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
                     wrapperTrackEvent(@"apn", @"click_launch");
-                    // add by zjing for test houseAppDelegate
-                    ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = [[FHHouseBridgeManager sharedInstance].pushBridge houseAppDelegate];
 
-//                    ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = SharedAppDelegate;
+                    ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = SharedAppDelegate;
                     [[APNsManager sharedManager] handleRemoteNotification:payload];
                     completionHandler();
                 }];

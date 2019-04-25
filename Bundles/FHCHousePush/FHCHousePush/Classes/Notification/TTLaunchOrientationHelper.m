@@ -7,17 +7,14 @@
 //
 
 #import "TTLaunchOrientationHelper.h"
-//#import "NewsBaseDelegate.h"
-#import <FHHouseBase/FHHouseBridgeManager.h>
+#import <TTAppRuntime/NewsBaseDelegate.h>
 #import <TTBaseLib/NSObject+TTAdditions.h>
 
 @implementation TTLaunchOrientationHelper
 
 + (void)executeBlockAfterStatusbarOrientationNormal:(dispatch_block_t)block {
-    // add by zjing for test
-    UINavigationController *topNavigationController = [[FHHouseBridgeManager sharedInstance].pushBridge appTopNavigationController];
 
-//    UINavigationController *topNavigationController = [SharedAppDelegate appTopNavigationController];
+    UINavigationController *topNavigationController = [SharedAppDelegate appTopNavigationController];
     if (topNavigationController && ([[UIApplication sharedApplication] statusBarOrientation] != topNavigationController.interfaceOrientation)) {
         
         __block BOOL excecuted = NO;

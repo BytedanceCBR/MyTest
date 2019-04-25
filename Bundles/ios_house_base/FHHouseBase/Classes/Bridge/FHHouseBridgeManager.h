@@ -11,7 +11,6 @@
 #import "FHHouseCellsBridge.h"
 #import "FHUserTrackerDefine.h"
 #import "FHHouseSwitchCityDelegate.h"
-#import "FHCHousePushDelegate.h"
 #import "FHHouseAccountBridge.h"
 
 #define SETTRACERKV(key ,value) [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:value forKey:key]
@@ -31,7 +30,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(id<FHHouseSwitchCityDelegate>)cityListModelBridge;
 
--(id<FHCHousePushDelegate>)pushBridge;
 -(id<FHHouseAccountBridge>)accountBridge;
 
 @end

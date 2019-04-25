@@ -109,7 +109,6 @@ static APNsManager *_sharedManager = nil;
 //    [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
 
     [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
-    [[FHHouseBridgeManager sharedInstance].pushBridge setTTTrackerLaunchFromRemotePush];
     
     if ([self tryForOldAPNsLogical:userInfo]) {
         return;
@@ -263,7 +262,7 @@ static APNsManager *_sharedManager = nil;
     // 注意：根据 app_notice_status api 的定义，close 发送 1，open 发送 0
     // 这个是早期的api，根据server数据库的定义，0为有效值
     
-    //         add by zjing for test 写死了是YES
+    //         add by zjing 写死了是YES
 //    if(![SSCommonLogic pushSDKEnable]) {
 //        NSMutableString *tURL = [NSMutableString stringWithFormat:@"%@?notice=%d", [[FHHouseBridgeManager sharedInstance].pushBridge appNoticeStatusURLString], [TTUserSettingsManager apnsNewAlertClosed]];
 //

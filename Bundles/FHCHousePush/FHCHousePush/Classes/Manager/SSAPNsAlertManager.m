@@ -24,6 +24,8 @@
 #import "FHHouseBridgeManager.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "FHCHousePushUtils.h"
+#import <TTArticleBase/SSCommonLogic.h>
+#import <TTAppRuntime/TTProjectLogicManager.h>
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -344,7 +346,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 
 + (BOOL)isF100PushUrl:(NSString*) host {
     
-    NSString *result = [[FHHouseBridgeManager sharedInstance].pushBridge logicStringForKey:host];
+    NSString *result = [[TTProjectLogicManager sharedInstance_tt] logicStringForKey:host];
     return result.length > 0;
     
     //    return [@"old_house_detail" isEqualToString:host] ||
@@ -531,9 +533,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
         
         NSNumber *groupIdNumber = [NSNumber numberWithLongLong:[groupIdString longLongValue]];
 
-        // add by zjing for test
-        NSNumber *fixedgroupID  = [FHCHousePushUtils fixNumberTypeGroupID:groupIdNumber];
-//        NSNumber *fixedgroupID  = [SSCommonLogic fixNumberTypeGroupID:groupIdNumber];
+        NSNumber *fixedgroupID  = [SSCommonLogic fixNumberTypeGroupID:groupIdNumber];
         NSString *fixedgroupIDString = [NSString stringWithFormat:@"%@", fixedgroupID];
         
         NSMutableDictionary *query = [NSMutableDictionary dictionaryWithCapacity:2];
