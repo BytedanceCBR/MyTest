@@ -6,7 +6,6 @@
 //
 
 #import "FHHouseDetailPhoneCallViewModel.h"
-#import "FHDetailNoticeAlertView.h"
 #import "FHHouseType.h"
 #import "FHHouseDetailAPI.h"
 #import <TTRoute.h>
@@ -26,18 +25,10 @@
 extern NSString *const kFHToastCountKey;
 extern NSString *const kFHPhoneNumberCacheKey;
 
-typedef enum : NSUInteger {
-    FHPhoneCallTypeSuccessVirtual = 0,
-    FHPhoneCallTypeSuccessReal,
-    FHPhoneCallTypeNetFailed,
-    FHPhoneCallTypeRequestFailed,
-} FHPhoneCallType;
-
 @interface FHHouseDetailPhoneCallViewModel ()
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
-@property (nonatomic, weak) FHDetailNoticeAlertView *alertView;
 @property (nonatomic, strong) NSMutableDictionary *imParams; //用于IM跟前端交互的字段
 
 @end
@@ -52,43 +43,6 @@ typedef enum : NSUInteger {
         _houseId = houseId;
     }
     return self;
-}
-
-- (void)addDetailCallExceptionLog:(NSInteger)status realtorId:(NSString *)realtorId errorCode:(NSInteger)errorCode message:(NSString *)message
-{
-    NSMutableDictionary *attr = @{}.mutableCopy;
-    if (status != FHPhoneCallTypeSuccessVirtual && status != FHPhoneCallTypeSuccessReal) {
-        attr[@"realtor_id"] = realtorId;
-        attr[@"house_id"] = self.houseId;
-    }
-    if (status == FHPhoneCallTypeRequestFailed) {
-        attr[@"error_code"] = @(errorCode);
-        attr[@"message"] = message;
-    }
-    attr[@"desc"] = [self exceptionStatusStrBy:status];
-    [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_call_exception" status:status extra:attr];
-}
-
-- (NSString *)exceptionStatusStrBy:(NSInteger)status
-{
-    switch (status) {
-        case FHPhoneCallTypeSuccessVirtual:
-            return @"success_virtual";
-            break;
-        case FHPhoneCallTypeSuccessReal:
-            return @"success_real";
-            break;
-        case FHPhoneCallTypeNetFailed:
-            return @"net_failed";
-            break;
-        case FHPhoneCallTypeRequestFailed:
-            return @"request_failed";
-            break;
-            
-        default:
-            return @"be_null";
-            break;
-    }
 }
 
 - (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank position:(NSString *)position {
@@ -139,66 +93,6 @@ typedef enum : NSUInteger {
     [_imParams setValue:housePrice forKey:@"house_price"];
     [_imParams setValue:houseAvgPrice forKey:@"house_avg_price"];
     [_imParams setValue:houseType forKey:@"house_type"];
-}
-
-- (void)fillFormRequest:(NSString *)phoneNum customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr
-{
-    __weak typeof(self)wself = self;
-    if (![TTReachability isNetworkConnected]) {
-        
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
-    NSString *houseId = customHouseId.length > 0 ? customHouseId : self.houseId;
-    NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:self.houseType];
-    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
-        
-        if (model.status.integerValue == 0 && !error) {
-            
-            [wself.alertView dismiss];
-            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-            [sendPhoneNumberCache setObject:phoneNum forKey:kFHPhoneNumberCacheKey];
-            NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-            if (toastCount >= 3) {
-                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            }
-        }else {
-            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
-        }
-    }];
-    // 静默关注功能
-    NSMutableDictionary *params = @{}.mutableCopy;
-    if (self.tracerDict) {
-        [params addEntriesFromDictionary:self.tracerDict];
-    }
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-    configModel.houseType = self.houseType;
-    configModel.followId = self.houseId;
-    configModel.actionType = self.houseType;
-    configModel.showTip = YES;
-
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-}
-
-- (NSString *)fromStrByHouseType:(FHHouseType)houseType
-{
-    switch (houseType) {
-        case FHHouseTypeNewHouse:
-            return @"app_court";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            return @"app_oldhouse";
-            break;
-        case FHHouseTypeNeighborhood:
-            return @"app_neighbourhood";
-            break;
-        case FHHouseTypeRentHouse:
-            return @"app_rent";
-            break;
-        default:
-            break;
-    }
-    return @"be_null";
 }
 
 - (void)licenseActionWithPhone:(FHDetailContactModel *)contactPhone
@@ -334,116 +228,5 @@ typedef enum : NSUInteger {
     return params;
 }
 
-// 拨打电话和经纪人展位拨打电话
-- (void)addClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(NSInteger)isVirtual
-{
-    //    11.realtor_id
-    //    12.realtor_rank:经纪人推荐位置，从0开始，底部button的默认为0
-    //    13.realtor_position ：detail_button，detail_related
-    //    14.has_associate：是否为虚拟号码：是：1，否：0
-    //    15.is_dial ：是否为为拨号键盘：是：1，否：0
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:[self baseParams]];
-    params[@"has_auth"] = @(1);
-    params[@"realtor_id"] = extraDict[@"realtor_id"] ? : @"be_null";
-    params[@"realtor_rank"] = extraDict[@"realtor_rank"] ? : @(0);
-    params[@"realtor_position"] = extraDict[@"realtor_position"] ? : @"detail_button";
-    params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
-    params[@"is_dial"] = @(1);
-    params[@"conversation_id"] = @"be_null";
-    [FHUserTracker writeEvent:@"click_call" params:params];
-}
-
-- (void)addRealtorClickCallLogWithExtra:(NSDictionary *)extraDict isVirtual:(NSInteger)isVirtual
-{
-    //    11.realtor_id
-    //    12.realtor_rank:经纪人推荐位置，从0开始，底部button的默认为0
-    //    13.realtor_position ：detail_button，detail_related
-    //    14.has_associate：是否为虚拟号码：是：1，否：0
-    //    15.is_dial ：是否为为拨号键盘：是：1，否：0
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:[self baseParams]];
-    params[@"page_type"] = @"realtor_detail";
-    params[@"card_type"] = @"left_pic";
-    if (extraDict[@"card_type"]) {
-        params[@"card_type"] = extraDict[@"card_type"];
-    }
-    if (extraDict[@"enter_from"]) {
-        params[@"enter_from"] = extraDict[@"enter_from"];
-    }
-    if (extraDict[@"element_from"]) {
-        params[@"element_from"] = extraDict[@"element_from"];
-    }
-    if (extraDict[@"rank"]) {
-        params[@"rank"] = extraDict[@"rank"];
-    }
-    if (extraDict[@"origin_from"]) {
-        params[@"origin_from"] = extraDict[@"origin_from"];
-    }
-    if (extraDict[@"origin_search_id"]) {
-        params[@"origin_search_id"] = extraDict[@"origin_search_id"];
-    }
-    if (extraDict[@"log_pb"]) {
-        params[@"log_pb"] = extraDict[@"log_pb"];
-    }
-    params[@"has_auth"] = @(1);
-    params[@"realtor_id"] = extraDict[@"realtor_id"] ? : @"be_null";
-    params[@"realtor_rank"] = extraDict[@"realtor_rank"] ? : @(0);
-    params[@"realtor_position"] = extraDict[@"realtor_position"] ? : @"detail_button";
-    params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
-    params[@"is_dial"] = @(1);
-    params[@"conversation_id"] = @"be_null";
-    [FHUserTracker writeEvent:@"click_call" params:params];
-}
-
-// 表单展示
-- (void)addInformShowLog
-{
-//    1. event_type：house_app2c_v2
-//    2. page_type（页面类型）：old_detail（二手房详情页），rent_detail（租房详情页）
-//    3. card_type ：left_pic（左图）
-//    4. enter_from ：search_related_list（搜索结果推荐）
-//    5. element_from ：search_related
-//    6. rank
-//    7. origin_from
-//    8. origin_search_id
-//    9.log_pb
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:[self baseParams]];
-    [FHUserTracker writeEvent:@"inform_show" params:params];
-}
-
-// 表单展示
-- (void)addReservationShowLog
-{
-//    1. event_type：house_app2c_v2
-//    2. page_type：old_detail（二手房详情页），rent_detail（租房详情页）
-//    3. card_type
-//    4. enter_from
-//    5. element_from
-//    6. rank
-//    7. origin_from
-//    8. origin_search_id
-//    9.log_pb
-//    10.position:通过在线联系点击立即预约：online
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:[self baseParams]];
-    params[@"position"] = @"online";
-    [FHUserTracker writeEvent:@"reservation_show" params:params];
-}
-
-
-// 表单提交
-- (void)addClickConfirmLogWithExtra:(NSDictionary *)extraDict
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:[self baseParams]];
-    if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
-        params[@"position"] = extraDict[@"position"] ? : @"button";
-    } else {
-        params[@"position"] = @"button";
-    }
-    [FHUserTracker writeEvent:@"click_confirm" params:params];
-}
 
 @end
