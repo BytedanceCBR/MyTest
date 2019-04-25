@@ -18,7 +18,7 @@
 #import "TTVideoRotateScreenController.h"
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/TTDeviceHelper.h>
-
+#import <TTImage/TTImageInfosModel.h>
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 

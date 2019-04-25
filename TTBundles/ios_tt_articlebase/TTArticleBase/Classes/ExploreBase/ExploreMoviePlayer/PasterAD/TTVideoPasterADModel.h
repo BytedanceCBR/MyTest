@@ -8,6 +8,7 @@
 
 #import <JSONModel/JSONModel.h>
 //#import "TTVideoApiModel.h"
+#import <TTImage/TTImageInfosModel.h>
 
 
 typedef NS_ENUM(NSUInteger, TTVideoPasterADStyle)
@@ -36,9 +37,8 @@ typedef NS_ENUM(NSUInteger, TTVideoPasterADPageType)
 
 @class TTVideoURLInfo, TTImageInfosModel, TTVideoPasterADVideoInfoModel;
 
-@protocol TTImageInfosModel <NSObject>
+@protocol TTImageInfosModel ;
 
-@end
 
 @interface TTVideoPasterADInfoModel : JSONModel
 @property (nonatomic, strong)   NSNumber <Optional> *adID; //贴片广告ID，统计用
