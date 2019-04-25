@@ -220,21 +220,15 @@ extern NSString *const kFHToastCountKey;
 // 表单展示
 + (void)addReservationShowLog:(FHHouseFillFormConfigModel *)configModel
 {
-    //    1. event_type：house_app2c_v2
-    //    2. page_type：old_detail（二手房详情页），rent_detail（租房详情页）
-    //    3. card_type
-    //    4. enter_from
-    //    5. element_from
-    //    6. rank
-    //    7. origin_from
-    //    8. origin_search_id
-    //    9.log_pb
-    //    10.position:通过在线联系点击立即预约：online
     NSMutableDictionary *params = @{}.mutableCopy;
-    NSDictionary *baseParams = [self baseParamsWithConfigModel:configModel];
-    if (baseParams) {
-        [params addEntriesFromDictionary:baseParams];
-    }
+    params[@"page_type"] = configModel.pageType ? : @"be_null";
+    params[@"card_type"] = configModel.cardType ? : @"be_null";
+    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
+    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
+    params[@"rank"] = configModel.rank ? : @"be_null";
+    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
+    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
+    params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = @"online";
     [FHUserTracker writeEvent:@"reservation_show" params:params];
 }

@@ -75,6 +75,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *reportButtonText;
 
 @property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
+@property (nonatomic, assign) BOOL isFormReport; //是否包含填表单
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *imprId;
 

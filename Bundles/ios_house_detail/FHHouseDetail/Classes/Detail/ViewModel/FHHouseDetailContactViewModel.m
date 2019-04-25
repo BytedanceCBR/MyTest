@@ -355,13 +355,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 // 在线联系点击
 - (void)onlineActionWithExtraDict:(NSDictionary *)extraDict {
-    NSMutableDictionary *params = @{}.mutableCopy;
+    NSMutableDictionary *params = [self baseParams].mutableCopy;
     if (extraDict.count > 0) {
         [params addEntriesFromDictionary:extraDict];
     }
  
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
-        [self addFakeImClickLog];
+        
+        params[@"is_login"] = [TTAccount sharedAccount].isLogin?@"1":@"0";
+        params[@"realtor_id"] = _contactPhone.realtorId?:@"be_null";
+        params[@"realtor_rank"] = @(0);
+        [self addFakeImClickLog:params];
         NSString *fromStr = nil;
         if (self.houseType == FHHouseTypeSecondHandHouse) {
             fromStr = @"app_oldhouse_chat";
@@ -385,11 +389,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         fillFormConfig.fromStr = fromStr;
         fillFormConfig.realtorId = self.contactPhone.realtorId;
         fillFormConfig.phone = self.contactPhone.phone;
-
-        NSMutableDictionary *params = @{}.mutableCopy;
-        if (self.tracerDict) {
-            [params addEntriesFromDictionary:self.tracerDict];
-        }
         [fillFormConfig setTraceParams:params];
         fillFormConfig.searchId = self.searchId;
         fillFormConfig.imprId = self.imprId;
@@ -585,20 +584,26 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *tracerDic = [self baseParams].mutableCopy;
     tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
     tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
-    tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+    tracerDic[@"is_report"] = contactPhone.isFormReport ? @"1" : @"0";
     tracerDic[@"is_online"] = _contactPhone.unregistered?@"1":@"0";
     [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
 }
 
--(void)addFakeImClickLog
+-(void)addFakeImClickLog:(NSDictionary *)params
 {
-    NSMutableDictionary *tracerDic = [self baseParams].mutableCopy;
+    NSMutableDictionary *tracerDic = @{}.mutableCopy;
+    tracerDic[@"page_type"] = params[@"page_type"] ? : @"be_null";
+    tracerDic[@"card_type"] = params[@"card_type"] ? : @"be_null";
+    tracerDic[@"enter_from"] = params[@"enter_from"] ? : @"be_null";
+    tracerDic[@"element_from"] = params[@"element_from"] ? : @"be_null";
+    tracerDic[@"rank"] = params[@"rank"] ? : @"be_null";
+    tracerDic[@"origin_from"] = params[@"origin_from"] ? : @"be_null";
+    tracerDic[@"origin_search_id"] = params[@"origin_search_id"] ? : @"be_null";
     tracerDic[@"is_login"] = [TTAccount sharedAccount].isLogin?@"1":@"0";
-    tracerDic[@"conversation_id"] = @"be_null";
-    tracerDic[@"realtor_id"] = _contactPhone.realtorId?:@"be_null";
+    tracerDic[@"log_pb"] = params[@"log_pb"] ? : @"be_null";
+    tracerDic[@"realtor_id"] = params[@"realtor_id"] ?: @"be_null";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"online";
-    
     TRACK_EVENT(@"click_online", tracerDic);
 }
 

@@ -463,6 +463,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         model.data.contact.unregistered = YES;
         self.contactViewModel.contactPhone = model.data.contact;
     }
+    if (self.contactViewModel.contactPhone.phone.length > 0) {
+        
+        if ([self isShowSubscribe]) {
+            self.contactViewModel.contactPhone.isFormReport = YES;
+        }else {
+            self.contactViewModel.contactPhone.isFormReport = NO;
+        }
+    }else {
+        self.contactViewModel.contactPhone.isFormReport = YES;
+    }
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
 
