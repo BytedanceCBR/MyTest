@@ -42,6 +42,7 @@
 @property (nonatomic, strong) NSString *bundleNameStr;
 @property (nonatomic, assign) BOOL isDebug;
 @property (nonatomic, assign) BOOL canPreLoad;
+@property (nonatomic, assign) BOOL statusBarHighLight;
 @property (nonatomic, strong) TTRouteParamObj *paramCurrentObj;
 @property (nonatomic, strong) TTRNKit *ttRNKit;
 @property (nonatomic, strong) UIView *container;
@@ -142,6 +143,7 @@
     _moduleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_MODULE_NAME];
     _canPreLoad = [params tt_boolValueForKey:FHRN_CAN_PRE_LOAD];
     _bundleNameStr = [params tt_stringValueForKey:FHRN_BUNDLE_NAME];
+    _statusBarHighLight = [params tt_intValueForKey:FHRN_BUNDLE_STATUS_BAR_LIGHTR] == 1;
 }
 
 - (void)processPreloadAction
@@ -222,6 +224,12 @@
     }
     [[UIApplication sharedApplication] setStatusBarHidden:_hideStatusBar];
     
+    if (_statusBarHighLight) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }else
+    {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    }
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         _container.hidden = NO;
