@@ -172,19 +172,6 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 }
 
 #pragma mark 埋点相关
-//- (NSDictionary *)baseParams
-//{
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    params[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
-//    params[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
-//    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-//    params[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
-//    params[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
-//    params[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
-//    params[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-//    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
-//    return params;
-//}
 
 + (void)addClickFollowLog:(FHHouseFollowUpConfigModel *)configModel
 {

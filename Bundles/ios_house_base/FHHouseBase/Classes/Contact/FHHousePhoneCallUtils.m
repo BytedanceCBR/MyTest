@@ -66,24 +66,30 @@ typedef enum : NSUInteger {
         [self callPhone:urlStr];
         [self addClickCallLog:configModel isVirtual:0];
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
+        NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
+        if (configModel.failBlock) {
+            configModel.failBlock(error);
+        }
         return;
     }
-    // add by zjing for test todo
-//    BOOL showLoading = YES;
-//    if (extraDict[@"show_loading"]) {
-//        showLoading = [extraDict[@"show_loading"]boolValue];
-//    }
-//    if (showLoading) {
-//        [self.bottomBar startLoading];
-//    }
+    
+    if (configModel.showLoading) {
+        
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"house_id"] = houseId;
+        userInfo[@"show_loading"] = @(1);
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
+    }
     
     [self isPhoneCallParamsValid:configModel];
 
     [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
-//        if (showLoading) {
-//            [wself.bottomBar stopLoading];
-//        }
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"house_id"] = houseId;
+        userInfo[@"show_loading"] = @(0);
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
+        
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         NSInteger isVirtual = model.data.isVirtual;
         if (!error && model.data.virtualNumber.length > 0) {
@@ -102,7 +108,9 @@ typedef enum : NSUInteger {
         }
         [self addClickCallLog:configModel isVirtual:isVirtual];
         [self callPhone:urlStr];
-        
+        if (configModel.successBlock) {
+            configModel.successBlock(YES);
+        }
     }];
 }
 

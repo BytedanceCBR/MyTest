@@ -141,9 +141,6 @@
         if (self.baseViewModel.detailTracerDic) {
             [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
         }
-        // add by zjing for test
-//        [model.phoneCallViewModel callWithPhone:contact.phone realtorId:contact.realtorId searchId:model.searchId imprId:model.imprId extraDict:extraDict];
-//        [model.phoneCallViewModel.followUpViewModel silentFollowHouseByFollowId:model.houseId houseType:model.houseType actionType:model.houseType showTip:NO];
 
         FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
         contactConfig.houseType = self.baseViewModel.houseType;

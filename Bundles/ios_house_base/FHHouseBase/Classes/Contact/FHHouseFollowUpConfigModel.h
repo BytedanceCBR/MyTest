@@ -32,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *enterFrom;
 @property (nonatomic , copy) NSString *pageType;
 @property (nonatomic , copy) NSString *cardType;
-@property (nonatomic , copy) NSString *rank; //add by zjing for test confirm
+@property (nonatomic , copy) NSString *rank; 
 @property (nonatomic , strong) NSDictionary *logPb;
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;

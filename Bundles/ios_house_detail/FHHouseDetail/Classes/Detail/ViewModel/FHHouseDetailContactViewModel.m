@@ -17,7 +17,6 @@
 #import <TTQQZoneContentItem.h>
 #import "BDWebImage.h"
 #import "FHURLSettings.h"
-#import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
 #import <TTWechatTimelineActivity.h>
 #import <TTWechatActivity.h>
 #import <TTQQFriendActivity.h>
@@ -40,8 +39,9 @@
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
 #import <FHHouseBase/FHHouseFillFormHelper.h>
 
+NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
-@interface FHHouseDetailContactViewModel () <TTShareManagerDelegate, FHRealtorDetailWebViewControllerDelegate>
+@interface FHHouseDetailContactViewModel () <TTShareManagerDelegate>
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
@@ -74,6 +74,8 @@
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshMessageDot) name:@"kFHChatMessageUnreadChangedNotification" object:nil];
         
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(refreshBottomBarLoadingState:) name:kFHDetailLoadingNotification object:nil];
+
         [FHEnvContext sharedInstance].messageManager ;
         
         __weak typeof(self)wself = self;
@@ -142,6 +144,21 @@
 {
     _followStatus = followStatus;
     [self.navBar setFollowStatus:followStatus];
+}
+
+- (void)refreshBottomBarLoadingState:(NSNotification *)noti
+{
+    NSDictionary *userInfo = noti.userInfo;
+    NSString *houseId = [userInfo tt_stringValueForKey:@"house_id"];
+    NSInteger loading = [userInfo tt_integerValueForKey:@"show_loading"];
+    if (![houseId isEqualToString:self.houseId]) {
+        return;
+    }
+    if (loading) {
+        [self.bottomBar startLoading];
+    }else {
+        [self.bottomBar stopLoading];
+    }
 }
 
 - (void)hideFollowBtn
@@ -319,6 +336,7 @@
     if (extraDict.count > 0) {
         [params addEntriesFromDictionary:extraDict];
     }
+ 
     if (self.contactPhone.unregistered && self.contactPhone.imLabel.length > 0) {
         [self addFakeImClickLog];
         NSString *fromStr = nil;
@@ -352,7 +370,7 @@
         [fillFormConfig setTraceParams:params];
         fillFormConfig.searchId = self.searchId;
         fillFormConfig.imprId = self.imprId;
-        [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
+        [FHHouseFillFormHelper fillOnlineFormActionWithConfigModel:fillFormConfig];
         return;
     }
     NSString *realtor_pos = @"detail_button";
@@ -429,11 +447,6 @@
 
 // 拨打电话
 - (void)callActionWithExtraDict:(NSDictionary *)extraDict {
-    // add by zjing for test
-//    [self.phoneCallViewModel callWithPhone:self.contactPhone.phone realtorId:self.contactPhone.realtorId searchId:self.searchId imprId:self.imprId extraDict:extraDict];
-    // 静默关注功能
-    //    [self.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
-    
     NSMutableDictionary *params = @{}.mutableCopy;
     if (self.tracerDict) {
         [params addEntriesFromDictionary:self.tracerDict];
@@ -446,6 +459,7 @@
     contactConfig.realtorId = self.contactPhone.realtorId;
     contactConfig.searchId = self.searchId;
     contactConfig.imprId = self.imprId;
+    contactConfig.showLoading = YES;
     [FHHousePhoneCallUtils callWithConfigModel:contactConfig];
     
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];

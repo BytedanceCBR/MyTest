@@ -13,9 +13,6 @@
 #import "YYCache.h"
 #import <FHCommonUI/ToastManager.h>
 #import <TTReachability.h>
-//#import <TTPhotoScrollVC/TTPhotoScrollViewController.h>
-//#import "FHDetailBottomBarView.h"
-//#import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
 #import "TTAccount.h"
 #import "TTTracker.h"
 #import <FHHouseBase/FHUserTracker.h>

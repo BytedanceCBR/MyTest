@@ -15,7 +15,6 @@
 #import <TTReachability.h>
 #import <TTPhotoScrollVC/TTPhotoScrollViewController.h>
 #import "FHDetailBottomBarView.h"
-#import <FHHouseBase/FHRealtorDetailWebViewControllerDelegate.h>
 #import "TTAccount.h"
 #import "TTTracker.h"
 #import <FHHouseBase/FHUserTracker.h>
@@ -34,7 +33,7 @@ typedef enum : NSUInteger {
     FHPhoneCallTypeRequestFailed,
 } FHPhoneCallType;
 
-@interface FHHouseDetailPhoneCallViewModel () <FHRealtorDetailWebViewControllerDelegate>
+@interface FHHouseDetailPhoneCallViewModel ()
 
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *houseId;
@@ -55,79 +54,6 @@ typedef enum : NSUInteger {
     return self;
 }
 
-//- (void)fillFormActionWithCustomHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
-//{
-//    NSString *title = @"询底价";
-//    NSString *subtitle = @"提交后将安排专业经纪人与您联系";
-//    NSString *btnTitle = @"获取底价";
-//    if (self.houseType == FHHouseTypeNeighborhood) {
-//        title = @"咨询经纪人";
-//        btnTitle = @"提交";
-//    }
-//    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:customHouseId fromStr:fromStr withExtraDict:extraDict];
-//}
-//
-//- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle withExtraDict:(NSDictionary *)extraDict
-//{
-//    [self fillFormActionWithTitle:title subtitle:subtitle btnTitle:btnTitle customHouseId:nil fromStr:nil withExtraDict:extraDict];
-//}
-
-//- (void)fillFormAction:(FHHouseDetailFormAlertModel *)alertModel contactPhone:(FHDetailContactModel *)contactPhone customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
-//{
-//    NSString *title = alertModel.title ? : @"询底价";
-//    NSString *subtitle = alertModel.subtitle ? : @"提交后将安排专业经纪人与您联系";
-//    NSString *btnTitle = alertModel.btnTitle ? : @"获取底价";
-//    NSString *leftBtnTitle = alertModel.leftBtnTitle;
-//
-//    __weak typeof(self)wself = self;
-//    FHDetailNoticeAlertView *alertView = nil;
-//    if (leftBtnTitle.length > 0) {
-//        [self addReservationShowLog];
-//        alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle leftBtnTitle:leftBtnTitle];
-//        alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
-//            NSMutableDictionary *params = @{}.mutableCopy;
-//            if (extraDict) {
-//                [params addEntriesFromDictionary:extraDict];
-//                params[@"show_loading"] = @(NO);
-//            }
-//            [wself callWithPhone:contactPhone.phone realtorId:contactPhone.realtorId searchId:contactPhone.searchId imprId:contactPhone.imprId extraDict:params];
-//            [wself.alertView dismiss];
-//        };
-//        alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum,FHDetailNoticeAlertView *alertView) {
-//            [wself fillFormRequest:phoneNum customHouseId:customHouseId fromStr:fromStr];
-//            [wself addClickConfirmLogWithExtra:extraDict];
-//        };
-//    }else {
-//        [self addInformShowLog];
-//        alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
-//        alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
-//            [wself fillFormRequest:phoneNum customHouseId:customHouseId fromStr:fromStr];
-//            [wself addClickConfirmLogWithExtra:extraDict];
-//        };
-//    }
-//    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-//    alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-//    alertView.tipClickBlock = ^{
-//
-//        NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
-//        NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//        NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
-//        [[TTRoute sharedRoute]openURLByPushViewController:url];
-//    };
-//    [alertView showFrom:self.belongsVC.view];
-//    self.alertView = alertView;
-//
-//}
-
-- (void)fillFormActionWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle customHouseId:(NSString *)customHouseId fromStr:(NSString *)fromStr withExtraDict:(NSDictionary *)extraDict
-{
-//    FHHouseDetailFormAlertModel *alertModel = [[FHHouseDetailFormAlertModel alloc]init];
-//    alertModel.title = title;
-//    alertModel.subtitle = subtitle;
-//    alertModel.btnTitle = btnTitle;
-//
-//    [self fillFormAction:alertModel contactPhone:nil customHouseId:customHouseId fromStr:fromStr withExtraDict:extraDict];
-}
 - (void)addDetailCallExceptionLog:(NSInteger)status realtorId:(NSString *)realtorId errorCode:(NSInteger)errorCode message:(NSString *)message
 {
     NSMutableDictionary *attr = @{}.mutableCopy;
@@ -164,103 +90,6 @@ typedef enum : NSUInteger {
             break;
     }
 }
-
-//- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId extraDict:(NSDictionary *)extraDict
-//{
-//    __weak typeof(self)wself = self;
-//    if (![TTReachability isNetworkConnected]) {
-//
-//        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-//        [self callPhone:urlStr];
-//        [self addClickCallLogWithExtra:extraDict isVirtual:0];
-//        [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed realtorId:realtorId errorCode:0 message:nil];
-//        return;
-//    }
-//    BOOL showLoading = YES;
-//    if (extraDict[@"show_loading"]) {
-//        showLoading = [extraDict[@"show_loading"]boolValue];
-//    }
-//    if (showLoading) {
-//        [self.bottomBar startLoading];
-//    }
-//    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
-//
-//        if (showLoading) {
-//            [wself.bottomBar stopLoading];
-//        }
-//        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-//        NSInteger isVirtual = model.data.isVirtual;
-//        if (!error && model.data.virtualNumber.length > 0) {
-//            urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
-//            if (model.data.isVirtual) {
-//                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
-//            }else {
-//                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
-//            }
-//        }else {
-//            [wself addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
-//        }
-//        NSMutableDictionary *extra = @{}.mutableCopy;
-//        if (extraDict) {
-//            [extra addEntriesFromDictionary:extraDict];
-//        }
-//        if (model.data.realtorId.length > 0) {
-//            extra[@"realtor_id"] = model.data.realtorId;
-//        }
-//        [wself addClickCallLogWithExtra:extra isVirtual:isVirtual];
-//        [wself callPhone:urlStr];
-//
-//    }];
-//}
-//
-//- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId
-//{
-//    [self callWithPhone:phone realtorId:realtorId searchId:searchId imprId:imprId extraDict:nil];
-//}
-//
-//- (void)callWithPhone:(NSString *)phone realtorId:(NSString *)realtorId searchId:(NSString *)searchId imprId:(NSString *)imprId reportParams:(NSDictionary *)reportParams successBlock:(FHHouseDetailPhoneCallSuccessBlock)successBlock failBlock:(FHHouseDetailPhoneCallFailBlock)failBlock
-//{
-//    __weak typeof(self)wself = self;
-//    if (![TTReachability isNetworkConnected]) {
-//
-//        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-//        [self callPhone:urlStr];
-//        [self addRealtorClickCallLogWithExtra:reportParams isVirtual:0];
-//        NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
-//        failBlock(error);
-//        [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed realtorId:realtorId errorCode:0 message:nil];
-//        return;
-//    }
-//    [self.bottomBar startLoading];
-//    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:self.houseId houseType:self.houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
-//
-//        [wself.bottomBar stopLoading];
-//        NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
-//        NSInteger isVirtual = model.data.isVirtual;
-//        if (!error && model.data.virtualNumber.length > 0) {
-//            urlStr = [NSString stringWithFormat:@"tel://%@", model.data.virtualNumber];
-//            NSMutableDictionary *extra = @{}.mutableCopy;
-//            if (reportParams) {
-//                [extra addEntriesFromDictionary:reportParams];
-//            }
-//            if (model.data.realtorId.length > 0) {
-//                extra[@"realtor_id"] = model.data.realtorId;
-//            }
-//            [wself addRealtorClickCallLogWithExtra:extra isVirtual:isVirtual];
-//            if (model.data.isVirtual) {
-//                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessVirtual realtorId:realtorId errorCode:0 message:nil];
-//            }else {
-//                [wself addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal realtorId:realtorId errorCode:0 message:nil];
-//            }
-//        }else {
-//            failBlock(error);
-//            [wself addDetailCallExceptionLog:FHPhoneCallTypeRequestFailed realtorId:realtorId errorCode:error.code message:model.message ? : error.localizedDescription];
-//        }
-//        [wself callPhone:urlStr];
-//        successBlock(YES);
-//    }];
-//
-//}
 
 - (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank position:(NSString *)position {
     
@@ -490,28 +319,6 @@ typedef enum : NSUInteger {
     [[TTRoute sharedRoute]openURLByViewController:openUrl userInfo:userInfo];
 }
 
-
-//- (void)callPhone:(NSString *)phone
-//{
-//    NSURL *url = [NSURL URLWithString:phone];
-//    if ([[UIApplication sharedApplication]canOpenURL:url]) {
-//        if (@available(iOS 10.0, *)) {
-//            [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
-//        } else {
-//            // Fallback on earlier versions
-//            [[UIApplication sharedApplication]openURL:url];
-//        }
-//    }
-//}
-
-#pragma mark delegate
-- (void)followUpActionByFollowId:(NSString *)followId houseType:(FHHouseType)houseType
-{
-    // add by zjing for test
-//    [self.followUpViewModel silentFollowHouseByFollowId:followId houseType:houseType actionType:houseType showTip:NO];
-}
-
-
 #pragma mark 埋点相关
 - (NSDictionary *)baseParams
 {
@@ -638,7 +445,5 @@ typedef enum : NSUInteger {
     }
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
-
-
 
 @end
