@@ -56,6 +56,7 @@
     videoModel.useCache = YES;
     videoModel.repeated = YES;
     videoModel.scalingMode = AWEVideoScaleModeAspectFit;
+    videoModel.isShowMiniSlider = YES;
     
     [self.videoVC updateData:videoModel];
     
@@ -67,7 +68,15 @@
 - (void)playVideo {
     self.coverView.hidden = YES;
     self.startBtn.hidden = YES;
+    [self play];
+}
+
+- (void)play {
     [self.videoVC play];
+}
+
+- (void)pause {
+    [self.videoVC pause];
 }
 
 @end

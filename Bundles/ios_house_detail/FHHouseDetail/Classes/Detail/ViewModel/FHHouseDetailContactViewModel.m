@@ -34,6 +34,10 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHEnvContext.h"
 #import "FHMessageManager.h"
+#import "FHIMShareActivity.h"
+#import "FHIMShareItem.h"
+#import "TTAccountManager.h"
+#import "TTCopyActivity.h"
 #import <TTAccountSDK/TTAccount.h>
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
@@ -227,6 +231,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *webPageUrl = self.shareInfo.shareUrl ? : @"";
 
     NSMutableArray *shareContentItems = @[].mutableCopy;
+    if(TTAccountManager.isLogin &&
+       (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) &&
+       self.imShareInfo != nil &&
+       [self hasImUser]) {
+        FHIMShareItem* fhImShareItem = [[FHIMShareItem alloc] init];
+        fhImShareItem.imShareInfo = self.imShareInfo;
+        NSMutableDictionary* dict = [self.tracerDict mutableCopy];
+        dict[@"enter_from"] = dict[@"page_type"];
+        fhImShareItem.tracer = dict;
+        [shareContentItems addObject:fhImShareItem];
+    }
+
     TTWechatContentItem *wechatItem = [[TTWechatContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
     [shareContentItems addObject:wechatItem];
     TTWechatTimelineContentItem *timeLineItem = [[TTWechatTimelineContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage shareType:TTShareWebPage];
@@ -240,7 +256,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         TTQQZoneContentItem *qqZoneItem = [[TTQQZoneContentItem alloc] initWithTitle:title desc:desc webPageUrl:webPageUrl thumbImage:shareImage imageUrl:@"" shareTye:TTShareWebPage];
         [shareContentItems addObject:qqZoneItem];
     }
+
+    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:webPageUrl];
+    [shareContentItems addObject:copyContentItem];
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
+}
+
+-(BOOL)hasImUser {
+    return [[IMManager shareInstance].chatService numberOfItems] > 0;
 }
 
 - (void)messageAction {
@@ -586,12 +609,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSString *platform = @"be_null";
     if ([activity isKindOfClass:[TTWechatTimelineActivity class]]) {
         platform = @"weixin_moments";
-    }else if ([activity isKindOfClass:[TTWechatActivity class]]) {
+    } else if ([activity isKindOfClass:[TTWechatActivity class]]) {
         platform = @"weixin";
-    }else if ([activity isKindOfClass:[TTQQFriendActivity class]]) {
+    } else if ([activity isKindOfClass:[TTQQFriendActivity class]]) {
         platform = @"qq";
-    }else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
+    } else if ([activity isKindOfClass:[TTQQZoneActivity class]]) {
         platform = @"qzone";
+    } else if ([activity isKindOfClass:[FHIMShareActivity class]]) {
+        platform = @"realtor";
+    } else if ([activity isKindOfClass:[TTCopyActivity class]]) {
+        platform = @"copy";
     }
     [self addShareFormLog:platform];
 }
@@ -606,6 +633,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (!_shareManager) {
         _shareManager = [[TTShareManager alloc]init];
         _shareManager.delegate = self;
+        FHIMShareActivity* activity = [[FHIMShareActivity alloc] init];
+        [TTShareManager addUserDefinedActivity:activity];
     }
     return _shareManager;
 }

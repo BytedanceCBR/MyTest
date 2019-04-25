@@ -212,6 +212,10 @@ static APNsManager *_sharedManager = nil;
 //                                                   @"group_id": paramObj.allParams[@"group_id"],
                                                    }};
                 TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                float fSystemVersion = [[UIDevice currentDevice].systemVersion floatValue];
+                if (fSystemVersion >= 10.0 && fSystemVersion < 11.0) { // 10.0
+                    userInfo.animated = @(0);
+                }
                 [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
             }
         }
