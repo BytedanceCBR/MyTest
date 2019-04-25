@@ -42,11 +42,9 @@ def appPods
     pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
     pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
-    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
 
-#    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '4b730fd2b839b80b8975cadd066c7f4041ae362c' #:branch => 'feature/develop'
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'f62c227da2472b9f30704645b8f5a97854b80d6d'
-    #    :branch => 'feature/develop_rn'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '66541148a531f14f936f4a38a24d012cdfe701ca' #:branch => 'feature/develop'
+#    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
 #    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
@@ -58,9 +56,8 @@ def appPods
 
 #    #-----安全组sdk-----#
 #    pod 'IESSafeGuard', '0.6.5'
-#    pod 'TTRNKit', :path => '../ReactCommon/TTRNKit'
 
-#    pod 'TTRNKit', '0.3.3'
+    pod 'TTRNKit', '0.3.3'
     pod 'IESGeckoKit', '0.4.0'
     pod 'IESWebKit', '0.1.4'
 #    pod 'IESWebKit/Falcon', :git => 'git@code.byted.org:ugc/IESWebKit.git', :branch => 'master'
@@ -227,14 +224,13 @@ def appPods
 
     pod_binary 'TTEntry', '0.1.7'
     
-#    pod 'TTBridgeUnify', '0.3.19',:subspecs => [
-#    'TTBridge',#核心模块，必须引入
-#    'React',
-#    'WebView',#默认实现的 webview engine,具体可参考此文档的 engine 的使用姿势一节
-#    # 'React', #默认的 RN engine, 如果业务没有使用 RN，可以不用依赖
-#    'TTBridgeAuthManager' #默认的鉴权类，如果业务自身鉴权流程和主端不一致，可以自己实现，初始化 engine 时，修改 engine 的 authorization 为自定义实现即可
-#    ]
-
+    pod 'TTBridgeUnify', '0.3.19',:subspecs => [
+    'TTBridge',#核心模块，必须引入
+    'WebView',#默认实现的 webview engine,具体可参考此文档的 engine 的使用姿势一节
+    # 'React', #默认的 RN engine, 如果业务没有使用 RN，可以不用依赖
+    'TTBridgeAuthManager' #默认的鉴权类，如果业务自身鉴权流程和主端不一致，可以自己实现，初始化 engine 时，修改 engine 的 authorization 为自定义实现即可
+    ]
+    
     #-----朋友关系-----
     pod 'TTFriendRelation', :path => '../AKPlugins/TTFriendRelation', :inhibit_warnings => false
     #-----点赞分享顶踩不感兴趣----

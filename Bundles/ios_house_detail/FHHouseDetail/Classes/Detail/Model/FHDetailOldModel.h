@@ -198,6 +198,18 @@ typedef enum : NSInteger {
 @end
 
 
+@protocol FHDetailImShareInfoModel <NSObject>
+
+@end
+
+
+@interface FHDetailImShareInfoModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *shareUrl;
+@property (nonatomic, copy , nullable) NSString *coverImage;
+@property (nonatomic, copy , nullable) NSString *description;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -229,6 +241,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDisclaimerModel *disclaimer ;
 @property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataListEntranceItemModel> *listEntrance;
+@property (nonatomic, strong , nullable) FHDetailShareInfoModel *imShareInfo;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborEvalModel *neighborEval ;
 @property (nonatomic, strong , nullable) FHDetailOldDataPriceAnalyzeModel *priceAnalyze ;
 @property (nonatomic, strong , nullable) FHDetailOldDataComfortInfoModel *comfortInfo ;

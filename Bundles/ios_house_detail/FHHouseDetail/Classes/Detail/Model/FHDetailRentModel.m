@@ -116,6 +116,7 @@
                            @"shareInfo": @"share_info",
                            @"userStatus": @"user_status",
                            @"camplaintUrl": @"camplaint_url",
+                           @"imShareInfo": @"im_share_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -316,3 +317,25 @@
 
 @end
 
+@implementation FHRentDetailImShareInfoModel
+
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"coverImage": @"cover_image",
+                           @"shareUrl": @"share_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+
+
+@end

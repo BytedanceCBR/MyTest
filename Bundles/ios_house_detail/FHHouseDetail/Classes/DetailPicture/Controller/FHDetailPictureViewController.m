@@ -21,6 +21,9 @@
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureNavView.h"
 #import "FHDetailPictureTitleView.h"
+#import "TTNavigationController.h"
+#import <Photos/Photos.h>
+#import "HTSDeviceManager.h"
 
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 54.f
@@ -255,6 +258,10 @@
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
     }
+    TTNavigationController *navi = self.topVC.navigationController;
+    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
+        navi.panRecognizer.enabled = NO;
+    }
 }
 
 - (void)addLeadShowLog:(FHDetailContactModel *)contactPhone baseParams:(NSDictionary *)dic
@@ -265,6 +272,7 @@
         tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
         tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
+        // tracerDic[@"element_from"] = @"large"; // 后续版本需要放开
         [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
 }
@@ -285,7 +293,9 @@
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
         NSDictionary *extraDic = @{@"realtor_position":@"online",
-                                   @"position":@"online"};
+                                   @"position":@"online",
+                                   @"element_from":@"large"
+                                   };
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }
@@ -294,7 +304,9 @@
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
         NSDictionary *extraDic = @{@"realtor_position":@"phone_button",
-                                   @"position":@"report_button"};
+                                   @"position":@"report_button",
+                                   @"element_from":@"large"
+                                   };
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }
@@ -360,6 +372,10 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    TTNavigationController *navi = self.topVC.navigationController;
+    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
+        navi.panRecognizer.enabled = NO;
+    }
     [self setCurrentStatusStyle];
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -369,7 +385,10 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-   
+    TTNavigationController *navi = self.topVC.navigationController;
+    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
+        navi.panRecognizer.enabled = YES;
+    }
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -432,7 +451,8 @@
                 }
             }
         }
-        if (titles.count > 0) {
+        // 只有一个分类时隐藏
+        if (titles.count > 1) {
             self.pictureTitles = titles;
             self.pictureNumbers = numbers;
         }
@@ -912,10 +932,39 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            [self saveButtonClicked:nil];
+            [self alertSheetShow];
             break;
         default:
             break;
+    }
+}
+
+- (void)alertSheetShow {
+    if (self.topVC) {
+        __weak typeof(self) weakSelf = self;
+        UIAlertController *alertController = [[UIAlertController alloc] init];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            
+        }]];
+        
+        [alertController addAction:[UIAlertAction actionWithTitle:@"保存图片到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+            if (PHAuthorizationStatusAuthorized == status) {
+                [weakSelf saveButtonClicked:nil];
+            } else {
+                // 请求权限
+                [HTSDeviceManager requestPhotoLibraryPermission:^(BOOL success) {
+                    if (success) {
+                        [weakSelf saveButtonClicked:nil];
+                    } else {
+                        [HTSDeviceManager presentPhotoLibraryDeniedAlert];
+                    }
+                }];
+            }
+        }]];
+        
+        [self.topVC presentViewController:alertController animated:YES completion:nil];
     }
 }
 
@@ -1076,7 +1125,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (!startShowImageView.isDownloading && self.placeholderSourceViewFrames.count > _startWithIndex && [self.placeholderSourceViewFrames objectAtIndex:_startWithIndex] != [NSNull null]) {
         
         __weak TTShowImageView * weakShowImageView = startShowImageView;
-        __weak TTPhotoScrollViewController * weakSelf = self;
+        __weak FHDetailPictureViewController * weakSelf = self;
         
         startShowImageView.loadingCompletedAnimationBlock = ^() {
             

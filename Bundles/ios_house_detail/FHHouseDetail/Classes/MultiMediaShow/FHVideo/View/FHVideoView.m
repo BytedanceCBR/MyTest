@@ -9,11 +9,11 @@
 #import "AWEVideoPlayerController.h"
 #import "FHVideoMiniSliderView.h"
 
-
 @interface FHVideoView ()
 
 @property(nonatomic, strong) AWEVideoPlayerController *playerController;
 @property(nonatomic, strong) FHVideoMiniSliderView *miniSliderView;
+@property(nonatomic, assign) BOOL isRefreshingSlider;
 
 @end
 
@@ -34,8 +34,7 @@
     [self addSubview:_playerController.view];
     
     self.miniSliderView = [[FHVideoMiniSliderView alloc] initWithFrame:CGRectZero];
-    [_miniSliderView setWatchedProgress:30];
-    [_miniSliderView setCacheProgress:50];
+    self.miniSliderView.hidden = YES;
     [self addSubview:_miniSliderView];
 }
 
@@ -53,9 +52,7 @@
     _playerController.useCache = model.useCache;
     _playerController.repeated = model.repeated;
     _playerController.scalingMode = model.scalingMode;
-    
-//    [_playerController prepareToPlay];
-//    [_playerController play];
+    _miniSliderView.hidden = !model.isShowMiniSlider;
 }
 
 - (void)play {
@@ -63,6 +60,31 @@
     [_playerController play];
 }
 
+- (void)pause {
+    [_playerController pause];
+}
+
+- (void)refreshMiniSlider {
+    if (_isRefreshingSlider) {
+        return;
+    }
+    NSTimeInterval duration = self.playerController.duration;
+    NSTimeInterval currentPlaybackTime = self.playerController.currentPlaybackTime;
+    if (isnan(duration) || duration == NAN || duration <= 0 || isnan(currentPlaybackTime) || currentPlaybackTime == NAN || currentPlaybackTime < 0) {
+        return;
+    }
+    CGFloat progress = ((currentPlaybackTime / duration) * 100.f);
+    [self.miniSliderView setWatchedProgress:progress];
+    
+    NSTimeInterval playableDuration = self.playerController.playableDuration;
+    if (playableDuration > 0 && !isnan(playableDuration) && playableDuration != NAN) {
+        progress = (playableDuration / duration) * 100;
+        [self.miniSliderView setCacheProgress:progress];
+    }
+    else {
+        [self.miniSliderView setCacheProgress:0];
+    }
+}
 
 
 @end
