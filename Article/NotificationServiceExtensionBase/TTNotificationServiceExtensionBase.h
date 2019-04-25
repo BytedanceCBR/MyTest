@@ -8,6 +8,7 @@
 
 #import <UserNotifications/UserNotifications.h>
 
+API_AVAILABLE(ios(10.0))
 @interface TTNotificationServiceExtensionBase : UNNotificationServiceExtension
 
 @end

@@ -64,6 +64,8 @@
 @property(nonatomic , weak)   FHHouseListRedirectTipView *redirectTipView;
 
 @property(nonatomic , assign) BOOL showFilter;
+@property(nonatomic , assign) BOOL animateShowNotify;
+@property(nonatomic , copy)  void(^showNotifyDoneBlock)();
 
 -(void)showErrorMask:(BOOL)show tip:(FHEmptyMaskViewType )type enableTap:(BOOL)enableTap showReload:(BOOL)showReload;
 
@@ -74,6 +76,8 @@
 -(NSString *)houseTypeString;
 
 -(void)addStayLog:(NSTimeInterval)duration;
+
+-(void)gotoCommuteList:(UIViewController *)popController;
 
 @end
 

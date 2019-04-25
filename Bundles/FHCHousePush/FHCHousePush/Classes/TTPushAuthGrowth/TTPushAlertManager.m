@@ -14,7 +14,7 @@
 #import <TTPhotoScrollViewController.h>
 //#import "FRPhotoBrowserViewController.h"
 #import <TTDialogDirector/TTDialogDirector.h>
-
+#import <FHHouseDetail/FHDetailPictureViewController.h>
 
 
 NSString * const TTStrongPushHideOnlyResultKey = @"hide_result";
@@ -240,7 +240,7 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
 //    if ([FRPhotoBrowserViewController photoBrowserAtTop]) {
 //        return YES;
 //    }
-    if ([TTPhotoScrollViewController photoBrowserAtTop]) {
+    if ([TTPhotoScrollViewController photoBrowserAtTop] || [FHDetailPictureViewController photoBrowserAtTop]) {
         return YES;
     }
     return NO;
