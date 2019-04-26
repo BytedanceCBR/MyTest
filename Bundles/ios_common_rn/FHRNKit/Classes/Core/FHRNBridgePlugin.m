@@ -30,6 +30,7 @@
 #import "NetworkUtilities.h"
 #import "TTInstallIDManager.h"
 #import "TTAccount.h"
+#import <ToastManager.h>
 
 @interface FHRNBridgePlugin ()
 @property (nonatomic, strong) NSMutableArray<NSString *> *events;
@@ -143,14 +144,17 @@
     }
 
     [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
-        
+        if (!success) {
+            [[ToastManager manager] showToast:@"获取电话失败"];
+        }
+        if (callback) {
+            callback(TTBridgeMsgSuccess, nil);
+        }
     }];
     if (callParams[@"follow_id"]) {
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
     }
-    if (callback) {
-        callback(TTBridgeMsgSuccess, nil);
-    }
+
 }
 
 - (void)monitor_durationWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -226,7 +230,7 @@
 {
     
     if (!TTNetworkConnected()) {
-        callback(TTBridgeMsgFailed, @{ @"response": @{@"message":@"failed"}, @"status": @(0),
+        callback(TTBridgeMsgSuccess, @{ @"response": @{@"message":@"failed"}, @"status": @(0),
                                            @"code":@(0)});
         return;
     }
