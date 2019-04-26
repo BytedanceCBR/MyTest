@@ -142,7 +142,9 @@
         callParams[@"house_id"] = callParams[@"group_id"];
     }
 
-    [FHHousePhoneCallUtils callWithConfig:callParams];
+    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
+        
+    }];
     if (callParams[@"follow_id"]) {
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
     }

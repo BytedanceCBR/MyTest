@@ -504,7 +504,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     contactConfig.searchId = self.searchId;
     contactConfig.imprId = self.imprId;
     contactConfig.showLoading = YES;
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig];
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
     
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
     configModel.houseType = self.houseType;

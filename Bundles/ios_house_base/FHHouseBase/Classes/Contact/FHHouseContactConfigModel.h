@@ -12,8 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef void(^FHHousePhoneCallSuccessBlock)(BOOL success);
-typedef void(^FHHousePhoneCallFailBlock)(NSError *error);
+typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
 
 @interface FHHouseContactConfigModel : JSONModel
 
@@ -28,8 +27,6 @@ typedef void(^FHHousePhoneCallFailBlock)(NSError *error);
 
 // 选填
 @property (nonatomic, assign) BOOL showLoading; // 按钮状态
-@property (nonatomic, copy) FHHousePhoneCallSuccessBlock successBlock;
-@property (nonatomic, copy) FHHousePhoneCallFailBlock failBlock;
 
 #pragma mark 埋点
 // 必填

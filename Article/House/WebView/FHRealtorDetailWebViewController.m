@@ -79,13 +79,13 @@ static NSString *s_oldAgent = nil;
     contactConfig.houseId = self.houseId;
     contactConfig.phone = phone;
     contactConfig.realtorId = self->_realtorId;
-    contactConfig.successBlock = ^(BOOL success) {
-        completion(TTRJSBMsgSuccess, @{});
-    };
-    contactConfig.failBlock = ^(NSError * _Nonnull error) {
-        completion(TTRJSBMsgFailed, @{});
-    };
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig];
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        if (success) {
+            completion(TTRJSBMsgSuccess, @{});
+        }else {
+            completion(TTRJSBMsgFailed, @{});
+        }
+    }];
     
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
     configModel.houseType = self.houseType;

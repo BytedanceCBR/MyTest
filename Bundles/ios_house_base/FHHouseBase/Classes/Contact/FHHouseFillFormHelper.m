@@ -132,7 +132,7 @@ extern NSString *const kFHToastCountKey;
     contactConfig.realtorId = configModel.realtorId;
     contactConfig.searchId = configModel.searchId;
     contactConfig.imprId = configModel.imprId;
-    [FHHousePhoneCallUtils callWithConfigModel:contactConfig];
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
 }
 
 + (void)fillOnlineFormActionWithConfig:(NSDictionary *)config

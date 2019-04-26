@@ -43,16 +43,16 @@ typedef enum : NSUInteger {
     return YES;
 }
 
-+ (void)callWithConfig:(NSDictionary *)configDict
++ (void)callWithConfig:(NSDictionary *)configDict completion:(FHHousePhoneCallCompletionBlock)completionBlock
 {
     FHHouseContactConfigModel *configModel = [[FHHouseContactConfigModel alloc]initWithDictionary:configDict error:nil];
     if (configModel) {
-        [self callWithConfigModel:configModel];
+        [self callWithConfigModel:configModel completion:completionBlock];
     }
 }
 
++ (void)callWithConfigModel:(FHHouseContactConfigModel *)configModel completion:(FHHousePhoneCallCompletionBlock)completionBlock
 
-+ (void)callWithConfigModel:(FHHouseContactConfigModel *)configModel 
 {
     NSString *phone = configModel.phone;
     NSString *houseId = configModel.houseId;
@@ -68,8 +68,8 @@ typedef enum : NSUInteger {
         [self addClickCallLog:configModel isVirtual:0];
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
         NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
-        if (configModel.failBlock) {
-            configModel.failBlock(error);
+        if (completionBlock) {
+            completionBlock(NO,error);
         }
         return;
     }
@@ -109,8 +109,8 @@ typedef enum : NSUInteger {
         }
         [self addClickCallLog:configModel isVirtual:isVirtual];
         [self callPhone:urlStr];
-        if (configModel.successBlock) {
-            configModel.successBlock(YES);
+        if (completionBlock) {
+            completionBlock(YES,nil);
         }
     }];
 }
