@@ -692,7 +692,7 @@ TTRefreshViewDelegate
                                  [wself.remindView refreshAndHide];
                              }
                              [wself fetchFromLocal:![wself tt_hasValidateData] fromRemote:YES getMore:NO];
-                             if (![FHHomeConfigManager sharedInstance].currentDataModel)
+                             if (![[FHEnvContext sharedInstance] getConfigFromCache])
                              {
                                  [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
 //                                 if ([[EnvContext shared] respondsToSelector:@selector(client)] && [[[EnvContext shared] client] respondsToSelector:@selector(onStart)]) {

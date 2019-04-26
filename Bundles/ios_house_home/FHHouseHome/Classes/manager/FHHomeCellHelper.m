@@ -142,7 +142,9 @@ static NSMutableArray  * _Nullable identifierArr;
         [tableView reloadData];
     }
     
-    if ([FHHomeConfigManager sharedInstance].currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+
+    if (currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
@@ -150,9 +152,9 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (void)sendCellShowTrace
 {
-    
-    FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
-    FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataOpData2Model *modelOpdata2 = currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = currentDataModel.cityStats;
     
     if (modelOpdata2.items > 0)
     {

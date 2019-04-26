@@ -220,11 +220,9 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (_hideBar) {
-        [self.navigationController setNavigationBarHidden:YES animated:NO];
-    } else {
-        [self.navigationController setNavigationBarHidden:NO animated:NO];
-    }
+    
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+
     [[UIApplication sharedApplication] setStatusBarHidden:_hideStatusBar];
     
     if (_statusBarHighLight) {
@@ -261,7 +259,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.navigationController setNavigationBarHidden:self.originHideNavigationBar animated:NO];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
     [[UIApplication sharedApplication] setStatusBarHidden:self.originHideStatusBar];
 }
 
