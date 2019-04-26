@@ -557,6 +557,8 @@ typedef enum : NSUInteger {
             [dict setValue:@"old_detail_related" forKey:@"element_type"];
         }
         
+        dict[@"impr_id"] = dict[@"impr_id"] ? : @"be_null";
+        
         NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"]];
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
