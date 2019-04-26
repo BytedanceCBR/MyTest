@@ -17,6 +17,7 @@
 #import "TTOpenURLFeedBackLogTask.h"
 //#import "TTBDSDKOpenURLTask.h"
 //#import "TTSFOpenURLTask.h"
+#import "TTOpenURLTask.h"
 
 @implementation TTStartupOpenURLGroup
 
@@ -35,6 +36,7 @@
     [group.tasks addObject:[[self class] openURLStartupForType:TTOpenURLTypeWeixin]];
 //    [group.tasks addObject:[[self class] openURLStartupForType:TTOpenURLTypeDingtalk]];
     [group.tasks addObject:[[self class] openURLStartupForType:TTOpenURLTypePayManager]];
+    [group.tasks addObject:[[self class] openURLStartupForType:TTOpenURLTypeMain]];
 //    [group.tasks addObject:[[self class] openURLStartupForType:TTOpenURLTypeAlipay]];
     
     return group;
@@ -72,6 +74,9 @@
 //        case TTOpenURLTypeBytedanceSDKs:
 //            return [[TTBDSDKOpenURLTask alloc] init];
 //            break;
+        case TTOpenURLTypeMain:
+            return [[TTOpenURLTask alloc] init];
+            break;
         default:
             return [[TTStartupTask alloc] init];
             break;

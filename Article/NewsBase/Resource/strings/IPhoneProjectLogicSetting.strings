@@ -108,6 +108,7 @@
 
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
+"im_house_share" = "FHIMSharedUserListViewController";
 //会话列表
 "message_conversation_list" = "FHTempMessageViewController";
 
@@ -137,6 +138,5 @@
 "price_valuation_result" = "FHPriceValuationResultController";
 //房屋估价补充信息
 "price_valuation_more_info" = "FHPriceValuationMoreInfoController";
-
 //房源详情价格对比房源列表
 "house_search_result_list" = "FHOldPriceComparisonListController";

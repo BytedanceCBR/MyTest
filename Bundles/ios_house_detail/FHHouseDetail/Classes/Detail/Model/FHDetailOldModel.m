@@ -205,6 +205,7 @@
                            @"neighborhoodInfo": @"neighborhood_info",
                            @"logPb": @"log_pb",
                            @"houseImage": @"house_image",
+                           @"houseImageDictList": @"house_image_dict_list",
                            @"shareInfo": @"share_info",
                            @"priceChangeHistory": @"price_change_history",
                            @"pricingPerSqmV": @"pricing_per_sqm_v",
@@ -218,6 +219,7 @@
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"listEntrance": @"list_entrance",
+                           @"imShareInfo": @"im_share_info",
                            @"neighborEval": @"neighbor_eval",
                            @"priceAnalyze": @"price_analyze",
                            @"neighborhoodPriceRange": @"neighborhood_price_range",
@@ -286,6 +288,23 @@
 }
 @end
 
+@implementation FHDetailOldDataHouseImageDictListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"houseImageTypeName": @"house_image_type_name",
+                           @"houseImageType": @"house_image_type",
+                           @"houseImageList": @"house_image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation FHDetailOldDataHousePricingRankBuySuggestionModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
@@ -311,6 +330,26 @@
 }
 @end
 
+@implementation FHDetailImShareInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"coverImage": @"cover_image",
+                           @"shareUrl": @"share_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailOldDataHouseOverreviewListModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -328,6 +367,7 @@
         return dict[keyName]?:keyName;
     }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
