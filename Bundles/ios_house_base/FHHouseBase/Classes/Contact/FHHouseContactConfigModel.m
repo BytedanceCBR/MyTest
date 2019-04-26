@@ -31,6 +31,6 @@
     _logPb = params[@"log_pb"];
     _searchId = params[@"search_id"];
     _imprId = params[@"impr_id"];
-
+    _realtorPosition = params[@"realtor_position"];
 }
 @end

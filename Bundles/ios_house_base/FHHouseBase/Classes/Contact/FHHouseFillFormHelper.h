@@ -56,6 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *imprId;
 // 非必填
 @property (nonatomic , copy) NSString *position;
+@property (nonatomic , copy) NSString *realtorPosition;
+
 - (void)setTraceParams:(NSDictionary *)params;
 @end
 

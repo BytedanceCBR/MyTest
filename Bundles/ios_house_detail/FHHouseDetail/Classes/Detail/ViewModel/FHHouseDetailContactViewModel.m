@@ -473,7 +473,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (self.tracerDict) {
         [params addEntriesFromDictionary:self.tracerDict];
     }
-    
+    if (extraDict) {
+        [params addEntriesFromDictionary:extraDict];
+    }
     FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
     contactConfig.houseType = self.houseType;
     contactConfig.houseId = self.houseId;

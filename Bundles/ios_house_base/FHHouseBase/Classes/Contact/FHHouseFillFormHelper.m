@@ -123,7 +123,9 @@ extern NSString *const kFHToastCountKey;
 
 +(void)phoneCallAction:(FHHouseFillFormConfigModel *)configModel
 {
+    NSDictionary *tracerDict = [configModel toDictionary];
     FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]init];
+    [contactConfig setTraceParams:tracerDict];
     contactConfig.houseType = configModel.houseType;
     contactConfig.houseId = configModel.houseId;
     contactConfig.phone = configModel.phone;
@@ -276,6 +278,14 @@ extern NSString *const kFHToastCountKey;
     return [JSONKeyMapper mapperForSnakeCase];
 }
 
++(BOOL)propertyIsIgnored:(NSString *)propertyName
+{
+    if ([propertyName isEqualToString:@"topViewController"]) {
+        return YES;
+    }
+    return NO;
+}
+
 +(BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
@@ -304,6 +314,8 @@ extern NSString *const kFHToastCountKey;
     _logPb = params[@"log_pb"];
     _searchId = params[@"search_id"];
     _imprId = params[@"impr_id"];
+    _position = params[@"position"];
+    _realtorPosition = params[@"realtor_position"];
 }
 
 @end
