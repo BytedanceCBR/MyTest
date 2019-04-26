@@ -28,6 +28,7 @@
 #import "FHRNHelper.h"
 #import "RCTDevLoadingView.h"
 #import <HMDTTMonitor.h>
+#import <TTReachability.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -110,6 +111,9 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
+        
         if ([paramObj.sourceURL respondsToSelector:@selector(absoluteString)]) {
             _shemeUrlStr = [paramObj.sourceURL absoluteString];
         }
@@ -129,6 +133,23 @@
         }
     }
     return self;
+}
+
+#pragma mark - network changed
+-(void)connectionChanged:(NSNotification *)notification
+{
+    TTReachability *reachability = (TTReachability *)notification.object;
+    NetworkStatus status = [reachability currentReachabilityStatus];
+    NSInteger netStatusV = 0;
+    if (status != NotReachable) {
+        //有网络了，重新请求
+        netStatusV = 1;
+    }else
+    {
+        netStatusV = 0;
+    }
+    
+    [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",netStatusV]}];
 }
 
 - (void)processParams:(NSDictionary *)params
@@ -215,6 +236,7 @@
     
     _container.hidden = YES;
     
+    
     [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
 }
 
@@ -259,7 +281,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
     [[UIApplication sharedApplication] setStatusBarHidden:self.originHideStatusBar];
 }
 

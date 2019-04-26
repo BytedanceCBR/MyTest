@@ -539,8 +539,17 @@ typedef enum : NSUInteger {
         dict[@"page_type"] = @"realtor_detail";
         BOOL islogin = [[TTAccount sharedAccount] isLogin];
         [imdic setValue:islogin ? @"1" : @"0" forKey:@"is_login"];
+        [dict setValue:@"old_detail" forKey:@"enter_from"];
         
-        NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"]];
+        if(isPre)
+        {
+            [dict setValue:@"old_detail_button" forKey:@"element_from"];
+        }else
+        {
+            [dict setValue:@"old_detail_related" forKey:@"element_from"];
+        }
+        
+        NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=1&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"]];
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
       
