@@ -549,6 +549,14 @@ typedef enum : NSUInteger {
             [dict setValue:@"old_detail_related" forKey:@"element_from"];
         }
         
+        if(isPre)
+        {
+            [dict setValue:@"old_detail_button" forKey:@"element_type"];
+        }else
+        {
+            [dict setValue:@"old_detail_related" forKey:@"element_type"];
+        }
+        
         NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=1&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"]];
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
