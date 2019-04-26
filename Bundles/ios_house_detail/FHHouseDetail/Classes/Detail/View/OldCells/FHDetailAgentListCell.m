@@ -114,7 +114,8 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
-        [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact];
+        model.phoneCallViewModel.belongsVC = model.belongsVC;
+        [model.phoneCallViewModel jump2RealtorDetailWithPhone:contact isPreLoad:NO];
     }
 }
 

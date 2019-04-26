@@ -101,7 +101,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     }
     NSString *followId = configModel.followId;
     FHHouseType houseType = configModel.houseType;
-    FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
+    FHFollowActionType actionType = configModel.actionType ? :configModel.houseType;
     
     [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         

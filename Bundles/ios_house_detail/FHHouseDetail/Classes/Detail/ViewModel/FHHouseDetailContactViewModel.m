@@ -179,6 +179,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)setBelongsVC:(UIViewController *)belongsVC
 {
     _belongsVC = belongsVC;
+    self.phoneCallViewModel.belongsVC = belongsVC;
 }
 
 - (void)followAction
@@ -210,7 +211,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 //todo 增加埋点的东西
 - (void)jump2RealtorDetail
 {
-    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone];
+    [self.phoneCallViewModel jump2RealtorDetailWithPhone:self.contactPhone isPreLoad:YES];
 }
 
 - (void)licenseAction
@@ -321,6 +322,25 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [self addElementShowLog:contactPhone];
     }
     [self addLeadShowLog:contactPhone];
+    
+    @try {
+        // 可能会出现崩溃的代码
+        if ([FHHouseDetailPhoneCallViewModel fhRNEnableChannels].count > 0 && [FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels].count > 0 && [[FHHouseDetailPhoneCallViewModel fhRNEnableChannels] containsObject:@"f_realtor_detail"] && [[FHHouseDetailPhoneCallViewModel fhRNPreLoadChannels] containsObject:@"f_realtor_detail"] && contactPhone.showRealtorinfo) {
+            //保证主线程执行
+            [self.phoneCallViewModel creatJump2RealtorDetailWithPhone:contactPhone isPreLoad:YES andIsOpen:NO];
+        }
+    }
+    
+    @catch (NSException *exception) {
+        // 捕获到的异常exception
+        if (exception) {
+            self.phoneCallViewModel.rnIsUnAvalable = YES;
+        }
+    }
+    @finally {
+        // 结果处理
+    }
+
 }
 
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
@@ -646,6 +666,15 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     return _shareManager;
 }
 
+- (void)destroyRNPreLoadCache
+{
+    [self.phoneCallViewModel destoryRNPreloadCache];
+}
+
+- (void)updateLoadFinish
+{
+    [self.phoneCallViewModel updateLoadFinish];
+}
 
 - (void)dealloc
 {

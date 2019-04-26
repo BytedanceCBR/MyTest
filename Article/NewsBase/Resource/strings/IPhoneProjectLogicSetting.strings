@@ -120,6 +120,8 @@
 
 "second_house_main"   = "FHBaseMainListViewController";
 
+"react" = "FHRNBaseViewController";
+
 //通勤找房
 "commute_config" = "FHCommuteConfigViewController";
 "commute_poi" = "FHCommutePOISearchViewController";
