@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #define kRootViewWillTransitionToSize       @"kRootViewWillTransitionToSize"
-
+#define kSharePanelShouldDismiss            @"kSharePanelShouldDismiss"
 typedef NS_ENUM(NSUInteger, TTActivityPanelControllerItemLoadImageType) {
     // 使用TTThemed加载图片
     TTActivityPanelControllerItemLoadImageTypeThemed,

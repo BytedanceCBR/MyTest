@@ -24,7 +24,7 @@
                            @"gaodeLng": @"gaode_lng",
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"evaluationInfo": @"evaluation_info",
-                           @"schoolInfo": @"school_info",
+                           @"schoolDictList": @"school_dict_list",
                            @"searchId": @"search_id",
                            @"imprId": @"impr_id",
                            };
@@ -116,6 +116,7 @@
                            @"shareInfo": @"share_info",
                            @"userStatus": @"user_status",
                            @"camplaintUrl": @"camplaint_url",
+                           @"imShareInfo": @"im_share_info",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -316,3 +317,25 @@
 
 @end
 
+@implementation FHRentDetailImShareInfoModel
+
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"coverImage": @"cover_image",
+                           @"shareUrl": @"share_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+
+
+@end

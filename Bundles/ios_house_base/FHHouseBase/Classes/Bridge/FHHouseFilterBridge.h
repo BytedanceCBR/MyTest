@@ -29,6 +29,9 @@
                     showSort:(BOOL)showSort
           safeBottomPandding:(CGFloat)safeBottomPandding;
 
+// 交易历史过滤器
+-(id)filterSaleHistoryViewModelWithType:(FHHouseType)houseType;
+
 -(UIView *)filterPannel:(id)viewModel;
 
 -(UIView *)filterBgView:(id)viewModel;
