@@ -74,11 +74,6 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                             [[NSUserDefaults standardUserDefaults]synchronize];
                         }
                     }
-                }else {
-                    NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-                    if (toastCount < 3 && showTip) {
-                        [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-                    }
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;

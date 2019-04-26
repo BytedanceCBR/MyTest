@@ -415,9 +415,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         fillFormConfig.title = @"咨询经纪人";
         fillFormConfig.btnTitle = @"提交";
     }
-    NSMutableDictionary *params = @{}.mutableCopy;
-    if (self.tracerDict) {
-        [params addEntriesFromDictionary:self.tracerDict];
+    NSMutableDictionary *params = [self baseParams].mutableCopy;
+    if (extraDict.count > 0) {
+        [params addEntriesFromDictionary:extraDict];
     }
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;

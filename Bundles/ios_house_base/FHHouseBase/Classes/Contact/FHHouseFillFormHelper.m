@@ -161,10 +161,7 @@ extern NSString *const kFHToastCountKey;
             [alertView dismiss];
             YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
             [sendPhoneNumberCache setObject:phone forKey:kFHPhoneNumberCacheKey];
-            NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-            if (toastCount >= 3) {
-                [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-            }
+            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
         }else {
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
         }
@@ -238,20 +235,16 @@ extern NSString *const kFHToastCountKey;
 // 表单展示
 + (void)addInformShowLog:(FHHouseFillFormConfigModel *)configModel
 {
-    //    1. event_type：house_app2c_v2
-    //    2. page_type（页面类型）：old_detail（二手房详情页），rent_detail（租房详情页）
-    //    3. card_type ：left_pic（左图）
-    //    4. enter_from ：search_related_list（搜索结果推荐）
-    //    5. element_from ：search_related
-    //    6. rank
-    //    7. origin_from
-    //    8. origin_search_id
-    //    9.log_pb
     NSMutableDictionary *params = @{}.mutableCopy;
-    NSDictionary *baseParams = [self baseParamsWithConfigModel:configModel];
-    if (baseParams) {
-        [params addEntriesFromDictionary:baseParams];
-    }
+    params[@"page_type"] = configModel.pageType ? : @"be_null";
+    params[@"card_type"] = configModel.cardType ? : @"be_null";
+    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
+    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
+    params[@"rank"] = configModel.rank ? : @"be_null";
+    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
+    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
+    params[@"log_pb"] = configModel.logPb ? : @"be_null";
+    params[@"position"] = configModel.position ? : @"button";
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
 
@@ -259,10 +252,14 @@ extern NSString *const kFHToastCountKey;
 + (void)addClickConfirmLog:(FHHouseFillFormConfigModel *)configModel
 {
     NSMutableDictionary *params = @{}.mutableCopy;
-    NSDictionary *baseParams = [self baseParamsWithConfigModel:configModel];
-    if (baseParams) {
-        [params addEntriesFromDictionary:baseParams];
-    }
+    params[@"page_type"] = configModel.pageType ? : @"be_null";
+    params[@"card_type"] = configModel.cardType ? : @"be_null";
+    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
+    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
+    params[@"rank"] = configModel.rank ? : @"be_null";
+    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
+    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
+    params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = configModel.position ? : @"button";
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }

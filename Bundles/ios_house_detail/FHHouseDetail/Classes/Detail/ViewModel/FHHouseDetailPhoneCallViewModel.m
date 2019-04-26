@@ -53,17 +53,13 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
     dict[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
     dict[@"log_pb"] = self.tracerDict[@"log_pb"];
-    dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
     dict[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-    dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
-    dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
-    dict[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
-    if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-        NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
-        dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
-        dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
-        dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
+    if (rank.length > 0) {
+        dict[@"rank"] = rank;
+    }else {
+        dict[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
     }
+    dict[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
     dict[@"page_type"] = self.tracerDict[@"page_type"] ?: @"be_null";
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"realtor_id"] = contactPhone.realtorId;
@@ -71,8 +67,15 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"realtor_position"] = position ?: @"detail_button";
     dict[@"conversation_id"] = @"be_null";
     
-    [TTTracker eventV3:@"click_im" params:dict];
-    
+    [FHUserTracker writeEvent:@"click_im" params:dict];
+    dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
+    dict[@"search_id"] = self.tracerDict[@"search_id"] ? : @"be_null";
+    if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *logPbDict = self.tracerDict[@"log_pb"];
+        dict[@"impr_id"] = logPbDict[@"impr_id"] ? : @"be_null";
+        dict[@"search_id"] = logPbDict[@"search_id"] ? : @"be_null";
+        dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
+    }
     NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict}];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
