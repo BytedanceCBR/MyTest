@@ -230,7 +230,8 @@
 {
     
     if (!TTNetworkConnected()) {
-        callback(TTBridgeMsgSuccess, @{ @"response": @{@"message":@"failed"}, @"status": @(0),
+        NSString *stringRes = @"\{\"message\": \"failed\"\}";
+        callback(TTBridgeMsgSuccess, @{ @"response": stringRes, @"status": @(0),
                                            @"code":@(0)});
         return;
     }
