@@ -358,6 +358,8 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     [@"realtor_detail" isEqualToString:host] ||
     [@"second_house_main" isEqualToString:host] ||
     [@"house_find" isEqualToString:host] ||
+    [@"city_market_trend" isEqualToString:host] ||
+    [@"city_market_hot_list" isEqualToString:host] ||
     [@"main" isEqualToString:host];
 }
 
