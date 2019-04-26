@@ -10,7 +10,7 @@
 #import "FHDetailOldModel.h"
 #import "FHHouseDetailBaseViewModel.h"
 #import "FHHouseDetailPhoneCallViewModel.h"
-#import "FHHouseDetailFollowUpViewModel.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
 
 NS_ASSUME_NONNULL_BEGIN
 // 推荐经纪人-列表

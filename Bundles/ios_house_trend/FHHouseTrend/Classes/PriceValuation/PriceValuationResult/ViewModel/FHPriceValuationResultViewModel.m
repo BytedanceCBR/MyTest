@@ -357,7 +357,7 @@ extern NSString *const kFHToastCountKey;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:@"专业房地产经纪人为您服务" btnTitle:@"提交"];
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    alertView.confirmClickBlock = ^(NSString *phoneNum){
+    alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
         [wself addInfomationTracer:@"click_confirmation"];
         [wself fillFormRequest:phoneNum];
     };

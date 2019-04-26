@@ -19192,7 +19192,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h";
+			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h\n";
 		};
 		FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */ = {
 			isa = PBXShellScriptBuildPhase;

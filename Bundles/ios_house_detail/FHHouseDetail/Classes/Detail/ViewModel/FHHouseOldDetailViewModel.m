@@ -38,6 +38,8 @@
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHDetailMediaHeaderCell.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
+#import <FHHouseBase/FHMainApi+Contact.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -368,8 +370,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
@@ -461,6 +463,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }else {
         model.data.contact.unregistered = YES;
         self.contactViewModel.contactPhone = model.data.contact;
+    }
+    if (self.contactViewModel.contactPhone.phone.length > 0) {
+        
+        if ([self isShowSubscribe]) {
+            self.contactViewModel.contactPhone.isFormReport = YES;
+        }else {
+            self.contactViewModel.contactPhone.isFormReport = NO;
+        }
+    }else {
+        self.contactViewModel.contactPhone.isFormReport = YES;
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
@@ -588,7 +600,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
-    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -605,7 +617,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
     }];
     // 静默关注功能
-    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
 
 - (BOOL)isShowSubscribe {

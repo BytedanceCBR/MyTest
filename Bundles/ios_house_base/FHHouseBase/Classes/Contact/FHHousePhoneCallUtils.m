@@ -6,9 +6,8 @@
 //
 
 #import "FHHousePhoneCallUtils.h"
-#import "FHHouseContactConfigModel.h"
 #import "FHHouseType.h"
-#import "FHHouseDetailAPI.h"
+#import "FHMainApi+Contact.h"
 #import <TTRoute.h>
 #import "YYCache.h"
 #import <FHCommonUI/ToastManager.h>
@@ -44,18 +43,17 @@ typedef enum : NSUInteger {
     return YES;
 }
 
-+ (void)callWithConfig:(NSDictionary *)configDict
++ (void)callWithConfig:(NSDictionary *)configDict completion:(FHHousePhoneCallCompletionBlock)completionBlock
 {
     FHHouseContactConfigModel *configModel = [[FHHouseContactConfigModel alloc]initWithDictionary:configDict error:nil];
     if (configModel) {
-        [self callWithConfigModel:configModel];
+        [self callWithConfigModel:configModel completion:completionBlock];
     }
 }
 
++ (void)callWithConfigModel:(FHHouseContactConfigModel *)configModel completion:(FHHousePhoneCallCompletionBlock)completionBlock
 
-+ (void)callWithConfigModel:(FHHouseContactConfigModel *)configModel 
 {
-    __weak typeof(self)wself = self;
     NSString *phone = configModel.phone;
     NSString *houseId = configModel.houseId;
     FHHouseType houseType = configModel.houseType;
@@ -69,24 +67,30 @@ typedef enum : NSUInteger {
         [self callPhone:urlStr];
         [self addClickCallLog:configModel isVirtual:0];
         [self addDetailCallExceptionLog:FHPhoneCallTypeNetFailed extraDict:nil errorCode:0 message:nil];
+        NSError *error = [[NSError alloc]initWithDomain:NSURLErrorDomain code:-1 userInfo:nil];
+        if (completionBlock) {
+            completionBlock(NO,error);
+        }
         return;
     }
-    // add by zjing for test todo
-//    BOOL showLoading = YES;
-//    if (extraDict[@"show_loading"]) {
-//        showLoading = [extraDict[@"show_loading"]boolValue];
-//    }
-//    if (showLoading) {
-//        [self.bottomBar startLoading];
-//    }
+    
+    if (configModel.showLoading) {
+        
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"house_id"] = houseId;
+        userInfo[@"show_loading"] = @(1);
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
+    }
     
     [self isPhoneCallParamsValid:configModel];
 
-    [FHHouseDetailAPI requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestVirtualNumber:realtorId houseId:houseId houseType:houseType searchId:searchId imprId:imprId completion:^(FHDetailVirtualNumResponseModel * _Nullable model, NSError * _Nullable error) {
         
-//        if (showLoading) {
-//            [wself.bottomBar stopLoading];
-//        }
+        NSMutableDictionary *userInfo = @{}.mutableCopy;
+        userInfo[@"house_id"] = houseId;
+        userInfo[@"show_loading"] = @(0);
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"kFHDetailLoadingNotification" object:nil userInfo:userInfo];
+        
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         NSInteger isVirtual = model.data.isVirtual;
         if (!error && model.data.virtualNumber.length > 0) {
@@ -103,9 +107,11 @@ typedef enum : NSUInteger {
             extraDict[@"house_id"] = houseId;
             [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:extraDict errorCode:error.code message:model.message ? : error.localizedDescription];
         }
-        [wself addClickCallLog:configModel isVirtual:isVirtual];
-        [wself callPhone:urlStr];
-        
+        [self addClickCallLog:configModel isVirtual:isVirtual];
+        [self callPhone:urlStr];
+        if (completionBlock) {
+            completionBlock(YES,nil);
+        }
     }];
 }
 

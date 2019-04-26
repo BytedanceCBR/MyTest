@@ -18,11 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 // 必填
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
 @property (nonatomic, copy) NSString *followId;
-@property (nonatomic, assign) FHFollowActionType actionType;
 
 // 选填
 @property (nonatomic, assign) BOOL showTip;
-@property (nonatomic, weak) UIViewController *topVC;
+@property (nonatomic, assign) FHFollowActionType actionType;
+@property (nonatomic, assign) BOOL hideToast;
 
 #pragma mark 埋点
 // 必填
@@ -32,9 +32,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *enterFrom;
 @property (nonatomic , copy) NSString *pageType;
 @property (nonatomic , copy) NSString *cardType;
-@property (nonatomic , copy) NSString *rank; //add by zjing for test confirm
+@property (nonatomic , copy) NSString *rank; 
 @property (nonatomic , strong) NSDictionary *logPb;
-
+@property (nonatomic, copy) NSString *searchId;
+@property (nonatomic, copy) NSString *imprId;
 
 @end
 

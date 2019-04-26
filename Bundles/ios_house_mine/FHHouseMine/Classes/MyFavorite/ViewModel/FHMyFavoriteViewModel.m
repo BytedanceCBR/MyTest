@@ -22,6 +22,7 @@
 #import "FHPlaceHolderCell.h"
 #import "FHUserTracker.h"
 #import "FHRefreshCustomFooter.h"
+#import <FHHouseBase/FHMainApi+Contact.h>
 
 
 #define kCellId @"cell_id"
@@ -630,7 +631,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (void)cancelHouseFollow:(FHSingleImageInfoCellModel *)cellModel completion:(void(^)(FHDetailUserFollowResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString *followId = [self getFollowId:cellModel];
-    [FHHouseDetailAPI requestCancelFollow:followId houseType:self.type actionType:self.type completion:completion];
+    [FHMainApi requestCancelFollow:followId houseType:self.type actionType:self.type completion:completion];
 }
 
 - (NSString *)getFollowId:(FHSingleImageInfoCellModel *)cellModel {

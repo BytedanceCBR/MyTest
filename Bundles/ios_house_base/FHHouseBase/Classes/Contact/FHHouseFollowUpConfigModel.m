@@ -19,4 +19,18 @@
     return YES;
 }
 
+- (void)setTraceParams:(NSDictionary *)params
+{
+    _pageType = params[@"page_type"];
+    _cardType = params[@"card_type"];
+    _enterFrom = params[@"enter_from"];
+    _elementFrom = params[@"element_from"];
+    _rank = params[@"rank"];
+    _originFrom = params[@"origin_from"];
+    _originSearchId = params[@"origin_search_id"];
+    _logPb = params[@"log_pb"];
+    _searchId = params[@"search_id"];
+    _imprId = params[@"impr_id"];
+}
+
 @end

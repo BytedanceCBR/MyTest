@@ -12,6 +12,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void(^FHHousePhoneCallCompletionBlock)(BOOL success,NSError *error);
+
 @interface FHHouseContactConfigModel : JSONModel
 
 // 全部用search_id下划线这种格式
@@ -23,9 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *searchId;
 @property (nonatomic, copy) NSString *imprId;
 
-
 // 选填
-@property (nonatomic , strong) NSDictionary *reportParams;
+@property (nonatomic, assign) BOOL showLoading; // 按钮状态
 
 #pragma mark 埋点
 // 必填
@@ -35,13 +36,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *enterFrom;
 @property (nonatomic , copy) NSString *pageType;
 @property (nonatomic , copy) NSString *cardType;
-@property (nonatomic , copy) NSString *rank; //add by zjing for test confirm
+@property (nonatomic , copy) NSString *rank; 
 @property (nonatomic , strong) NSDictionary *logPb;
 
 // 选填
 @property (nonatomic , strong) NSNumber *realtorRank;
 @property (nonatomic , copy) NSString *realtorPosition;
 @property (nonatomic , copy) NSString *conversationId;
+- (void)setTraceParams:(NSDictionary *)params;
 
 @end
 

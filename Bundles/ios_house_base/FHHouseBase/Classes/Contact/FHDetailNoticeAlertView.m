@@ -307,7 +307,7 @@
     NSString *phoneNum = [self currentInputPhoneNumber];
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
         if (self.confirmClickBlock) {
-            self.confirmClickBlock(phoneNum);
+            self.confirmClickBlock(phoneNum,self);
         }
     }else {
         [self showErrorText];
@@ -319,7 +319,7 @@
     NSString *phoneNum = [self currentInputPhoneNumber];
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
         if (self.leftClickBlock) {
-            self.leftClickBlock(phoneNum);
+            self.leftClickBlock(phoneNum,self);
         }
     }else {
         [self showErrorText];
@@ -330,7 +330,7 @@
 
 {    NSString *phoneNum = [self currentInputPhoneNumber];
     if (self.confirmClickBlock) {
-        self.confirmClickBlock(phoneNum);
+        self.confirmClickBlock(phoneNum,self);
     }
 }
 

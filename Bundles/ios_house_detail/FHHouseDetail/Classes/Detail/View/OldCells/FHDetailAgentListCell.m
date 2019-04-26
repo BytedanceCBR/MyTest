@@ -17,6 +17,8 @@
 #import "FHExtendHotAreaButton.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
+#import <FHHouseBase/FHHousePhoneCallUtils.h>
 
 @interface FHDetailAgentListCell ()
 
@@ -137,9 +139,26 @@
         extraDict[@"realtor_id"] = contact.realtorId;
         extraDict[@"realtor_rank"] = @(index);
         extraDict[@"realtor_position"] = @"detail_related";
-        [model.phoneCallViewModel callWithPhone:contact.phone realtorId:contact.realtorId searchId:model.searchId imprId:model.imprId extraDict:extraDict];
+        if (self.baseViewModel.detailTracerDic) {
+            [extraDict addEntriesFromDictionary:self.baseViewModel.detailTracerDic];
+        }
+
+        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
+        contactConfig.houseType = self.baseViewModel.houseType;
+        contactConfig.houseId = self.baseViewModel.houseId;
+        contactConfig.phone = contact.phone;
+        contactConfig.realtorId = contact.realtorId;
+        contactConfig.searchId = model.searchId;
+        contactConfig.imprId = model.imprId;
+        [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
+
+        FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
+        configModel.houseType = self.baseViewModel.houseType;
+        configModel.followId = self.baseViewModel.houseId;
+        configModel.actionType = self.baseViewModel.houseType;
+        
         // 静默关注功能
-        [model.phoneCallViewModel.followUpViewModel silentFollowHouseByFollowId:model.houseId houseType:model.houseType actionType:model.houseType showTip:NO];
+        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 }
 
