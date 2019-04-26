@@ -222,6 +222,13 @@
 
 - (void)fetchWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
+    
+    if (!TTNetworkConnected()) {
+        callback(TTBridgeMsgFailed, @{ @"response": @{@"message":@"failed"}, @"status": @(0),
+                                           @"code":@(0)});
+        return;
+    }
+    
     NSString *url = [param tt_stringValueForKey:@"url"];
     NSString *method = [param stringValueForKey:@"method" defaultValue:@"GET"];
     method = [method.uppercaseString isEqualToString:@"POST"]? @"POST": @"GET";
