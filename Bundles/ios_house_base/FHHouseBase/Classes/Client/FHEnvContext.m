@@ -25,7 +25,6 @@
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
 #import "FHIESGeckoManager.h"
-#import "TimePerformanceTracer.h"
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
