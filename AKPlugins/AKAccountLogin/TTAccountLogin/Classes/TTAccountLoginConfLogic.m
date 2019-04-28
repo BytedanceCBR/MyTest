@@ -8,7 +8,7 @@
 
 #import "TTAccountLoginConfLogic.h"
 #import <TTAccountSDK.h>
-
+#import <TTAccountSDK/TTAccountAuthWeChat.h>
 
 
 @implementation TTAccountLoginConfLogic
@@ -164,7 +164,7 @@ static TTAccountLoginPlatformType s_supportedPlatforms;
         }
             break;
         case TTAccountLoginPlatformTypeWeChat: {
-            defLoginPlatformName = [TTAccountAuthWeChat platformName] ? : @"weixin";
+            defLoginPlatformName = [TTAccountAuthWeChat  platformName] ? : @"weixin";
         }
             break;
         case TTAccountLoginPlatformTypeWeChatSNS: {

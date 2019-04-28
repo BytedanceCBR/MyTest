@@ -5,7 +5,8 @@
 //  Created by Zuopeng Liu on 7/26/16.
 //
 //
-
+#if 0
+//去掉上传用户通讯录
 #import <Foundation/Foundation.h>
 #import "TTABContact.h"
 
@@ -37,3 +38,4 @@ typedef enum : NSUInteger {
           completion:(void (^)(NSError *error, id jsonObj))completion;
 
 @end
+#endif

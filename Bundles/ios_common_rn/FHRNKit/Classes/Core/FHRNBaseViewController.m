@@ -29,6 +29,7 @@
 #import "RCTDevLoadingView.h"
 #import <HMDTTMonitor.h>
 #import <TTReachability.h>
+#import <FHEnvContext.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -138,11 +139,8 @@
 #pragma mark - network changed
 -(void)connectionChanged:(NSNotification *)notification
 {
-    TTReachability *reachability = (TTReachability *)notification.object;
-    NetworkStatus status = [reachability currentReachabilityStatus];
     NSInteger netStatusV = 0;
-    if (status != NotReachable) {
-        //有网络了，重新请求
+    if (![FHEnvContext isNetworkConnected]) {
         netStatusV = 1;
     }else
     {
@@ -235,6 +233,8 @@
     [self registerObserver];
     
     _container.hidden = YES;
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
     
     
     [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
@@ -348,9 +348,6 @@
 - (void)goBack
 {
     UIViewController *popVC = [self.navigationController popViewControllerAnimated:YES];
-    if (!_canPreLoad) {
-        [self destroyRNView];
-    }
     
     if (nil == popVC) {
         [self dismissViewControllerAnimated:YES completion:^{
