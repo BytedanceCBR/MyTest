@@ -9,6 +9,7 @@
 #ifndef TTAdConstant_h
 #define TTAdConstant_h
 #import <TTBaseLib/NetworkUtilities.h>
+#import <TTBaseLib/TTDeviceUIUtils.h>
 
 extern NSString * const TTAdActionTypeWebString;
 extern NSString * const TTAdActionTypePhoneString;

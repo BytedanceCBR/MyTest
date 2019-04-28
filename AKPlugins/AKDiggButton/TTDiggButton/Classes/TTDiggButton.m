@@ -263,8 +263,8 @@
         } completion:^(BOOL finished) {
             self.selected = YES;
             self.alpha = 0;
-            if (_buttonClickBlock) {
-                _buttonClickBlock(type);
+            if (self.buttonClickBlock) {
+                self.buttonClickBlock(type);
             }
             [UIView animateWithDuration:0.2f delay:0.f options:UIViewAnimationOptionCurveEaseIn animations:^{
                 self.imageView.transform = CGAffineTransformMakeScale(1.f,1.f);
