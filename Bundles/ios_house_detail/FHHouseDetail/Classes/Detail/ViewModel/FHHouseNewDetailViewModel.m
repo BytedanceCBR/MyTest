@@ -179,6 +179,9 @@
                 [arrayHouseImage addObject:groupModel.images[j]];
             }
         }
+  
+        headerCellModel.isNewHouse = YES;
+        headerCellModel.smallImageGroup = model.data.smallImageGroup;
         headerCellModel.houseImage = arrayHouseImage;
         [self.items addObject:headerCellModel];
     }

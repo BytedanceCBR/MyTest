@@ -347,7 +347,7 @@
     [self.KVOController observe:self.view keyPath:@"ttLoadingView" options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         StrongSelf;
         if ([self.view.ttLoadingView isKindOfClass:[SSThemedView class]]) {
-            ((SSThemedView *)self.view.ttLoadingView).themeMode = SSThemeModeAlwaysNight;
+            ((SSThemedView *)self.view.ttLoadingView).themeMode = SSThemeModeAlwaysDay;
         }
     }];
     [self buildTopView];

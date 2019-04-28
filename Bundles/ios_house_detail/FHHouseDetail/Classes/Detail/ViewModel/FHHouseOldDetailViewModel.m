@@ -34,8 +34,10 @@
 #import "FHDetailNeighborhoodEvaluateCell.h"
 #import "FHDetailListEntranceCell.h"
 #import "FHDetailHouseSubscribeCell.h"
+#import "FHDetailAveragePriceComparisonCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
+#import "FHDetailMediaHeaderCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -55,6 +57,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHDetailPhotoHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPhotoHeaderCell class])];
+    [self.tableView registerClass:[FHDetailMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailMediaHeaderCell class])];
     [self.tableView registerClass:[FHDetailGrayLineCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailGrayLineCell class])];
     [self.tableView registerClass:[FHDetailHouseNameCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseNameCell class])];
     [self.tableView registerClass:[FHDetailErshouHouseCoreInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailErshouHouseCoreInfoCell class])];
@@ -75,13 +78,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
+    [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonCell class])];
 
 }
 // cell class
 - (Class)cellClassForEntity:(id)model {
-    // 头部滑动图片
+    // 兼容旧版本 头部滑动图片
     if ([model isKindOfClass:[FHDetailPhotoHeaderModel class]]) {
         return [FHDetailPhotoHeaderCell class];
+    }
+    // 新版本 头部滑动图片
+    if ([model isKindOfClass:[FHDetailMediaHeaderModel class]]) {
+        return [FHDetailMediaHeaderCell class];
     }
     // 标题
     if ([model isKindOfClass:[FHDetailHouseNameModel class]]) {
@@ -162,6 +170,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if ([model isKindOfClass:[FHDetailHouseSubscribeModel class]]) {
         return [FHDetailHouseSubscribeCell class];
     }
+    // 均价对比
+    if ([model isKindOfClass:[FHDetailAveragePriceComparisonModel class]]) {
+        return [FHDetailAveragePriceComparisonCell class];
+    }
     return [FHDetailBaseCell class];
 }
 // cell identifier
@@ -187,6 +199,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
+                wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
@@ -235,14 +248,25 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (void)processDetailData:(FHDetailOldModel *)model {
     
     self.detailData = model;
-    [self addDetailCoreInfoExcetionLog];
+    if (model.data.status != -1) {
+        [self addDetailCoreInfoExcetionLog];
+    }
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
-    if (model.data.houseImage) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
-        headerCellModel.houseImage = model.data.houseImage;
+    if (model.data.houseImageDictList.count > 0) {
+        FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
+        headerCellModel.houseImageDictList = model.data.houseImageDictList;
+        headerCellModel.vedioModel = nil;// 添加视频模型数据
+        headerCellModel.contactViewModel = self.contactViewModel;
         [self.items addObject:headerCellModel];
+    }else{
+        // 添加头滑动图片
+        if (model.data.houseImage.count > 0) {
+            FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+            headerCellModel.houseImage = model.data.houseImage;
+            [self.items addObject:headerCellModel];
+        }
     }
     // 添加标题
     if (model.data) {
@@ -361,7 +385,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.baseViewModel = self;
         [self.items addObject:infoModel];
     }
-    
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -369,6 +392,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
     // 小区评测
@@ -392,18 +416,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:infoModel];
     }
 
-    if (model.data.housePricingRank.analyseDetail.length > 0) {
-        
-        // 价格分析
-        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
-        titleModel.title = @"价格分析";
-        [self.items addObject:titleModel];
-        if (model.data.housePricingRank.analyseDetail.length > 0) {
-            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
-            priceRankModel.priceRank = model.data.housePricingRank;
-            [self.items addObject:priceRankModel];
-        }
-    }
+//    if (model.data.housePricingRank.analyseDetail.length > 0) {
+//        
+//        // 价格分析
+//        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
+//        titleModel.title = @"价格分析";
+//        [self.items addObject:titleModel];
+//        if (model.data.housePricingRank.analyseDetail.length > 0) {
+//            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
+//            priceRankModel.priceRank = model.data.housePricingRank;
+//            [self.items addObject:priceRankModel];
+//        }
+//    }
     // 均价走势
     FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
     priceTrendModel.priceTrends = model.data.priceTrend;
@@ -412,7 +436,15 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     priceTrendModel.hasSuggestion = (model.data.housePricingRank.buySuggestion.content.length > 0) ? YES : NO;
     priceTrendModel.tableView = self.tableView;
     [self.items addObject:priceTrendModel];
-    
+    // 均价对比
+    if(model.data.neighborhoodPriceRange && model.data.priceAnalyze){
+        FHDetailAveragePriceComparisonModel *infoModel = [[FHDetailAveragePriceComparisonModel alloc] init];
+        infoModel.neighborhoodId = model.data.neighborhoodInfo.id;
+        infoModel.neighborhoodName = model.data.neighborhoodInfo.name;
+        infoModel.analyzeModel = model.data.priceAnalyze;
+        infoModel.rangeModel = model.data.neighborhoodPriceRange;
+        [self.items addObject:infoModel];
+    }
     // 购房小建议
     if (model.data.housePricingRank.buySuggestion.content.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -426,6 +458,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if (model.data.highlightedRealtor) {
         self.contactViewModel.contactPhone = model.data.highlightedRealtor;
     }else {
+        model.data.contact.unregistered = YES;
         self.contactViewModel.contactPhone = model.data.contact;
     }
     self.contactViewModel.shareInfo = model.data.shareInfo;

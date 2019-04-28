@@ -20,6 +20,13 @@ PODS:
   - AMapLocation (2.6.0.1-binary)
   - AMapSearch (6.1.1.1-binary)
   - Aspects (1.4.1.1-binary)
+  - AWECloudCommand (1.0.7.1-binary):
+    - AWECloudCommand/Core (= 1.0.7.1-binary)
+    - AWECloudCommand/NetDiagnose (= 1.0.7.1-binary)
+    - AWECloudCommand/Utilities (= 1.0.7.1-binary)
+  - AWECloudCommand/Core (1.0.7.1-binary)
+  - AWECloudCommand/NetDiagnose (1.0.7.1-binary)
+  - AWECloudCommand/Utilities (1.0.7.1-binary)
   - AWEVideoPlayer (0.3.20)
   - BDABTestSDK (1.0.2-rc.3):
     - BDABTestSDK/Core (= 1.0.2-rc.3)
@@ -75,7 +82,6 @@ PODS:
   - FHHouseList (0.1.0)
   - FHHouseMessage (0.1.0)
   - FHHouseMine (0.1.0)
-  - FHHouseRent (0.1.0)
   - FHHouseTrend (0.1.0)
   - FHMapSearch (0.1.0)
   - FLAnimatedImage (1.0.12.1-binary)
@@ -85,6 +91,7 @@ PODS:
   - FMDB/standard (2.6.2.1-binary)
   - Godzippa (1.1.0.1-binary)
   - Heimdallr/ALog (0.6.27)
+  - Heimdallr/CloudCommand (0.6.27)
   - Heimdallr/Core (0.6.27)
   - Heimdallr/CrashDetector (0.6.27)
   - Heimdallr/DeviceInfo (0.6.27)
@@ -492,6 +499,7 @@ DEPENDENCIES:
   - AMapLocation (= 2.6.0.1-binary)
   - AMapSearch (= 6.1.1.1-binary)
   - Aspects (= 1.4.1.1-binary)
+  - AWECloudCommand (= 1.0.7.1-binary)
   - AWEVideoPlayer (= 0.3.20)
   - BDABTestSDK (= 1.0.2-rc.3)
   - BDAccount/Account (from `git@code.byted.org:iOS_Library/BDAccount.git`, tag `fixAvatarURL`)
@@ -532,7 +540,6 @@ DEPENDENCIES:
   - FHHouseList (from `../Bundles/ios_house_list`)
   - FHHouseMessage (from `../Bundles/ios_house_message`)
   - FHHouseMine (from `../Bundles/ios_house_mine`)
-  - FHHouseRent (from `../Bundles/ios_house_rent`)
   - FHHouseTrend (from `../Bundles/ios_house_trend`)
   - FHMapSearch (from `../Bundles/ios_map_search`)
   - FLAnimatedImage (= 1.0.12.1-binary)
@@ -540,6 +547,7 @@ DEPENDENCIES:
   - FMDB (= 2.6.2.1-binary)
   - Godzippa (= 1.1.0.1-binary)
   - Heimdallr/ALog (= 0.6.27)
+  - Heimdallr/CloudCommand (= 0.6.27)
   - Heimdallr/Core (= 0.6.27)
   - Heimdallr/CrashDetector (= 0.6.27)
   - Heimdallr/DeviceInfo (= 0.6.27)
@@ -564,8 +572,8 @@ DEPENDENCIES:
   - IESVideoPlayer (= 0.1.16)
   - IESWebKit (= 0.1.4)
   - IGListKit
-  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, branch `feature/develop`)
-  - ios_house_im (from `../../lab/ios_house_im`)
+  - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9423cbfa9bb1c30d2b87c1542b862b457b7c141a`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `66541148a531f14f936f4a38a24d012cdfe701ca`)
   - JSONModel (= 1.7.0-private)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -679,7 +687,7 @@ DEPENDENCIES:
   - TTNewsAccountBusiness (from `../AKPlugins/TTNewsAccountBusiness`)
   - TTPersistence (= 0.2.3)
   - TTPhotoScrollVC (from `../AKPlugins/TTPhotoScrollVC`)
-  - TTPlatformBaseLib (from `git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git`, branch `dev_bubble`)
+  - TTPlatformBaseLib (from `git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git`, commit `be740facc849bf022c4265a19bea8d6657de0741`, branch `dev_bubble`)
   - TTPlatformUIModel (from `../AKPlugins/AKPlatformUIModel`)
   - TTPlayerSDK (= 2.9.9.10)
   - TTPreloaderSDK (= 1.4.20-rc.0)
@@ -764,8 +772,6 @@ EXTERNAL SOURCES:
     :path: ../Bundles/ios_house_message
   FHHouseMine:
     :path: ../Bundles/ios_house_mine
-  FHHouseRent:
-    :path: ../Bundles/ios_house_rent
   FHHouseTrend:
     :path: ../Bundles/ios_house_trend
   FHMapSearch:
@@ -773,10 +779,11 @@ EXTERNAL SOURCES:
   HTSVideoPlay:
     :path: ../Vendor/ShortVideo
   ios_house_filter:
-    :branch: feature/develop
+    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :path: ../../lab/ios_house_im
+    :commit: 66541148a531f14f936f4a38a24d012cdfe701ca
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAccountSDK:
@@ -804,6 +811,7 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTPhotoScrollVC
   TTPlatformBaseLib:
     :branch: dev_bubble
+    :commit: be740facc849bf022c4265a19bea8d6657de0741
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTPlatformUIModel:
     :path: ../AKPlugins/AKPlatformUIModel
@@ -828,13 +836,16 @@ CHECKOUT OPTIONS:
     :git: git@code.byted.org:iOS_Library/BDAccount.git
     :tag: fixAvatarURL
   ios_house_filter:
-    :commit: 9c5ef3144d54acc6f0203df98cb38bf5f38f075d
+    :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
+  ios_house_im:
+    :commit: 66541148a531f14f936f4a38a24d012cdfe701ca
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
   TTPlatformBaseLib:
-    :commit: 49bc68f0b533295611619e12234719da02a66de4
+    :commit: a50fb0b6d98721353148904544701aef2ae6f027
     :git: git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git
   TTRoute:
     :commit: 8892eec30c52c945078790d3645d0ea5aad5ccaa
@@ -852,6 +863,7 @@ SPEC CHECKSUMS:
   AMapLocation: 4ada3e0cb6933c1ac0b64038abb816b768d6311b
   AMapSearch: 010f2224fd4b3d902e3df088856382370da84607
   Aspects: 49ab2ffbcea7b491efa20fda09e60a3f629b7616
+  AWECloudCommand: 60f409e41dc60fe48dca27e05028da89fe3e5f18
   AWEVideoPlayer: 07ffe01239d24b1010d95b074c002dc7a54b04fc
   BDABTestSDK: eb7cdb2ce2887b35f44cc374ee01372e77278530
   BDAccount: f8e1b942a717c00b28707de9942d55206a7a8ccd
@@ -874,10 +886,9 @@ SPEC CHECKSUMS:
   FHHouseDetail: 22619e5fd888a2956b9c3bfbfc78f837e937fda5
   FHHouseFind: b0e40221ad76cc8455c4da2d7dae61adf480a2a1
   FHHouseHome: e6f78062259c79d7354a352b5ccf97dd0d4f6e1e
-  FHHouseList: 9fca986715f590f01b92da73d05e6ac15130f331
+  FHHouseList: 02ebfe64a848d2ac54a0f4fa72603813b70190f3
   FHHouseMessage: 1879205d8b77b49fefba376311c38ae3b5e8381c
   FHHouseMine: c0c197cb55d97e3357427d2a1731a7ab4225d94b
-  FHHouseRent: e66fd32869e2800f913c1f827ee73e2ddaf38b6d
   FHHouseTrend: feb4c9736617882d2bd7181262e6a3e2d4ebad4f
   FHMapSearch: 9acedf28d488c221ded3616fef6ac5fcf862d44e
   FLAnimatedImage: c103d911f434514c39961a5eed4c0e29c6cdae48
@@ -891,7 +902,7 @@ SPEC CHECKSUMS:
   IESWebKit: e13a10709fb324b827ecf099f650064cc7cdc4b9
   IGListKit: 684b7cbb1b0192538d29483080e2280b037882dc
   ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
-  ios_house_im: bff4c982d4baf0938adadeae3712e66e4ec0e324
+  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
   JSONModel: e751eaf024f86094e58f0a24fb9d08d1ff2a1e3d
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -995,6 +1006,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: abbe5aa088d3de89e0518ccda04b0c84a6e4998e
+PODFILE CHECKSUM: 7b5d2928352623a4626c83bf33cd4d88fdbe389c
 
 COCOAPODS: 1.4.0

@@ -66,24 +66,6 @@
 }
 @end
 
-@implementation FHDetailOldDataNeighborhoodInfoSchoolInfoModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"schoolType": @"school_type",
-                           @"schoolId": @"school_id",
-                           @"schoolName": @"school_name",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailOldDataNeighborhoodInfoEvaluationInfoModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -122,7 +104,45 @@
                            @"searchId": @"search_id",
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"evaluationInfo": @"evaluation_info",
-                           @"schoolInfo": @"school_info",
+                           @"schoolDictList": @"school_dict_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailOldDataComfortInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"buildingAge": @"building_age",
+                           @"plotRatio": @"plot_ratio",
+                           @"propertyFee": @"property_fee",
+                           @"houseCount": @"house_count",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailOldDataNeighborhoodPriceRangeModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"maxPricePsm": @"max_price_psm",
+                           @"curPricePsm": @"cur_price_psm",
+                           @"minPricePsm": @"min_price_psm",
+                           @"sameNeighborhoodRoomsSchema": @"same_neighborhood_rooms_schema"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -152,7 +172,28 @@
 }
 @end
 
+@implementation FHDetailOldDataNeighborEvalModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
+@implementation FHDetailOldDataPriceAnalyzeModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"houseType": @"house_type",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
@@ -164,6 +205,7 @@
                            @"neighborhoodInfo": @"neighborhood_info",
                            @"logPb": @"log_pb",
                            @"houseImage": @"house_image",
+                           @"houseImageDictList": @"house_image_dict_list",
                            @"shareInfo": @"share_info",
                            @"priceChangeHistory": @"price_change_history",
                            @"pricingPerSqmV": @"pricing_per_sqm_v",
@@ -177,7 +219,12 @@
                            @"highlightedRealtor": @"highlighted_realtor",
                            @"recommendedRealtors": @"recommended_realtors",
                            @"listEntrance": @"list_entrance",
-                           
+                           @"imShareInfo": @"im_share_info",
+                           @"neighborEval": @"neighbor_eval",
+                           @"priceAnalyze": @"price_analyze",
+                           @"neighborhoodPriceRange": @"neighborhood_price_range",
+                           @"comfortInfo": @"comfort_info",
+            
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -241,6 +288,23 @@
 }
 @end
 
+@implementation FHDetailOldDataHouseImageDictListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"houseImageTypeName": @"house_image_type_name",
+                           @"houseImageType": @"house_image_type",
+                           @"houseImageList": @"house_image_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 @implementation FHDetailOldDataHousePricingRankBuySuggestionModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
@@ -266,6 +330,26 @@
 }
 @end
 
+@implementation FHDetailImShareInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"coverImage": @"cover_image",
+                           @"shareUrl": @"share_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailOldDataHouseOverreviewListModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
@@ -283,6 +367,7 @@
         return dict[keyName]?:keyName;
     }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

@@ -139,6 +139,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
                 wSelf.neighborhoodId = neighborhoodId;
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
+                wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
@@ -193,12 +194,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 处理详情页数据
 - (void)processDetailData:(FHRentDetailResponseModel *)model {
 
+    //当前IM全是非B端注册经纪人
+    model.data.contact.unregistered = YES;
     self.contactViewModel.contactPhone = model.data.contact;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     
     self.detailData = model;
-    [self addDetailCoreInfoExcetionLog];
+    if (model.data.status != -1) {
+        [self addDetailCoreInfoExcetionLog];
+    }
 
     // 清空数据源
     [self.items removeAllObjects];
@@ -267,6 +272,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:grayLine];
         FHDetailNeighborhoodInfoModel *infoModel = [[FHDetailNeighborhoodInfoModel alloc] init];
         infoModel.rent_neighborhoodInfo = model.data.neighborhoodInfo;
+        infoModel.tableView = self.tableView;
         [self.items addObject:infoModel];
     }
     // 地图

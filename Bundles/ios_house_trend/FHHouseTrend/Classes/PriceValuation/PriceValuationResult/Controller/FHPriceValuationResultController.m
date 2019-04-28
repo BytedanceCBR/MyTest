@@ -9,6 +9,7 @@
 #import "FHPriceValuationResultViewModel.h"
 #import "FHPriceValuationResultView.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
+#import <TTReachability/TTReachability.h>
 
 @interface FHPriceValuationResultController()<UIViewControllerErrorHandler,UIScrollViewDelegate>
 
@@ -45,13 +46,16 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    if(self.emptyView && !self.emptyView.hidden){
+        return;
+    }
     [self refreshContentOffset:self.resultView.scrollView.contentOffset];
 }
 
 - (void)initNavbar {
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"查房价";
-    [self setNavBar:NO];
+    [self setNavBar:YES];
 }
 
 - (void)setNavBar:(BOOL)error {
@@ -83,9 +87,17 @@
     }];
 }
 
+- (void)startLoadData {
+    if ([TTReachability isNetworkConnected]) {
+        [_viewModel requestData];
+    } else {
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
+}
+
 - (void)initViewModel {
     self.viewModel = [[FHPriceValuationResultViewModel alloc] initWithView:self.resultView controller:self];
-    [_viewModel requestData];
+    [self startLoadData];
 }
 
 - (void)refreshContentOffset:(CGPoint)contentOffset {
@@ -109,6 +121,10 @@
     }else {
         [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
     }
+}
+
+- (void)retryLoadData {
+    [self startLoadData];
 }
 
 #pragma mark - UIViewControllerErrorHandler

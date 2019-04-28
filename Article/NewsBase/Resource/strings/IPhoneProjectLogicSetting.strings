@@ -108,6 +108,7 @@
 
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
+"im_house_share" = "FHIMSharedUserListViewController";
 //会话列表
 "message_conversation_list" = "FHTempMessageViewController";
 
@@ -118,10 +119,12 @@
 "city_market_hot_list"   = "FHCityMarketHotCityListViewController";
 
 "second_house_main"   = "FHBaseMainListViewController";
-// 帮我找房提交页面
-"house_find_help"   = "FHHouseFindHelpViewController";
-// 帮我找房结果页
-"house_find_result"   = "FHHouseFindResultViewController";
+
+//通勤找房
+"commute_config" = "FHCommuteConfigViewController";
+"commute_poi" = "FHCommutePOISearchViewController";
+"commute_list" = "FHHouseListViewController";
+
 // 帮我找房中转页
 "house_find"   = "FHHouseFindMainViewController";
 
@@ -135,3 +138,5 @@
 "price_valuation_result" = "FHPriceValuationResultController";
 //房屋估价补充信息
 "price_valuation_more_info" = "FHPriceValuationMoreInfoController";
+//房源详情价格对比房源列表
+"house_search_result_list" = "FHOldPriceComparisonListController";

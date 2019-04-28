@@ -125,7 +125,8 @@ static BOOL isFullScreen;
         return @"share_twitter";
     }
     else if (activityType == TTActivityTypeCopy) {
-        return @"share_copy_link";
+//        return @"share_copy_link";
+        return @"copy";
     }
     else if (activityType == TTActivityTypeWeixinShare) {
         return @"share_weixin";

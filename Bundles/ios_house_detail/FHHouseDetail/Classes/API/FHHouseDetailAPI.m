@@ -331,9 +331,13 @@
                                                            searchId:(NSString*)searchId
                                                                page:(NSInteger)page
                                                               count:(NSInteger)count
+                                                              query:(NSString *)query
                                                          completion:(void(^)(FHTransactionHistoryModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:@"/f100/api/neighborhood/sale?neighborhood_id=%@",neighborhoodId];
+    if (query.length > 0) {
+        url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     paramDic[@"page"] = @(page);
     if (![url containsString:@"count"]) {

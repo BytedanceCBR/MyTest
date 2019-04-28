@@ -177,6 +177,11 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         [[ToastManager manager] showToast:@"暂无相关房型~"];
     }
     [_floorListTable reloadData];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    if ([_floorListTable numberOfSections] && [_floorListTable numberOfRowsInSection:0]) {
+        [_floorListTable scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+    }
+    _floorListTable.contentOffset = CGPointMake(0, 0);
 }
 
 - (NSArray<FHDetailNewDataFloorpanListListModel *> *)getSelectFilterDataList
@@ -292,6 +297,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
+        self.floorListTable.contentOffset = CGPointMake(0, 0);
         [self refreshCurrentShowList];
     };
     
@@ -388,7 +394,7 @@ static const NSString *kDefaultTopFilterStatus = @"-1";
         NSMutableDictionary *subPageParams = [_floorListVC subPageParams];
         NSDictionary *tracer = subPageParams[@"tracer"];
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        if (tracer) {
+        if ([tracer isKindOfClass:[NSDictionary class]]) {
             [traceParam addEntriesFromDictionary:tracer];
         }
         traceParam[@"card_type"] = @"left_pic";

@@ -9,6 +9,8 @@
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
 
+@class FHDetailNewDataSmallImageGroupModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHDetailPhotoHeaderModelProtocol <AbstractJSONModelProtocol>
@@ -36,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel
+@property (nonatomic,assign)BOOL isNewHouse;
+@property (nonatomic, strong , nullable) NSArray<FHDetailNewDataSmallImageGroupModel *> *smallImageGroup;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel *> *houseImage;
 @end
 
@@ -67,6 +71,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *imLabel;
 @property (nonatomic, copy , nullable) NSString *realtorDetailUrl;
 @property (nonatomic, assign) NSInteger showRealtorinfo;
+@property (nonatomic, copy , nullable) NSString *callButtonText;
+@property (nonatomic, copy , nullable) NSString *reportButtonText;
+
+@property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
+@property (nonatomic, copy , nullable) NSString *searchId;
+@property (nonatomic, copy , nullable) NSString *imprId;
 
 @property (nonatomic, copy , nullable) NSString *noticeDesc;
 
@@ -179,6 +189,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendValuesModel> *values;
 @property (nonatomic, copy , nullable) NSString *name;
+@end
+
+
+@protocol FHDetailDataNeighborhoodInfoSchoolInfoModel<NSObject>
+@end
+
+@interface FHDetailDataNeighborhoodInfoSchoolInfoModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *schoolType;
+@property (nonatomic, copy , nullable) NSString *schoolId;
+@property (nonatomic, copy , nullable) NSString *schoolName;
+@end
+
+@protocol FHDetailDataNeighborhoodInfoSchoolItemModel<NSObject>
+@end
+
+@interface FHDetailDataNeighborhoodInfoSchoolItemModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *schoolTypeName;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolInfoModel> *schoolList;
 @end
 
 

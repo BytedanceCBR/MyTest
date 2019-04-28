@@ -119,6 +119,10 @@
         make.left.right.bottom.mas_equalTo(self.view);
         make.top.mas_equalTo(self.view);
     }];
+    UIView* tableBgView = [[UIView alloc] init];
+    tableBgView.backgroundColor = [UIColor whiteColor];
+    _tableView.backgroundColor = [UIColor whiteColor];
+    _tableView.backgroundView = tableBgView;
     CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 84 : 64;
 
     self.headerView = [[FHCityMarketHeaderView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 195 + navBarHeight)]; //174
@@ -188,12 +192,13 @@
                 [self.listViewModel notifyCellDisplay];
             });
         });
-        _navBarViewModel.isHasData = YES;
+        self.navBarViewModel.isHasData = YES;
         [self endLoading];
         if ([x count] > 0) {
             [self.tableView setHidden:NO];
             [self.emptyView setHidden:YES];
         }
+        [self fillDataToBottomBar];
     }];
 
     RAC(_chatSectionCellPlaceHolder, marketTrendList) = [RACObserve(_headerViewModel, model) map:^id _Nullable(FHCityMarketDetailResponseModel*  _Nullable value) {
@@ -274,10 +279,10 @@
             make.height.mas_equalTo(64);
         }
     }];
+}
 
+-(void)fillDataToBottomBar {
     TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
-
-
     NSArray<FHCityMarketBottomBarItem*>* items = [_headerViewModel.model.data.bottomButtons rx_mapWithBlock:^id(FHCityMarketDetailResponseBottomButton* each) {
         FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
         item.titleLabel.text = each.text;
@@ -295,14 +300,19 @@
 
     if (items.count == 0) {
         _bottomBarView.hidden = YES;
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 30 : 10;
+
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
     } else {
         CGFloat buttomBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 98 : 64;
         // 这里设置tableView底部滚动的区域，保证内容可以完全露出
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, buttomBarHeight, 0);
         [_bottomBarView setBottomBarItems:items];
-        [self traceElementShow:@"sale_value"];
-        [self traceElementShow:@"driving_find_house"];
+        [_headerViewModel.model.data.bottomButtons enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseBottomButton*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (obj.type != nil) {
+                [self traceElementShow:obj.type];
+            }
+        }];
     }
 }
 

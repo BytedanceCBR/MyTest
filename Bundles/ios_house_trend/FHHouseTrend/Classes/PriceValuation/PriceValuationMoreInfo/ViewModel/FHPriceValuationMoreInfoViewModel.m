@@ -9,6 +9,7 @@
 #import "FHPriceValuationDataPickerView.h"
 #import "TTDeviceUIUtils.h"
 #import "FHUserTracker.h"
+#import "FHNotificationDefines.h"
 
 @interface FHPriceValuationMoreInfoViewModel()<FHPriceValuationMoreInfoViewDelegate>
 
@@ -57,6 +58,8 @@
     tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.infoModel.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"go_detail", tracer);
 }
 
@@ -68,6 +71,8 @@
     tracer[@"page_type"] = [self pageType];
     tracer[@"group_id"] = self.viewController.infoModel.estimateId;
     tracer[@"click_position"] = position;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     TRACK_EVENT(@"click_options", tracer);
 }
 
@@ -94,7 +99,7 @@
     NSInteger currentYear=[[formatter stringFromDate:date] integerValue];
     NSInteger startYear = 1960;
     
-    for (NSInteger i = startYear; i <= currentYear; i++) {
+    for (NSInteger i = currentYear; i >= startYear; i--) {
         [yearArray addObject:[NSString stringWithFormat:@"%i",i]];
     }
     
@@ -221,6 +226,14 @@
     }
 }
 
+- (BOOL)isChanged {
+    if(![self.viewController.infoModel.builtYear isEqualToString:self.buildYear] || ![self.viewController.infoModel.facingType isEqualToString:self.faceType] || ![self.viewController.infoModel.floor isEqualToString:self.floor] || ![self.viewController.infoModel.totalFloor isEqualToString:self.totalFloor] || ![self.viewController.infoModel.buildingType isEqualToString:self.buildType] || ![self.viewController.infoModel.decorationType isEqualToString:self.decorateType]){
+        return YES;
+    }
+    
+    return NO;
+}
+
 #pragma mark - FHPriceValuationMoreInfoViewDelegate
 
 - (void)confirm {
@@ -231,8 +244,9 @@
     self.viewController.infoModel.buildingType = self.buildType;
     self.viewController.infoModel.decorationType = self.decorateType;
     
-    [self.viewController.navigationController popViewControllerAnimated:YES];
     [self.viewController.delegate callBackDataInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kPriceValuationMoreInfoChangedNotification object:nil];
+    [self.viewController.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)chooseBuildYear {

@@ -36,7 +36,11 @@
                 lowPrice = highPrice;
                 highPrice = temp;
             }
-            [query appendFormat:@"%@[]=[%ld,%ld]",self.configOption.type?:@"price",lowPrice*r,highPrice*r];
+            if (highPrice == 0 && self.fromType == FHHouseFindPriceFromTypeHelp) {
+                [query appendFormat:@"%@[]=[%ld]",self.configOption.type?:@"price",lowPrice*r];
+            }else {
+                [query appendFormat:@"%@[]=[%ld,%ld]",self.configOption.type?:@"price",lowPrice*r,highPrice*r];
+            }
             
         }else if (self.lowerPrice){
             NSInteger lowPrice = self.lowerPrice.integerValue;

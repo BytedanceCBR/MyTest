@@ -19,6 +19,9 @@
 #import "ALAssetsLibrary+TTImagePicker.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "FHFloorPanPicShowViewController.h"
+#import <Photos/Photos.h>
+#import "HTSDeviceManager.h"
 
 #define indexPromptLabelTextSize 16.f
 #define indexPromptLabelBottomPadding 5.f
@@ -72,6 +75,9 @@
 @property(nonatomic, strong)UILabel * selectCountLabel;
 @property(nonatomic, strong)UIButton * bottomBarRightButton;
 
+@property(nonatomic, strong)UIButton *clonseBtn;
+@property(nonatomic, strong)UIButton *albumBtn;
+
 @property(nonatomic, assign)NSUInteger selectCount;
 
 //@property(nonatomic, copy)FinishCompletion finishCompletion;
@@ -117,7 +123,7 @@
         _longPressToSave = YES;
         
         self.ttHideNavigationBar = YES;
-        
+        self.isShowAlbumAndCloseButton = NO;
         _addedToContainer = NO;
         
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
@@ -327,6 +333,74 @@
         self.animateManager.panDelegate = self;
         [_animateManager registeredPanBackWithGestureView:self.view];
         [self frameTransform];
+    }
+    
+    
+    if (self.isShowAlbumAndCloseButton) {
+        CGFloat height = 0;
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            height = 64;
+        }else
+        {
+            height = 44;
+        }
+        
+        _clonseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_clonseBtn setTitle:@"关闭" forState:UIControlStateNormal];
+        [_clonseBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_clonseBtn setFrame:CGRectMake(20, height, 48, 48)];
+        [_clonseBtn addTarget:self action:@selector(closeBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:_clonseBtn];
+        
+        
+        if (self.smallImageInfosModels.count != 0) {
+            _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
+            [_albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [_albumBtn setFrame:CGRectMake(self.view.frame.size.width - 100, height, 100, 48)];
+            [_albumBtn addTarget:self action:@selector(albumBtnClick) forControlEvents:UIControlEventTouchUpInside];
+            [self.view addSubview:_albumBtn];
+        }
+    }
+    
+}
+
+- (void)closeBtnClick
+{
+    [self finished];
+}
+
+
+- (void)albumBtnClick
+{
+    if (self.smallImageInfosModels.count == 0) {
+        return;
+    }
+    
+    if (self.albumImageBtnClickBlock) {
+        self.albumImageBtnClickBlock(self.currentIndex);
+    }
+    
+    FHFloorPanPicShowViewController *showVC = [[FHFloorPanPicShowViewController alloc] init];
+    showVC.pictsArray = _smallImageInfosModels;
+    __weak TTPhotoScrollViewController * weakSelf = self;
+    showVC.albumImageBtnClickBlock = ^(NSInteger index){
+        if (index >= 0) {
+            weakSelf.photoScrollView.contentOffset = CGPointMake(self.view.frame.size.width * index, 0);
+        }
+    };
+    
+    showVC.albumImageStayBlock = ^(NSInteger index, NSInteger stayTime) {
+        [self stayCallBack:stayTime];
+    };
+    
+    [self presentViewController:showVC animated:NO completion:nil];
+}
+
+- (void)stayCallBack:(NSInteger)stayTime
+{
+    if (self.albumImageStayBlock) {
+        self.albumImageStayBlock(self.currentIndex,stayTime);
     }
 }
 
@@ -1020,15 +1094,49 @@ static BOOL staticPhotoBrowserAtTop = NO;
     if (!_longPressToSave || self.interfaceOrientation != UIInterfaceOrientationPortrait) {
         return;
     }
-
+    TTShowImageView * currentImageView = [self showImageViewAtIndex:_currentIndex];
+    CGRect frame = [currentImageView currentImageView].frame;
+    UIView * touchView = recognizer.view;
+    
+    CGPoint point = [recognizer locationInView:touchView];
+    if (!CGRectContainsPoint(frame, point)) {
+        return;
+    }
+    
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
-            NSLog(@"longpress");
-            [self saveButtonClicked:self.saveButton];
+            [self alertSheetShow];
             break;
         default:
             break;
     }
+}
+
+- (void)alertSheetShow {
+    __weak typeof(self) weakSelf = self;
+    UIAlertController *alertController = [[UIAlertController alloc] init];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"保存图片到相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+        if (PHAuthorizationStatusAuthorized == status) {
+            [weakSelf saveButtonClicked:weakSelf.saveButton];
+        } else {
+            // 请求权限
+            [HTSDeviceManager requestPhotoLibraryPermission:^(BOOL success) {
+                if (success) {
+                    [weakSelf saveButtonClicked:weakSelf.saveButton];
+                } else {
+                    [HTSDeviceManager presentPhotoLibraryDeniedAlert];
+                }
+            }];
+        }
+    }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Pan close gesture
@@ -1411,6 +1519,12 @@ static BOOL staticPhotoBrowserAtTop = NO;
             imageView.hidden = YES;
             break;
         case TTPreviewAnimateStateChange:
+            if (_clonseBtn) {
+                _clonseBtn.hidden = YES;
+            }
+            if (_albumBtn) {
+                _albumBtn.hidden = YES;
+            }
             self.containerView.alpha = MAX(0,(scale*14-13 - _animateManager.minScale)/(1 - _animateManager.minScale));
             break;
         case TTPreviewAnimateStateDidFinish:
@@ -1469,6 +1583,12 @@ static BOOL staticPhotoBrowserAtTop = NO;
 
 - (void)ttPreviewPanBackCancelAnimationCompletion{
     self.containerView.alpha = 1;
+    if (_clonseBtn) {
+        _clonseBtn.hidden = NO;
+    }
+    if (_albumBtn) {
+        _albumBtn.hidden = NO;
+    }
 }
 
 - (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{

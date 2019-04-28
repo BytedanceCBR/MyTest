@@ -275,6 +275,18 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         
         [wSelf sendLocationAuthorizedTrace];
         
+        NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
+        
+        [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        
+        NSInteger statusNum = 1;
+        if (![self isHaveLocationAuthorization]) {
+            statusNum = 2;
+        }else if (![FHEnvContext isNetworkConnected])
+        {
+            statusNum = 3;
+        }
+        
         if (error.code == AMapLocationErrorLocateFailed) {
             
             NSNumber *statusNumber = [NSNumber numberWithInteger:[self isHaveLocationAuthorization] ? 1 : 0];
@@ -286,11 +298,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             [uploadParams setValue:statusNumber forKey:@"location_status"];
             [uploadParams setValue:netStatusNumber forKey:@"network_status"];
             
-            NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
-            
-            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-            
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" metric:nil category:uploadParams extra:paramsExtra];
+
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:statusNum extra:paramsExtra];
             
             NSLog(@"定位错误:%@",error.localizedDescription);
         }else if (error.code == AMapLocationErrorReGeocodeFailed || error.code == AMapLocationErrorTimeOut || error.code == AMapLocationErrorCannotFindHost || error.code == AMapLocationErrorBadURL || error.code == AMapLocationErrorNotConnectedToInternet || error.code == AMapLocationErrorCannotConnectToHost)
@@ -298,7 +307,9 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
             NSLog(@"逆地理错误:%@",error.localizedDescription);
         }else
         {
-            
+            if (regeocode) {
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"home_location_error" status:0 extra:paramsExtra];
+            }
         }
         
         NSMutableDictionary * amapInfo = [NSMutableDictionary new];
@@ -336,7 +347,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
             }
             [FHConfigAPI requestGeneralConfig:cityId gaodeLocation:location.coordinate gaodeCityId:regeocode.citycode gaodeCityName:regeocode.city completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-                if (!model) {
+                if (!model || error) {
                     wSelf.retryConfigCount -= 1;
                     if (wSelf.retryConfigCount >= 0)
                     {
@@ -356,30 +367,20 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
                 
                 if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && self.isShowSwitch && !self.isShowSplashAdView && hasSelectedCity) {
                     [self showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.data.citySwitch.cityName] openUrl:model.data.citySwitch.openUrl];
-                    [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                    [wSelf updateAllConfig:model isNeedDiff:NO];
-                }else
-                {
-                    NSString *currentCityid = [FHEnvContext getCurrentSelectCityIdFromLocal];
-                    if ([currentCityid isEqualToString:model.data.currentCityId] || !currentCityid) {
-                        //更新config
-                        [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                        [wSelf updateAllConfig:model isNeedDiff:NO];
-                    }
                 }
+
+                [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
+                [wSelf updateAllConfig:model isNeedDiff:NO];
+   
                 
-                FHConfigDataModel *configCache = [[FHEnvContext sharedInstance] getConfigFromCache];
-                if (!configCache) {
-                    [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
-                    [wSelf updateAllConfig:model isNeedDiff:NO];
-                }
+                BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
                 
-                if (self.isShowHomeViewController) {
+                if (!isHasFindHouseCategory && [[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                     [[TTArticleCategoryManager sharedManager] startGetCategoryWithCompleticon:^(BOOL isSuccessed){
                         
                     }];
                 }
-   
+
                 wSelf.retryConfigCount = 3;
             }];
         }
@@ -423,7 +424,7 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     {
         return;
     }
-    
+    [FHEnvContext sharedInstance].generalBizConfig.configCache = model.data;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [[FHEnvContext sharedInstance] saveGeneralConfig:model];
     });

@@ -21,6 +21,8 @@
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "TimePerformanceTracer.h"
+#import "FHHomeScrollBannerCell.h"
+
 static CGFloat const kShowTipViewHeight = 32;
 
 static CGFloat const kSectionHeaderHeight = 38;
@@ -206,7 +208,18 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillAppear:animated];
     
+    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if (!configDataModel.cityAvailability.enable.boolValue) {
+        [self.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+    }
+    
     [self scrollToTopEnable:YES];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)pullAndRefresh
@@ -228,11 +241,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)didAppear
 {
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
+    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView resetTimer];
 }
 
 - (void)willDisappear
 {
-    
+    [FHLocManager sharedInstance].isShowHomeViewController = NO;
 }
 
 
@@ -241,6 +255,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self.homeListViewModel sendTraceEvent:FHHomeCategoryTraceTypeStay];
     self.homeListViewModel.stayTime = 0;
     [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
+    [[FHHomeCellHelper sharedInstance].fhLastHomeScrollBannerCell.bannerView pauseTimer];
 }
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom

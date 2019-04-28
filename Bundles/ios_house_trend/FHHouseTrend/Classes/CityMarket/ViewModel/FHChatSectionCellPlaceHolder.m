@@ -154,7 +154,12 @@
 //        maxValue = MAX(maxValue, [obj floatValue]);
 //        minValue = MIN(minValue, [obj floatValue]);
 //    }];
-
+    FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* trendLine = values.trendLines.firstObject;
+    if (shouldUseTenThousandUnit) {
+        chartView.banner.unitLabel.text = [NSString stringWithFormat:@"万%@", trendLine.valueUnit];
+    } else {
+        chartView.banner.unitLabel.text = trendLine.valueUnit;
+    }
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
         UIColor* color = [UIColor colorWithHexString:each.color];

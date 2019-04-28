@@ -520,13 +520,14 @@ extern NSString *const kFHDetailFollowUpNotification;
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) wself = self;
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
-        [wself trackDeleteFollow:cellModel];
-        [[ToastManager manager] showCustomLoading:@"正在取消关注"];
         if(indexPath.row < wself.dataList.count){
+            FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
+            [wself trackDeleteFollow:cellModel];
+            [[ToastManager manager] showCustomLoading:@"正在取消关注"];
             [self cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
                 if(error){
                     [wself.tableView setEditing:NO animated:YES];
+                    [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [wself deleteFocusCell:indexPath.row];
@@ -547,13 +548,14 @@ extern NSString *const kFHDetailFollowUpNotification;
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) wself = self;
     UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"取消关注" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
-        [wself trackDeleteFollow:cellModel];
-        [[ToastManager manager] showCustomLoading:@"正在取消关注"];
         if(indexPath.row < wself.dataList.count){
+            FHSingleImageInfoCellModel *cellModel = wself.dataList[indexPath.row];
+            [wself trackDeleteFollow:cellModel];
+            [[ToastManager manager] showCustomLoading:@"正在取消关注"];
             [self cancelHouseFollow:cellModel completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
                 if(error){
                     [wself.tableView setEditing:NO animated:YES];
+                    [[ToastManager manager] dismissCustomLoading];
                     [[ToastManager manager] showToast:@"网络异常"];
                 }else{
                     [wself deleteFocusCell:indexPath.row];

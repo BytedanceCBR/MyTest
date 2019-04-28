@@ -203,6 +203,9 @@ extern NSString *const kFHPhoneNumberCacheKey;
 
 #pragma mark - 键盘通知
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    if (!self.textField.isFirstResponder) {
+        return;
+    }
     NSNumber *duration = notification.userInfo[UIKeyboardAnimationDurationUserInfoKey];
     NSNumber *curve = notification.userInfo[UIKeyboardAnimationCurveUserInfoKey];
     CGFloat height = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
