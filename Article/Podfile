@@ -102,6 +102,7 @@ def appPods
     pod 'yoga', :path => '../ReactCommon/yoga'
 
     #-----视频业务库-----#
+    pod 'TTVPlayerPod', :path => '../AKPlugins/TTVPlayer', :inhibit_warnings => false
     pod_binary 'TTVideoService', '0.1.71'
     pod_binary 'TTVideoService/TTBusinessService', '0.1.71'
     #-----问答业务库-----#

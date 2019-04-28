@@ -185,6 +185,7 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
  */
 + (nullable NSString *)resolutionString;
 
++ (BOOL)isIPhoneXSeries;
 
 @end
 
