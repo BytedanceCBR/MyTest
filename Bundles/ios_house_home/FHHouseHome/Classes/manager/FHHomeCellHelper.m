@@ -416,8 +416,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     [cellEntrance setNeedsLayout];
-    [cellEntrance layoutIfNeeded];
-    
+//    [cellEntrance layoutIfNeeded];
+
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
@@ -586,8 +586,8 @@ static NSMutableArray  * _Nullable identifierArr;
     //    }];
     
     [cellBanner setNeedsLayout];
-    [cellBanner layoutIfNeeded];
-    
+//    [cellBanner layoutIfNeeded];
+
 }
 
 // 首页轮播banner

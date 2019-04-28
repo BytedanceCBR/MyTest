@@ -85,8 +85,10 @@
 }
 
 - (void)setBadgeNumber:(NSInteger)number {
-    id<FHHouseEnvContextBridge> envContextBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
-    [envContextBridge setMessageTabBadgeNumber:number];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        id<FHHouseEnvContextBridge> envContextBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+        [envContextBridge setMessageTabBadgeNumber:number];
+    });
 }
 
 -(void)refreshBadgeNumber {

@@ -166,14 +166,16 @@
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     NSLog(@"startup IM");
     if ([SSCommonLogic imCanStart]) {
-        FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
-        [IMManager shareInstance].accountCenter = accountCenter;
-        
-        FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
-        [[FHIMConfigManager shareInstance] registerDelegate:delegate];
-        
-        NSString* uid = [[TTAccount sharedAccount] userIdString];
-        [[IMManager shareInstance] startupWithUid:uid];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
+            [IMManager shareInstance].accountCenter = accountCenter;
+
+            FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
+            [[FHIMConfigManager shareInstance] registerDelegate:delegate];
+
+            NSString* uid = [[TTAccount sharedAccount] userIdString];
+            [[IMManager shareInstance] startupWithUid:uid];
+        });
     }
 }
 

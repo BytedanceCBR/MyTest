@@ -8325,6 +8325,8 @@
 		B1E15E061D77117900B551D9 /* NewsResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewsResource.xcassets; sourceTree = "<group>"; };
 		B30912BE21E3865500E530C3 /* FHRealtorDetailWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHRealtorDetailWebViewController.h; sourceTree = "<group>"; };
 		B30912BF21E3865500E530C3 /* FHRealtorDetailWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHRealtorDetailWebViewController.m; sourceTree = "<group>"; };
+		B30B3A7D2275537400F51E24 /* MonitorHook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorHook.h; sourceTree = "<group>"; };
+		B30B3A7E2275537400F51E24 /* MonitorHook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorHook.m; sourceTree = "<group>"; };
 		B358140A432F576A8121CD57 /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
 		B373CF102174587A008F9905 /* f100.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -14861,6 +14863,8 @@
 		B388C9DB2142652800653188 /* Launch */ = {
 			isa = PBXGroup;
 			children = (
+				B30B3A7D2275537400F51E24 /* MonitorHook.h */,
+				B30B3A7E2275537400F51E24 /* MonitorHook.m */,
 				B388C9DE2142652800653188 /* FTTNavigationController.m */,
 				B388C9E22142652800653188 /* FTTNavigationController.h */,
 			);
