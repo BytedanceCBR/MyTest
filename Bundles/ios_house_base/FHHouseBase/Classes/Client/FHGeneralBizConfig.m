@@ -9,7 +9,6 @@
 #import <YYCache.h>
 #import "FHUtils.h"
 #import "FHEnvContext.h"
-#import "TimePerformanceTracer.h"
 #import "FHLazyLoadModel.h"
 static NSString *const kGeneralCacheName = @"general_config";
 static NSString *const kGeneralKey = @"config";
@@ -133,7 +132,6 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 {
     NSString *configJsonStr = [self.generalConfigCache objectForKey:kGeneralKey];
     NSDictionary *configDict = [FHUtils dictionaryWithJsonString:configJsonStr];
-    [[TimePerformanceTracer shareInstance] traceTimeDuration:@"configTrace" withEvent:@"readFromCache"];
 
     if ([configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *configModel = [self lazyInitConfig:configDict];
