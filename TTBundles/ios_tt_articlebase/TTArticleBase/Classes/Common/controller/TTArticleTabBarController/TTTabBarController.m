@@ -42,14 +42,15 @@ NSString * const kTTTabBarSelectedIndexChangedNotification = @"kTTTabBarSelected
     //[self initTabbarBadge];
 }
 
-//- (void)viewWillLayoutSubviews
-//{
-//    [super viewWillLayoutSubviews];
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    self.tabBar.left = 0;
 //    if (CGAffineTransformIsIdentity(self.view.transform)) {
 //        UIEdgeInsets safeInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
 //        self.tabBar.frame = CGRectMake(0, self.view.frame.size.height - self.tabbarHeight - safeInset.bottom, self.view.frame.size.width, self.tabbarHeight + safeInset.bottom);
 //    }
-//}
+}
 
 #pragma mark - UITabBarControllerDelegate
 
