@@ -13,6 +13,7 @@
 #import <TTDeviceHelper.h>
 #import "TTAccountLoginConfLogic.h"
 #import <TTSandBoxHelper.h>
+#import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 
 
 

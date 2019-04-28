@@ -231,8 +231,8 @@ static const CGFloat kLabelKeyRightPandding = -20;
     FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithTitle:subtitle:btnTitle:)]) {
-            [contactViewModel fillFormActionWithTitle:@"开盘通知" subtitle:@"订阅开盘通知，楼盘开盘信息会及时发送到您的手机" btnTitle:@"提交"];
+        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithActionType:)]) {
+            [contactViewModel fillFormActionWithActionType:FHFollowActionTypeFloorPan];
         }
     }
 }
@@ -241,8 +241,8 @@ static const CGFloat kLabelKeyRightPandding = -20;
     FHDetailNewHouseCoreInfoModel *model = (FHDetailNewHouseCoreInfoModel *)self.currentData;
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
-        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithTitle:subtitle:btnTitle:)]) {
-            [contactViewModel fillFormActionWithTitle:@"变价通知" subtitle:@"订阅变价通知，楼盘变价信息会及时发送到您的手机" btnTitle:@"提交"];
+        if ([model.contactModel respondsToSelector:@selector(fillFormActionWithActionType:)]) {
+            [contactViewModel fillFormActionWithActionType:FHFollowActionTypePriceChanged];
         }
     }
 }

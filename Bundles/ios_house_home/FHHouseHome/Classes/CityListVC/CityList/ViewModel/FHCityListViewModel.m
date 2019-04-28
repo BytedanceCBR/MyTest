@@ -56,6 +56,10 @@ static const NSString *kFHHistoryListKey = @"key_history_list";
     return [self initWithController:nil tableView:nil];
 }
 
+- (void)setCityList:(NSArray<FHConfigDataCityListModel> *)cityList {
+    _cityList = cityList;
+}
+
 -(void)configTableView
 {
     _tableView.delegate = self;

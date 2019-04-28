@@ -16,11 +16,14 @@
 #import "TTLaunchTracer.h"
 #import "FHEnvContext.h"
 #import "TTAppLogStartupTask.h"
+#import "revision.h"
 
 #define APPSEE_ENABLE 0
 
 extern NSString * const SSCommonLogicSettingWebViewQueryStringEnableKey;
 extern NSString * const SSCommonLogicSettingWebViewQueryStringListKey;
+
+const char * build_rev() ;
 
 #if APPSEE_ENABLE
 #import "Appsee/Appsee.h"
@@ -121,3 +124,13 @@ extern NSString *const kTTAppseeEnableKey;
 }
 
 @end
+
+const char * build_rev() {
+    
+#ifdef BuildRev
+    return BuildRev;
+#else
+    return "";
+#endif
+    
+}

@@ -1,0 +1,15 @@
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+
+platform :ios, '7.0'
+
+target 'BDTExploreOrderedData_Example' do
+  pod 'BDTExploreOrderedData', :path => '../'
+  pod 'BDTSharedHeaders', :path => 'Vendor/BDTSharedHeaders'
+
+  target 'BDTExploreOrderedData_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

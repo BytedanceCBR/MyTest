@@ -12,8 +12,10 @@
 #import "YYCache.h"
 #import "FHLocManager.h"
 #import "TTInstallIDManager.h"
-#import "BDAccountConfiguration.h"
-#import "BDAccount+Configuration.h"
+#import <TTAccountSDK/TTAccount.h>
+#import <TTAccountSDK/TTAccountConfiguration.h>
+#import <TTNewsAccountBusiness/TTAccountService.h>
+#import <TTNewsAccountBusiness/SSCookieManager.h>
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
@@ -322,46 +324,53 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //开始网络监听通知
     [self.reachability startNotifier];
-    
+
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
-    
+
+
     //开始定位
     [self startLocation];
     
     //检测是否需要打开城市列表
     [self check2CityList];
-    
-    [self.messageManager startSyncMessage];
-    
+
+
     NSString * channelName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];
     if (!channelName) {
         channelName = @"App Store";
     }
-    
+
     [[TTInstallIDManager sharedInstance] startWithAppID:@"1370" channel:channelName finishBlock:^(NSString *deviceID, NSString *installID) {
         
-        BDAccountConfiguration *conf = [BDAccountConfiguration defaultConfiguration];
+        TTAccountConfiguration *conf = [TTAccount accountConf];
         conf.domain = [FHURLSettings baseURL];
-        conf.getDeviceIdBlock = ^NSString * _Nonnull{
-            return deviceID;
+        conf.appRequiredParamsHandler = ^NSDictionary * _Nonnull{
+            NSMutableDictionary *requiredDict = [NSMutableDictionary dictionaryWithCapacity:4];
+            [requiredDict setValue:installID forKey:TTAccountInstallIdKey];
+            [requiredDict setValue:deviceID forKey:TTAccountDeviceIdKey];
+            [requiredDict setValue:nil forKey:TTAccountSessionKeyKey];
+            [requiredDict setValue:@"1370" forKey:TTAccountSSAppIdKey];
+            return [requiredDict copy];
+        };
+
+        [TTAccount accountConf].networkParamsHandler = ^NSDictionary *() {
+            return [[TTNetworkUtilities commonURLParameters] copy]?:@{};
         };
         
-        conf.getInstallIdBlock = ^NSString * _Nonnull{
-            return installID;
-        };
+        [TTAccount accountConf].accountMessageFirstResponder = [TTAccountService sharedAccountService];
         
-        conf.SSAppId = @"1370";
+        //TODO: 待头条库下沉后替换成真正的类
+        id delegateImp = [[[FHHouseBridgeManager sharedInstance] accountBridge] accountLoggerImp];
+        [TTAccount accountConf].loggerDelegate  = delegateImp;
+        [TTAccount accountConf].monitorDelegate = delegateImp;
         
-        conf.networkParamsHandler = ^NSDictionary * _Nonnull{
-            return [NSDictionary new];
-        };
-        
-        [BDAccount sharedAccount].accountConf = conf;
+        [SSCookieManager setSessionIDToCookie:[[TTAccount sharedAccount] sessionKey]];
     }];
+
     //更新公共参数
     [self updateRequestCommonParams];
-    
+
     NSString *startFeedCatgegory = [[[FHHouseBridgeManager sharedInstance] envContextBridge] getFeedStartCategoryName];
 
     if (![startFeedCatgegory isEqualToString:@"f_house_news"] && startFeedCatgegory != nil) {
@@ -369,18 +378,23 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
     }
     
-    
-    [FHIESGeckoManager configGeckoInfo];
-    [FHIESGeckoManager configIESWebFalcon];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self.messageManager startSyncMessage];
+    });
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [FHIESGeckoManager configGeckoInfo];
+        [FHIESGeckoManager configIESWebFalcon];
+    });
+
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
 {
     if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-        self.generalBizConfig.configCache = dataModel;
+//        self.generalBizConfig.configCache = dataModel;
         [FHEnvContext saveCurrentUserCityId:dataModel.currentCityId];
-        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
+//        [self.generalBizConfig saveCurrentConfigDataCache:dataModel];
         [self.configDataReplay sendNext:dataModel];
     }
 }
@@ -388,9 +402,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
 - (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
 {
     if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
-        self.generalBizConfig.configCache = configModel;
+//        self.generalBizConfig.configCache = configModel;
         [FHEnvContext saveCurrentUserCityId:configModel.currentCityId];
-        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
+//        [self.generalBizConfig saveCurrentConfigDataCache:configModel];
         [self.configDataReplay sendNext:configModel];
     }
 }
@@ -447,7 +461,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         return self.generalBizConfig.configCache;
     }else
     {
-        return [self readConfigFromLocal];
+        self.generalBizConfig.configCache = [self readConfigFromLocal];
+        return self.generalBizConfig.configCache;
     }
 }
 
@@ -473,6 +488,27 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     return @"深圳";
+}
+
+
+//获取当前三位版本号
++ (NSString *)getToutiaoVersionCode
+{
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    NSString * buildVersionNew = [buildVersionRaw stringByReplacingOccurrencesOfString:@"." withString:@""];
+    
+    NSString * versionFirst = @"6";
+    NSString * versionMiddle = @"6";
+    NSString * versionEnd = @"6";
+    
+    if ([buildVersionNew isKindOfClass:[NSString class]] && buildVersionNew.length > 3) {
+        versionFirst = [buildVersionNew substringWithRange:NSMakeRange(0, 1)];
+        versionMiddle = [buildVersionNew substringWithRange:NSMakeRange(1, 1)];
+        versionEnd = [buildVersionNew substringWithRange:NSMakeRange(2, 1)];
+        
+    }
+    NSString *stringVersion = [NSString stringWithFormat:@"%@.%@.%@",versionFirst,versionMiddle,versionEnd];
+    return stringVersion;
 }
 
 //保存当前城市名称
