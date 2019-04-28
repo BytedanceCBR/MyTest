@@ -13,6 +13,8 @@
 #import <TTTracker/TTTracker.h>
 #import "FHUserTracker.h"
 #import "NetworkUtilities.h"
+#import <FHHouseBase/FHHousePhoneCallUtils.h>
+#import <FHHouseBase/FHHouseFillFormHelper.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 
@@ -50,7 +52,7 @@ static NSString *s_oldAgent = nil;
     [[self class] registerUserAgentV2:YES];
     [super viewDidLoad];
     _startTime = [NSDate new].timeIntervalSince1970;
-    _delegate = [self.realtorUserInfo allInfo][@"delegate"];
+//    _delegate = [self.realtorUserInfo allInfo][@"delegate"];
 
     @weakify(self);
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse completion) {
@@ -59,23 +61,41 @@ static NSString *s_oldAgent = nil;
         NSString *phone = params[@"phone"];
 
         self.tracerDict[@"pageType"] = @"realtor_detail";
-        NSString *searchId = self.tracerDict[@"search_id"];
-        NSString *imprId = self.tracerDict[@"impr_id"];
-
         NSDictionary *reportParams = params[@"reportParams"];
-        if (self->_realtorId != nil && phone != nil) {
-            [self.phoneCallViewModel callWithPhone:phone realtorId:self->_realtorId searchId:searchId imprId:imprId reportParams:reportParams successBlock:^(BOOL isSuccess) {
-                completion(TTRJSBMsgSuccess, @{});
-            } failBlock:^(NSError * _Nonnull error) {
-                completion(TTRJSBMsgFailed, @{});
-
-            }];
-            if ([self.delegate respondsToSelector:@selector(followUpActionByFollowId:houseType:)]) {
-                [self.delegate followUpActionByFollowId:self.houseId houseType:self.houseType];
-            }
-        }
+        [self callWithPhone:phone extraDict:reportParams completion:completion];
     } forMethodName:@"phoneSwitch"];
     [FHUserTracker writeEvent:@"go_detail" params:[self goDetailParams]];
+}
+
+- (void)callWithPhone:(NSString *)phone extraDict:(NSDictionary *)extraDict completion:(TTRJSBResponse)completion {
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.tracerDict) {
+        [params addEntriesFromDictionary:self.tracerDict];
+    }
+    if (extraDict) {
+        [params addEntriesFromDictionary:extraDict];
+    }
+    FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:params error:nil];
+    contactConfig.houseType = self.houseType;
+    contactConfig.houseId = self.houseId;
+    contactConfig.phone = phone;
+    contactConfig.realtorId = self->_realtorId;
+    [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:^(BOOL success, NSError * _Nonnull error) {
+        if (success) {
+            completion(TTRJSBMsgSuccess, @{});
+        }else {
+            completion(TTRJSBMsgFailed, @{});
+        }
+    }];
+    
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
+    
 }
 
 -(NSMutableDictionary*)goDetailParams {

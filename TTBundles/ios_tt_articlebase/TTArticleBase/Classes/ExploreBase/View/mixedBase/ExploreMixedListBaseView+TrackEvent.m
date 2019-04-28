@@ -16,7 +16,7 @@
 //#import "Bubble-Swift.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHEnvContext.h"
-#import <TTRNKit/TTRNKitMacro.h>
+#import <BDTSharedHeaders/SSCommonDefines.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/Log.h>
 

@@ -19,7 +19,7 @@
 #import <TTNetworkManager.h>
 #import <FHEnvContext.h>
 #import "ToastManager.h"
-#import "SSCommonLogic.h"
+#import <TTArticleBase/SSCommonLogic.h>
 #import <Heimdallr/HMDTTMonitor.h>
 
 @interface FHIMConfigDelegateImpl : NSObject<FHIMConfigDelegate>
@@ -87,7 +87,7 @@
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
     NSDictionary *param = @{
                             @"realtor_id":userId,
-                            @"impr_id": imprId
+                            @"impr_id": imprId ? : @"be_null"
                             };
     NSMutableDictionary *monitorParams = [NSMutableDictionary dictionaryWithDictionary:param];
     [monitorParams setValue:@"client_c" forKey:@"client_type"];
@@ -130,6 +130,7 @@
             NSURL *url = [NSURL URLWithString:phoneUrl];
             [[UIApplication sharedApplication] openURL:url];
         } else {
+            [[ToastManager manager] showToast:@"获取电话失败，请重试"];
             [monitorParams setValue:error forKey:@"server_error"];
             [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
             finishBlock(@"click_call", imprId);
@@ -166,14 +167,16 @@
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     NSLog(@"startup IM");
     if ([SSCommonLogic imCanStart]) {
-        FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
-        [IMManager shareInstance].accountCenter = accountCenter;
-        
-        FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
-        [[FHIMConfigManager shareInstance] registerDelegate:delegate];
-        
-        NSString* uid = [[TTAccount sharedAccount] userIdString];
-        [[IMManager shareInstance] startupWithUid:uid];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHIMAccountCenterImpl* accountCenter = [[FHIMAccountCenterImpl alloc] init];
+            [IMManager shareInstance].accountCenter = accountCenter;
+
+            FHIMConfigDelegateImpl* delegate = [[FHIMConfigDelegateImpl alloc] init];
+            [[FHIMConfigManager shareInstance] registerDelegate:delegate];
+
+            NSString* uid = [[TTAccount sharedAccount] userIdString];
+            [[IMManager shareInstance] startupWithUid:uid];
+        });
     }
 }
 

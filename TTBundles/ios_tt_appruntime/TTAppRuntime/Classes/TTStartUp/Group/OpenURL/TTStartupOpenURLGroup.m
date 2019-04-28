@@ -77,7 +77,6 @@
         case TTOpenURLTypeMain:
             return [[TTOpenURLTask alloc] init];
             break;
-
         default:
             return [[TTStartupTask alloc] init];
             break;

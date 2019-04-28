@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, TTOpenURLType) {
     TTOpenURLTypeTTTracker,     //TTTracker
     TTOpenURLTypeBytedanceSDKs, //BDSDK和BDPlatformSDK
     TTOpenURLTypeMain,//open url 调起
+
 //    TTOpenURLTypeSF,            //TTSF吊起
 };
 

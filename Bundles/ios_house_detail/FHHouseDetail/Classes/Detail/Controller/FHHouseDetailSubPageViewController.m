@@ -99,6 +99,11 @@
             NSDictionary *logPbDict = allInfo[@"log_pb"];
             self.searchId = logPbDict[@"search_id"];
             self.imprId = logPbDict[@"impr_id"];
+        }else if ([allInfo[@"tracer"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *tracerDict = allInfo[@"tracer"];
+            NSDictionary *logPbDict = tracerDict[@"log_pb"];
+            self.searchId = logPbDict[@"search_id"];
+            self.imprId = logPbDict[@"impr_id"];
         }
     }
     return self;

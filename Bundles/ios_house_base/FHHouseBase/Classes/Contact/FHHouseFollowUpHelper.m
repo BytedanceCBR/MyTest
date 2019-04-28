@@ -1,11 +1,11 @@
 //
-//  FHHouseDetailFollowUpViewModel.m
-//  Pods
+//  FHHouseFollowUpHelper.m
+//  FHHouseDetail
 //
-//  Created by 张静 on 2019/2/14.
+//  Created by 张静 on 2019/4/22.
 //
 
-#import "FHHouseDetailFollowUpViewModel.h"
+#import "FHHouseFollowUpHelper.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHDetailBaseModel.h"
@@ -15,25 +15,44 @@
 #import "TTUIResponderHelper.h"
 #import "TTDeviceHelper.h"
 #import <FHHouseBase/FHUserTracker.h>
+#import "FHHouseType.h"
+#import "FHMainApi+Contact.h"
 
 NSString *const kFHDetailFollowUpNotification = @"follow_up_did_changed";
 NSString *const kFHToastCountKey = @"kFHToastCountKey";
 
-@implementation FHHouseDetailFollowUpViewModel
+@implementation FHHouseFollowUpHelper
 
-- (void)silentFollowHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType showTip:(BOOL)showTip
++ (BOOL)isFollowUpParamsValid:(FHHouseFollowUpConfigModel *)configModel
+{
+    NSString *followId = configModel.followId;
+    if (followId.length < 1) {
+        NSAssert(NO, @"请校验以上必填字段！");
+        return NO;
+    }
+    return YES;
+}
+
++ (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
 {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+    NSString *followId = configModel.followId;
+    FHHouseType houseType = configModel.houseType;
+    FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
+    BOOL showTip = configModel.showTip;
+    BOOL hideToast = configModel.hideToast;
+
+    [self isFollowUpParamsValid:configModel];
+    
+    [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (!error) {
             if (model.status.integerValue == 0) {
                 if (model.data.followStatus == 0) {
-                    if (wSelf.topVC && wSelf.topVC.childViewControllers.count == 0) {
+                    if (!hideToast) {
                         
                         NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
                         if (toastCount < 3) {
@@ -50,16 +69,10 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
                             style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
                             toastCount += 1;
                             UIViewController *temp = [TTUIResponderHelper topmostViewController];
-                            UIView *v = temp.view;
-                            [wSelf.topVC.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
+                            [temp.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
                             [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
                             [[NSUserDefaults standardUserDefaults]synchronize];
                         }
-                    }
-                }else {
-                    NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-                    if (toastCount < 3 && showTip) {
-                        [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
                     }
                 }
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
@@ -71,14 +84,26 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     }];
 }
 
-- (void)followHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType
++ (void)silentFollowHouseWithConfig:(NSDictionary *)config
 {
-    [self addClickFollowLog];
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:config error:nil];
+    if (configModel) {
+        [self silentFollowHouseWithConfigModel:configModel];
+    }
+}
+
++ (void)followHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
+{
+    [self addClickFollowLog:configModel];
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    [FHHouseDetailAPI requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+    NSString *followId = configModel.followId;
+    FHHouseType houseType = configModel.houseType;
+    FHFollowActionType actionType = configModel.actionType ? :configModel.houseType;
+    
+    [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (error) {
             [[ToastManager manager] showToast:@"关注失败"];
@@ -97,13 +122,26 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
         }
     }];
 }
-- (void)cancelFollowHouseByFollowId:(NSString *)followId houseType:(FHHouseType)houseType actionType:(FHFollowActionType)actionType
+
++ (void)followHouseWithConfig:(NSDictionary *)config
+{
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:config error:nil];
+    if (configModel) {
+        [self followHouseWithConfigModel:configModel];
+    }
+}
+
++ (void)cancelFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
 {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    [FHHouseDetailAPI requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+    NSString *followId = configModel.followId;
+    FHHouseType houseType = configModel.houseType;
+    FHFollowActionType actionType = configModel.actionType;
+    
+    [FHMainApi requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (error) {
             [[ToastManager manager] showToast:@"取消失败"];
@@ -120,28 +158,29 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     }];
 }
 
-#pragma mark 埋点相关
-- (NSDictionary *)baseParams
++ (void)cancelFollowHouseWithConfig:(NSDictionary *)config
 {
-    NSMutableDictionary *params = @{}.mutableCopy;
-    params[@"page_type"] = self.tracerDict[@"page_type"] ? : @"be_null";
-    params[@"card_type"] = self.tracerDict[@"card_type"] ? : @"be_null";
-    params[@"enter_from"] = self.tracerDict[@"enter_from"] ? : @"be_null";
-    params[@"element_from"] = self.tracerDict[@"element_from"] ? : @"be_null";
-    params[@"rank"] = self.tracerDict[@"rank"] ? : @"be_null";
-    params[@"origin_from"] = self.tracerDict[@"origin_from"] ? : @"be_null";
-    params[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ? : @"be_null";
-    params[@"log_pb"] = self.tracerDict[@"log_pb"] ? : @"be_null";
-    return params;
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:config error:nil];
+    if (configModel) {
+        [self cancelFollowHouseWithConfigModel:configModel];
+    }
 }
 
-- (void)addClickFollowLog
+#pragma mark 埋点相关
+
++ (void)addClickFollowLog:(FHHouseFollowUpConfigModel *)configModel
 {
     NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:[self baseParams]];
+    params[@"page_type"] = configModel.pageType ? : @"be_null";
+    params[@"card_type"] = configModel.cardType ? : @"be_null";
+    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
+    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
+    params[@"rank"] = configModel.rank ? : @"be_null";
+    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
+    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
+    params[@"log_pb"] = configModel.logPb ? : @"be_null";
     [FHUserTracker writeEvent:@"click_follow" params:params];
 }
-
 
 
 @end

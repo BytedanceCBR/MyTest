@@ -142,7 +142,9 @@ static NSMutableArray  * _Nullable identifierArr;
         [tableView reloadData];
     }
     
-    if ([FHHomeConfigManager sharedInstance].currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+
+    if (currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
@@ -150,9 +152,9 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (void)sendCellShowTrace
 {
-    
-    FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
-    FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataOpData2Model *modelOpdata2 = currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = currentDataModel.cityStats;
     
     if (modelOpdata2.items > 0)
     {
@@ -254,6 +256,9 @@ static NSMutableArray  * _Nullable identifierArr;
             }else {
                 height += 10;
             }
+        }else
+        {
+            height += 10;
         }
     }
     self.headerHeight = height;
@@ -411,8 +416,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     [cellEntrance setNeedsLayout];
-    [cellEntrance layoutIfNeeded];
-    
+//    [cellEntrance layoutIfNeeded];
+
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
@@ -581,8 +586,8 @@ static NSMutableArray  * _Nullable identifierArr;
     //    }];
     
     [cellBanner setNeedsLayout];
-    [cellBanner layoutIfNeeded];
-    
+//    [cellBanner layoutIfNeeded];
+
 }
 
 // 首页轮播banner

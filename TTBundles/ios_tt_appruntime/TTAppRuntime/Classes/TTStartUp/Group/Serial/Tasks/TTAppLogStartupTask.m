@@ -62,17 +62,20 @@
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     [[self class] startupTracker];
-    [[SSImpressionManager shareInstance] setTodayExtensionBlock:^(void){
-        //保存today extenstion的impression
-        NSMutableDictionary * todayExtenstionImpressions = [ExploreExtenstionDataHelper fetchTodayExtenstionDict];
-        if (todayExtenstionImpressions) {
-            [todayExtenstionImpressions setValue:@"" forKey:@"session_id"];
-        }
-        
-        [ExploreExtenstionDataHelper clearSavedTodayExtenstions];
-        
-        return [todayExtenstionImpressions copy];
-    }];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [[self class] startupTracker];
+        [[SSImpressionManager shareInstance] setTodayExtensionBlock:^(void){
+            //保存today extenstion的impression
+            NSMutableDictionary * todayExtenstionImpressions = [ExploreExtenstionDataHelper fetchTodayExtenstionDict];
+            if (todayExtenstionImpressions) {
+                [todayExtenstionImpressions setValue:@"" forKey:@"session_id"];
+            }
+            
+            [ExploreExtenstionDataHelper clearSavedTodayExtenstions];
+            
+            return [todayExtenstionImpressions copy];
+        }];
+    });
 }
 
 + (void)startupTracker {

@@ -16,7 +16,6 @@
 #import <TTAccountSDK.h>
 #import <FHHomeConfigManager.h>
 #import <TTBaseLib/TTStringHelper.h>
-#import <TTAccountSDK/TTAccount+NetworkTasks.h>
 
 @implementation TTRNavi
 
@@ -269,8 +268,6 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     if ([controller respondsToSelector:@selector(setUpCloseBtnControlForWeb:)]) {
         [controller performSelector:@selector(setUpCloseBtnControlForWeb:) withObject:@(isShowCloseBtn)];
     }
-    
-//    controller.ttDisableDragBack = NO;
 }
 
 - (void)setNativeTitleWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
@@ -305,6 +302,7 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
         
         NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
         // 注销登录
+//        [TTAccount logoutAndClearCookie:^(BOOL success, NSError * _Nullable error) {
         [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
             callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
         }];
@@ -337,6 +335,18 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     
     if ([controller respondsToSelector:@selector(setUpCloseBtnControlForNaviBackBtn:)]) {
         [controller performSelector:@selector(setUpCloseBtnControlForNaviBackBtn:) withObject:@(isShowCloseBtn)];
+    }
+}
+
+- (void)setStatusBarStyleWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    BOOL statusBarHighLight = [param tt_boolValueForKey:@"highLight"];
+    
+    if (statusBarHighLight)  {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }else
+    {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     }
 }
 

@@ -170,13 +170,12 @@
         [commonParams setValue:[TTSandBoxHelper buildVerion] forKey:@"update_version_code"];
         
         // add by zjing f_city_name
-        FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-        NSString *cityName = configModel.currentCityName;
+        NSString *cityName = [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
         if (cityName.length > 0) {
             [commonParams setValue:cityName forKey:@"f_city_name"];
         }
         
-        NSString *cityId = configModel.currentCityId;
+        NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
         if (cityId.length > 0) {
             [commonParams setValue:cityId forKey:@"f_city_id"];
             [commonParams setValue:cityId forKey:@"city_id"];

@@ -67,10 +67,6 @@
     } else {
         SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateInitialViewController];
     }
-//    [[TTFantasyTimeCountDownManager sharedManager] fetchFantasyActivityTimes];
-    dispatch_async(dispatch_get_main_queue(), ^{
-//        [[[EnvContext shared] client] onStart];
-    });
 
     [SharedAppDelegate.window makeKeyAndVisible];
     [[FHEnvContext sharedInstance] onStartApp];

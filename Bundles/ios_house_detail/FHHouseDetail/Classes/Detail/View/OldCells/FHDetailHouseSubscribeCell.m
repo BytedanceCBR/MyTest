@@ -181,7 +181,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 - (void)subscribe {
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-    tracerDic[@"postiton"] = @"card";
+    tracerDic[@"position"] = @"card";
     [FHUserTracker writeEvent:@"click_confirm" params:tracerDic];
     
     NSString *phoneNum = self.phoneNum;
@@ -236,7 +236,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
-    tracerDic[@"postiton"] = @"card";
+    tracerDic[@"position"] = @"card";
     [FHUserTracker writeEvent:@"inform_show" params:tracerDic];
     
     [self showFullPhoneNum:YES];
