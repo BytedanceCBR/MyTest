@@ -52,15 +52,20 @@ extern NSString *const kFHToastCountKey;
     NSString *subtitle = configModel.subtitle;
     NSString *btnTitle = configModel.btnTitle;
 
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    NSString *phoneNum = (NSString *)phoneCache;
+    if (phoneNum.length > 0) {
+        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号。",subtitle];
+    }
     [self addInformShowLog:configModel];
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [self fillFormRequest:configModel phone:phoneNum alertView:alert];
         [self addClickConfirmLog:configModel];
     };
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    alertView.phoneNum = (NSString *)phoneCache;
+
     alertView.tipClickBlock = ^{
         
         NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
@@ -86,7 +91,12 @@ extern NSString *const kFHToastCountKey;
     NSString *subtitle = configModel.subtitle;
     NSString *btnTitle = configModel.btnTitle;
     NSString *leftBtnTitle = configModel.leftBtnTitle;
-    
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    NSString *phoneNum = (NSString *)phoneCache;
+    if (phoneNum.length > 0) {
+        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号。",subtitle];
+    }
     __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = nil;
     if (leftBtnTitle.length > 0) {
@@ -108,9 +118,7 @@ extern NSString *const kFHToastCountKey;
             [wself addClickConfirmLog:configModel];
         };
     }
-    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
-    alertView.phoneNum = (NSString *)phoneCache;
+    alertView.phoneNum = phoneNum;
     alertView.tipClickBlock = ^{
         
         NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
