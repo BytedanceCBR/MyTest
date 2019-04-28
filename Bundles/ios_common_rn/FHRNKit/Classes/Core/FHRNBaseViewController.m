@@ -234,6 +234,8 @@
     
     _container.hidden = YES;
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     
     [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
 }
