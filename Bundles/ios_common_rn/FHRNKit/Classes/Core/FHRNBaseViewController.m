@@ -346,9 +346,6 @@
 - (void)goBack
 {
     UIViewController *popVC = [self.navigationController popViewControllerAnimated:YES];
-    if (!_canPreLoad) {
-        [self destroyRNView];
-    }
     
     if (nil == popVC) {
         [self dismissViewControllerAnimated:YES completion:^{
