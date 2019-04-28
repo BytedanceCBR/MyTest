@@ -537,6 +537,7 @@
 		617C25B62143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		617C25B72143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 617C25B42143E28A0007E2C4 /* NIHFeedCollectionHouseCell.m */; };
 		6198677D2223E8EE0056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198677C2223E8EE0056B2EF /* NotificationService.m */; };
+		619867812223E8EE0056B2EF /* serviceNofExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 619867792223E8EE0056B2EF /* serviceNofExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		619867862223E9650056B2EF /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 619867562223E22B0056B2EF /* TTNotificationServiceExtensionBase.m */; };
 		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
 		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -2598,10 +2599,6 @@
 		B373CF012174587A008F9905 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058C15876AE500EB27FA /* libz.1.dylib */; };
 		B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
 		B373CF032174587A008F9905 /* libttheif_dec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF860F21FA1CA8100926C1A /* libttheif_dec.a */; };
-		B375FCC3225F474C00D51790 /* MonitorHook.m in Sources */ = {isa = PBXBuildFile; fileRef = B375FCC2225F474C00D51790 /* MonitorHook.m */; };
-		B375FCC4225F474C00D51790 /* MonitorHook.m in Sources */ = {isa = PBXBuildFile; fileRef = B375FCC2225F474C00D51790 /* MonitorHook.m */; };
-		B375FCC5225F474C00D51790 /* MonitorHook.m in Sources */ = {isa = PBXBuildFile; fileRef = B375FCC2225F474C00D51790 /* MonitorHook.m */; };
-		B375FCC6225F474C00D51790 /* MonitorHook.m in Sources */ = {isa = PBXBuildFile; fileRef = B375FCC2225F474C00D51790 /* MonitorHook.m */; };
 		B376FC9822193F7C009D8E2F /* FHIMStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */; };
 		B376FC9922193F7C009D8E2F /* FHIMStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */; };
 		B376FC9A22193F7C009D8E2F /* FHIMStartupTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */; };
@@ -6109,6 +6106,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6198677F2223E8EE0056B2EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 619867782223E8EE0056B2EF;
+			remoteInfo = serviceNofExtension;
+		};
 		619867912223E9A70056B2EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
@@ -6178,6 +6182,17 @@
 			files = (
 			);
 			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FEFA5A54205FB1A8001F50D8 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				619867812223E8EE0056B2EF /* serviceNofExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */ = {
@@ -8313,8 +8328,6 @@
 		B358140A432F576A8121CD57 /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
 		B373CF102174587A008F9905 /* f100.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B375FCC1225F474C00D51790 /* MonitorHook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorHook.h; sourceTree = "<group>"; };
-		B375FCC2225F474C00D51790 /* MonitorHook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorHook.m; sourceTree = "<group>"; };
 		B376FC9622193F7C009D8E2F /* FHIMStartupTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHIMStartupTask.h; sourceTree = "<group>"; };
 		B376FC9722193F7C009D8E2F /* FHIMStartupTask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHIMStartupTask.m; sourceTree = "<group>"; };
 		B388C9D92142652800653188 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -14848,8 +14861,6 @@
 		B388C9DB2142652800653188 /* Launch */ = {
 			isa = PBXGroup;
 			children = (
-				B375FCC1225F474C00D51790 /* MonitorHook.h */,
-				B375FCC2225F474C00D51790 /* MonitorHook.m */,
 				B388C9DE2142652800653188 /* FTTNavigationController.m */,
 				B388C9E22142652800653188 /* FTTNavigationController.h */,
 			);
@@ -17491,6 +17502,7 @@
 				FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */,
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
 				FEFA5A25205FB1A8001F50D8 /* Frameworks */,
+				FEFA5A54205FB1A8001F50D8 /* Embed App Extensions */,
 				FEFA5A55205FB1A8001F50D8 /* ShellScript */,
 				FEFA5A56205FB1A8001F50D8 /* Run Script - Fix Copy Pods Resources Script  */,
 				FEFA5A57205FB1A8001F50D8 /* Embed Watch Content */,
@@ -17502,6 +17514,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				619867802223E8EE0056B2EF /* PBXTargetDependency */,
 			);
 			name = NewsLiteInHouse;
 			productName = Article;
@@ -17591,7 +17604,7 @@
 					};
 					FEFA5259205FB1A8001F50D8 = {
 						DevelopmentTeam = X46375UBYG;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -19187,7 +19200,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h\n";
+			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h";
 		};
 		FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -19201,7 +19214,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "rm -f Config/revision.h\n";
+			shellScript = "rm -f Config/revision.h";
 		};
 		FEFA5A55205FB1A8001F50D8 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -19863,7 +19876,6 @@
 				6B2845911DF5402100170DE7 /* Book.m in Sources */,
 				6B2846621DF5407000170DE7 /* TTLayOutLargePicCell.m in Sources */,
 				ABBEA6C71F334229005DAD27 /* SSFeedbackPostViewController.m in Sources */,
-				B375FCC3225F474C00D51790 /* MonitorHook.m in Sources */,
 				B3A735912150AA52001A3953 /* TTLaunchTracer.m in Sources */,
 				F87693A41F31D0D400D59CA5 /* TTVRelatedItem+TTVArticleProtocolSupport.m in Sources */,
 				C32AF9221F555B00003FEEBC /* TTAdCanvasProjectModel+Resource.m in Sources */,
@@ -21302,7 +21314,6 @@
 				B373CADC2174587A008F9905 /* TTVPasterADModel.m in Sources */,
 				B373CADD2174587A008F9905 /* TTVDetailCarCard.m in Sources */,
 				B373CADE2174587A008F9905 /* Book.m in Sources */,
-				B375FCC5225F474C00D51790 /* MonitorHook.m in Sources */,
 				B373CADF2174587A008F9905 /* TTLayOutLargePicCell.m in Sources */,
 				B373CAE02174587A008F9905 /* SSFeedbackPostViewController.m in Sources */,
 				B373CAE12174587A008F9905 /* TTLaunchTracer.m in Sources */,
@@ -22723,7 +22734,6 @@
 				D47953B821ECC94E00548965 /* TTVPasterADModel.m in Sources */,
 				D47953B921ECC94E00548965 /* TTVDetailCarCard.m in Sources */,
 				D47953BA21ECC94E00548965 /* Book.m in Sources */,
-				B375FCC6225F474C00D51790 /* MonitorHook.m in Sources */,
 				D47953BC21ECC94E00548965 /* TTLayOutLargePicCell.m in Sources */,
 				D47953BD21ECC94E00548965 /* SSFeedbackPostViewController.m in Sources */,
 				D47953BE21ECC94E00548965 /* TTLaunchTracer.m in Sources */,
@@ -24144,7 +24154,6 @@
 				FEFA55AF205FB1A8001F50D8 /* TTVPasterADModel.m in Sources */,
 				FEFA55B0205FB1A8001F50D8 /* TTVDetailCarCard.m in Sources */,
 				FEFA55B1205FB1A8001F50D8 /* Book.m in Sources */,
-				B375FCC4225F474C00D51790 /* MonitorHook.m in Sources */,
 				FEFA55B2205FB1A8001F50D8 /* TTLayOutLargePicCell.m in Sources */,
 				FEFA55B3205FB1A8001F50D8 /* SSFeedbackPostViewController.m in Sources */,
 				B3A735922150AEE2001A3953 /* TTLaunchTracer.m in Sources */,
@@ -24940,6 +24949,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		619867802223E8EE0056B2EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 619867782223E8EE0056B2EF /* serviceNofExtension */;
+			targetProxy = 6198677F2223E8EE0056B2EF /* PBXContainerItemProxy */;
+		};
 		619867922223E9A70056B2EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6198678A2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */;
@@ -25910,12 +25924,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/News.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -25991,7 +26005,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse_dev;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -26015,12 +26029,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = NewsBase/NewsInHouse.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = X46375UBYG;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"TTNetworkStub.*",
@@ -26104,7 +26118,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1.inhouse;
 				SEPARATE_STRIP = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
