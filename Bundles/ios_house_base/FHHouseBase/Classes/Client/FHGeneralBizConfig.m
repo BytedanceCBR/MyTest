@@ -67,8 +67,7 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
 
 - (void)onStartAppGeneralCache
 {
-//    self.configCache = [self getGeneralConfigFromLocal];
-    if (_configCache) {
+    if (self.configCache) {
         [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = NO;
         [[FHEnvContext sharedInstance] acceptConfigDataModel:self.configCache];
     }
@@ -161,6 +160,10 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     cache[configKey] = theConfig[configKey];
     theConfig[configKey] = nil;
 
+    configKey = @"filter_order";
+    cache[@"filterOrder"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
     configKey = @"court_filter";
     cache[@"courtFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
@@ -170,8 +173,16 @@ static NSString *const kFHSubscribeHouseCacheKey = @"subscribeHouse";
     cache[@"rentFilter"] = theConfig[configKey];
     theConfig[configKey] = nil;
 
+    configKey = @"rent_filter_order";
+    cache[@"rentFilterOrder"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
     configKey = @"neighborhood_filter";
     cache[@"neighborhoodFilter"] = theConfig[configKey];
+    theConfig[configKey] = nil;
+
+    configKey = @"neighborhood_filter_order";
+    cache[@"neighborhoodFilterOrder"] = theConfig[configKey];
     theConfig[configKey] = nil;
 
     configKey = @"search_tab_neighborhood_filter";
