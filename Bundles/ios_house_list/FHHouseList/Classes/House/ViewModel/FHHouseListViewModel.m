@@ -1614,7 +1614,10 @@
 }
 
 -(void)addCategoryRefreshLog {
-
+    
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
+        return;
+    }
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"refresh_type"] = @"pre_load_more";
     [FHUserTracker writeEvent:@"category_refresh" params:tracerDict];
