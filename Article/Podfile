@@ -59,8 +59,9 @@ def appPods
 #    pod 'IESSafeGuard', '0.6.5'
 
 #    pod 'TTRNKit', '0.3.3'
-    pod 'IESGeckoKit', '0.4.0'
-    pod 'IESWebKit', '0.1.4'
+    pod_binary 'IESGeckoKit', '0.4.0'
+    pod_binary 'IESWebKit', '0.2.0-rc.3'
+    
 #    pod 'IESWebKit/Falcon', :git => 'git@code.byted.org:ugc/IESWebKit.git', :branch => 'master'
     pod 'React', '0.55.9-alpha.22', :subspecs => [ #可根据需要选择相应子库以减少包大小
     'Core',
