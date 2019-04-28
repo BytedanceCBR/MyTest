@@ -135,7 +135,7 @@ dispatch_async(dispatch_get_main_queue(), block);\
 
 - (void)setupNavigationBar {
     self.ttHideNavigationBar = NO;
-    self.titleLabel = (SSThemedLabel *)[SSNavigationBar navigationTitleViewWithTitle:NSLocalizedString(@"收藏", nil)];
+    self.titleLabel = (SSThemedLabel *)[SSNavigationBar navigationTitleViewWithTitle:NSLocalizedString(@"我的收藏", nil)];
     self.navigationItem.titleView = self.titleLabel;
     
     // 搜索页面开关

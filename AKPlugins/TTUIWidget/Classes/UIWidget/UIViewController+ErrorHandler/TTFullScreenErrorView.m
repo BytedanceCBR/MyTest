@@ -9,6 +9,9 @@
 #import "TTFullScreenErrorView.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceHelper.h"
+#import <TTBaseLib/UIImageAdditions.h>
+#import <FHCommonUI/UIFont+House.h>
+#import <FHCommonUI/UIColor+Theme.h>
 
 @interface TTFullScreenErrorView ()
 
@@ -20,34 +23,39 @@
 
 @implementation TTFullScreenErrorView
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+- (void)awakeFromNib {
+    [super awakeFromNib];
 
+    [self.refreshButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+    [self.refreshButton setTitle:@"刷新" forState:UIControlStateNormal];
+    self.refreshButton.layer.cornerRadius  = 15;
+    self.refreshButton.titleLabel.font = [UIFont themeFontRegular:14];
+    self.refreshButton.layer.borderColor = [[UIColor themeRed1]CGColor];
+    self.refreshButton.layer.borderWidth = 1;
+    [self.refreshButton setBackgroundImage:[UIImage imageWithUIColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+    [self.refreshButton setBackgroundImage:[UIImage imageWithUIColor:[[UIColor themeRed1] colorWithAlphaComponent:0.1]] forState:UIControlStateHighlighted];
+    self.refreshButton.layer.masksToBounds = YES;
+}
 //错误提示图片和文本描述根据不同的设备自动适应
 - (void)willMoveToSuperview:(UIView *)newSuperview {
 	[super willMoveToSuperview:newSuperview];
 
 	if (newSuperview) {
 		CGFloat width = 152.0, height = 80.0;
-		CGFloat fontSize = 15.0;
+		CGFloat fontSize = 14.0;
 
-		if ([TTDeviceHelper is667Screen]) {
-			width = 226.0;
-			height = 119.0;
-			fontSize = 17.0;
-		} else if ([TTDeviceHelper is736Screen]) {
-			width = 239.0;
-			height = 126.0;
-			fontSize = 18.0;
-		}
+//        if ([TTDeviceHelper is667Screen]) {
+//            width = 226.0;
+//            height = 119.0;
+//            fontSize = 17.0;
+//        } else if ([TTDeviceHelper is736Screen]) {
+//            width = 239.0;
+//            height = 126.0;
+//            fontSize = 18.0;
+//        }
 
-		self.errorImageWidthConstraint.constant = width;
-		self.errorImageHeightConstraint.constant = height;
+//        self.errorImageWidthConstraint.constant = width;
+//        self.errorImageHeightConstraint.constant = height;
 		self.errorMsg.font = [UIFont systemFontOfSize:fontSize];
 	}
 }
@@ -173,10 +181,9 @@
             break;
         }
         default: {
-            [self.errorImage setImage:[UIImage themedImageNamed:@"not_network_loading"]];
-            self.errorMsg.text = NSLocalizedString(@"网络不给力，点击屏幕重试", nil);
+            self.errorMsg.text = NSLocalizedString(@"网络异常，请检查网络连接", nil);
+            [self.errorImage setImage:[UIImage themedImageNamed:@"group-4"]];
             self.refreshButton.hidden = NO;
-            [self.refreshButton setTitle:@"" forState:UIControlStateNormal];
             break;
         }
     }
