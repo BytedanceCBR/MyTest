@@ -257,9 +257,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.items removeAllObjects];
     // 添加头滑动图片
     if (model.data.houseImageDictList.count > 0) {
+        //视频测试数据
+        FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
+        itemModel.mediaType = FHMultiMediaTypeVideo;
+        itemModel.videoID = @"v03004b60000bh57qrtlt63p5lgd20d0";// @"v0200c940000bh9r6mna1haoho053neg";
+        itemModel.imageUrl = @"https://p3.pstatp.com/origin/f100-image/RM9th6BUofQQc";
+        itemModel.groupType = @"视频";
+        
         FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
-        headerCellModel.vedioModel = nil;// 添加视频模型数据
+        headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
         [self.items addObject:headerCellModel];
     }else{

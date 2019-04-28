@@ -16,7 +16,6 @@
 #import "FHFloorPanPicShowViewController.h"
 #import "FHDetailPictureViewController.h"
 
-#define K_PhotoHeader_HEIGHT 300
 #define K_CELLID @"cell_id"
 
 @interface FHPhotoHeaderCell : UICollectionViewCell
@@ -35,6 +34,8 @@
 @property(nonatomic, assign) BOOL isLarge;
 @property(nonatomic, assign) NSInteger currentIndex;
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
+@property (nonatomic, assign)   CGFloat       photoCellHeight;
+
 @end
 
 @implementation FHDetailPhotoHeaderCell
@@ -48,6 +49,13 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
++ (CGFloat)cellHeight {
+    CGFloat photoCellHeight = 300.0; // 默认300
+    photoCellHeight = [UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight;
+    return photoCellHeight;
 }
 
 - (void)refreshWithData:(id)data {
@@ -65,17 +73,16 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
-        
+        _photoCellHeight = [FHDetailPhotoHeaderCell cellHeight];
         _pictureShowDict = [NSMutableDictionary dictionary];
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        //        layout.estimatedItemSize = CGSizeMake(SCREEN_WIDTH, HEIGHT);
-        layout.itemSize = CGSizeMake(SCREEN_WIDTH, K_PhotoHeader_HEIGHT);
+        layout.itemSize = CGSizeMake(SCREEN_WIDTH, _photoCellHeight);
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
         
-        _colletionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, K_PhotoHeader_HEIGHT) collectionViewLayout:layout];
+        _colletionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, _photoCellHeight) collectionViewLayout:layout];
         _colletionView.backgroundColor = [UIColor whiteColor];
         _colletionView.pagingEnabled = YES;
         _colletionView.showsHorizontalScrollIndicator = NO;
@@ -103,7 +110,7 @@
         
         [_colletionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.right.bottom.mas_equalTo(self.colletionView.superview);
-            make.height.mas_equalTo(K_PhotoHeader_HEIGHT);
+            make.height.mas_equalTo(self.photoCellHeight);
         }];
         
         [_infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -114,7 +121,7 @@
         }];
         [_noDataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.right.bottom.mas_equalTo(self.colletionView.superview);
-            make.height.mas_equalTo(K_PhotoHeader_HEIGHT);
+            make.height.mas_equalTo(self.photoCellHeight);
         }];
         
         

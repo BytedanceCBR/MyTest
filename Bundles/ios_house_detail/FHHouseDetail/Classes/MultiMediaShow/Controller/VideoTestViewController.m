@@ -13,6 +13,7 @@
 
 @property(nonatomic, strong) FHMultiMediaScrollView *mediaView;
 @property(nonatomic, strong) FHMultiMediaModel *model;
+@property(nonatomic, strong) FHVideoViewController *videoVC;
 
 @end
 
@@ -25,10 +26,39 @@
     
     [self generateModel];
     
-    self.mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 200)];
+    self.mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 300)];
     [self.view addSubview:_mediaView];
     
     [_mediaView updateWithModel:self.model];
+    
+    [self initVideoVC];
+}
+
+- (void)initVideoVC {
+    self.videoVC = [[FHVideoViewController alloc] init];
+    _videoVC.view.backgroundColor = [UIColor blackColor];
+    [self.view addSubview:_videoVC.view];
+    _videoVC.view.frame = CGRectMake(0, 420, [UIScreen mainScreen].bounds.size.width, 300);
+    
+    FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
+    itemModel.mediaType = FHMultiMediaTypeVideo;
+    itemModel.videoID = @"v03004b60000bh57qrtlt63p5lgd20d0";
+    itemModel.imageUrl = @"https://p3.pstatp.com/origin/f100-image/RM9th6BUofQQc";
+    itemModel.groupType = @"视频";
+
+    [self updateVideo:itemModel];
+}
+
+- (void)updateVideo:(FHMultiMediaItemModel *)model {
+
+    FHVideoModel *videoModel = [[FHVideoModel alloc] init];
+    videoModel.videoID = model.videoID;
+    videoModel.coverImageUrl = model.imageUrl;
+    videoModel.muted = NO;
+    videoModel.repeated = NO;
+    videoModel.isShowControl = YES;
+
+    [self.videoVC updateData:videoModel];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -43,7 +73,7 @@
     
     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
     itemModel.mediaType = FHMultiMediaTypeVideo;
-    itemModel.videoUrl = @"https://aweme.snssdk.com/aweme/v1/play/?video_id=v03033c20000bbvd7nlehji8cghrbb20&line=0&ratio=default&media_type=4&vr_type=0&test_cdn=None&improve_bitrate=0";
+    itemModel.videoID = @"v03004b60000bh57qrtlt63p5lgd20d0";
     itemModel.imageUrl = @"https://p3.pstatp.com/origin/f100-image/RM9th6BUofQQc";
     itemModel.groupType = @"视频";
     [itemArray addObject:itemModel];

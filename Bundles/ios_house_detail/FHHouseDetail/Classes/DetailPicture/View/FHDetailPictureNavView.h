@@ -9,9 +9,19 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 视频 图片
+@interface FHDetailVideoTitle : UIView
+
+@property (nonatomic, assign)   BOOL       isSelectVideo; // 是否选中视频
+@property(nonatomic, copy) void (^currentTitleBlock)(NSInteger currentIndex);// 1是视频 2 是图片
+
+@end
+
 @interface FHDetailPictureNavView : UIView
 
 @property(nonatomic , copy) void (^backActionBlock)();
+@property (nonatomic, assign)   BOOL       hasVideo;// 是否有视频
+@property (nonatomic, strong)   FHDetailVideoTitle       *videoTitle;
 
 @end
 

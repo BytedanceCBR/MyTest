@@ -6,16 +6,18 @@
 //
 
 #import "FHVideoViewController.h"
-#import "AWEVideoPlayerController.h"
 #import "FHVideoView.h"
 #import <Masonry.h>
 #import "FHVideoViewModel.h"
+#import "UIViewAdditions.h"
 
-@interface FHVideoViewController ()
+@interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate>
 
-@property(nonatomic, strong) AWEVideoPlayerController *playerController;
+@property(nonatomic, strong) TTVPlayer *player;
 @property(nonatomic, strong) FHVideoView *videoView;
 @property(nonatomic, strong) FHVideoViewModel *viewModel;
+@property(nonatomic, assign) TTVPlaybackState playState;
+@property(nonatomic, assign) CGRect firstVideoFrame;
 
 @end
 
@@ -27,15 +29,18 @@
     [self initViews];
     [self initConstaints];
     [self initViewModel];
-    
 }
 
 - (void)dealloc {
-    [self.viewModel invalidatePlaybackTimer];
+
 }
 
 - (void)initViews {
-    self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero];
+    self.player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
+    self.player.delegate = self;
+    
+    self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero playerView:self.player.view];
+    _videoView.delegate = self;
     [self.view addSubview:_videoView];
 }
 
@@ -45,22 +50,200 @@
     }];
 }
 
+- (CGFloat)videoWidth {
+    return 640;
+}
+
+- (CGFloat)videoHeight {
+    return 360;
+}
+
 - (void)initViewModel {
-    self.viewModel = [[FHVideoViewModel alloc] initWithView:self.videoView controller:self];
+    self.viewModel = [[FHVideoViewModel alloc] initWithView:self.videoView controller:self player:self.player];
 }
 
 - (void)updateData:(FHVideoModel *)model {
-    self.model = model;
-    [self.videoView updateData:model];
+    if(model){
+        // 是否是新的vid
+        if (_model && ![model.videoID isEqualToString:_model.videoID]) {
+            _playState = TTVPlaybackState_Stopped;
+        }
+        _model = model;
+        [self.player setVideoID:model.videoID host:@"is.snssdk.com" commonParameters:nil];
+        self.player.muted = model.muted;
+        self.player.looping = model.repeated;
+       
+        self.videoView.coverView.imageUrl = model.coverImageUrl;
+//        self.player.controlView.hidden = !self.model.isShowControl;
+    }
 }
 
 - (void)play {
-    [self.viewModel startPlayBackTimer];
-    [self.videoView play];
+    self.videoView.coverView.hidden = YES;
+    [self.player play];
 }
 
 - (void)pause {
-    [self.videoView pause];
+    [self.player pause];
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    if (self.firstVideoFrame.size.height <= 0) {
+        self.firstVideoFrame = self.view.frame;
+    }
+    if (self.playState == TTVideoEnginePlaybackStateStopped) {
+        [self changeVideoFrame];
+    }
+}
+
+// 只是改变 所播放视频的frame：videoFrame 值，布局并不改变
+- (void)changeVideoFrame {
+    CGRect vFrame = self.view.frame;
+    CGFloat vWidth = [self videoWidth];
+    CGFloat vHeight = [self videoHeight];
+    // 目前只处理origin.y 为0 的数据
+    if (self.playState == TTVideoEnginePlaybackStateStopped) {
+        self.videoFrame = self.firstVideoFrame;
+        return;
+    }
+    if (vFrame.origin.y > 0) {
+        vFrame = self.firstVideoFrame;
+    }
+    if (vWidth > 0 && vHeight > 0 && vFrame.size.width > 0 && vFrame.size.height > 0) {
+        CGFloat radioW = vWidth / vFrame.size.width;
+        CGFloat radioH = vHeight / vFrame.size.height;
+        CGFloat radio = radioW > radioH ? radioW : radioH;
+        CGFloat tempW = vWidth / radio;
+        CGFloat tempH = vHeight / radio;
+        CGFloat offsetX = (vFrame.size.width - tempW) / 2;
+        CGFloat offsetY = (vFrame.size.height - tempH) / 2;
+        vFrame.origin.x += offsetX;
+        vFrame.origin.y += offsetY;
+        vFrame.size.width = tempW;
+        vFrame.size.height = tempH;
+        self.videoFrame = vFrame;
+    } else {
+        self.videoFrame = vFrame;
+    }
+}
+
+- (void)setPlayState:(TTVPlaybackState)playState {
+    if (_playState == TTVPlaybackState_Stopped) {
+        if (playState == TTVPlaybackState_Playing) {
+            // 第一次开始播放，修改frame
+            _playState = playState;
+            [self changeVideoFrame];
+        }
+    } else if (_playState != TTVPlaybackState_Stopped) {
+        // 可以 重新开始
+        if (playState == TTVPlaybackState_Stopped) {
+            _playState = TTVPlaybackState_Stopped;
+            [self changeVideoFrame];
+        }
+    }
+}
+
+- (TTVPlaybackState)playbackState {
+    return self.player.playbackState;
+}
+
+- (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime complete:(void (^)(BOOL))finised {
+    [self.player setCurrentPlaybackTime:currentPlaybackTime complete:finised];
+}
+
+#pragma mark - FHVideoViewDelegate
+
+- (void)startPlayVideo {
+    [self play];
+}
+
+#pragma mark - TTVPlayerDelegate
+
+- (void)playerViewDidLayoutSubviews:(TTVPlayer *)player state:(TTVPlayerState *)state {
+    BOOL fullScreen = ((TTVPlayerState *)player.playerStore.state).fullScreenState.fullScreen;
+    CGRectEdge leftEdge = fullScreen ? 20 : 12;
+    CGRectEdge topEdge = 12;
+
+    UIView *topBar = [player partControlForKey:TTVPlayerPartControlKey_TopBar];
+    topBar.width = topBar.superview.width;
+    topBar.height = fullScreen ? 130 : 70;
+    topBar.left = 0;
+    topBar.top = 0;
+
+    UIView * defaultBackButton = [player partControlForKey:TTVPlayerPartControlKey_BackButton];
+    UIView * defaultTitleLable = [player partControlForKey:TTVPlayerPartControlKey_TitleLabel];
+    [defaultTitleLable sizeToFit];
+
+    UIView * playCenter = [player partControlForKey:TTVPlayerPartControlKey_PlayCenterToggledButton];
+    [playCenter sizeToFit];
+    playCenter.center = CGPointMake(player.view.width / 2.0, player.view.height / 2.0);
+
+    if (fullScreen) {
+        defaultBackButton.size = CGSizeMake(24, 24);
+        defaultBackButton.top = 32;
+        defaultBackButton.left = 12;
+        defaultTitleLable.frame = CGRectMake(defaultBackButton.right, 0, player.view.width - 2 * leftEdge, defaultTitleLable.height);
+        defaultTitleLable.centerY = defaultBackButton.centerY;
+    }else{
+        defaultTitleLable.frame = CGRectMake(leftEdge, topEdge, player.view.width - 2 * leftEdge, defaultTitleLable.height);
+    }
+
+    UIEdgeInsets safeInset = UIEdgeInsetsZero;
+    if (@available(iOS 11.0, *)) {
+        if (fullScreen) {
+            safeInset = [[[UIApplication sharedApplication] delegate] window].safeAreaInsets;
+        }
+    }
+
+    UIView *toolbar = [player partControlForKey:TTVPlayerPartControlKey_BottomBar];
+    toolbar.width = player.view.width;
+    toolbar.height = fullScreen ? 130 : 70;
+    toolbar.left = 0;
+    toolbar.bottom = player.view.height;
+
+    UIView *currentTimeLabel = [player partControlForKey:TTVPlayerPartControlKey_TimeCurrentLabel];
+    UIView *slider = [player partControlForKey:TTVPlayerPartControlKey_Slider];
+    UIView *totalTimeLabel = [player partControlForKey:TTVPlayerPartControlKey_TimeTotalLabel];
+    UIView *fullScreenBtn = [player partControlForKey:TTVPlayerPartControlKey_FullToggledButton];
+    //只有进度条 ，全屏功能的时候
+    [currentTimeLabel sizeToFit];
+    currentTimeLabel.left = leftEdge;
+    currentTimeLabel.centerY = (toolbar.height - safeInset.bottom - (fullScreen ? 25.5 : 16));
+
+    NSInteger right = 0;
+    fullScreenBtn.hidden = fullScreen == YES;
+    if (fullScreenBtn && !fullScreenBtn.hidden) {
+        fullScreenBtn.width = 32;
+        fullScreenBtn.height = 32;
+        fullScreenBtn.right = toolbar.width - 10;
+        fullScreenBtn.centerY = currentTimeLabel.centerY;
+        right = fullScreenBtn.left;
+    }else{
+        right = player.view.width - leftEdge;
+    }
+
+    [totalTimeLabel sizeToFit];
+    totalTimeLabel.right = right - 10;
+    totalTimeLabel.centerY = currentTimeLabel.centerY;
+
+    NSInteger sliderEdge = 8;
+    slider.width = totalTimeLabel.left - sliderEdge * 2 - currentTimeLabel.right;
+    slider.height = 12;
+    slider.left = currentTimeLabel.right + sliderEdge;
+    slider.centerY = currentTimeLabel.centerY;
+}
+
+- (void)player:(TTVPlayer *)player didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus {
+    [self.viewModel didFinishedWithStatus:finishStatus];
+}
+
+/// 播放器播放状态变化通知
+- (void)player:(TTVPlayer *)player playbackStateDidChanged:(TTVPlaybackState)playbackState {
+    self.playState = playbackState;
+    if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
+        [self.delegate playbackStateDidChanged:playbackState];
+    }
 }
 
 @end

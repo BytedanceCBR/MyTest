@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHMultiMediaModel.h"
+#import "FHVideoViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMultiMediaScrollView : UIView
 
+@property (nonatomic, assign) BOOL isShowenPictureVC;
+@property(nonatomic, strong) FHVideoViewController *videoVC;
+@property(nonatomic, strong) UICollectionViewCell *currentMediaCell;
 @property(nonatomic , weak) id<FHMultiMediaScrollViewDelegate> delegate;
 
 - (void)updateWithModel:(FHMultiMediaModel *)model;

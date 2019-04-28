@@ -12,8 +12,7 @@
 #import "FHDetailPictureViewController.h"
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
-
-#define kHEIGHT 300
+#import "FHMultiMediaVideoCell.h"
 
 @interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate>
 
@@ -24,6 +23,8 @@
 @property(nonatomic, assign) BOOL isLarge;
 @property(nonatomic, assign) NSInteger currentIndex;
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
+@property (nonatomic, assign)   NSInteger       vedioCount;
+@property (nonatomic, assign)   CGFloat       photoCellHeight;
 
 @end
 
@@ -38,6 +39,12 @@
     [super setSelected:selected animated:animated];
     
     // Configure the view for the selected state
+}
+
++ (CGFloat)cellHeight {
+    CGFloat photoCellHeight = 300.0; // 默认300
+    photoCellHeight = [UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight;
+    return photoCellHeight;
 }
 
 - (void)refreshWithData:(id)data {
@@ -57,16 +64,17 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _photoCellHeight = [FHDetailMediaHeaderCell cellHeight];
         _pictureShowDict = [NSMutableDictionary dictionary];
-        
+        _vedioCount = 0;
         _imageList = [[NSMutableArray alloc] init];
-        _mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, kHEIGHT)];
+        _mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _photoCellHeight)];
         _mediaView.delegate = self;
         [self.contentView addSubview:_mediaView];
         
         [_mediaView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);
-            make.height.mas_equalTo(kHEIGHT);
+            make.height.mas_equalTo(self.photoCellHeight);
         }];
     }
     return self;
@@ -77,7 +85,11 @@
     NSMutableArray *itemArray = [NSMutableArray array];
     
     NSArray *houseImageDict = ((FHDetailMediaHeaderModel *)self.currentData).houseImageDictList;
-
+    FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+    if (vedioModel && vedioModel.videoID.length > 0) {
+        self.vedioCount = 1;
+        [itemArray addObject:vedioModel];
+    }
     for (FHDetailOldDataHouseImageDictListModel *listModel in houseImageDict) {
         if (listModel.houseImageTypeName.length > 0) {
             NSString *groupType = nil;
@@ -106,15 +118,48 @@
 -(void)showImagesWithCurrentIndex:(NSInteger)index
 {
     NSArray *images = self.imageList;
-    if (images.count == 0 || index < 0 || index >= images.count) {
+    if (index < 0 || index >= (images.count + self.vedioCount)) {
         return;
+    }
+    if (index < self.vedioCount) {
+        // 视频
+        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped) {
+            // 第一次 非播放状态直接播放即可
+            [self.mediaView.videoVC play];
+            return;
+        }
     }
     __weak typeof(self) weakSelf = self;
     self.baseViewModel.detailController.ttNeedIgnoreZoomAnimation = YES;
     FHDetailPictureViewController *vc = [[FHDetailPictureViewController alloc] init];
     vc.topVC = self.baseViewModel.detailController;
+    // 获取图片需要的房源信息数据
+    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
+        // 二手房数据
+        FHDetailOldModel *model = (FHDetailOldModel *)self.baseViewModel.detailData;
+        NSString *priceStr = @"";
+        NSString *infoStr = @"";
+        FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
+        if (vedioModel && vedioModel.videoID.length > 0) {
+            priceStr = @"500万";
+            infoStr = @"3室1厅 105平 小区";
+        }
+        NSString *houseId = model.data.id;
+        vc.houseId = houseId;
+        vc.priceStr = priceStr;
+        vc.infoStr = infoStr;
+        vc.followStatus = self.baseViewModel.contactViewModel.followStatus;
+    }
+    // 分享
+    vc.shareActionBlock = ^{
+        
+    };
+    // 收藏
+    vc.collectActionBlock = ^(BOOL followStatus) {
+        
+    };
     vc.dragToCloseDisabled = YES;
-    //    vc.mode = PhotosScrollViewSupportBrowse;
+    vc.videoVC = self.mediaView.videoVC;
     vc.startWithIndex = index;
     vc.albumImageBtnClickBlock = ^(NSInteger index){
         [weakSelf enterPictureShowPictureWithIndex:index];
@@ -123,36 +168,14 @@
         [weakSelf stayPictureShowPictureWithIndex:index andTime:stayTime];
     };
     
-    NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
-    for(id<FHDetailPhotoHeaderModelProtocol> imgModel in images)
-    {
-        NSMutableDictionary *dict = [[imgModel toDictionary] mutableCopy];
-        //change url_list from string array to dict array
-        NSMutableArray *dictUrlList = [[NSMutableArray alloc] initWithCapacity:imgModel.urlList.count];
-        for (NSString * url in imgModel.urlList) {
-            if ([url isKindOfClass:[NSString class]]) {
-                [dictUrlList addObject:@{@"url":url}];
-            }else{
-                [dictUrlList addObject:url];
-            }
-        }
-        dict[@"url_list"] = dictUrlList;
-        
-        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithDictionary:dict];
-        model.imageType = TTImageTypeLarge;
-        if (model) {
-            [models addObject:model];
-        }
-    }
-    vc.mediaHeaderModel = (FHDetailMediaHeaderModel *)self.currentData;
-    vc.imageInfosModels = models;// 图片展示模型
+    [vc setMediaHeaderModel:self.currentData mediaImages:images];
     
     UIImage *placeholder = [UIImage imageNamed:@"default_image"];
     UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
     CGRect frame = [self convertRect:self.bounds toView:window];
     NSMutableArray *frames = [[NSMutableArray alloc] initWithCapacity:index+1];
     NSMutableArray *placeholders = [[NSMutableArray alloc] initWithCapacity:images.count];
-    for (NSInteger i = 0 ; i < images.count; i++) {
+    for (NSInteger i = 0 ; i < images.count + self.vedioCount; i++) {
         [placeholders addObject:placeholder];
         NSValue *frameValue = [NSValue valueWithCGRect:frame];
         [frames addObject:frameValue];
@@ -168,8 +191,13 @@
             [weakSelf.mediaView updateItemAndInfoLabel];
         }
     };
-    
+    self.mediaView.isShowenPictureVC = YES;
     [vc presentPhotoScrollViewWithDismissBlock:^{
+        weakSelf.mediaView.isShowenPictureVC = NO;
+        if ([weakSelf.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
+            // 当前是视频
+            [weakSelf resetVideoCell:frame];
+        }
         weakSelf.isLarge = NO;
         [weakSelf trackPictureShowWithIndex:weakSelf.currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
@@ -182,6 +210,26 @@
     self.isLarge = YES;
     [self trackPictureShowWithIndex:index];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
+}
+
+// 重置视频view，注意状态以及是否是首屏幕图片
+- (void)resetVideoCell:(CGRect)frame {
+    __weak typeof(self) weakSelf = self;
+    if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
+        FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
+        tempCell.contentView.backgroundColor = [UIColor clearColor];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            weakSelf.mediaView.videoVC.view.frame = frame;
+            [weakSelf.mediaView.currentMediaCell addSubview:weakSelf.mediaView.videoVC.view];
+            weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
+            weakSelf.mediaView.videoVC.model.isShowControl = NO;
+            [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
+        });
+        __weak typeof(FHMultiMediaVideoCell) *wTempCell = tempCell;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            wTempCell.contentView.backgroundColor = [UIColor blackColor];
+        });
+    }
 }
 
 //埋点
@@ -322,7 +370,7 @@
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     // 图片逻辑
-    if (index >= 0 && index < self.imageList.count) {
+    if (index >= 0 && index < (self.imageList.count + self.vedioCount)) {
         [self showImagesWithCurrentIndex:index];
     }
 }

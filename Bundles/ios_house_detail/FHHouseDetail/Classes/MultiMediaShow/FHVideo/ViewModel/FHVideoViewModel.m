@@ -11,43 +11,27 @@
 
 @property(nonatomic, strong) FHVideoView *view;
 @property(nonatomic, weak) FHVideoViewController *viewController;
-@property(nonatomic, strong) NSTimer *playbackTimer;
+@property(nonatomic, weak) TTVPlayer *player;
 
 @end
 
 @implementation FHVideoViewModel
 
-- (instancetype)initWithView:(FHVideoView *)view controller:(FHVideoViewController *)viewController {
+- (instancetype)initWithView:(FHVideoView *)view controller:(FHVideoViewController *)viewController player:(nonnull TTVPlayer *)player {
     self = [super init];
     if (self) {
         _view = view;
         _viewController = viewController;
+        _player = player;
     }
     return self;
 }
 
-#pragma mark -- playback timer
-
-- (void)invalidatePlaybackTimer {
-    [_playbackTimer invalidate];
-    _playbackTimer = nil;
-}
-
-- (void)startPlayBackTimer {
-    [self invalidatePlaybackTimer];
-    self.playbackTimer = [NSTimer scheduledTimerWithTimeInterval:0.5f
-                                                          target:self
-                                                        selector:@selector(updatePlaybackTime:)
-                                                        userInfo:nil
-                                                         repeats:YES];
-    if (_playbackTimer) {
-        [[NSRunLoop currentRunLoop] addTimer:_playbackTimer forMode:NSRunLoopCommonModes];
-    }
-}
-
-- (void)updatePlaybackTime:(NSTimer *)timer {
-    if(self.viewController.model.isShowMiniSlider){
-        [self.view refreshMiniSlider];
+- (void)didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus {
+    //用户正常停止播放视频
+    if(!finishStatus.playError){
+        self.view.coverView.hidden = NO;
+        [self.view bringSubviewToFront:self.view.coverView];
     }
 }
 

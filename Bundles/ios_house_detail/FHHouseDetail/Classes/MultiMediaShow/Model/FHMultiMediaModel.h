@@ -18,8 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, assign) FHMultiMediaType mediaType;
 @property(nonatomic, copy) NSString *groupType;
-@property(nonatomic, copy) NSString *videoUrl;
+@property(nonatomic, copy) NSString *videoID;
 @property(nonatomic, copy) NSString *imageUrl;
+@property(nonatomic, assign) NSTimeInterval currentPlaybackTime;
+@property(nonatomic, strong) UIView *playerView;
 
 @end
 
