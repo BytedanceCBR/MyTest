@@ -48,6 +48,7 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setNativeDividerVisible" for:@"setNativeDividerVisible"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.onAccountCancellationSuccess" for:@"onAccountCancellationSuccess"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.showBackBtn" for:@"showBackBtn"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setStatusBarStyle" for:@"setStatusBarStyle"];
 
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShare.share" for:@"share"];

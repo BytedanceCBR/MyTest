@@ -86,7 +86,7 @@
     NSString* url = [host stringByAppendingString:@"/f100/api/virtual_number"];
     NSDictionary *param = @{
                             @"realtor_id":userId,
-                            @"impr_id": imprId
+                            @"impr_id": imprId ? : @"be_null"
                             };
     NSMutableDictionary *monitorParams = [NSMutableDictionary dictionaryWithDictionary:param];
     [monitorParams setValue:@"client_c" forKey:@"client_type"];

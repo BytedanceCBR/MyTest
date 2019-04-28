@@ -440,10 +440,6 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
         [[FHEnvContext sharedInstance] acceptConfigDataModel:model.data];
     }
     
-    if ([FHEnvContext sharedInstance].homeConfigCallBack) {
-        [FHEnvContext sharedInstance].homeConfigCallBack(model.data);
-    }
-    
     // 告诉城市列表config加载ok
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHAllConfigLoadSuccessNotice object:nil];
 }

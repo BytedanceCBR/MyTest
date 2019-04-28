@@ -270,9 +270,9 @@
         NSMutableDictionary *tracerDic = dic.mutableCopy;
         tracerDic[@"is_im"] = !isEmptyString(contactPhone.imOpenUrl) ? @"1" : @"0";
         tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
-        tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
+        tracerDic[@"is_report"] = contactPhone.isFormReport ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
-        // tracerDic[@"element_from"] = @"large"; // 后续版本需要放开
+        tracerDic[@"element_from"] = @"large"; // 后续版本需要放开
         [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
 }

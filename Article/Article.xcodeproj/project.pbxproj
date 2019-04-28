@@ -18193,7 +18193,6 @@
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/iconfont.ttf",
 				"${PODS_ROOT}/TTPlayerSDK/TTPlayerSDK/Assets/ttplayer.metallib",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTRNKit/TTRNKit_Core.bundle",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareCopy/TTShareCopy.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
@@ -18278,7 +18277,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ttplayer.metallib",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTRNKit_Core.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareCopy.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareQQ.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareWeChat.xcassets",
@@ -18431,7 +18429,6 @@
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/iconfont.ttf",
 				"${PODS_ROOT}/TTPlayerSDK/TTPlayerSDK/Assets/ttplayer.metallib",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTRNKit/TTRNKit_Core.bundle",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareCopy/TTShareCopy.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
@@ -18516,7 +18513,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ttplayer.metallib",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTRNKit_Core.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareCopy.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareQQ.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareWeChat.xcassets",
@@ -18611,7 +18607,6 @@
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/iconfont.ttf",
 				"${PODS_ROOT}/TTPlayerSDK/TTPlayerSDK/Assets/ttplayer.metallib",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTRNKit/TTRNKit_Core.bundle",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareCopy/TTShareCopy.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
@@ -18695,7 +18690,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ttplayer.metallib",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTRNKit_Core.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareCopy.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareQQ.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareWeChat.xcassets",
@@ -19086,7 +19080,6 @@
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/ChatroomIconFont.ttf",
 				"${PODS_ROOT}/TTPlatformBaseLib/TTPlatformBaseLib/Resource/iconfont.ttf",
 				"${PODS_ROOT}/TTPlayerSDK/TTPlayerSDK/Assets/ttplayer.metallib",
-				"${PODS_CONFIGURATION_BUILD_DIR}/TTRNKit/TTRNKit_Core.bundle",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareCopy/TTShareCopy.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareQQ/TTShareQQ.xcassets",
 				"${PODS_ROOT}/TTShare/TTShareBusiness/TTShareWeChat/TTShareWeChat.xcassets",
@@ -19170,7 +19163,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ChatroomIconFont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/iconfont.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/ttplayer.metallib",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTRNKit_Core.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareCopy.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareQQ.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTShareWeChat.xcassets",
@@ -19204,7 +19196,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h";
+			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h\n";
 		};
 		FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */ = {
 			isa = PBXShellScriptBuildPhase;

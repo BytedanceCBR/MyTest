@@ -267,8 +267,6 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     if ([controller respondsToSelector:@selector(setUpCloseBtnControlForWeb:)]) {
         [controller performSelector:@selector(setUpCloseBtnControlForWeb:) withObject:@(isShowCloseBtn)];
     }
-    
-//    controller.ttDisableDragBack = NO;
 }
 
 - (void)setNativeTitleWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
@@ -335,6 +333,18 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     
     if ([controller respondsToSelector:@selector(setUpCloseBtnControlForNaviBackBtn:)]) {
         [controller performSelector:@selector(setUpCloseBtnControlForNaviBackBtn:) withObject:@(isShowCloseBtn)];
+    }
+}
+
+- (void)setStatusBarStyleWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
+{
+    BOOL statusBarHighLight = [param tt_boolValueForKey:@"highLight"];
+    
+    if (statusBarHighLight)  {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }else
+    {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     }
 }
 

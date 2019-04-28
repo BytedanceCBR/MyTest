@@ -15,6 +15,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)configIESWebFalcon;
 
++ (BOOL)isHasCacheForChannel:(NSString *)channel;
+
++ (NSString *)getGeckoKey;
 @end
 
 NS_ASSUME_NONNULL_END

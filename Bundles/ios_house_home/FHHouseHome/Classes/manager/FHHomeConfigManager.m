@@ -27,45 +27,12 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[FHHomeConfigManager alloc] init];
-        [FHEnvContext sharedInstance].homeConfigCallBack = ^(FHConfigDataModel * _Nonnull configModel) {
-            [manager acceptConfigDataModel:configModel];
-        };
     });
     return manager;
 }
 
-//to do 去掉找房频道之后，单独请求
-- (void)currentNeedRequestConfig:(NSString *)cityId cityGeoCode:(NSString *)cityCode lat:(double)latValue lon:(double)lonValue cityName:(NSString *)cityName
-{
-    NSInteger cityIdNumber = 0;
-    if (cityId&&[cityId isKindOfClass:[NSString class]]) {
-        cityIdNumber = [cityId integerValue];
-    }
-    [FHMainApi getConfig:cityIdNumber gaodeLocation:CLLocationCoordinate2DMake(latValue, lonValue) gaodeCityId:cityCode gaodeCityName:cityName completion:^(FHConfigModel * _Nullable model, NSError * _Nullable error) {
-        self.currentDataModel = model.data;
-        self.currentDictionary = model.data.toDictionary;
-//        [self.configDataReplay sendNext:model.data];
-    }];
-}
-
-- (void)acceptConfigDictionary:(NSDictionary *)configDict
-{
-    if (configDict && [configDict isKindOfClass:[NSDictionary class]]) {
-            FHConfigDataModel *dataModel = [[FHConfigDataModel alloc] initWithDictionary:configDict error:nil];
-            self.currentDataModel = dataModel;
-    }
-}
-
-- (void)acceptConfigDataModel:(FHConfigDataModel *)configModel
-{
-    if (configModel && [configModel isKindOfClass:[FHConfigDataModel class]]) {
-            self.currentDataModel = configModel;
-    }
-}
-
 - (void)openCategoryFeedStart
 {
-
     NSString * categoryStartName = nil;
 
     if ([[[FHHomeConfigManager sharedInstance] fhHomeBridgeInstance] respondsToSelector:@selector(feedStartCategoryName)]) {
@@ -103,11 +70,6 @@
     });
 }
 
-- (void)updateConfigDataFromCache
-{
-    
-}
-
 - (id<FHHomeBridgeProtocol>)fhHomeBridgeInstance
 {
     if (!_fhHomeBridge) {
@@ -118,7 +80,5 @@
     }
     return _fhHomeBridge;
 }
-
-
 
 @end
