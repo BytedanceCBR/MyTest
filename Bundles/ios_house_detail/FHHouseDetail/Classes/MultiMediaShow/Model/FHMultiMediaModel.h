@@ -23,7 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) NSTimeInterval currentPlaybackTime;
 @property(nonatomic, strong) UIView *playerView;
 @property(nonatomic, assign)   CGFloat       vWidth;
-@property (nonatomic, assign)   CGFloat       vHeight;
+@property(nonatomic, assign)   CGFloat       vHeight;
+@property (nonatomic, copy , nullable) NSString *infoSubTitle;
+@property (nonatomic, copy , nullable) NSString *infoTitle;
 
 @end
 

@@ -141,8 +141,8 @@
         NSString *infoStr = @"";
         FHMultiMediaItemModel *vedioModel = ((FHDetailMediaHeaderModel *)self.currentData).vedioModel;
         if (vedioModel && vedioModel.videoID.length > 0) {
-            priceStr = @"500万";
-            infoStr = @"3室1厅 105平 小区";
+            priceStr = vedioModel.infoTitle;
+            infoStr = vedioModel.infoSubTitle;
         }
         NSString *houseId = model.data.id;
         vc.houseId = houseId;

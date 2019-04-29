@@ -269,10 +269,27 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             // 测试id
             // @"v03004b60000bh57qrtlt63p5lgd20d0";
             // @"v0200c940000bh9r6mna1haoho053neg";
+            if (info.coverImageUrl.length <= 0) {
+                // 视频没有url
+                if (model.data.houseImageDictList.count > 0) {
+                    for (int i = 0; i < model.data.houseImageDictList.count; i++) {
+                        FHDetailOldDataHouseImageDictListModel *item = model.data.houseImageDictList[i];
+                        if (item.houseImageList.count > 0) {
+                            FHDetailHouseDataItemsHouseImageModel *imageModel = item.houseImageList[0];
+                            if (imageModel.url.length > 0) {
+                                info.coverImageUrl = imageModel.url;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
             itemModel.videoID = info.vid;
             itemModel.imageUrl = info.coverImageUrl;
             itemModel.vWidth = info.vWidth;
             itemModel.vHeight = info.vHeight;
+            itemModel.infoTitle = model.data.houseVideo.infoTitle;
+            itemModel.infoSubTitle = model.data.houseVideo.infoSubTitle;
             itemModel.groupType = @"视频";
         }
         

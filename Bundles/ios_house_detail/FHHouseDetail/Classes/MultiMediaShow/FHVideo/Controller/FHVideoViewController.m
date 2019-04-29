@@ -53,11 +53,11 @@
 }
 
 - (CGFloat)videoWidth {
-    return 640;
+    return self.model.vWidth;
 }
 
 - (CGFloat)videoHeight {
-    return 360;
+    return self.model.vHeight;
 }
 
 - (void)initViewModel {
