@@ -419,9 +419,9 @@
 #pragma mark - FHDetailVCViewLifeCycleProtocol
 
 - (void)vc_viewDidAppear:(BOOL)animated {
-    if (self.vcParentView) {
-        [self fhDetail_scrollViewDidScroll:self.vcParentView];
-    }
+//    if (self.vcParentView) {
+//        [self fhDetail_scrollViewDidScroll:self.vcParentView];
+//    }
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
