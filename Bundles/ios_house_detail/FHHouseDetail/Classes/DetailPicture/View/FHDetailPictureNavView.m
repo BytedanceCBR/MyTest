@@ -13,7 +13,6 @@
 @interface FHDetailPictureNavView ()
 @property (nonatomic, strong)   UIImage       *backWhiteImage;
 @property(nonatomic , strong) UIButton *backBtn;
-@property (nonatomic, strong)   UILabel       *titleLabel;// 图片
 
 @end
 

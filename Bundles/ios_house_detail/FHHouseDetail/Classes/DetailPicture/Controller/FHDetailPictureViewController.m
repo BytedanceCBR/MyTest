@@ -241,6 +241,11 @@
         } else {
             _naviView.videoTitle.isSelectVideo = NO;
         }
+        // 特殊处理，如果只有视频
+        if (self.photoCount == self.vedioCount) {
+            _naviView.hasVideo = NO;
+            _naviView.titleLabel.text = @"视频";
+        }
     }
     [_topBar addSubview:_naviView];
     
@@ -604,7 +609,11 @@
 }
 
 - (void)setMediaImages:(NSArray *)images {
-    if (images.count <= 0) {
+    BOOL hasVideo = NO;
+    if (self.mediaHeaderModel.vedioModel && self.mediaHeaderModel.vedioModel.videoID.length > 0) {
+        hasVideo = YES;
+    }
+    if (images.count <= 0 && !hasVideo) {
         return;
     }
     NSMutableArray *models = [NSMutableArray arrayWithCapacity:images.count];
