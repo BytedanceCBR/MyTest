@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 #import "TTVPlayerCustomViewDelegate.h"
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  2、双击手势控制播放暂停
  3、自定义按钮样式
  */
-@interface TTVPlayPart : NSObject<TTVPlayerContextNew, TTVReduxStateObserver, TTVPlayerPartProtocol>
+@interface TTVPlayPart : NSObject<TTVPlayerContexts, TTVReduxStateObserver, TTVPlayerPartProtocol>
 
 /// UI 
 @property (nonatomic, strong) UIView<TTVToggledButtonProtocol> *centerPlayButton; // default play Button

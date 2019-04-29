@@ -66,7 +66,7 @@ typedef NS_ENUM(NSUInteger, TTVPlaybackState) {
 };
 
 /// 视频清晰度
-typedef NS_ENUM(NSUInteger, TTVPlayerResolutionTypeNew) {
+typedef NS_ENUM(NSUInteger, TTVPlayerResolutionTypes) {
     
     TTVPlayerResolutionType_SD = 0, //标清
     TTVPlayerResolutionType_HD = 1, //高清
@@ -91,7 +91,7 @@ typedef NS_ENUM(NSUInteger, TTVPlayerEngineState) {
 /**
  *  播放器加载的状态
  */
-typedef NS_ENUM(NSUInteger, TTVPlayerLoadStateNew) {
+typedef NS_ENUM(NSUInteger, TTVPlayerDataLoadState) {
     TTVPlayerLoadState_Unknown = 0,
     TTVPlayerLoadState_Playable,
     TTVPlayerLoadState_Stalled,

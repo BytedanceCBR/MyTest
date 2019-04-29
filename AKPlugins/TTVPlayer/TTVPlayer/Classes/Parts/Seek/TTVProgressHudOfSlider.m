@@ -72,6 +72,7 @@
 
 - (void)setProgress:(CGFloat)progress animated:(BOOL)animated {
     self.timeLabel.attributedText = [self _timeStringForProgress:progress];
+    [self setNeedsLayout];
     [self.progressView setProgress:progress animated:animated];
 }
 
@@ -128,14 +129,12 @@
     UIFont *font = [UIFont fontWithDescriptor:self.fontDescriptor size:[TTVPlayerUtility tt_fontSize:23.f]];
     NSMutableAttributedString *attributedString1 = [[NSMutableAttributedString alloc] initWithString:currentTimeStr];
     [attributedString1 addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, [currentTimeStr length])];
-    //    [attributedString1 addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithRed:250.f / 255.f green:38.f / 255.f blue:71.f / 255.f alpha:1.f] range:NSMakeRange(0, [currentTimeStr length])];
     [attributedString1 addAttribute:NSForegroundColorAttributeName value:[TTVPlayerUtility colorWithHexString:self.currentTimeTextColorString] range:NSMakeRange(0, [currentTimeStr length])];
     
     totalTimeStr = [NSString stringWithFormat:@" / %@",totalTimeStr];
     
     NSMutableAttributedString *attributedString2 = [[NSMutableAttributedString alloc] initWithString:totalTimeStr];
     [attributedString2 addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, [totalTimeStr length])];
-    //    [attributedString2 addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithWhite:255.0f / 255.0f alpha:1.0f] range:NSMakeRange(0, [totalTimeStr length])];
     [attributedString2 addAttribute:NSForegroundColorAttributeName value:[TTVPlayerUtility colorWithHexString:self.totalTimeTextColorString] range:NSMakeRange(0, [totalTimeStr length])];
     [attributedString1 appendAttributedString:attributedString2];
     return attributedString1;
@@ -170,7 +169,7 @@
     // background
     self.backgroundView.center = CGPointMake(self.width/2.0, self.height/2.0);
     self.backgroundView.left = self.timeLabel.left - 20;
-    self.backgroundView.width = self.width - self.backgroundView.left * 2;
+    self.backgroundView.width = self.timeLabel.width + 20*2;//self.width - self.backgroundView.left * 2;
 }
 
 - (void)_buildViewHierarchy {

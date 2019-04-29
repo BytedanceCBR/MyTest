@@ -6,8 +6,11 @@
 //
 
 #import "TTVPlayer+Engine.h"
-//#import <TTVideoEngine/TTVideoEngineHeader.h>
+#if __has_include(<TTVideoEngineHeader.h>)
+#import <TTVideoEngineHeader.h>
+#else
 #import <TTVideoEngine.h>
+#endif
 #import "TTVPlayer+CacheProgress.h"
 #import "TTVPlaybackTime.h"
 #import "TTVPlaybackTimePrivate.h"
@@ -145,7 +148,6 @@ static NSString *platformString;
     if (self.finishStatus && self.playbackState == TTVPlaybackState_Stopped) {
 //        [self.videoEngine setOptions:@{@(VEKKeyPlayerStartTime_CGFloat):@(currentPlaybackTime)}];
         self.videoEngine.startTime = currentPlaybackTime;
-
         [self play];
         if (finished) {
             finished(YES);
@@ -164,7 +166,7 @@ static NSString *platformString;
         @strongify(self)
         self.isSeeking = NO;
         [self updatePlaybackTime];
-        //        Debug_NSLog(@"isSeeking = %f,%f", self.playbackTime.progress,[self ttv_progress]);
+        
         if (finished) {
             finished(success);
         }
@@ -229,6 +231,10 @@ static NSString *platformString;
     }
 //    Debug_NSLog(@"time:currentPlaybackTime%f",self.playbackTime.currentPlaybackTime);
 //    Debug_NSLog(@"time:playableDuration%f",self.videoEngine.playableDuration);
+//    self.playbackTime.currentPlaybackTime;
+//    self.playbackTime.duration;
+//    self.playbackTime.playableDuration;
+//    self.playbackTime.durationWatched;
     
     // 发 action，需要做判断是否有变化
     [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_PlayBackTimeChanged]];
@@ -304,7 +310,7 @@ static NSString *platformString;
 - (void)videoEngine:(TTVideoEngine *)videoEngine loadStateDidChanged:(TTVideoEngineLoadState)loadState {
     [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_LoadStateChanged]];
     if ([self.delegate respondsToSelector:@selector(player:loadStateDidChanged:)]) {
-        [self.delegate player:self loadStateDidChanged:(TTVPlayerLoadStateNew)loadState];
+        [self.delegate player:self loadStateDidChanged:(TTVPlayerDataLoadState)loadState];
     }
 }
 - (void)videoEnginePrepared:(TTVideoEngine *)videoEngine {
@@ -459,7 +465,7 @@ static NSString *platformString;
 - (void)setPlayAPIVersion:(TTVPlayerAPIVersion)apiVersion auth:(NSString *)auth {
     [self.videoEngine setPlayAPIVersion:(TTVideoEnginePlayAPIVersion)apiVersion auth:auth];
 }
-- (NSInteger)videoSizeForType:(TTVPlayerResolutionTypeNew)type {
+- (NSInteger)videoSizeForType:(TTVPlayerResolutionTypes)type {
     return [self.videoEngine videoSizeForType:(TTVideoEngineResolutionType)type];
 }
 - (NSInteger)videoSizeOfCurrentResolution {

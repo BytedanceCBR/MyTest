@@ -76,7 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @name 播放器状态
 ///-----------------------------------------------------------------
 /// 加载状态 ，用于反馈 loading 的状态
-@property (nonatomic, readonly) TTVPlayerLoadStateNew  loadState;
+@property (nonatomic, readonly) TTVPlayerDataLoadState  loadState;
 /// 播放状态，调用了 play stop 等改变
 @property (nonatomic, readonly) TTVPlaybackState    playbackState;
 /// 播放器 整体状态
@@ -158,9 +158,9 @@ NS_ASSUME_NONNULL_BEGIN
 /// @name 清晰度
 ///-----------------------------------------------------------------
 /// 切换清晰度
-- (void)configResolution:(TTVPlayerResolutionTypeNew)resolution completion:(void(^)(BOOL success, TTVPlayerResolutionTypeNew completeResolution))completion;
+- (void)configResolution:(TTVPlayerResolutionTypes)resolution completion:(void(^)(BOOL success, TTVPlayerResolutionTypes completeResolution))completion;
 /// 返回当前的清晰度
-@property (nonatomic, readonly) TTVPlayerResolutionTypeNew currentResolution;
+@property (nonatomic, readonly) TTVPlayerResolutionTypes currentResolution;
 /// 支持的清晰度
 - (NSArray<NSNumber *> *)supportedResolutionTypes;
 
@@ -196,26 +196,33 @@ NS_ASSUME_NONNULL_BEGIN
 ///-----------------------------------------------------------------
 // 是否循环播放，默认 NO, 播放完停止在最后一帧
 @property (nonatomic) BOOL looping;
-///**
-// Get option that you care about.
-// Example: get video width.
-// NSInteger videoWidth = [[self getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] integerValue];
-// |                                  |                    |           |
-// value                             Gen key               Filed      valueType
-// @param key Please use VEKKEY(key) to prodect a valid key.
-// @return Value correspod the key. The key include value type.
-// */
-//- (id)getOptionBykey:(VEKKeyType)key;
-//
-///**
-// Set options by VEKKey
-// Example:
-// [self setOptions:@{VEKKEY(VEKKeyPlayerTestSpeedMode_ENUM),@(TTVideoEngineTestSpeedModeContinue)}];
-// |                   |          |                          |
-// Generate key            Filed     valueType                   value
-// @param options key is one of VEKKeys, value defined id type.
-// */
-//- (void)setOptions:(NSDictionary<VEKKeyType, id> *)options;
+
+#if __has_include(<TTVideoEngineHeader.h>)
+/**
+ Get option that you care about.
+ Example: get video width.
+ NSInteger videoWidth = [[self getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] integerValue];
+ |                                  |                    |           |
+ value                             Gen key               Filed      valueType
+ @param key Please use VEKKEY(key) to prodect a valid key.
+ @return Value correspod the key. The key include value type.
+ */
+- (id)getOptionBykey:(VEKKeyType)key;
+
+/**
+ Set options by VEKKey
+ Example:
+ [self setOptions:@{VEKKEY(VEKKeyPlayerTestSpeedMode_ENUM),@(TTVideoEngineTestSpeedModeContinue)}];
+ |                   |          |                          |
+ Generate key            Filed     valueType                   value
+ @param options key is one of VEKKeys, value defined id type.
+ */
+- (void)setOptions:(NSDictionary<VEKKeyType, id> *)options;
+#else
+- (NSInteger)getVideoWidth;
+- (NSInteger)getVideoHeight;
+#endif
+
 
 @end
 

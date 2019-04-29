@@ -6,7 +6,7 @@
 //
 
 #import "TTVNetworkMonitorSimplePart.h"
-#import "TTVNetTrafficFreeFlowTipViewNew.h"
+#import "TTVNetFlowTipView.h"
 #import "UIImage+TTVHelper.h"
 #import "TTVIndicatorView.h"
 #import "TTVPlayer.h"

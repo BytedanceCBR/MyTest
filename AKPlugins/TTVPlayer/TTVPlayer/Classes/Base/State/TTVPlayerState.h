@@ -31,7 +31,7 @@
 @property (nonatomic, assign) TTVPlaybackState      playbackState; // play/stop/pause/error
 @property (nonatomic, strong) TTVPlaybackTime       *playbackTime; // 内核所有跟播放时间相关的进度
 @property (nonatomic, strong) TTVPlayFinishStatus   *finishStatus; // 结束状态
-@property (nonatomic, assign) TTVPlayerLoadStateNew    loadState;     // loading状态
+@property (nonatomic, assign) TTVPlayerDataLoadState    loadState;     // loading状态
 @property (nonatomic, copy)   NSString              *videoTitle;   // 视频标题
 @property (nonatomic, assign) BOOL                  readyForDisplay;// 展示第一帧
 @property (nonatomic, getter=isSeeking) BOOL        seeking;       //  播放器正在 seeking

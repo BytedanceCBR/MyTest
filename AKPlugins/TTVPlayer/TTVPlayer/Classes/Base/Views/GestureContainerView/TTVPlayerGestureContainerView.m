@@ -46,6 +46,9 @@
         // overlay
         self.controlOverlayView = [[TTVTouchIgoringView alloc] initWithFrame:frame];
         [self addSubview:self.controlOverlayView];
+        
+        // 默认隐藏
+        [self showControlView:NO];
     }
     return self;
 }
@@ -71,20 +74,20 @@
 - (void)showControlView:(BOOL)show {
     if (self.customBundle) {
         self.playbackControlView.backgroundColor = !show ? [UIColor clearColor] : [UIColor colorWithWhite:0.0 alpha:0.12f];
+        if (self.enableNoPlaybackControlStatus) {
+            self.playbackControlView.backgroundColor = [UIColor clearColor];
+        }
     }
-    self.playbackControlView.contentView.hidden = !show;
-    self.playbackControlView.topBar.hidden = !show;
-    self.playbackControlView.bottomBar.hidden = !show;
-    self.playbackControlView.immersiveContentView.hidden = show;
     
-    self.playbackControlView_Lock.contentView.hidden = !show;
-    self.playbackControlView_Lock.topBar.hidden = !show;
-    self.playbackControlView_Lock.bottomBar.hidden = !show;
-    self.playbackControlView_Lock.immersiveContentView.hidden = show;
-    
-//    if (!show) {
-//        ;
-//    }
+    self.playbackControlView.contentView.hidden = self.enableNoPlaybackControlStatus?YES:!show;
+    self.playbackControlView.topBar.hidden = self.enableNoPlaybackControlStatus?YES:!show;
+    self.playbackControlView.bottomBar.hidden = self.enableNoPlaybackControlStatus?YES:!show;
+    self.playbackControlView.immersiveContentView.hidden = self.enableNoPlaybackControlStatus?NO:show;
+
+    self.playbackControlView_Lock.contentView.hidden = self.enableNoPlaybackControlStatus?YES:!show;
+    self.playbackControlView_Lock.topBar.hidden = self.enableNoPlaybackControlStatus?YES:!show;
+    self.playbackControlView_Lock.bottomBar.hidden = self.enableNoPlaybackControlStatus?YES:!show;
+    self.playbackControlView_Lock.immersiveContentView.hidden = self.enableNoPlaybackControlStatus?NO:show;
 }
 
 - (void)ttv_autoHidden:(BOOL)hidden {

@@ -212,7 +212,7 @@
 			<key>Key</key>
 			<integer>1024</integer>
 			<key>AvailableOnInit</key>
-			<true/>
+			<false/>
 			<key>SingleTapEnabled</key>
 			<true/>
 			<key>DoubleTapEnabled</key>

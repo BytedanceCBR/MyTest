@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "TTVPlayerDefine.h"
 #import "TTVReduxKit.h"
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVPlayerPartProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  管理 part：解析配置文件、添加和移除 part、part 中所有 view 的add、layout
  可以根据配置文件动态添加 part
  */
-@interface TTVPlayerPartManager : NSObject<TTVReduxStateObserver, TTVPlayerContextNew, TTVPartManagerProtocol>
+@interface TTVPlayerPartManager : NSObject<TTVReduxStateObserver, TTVPlayerContexts, TTVPartManagerProtocol>
 @property (nonatomic, assign) BOOL viewDidLoaded;
 
 #pragma mark - config

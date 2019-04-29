@@ -6,13 +6,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TTVPlayerFinishPart : NSObject<TTVPlayerContextNew, TTVReduxStateObserver, TTVPlayerPartProtocol>
+@interface TTVPlayerFinishPart : NSObject<TTVPlayerContexts, TTVReduxStateObserver, TTVPlayerPartProtocol>
 
 @end
 

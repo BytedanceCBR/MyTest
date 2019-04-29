@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 #import "TTVPlayerCustomViewDelegate.h"
@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TTVFullScreenPart : NSObject<TTVPlayerContextNew, TTVReduxStateObserver, TTVPlayerPartProtocol>
+@interface TTVFullScreenPart : NSObject<TTVPlayerContexts, TTVReduxStateObserver, TTVPlayerPartProtocol>
 
 /// 全屏button
 @property (nonatomic, strong) UIView<TTVToggledButtonProtocol> * fullButton;

@@ -38,6 +38,8 @@
 - (void)initViews {
     self.player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
     self.player.delegate = self;
+    self.player.showPlaybackControlsOnViewFirstLoaded = YES;
+    self.player.enableNoPlaybackStatus = YES;
     
     self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero playerView:self.player.view];
     _videoView.delegate = self;
@@ -72,6 +74,8 @@
         [self.player setVideoID:model.videoID host:@"is.snssdk.com" commonParameters:nil];
         self.player.muted = model.muted;
         self.player.looping = model.repeated;
+//        self.player.showPlaybackControlsOnViewFirstLoaded = YES;
+//        self.player.enableNoPlaybackStatus = YES;
        
         self.videoView.coverView.imageUrl = model.coverImageUrl;
 //        self.player.controlView.hidden = !self.model.isShowControl;

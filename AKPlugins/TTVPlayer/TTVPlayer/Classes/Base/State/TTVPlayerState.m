@@ -89,7 +89,8 @@
         self.seeking == other.seeking &&
         (self.gestureState == other.gestureState || [self.gestureState isEqual:other.gestureState]) &&
         (self.speedState == other.speedState || [self.speedState isEqual:other.speedState]) &&
-        (self.fullScreenState == other.fullScreenState || [self.fullScreenState isEqual:other.fullScreenState])) { // need remove
+        (self.fullScreenState == other.fullScreenState || [self.fullScreenState isEqual:other.fullScreenState]) &&
+        self.readyForDisplay == other.readyForDisplay) { 
         return YES;
     }
     

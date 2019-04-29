@@ -41,7 +41,7 @@
     
     [self.view addSubview:self.player.view];
     _player.videoTitle = @"五分钟告诉你,谁是通货膨胀的受害者和受益者";//f860a7b9d56c4af3980f01db5fa13343
-    [self.player setVideoID:@"aa29c33b79aa48a6a20b677feb79725b" host:@"is.snssdk.com" commonParameters:nil];
+    [self.player setVideoID:@"f860a7b9d56c4af3980f01db5fa13343" host:@"is.snssdk.com" commonParameters:nil];
 //    [self.player.playerStore subscribe:self];
 //    [self.player addViewUnderPlayerControl:button];
     // 默认不展示 control，需要手动设置
@@ -72,6 +72,7 @@
         _player.startPlayFromLastestCache = YES;
         _player.customPartDelegate = self;
         _player.customViewDelegate = self;
+//        _player.enableNoPlaybackStatus = YES;
 //        _player.supportPlaybackControlAutohide = NO;
         [_player setTitle:@"静态检测定制化"];
     }

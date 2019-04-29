@@ -317,18 +317,18 @@
     }
     self.allLoadedPartsDic[@(part.key)] = part;
     // player context
-    if ([part conformsToProtocol:@protocol(TTVPlayerContextNew)]) {
+    if ([part conformsToProtocol:@protocol(TTVPlayerContexts)]) {
         if ([part respondsToSelector:@selector(setPlayer:)]) {
-            ((NSObject<TTVPlayerContextNew> *)part).player = self.player;
+            ((NSObject<TTVPlayerContexts> *)part).player = self.player;
         }
         if ([part respondsToSelector:@selector(setPlayerStore:)]) {
-            ((NSObject<TTVPlayerContextNew> *)part).playerStore = self.playerStore;
+            ((NSObject<TTVPlayerContexts> *)part).playerStore = self.playerStore;
         }
         if ([part respondsToSelector:@selector(setCustomBundle:)]) {
-            ((NSObject<TTVPlayerContextNew> *)part).customBundle = self.customBundle;
+            ((NSObject<TTVPlayerContexts> *)part).customBundle = self.customBundle;
         }
         if ([part respondsToSelector:@selector(setPlayerAction:)]) {
-            ((NSObject<TTVPlayerContextNew> *)part).playerAction = self.playerAction;
+            ((NSObject<TTVPlayerContexts> *)part).playerAction = self.playerAction;
         }
         if ([part respondsToSelector:@selector(setControlViewFactory:)]) {
             part.controlViewFactory = [TTVPlayerControlViewFactory sharedInstance];
@@ -377,7 +377,7 @@
 
 - (void)viewDidLayoutSubviews:(TTVPlayer *)playerVC {
     // 如果 各 part 需要布局
-    [self.allLoadedPartsDic.allValues enumerateObjectsUsingBlock:^(id<TTVPlayerContextNew,TTVPlayerPartProtocol,TTVReduxStateObserver>  _Nonnull part, NSUInteger idx, BOOL * _Nonnull stop) {
+    [self.allLoadedPartsDic.allValues enumerateObjectsUsingBlock:^(id<TTVPlayerContexts,TTVPlayerPartProtocol,TTVReduxStateObserver>  _Nonnull part, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([part respondsToSelector:@selector(viewDidLayoutSubviews:)]) {
             [part viewDidLayoutSubviews:playerVC];
         }

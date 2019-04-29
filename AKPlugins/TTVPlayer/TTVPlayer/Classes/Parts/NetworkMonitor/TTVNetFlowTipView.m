@@ -1,11 +1,11 @@
 //
-//  TTVNetTrafficFreeFlowTipViewNew.m
+//  TTVNetFlowTipView.m
 //  Article
 //
 //  Created by lijun.thinker on 2017/7/10.
 //
 
-#import "TTVNetTrafficFreeFlowTipViewNew.h"
+#import "TTVNetFlowTipView.h"
 //#import <TTThemed/SSThemed.h>
 //#import "TTAlphaThemedButton.h"
 #import "UIViewAdditions.h"
@@ -14,7 +14,7 @@
 static const CGFloat kTipAndBtnPadding = 24.f;
 static CGFloat kcontinuePlayBtnPadding = 42.f;
 
-@interface TTVNetTrafficFreeFlowTipViewNew()
+@interface TTVNetFlowTipView()
 
 @property (nonatomic, strong) UILabel *tipLabel;
 
@@ -26,7 +26,7 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
 
 @end
 
-@implementation TTVNetTrafficFreeFlowTipViewNew
+@implementation TTVNetFlowTipView
 
 
 - (instancetype)initWithFrame:(CGRect)frame tipText:(NSString *)text isSubscribe:(BOOL)isSubscribe {

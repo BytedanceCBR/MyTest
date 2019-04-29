@@ -7,9 +7,13 @@
 
 #import <UIKit/UIKit.h>
 #import "TTVPlayerDefine.h"
-//#import <TTVideoEngine/TTVideoEngine+Options.h>
+#if __has_include(<TTVideoEngineHeader.h>)
+#import <TTVideoEngineHeader.h>
+#else
 #import <TTVideoEngine.h>
-#import "TTVPlayerContextNew.h"
+#endif
+
+#import "TTVPlayerContexts.h"
 #import "TTVPlayerPartProtocol.h"
 #import "TTVPlayerState.h"
 #import "TTVPlaybackTime.h"
@@ -17,7 +21,6 @@
 #import "TTVPlaybackControlView.h"
 #import "TTVPlayerCustomViewDelegate.h"
 #import "TTVPlayerCustomPartDelegate.h"
-#import "TTVPlayerAction.h"
 
 @protocol TTVPlayerDelegate;
 
@@ -186,16 +189,19 @@
 /// 播放控件是否会自动隐藏掉，默认为 YES 会自动隐藏
 @property (nonatomic) BOOL supportPlaybackControlAutohide;
 
+/// 没有播放控制层：默认为 NO；如果设置为 YES，将只有沉浸态
+@property (nonatomic) BOOL enableNoPlaybackStatus;
+
 /// 视频标题
 @property (nonatomic, copy) NSString *videoTitle;
 
 /**
  获取某个清晰度下，视频的大小，可以用于流量提示
 
- @param type @see TTVPlayerResolutionTypeNew
+ @param type @see TTVPlayerResolutionTypes
  @return 视频大小，单位是 bit，需要自行转化为 kb 或者 M 进行显示
  */
-- (NSInteger)videoSizeForType:(TTVPlayerResolutionTypeNew)type;
+- (NSInteger)videoSizeForType:(TTVPlayerResolutionTypes)type;
 
 /**
  当前清晰度下，视频尺寸
@@ -305,7 +311,7 @@
 - (void)player:(TTVPlayer *)player playbackStateDidChanged:(TTVPlaybackState)playbackState;
 
 /// 播放器加载状态变化通知
-- (void)player:(TTVPlayer *)player loadStateDidChanged:(TTVPlayerLoadStateNew)loadState;
+- (void)player:(TTVPlayer *)player loadStateDidChanged:(TTVPlayerDataLoadState)loadState;
 
 /// 播放器获取播放源通知
 - (void)player:(TTVPlayer *)player didFetchedVideoModel:(TTVideoEngineModel *)videoModel;
