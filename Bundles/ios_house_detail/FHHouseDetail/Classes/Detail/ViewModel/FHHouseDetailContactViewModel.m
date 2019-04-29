@@ -431,7 +431,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (params && [params isKindOfClass:[NSDictionary class]]) {
         realtor_pos = params[@"realtor_position"] ? : @"detail_button";
     }
-    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:realtor_pos];
+    // 目前需要添加：realtor_position element_from item_id
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"realtor_position"] = realtor_pos;
+    if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
+        if (extraDict[@"element_from"]) {
+            imExtra[@"element_from"] = extraDict[@"element_from"];
+        }
+        if (extraDict[@"item_id"]) {
+            imExtra[@"item_id"] = extraDict[@"item_id"];
+        }
+    }
+    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
 
 - (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
@@ -645,6 +656,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_id"] = params[@"realtor_id"] ?: @"be_null";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"online";
+    if (params[@"item_id"]) {
+        tracerDic[@"item_id"] = params[@"item_id"];
+    }
     TRACK_EVENT(@"click_online", tracerDic);
 }
 
