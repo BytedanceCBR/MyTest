@@ -50,7 +50,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
 @property (nonatomic, assign) BOOL isRetryedPullDownRefresh;
 @property (nonatomic, assign) BOOL isFirstChange;
-@property (nonatomic, assign) BOOL isRequestFromSwitch;
+@property (nonatomic, assign) BOOL isRequestFromSwitch; //左右切换房源类型
 @property(nonatomic, weak)   NSTimer *timer;
 
 @end
@@ -136,7 +136,12 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             self.isRequestFromSwitch = NO;
-            self.dataSource.showNoDataErrorView = NO;
+            
+            //切换城市先显示横条
+            if([FHEnvContext sharedInstance].isRefreshFromCitySwitch)
+            {
+                self.dataSource.showNoDataErrorView = NO;
+            }
             
             //更新冷启动默认选项
             if (configDataModel.houseTypeDefault && (configDataModel.houseTypeDefault.integerValue > 0) &&  [FHHomeCellHelper sharedInstance].isFirstLanuch) {

@@ -22,6 +22,7 @@
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
 #import <FHErrorView.h>
+#import <TTDeviceHelper.h>
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -81,7 +82,7 @@
                 [subView removeFromSuperview];
             }
             cellError.selectionStyle = UITableViewCellSelectionStyleNone;
-            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.45)];
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
             
@@ -110,6 +111,17 @@
     }
 }
 
+- (CGFloat)getHeightShowNoData
+{
+    if([TTDeviceHelper isScreenWidthLarge320])
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.45;
+    }else
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.65;
+    }
+}
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -120,7 +132,7 @@
     
     if (self.showNoDataErrorView)
     {
-         return [UIScreen mainScreen].bounds.size.height * 0.45;
+        return [self getHeightShowNoData];
     }
     
     if (self.showPlaceHolder) {
