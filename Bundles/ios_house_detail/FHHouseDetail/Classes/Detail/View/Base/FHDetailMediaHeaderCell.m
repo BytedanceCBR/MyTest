@@ -14,7 +14,7 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 
-@interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate>
+@interface FHDetailMediaHeaderCell ()<FHMultiMediaScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
 @property(nonatomic, strong) FHMultiMediaScrollView *mediaView;
 @property(nonatomic, strong) FHMultiMediaModel *model;
@@ -25,6 +25,7 @@
 @property(nonatomic, assign) NSTimeInterval enterTimestamp;
 @property (nonatomic, assign)   NSInteger       vedioCount;
 @property (nonatomic, assign)   CGFloat       photoCellHeight;
+@property (nonatomic, weak)     UIView       *vcParentView;
 
 @end
 
@@ -233,16 +234,11 @@
     __weak typeof(self) weakSelf = self;
     if ([self.mediaView.currentMediaCell isKindOfClass:[FHMultiMediaVideoCell class]]) {
         FHMultiMediaVideoCell *tempCell = self.mediaView.currentMediaCell;
-        tempCell.contentView.backgroundColor = [UIColor clearColor];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             weakSelf.mediaView.videoVC.view.frame = frame;
             weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
             weakSelf.mediaView.videoVC.model.isShowControl = NO;
             [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
-        });
-        __weak typeof(FHMultiMediaVideoCell) *wTempCell = tempCell;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            wTempCell.contentView.backgroundColor = [UIColor blackColor];
         });
     }
 }
@@ -396,6 +392,42 @@
 
 - (void)selectItem:(NSString *)title {
     [self trackClickOptions:title];
+}
+
+#pragma mark - FHDetailScrollViewDidScrollProtocol
+
+- (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
+    if (vcParentView) {
+        self.vcParentView = vcParentView;
+        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXDevice] ? 44 : 20) + 44.0;
+        CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
+        if (-point.y + navBarHeight > cellHei) {
+            // 暂停播放
+            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
+                [self.mediaView.videoVC pause];
+            }
+        } else {
+            // 如果可以重新播放
+            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Paused) {
+                [self.mediaView.videoVC play];
+            }
+        }
+    }
+}
+
+#pragma mark - FHDetailVCViewLifeCycleProtocol
+
+- (void)vc_viewDidAppear:(BOOL)animated {
+    if (self.vcParentView) {
+        [self fhDetail_scrollViewDidScroll:self.vcParentView];
+    }
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated {
+    if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
+        [self.mediaView.videoVC pause];
+    }
 }
 
 @end
