@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *imageUrl;
 @property(nonatomic, assign) NSTimeInterval currentPlaybackTime;
 @property(nonatomic, strong) UIView *playerView;
+@property(nonatomic, assign)   CGFloat       vWidth;
+@property (nonatomic, assign)   CGFloat       vHeight;
 
 @end
 
