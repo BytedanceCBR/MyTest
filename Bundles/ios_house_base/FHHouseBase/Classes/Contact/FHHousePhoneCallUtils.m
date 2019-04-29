@@ -62,7 +62,10 @@ typedef enum : NSUInteger {
     NSString *imprId = configModel.imprId;
 
     if (![TTReachability isNetworkConnected]) {
-        
+        if (phone.length < 1) {
+            [[ToastManager manager] showToast:@"获取电话失败"];
+            return;
+        }
         NSString *urlStr = [NSString stringWithFormat:@"tel://%@", phone];
         [self callPhone:urlStr];
         [self addClickCallLog:configModel isVirtual:0];

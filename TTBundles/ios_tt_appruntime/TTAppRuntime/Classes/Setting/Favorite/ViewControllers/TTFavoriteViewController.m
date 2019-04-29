@@ -98,7 +98,7 @@
 
 - (void)setupTableView {
     self.tableView = [[SSThemedTableView alloc] initWithFrame:self.view.bounds];
-    self.tableView.backgroundColorThemeKey = kColorBackground3;
+    self.tableView.backgroundColorThemeKey = kColorBackground4;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
@@ -569,6 +569,12 @@
 - (void)didFetchDataformRemote:(BOOL)formRemote error:(NSError *)error {
     
     if (![self tt_hasValidateData]) {
+        self.customEmptyErrorImageNameBlock = ^NSString *{
+            return @"group-9";
+        };
+        self.customEmptyErrorMsgBlock = ^NSString *{
+            return @"暂无收藏内容";
+        };
         self.ttViewType = TTFullScreenErrorViewTypeEmpty;
     }
     [self tt_endUpdataData:[self tt_hasValidateData] error:error];

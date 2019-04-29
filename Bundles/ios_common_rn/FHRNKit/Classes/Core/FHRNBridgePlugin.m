@@ -143,14 +143,22 @@
         callParams[@"house_id"] = callParams[@"group_id"];
     }
 
-    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
-        if (!success) {
-            [[ToastManager manager] showToast:@"获取电话失败"];
-        }
+    if (!TTNetworkConnected() && !callParams[@"phone"]) {
         if (callback) {
             callback(TTBridgeMsgSuccess, nil);
         }
-    }];
+    }else
+    {
+        [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
+            if (!success) {
+                [[ToastManager manager] showToast:@"获取电话失败"];
+            }
+            if (callback) {
+                callback(TTBridgeMsgSuccess, nil);
+            }
+        }];
+    }
+
     if (callParams[@"follow_id"]) {
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
     }
