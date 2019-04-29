@@ -144,6 +144,7 @@
     self.isViewDidDisapper = NO;
     [self refreshContentOffset:self.tableView.contentOffset];
     [self.view endEditing:YES];
+    [self.viewModel vc_viewDidAppear:animated];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
@@ -157,6 +158,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.isViewDidDisapper = YES;
+    [self.viewModel vc_viewDidDisappear:animated];
 }
 
 #pragma mark - for keyboard show
