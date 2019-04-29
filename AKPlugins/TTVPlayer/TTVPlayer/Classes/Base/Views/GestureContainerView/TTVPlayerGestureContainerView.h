@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVReduxKit.h"
 #import "TTVGesturePart.h"
 
@@ -31,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
  除了视频播放view之外，看到的所有 view 都加在这个 view 上；这个 view 可以响应单击、双击、滑动等手势以及处理相关冲突
  整体分为两层view，参见下面成员注释，其中最重要的是 controlView：part 中控制功能的控件会加到这个 view 上, 他控制着整体控件的消失和出现
  */
-@interface TTVPlayerGestureContainerView : UIView<TTVPlayerContextNew, TTVReduxStateObserver>
+@interface TTVPlayerGestureContainerView : UIView<TTVPlayerContexts, TTVReduxStateObserver>
 
 /**
  初始化函数，可以创建一个带有手势的，播放器的容器 view
@@ -63,6 +63,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param show 是否需要展示 controlView
  */
 - (void)showControl:(BOOL)show;
+
+/// 没有播放控制层：默认为 NO；如果设置为 YES，将只有沉浸态
+@property (nonatomic) BOOL enableNoPlaybackControlStatus;
 
 @end
 

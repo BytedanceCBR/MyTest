@@ -32,7 +32,7 @@
         state.loadingViewState.shouldShow = NO;
     }
     else if ([action.type isEqualToString:TTVPlayerActionType_LoadStateChanged]) {
-        TTVPlayerLoadStateNew loadState = self.player.loadState;
+        TTVPlayerDataLoadState loadState = self.player.loadState;
         if (loadState == TTVPlayerLoadState_Playable) {
             state.loadingViewState.shouldShow = NO;
         }

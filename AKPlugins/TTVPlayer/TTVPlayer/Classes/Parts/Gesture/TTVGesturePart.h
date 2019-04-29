@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 #import "TTVPlayerGestureManager.h"
@@ -14,7 +14,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TTVGesturePart : NSObject<TTVPlayerContextNew, TTVReduxStateObserver, TTVPlayerPartProtocol>
+@interface TTVGesturePart : NSObject<TTVPlayerContexts, TTVReduxStateObserver, TTVPlayerPartProtocol>
 
 /// 实际响应手势的类
 @property (nonatomic, strong, readonly) TTVPlayerGestureManager * gestureVC;

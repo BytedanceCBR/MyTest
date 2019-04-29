@@ -6,13 +6,13 @@
 //
 
 #import <UIKit/UIkit.h>
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TTVTitlePart : NSObject<TTVPlayerContextNew, TTVReduxStateObserver, TTVPlayerPartProtocol>
+@interface TTVTitlePart : NSObject<TTVPlayerContexts, TTVReduxStateObserver, TTVPlayerPartProtocol>
 
 @property (nonatomic, strong) UILabel * titleLabel;
 @end

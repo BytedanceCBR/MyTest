@@ -1,5 +1,5 @@
 //
-//  TTVPlayerContextNew.h
+//  TTVPlayerContexts.h
 //  Article
 //
 //  Created by panxiang on 2018/10/24.
@@ -18,7 +18,7 @@
 @class TTVPlayerStore;
 @class TTVPlayer;
 
-@protocol TTVPlayerContextNew <NSObject>
+@protocol TTVPlayerContexts <NSObject>
 
 @optional
 

@@ -67,39 +67,39 @@
 - (void)setPlayer:(TTVPlayer *)player {
     _player = player;
     if ([part respondsToSelector:@selector(setPlayer:)]) {
-        ((NSObject<TTVPlayerContextNew> *)part).player = self.player;
+        ((NSObject<TTVPlayerContexts> *)part).player = self.player;
     }
 }
 
 - (void)setPlayerStore:(TTVReduxStore *)playerStore {
     _playerStore = playerStore;
     if ([part respondsToSelector:@selector(setPlayerStore:)]) {
-        ((NSObject<TTVPlayerContextNew> *)part).playerStore = self.playerStore;
+        ((NSObject<TTVPlayerContexts> *)part).playerStore = self.playerStore;
     }
 }
 
 - (void)setCustomBundle:(NSBundle *)customBundle {
     _customBundle = customBundle;
     if ([part respondsToSelector:@selector(setCustomBundle:)]) {
-        ((NSObject<TTVPlayerContextNew> *)part).customBundle = self.customBundle;
+        ((NSObject<TTVPlayerContexts> *)part).customBundle = self.customBundle;
     }
 }
 
 - (void)setPlayerAction:(TTVPlayerAction *)playerAction {
     _playerAction = playerAction;
     if ([part respondsToSelector:@selector(setPlayerAction:)]) {
-        ((NSObject<TTVPlayerContextNew> *)part).playerAction = self.playerAction;
+        ((NSObject<TTVPlayerContexts> *)part).playerAction = self.playerAction;
     }
 }
 
 - (void)viewDidLoad:(TTVPlayer *)playerVC {
     if ([part respondsToSelector:@selector(viewDidLoad:)]) {
-        [(NSObject<TTVPlayerContextNew> *)part viewDidLoad:self.player];
+        [(NSObject<TTVPlayerContexts> *)part viewDidLoad:self.player];
     }
 }
 - (void)viewDidLayoutSubviews:(TTVPlayer *)playerVC {
     if ([part respondsToSelector:@selector(viewDidLayoutSubviews:)]) {
-        [(NSObject<TTVPlayerContextNew> *)part viewDidLayoutSubviews:self.player];
+        [(NSObject<TTVPlayerContexts> *)part viewDidLayoutSubviews:self.player];
     }
 }
 @end

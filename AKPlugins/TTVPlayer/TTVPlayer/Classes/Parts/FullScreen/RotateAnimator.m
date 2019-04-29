@@ -13,7 +13,7 @@
 
 @property (nonatomic) NSUInteger rotatedViewTag;
 @property (nonatomic, weak) UIView * superViewOfPlayer;
-@property (nonatomic) UIDeviceOrientation lastPlayViewOrientation;
+@property (nonatomic) UIDeviceOrientation lastOrientation;
 
 @end
 
@@ -23,7 +23,6 @@
     self = [super init];
     if (self) {
         _rotatedViewTag = tag;
-        _lastPlayViewOrientation = UIDeviceOrientationPortrait;
     }
     return self;
 }
@@ -34,6 +33,10 @@
         _rotatedViewTag = -1;
     }
     return self;
+}
+- (void)dealloc
+{
+    ;
 }
 #pragma mark - UIViewControllerTransitioningDelegate
 - (nullable id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source{
@@ -71,12 +74,13 @@
     //播放器视图
     UIView* playView = [fromViewController.view viewWithTag:self.rotatedViewTag];
     
-    
     BOOL isPresent = [fromViewController.presentedViewController isEqual:toViewController];//如果底层的视图弹出的视图是顶层的，那么是present出来的
     
     if (isPresent) {
         self.superViewOfPlayer = playView.superview;
         [containerView bringSubviewToFront:fromViewController.view];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
         
         CGSize size = containerView.frame.size;
         [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -106,6 +110,8 @@
             
         }];
     }else{
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        
         UIDeviceOrientation currentOrirentation = [UIDevice currentDevice].orientation;
         
         [containerView bringSubviewToFront:fromViewController.view];
@@ -114,24 +120,25 @@
         CGFloat width = self.frameBeforePresent.size.width;
         CGFloat height = self.frameBeforePresent.size.height;
         [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            
             make.width.mas_equalTo(@(width));
             make.height.mas_equalTo(@(height));
-            make.center.equalTo(playView.superview).centerOffset(CGPointMake(-(containerView.frame.size.height - height) / 2.0+self.frameBeforePresent.origin.y, 0));
+            if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
+                make.center.equalTo(playView.superview).centerOffset(CGPointMake(-(containerView.frame.size.height - height) / 2.0+self.frameBeforePresent.origin.y, 0));
+            }
+            else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
+                 make.center.equalTo(playView.superview).centerOffset(CGPointMake((containerView.frame.size.height - height) / 2.0-self.frameBeforePresent.origin.y, 0));
+            }
+            
         }];
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             [playView.superview layoutIfNeeded];
             [self changePlayViewTransform:playView isPrensent:NO];
-            
             fromViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
-
-            
         } completion:^(BOOL finished) {
             
             [playView removeFromSuperview];
             [self.superViewOfPlayer addSubview:playView];
-
             playView.transform = CGAffineTransformMakeRotation(0);
 
             [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -147,66 +154,47 @@
             
         }];
     }
-    
 }
 // isPrensent 是否是大屏那个 playview
 - (void)changePlayViewTransform:(UIView *)playView isPrensent:(BOOL)isPrensent {
     UIDeviceOrientation currentOrirentation = [UIDevice currentDevice].orientation;
-//    if (isPrensent) {
-//         playView.transform = CGAffineTransformMakeRotation(M_PI_2);
-//    }
-//    else {
-//         playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-//    }
-    if (currentOrirentation == UIDeviceOrientationPortrait) {
-        if (self.lastPlayViewOrientation == UIDeviceOrientationPortrait) {
-            if (isPrensent) {
-                playView.transform = CGAffineTransformMakeRotation(M_PI_2);
-                self.lastPlayViewOrientation = UIDeviceOrientationLandscapeLeft;
-            }
+    if (isPrensent) {
+        if (currentOrirentation == UIDeviceOrientationLandscapeRight) {
+            playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+            self.lastOrientation = UIDeviceOrientationLandscapeRight;
         }
-        else if (self.lastPlayViewOrientation == UIDeviceOrientationLandscapeLeft) {
-            if (!isPrensent) { // 说明需要缩小
+        else {
+            playView.transform = CGAffineTransformMakeRotation(M_PI_2);
+            self.lastOrientation = UIDeviceOrientationLandscapeLeft;
+        }
+    }
+    else {
+        if (currentOrirentation == UIDeviceOrientationLandscapeRight) {
+            playView.transform = CGAffineTransformMakeRotation(M_PI_2);
+        }
+        else if (currentOrirentation == UIDeviceOrientationLandscapeLeft){
+            playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+        }
+        else if (currentOrirentation == UIDeviceOrientationPortrait) {
+            if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
                 playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-                self.lastPlayViewOrientation = UIDeviceOrientationLandscapeLeft;
             }
-        }
-        else if (self.lastPlayViewOrientation == UIDeviceOrientationLandscapeRight){
-            if (!isPrensent) { // 说明需要缩小
+            else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
                 playView.transform = CGAffineTransformMakeRotation(M_PI_2);
-                self.lastPlayViewOrientation = UIDeviceOrientationLandscapeRight;
             }
         }
     }
-    else if (currentOrirentation == UIDeviceOrientationLandscapeLeft) {
-        if (self.lastPlayViewOrientation == UIDeviceOrientationPortrait) {
-            if (isPrensent) {
-                playView.transform = CGAffineTransformMakeRotation(M_PI_2);
-                self.lastPlayViewOrientation = UIDeviceOrientationLandscapeLeft;
-            }
-        }
-        else if (self.lastPlayViewOrientation == UIDeviceOrientationLandscapeRight) {
-            if (isPrensent) {
-                playView.transform = CGAffineTransformMakeRotation(M_PI);
-                self.lastPlayViewOrientation = UIDeviceOrientationLandscapeLeft;
-            }
-        }
-    }
-    else if (currentOrirentation == UIDeviceOrientationLandscapeRight) {
-        if (self.lastPlayViewOrientation == UIDeviceOrientationPortrait) {
-            if (isPrensent) {
-                playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-                self.lastPlayViewOrientation = UIDeviceOrientationLandscapeRight;
-            }
-        }
-        else if (self.lastPlayViewOrientation == UIDeviceOrientationLandscapeRight) {
-            if (isPrensent) {
-                playView.transform = CGAffineTransformMakeRotation(-M_PI);
-                self.lastPlayViewOrientation = UIDeviceOrientationLandscapeRight;
-            }
-        }
-    }
+}
 
+-(void)screenRotate:(NSNotification*)notification{
+    UIDevice* device = notification.object;
+    NSLog(@"notification1:::%@", @(device.orientation));
+    if (device.orientation == UIDeviceOrientationLandscapeLeft && self.lastOrientation == UIDeviceOrientationLandscapeRight) {
+        self.lastOrientation = UIDeviceOrientationLandscapeLeft;
+    }
+    else if (device.orientation == UIDeviceOrientationLandscapeRight && self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
+        self.lastOrientation = UIDeviceOrientationLandscapeRight;
+    }
 }
 
 @end

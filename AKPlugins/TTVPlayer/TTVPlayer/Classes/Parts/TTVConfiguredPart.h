@@ -8,11 +8,11 @@
 #import <UIKit/UIkit.h>
 #import "TTVPlayerPartProtocol.h"
 #import "TTVReduxKit.h"
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TTVConfiguredPart : NSObject<TTVConfigedPartProtocol, TTVReduxStateObserver, TTVPlayerContextNew>
+@interface TTVConfiguredPart : NSObject<TTVConfigedPartProtocol, TTVReduxStateObserver, TTVPlayerContexts>
 
 - (instancetype)initWithPart:(NSObject <TTVPlayerPartProtocol> *)part config:(NSDictionary *)config;
 - (instancetype)initWithPart:(NSObject<TTVPlayerPartProtocol> *)part;

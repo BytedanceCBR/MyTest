@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 
@@ -16,7 +16,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TTVSeekPart : NSObject<TTVPlayerContextNew, TTVReduxStateObserver, TTVPlayerPartProtocol>
+@interface TTVSeekPart : NSObject<TTVPlayerContexts, TTVReduxStateObserver, TTVPlayerPartProtocol>
 
 // UI
 @property (nonatomic, strong) UIView<TTVSliderControlProtocol> *slider;

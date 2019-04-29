@@ -8,7 +8,7 @@
 
 #import "TTVPlayerControlViewFactory.h"
 #import "TTVLPlayerLoadingView.h"
-#import "TTVNetTrafficFreeFlowTipViewNew.h"
+#import "TTVNetFlowTipView.h"
 #import "TTVPlayerErrorView.h"
 #import "TTVSliderControlView.h"
 #import "TTVProgressHudOfSlider.h"
@@ -227,7 +227,7 @@
     return control;
 }
 - (UIView <TTVFlowTipViewProtocol> *)customCellularNetTipView {
-    UIView <TTVFlowTipViewProtocol> * control = [[TTVNetTrafficFreeFlowTipViewNew alloc] initWithFrame:CGRectZero tipText:@"正在使用非WiFi网络\n「继续播放」将消耗%.2fMB流量" isSubscribe:NO];
+    UIView <TTVFlowTipViewProtocol> * control = [[TTVNetFlowTipView alloc] initWithFrame:CGRectZero tipText:@"正在使用非WiFi网络\n「继续播放」将消耗%.2fMB流量" isSubscribe:NO];
     return control;
 }
 // slider TODO

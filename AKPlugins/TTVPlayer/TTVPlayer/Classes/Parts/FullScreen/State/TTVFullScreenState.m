@@ -15,4 +15,29 @@
     return copy;
 }
 
+- (BOOL)isEqual:(id)object {
+    if (!object) {
+        return NO;
+    }
+    if (self == object) {
+        return YES;
+    }
+    if (![object isKindOfClass:[self class]]) {
+        return NO;
+    }
+    return [self isEqualToState:object];
+}
+
+
+- (BOOL)isEqualToState:(TTVFullScreenState *)other {
+    if (self.fullScreen == other.fullScreen) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSUInteger)hash {
+    return self.fullScreen;
+}
+
 @end

@@ -17,6 +17,7 @@
 #import "TTVLoadingReducer.h"
 #import "TTVSeekReducer.h"
 #import "TTVNetworkMonitorReducer.h"
+#import "TTVPlayerAction.h"
 #import "TTVSpeedReducer.h"
 
 static NSPointerArray *playersArray = nil;
@@ -41,6 +42,7 @@ static NSMutableDictionary<NSString *, NSDictionary *> * configDict;// 用来保
 @implementation TTVPlayer
 
 @dynamic playerView;
+@synthesize enableNoPlaybackStatus = _enableNoPlaybackStatus;
 
 #pragma mark - life
 + (void)initialize {
@@ -178,6 +180,7 @@ static NSMutableDictionary<NSString *, NSDictionary *> * configDict;// 用来保
     self.containerView.player = self;
     self.containerView.customBundle = self.customBundle;
     [self.playerStore subscribe:self.containerView];
+    self.containerView.enableNoPlaybackControlStatus = self.enableNoPlaybackStatus;
     
     // 加载 view
     [self.basePart viewDidLoad:self];
@@ -431,6 +434,10 @@ static NSMutableDictionary<NSString *, NSDictionary *> * configDict;// 用来保
 }
 - (UIView *)partControlForKey:(TTVPlayerPartControlKey)key {
     return [self.view viewWithTag:key];
+}
+- (void)setEnableNoPlaybackStatus:(BOOL)enableNoPlaybackStatus {
+    _enableNoPlaybackStatus = enableNoPlaybackStatus;
+    self.containerView.enableNoPlaybackControlStatus = enableNoPlaybackStatus;
 }
 #pragma mark - ******************* player managment *******************
 

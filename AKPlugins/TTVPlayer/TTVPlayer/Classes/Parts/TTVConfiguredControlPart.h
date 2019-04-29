@@ -8,7 +8,7 @@
 #import "TTVConfiguredPart.h"
 #import "TTVReduxKit.h"
 #import "TTVPlayerCustomViewDelegate.h"
-#import "TTVPlayerContextNew.h"
+#import "TTVPlayerContexts.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  他只专注处理所有需要配置的 control 的配置，以及unlock 下的 playbackControlView 的统一添加
  但是 lock，immersive 等状态下的默认不处理，交给 part 自己处理
  */
-@interface TTVConfiguredControlPart : TTVConfiguredPart<TTVReduxStateObserver, TTVPlayerContextNew>
+@interface TTVConfiguredControlPart : TTVConfiguredPart<TTVReduxStateObserver, TTVPlayerContexts>
 
 - (instancetype)initWithPart:(NSObject <TTVPlayerPartProtocol> *)part config:(NSDictionary *)config controlFactory:(TTVPlayerControlViewFactory *)controlFactory;
 - (instancetype)initWithPart:(NSObject <TTVPlayerPartProtocol> *)part controlFactory:(TTVPlayerControlViewFactory *)controlFactory;

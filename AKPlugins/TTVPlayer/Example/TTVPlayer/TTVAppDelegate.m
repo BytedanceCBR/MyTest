@@ -7,8 +7,11 @@
 //
 
 #import "TTVAppDelegate.h"
-//#import <TTVideoEngineHeader.h>
+#if __has_include(<TTVideoEngineHeader.h>)
+#import <TTVideoEngineHeader.h>
+#else
 #import <TTVideoEngine.h>
+#endif
 @implementation TTVAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
