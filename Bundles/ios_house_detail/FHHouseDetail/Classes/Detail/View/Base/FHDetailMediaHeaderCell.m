@@ -152,11 +152,27 @@
     }
     // 分享
     vc.shareActionBlock = ^{
-        
+        NSString *v_id = @"be_null";
+        if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+            v_id = weakSelf.mediaView.videoVC.model.videoID;
+        }
+        NSDictionary *dict = @{@"item_id":v_id,
+                               @"element_from":@"video"};
+        [weakSelf.baseViewModel.contactViewModel shareActionWithShareExtra:dict];
     };
     // 收藏
     vc.collectActionBlock = ^(BOOL followStatus) {
-        
+        if (followStatus) {
+            [weakSelf.baseViewModel.contactViewModel cancelFollowAction];
+        } else {
+            NSString *v_id = @"be_null";
+            if (weakSelf.mediaView.videoVC.model.videoID.length > 0) {
+                v_id = weakSelf.mediaView.videoVC.model.videoID;
+            }
+            NSDictionary *dict = @{@"item_id":v_id,
+                                   @"element_from":@"video"};
+            [weakSelf.baseViewModel.contactViewModel followActionWithExtra:dict];
+        }
     };
     vc.dragToCloseDisabled = YES;
     vc.videoVC = self.mediaView.videoVC;

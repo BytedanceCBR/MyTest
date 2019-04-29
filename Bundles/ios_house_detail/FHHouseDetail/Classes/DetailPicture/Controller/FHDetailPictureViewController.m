@@ -364,7 +364,7 @@
         tracerDic[@"is_call"] = contactPhone.phone.length < 1 ? @"0" : @"1";
         tracerDic[@"is_report"] = contactPhone.phone.length < 1 ? @"1" : @"0";
         tracerDic[@"is_online"] = contactPhone.unregistered ? @"1" : @"0";
-        // tracerDic[@"element_from"] = @"large"; // 后续版本需要放开
+        tracerDic[@"element_from"] = [self elementFrom];
         [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
 }
@@ -381,13 +381,40 @@
     }
 }
 
+- (NSString *)elementFrom {
+    NSString *element_from = @"be_null";
+    if (self.currentIndex < self.vedioCount) {
+        element_from = @"video";
+    } else {
+        element_from = @"large";
+    }
+    return element_from;
+}
+
+- (NSString *)videoId {
+    NSString *video_id = @"";
+    if (self.vedioCount <= 0) {
+        return video_id;
+    }
+    if (self.currentIndex < self.vedioCount && self.mediaHeaderModel.vedioModel.videoID.length > 0) {
+        video_id = self.mediaHeaderModel.vedioModel.videoID;
+    } else {
+        video_id = @"";
+    }
+    return video_id;
+}
+
 // 在线联系点击
 - (void)onlineButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
-        NSDictionary *extraDic = @{@"realtor_position":@"online",
+        NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
                                    @"position":@"online",
-                                   @"element_from":@"large"
-                                   };
+                                   @"element_from":[self elementFrom]
+                                   }.mutableCopy;
+        NSString *vid = [self videoId];
+        if ([vid length] > 0) {
+            extraDic[@"item_id"] = vid;
+        }
         [self.mediaHeaderModel.contactViewModel onlineActionWithExtraDict:extraDic];
     }
 }
@@ -395,10 +422,14 @@
 // 电话咨询点击
 - (void)contactButtonClick:(UIButton *)btn {
     if (self.mediaHeaderModel.contactViewModel) {
-        NSDictionary *extraDic = @{@"realtor_position":@"phone_button",
+        NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                    @"position":@"report_button",
-                                   @"element_from":@"large"
-                                   };
+                                   @"element_from":[self elementFrom]
+                                   }.mutableCopy;
+        NSString *vid = [self videoId];
+        if ([vid length] > 0) {
+            extraDic[@"item_id"] = vid;
+        }
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }

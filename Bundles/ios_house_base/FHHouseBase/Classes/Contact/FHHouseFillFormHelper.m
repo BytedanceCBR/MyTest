@@ -214,6 +214,9 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_from"] = configModel.originFrom ? : @"be_null";
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     return params;
 }
 // 表单展示
@@ -229,6 +232,9 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = @"online";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     [FHUserTracker writeEvent:@"reservation_show" params:params];
 }
 
@@ -245,6 +251,9 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = configModel.position ? : @"button";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
 
@@ -261,6 +270,9 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = configModel.position ? : @"button";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 
@@ -313,6 +325,7 @@ extern NSString *const kFHToastCountKey;
     _imprId = params[@"impr_id"];
     _position = params[@"position"];
     _realtorPosition = params[@"realtor_position"];
+    _itemId = params[@"item_id"];
 }
 
 @end
