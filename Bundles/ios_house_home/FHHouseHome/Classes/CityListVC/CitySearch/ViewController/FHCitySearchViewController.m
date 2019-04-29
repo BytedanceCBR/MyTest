@@ -86,9 +86,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
-- (FHCitySearchTableView *)createTableView {
+- (FHHouseBaseTableView *)createTableView {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    FHCitySearchTableView *tableView = [[FHCitySearchTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+    FHHouseBaseTableView *tableView = [[FHHouseBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
     __weak typeof(self) weakSelf = self;
     tableView.handleTouch = ^{
         [weakSelf.view endEditing:YES];

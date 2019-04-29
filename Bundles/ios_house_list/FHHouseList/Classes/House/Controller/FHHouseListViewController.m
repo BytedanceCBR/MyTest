@@ -99,9 +99,6 @@
                                                      extra:@{@"device_id":did}];
             self.houseType = FHHouseTypeSecondHandHouse;
         }
-        // add by zjing for test
-        paramObj.host = @"neighborhood_deal_list";
-        
         if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) {
             self.houseType = FHHouseTypeNeighborhood;
             self.searchType = FHHouseListSearchTypeNeighborhoodDeal;

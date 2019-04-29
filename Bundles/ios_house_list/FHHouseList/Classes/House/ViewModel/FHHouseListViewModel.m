@@ -190,7 +190,10 @@
             self.houseType = FHHouseTypeRentHouse;
             self.commute = YES;
         }
-        
+        if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) {
+            self.houseType = FHHouseTypeNeighborhood;
+            self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
+        }
         self.houseSearchDic = paramObj.userInfo.allInfo[@"houseSearch"];
         NSDictionary *tracerDict = paramObj.allParams[@"tracer"];
         if (tracerDict) {
@@ -929,7 +932,7 @@
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         urlStr = [NSString stringWithFormat:@"sslocal://house_search_deal_neighborhood"];
     }else {
-       urlStr = [NSURL URLWithString:@"sslocal://house_search"];
+       urlStr = @"sslocal://house_search";
     }
     NSURL *url = [NSURL URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -1705,6 +1708,9 @@
         sortType = self.getSortTypeString();
     }
     if (sortType.length < 1) {
+        return;
+    }
+    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         return;
     }
     NSMutableDictionary *params = [NSMutableDictionary new];
