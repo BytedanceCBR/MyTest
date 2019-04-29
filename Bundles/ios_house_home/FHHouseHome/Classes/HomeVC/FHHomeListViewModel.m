@@ -169,6 +169,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 
                 //请求推荐房源
                 [self requestOriginData:self.isFirstChange];
+                
                 return ;
             }
             
@@ -433,16 +434,15 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         if (model.data.items.count == 0) {
             self.tableViewV.hidden = YES;
             
-            if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"])
+            if (!error)
             {
-                [self.homeViewController.view sendSubviewToBack:self.tableViewV];
-                [self showCityUnAvalibleStatus];
-        
-                self.categoryView.segmentedControl.userInteractionEnabled = YES;
-                [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
                 if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
-                    [self showCityUnAvalibleStatus];
+                    [self reloadCityEnbaleAndNoHouseData];
+                }else
+                {
+                    [self.homeViewController.view sendSubviewToBack:self.tableViewV];
                     self.categoryView.segmentedControl.userInteractionEnabled = YES;
+                    [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = NO;
                 }
                 return;
             }
@@ -572,6 +572,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         //判断下拉刷新
         if (pullType == FHHomePullTriggerTypePullDown) {
             
+            
             if ((model.data.items.count == 0 && self.dataSource.modelsArray.count == 0 && !error) || ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
                 self.tableViewV.hidden = YES;
                 [self checkCityStatus];
@@ -585,7 +586,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 return;
             }
             
-            if (model.data.items.count == 0 && self.dataSource.modelsArray.count != 0) {
+            if (model.data.items.count == 0 && !error) {
                 if (self.isRetryedPullDownRefresh) {
                     self.isRetryedPullDownRefresh = NO;
                     [self requestDataForRefresh:FHHomePullTriggerTypePullDown];
@@ -598,6 +599,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                             [self.homeViewController.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
                     }
                 }
+                
+                [self reloadCityEnbaleAndNoHouseData];
                 
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;
             }
@@ -837,6 +840,19 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 - (void)reloadHomeTableHeaderSection
 {
     self.dataSource.showPlaceHolder = YES;
+    self.dataSource.currentHouseType = self.currentHouseType;
+    self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
+    if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {
+        [UIView performWithoutAnimation:^{
+            [self.tableViewV reloadData];
+        }];
+    }
+}
+
+//重载城市开通，且无房源时显示error页
+- (void)reloadCityEnbaleAndNoHouseData
+{
+    self.dataSource.showNoDataErrorView = YES;
     self.dataSource.currentHouseType = self.currentHouseType;
     self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
     if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {

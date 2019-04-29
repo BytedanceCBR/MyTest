@@ -33,6 +33,10 @@
         [localChannels addObject:@"f_realtor_detail"];
     }
     
+    if (![localChannels containsObject:@"fe_app_c"]) {
+        [localChannels addObject:@"fe_app_c"];
+    }
+    
     if ([localChannels isKindOfClass:[NSArray class]] && localChannels.count > 0) {
         [IESGeckoKit registerAccessKey:[FHIESGeckoManager getGeckoKey] appVersion:stringVersion channels:localChannels];
         [IESGeckoKit syncResourcesIfNeeded];// 同步资源文件
