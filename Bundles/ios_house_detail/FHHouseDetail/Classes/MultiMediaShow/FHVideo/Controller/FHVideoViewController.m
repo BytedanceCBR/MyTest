@@ -265,6 +265,14 @@
     }
 }
 
+/// 网络发生变化,出流量提示，应该暂停
+- (void)playerDidPauseByCellularNet:(TTVPlayer *)player {
+    self.isShowingNetFlow = YES;
+    if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidPauseByCellularNet)]){
+        [self.delegate playerDidPauseByCellularNet];
+    }
+}
+
 #pragma mark - TTVPlayerCustomViewDelegate
 
 - (UIView<TTVPlayerErrorViewProtocol> *)customPlayerErrorFinishView {
@@ -275,6 +283,13 @@
 
 - (UIView<TTVFlowTipViewProtocol> *)customCellularNetTipView {
     FHVideoNetFlowTipView *view = [[FHVideoNetFlowTipView alloc] initWithFrame:self.videoView.bounds tipText:nil isSubscribe:nil];
+    
+    __weak typeof(self) wself = self;
+    view.continuePlayBlockAddtion = ^{
+        __strong typeof(wself) self = wself;
+        wself.isShowingNetFlow = NO;
+    };
+    
     return view;
 }
 

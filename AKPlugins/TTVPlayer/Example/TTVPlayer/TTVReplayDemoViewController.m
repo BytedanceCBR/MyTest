@@ -42,7 +42,7 @@
     
     [self.view addSubview:self.player.view];
     _player.videoTitle = @"五分钟告诉你,谁是通货膨胀的受害者和受益者";//f860a7b9d56c4af3980f01db5fa13343
-    [self.player setVideoID:@"f860a7b9d56c4af3980f01db5fa13343" host:@"is.snssdk.com" commonParameters:nil];
+    [self.player setVideoID:@"v037d19d0000bipisrckkk8gd9d1rqjg" host:@"is.snssdk.com" commonParameters:nil];
 //    [self.player.playerStore subscribe:self];
 //    [self.player addViewUnderPlayerControl:button];
     // 默认不展示 control，需要手动设置

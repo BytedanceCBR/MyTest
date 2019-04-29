@@ -123,7 +123,6 @@
         //  当前播放声音被打断 结束
         if (self.autoPaused && self.pausedByAudioInterruption) {
             self.autoPaused = NO;
-            [[TTVAudioSessionManager sharedInstance] setActive:YES];
             [self resume];
         }
     }

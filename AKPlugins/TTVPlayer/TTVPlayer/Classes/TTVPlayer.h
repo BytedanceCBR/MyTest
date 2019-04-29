@@ -293,6 +293,9 @@
 /// 结束设置播放时间
 - (void)playerDidStopSeeking:(TTVPlayer *)player;
 
+/// 网络发生变化,出流量提示，应该暂停
+- (void)playerDidPauseByCellularNet:(TTVPlayer *)player;
+
 ///-----------------------------------------------------------------
 /// @name 内核的回调，主要封装了 Engine 的回调
 ///-----------------------------------------------------------------

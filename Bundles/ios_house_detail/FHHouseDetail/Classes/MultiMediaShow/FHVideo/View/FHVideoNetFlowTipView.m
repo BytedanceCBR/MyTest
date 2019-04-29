@@ -142,6 +142,9 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
     if ([self respondsToSelector:@selector(continuePlayBlock)]) {
         (!self.continuePlayBlock) ?: self.continuePlayBlock();
     }
+    if ([self respondsToSelector:@selector(continuePlayBlockAddtion)]) {
+        (!self.continuePlayBlockAddtion) ?: self.continuePlayBlockAddtion();
+    }
 }
 
 - (UIButton *)subscribeBtn {

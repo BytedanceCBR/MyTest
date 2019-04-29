@@ -69,7 +69,9 @@
 }
 
 - (void)show {
+
     if (self.errorView.isShowed) {
+        [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_PlayerErrorViewShowed info:@{TTVPlayerActionInfo_isShowed:@(YES)}]];
         return;
     }
     if (!self.errorView.superview) {
@@ -82,6 +84,7 @@
 
 - (void)dismiss {
     if (!self.errorView.isShowed) {
+        [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_PlayerErrorViewShowed info:@{TTVPlayerActionInfo_isShowed:@(NO)}]];
         return;
     }
     [self.errorView dismiss];

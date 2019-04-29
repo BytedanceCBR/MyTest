@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHVideoNetFlowTipView : UIView<TTVFlowTipViewProtocol>
 - (instancetype)initWithFrame:(CGRect)frame tipText:(NSString *)text isSubscribe:(BOOL)isSubscribe;
 @property (nonatomic, copy) dispatch_block_t continuePlayBlock;
+@property (nonatomic, copy) dispatch_block_t continuePlayBlockAddtion;
 @property (nonatomic, copy) dispatch_block_t subscribeBlock;
 @property (nonatomic, assign) BOOL isSubscribe;
 @end

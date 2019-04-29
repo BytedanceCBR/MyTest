@@ -122,6 +122,7 @@
         _playbackSpeedView.didPlaybackSpeedChanged = ^(CGFloat playbackSpeed) {
             // action
             @strongify(self);
+            [self.player.view setNeedsLayout];
             [self.playerStore dispatch:[self.playerAction changeSpeedToAction:playbackSpeed]];
             
         };

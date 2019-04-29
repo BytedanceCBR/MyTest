@@ -24,6 +24,16 @@
 					<string>bottom_bar</string>
 					<key>Description</key>
 					<string>TTVPlayerPartControlKey_TimeCurrentAndTotalLabel</string>
+					<key>FontColor</key>
+					<string>0xffffff</string>
+					<key>FontSize</key>
+					<integer>13</integer>
+					<key>NumberOfLines</key>
+					<integer>1</integer>
+					<key>FontName</key>
+					<string>DINAlternate-Bold</string>
+					<key>Alignment</key>
+					<string>left</string>
 				</dict>
 				<key>当前播放时间Label</key>
 				<dict>

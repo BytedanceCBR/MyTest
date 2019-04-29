@@ -208,7 +208,7 @@
     }
     else if (key == TTVPlayerPartControlKey_TimeCurrentAndTotalLabel) {
         self.currentAndTotoalTimeLabel = (UILabel *)controlView;
-        _currentAndTotoalTimeLabel.text = @"00:00/00:00";
+        _currentAndTotoalTimeLabel.text = @"00:00 / 00:00";
         UIFont * font = self.currentAndTotoalTimeLabel.font;
         self.currentAndTotoalTimeLabel.font = [UIFont fontWithDescriptor:self.fontDescriptor size:font.pointSize];
     }
@@ -277,12 +277,13 @@
 
 #pragma mark - getter & setter
 - (void)setCurrentAndTotalTimeWith:(NSTimeInterval)process duration:(NSTimeInterval)duration {
+    [self.player.view setNeedsLayout];
     if (duration <= 0) {
         return;
     }
     NSString * currentString = [TTVPlayerUtility transformProgressToTimeString:process duration:duration];
     NSString * duratitonString = [TTVPlayerUtility transformProgressToTimeString:1 duration:duration];
-    self.currentAndTotoalTimeLabel.text = [[currentString stringByAppendingString:@"/"] stringByAppendingString:duratitonString];
+    self.currentAndTotoalTimeLabel.text = [[currentString stringByAppendingString:@" / "] stringByAppendingString:duratitonString];
 }
 
 - (UIFontDescriptor *)fontDescriptor {
