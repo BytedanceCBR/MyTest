@@ -59,6 +59,7 @@
 @property (nonatomic, assign)   BOOL       isShowenVideo;// 是否正在显示视频
 @property(nonatomic, strong) NSMutableSet * vedioViewPools;
 @property (nonatomic, strong)   FHDetailVideoInfoView       *videoInfoView;
+@property (nonatomic, assign)   BOOL       startDismissSelf;
 
 @property(nonatomic, strong)UIView * topBar;
 @property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
@@ -93,6 +94,7 @@
     self = [super init];
     if (self) {
         self.hidesBottomBarWhenPushed = YES;
+        _startDismissSelf = NO;
         _startWithIndex = 0;
         _currentIndex = -1;
         _photoCount = 0;
@@ -509,6 +511,12 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf setCurrentStatusStyle];
     });
+    if (self.currentIndex < self.vedioCount) {
+        // 视频
+        if (self.videoVC.playbackState != TTVPlaybackState_Playing) {
+            [self.videoVC play];
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -516,6 +524,12 @@
     TTNavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
         navi.panRecognizer.enabled = YES;
+    }
+    if (self.currentIndex < self.vedioCount && !self.startDismissSelf) {
+        // 视频
+        if (self.videoVC.playbackState == TTVPlaybackState_Playing) {
+            [self.videoVC pause];
+        }
     }
 }
 
@@ -1513,6 +1527,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 - (void)dismissSelf
 {
+    self.startDismissSelf = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:_statusBarHidden
                                             withAnimation:NO];
     // 关闭 页面时隐藏

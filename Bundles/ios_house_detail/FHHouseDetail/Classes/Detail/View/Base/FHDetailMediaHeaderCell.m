@@ -397,31 +397,31 @@
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-    if (vcParentView) {
-        self.vcParentView = vcParentView;
-        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXDevice] ? 44 : 20) + 44.0;
-        CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
-        if (-point.y + navBarHeight > cellHei) {
-            // 暂停播放
-            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
-                [self.mediaView.videoVC pause];
-            }
-        } else {
-            // 如果可以重新播放
-            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Paused) {
-                [self.mediaView.videoVC play];
-            }
-        }
-    }
+//   if (vcParentView) {
+//        self.vcParentView = vcParentView;
+//        CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
+//        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXDevice] ? 44 : 20) + 44.0;
+//        CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
+//        if (-point.y + navBarHeight > cellHei) {
+//            // 暂停播放
+//            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
+//                [self.mediaView.videoVC pause];
+//            }
+//        } else {
+//            // 如果可以重新播放
+//            if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Paused) {
+//                [self.mediaView.videoVC play];
+//            }
+//        }
+//   }
 }
 
 #pragma mark - FHDetailVCViewLifeCycleProtocol
 
 - (void)vc_viewDidAppear:(BOOL)animated {
-    if (self.vcParentView) {
-        [self fhDetail_scrollViewDidScroll:self.vcParentView];
-    }
+//    if (self.vcParentView) {
+//        [self fhDetail_scrollViewDidScroll:self.vcParentView];
+//    }
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
