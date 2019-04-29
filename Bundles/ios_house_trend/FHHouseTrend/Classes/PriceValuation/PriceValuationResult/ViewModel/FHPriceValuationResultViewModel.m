@@ -359,9 +359,10 @@ extern NSString *const kFHToastCountKey;
     NSString *phoneNum = (NSString *)phoneCache;
     NSString *subtitle = @"专业房地产经纪人为您服务";
     if (phoneNum.length > 0) {
-        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号。",subtitle];
+        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:subtitle btnTitle:@"提交"];
+    alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
         [wself addInfomationTracer:@"click_confirmation"];
         [wself fillFormRequest:phoneNum];
