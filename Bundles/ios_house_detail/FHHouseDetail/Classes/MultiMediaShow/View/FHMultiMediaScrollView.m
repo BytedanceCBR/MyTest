@@ -327,7 +327,7 @@
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
         
-//        NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
+        NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
 //        FHMultiMediaItemModel *itemModel = self.medias[index];
 //        NSString *groupType = itemModel.groupType;
 //        [self.itemView selectedItem:groupType];
