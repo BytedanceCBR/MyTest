@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *contentUrl;
 @property(nonatomic, copy) NSString *coverImageUrl;
 @property(nonatomic, copy) NSString *videoID;
+@property(nonatomic, assign) CGFloat vWidth;
+@property(nonatomic, assign) CGFloat vHeight;
 @property(nonatomic, assign) BOOL muted;
 @property(nonatomic, assign) BOOL useCache;
 @property(nonatomic, assign) BOOL repeated;

@@ -170,6 +170,8 @@
     videoModel.muted = NO;
     videoModel.repeated = NO;
     videoModel.isShowControl = NO;
+    videoModel.vWidth = model.vWidth;
+    videoModel.vHeight = model.vHeight;
     
     [self.videoVC updateData:videoModel];
 }
