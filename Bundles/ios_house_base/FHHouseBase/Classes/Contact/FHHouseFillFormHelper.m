@@ -99,8 +99,8 @@ extern NSString *const kFHToastCountKey;
     }
     __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = nil;
+    [self addReservationShowLog:configModel];
     if (leftBtnTitle.length > 0) {
-        [self addReservationShowLog:configModel];
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle leftBtnTitle:leftBtnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
             [self phoneCallAction:configModel];
@@ -111,7 +111,6 @@ extern NSString *const kFHToastCountKey;
             [wself addClickConfirmLog:configModel];
         };
     }else {
-        [self addInformShowLog:configModel];
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
