@@ -922,7 +922,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         // 视频
         if ([self isPhotoViewExistInScrollViewForIndex:index]) {
             [[self showImageViewAtIndex:index] setVisible:visible];
-            // 设置视频数据 add by zyk
             FHShowVideoView * tempVedioView = (FHShowVideoView *)[self showImageViewAtIndex:index];
             
             if (visible) {
@@ -1158,7 +1157,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
         }
         self.videoInfoView.frame = CGRectMake(0, mainSize.height - (bottomInset + 141), mainSize.width, 141);
-        // add by zyk 添加背景色
+        self.videoInfoView.backgroundColor = [UIColor colorWithHexString:@"#000000" alpha:0.3];
     } else {
         self.videoInfoView.backgroundColor = [UIColor clearColor];
         self.videoInfoView.frame = CGRectMake(0, videoFrame.size.height + videoFrame.origin.y + 14, mainSize.width, 67);

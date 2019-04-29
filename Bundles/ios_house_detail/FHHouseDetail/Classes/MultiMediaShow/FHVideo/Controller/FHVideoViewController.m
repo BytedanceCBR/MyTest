@@ -53,11 +53,19 @@
 }
 
 - (CGFloat)videoWidth {
-    return self.model.vWidth;
+    CGFloat wid = [self.player getVideoWidth];
+    if (self.model.vWidth > 0) {
+        wid = self.model.vWidth;
+    }
+    return wid;
 }
 
 - (CGFloat)videoHeight {
-    return self.model.vHeight;
+    CGFloat hei = [self.player getVideoHeight];
+    if (self.model.vHeight) {
+        hei = self.model.vHeight;
+    }
+    return hei;
 }
 
 - (void)initViewModel {
