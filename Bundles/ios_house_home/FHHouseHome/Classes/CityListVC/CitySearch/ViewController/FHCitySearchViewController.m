@@ -12,7 +12,6 @@
 #import "FHPopupMenuView.h"
 #import "FHEnvContext.h"
 #import "ToastManager.h"
-#import "FHCitySearchNavBarView.h"
 #import "TTNavigationController.h"
 #import "FHCitySearchViewModel.h"
 #import "FHCitySearchItemCell.h"
@@ -73,7 +72,8 @@
 
 - (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    _naviBar = [[FHCitySearchNavBarView alloc] init];
+    _naviBar = [[FHSearchBar alloc] init];
+    [_naviBar setSearchPlaceHolderText:@"请输入城市名称"];
     [self.view addSubview:_naviBar];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
