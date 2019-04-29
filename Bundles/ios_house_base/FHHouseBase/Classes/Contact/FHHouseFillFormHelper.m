@@ -56,7 +56,7 @@ extern NSString *const kFHToastCountKey;
     id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     NSString *phoneNum = (NSString *)phoneCache;
     if (phoneNum.length > 0) {
-        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号。",subtitle];
+        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
     [self addInformShowLog:configModel];
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
@@ -95,7 +95,7 @@ extern NSString *const kFHToastCountKey;
     id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     NSString *phoneNum = (NSString *)phoneCache;
     if (phoneNum.length > 0) {
-        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号。",subtitle];
+        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
     __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = nil;
