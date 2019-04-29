@@ -51,7 +51,7 @@
 //    [self.player addPeriodicTimeObserverForInterval:0.2 queue:dispatch_get_main_queue() usingBlock:^{
 //        NSLog(@"---");
 //    }];
-    [self.player removePartForKey:TTVPlayerPartKey_Gesture];
+//    [self.player removePartForKey:TTVPlayerPartKey_Gesture];
 }
 
 - (void)onButtonClicked:(id)sender {
@@ -69,7 +69,7 @@
         _player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle-EV.plist"];
 //        _player = [[TTVPlayer alloc] initWithOwnPlayer:YES style:TTVPlayerStyle_Simple_NoRotate];
         _player.delegate = self;
-        _player.showPlaybackControlsOnViewFirstLoaded = NO;
+        _player.showPlaybackControlsOnViewFirstLoaded = YES;
         _player.supportBackgroundPlayback = YES;
         _player.startPlayFromLastestCache = YES;
         _player.customPartDelegate = self;

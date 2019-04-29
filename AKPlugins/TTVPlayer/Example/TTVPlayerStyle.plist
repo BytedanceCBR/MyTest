@@ -14,6 +14,17 @@
 			<true/>
 			<key>Controls</key>
 			<dict>
+				<key>当前时间/总时长 Label</key>
+				<dict>
+					<key>Tag</key>
+					<real>7775</real>
+					<key>Type</key>
+					<string>label</string>
+					<key>AddTo</key>
+					<string>bottom_bar</string>
+					<key>Description</key>
+					<string>TTVPlayerPartControlKey_TimeCurrentAndTotalLabel</string>
+				</dict>
 				<key>当前播放时间Label</key>
 				<dict>
 					<key>Tag</key>

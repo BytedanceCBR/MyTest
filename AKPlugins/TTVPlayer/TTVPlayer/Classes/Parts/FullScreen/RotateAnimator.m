@@ -128,7 +128,6 @@
             else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
                  make.center.equalTo(playView.superview).centerOffset(CGPointMake((containerView.frame.size.height - height) / 2.0-self.frameBeforePresent.origin.y, 0));
             }
-            
         }];
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
@@ -175,7 +174,8 @@
         else if (currentOrirentation == UIDeviceOrientationLandscapeLeft){
             playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
         }
-        else if (currentOrirentation == UIDeviceOrientationPortrait) {
+        else //if (currentOrirentation == UIDeviceOrientationPortrait) {
+        {
             if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
                 playView.transform = CGAffineTransformMakeRotation(-M_PI_2);
             }
