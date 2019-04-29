@@ -9,6 +9,7 @@
 #import "TTVPlayer+Engine.h"
 #import "NetworkUtilities.h"
 #import <objc/runtime.h>
+#import "TTVAudioSessionManager.h"
 
 @interface TTVPlayer ()
 @property (nonatomic) BOOL isActive;
@@ -41,6 +42,9 @@
                                              selector:@selector(_audioSessionInterruptionNotification:)
                                                  name:AVAudioSessionInterruptionNotification
                                                object:nil];
+    
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+
 }
 
 - (void)_willResignActive:(NSNotification *)notification {
@@ -119,6 +123,7 @@
         //  当前播放声音被打断 结束
         if (self.autoPaused && self.pausedByAudioInterruption) {
             self.autoPaused = NO;
+            [[TTVAudioSessionManager sharedInstance] setActive:YES];
             [self resume];
         }
     }

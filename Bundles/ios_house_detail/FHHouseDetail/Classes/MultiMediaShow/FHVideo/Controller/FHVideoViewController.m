@@ -10,8 +10,10 @@
 #import <Masonry.h>
 #import "FHVideoViewModel.h"
 #import "UIViewAdditions.h"
+#import "FHVideoErrorView.h"
+#import "FHVideoNetFlowTipView.h"
 
-@interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate>
+@interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
 @property(nonatomic, strong) TTVPlayer *player;
 @property(nonatomic, strong) FHVideoView *videoView;
@@ -38,6 +40,7 @@
 - (void)initViews {
     self.player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
     self.player.delegate = self;
+    self.player.customViewDelegate = self;
     self.player.showPlaybackControlsOnViewFirstLoaded = YES;
     self.player.enableNoPlaybackStatus = YES;
     
@@ -260,6 +263,19 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
         [self.delegate playbackStateDidChanged:playbackState];
     }
+}
+
+#pragma mark - TTVPlayerCustomViewDelegate
+
+- (UIView<TTVPlayerErrorViewProtocol> *)customPlayerErrorFinishView {
+    FHVideoErrorView *view = [[FHVideoErrorView alloc] init];
+    view.imageUrl = self.model.coverImageUrl;
+    return view;
+}
+
+- (UIView<TTVFlowTipViewProtocol> *)customCellularNetTipView {
+    FHVideoNetFlowTipView *view = [[FHVideoNetFlowTipView alloc] initWithFrame:self.videoView.bounds tipText:nil isSubscribe:nil];
+    return view;
 }
 
 @end
