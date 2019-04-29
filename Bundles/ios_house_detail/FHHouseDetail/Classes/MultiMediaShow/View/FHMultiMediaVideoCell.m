@@ -14,7 +14,6 @@
 @property(nonatomic, strong) UIImageView *coverView;
 @property(nonatomic, strong) UIButton *startBtn;
 @property(nonatomic, strong) FHMultiMediaItemModel *model;
-@property(nonatomic, strong) UIView *playerView;
 
 @end
 
@@ -31,13 +30,19 @@
 
 - (void)updateViewModel:(FHMultiMediaItemModel *)model {
     
-    if (model && !self.mediaScrollView.isShowenPictureVC) {
+    if (model && !self.isShowenPictureVC) {
         self.model = model;
-        
-        [self.playerView removeFromSuperview];
         self.playerView = model.playerView;
-        [self.contentView addSubview:self.playerView];
     }
+}
+
+- (void)setPlayerView:(UIView *)playerView {
+    if(_playerView){
+        [_playerView removeFromSuperview];
+        _playerView = nil;
+    }
+    _playerView = playerView;
+    [self.contentView addSubview:_playerView];
 }
 
 @end

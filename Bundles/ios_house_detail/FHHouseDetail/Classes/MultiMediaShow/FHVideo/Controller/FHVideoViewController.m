@@ -74,11 +74,15 @@
         [self.player setVideoID:model.videoID host:@"is.snssdk.com" commonParameters:nil];
         self.player.muted = model.muted;
         self.player.looping = model.repeated;
-//        self.player.showPlaybackControlsOnViewFirstLoaded = YES;
-//        self.player.enableNoPlaybackStatus = YES;
-       
         self.videoView.coverView.imageUrl = model.coverImageUrl;
-//        self.player.controlView.hidden = !self.model.isShowControl;
+        
+        if(model.isShowControl){
+            self.player.enableNoPlaybackStatus = NO;
+            [self.player addPartFromConfigForKey:TTVPlayerPartKey_Gesture];
+        }else{
+            self.player.enableNoPlaybackStatus = YES;
+            [self.player removePartForKey:TTVPlayerPartKey_Gesture];
+        }
     }
 }
 

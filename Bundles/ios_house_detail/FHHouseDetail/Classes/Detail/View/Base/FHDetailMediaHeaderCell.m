@@ -236,8 +236,7 @@
         tempCell.contentView.backgroundColor = [UIColor clearColor];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             weakSelf.mediaView.videoVC.view.frame = frame;
-            [weakSelf.mediaView.currentMediaCell addSubview:weakSelf.mediaView.videoVC.view];
-            weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
+            weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
             weakSelf.mediaView.videoVC.model.isShowControl = NO;
             [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
         });

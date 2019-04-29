@@ -16,14 +16,13 @@ inhibit_all_warnings!# ignore all warnings from all pods
 target 'TTVPlayer_Example' do
   pod 'TTVPlayerPod', :path => '../'
   #-----播放器内核-----
-#  pod_source 'TTPlayerSDK', git:'git@code.byted.org:TTVideo/ttplayer_sdk.git', :tag => '2.9.11.6'
-#  pod_source 'TTVideoEngine', '1.9.6.11'
-##pod 'TTVideoEngine',git:'git@code.byted.org:TTVideo/ttvideoplayer.git', :commit => 'd1565a3cc0'
-#  pod_source 'TTFFmpeg', :git =>'git@code.byted.org:ttmp/TTFFmpeg.git', :tag => '1.6.6'
+  pod_source 'TTPlayerSDK', git:'git@code.byted.org:TTVideo/ttplayer_sdk.git', :tag => '2.9.11.6'
+  pod_source 'TTVideoEngine', '1.9.6.11'
+  pod_source 'TTFFmpeg', :git =>'git@code.byted.org:ttmp/TTFFmpeg.git', :tag => '1.6.6'
 
-pod 'TTPlayerSDK', '2.9.9.10'
-pod 'TTFFmpeg', '1.4.3'
-pod_binary 'TTVideoEngine', '1.9.3.24'
+#pod 'TTPlayerSDK', '2.9.9.10'
+#pod 'TTFFmpeg', '1.4.3'
+#pod_binary 'TTVideoEngine', '1.9.3.24'
 
   #-----视频预加载库-----
   pod_source 'TTPreloaderSDK', git:'git@code.byted.org:TTVideo/ttpreloader_sdk.git', :tag => '1.4.19'   # 这个包含 stdc++.6

@@ -7,13 +7,14 @@
 //
 
 #import "TTVReplayDemoViewController.h"
-#import <TTVPlayer.h>
+#import <TTVPlayerKitHeader.h>
 #import <Masonry/Masonry.h>
 #import <UIViewAdditions.h>
 #import <TTVPlayer+Engine.h>
 #import <TTVPlayer+BecomeResignActive.h>
 #import <TTVLoadingPart.h>
 #import <TTVLPlayerLoadingView.h>
+
 
 @interface TTVReplayDemoViewController () <TTVPlayerDelegate, TTVPlayerCustomPartDelegate>
 
@@ -50,6 +51,7 @@
 //    [self.player addPeriodicTimeObserverForInterval:0.2 queue:dispatch_get_main_queue() usingBlock:^{
 //        NSLog(@"---");
 //    }];
+    [self.player removePartForKey:TTVPlayerPartKey_Gesture];
 }
 
 - (void)onButtonClicked:(id)sender {
@@ -67,7 +69,7 @@
         _player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle-EV.plist"];
 //        _player = [[TTVPlayer alloc] initWithOwnPlayer:YES style:TTVPlayerStyle_Simple_NoRotate];
         _player.delegate = self;
-        _player.showPlaybackControlsOnViewFirstLoaded = YES;
+        _player.showPlaybackControlsOnViewFirstLoaded = NO;
         _player.supportBackgroundPlayback = YES;
         _player.startPlayFromLastestCache = YES;
         _player.customPartDelegate = self;

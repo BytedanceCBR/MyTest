@@ -133,7 +133,7 @@
 @property (nonatomic, strong, readonly) UIView * controlOverlayView;
 
 /// 返回 button，默认隐藏，需要外界使用者来控制显示状态 TODO
-@property (nonatomic, strong, readonly) UIButton *backButton;
+//@property (nonatomic, strong, readonly) UIButton *backButton;
 
 /**
  在 player 的  TTVPlaybackControlView 上面添加 view， 主要用户添加提示控件
@@ -189,7 +189,7 @@
 /// 播放控件是否会自动隐藏掉，默认为 YES 会自动隐藏
 @property (nonatomic) BOOL supportPlaybackControlAutohide;
 
-/// 没有播放控制层：默认为 NO；如果设置为 YES，将只有沉浸态
+/// 没有播放控制层：默认为 NO；如果设置为 YES，将只有沉浸态, 如果是 NO，需要在初始化的时候设置一次，否则会出现
 @property (nonatomic) BOOL enableNoPlaybackStatus;
 
 /// 视频标题

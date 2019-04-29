@@ -156,5 +156,13 @@
 }
 
 #pragma mark - getters & setters
-
+- (void)setEnableNoPlaybackControlStatus:(BOOL)enableNoPlaybackControlStatus {
+    _enableNoPlaybackControlStatus = enableNoPlaybackControlStatus;
+    if (enableNoPlaybackControlStatus) {
+        self.playbackControlView.contentView.hidden = YES;
+        self.playbackControlView.topBar.hidden = YES;
+        self.playbackControlView.bottomBar.hidden = YES;
+        self.playbackControlView.immersiveContentView.hidden = NO;
+    }
+}
 @end

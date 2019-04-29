@@ -37,7 +37,6 @@
         _videoVC = videoVC;
         videoVC.delegate = self;
         // 状态维护
-        videoVC.model.isShowMiniSlider = NO;
         videoVC.model.isShowControl = YES;
         [self.videoVC updateData:videoVC.model];
         _videoVC.view.backgroundColor = [UIColor clearColor];

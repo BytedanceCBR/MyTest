@@ -126,7 +126,9 @@ typedef NS_OPTIONS(NSUInteger, TTVPlayerPartKey) {
     TTVPlayerPartKey_Gesture = 1 << 10,         // 手势功能 1024
     
     /// 倍速播放功能，2048
-    TTVPlayerPartKey_Speed = 1 << 11
+    TTVPlayerPartKey_Speed = 1 << 11,
+    /// 清晰度切换 4096
+    TTVPlayerPartKey_Resolution = 1 << 12
 };
 
 typedef NS_OPTIONS(NSUInteger, TTVPlayerPartType) {

@@ -223,7 +223,7 @@
 					<key>AddTo</key>
 					<string>none</string>
 					<key>SliderBarColor</key>
-					<string>0xFFFFFF33</string>
+					<string>0x111111</string>
 					<key>WatchedProgressColor</key>
 					<string>0x188FFE</string>
 					<key>CachedProgressColor</key>

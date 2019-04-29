@@ -26,6 +26,10 @@
 #pragma mark - TTVReduxStateObserver
 
 - (void)stateDidChangedToNew:(TTVPlayerState *)newState lastState:(TTVPlayerState *)lastState store:(NSObject<TTVReduxStoreProtocol> *)store {
+    if (self.player.enableNoPlaybackStatus && self.immersiveSlider.superview != self.player.containerView.playbackControlView.immersiveContentView) {
+        [self.player.containerView.playbackControlView.immersiveContentView addSubview:self.immersiveSlider];
+        [self.player.containerView setNeedsLayout];
+    }
     // 处理沉浸态的进度条
     if (newState.controlViewState.isShowed != lastState.controlViewState.isShowed) {
         // 沉浸态到来，full 下加入到锁屏下，非 full 下加入到正常下
@@ -46,8 +50,8 @@
                     }
                 }
                 else {
-                    if (self.immersiveSlider.superview != self.player.containerView.playbackControlView_Lock.bottomBar) {
-                        [self.player.containerView.playbackControlView_Lock.bottomBar addSubview:self.immersiveSlider];
+                    if (self.immersiveSlider.superview != self.player.containerView.playbackControlView_Lock.immersiveContentView) {
+                        [self.player.containerView.playbackControlView_Lock.immersiveContentView addSubview:self.immersiveSlider];
                         [self.player.containerView setNeedsLayout];
 //                        [self viewDidLayoutSubviews:self.player];
                     }

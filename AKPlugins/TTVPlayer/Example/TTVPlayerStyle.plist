@@ -135,7 +135,7 @@
 					<key>AddTo</key>
 					<string>none</string>
 					<key>SliderBarColor</key>
-					<string>0xFFFFFF33</string>
+					<string>0x333333</string>
 					<key>WatchedProgressColor</key>
 					<string>0x188FFE</string>
 					<key>CachedProgressColor</key>
@@ -438,12 +438,37 @@
 			<real>2048</real>
 			<key>AvailableOnInit</key>
 			<true/>
+			<key>Description</key>
+			<string>TTVPlayerPartKey_Speed</string>
 			<key>Controls</key>
 			<dict>
 				<key>倍速播放 button</key>
 				<dict>
 					<key>Tag</key>
 					<real>7785</real>
+					<key>AddTo</key>
+					<string></string>
+					<key>Description</key>
+					<string>TTVPlayerPartControlKey_SpeedChangeButton</string>
+					<key>Type</key>
+					<string></string>
+				</dict>
+			</dict>
+		</dict>
+		<key>清晰度切换功能</key>
+		<dict>
+			<key>Key</key>
+			<integer>4096</integer>
+			<key>AvailableOnInit</key>
+			<false/>
+			<key>Description</key>
+			<string>TTVPlayerPartKey_Resolution</string>
+			<key>Controls</key>
+			<dict>
+				<key>清晰度切换 button</key>
+				<dict>
+					<key>Tag</key>
+					<integer>-1</integer>
 					<key>AddTo</key>
 					<string></string>
 					<key>Description</key>

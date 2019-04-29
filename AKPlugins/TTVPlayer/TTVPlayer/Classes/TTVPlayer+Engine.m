@@ -88,7 +88,7 @@ static NSString *platformString;
 //    [self setOptions:@{@(VEKKeyCacheCacheEnable_BOOL):@(YES)}];
     self.videoEngine.cacheEnable = YES;
     
-    [TTVideoEngine setIgnoreAudioInterruption:NO];
+    [TTVideoEngine setIgnoreAudioInterruption:YES];
     // audio
     self.enableAudioSession = YES;
 }

@@ -102,4 +102,8 @@
         [(NSObject<TTVPlayerContexts> *)part viewDidLayoutSubviews:self.player];
     }
 }
+
+- (void)removeAllControlView {
+    
+}
 @end
