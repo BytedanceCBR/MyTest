@@ -679,20 +679,14 @@
 
         } else if ([model isKindOfClass:[FHHouseNeighborModel class]]) {
 
+            FHHouseNeighborDataModel *houseModel = ((FHHouseNeighborModel *)model).data;
+            self.searchId = houseModel.searchId;
+            self.houseListOpenUrl = houseModel.houseListOpenUrl;
+            hasMore = houseModel.hasMore;
+            refreshTip = houseModel.refreshTip;
+            itemArray = houseModel.items;
             if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
-                FHHouseNeighborDataModel *houseModel = ((FHHouseNeighborModel *)model).data;
-                self.searchId = houseModel.searchId;
-                self.houseListOpenUrl = houseModel.houseListOpenUrl;
-                hasMore = houseModel.hasMore;
-                refreshTip = houseModel.refreshTip;
-                itemArray = houseModel.items;
             }else {
-                FHHouseNeighborDataModel *houseModel = ((FHHouseNeighborModel *)model).data;
-                self.searchId = houseModel.searchId;
-                self.houseListOpenUrl = houseModel.houseListOpenUrl;
-                hasMore = houseModel.hasMore;
-                refreshTip = houseModel.refreshTip;
-                itemArray = houseModel.items;
                 redirectTips = houseModel.redirectTips;
             }
         }
