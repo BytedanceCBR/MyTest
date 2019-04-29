@@ -153,6 +153,9 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     params[@"origin_from"] = configModel.originFrom ? : @"be_null";
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     [FHUserTracker writeEvent:@"click_follow" params:params];
 }
 

@@ -90,7 +90,7 @@
 - (void)collectAction:(UIButton *)sender
 {
     if (self.collectActionBlock) {
-        self.collectActionBlock(self.followStatus);
+        self.collectActionBlock(self.followStatus == 1);
     }
 }
 

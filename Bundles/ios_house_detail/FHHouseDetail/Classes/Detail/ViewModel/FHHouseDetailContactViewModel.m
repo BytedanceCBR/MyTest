@@ -184,12 +184,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)followAction
 {
+    [self followActionWithExtra:nil];
+}
+
+// 关注
+- (void)followActionWithExtra:(NSDictionary *)extra {
     NSMutableDictionary *extraDict = @{}.mutableCopy;
-//    extraDict[@"realtor_id"] = contact.realtorId;
-//    extraDict[@"realtor_rank"] = @(index);
-//    extraDict[@"realtor_position"] = @"detail_related";
     if (self.tracerDict) {
         [extraDict addEntriesFromDictionary:self.tracerDict];
+    }
+    if (extra.count > 0) {
+        [extraDict addEntriesFromDictionary:extra];
     }
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
     configModel.houseType = self.houseType;
