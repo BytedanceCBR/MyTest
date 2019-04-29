@@ -21,6 +21,7 @@
 #import "TTRoute.h"
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
+#import <FHErrorView.h>
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -48,6 +49,12 @@
     if (section == kFHHomeListHeaderBaseViewSection) {
         return 1;
     }
+    
+    if (self.showNoDataErrorView)
+    {
+        return 1;
+    }
+    
     if (self.showPlaceHolder) {
         return 10;
     }
@@ -67,10 +74,29 @@
         return cell;
     }else
     {
+        
+        if (self.showNoDataErrorView) {
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.4)];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImageName:@"group-9"
+                                    showRetry:NO];
+            
+            return cellError;
+        }
+        
+        
         if (self.showPlaceHolder) {
             FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
             return cell;
         }
+        
         //to do 房源cell
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseBaseItemCell class])];
         BOOL isFirstCell = (indexPath.row == 0);
@@ -92,9 +118,15 @@
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
+    if (self.showNoDataErrorView)
+    {
+         return [UIScreen mainScreen].bounds.size.height * 0.4;
+    }
+    
     if (self.showPlaceHolder) {
         return 105;
     }
+    
     return 105;
 }
 
