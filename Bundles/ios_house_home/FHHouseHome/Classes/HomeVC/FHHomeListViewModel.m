@@ -582,7 +582,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                     [self reloadCityEnbaleAndNoHouseData];
                 }else
                 {
-                    [self.homeViewController.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+                    [self.homeViewController.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
                 }
                 
                 self.categoryView.segmentedControl.userInteractionEnabled = YES;

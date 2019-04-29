@@ -207,7 +207,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configDataModel.cityAvailability.enable.boolValue) {
-        [self.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+        [self.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
     
     [self scrollToTopEnable:YES];

@@ -81,7 +81,7 @@
                 [subView removeFromSuperview];
             }
             cellError.selectionStyle = UITableViewCellSelectionStyleNone;
-            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.4)];
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.45)];
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
             
@@ -120,7 +120,7 @@
     
     if (self.showNoDataErrorView)
     {
-         return [UIScreen mainScreen].bounds.size.height * 0.4;
+         return [UIScreen mainScreen].bounds.size.height * 0.45;
     }
     
     if (self.showPlaceHolder) {
