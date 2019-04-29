@@ -1619,7 +1619,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
-            [UIView animateWithDuration:0.35f animations:^{
+            [UIView animateWithDuration:0.4f animations:^{
                 self.containerView.backgroundColor = [UIColor clearColor];
                 containerView.backgroundColor = [UIColor clearColor];
                 largeImageView.frame = endFrame;
