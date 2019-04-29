@@ -54,6 +54,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
 
 @end
 
@@ -224,8 +225,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self.phoneCallViewModel licenseActionWithPhone:self.contactPhone];
 }
 
-- (void)shareAction
-{
+// 详情页分享
+- (void)shareAction {
+    [self shareActionWithShareExtra:nil];
+}
+
+// 携带埋点参数的分享
+- (void)shareActionWithShareExtra:(NSDictionary *)extra {
+    self.shareExtraDic = extra;
     [self addClickShareLog];
     
     if (!self.shareInfo) {
@@ -550,6 +557,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
+    if (self.shareExtraDic) {
+        [params addEntriesFromDictionary:self.shareExtraDic];
+    }
     [FHUserTracker writeEvent:@"click_share" params:params];
 }
 
@@ -558,7 +568,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
     params[@"platform"] = platform ? : @"be_null";
+    if (self.shareExtraDic) {
+        [params addEntriesFromDictionary:self.shareExtraDic];
+    }
     [FHUserTracker writeEvent:@"share_platform" params:params];
+    self.shareExtraDic = nil;// 分享都会走当前方法
 }
 
 - (void)addRealtorShowLog:(FHDetailContactModel *)contactPhone
