@@ -146,7 +146,10 @@
     
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
-    self.contactViewModel.contactPhone = [[FHDetailContactModel alloc]init];
+    
+    FHDetailContactModel *contactPhone = [[FHDetailContactModel alloc]init];
+    contactPhone.isFormReport = YES;
+    self.contactViewModel.contactPhone = contactPhone;
     
     self.detailData = model;
     [self addDetailCoreInfoExcetionLog];

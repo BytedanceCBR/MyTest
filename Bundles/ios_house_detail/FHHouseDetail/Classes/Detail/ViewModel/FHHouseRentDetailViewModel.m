@@ -197,17 +197,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
     //当前IM全是非B端注册经纪人
     model.data.contact.unregistered = YES;
-    self.contactViewModel.contactPhone = model.data.contact;
-    if (self.contactViewModel.contactPhone.phone.length > 0) {
+    FHDetailContactModel *contactPhone = model.data.contact;
+    if (contactPhone.phone.length > 0) {
         
         if ([self isShowSubscribe]) {
-            self.contactViewModel.contactPhone.isFormReport = YES;
+            contactPhone.isFormReport = YES;
         }else {
-            self.contactViewModel.contactPhone.isFormReport = NO;
+            contactPhone.isFormReport = NO;
         }
     }else {
-        self.contactViewModel.contactPhone.isFormReport = YES;
+        contactPhone.isFormReport = YES;
     }
+    self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
     self.detailData = model;

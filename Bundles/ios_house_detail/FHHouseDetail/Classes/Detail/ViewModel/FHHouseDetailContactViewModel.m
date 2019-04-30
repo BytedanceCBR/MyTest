@@ -399,7 +399,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         fillFormConfig.houseId = self.houseId;
         fillFormConfig.topViewController = self.belongsVC;
         fillFormConfig.title = @"预约看房";
-        fillFormConfig.subtitle = @"很抱歉，该经纪人暂未开通该服务，请留下您的联系方式，我们会立即短信告知对方，方便与您联系！";
+        fillFormConfig.subtitle = @"很抱歉，该经纪人暂未开通该服务，请留下您的联系方式，我们会立即短信告知对方，方便与您联系";
         if (self.contactPhone.phone.length > 0) {
             fillFormConfig.btnTitle = @"电话咨询";
             fillFormConfig.leftBtnTitle = @"立即预约";
