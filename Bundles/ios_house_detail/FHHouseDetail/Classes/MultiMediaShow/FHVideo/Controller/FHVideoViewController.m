@@ -20,6 +20,8 @@
 @property(nonatomic, strong) FHVideoViewModel *viewModel;
 @property(nonatomic, assign) TTVPlaybackState playState;
 @property(nonatomic, assign) CGRect firstVideoFrame;
+//是否正在显示流量提示view
+@property (nonatomic, assign) BOOL isShowingNetFlow;
 
 @end
 
@@ -99,7 +101,9 @@
 
 - (void)play {
     self.videoView.coverView.hidden = YES;
-    [self.player play];
+    if(!self.isShowingNetFlow){
+        [self.player play];
+    }
 }
 
 - (void)pause {

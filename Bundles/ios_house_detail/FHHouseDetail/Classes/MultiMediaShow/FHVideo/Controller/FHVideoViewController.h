@@ -36,8 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat videoHeight;
 
 @property (nonatomic, assign)   CGRect videoFrame;
-//是否正在显示流量提示view
-@property (nonatomic, assign)   BOOL isShowingNetFlow;
 
 - (void)updateData:(FHVideoModel *)model;
 

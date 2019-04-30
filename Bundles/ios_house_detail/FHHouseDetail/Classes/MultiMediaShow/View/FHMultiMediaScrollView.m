@@ -148,7 +148,7 @@
             [self.videoVC pause];
         }
 
-        if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Paused && !self.videoVC.isShowingNetFlow){
+        if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Paused){
             [self.videoVC play];
         }
         self.lastCell = currentCell;
@@ -350,7 +350,7 @@
                     [self.videoVC pause];
                 }
                 
-                if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVideoEnginePlaybackStatePaused && !self.videoVC.isShowingNetFlow){
+                if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVideoEnginePlaybackStatePaused){
                     [self.videoVC play];
                 }
             }
