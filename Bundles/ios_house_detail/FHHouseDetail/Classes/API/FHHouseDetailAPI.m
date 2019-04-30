@@ -197,7 +197,7 @@
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
                 FHHouseRentRelatedResponseModel* model = nil;
-                if (!error && [obj isKindOfClass:[NSDictionary class]]) {
+                if (!error) {
                     model = [[FHHouseRentRelatedResponseModel alloc] initWithData:obj error:nil];
                 }
                 if (!error && model) {
@@ -241,7 +241,7 @@
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
                 FHRentSameNeighborhoodResponseModel* model = nil;
-                if (!error && [obj isKindOfClass:[NSDictionary class]]) {
+                if (!error) {
                     model = [[FHRentSameNeighborhoodResponseModel alloc] initWithData:obj error:nil];
                 }
                 if (!error && model) {
