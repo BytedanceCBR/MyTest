@@ -331,6 +331,13 @@
 
 - (void)willMoveToParentViewController:(UIViewController*)parent{
     [super willMoveToParentViewController:parent];
+    if(!parent){
+    }else
+    {
+        if (![FHEnvContext isNetworkConnected]) {
+            [self sendEventName:@"enter_unAvalable" andParams:nil];
+        }
+    }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
     [super didMoveToParentViewController:parent];
