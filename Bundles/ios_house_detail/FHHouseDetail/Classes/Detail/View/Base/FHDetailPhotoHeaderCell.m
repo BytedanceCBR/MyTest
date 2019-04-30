@@ -51,6 +51,9 @@
     // Configure the view for the selected state
 }
 
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    return @"picture";
+}
 
 + (CGFloat)cellHeight {
     CGFloat photoCellHeight = 300.0; // 默认300

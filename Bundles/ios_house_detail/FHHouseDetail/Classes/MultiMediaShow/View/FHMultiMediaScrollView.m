@@ -95,6 +95,11 @@
     _videoVC.view.frame = self.bounds;
 }
 
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    _tracerDic = tracerDic;
+    _videoVC.tracerDic = tracerDic;
+}
+
 - (void)initConstaints {
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(44);

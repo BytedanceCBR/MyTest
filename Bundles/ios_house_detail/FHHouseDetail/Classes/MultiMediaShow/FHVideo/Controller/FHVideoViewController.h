@@ -31,21 +31,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, strong) FHVideoModel *model;
 
-@property (nonatomic, assign, readonly) NSTimeInterval currentPlaybackTime;
+@property(nonatomic, assign, readonly) NSTimeInterval currentPlaybackTime;
 
-@property (nonatomic, assign, readonly) TTVPlaybackState playbackState;
+@property(nonatomic, assign, readonly) TTVPlaybackState playbackState;
 
-@property (nonatomic, assign) CGFloat videoWidth;
+@property(nonatomic, assign) CGFloat videoWidth;
 
-@property (nonatomic, assign) CGFloat videoHeight;
+@property(nonatomic, assign) CGFloat videoHeight;
 
-@property (nonatomic, assign)   CGRect videoFrame;
+@property(nonatomic, assign) CGRect videoFrame;
+
+@property(nonatomic, assign) BOOL isFullScreen;
+
+@property(nonatomic, strong) NSDictionary *tracerDic;
 
 - (void)updateData:(FHVideoModel *)model;
 
 - (void)play;
 
 - (void)pause;
+
+- (void)stop;
+
+- (void)close;
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime complete:(void(^)(BOOL success))finised;
 

@@ -65,6 +65,10 @@
 #pragma mark public methods
 
 - (void)retryClicked:(id)sender {
+    if(self.willClickRetry){
+        self.willClickRetry();
+    }
+    
     if (self.didClickRetry) {
         self.hidden = YES;
         self.didClickRetry();

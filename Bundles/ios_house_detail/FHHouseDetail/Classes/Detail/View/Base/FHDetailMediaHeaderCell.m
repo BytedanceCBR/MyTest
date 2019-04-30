@@ -42,6 +42,17 @@
     // Configure the view for the selected state
 }
 
+- (void)dealloc {
+    [self.mediaView.videoVC close];
+}
+
+- (NSString *)elementTypeString:(FHHouseType)houseType {
+    if(self.vedioCount > 0){
+        return @"video";
+    }
+    return @"picture";
+}
+
 + (CGFloat)cellHeight {
     CGFloat photoCellHeight = 300.0; // 默认300
     photoCellHeight = [UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight;
@@ -54,10 +65,25 @@
     }
     [self.imageList removeAllObjects];
     self.currentData = data;
+    
+    self.mediaView.tracerDic = [self tracerDic];
 
     [self generateModel];
     [self.mediaView updateWithModel:self.model];
+}
+
+- (NSDictionary *)tracerDic {
+    NSMutableDictionary *dict = [self.baseViewModel.detailTracerDic mutableCopy];
+    if(!dict){
+        dict = [NSMutableDictionary dictionary];
+    }
     
+    if([dict isKindOfClass:[NSDictionary class]]){
+        [dict removeObjectsForKeys:@[@"card_type"]];        
+        return dict;
+    }else{
+        return nil;
+    }
 }
 
 
@@ -335,6 +361,8 @@
             dict[@"click_position"] = @"picture";
         }else if([str isEqualToString:@"户型"]){
             dict[@"click_position"] = @"house_model";
+        }else if([str isEqualToString:@"视频"]){
+            dict[@"click_position"] = @"video";
         }
 
         dict[@"rank"] = @"be_null";

@@ -12,6 +12,7 @@
 #import "UIViewAdditions.h"
 #import "FHVideoErrorView.h"
 #import "FHVideoNetFlowTipView.h"
+#import "FHUserTracker.h"
 
 @interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
@@ -22,6 +23,9 @@
 @property(nonatomic, assign) CGRect firstVideoFrame;
 //是否正在显示流量提示view
 @property (nonatomic, assign) BOOL isShowingNetFlow;
+//记录视频播放时长
+@property (nonatomic, assign) NSTimeInterval stayTime;
+@property (nonatomic, assign) NSTimeInterval startTime;
 
 @end
 
@@ -33,10 +37,6 @@
     [self initViews];
     [self initConstaints];
     [self initViewModel];
-}
-
-- (void)dealloc {
-
 }
 
 - (void)initViews {
@@ -107,13 +107,41 @@
 
 - (void)play {
     self.videoView.coverView.hidden = YES;
-    if(!self.isShowingNetFlow){
+    if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
+        //埋点
+        if(self.playbackState == TTVPlaybackState_Stopped){
+            [self trackWithName:@"video_play"];
+        }else{
+            [self trackWithName:@"video_continue"];
+        }
+        
         [self.player play];
     }
 }
 
 - (void)pause {
-    [self.player pause];
+    if(self.playbackState == TTVPlaybackState_Playing){
+        [self trackWithName:@"video_pause"];
+        [self.player pause];
+    }
+}
+
+- (void)stop {
+    [self.player stop];
+}
+
+- (void)close {
+    [self trackWithName:@"video_over"];
+    [self.player close];
+}
+
+- (void)resetTime {
+    if(self.playbackState == TTVPlaybackState_Playing){
+        self.stayTime = 0;
+        self.startTime = [[NSDate date] timeIntervalSince1970];
+    }else{
+        self.stayTime += [[NSDate date] timeIntervalSince1970] - self.startTime;
+    }
 }
 
 - (void)viewWillLayoutSubviews {
@@ -270,6 +298,8 @@
 /// 播放器播放状态变化通知
 - (void)player:(TTVPlayer *)player playbackStateDidChanged:(TTVPlaybackState)playbackState {
     self.playState = playbackState;
+    [self resetTime];
+    
     if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
         [self.delegate playbackStateDidChanged:playbackState];
     }
@@ -285,6 +315,8 @@
 
 /// 进入全屏
 - (void)playerDidEnterFullscreen:(TTVPlayer *)player {
+    [self trackWithName:@"enter_fullscreen"];
+    self.isFullScreen = YES;
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidEnterFullscreen)]){
         [self.delegate playerDidEnterFullscreen];
     }
@@ -292,9 +324,25 @@
 
 /// 离开全屏
 - (void)playerDidExitFullscreen:(TTVPlayer *)player {
+    [self trackWithName:@"exit_fullscreen"];
+    self.isFullScreen = NO;
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidExitFullscreen)]){
         [self.delegate playerDidExitFullscreen];
     }
+}
+
+#pragma mark - 埋点相关
+
+//埋点
+- (void)trackWithName:(NSString *)name {
+    NSMutableDictionary *dict = [self.tracerDic mutableCopy];
+    dict[@"item_id"] = self.model.videoID;
+    
+    if([name isEqualToString:@"video_pause"] || [name isEqualToString:@"video_over"]){
+        dict[@"stay_time"] = @(self.stayTime);
+    }
+    
+    TRACK_EVENT(name, dict);
 }
 
 #pragma mark - TTVPlayerCustomViewDelegate
@@ -302,6 +350,11 @@
 - (UIView<TTVPlayerErrorViewProtocol> *)customPlayerErrorFinishView {
     FHVideoErrorView *view = [[FHVideoErrorView alloc] init];
     view.imageUrl = self.model.coverImageUrl;
+    
+    __weak typeof(self) wself = self;
+    view.willClickRetry = ^{
+        [wself trackWithName:@"click_load"];
+    };
     return view;
 }
 

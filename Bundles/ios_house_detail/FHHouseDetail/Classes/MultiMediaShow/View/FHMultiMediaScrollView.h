@@ -28,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) FHVideoViewController *videoVC;
 @property(nonatomic, strong) FHMultiMediaVideoCell *currentMediaCell;
 @property(nonatomic , weak) id<FHMultiMediaScrollViewDelegate> delegate;
+@property(nonatomic, strong) NSDictionary *tracerDic;
 
 - (void)updateWithModel:(FHMultiMediaModel *)model;
 
