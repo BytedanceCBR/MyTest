@@ -23,17 +23,13 @@
 #import "FHUserTracker.h"
 #import "FHRefreshCustomFooter.h"
 #import <FHHouseBase/FHMainApi+Contact.h>
-
-
-#define kCellId @"cell_id"
-#define kFHFavoriteListPlaceholderCellId @"FHFavoriteListPlaceholderCellId"
+#import "IFHMyFavoriteController.h"
 
 extern NSString *const kFHDetailFollowUpNotification;
 
 @interface FHMyFavoriteViewModel()<UITableViewDelegate,UITableViewDataSource>
 
-@property(nonatomic, strong) UITableView *tableView;
-@property(nonatomic, weak) FHMyFavoriteViewController *viewController;
+@property(nonatomic, weak) id<IFHMyFavoriteController> viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, assign) FHHouseType type;
 @property(nonatomic, assign) NSInteger offset;
@@ -49,7 +45,9 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 @implementation FHMyFavoriteViewModel
 
--(instancetype)initWithTableView:(UITableView *)tableView controller:(FHMyFavoriteViewController *)viewController type:(FHHouseType)type
+-(instancetype)initWithTableView:(UITableView *)tableView
+                      controller:(id<IFHMyFavoriteController>)viewController
+                            type:(FHHouseType)type
 {
     self = [super init];
     if (self) {
@@ -58,29 +56,38 @@ extern NSString *const kFHDetailFollowUpNotification;
         _removedDataList = [NSMutableArray new];
         _limit = 10;
         _type = type;
-        _tableView = tableView;
         _showPlaceHolder = YES;
         _isFirstLoad = YES;
-        
-        [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
-        [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
-        
-        tableView.delegate = self;
-        tableView.dataSource = self;
-        
-        __weak typeof(self) weakSelf = self;
-        
-        self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-            [weakSelf requestData:NO];
-        }];
-        self.tableView.mj_footer = self.refreshFooter;
-        
+
+        if (tableView != nil) {
+            [self bindTableView:tableView];
+        }
+
         self.viewController = viewController;
         
         [self initNotification];
         
     }
     return self;
+}
+
+-(void)bindTableView:(UITableView*)tableView {
+    self.tableView = tableView;
+    [self registerCell:tableView];
+    tableView.delegate = self;
+    tableView.dataSource = self;
+
+    __weak typeof(self) weakSelf = self;
+
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+        [weakSelf requestData:NO];
+    }];
+    self.tableView.mj_footer = self.refreshFooter;
+}
+
+-(void)registerCell:(UITableView*)tableView {
+    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
+    [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
 }
 
 - (void)dealloc {

@@ -35,7 +35,6 @@
 @property(nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
 
 @property(nonatomic, strong) UIView *leftInfoView;
-@property(nonatomic, strong) UIImageView *mainImageView;
 @property(nonatomic, strong) UILabel *imageTagLabel;
 @property(nonatomic, strong) FHCornerView *imageTagLabelBgView;
 

@@ -147,7 +147,11 @@
     if ([_hotList count] > indexPath.section - self.sectionOffset && [_hotList[indexPath.section - self.sectionOffset].items count] > indexPath.row) {
         FHCityMarketDetailResponseDataHotListItemsModel* model = _hotList[indexPath.section - self.sectionOffset].items[indexPath.row];
         NSURL* url = [NSURL URLWithString:model.openUrl];
-        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        NSMutableDictionary* dict = [self.tracer mutableCopy];
+        TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{
+                                                                        @"tracer": dict,
+                                                                        }];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:info];
         [self traceClickItem:model atIndexPath:indexPath];
     }
 }

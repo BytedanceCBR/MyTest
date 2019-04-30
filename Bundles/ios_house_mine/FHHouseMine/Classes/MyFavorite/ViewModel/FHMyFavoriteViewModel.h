@@ -11,8 +11,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#define kCellId @"cell_id"
+#define kFHFavoriteListPlaceholderCellId @"FHFavoriteListPlaceholderCellId"
 @interface FHMyFavoriteViewModel : NSObject
 
+@property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSMutableArray *removedDataList;
 
@@ -22,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addStayCategoryLog:(NSTimeInterval)stayTime;
 
+-(void)bindTableView:(UITableView*)tableView;
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+-(void)registerCell:(UITableView*)tableView;
 @end
 
 NS_ASSUME_NONNULL_END
