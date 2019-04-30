@@ -350,7 +350,7 @@ extern CGFloat ttvs_detailVideoMaxHeight(void);
         self.interactModel.maxMovieH = videoAreaSize.height;
         self.interactModel.curMovieH = videoAreaSize.height;
     }
-    if (!self.interactModel.curMovieH) {
+//    if (!self.interactModel.curMovieH) {
         if (self.beginShowComment) { //点击评论按钮进入，默认显示16：9
             self.interactModel.curMovieH = self.interactModel.minMovieH;
         } else {
@@ -359,7 +359,7 @@ extern CGFloat ttvs_detailVideoMaxHeight(void);
         if ([self vdvi_shouldFiltered]) { //默认16:9
             self.interactModel.curMovieH = self.interactModel.minMovieH;
         }
-    }
+//    }
     if ([ExploreVideoDetailHelper currentVideoDetailRelatedStyleForMaxWidth:[self maxWidth]] == VideoDetailRelatedStyleNatant) {
         return CGRectMake(([self maxWidth] - videoAreaSize.width)/2, 0, videoAreaSize.width, self.interactModel.curMovieH);
     } else {
