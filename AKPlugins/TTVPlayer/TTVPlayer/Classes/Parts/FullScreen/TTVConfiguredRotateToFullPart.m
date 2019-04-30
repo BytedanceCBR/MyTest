@@ -22,11 +22,22 @@
     return self;
 }
 
-
 - (void)applyConfigOfPart {
+    if (self.configOfPart.count == 0) {
+        return;
+    }
     // 应用control 的 config
+//    AutoRotateEnabled
     [super applyConfigOfPart];
-    // 应用 setting 的 config
+    
+    
+   
+    BOOL autoRatateEnabled = [self.configOfPart[@"AutoRotateEnabled"] boolValue];
+    if (!autoRatateEnabled && self.configOfPart[@"AutoRotateEnabled"]) {
+        [self.playerStore dispatch:[self.playerAction enableAutoRotate:autoRatateEnabled]];
+        
+    }
+    
 }
 
 @end

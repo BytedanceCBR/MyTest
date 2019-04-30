@@ -33,16 +33,20 @@
     button.frame = CGRectMake(0, 44, 80, 40);
     [self.view addSubview:button];
     
-    self.view.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:self.player.view];
-    _player.videoTitle = @"五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者";
-    [self.player setVideoID:@"v037d19d0000bipisrckkk8gd9d1rqjg" host:@"is.snssdk.com" commonParameters:nil];
-    self.player.view.frame = CGRectMake(0, 100, 375,210);
-    [self.player.view mas_makeConstraints:^(MASConstraintMaker *make) {
+    UIView * containerView = [UIView new];
+    [self.view addSubview:containerView];
+    [containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(@100);
         make.left.right.equalTo(self.view);
         make.height.equalTo(@210);
     }];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    [containerView addSubview:self.player.view];
+    _player.videoTitle = @"五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者";
+    [self.player setVideoID:@"v037d19d0000bipisrckkk8gd9d1rqjg" host:@"is.snssdk.com" commonParameters:nil];
+    self.player.view.frame = containerView.bounds;//CGRectMake(0, 100, 375,210);
+  
 //    self.player.view.backgroundColor = [UIColor whiteColor];
 //    self.player.view.center = CGPointMake(self.view.width / 2.0, self.player.view.centerY);
     [self.player.playerStore subscribe:self];
@@ -115,7 +119,7 @@
     BOOL isSimple = YES;
     CGFloat centerY = (toolbar.height - safeInset.bottom - (fullScreen ? 24 : 19));
     if (speed) {
-//        isSimple = NO;
+        isSimple = NO;
         centerY = (toolbar.height - safeInset.bottom - (fullScreen ? 56 : 19));
     }
     UIView *currentTimeLabel = [player partControlForKey:TTVPlayerPartControlKey_TimeCurrentLabel];

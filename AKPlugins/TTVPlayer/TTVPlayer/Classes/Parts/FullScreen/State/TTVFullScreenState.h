@@ -14,11 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 界面应该处于全屏状态, 竖屏或者横屏全屏，这里描述不准确 ？？？？TODO
 @property (nonatomic, getter=isFullScreen) BOOL fullScreen;
+/// 是否可以自动旋转
+@property (nonatomic) BOOL enableAutoRotate;
+
 //@property (nonatomic) BOOL supportsPortaitFullScreen; // ?? TODO
 //@property (nonatomic) BOOL isTransitioning; // ?? TODO
 
 //@property (nonatomic) UIDeviceOrientation deviceOrientation;
-@property (nonatomic) BOOL enableRotate;
 
 @end
 

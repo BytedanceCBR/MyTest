@@ -78,6 +78,8 @@ extern NSString * const TTVPlayerActionType_RotateToLandscapeFullScreen;
 /// 回退到 inline 屏
 extern NSString * const TTVPlayerActionType_RotateToInlineScreen;
 
+extern NSString * const TTVPlayerActionType_EnableAutoFullscreen;
+
 ///-----------------------------------------------------------------
 /// @name 界面展示后的 action
 ///-----------------------------------------------------------------
@@ -151,6 +153,8 @@ extern NSString * const TTVPlayerActionType_ShowSpeedSelectView;
 - (TTVReduxAction *)showSpeedSelectViewAction:(BOOL)show;
 
 - (TTVReduxAction *)showControlViewAction:(BOOL)show;
+
+- (TTVReduxAction *)enableAutoRotate:(BOOL)canAutoRotate;
 
 @end
 

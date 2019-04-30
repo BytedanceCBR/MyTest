@@ -42,13 +42,24 @@
             self.fullButton.currentToggledStatus = TTVToggledButtonStatus_Normal;
         }
     }
+    
+    // 设置监控杆旋转
+    if (newState.fullScreenState.enableAutoRotate != lastState.fullScreenState.enableAutoRotate) {
+        if (newState.fullScreenState.enableAutoRotate) {
+            [self _beginMonitorDeviceOrientationChange];
+        }
+        else {
+            [self _endMonitorDeviceOrientationChange];
+        }
+    }
 }
 
 - (void)subscribedStoreSuccess:(id<TTVReduxStoreProtocol>)store {
     TTVFullScreenReducer * fullscreenReducer = [[TTVFullScreenReducer alloc] init];
     [self.playerStore setSubReducer:fullscreenReducer forKey:@"TTVFullScreenReducer"];
-    
-    [self _beginMonitorDeviceOrientationChange];
+    if ([self state].fullScreenState.enableAutoRotate) {
+        [self _beginMonitorDeviceOrientationChange];
+    }
 }
 
 - (void)unsubcribedStoreSuccess:(id<TTVReduxStoreProtocol>)store {
@@ -122,8 +133,6 @@
     horizontallyVideoVC.didDismiss = ^(){
         
     };
-    
-//    [weakSelf.fullScreenButton setTitle:@"小屏" forState:(UIControlStateNormal)];
 }
 
 - (void)rotateToInlineScreenVideo {

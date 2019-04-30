@@ -149,6 +149,8 @@
 			<integer>32</integer>
 			<key>AvailableOnInit</key>
 			<true/>
+			<key>AutoRotateEnabled</key>
+			<false/>
 			<key>Controls</key>
 			<dict>
 				<key>全屏切换按钮</key>

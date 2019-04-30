@@ -87,7 +87,7 @@
     // slider
     if (newState.seekStatus.isSliderPanning != lastState.seekStatus.isSliderPanning) {
         if (newState.seekStatus.isSliderPanning) {
-            if ([self.player.delegate respondsToSelector:@selector(playerSliderDidStaifrtPanning:)]) {
+            if ([self.player.delegate respondsToSelector:@selector(playerSliderDidStartPanning:)]) {
                 [self.player.delegate playerSliderDidStartPanning:(UIView<TTVSliderControlProtocol> *)[self.player partControlForKey:TTVPlayerPartControlKey_Slider]];
             }
         }
@@ -114,13 +114,13 @@
     }
     
     // to 4g
-    if (newState.networkState.pausingBycellularNetwork != lastState.networkState.pausingBycellularNetwork) {
-        if (newState.networkState.pausingBycellularNetwork) {
-            if ([self.player.delegate respondsToSelector:@selector(playerDidPauseByCellularNet:)]) {
-                [self.player.delegate playerDidPauseByCellularNet:self.player];
-            }
-        }
-    }
+//    if (newState.networkState.pausingBycellularNetwork != lastState.networkState.pausingBycellularNetwork) {
+//        if (newState.networkState.pausingBycellularNetwork) {
+//            if ([self.player.delegate respondsToSelector:@selector(playerDidPauseByCellularNet:)]) {
+//                [self.player.delegate playerDidPauseByCellularNet:self.player];
+//            }
+//        }
+//    }
     
     // to full
     if (newState.fullScreenState.isFullScreen != lastState.fullScreenState.isFullScreen) {

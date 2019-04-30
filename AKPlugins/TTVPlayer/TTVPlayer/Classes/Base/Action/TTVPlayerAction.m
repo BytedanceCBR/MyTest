@@ -77,6 +77,8 @@ NSString * const TTVPlayerActionType_RotateToLandscapeFullScreen= @"TTVPlayerAct
 /// 回退到 inline 屏
 NSString * const TTVPlayerActionType_RotateToInlineScreen       = @"TTVPlayerActionType_RotateToInlineScreen";
 
+NSString * const TTVPlayerActionType_EnableAutoFullscreen       = @"TTVPlayerActionType_EnableFullscreen";
+
 ///-----------------------------------------------------------------
 /// @name 界面展示后的 action
 ///-----------------------------------------------------------------
@@ -175,6 +177,10 @@ NSString * const TTVPlayerActionType_ShowSpeedSelectView        = @"TTVPlayerAct
 }
 - (TTVReduxAction *)showControlViewAction:(BOOL)show {
     return [TTVReduxAction actionWithType:TTVPlayerActionType_ShowControlView info:@{TTVPlayerActionInfo_isShowed:@(show)}];
+}
+
+- (TTVReduxAction *)enableAutoRotate:(BOOL)canAutoRotate {
+    return [[TTVReduxAction alloc] initWithType:TTVPlayerActionType_EnableAutoFullscreen info:@{TTVPlayerActionInfo_Enabled:@(canAutoRotate)}];
 }
 
 @end

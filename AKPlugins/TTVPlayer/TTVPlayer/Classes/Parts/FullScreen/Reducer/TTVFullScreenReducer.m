@@ -29,6 +29,10 @@
     else if ([action.type isEqualToString:TTVPlayerActionType_RotateToInlineScreen]) {
         state.fullScreenState.fullScreen = NO;
     }
+    else if ([action.type isEqualToString:TTVPlayerActionType_EnableAutoFullscreen]) {
+        BOOL enable = [action.info[TTVPlayerActionInfo_Enabled] boolValue];
+        state.fullScreenState.enableAutoRotate = enable;
+    }
     return state;
 }
 

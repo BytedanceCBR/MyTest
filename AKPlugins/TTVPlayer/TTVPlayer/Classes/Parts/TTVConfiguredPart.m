@@ -61,7 +61,6 @@
 }
 
 - (void)applyConfigOfPart {
-    
 }
 
 - (void)setPlayer:(TTVPlayer *)player {
