@@ -252,6 +252,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHomeHouseDataItemsImagesModel> *houseImage;
 
 @property (nonatomic, copy , nullable) NSString *houseType;
+@property (nonatomic, assign)   BOOL   houseVideo;
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *searchId;
 //租房相关
