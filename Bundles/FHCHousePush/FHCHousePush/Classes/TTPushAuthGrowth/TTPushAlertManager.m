@@ -114,12 +114,14 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
     weakAlertView.didTapHandler = ^(NSInteger hideReason) {
         
         // to fix 全屏播放时点击push alert跳转页面时新页面在播放器下面
-        if (hideReason == TTWeakPushAlertHideTypeOpenContent && isFullScreen) {
+        if (didTaphandler && hideReason == TTWeakPushAlertHideTypeOpenContent && isFullScreen) {
             [[TTVPlayVideo currentPlayingPlayVideo].player exitFullScreen:YES completion:^(BOOL finished) {
 //                NSLog(@"zjing---exitFullScreen finished:%ld",finished);
             }];
         }
-        didTaphandler(hideReason);
+        if (didTaphandler) {
+            didTaphandler(hideReason);
+        }
     };
 //    weakAlertView.didTapHandler = didTaphandler;
     weakAlertView.willHideHandler = ^(NSInteger hideReason) {
