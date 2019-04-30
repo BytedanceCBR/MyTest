@@ -245,8 +245,8 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         //            [[self class] setRemoteNotificationDict:dict];
         //        }
         if (![[TTAdSplashMediator shareInstance] isAdShowing]) {
-#undef NSLog
-            NSLog(@"add by zjing for test---notification:%@",userInfo);
+//#undef NSLog
+//            NSLog(@"add by zjing for test---notification:%@",userInfo);
             
             [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:dict];
         }else{

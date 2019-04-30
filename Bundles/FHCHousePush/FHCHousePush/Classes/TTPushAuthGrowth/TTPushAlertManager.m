@@ -114,7 +114,7 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
     weakAlertView.didTapHandler = ^(NSInteger hideReason) {
         
         // to fix 全屏播放时点击push alert跳转页面时新页面在播放器下面
-        if (didTaphandler && hideReason == TTWeakPushAlertHideTypeOpenContent && isFullScreen) {
+        if (hideReason == TTWeakPushAlertHideTypeOpenContent && isFullScreen) {
             [[TTVPlayVideo currentPlayingPlayVideo].player exitFullScreen:YES completion:^(BOOL finished) {
 //                NSLog(@"zjing---exitFullScreen finished:%ld",finished);
             }];
