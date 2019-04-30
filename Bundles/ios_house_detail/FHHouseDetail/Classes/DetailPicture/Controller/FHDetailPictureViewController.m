@@ -285,7 +285,6 @@
     [self.view addSubview:_bottomBar];
     
     if (self.mediaHeaderModel.contactViewModel) {
-        [self addLeadShowLog:self.mediaHeaderModel.contactViewModel.contactPhone baseParams:[self.mediaHeaderModel.contactViewModel baseParams]];
         CGFloat itemWidth = self.view.width - 40;
         BOOL showenOnline = self.mediaHeaderModel.contactViewModel.showenOnline;
         if (showenOnline) {
@@ -348,6 +347,10 @@
     }
     // 是否正在显示 视频
     self.isShowenVideo = _naviView.videoTitle.isSelectVideo;
+    // lead_show 埋点
+    if (self.mediaHeaderModel.contactViewModel) {
+        [self addLeadShowLog:self.mediaHeaderModel.contactViewModel.contactPhone baseParams:[self.mediaHeaderModel.contactViewModel baseParams]];
+    }
 }
 
 - (void)setIsShowenVideo:(BOOL)isShowenVideo {
