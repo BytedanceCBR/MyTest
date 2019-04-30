@@ -121,6 +121,20 @@
             }
         }
     }
+    
+    // to full
+    if (newState.fullScreenState.isFullScreen != lastState.fullScreenState.isFullScreen) {
+        if (newState.fullScreenState.isFullScreen) {
+            if ([self.player.delegate respondsToSelector:@selector(playerDidEnterFullscreen:)]) {
+                [self.player.delegate playerDidEnterFullscreen:self.player];
+            }
+        }
+        else {
+            if ([self.player.delegate respondsToSelector:@selector(playerDidExitFullscreen:)]) {
+                [self.player.delegate playerDidExitFullscreen:self.player];
+            }
+        }
+    }
 }
 
 - (void)subscribedStoreSuccess:(TTVReduxStore *)store {
@@ -352,7 +366,9 @@
     [self.playerStore unSubscribe:part];
     
     // 移除这个 part 相关的所有 UI
-    [part removeAllControlView];
+    if ([part respondsToSelector:@selector(removeAllControlView)]) {
+        [part removeAllControlView];
+    }
     
     [self.allLoadedPartsDic removeObjectForKey:@(part.key)];
 }
@@ -382,7 +398,6 @@
     // 将所有目前注册过的 part 的 view 都添加到 container View 上,
     [self loadAllParts:[self state].fullScreenState.isFullScreen];
 }
-
 
 - (void)viewDidLayoutSubviews:(TTVPlayer *)playerVC {
     // 如果 各 part 需要布局

@@ -17,6 +17,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playbackStateDidChanged:(TTVPlaybackState)playbackState;
 //弹出流量提示时调用
 - (void)playerDidPauseByCellularNet;
+// 进入全屏
+- (void)playerDidEnterFullscreen;
+// 离开全屏
+- (void)playerDidExitFullscreen;
 
 
 @end

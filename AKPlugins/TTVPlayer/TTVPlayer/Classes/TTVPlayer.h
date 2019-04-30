@@ -296,6 +296,12 @@
 /// 网络发生变化,出流量提示，应该暂停
 - (void)playerDidPauseByCellularNet:(TTVPlayer *)player;
 
+/// 进入全屏
+- (void)playerDidEnterFullscreen:(TTVPlayer *)player;
+
+/// 离开全屏
+- (void)playerDidExitFullscreen:(TTVPlayer *)player;
+
 ///-----------------------------------------------------------------
 /// @name 内核的回调，主要封装了 Engine 的回调
 ///-----------------------------------------------------------------

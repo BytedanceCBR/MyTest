@@ -283,6 +283,20 @@
     }
 }
 
+/// 进入全屏
+- (void)playerDidEnterFullscreen:(TTVPlayer *)player {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidEnterFullscreen)]){
+        [self.delegate playerDidEnterFullscreen];
+    }
+}
+
+/// 离开全屏
+- (void)playerDidExitFullscreen:(TTVPlayer *)player {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidExitFullscreen)]){
+        [self.delegate playerDidExitFullscreen];
+    }
+}
+
 #pragma mark - TTVPlayerCustomViewDelegate
 
 - (UIView<TTVPlayerErrorViewProtocol> *)customPlayerErrorFinishView {
