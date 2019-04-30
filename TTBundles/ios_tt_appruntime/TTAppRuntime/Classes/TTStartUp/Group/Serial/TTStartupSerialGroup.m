@@ -20,7 +20,6 @@
 #import "TTHandleShorcutItemTask.h"
 #import "TTHandleFirstLauchTask.h"
 #import "TTNetworkNotifyTask.h"
-#import "TTHandleAPNSTask.h"
 #import "TTWatchConnectionTask.h"
 #import "TTOrientationTask.h"
 #import "TTFabricSDKRegister.h"
@@ -32,6 +31,7 @@
 #import "TTABHelperTask.h"
 #import "TTSetUseBDWebImageTask.h"
 #import "FHIMStartupTask.h"
+#import <FHCHousePush/FHCHandleAPNSTask.h>
 
 @implementation TTStartupSerialGroup
 
@@ -125,7 +125,7 @@
             return [[TTNetworkNotifyTask alloc] init];
             break;
         case TTSerialStartupTypeHanleAPNS:
-            return [[TTHandleAPNSTask alloc] init];
+            return [[FHCHandleAPNSTask alloc] init];
             break;
         case TTSerialStartupTypeWatchConnetion:
             return [[TTWatchConnectionTask alloc] init];
