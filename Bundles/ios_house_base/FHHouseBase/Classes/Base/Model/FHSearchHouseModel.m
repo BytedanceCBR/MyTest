@@ -233,6 +233,7 @@
                            @"cellStyle": @"cell_style",
                            @"houseImage": @"house_image",
                            @"houseType": @"house_type",
+                           @"houseVideo": @"house_video",
                            @"displaySameNeighborhoodTitle": @"display_same_neighborhood_title",
                            @"baseInfoMap": @"base_info_map",
                            @"coreInfo": @"core_info",
