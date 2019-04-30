@@ -270,6 +270,14 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self updateItemAndInfoLabel];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self updateVideoState];
+}
+
+- (void)updateItemAndInfoLabel {
     int diff = abs(self.colletionView.contentOffset.x - self.beginX);
     
     if(diff < self.colletionView.frame.size.width/2){
@@ -289,10 +297,6 @@
             curPage = 1;
             indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
         }
-//        if (indexPath) {
-//            //循环滚动
-//            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
-//        }
         
         NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
         FHMultiMediaItemModel *itemModel = self.medias[index];
@@ -303,11 +307,7 @@
     }
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self updateItemAndInfoLabel];
-}
-
-- (void)updateItemAndInfoLabel {
+- (void)updateVideoState {
     NSInteger curPage = (NSInteger)(self.colletionView.contentOffset.x / self.colletionView.frame.size.width);
     NSInteger originCurPage = (NSInteger)(self.colletionView.contentOffset.x / self.colletionView.frame.size.width);
     
@@ -328,11 +328,6 @@
         }
         
         NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
-//        FHMultiMediaItemModel *itemModel = self.medias[index];
-//        NSString *groupType = itemModel.groupType;
-//        [self.itemView selectedItem:groupType];
-        
-//        self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
         
         if(!indexPath){
             indexPath = [NSIndexPath indexPathForItem:originCurPage inSection:0];

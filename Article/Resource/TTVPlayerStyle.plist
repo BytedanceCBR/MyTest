@@ -166,7 +166,7 @@
 						<key>Identifier</key>
 						<string>tofull</string>
 						<key>ImageName</key>
-						<string>enlarge_video_default_player</string>
+						<string>video_full</string>
 						<key>ToggledImageName</key>
 						<string>shrink_video_default_player</string>
 					</dict>

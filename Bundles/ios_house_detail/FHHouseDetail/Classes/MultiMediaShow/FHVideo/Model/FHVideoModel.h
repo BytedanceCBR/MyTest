@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) CGFloat vWidth;
 @property(nonatomic, assign) CGFloat vHeight;
 @property(nonatomic, assign) BOOL muted;
-@property(nonatomic, assign) BOOL useCache;
 @property(nonatomic, assign) BOOL repeated;
 @property(nonatomic, assign) BOOL isShowMiniSlider;
 @property(nonatomic, assign) BOOL isShowControl;

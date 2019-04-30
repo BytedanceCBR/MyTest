@@ -238,6 +238,7 @@
             weakSelf.mediaView.videoVC.view.frame = frame;
             weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
             weakSelf.mediaView.videoVC.model.isShowControl = NO;
+            weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
             [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
         });
     }

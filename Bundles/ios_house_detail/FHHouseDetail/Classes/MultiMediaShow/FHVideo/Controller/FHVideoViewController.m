@@ -96,6 +96,12 @@
             self.player.enableNoPlaybackStatus = YES;
             [self.player removePartForKey:TTVPlayerPartKey_Gesture];
         }
+        
+        if(model.isShowMiniSlider){
+            self.player.controlView.immersiveContentView.alpha = 1;
+        }else{
+            self.player.controlView.immersiveContentView.alpha = 0;
+        }
     }
 }
 
@@ -115,7 +121,7 @@
     if (self.firstVideoFrame.size.height <= 0) {
         self.firstVideoFrame = self.view.frame;
     }
-    if (self.playState == TTVideoEnginePlaybackStateStopped) {
+    if (self.playState == TTVPlaybackState_Stopped) {
         [self changeVideoFrame];
     }
 }
@@ -126,7 +132,7 @@
     CGFloat vWidth = [self videoWidth];
     CGFloat vHeight = [self videoHeight];
     // 目前只处理origin.y 为0 的数据
-    if (self.playState == TTVideoEnginePlaybackStateStopped) {
+    if (self.playState == TTVPlaybackState_Stopped) {
         self.videoFrame = self.firstVideoFrame;
         return;
     }
@@ -293,7 +299,6 @@
         __strong typeof(wself) self = wself;
         wself.isShowingNetFlow = NO;
     };
-    
     return view;
 }
 
