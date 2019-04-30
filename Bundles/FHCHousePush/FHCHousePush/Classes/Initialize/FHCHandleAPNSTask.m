@@ -307,6 +307,8 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 + (void)showRemoteNotificationAlertIfNeeded
 {
     NSDictionary *remoteDict = [[self class] remoteNotificationDict];
+#undef NSLog
+    NSLog(@"zjing---remoteDict:%@",remoteDict);
     //    if (remoteDict && ![[SSADManager shareInstance] isSplashADShowed]) {
     //        [[SSAPNsAlertManager sharedManager] showRemoteNotificationAlert:remoteDict];
     //        [self setRemoteNotificationDict:nil];
