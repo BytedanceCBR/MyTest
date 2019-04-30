@@ -21,6 +21,7 @@
 #import "ToastManager.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <Heimdallr/HMDTTMonitor.h>
+#import "FHIMAlertViewListenerImpl.h"
 
 @interface FHIMConfigDelegateImpl : NSObject<FHIMConfigDelegate>
 
@@ -176,6 +177,7 @@
 
             NSString* uid = [[TTAccount sharedAccount] userIdString];
             [[IMManager shareInstance] startupWithUid:uid];
+            [IMManager shareInstance].imAlertViewListener = [FHIMAlertViewListenerImpl shareInstance];
         });
     }
 }
