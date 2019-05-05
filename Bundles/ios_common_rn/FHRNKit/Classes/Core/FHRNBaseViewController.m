@@ -103,9 +103,9 @@
     }
     return self;
 }
+
 - (void)initRNKit
 {
-    [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
     self.ttRNKit = [self extracted];
 }
 
@@ -128,6 +128,8 @@
         if (!_isDebug) {
             [self initRNKit];
         }
+        
+        [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
         
         if (_canPreLoad) {
             [self processPreloadAction];
