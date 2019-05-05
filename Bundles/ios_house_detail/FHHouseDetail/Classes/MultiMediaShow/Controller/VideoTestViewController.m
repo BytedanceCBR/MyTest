@@ -38,7 +38,8 @@
     self.videoVC = [[FHVideoViewController alloc] init];
     _videoVC.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_videoVC.view];
-    _videoVC.view.frame = CGRectMake(0, 300, [UIScreen mainScreen].bounds.size.width, 300);
+    
+    [_videoVC setViewFrame:CGRectMake(0, 300, [UIScreen mainScreen].bounds.size.width, 300)];
     
     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
     itemModel.mediaType = FHMultiMediaTypeVideo;

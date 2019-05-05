@@ -116,26 +116,23 @@
         
         [containerView bringSubviewToFront:fromViewController.view];
         playView = [fromViewController.view viewWithTag:self.rotatedViewTag];
-        
-        CGFloat width = self.frameBeforePresent.size.width;
-        CGFloat height = self.frameBeforePresent.size.height;
-        
-        CGRect toRect = [fromViewController.view convertRect:self.frameBeforePresent toView:toViewController.view];
+    
+        CGRect toRect = [self.superViewOfPlayer convertRect:self.frameBeforePresent toView:fromViewController.view.window];
+
 //        CGRect toRect = [playView.superview convertRect:self.frameBeforePresent toView:toViewController.view];
 //        CGRect toRect = [toViewController.view convertRect:self.frameBeforePresent fromView:playView.superview];
         
         [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(@(toRect.size.height));
-            make.height.mas_equalTo(@(toRect.size.width));
+            make.width.mas_equalTo(@(toRect.size.width));
+            make.height.mas_equalTo(@(toRect.size.height));
     
             if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
-                make.center.equalTo(toViewController.view).centerOffset(CGPointMake(-toRect.size.height/2.0, 0));
+                make.center.equalTo(fromViewController.view).centerOffset(CGPointMake(-(containerView.frame.size.height - toRect.size.height)/2.0 + toRect.origin.y, 0));
             }
             else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
-                 make.center.equalTo(toViewController.view).centerOffset(CGPointMake(toRect.size.height/2.0, 0));
+                make.center.equalTo(fromViewController.view).centerOffset(CGPointMake((containerView.frame.size.height - toRect.size.height)/2.0 - toRect.origin.y, 0));
             }
         }];
-        
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             [playView.superview layoutIfNeeded];

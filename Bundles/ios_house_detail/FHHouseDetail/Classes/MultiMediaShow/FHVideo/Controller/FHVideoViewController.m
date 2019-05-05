@@ -29,6 +29,8 @@
 @property (nonatomic, assign) NSTimeInterval stayTime;
 @property (nonatomic, assign) NSTimeInterval startTime;
 
+@property(nonatomic, assign) CGRect originFrame;
+
 @end
 
 @implementation FHVideoViewController
@@ -37,7 +39,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self initViews];
-    [self initConstaints];
+//    [self initConstaints];
     [self initViewModel];
 }
 
@@ -53,10 +55,15 @@
     [self.view addSubview:_videoView];
 }
 
-- (void)initConstaints {
-    [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.view);
-    }];
+- (void)setViewFrame:(CGRect)frame {
+    _originFrame = frame;
+    self.view.frame = frame;
+}
+
+- (void)viewDidLayoutSubviews {
+    CGRect frame = CGRectMake(0, 0, self.originFrame.size.width, self.originFrame.size.height);
+    self.view.frame = self.originFrame; 
+    self.videoView.frame = frame;
 }
 
 - (CGFloat)videoWidth {

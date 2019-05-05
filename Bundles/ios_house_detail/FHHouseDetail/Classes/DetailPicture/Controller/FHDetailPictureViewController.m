@@ -1654,7 +1654,12 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             [UIView animateWithDuration:0.4f animations:^{
                 self.containerView.backgroundColor = [UIColor clearColor];
                 containerView.backgroundColor = [UIColor clearColor];
-                largeImageView.frame = endFrame;
+                if ([showImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
+                    [self.videoVC setViewFrame:endFrame];
+                }else{
+                    largeImageView.frame = endFrame;
+                }
+                
             } completion:^(BOOL finished) {
                 [containerView removeFromSuperview];
                 kFHStaticPhotoBrowserAtTop = NO;

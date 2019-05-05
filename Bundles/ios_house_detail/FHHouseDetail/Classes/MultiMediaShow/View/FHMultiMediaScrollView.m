@@ -92,7 +92,7 @@
 
 - (void)initVideoVC {
     self.videoVC = [[FHVideoViewController alloc] init];
-    _videoVC.view.frame = self.bounds;
+    [_videoVC setViewFrame:self.bounds];
 }
 
 - (void)setTracerDic:(NSDictionary *)tracerDic {
@@ -175,6 +175,7 @@
     videoModel.muted = NO;
     videoModel.repeated = NO;
     videoModel.isShowControl = NO;
+    videoModel.isShowMiniSlider = YES;
     videoModel.vWidth = model.vWidth;
     videoModel.vHeight = model.vHeight;
     
