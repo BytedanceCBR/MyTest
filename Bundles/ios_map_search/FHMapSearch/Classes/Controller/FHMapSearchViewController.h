@@ -40,6 +40,10 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 
 -(void)insertHouseListView:(UIView *)houseListView;
 
+-(void)enterMapDrawMode;
+
+-(void)switchToNormalMode;
+
 @end
 
 

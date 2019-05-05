@@ -27,6 +27,10 @@
 #import <UIViewController+NavigationBarStyle.h>
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHMapSearchOpenUrlDelegate.h"
+#import "FHMapDrawMaskView.h"
+#import "FHMapSearchWayChooseView.h"
+#import <TTUIWidget/TTNavigationController.h>
+#import "FHMapSearchBottomBar.h"
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
@@ -45,6 +49,10 @@
 @property(nonatomic , strong) UIBarButtonItem *showMapBarItem;
 @property(nonatomic , strong) UILabel *navTitleLabel;
 @property(nonatomic , strong) UIButton *locationButton;
+
+@property(nonatomic , strong) FHMapDrawMaskView *drawMaskView;
+@property(nonatomic , strong) FHMapSearchWayChooseView *chooseView;
+@property(nonatomic , strong) FHMapSearchBottomBar *bottomBar;
 
 @end
 
@@ -298,9 +306,19 @@
     
     [bridge setViewModel:self.houseFilterViewModel withDelegate:_viewModel];
     
+    _chooseView = [[FHMapSearchWayChooseView alloc]initWithFrame:CGRectZero];
+    _chooseView.delegate = _viewModel;
+    _viewModel.chooseView = _chooseView;
+    
+    _bottomBar = [[FHMapSearchBottomBar alloc] init];
+    _bottomBar.delegate = _viewModel;
+    _bottomBar.hidden = YES;
+    _viewModel.bottomBar = _bottomBar;
     
     MAMapView *mapView = self.viewModel.mapView;
     [self.view addSubview:mapView];
+    [self.view addSubview:_chooseView];
+    [self.view addSubview:_bottomBar];
     [self.view addSubview:self.locationButton];
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];
@@ -313,7 +331,12 @@
     self.title = _viewModel.navTitle;
     [self.navBar setTitle:self.title];
     [self.view bringSubviewToFront:self.navBar];
+}
 
+-(void)enablePan:(BOOL)enable
+{
+    TTNavigationController *navController = (TTNavigationController *)self.navigationController;
+    navController.panRecognizer.enabled = enable;
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -324,7 +347,9 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     
     [self.view addObserver:self forKeyPath:@"userInteractionEnabled" options:NSKeyValueObservingOptionNew context:nil];
-    
+    if (self.viewModel.showMode == FHMapSearchShowModeDrawLine || self.viewModel.showMode == FHMapSearchShowModeSubway) {
+        [self enablePan:NO];
+    }
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -332,6 +357,8 @@
     [self.viewModel viewWillDisappear:animated];
     
     [self.view removeObserver:self forKeyPath:@"userInteractionEnabled"];
+    
+    [self enablePan:YES];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -353,7 +380,7 @@
 -(void)initConstraints
 {
     CGFloat navHeight = 44;
-    
+    CGFloat bottomSafeInset = 0;
     if (@available(iOS 11.0 , *)) {
         CGFloat top  = [UIApplication sharedApplication].delegate.window.safeAreaInsets.top;
         if (top > 0) {
@@ -361,6 +388,8 @@
         }else{
             navHeight += [self statusBarHeight];
         }
+        bottomSafeInset = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
+        
     }else{
         navHeight += [self statusBarHeight];
     }
@@ -387,9 +416,23 @@
     
     [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-20);
-        make.bottom.mas_equalTo(self.view).offset(-20);
-        make.size.mas_equalTo(CGSizeMake(42, 42));
+        make.top.mas_equalTo(self.navBar.mas_bottom).offset(20);
+        make.size.mas_equalTo(CGSizeMake(46, 46));
     }];
+    
+    CGFloat bottomMargin = -(39+bottomSafeInset);
+    
+    [self.chooseView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.view).offset(bottomMargin);
+        make.centerX.mas_equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(100, 46));
+    }];
+    
+    [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.view).offset(bottomMargin);
+        make.height.mas_equalTo(46);
+    }];    
 }
 
 -(CGFloat)contentViewHeight
@@ -445,26 +488,40 @@
     }
 }
 
-//-(void)tryCallbackFilterCondition
-//{
-//    if (self.choosedConditionFilter) {
-//
-//        BOOL conditionChanged = [self.viewModel conditionChanged];
-//        NSString *conditions = nil;
-//        if (conditionChanged) {
-//            conditions = [self.viewModel filterConditionParams];;
-//        }
-//        if (conditions) {
-//            NSURL *url = [NSURL URLWithString:[@"https://a?" stringByAppendingString:conditions]];
-//            TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-//            NSString *suggestion =  [self.viewModel configModel].suggestionParams;
-//            if(paramObj.queryParams || suggestion){
-//                self.choosedConditionFilter(paramObj.queryParams,suggestion);
-//            }
-//        }
-//        self.choosedConditionFilter = nil;
-//    }
-//}
+#pragma mark - 画图找房
+-(void)switchToNormalMode
+{
+    self.viewModel.showMode = FHMapSearchShowModeMap;
+    self.bottomBar.hidden = YES;
+    self.chooseView.hidden = NO;
+    [self switchNavbarMode:FHMapSearchShowModeMap];
+    [self showNavTopViews:1 animated:NO];
+    [self enablePan:YES];
+}
+
+-(FHMapDrawMaskView *)drawMaskView
+{
+    if (!_drawMaskView) {
+        _drawMaskView = [[FHMapDrawMaskView alloc] initWithFrame:self.view.bounds];
+        _drawMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        _drawMaskView.backgroundColor = RGBA(0, 0, 0, 0.5);
+        _drawMaskView.delegate = self.viewModel;
+    }
+    return _drawMaskView;
+}
+
+-(void)enterMapDrawMode
+{
+    [self switchNavbarMode:FHMapSearchShowModeMap];
+    [self showNavTopViews:0 animated:NO];
+    [self.houseFilterBridge closeConditionFilterPanel];
+    self.chooseView.hidden = YES;
+    self.bottomBar.hidden = YES;
+    
+    [self.view addSubview:self.drawMaskView];
+    TTNavigationController *navController = (TTNavigationController *)self.navigationController;
+    navController.panRecognizer.enabled = NO;
+}
 
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
