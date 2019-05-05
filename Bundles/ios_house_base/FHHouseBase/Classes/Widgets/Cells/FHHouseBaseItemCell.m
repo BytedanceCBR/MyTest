@@ -390,7 +390,7 @@
 
 -(void)updateHomeHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
-    self.houseVideoImageView.hidden = !commonModel.houseVideo;
+    self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
     NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
@@ -565,7 +565,7 @@
 #pragma mark 二手房
 -(void)updateWithSecondHouseModel:(FHSearchHouseDataItemsModel *)model
 {
-    self.houseVideoImageView.hidden = !model.houseVideo;
+    self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
     [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
