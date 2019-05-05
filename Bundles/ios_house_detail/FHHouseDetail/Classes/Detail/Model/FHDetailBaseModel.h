@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
+#import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
 @class FHDetailNewDataSmallImageGroupModel;
 
@@ -175,13 +176,5 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataNeighborhoodInfoSchoolInfoModel> *schoolList;
 @end
 
-@protocol FHDetailDataAgencyListItemModel<NSObject>
-@end
-
-@interface FHDetailDataAgencyListItemModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *agencyId;
-@property (nonatomic, copy , nullable) NSString *agencyName;
-@end
 
 NS_ASSUME_NONNULL_END

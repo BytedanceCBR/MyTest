@@ -10,6 +10,7 @@
 #import "FHDetailNavBar.h"
 #import "FHHouseType.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
-@property (nonatomic, copy , nullable) NSString *chosenAgencyText;
-@property (nonatomic, strong , nullable) NSArray<FHDetailDataAgencyListItemModel> *chooseAgencyList;
+@property (nonatomic, copy , nullable) NSString *chosenAgencyNum;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;

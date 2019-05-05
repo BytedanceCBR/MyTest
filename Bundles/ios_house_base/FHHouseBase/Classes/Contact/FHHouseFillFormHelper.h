@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *realtorId; // 在线联系时必填
 @property (nonatomic, copy) NSString *phone;
 @property (nonatomic, assign) FHFollowActionType actionType;
-@property (nonatomic, copy , nullable) NSString *chosenAgencyText;
+@property (nonatomic, copy , nullable) NSString *chosenAgencyNum;
 @property (nonatomic, strong , nullable) NSArray<FHDetailFillFormAgencyListItemModel *> *chooseAgencyList;
 
 #pragma mark 埋点
@@ -63,10 +63,5 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setTraceParams:(NSDictionary *)params;
 @end
 
-@interface FHDetailFillFormAgencyListItemModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *agencyId;
-@property (nonatomic, copy , nullable) NSString *agencyName;
-@end
 
 NS_ASSUME_NONNULL_END

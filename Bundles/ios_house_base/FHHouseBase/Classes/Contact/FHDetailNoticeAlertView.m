@@ -85,7 +85,7 @@
 
 - (void)updateAgencyTitle:(NSString *)agencyTitle
 {
-    if (agencyTitle.length < 1) {
+    if (agencyTitle.integerValue == 0) {
         return;
     }
     CGFloat height = 45;
@@ -93,7 +93,7 @@
     self.agencyLabel.hidden = NO;
     self.line1.hidden = NO;
     self.rightArrow.hidden = NO;
-    self.agencyLabel.text = agencyTitle;
+    self.agencyLabel.text = [NSString stringWithFormat:@"已选%@家服务方",agencyTitle];
     [self.agencyView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
@@ -526,9 +526,8 @@
     if (!_agencyLabel) {
         _agencyLabel = [[UILabel alloc]init];
         _agencyLabel.font = [UIFont themeFontRegular:14];
-        _agencyLabel.textColor = [UIColor themeGray1];
+        _agencyLabel.textColor = [UIColor themeGray2];
         _agencyLabel.numberOfLines = 1;
-        _agencyLabel.lineBreakMode = NSLineBreakByWordWrapping;
     }
     return _agencyLabel;
 }

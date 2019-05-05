@@ -275,7 +275,7 @@
                            @"floorpanList": @"floorpan_list",
                            @"shareInfo": @"share_info",
                            @"highlightedRealtor": @"highlighted_realtor",
-                           @"chosenAgencyText": @"chosen_agency_text",
+                           @"chosenAgencyNum": @"chosen_agency_num",
                            @"chooseAgencyList": @"choose_agency_list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

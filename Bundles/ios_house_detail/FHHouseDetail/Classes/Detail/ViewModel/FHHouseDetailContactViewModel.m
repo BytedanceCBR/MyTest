@@ -412,15 +412,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [fillFormConfig setTraceParams:params];
         fillFormConfig.searchId = self.searchId;
         fillFormConfig.imprId = self.imprId;
-        fillFormConfig.chosenAgencyText = self.chosenAgencyText;
-        NSMutableArray *agencyList = @[].mutableCopy;
-        for (FHDetailDataAgencyListItemModel *itemModel in self.chooseAgencyList) {
-            FHDetailFillFormAgencyListItemModel *agencyModel = [[FHDetailFillFormAgencyListItemModel alloc]init];
-            agencyModel.agencyId = itemModel.agencyId;
-            agencyModel.agencyName = itemModel.agencyName;
-            [agencyList addObject:itemModel];
-        }
-        fillFormConfig.chooseAgencyList = agencyList;
+        fillFormConfig.chosenAgencyNum = self.chosenAgencyNum;
+        fillFormConfig.chooseAgencyList = self.chooseAgencyList;
         [FHHouseFillFormHelper fillOnlineFormActionWithConfigModel:fillFormConfig];
         return;
     }
@@ -451,15 +444,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
-    fillFormConfig.chosenAgencyText = self.chosenAgencyText;
-    NSMutableArray *agencyList = @[].mutableCopy;
-    for (FHDetailDataAgencyListItemModel *itemModel in self.chooseAgencyList) {
-        FHDetailFillFormAgencyListItemModel *agencyModel = [[FHDetailFillFormAgencyListItemModel alloc]init];
-        agencyModel.agencyId = itemModel.agencyId;
-        agencyModel.agencyName = itemModel.agencyName;
-        [agencyList addObject:itemModel];
-    }
-    fillFormConfig.chooseAgencyList = agencyList;
+    fillFormConfig.chosenAgencyNum = self.chosenAgencyNum;
+    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
 
@@ -502,15 +488,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
-    fillFormConfig.chosenAgencyText = self.chosenAgencyText;
-    NSMutableArray *agencyList = @[].mutableCopy;
-    for (FHDetailDataAgencyListItemModel *itemModel in self.chooseAgencyList) {
-        FHDetailFillFormAgencyListItemModel *agencyModel = [[FHDetailFillFormAgencyListItemModel alloc]init];
-        agencyModel.agencyId = itemModel.agencyId;
-        agencyModel.agencyName = itemModel.agencyName;
-        [agencyList addObject:itemModel];
-    }
-    fillFormConfig.chooseAgencyList = agencyList;
+    fillFormConfig.chosenAgencyNum = self.chosenAgencyNum;
+    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
 
