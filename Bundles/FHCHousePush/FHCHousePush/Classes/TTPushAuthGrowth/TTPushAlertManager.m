@@ -119,7 +119,9 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
 //                NSLog(@"zjing---exitFullScreen finished:%ld",finished);
             }];
         }
-        didTaphandler(hideReason);
+        if (didTaphandler) {
+            didTaphandler(hideReason);
+        }
     };
 //    weakAlertView.didTapHandler = didTaphandler;
     weakAlertView.willHideHandler = ^(NSInteger hideReason) {

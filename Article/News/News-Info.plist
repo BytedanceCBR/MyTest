@@ -4,6 +4,8 @@
 <dict>
 	<key>AppName</key>
 	<string>f100</string>
+	<key>BuildInfo</key>
+	<string></string>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
