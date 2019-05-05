@@ -127,11 +127,16 @@
 }
 
 - (void)stop {
+    if(self.playbackState != TTVPlaybackState_Stopped){
+        [self trackWithName:@"video_over"];
+    }
     [self.player stop];
 }
 
 - (void)close {
-    [self trackWithName:@"video_over"];
+    if(self.playbackState != TTVPlaybackState_Stopped){
+        [self trackWithName:@"video_over"];
+    }
     [self.player close];
 }
 

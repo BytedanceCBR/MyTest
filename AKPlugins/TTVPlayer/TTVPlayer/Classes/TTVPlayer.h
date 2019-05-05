@@ -101,12 +101,12 @@
 @property (nonatomic, weak) NSObject<TTVPlayerDelegate> *delegate;
 
 /// 自定义 view 提供内置播放器控件相关的自定义API @see TTVPlayerCustomViewDelegate
-//@property (nonatomic, weak) NSObject<TTVPlayerCustomViewDelegate> *customViewDelegate;
-- (void)setCustomViewDelegate:(NSObject<TTVPlayerCustomViewDelegate> *)customViewDelegate;
-- (id<TTVPlayerCustomViewDelegate>)customViewDelegate;
+@property (nonatomic, weak) NSObject<TTVPlayerCustomViewDelegate> * customViewDelegate;
+//- (void)setCustomViewDelegate:(NSObject<TTVPlayerCustomViewDelegate> *)customViewDelegate;
+//- (id<TTVPlayerCustomViewDelegate>)customViewDelegate;
 
 /// 自定义 part, 提供自定义 part, 可以覆盖已有的 part 以及新增外部 part @see TTVPlayerCustomPartDelegate
-@property (nonatomic, weak) NSObject<TTVPlayerCustomPartDelegate> *customPartDelegate;
+@property (nonatomic, weak) NSObject<TTVPlayerCustomPartDelegate> * customPartDelegate;
 
 #pragma mark - 播放器 UI
 ///-----------------------------------------------------------------

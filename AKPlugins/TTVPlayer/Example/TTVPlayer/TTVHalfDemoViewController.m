@@ -43,9 +43,15 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     [containerView addSubview:self.player.view];
+//    [self.view addSubview:self.player.view];
+//    [self.player.view mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(@100);
+//        make.left.right.equalTo(self.view);
+//        make.height.equalTo(@210);
+//    }];
     _player.videoTitle = @"五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者";
     [self.player setVideoID:@"v037d19d0000bipisrckkk8gd9d1rqjg" host:@"is.snssdk.com" commonParameters:nil];
-    self.player.view.frame = containerView.bounds;//CGRectMake(0, 100, 375,210);
+    self.player.view.frame = containerView.bounds;//CGRectMake(0, 100, 375,210);//;
   
 //    self.player.view.backgroundColor = [UIColor whiteColor];
 //    self.player.view.center = CGPointMake(self.view.width / 2.0, self.player.view.centerY);

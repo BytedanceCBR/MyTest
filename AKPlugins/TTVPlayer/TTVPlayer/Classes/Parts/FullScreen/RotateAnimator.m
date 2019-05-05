@@ -15,6 +15,7 @@
 @property (nonatomic, weak) UIView * superViewOfPlayer;
 @property (nonatomic) UIDeviceOrientation lastOrientation;
 
+
 @end
 
 @implementation RotateAnimator
@@ -79,6 +80,7 @@
     if (isPresent) {
         self.superViewOfPlayer = playView.superview;
         [containerView bringSubviewToFront:fromViewController.view];
+//        self.testRect = [playView.superview convertRect:self.frameBeforePresent toView:[UIApplication sharedApplication].keyWindow];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
         
@@ -86,20 +88,18 @@
         [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.equalTo(@(size.width));
             make.height.equalTo(@(size.height));
-            make.center.equalTo(playView.superview);
+            make.center.equalTo(toViewController.view);
         }];
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             [playView.superview layoutIfNeeded];
-//            playView.transform = CGAffineTransformMakeRotation([self angleOfCurrentOrientation:YES]);
             [self changePlayViewTransform:playView isPrensent:YES];
-           
             toViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
             
         } completion:^(BOOL finished) {
             [playView removeFromSuperview];
             [toViewController.view addSubview:playView];
-            playView.transform = CGAffineTransformMakeRotation(0);
+            playView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeRotation(0);
             [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(toViewController.view).insets(UIEdgeInsetsZero);
             }];
@@ -119,16 +119,29 @@
         
         CGFloat width = self.frameBeforePresent.size.width;
         CGFloat height = self.frameBeforePresent.size.height;
+        
+        CGRect toRect = [fromViewController.view convertRect:self.frameBeforePresent toView:toViewController.view];
+//        CGRect toRect = [playView.superview convertRect:self.frameBeforePresent toView:toViewController.view];
+//        CGRect toRect = [toViewController.view convertRect:self.frameBeforePresent fromView:playView.superview];
+        
         [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(@(width));
-            make.height.mas_equalTo(@(height));
+            make.width.mas_equalTo(@(toRect.size.height));
+            make.height.mas_equalTo(@(toRect.size.width));
+    
             if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
-                make.center.equalTo(playView.superview).centerOffset(CGPointMake(-(containerView.frame.size.height - height) / 2.0+self.frameBeforePresent.origin.y, 0));
+//                make.center.equalTo(toViewController.view).centerOffset(CGPointMake(-(toViewController.view.frame.size.height - height) / 2.0+toRect.origin.x, 0));
+
+                make.center.equalTo(toViewController.view).centerOffset(CGPointMake(-toRect.size.height/2.0, 0));
+
+
             }
             else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
-                 make.center.equalTo(playView.superview).centerOffset(CGPointMake((containerView.frame.size.height - height) / 2.0-self.frameBeforePresent.origin.y, 0));
+                 make.center.equalTo(toViewController.view).centerOffset(CGPointMake(toRect.size.width/2.0, 0));
+//                make.top.equalTo(toViewController.view).offset(toRect.origin.y);
+//                make.left.equalTo(toViewController.view).offset(toRect.origin.x);
             }
         }];
+        
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             [playView.superview layoutIfNeeded];
@@ -188,7 +201,7 @@
 
 -(void)screenRotate:(NSNotification*)notification{
     UIDevice* device = notification.object;
-    NSLog(@"notification1:::%@", @(device.orientation));
+//    NSLog(@"notification1:::%@", @(device.orientation));
     if (device.orientation == UIDeviceOrientationLandscapeLeft && self.lastOrientation == UIDeviceOrientationLandscapeRight) {
         self.lastOrientation = UIDeviceOrientationLandscapeLeft;
     }
