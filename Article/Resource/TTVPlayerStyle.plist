@@ -430,7 +430,7 @@
 					<key>Action</key>
 					<string>TTVPlayerActionType_RotateToInlineScreen</string>
 					<key>ImageName</key>
-					<string>player_back_default_player</string>
+					<string>detail_back_white</string>
 				</dict>
 			</dict>
 		</dict>
