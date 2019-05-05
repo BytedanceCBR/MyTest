@@ -171,7 +171,7 @@
 			<key>AvailableOnInit</key>
 			<true/>
 			<key>AutoRotateEnabled</key>
-			<true/>
+			<false/>
 			<key>Controls</key>
 			<dict>
 				<key>全屏切换按钮</key>

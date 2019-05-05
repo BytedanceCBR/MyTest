@@ -163,6 +163,9 @@
                                              selector:@selector(_orientationChanged:)
                                                  name:UIDeviceOrientationDidChangeNotification
                                                object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
+
 }
 
 - (void)_endMonitorDeviceOrientationChange {
