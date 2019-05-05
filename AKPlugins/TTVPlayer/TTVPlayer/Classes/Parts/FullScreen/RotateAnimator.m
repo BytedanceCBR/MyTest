@@ -82,7 +82,7 @@
         [containerView bringSubviewToFront:fromViewController.view];
 //        self.testRect = [playView.superview convertRect:self.frameBeforePresent toView:[UIApplication sharedApplication].keyWindow];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
         
         CGSize size = containerView.frame.size;
         [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -99,7 +99,7 @@
         } completion:^(BOOL finished) {
             [playView removeFromSuperview];
             [toViewController.view addSubview:playView];
-            playView.transform = CGAffineTransformIdentity;//CGAffineTransformMakeRotation(0);
+            playView.transform = CGAffineTransformMakeRotation(0);//CGAffineTransformIdentity;//CGAffineTransformMakeRotation(0);
             [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(toViewController.view).insets(UIEdgeInsetsZero);
             }];
@@ -129,16 +129,10 @@
             make.height.mas_equalTo(@(toRect.size.width));
     
             if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
-//                make.center.equalTo(toViewController.view).centerOffset(CGPointMake(-(toViewController.view.frame.size.height - height) / 2.0+toRect.origin.x, 0));
-
                 make.center.equalTo(toViewController.view).centerOffset(CGPointMake(-toRect.size.height/2.0, 0));
-
-
             }
             else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
-                 make.center.equalTo(toViewController.view).centerOffset(CGPointMake(toRect.size.width/2.0, 0));
-//                make.top.equalTo(toViewController.view).offset(toRect.origin.y);
-//                make.left.equalTo(toViewController.view).offset(toRect.origin.x);
+                 make.center.equalTo(toViewController.view).centerOffset(CGPointMake(toRect.size.height/2.0, 0));
             }
         }];
         
