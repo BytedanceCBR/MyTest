@@ -60,6 +60,15 @@ extern NSString *const kFHToastCountKey;
     }
     [self addInformShowLog:configModel];
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    if (configModel.chooseAgencyList.count > 0 && configModel.chosenAgencyText.length > 0) {
+        [alertView updateAgencyTitle:configModel.chosenAgencyText];
+        alertView.agencyClickBlock = ^{
+            NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+            NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+            [[TTRoute sharedRoute]openURLByPushViewController:url];
+        };
+    }
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [self fillFormRequest:configModel phone:phoneNum alertView:alert];
@@ -324,3 +333,19 @@ extern NSString *const kFHToastCountKey;
 
 @end
 
+@implementation FHDetailFillFormAgencyListItemModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"agencyId": @"agency_id",
+                           @"agencyName": @"agency_name",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end

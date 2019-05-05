@@ -211,6 +211,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
+    self.contactViewModel.chosenAgencyText = model.data.chosenAgencyText;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];

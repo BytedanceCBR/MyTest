@@ -138,7 +138,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodNeighborhoodInfoEvaluationInfoModel *evaluationInfo ;
 @property (nonatomic, copy , nullable) NSString *chosenAgencyText;
-@property (nonatomic, strong , nullable) NSArray<FHDetailDataAgencyListModel> *chooseAgencyList;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataAgencyListItemModel> *chooseAgencyList;
 
 @end
 

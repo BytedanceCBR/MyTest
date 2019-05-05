@@ -28,6 +28,11 @@
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , copy) NSString *originPhoneNumber;
 
+@property(nonatomic , strong) UIControl *agencyView;
+@property(nonatomic , strong) UILabel *agencyLabel;
+@property(nonatomic , strong) UIView *line1;
+@property(nonatomic , strong) UIImageView *rightArrow;
+
 @end
 
 
@@ -66,7 +71,7 @@
             }];
             [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(40);
-                make.top.mas_equalTo(self.seperateLine.mas_bottom).mas_offset(20.5);
+                make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
                 make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
                 make.right.mas_equalTo(-20);
             }];
@@ -76,6 +81,22 @@
         }
     }
     return self;
+}
+
+- (void)updateAgencyTitle:(NSString *)agencyTitle
+{
+    if (agencyTitle.length < 1) {
+        return;
+    }
+    CGFloat height = 45;
+    self.agencyView.hidden = NO;
+    self.agencyLabel.hidden = NO;
+    self.line1.hidden = NO;
+    self.rightArrow.hidden = NO;
+    self.agencyLabel.text = agencyTitle;
+    [self.agencyView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(height);
+    }];
 }
 
 - (void)setPhoneNum:(NSString *)phoneNum
@@ -139,6 +160,16 @@
     [self.contentView addSubview:self.submitBtn];
     [self.contentView addSubview:self.tipLabel];
     
+    [self.contentView addSubview:self.agencyView];
+    [self.agencyView addSubview:self.agencyLabel];
+    [self.agencyView addSubview:self.line1];
+    [self.agencyView addSubview:self.rightArrow];
+    self.agencyView.hidden = YES;
+    self.agencyLabel.hidden = YES;
+    self.line1.hidden = YES;
+    self.rightArrow.hidden = YES;
+    [self.agencyView addTarget:self action:@selector(agencyBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(34);
         make.right.mas_equalTo(self.contentView).mas_offset(-5);
@@ -171,9 +202,29 @@
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.contentView).mas_offset(-20);
     }];
+    
+    [self.agencyView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.seperateLine.mas_bottom);
+        make.left.mas_equalTo(20);
+        make.right.mas_equalTo(-20);
+        make.height.mas_equalTo(0);
+    }];
+    [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.mas_equalTo(0);
+        make.right.mas_equalTo(self.rightArrow.mas_left).mas_offset(-10);
+    }];
+    [self.line1 mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0.5);
+        make.left.right.bottom.mas_equalTo(0);
+    }];
+    [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(0);
+        make.centerY.mas_equalTo(self.agencyView);
+    }];
+    
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(40);
-        make.top.mas_equalTo(self.seperateLine.mas_bottom).mas_offset(20.5);
+        make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(-20);
     }];
@@ -334,6 +385,14 @@
     }
 }
 
+- (void)agencyBtnDidClick:(UIControl *)btn
+{
+    if (self.agencyClickBlock) {
+        self.agencyClickBlock();
+    }
+}
+
+
 - (BOOL)isPureInt:(NSString*)string{
     NSScanner* scan = [NSScanner scannerWithString:string];
     int val;
@@ -452,6 +511,43 @@
         _errorTextLabel.hidden = YES;
     }
     return _errorTextLabel;
+}
+
+- (UIControl *)agencyView
+{
+    if (!_agencyView) {
+        _agencyView = [[UIControl alloc]init];
+    }
+    return _agencyView;
+}
+
+- (UILabel *)agencyLabel
+{
+    if (!_agencyLabel) {
+        _agencyLabel = [[UILabel alloc]init];
+        _agencyLabel.font = [UIFont themeFontRegular:14];
+        _agencyLabel.textColor = [UIColor themeGray1];
+        _agencyLabel.numberOfLines = 1;
+        _agencyLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    }
+    return _agencyLabel;
+}
+
+- (UIView *)line1
+{
+    if (!_line1) {
+        _line1 = [[UIView alloc]init];
+        _line1.backgroundColor = [UIColor themeGray6];
+    }
+    return _line1;
+}
+
+- (UIImageView *)rightArrow
+{
+    if (!_rightArrow) {
+        _rightArrow = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"house_right_arrow"]];
+    }
+    return _rightArrow;
 }
 
 - (UIButton *)submitBtn

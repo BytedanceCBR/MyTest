@@ -197,7 +197,7 @@
 }
 @end
 
-@implementation FHDetailDataAgencyListModel
+@implementation FHDetailDataAgencyListItemModel
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
