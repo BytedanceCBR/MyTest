@@ -207,6 +207,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *camplaintUrl;
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, strong , nullable) FHRentDetailImShareInfoModel *imShareInfo;
+@property (nonatomic, copy , nullable) NSString *chosenAgencyText;
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataAgencyListModel> *chooseAgencyList;
+
 @end
 
 
