@@ -674,8 +674,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 
 - (CGRect)frameForWebView {
     
+    CGFloat statusBarHeight = 0;
+    if (!_shouldhideStatusBar) {
+        statusBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    }
     CGFloat navHeight = _shouldHideNavigationBar ?
-    (_wapViewStartFromTop? 0 : [UIApplication sharedApplication].statusBarFrame.size.height) : 44 + [UIApplication sharedApplication].statusBarFrame.size.height;
+    (_wapViewStartFromTop? 0 : statusBarHeight) : 44 + statusBarHeight;
     
     if(_useSystemNavigationbarHeight){
         navHeight = 44;
