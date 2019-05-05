@@ -24,12 +24,12 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    [self generateModel];
-    
-    self.mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 300)];
-    [self.view addSubview:_mediaView];
-    
-    [_mediaView updateWithModel:self.model];
+//    [self generateModel];
+//    
+//    self.mediaView = [[FHMultiMediaScrollView alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 300)];
+//    [self.view addSubview:_mediaView];
+//    
+//    [_mediaView updateWithModel:self.model];
     
     [self initVideoVC];
 }
@@ -38,7 +38,7 @@
     self.videoVC = [[FHVideoViewController alloc] init];
     _videoVC.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_videoVC.view];
-    _videoVC.view.frame = CGRectMake(0, 420, [UIScreen mainScreen].bounds.size.width, 300);
+    _videoVC.view.frame = CGRectMake(0, 300, [UIScreen mainScreen].bounds.size.width, 300);
     
     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
     itemModel.mediaType = FHMultiMediaTypeVideo;
