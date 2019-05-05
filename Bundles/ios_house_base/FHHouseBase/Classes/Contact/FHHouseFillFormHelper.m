@@ -21,8 +21,8 @@
 #import "IMManager.h"
 #import <HMDTTMonitor.h>
 #import "FHHousePhoneCallUtils.h"
-#import "FHDetailBaseModel.h"
 #import "FHHouseFollowUpHelper.h"
+#import "FHFillFormAgencyListItemModel.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -60,15 +60,17 @@ extern NSString *const kFHToastCountKey;
     }
     [self addInformShowLog:configModel];
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
-    if (configModel.chooseAgencyList.count > 0 && configModel.chosenAgencyNum.length > 0) {
+    if (configModel.chooseAgencyList.count > 0) {
         [alertView updateAgencyTitle:configModel.chosenAgencyNum];
-        alertView.agencyClickBlock = ^{
+        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
             
             NSMutableDictionary *info = @{}.mutableCopy;
             info[@"chosen_agency_num"] = configModel.chosenAgencyNum;
-            info[@"choose_agency_list"] = configModel.chooseAgencyList;
+            info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
+            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+            [delegateTable addObject:alert];
+            info[@"delegate"] = delegateTable;
             TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
-
             NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
             [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
         };
@@ -130,6 +132,21 @@ extern NSString *const kFHToastCountKey;
             [wself addClickConfirmLog:configModel];
         };
     }
+    if (configModel.chooseAgencyList.count > 0) {
+        [alertView updateAgencyTitle:configModel.chosenAgencyNum];
+        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
+            
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"chosen_agency_num"] = configModel.chosenAgencyNum;
+            info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
+            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+            [delegateTable addObject:alert];
+            info[@"delegate"] = delegateTable;
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+            NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
+            [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+        };
+    }
     alertView.phoneNum = phoneNum;
     alertView.tipClickBlock = ^{
         
@@ -174,6 +191,9 @@ extern NSString *const kFHToastCountKey;
     }
     NSString *houseId = customHouseId.length > 0 ? customHouseId : configModel.houseId;
     NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:configModel.houseType];
+    // add by zjing for test
+    NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
+    NSLog(@"zjing---selectAgencyList:%@",selectAgencyList);
     [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {

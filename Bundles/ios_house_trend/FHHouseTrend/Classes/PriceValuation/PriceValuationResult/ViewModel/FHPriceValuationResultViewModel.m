@@ -362,9 +362,25 @@ extern NSString *const kFHToastCountKey;
         subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:subtitle btnTitle:@"提交"];
+    if (_neighborhoodDetailModel.data.chooseAgencyList.count > 0) {
+        [alertView updateAgencyTitle:_neighborhoodDetailModel.data.chosenAgencyNum];
+        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
+            
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"chosen_agency_num"] = _neighborhoodDetailModel.data.chosenAgencyNum;
+            info[@"choose_agency_list"] = [alert selectAgencyList] ? : _neighborhoodDetailModel.data.chooseAgencyList;
+            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+            [delegateTable addObject:alert];
+            info[@"delegate"] = delegateTable;
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+            NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
+            [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+        };
+    }
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
         [wself addInfomationTracer:@"click_confirmation"];
+        // add by zjing for test
         [wself fillFormRequest:phoneNum];
     };
     alertView.tipClickBlock = ^{

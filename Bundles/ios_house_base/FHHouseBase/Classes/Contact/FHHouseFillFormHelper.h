@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHHouseFillFormConfigModel,FHDetailFillFormAgencyListItemModel;
+@class FHHouseFillFormConfigModel,FHFillFormAgencyListItemModel;
 
 @interface FHHouseFillFormHelper : NSObject
 
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *phone;
 @property (nonatomic, assign) FHFollowActionType actionType;
 @property (nonatomic, copy , nullable) NSString *chosenAgencyNum;
-@property (nonatomic, strong , nullable) NSArray<FHDetailFillFormAgencyListItemModel *> *chooseAgencyList;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
 
 #pragma mark 埋点
 // 必填

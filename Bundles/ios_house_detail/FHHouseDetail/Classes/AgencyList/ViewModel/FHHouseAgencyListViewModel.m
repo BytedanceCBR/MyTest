@@ -29,7 +29,15 @@
         _paramObj = paramObj;
         NSHashTable<FHHouseAgencyListSugDelegate> *temp_delegate = paramObj.allParams[@"delegate"];
         self.delegate = temp_delegate.anyObject;
-        self.agencyList = paramObj.allParams[@"choose_agency_list"];
+        if ([paramObj.allParams[@"choose_agency_list"] isKindOfClass:[NSArray class]]) {
+            NSMutableArray *mutable = @[].mutableCopy;
+            NSArray<FHFillFormAgencyListItemModel *> *agencyList = paramObj.allParams[@"choose_agency_list"];
+            for (FHFillFormAgencyListItemModel *item in agencyList) {
+                FHFillFormAgencyListItemModel *itemModel = [item copy];
+                [mutable addObject:itemModel];
+            }
+            self.agencyList = mutable;
+        }
         tableView.delegate  = self;
         tableView.dataSource = self;
         [tableView registerClass:[FHHouseAgencyItemTableViewCell class] forCellReuseIdentifier:@"FHHouseAgencyItemTableViewCell"];
@@ -45,7 +53,10 @@
 
 - (void)confirmAction
 {
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(agencySelected:)]) {
+        [self.delegate agencySelected:self.agencyList];
+        [self.viewController.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 #pragma mark - tableview delegate

@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *agencyName;
 @property (nonatomic, assign) BOOL checked;
 
+- (nonnull id)copyWithZone:(nullable NSZone *)zone;
+
 @end
 
 NS_ASSUME_NONNULL_END

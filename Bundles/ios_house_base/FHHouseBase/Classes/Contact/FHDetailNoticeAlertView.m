@@ -12,8 +12,10 @@
 #import "TTDeviceHelper.h"
 #import "TTUIResponderHelper.h"
 #import "UIView+House.h"
+#import <FHHouseBase/FHHouseAgencyListSugDelegate.h>
+#import "FHFillFormAgencyListItemModel.h"
 
-@interface FHDetailNoticeAlertView () <UITextFieldDelegate>
+@interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
 
 @property(nonatomic , strong) UIView *bgView;
 @property(nonatomic , strong) UIView *contentView;
@@ -32,6 +34,7 @@
 @property(nonatomic , strong) UILabel *agencyLabel;
 @property(nonatomic , strong) UIView *line1;
 @property(nonatomic , strong) UIImageView *rightArrow;
+@property(nonatomic , strong) NSArray *agencyList;
 
 @end
 
@@ -97,6 +100,26 @@
     [self.agencyView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(height);
     }];
+}
+
+- (void)agencySelected:(NSArray *)agencyList
+{
+    _agencyList = agencyList;
+    NSInteger selectCount = 0;
+    for (FHFillFormAgencyListItemModel *item in agencyList) {
+        if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
+            continue;
+        }
+        if (item.checked) {
+            selectCount += 1;
+        }
+    }
+    [self updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
+}
+
+- (NSArray *)selectAgencyList
+{
+    return _agencyList;
 }
 
 - (void)setPhoneNum:(NSString *)phoneNum
@@ -388,7 +411,7 @@
 - (void)agencyBtnDidClick:(UIControl *)btn
 {
     if (self.agencyClickBlock) {
-        self.agencyClickBlock();
+        self.agencyClickBlock(self);
     }
 }
 

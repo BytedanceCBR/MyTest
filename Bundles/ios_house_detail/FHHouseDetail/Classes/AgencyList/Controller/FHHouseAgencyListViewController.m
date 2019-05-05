@@ -43,7 +43,7 @@
     self.customNavBarView.title.text = @"选择服务方";
     [self setupTableView];
     self.viewModel = [[FHHouseAgencyListViewModel alloc]initWithTableView:_tableView paramObj:_paramObj];
-    
+    self.viewModel.viewController = self;
     UIView *bottomBar = [[UIView alloc]init];
     bottomBar.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:bottomBar];

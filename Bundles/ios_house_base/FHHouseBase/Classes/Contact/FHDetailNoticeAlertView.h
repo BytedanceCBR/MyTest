@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy)void(^confirmClickBlock)(NSString *phoneNum,FHDetailNoticeAlertView *alertView);
 @property(nonatomic, copy)void(^leftClickBlock)(NSString *phoneNum,FHDetailNoticeAlertView *alertView);
 @property(nonatomic, copy)void(^tipClickBlock)(void);
-@property(nonatomic, copy)void(^agencyClickBlock)(void);
+@property(nonatomic, copy)void(^agencyClickBlock)(FHDetailNoticeAlertView *alertView);
 
 - (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
 - (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle;
@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateAgencyTitle:(NSString *)agencyTitle;
 - (void)showFrom:(UIView *)parentView;
 - (void)dismiss;
+
+- (NSArray *)selectAgencyList;
+
 @end
 
 NS_ASSUME_NONNULL_END

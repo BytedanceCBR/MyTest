@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseAgencyListViewModel : NSObject
 
+@property(nonatomic, weak) UIViewController *viewController;
 - (instancetype)initWithTableView:(UITableView *)tableView paramObj:(TTRouteParamObj *)paramObj;
 - (void)confirmAction;
 
