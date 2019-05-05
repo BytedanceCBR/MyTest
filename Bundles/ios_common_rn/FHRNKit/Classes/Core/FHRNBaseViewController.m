@@ -310,16 +310,16 @@
                 ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
                 [self.ttRNKit clearRNResourceForChannel:_channelStr];
                 [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+                self.ttRNKit.delegate = nil;
+                self.ttRNKit = nil;
+                self.viewWrapper = nil;
+                _viewWrapper.rnView = nil;
             }
-        
-            self.ttRNKit.delegate = nil;
-            self.ttRNKit = nil;
+
             [_container removeFromSuperview];
-            self.container = nil;
             [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
-            _viewWrapper.rnView = nil;
             [_viewWrapper removeFromSuperview];
-            self.viewWrapper = nil;
+             self.container = nil;
     });
 }
 
