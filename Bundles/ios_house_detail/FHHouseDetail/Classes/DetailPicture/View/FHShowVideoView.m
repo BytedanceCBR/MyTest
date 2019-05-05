@@ -131,4 +131,19 @@
     }
 }
 
+// 很不乐意这样加，为了进入和退出全屏，要传递多层代理，balala...
+// 进入全屏
+- (void)playerDidEnterFullscreen {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playerDidEnterFullscreen)]) {
+        [self.delegate playerDidEnterFullscreen];
+    }
+}
+
+// 离开全屏
+- (void)playerDidExitFullscreen {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(playerDidExitFullscreen)]) {
+        [self.delegate playerDidExitFullscreen];
+    }
+}
+
 @end

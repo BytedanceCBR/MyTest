@@ -454,7 +454,7 @@
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
-    if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
+    if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing && !self.mediaView.videoVC.isFullScreen) {
         [self.mediaView.videoVC pause];
     }
 }
