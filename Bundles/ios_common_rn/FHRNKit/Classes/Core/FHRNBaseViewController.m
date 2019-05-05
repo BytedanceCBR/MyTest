@@ -334,9 +334,9 @@
     if(!parent){
     }else
     {
-        if (![FHEnvContext isNetworkConnected]) {
-            [self sendEventName:@"enter_unAvalable" andParams:nil];
-        }
+//        if (![FHEnvContext isNetworkConnected]) {
+//            [self sendEventName:@"enter_unAvalable" andParams:nil];
+//        }
     }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
