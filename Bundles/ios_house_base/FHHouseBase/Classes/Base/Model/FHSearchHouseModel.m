@@ -209,6 +209,25 @@
 
 @end
 
+@implementation FHHouseItemHouseVideo
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"hasVideo": @"has_video"
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation  FHSearchHouseDataItemsModel
 

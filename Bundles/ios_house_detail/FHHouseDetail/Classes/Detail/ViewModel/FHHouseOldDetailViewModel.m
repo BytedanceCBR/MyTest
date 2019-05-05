@@ -258,19 +258,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 添加头滑动图片 && 视频
     BOOL hasVideo = NO;
     
-    // add by zyk 测试
-    FHVideoHouseVideoModel *houseVideo = [[FHVideoHouseVideoModel alloc] init];
-    houseVideo.infoTitle = @"2000万";
-    houseVideo.infoSubTitle = @"小区 3规划 哈哈小区";
-    NSMutableArray *infos = [[NSMutableArray alloc] init];
-    FHVideoHouseVideoVideoInfosModel *infoModel = [[FHVideoHouseVideoVideoInfosModel alloc] init];
-    infoModel.vid = @"v03004b60000bh57qrtlt63p5lgd20d0";
-    infoModel.vWidth = 640;
-    infoModel.vHeight = 360;
-    [infos addObject:infoModel];
-    houseVideo.videoInfos = infos;
-    model.data.houseVideo = houseVideo;
-    
     if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
         hasVideo = YES;
     }
