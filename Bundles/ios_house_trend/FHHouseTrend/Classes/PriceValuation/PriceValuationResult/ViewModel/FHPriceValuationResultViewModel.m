@@ -354,9 +354,15 @@ extern NSString *const kFHToastCountKey;
     [self addInfomationTracer:@"information_show"];
     
     __weak typeof(self)wself = self;
-    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:@"专业房地产经纪人为您服务" btnTitle:@"提交"];
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    alertView.phoneNum = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
+    NSString *phoneNum = (NSString *)phoneCache;
+    NSString *subtitle = @"专业房地产经纪人为您服务";
+    if (phoneNum.length > 0) {
+        subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
+    }
+    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:subtitle btnTitle:@"提交"];
+    alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
         [wself addInfomationTracer:@"click_confirmation"];
         [wself fillFormRequest:phoneNum];

@@ -197,7 +197,7 @@
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
                 FHHouseRentRelatedResponseModel* model = nil;
-                if (!error && [obj isKindOfClass:[NSDictionary class]]) {
+                if (!error) {
                     model = [[FHHouseRentRelatedResponseModel alloc] initWithData:obj error:nil];
                 }
                 if (!error && model) {
@@ -241,7 +241,7 @@
             needCommonParams:YES
             callback:^(NSError *error, id obj) {
                 FHRentSameNeighborhoodResponseModel* model = nil;
-                if (!error && [obj isKindOfClass:[NSDictionary class]]) {
+                if (!error) {
                     model = [[FHRentSameNeighborhoodResponseModel alloc] initWithData:obj error:nil];
                 }
                 if (!error && model) {
@@ -424,7 +424,10 @@
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
-        FHDetailSameNeighborhoodHouseResponseModel *model = [[FHDetailSameNeighborhoodHouseResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        FHDetailSameNeighborhoodHouseResponseModel *model;
+        if (!error) {
+            model = [[FHDetailSameNeighborhoodHouseResponseModel alloc] initWithDictionary:jsonObj error:&error];
+        }
         if (!error && model) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;

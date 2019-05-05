@@ -166,7 +166,7 @@
         NSNumber *uniqueID = @(((ExploreOrderedData *)item).originalData.uniqueID);
         NSString *key = [NSString stringWithFormat:@"%@_%@", uniqueID, adIDStr != nil ? adIDStr : @""];
         
-        if ([uniqueIDDicts objectForKey:key]) {//重复
+        if ([uniqueIDDicts objectForKey:key] && [(ExploreOrderedData *)item cellType] != ExploreOrderedDataCellTypeFHHouse) {//重复 且不是房源卡片
             id repeatItem = [uniqueIDDicts objectForKey:key];
             [mutableShowedAllItems removeObject:repeatItem];
             

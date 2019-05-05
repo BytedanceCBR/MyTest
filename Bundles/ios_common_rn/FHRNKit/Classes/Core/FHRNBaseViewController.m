@@ -103,9 +103,9 @@
     }
     return self;
 }
+
 - (void)initRNKit
 {
-    [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
     self.ttRNKit = [self extracted];
 }
 
@@ -128,6 +128,8 @@
         if (!_isDebug) {
             [self initRNKit];
         }
+        
+        [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
         
         if (_canPreLoad) {
             [self processPreloadAction];
@@ -308,16 +310,16 @@
                 ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
                 [self.ttRNKit clearRNResourceForChannel:_channelStr];
                 [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+                self.ttRNKit.delegate = nil;
+                self.ttRNKit = nil;
+                self.viewWrapper = nil;
+                _viewWrapper.rnView = nil;
             }
-        
-            self.ttRNKit.delegate = nil;
-            self.ttRNKit = nil;
+
             [_container removeFromSuperview];
-            self.container = nil;
             [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
-            _viewWrapper.rnView = nil;
             [_viewWrapper removeFromSuperview];
-            self.viewWrapper = nil;
+             self.container = nil;
     });
 }
 
@@ -331,6 +333,13 @@
 
 - (void)willMoveToParentViewController:(UIViewController*)parent{
     [super willMoveToParentViewController:parent];
+    if(!parent){
+    }else
+    {
+//        if (![FHEnvContext isNetworkConnected]) {
+//            [self sendEventName:@"enter_unAvalable" andParams:nil];
+//        }
+    }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
     [super didMoveToParentViewController:parent];

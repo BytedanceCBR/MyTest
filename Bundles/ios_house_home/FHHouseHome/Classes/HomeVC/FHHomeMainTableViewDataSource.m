@@ -22,6 +22,7 @@
 #import "FHHomeConfigManager.h"
 #import "TTArticleCategoryManager.h"
 #import <FHErrorView.h>
+#import <TTDeviceHelper.h>
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong)NSMutableDictionary *traceRecordDict;
@@ -50,11 +51,11 @@
         return 1;
     }
     
-    if (self.showNoDataErrorView)
+    if (self.showNoDataErrorView || self.showRequestErrorView)
     {
         return 1;
     }
-    
+
     if (self.showPlaceHolder) {
         return 10;
     }
@@ -81,16 +82,35 @@
                 [subView removeFromSuperview];
             }
             cellError.selectionStyle = UITableViewCellSelectionStyleNone;
-            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.4)];
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
             //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
             [cellError.contentView addSubview:noDataErrorView];
             
             [noDataErrorView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImageName:@"group-9"
                                     showRetry:NO];
-            
             return cellError;
         }
         
+        if (self.showRequestErrorView) {
+            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+            for (UIView *subView in cellError.contentView.subviews) {
+                [subView removeFromSuperview];
+            }
+            cellError.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [self getHeightShowNoData])];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [cellError.contentView addSubview:noDataErrorView];
+            
+            [noDataErrorView showEmptyWithTip:@"数据走丢了" errorImageName:@"group-9"
+                                    showRetry:YES];
+            __weak typeof(self) weakSelf = self;
+            noDataErrorView.retryBlock = ^{
+                if (weakSelf.requestErrorRetry) {
+                    weakSelf.requestErrorRetry();
+                }
+            };
+            return cellError;
+        }
         
         if (self.showPlaceHolder) {
             FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
@@ -110,6 +130,17 @@
     }
 }
 
+- (CGFloat)getHeightShowNoData
+{
+    if([TTDeviceHelper isScreenWidthLarge320])
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.45;
+    }else
+    {
+        return [UIScreen mainScreen].bounds.size.height * 0.65;
+    }
+}
+
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -118,9 +149,9 @@
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
-    if (self.showNoDataErrorView)
+    if (self.showNoDataErrorView || self.showRequestErrorView)
     {
-         return [UIScreen mainScreen].bounds.size.height * 0.4;
+        return [self getHeightShowNoData];
     }
     
     if (self.showPlaceHolder) {
