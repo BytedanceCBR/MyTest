@@ -22,6 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)videoViewFullScreenClick:(FHShowVideoView *)videoView;
 // 默认是横屏视频
 - (void)videoFrameChanged:(CGRect)videoFrame isVerticalVideo:(BOOL)isVerticalVideo;
+// 进入全屏
+- (void)playerDidEnterFullscreen;
+// 离开全屏
+- (void)playerDidExitFullscreen;
 
 @end
 

@@ -60,6 +60,7 @@
 @property(nonatomic, strong) NSMutableSet * vedioViewPools;
 @property (nonatomic, strong)   FHDetailVideoInfoView       *videoInfoView;
 @property (nonatomic, assign)   BOOL       startDismissSelf;
+@property (nonatomic, assign)   BOOL       disableAutoPlayVideo;// 禁用自动播放和暂停功能
 
 @property(nonatomic, strong)UIView * topBar;
 @property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
@@ -101,6 +102,7 @@
         _vedioCount = 0;
         _isShowenVideo = NO;
         _longPressToSave = YES;
+        _disableAutoPlayVideo = NO;
         
         self.ttHideNavigationBar = YES;
 
@@ -514,12 +516,13 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf setCurrentStatusStyle];
     });
-    if (self.currentIndex < self.vedioCount) {
+    if (self.currentIndex < self.vedioCount && !self.disableAutoPlayVideo) {
         // 视频
         if (self.videoVC.playbackState != TTVPlaybackState_Playing) {
             [self.videoVC play];
         }
     }
+    self.disableAutoPlayVideo = NO;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -528,12 +531,13 @@
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
         navi.panRecognizer.enabled = YES;
     }
-    if (self.currentIndex < self.vedioCount && !self.startDismissSelf) {
+    if (self.currentIndex < self.vedioCount && !self.startDismissSelf && !self.disableAutoPlayVideo) {
         // 视频
         if (self.videoVC.playbackState == TTVPlaybackState_Playing) {
             [self.videoVC pause];
         }
     }
+    self.disableAutoPlayVideo = NO;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -1179,6 +1183,16 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         self.videoInfoView.backgroundColor = [UIColor clearColor];
         self.videoInfoView.frame = CGRectMake(0, videoFrame.size.height + videoFrame.origin.y + 14, mainSize.width, 67);
     }
+}
+
+// 进入全屏
+- (void)playerDidEnterFullscreen {
+    _disableAutoPlayVideo = YES;
+}
+
+// 离开全屏
+- (void)playerDidExitFullscreen {
+    _disableAutoPlayVideo = YES;
 }
 
 #pragma mark -- rotate
