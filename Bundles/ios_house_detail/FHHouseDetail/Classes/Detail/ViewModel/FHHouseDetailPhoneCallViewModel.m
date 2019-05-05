@@ -156,7 +156,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     
     if ([FHHouseDetailPhoneCallViewModel isEnableCurrentChannel]) {
-        if (isPre) {
+        if (isPre && [FHEnvContext isNetworkConnected]) {
             if ([self.routeAgentObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
                 [self.belongsVC.navigationController pushViewController:self.routeAgentObj.instance animated:YES];
             }else
@@ -294,7 +294,6 @@ extern NSString *const kFHPhoneNumberCacheKey;
         NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"]];
         
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-      
         TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:openUrlRn userInfo:userInfo];
         if (isPre) {
             self.routeAgentObj = routeObj;

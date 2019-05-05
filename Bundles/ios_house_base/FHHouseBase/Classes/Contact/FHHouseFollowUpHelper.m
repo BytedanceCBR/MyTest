@@ -42,39 +42,13 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     NSString *followId = configModel.followId;
     FHHouseType houseType = configModel.houseType;
     FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
-    BOOL showTip = configModel.showTip;
-    BOOL hideToast = configModel.hideToast;
-
     [self isFollowUpParamsValid:configModel];
     
     [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (!error) {
             if (model.status.integerValue == 0) {
-                if (model.data.followStatus == 0) {
-                    if (!hideToast) {
-                        
-                        NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
-                        if (toastCount < 3) {
-                            CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
-                            style.cornerRadius = 12;
-                            style.messageAlignment = NSTextAlignmentCenter;
-                            style.messageColor = [UIColor whiteColor];
-                            style.backgroundColor = [[UIColor themeGray1] colorWithAlphaComponent:0.96];
-                            style.messageFont = [UIFont themeFontRegular:10];
-                            style.verticalPadding = 5;
-                            style.horizontalPadding = 6;
-                            style.isCustomPosition = YES;
-                            style.customX = [UIScreen mainScreen].bounds.size.width - 20;
-                            style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
-                            toastCount += 1;
-                            UIViewController *temp = [TTUIResponderHelper topmostViewController];
-                            [temp.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
-                            [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
-                            [[NSUserDefaults standardUserDefaults]synchronize];
-                        }
-                    }
-                }
+
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"followId"] = followId;
                 userInfo[@"followStatus"] = @(1);

@@ -14,7 +14,7 @@
 #import <Masonry.h>
 #import <TTAccountSDK.h>
 #import "TTAccountLoginConfLogic.h"
-
+#import <TTAccountSDK/TTAccountAuthWeChat.h>
 
 
 #define kTTAccountLoginTipTitleHeight          (14.f)

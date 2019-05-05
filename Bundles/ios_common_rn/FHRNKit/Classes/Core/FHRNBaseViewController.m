@@ -234,6 +234,8 @@
     
     _container.hidden = YES;
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     
     [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
 }
@@ -329,6 +331,13 @@
 
 - (void)willMoveToParentViewController:(UIViewController*)parent{
     [super willMoveToParentViewController:parent];
+    if(!parent){
+    }else
+    {
+        if (![FHEnvContext isNetworkConnected]) {
+            [self sendEventName:@"enter_unAvalable" andParams:nil];
+        }
+    }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
     [super didMoveToParentViewController:parent];
