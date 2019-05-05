@@ -1704,9 +1704,6 @@
     if (sortType.length < 1) {
         return;
     }
-    if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
-        return;
-    }
     NSMutableDictionary *params = [NSMutableDictionary new];
     params[@"page_type"] = [self pageTypeString];
     params[@"rank_type"] = sortType;
