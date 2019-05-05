@@ -23,6 +23,8 @@
 @property(nonatomic, assign) CGRect firstVideoFrame;
 //是否正在显示流量提示view
 @property (nonatomic, assign) BOOL isShowingNetFlow;
+//上一次的状态
+@property(nonatomic, assign) TTVPlaybackState lastPlaybackState;
 //记录视频播放时长
 @property (nonatomic, assign) NSTimeInterval stayTime;
 @property (nonatomic, assign) NSTimeInterval startTime;
@@ -108,36 +110,23 @@
 - (void)play {
     self.videoView.coverView.hidden = YES;
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
-        //埋点
-        if(self.playbackState == TTVPlaybackState_Stopped){
-            [self trackWithName:@"video_play"];
-        }else{
-            [self trackWithName:@"video_continue"];
-        }
-        
         [self.player play];
     }
 }
 
 - (void)pause {
     if(self.playbackState == TTVPlaybackState_Playing){
-        [self trackWithName:@"video_pause"];
         [self.player pause];
     }
 }
 
 - (void)stop {
-    if(self.playbackState != TTVPlaybackState_Stopped){
-        [self trackWithName:@"video_over"];
-    }
     [self.player stop];
 }
 
 - (void)close {
-    if(self.playbackState != TTVPlaybackState_Stopped){
-        [self trackWithName:@"video_over"];
-    }
     [self.player close];
+    [self trackWithName:@"video_over"];
 }
 
 - (void)resetTime {
@@ -145,7 +134,7 @@
         self.stayTime = 0;
         self.startTime = [[NSDate date] timeIntervalSince1970];
     }else{
-        self.stayTime += [[NSDate date] timeIntervalSince1970] - self.startTime;
+        self.stayTime = [[NSDate date] timeIntervalSince1970] - self.startTime;
     }
 }
 
@@ -303,7 +292,11 @@
 /// 播放器播放状态变化通知
 - (void)player:(TTVPlayer *)player playbackStateDidChanged:(TTVPlaybackState)playbackState {
     self.playState = playbackState;
+    
+    //埋点
     [self resetTime];
+    [self trackPlayBackState];
+    self.lastPlaybackState = playbackState;
     
     if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
         [self.delegate playbackStateDidChanged:playbackState];
@@ -337,6 +330,21 @@
 }
 
 #pragma mark - 埋点相关
+
+//埋点
+- (void)trackPlayBackState {
+    if(self.playbackState == TTVPlaybackState_Playing){
+        if(self.lastPlaybackState == TTVPlaybackState_Stopped){
+            [self trackWithName:@"video_play"];
+        }else{
+            [self trackWithName:@"video_continue"];
+        }
+    }else if(self.playbackState == TTVPlaybackState_Paused){
+        [self trackWithName:@"video_pause"];
+    }else{
+        [self trackWithName:@"video_over"];
+    }
+}
 
 //埋点
 - (void)trackWithName:(NSString *)name {
