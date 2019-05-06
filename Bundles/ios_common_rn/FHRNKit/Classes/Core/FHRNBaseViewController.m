@@ -103,9 +103,9 @@
     }
     return self;
 }
+
 - (void)initRNKit
 {
-    [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
     self.ttRNKit = [self extracted];
 }
 
@@ -128,6 +128,8 @@
         if (!_isDebug) {
             [self initRNKit];
         }
+        
+        [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
         
         if (_canPreLoad) {
             [self processPreloadAction];
@@ -303,21 +305,18 @@
 
     [[FHRNHelper sharedInstance] removeCountChannel:_channelStr];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
-                ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
-                [self.ttRNKit clearRNResourceForChannel:_channelStr];
-                [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
-            }
-        
-            self.ttRNKit.delegate = nil;
-            self.ttRNKit = nil;
-            [_container removeFromSuperview];
-            self.container = nil;
-            [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
-            _viewWrapper.rnView = nil;
-            [_viewWrapper removeFromSuperview];
-            self.viewWrapper = nil;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
+            ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
+            [self.ttRNKit clearRNResourceForChannel:_channelStr];
+            [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+        }
+        [_container removeFromSuperview];
+        self.container = nil;
+        [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
+        _viewWrapper.rnView = nil;
+        [_viewWrapper removeFromSuperview];
+         self.viewWrapper = nil;
     });
 }
 
@@ -335,7 +334,8 @@
     }else
     {
         if (![FHEnvContext isNetworkConnected]) {
-            [self sendEventName:@"enter_unAvalable" andParams:nil];
+            [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",0]}];
+//            [self sendEventName:@"enter_unAvalable" andParams:nil];
         }
     }
 }

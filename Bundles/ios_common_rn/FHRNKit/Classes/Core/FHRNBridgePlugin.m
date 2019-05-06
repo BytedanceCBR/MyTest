@@ -289,7 +289,7 @@
             
 //            callback(TTBridgeMsgSuccess,nil);
             if (callback) {
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
+                callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),
                                                           @"beginReqNetTime": startTime
@@ -304,7 +304,7 @@
                 if([obj isKindOfClass:[NSData class]]){
                     result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
                 }
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
+                callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
                                                           @"response": result,
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),
