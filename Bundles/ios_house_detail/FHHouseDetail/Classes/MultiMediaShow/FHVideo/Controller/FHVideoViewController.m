@@ -130,7 +130,9 @@
 
 - (void)close {
     [self.player close];
-    [self trackWithName:@"video_over"];
+    if(self.playbackState == TTVPlaybackState_Playing){
+        [self trackWithName:@"video_over"];
+    }
 }
 
 - (void)resetTime {
@@ -154,6 +156,10 @@
 
 // 只是改变 所播放视频的frame：videoFrame 值，布局并不改变
 - (void)changeVideoFrame {
+    if(self.isFullScreen){
+        return;
+    }
+    
     CGRect vFrame = self.view.frame;
     CGFloat vWidth = [self videoWidth];
     CGFloat vHeight = [self videoHeight];
@@ -300,6 +306,7 @@
     //埋点
     [self resetTime];
     [self trackPlayBackState];
+    
     self.lastPlaybackState = playbackState;
     
     if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
@@ -382,6 +389,7 @@
         __strong typeof(wself) self = wself;
         wself.isShowingNetFlow = NO;
     };
+    
     return view;
 }
 

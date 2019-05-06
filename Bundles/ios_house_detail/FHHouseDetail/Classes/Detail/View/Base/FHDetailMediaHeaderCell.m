@@ -365,6 +365,7 @@
             dict[@"click_position"] = @"video";
         }
 
+        dict[@"enter_type"] = @"click";
         dict[@"rank"] = @"be_null";
         
         TRACK_EVENT(@"click_options", dict);

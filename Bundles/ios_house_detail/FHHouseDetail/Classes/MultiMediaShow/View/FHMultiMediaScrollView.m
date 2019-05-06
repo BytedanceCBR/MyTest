@@ -289,7 +289,7 @@
 - (void)updateItemAndInfoLabel {
     int diff = abs(self.colletionView.contentOffset.x - self.beginX);
     
-    if(diff < self.colletionView.frame.size.width/2){
+    if(diff < self.colletionView.frame.size.width/2 && !self.isShowenPictureVC){
         return;
     }
     

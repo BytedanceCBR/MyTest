@@ -96,93 +96,61 @@
         
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
-//        CGSize size = containerView.frame.size;
-//        [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.width.equalTo(@(size.width));
-//            make.height.equalTo(@(size.height));
-//            make.center.mas_equalTo(coverView);
-//        }];
-       
+        CGSize size = containerView.frame.size;
         
-        [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-             playView.frame = CGRectMake(-200, 200, 700, 414);
-            [self changePlayViewTransform:playView isPrensent:YES];
-        } completion:^(BOOL finished) {
-            [playView removeFromSuperview];
-            [coverView removeFromSuperview];
-            [toViewController.view addSubview:playView];
-            playView.transform = CGAffineTransformMakeRotation(0);//CGAffineTransformIdentity;//CGAffineTransformMakeRotation(0);
-//            [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//                make.edges.equalTo(toViewController.view).insets(UIEdgeInsetsZero);
-//            }];
-            playView.frame = toViewController.view.frame;
+        [UIView animateWithDuration:[self transitionDuration:transitionContext]
+                              delay:0.0 options:UIViewAnimationOptionLayoutSubviews
+                         animations:^{
+                             [playView.superview layoutIfNeeded];
+                             playView.width = size.width;
+                             playView.height = size.height;
+                             playView.center = coverView.center;
+                             [self changePlayViewTransform:playView isPrensent:YES];
+                         } completion:^(BOOL finished) {
+                             [playView removeFromSuperview];
+                             [coverView removeFromSuperview];
+                             [toViewController.view addSubview:playView];
+                             playView.transform = CGAffineTransformMakeRotation(0);//CGAffineTransformIdentity;//
+                             playView.frame = toViewController.view.bounds;
 
-            BOOL wasCancelled = [transitionContext transitionWasCancelled];
-            //设置transitionContext通知系统动画执行完毕
-            [transitionContext completeTransition:!wasCancelled];
-
-        }];
+                             BOOL wasCancelled = [transitionContext transitionWasCancelled];
+                             //设置transitionContext通知系统动画执行完毕
+                             [transitionContext completeTransition:!wasCancelled];
+                         }];
     }else{
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         
         UIDeviceOrientation currentOrirentation = [UIDevice currentDevice].orientation;
         
         [containerView bringSubviewToFront:fromViewController.view];
-//        playView = [fromViewController.view viewWithTag:self.rotatedViewTag];
     
         CGRect toRect = self.frameBeforePresentRelative;
-
-//        CGRect toRect = [playView.superview convertRect:self.frameBeforePresent toView:toViewController.view];
-//        CGRect toRect = [toViewController.view convertRect:self.frameBeforePresent fromView:playView.superview];
         
-        
-        
-//        [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.width.mas_equalTo(@(toRect.size.width));
-//            make.height.mas_equalTo(@(toRect.size.height));
-//
-//            if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
-//                make.center.equalTo(fromViewController.view).centerOffset(CGPointMake(-(containerView.frame.size.height - toRect.size.height)/2.0 + toRect.origin.y, 0));
-//            }
-//            else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
-//                make.center.equalTo(fromViewController.view).centerOffset(CGPointMake((containerView.frame.size.height - toRect.size.height)/2.0 - toRect.origin.y, 0));
-//            }
-//        }];
-        
-        [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
-            playView.frame = toRect;
-//             playView.transform = CGAf;
-//            [playView.superview layoutIfNeeded];
-//            playView.width = toRect.size.width;
-//            playView.height = toRect.size.height;
-//            if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
-//                playView.center = CGPointMake(-(fromViewController.view.center.x +  containerView.frame.size.height - toRect.size.height)/2.0 + toRect.origin.y, fromViewController.view.center.y);//;.equalTo(fromViewController.view).centerOffset(CGPointMake(-(containerView.frame.size.height - toRect.size.height)/2.0 + toRect.origin.y, 0));
-//            }
-//            else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
-//                //            make.center.equalTo(fromViewController.view).centerOffset(CGPointMake((containerView.frame.size.height - toRect.size.height)/2.0 - toRect.origin.y, 0));
-//                playView.center = fromViewController.view.center;
-//            }
-            [self changePlayViewTransform:playView isPrensent:NO];
-            fromViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
-        } completion:^(BOOL finished) {
-//            [playView removeConstraints:playView.constraints];
-            [playView removeFromSuperview];
-            [self.superViewOfPlayer addSubview:playView];
-            playView.transform = CGAffineTransformMakeRotation(0);
-
-//            [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//                make.top.mas_equalTo(@(toRect.origin.y));
-//                make.left.mas_equalTo(@(toRect.origin.x));
-//                make.width.mas_equalTo(@(toRect.size.width));
-//                make.height.mas_equalTo(@(toRect.size.height));
-//            }];
-            playView.frame = toRect;
-        
-            BOOL wasCancelled = [transitionContext transitionWasCancelled];
-            //设置transitionContext通知系统动画执行完毕
-            [transitionContext completeTransition:!wasCancelled];
-            
-        }];
+        [UIView animateWithDuration:[self transitionDuration:transitionContext]
+                              delay:0.0 options:UIViewAnimationOptionLayoutSubviews
+                         animations:^{
+                             [playView.superview layoutIfNeeded];
+                             playView.width = toRect.size.width;
+                             playView.height = toRect.size.height;
+                             if (self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
+                                 playView.center = CGPointMake(fromViewController.view.center.y - (containerView.frame.size.height - toRect.size.height)/2.0 + toRect.origin.y, fromViewController.view.center.x);
+                             }
+                             else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
+                                 playView.center = CGPointMake(fromViewController.view.center.x + (containerView.frame.size.height - toRect.size.height)/2.0 - toRect.origin.y, fromViewController.view.center.y);
+                             }
+                             [self changePlayViewTransform:playView isPrensent:NO];
+                             fromViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
+                         } completion:^(BOOL finished) {
+                             [playView removeFromSuperview];
+                             [self.superViewOfPlayer addSubview:playView];
+                             playView.transform = CGAffineTransformMakeRotation(0);
+                             
+                             playView.frame = toRect;
+                             
+                             BOOL wasCancelled = [transitionContext transitionWasCancelled];
+                             //设置transitionContext通知系统动画执行完毕
+                             [transitionContext completeTransition:!wasCancelled];
+                         }];
     }
 }
 // isPrensent 是否是大屏那个 playview
