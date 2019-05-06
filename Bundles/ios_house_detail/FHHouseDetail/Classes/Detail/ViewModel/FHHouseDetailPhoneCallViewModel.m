@@ -158,7 +158,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     
     if ([FHHouseDetailPhoneCallViewModel isEnableCurrentChannel]) {
-        if (isPre) {
+        if (isPre && [FHEnvContext isNetworkConnected]) {
             if ([self.routeAgentObj.instance isKindOfClass:[UIViewController class]] && [self.belongsVC isKindOfClass:[UIViewController class]]) {
                 [self.belongsVC.navigationController pushViewController:self.routeAgentObj.instance animated:YES];
             }else

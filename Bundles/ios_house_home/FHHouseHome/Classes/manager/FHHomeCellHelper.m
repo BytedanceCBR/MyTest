@@ -73,6 +73,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeScrollBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeScrollBannerCell class])];
     
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
+    
+    [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate

@@ -495,22 +495,25 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+    
+    FHDetailContactModel *contactPhone = nil;
     if (model.data.highlightedRealtor) {
-        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
+        contactPhone = model.data.highlightedRealtor;
     }else {
-        model.data.contact.unregistered = YES;
-        self.contactViewModel.contactPhone = model.data.contact;
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
     }
-    if (self.contactViewModel.contactPhone.phone.length > 0) {
+    if (contactPhone.phone.length > 0) {
         
         if ([self isShowSubscribe]) {
-            self.contactViewModel.contactPhone.isFormReport = YES;
+            contactPhone.isFormReport = YES;
         }else {
-            self.contactViewModel.contactPhone.isFormReport = NO;
+            contactPhone.isFormReport = NO;
         }
     }else {
-        self.contactViewModel.contactPhone.isFormReport = YES;
+        contactPhone.isFormReport = YES;
     }
+    self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
 
