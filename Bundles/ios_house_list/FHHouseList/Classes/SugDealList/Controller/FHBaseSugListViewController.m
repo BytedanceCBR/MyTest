@@ -12,6 +12,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTReachability/TTReachability.h>
+#import "FHPriceValuationNSearchView.h"
 
 @interface FHBaseSugListViewController ()
 
@@ -21,6 +22,7 @@
 @property (nonatomic, strong)   TTRouteParamObj      *paramObj;
 @property (nonatomic, assign)   FHHouseType      houseType;
 @property (nonatomic, assign)   FHSugListSearchType      searchType;
+@property (nonatomic, strong)   FHPriceValuationNSearchView       *searchView;
 
 @end
 
@@ -34,6 +36,9 @@
         if ([paramObj.host isEqualToString:@"house_search_deal_neighborhood"]) {
             self.houseType = FHHouseTypeNeighborhood;
             self.searchType = FHSugListSearchTypeNeighborDealList;
+        } else if ([paramObj.host isEqualToString:@"price_valuation_neighborhood_search"]) {
+            self.houseType = FHHouseTypeNeighborhood;
+            self.searchType = FHSugListSearchTypePriceValuation;
         }
     }
     return self;
@@ -46,7 +51,7 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     __weak typeof(self) weakSelf = self;
     self.panBeginAction = ^{
-        [weakSelf.naviBar.searchInput resignFirstResponder];
+        [weakSelf.viewModel resignFirstResponder];
     };
     // 初始化
     if (![TTReachability isNetworkConnected]) {
@@ -58,46 +63,64 @@
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf.naviBar.searchInput becomeFirstResponder];
+        [weakSelf.searchView.searchInput becomeFirstResponder];
     });
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.naviBar.searchInput resignFirstResponder];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    [self.naviBar.searchInput resignFirstResponder];
+    [self.viewModel viewWillDisappear:animated];
 }
 
 - (void)setupUI
 {
     [self setupNaviBar];
+    if (self.searchType == FHSugListSearchTypePriceValuation) {
+        self.searchView = [[FHPriceValuationNSearchView alloc] init];
+        [self.view addSubview:self.searchView];
+    }
     self.suggestTableView = [self createTableView];
     self.viewModel = [[FHBaseSugListViewModel alloc] initWithTableView:self.suggestTableView paramObj:_paramObj];
     self.viewModel.houseType = self.houseType;
     self.viewModel.searchType = self.searchType;
     self.viewModel.listController = self;
     self.viewModel.naviBar = _naviBar;
+    self.viewModel.searchView = _searchView;
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     self.emptyView.hidden = NO;
+    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
+    CGFloat searchHeight = 0;
+    if (self.searchType == FHSugListSearchTypePriceValuation) {
+        searchHeight = 64;
+        [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.left.right.mas_equalTo(self.view);
+            make.height.mas_equalTo(naviHeight);
+        }];
+        [self.searchView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.view).mas_offset(naviHeight);
+            make.left.right.mas_equalTo(self.view);
+            make.height.mas_equalTo(searchHeight);
+        }];
+    }
+    [self.suggestTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.view);
+        make.top.mas_equalTo(self.view).mas_offset(naviHeight + searchHeight);
+        make.bottom.mas_equalTo(self.view);
+    }];
 }
 
 - (void)setupNaviBar
 {
-    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    if (self.searchType == FHSugListSearchTypePriceValuation) {
+        [self setupDefaultNavBar:YES];
+        self.customNavBarView.title.text = @"查房价";
+        return;
+    }
     _naviBar = [[FHSearchBar alloc] init];
     [self.view addSubview:_naviBar];
-    CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
-    [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.view);
-        make.height.mas_equalTo(naviHeight);
-    }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-
 }
 
 - (FHHouseBaseTableView *)createTableView
@@ -115,11 +138,6 @@
     }
     tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     [self.view addSubview:tableView];
-    [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.top.mas_equalTo(self.naviBar.mas_bottom);
-        make.bottom.mas_equalTo(self.view);
-    }];
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }

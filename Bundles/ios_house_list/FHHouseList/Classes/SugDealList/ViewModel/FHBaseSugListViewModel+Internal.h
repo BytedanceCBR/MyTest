@@ -11,6 +11,7 @@
 #import <TTReachability/TTReachability.h>
 #import <FHCommonUI/ToastManager.h>
 #import "FHSuggestionListModel.h"
+#import <FHHouseBase/FHBaseViewController.h>
 
 @protocol FHHouseBaseDataProtocel,FHHouseSuggestionDelegate;
 

@@ -1,16 +1,16 @@
 //
-//  FHBaseSugListViewModel+dealList.m
+//  FHBaseSugListViewModel+priceValuation.m
 //  FHHouseList
 //
-//  Created by 张静 on 2019/4/18.
+//  Created by 张静 on 2019/5/6.
 //
 
-#import "FHBaseSugListViewModel+dealList.h"
+#import "FHBaseSugListViewModel+priceValuation.h"
 #import "FHBaseSugListViewModel+Internal.h"
 
-@implementation FHBaseSugListViewModel (dealList)
+@implementation FHBaseSugListViewModel (priceValuation)
 
-- (void)requestNeighborDealSuggestion:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query searchType:(NSString *)searchType
+- (void)requestSuggestion:(NSInteger)cityId houseType:(NSInteger)houseType query:(NSString *)query
 {
     if (self.sugHttpTask) {
         [self.sugHttpTask cancel];
@@ -18,7 +18,7 @@
     self.highlightedText = query;
     __weak typeof(self) wself = self;
     
-    self.sugHttpTask = [FHHouseListAPI requestDealSuggestionCityId:cityId houseType:houseType query:query searchType:searchType class:[FHSuggestionResponseModel class] completion:^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseListAPI requestSuggestionOnlyNeiborhoodCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (error.code == NSURLErrorCancelled) {
             return ;
         }

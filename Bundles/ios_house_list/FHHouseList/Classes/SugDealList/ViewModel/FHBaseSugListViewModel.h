@@ -9,7 +9,7 @@
 #import "FHHouseListAPI.h"
 
 NS_ASSUME_NONNULL_BEGIN
-@class TTRouteParamObj,FHBaseViewController,FHSearchBar;
+@class TTRouteParamObj,FHBaseViewController,FHSearchBar,FHPriceValuationNSearchView;
 
 typedef enum : NSUInteger {
     FHSugListSearchTypeDefault,
@@ -21,12 +21,15 @@ typedef enum : NSUInteger {
 
 @property(nonatomic , weak) FHBaseViewController *listController;
 @property (nonatomic, weak)   FHSearchBar       *naviBar;
+@property (nonatomic, weak)   FHPriceValuationNSearchView       *searchView;
 @property (nonatomic, assign) FHSugListSearchType searchType;
 @property (nonatomic, assign) FHHouseType houseType;
 
 - (instancetype)initWithTableView:(UITableView *)tableView paramObj:(TTRouteParamObj *)paramObj;
 - (void)clearSugTableView;
 - (void)reloadSugTableView;
+- (void)viewWillDisappear:(BOOL)animated;
+- (BOOL)resignFirstResponder;
 
 @end
 

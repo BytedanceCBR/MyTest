@@ -30,7 +30,9 @@
 -(instancetype)initWithType:(FHSearchNavType)type
 {
     CGRect frame = [[UIScreen mainScreen] bounds];
-    frame.size.height = MIN_HEIGHT;
+    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    CGFloat statusBarHeight = (isIphoneX ? 44 : 20);
+    frame.size.height = MIN_HEIGHT + statusBarHeight;
     self = [super initWithFrame:frame];
     if (self) {
         _type = type;

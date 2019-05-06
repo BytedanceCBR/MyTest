@@ -14,10 +14,13 @@
 #import <TTRoute/TTRoute.h>
 #import <FHHouseBase/FHHouseSuggestionDelegate.h>
 #import "FHBaseSugListViewModel+dealList.h"
+#import "FHBaseSugListViewModel+priceValuation.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import "FHSuggestionItemCell.h"
 #import <FHHouseBase/FHBaseViewController.h>
 #import <FHCommonUI/FHSearchBar.h>
+#import "FHPriceValuationNSCell.h"
+#import "FHPriceValuationNSearchView.h"
 
 @implementation FHBaseSugListViewModel
 
@@ -39,7 +42,9 @@
             self.backListVC = back_vc.anyObject;  // 需要返回到的某个列表页面
             
         }
+        
         [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
+        [tableView registerClass:[FHPriceValuationNSCell class] forCellReuseIdentifier:@"FHPriceValuationNSCell"];
         tableView.delegate  = self;
         tableView.dataSource = self;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
@@ -65,7 +70,7 @@
         if (self.searchType == FHSugListSearchTypeNeighborDealList) {
             [self requestNeighborDealSuggestion:cityId houseType:self.houseType query:text searchType:@"neighborhood_deal"];
         }else if (self.searchType == FHSugListSearchTypePriceValuation) {
-            
+            [self requestSuggestion:cityId houseType:self.houseType query:text];
         }
     }
 }
@@ -74,12 +79,27 @@
 {
     _naviBar = naviBar;
     if (self.searchType == FHSugListSearchTypeNeighborDealList) {
-
         [_naviBar setSearchPlaceHolderText:@"请输入小区"];
     }
     _naviBar.searchInput.delegate = self;
 }
 
+- (void)setSearchView:(FHPriceValuationNSearchView *)searchView
+{
+    _searchView = searchView;
+    _searchView.searchInput.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self resignFirstResponder];
+}
+
+- (BOOL)resignFirstResponder
+{
+    [self.naviBar.searchInput resignFirstResponder];
+    [self.searchView.searchInput resignFirstResponder];
+}
 
 #pragma mark - tableview delegate
 
@@ -93,9 +113,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.sugListData.count) {
-        FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        if (indexPath.row < self.sugListData.count) {
+        if (self.searchType == FHSugListSearchTypeNeighborDealList) {
+
+            FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
             NSString *originText = model.text;
             NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
@@ -117,8 +138,23 @@
                     make.bottom.mas_equalTo(cell.contentView).offset(0);
                 }];
             }
+            return cell;
+        } else if (self.searchType == FHSugListSearchTypePriceValuation) {
+            FHPriceValuationNSCell *cell = (FHPriceValuationNSCell *)[tableView dequeueReusableCellWithIdentifier:@"FHPriceValuationNSCell" forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+            NSString *originText = model.text;
+            NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
+            NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
+            cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeRed1] fontSize:15.0];
+            if (indexPath.row == self.sugListData.count - 1) {
+                // 末尾
+                cell.sepLine.hidden = YES;
+            } else {
+                cell.sepLine.hidden = NO;
+            }
+            return cell;
         }
-        return cell;
     }
     
     return [[UITableViewCell alloc] init];
@@ -184,7 +220,12 @@
 - (void)textFiledTextChangeNoti:(NSNotification *)noti
 {
     NSInteger maxCount = 80;
-    NSString *text = self.naviBar.searchInput.text;
+    NSString *text = nil;
+    if (self.searchType == FHSugListSearchTypePriceValuation) {
+        text = self.searchView.searchInput.text;
+    } else {
+        text = self.naviBar.searchInput.text;
+    }
     if (text.length > maxCount) {
         text = [text substringToIndex:maxCount];
         self.naviBar.searchInput.text = text;
