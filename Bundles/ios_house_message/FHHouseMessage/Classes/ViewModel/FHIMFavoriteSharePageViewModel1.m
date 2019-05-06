@@ -11,14 +11,14 @@
 #import "FHHouseSelectedItemCell.h"
 #import "RXCollection.h"
 @interface FHIMFavoriteSharePageViewModel1 ()
-@property (nonatomic, strong) NSMutableSet<NSIndexPath*>* selected;
+@property (nonatomic, strong) NSMutableOrderedSet<NSIndexPath*>* selected;
 @end
 
 @implementation FHIMFavoriteSharePageViewModel1
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMyFavoriteViewController *)viewController type:(FHHouseType)type {
     self = [super initWithTableView:tableView controller:viewController type:type];
     if (self) {
-        self.selected = [[NSMutableSet alloc] init];
+        self.selected = [[NSMutableOrderedSet alloc] init];
         self.isDisplay = NO;
     }
     return self;
