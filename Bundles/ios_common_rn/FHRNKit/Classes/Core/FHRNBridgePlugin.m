@@ -60,10 +60,10 @@
 
 - (void)toastWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    NSString *text = [param tt_stringValueForKey:@"text"];
+    NSString *title = [param tt_stringValueForKey:@"title"];
 
-    if ([text isKindOfClass:[NSString class]] && text.length > 0) {
-        [[ToastManager manager] showToast:text];
+    if ([title isKindOfClass:[NSString class]] && title.length > 0) {
+        [[ToastManager manager] showToast:title];
     }
 }
 
