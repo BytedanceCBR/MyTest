@@ -54,7 +54,17 @@
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, call_phone), @"app.call_phone");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, toast), @"app.toast");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
+}
+
+- (void)toastWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    NSString *text = [param tt_stringValueForKey:@"text"];
+
+    if ([text isKindOfClass:[NSString class]] && text.length > 0) {
+        [[ToastManager manager] showToast:text];
+    }
 }
 
 - (void)appInfoWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
