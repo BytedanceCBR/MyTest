@@ -230,7 +230,9 @@
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VIDEOCELLID forIndexPath:indexPath];
             model.playerView = self.videoVC.view;
             model.currentPlaybackTime = self.videoVC.currentPlaybackTime;
-            [self updateVideo:model];
+            if (!self.isShowenPictureVC) {
+                [self updateVideo:model];
+            }
         }else{
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
         }

@@ -95,7 +95,6 @@
     UIImageView *displayV = [super displayImageView];
     CGRect imageViewFrame = [self showVideoFrame];
     self.vedioView.frame = imageViewFrame;
-//    [_videoVC setViewFrame:imageViewFrame];
     return self.vedioView;
 }
 
@@ -109,7 +108,6 @@
     if (self.vedioView.superview == self) {
         self.currentImageView.hidden = YES;
         self.vedioView.frame = imageViewFrame;
-//        [_videoVC setViewFrame:imageViewFrame];
         [self.vedioView.superview bringSubviewToFront:self.vedioView];// 需要播放的时候把当前页面移动到前面
     }
 }
