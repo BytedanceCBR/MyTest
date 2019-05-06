@@ -189,7 +189,8 @@
 
 - (void)setupNaviBar {
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
-    _naviBar = [[FHSuggestionListNavBar alloc] init];
+    _naviBar = [[FHSearchBar alloc] initWithType:FHSearchNavTypeSug];
+    [_naviBar setSearchPlaceHolderText:@"二手房/租房/小区"];
     [self.view addSubview:_naviBar];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     [_naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
