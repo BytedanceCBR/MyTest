@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHVideoViewDelegate <NSObject>
 
-// 全屏按钮点击
-- (void)videoViewFullScreenClick:(FHShowVideoView *)videoView;
 // 默认是横屏视频
 - (void)videoFrameChanged:(CGRect)videoFrame isVerticalVideo:(BOOL)isVerticalVideo;
 // 进入全屏
