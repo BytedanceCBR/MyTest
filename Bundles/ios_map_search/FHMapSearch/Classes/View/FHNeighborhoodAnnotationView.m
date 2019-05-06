@@ -86,19 +86,20 @@
         
         switch (houseAnnotation.type) {
             case FHHouseAnnotationTypeSelected:
-            {
+            case FHHouseAnnotationTypeOverSelected:
+            { //不区分选中还是选过
                 bgImageName = @"mapsearch_annotation_bg_red";
                 arrowImageName = @"mapsearch_annotation_arrow_red";
                 textColor = [UIColor whiteColor];
             }
                 break;
-            case FHHouseAnnotationTypeOverSelected:
-            {
-                bgImageName = @"mapsearch_annotation_bg_grayRed";
-                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
-                textColor = [UIColor whiteColor];
-            }
-                break;
+//            case FHHouseAnnotationTypeOverSelected:
+//            {
+//                bgImageName = @"mapsearch_annotation_bg_grayRed";
+//                arrowImageName = @"mapsearch_annotation_arrow_grayRed";
+//                textColor = [UIColor whiteColor];
+//            }
+//                break;
                 
             default:
             {

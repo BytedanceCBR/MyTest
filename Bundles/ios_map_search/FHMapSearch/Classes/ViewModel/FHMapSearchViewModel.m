@@ -30,6 +30,7 @@
 #import "FHMapSearchWayChooseView.h"
 #import <FHCommonUI/ToastManager.h>
 #import "FHMapSearchDrawGuideView.h"
+#import "FHMapSearchLevelPopLayer.h"
 
 #define kTipDuration 3
 
@@ -73,7 +74,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , assign) BOOL movingToCenter;
 @property(nonatomic , assign) BOOL configUserLocationLayer;
 @property(nonatomic , assign) BOOL mapViewRegionSuccess;
+
 @property(nonatomic , strong) MAPolygon *drawLayer;//画圈图层
+@property(nonatomic , strong) NSArray *drawLineXCoords;
+@property(nonatomic , strong) NSArray *drawLineYCoords;
+@property(nonatomic , strong) NSArray *drawLineNeighbors;
 
 @end
 
@@ -372,6 +377,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [wself showRentHouseDetailPage:model rank:rank];
         };
         
+        _houseListViewController.getPloyInfoBlock = ^FHMapSearchPolyInfoModel * _Nonnull{
+            if (wself.showMode != FHMapSearchShowModeDrawLine) {
+                return nil;
+            }
+            
+            FHMapSearchPolyInfoModel *model = [FHMapSearchPolyInfoModel new];
+            model.coordinateEnclosure = [wself drawLineCoordinates];
+            model.neighborhoodIds = [wself drawLineNeighborIds];
+            return model;
+        };
+        
         _houseListViewController.viewModel.configModel = self.configModel;
     }
     return _houseListViewController;
@@ -519,8 +535,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         query = self.filterConditionParams;
     }
     
+    NSString *targetType = nil;
+    if (_showMode == FHMapSearchShowModeDrawLine) {
+        targetType = @"neighborhood";
+    }
+    
     __weak typeof(self) wself = self;
-    TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel suggestionParams:nil callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
+    TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
         
         if (!wself) {
             return ;
@@ -574,6 +595,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)addAnnotations:(NSArray *)list
 {
+    self.drawLineNeighbors = nil;
+    
     if (self.showMode == FHMapSearchShowModeDrawLine) {
         //处理小区
         self->onSaleHouseCount = 0;
@@ -586,6 +609,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
         }
         list = hlist;
+        self.drawLineNeighbors = list;
     }
     
     if (list.count > 0) {
@@ -686,16 +710,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             /*
              *  zoomlevel 与显示对应关系
              *  区域 7 - 13
-             *  商圈 13 - 16
-             *  小区 16 - 20
+             *  商圈 13 - 15
+             *  小区 15 - 20
              */
             if (zoomLevel < 10) {
                 //BY PM qiuruixiang
                 zoomLevel = 10;
             }else if (zoomLevel < 13) {
                 zoomLevel = 13.5;
-            }else if (zoomLevel < 16){
-                zoomLevel = 16.5;
+            }else if (zoomLevel < 15){
+                zoomLevel = 15.5;
             }else{
                 zoomLevel += 1;
             }
@@ -1272,6 +1296,44 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self requestHouses:YES showTip:NO];
 }
 
+//画圈的坐标数组
+-(NSString *)drawLineCoordinates
+{
+    if (self->drawLinePointCount <= 0) {
+        return nil;
+    }
+    NSMutableString *coords = [NSMutableString new];
+    for (int i = 0 ; i < self->drawLinePointCount; i++) {
+        MAMapPoint point = self->drawLinePoints[i];
+        if (coords.length > 0) {
+            [coords appendString:@";"];
+        }
+        [coords appendFormat:@"%f,%f",point.x,point.y];
+    }
+    
+    return coords;
+}
+
+-(NSString *)drawLineNeighborIds
+{
+    if (self.drawLineNeighbors.count == 0) {
+        return nil;
+    }
+    
+    NSMutableString *neighborIds = [NSMutableString new];
+    [neighborIds appendString:@"["];
+    for (FHMapSearchDataListModel *info in self.drawLineNeighbors ) {
+        if (info.nid.length > 0) {
+            if (neighborIds.length > 1) {
+                [neighborIds appendString:@","];
+            }
+            [neighborIds appendString:info.nid];
+        }
+    }
+    [neighborIds appendString:@"]"];
+    return neighborIds;
+}
+
 -(void)userExit:(FHMapDrawMaskView *)view
 {
     [view removeFromSuperview];
@@ -1290,9 +1352,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)chooseDrawLine
 {
     if (self.mapView.zoomLevel < 13) {
-        SHOW_TOAST(@"请放大地图后使用地图找房");
+        
+        [FHMapSearchLevelPopLayer showInView:self.viewController.view atPoint:CGPointMake(self.chooseView.centerX, self.chooseView.top)];
+        
         return;
     }
+    [self.tipView removeFromSuperview];
     self.showMode = FHMapSearchShowModeDrawLine;
     [self.viewController enterMapDrawMode];
     
@@ -1313,6 +1378,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)showNeighborList
 {
+    if (self->onSaleHouseCount == 0) {
+        //0套房源
+        return;
+    }
+    
+    //TODO: handle show house list
     
 }
 

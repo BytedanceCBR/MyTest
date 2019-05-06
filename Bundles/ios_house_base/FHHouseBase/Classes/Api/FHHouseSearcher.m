@@ -7,14 +7,15 @@
 
 #import "FHHouseSearcher.h"
 #import <TTNetworkManager/TTNetworkManager.h>
-//#import "Bubble-Swift.h"
-#import "FHURLSettings.h"
+#import <FHHouseBase/FHURLSettings.h>
+#import <FHHouseBase/FHCommonDefines.h>
+#import "FHMainApi.h"
 
 @implementation FHHouseSearcher
 
 +(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *_Nullable)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , FHSearchHouseDataModel *_Nullable model))callback
 {
-    NSString *host = [[FHURLSettings baseURL] stringByAppendingString:@"/f100/api/search?"];
+    NSString *host = @"/f100/api/search?";
     if (query.length > 0) {
         host = [host stringByAppendingString:query];
     }
@@ -23,32 +24,32 @@
     
     [param addEntriesFromDictionary:queryParam];
     
-    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:host params:param method:@"GET" needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    return [FHMainApi postJsonRequest:host query:query params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {        
         if (!callback) {
             return ;
         }
-        if (!error) {
-            if ([(NSData *)obj length] > 0 ) {
-                NSError *jsonError = nil;
-                FHSearchHouseModel *houseModel = [[FHSearchHouseModel alloc] initWithData:obj error:&jsonError];
-                if (jsonError) {
-                    error = jsonError;
-                }else if (houseModel && [houseModel.message isEqualToString:@"success"]) {
-                    callback(nil,houseModel.data);
-                    return;
-                }else{
-                    error = [NSError errorWithDomain:houseModel.status?:@"请求失败" code:-10000 userInfo:nil];
-                }
+        if (!error && result) {
+            NSError *jsonError = nil;
+            FHSearchHouseModel *houseModel = [[FHSearchHouseModel alloc] initWithDictionary:result error:&jsonError];
+            if (jsonError) {
+                error = jsonError;
+            }else if (houseModel && [houseModel.message isEqualToString:@"success"]) {
+                callback(nil,houseModel.data);
+                return;
             }else{
-               error = [NSError errorWithDomain:@"请求失败" code:-10000 userInfo:nil];
+                error = [NSError errorWithDomain:houseModel.status?:@"请求失败" code:-10000 userInfo:nil];
             }
+            
+        }else{
+            error = [NSError errorWithDomain:@"请求失败" code:-10000 userInfo:nil];
         }
+        
         callback(error ,nil);
     }];
 }
 
 
-+(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback
++(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel targetType:(NSString *_Nullable)targetType  suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback
 {
     NSString *host = [[FHURLSettings baseURL] stringByAppendingString:@"/f100/api/map_search?"];
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -82,6 +83,11 @@
     if (![query containsString:@"resize_level"]) {
         param[@"resize_level"] = @(reizeLevel);
     }
+    
+    if (!IS_EMPTY_STRING(targetType)) {
+        param[@"target_type"] = targetType;
+    }
+    
     
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:host params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         if (!callback) {

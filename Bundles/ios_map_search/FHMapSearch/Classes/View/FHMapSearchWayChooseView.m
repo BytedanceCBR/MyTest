@@ -8,11 +8,13 @@
 #import "FHMapSearchWayChooseView.h"
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 @interface FHMapSearchWayChooseView ()
 
 @property(nonatomic , strong) UIButton *subwayButton;
 @property(nonatomic , strong) UIButton *drawLineButton;
+@property(nonatomic , strong) UIView *contentView;
 
 @end
 
@@ -23,9 +25,21 @@
     self = [super initWithFrame:frame];
     if (self) {
         _subwayButton = [self buttonWithTitle:@"地铁找房" icon:nil];
-        _drawLineButton = [self buttonWithTitle:@"画圈找房" icon:nil];
+        _drawLineButton = [self buttonWithTitle:@"画圈找房" icon:SYS_IMG( @"mapsearch_draw_line")];
         
-        [self addSubview:_drawLineButton];
+        _contentView = [[UIView alloc] initWithFrame:self.bounds];
+        _contentView.layer.cornerRadius = 4;
+        _contentView.layer.masksToBounds = YES;
+        _contentView.backgroundColor = [UIColor whiteColor];
+        [_contentView addSubview:_drawLineButton];
+        
+        self.layer.shadowRadius = 6;
+        self.layer.shadowColor = [[UIColor colorWithWhite:0 alpha:0.4] CGColor];
+        self.layer.shadowOffset = CGSizeMake(0, 2);
+        self.layer.shadowOpacity = 1;
+        
+        [self addSubview:_contentView];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
     
@@ -43,6 +57,8 @@
     [button setImage:icon forState:UIControlStateNormal];
     
     [button setBackgroundColor:[UIColor whiteColor]];
+    
+    button.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, 0);
     
     return button;
 }
@@ -63,7 +79,9 @@
 -(void)layoutSubviews
 {
     [super layoutSubviews];
-    _drawLineButton.frame = self.bounds;
+    _contentView.frame = self.bounds;
+    _drawLineButton.frame = self.contentView.bounds;
+    
 }
 
 /*

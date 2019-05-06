@@ -425,7 +425,7 @@
     [self.chooseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.view).offset(bottomMargin);
         make.centerX.mas_equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(100, 46));
+        make.size.mas_equalTo(CGSizeMake(186, 46));
     }];
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {

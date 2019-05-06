@@ -7,6 +7,7 @@
 
 #import "FHBaseViewController.h"
 #import "FHMapSearchHouseListViewModel.h"
+#import "FHMapSearchPolyInfoModel.h"
 
 @class FHSearchHouseDataModel;
 @class FHSearchHouseDataItemsModel;
@@ -26,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy)   void (^showRentHouseDetailBlock)(FHHouseRentDataItemsModel *model , NSInteger rank);
 @property(nonatomic , copy)   void (^showNeighborhoodDetailBlock)(FHMapSearchDataListModel *model);
 @property(nonatomic , copy)   void (^movingBlock)(CGFloat top);
-
+@property(nonatomic , copy)   FHMapSearchPolyInfoModel * (^getPloyInfoBlock)(void);
 -(void)showNeighborHouses:(FHMapSearchDataListModel *)neighbor bubble:(FHMapSearchBubbleModel *)bubble;
 -(void)showWithHouseData:(FHSearchHouseDataModel *)data neighbor:(FHMapSearchDataListModel *)neighbor  bubble:(FHMapSearchBubbleModel *)bubble;
 

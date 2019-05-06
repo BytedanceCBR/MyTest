@@ -14,6 +14,7 @@
 @interface FHMapSearchBottomBar ()
 
 @property(nonatomic , strong) UIButton *closeButton;
+@property(nonatomic , strong) UIView *drawLineShadowBgView;
 @property(nonatomic , strong) UIControl *drawLineBgView;
 @property(nonatomic , strong) UILabel *drawLineLabel;
 @property(nonatomic , strong) UIImageView *drawLineIndicator;
@@ -48,7 +49,16 @@
 -(void)initDrawLines
 {
     
+    _drawLineShadowBgView = [[UIView alloc] init];
+    _drawLineShadowBgView.layer.shadowRadius = 6;
+    _drawLineShadowBgView.layer.shadowColor = [[UIColor colorWithWhite:0 alpha:0.4] CGColor];
+    _drawLineShadowBgView.layer.shadowOffset = CGSizeMake(0, 2);
+    _drawLineShadowBgView.layer.shadowOpacity = 1;
+    
     _drawLineBgView = [[UIControl alloc] init];
+    _drawLineBgView.backgroundColor = [UIColor whiteColor];
+    _drawLineBgView.layer.cornerRadius = 4;
+    _drawLineBgView.layer.masksToBounds = YES;
     [_drawLineBgView addTarget:self action:@selector(onDrawLineInfo) forControlEvents:UIControlEventTouchUpInside];
     
     _drawLineLabel = [[UILabel alloc]init];
@@ -60,6 +70,8 @@
     [_drawLineBgView addSubview:_drawLineLabel];
     [_drawLineBgView addSubview:_drawLineIndicator];
     
+    [self addSubview:_drawLineShadowBgView];
+    [self addSubview:_drawLineBgView];
 }
 
 -(void)initSubways
@@ -84,6 +96,10 @@
         make.top.bottom.mas_equalTo(self);
     }];
     
+    [_drawLineShadowBgView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.drawLineBgView);
+    }];
+    
     
     [_drawLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.drawLineBgView);
@@ -98,31 +114,31 @@
     
     //TODO: add subway
     
-    
-    
-    
 }
 
 -(void)showDrawLine:(NSString *)content
 {
+    _drawLineLabel.text = content;
+    _drawLineBgView.hidden = NO;
+    _subwayBgView.hidden = YES;
     
 }
 
 -(void)showSubway:(NSString *)line
 {
-    
+    _drawLineBgView.hidden = YES;
+    _subwayBgView.hidden = NO;
 }
 
 
 -(void)onCloseAction
 {
-
     [self.delegate closeBottomBar];
 }
 
 -(void)onDrawLineInfo
 {
-    
+    [self.delegate showNeighborList];
 }
 
 
