@@ -141,6 +141,7 @@
     self.segmentEdgeInset = UIEdgeInsetsMake(0, 5, 0, 5);
     self.selectionIndicatorHeight = 5.0f;
     self.selectionIndicatorCornerRadius = 0.0f;
+    self.selectionIndicatorWidth = CGFLOAT_MIN;
     self.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
     self.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     self.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationUp;
@@ -627,7 +628,11 @@
             CGFloat widthToStartOfSelectedIndex = (self.segmentWidth * self.selectedSegmentIndex);
             
             CGFloat x = ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) + (widthToStartOfSelectedIndex - sectionWidth / 2);
-            return CGRectMake(x + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, sectionWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight);
+            if (self.selectionIndicatorWidth != CGFLOAT_MIN) {
+                return CGRectMake(x + self.selectionIndicatorEdgeInsets.left + (sectionWidth - self.selectionIndicatorWidth) / 2, indicatorYOffset, self.selectionIndicatorWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight);
+            } else {
+                return CGRectMake(x + self.selectionIndicatorEdgeInsets.left, indicatorYOffset, sectionWidth - (self.selectionIndicatorEdgeInsets.left + self.selectionIndicatorEdgeInsets.right), self.selectionIndicatorHeight);
+            }
         } else {
             if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
                 CGFloat selectedSegmentOffset = 0.0f;

@@ -152,7 +152,7 @@
     segmented.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     segmented.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     segmented.isNeedNetworkCheck = NO;
-
+    segmented.selectionIndicatorWidth = 25;
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
                                      [UIColor themeGray3],NSForegroundColorAttributeName,nil];
@@ -180,7 +180,7 @@
         if (self.shareViewModel.currentPage != index) {
             self->_openCategoryIndex = index;
             self.shareViewModel.currentPage = index;
-//            [self resetPageDisplayState];
+            [self resetPageDisplayState];
         }
     };
 
