@@ -192,10 +192,21 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 [TTSandBoxHelper setAppFirstLaunchForAd];
 
                 [self resetAllOthersCacheData];
-                [UIView performWithoutAnimation:^{
-                    [self.tableViewV reloadData];
-                }];
                 
+                [self.tableViewV beginUpdates];
+                
+                if ([self.tableViewV numberOfSections] > 0) {
+                    NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
+                    [UIView performWithoutAnimation:^{
+                        [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                    }];
+                }
+                
+                [self.tableViewV endUpdates];
+                
+//                [UIView performWithoutAnimation:^{
+//                    [self.tableViewV reloadData];
+//                }];
                 
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
