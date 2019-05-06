@@ -69,7 +69,7 @@
 }
 
 -(NSArray*)selectedItems {
-    return [_selected rx_mapWithBlock:^id(NSIndexPath* each) {
+    return [[_selected array] rx_mapWithBlock:^id(NSIndexPath* each) {
         if ([self.dataList count] > [each row]) {
             return self.dataList[[each row]];
         } else {
