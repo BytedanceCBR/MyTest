@@ -154,11 +154,19 @@
 
     // 清空数据源
     [self.items removeAllObjects];
+    FHDetailContactModel *contactPhone = nil;
+    
     if (model.data.highlightedRealtor) {
-        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
+        contactPhone = model.data.highlightedRealtor;
     }else {
-        self.contactViewModel.contactPhone = model.data.contact;
+        contactPhone = model.data.contact;
     }
+    if (contactPhone.phone.length > 0) {
+        contactPhone.isFormReport = NO;
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
 

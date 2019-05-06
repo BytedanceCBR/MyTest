@@ -19,6 +19,9 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <TTBaseLib/NetworkUtilities.h>
+#import <TTUIWidget/TTIndicatorView.h>
+#import <TTThemed/UIImage+TTThemeExtension.h>
 
 #define TTEdgeHeight self.titleView.height
 
@@ -91,6 +94,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     wrapperTrackEvent(@"update_detail", @"enter_diggers");
+    if (!TTNetworkConnected()) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"网络不给力，请稍后重试" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
+    }
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

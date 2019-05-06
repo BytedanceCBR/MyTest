@@ -54,7 +54,17 @@
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, call_phone), @"app.call_phone");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, toast), @"app.toast");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
+}
+
+- (void)toastWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    NSString *title = [param tt_stringValueForKey:@"title"];
+
+    if ([title isKindOfClass:[NSString class]] && title.length > 0) {
+        [[ToastManager manager] showToast:title];
+    }
 }
 
 - (void)appInfoWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -143,14 +153,22 @@
         callParams[@"house_id"] = callParams[@"group_id"];
     }
 
-    [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
-        if (!success) {
-            [[ToastManager manager] showToast:@"获取电话失败"];
-        }
+    if (!TTNetworkConnected() && !callParams[@"phone"]) {
         if (callback) {
             callback(TTBridgeMsgSuccess, nil);
         }
-    }];
+    }else
+    {
+        [FHHousePhoneCallUtils callWithConfig:callParams completion:^(BOOL success, NSError * _Nonnull error) {
+            if (!success) {
+                [[ToastManager manager] showToast:@"获取电话失败"];
+            }
+            if (callback) {
+                callback(TTBridgeMsgSuccess, nil);
+            }
+        }];
+    }
+
     if (callParams[@"follow_id"]) {
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
     }
@@ -281,7 +299,7 @@
             
 //            callback(TTBridgeMsgSuccess,nil);
             if (callback) {
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
+                callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),
                                                           @"beginReqNetTime": startTime
@@ -296,7 +314,7 @@
                 if([obj isKindOfClass:[NSData class]]){
                     result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
                 }
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
+                callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
                                                           @"response": result,
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),

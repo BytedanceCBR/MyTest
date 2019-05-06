@@ -419,10 +419,10 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [_customActivities addObject:copyActivity];
     }
     //复制链接
-    if (!isEmptyString(_copyText)) {
+//    if (!isEmptyString(_copyText)) {
         TTActivity * copyActivity = [TTActivity activityOfCopy];
         [_customActivities addObject:copyActivity];
-    }
+//    }
     
     if (!isAccountUser) {
         //举报
@@ -619,10 +619,10 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [_customActivities addObject:copyActivity];
     }
     //复制链接
-    if (!isEmptyString(_copyText)) {
+//    if (!isEmptyString(_copyText)) {
         TTActivity * copyActivity = [TTActivity activityOfCopy];
         [_customActivities addObject:copyActivity];
-    }
+//    }
     
     if (containReport) {
         //举报
