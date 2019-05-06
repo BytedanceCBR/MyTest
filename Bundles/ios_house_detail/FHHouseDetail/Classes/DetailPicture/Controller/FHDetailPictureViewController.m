@@ -25,7 +25,6 @@
 #import "FHShowVideoView.h"
 #import <Photos/Photos.h>
 #import "HTSDeviceManager.h"
-#import "FHDetailFullScreenVideoVC.h"
 #import "FHDetailVideoInfoView.h"
 #import "NSDictionary+TTAdditions.h"
 
@@ -85,7 +84,6 @@
 @property (nonatomic, copy) NSArray<NSValue *> *animateFrames;
 @property (nonatomic, copy) NSString *locationStr;
 
-@property (nonatomic, weak)     FHDetailFullScreenVideoVC       *fullScreenVC;
 @end
 
 @implementation FHDetailPictureViewController
@@ -1152,20 +1150,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 #pragma mark - FHVideoViewDelegate
 
-- (void)videoViewFullScreenClick:(FHShowVideoView *)videoView {
-    if (self.fullScreenVC) {
-        [self.fullScreenVC dismissVC];
-    } else {
-        FHDetailFullScreenVideoVC *fcVC = [[FHDetailFullScreenVideoVC alloc] init];
-        fcVC.videoView = videoView;
-        __weak typeof(self) weakSelf = self;
-        [fcVC presentVideoViewWithDismissBlock:^{
-            [weakSelf setCurrentStatusStyle];
-        }];
-        self.fullScreenVC = fcVC;
-    }
-}
-
 - (void)videoFrameChanged:(CGRect)videoFrame isVerticalVideo:(BOOL)isVerticalVideo {
     if (self.currentIndex >= self.vedioCount) {
         // 非视频
@@ -1586,7 +1570,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             TTShowImageView * showImageView = [self showImageViewAtIndex:_currentIndex];
             UIImageView * largeImageView = [showImageView displayImageView];
             CGRect endFrame = [[_placeholderSourceViewFrames objectAtIndex:_currentIndex] CGRectValue];
-            if ([showImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
+            if ([showImageView isKindOfClass:[FHShowVideoView class]] && _currentIndex == 0) {
                 // 视频cell
                 endFrame = self.videoVC.videoFrame;
             }
@@ -1654,8 +1638,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             [UIView animateWithDuration:0.4f animations:^{
                 self.containerView.backgroundColor = [UIColor clearColor];
                 containerView.backgroundColor = [UIColor clearColor];
-                if ([showImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
-//                    [self.videoVC setViewFrame:endFrame];
+                if ([showImageView isKindOfClass:[FHShowVideoView class]] && self.currentIndex == 0) {
                     self.videoVC.view.frame = endFrame;
                 }else{
                     largeImageView.frame = endFrame;

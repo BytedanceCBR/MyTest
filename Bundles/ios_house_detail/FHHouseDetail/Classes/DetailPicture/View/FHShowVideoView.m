@@ -130,13 +130,6 @@
     }
 }
 
-// 全屏按钮点击
-- (void)fullScreen {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(videoViewFullScreenClick:)]) {
-        [self.delegate videoViewFullScreenClick:self];
-    }
-}
-
 // 很不乐意这样加，为了进入和退出全屏，要传递多层代理，balala...
 // 进入全屏
 - (void)playerDidEnterFullscreen {
