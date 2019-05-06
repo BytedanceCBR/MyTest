@@ -336,9 +336,10 @@
     if(!parent){
     }else
     {
-//        if (![FHEnvContext isNetworkConnected]) {
+        if (![FHEnvContext isNetworkConnected]) {
+            [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",0]}];
 //            [self sendEventName:@"enter_unAvalable" andParams:nil];
-//        }
+        }
     }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
