@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSMutableArray *removedDataList;
+@property(nonatomic, assign) BOOL isDisplay;
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(id<IFHMyFavoriteController>)viewController type:(FHHouseType)type;
 
@@ -30,6 +31,13 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)bindTableView:(UITableView*)tableView;
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 -(void)registerCell:(UITableView*)tableView;
+
+- (NSDictionary *)categoryLogDict;
+- (NSString *)categoryName;
+-(void)traceDisplayCell;
+
+- (void)addEnterCategoryLog;
+- (void)trackRefresh;
 @end
 
 NS_ASSUME_NONNULL_END

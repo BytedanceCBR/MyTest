@@ -20,7 +20,7 @@
 #import "IMConsDefine.h"
 #import "FHErrorView.h"
 #import "IFHMyFavoriteController.h"
-
+#import "TTTracker.h"
 @interface FHIMFavoriteViewController : NSObject<IFHMyFavoriteController>
 
 @property (nonatomic, strong) FHErrorView *emptyView;
@@ -92,6 +92,7 @@
         if (contentOffset.x != self->_containerView.contentOffset.x) {
             self->_containerView.contentOffset = contentOffset;
         }
+//        [self resetPageDisplayState];
     }];
     //检测是否有选中项，设置发送按钮状态
     [[RACObserve(_shareViewModel, selectedItems) map:^id _Nullable(NSArray*  _Nullable value) {
@@ -179,10 +180,23 @@
         if (self.shareViewModel.currentPage != index) {
             self->_openCategoryIndex = index;
             self.shareViewModel.currentPage = index;
+//            [self resetPageDisplayState];
         }
     };
 
 
+}
+
+-(void)resetPageDisplayState {
+    [self.shareViewModel.pageViewModels enumerateObjectsUsingBlock:^(FHIMFavoriteSharePageViewModel1 * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        obj.isDisplay = NO;
+    }];
+
+    if ([self.shareViewModel.pageViewModels count] > self.shareViewModel.currentPage) {
+        FHIMFavoriteSharePageViewModel1* viewModel = self.shareViewModel.pageViewModels[self.shareViewModel.currentPage];
+        viewModel.isDisplay = YES;
+        [viewModel traceDisplayCell];
+    }
 }
 
 -(FHIMFavoriteSharePageViewModel1*)sharePageViewModelByType:(FHHouseType)type {
@@ -214,11 +228,13 @@
         [tables mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(_containerView);
         }];
-
+        @weakify(self);
         self.controllers = [_supportHouseType rx_mapWithBlock:^id(id each) {
+            @strongify(self);
             FHErrorView* errorView = [[FHErrorView alloc] init];
             FHIMFavoriteViewController* controller = [[FHIMFavoriteViewController alloc] init];
             controller.emptyView = errorView;
+            controller.tracerDict = self.tracerDict;
             return controller;
         }];
 
@@ -286,7 +302,7 @@
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(44);
     }];
-    [_sendBtn addTarget:self.shareViewModel action:@selector(sendSelectedItemToIM) forControlEvents:UIControlEventTouchUpInside];
+    [_sendBtn addTarget:self action:@selector(sendSelectedItemToIM) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(NSAttributedString*)sendAttriTextByCount:(NSUInteger)count {
@@ -329,6 +345,40 @@
 -(NSUInteger)setCategoryByHouseType:(NSInteger)houseType {
     NSInteger index = [_supportHouseType indexOfObject:@(houseType)];
     return index;
+}
+
+-(void)sendSelectedItemToIM {
+    [self.shareViewModel sendSelectedItemToIM];
+    [self traceClickSend];
+}
+
+-(void)traceClickSend {
+    NSMutableDictionary* trace = [NSMutableDictionary dictionaryWithCapacity:6];
+    trace[@"event_type"] = @"house_app2c_v2";
+    trace[@"page_type"] = @"converation_detail";
+    trace[@"house_type"] = [self houseTypeByIndex:self.shareViewModel.currentPage];
+    trace[@"converation_id"] = self.shareViewModel.conversactionId ? : @"";
+    trace[@"log_pb"] = @"be_null";
+    trace[@"send_total"] = @([self.shareViewModel.selectedItems count]);
+    [TTTracker eventV3:@"click_send" params:trace];
+}
+
+-(NSString*)houseTypeByIndex:(NSUInteger)index {
+    if ([_supportHouseType count] > index) {
+        NSInteger type = _supportHouseType[index];
+        switch (type) {
+            case 2:
+                return @"old";
+            case 3:
+                return @"rent";
+            case 1:
+                return @"new";
+            default:
+                return @"old";
+        }
+    } else {
+        return @"old";
+    }
 }
 
 @end

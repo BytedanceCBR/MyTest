@@ -19,6 +19,7 @@
     self = [super initWithTableView:tableView controller:viewController type:type];
     if (self) {
         self.selected = [[NSMutableSet alloc] init];
+        self.isDisplay = NO;
     }
     return self;
 }
@@ -77,4 +78,21 @@
     }];
 }
 
+- (NSDictionary *)categoryLogDict {
+    NSMutableDictionary* dict = [[super categoryLogDict] mutableCopy];
+    dict[@"category_name"] = nil;
+    return dict;
+}
+
+- (NSString *)categoryName {
+    return @"conversation_detail";
+}
+
+- (void)addEnterCategoryLog {
+    //DO Nothing
+}
+
+- (void)trackRefresh {
+    //DO Nothing
+}
 @end

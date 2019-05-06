@@ -39,7 +39,6 @@ extern NSString *const kFHDetailFollowUpNotification;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-
 @end
 
 @implementation FHMyFavoriteViewModel
@@ -57,7 +56,7 @@ extern NSString *const kFHDetailFollowUpNotification;
         _type = type;
         _showPlaceHolder = YES;
         _isFirstLoad = YES;
-
+        _isDisplay = YES;
         if (tableView != nil) {
             [self bindTableView:tableView];
         }
@@ -443,24 +442,37 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(!self.showPlaceHolder && indexPath.row < self.dataList.count){
-        FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-        
-        if (!_clientShowDict) {
-            _clientShowDict = [NSMutableDictionary new];
-        }
-        
-        NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
-        NSString *followId = [self getFollowId:cellModel];
-        if(followId){
-            if (_clientShowDict[followId]) {
-                return;
-            }
-    
-            _clientShowDict[followId] = @(indexPath.row);
-            [self trackHouseShow:cellModel rank:indexPath.row];
-        }
+    if(!self.showPlaceHolder && indexPath.row < self.dataList.count && _isDisplay){
+        [self traceHouseShowAtIndexPath:indexPath];
     }
+}
+
+-(void)traceHouseShowAtIndexPath:(NSIndexPath*)indexPath {
+    if (indexPath.row >= self.dataList.count) {
+        return;
+    }
+    FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+
+    if (!_clientShowDict) {
+        _clientShowDict = [NSMutableDictionary new];
+    }
+
+    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+    NSString *followId = [self getFollowId:cellModel];
+    if(followId){
+        if (_clientShowDict[followId]) {
+            return;
+        }
+
+        _clientShowDict[followId] = @(indexPath.row);
+        [self trackHouseShow:cellModel rank:indexPath.row];
+    }
+}
+
+-(void)traceDisplayCell {
+    [[self.tableView indexPathsForVisibleRows] enumerateObjectsUsingBlock:^(NSIndexPath * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self traceHouseShowAtIndexPath:obj];
+    }];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
