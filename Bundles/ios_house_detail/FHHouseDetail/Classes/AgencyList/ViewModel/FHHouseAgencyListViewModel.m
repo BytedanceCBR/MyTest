@@ -9,6 +9,7 @@
 #import "FHHouseAgencyItemTableViewCell.h"
 #import <FHHouseBase/FHHouseAgencyListSugDelegate.h>
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
+#import <FHCommonUI/ToastManager.h>
 
 @interface FHHouseAgencyListViewModel () <UITableViewDelegate, UITableViewDataSource>
 
@@ -85,7 +86,18 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row < self.agencyList.count) {
+        
+        NSInteger selectCount = 0;
+        for (FHFillFormAgencyListItemModel *model in self.agencyList) {
+            if (model.checked) {
+                selectCount += 1;
+            }
+        }
         FHFillFormAgencyListItemModel *model  = self.agencyList[indexPath.row];
+        if (model.checked && selectCount < 2) {
+            [[ToastManager manager]showToast:@"至少选择一家服务方"];
+            return;
+        }
         model.checked = !model.checked;
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
