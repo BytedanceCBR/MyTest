@@ -305,21 +305,18 @@
 
     [[FHRNHelper sharedInstance] removeCountChannel:_channelStr];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
-                ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
-                [self.ttRNKit clearRNResourceForChannel:_channelStr];
-                [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
-                self.ttRNKit.delegate = nil;
-                self.ttRNKit = nil;
-                self.viewWrapper = nil;
-                _viewWrapper.rnView = nil;
-            }
-
-            [_container removeFromSuperview];
-            [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
-            [_viewWrapper removeFromSuperview];
-             self.container = nil;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
+            ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
+            [self.ttRNKit clearRNResourceForChannel:_channelStr];
+            [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+        }
+        [_container removeFromSuperview];
+        self.container = nil;
+        [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
+        _viewWrapper.rnView = nil;
+        [_viewWrapper removeFromSuperview];
+         self.viewWrapper = nil;
     });
 }
 
@@ -336,9 +333,10 @@
     if(!parent){
     }else
     {
-//        if (![FHEnvContext isNetworkConnected]) {
+        if (![FHEnvContext isNetworkConnected]) {
+            [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",0]}];
 //            [self sendEventName:@"enter_unAvalable" andParams:nil];
-//        }
+        }
     }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
