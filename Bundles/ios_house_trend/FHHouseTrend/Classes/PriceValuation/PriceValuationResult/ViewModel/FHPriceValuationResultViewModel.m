@@ -245,7 +245,7 @@ extern NSString *const kFHToastCountKey;
     tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
     tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
     NSMutableDictionary *dict = @{}.mutableCopy;
-    NSArray *selectAgencyList = [alertView selectAgencyList];// ? : configModel.chooseAgencyList;
+    NSArray *selectAgencyList = [alertView selectAgencyList] ? : self.neighborhoodDetailModel.data.chooseAgencyList;
     for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
         if (item.agencyId.length > 0) {
             [dict setValue:[NSNumber numberWithInt:item.checked] forKey:item.agencyId];
@@ -403,8 +403,7 @@ extern NSString *const kFHToastCountKey;
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself addClickConfirmationLogWithAlertView:alert];
-        // add by zjing for test
-        [wself fillFormRequest:phoneNum];
+        [wself fillFormRequest:phoneNum alertView:alert];
     };
     alertView.tipClickBlock = ^{
         NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
@@ -416,7 +415,7 @@ extern NSString *const kFHToastCountKey;
     self.alertView = alertView;
 }
 
-- (void)fillFormRequest:(NSString *)phoneNum {
+- (void)fillFormRequest:(NSString *)phoneNum alertView:(FHDetailNoticeAlertView *)alertView {
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
@@ -427,7 +426,20 @@ extern NSString *const kFHToastCountKey;
     params[@"estimate_id"] = self.viewController.model.data.estimateId;
     params[@"house_type"] = @(2);
     params[@"phone"] = phoneNum;
-    
+    // add by zjing for test
+    NSArray *selectAgencyList = [alertView selectAgencyList] ? : self.neighborhoodDetailModel.data.chooseAgencyList;
+    if (selectAgencyList.count > 0) {
+        NSMutableArray *array = @[].mutableCopy;
+        for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"agency_id"] = item.agencyId;
+            dict[@"checked"] = [NSNumber numberWithInt:item.checked];
+            if (dict.count > 0) {
+                [array addObject:dict];
+            }
+        }
+        params[@"choose_agency_list"] = array;
+    }
     [FHPriceValuationAPI requestSubmitPhoneWithParams:params completion:^(BOOL success, NSError * _Nonnull error) {
         if(success && !error){
             [wself.alertView dismiss];
