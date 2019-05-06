@@ -12,6 +12,7 @@
 #import "FHURLSettings.h"
 #import <TTNetworkManager.h>
 #import "FHPostDataHTTPRequestSerializer.h"
+#import "FHFillFormAgencyListItemModel.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -25,6 +26,7 @@
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
                                           phone:(NSString*)phone
                                            from:(NSString*)from
+                                     agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
@@ -41,6 +43,18 @@
     }
     if (from.length > 0) {
         paramDic[@"d"] = from;
+    }
+    if (agencyList.count > 0) {
+        NSMutableArray *array = @[].mutableCopy;
+        for (FHFillFormAgencyListItemModel *item in agencyList) {
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"agency_id"] = item.agencyId;
+            dict[@"checked"] = [NSNumber numberWithInt:item.checked];
+            if (dict.count > 0) {
+                [array addObject:dict];
+            }
+        }
+        paramDic[@"choose_agency_list"] = array;
     }
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj) {
         FHDetailResponseModel *model = nil;

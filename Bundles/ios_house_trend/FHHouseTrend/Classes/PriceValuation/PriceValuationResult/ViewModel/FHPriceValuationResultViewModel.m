@@ -229,7 +229,30 @@ extern NSString *const kFHToastCountKey;
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
     tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
     tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
+
     TRACK_EVENT(key, tracer);
+}
+
+- (void)addClickConfirmationLogWithAlertView:(FHDetailNoticeAlertView *)alertView
+{
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"click_position"] = @"sale";
+    tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSArray *selectAgencyList = [alertView selectAgencyList];// ? : configModel.chooseAgencyList;
+    for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
+        if (item.agencyId.length > 0) {
+            [dict setValue:[NSNumber numberWithInt:item.checked] forKey:item.agencyId];
+        }
+    }
+    tracer[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
+    TRACK_EVENT(@"click_confirmation", tracer);
 }
 
 - (void)addClickExpectedTracer:(NSString *)result {
@@ -378,8 +401,8 @@ extern NSString *const kFHToastCountKey;
         };
     }
     alertView.phoneNum = phoneNum;
-    alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
-        [wself addInfomationTracer:@"click_confirmation"];
+    alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
+        [wself addClickConfirmationLogWithAlertView:alert];
         // add by zjing for test
         [wself fillFormRequest:phoneNum];
     };
