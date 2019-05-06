@@ -228,7 +228,7 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlImagePosition) {
  Default is 5.0
  */
 @property (nonatomic, readwrite) CGFloat selectionIndicatorHeight;
-
+@property (nonatomic, readwrite) CGFloat selectionIndicatorCornerRadius;
 /**
  Edge insets for the selection indicator.
  NOTE: This does not affect the bounding box of HMSegmentedControlSelectionStyleBox

@@ -29,7 +29,6 @@ extern NSString *const kFHDetailFollowUpNotification;
 
 @interface FHMyFavoriteViewModel()<UITableViewDelegate,UITableViewDataSource>
 
-@property(nonatomic, weak) id<IFHMyFavoriteController> viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, assign) FHHouseType type;
 @property(nonatomic, assign) NSInteger offset;

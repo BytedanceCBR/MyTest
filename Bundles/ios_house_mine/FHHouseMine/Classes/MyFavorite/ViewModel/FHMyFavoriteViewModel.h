@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHMyFavoriteViewController.h"
 #import "FHHouseType.h"
+#import "IFHMyFavoriteController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,11 +16,12 @@ NS_ASSUME_NONNULL_BEGIN
 #define kFHFavoriteListPlaceholderCellId @"FHFavoriteListPlaceholderCellId"
 @interface FHMyFavoriteViewModel : NSObject
 
+@property(nonatomic, weak) id<IFHMyFavoriteController> viewController;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, strong) NSMutableArray *removedDataList;
 
-- (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMyFavoriteViewController *)viewController type:(FHHouseType)type;
+- (instancetype)initWithTableView:(UITableView *)tableView controller:(id<IFHMyFavoriteController>)viewController type:(FHHouseType)type;
 
 - (void)requestData:(BOOL)isHead;
 

@@ -34,6 +34,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([_selected containsObject:indexPath]) {
         [_selected removeObject:indexPath];
+        [_selectedListener onItemSelected:self];
     } else if([_selected count] < 9){
         [_selected addObject:indexPath];
         [_selectedListener onItemSelected:self];

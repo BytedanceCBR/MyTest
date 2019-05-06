@@ -15,14 +15,35 @@
 #import "TTDeviceHelper.h"
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
+#import "HMSegmentedControl.h"
+#import "ReactiveObjC.h"
+#import "IMConsDefine.h"
+#import "FHErrorView.h"
+#import "IFHMyFavoriteController.h"
+
+@interface FHIMFavoriteViewController : NSObject<IFHMyFavoriteController>
+
+@property (nonatomic, strong) FHErrorView *emptyView;
+@property (nonatomic , strong) NSMutableDictionary *tracerDict;
+@property (nonatomic , assign) BOOL hasValidateData;
+
+@end
+
+@implementation FHIMFavoriteViewController
+
+
+@end
+
 @interface FHIMFavoriteShareViewController ()
 {
     UIScrollView* _containerView;
+    NSInteger _openCategoryIndex;
 }
 @property (nonatomic, assign) NSUInteger currentIndex;
 @property (nonatomic, strong) NSArray<NSNumber*>* supportHouseType;
 @property (nonatomic, strong) FHIMFavoriteShareViewModel* shareViewModel;
 @property (nonatomic, strong) UIButton* sendBtn;
+@property (nonatomic, strong) NSArray<FHIMFavoriteViewController*>* controllers;
 @end
 
 @implementation FHIMFavoriteShareViewController
@@ -32,7 +53,9 @@
     if (self) {
         self.supportHouseType = @[@(2), @(3), @(1)];
         self.shareViewModel = [[FHIMFavoriteShareViewModel alloc] init];
-
+        self.shareViewModel.viewController = self;
+        self.shareViewModel.conversactionId = [paramObj allParams][@"convId"];
+        _openCategoryIndex = [self setCategoryByHouseType:[[paramObj allParams][@"houseType"] integerValue]];
         @weakify(self);
         self.shareViewModel.pageViewModels = [_supportHouseType rx_mapWithBlock:^id(id each) {
             @strongify(self);
@@ -58,11 +81,108 @@
 
     [self initBottonBar];
     [self setupPageBySupportTypes:_supportHouseType];
+    @weakify(self);
+
+    RACSignal* currentPageSignal = RACObserve(_shareViewModel, currentPage);
+//    RACSignal* containerFrameSignal = RACObserve(_containerView, frame);
+//    [[currentPageSignal combineLatestWith:containerFrameSignal] subscribeNext:^(id  _Nullable x) {
+    [currentPageSignal subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        CGPoint contentOffset = CGPointMake([x unsignedIntegerValue] * CGRectGetWidth(self->_containerView.frame), 0);
+        if (contentOffset.x != self->_containerView.contentOffset.x) {
+            self->_containerView.contentOffset = contentOffset;
+        }
+    }];
+    //检测是否有选中项，设置发送按钮状态
+    [[RACObserve(_shareViewModel, selectedItems) map:^id _Nullable(NSArray*  _Nullable value) {
+        return @([value count]);
+    }] subscribeNext:^(NSNumber*  _Nullable x) {
+        @strongify(self);
+        if ([x integerValue] != 0) {
+            [self.sendBtn setEnabled:YES];
+            self.sendBtn.alpha = 1;
+        } else {
+            [self.sendBtn setEnabled:NO];
+            self.sendBtn.alpha = 0.3;
+        }
+        [self.sendBtn setAttributedTitle:[self sendAttriTextByCount:[x integerValue]] forState:UIControlStateNormal];
+    }];
+
+    [[[[RACObserve(_containerView, contentOffset) throttle:0.1] map:^id _Nullable(NSValue*  _Nullable value) {
+        @strongify(self);
+        CGPoint point = [value CGPointValue];
+        return @(point.x / SCREEN_WIDTH);
+    }] skip:1] subscribeNext:^(NSNumber*  _Nullable x) {
+        if (self.shareViewModel.currentPage != [x unsignedIntegerValue]) {
+            NSUInteger index = [x unsignedIntegerValue];
+            self->_openCategoryIndex = index;
+            self.shareViewModel.currentPage = index;
+        }
+    }];
+
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.shareViewModel.currentPage = _openCategoryIndex;
+}
+
+-(void)resetSendBtnStateAtPageIndex:(NSUInteger)index {
+    if ([self.shareViewModel.pageViewModels count] > index) {
+        FHIMFavoriteSharePageViewModel1* viewModel = self.shareViewModel.pageViewModels[index];
+        if ([viewModel.dataList count] == 0) {
+            [self.sendBtn setHidden:YES];
+        } else {
+            [self.sendBtn setHidden:NO];
+        }
+    }
 }
 
 -(void)setupNavBar {
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.title.text = @"二手房";
+    [self.customNavBarView.title setHighlighted:YES];
+    NSArray* titles = [_supportHouseType rx_mapWithBlock:^id(id each) {
+        return [FHIMFavoriteShareViewController titleByHouseType:[each integerValue]];
+    }];
+    HMSegmentedControl* segmented = [[HMSegmentedControl alloc] initWithSectionTitles:titles];
+    segmented.selectionIndicatorHeight = 4;
+    segmented.selectionIndicatorCornerRadius = 2.5f;
+    segmented.selectionIndicatorColor = [UIColor themeRed1];
+    segmented.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
+    segmented.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    segmented.isNeedNetworkCheck = NO;
+
+    NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     [UIFont themeFontRegular:16],NSFontAttributeName,
+                                     [UIColor themeGray3],NSForegroundColorAttributeName,nil];
+
+    NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     [UIFont themeFontRegular:16],NSFontAttributeName,
+                                     [UIColor blackColor],NSForegroundColorAttributeName,nil];
+    segmented.titleTextAttributes = attributeNormal;
+    segmented.selectedTitleTextAttributes = attributeSelect;
+    //    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(-10, 5, 0, 5);
+    segmented.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 3, 0, 3);
+    segmented.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    [self.customNavBarView addSubview:segmented];
+    [segmented mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.customNavBarView.leftBtn.mas_right).mas_offset(5);
+        make.centerX.mas_equalTo(self.customNavBarView);
+        make.bottom.mas_equalTo(self.customNavBarView).mas_offset(-1);
+        make.height.mas_equalTo(35);
+    }];
+
+    RAC(segmented, selectedSegmentIndex) = RACObserve(self.shareViewModel, currentPage);
+    @weakify(self)
+    segmented.indexChangeBlock = ^(NSInteger index) {
+        @strongify(self);
+        if (self.shareViewModel.currentPage != index) {
+            self->_openCategoryIndex = index;
+            self.shareViewModel.currentPage = index;
+        }
+    };
+
+
 }
 
 -(FHIMFavoriteSharePageViewModel1*)sharePageViewModelByType:(FHHouseType)type {
@@ -93,6 +213,24 @@
                                  tailSpacing:0];
         [tables mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(_containerView);
+        }];
+
+        self.controllers = [_supportHouseType rx_mapWithBlock:^id(id each) {
+            FHErrorView* errorView = [[FHErrorView alloc] init];
+            FHIMFavoriteViewController* controller = [[FHIMFavoriteViewController alloc] init];
+            controller.emptyView = errorView;
+            return controller;
+        }];
+
+        [_controllers enumerateObjectsUsingBlock:^(FHIMFavoriteViewController * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHErrorView* maskView = obj.emptyView;
+            maskView.hidden = YES;
+            [_containerView addSubview:maskView];
+            [maskView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.edges.mas_equalTo(tables[idx]);
+            }];
+            FHIMFavoriteSharePageViewModel1* viewModel = _shareViewModel.pageViewModels[idx];
+            viewModel.viewController = obj;
         }];
 
         [tables enumerateObjectsUsingBlock:^(UITableView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -148,6 +286,7 @@
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(44);
     }];
+    [_sendBtn addTarget:self.shareViewModel action:@selector(sendSelectedItemToIM) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(NSAttributedString*)sendAttriTextByCount:(NSUInteger)count {
@@ -174,6 +313,22 @@
         }
     }
     return safeBottomPandding + 64;
+}
+
++(NSString*)titleByHouseType:(NSInteger)houseType {
+    switch (houseType) {
+        case 1:
+            return @"新房";
+        case 3:
+            return @"租房";
+        default:
+            return @"二手房";
+    }
+}
+
+-(NSUInteger)setCategoryByHouseType:(NSInteger)houseType {
+    NSInteger index = [_supportHouseType indexOfObject:@(houseType)];
+    return index;
 }
 
 @end

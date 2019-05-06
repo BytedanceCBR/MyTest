@@ -13,7 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHErrorView *emptyView;
 @property(nonatomic , strong) NSMutableDictionary *tracerDict;
 @property(nonatomic , assign) BOOL hasValidateData;
--(void)bindTableView:(UITableView*)tableView;
 @end
 
 NS_ASSUME_NONNULL_END

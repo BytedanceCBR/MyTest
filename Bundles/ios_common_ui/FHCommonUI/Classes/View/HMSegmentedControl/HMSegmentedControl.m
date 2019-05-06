@@ -140,6 +140,7 @@
     self.selectedSegmentIndex = 0;
     self.segmentEdgeInset = UIEdgeInsetsMake(0, 5, 0, 5);
     self.selectionIndicatorHeight = 5.0f;
+    self.selectionIndicatorCornerRadius = 0.0f;
     self.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
     self.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     self.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationUp;
@@ -278,6 +279,7 @@
     self.selectionIndicatorArrowLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
     
     self.selectionIndicatorStripLayer.backgroundColor = self.selectionIndicatorColor.CGColor;
+    self.selectionIndicatorStripLayer.cornerRadius = self.selectionIndicatorCornerRadius;
     
     self.selectionIndicatorBoxLayer.backgroundColor = self.selectionIndicatorBoxColor.CGColor;
     self.selectionIndicatorBoxLayer.borderColor = self.selectionIndicatorBoxColor.CGColor;
@@ -539,6 +541,7 @@
         CALayer *borderLayer = [CALayer layer];
         borderLayer.frame = CGRectMake(0, fullRect.size.height - self.borderWidth, fullRect.size.width, self.borderWidth);
         borderLayer.backgroundColor = self.borderColor.CGColor;
+        borderLayer.cornerRadius = self.selectionIndicatorCornerRadius;
         [backgroundLayer addSublayer: borderLayer];
     }
     if (self.borderType & HMSegmentedControlBorderTypeRight) {
