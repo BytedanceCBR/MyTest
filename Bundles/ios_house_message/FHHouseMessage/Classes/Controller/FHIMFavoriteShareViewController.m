@@ -82,18 +82,6 @@
     [self initBottonBar];
     [self setupPageBySupportTypes:_supportHouseType];
     @weakify(self);
-
-    RACSignal* currentPageSignal = RACObserve(_shareViewModel, currentPage);
-//    RACSignal* containerFrameSignal = RACObserve(_containerView, frame);
-//    [[currentPageSignal combineLatestWith:containerFrameSignal] subscribeNext:^(id  _Nullable x) {
-    [currentPageSignal subscribeNext:^(id  _Nullable x) {
-        @strongify(self);
-        CGPoint contentOffset = CGPointMake([x unsignedIntegerValue] * CGRectGetWidth(self->_containerView.frame), 0);
-        if (contentOffset.x != self->_containerView.contentOffset.x) {
-            self->_containerView.contentOffset = contentOffset;
-        }
-//        [self resetPageDisplayState];
-    }];
     //检测是否有选中项，设置发送按钮状态
     [[RACObserve(_shareViewModel, selectedItems) map:^id _Nullable(NSArray*  _Nullable value) {
         return @([value count]);
@@ -109,10 +97,11 @@
         [self.sendBtn setAttributedTitle:[self sendAttriTextByCount:[x integerValue]] forState:UIControlStateNormal];
     }];
 
-    [[[[RACObserve(_containerView, contentOffset) throttle:0.1] map:^id _Nullable(NSValue*  _Nullable value) {
+    [[[RACObserve(_containerView, contentOffset) map:^id _Nullable(NSValue*  _Nullable value) {
+//    [[[[RACObserve(_containerView, contentOffset) throttle:0.1] map:^id _Nullable(NSValue*  _Nullable value) {
         @strongify(self);
         CGPoint point = [value CGPointValue];
-        return @(point.x / SCREEN_WIDTH);
+        return @(abs((point.x + SCREEN_WIDTH / 2) / SCREEN_WIDTH));
     }] skip:1] subscribeNext:^(NSNumber*  _Nullable x) {
         if (self.shareViewModel.currentPage != [x unsignedIntegerValue]) {
             NSUInteger index = [x unsignedIntegerValue];
@@ -173,18 +162,30 @@
         make.height.mas_equalTo(35);
     }];
 
-    RAC(segmented, selectedSegmentIndex) = RACObserve(self.shareViewModel, currentPage);
-    @weakify(self)
+    @weakify(segmented);
+    [RACObserve(self.shareViewModel, currentPage) subscribeNext:^(id  _Nullable x) {
+        @strongify(segmented);
+        [segmented setSelectedSegmentIndex:[x integerValue] animated:YES];
+    }];
+    @weakify(self);
     segmented.indexChangeBlock = ^(NSInteger index) {
         @strongify(self);
         if (self.shareViewModel.currentPage != index) {
             self->_openCategoryIndex = index;
             self.shareViewModel.currentPage = index;
-            [self resetPageDisplayState];
+            [self scrollToPageAtIndex:index];
+//            [self resetPageDisplayState];
         }
     };
 
 
+}
+
+-(void)scrollToPageAtIndex:(NSUInteger)index {
+    CGPoint contentOffset = CGPointMake(index * CGRectGetWidth(_containerView.frame), 0);
+    if (contentOffset.x != _containerView.contentOffset.x) {
+        _containerView.contentOffset = contentOffset;
+    }
 }
 
 -(void)resetPageDisplayState {
