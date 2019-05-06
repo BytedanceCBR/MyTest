@@ -15,6 +15,9 @@
 @property (nonatomic, weak) UIView * superViewOfPlayer;
 @property (nonatomic) UIDeviceOrientation lastOrientation;
 
+//外面传的只是playview的frame，这里记的是真正的playerview的frame，可能是包了很多层的view，为了返回时候还原
+@property (nonatomic) CGRect frameBeforePresentRelative;
+
 
 @end
 
@@ -60,54 +63,62 @@
     }
     //转场过渡的容器view
     UIView *containerView = [transitionContext containerView];
-    
+    containerView.backgroundColor = [UIColor greenColor];
     //ToVC
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     toViewController.view.frame = containerView.bounds;
-    //    toViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];
+//    toViewController.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
     [containerView addSubview:toViewController.view];
     
     //FromVC
     UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    fromViewController.view.frame = containerView.bounds;// CGRectMake(0, 0, containerView.frame.size.height, containerView.frame.size.width);
+    fromViewController.view.frame = containerView.bounds;
     [containerView addSubview:fromViewController.view];
     
     //播放器视图
     UIView* playView = [fromViewController.view viewWithTag:self.rotatedViewTag];
     
+    playView = [self getRotateView:playView];
+    
     BOOL isPresent = [fromViewController.presentedViewController isEqual:toViewController];//如果底层的视图弹出的视图是顶层的，那么是present出来的
     
     if (isPresent) {
         self.superViewOfPlayer = playView.superview;
+        self.frameBeforePresentRelative = [playView convertRect:self.frameBeforePresent toView:self.superViewOfPlayer];
+        
+        //这里加一个覆盖的view，因为旋转时候可能导致原来view布局问题，盖一个view只看到playview就够了
+        UIView *coverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, containerView.bounds.size.height, containerView.bounds.size.width)];
+        coverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
+        [fromViewController.view addSubview:coverView];
         [containerView bringSubviewToFront:fromViewController.view];
-//        self.testRect = [playView.superview convertRect:self.frameBeforePresent toView:[UIApplication sharedApplication].keyWindow];
+        [playView removeFromSuperview];
+        [coverView addSubview:playView];
         
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
-        
+    
         CGSize size = containerView.frame.size;
         [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.width.equalTo(@(size.width));
             make.height.equalTo(@(size.height));
-            make.center.equalTo(toViewController.view);
+            make.center.mas_equalTo(coverView);
         }];
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext] animations:^{
             [playView.superview layoutIfNeeded];
             [self changePlayViewTransform:playView isPrensent:YES];
-            toViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:1];
-            
         } completion:^(BOOL finished) {
             [playView removeFromSuperview];
+            [coverView removeFromSuperview];
             [toViewController.view addSubview:playView];
             playView.transform = CGAffineTransformMakeRotation(0);//CGAffineTransformIdentity;//CGAffineTransformMakeRotation(0);
             [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.edges.equalTo(toViewController.view).insets(UIEdgeInsetsZero);
             }];
-            
+
             BOOL wasCancelled = [transitionContext transitionWasCancelled];
             //设置transitionContext通知系统动画执行完毕
             [transitionContext completeTransition:!wasCancelled];
-            
+
         }];
     }else{
         [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -115,9 +126,9 @@
         UIDeviceOrientation currentOrirentation = [UIDevice currentDevice].orientation;
         
         [containerView bringSubviewToFront:fromViewController.view];
-        playView = [fromViewController.view viewWithTag:self.rotatedViewTag];
+//        playView = [fromViewController.view viewWithTag:self.rotatedViewTag];
     
-        CGRect toRect = [self.superViewOfPlayer convertRect:self.frameBeforePresent toView:fromViewController.view.window];
+        CGRect toRect = self.frameBeforePresentRelative;
 
 //        CGRect toRect = [playView.superview convertRect:self.frameBeforePresent toView:toViewController.view];
 //        CGRect toRect = [toViewController.view convertRect:self.frameBeforePresent fromView:playView.superview];
@@ -145,10 +156,10 @@
             playView.transform = CGAffineTransformMakeRotation(0);
 
             [playView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(@(self.frameBeforePresent.origin.y));
-                make.left.mas_equalTo(@(self.frameBeforePresent.origin.x));
-                make.left.right.equalTo(playView.superview);
-                make.height.mas_equalTo(@(self.frameBeforePresent.size.height));
+                make.top.mas_equalTo(@(toRect.origin.y));
+                make.left.mas_equalTo(@(toRect.origin.x));
+                make.width.mas_equalTo(@(toRect.size.width));
+                make.height.mas_equalTo(@(toRect.size.height));
             }];
         
             BOOL wasCancelled = [transitionContext transitionWasCancelled];
@@ -199,6 +210,22 @@
     else if (device.orientation == UIDeviceOrientationLandscapeRight && self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
         self.lastOrientation = UIDeviceOrientationLandscapeRight;
     }
+}
+
+- (BOOL)isEqualSizeFromFrame:(CGRect)fromFrame toFrame:(CGRect)toFrame {
+    if(round(fromFrame.size.width) == round(toFrame.size.width) && round(fromFrame.size.height) == round(toFrame.size.height)){
+        return YES;
+    }
+    return NO;
+}
+
+//获取正确的playview,不管外面包了多少层
+- (UIView *)getRotateView:(UIView *)rotateView {
+    UIView *view = rotateView;
+    while ([self isEqualSizeFromFrame:view.frame toFrame:view.superview.frame]) {
+        view = view.superview;
+    }
+    return view;
 }
 
 @end

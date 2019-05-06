@@ -39,8 +39,8 @@
     _videoVC.view.backgroundColor = [UIColor blackColor];
     [self.view addSubview:_videoVC.view];
     
-    [_videoVC setViewFrame:CGRectMake(0, 300, [UIScreen mainScreen].bounds.size.width, 300)];
-    
+//    [_videoVC setViewFrame:CGRectMake(0, 300, [UIScreen mainScreen].bounds.size.width, 300)];
+    _videoVC.view.frame = CGRectMake(0, 300, [UIScreen mainScreen].bounds.size.width, 300);
     FHMultiMediaItemModel *itemModel = [[FHMultiMediaItemModel alloc] init];
     itemModel.mediaType = FHMultiMediaTypeVideo;
     itemModel.videoID = @"v03004b60000bh57qrtlt63p5lgd20d0";

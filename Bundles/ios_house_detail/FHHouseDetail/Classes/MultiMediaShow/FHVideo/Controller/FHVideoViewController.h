@@ -57,7 +57,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime complete:(void(^)(BOOL success))finised;
 
-- (void)setViewFrame:(CGRect)frame;
+//- (void)setViewFrame:(CGRect)frame;
 
 @end
 

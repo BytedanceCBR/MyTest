@@ -1655,7 +1655,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 self.containerView.backgroundColor = [UIColor clearColor];
                 containerView.backgroundColor = [UIColor clearColor];
                 if ([showImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
-                    [self.videoVC setViewFrame:endFrame];
+//                    [self.videoVC setViewFrame:endFrame];
+                    self.videoVC.view.frame = endFrame;
                 }else{
                     largeImageView.frame = endFrame;
                 }

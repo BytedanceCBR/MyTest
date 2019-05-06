@@ -92,7 +92,8 @@
 
 - (void)initVideoVC {
     self.videoVC = [[FHVideoViewController alloc] init];
-    [_videoVC setViewFrame:self.bounds];
+//    [_videoVC setViewFrame:self.bounds];
+    _videoVC.view.frame = self.bounds;
 }
 
 - (void)setTracerDic:(NSDictionary *)tracerDic {

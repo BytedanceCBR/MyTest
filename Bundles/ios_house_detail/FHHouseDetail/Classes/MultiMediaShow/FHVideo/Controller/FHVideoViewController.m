@@ -29,8 +29,6 @@
 @property (nonatomic, assign) NSTimeInterval stayTime;
 @property (nonatomic, assign) NSTimeInterval startTime;
 
-@property(nonatomic, assign) CGRect originFrame;
-
 @end
 
 @implementation FHVideoViewController
@@ -38,8 +36,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    //很关键，防止全屏时候view尺寸改变
+    self.view.autoresizingMask = UIViewAutoresizingNone;
+    
     [self initViews];
-//    [self initConstaints];
+    [self initConstaints];
     [self initViewModel];
 }
 
@@ -55,15 +57,10 @@
     [self.view addSubview:_videoView];
 }
 
-- (void)setViewFrame:(CGRect)frame {
-    _originFrame = frame;
-    self.view.frame = frame;
-}
-
-- (void)viewDidLayoutSubviews {
-    CGRect frame = CGRectMake(0, 0, self.originFrame.size.width, self.originFrame.size.height);
-    self.view.frame = self.originFrame; 
-    self.videoView.frame = frame;
+- (void)initConstaints {
+    [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(self.view);
+    }];
 }
 
 - (CGFloat)videoWidth {
@@ -338,7 +335,6 @@
 
 #pragma mark - 埋点相关
 
-//埋点
 - (void)trackPlayBackState {
     if(self.playbackState == TTVPlaybackState_Playing){
         if(self.lastPlaybackState == TTVPlaybackState_Stopped){
