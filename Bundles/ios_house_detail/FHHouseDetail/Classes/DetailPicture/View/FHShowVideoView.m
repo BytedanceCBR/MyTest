@@ -93,6 +93,7 @@
 - (UIView *)displayImageView
 {
     UIImageView *displayV = [super displayImageView];
+    displayV.hidden = YES;
     CGRect imageViewFrame = [self showVideoFrame];
     self.vedioView.frame = imageViewFrame;
     return self.vedioView;
