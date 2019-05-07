@@ -6,8 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "UIColor+TTVideo.h"
 #import "UIViewAdditions.h"
+#import "NSDictionary+TTAdditions.h"
 #import "EXTScope.h"
 #import "EXTKeyPathCoding.h"
 #import "Masonry.h"

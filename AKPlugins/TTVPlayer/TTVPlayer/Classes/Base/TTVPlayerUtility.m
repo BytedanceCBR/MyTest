@@ -285,4 +285,30 @@ static BOOL hexStrToRGBA(NSString *str, CGFloat *r, CGFloat *g, CGFloat *b, CGFl
     }
 }
 
++ (UIViewController *)lm_topmostViewController
+{
+    UIViewController *rootVC = [UIApplication sharedApplication].keyWindow.rootViewController;
+    if (!rootVC) {
+        rootVC = [UIApplication sharedApplication].delegate.window.rootViewController;
+    }
+    return [self lm_topViewControllerRecursivityWithRootViewController:rootVC];
+}
+
++ (UIViewController *)lm_topViewControllerRecursivityWithRootViewController:(UIViewController *)rootViewController
+{
+    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tabBarController = (UITabBarController *)rootViewController;
+        return [self lm_topViewControllerRecursivityWithRootViewController:tabBarController.selectedViewController];
+    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *navigationController = (UINavigationController *)rootViewController;
+        return [self lm_topViewControllerRecursivityWithRootViewController:navigationController.topViewController];
+    } else if (rootViewController.presentedViewController) {
+        UIViewController *presentedViewController = rootViewController.presentedViewController;
+        return [self lm_topViewControllerRecursivityWithRootViewController:presentedViewController];
+    } else {
+        return rootViewController;// 暂未考虑childViewController
+    }
+}
+
+
 @end

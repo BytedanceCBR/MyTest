@@ -8,7 +8,7 @@
 #import "TTVPlayer+Part.h"
 #import <objc/runtime.h>
 
-@interface TTVPlayer ()
+@interface TTVPlayer (Part)
 @property (nonatomic, strong) TTVPlayerPartManager * partManager;
 @end
 

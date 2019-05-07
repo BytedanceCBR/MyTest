@@ -7,7 +7,7 @@
 //
 
 #import "TTVReplayDemoViewController.h"
-#import <TTVPlayerKitHeader.h>
+#import <TTVPlayerPod/TTVPlayerKitHeader.h>
 #import <Masonry/Masonry.h>
 #import <UIViewAdditions.h>
 #import <TTVPlayer+Engine.h>

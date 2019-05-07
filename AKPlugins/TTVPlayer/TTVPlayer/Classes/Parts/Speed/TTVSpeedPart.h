@@ -10,13 +10,13 @@
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 #import "TTVPlayerCustomViewDelegate.h"
-#import "TTVButton.h"
+#import "TTVPlayerButton.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TTVSpeedPart : NSObject<TTVPlayerContexts, TTVReduxStateObserver, TTVPlayerPartProtocol>
 
-@property (nonatomic, strong) TTVButton * speedChangeButton;
+@property (nonatomic, strong) TTVPlayerButton * speedChangeButton;
 
 - (void)dismissFloatSelectView;
 - (void)showFloatSelectView;

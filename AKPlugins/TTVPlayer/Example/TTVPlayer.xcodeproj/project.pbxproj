@@ -12,6 +12,7 @@
 		42DC68ED226854BE0075FD91 /* TTVPlayerStyle-Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42DC68EC226854BE0075FD91 /* TTVPlayerStyle-Presentation.plist */; };
 		42FA8F85221566BB002558C6 /* TTVReplayDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FA8F84221566BB002558C6 /* TTVReplayDemoViewController.m */; };
 		42FA8F8722156760002558C6 /* TTVPlayerStyle-EV.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42FA8F8622156760002558C6 /* TTVPlayerStyle-EV.plist */; };
+		435EBA7A22783F8B002FB99E /* TTVPlayerTokenManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 435EBA7822783F8A002FB99E /* TTVPlayerTokenManager.m */; };
 		439A0013225F185B00E33794 /* TTVHalfDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 439A0012225F185B00E33794 /* TTVHalfDemoViewController.m */; };
 		43F7BF5B22166B10006EF203 /* TTFlexManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43F7BF5722166B10006EF203 /* TTFlexManager.m */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
@@ -31,6 +32,9 @@
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		DF99BD57357659042F17A654 /* libPods-TTVPlayer_Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C4D6DFD292C7A8BF36DB184 /* libPods-TTVPlayer_Tests.a */; };
+		FB45BBF7227ECBF8009E8402 /* TTVHalfDemo2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB45BBF6227ECBF8009E8402 /* TTVHalfDemo2ViewController.m */; };
+		FB45BBFA227ECD29009E8402 /* FHVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = FB45BBF9227ECD29009E8402 /* FHVideoView.m */; };
+		FB45BBFD227ECEE3009E8402 /* FHVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FB45BBFC227ECEE3009E8402 /* FHVideoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +58,8 @@
 		42FA8F83221566BB002558C6 /* TTVReplayDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTVReplayDemoViewController.h; sourceTree = "<group>"; };
 		42FA8F84221566BB002558C6 /* TTVReplayDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTVReplayDemoViewController.m; sourceTree = "<group>"; };
 		42FA8F8622156760002558C6 /* TTVPlayerStyle-EV.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TTVPlayerStyle-EV.plist"; sourceTree = "<group>"; };
+		435EBA7822783F8A002FB99E /* TTVPlayerTokenManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTVPlayerTokenManager.m; sourceTree = "<group>"; };
+		435EBA7922783F8A002FB99E /* TTVPlayerTokenManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTVPlayerTokenManager.h; sourceTree = "<group>"; };
 		439A0011225F185B00E33794 /* TTVHalfDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTVHalfDemoViewController.h; sourceTree = "<group>"; };
 		439A0012225F185B00E33794 /* TTVHalfDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTVHalfDemoViewController.m; sourceTree = "<group>"; };
 		43F7BF5722166B10006EF203 /* TTFlexManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTFlexManager.m; sourceTree = "<group>"; };
@@ -84,6 +90,12 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8E541D05442A8D9DDD91E8F4 /* libPods-TTVPlayer_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TTVPlayer_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5C81F262F1C0392E61D7DA0 /* Pods-TTVPlayer_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTVPlayer_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TTVPlayer_Tests/Pods-TTVPlayer_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		FB45BBF5227ECBF8009E8402 /* TTVHalfDemo2ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTVHalfDemo2ViewController.h; sourceTree = "<group>"; };
+		FB45BBF6227ECBF8009E8402 /* TTVHalfDemo2ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TTVHalfDemo2ViewController.m; sourceTree = "<group>"; };
+		FB45BBF8227ECD29009E8402 /* FHVideoView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHVideoView.h; sourceTree = "<group>"; };
+		FB45BBF9227ECD29009E8402 /* FHVideoView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHVideoView.m; sourceTree = "<group>"; };
+		FB45BBFB227ECEE3009E8402 /* FHVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FHVideoViewController.h; sourceTree = "<group>"; };
+		FB45BBFC227ECEE3009E8402 /* FHVideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FHVideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +185,8 @@
 		6003F593195388D20070C39A /* Example for TTVPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				435EBA7922783F8A002FB99E /* TTVPlayerTokenManager.h */,
+				435EBA7822783F8A002FB99E /* TTVPlayerTokenManager.m */,
 				43F7BF5622166B10006EF203 /* TTFlexManager */,
 				6003F59C195388D20070C39A /* TTVAppDelegate.h */,
 				6003F59D195388D20070C39A /* TTVAppDelegate.m */,
@@ -186,6 +200,12 @@
 				6003F594195388D20070C39A /* Supporting Files */,
 				439A0011225F185B00E33794 /* TTVHalfDemoViewController.h */,
 				439A0012225F185B00E33794 /* TTVHalfDemoViewController.m */,
+				FB45BBF5227ECBF8009E8402 /* TTVHalfDemo2ViewController.h */,
+				FB45BBF6227ECBF8009E8402 /* TTVHalfDemo2ViewController.m */,
+				FB45BBF8227ECD29009E8402 /* FHVideoView.h */,
+				FB45BBF9227ECD29009E8402 /* FHVideoView.m */,
+				FB45BBFB227ECEE3009E8402 /* FHVideoViewController.h */,
+				FB45BBFC227ECEE3009E8402 /* FHVideoViewController.m */,
 			);
 			name = "Example for TTVPlayer";
 			path = TTVPlayer;
@@ -243,6 +263,7 @@
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
 				47C187F3B3F3811BEEBCCD3A /* [CP] Copy Pods Resources */,
+				497F7F970D0B6E71B6B5A36E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -361,6 +382,30 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TTVPlayer_Example/Pods-TTVPlayer_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		497F7F970D0B6E71B6B5A36E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TTVPlayer_Example/Pods-TTVPlayer_Example-frameworks.sh",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManager.framework",
+				"${PODS_ROOT}/TTNetworkManager/TTNetworkManager.framework.dSYM",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TTNetworkManager.framework",
+				"${DWARF_DSYM_FOLDER_PATH}/TTNetworkManager.framework.dSYM",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TTVPlayer_Example/Pods-TTVPlayer_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8EA49E933D2628840AAF3E3E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -404,10 +449,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB45BBFD227ECEE3009E8402 /* FHVideoViewController.m in Sources */,
+				FB45BBFA227ECD29009E8402 /* FHVideoView.m in Sources */,
 				6003F59E195388D20070C39A /* TTVAppDelegate.m in Sources */,
 				43F7BF5B22166B10006EF203 /* TTFlexManager.m in Sources */,
+				435EBA7A22783F8B002FB99E /* TTVPlayerTokenManager.m in Sources */,
 				6003F5A7195388D20070C39A /* TTVViewController.m in Sources */,
 				439A0013225F185B00E33794 /* TTVHalfDemoViewController.m in Sources */,
+				FB45BBF7227ECBF8009E8402 /* TTVHalfDemo2ViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 				42FA8F85221566BB002558C6 /* TTVReplayDemoViewController.m in Sources */,
 			);

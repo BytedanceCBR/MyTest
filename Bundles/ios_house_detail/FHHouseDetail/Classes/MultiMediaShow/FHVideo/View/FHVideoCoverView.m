@@ -11,8 +11,6 @@
 
 @interface FHVideoCoverView ()
 
-@property(nonatomic, strong) UIImageView *coverView;
-@property(nonatomic, strong) UIButton *startBtn;
 @property(nonatomic, strong) UIImage *placeHolder;
 
 @end

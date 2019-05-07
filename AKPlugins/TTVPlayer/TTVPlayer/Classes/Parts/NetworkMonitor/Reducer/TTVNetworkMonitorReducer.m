@@ -87,12 +87,15 @@
     BOOL isLocalVideo = self.player.isLocalVideo;
     if (cellularNetwork && !isLocalVideo) {
         // 暂停当前播放
-        BOOL isPlaying = [self state].playbackState == TTVPlaybackState_Playing;
-        // 一定要放在 pause 之前，否则计算错误
-        _pauseByCellularNetwork = YES;
-//        [self.player pause];
-        [self.player.playerStore dispatch:[self.player.playerAction pauseAction]];
-        return YES;
+        BOOL isPlaying = self.player.playbackState == TTVPlaybackState_Playing;
+        if (isPlaying) {
+            // 一定要放在 pause 之前，否则计算错误
+            _pauseByCellularNetwork = YES;
+            [self.player.playerStore dispatch:[self.player.playerAction pauseAction]];
+            return YES;
+
+        }
+        
     }
     return NO;
 }

@@ -1,14 +1,14 @@
 //
-//  TTVButton.m
+//  TTVPlayerButton.m
 //  TTVPlayerPod
 //
 //  Created by lisa on 2019/4/6.
 //
 
-#import "TTVButton.h"
+#import "TTVPlayerButton.h"
 #import "TTVReduxKit.h"
 
-@interface TTVButton ()
+@interface TTVPlayerButton ()
 
 @property (nonatomic, strong) UIColor * buttonTitleColor;/// 默认状态的 buttonColor
 @property (nonatomic, strong) TTVReduxAction * actionTouchupInside; // 正常状态，点击的 action
@@ -16,7 +16,7 @@
 @end
 
 
-@implementation TTVButton
+@implementation TTVPlayerButton
 
 @synthesize store, didButtonTouchUpInside, image = _image, title = _title, titleColor = _titleColor;
 

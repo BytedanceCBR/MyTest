@@ -58,5 +58,7 @@ typedef NS_ENUM(NSUInteger, TTVDeviceMode) {
 
 + (void)quitCurrentViewController;
 
++ (UIViewController *)lm_topmostViewController;
+
 @end
 

@@ -13,7 +13,7 @@
 @class TTPlayerProgressHUDView;
 @class TTVProgressViewOfSlider;
 @class TTVToggledButton;
-@class TTVButton;
+@class TTVPlayerButton;
 @class TTVTouchIgoringView;
 @class TTVPlayerBottomToolBar;
 @protocol TTVPlayerLoadingViewProtocol;

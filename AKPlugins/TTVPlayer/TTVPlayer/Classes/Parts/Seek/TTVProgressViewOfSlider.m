@@ -115,10 +115,10 @@
     return _cacheProgressView;
 }
 
-- (TTPlayerSliderMarkView *)markView
+- (TTVPlayerSliderMarkView *)markView
 {
     if (!_markView) {
-        _markView = [[TTPlayerSliderMarkView alloc] init];
+        _markView = [[TTVPlayerSliderMarkView alloc] init];
     }
     return _markView;
 }

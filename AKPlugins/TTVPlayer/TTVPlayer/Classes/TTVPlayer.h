@@ -337,6 +337,11 @@
 /// 当调用 closeAysn,会收到此回调
 - (void)playerCloseAysncFinish:(TTVPlayer *)player;
 
+/// 长视频 更新bizToken , 各业务方自己更新,
+- (void)player:(TTVPlayer *)player requestPlayTokenCompletion:(void (^)(NSError *error, NSString *authToken, NSString *bizToken))completion;
+
+- (NSString *)playerV2URL:(TTVPlayer *)player path:(NSString *)path;
+
 @end
 
 

@@ -1,25 +1,25 @@
 //
-//  TTVideoIdleTimeService.m
+//  TTVIdleTimeService.m
 //  Article
 //
 //  Created by liuty on 2017/3/2.
 //
 //
 
-#import "TTVideoIdleTimeService.h"
+#import "TTVIdleTimeService.h"
 
 #define kLockScreenTime 60 * 1
 
-@implementation TTVideoIdleTimeService
+@implementation TTVIdleTimeService
 
 #pragma mark -
 #pragma mark public methods
 
 + (instancetype)sharedService {
     static dispatch_once_t onceToken;
-    static TTVideoIdleTimeService *service = nil;
+    static TTVIdleTimeService *service = nil;
     dispatch_once(&onceToken, ^{
-        service = [[TTVideoIdleTimeService alloc] init];
+        service = [[TTVIdleTimeService alloc] init];
     });
     return service;
 }

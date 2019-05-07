@@ -1,5 +1,5 @@
 //
-//  TTVideoIdleTimeService.h
+//  TTVIdleTimeService.h
 //  Article
 //
 //  Created by liuty on 2017/3/2.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TTVideoIdleTimeService : NSObject
+@interface TTVIdleTimeService : NSObject
 
 + (instancetype)sharedService;
 

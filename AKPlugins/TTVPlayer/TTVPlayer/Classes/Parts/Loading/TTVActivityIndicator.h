@@ -1,5 +1,5 @@
 //
-//  TTVideoActivityIndicator.h
+//  TTVActivityIndicator.h
 //  Article
 //
 //  Created by liuty on 2016/11/3.
@@ -12,7 +12,7 @@
  *  A control similar to iOS' UIActivityIndicatorView modeled after Google's Material Design Activity spinner.
  */
 
-@interface TTVideoActivityIndicator : UIView
+@interface TTVActivityIndicator : UIView
 
 
 /** Sets the line width of the spinner's circle. */

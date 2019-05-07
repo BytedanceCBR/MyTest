@@ -126,7 +126,7 @@
         currentTimeStr = [NSString stringWithFormat:@"%02d:%02d", currentMin, currentSec];
     }
     
-    UIFont *font = [UIFont fontWithDescriptor:self.fontDescriptor size:[TTVPlayerUtility tt_fontSize:23.f]];
+    UIFont *font = [UIFont fontWithDescriptor:self.fontDescriptor size:[TTVPlayerUtility tt_fontSize:self.textSize]];
     NSMutableAttributedString *attributedString1 = [[NSMutableAttributedString alloc] initWithString:currentTimeStr];
     [attributedString1 addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, [currentTimeStr length])];
     [attributedString1 addAttribute:NSForegroundColorAttributeName value:[TTVPlayerUtility colorWithHexString:self.currentTimeTextColorString] range:NSMakeRange(0, [currentTimeStr length])];
@@ -265,5 +265,32 @@
     }
     return newDescriptor;
 }
+
+- (NSString *)currentTimeTextColorString {
+    if (isEmptyString(_currentTimeTextColorString)) {
+        _currentTimeTextColorString = @"0xFF0000";
+    }
+    return _currentTimeTextColorString;
+}
+
+- (NSString *)totalTimeTextColorString {
+    if (isEmptyString(_totalTimeTextColorString)) {
+        _totalTimeTextColorString = @"0xffffff";
+    }
+    return _totalTimeTextColorString;
+}
+
+- (CGFloat)textSize {
+    if (_textSize <= 0) {
+        _textSize = 15;
+    }
+    return _textSize;
+}
+
+//- (void)setTextSize:(CGFloat)textSize {
+//    _textSize = textSize;
+//    self.timeLabel.font = [UIFont fontWithDescriptor:self.fontDescriptor size:self.textSize];
+//    
+//}
 
 @end

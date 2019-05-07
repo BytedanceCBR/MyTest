@@ -11,7 +11,7 @@
 #import <objc/runtime.h>
 #import "TTVAudioSessionManager.h"
 
-@interface TTVPlayer ()
+@interface TTVPlayer (BecomeResignActive)
 @property (nonatomic) BOOL isActive;
 @property (nonatomic) BOOL pausedByAudioInterruption;
 @property (nonatomic) BOOL autoPaused;

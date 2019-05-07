@@ -1,31 +1,31 @@
 //
-//  TTPlayerSliderMarkView.m
+//  TTVPlayerSliderMarkView.m
 //  Article
 //
 //  Created by liufeng on 2017/8/22.
 //
 //
 
-#import "TTPlayerSliderMarkView.h"
+#import "TTVPlayerSliderMarkView.h"
 
-@interface TTPlayerSliderPointView : UIView
+@interface TTVPlayerSliderPointView : UIView
 
 @property (nonatomic, assign) CGFloat point;
 
 @end
 
-@implementation TTPlayerSliderPointView
+@implementation TTVPlayerSliderPointView
 
 @end
 
-@interface TTPlayerSliderMarkView ()
+@interface TTVPlayerSliderMarkView ()
 
-@property (nonatomic, strong) NSMutableArray <TTPlayerSliderPointView *>*pointViews;
-@property (nonatomic, strong) NSMutableArray <TTPlayerSliderPointView *>*openingPointViews;
+@property (nonatomic, strong) NSMutableArray <TTVPlayerSliderPointView *>*pointViews;
+@property (nonatomic, strong) NSMutableArray <TTVPlayerSliderPointView *>*openingPointViews;
 
 @end
 
-@implementation TTPlayerSliderMarkView
+@implementation TTVPlayerSliderMarkView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -72,7 +72,7 @@
     [_openingPointViews removeAllObjects];
     
     for (NSNumber *point in _openingPoints) {
-        TTPlayerSliderPointView *pointView = [[TTPlayerSliderPointView alloc] init];
+        TTVPlayerSliderPointView *pointView = [[TTVPlayerSliderPointView alloc] init];
         pointView.backgroundColor = [UIColor colorWithWhite:255.0f / 255.0f alpha:1.0f];;
         pointView.point = point.floatValue;
         [self addSubview:pointView];
@@ -86,7 +86,7 @@
     [_pointViews removeAllObjects];
     
     for (NSNumber *point in _markPoints) {
-        TTPlayerSliderPointView *pointView = [[TTPlayerSliderPointView alloc] init];
+        TTVPlayerSliderPointView *pointView = [[TTVPlayerSliderPointView alloc] init];
         pointView.backgroundColor = [UIColor yellowColor];
         pointView.point = point.floatValue;
         [self addSubview:pointView];
@@ -98,11 +98,11 @@
 {
     [super layoutSubviews];
     
-    for (TTPlayerSliderPointView *view in _pointViews) {
+    for (TTVPlayerSliderPointView *view in _pointViews) {
         view.frame = CGRectMake(view.point * self.width, 0, self.height * 2, self.height);
         view.layer.cornerRadius = self.height / 2.f;
     }
-    for (TTPlayerSliderPointView *view in _openingPointViews) {
+    for (TTVPlayerSliderPointView *view in _openingPointViews) {
         view.frame = CGRectMake(view.point * self.width, 0, self.height * 2, self.height);
         view.layer.cornerRadius = self.height / 2.f;
     }

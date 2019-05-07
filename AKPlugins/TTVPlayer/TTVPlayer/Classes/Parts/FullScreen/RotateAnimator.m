@@ -14,6 +14,7 @@
 @property (nonatomic) NSUInteger rotatedViewTag;
 @property (nonatomic, weak) UIView * superViewOfPlayer;
 @property (nonatomic) UIDeviceOrientation lastOrientation;
+@property (nonatomic, weak) UIViewController * playerVC;
 
 //外面传的只是playview的frame，这里记的是真正的playerview的frame，可能是包了很多层的view，为了返回时候还原
 @property (nonatomic) CGRect frameBeforePresentRelative;
@@ -23,10 +24,11 @@
 
 @implementation RotateAnimator
 
-- (instancetype)initWithRotateViewTag:(NSUInteger)tag {
+- (instancetype)initWithRotateViewTag:(NSUInteger)tag playerVC:(UIViewController *)playerVC {
     self = [super init];
     if (self) {
         _rotatedViewTag = tag;
+        self.playerVC = playerVC;
     }
     return self;
 }
@@ -86,8 +88,10 @@
         self.superViewOfPlayer = playView.superview;
         self.frameBeforePresentRelative = [playView convertRect:self.frameBeforePresent toView:self.superViewOfPlayer];
         
+        // 添加转屏通知
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
+        
         // 这里加一个覆盖的view，因为旋转时候可能导致原来view布局问题，盖一个view只看到playview就够了
-
         CGSize size = containerView.frame.size;
         
         CGPoint center = CGPointMake(size.height / 2, size.width / 2);
@@ -119,6 +123,9 @@
                              [transitionContext completeTransition:!wasCancelled];
                          }];
     }else{
+        // 移除转屏通知
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+        
         [containerView bringSubviewToFront:fromViewController.view];
     
         CGRect toRect = self.frameBeforePresentRelative;
@@ -179,6 +186,17 @@
                 playView.transform = CGAffineTransformMakeRotation(M_PI_2);
             }
         }
+    }
+}
+
+-(void)screenRotate:(NSNotification*)notification{
+    UIDevice* device = notification.object;
+    //    NSLog(@"notification1:::%@", @(device.orientation));
+    if (device.orientation == UIDeviceOrientationLandscapeLeft && self.lastOrientation == UIDeviceOrientationLandscapeRight) {
+        self.lastOrientation = UIDeviceOrientationLandscapeLeft;
+    }
+    else if (device.orientation == UIDeviceOrientationLandscapeRight && self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
+        self.lastOrientation = UIDeviceOrientationLandscapeRight;
     }
 }
 

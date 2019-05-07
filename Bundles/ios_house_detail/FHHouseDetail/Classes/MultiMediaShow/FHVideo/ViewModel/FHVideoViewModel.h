@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus;
 
+- (void)hideCoverView;
+
+- (void)showCoverViewStartBtn;
+
 @end
 
 NS_ASSUME_NONNULL_END

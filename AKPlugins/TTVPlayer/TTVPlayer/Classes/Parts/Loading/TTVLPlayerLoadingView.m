@@ -6,14 +6,14 @@
 //
 
 #import "TTVLPlayerLoadingView.h"
-#import "TTVideoActivityIndicator.h"
+#import "TTVActivityIndicator.h"
 
 #define kTipLoadingViewH 32
 #define kHorizontalGap [TTVPlayerUtility tt_padding:12]
 
 @interface TTVLPlayerLoadingView ()
 
-@property (nonatomic, strong) TTVideoActivityIndicator *loadingView;
+@property (nonatomic, strong) TTVActivityIndicator *loadingView;
 @property (nonatomic, strong) UILabel *loadingTip;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic, assign) BOOL showFreeFlowTip;
@@ -87,9 +87,9 @@
 #pragma mark -
 #pragma mark getters
 
-- (TTVideoActivityIndicator *)loadingView {
+- (TTVActivityIndicator *)loadingView {
     if (!_loadingView) {
-        _loadingView = [[TTVideoActivityIndicator alloc] initWithFrame:CGRectMake(0, 0, kTipLoadingViewH, kTipLoadingViewH)];
+        _loadingView = [[TTVActivityIndicator alloc] initWithFrame:CGRectMake(0, 0, kTipLoadingViewH, kTipLoadingViewH)];
         _loadingView.lineWidth = 4;
         _loadingView.hidesWhenStopped = YES;
         _loadingView.tintColor = [UIColor colorWithWhite:255.0f / 255.0f alpha:1.0f];

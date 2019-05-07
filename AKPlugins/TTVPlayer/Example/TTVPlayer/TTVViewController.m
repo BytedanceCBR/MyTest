@@ -10,6 +10,7 @@
 #import "TTVReplayDemoViewController.h"
 #import "TTVHalfDemoViewController.h"
 #import <UIViewAdditions.h>
+#import "TTVHalfDemo2ViewController.h"
 
 @interface TTVViewController ()
 @property (nonatomic, strong)UIButton * button;
@@ -56,7 +57,7 @@
 
 - (void)half
 {
-    TTVHalfDemoViewController * vc = [[TTVHalfDemoViewController alloc] init];
+    TTVHalfDemo2ViewController * vc = [[TTVHalfDemo2ViewController alloc] init];
     [self presentViewController:vc animated:YES completion:nil];
 }
 

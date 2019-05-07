@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TTPlayerSliderMarkView.h"
+#import "TTVPlayerSliderMarkView.h"
 #import "TTVPlayerCustomViewDelegate.h"
 
 @interface TTVProgressViewOfSlider : UIView<TTVProgressViewOfSliderProtocol>
@@ -16,6 +16,6 @@
 @property (nonatomic, strong) NSArray <NSNumber *> *markPoints;
 @property (nonatomic, strong) NSArray <NSNumber *> *openingPoints;
 
-@property (nonatomic, strong) TTPlayerSliderMarkView *markView;
+@property (nonatomic, strong) TTVPlayerSliderMarkView *markView;
 
 @end

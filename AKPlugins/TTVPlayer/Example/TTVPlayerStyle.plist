@@ -135,13 +135,13 @@
 					<key>SliderBarColor</key>
 					<string>0xFFFFFF7F</string>
 					<key>WatchedProgressColor</key>
-					<string>0xFFFFFF</string>
+					<string></string>
 					<key>FontColorOfCurrentTime</key>
-					<string>0xFFFFFF</string>
+					<string></string>
 					<key>FontColorOfTotalTime</key>
-					<string>0xFFFFFF7F</string>
+					<string></string>
 					<key>FontSize</key>
-					<integer>20</integer>
+					<integer>0</integer>
 					<key>FontName</key>
 					<string></string>
 				</dict>
@@ -171,7 +171,7 @@
 			<key>AvailableOnInit</key>
 			<true/>
 			<key>AutoRotateEnabled</key>
-			<true/>
+			<false/>
 			<key>Controls</key>
 			<dict>
 				<key>全屏切换按钮</key>

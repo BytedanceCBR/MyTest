@@ -7,7 +7,6 @@
 
 #import "TTVPlayer.h"
 
-NS_ASSUME_NONNULL_BEGIN
 
 @interface TTVPlayer (Engine)
 
@@ -28,15 +27,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setVideoID:(NSString *)videoID host:(NSString *)host commonParameters:(NSDictionary *)commonParameters;
 
-/**
- 设置播放器播放源相关的参数，此方法 将3个参数会拼接一个 url，进行真实播放地址的获取,获取视频地址的url加密
- 
- @param videoID  vid
- @param host  服务端 host
- @param commonParameters url 后添加的通用参数，比如机型等
- @param businessToken 加密秘钥，用于对此方法形成的 url 进行加密
+/*!
+ @method    setPlayAuthToken:
+ @abstract  authToken是老版获取播放地址的鉴权参数 ,playAuthToken是新版获取播放地址的鉴权参数 ,businesstoken对应ptoken,决定视频带不带水印，加不加密
  */
-- (void)setVideoID:(NSString *)videoID host:(NSString *)host commonParameters:(NSDictionary *)commonParameters businessToken:(NSString *)businessToken;
+- (void)setPlayAuthToken:(NSString *)playAuthToken authToken:(NSString *)authToken businessToken:(NSString *)businessToken;
 
 /**
  设置本地视频地址
@@ -58,9 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param preloaderItem  预加载 item
  */
 - (void)setPreloaderItem:(TTAVPreloaderItem *)preloaderItem;
-
-/// 设置播放器选用哪个 API 的版本进行获取播放地址 @see TTVPlayerAPIVersion
-- (void)setPlayAPIVersion:(TTVPlayerAPIVersion)apiVersion auth:(NSString *)auth;
 
 /// 设置获取视频源的网络
 @property (nonatomic, strong) id<TTVideoEngineNetClient> netClient; // 设置网络请求 client
@@ -226,4 +218,3 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-NS_ASSUME_NONNULL_END

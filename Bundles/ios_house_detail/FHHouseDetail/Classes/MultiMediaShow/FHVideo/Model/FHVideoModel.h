@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL repeated;
 @property(nonatomic, assign) BOOL isShowMiniSlider;
 @property(nonatomic, assign) BOOL isShowControl;
+//和isShowControld互斥
+@property(nonatomic, assign) BOOL isShowStartBtnWhenPause;
 
 @end
 

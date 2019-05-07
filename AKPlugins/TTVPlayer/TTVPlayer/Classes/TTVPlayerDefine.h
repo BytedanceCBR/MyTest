@@ -108,7 +108,8 @@ typedef NS_ENUM(NSUInteger, TTVPlayerAPIVersion) {
 ///-----------------------------------------------------------------
 
 /// player pod 库现有支持的所有的 part
-typedef NS_OPTIONS(NSUInteger, TTVPlayerPartKey) {
+typedef NSUInteger TTVPlayerPartKey;
+typedef NS_OPTIONS(TTVPlayerPartKey, TTVPlayerInternalPartKey) {
     /// 播放控制功能 1
     TTVPlayerPartKey_Play = 1 << 0,
     /// 进度控制功能 2
@@ -130,20 +131,6 @@ typedef NS_OPTIONS(NSUInteger, TTVPlayerPartKey) {
     /// 清晰度切换 4096
     TTVPlayerPartKey_Resolution = 1 << 12
 };
-
-typedef NS_OPTIONS(NSUInteger, TTVPlayerPartType) {
-    TTVPlayerPartType_PlaybackControl = 1 << 0,// 播放控制：TTVPlayerPartKey_Play，TTVPlayerPartKey_Seek，TTVPlayerPartKey_Full
-    TTVPlayerPartType_AfterPlay = 1 << 1,    // 播放器状态：TTVPlayerPartKey_Loading，TTVPlayerPartKey_PlayerFinish，TTVPlayerPartKey_NetworkMonitor
-    TTVPlayerPartType_BeforePlay = 1 << 2,
-};
-
-/// 应该是一个 string ？？？？
-typedef NS_OPTIONS(NSUInteger, TTVPlayerPartLoadTiming) {
-    TTVPlayerPartLoadTiming_PlaybackControlShow = 1 << 0,
-    TTVPlayerPartLoadTiming_AfterPlay = 1 << 1,
-    TTVPlayerPartLoadTiming_BeforePlay = 1 << 2,
-};
-
 ///**
 // player pod 库
 // 1、player 是否支持全屏， 可以通过 part 来设置是否支持全屏哈
@@ -154,9 +141,8 @@ typedef NS_OPTIONS(NSUInteger, TTVPlayerPartLoadTiming) {
 /**
  part 上 control 对应的 key
  */
-//#define ttv_isTipView(tag) (tag >= 77700)?YES:NO
-
-typedef NS_ENUM(NSUInteger, TTVPlayerPartControlKey) {
+typedef NSUInteger TTVPlayerPartControlKey;
+typedef NS_ENUM(TTVPlayerPartControlKey, TTVPlayerInternalPartControlKey) {
     TTVPlayerView_Tag = 6999,
     // TTVPlayerPartKey_Play
     TTVPlayerPartControlKey_PlayCenterToggledButton = 7771,          // 位于中间的播放按钮

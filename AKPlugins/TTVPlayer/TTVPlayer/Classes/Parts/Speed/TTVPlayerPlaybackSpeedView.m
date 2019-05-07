@@ -1,23 +1,23 @@
 //
-//  TTPlayerPlaybackSpeedView.m
+//  TTVPlayerPlaybackSpeedView.m
 //  Article
 //
 //  Created by Chen Hong on 2018/11/26.
 //
 
-#import "TTPlayerPlaybackSpeedView.h"
+#import "TTVPlayerPlaybackSpeedView.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
 #define kButtonH 64.f
 
-@interface TTPlayerPlaybackSpeedView ()
+@interface TTVPlayerPlaybackSpeedView ()
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, copy) NSArray<NSNumber *> *presetSpeedArray;
 @property (nonatomic, copy) NSArray<NSString *> *presetSpeedTitleArray;
 @property (nonatomic, assign) BOOL hasChangedSpeed;
 @end
 
-@implementation TTPlayerPlaybackSpeedView
+@implementation TTVPlayerPlaybackSpeedView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {

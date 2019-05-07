@@ -15,7 +15,7 @@
 #import "TTVPlaybackTime.h"
 #import "TTVPlaybackTimePrivate.h"
 #import "TTVURLService.h"
-#import "TTVideoIdleTimeService.h"
+#import "TTVIdleTimeService.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #import "TTVPlayerEnvironmentContext.h"
@@ -24,7 +24,7 @@
 
 static NSString *platformString;
 
-@interface TTVPlayer ()<TTVideoEngineDelegate, TTVideoEngineDataSource, TTVideoEngineResolutionDelegate>
+@interface TTVPlayer (Engine)<TTVideoEngineDelegate, TTVideoEngineDataSource, TTVideoEngineResolutionDelegate>
 
 @property (nonatomic, strong) TTVideoEngine         *videoEngine;   // 包装了 videoEngine
 @property (nonatomic, copy)   NSString              *videoID;
@@ -39,22 +39,27 @@ static NSString *platformString;
 @property (nonatomic)         NSTimeInterval        playbackTimeInterval;
 @property (nonatomic, getter=isFirstCallPlay) BOOL  firstCallPlay;
 @property (nonatomic, assign) BOOL                  isSeeking;
-@property (nonatomic, copy)   NSString              *businessToken;  // 视频加密使用
+@property (nonatomic, copy)   NSString              *businessToken;  // businesstoken对应ptoken,决定视频带不带水印，加不加密
+@property (nonatomic, copy) NSString                *authToken;      //authToken是老版获取播放地址的鉴权参数
+@property (nonatomic, copy) NSString                *playAuthToken;  //playAuthToken是新版获取播放地址的鉴权参数
 @property (nonatomic, assign) BOOL                  readyForDisplay;
 
 @end
 
 @implementation TTVPlayer (Engine)
 
-@dynamic netClient;
-@dynamic loadState, shouldPlay, state;
-@dynamic currentResolution, playbackSpeed, volume, muted, looping;
+//@dynamic netClient;
+//@dynamic loadState, shouldPlay, state;
+//@dynamic currentResolution, playbackSpeed, volume, muted, looping;
 
 
 // 因为他代理了TTVPlayerVideoEnginePrivate 好多属性，所以需要转发代理
 // 感觉应该常用的还是可以写出来 TOOD???
 - (id)forwardingTargetForSelector:(SEL)aSelector {
     //    Debug_NSLog(@"selector = %@ ", NSStringFromSelector(aSelector));
+    if ([self respondsToSelector:@selector(aSelector)]) {
+        return self;
+    }
     if ([self.videoEngine respondsToSelector:aSelector]) {
         return self.videoEngine;
     }
@@ -271,7 +276,7 @@ static NSString *platformString;
     TTVReduxAction *action = [[TTVReduxAction alloc] initWithType:TTVPlayerActionType_PlaybackStateDidChanged];
     [self.playerStore dispatch:action];
     
-    [[TTVideoIdleTimeService sharedService] lockScreen:YES later:YES];
+    [[TTVIdleTimeService sharedService] lockScreen:YES later:YES];
     
     // 处理 播放时间相关的数据
     switch (playbackState) {
@@ -279,7 +284,7 @@ static NSString *platformString;
         {
             [self _beginObservePlayTime];
             self.finishStatus = nil;
-            [[TTVideoIdleTimeService sharedService] lockScreen:NO];
+            [[TTVIdleTimeService sharedService] lockScreen:NO];
         }
             break;
         case TTVideoEnginePlaybackStatePaused:
@@ -340,11 +345,24 @@ static NSString *platformString;
 }
 
 - (void)videoEngineDidFinish:(TTVideoEngine *)videoEngine error:(NSError *)error {
-    [self videoFinishedWithType:TTVPlayFinishStatusType_SystemFinish error:error sourceErrorStatus:0];
-    
     //当在视频播放中切换上下一个时，可能由于视频frame变化造成的拉伸变形，故隐藏 /// TODO, 如果这个需要保留下一帧怎么整
     if (self.videoEngine.currentPlaybackTime != self.videoEngine.duration) {
         self.playerView.alpha = 0.0;
+    }
+    
+    BOOL tokenExpired = NO;
+    if (error && error.code ==  -9990) {//TTVideoEngineErrorInvalidRequest ,兼容旧版本
+        long errorCode = [error.userInfo tt_longValueForKey:@"kTTVideoEngineAPIRetCodeKey"];//kTTVideoEngineAPIRetCodeKey 兼容旧版本
+        // 10408表示auth_token过期，50401表示play_token过期
+        if (errorCode == 10408 || errorCode == 50401) {
+            tokenExpired = YES;
+        }
+    }
+    
+    if (tokenExpired) {
+        [self refreshTokenWithEngine:videoEngine];
+    } else {
+        [self videoFinishedWithType:TTVPlayFinishStatusType_SystemFinish error:error sourceErrorStatus:0];
     }
 }
 
@@ -356,6 +374,22 @@ static NSString *platformString;
     [self videoFinishedWithType:TTVPlayFinishStatusType_UserFinish error:nil sourceErrorStatus:0];
     if ([self.delegate respondsToSelector:@selector(playerCloseAysncFinish:)]) {
         [self.delegate playerCloseAysncFinish:self];
+    }
+}
+
+- (void)refreshTokenWithEngine:(TTVideoEngine *)videoEngine
+{
+    @weakify(self);
+    if ([self.delegate respondsToSelector:@selector(playerViewController:requestPlayTokenCompletion:)]) {
+        [self.delegate player:self requestPlayTokenCompletion:^(NSError *error, NSString *authToken, NSString *bizToken) {
+            @strongify(self);
+            if (error) {
+                [self videoFinishedWithType:TTVPlayFinishStatusType_SystemFinish error:error sourceErrorStatus:0];
+            } else {
+                [self setPlayAuthToken:nil authToken:authToken businessToken:bizToken];
+                [self.videoEngine play];
+            }
+        }];
     }
 }
 
@@ -384,14 +418,26 @@ static NSString *platformString;
         [self.delegate player:self didFinishedWithStatus:self.finishStatus];
     }
 }
+
+- (NSInteger)playAPIVersion2
+{
+    return 2/*TTVideoEnginePlayAPIVersion2 兼容旧版本*/;
+}
+
 - (NSString *)apiForFetcher:(TTVideoEnginePlayAPIVersion)apiVersion {
-    
-    if (TTVideoEnginePlayAPIVersion1 == apiVersion) {
+    if ([self playAPIVersion2] == apiVersion) {
+        NSString *playerV2URL = nil;
+        if ([self.delegate respondsToSelector:@selector(playerV2URL:)]) {
+            playerV2URL = [self.delegate playerV2URL:self path:@"/vod/get_play_info"];
+        }
+        return [TTVURLService urlForV2WithPlayerAuthToken:self.playAuthToken businessToken:self.businessToken playerV2URL:playerV2URL];
+    } else if (TTVideoEnginePlayAPIVersion1 == apiVersion) {
         return [TTVURLService urlForV1WithVideoId:self.videoID businessToken:self.businessToken];
     } else {
         return [TTVURLService urlWithVideoId:self.videoID];
     }
 }
+
 
 #pragma mark - TTVideoEngineResolutionDelegate
 
@@ -446,10 +492,27 @@ static NSString *platformString;
         self.videoEngine.hardwareDecode = hardwareDecode;
     }
 }
+
 - (void)setLocalURL:(NSString *)localURL {
     [self.videoEngine setLocalURL:localURL];
     self.isLocalVideo = YES;
 }
+
+- (void)setPlayAuthToken:(NSString *)playAuthToken authToken:(NSString *)authToken businessToken:(NSString *)businessToken {
+    self.playAuthToken = playAuthToken;
+    self.businessToken = businessToken;
+    self.authToken = authToken;
+    if (!isEmptyString(playAuthToken) && !isEmptyString(businessToken) && !isEmptyString(authToken)) {
+        [self.videoEngine setPlayAPIVersion:[self playAPIVersion2] auth:authToken];
+    } else {
+        if (!isEmptyString(authToken)) {
+            [self.videoEngine setPlayAPIVersion:TTVideoEnginePlayAPIVersion1 auth:authToken];
+        } else {
+            [self.videoEngine setPlayAPIVersion:TTVideoEnginePlayAPIVersion0 auth:nil];
+        }
+    }
+}
+
 - (void)setVideoID:(NSString *)videoID host:(NSString *)host commonParameters:(NSDictionary *)commonParameters {
     self.videoID = videoID;
     [self.videoEngine setVideoID:videoID];
@@ -592,6 +655,26 @@ static NSString *platformString;
 }
 - (void)setStartPlayFromLastestCache:(BOOL)startPlayFromLastestCache {
     objc_setAssociatedObject(self, @selector(startPlayFromLastestCache), @(startPlayFromLastestCache), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSString *)authToken
+{
+    return objc_getAssociatedObject(self, @selector(authToken));
+}
+
+- (void)setAuthToken:(NSString *)authToken
+{
+    objc_setAssociatedObject(self, @selector(authToken), authToken, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (NSString *)playAuthToken
+{
+    return objc_getAssociatedObject(self, @selector(playAuthToken));
+}
+
+- (void)setPlayAuthToken:(NSString *)playAuthToken
+{
+    objc_setAssociatedObject(self, @selector(playAuthToken), playAuthToken, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
 
 @end

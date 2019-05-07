@@ -43,7 +43,9 @@
 }
 
 - (void)dealloc {
-    [self.mediaView.videoVC close];
+    if(self.vedioCount > 0){
+        [self.mediaView.videoVC close];
+    }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
@@ -66,7 +68,10 @@
     [self.imageList removeAllObjects];
     self.currentData = data;
     
-    self.mediaView.tracerDic = [self tracerDic];
+    //有视频才传入埋点
+    if(self.vedioCount > 0){
+        self.mediaView.tracerDic = [self tracerDic];
+    }
 
     [self generateModel];
     [self.mediaView updateWithModel:self.model];
@@ -202,7 +207,9 @@
         }
     };
     vc.dragToCloseDisabled = YES;
-    vc.videoVC = self.mediaView.videoVC;
+    if(self.vedioCount > 0){
+        vc.videoVC = self.mediaView.videoVC;
+    }
     vc.startWithIndex = index;
     vc.albumImageBtnClickBlock = ^(NSInteger index){
         [weakSelf enterPictureShowPictureWithIndex:index];
@@ -265,6 +272,7 @@
             weakSelf.mediaView.currentMediaCell.playerView = weakSelf.mediaView.videoVC.view;
             weakSelf.mediaView.videoVC.model.isShowControl = NO;
             weakSelf.mediaView.videoVC.model.isShowMiniSlider = YES;
+            weakSelf.mediaView.videoVC.model.isShowStartBtnWhenPause = YES;
             [weakSelf.mediaView.videoVC updateData:weakSelf.mediaView.videoVC.model];
         });
     }
@@ -426,7 +434,7 @@
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
 - (void)fhDetail_scrollViewDidScroll:(UIView *)vcParentView {
-   if (vcParentView) {
+   if (vcParentView && self.vedioCount > 0) {
         self.vcParentView = vcParentView;
         CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
         CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXDevice] ? 44 : 20) + 44.0;
@@ -454,7 +462,7 @@
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
-    if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing && !self.mediaView.videoVC.isFullScreen) {
+    if (self.vedioCount > 0 && self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing && !self.mediaView.videoVC.isFullScreen) {
         [self.mediaView.videoVC pause];
     }
 }

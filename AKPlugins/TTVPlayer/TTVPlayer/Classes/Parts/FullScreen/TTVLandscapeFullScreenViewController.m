@@ -18,7 +18,7 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(BOOL)prefersStatusBarHidden{
@@ -33,19 +33,19 @@
     return (UIInterfaceOrientationMaskLandscape);
 }
 
--(void)screenRotate:(NSNotification*)notification{
-    UIDevice* device = notification.object;
-    NSLog(@"notification:::%@", @(device.orientation));
-    
-    if (device.orientation == UIDeviceOrientationPortrait) {
-        
-        __weak typeof(self) weakSelf = self;
-        [self dismissViewControllerAnimated:YES completion:^{
-            if (weakSelf.didDismiss) {
-                weakSelf.didDismiss();
-            }
-        }];
-    }
-}
+//-(void)screenRotate:(NSNotification*)notification{
+//    UIDevice* device = notification.object;
+//    NSLog(@"notification:::%@", @(device.orientation));
+//
+//    if (device.orientation == UIDeviceOrientationPortrait) {
+//
+//        __weak typeof(self) weakSelf = self;
+//        [self dismissViewControllerAnimated:YES completion:^{
+//            if (weakSelf.didDismiss) {
+//                weakSelf.didDismiss();
+//            }
+//        }];
+//    }
+//}
 
 @end

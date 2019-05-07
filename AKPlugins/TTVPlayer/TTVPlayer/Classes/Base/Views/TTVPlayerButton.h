@@ -1,5 +1,5 @@
 //
-//  TTVButton.h
+//  TTVPlayerButton.h
 //  TTVPlayerPod
 //
 //  Created by lisa on 2019/4/6.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TTVButton : UIButton<TTVButtonProtocol>
+@interface TTVPlayerButton : UIButton<TTVButtonProtocol>
 
 @end
 

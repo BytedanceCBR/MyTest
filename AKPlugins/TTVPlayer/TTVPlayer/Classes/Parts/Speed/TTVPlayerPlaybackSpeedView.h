@@ -1,5 +1,5 @@
 //
-//  TTPlayerPlaybackSpeedView.h
+//  TTVPlayerPlaybackSpeedView.h
 //  Article
 //
 //  Created by Chen Hong on 2018/11/26.
@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TTPlayerPlaybackSpeedView : UIView
+@interface TTVPlayerPlaybackSpeedView : UIView
 
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, strong) void (^didPlaybackSpeedChanged)(CGFloat playbackSpeed);

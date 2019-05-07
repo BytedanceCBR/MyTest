@@ -1,24 +1,24 @@
 //
-//  TTVideoActivityIndicator.m
+//  TTVActivityIndicator.m
 //  Article
 //
 //  Created by liuty on 2016/11/3.
 //
 //
 
-#import "TTVideoActivityIndicator.h"
+#import "TTVActivityIndicator.h"
 
 static NSString *kTTRingStrokeAnimationKey = @"TTMaterialDesignSpinner.stroke";
 static NSString *kTTRingRotationAnimationKey = @"TTMaterialDesignSpinner.rotation";
 
-@interface TTVideoActivityIndicator ()
+@interface TTVActivityIndicator ()
 
 @property (nonatomic, strong) CAShapeLayer *progressLayer;
 @property (nonatomic, readwrite) BOOL isAnimating;
 
 @end
 
-@implementation TTVideoActivityIndicator
+@implementation TTVActivityIndicator
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {

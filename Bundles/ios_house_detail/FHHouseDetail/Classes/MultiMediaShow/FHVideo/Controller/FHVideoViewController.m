@@ -105,6 +105,10 @@
             [self.player removePartForKey:TTVPlayerPartKey_Gesture];
         }
         
+        if(self.playbackState == TTVPlaybackState_Paused && self.model.isShowStartBtnWhenPause){
+            [self.viewModel showCoverViewStartBtn];
+        }
+        
         if(model.isShowMiniSlider){
             self.player.controlView.immersiveContentView.alpha = 1;
         }else{
@@ -114,7 +118,8 @@
 }
 
 - (void)play {
-    self.videoView.coverView.hidden = YES;
+    [self.viewModel hideCoverView];
+    
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
         [self.player play];
     }
@@ -142,7 +147,7 @@
         self.stayTime = 0;
         self.startTime = [[NSDate date] timeIntervalSince1970];
     }else{
-        self.stayTime = [[NSDate date] timeIntervalSince1970] - self.startTime;
+        self.stayTime = ([[NSDate date] timeIntervalSince1970] - self.startTime) * 1000;
     }
 }
 
@@ -222,6 +227,11 @@
 }
 
 #pragma mark - TTVPlayerDelegate
+
+/// 播放器展示第一帧
+- (void)playerReadyToDisplay:(TTVPlayer *)player {
+    
+}
 
 - (void)playerViewDidLayoutSubviews:(TTVPlayer *)player state:(TTVPlayerState *)state {
     BOOL fullScreen = ((TTVPlayerState *)player.playerStore.state).fullScreenState.fullScreen;
@@ -305,23 +315,23 @@
 - (void)player:(TTVPlayer *)player playbackStateDidChanged:(TTVPlaybackState)playbackState {
     self.playState = playbackState;
     
+    if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
+        [self.delegate playbackStateDidChanged:playbackState];
+    }
+    
     //埋点
     [self resetTime];
     [self trackPlayBackState];
-    
-    if(self.playbackState == TTVPlaybackState_Playing){
-        [self.errorView removeFromSuperview];
-    }
     
     if(self.playbackState == TTVPlaybackState_Stopped && self.isFullScreen){
         [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
     }
     
-    self.lastPlaybackState = playbackState;
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
-        [self.delegate playbackStateDidChanged:playbackState];
+    if(self.playbackState == TTVPlaybackState_Paused && self.model.isShowStartBtnWhenPause){
+        [self.viewModel showCoverViewStartBtn];
     }
+    
+    self.lastPlaybackState = playbackState;
 }
 
 /// 网络发生变化,出流量提示，应该暂停

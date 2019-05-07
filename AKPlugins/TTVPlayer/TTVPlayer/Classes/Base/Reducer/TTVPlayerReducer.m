@@ -51,6 +51,7 @@
         }
         else {
             state.finishStatus = nil;
+            state.finishViewState.playerErrorViewShouldShow = NO;
         }
     }
     else if ([action.type isEqualToString:TTVPlayerActionType_VideoTitleChanged]) {

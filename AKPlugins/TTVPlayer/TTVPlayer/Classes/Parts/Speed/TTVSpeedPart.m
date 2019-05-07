@@ -9,12 +9,12 @@
 #import "TTVPlayer.h"
 #import "TTVPlayerState.h"
 #import "TTVPlayer+Engine.h"
-#import "TTPlayerPlaybackSpeedView.h" // 弹层选择 view
+#import "TTVPlayerPlaybackSpeedView.h" // 弹层选择 view
 #import "TTVIndicatorView.h"
 
 @interface TTVSpeedPart ()
 
-@property (nonatomic, strong) TTPlayerPlaybackSpeedView *playbackSpeedView; // 弹层
+@property (nonatomic, strong) TTVPlayerPlaybackSpeedView *playbackSpeedView; // 弹层
 @property (nonatomic, strong) TTVIndicatorView * currentIndicatorView;      // 当前展示的
 
 @end
@@ -76,7 +76,7 @@
 
 - (void)setControlView:(UIView *)controlView forKey:(TTVPlayerPartControlKey)key {
     if (key == TTVPlayerPartControlKey_SpeedChangeButton) {
-        self.speedChangeButton = (TTVButton *)controlView;
+        self.speedChangeButton = (TTVPlayerButton *)controlView;
         _speedChangeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -7);
         [_speedChangeButton setTitle:@"倍速" forState:UIControlStateNormal];
         _speedChangeButton.titleLabel.font = [TTVPlayerUtility tt_semiboldFontOfSize:17];
@@ -115,9 +115,9 @@
     return TTVPlayerPartKey_Speed;
 }
 
-- (TTPlayerPlaybackSpeedView *)playbackSpeedView {
+- (TTVPlayerPlaybackSpeedView *)playbackSpeedView {
     if (!_playbackSpeedView) {
-        _playbackSpeedView = [[TTPlayerPlaybackSpeedView alloc] initWithFrame:CGRectZero];
+        _playbackSpeedView = [[TTVPlayerPlaybackSpeedView alloc] initWithFrame:CGRectZero];
         @weakify(self);
         _playbackSpeedView.didPlaybackSpeedChanged = ^(CGFloat playbackSpeed) {
             // action

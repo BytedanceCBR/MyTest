@@ -14,6 +14,27 @@
 			<true/>
 			<key>Controls</key>
 			<dict>
+				<key>当前时间/总时长 Label</key>
+				<dict>
+					<key>Tag</key>
+					<real>7775</real>
+					<key>Type</key>
+					<string>label</string>
+					<key>AddTo</key>
+					<string>bottom_bar</string>
+					<key>Description</key>
+					<string>TTVPlayerPartControlKey_TimeCurrentAndTotalLabel</string>
+					<key>FontColor</key>
+					<string>0xffffff</string>
+					<key>FontSize</key>
+					<integer>13</integer>
+					<key>NumberOfLines</key>
+					<integer>1</integer>
+					<key>FontName</key>
+					<string>DINAlternate-Bold</string>
+					<key>Alignment</key>
+					<string>left</string>
+				</dict>
 				<key>当前播放时间Label</key>
 				<dict>
 					<key>Tag</key>
@@ -91,15 +112,15 @@
 					<key>SliderIndicatorBackgroundImageName</key>
 					<string></string>
 					<key>SliderIndicatorColor</key>
-					<string></string>
+					<string>0xFFFFFF</string>
 					<key>SliderIndicatorBackgroundColor</key>
-					<string></string>
+					<string>0x0099FF</string>
 					<key>SliderBarColor</key>
-					<string></string>
+					<string>0xFFFFFF33</string>
 					<key>CachedProgressColor</key>
-					<string></string>
+					<string>0xFF66FF7F</string>
 					<key>WatchedProgressColor</key>
-					<string></string>
+					<string>0x188FFE</string>
 				</dict>
 				<key>进度条抬头 SliderHUD</key>
 				<dict>
@@ -112,15 +133,15 @@
 					<key>Description</key>
 					<string>TTVPlayerPartControlKey_SeekHUD，进度条抬头显示</string>
 					<key>SliderBarColor</key>
-					<string></string>
+					<string>0xFFFFFF7F</string>
 					<key>WatchedProgressColor</key>
-					<string></string>
+					<string>0xFFFFFF</string>
 					<key>FontColorOfCurrentTime</key>
-					<string></string>
+					<string>0xFFFFFF</string>
 					<key>FontColorOfTotalTime</key>
-					<string></string>
+					<string>0xFFFFFF7F</string>
 					<key>FontSize</key>
-					<integer>0</integer>
+					<integer>20</integer>
 					<key>FontName</key>
 					<string></string>
 				</dict>
@@ -135,11 +156,11 @@
 					<key>AddTo</key>
 					<string>none</string>
 					<key>SliderBarColor</key>
-					<string></string>
+					<string>0x333333</string>
 					<key>WatchedProgressColor</key>
-					<string></string>
+					<string>0x188FFE</string>
 					<key>CachedProgressColor</key>
-					<string></string>
+					<string>0xFF66FF7F</string>
 				</dict>
 			</dict>
 		</dict>
@@ -150,7 +171,7 @@
 			<key>AvailableOnInit</key>
 			<true/>
 			<key>AutoRotateEnabled</key>
-			<true/>
+			<false/>
 			<key>Controls</key>
 			<dict>
 				<key>全屏切换按钮</key>
@@ -431,6 +452,29 @@
 					<string>TTVPlayerActionType_RotateToInlineScreen</string>
 					<key>ImageName</key>
 					<string>player_back_default_player</string>
+				</dict>
+			</dict>
+		</dict>
+		<key>倍速播放</key>
+		<dict>
+			<key>Key</key>
+			<real>2048</real>
+			<key>AvailableOnInit</key>
+			<true/>
+			<key>Description</key>
+			<string>TTVPlayerPartKey_Speed</string>
+			<key>Controls</key>
+			<dict>
+				<key>倍速播放 button</key>
+				<dict>
+					<key>Tag</key>
+					<real>7785</real>
+					<key>AddTo</key>
+					<string></string>
+					<key>Description</key>
+					<string>TTVPlayerPartControlKey_SpeedChangeButton</string>
+					<key>Type</key>
+					<string></string>
 				</dict>
 			</dict>
 		</dict>

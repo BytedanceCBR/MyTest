@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *cancelView;
 @property (nonatomic, strong) UILabel *cancelLabel;
 
+@property (nonatomic, copy) NSString *  currentTimeTextColorString;
+@property (nonatomic, copy) NSString *  totalTimeTextColorString;
+
 @end
 
 NS_ASSUME_NONNULL_END

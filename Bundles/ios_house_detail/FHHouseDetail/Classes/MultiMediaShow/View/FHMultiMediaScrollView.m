@@ -41,7 +41,7 @@
     if (self) {
         _isShowenPictureVC = NO;
         [self initViews];
-        [self initVideoVC];
+//        [self initVideoVC];
         [self initConstaints];
     }
     return self;
@@ -90,15 +90,22 @@
     _noDataImageView.hidden = YES;
 }
 
-- (void)initVideoVC {
-    self.videoVC = [[FHVideoViewController alloc] init];
-//    [_videoVC setViewFrame:self.bounds];
-    _videoVC.view.frame = self.bounds;
+//- (void)initVideoVC {
+//    self.videoVC = [[FHVideoViewController alloc] init];
+//    _videoVC.view.frame = self.bounds;
+//}
+
+- (FHVideoViewController *)videoVC {
+    if(!_videoVC){
+        _videoVC = [[FHVideoViewController alloc] init];
+        _videoVC.view.frame = self.bounds;
+    }
+    return _videoVC;
 }
 
 - (void)setTracerDic:(NSDictionary *)tracerDic {
     _tracerDic = tracerDic;
-    _videoVC.tracerDic = tracerDic;
+    self.videoVC.tracerDic = tracerDic;
 }
 
 - (void)initConstaints {
@@ -177,6 +184,7 @@
     videoModel.repeated = NO;
     videoModel.isShowControl = NO;
     videoModel.isShowMiniSlider = YES;
+    videoModel.isShowStartBtnWhenPause = YES;
     videoModel.vWidth = model.vWidth;
     videoModel.vHeight = model.vHeight;
     

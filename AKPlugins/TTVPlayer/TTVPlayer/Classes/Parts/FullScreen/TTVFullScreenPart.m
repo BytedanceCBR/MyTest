@@ -121,7 +121,7 @@
     TTVLandscapeFullScreenViewController * horizontallyVideoVC = [[TTVLandscapeFullScreenViewController alloc] init];
     horizontallyVideoVC.transitioningDelegate = self.customAnimator;
     // find top vc
-    UIViewController * topVC = [TTUIResponderHelper visibleTopViewController];
+    UIViewController * topVC = [TTVPlayerUtility lm_topmostViewController];
     [topVC presentViewController:horizontallyVideoVC animated:YES completion:^{
         Debug_NSLog(@"presentViewController执行完毕，有的时候控制器切换如果有视频在播放可能会有顿，可在执行前和完成之后做一些暂停开始的处理");
         // 全屏
@@ -137,7 +137,7 @@
 
 - (void)rotateToInlineScreenVideo {
     self.isTransitioning = YES;
-    UIViewController * topVC = [TTUIResponderHelper visibleTopViewController];
+    UIViewController * topVC = [TTVPlayerUtility lm_topmostViewController];
     @weakify(self)
     [topVC dismissViewControllerAnimated:YES completion:^{
         @strongify(self)
@@ -148,7 +148,7 @@
 
 - (RotateAnimator *)customAnimator {
     if (!_customAnimator) {
-        _customAnimator = [[RotateAnimator alloc] initWithRotateViewTag:self.player.view.tag];
+        _customAnimator = [[RotateAnimator alloc] initWithRotateViewTag:self.player.view.tag playerVC:self.player];
         _customAnimator.frameBeforePresent = self.player.view.frame;
     }
     return _customAnimator;
@@ -191,6 +191,7 @@
     else if (deviceOrientation == UIDeviceOrientationPortrait){
         [self.playerStore dispatch:[self.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
     }
+    
     
    
     

@@ -15,7 +15,7 @@
 #import "TTVPlayerNavigationBar.h"
 #import "TTVPlayerBottomToolBar.h"
 #import "TTVToggledButton.h"
-#import "TTVButton.h"
+#import "TTVPlayerButton.h"
 
 @implementation TTVPlayerControlViewFactory
 
@@ -203,7 +203,7 @@
 }
 #pragma mark - TTVPlayerCustomViewDelegate
 - (UIView<TTVButtonProtocol> *)customButtonForKey:(TTVPlayerPartControlKey)key {
-    TTVButton * button = [TTVButton buttonWithType:UIButtonTypeCustom];
+    TTVPlayerButton * button = [TTVPlayerButton buttonWithType:UIButtonTypeCustom];
     return button;
 }
 
@@ -260,7 +260,7 @@
 }
 - (UIView *)customOtherViewForKey:(TTVPlayerPartControlKey)key {
     if (key == TTVPlayerPartControlKey_SpeedChangeButton) {
-        return [TTVButton buttonWithType:UIButtonTypeCustom];
+        return [TTVPlayerButton buttonWithType:UIButtonTypeCustom];
     }
     return nil;
 }

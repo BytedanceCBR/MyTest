@@ -8,9 +8,6 @@
 
 #import "TTVURLService.h"
 #import <CommonCrypto/CommonDigest.h>
-#import <TTNetworkManager/TTNetworkUtil.h>
-
-//#import <TTExtensions.h>
 #define kToutiaoVideoUserKey @"kToutiaoVideoUserKey"
 #define kToutiaoVideoSecretKey @"kToutiaoVideoSecretKey"
 #define kToutiaoHostKey @"kToutiaoHostKey"
@@ -57,6 +54,45 @@ static NSMutableDictionary *ttv_common = nil;
     return [NSString stringWithFormat:@"%@/video/play/%@", [self staticDic][kToutiaoHostKey], [self toutiaoVideoAPIVersion]];
 }
 
++ (NSString *)URLString:(NSString *)URLStr appendCommonParams:(NSDictionary *)commonParams
+{
+    if ([commonParams count] == 0 || isEmptyString(URLStr)) {
+        return URLStr;
+    }
+    URLStr = [URLStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    NSString *sep = @"?";
+    if ([URLStr rangeOfString:@"?"].location != NSNotFound) {
+        sep = @"&";
+    }
+    
+    NSMutableString *query = [NSMutableString new];
+    for (NSString *key in [commonParams allKeys]) {
+        [query appendFormat:@"%@%@=%@", sep, key, commonParams[key]];
+        sep = @"&";
+    }
+    
+    NSString *result = [NSString stringWithFormat:@"%@%@", URLStr, query];
+    if ([NSURL URLWithString:result]) {
+        return result;
+    }
+    
+    if ([NSURL URLWithString:URLStr]) {
+        query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding].mutableCopy;
+        if (query) { // 如果query里含有不可转义的字符，会返回nil。
+            NSString *result = [NSString stringWithFormat:@"%@%@", URLStr, query];
+            if ([NSURL URLWithString:result]) {
+                return result;
+            }
+        }
+    }
+    
+    // 走到这里，说明 URLStr 不合法，可能含有空格或汉字等；或者 query 包含不可转义的字符；
+    // 此时如果 URLStr 既包含 % 又包含空格或汉字等需百分号转义的字符，进行百分号转义后依然是错误的；
+    // URLStr 是我们调用时传进来的，原则上应该保证其是一个合法的URL。
+    return [result stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+}
+
 + (NSString *)urlWithVideoId:(NSString *)videoId
 {
     long long ts = [self currentTs];
@@ -71,7 +107,7 @@ static NSMutableDictionary *ttv_common = nil;
     
     NSString *url = [NSString stringWithFormat:@"%@/%@/%@/%@/%@/%@", apiPrefix, userStr, @(ts), sign, videoType, videoId];
     NSDictionary *commonParams = [self staticDic][kToutiaoPrametersKey];
-    NSString *transformedURL = [TTNetworkUtil URLString:url appendCommonParams:commonParams];
+    NSString *transformedURL = [self URLString:url appendCommonParams:commonParams];
     
     return transformedURL ?:url;
 }
@@ -81,10 +117,31 @@ static NSMutableDictionary *ttv_common = nil;
 }
 
 + (NSString *)urlForV1WithVideoId:(NSString *)videoId businessToken:(NSString *)businessToken {
+    
+    NSString *apiPrefix = [self staticDic][kToutiaoHostKey];
+    // 有传入的 host 不带 https，这里应该叫做 baseUrl
+    if (![apiPrefix hasPrefix:@"http"] && ![apiPrefix hasPrefix:@"https"]) {
+        apiPrefix = [@"https://" stringByAppendingString:apiPrefix];
+    }
+    
     if ([businessToken isKindOfClass:[NSString class]] && businessToken.length > 0) {
-        return [NSString stringWithFormat:@"%@?action=GetPlayInfo&video_id=%@&ptoken=%@", [self staticDic][kToutiaoHostKey], videoId, businessToken];
+        return [NSString stringWithFormat:@"%@?action=GetPlayInfo&video_id=%@&ptoken=%@", apiPrefix, videoId, businessToken];
     } else {
-        return [NSString stringWithFormat:@"%@?action=GetPlayInfo_VIP&video_id=%@", [self staticDic][kToutiaoHostKey], videoId];
+        return [NSString stringWithFormat:@"%@?action=GetPlayInfo_VIP&video_id=%@", apiPrefix, videoId];
+    }
+}
+
++ (NSString *)urlForV2WithPlayerAuthToken:(NSString *)playerAuthToken businessToken:(NSString *)businessToken playerV2URL:(NSString *)playerV2URL{
+    
+    NSURL *urlObj = [NSURL URLWithString:playerV2URL];
+    if (isEmptyString(playerV2URL) || !urlObj || isEmptyString(urlObj.host)) {
+        playerV2URL = @"https://vod.bytedanceapi.com";
+    }
+    if (!isEmptyString(playerAuthToken) && !isEmptyString(businessToken)) {
+        NSString *url = [NSString stringWithFormat:@"%@?ptoken=%@&%@", [NSString stringWithFormat:@"%@/vod/get_play_info", playerV2URL], businessToken, playerAuthToken];
+        return url;
+    } else {
+        return nil;
     }
 }
 
