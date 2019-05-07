@@ -252,9 +252,6 @@
     if (self.contactViewModel.contactPhone) {
         info[@"contact_phone"] = self.contactViewModel.contactPhone;
     }
-    if (self.contactViewModel.chosenAgencyNum) {
-        info[@"chosen_agency_num"] = self.contactViewModel.chosenAgencyNum;
-    }
     if (self.contactViewModel.chooseAgencyList) {
         info[@"choose_agency_list"] = self.contactViewModel.chooseAgencyList;
     }

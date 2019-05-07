@@ -61,11 +61,19 @@ extern NSString *const kFHToastCountKey;
     [self addInformShowLog:configModel];
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
     if (configModel.chooseAgencyList.count > 0) {
-        [alertView updateAgencyTitle:configModel.chosenAgencyNum];
+        NSInteger selectCount = 0;
+        for (FHFillFormAgencyListItemModel *item in configModel.chooseAgencyList) {
+            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
+                continue;
+            }
+            if (item.checked) {
+                selectCount += 1;
+            }
+        }
+        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
         alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
             
             NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"chosen_agency_num"] = configModel.chosenAgencyNum;
             info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
             NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
             [delegateTable addObject:alert];
@@ -133,11 +141,19 @@ extern NSString *const kFHToastCountKey;
         };
     }
     if (configModel.chooseAgencyList.count > 0) {
-        [alertView updateAgencyTitle:configModel.chosenAgencyNum];
+        NSInteger selectCount = 0;
+        for (FHFillFormAgencyListItemModel *item in configModel.chooseAgencyList) {
+            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
+                continue;
+            }
+            if (item.checked) {
+                selectCount += 1;
+            }
+        }
+        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
         alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
             
             NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"chosen_agency_num"] = configModel.chosenAgencyNum;
             info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
             NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
             [delegateTable addObject:alert];

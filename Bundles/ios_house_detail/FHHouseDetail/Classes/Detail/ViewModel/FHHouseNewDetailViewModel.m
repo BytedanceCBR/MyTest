@@ -169,7 +169,6 @@
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.courtSubStatus;
-    self.contactViewModel.chosenAgencyNum = model.data.chosenAgencyNum;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     __weak typeof(self) wSelf = self;
     if (model.data) {

@@ -412,7 +412,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [fillFormConfig setTraceParams:params];
         fillFormConfig.searchId = self.searchId;
         fillFormConfig.imprId = self.imprId;
-        fillFormConfig.chosenAgencyNum = self.chosenAgencyNum;
         fillFormConfig.chooseAgencyList = self.chooseAgencyList;
         [FHHouseFillFormHelper fillOnlineFormActionWithConfigModel:fillFormConfig];
         return;
@@ -444,7 +443,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
-    fillFormConfig.chosenAgencyNum = self.chosenAgencyNum;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
@@ -488,7 +486,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
-    fillFormConfig.chosenAgencyNum = self.chosenAgencyNum;
     fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }

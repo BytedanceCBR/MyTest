@@ -246,7 +246,6 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailOldDataPriceAnalyzeModel *priceAnalyze ;
 @property (nonatomic, strong , nullable) FHDetailOldDataComfortInfoModel *comfortInfo ;
 @property (nonatomic, strong , nullable) FHDetailOldDataNeighborhoodPriceRangeModel *neighborhoodPriceRange ;
-@property (nonatomic, copy , nullable) NSString *chosenAgencyNum;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 
 @end

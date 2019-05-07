@@ -386,11 +386,19 @@ extern NSString *const kFHToastCountKey;
     }
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:subtitle btnTitle:@"提交"];
     if (_neighborhoodDetailModel.data.chooseAgencyList.count > 0) {
-        [alertView updateAgencyTitle:_neighborhoodDetailModel.data.chosenAgencyNum];
+        NSInteger selectCount = 0;
+        for (FHFillFormAgencyListItemModel *item in _neighborhoodDetailModel.data.chooseAgencyList) {
+            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
+                continue;
+            }
+            if (item.checked) {
+                selectCount += 1;
+            }
+        }
+        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
         alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
             
             NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"chosen_agency_num"] = _neighborhoodDetailModel.data.chosenAgencyNum;
             info[@"choose_agency_list"] = [alert selectAgencyList] ? : _neighborhoodDetailModel.data.chooseAgencyList;
             NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
             [delegateTable addObject:alert];

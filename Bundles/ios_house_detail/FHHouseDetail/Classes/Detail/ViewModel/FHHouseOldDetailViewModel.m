@@ -479,7 +479,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-    self.contactViewModel.chosenAgencyNum = model.data.chosenAgencyNum;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     [self reloadData];
 }

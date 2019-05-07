@@ -41,7 +41,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *realtorId; // 在线联系时必填
 @property (nonatomic, copy) NSString *phone;
 @property (nonatomic, assign) FHFollowActionType actionType;
-@property (nonatomic, copy , nullable) NSString *chosenAgencyNum;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
 
 #pragma mark 埋点

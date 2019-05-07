@@ -39,7 +39,6 @@
                            @"neighborhoodImage": @"neighborhood_image",
                            @"coreInfo": @"core_info",
                            @"evaluationInfo": @"evaluation_info",
-                           @"chosenAgencyNum": @"chosen_agency_num",
                            @"chooseAgencyList": @"choose_agency_list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

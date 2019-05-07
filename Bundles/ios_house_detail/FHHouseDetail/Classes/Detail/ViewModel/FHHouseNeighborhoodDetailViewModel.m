@@ -150,7 +150,6 @@
     FHDetailContactModel *contactPhone = [[FHDetailContactModel alloc]init];
     contactPhone.isFormReport = YES;
     self.contactViewModel.contactPhone = contactPhone;
-    self.contactViewModel.chosenAgencyNum = model.data.chosenAgencyNum;
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.detailData = model;
     [self addDetailCoreInfoExcetionLog];

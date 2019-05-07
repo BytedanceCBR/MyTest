@@ -224,7 +224,6 @@
                            @"priceAnalyze": @"price_analyze",
                            @"neighborhoodPriceRange": @"neighborhood_price_range",
                            @"comfortInfo": @"comfort_info",
-                           @"chosenAgencyNum": @"chosen_agency_num",
                            @"chooseAgencyList": @"choose_agency_list",
                            
                            };
