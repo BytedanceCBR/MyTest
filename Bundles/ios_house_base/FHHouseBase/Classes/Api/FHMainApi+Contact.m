@@ -31,16 +31,16 @@
     NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (houseId.length > 0) {
-        paramDic[@"a"] = houseId;
+        paramDic[@"house_id"] = houseId;
     }
     if (userName.length > 0) {
-        paramDic[@"b"] = userName;
+        paramDic[@"user_name"] = userName;
     }
     if (phone.length > 0) {
-        paramDic[@"c"] = phone;
+        paramDic[@"user_phone"] = phone;
     }
     if (from.length > 0) {
-        paramDic[@"d"] = from;
+        paramDic[@"from"] = from;
     }
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:paramDic method:@"POST" needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj) {
         FHDetailResponseModel *model = nil;
