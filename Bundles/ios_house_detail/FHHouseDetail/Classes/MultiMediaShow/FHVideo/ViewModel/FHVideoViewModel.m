@@ -35,21 +35,21 @@
 }
 
 - (void)hideCoverView {
-    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//        self.view.coverView.alpha = 0;
+//    } completion:^(BOOL finished) {
         self.view.coverView.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.view.coverView.alpha = 0;
-    }];
+//    }];
 }
 
 - (void)showCoverView {
     self.view.coverView.coverView.hidden = NO;
-    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.view.coverView.alpha = 1;
-    } completion:^(BOOL finished) {
+//    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+//        self.view.coverView.alpha = 1;
+//    } completion:^(BOOL finished) {
         self.view.coverView.alpha = 1;
         [self.view bringSubviewToFront:self.view.coverView];
-    }];
+//    }];
 }
 
 - (void)showCoverViewStartBtn {

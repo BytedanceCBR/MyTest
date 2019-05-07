@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateItemAndInfoLabel;
 
+- (void)updateVideoState;
+
 @end
 
 NS_ASSUME_NONNULL_END
