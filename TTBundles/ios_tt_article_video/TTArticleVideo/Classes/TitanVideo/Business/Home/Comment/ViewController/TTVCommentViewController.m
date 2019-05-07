@@ -20,7 +20,6 @@
 #import "NetworkUtilities.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "ExploreDeleteManager.h"
-#import <TTABManager/TTABHelper.h>
 #import "SSImpressionProtocol.h"
 #import "TTCommentModel.h"
 #import "TTCommentFooterCell.h"

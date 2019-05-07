@@ -8,7 +8,6 @@
 
 #import "TTVCommentListReplyTableViewCell.h"
 
-#import <TTABManager/TTABHelper.h>
 #import "TTIconFontDefine.h"
 #import "TTCommentTextAttachment.h"
 #import "TTCommentImageHelper.h"
