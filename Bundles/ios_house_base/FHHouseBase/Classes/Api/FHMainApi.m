@@ -56,13 +56,14 @@
     {
         requestParam[@"city_name"] = nil;
     }
-    
-    if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
-        requestParam[@"app_first_start"] = @(1);
-    }else
-    {
-        requestParam[@"app_first_start"] = @(0);
-    }
+    requestParam[@"app_first_start"] = @(1);
+
+//    if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
+//        requestParam[@"app_first_start"] = @(1);
+//    }else
+//    {
+//        requestParam[@"app_first_start"] = @(0);
+//    }
 
     double longitude = location.longitude;
     double latitude = location.latitude;
