@@ -95,4 +95,8 @@
 - (void)trackRefresh {
     //DO Nothing
 }
+
+-(FHEmptyMaskViewType)networkErrorType {
+    return FHEmptyMaskViewTypeNoNetWorkAndRefresh;
+}
 @end

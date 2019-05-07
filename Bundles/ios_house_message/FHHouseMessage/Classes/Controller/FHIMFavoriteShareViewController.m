@@ -233,6 +233,10 @@
         self.controllers = [_supportHouseType rx_mapWithBlock:^id(id each) {
             @strongify(self);
             FHErrorView* errorView = [[FHErrorView alloc] init];
+            errorView.retryBlock = ^{
+                @strongify(self);
+                [self retryLoadData];
+            };
             FHIMFavoriteViewController* controller = [[FHIMFavoriteViewController alloc] init];
             controller.emptyView = errorView;
             controller.tracerDict = self.tracerDict;
@@ -260,6 +264,12 @@
     }
 }
 
+-(void)retryLoadData {
+    [self.shareViewModel.pageViewModels enumerateObjectsUsingBlock:^(FHIMFavoriteSharePageViewModel1 * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [obj requestData:NO];
+    }];
+}
+
 -(UITableView*)generateTableView {
     UITableView* tableView = [[UITableView alloc] init];
     [_containerView addSubview:tableView];
@@ -277,6 +287,7 @@
 
     tableView.sectionFooterHeight = 0;
     tableView.sectionHeaderHeight = 0;
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, [self bottonAreaHeight], 0);
     return tableView;
 }
 

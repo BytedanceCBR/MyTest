@@ -124,7 +124,7 @@
     }
     result.displayTitle = model.displayTitle;
     result.displaySubTitle = model.displayDescription;
-    result.displayPricePerSqm = model.displayPricePerSqm;
+    result.displayPrice = model.displayPricePerSqm;
     return result;
 }
 

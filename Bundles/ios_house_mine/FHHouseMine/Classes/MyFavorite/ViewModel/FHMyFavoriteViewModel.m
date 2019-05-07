@@ -119,7 +119,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 
         if (error && wself.dataList.count == 0) {
             //TODO: show handle error
-            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+            [wself.viewController.emptyView showEmptyWithType:[self networkErrorType]];
             return;
         }
         
@@ -129,6 +129,10 @@ extern NSString *const kFHDetailFollowUpNotification;
             [wself handleSuccess:model isHead:isHead];
         }
     }];
+}
+
+-(FHEmptyMaskViewType)networkErrorType {
+    return FHEmptyMaskViewTypeNetWorkError;
 }
 
 - (void)handleSuccess:(id<FHBaseModelProtocol>  _Nonnull) model isHead:(BOOL)isHead {
