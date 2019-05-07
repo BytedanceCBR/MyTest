@@ -77,7 +77,6 @@
 #import "TTRNKit.h"
 #import "TTRNKitMacro.h"
 #import "FHRNDebugViewController.h"
-#import "TTRNKitDebugViewController.h"
 
 //#import "TTXiguaLiveManager.h"
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -684,9 +683,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     self.ttRNKit = [[TTRNKit alloc] initWithGeckoParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitGeckoParams] ?: @{}
                                         animationParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitAnimationParams] ?: @{}];
     self.ttRNKit.delegate = self;
-//    FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
-//    TTRNKitDebugViewController
-    TTRNKitDebugViewController *vc = [[TTRNKitDebugViewController alloc] init];
+    FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
