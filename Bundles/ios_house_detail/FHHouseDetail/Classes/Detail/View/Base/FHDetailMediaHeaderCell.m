@@ -239,6 +239,7 @@
             NSIndexPath * indexPath = [NSIndexPath indexPathForRow:currentIndex + 1 inSection:0];
             [weakSelf.mediaView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
             [weakSelf.mediaView updateItemAndInfoLabel];
+            [weakSelf.mediaView updateVideoState];
         }
     };
     self.mediaView.isShowenPictureVC = YES;

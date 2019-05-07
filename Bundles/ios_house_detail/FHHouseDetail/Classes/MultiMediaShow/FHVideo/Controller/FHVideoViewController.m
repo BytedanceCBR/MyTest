@@ -51,7 +51,7 @@
     self.player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
     self.player.delegate = self;
     self.player.customViewDelegate = self;
-    self.player.showPlaybackControlsOnViewFirstLoaded = YES;
+    self.player.showPlaybackControlsOnViewFirstLoaded = NO;
     self.player.enableNoPlaybackStatus = YES;
     
     self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero playerView:self.player.view];
