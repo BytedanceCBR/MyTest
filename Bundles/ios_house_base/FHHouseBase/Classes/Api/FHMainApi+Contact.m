@@ -33,16 +33,16 @@
     NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (houseId.length > 0) {
-        paramDic[@"a"] = houseId;
+        paramDic[@"house_id"] = houseId;
     }
     if (userName.length > 0) {
-        paramDic[@"b"] = userName;
+        paramDic[@"user_name"] = userName;
     }
     if (phone.length > 0) {
-        paramDic[@"c"] = phone;
+        paramDic[@"user_phone"] = phone;
     }
     if (from.length > 0) {
-        paramDic[@"d"] = from;
+        paramDic[@"from"] = from;
     }
     if (agencyList.count > 0) {
         NSMutableArray *array = @[].mutableCopy;
