@@ -29,6 +29,10 @@
 
 + (NSString *)getJsonStrFrom:(NSDictionary *)dic
 {
+    if (![dic isKindOfClass:[NSDictionary class]]) {
+        return @"";
+    }
+    
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONReadingAllowFragments error:&error];
     if (data && !error) {
@@ -36,7 +40,7 @@
         temp = [temp stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
         return temp;
     }
-    return nil;
+    return @"";
 }
 
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString
