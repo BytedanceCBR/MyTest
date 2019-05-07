@@ -215,7 +215,7 @@
     }];
     [self.phoneTextField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(24);
-        make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(30);
+        make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(20);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(-20);
     }];
