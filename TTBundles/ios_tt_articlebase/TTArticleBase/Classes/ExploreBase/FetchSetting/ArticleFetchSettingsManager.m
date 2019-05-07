@@ -1063,8 +1063,9 @@
         [SSCommonLogic setNewNatantStyleEnabled:res];
     }
     
-    [SSCommonLogic setNewNatantStyleInADEnabled:[dSettings tt_boolValueForKey:@"ad_detail_natant_style"]];
-    
+//    [SSCommonLogic setNewNatantStyleInADEnabled:[dSettings tt_boolValueForKey:@"ad_detail_natant_style"]];
+    [SSCommonLogic setNewNatantStyleInADEnabled:YES];
+
     [SSCommonLogic setDetailWKEnabled:[dSettings tt_boolValueForKey:@"detail_wk_enable"]];
     
     if ([dSettings objectForKey:@"channel_control_conf"]) {
