@@ -114,13 +114,13 @@
     }
     
     // to 4g
-//    if (newState.networkState.pausingBycellularNetwork != lastState.networkState.pausingBycellularNetwork) {
-//        if (newState.networkState.pausingBycellularNetwork) {
-//            if ([self.player.delegate respondsToSelector:@selector(playerDidPauseByCellularNet:)]) {
-//                [self.player.delegate playerDidPauseByCellularNet:self.player];
-//            }
-//        }
-//    }
+    if (newState.networkState.pausingBycellularNetwork != lastState.networkState.pausingBycellularNetwork) {
+        if (newState.networkState.pausingBycellularNetwork) {
+            if ([self.player.delegate respondsToSelector:@selector(playerDidPauseByCellularNet:)]) {
+                [self.player.delegate playerDidPauseByCellularNet:self.player];
+            }
+        }
+    }
     
     // to full
     if (newState.fullScreenState.isFullScreen != lastState.fullScreenState.isFullScreen) {

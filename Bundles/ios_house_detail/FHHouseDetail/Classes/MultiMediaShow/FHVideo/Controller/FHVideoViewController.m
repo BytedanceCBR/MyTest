@@ -112,9 +112,7 @@
             [self.player removePartForKey:TTVPlayerPartKey_Gesture];
         }
         
-        if(self.playbackState == TTVPlaybackState_Paused && self.model.isShowStartBtnWhenPause){
-            [self.viewModel showCoverViewStartBtn];
-        }
+        [self showStartBtnWhenPause];
         
         if(model.isShowMiniSlider){
             self.player.controlView.immersiveContentView.alpha = 1;
@@ -227,6 +225,12 @@
     [self.player setCurrentPlaybackTime:currentPlaybackTime complete:finised];
 }
 
+- (void)showStartBtnWhenPause {
+    if(self.playbackState == TTVPlaybackState_Paused && self.model.isShowStartBtnWhenPause && !self.isShowingNetFlow){
+        [self.viewModel showCoverViewStartBtn];
+    }
+}
+
 #pragma mark - FHVideoViewDelegate
 
 - (void)startPlayVideo {
@@ -334,9 +338,7 @@
         [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
     }
     
-    if(self.playbackState == TTVPlaybackState_Paused && self.model.isShowStartBtnWhenPause){
-        [self.viewModel showCoverViewStartBtn];
-    }
+    [self showStartBtnWhenPause];
     
     self.lastPlaybackState = playbackState;
 }
