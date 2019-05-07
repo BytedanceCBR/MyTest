@@ -161,9 +161,14 @@
     }];
     
     [self addSubview:self.contentView];
+    CGFloat width = 280 * [TTDeviceHelper scaleToScreen375];
+    if (![TTDeviceHelper isScreenWidthLarge320]) {
+        width = 280;
+    }
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self);
-        make.width.mas_equalTo(280 * [TTDeviceHelper scaleToScreen375]);
+        make.width.mas_equalTo(width);
+
     }];
     
     self.bgView.alpha = 0;
