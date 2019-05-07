@@ -63,11 +63,11 @@
     }
     //转场过渡的容器view
     UIView *containerView = [transitionContext containerView];
-    containerView.backgroundColor = [UIColor greenColor];
+    containerView.backgroundColor = [UIColor clearColor];
     //ToVC
     UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     toViewController.view.frame = containerView.bounds;
-//    toViewController.view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0];
+    
     [containerView addSubview:toViewController.view];
     
     //FromVC
@@ -86,17 +86,18 @@
         self.superViewOfPlayer = playView.superview;
         self.frameBeforePresentRelative = [playView convertRect:self.frameBeforePresent toView:self.superViewOfPlayer];
         
-        //这里加一个覆盖的view，因为旋转时候可能导致原来view布局问题，盖一个view只看到playview就够了
+        // 这里加一个覆盖的view，因为旋转时候可能导致原来view布局问题，盖一个view只看到playview就够了
+
+        CGSize size = containerView.frame.size;
+        
+        CGPoint center = CGPointMake(size.height / 2, size.width / 2);
         UIView *coverView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, containerView.bounds.size.height, containerView.bounds.size.width)];
+
         coverView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
         [fromViewController.view addSubview:coverView];
         [containerView bringSubviewToFront:fromViewController.view];
         [playView removeFromSuperview];
         [coverView addSubview:playView];
-        
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
-    
-        CGSize size = containerView.frame.size;
         
         [UIView animateWithDuration:[self transitionDuration:transitionContext]
                               delay:0.0 options:UIViewAnimationOptionLayoutSubviews
@@ -104,7 +105,7 @@
                              [playView.superview layoutIfNeeded];
                              playView.width = size.width;
                              playView.height = size.height;
-                             playView.center = coverView.center;
+                             playView.center = center;
                              [self changePlayViewTransform:playView isPrensent:YES];
                          } completion:^(BOOL finished) {
                              [playView removeFromSuperview];
@@ -114,13 +115,11 @@
                              playView.frame = toViewController.view.bounds;
 
                              BOOL wasCancelled = [transitionContext transitionWasCancelled];
-                             //设置transitionContext通知系统动画执行完毕
+                             // 设置transitionContext通知系统动画执行完毕
                              [transitionContext completeTransition:!wasCancelled];
                          }];
     }else{
         [[NSNotificationCenter defaultCenter] removeObserver:self];
-        
-        UIDeviceOrientation currentOrirentation = [UIDevice currentDevice].orientation;
         
         [containerView bringSubviewToFront:fromViewController.view];
     
@@ -182,17 +181,6 @@
                 playView.transform = CGAffineTransformMakeRotation(M_PI_2);
             }
         }
-    }
-}
-
--(void)screenRotate:(NSNotification*)notification{
-    UIDevice* device = notification.object;
-//    NSLog(@"notification1:::%@", @(device.orientation));
-    if (device.orientation == UIDeviceOrientationLandscapeLeft && self.lastOrientation == UIDeviceOrientationLandscapeRight) {
-        self.lastOrientation = UIDeviceOrientationLandscapeLeft;
-    }
-    else if (device.orientation == UIDeviceOrientationLandscapeRight && self.lastOrientation == UIDeviceOrientationLandscapeLeft) {
-        self.lastOrientation = UIDeviceOrientationLandscapeRight;
     }
 }
 

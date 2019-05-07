@@ -60,6 +60,7 @@
 @property (nonatomic, strong)   FHDetailVideoInfoView       *videoInfoView;
 @property (nonatomic, assign)   BOOL       startDismissSelf;
 @property (nonatomic, assign)   BOOL       disableAutoPlayVideo;// 禁用自动播放和暂停功能
+@property (nonatomic, assign)   BOOL       didEnterFullscreen;// 进入全屏视频
 
 @property(nonatomic, strong)UIView * topBar;
 @property (nonatomic, strong)   FHDetailPictureNavView       *naviView;
@@ -101,6 +102,7 @@
         _isShowenVideo = NO;
         _longPressToSave = YES;
         _disableAutoPlayVideo = NO;
+        _didEnterFullscreen = NO;
         
         self.ttHideNavigationBar = YES;
 
@@ -560,6 +562,10 @@
 
 - (void)refreshUI
 {
+    if (self.didEnterFullscreen) {
+        // 进入全屏视频
+        return;
+    }
     self.containerView.frame = self.view.frame;
     _photoScrollView.frame = [self frameForPagingScrollView];
     [self setPhotoScrollViewContentSize];
@@ -1172,11 +1178,13 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 // 进入全屏
 - (void)playerDidEnterFullscreen {
     _disableAutoPlayVideo = YES;
+    _didEnterFullscreen = YES;
 }
 
 // 离开全屏
 - (void)playerDidExitFullscreen {
     _disableAutoPlayVideo = YES;
+    _didEnterFullscreen = NO;
 }
 
 #pragma mark -- rotate
