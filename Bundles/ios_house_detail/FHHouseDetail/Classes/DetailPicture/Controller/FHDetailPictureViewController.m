@@ -954,6 +954,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 // 是否可见
                 tempVedioView.videoVC = self.videoVC;
             }
+            [tempVedioView currentImageView].alpha = 0;
             tempVedioView.visible = visible;
             return;
         }
@@ -981,8 +982,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         // 显示图片
         [self setUpShowImageView:showVedioView atIndex:index];
         showVedioView.visible = visible;
-        [showVedioView currentImageView].hidden = YES;
-        // 设置视频数据 并播放
+        [showVedioView currentImageView].alpha = 0;
+        // 设置视频数据
         if (visible) {
             // 是否可见
             [showVedioView setNeedsLayout];
@@ -1009,6 +1010,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         else {
             [_photoViewPools removeObject:showImageView];
         }
+        [showImageView currentImageView].alpha = 1;
         showImageView.frame = [self frameForPageAtIndex:index];
         
         showImageView.loadingCompletedAnimationBlock = ^{
