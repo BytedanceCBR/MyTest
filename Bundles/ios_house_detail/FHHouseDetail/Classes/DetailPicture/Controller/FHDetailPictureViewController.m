@@ -181,7 +181,7 @@
 {
     [super viewDidLoad];
     [self setCurrentStatusStyle];
-    
+    self.topVC.ttStatusBarStyle = UIStatusBarStyleLightContent;
     // 修复iOS7下，photoScrollView 子视图初始化位置不正确的问题
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)]){
         self.edgesForExtendedLayout = UIRectEdgeNone;

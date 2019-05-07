@@ -189,7 +189,7 @@ static inline CGFloat navigationBarTop() {
     }
     
     if (!self.topViewController.ttStatusBarStyle) {
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+        [UIApplication sharedApplication].statusBarStyle = [[TTThemeManager sharedInstance_tt] statusBarStyle];
     }
     else {
         
