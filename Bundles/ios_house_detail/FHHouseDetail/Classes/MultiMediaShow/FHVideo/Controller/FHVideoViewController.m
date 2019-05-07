@@ -309,9 +309,9 @@
     [self resetTime];
     [self trackPlayBackState];
     
-//    if(self.playbackState == TTVPlaybackState_Playing){
-//        [self.errorView removeFromSuperview];
-//    }
+    if(self.playbackState == TTVPlaybackState_Playing){
+        [self.errorView removeFromSuperview];
+    }
     
     if(self.playbackState == TTVPlaybackState_Stopped && self.isFullScreen){
         [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
