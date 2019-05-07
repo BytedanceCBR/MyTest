@@ -162,7 +162,7 @@
         return;
     }
     
-    CGRect vFrame = self.view.frame;
+    CGRect vFrame = self.view.bounds;
     CGFloat vWidth = [self videoWidth];
     CGFloat vHeight = [self videoHeight];
     // 目前只处理origin.y 为0 的数据
