@@ -57,6 +57,13 @@
     self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero playerView:self.player.view];
     _videoView.delegate = self;
     [self.view addSubview:_videoView];
+    
+    [self addObserver:self forKeyPath:@"view.frame" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
+{
+    NSLog(@"---:%@",change);
 }
 
 - (void)initConstaints {
@@ -167,7 +174,7 @@
         return;
     }
     
-    CGRect vFrame = self.view.frame;
+    CGRect vFrame = self.view.bounds;
     CGFloat vWidth = [self videoWidth];
     CGFloat vHeight = [self videoHeight];
     // 目前只处理origin.y 为0 的数据
