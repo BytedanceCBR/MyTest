@@ -83,6 +83,8 @@
 
 @property (nonatomic, weak) TTFeedGuideView *feedGuideView;
 
+@property (nonatomic) BOOL adColdHadJump;
+
 @end
 
 @implementation TTExploreMainViewController
@@ -128,6 +130,26 @@
 //#endif
     }
     
+    if(self.adShow)
+    {
+        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
+            if (!isClicked) {
+                FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://new_house_detail?court_id=6581052197591580942"]];
+
+            }
+        };
+    }else
+    {
+        WeakSelf;
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+            StrongSelf;
+            if (!self.adColdHadJump) {
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://new_house_detail?court_id=6581052197591580942"]];
+            }
+            self.adColdHadJump = YES;
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -188,6 +210,7 @@
 //    [self showPushAuthorizeAlertIfNeed];
     
     [TTPushAlertManager enterFeedPage:TTPushWeakAlertPageTypeMainFeed];
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
