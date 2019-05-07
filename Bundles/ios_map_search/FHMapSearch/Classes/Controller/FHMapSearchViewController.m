@@ -306,19 +306,25 @@
     
     [bridge setViewModel:self.houseFilterViewModel withDelegate:_viewModel];
     
-    _chooseView = [[FHMapSearchWayChooseView alloc]initWithFrame:CGRectZero];
-    _chooseView.delegate = _viewModel;
-    _viewModel.chooseView = _chooseView;
+    BOOL showDraw = (self.configModel.houseType == FHHouseTypeSecondHandHouse);
     
-    _bottomBar = [[FHMapSearchBottomBar alloc] init];
-    _bottomBar.delegate = _viewModel;
-    _bottomBar.hidden = YES;
-    _viewModel.bottomBar = _bottomBar;
-    
+    if (showDraw) {
+        _chooseView = [[FHMapSearchWayChooseView alloc]initWithFrame:CGRectZero];
+        _chooseView.delegate = _viewModel;
+        _viewModel.chooseView = _chooseView;
+        
+        _bottomBar = [[FHMapSearchBottomBar alloc] init];
+        _bottomBar.delegate = _viewModel;
+        _bottomBar.hidden = YES;
+        _viewModel.bottomBar = _bottomBar;
+    }
+        
     MAMapView *mapView = self.viewModel.mapView;
     [self.view addSubview:mapView];
-    [self.view addSubview:_chooseView];
-    [self.view addSubview:_bottomBar];
+    if (showDraw) {
+        [self.view addSubview:_chooseView];
+        [self.view addSubview:_bottomBar];
+    }
     [self.view addSubview:self.locationButton];
     [self.view addSubview:self.filterBgControl];
     [self.view addSubview:self.filterPanel];

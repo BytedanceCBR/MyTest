@@ -138,7 +138,7 @@
 
 -(void)onDrawLineInfo
 {
-    [self.delegate showNeighborList];
+    [self.delegate showNeighborList:self.drawLineLabel.text];
 }
 
 

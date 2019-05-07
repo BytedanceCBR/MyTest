@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @required
 -(void)closeBottomBar;
 
--(void)showNeighborList;
+-(void)showNeighborList:(NSString *)tip;
 
 -(void)showSubwayInBottombar:(FHMapSearchBottomBar *)bottomBar;
 

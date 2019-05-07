@@ -385,15 +385,6 @@
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
     }
-    FHMapSearchPolyInfoModel *polyInfoModel =  self.listController.getPloyInfoBlock();
-    if (polyInfoModel) {
-        if (polyInfoModel.coordinateEnclosure.length > 0) {
-            param[@"coordinate_enclosure"] = polyInfoModel.coordinateEnclosure;
-        }
-        if (polyInfoModel.neighborhoodIds.length > 0) {
-            param[@"neighborhood_ids"] = polyInfoModel.neighborhoodIds;
-        }
-    }
     if (showLoading) {
         self.tableView.scrollEnabled = NO;
     }

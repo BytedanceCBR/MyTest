@@ -34,6 +34,9 @@
 
 #define kTipDuration 3
 
+extern NSString *const COORDINATE_ENCLOSURE;
+extern NSString *const NEIGHBORHOOD_IDS ;
+
 typedef NS_ENUM(NSInteger , FHMapZoomTrigerType) {
     FHMapZoomTrigerTypeZoomMap = 0,// 缩放地图
     FHMapZoomTrigerTypeClickAnnotation , //点击气泡
@@ -376,18 +379,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController.showRentHouseDetailBlock = ^(FHHouseRentDataItemsModel * _Nonnull model, NSInteger rank) {
             [wself showRentHouseDetailPage:model rank:rank];
         };
-        
-        _houseListViewController.getPloyInfoBlock = ^FHMapSearchPolyInfoModel * _Nonnull{
-            if (wself.showMode != FHMapSearchShowModeDrawLine) {
-                return nil;
-            }
-            
-            FHMapSearchPolyInfoModel *model = [FHMapSearchPolyInfoModel new];
-            model.coordinateEnclosure = [wself drawLineCoordinates];
-            model.neighborhoodIds = [wself drawLineNeighborIds];
-            return model;
-        };
-        
+                
         _houseListViewController.viewModel.configModel = self.configModel;
     }
     return _houseListViewController;
@@ -1376,7 +1368,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     self.showMode = FHMapSearchShowModeMap;
 }
 
--(void)showNeighborList
+-(void)showNeighborList:(NSString *)tip
 {
     if (self->onSaleHouseCount == 0) {
         //0套房源
@@ -1384,7 +1376,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     }
     
     //TODO: handle show house list
-    
+    NSURL *url = [NSURL URLWithString:@"sslocal://mapfind_area_house_list"];
+    NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
+                                   NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
+                                   HOUSE_TYPE_KEY:@(self.configModel.houseType),
+                                   @"title":[NSString stringWithFormat:@"巩找到%d套房源",self->drawLinePointCount]
+                                   };
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+    [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
 }
 
 -(void)showSubwayInBottombar:(FHMapSearchBottomBar *)bottomBar

@@ -84,8 +84,9 @@
 "ad_full_screen_video"  = "TTAdFullScreenVideoViewController";
 
 // map search
-"mapfind_house"        = "FHMapSearchViewController";
-"mapfind_rent"         = "FHMapSearchViewController";
+"mapfind_house"          = "FHMapSearchViewController";
+"mapfind_rent"           = "FHMapSearchViewController";
+"mapfind_area_house_list"  = "FHMapAreaHouseListViewController";
 
 "renthouse_main"  = "FHBaseMainListViewController";
 //"FHHouseRentHomeVC";
