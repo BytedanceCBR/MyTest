@@ -150,7 +150,7 @@
     }
     if (index < self.vedioCount) {
         // 视频
-        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped) {
+        if (self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStateStopped || self.mediaView.videoVC.playbackState == TTVideoEnginePlaybackStatePaused) {
             // 第一次 非播放状态直接播放即可
             [self.mediaView.videoVC play];
             return;
