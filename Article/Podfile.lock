@@ -612,7 +612,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9423cbfa9bb1c30d2b87c1542b862b457b7c141a`)
-  - ios_house_im (from `../../lab/ios_house_im`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `3723502e0272c2b190a638c973bba41321a02781`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -831,7 +831,8 @@ EXTERNAL SOURCES:
     :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :path: ../../lab/ios_house_im
+    :commit: 3723502e0272c2b190a638c973bba41321a02781
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
   TTAD:
@@ -914,6 +915,9 @@ CHECKOUT OPTIONS:
   ios_house_filter:
     :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
+  ios_house_im:
+    :commit: 3723502e0272c2b190a638c973bba41321a02781
+    :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
     :git: git@code.byted.org:TTIOS/TTDialogDirector.git
@@ -974,7 +978,7 @@ SPEC CHECKSUMS:
   IESWebKit: fe56e757df4428b6993edddb252072805e3019d7
   IGListKit: 84637f319404ea6467216295e9441d0aa5cfff7f
   ios_house_filter: 872f04fb17142ff0a472fd3c414484c1075524ab
-  ios_house_im: bff4c982d4baf0938adadeae3712e66e4ec0e324
+  ios_house_im: 93431910eb6de50b0b84130f90d5eabb85849261
   JSONModel: 2148f37c84efba4215c4e56998a9a7659c89c474
   KVOController: e4a04238baae76d45c802e0a5fc4b225d5eef9f4
   libextobjc: bab224df836bdb044b2070a3105bda09ea46cf1e
@@ -1089,6 +1093,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: ef0009453c4c34a2ff8c0f6ef7f39b5c2e48675f
+PODFILE CHECKSUM: a4ef8d29ffed2af5fb25896248a5623106de30e8
 
 COCOAPODS: 1.4.0
