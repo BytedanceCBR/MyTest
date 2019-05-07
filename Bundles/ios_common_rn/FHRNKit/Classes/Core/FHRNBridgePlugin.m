@@ -154,7 +154,12 @@
     }
     
     if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
-        callParams[@"log_pb"] = nil;
+        if ([callParams[@"log_pb"] isEqualToString:@"be_null"]) {
+            callParams[@"log_pb"] = nil;
+        }else
+        {
+            callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
+        }
     }
 
     if (!TTNetworkConnected() && !callParams[@"phone"]) {
