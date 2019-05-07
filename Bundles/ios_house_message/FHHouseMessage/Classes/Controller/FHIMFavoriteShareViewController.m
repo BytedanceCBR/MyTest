@@ -51,6 +51,7 @@
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParamObj: paramObj];
     if (self) {
+        self.automaticallyAdjustsScrollViewInsets = NO;
         self.supportHouseType = @[@(2), @(3), @(1)];
         self.shareViewModel = [[FHIMFavoriteShareViewModel alloc] init];
         self.shareViewModel.viewController = self;
@@ -73,6 +74,7 @@
     _containerView = [[UIScrollView alloc] init];
     _containerView.pagingEnabled = YES;
     _containerView.bounces = NO;
+    _containerView.autoresizingMask = UIViewAutoresizingNone;
     [self.view addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self.view);
@@ -228,6 +230,7 @@
                                  tailSpacing:0];
         [tables mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(_containerView);
+            make.top.bottom.mas_equalTo(_containerView);
         }];
         @weakify(self);
         self.controllers = [_supportHouseType rx_mapWithBlock:^id(id each) {
