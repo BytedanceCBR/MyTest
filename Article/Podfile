@@ -45,9 +45,9 @@ def appPods
     pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush'#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
 #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
 
-#    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
+    pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
 
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '5aec16453da087f67b8d20e7260b14305966ba5d' #:branch => 'feature/develop'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '7022c452ff28598dc9279649647ed618c754ec1d' #:branch => 'feature/develop'
 #    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
 
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
