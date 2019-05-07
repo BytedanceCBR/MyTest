@@ -94,7 +94,7 @@
         [playView removeFromSuperview];
         [coverView addSubview:playView];
         
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
     
         CGSize size = containerView.frame.size;
         

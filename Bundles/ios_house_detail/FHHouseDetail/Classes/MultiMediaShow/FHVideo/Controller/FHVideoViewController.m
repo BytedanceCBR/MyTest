@@ -29,6 +29,8 @@
 @property (nonatomic, assign) NSTimeInterval stayTime;
 @property (nonatomic, assign) NSTimeInterval startTime;
 
+@property (nonatomic, strong) FHVideoErrorView *errorView;
+
 @end
 
 @implementation FHVideoViewController
@@ -307,6 +309,14 @@
     [self resetTime];
     [self trackPlayBackState];
     
+//    if(self.playbackState == TTVPlaybackState_Playing){
+//        [self.errorView removeFromSuperview];
+//    }
+    
+    if(self.playbackState == TTVPlaybackState_Stopped && self.isFullScreen){
+        [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
+    }
+    
     self.lastPlaybackState = playbackState;
     
     if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
@@ -378,6 +388,9 @@
     view.willClickRetry = ^{
         [wself trackWithName:@"click_load"];
     };
+    
+    self.errorView = view;
+    
     return view;
 }
 
