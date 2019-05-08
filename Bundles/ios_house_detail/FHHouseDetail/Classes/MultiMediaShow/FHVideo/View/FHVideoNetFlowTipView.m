@@ -88,6 +88,8 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
 }
 
 - (void)refreshTipLabelText:(NSString *)tipLabelText {
+    //当视频太小的时候返回的0，为了防止用户误解，这时候设成最小值0.01
+    tipLabelText = [tipLabelText stringByReplacingOccurrencesOfString:@"0.00" withString:@"0.01"];
     self.tipText = tipLabelText;
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
