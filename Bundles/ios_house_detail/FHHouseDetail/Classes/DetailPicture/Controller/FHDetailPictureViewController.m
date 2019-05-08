@@ -1486,15 +1486,16 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             // 全屏展示，无需转换 (由于navigation bar的存在，转换后的y可能差一个navigation bar的高度)
             CGRect transEndFrame = endFrame;
             
+            UIView *containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
+            containerView.backgroundColor = [UIColor clearColor];
+            
             CGRect beginFrame = [[_placeholderSourceViewFrames objectAtIndex:_startWithIndex] CGRectValue];
             if ([weakShowImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
                 // 视频cell
                 beginFrame = self.videoVC.videoFrame;
+                containerView.backgroundColor = [UIColor blackColor];
             }
             largeImageView.frame = beginFrame;
-            
-            UIView *containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
-            containerView.backgroundColor = [UIColor clearColor];
             
             UIView *originalSupperView = largeImageView.superview;
             [containerView addSubview:largeImageView];
