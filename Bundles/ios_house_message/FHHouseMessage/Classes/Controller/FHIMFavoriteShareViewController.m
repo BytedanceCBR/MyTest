@@ -370,7 +370,7 @@
 -(void)traceClickSend {
     NSMutableDictionary* trace = [NSMutableDictionary dictionaryWithCapacity:6];
     trace[@"event_type"] = @"house_app2c_v2";
-    trace[@"page_type"] = @"converation_detail";
+    trace[@"page_type"] = @"conversation_detail";
     trace[@"house_type"] = [self houseTypeByIndex:self.shareViewModel.currentPage];
     trace[@"converation_id"] = self.shareViewModel.conversactionId ? : @"";
     trace[@"log_pb"] = @"be_null";
@@ -380,7 +380,7 @@
 
 -(NSString*)houseTypeByIndex:(NSUInteger)index {
     if ([_supportHouseType count] > index) {
-        NSInteger type = _supportHouseType[index];
+        NSInteger type = [_supportHouseType[index] integerValue];
         switch (type) {
             case 2:
                 return @"old";
