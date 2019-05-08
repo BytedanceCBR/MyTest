@@ -111,6 +111,7 @@
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
 "im_house_share" = "FHIMSharedUserListViewController";
+"im_share_favorite_house" = "FHIMFavoriteShareViewController";
 //会话列表
 "message_conversation_list" = "FHTempMessageViewController";
 
