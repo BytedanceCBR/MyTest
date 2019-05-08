@@ -20,6 +20,10 @@
 #import <FHHouseBase/FHHouseFilterBridge.h>
 #import <FHCommonUI/FHRefreshCustomFooter.h>
 #import <FHHouseBase/FHMainApi.h>
+#import <TTPlatformUIModel/ArticleListNotifyBarView.h>
+#import <TTBaseLib/UIViewAdditions.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 #import "FHMapAreaHouseListViewController.h"
 
@@ -37,6 +41,8 @@
 @property(nonatomic , strong) TTHttpTask *requestTask;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic , copy)   NSString *filterCondition;
+@property(nonatomic , assign) BOOL hasEnterCategory;
+
 /*
  * 多边形，经纬度用","分割，不同点之间用";"分割。
  * 116.44417238014412,39.89371509137617;116.42774785086281,39.893496613309466
@@ -59,15 +65,15 @@
     if (self) {
         
         _houseShowTracerDic = [NSMutableDictionary new];
-        
+        _houseList = [NSMutableArray new];
         self.listController = viewController;
         self.tableView = table;
         
         [self configTableView];
         
         self.houseType = [userInfo[@"house_type"] integerValue];
-        self.coordinateEnclosure = userInfo[@"coordinate_enclosure"];
-        self.neighborhoodIds = userInfo[@"neighborhood_ids"];
+        self.coordinateEnclosure = userInfo[COORDINATE_ENCLOSURE];
+        self.neighborhoodIds = userInfo[NEIGHBORHOOD_IDS];
         
     }
     return self;
@@ -110,7 +116,6 @@
     if (cellModel) {
         NSString *origin_from = self.listController.tracerDict[@"origin_from"];
         NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
-//        NSString *house_type = [[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType];
         NSString *page_type = self.listController.tracerDict[@"category_name"];
         NSString *urlStr = NULL;
         if (self.houseType == FHHouseTypeSecondHandHouse) {
@@ -129,7 +134,6 @@
             urlStr = @"";
         }
         if (urlStr.length > 0) {
-//            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"card_type"] = @"left_pic";
             traceParam[@"enter_from"] = page_type ? : @"be_null";
@@ -151,6 +155,22 @@
     }
 }
 
+- (void)showNotify:(NSString *)message 
+{
+    UIEdgeInsets inset = self.tableView.contentInset;
+    inset.top = self.notifyBarView.height;
+    self.tableView.contentInset = inset;
+    
+    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [UIView animateWithDuration:0.3 animations:^{
+            self.tableView.contentInset = UIEdgeInsetsZero;
+        }];
+    });
+    
+}
+
 #pragma mark - Request
 
 -(void)loadData
@@ -165,22 +185,28 @@
     }
     
     NSMutableDictionary *param = [NSMutableDictionary new];
-    NSString *query = self.filterCondition;
+    NSMutableString *query = [[NSMutableString alloc] init];//
     
-    param[HOUSE_TYPE_KEY] = @(self.houseType);
+    if (self.filterCondition) {
+        [query appendString:self.filterCondition];
+    }
+        
+    if (query.length > 0 && ![query hasSuffix:@"&"]) {
+        [query appendString:@"&"];
+    }
+    [query appendFormat:@"%@=%@",HOUSE_TYPE_KEY,@(self.houseType)];
     
     if (self.searchId) {
-        param[@"search_id"] = self.searchId;
+        [query appendFormat:@"&search_id=%@",self.searchId];
     }
 
     if (self.coordinateEnclosure.length > 0) {
-        param[@"coordinate_enclosure"] = self.coordinateEnclosure;
+        param[COORDINATE_ENCLOSURE] = self.coordinateEnclosure;
     }
     if (self.neighborhoodIds.length > 0) {
-        param[@"neighborhood_ids"] = self.neighborhoodIds;
+        param[NEIGHBORHOOD_IDS] = self.neighborhoodIds;
     }
-    
-    
+        
     if (![TTReachability isNetworkConnected]) {
         if (isHead) {
             [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -233,17 +259,19 @@
         BOOL hasMore = NO;
         NSString *searchId = @"";
         NSArray *items = NULL;
-        
+        NSString *refreshTip = nil;
         if ([model isKindOfClass:[FHSearchHouseDataModel class]]) {
             FHSearchHouseDataModel *dataModel = (FHSearchHouseDataModel *)model;
             searchId = dataModel.searchId;
             hasMore = dataModel.hasMore;
             items = dataModel.items;
+            refreshTip = dataModel.refreshTip;
         }else if ([model isKindOfClass:[FHHouseRentDataModel class]]){
             FHHouseRentDataModel *dataModel = (FHHouseRentDataModel *)model;
             searchId = dataModel.searchId;
             hasMore = dataModel.hasMore;
             items = dataModel.items;
+            refreshTip = dataModel.refreshTip;
         }
         
         if (searchId.length > 0) {
@@ -263,38 +291,40 @@
             [self updateTableViewWithMoreData:hasMore];
             
             if (isHead) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+                if (refreshTip.length > 0){
+                    [self showNotify:refreshTip];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+                });
             }
             
-            
-            
         } else {
-            [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL];
+            [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL isHead:isHead];
         }
         
+        if (isHead) {
+            [self.houseShowTracerDic removeAllObjects];
+        }
         
-        
-        // enter category
-        //        if (!self.hasEnterCategory) {
-        //            [self addEnterCategoryLog];
-        //            self.hasEnterCategory = YES;
-        //        }
-        //        if (self.firstRequestData && self.houseList.count > 0) {
-        //            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
-        //        }
+        //enter category
+        if (!self.hasEnterCategory) {
+            [self addEnterCategoryLog];
+            self.hasEnterCategory = YES;
+        }
         
         if (!hasMore && self.houseList.count < 10) {
             self.tableView.mj_footer.hidden = YES;
         }
     } else {
-        [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
+        [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常" isHead:isHead];
     }
     
 }
 
-- (void)processError:(FHEmptyMaskViewType)maskViewType tips:(NSString *)tips {
+- (void)processError:(FHEmptyMaskViewType)maskViewType tips:(NSString *)tips isHead:(BOOL)isHead {
     // 此时需要看是否已经有有效数据，如果已经有的话只需要toast提示，不显示空页面
-    if (self.houseList.count > 0) {
+    if (self.houseList.count > 0 && !isHead) {
         self.listController.hasValidateData = YES;
         [self.listController.emptyView hideEmptyView];
         if (tips.length > 0) {
@@ -309,7 +339,6 @@
             [[ToastManager manager] showToast:tips];
         }
     }
-    //    [self updateTableViewWithMoreData:self.lastHasMore];
 }
 
 
@@ -493,20 +522,16 @@
 
 -(NSDictionary *)categoryLogDict {
     
-    NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    NSString *origin_from = self.listController.tracerDict[@"origin_from"];
-    tracerDict[@"origin_from"] = origin_from.length > 0 ? origin_from : @"be_null";
-    NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
-    tracerDict[@"origin_search_id"] = origin_search_id.length > 0 ? origin_search_id : @"be_null";
-    tracerDict[@"search_id"] = self.searchId.length > 0 ? self.searchId : @"be_null";
-    NSString *enter_type = self.listController.tracerDict[@"enter_type"];
-    tracerDict[@"enter_type"] = enter_type.length > 0 ? enter_type : @"be_null";
-    NSString *category_name = self.listController.tracerDict[@"category_name"];
-    tracerDict[@"category_name"] = category_name.length > 0 ? category_name : @"be_null";
-    NSString *enter_from = self.listController.tracerDict[@"enter_from"];
-    tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
-    NSString *element_from = self.listController.tracerDict[@"element_from"];
-    tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
+    NSMutableDictionary *tracerDict = [NSMutableDictionary new];
+    FHTracerModel *model = self.listController.tracerModel;
+    tracerDict[UT_ORIGIN_FROM] = model.originFrom?:UT_BE_NULL;
+    tracerDict[UT_ORIGIN_SEARCH_ID] = model.originSearchId?:UT_BE_NULL;
+    tracerDict[UT_SEARCH_ID] = IS_EMPTY_STRING(self.searchId) ? UT_BE_NULL:self.searchId;
+    tracerDict[UT_ENTER_TYPE] = model.enterType?:UT_BE_NULL;
+    tracerDict[UT_CATEGORY_NAME] = model.categoryName?:UT_BE_NULL;
+    tracerDict[UT_ENTER_FROM] = model.enterFrom?:UT_BE_NULL;
+    tracerDict[UT_ELEMENT_FROM] = model.elementFrom?:UT_BE_NULL;
+    
     return tracerDict;
 }
 

@@ -16,12 +16,10 @@
 
 @interface FHMapSearchDrawGuideView ()
 
-//@property(nonatomic , strong) CALayer *pathLayer;
-//@property(nonatomic , strong) CALayer *handLayer;
-//@property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , strong) CALayer *pathLayer;
 @property(nonatomic , strong) CALayer *handLayer;
+@property(nonatomic , copy)   void (^dismissBlock)();
 
 @end
 
@@ -60,6 +58,9 @@
 -(void)onTap
 {
     [self removeFromSuperview];
+    if (self.dismissBlock) {
+        self.dismissBlock();
+    }
 }
 
 -(void)layoutSubviews
@@ -72,9 +73,10 @@
     _tipLabel.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMaxX(_pathLayer.frame)+30+CGRectGetHeight(_tipLabel.frame)/2);
 }
 
-+(void)showInView:(UIView *)view
++(void)showInView:(UIView *)view dismiss:(void(^)())dismissBlock
 {
     FHMapSearchDrawGuideView *gview = [[FHMapSearchDrawGuideView alloc] initWithFrame:view.bounds];
+    gview.dismissBlock = dismissBlock;
     [view addSubview:gview];
 }
 

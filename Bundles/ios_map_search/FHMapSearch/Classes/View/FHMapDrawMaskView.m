@@ -9,7 +9,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHHouseBase/FHCommonDefines.h>
 
-#define MIN_POINTS 10
+#define MIN_POINTS 20
 #define CLOSE_WIDTH 46
 
 @interface FHMapDrawMaskView ()

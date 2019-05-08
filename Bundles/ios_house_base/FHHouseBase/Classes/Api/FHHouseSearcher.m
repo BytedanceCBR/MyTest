@@ -15,36 +15,15 @@
 
 +(TTHttpTask *_Nullable)houseSearchWithQuery:(NSString *_Nullable)query param:(NSDictionary * _Nonnull)queryParam offset:(NSInteger)offset needCommonParams:(BOOL)needCommonParams callback:(void(^_Nullable )(NSError *_Nullable error , FHSearchHouseDataModel *_Nullable model))callback
 {
-    NSString *host = @"/f100/api/search?";
+    NSString *path = @"/f100/api/search";
     if (query.length > 0) {
-        host = [host stringByAppendingString:query];
-    }
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    param[@"offset"] = @(offset);
-    
-    [param addEntriesFromDictionary:queryParam];
-    
-    return [FHMainApi postJsonRequest:host query:query params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {        
-        if (!callback) {
-            return ;
-        }
-        if (!error && result) {
-            NSError *jsonError = nil;
-            FHSearchHouseModel *houseModel = [[FHSearchHouseModel alloc] initWithDictionary:result error:&jsonError];
-            if (jsonError) {
-                error = jsonError;
-            }else if (houseModel && [houseModel.message isEqualToString:@"success"]) {
-                callback(nil,houseModel.data);
-                return;
-            }else{
-                error = [NSError errorWithDomain:houseModel.status?:@"请求失败" code:-10000 userInfo:nil];
-            }
-            
-        }else{
-            error = [NSError errorWithDomain:@"请求失败" code:-10000 userInfo:nil];
-        }
-        
-        callback(error ,nil);
+        query = [query stringByAppendingFormat:@"&offset=%ld",offset];
+    }else{
+        query = [NSString stringWithFormat:@"&offset=%ld",offset];
+    }    
+ 
+    return [FHMainApi postRequest:path query:query params:queryParam jsonClass:[FHSearchHouseModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {        
+        callback(error ,[(FHSearchHouseModel *)model data]);
     }];
 }
 
@@ -87,7 +66,6 @@
     if (!IS_EMPTY_STRING(targetType)) {
         param[@"target_type"] = targetType;
     }
-    
     
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:host params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj) {
         if (!callback) {

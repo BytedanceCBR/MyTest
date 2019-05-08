@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMapSearchDrawGuideView : UIView
 
-+(void)showInView:(UIView *)view;
++(void)showInView:(UIView *)view dismiss:(void(^)())dismissBlock;
 
 @end
 

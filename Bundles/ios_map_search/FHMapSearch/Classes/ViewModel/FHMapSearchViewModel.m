@@ -31,6 +31,7 @@
 #import <FHCommonUI/ToastManager.h>
 #import "FHMapSearchDrawGuideView.h"
 #import "FHMapSearchLevelPopLayer.h"
+#import <FHHouseBase/FHUserTrackerDefine.h>
 
 #define kTipDuration 3
 
@@ -82,6 +83,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSArray *drawLineXCoords;
 @property(nonatomic , strong) NSArray *drawLineYCoords;
 @property(nonatomic , strong) NSArray *drawLineNeighbors;
+@property(nonatomic , strong) NSDate *enterDrawLineTime;
 
 @end
 
@@ -830,14 +832,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidZoomByUser:(BOOL)wasUserAction
 {
-    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway) {
-        return;
-    }
-    
     [self tryAddMapZoomLevelTrigerby:FHMapZoomTrigerTypeZoomMap currentLevel:mapView.zoomLevel];
     
     if ( !wasUserAction) {
         //only send request by user
+        return;
+    }
+    
+    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway) {
         return;
     }
     
@@ -970,7 +972,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     } else if ([overlay isKindOfClass:[MAPolygon class]]) {
         
         MAPolygonRenderer *polygonRenderer = [[MAPolygonRenderer alloc] initWithPolygon:overlay];
-        polygonRenderer.lineWidth   = 4.f;
+        polygonRenderer.lineWidth   = 6.f;
         polygonRenderer.strokeColor = [UIColor themeRed1];
         polygonRenderer.fillColor   = RGBA(0xff, 0x58, 0x69,0.2);
         
@@ -1011,6 +1013,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)showNeighborHouseList:(FHMapSearchDataListModel *)model
 {
     [self changeNavbarAppear:NO];
+    FHMapSearchShowMode lastMode = self.showMode;
     self.showMode = FHMapSearchShowModeHalfHouseList;
     [self.tipView removeTip];
     
@@ -1025,6 +1028,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self.mapView setCenterCoordinate:destCenter animated:YES];
     
     FHMapSearchBubbleModel *houseListBubble = [self bubleFromOpenUrl:model.houseListOpenUrl];
+    houseListBubble.lastShowMode = lastMode;
     
     [self.houseListViewController showNeighborHouses:model bubble:houseListBubble];
     
@@ -1357,7 +1361,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if([[NSUserDefaults standardUserDefaults] boolForKey:showedGuide]){
         return;
     }
-    [FHMapSearchDrawGuideView showInView:self.viewController.view];
+
+    self.bottomBar.hidden = YES;
+    [FHMapSearchDrawGuideView showInView:self.viewController.view dismiss:^{
+        self.bottomBar.hidden = NO;        
+    }];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:showedGuide];
 }
 
@@ -1380,7 +1388,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
                                    NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
                                    HOUSE_TYPE_KEY:@(self.configModel.houseType),
-                                   @"title":[NSString stringWithFormat:@"巩找到%d套房源",self->drawLinePointCount]
+                                   @"title":[NSString stringWithFormat:@"共找到%d套房源",self->onSaleHouseCount]
                                    };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
@@ -1390,6 +1398,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 {
     
 }
+
 
 #pragma mark log
 -(NSMutableDictionary *)logBaseParams
@@ -1472,10 +1481,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             break;
     }
     param[@"view_level"] = viewTypeStr;
-    param[@"trigger_type"] = triger;
-
-    [FHUserTracker writeEvent:@"mapfind_view" params:param];
-    
+    if (self.showMode == FHMapSearchShowModeDrawLine) {
+        
+        param[UT_ENTER_FROM] = @"mapfind";
+        param[UT_LOG_PB] = self.viewController.tracerModel.logPb?:UT_BE_NULL;
+        TRACK_EVENT(@"circlefind_view", param);
+    }else{
+        param[@"trigger_type"] = triger;
+        [FHUserTracker writeEvent:@"mapfind_view" params:param];
+    }
 }
 
 
@@ -1528,6 +1542,87 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     param[@"element_from"] = self.configModel.elementFrom ?: @"be_null";
     
     [FHUserTracker writeEvent:@"click_switch_mapfind" params:param];
+}
+
+#pragma mark - 画圈找房 埋点
+-(void)addClickDrawLineLog
+{
+    /*
+     click_circlefind    "从地图找房入口进入
+     点击画圈找房button
+     "    "首页/租房列表页点击地图找房button
+     点击进入画圈找房button
+     
+     "    "1. event_type：house_app2c_v2
+     2. click_type: 点击类型,{'画圈找房': 'circlefind'}
+     4. enter_from：{'主页地图找房页面进入': 'maintab'，租房列表页地图找房进入renting_mapfind}
+     5. enter_type：进入category方式,{'点击': 'click'}
+     6. element_from：组件入口,{'首页搜索': 'maintab_search', '首页icon': 'maintab_icon', '找房tab开始找房': 'findtab_find', '找房tab搜索': 'findtab_search'}
+     7. log_pb
+     8. origin_from
+     9. origin_search_id"
+     
+     param[@"enter_from"] = self.configModel.enterFrom?: @"be_null";
+     param[@"search_id"] = self.searchId?:@"be_null";
+     param[@"origin_from"] = self.configModel.originFrom?:@"be_null";
+     param[@"origin_search_id"] = self.configModel.originSearchId ?: @"be_null";
+     
+     */
+    
+    NSMutableDictionary *param = [self logBaseParams];
+    FHTracerModel *tracer = self.viewController.tracerModel;
+    
+    param[@"click_type"] = @"circlefind";
+    param[UT_ENTER_FROM] = tracer.enterFrom?:UT_BE_NULL;
+    param[UT_ENTER_TYPE] = @"click";
+    param[UT_ELEMENT_FROM] = tracer.elementFrom?:UT_BE_NULL;
+    param[UT_LOG_PB] = tracer.logPb;
+    
+    TRACK_EVENT(@"click_circlefind", param);
+}
+
+-(void)addEnterCircleFindLog
+{
+    /*
+     enter_circlefind    进入画圈找房页    "从地图找房
+     进入画圈找房页
+     "    "1. event_type：house_app2c_v2
+     2. enter_from（画圈找房页入口）：地图找房：mapfind
+     3. search_id
+     4. origin_from
+     5. origin_search_id
+     6. log_pb"
+     */
+    
+    NSMutableDictionary *param = [self logBaseParams];
+    FHTracerModel *tracer = self.viewController.tracerModel;
+    param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
+    
+    TRACK_EVENT(@"enter_circlefind", param);
+}
+
+-(void)addStayCircelFineLog
+{
+/*
+ stay_circlefind    "画圈找房详情页
+ 停留时长"    "画圈找房页退出
+ 停留时长"    "1. event_type：house_app2c_v2
+ 2. enter_from（画圈找房页入口）：地图找房：mapfind
+ 3. search_id
+ 4. origin_from
+ 5. origin_search_id
+ 6. stay_time：单位ms
+ 7. log_pb
+ 8.element_from："
+ */
+  
+    NSMutableDictionary *param = [self logBaseParams];
+    FHTracerModel *tracer = self.viewController.tracerModel;
+    param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
+    param[UT_ELEMENT_FROM] = @"";
+    param[UT_STAY_TIME] = [NSString stringWithFormat:@"%.0f",[[NSDate date]timeIntervalSinceDate:self.enterDrawLineTime]*1000];
+    
+    TRACK_EVENT(@"stay_circlefind", param);
 }
 
 #pragma mark - network changed

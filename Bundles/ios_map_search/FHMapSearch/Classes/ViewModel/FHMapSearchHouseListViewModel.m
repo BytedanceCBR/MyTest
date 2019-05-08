@@ -659,6 +659,14 @@
 
 #pragma mark - log
 
+-(NSString *)enterFrom
+{
+    if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+        return @"circlefind";
+    }
+    return @"mapfind";
+}
+
 -(NSMutableDictionary *)logBaseParams
 {
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -688,7 +696,7 @@
     NSMutableDictionary *param = [self logBaseParams];
     param[@"category_name"] = @"same_neighborhood_list";
     param[@"enter_type"] = @"slide_up";
-    param[@"enter_from"] = @"mapfind"; // 地图找房页
+    param[@"enter_from"] = [self enterFrom]; // 地图找房页
     
     [FHUserTracker writeEvent:@"enter_category" params:param];
 }

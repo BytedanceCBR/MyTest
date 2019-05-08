@@ -12,10 +12,12 @@
 NS_ASSUME_NONNULL_BEGIN
 @class FHMapAreaHouseListViewController;
 @protocol FHHouseFilterBridge;
+@class ArticleListNotifyBarView;
 @interface FHMapAreaHouseListViewModel : NSObject<FHHouseFilterDelegate>
 
 @property(nonatomic , assign)FHHouseType houseType;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
+@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 
 -(instancetype)initWithWithController:(FHMapAreaHouseListViewController *)viewController tableView:(UITableView *)table userInfo:(NSDictionary *)userInfo;
 

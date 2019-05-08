@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <FHHouseBase/FHCommonDefines.h>
+#import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHMapSearchBottomBar ()
 
@@ -87,19 +88,19 @@
         make.top.mas_equalTo(0);
     }];
     
-    BOOL smallScreen = ( SCREEN_WIDTH < 321);
-    CGFloat centerXOffset = smallScreen?20:0;
+//    BOOL smallScreen = ( SCREEN_WIDTH < 321);
+//    CGFloat centerXOffset = smallScreen?20:0;
     
     [_drawLineBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(self).offset(centerXOffset);
-        make.width.mas_equalTo(200);
+        make.left.mas_equalTo(self).offset(88);
+//        make.width.mas_equalTo(200);
         make.top.bottom.mas_equalTo(self);
+        make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(20);
     }];
     
     [_drawLineShadowBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.drawLineBgView);
     }];
-    
     
     [_drawLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.drawLineBgView);
@@ -118,9 +119,24 @@
 
 -(void)showDrawLine:(NSString *)content
 {
+//    content = @"区域内共找到2000000012345套房源";
     _drawLineLabel.text = content;
     _drawLineBgView.hidden = NO;
     _subwayBgView.hidden = YES;
+    
+    [_drawLineLabel sizeToFit];
+    CGFloat padding = 40 + 24; //左右间距 箭头
+    CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - 98 - padding));
+    CGFloat left = (SCREEN_WIDTH - width - padding)/2;
+    if (left < 88) {
+        left = 88;
+    }
+    [_drawLineLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(width);
+    }];
+    [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(left);
+    }];
     
 }
 

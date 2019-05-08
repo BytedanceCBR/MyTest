@@ -15,6 +15,8 @@
 #import "FHMapAreaHouseListViewModel.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import <TTPlatformUIModel/ArticleListNotifyBarView.h>
+#import <TTBaseLib/UIViewAdditions.h>
 
 @interface FHMapAreaHouseListViewController ()
 
@@ -29,6 +31,7 @@
 @property (nonatomic , strong) id houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 
 @end
 
@@ -92,7 +95,17 @@
         make.top.mas_equalTo(self.filterPanel.mas_bottom);
         make.bottom.mas_equalTo(self.view);
     }];
+    
+    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.width, 32)];
+    [self.view addSubview:self.notifyBarView];
+    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.tableView);
+        make.height.mas_equalTo(32);
+    }];
+    _viewModel.notifyBarView = _notifyBarView;
+    
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(44, 0, 0, 0)];
+    [self.view bringSubviewToFront:self.filterPanel];
     [self.view bringSubviewToFront:self.filterBgControl];
 }
 
@@ -159,4 +172,4 @@
 
 
 NSString *const COORDINATE_ENCLOSURE = @"coordinate_enclosure";
-NSString *const NEIGHBORHOOD_IDS = @"neighborhood_ids";
+NSString *const NEIGHBORHOOD_IDS = @"neighborhood_id[]";
