@@ -39,6 +39,7 @@
         self.view.coverView.alpha = 0;
     } completion:^(BOOL finished) {
         self.view.coverView.alpha = 0;
+        self.view.coverView.coverView.hidden = YES;
     }];
 }
 
@@ -54,12 +55,10 @@
 
 - (void)showCoverViewStartBtn {
     self.view.coverView.alpha = 1;
-    self.view.coverView.coverView.hidden = YES;
 }
 
 - (void)hideCoverViewStartBtn {
     self.view.coverView.alpha = 0;
-    self.view.coverView.coverView.hidden = NO;
 }
 
 @end
