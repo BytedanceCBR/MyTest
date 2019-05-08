@@ -362,9 +362,9 @@
                     [self.videoVC pause];
                 }
                 
-                if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVideoEnginePlaybackStatePaused){
-                    [self.videoVC play];
-                }
+//                if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVideoEnginePlaybackStatePaused){
+//                    [self.videoVC play];
+//                }
             }
             self.lastCell = currentCell;
         }
