@@ -143,14 +143,18 @@
         [callParams setValue:houseType forKey:@"house_type"];
     }
     
-    if(callParams[@"group_id"])
+    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
     {
-        callParams[@"follow_id"] = callParams[@"group_id"];
+        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+            callParams[@"follow_id"] = callParams[@"group_id"];
+        }
     }
     
-    if(callParams[@"group_id"])
+    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
     {
-        callParams[@"house_id"] = callParams[@"group_id"];
+        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+            callParams[@"house_id"] = callParams[@"group_id"];
+        }
     }
     
     if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
