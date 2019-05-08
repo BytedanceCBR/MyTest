@@ -562,6 +562,10 @@
 
 - (void)refreshUI
 {
+    // 横屏直接返回
+    if (self.view.bounds.size.width > self.view.bounds.size.height) {
+        return;
+    }
     if (self.didEnterFullscreen) {
         // 进入全屏视频
         return;
