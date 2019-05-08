@@ -89,7 +89,8 @@
     if (estimateId.length > 0) {
         [url appendString:[NSString stringWithFormat:@"&estimate_id=%@",estimateId]];
     }
-    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:POST needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    NSDictionary *postParams = params.count > 0 ? params : nil;
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:postParams method:POST needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
         BOOL success = NO;
         NSMutableDictionary *result = [NSMutableDictionary dictionary];
         if (obj) {
