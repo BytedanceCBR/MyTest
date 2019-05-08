@@ -7,6 +7,7 @@
 
 #import "FHPriceValuationAPI.h"
 #import "FHHouseDetailAPI.h"
+#import "FHPostDataHTTPRequestSerializer.h"
 
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
 #define GET @"GET"
@@ -81,16 +82,17 @@
     NSString *queryPath = @"/f100/api/submit_phone";
     
     NSString *url = QURL(queryPath);
-    
-    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:GET needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:nil responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:POST needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
         BOOL success = NO;
         NSMutableDictionary *result = [NSMutableDictionary dictionary];
-        @try{
-            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
-            success = ([json[@"status"] integerValue] == 0);
-        }
-        @catch(NSException *e){
-            error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+        if (obj) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
         }
         
         if (completion) {
