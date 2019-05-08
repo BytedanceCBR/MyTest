@@ -47,7 +47,7 @@ def appPods
 
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
     
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => 'f5d2009bac6ca1d2e0f9dd4fe6f766285f7d0488' #:branch => 'feature/develop'
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '7ebb8e14d3768897f3cd16966dd7e29e292846b8' #:branch => 'feature/develop'
 #    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
 

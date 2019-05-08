@@ -46,7 +46,9 @@
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
         FHDetailNewModel *model = nil;
-        model = [[FHDetailNewModel alloc] initWithDictionary:jsonObj error:&error];
+        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
+            model = [[FHDetailNewModel alloc] initWithDictionary:jsonObj error:&error];
+        }
         if (model && !error) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;

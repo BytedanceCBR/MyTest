@@ -152,6 +152,10 @@
     {
         callParams[@"house_id"] = callParams[@"group_id"];
     }
+    
+    if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
+        callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
+    }
 
     if (!TTNetworkConnected() && !callParams[@"phone"]) {
         if (callback) {
