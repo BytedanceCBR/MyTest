@@ -203,7 +203,7 @@
     [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm.bytedance.com";
     [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm.pstatp.com";
 
-    [[TTNetworkManager shareInstance] setDomainBase:@"ib.haoduofangs.com"];
+    [[TTNetworkManager shareInstance] setDomainBase:@"i.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainLog:@"log.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainMon:@"mon.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainSec:@"security.haoduofangs.com"];
