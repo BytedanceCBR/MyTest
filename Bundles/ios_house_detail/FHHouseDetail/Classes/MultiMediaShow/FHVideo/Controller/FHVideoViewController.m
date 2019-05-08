@@ -40,7 +40,7 @@
     // Do any additional setup after loading the view.
     
     //很关键，防止全屏时候view尺寸改变
-    self.view.autoresizingMask = UIViewAutoresizingNone;
+//    self.view.autoresizingMask = UIViewAutoresizingNone;
     
     [self initViews];
     [self initConstaints];

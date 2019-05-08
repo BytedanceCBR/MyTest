@@ -88,6 +88,8 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
 }
 
 - (void)refreshTipLabelText:(NSString *)tipLabelText {
+    //当视频太小的时候返回的0，为了防止用户误解，这时候暂时不显示具体数值
+    tipLabelText = @" 正在使用非WiFi网络\n「继续播放」将消耗流量";
     self.tipText = tipLabelText;
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];

@@ -18,4 +18,11 @@
     return hitTestView;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    for (UIView *view in self.subviews) {
+        [view setNeedsLayout];
+    }
+}
+
 @end
