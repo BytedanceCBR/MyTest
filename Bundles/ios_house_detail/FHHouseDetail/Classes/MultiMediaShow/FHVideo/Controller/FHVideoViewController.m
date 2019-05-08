@@ -225,7 +225,6 @@
     }
     
     if(self.playbackState == TTVPlaybackState_Playing && self.model.isShowStartBtnWhenPause){
-        self.isShowingNetFlow = NO;
         [self.viewModel hideCoverViewStartBtn];
     }
 }
@@ -335,6 +334,10 @@
     
     if(self.playbackState == TTVPlaybackState_Stopped && self.isFullScreen){
         [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
+    }
+    
+    if(self.playbackState == TTVPlaybackState_Playing){
+        self.isShowingNetFlow = NO;
     }
     
     [self showStartBtnWhenPause];

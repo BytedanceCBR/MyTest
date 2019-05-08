@@ -43,6 +43,9 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
         self.subscribeBtn.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        [self addGestureRecognizer:singleTap];
     }
     
     return self;
@@ -168,6 +171,10 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
         (!self.subscribeBlock) ?: self.subscribeBlock();
     }
     
+}
+
+-(void)handleSingleTap:(UITapGestureRecognizer *)sender {
+    //什么都不做，就是为了不让下面的view可以点击
 }
 
 @end
