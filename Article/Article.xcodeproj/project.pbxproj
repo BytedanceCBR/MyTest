@@ -209,7 +209,7 @@
 		C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		D01379621DFE8F4A0020C6BD /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D013795E1DFE8BEF0020C6BD /* libresolv.tbd */; };
 		D08BFBDB1B8729AA00E6D9A1 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		D08BFBE01B8729B800E6D9A1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */; };
@@ -649,7 +649,7 @@
 				3AA5028915876A1F00EB27FA /* CoreGraphics.framework in Frameworks */,
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -1805,8 +1805,6 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/feed.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/FantasyAnimation.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
@@ -1913,8 +1911,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/feed.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FantasyAnimation.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
@@ -2089,8 +2085,6 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/feed.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/FantasyAnimation.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
@@ -2197,8 +2191,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/feed.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FantasyAnimation.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
@@ -2315,8 +2307,6 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/feed.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/FantasyAnimation.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
@@ -2422,8 +2412,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/feed.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FantasyAnimation.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
@@ -2836,8 +2824,6 @@
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/RootTab.storyboard",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_appruntime/TTAppRuntime/Assets/transparent_1px@2x.png",
 				"${PODS_ROOT}/TTAppUpdateHelper/TTAppUpdateHelper/Classes/TTUpdateView/Assets/TTUpdateView.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/feed.xcassets",
-				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/FantasyAnimation.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/Settings.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button.png",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_articlebase/TTArticleBase/Assets/AppAlert/recommend_button@2x.png",
@@ -2943,8 +2929,6 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/RootTab.storyboardc",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/transparent_1px@2x.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUpdateView.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/feed.xcassets",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FantasyAnimation.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Settings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/recommend_button@2x.png",
