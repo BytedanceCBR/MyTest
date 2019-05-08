@@ -111,12 +111,12 @@
             self.shareViewModel.currentPage = index;
         }
     }];
-
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.shareViewModel.currentPage = _openCategoryIndex;
+    [self scrollToPageAtIndex:_openCategoryIndex];
 }
 
 -(void)resetSendBtnStateAtPageIndex:(NSUInteger)index {
@@ -290,7 +290,7 @@
 
     tableView.sectionFooterHeight = 0;
     tableView.sectionHeaderHeight = 0;
-    tableView.contentInset = UIEdgeInsetsMake(0, 0, [self bottonAreaHeight], 0);
+    tableView.contentInset = UIEdgeInsetsMake(0, 0, 64, 0);
     return tableView;
 }
 
