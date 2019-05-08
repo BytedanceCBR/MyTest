@@ -68,6 +68,8 @@
 @property (nonatomic, assign) BOOL hasVideoAdShowSend;
 @property (nonatomic, assign) BOOL hasRelatedShowSend;
 @property (nonatomic, strong) TTVVideoDetailRelatedAdActionService *adActionService;
+@property (nonatomic, strong) NSMutableDictionary *traceIdDict;
+
 
 @end
 
@@ -100,6 +102,7 @@
     self.protocolInterceptor.receiver = self.fetchedResultsTableDataSource;
     self.indexPathController = [[TLIndexPathController alloc] init];
     self.indexPathController.delegate = self;
+    self.traceIdDict = [NSMutableDictionary dictionary];
     
     self.tableView.dataSource = self.protocolInterceptor;
     self.tableView.delegate = self.protocolInterceptor;
@@ -227,6 +230,7 @@
     self.tableView.separatorColor = [UIColor clearColor];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.backgroundView = nil;
+    self.tableView.tableHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 10)];
     [self.view addSubview:self.tableView];
     self.view.ttvNestedScrollView = self.tableView;
 }
@@ -250,11 +254,60 @@
         TTVRelatedItem *relatedItem = ((TTVDetailRelatedTableViewItem *)item).relatedItem;
         [self sendAdImpressionForArticle:self.videoInfo rArticle:relatedItem status:SSImpressionStatusRecording];
         if ([item isKindOfClass:[TTVDetailRelatedVideoItem class]]) {
+            TTVRelatedItem *item  = self.videoInfo.relatedVideoArray[indexPath.row];
+            TTVVideoArticle *articleItem = (TTVVideoArticle *)(item.videoItem.article);
+            
+            NSString *itemId = [NSString stringWithFormat:@"%lld",(long long)articleItem.itemId];
+            NSString *groupId = [NSString stringWithFormat:@"%lld",(long long)articleItem.groupId];
+            
+            TTVRelatedItem *article = relatedItem;
+            article.savedConvertedArticle = [article ttv_convertedArticle];
+//            NSString *categoryName = [NSString stringWithFormat:@"%lld",(long long)articleItem.];
+            if (![self.traceIdDict[itemId] isEqual: @""]) {
+                
+                NSMutableDictionary *traceParams = [NSMutableDictionary dictionary];
+                
+        
+                [traceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+                
+                [traceParams setValue:groupId forKey:@"group_id"];
+                
+                [traceParams setValue:itemId forKey:@"item_id"];
+                
+                [traceParams setValue:@"related" forKey:@"category_name"];
+                
+                [traceParams setValue:@"click_related" forKey:@"enter_from"];
+
+                NSString *jsonLogPb = item.videoItem.logPb;
+                if ([jsonLogPb isKindOfClass:[NSString class]])
+                {
+                    NSData *jsonData = [jsonLogPb dataUsingEncoding:NSUTF8StringEncoding];
+                    NSError *err;
+                    if (jsonData != nil) {
+                        NSDictionary *dicLogPb = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                                 options:NSJSONReadingMutableContainers
+                                                                                   error:&err];
+                        if(err)
+                        {
+                            NSLog(@"json解析失败：%@",err);
+                        }else
+                        {
+                            [traceParams setValue:dicLogPb forKey:@"log_pb"];
+                        }
+                    }
+                }
+                [traceParams setValue: @"be_null" forKey:@"cell_type"];
+                [TTTracker eventV3:@"client_show" params:traceParams];
+
+                [self.traceIdDict setObject:@"" forKey:itemId];
+            }
+            
             [self.class recordVideoDetailForArticle:self.videoInfo rArticle:relatedItem status:SSImpressionStatusRecording];
         } else if ([item isKindOfClass:[TTVVideoDetailRelatedAdItem class]]) {
         }
     }
 }
+
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {

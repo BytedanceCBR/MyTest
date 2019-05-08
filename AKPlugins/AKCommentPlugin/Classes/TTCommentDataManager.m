@@ -577,7 +577,7 @@ static TTCommentDataManager *sharedManager;
 }
 
 + (NSString *)tabCommentsURLString {
-    return [NSString stringWithFormat:@"%@/f100/article/v2/tab_comments/", [TTCommentDataManager baseURLString]];
+    return [NSString stringWithFormat:@"%@/article/v2/tab_comments/", [TTCommentDataManager baseURLString]];
 }
 
 + (NSString *)commentDetailURLString {
@@ -589,7 +589,7 @@ static TTCommentDataManager *sharedManager;
 }
 
 + (NSString*)postCommentURLString {
-    return [NSString stringWithFormat:@"%@/f100/2/data/v4/post_message/", [TTCommentDataManager baseURLString]];
+    return [NSString stringWithFormat:@"%@/2/data/v4/post_message/", [TTCommentDataManager baseURLString]];
 }
 
 + (NSString*)postCommentReplyURLString {

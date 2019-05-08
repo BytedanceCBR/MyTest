@@ -53,7 +53,7 @@
 - (NSString *)shareDesc
 {
     NSString *abstract = self.detailModel.answerEntity.abstract;
-    return isEmptyString(abstract) ? NSLocalizedString(@"爱看", nil):abstract;
+    return isEmptyString(abstract) ? NSLocalizedString(@"好房就在幸福里", nil):abstract;
 }
 
 - (NSString *)qqZoneDesc
@@ -238,8 +238,10 @@
     
     [activityItems addObject:[self favItem]];
     //    [activityItems addObject:[TTNightModelContentItem new]];
-    [activityItems addObject:[TTFontSettingContentItem new]];
-        [activityItems addObject:[self reportItem]];
+    
+    // add by zjing 去掉字体设置
+//    [activityItems addObject:[TTFontSettingContentItem new]];
+//        [activityItems addObject:[self reportItem]];
     return [activityItems copy];
 }
 

@@ -206,13 +206,7 @@
 
 + (NSDictionary *)_attributesWithFontSize:(CGFloat)fontSize lineHeight:(CGFloat)lineHeight lineBreakMode:(NSLineBreakMode)lineBreakMode isBoldFontStyle:(BOOL)isBold firstLineIndent:(CGFloat)indent textAlignment:(NSTextAlignment)alignment
 {
-//    UIFont *font = isBold ? [UIFont boldSystemFontOfSize:fontSize] : [UIFont systemFontOfSize:fontSize];
-    //f项目统一修改成平方
-    UIFont *boldFont = [UIFont fontWithName:@"PingFangSC-Semibold" size:fontSize] ? : [UIFont boldSystemFontOfSize:fontSize];
-    UIFont *regularFont = [UIFont fontWithName:@"PingFangSC-Regular" size:fontSize] ? : [UIFont systemFontOfSize:fontSize];
-
-    UIFont *font = isBold ? boldFont : regularFont;
-
+    UIFont *font = isBold ? [UIFont boldSystemFontOfSize:fontSize] : [UIFont systemFontOfSize:fontSize];
     CGFloat lineHeightMultiple = lineHeight / font.lineHeight;
     
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];

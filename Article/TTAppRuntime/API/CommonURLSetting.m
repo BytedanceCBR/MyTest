@@ -7,29 +7,29 @@
 //
 
 #import "CommonURLSetting.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTNetworkUtil.h"
 #import "ExploreExtenstionDataHelper.h"
-#import "DNSManager.h"
+#import <TTNetBusiness/DNSManager.h>
 
 #import "TTLocationManager.h"
  
 #import "SSCommonLogic.h"
 #import "TTBaseMacro.h"
-#import "TTHttpsControlManager.h"
+#import <TTNetBusiness/TTHttpsControlManager.h>
 
 #import "TTLCSServerConfig.h"
-#import "TTRouteSelectionServerConfig.h"
-#import "TTRouteSelectionManager.h"
-#import "TTGetDomainsResponseModel.h"
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>
+#import <TTNetBusiness/TTRouteSelectionManager.h>
+#import <TTNetBusiness/TTGetDomainsResponseModel.h>
 
 
-#define NormalBaseURLDomain  @"m.quduzixun.com"
-#define SNSBaseURLDomain     @"m.quduzixun.com"
-#define LogBaseURLDomain     @"log.snssdk.com"
-#define ChannelBaseURLDomain @"ichannel.snssdk.com"
-#define AppMonitorDomain     @"m.quduzixun.com"
-#define SecurityBaseURLDomain    @"security.snssdk.com"
+#define NormalBaseURLDomain  @"i.haoduofangs.com"
+#define SNSBaseURLDomain     @"isub.haoduofangs.com"
+#define LogBaseURLDomain     @"log.haoduofangs.com"
+#define ChannelBaseURLDomain @"ichannel.haoduofangs.com"
+#define AppMonitorDomain     @"mon.haoduofangs.com" //@"mon.snssdk.com"
+#define SecurityBaseURLDomain    @"security.haoduofangs.com"
 #define kibYangGuangURLDomain  @"ib.365yg.com"
 #define kiYangGuangURLDomain  @"i.365yg.com"
 
@@ -53,6 +53,7 @@ static inline void setBaseURLDomains(NSDictionary *domains) {
 
 static inline NSDictionary *baseURLDomains() {
     NSDictionary *domains = [[NSUserDefaults standardUserDefaults] objectForKey:kBaseURLDomainsUserDefaultKey];
+    domains = nil;
     if (!domains || !domains[kSecurityBaseURLDomainKey]) {
         domains = @{kNormalBaseURLDomainKey : NormalBaseURLDomain,
                     kSNSBaseURLDomainKey : SNSBaseURLDomain,
@@ -130,20 +131,28 @@ static inline NSString* baseURLDomainForKey(NSString *key) {
 static inline NSString* baseURLForKey(NSString *key) {
     NSString *domain = baseURLDomainForKey(key);
     
-    if ([key isEqualToString:kNormalBaseURLDomainKey] || [domain isEqualToString:NormalBaseURLDomain]) {
-        if ([TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isEnabled) {
-            
-            NSString *bestHost = [[TTRouteSelectionManager sharedTTRouteSelectionManager] bestHost];
-            if (bestHost) {
-                
-                //LOGD(@"%s use route selection result host: %@", __FUNCTION__, bestHost);
-                
-                return bestHost;
-            }
-        }
-    }
+    //FIXME: 因为返回了is.snssdk.com 会使某些api 404 故先注释掉该部分
+//    if s([key isEqualToString:kNormalBaseURLDomainKey] || [domain isEqualToString:NormalBaseURLDomain]) {
+//        if ([TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isEnabled) {
+//
+//            NSString *bestHost = [[TTRouteSelectionManager sharedTTRouteSelectionManager] bestHost];
+//            if (bestHost) {
+//                //LOGD(@"%s use route selection result host: %@", __FUNCTION__, bestHost);
+//                return bestHost;
+//            }
+//        }
+//    }
     
-    return [NSString stringWithFormat:@"http://%@", domain];
+#if DEBUG
+
+    return [NSString stringWithFormat:@"https://%@", domain];
+
+#else
+    
+    return [NSString stringWithFormat:@"https://%@", domain];
+    
+#endif
+    
 }
 
 
@@ -190,7 +199,9 @@ static CommonURLSetting *_sharedInstance = nil;
 - (void)requestURLDomains
 {
     
-    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/"];
+//    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/"];
+    NSArray *requestDomainURLs = @[@"https://dm.haoduofangs.com/get_domains/v4/"];
+
     if (_repeatCount < [requestDomainURLs count]) {
         NSString *tURL = [requestDomainURLs objectAtIndex:_repeatCount];
         
@@ -249,8 +260,9 @@ static CommonURLSetting *_sharedInstance = nil;
 
 - (void)refactorRequestURLDomains {
     
-//    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/", @"http://m.quduzixun.com/get_domains/v4/"];
-    NSArray *requestDomainURLs = @[@"http://m.quduzixun.com/get_domains/v4/"];
+//    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/"];
+        NSArray *requestDomainURLs = @[@"https://dm.haoduofangs.com/get_domains/v4/"];
+
     if (_repeatCount < [requestDomainURLs count]) {
         NSString *tURL = [requestDomainURLs objectAtIndex:_repeatCount];
         
@@ -581,13 +593,18 @@ static CommonURLSetting *_sharedInstance = nil;
     return baseURLForKey(kLogBaseURLDomainKey);
 }
 
++ (NSString*)xlogBaseURL
+{
+    return @"https://xlog.snssdk.com";//@"https://xlog.haoduofangs.com";
+}
+
 + (NSString*)monitorBaseURL
 {
     return baseURLForKey(kAppMonitorBaseURLDomainKey);
 }
 
 + (NSArray *)defaultArticleDetailURLHosts {
-    return @[@"m.quduzixun.com"];
+    return @[@"a3.bytecdn.cn", @"a3.pstatp.com"];
 }
 #pragma mark - Base URLs
 
@@ -599,12 +616,12 @@ static CommonURLSetting *_sharedInstance = nil;
  **/
 + (NSString*)tabCommentURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/article/v1/tab_comments/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/article/v1/tab_comments/", [self baseURL]];
 }
 
 + (NSString *)tabCommentURLStringV2
 {
-    return [NSString stringWithFormat:@"%@/f100/article/v2/tab_comments/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/article/v2/tab_comments/", [self baseURL]];
 }
 /**
  *  Deprecated 4.9开始统一使用tab_comments
@@ -652,7 +669,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)shortVideoCategoryURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/category/get_ugc_video/1/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/category/get_ugc_video/1/", [self baseURL]];
 }
 
 + (NSString*)appRecommendURLString
@@ -683,7 +700,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString *)appSettingsURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/service/settings/v2/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/service/settings/v2/", [self baseURL]];
 }
 
 + (NSString *)reportURLString
@@ -757,7 +774,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)feedbackFetch
 {
-    return [NSString stringWithFormat:@"%@/feedback/2/list/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/feedback/2/list/", [self channelBaseURL]];
 }
 
 + (NSString *)feedbackPostMsg
@@ -824,7 +841,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)commentActionURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/2/data/comment_action/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/2/data/comment_action/", [self baseURL]];
 }
 
 + (NSString*)favoriteActionURLString
@@ -840,12 +857,12 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)postMessageURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/2/data/v4/post_message/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/2/data/v4/post_message/", [self baseURL]];
 }
 
 + (NSString*)userInfoURLString
 {
-    return [NSString stringWithFormat:@"%@/2/user/info/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/passport/user/info/", [self baseURL]];
 }
 
 + (NSString*)loginURLString
@@ -1010,6 +1027,17 @@ static CommonURLSetting *_sharedInstance = nil;
     return [NSString stringWithFormat:@"%@/service/2/app_log/", [self logBaseURL]];
 }
 
++ (NSString*)rtAppLogURLString
+{
+    return @"http://rtlog.snssdk.com/service/2/app_log/";
+}
+
++ (NSString *)trackLogConfigURLString
+{
+    return [NSString stringWithFormat:@"%@/service/2/log_settings/", [self logBaseURL]];
+}
+
+
 + (NSString*)requestNewSessionURLString
 {
     return [NSString stringWithFormat:@"%@/auth/chain_login/", [self SNSBaseURL]];
@@ -1066,7 +1094,7 @@ static CommonURLSetting *_sharedInstance = nil;
 
 + (NSString*)reportUserConfigurationString
 {
-    return [NSString stringWithFormat:@"%@/f100/service/1/collect_settings/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/service/1/collect_settings/", [self baseURL]];
 }
 
 + (NSString*)exceptionURLString
@@ -1296,3 +1324,29 @@ static CommonURLSetting *_sharedInstance = nil;
 
 
 @end
+
+
+NSString * baseUrl(void)
+{
+    return [CommonURLSetting  baseURL];
+}
+
+NSString* SNSBaseURL(void)
+{
+    return [CommonURLSetting SNSBaseURL];
+}
+
+NSString* securityURL(void)
+{
+    return [CommonURLSetting securityURL];
+}
+
+NSArray *baseUrlMapping(void)
+{
+    return [CommonURLSetting urlMapping];
+}
+
+NSString * logBaseURL(void)
+{
+    return [CommonURLSetting logBaseURL];
+}

@@ -319,7 +319,7 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
         _moreCategoriesButton.titleColorThemeKey = kColorText4;
         [_moreCategoriesButton.titleLabel setFont:[UIFont systemFontOfSize:[ArticleCategorySubscribeCell articleCategorySubscribeCellTitleFontSizeWithText:title]]];
         [_moreCategoriesButton addTarget:self action:@selector(moreCategoriesButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.containerView addSubview:_moreCategoriesButton];
+        [self.containerView addSubview:_moreCategoriesButton];
         
         self.dashBorderLayer = [CAShapeLayer layer];
         _dashBorderLayer.fillColor = nil;
@@ -572,7 +572,8 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
     
     NSString *bgColorKey = kColorBackground4;
     
-    self.contentScrollView.backgroundColor = [UIColor tt_themedColorForKey:bgColorKey];
+//    self.contentScrollView.backgroundColor = [UIColor tt_themedColorForKey:bgColorKey];
+    self.contentScrollView.backgroundColor = [UIColor whiteColor];
     _dashBorderLayer.strokeColor = [[UIColor tt_themedColorForKey:kColorLine4] CGColor];
     
     UIColor * color = [UIColor tt_themedColorForKey:bgColorKey];

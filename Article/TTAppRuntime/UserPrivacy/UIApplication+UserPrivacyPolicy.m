@@ -8,11 +8,10 @@
 #import "UIApplication+UserPrivacyPolicy.h"
 #import "SSWebViewController.h"
 #import "AKHelper.h"
+//#import "Bubble-Swift.h"
+#import <FHURLSettings.h>
 
-
-#define TT_USER_AGREEMENT_ADDRESS           @"https://www.toutiao.com/user_agreement/?app=interesting_news&hideAll=1&status_bar_height=60"
-
-#define TT_USER_PRIVACY_PROTECTION_ADDRESS  @"https://i.snssdk.com/score_task/page/aikan/privacy_policy/"
+#define TT_USER_PRIVACY_PROTECTION_ADDRESS  @"https://www.toutiao.com/privacy_protection/"
 
 
 @implementation UIApplication (UserPrivacyPolicy) /** short for `upp` */
@@ -25,8 +24,8 @@
 + (void)openUserAgreementFromViewController:(UINavigationController *)navVC
                                useBarHeight:(BOOL)useBarHeight
 {
-    [self __upp_openWebViewWithUrl:TT_USER_AGREEMENT_ADDRESS
-                             title:NSLocalizedString(@"好多房用户协议", nil)
+    [self __upp_openWebViewWithUrl:[NSString stringWithFormat:@"%@/f100/download/user_agreement.html&hide_more=1",[FHURLSettings baseURL]]
+                             title:NSLocalizedString(@"幸福里用户协议", nil)
                 fromViewController:navVC
                    useNavBarHeight:useBarHeight];
 }
@@ -40,7 +39,7 @@
                                    useBarHeight:(BOOL)useBarHeight
 {
     [self __upp_openWebViewWithUrl:TT_USER_PRIVACY_PROTECTION_ADDRESS
-                             title:NSLocalizedString(@"好多房隐私政策", nil)
+                             title:NSLocalizedString(@"幸福里隐私政策", nil)
                 fromViewController:navVC
                    useNavBarHeight:useBarHeight];
 }

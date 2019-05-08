@@ -183,25 +183,44 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         self.layoutModelDict = [NSMutableDictionary dictionary];
         
         NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
-        [dict setValue:@"enter" forKey:@"label"];
-        [dict setValue:self.viewModel.qID forKey:@"value"];
+//        [dict setValue:@"enter" forKey:@"label"];
+//        [dict setValue:self.viewModel.qID forKey:@"value"];
         [self sendTrackWithDict:dict];
         
         //go detail
         NSMutableDictionary * goDetailDict = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
-        [goDetailDict setValue:@"go_detail" forKey:@"tag"];
-        [goDetailDict setValue:[self enterFrom] forKey:@"label"];
-        [goDetailDict setValue:self.viewModel.qID forKey:@"value"];
-        [goDetailDict setValue:@"umeng" forKey:@"category"];
+//        [goDetailDict setValue:@"go_detail" forKey:@"tag"];
+//        [goDetailDict setValue:[self enterFrom] forKey:@"label"];
+//        [goDetailDict setValue:self.viewModel.qID forKey:@"value"];
+//        [goDetailDict setValue:@"umeng" forKey:@"category"];
 
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTrackerWrapper eventData:goDetailDict];
-        }
+//        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//            [TTTrackerWrapper eventData:goDetailDict];
+//        }
         
+
         //Wenda_V3_DoubleSending
         NSMutableDictionary *v3Dic = [NSMutableDictionary dictionaryWithDictionary:baseCondition];
+        
+        [v3Dic setValue:@"question" forKey:@"page_type"];
+        [v3Dic setValue:@"house_app2c_v2" forKey:@"event_type"];
+        
+        if ([v3Dic[@"parent_enterfrom"] isEqualToString:@""]) {
+            [v3Dic setValue:@"be_null" forKey:@"parent_enterfrom"];
+        }
+        if ([v3Dic[@"from_gid"] isEqualToString:@""]) {
+            [v3Dic setValue:@"be_null" forKey:@"from_gid"];
+        }
+        if ([v3Dic[@"enterfrom_answerid"] isEqualToString:@""]) {
+            [v3Dic setValue:@"be_null" forKey:@"enterfrom_answerid"];
+        }
+        
+        [v3Dic removeObjectForKey:@"origin_source"];
+        [v3Dic removeObjectForKey:@"author_id"];
+        [v3Dic removeObjectForKey:@"article_type"];
+        [v3Dic removeObjectForKey:@"pct"];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
-//        [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
+        [TTTracker eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
 
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontChanged) name:kSettingFontSizeChangedNotification object:nil];
@@ -230,7 +249,6 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     self.isViewAppear = YES;
     [self _willAppear];
     [_answerListView reloadData];
@@ -454,6 +472,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         _answerListView.tableFooterView = nil;
     }
     else {
+        CGFloat bottom = 0;
+        if (@available(iOS 11.0 , *)) {
+            bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+        }
         //是否替换为引导回答界面
         if (_needShowEmptyView) {
             if (!_listFooterView) {
@@ -466,10 +488,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         }
         else if (_needShowFoldView && [self isFoldTipViewDataAvailable]) {
             if (!_listFooterView) {
-                self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight)];
+                self.listFooterView = [[WDWendaListFooterView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, kWDWendaListFooterViewHeight + bottom)];
                 self.listFooterView.viewModel = self.viewModel;
             }
-            self.listFooterView.height = kWDWendaListFooterViewHeight;
+            self.listFooterView.height = kWDWendaListFooterViewHeight + bottom;
             _answerListView.tableFooterView = self.listFooterView;
             WeakSelf;
             [self.listFooterView setTitle:[NSString stringWithFormat:@"%@",self.viewModel.moreListAnswersTitle] isShowArrow:YES isNoAnswers:NO clickedBlock:^{
@@ -560,6 +582,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     } else {
         [dict setValue:self.viewModel.qID forKey:@"group_id"];
     }
+    
+    [dict setValue:[self.viewModel.gdExtJson objectForKey:@"category_name"] forKey:@"category_name"];
+    dict[@"event_type"] = @"house_app2c_v2";
+
     [TTTracker eventV3:@"read_pct" params:[dict copy]];
 }
 
@@ -634,11 +660,12 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
 
 - (BOOL)tt_hasValidateData
 {
-    if (self.error/* && self.error.code == kCFURLErrorNotConnectedToInternet*/) {
-        return NO;
-    } else {
-        return YES;
-    }
+    return NO;
+//    if (self.error && self.error.code == kCFURLErrorNotConnectedToInternet) {
+//        return NO;
+//    } else {
+//        return YES;
+//    }
 }
 
 - (void)refreshData
@@ -696,9 +723,10 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
          clickedWith:(id<TTActivityProtocol>)activity
           sharePanel:(id<TTActivityPanelControllerProtocol>)panelController
 {
+
     NSString *label = [WDShareUtilsHelper labelNameForShareActivity:activity];
     NSMutableDictionary *dict = [self.viewModel.gdExtJson mutableCopy];
-    [dict setValue:self.viewModel.questionEntity.qid forKey:@"source"];
+//    [dict setValue:self.viewModel.questionEntity.qid forKey:@"source"];
     [WDListViewModel trackEvent:kWDWendaListViewControllerUMEventName label:label gdExtJson:[dict copy]];
     
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.viewModel.qID];
@@ -708,6 +736,50 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     [self.actionManager setContext:context];
     DetailActionRequestType requestType = [WDShareUtilsHelper requestTypeForShareActivityType:activity];
     [self.actionManager startItemActionByType:requestType];
+    NSString *media_id = self.viewModel.qID;
+    if (self.viewModel.gdExtJson && [self.viewModel.gdExtJson objectForKey:@"ansid"]) {
+        media_id = [self.viewModel.gdExtJson objectForKey:@"ansid"];
+    }
+//    dict[@"source"] = nil;
+    dict[@"parent_enterfrom"] = nil;
+    dict[@"from_gid"] = nil;
+    dict[@"enterfrom_answerid"] = nil;
+    dict[@"author_id"] = nil;
+    dict[@"article_type"] = nil;
+    dict[@"event_type"] = @"house_app2c_v2";
+    [dict setValue:media_id forKey:@"ansid"];
+    [dict setValue:media_id forKey:@"qid"];
+    [dict setValue:self.viewModel.qID forKey:@"group_id"];
+//    [dict setValue:self.viewModel.questionEntity.qid forKey:@"source"];
+    [dict setValue:@"detail" forKey:@"position"];
+    dict[@"category_name"] = [self.viewModel.gdExtJson objectForKey:@"category_name"];
+//    [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
+    dict[@"enter_from"] = [self enterFrom];
+
+    [dict setValue:[[self class] sharePlatformByRequestType: requestType] forKey:@"share_platform"];
+    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+
+
+}
+
++ (NSString*)sharePlatformByRequestType:(DetailActionRequestType)requestType {
+    switch (requestType) {
+        case DetailActionTypeWeixinShare:
+            return @"weixin_moments";
+            break;
+        case DetailActionTypeWeixinFriendShare:
+            return @"weixin";
+            break;
+        case DetailActionTypeQQShare:
+            return @"qq";
+            break;
+        case DetailActionTypeQQZoneShare:
+            return @"qzone";
+            break;
+        default:
+            return @"be_null";
+    }
+    return @"be_null";
 }
 
 - (void)shareManager:(TTShareManager *)shareManager
@@ -799,7 +871,7 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         stayPageDict[@"tag"] = @"stay_page";
         stayPageDict[@"label"] = [self enterFrom];
         stayPageDict[@"value"] = self.viewModel.qID;
-        stayPageDict[@"ext_value"] = @(duration);
+        stayPageDict[@"ext_value"] = @((NSInteger)duration);
 
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
             [TTTrackerWrapper eventData:stayPageDict];
@@ -807,11 +879,27 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         //Wenda_V3_DoubleSending
         NSMutableDictionary *v3Dic = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
-        [v3Dic setValue:@(duration) forKey:@"stay_time"];
+        [v3Dic setValue:@((NSInteger)duration) forKey:@"stay_time"];
+        
         if ([[v3Dic tt_stringValueForKey:@"enter_from"] isEqualToString:@"click_apn"]) {
             [v3Dic setValue:@"click_news_notify" forKey:@"enter_from"];
         }
-//        [TTTrackerWrapper eventV3:@"stay_page" params:v3Dic isDoubleSending:YES];
+        [v3Dic setValue:@"question" forKey:@"page_type"];
+
+        if ([v3Dic[@"parent_enterfrom"] isEqualToString:@""]) {
+            [v3Dic setValue:@"be_null" forKey:@"parent_enterfrom"];
+        }
+        if ([v3Dic[@"from_gid"] isEqualToString:@""]) {
+            [v3Dic setValue:@"be_null" forKey:@"from_gid"];
+        }
+        if ([v3Dic[@"enterfrom_answerid"] isEqualToString:@""]) {
+            [v3Dic setValue:@"be_null" forKey:@"enterfrom_answerid"];
+        }
+        [v3Dic setValue:@"house_app2c_v2" forKey:@"event_type"];
+        
+        [v3Dic removeObjectForKey:@"author_id"];
+
+        [TTTracker eventV3:@"stay_page" params:v3Dic isDoubleSending:NO];
         
         NSString *groupId = self.viewModel.qID;
         NSString *ansId = [self.viewModel.gdExtJson objectForKey:@"ansid"];
@@ -853,7 +941,14 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
         [moreButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -4)];
     }
     [moreButton addTarget:self action:@selector(moreButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    return moreButton;
+    
+    NSDictionary *dictSetting = [[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"];
+    if ([dictSetting tt_boolValueForKey:@"f_wenda_share_enable"]){
+        return moreButton;
+    }else
+    {
+        return nil;
+    }
 }
 
 - (SSThemedView<WDWendaListQuestionHeaderProtocol> *)questionHeader

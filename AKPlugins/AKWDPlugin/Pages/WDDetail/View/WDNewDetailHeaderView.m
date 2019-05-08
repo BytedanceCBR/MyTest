@@ -185,11 +185,11 @@ static CGFloat WDDetailTitleLabelTopMargin = 12.0f;
     }
     NSString *answerCountText = [NSString stringWithFormat:@"查看%@个回答", answerCount];
     NSDictionary *attributeText = @{NSFontAttributeName : [UIFont systemFontOfSize:13],
-                                    NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5]};
+                                    NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3]};
     NSMutableAttributedString *titleStr = [[NSMutableAttributedString alloc] initWithString:answerCountText attributes:attributeText];
     
     NSDictionary *attributesLogo = @{NSFontAttributeName : [UIFont fontWithName:wd_iconfont size:13],
-                                     NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5]};
+                                     NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3]};
     NSMutableAttributedString *iconStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", ask_arrow_right] attributes:attributesLogo];
     
     [titleStr appendAttributedString:iconStr];

@@ -9,7 +9,7 @@
 #import "YYDispatchQueuePool.h"
 #import "FLAnimatedImageView+WebCache.h"
 #import "UIView+WebCache.h"
-#import "SDWebImageDecoder.h"
+#import "UIImage+ForceDecode.h"
 #import "NSData+ImageContentType.h"
 #import "UIImageView+WebCache.h"
 #import "TTFeedCollectionViewController.h"
@@ -47,13 +47,13 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
 {
     Method originalMethod = class_getInstanceMethod(class, originalSelector);
     Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
-    
+
     BOOL didAddMethod =
     class_addMethod(class,
                     originalSelector,
                     method_getImplementation(swizzledMethod),
                     method_getTypeEncoding(swizzledMethod));
-    
+
     if (didAddMethod) {
         class_replaceMethod(class,
                             swizzledSelector,
@@ -67,13 +67,13 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
 
 // 等比缩放
 + (void)cropEqualScaleImage:(UIImage *)image toSize:(CGSize)size completeBlock:(void(^)(UIImage *targetImage))completeBlock {
-    
+
     dispatch_async(YYDispatchQueueGetForQOS(NSQualityOfServiceDefault), ^{
         CGFloat scale =  [UIScreen mainScreen].scale;
-        
+
         //指定sclae,指定不透明，不发生图层混合
         UIGraphicsBeginImageContextWithOptions(size, YES, scale);
-        
+
         //是否固定宽
         BOOL isFixedWidth = NO;
         if (image.size.width != 0 && image.size.height != 0) {
@@ -85,7 +85,7 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
         }
         float targetWidth;
         float targetHeight;
-        
+
         if (isFixedWidth) {
             targetWidth = size.width;
             targetHeight = targetWidth * image.size.height/image.size.width;
@@ -93,16 +93,16 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
             targetHeight = size.height;
             targetWidth = targetHeight * image.size.width/image.size.height;
         }
-        
+
         float x = isFixedWidth? 0 : (size.width - targetWidth)/2.0;
         float y = isFixedWidth? (size.height - targetHeight)/2.0 : 0;
-        
+
         [image drawInRect:CGRectMake(x, y, targetWidth,targetHeight)];
         UIImage *targetImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        
+
         UIImage *decodeImg = [UIImage decodedImageWithImage:targetImage];
-        
+
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completeBlock) {
                 completeBlock(decodeImg);
@@ -138,7 +138,7 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
                            progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
                           completed:(nullable SDExternalCompletionBlock)completedBlock {
     __weak typeof(self)weakSelf = self;
-    
+
     if ([self isNeedOptimizeImageSize]) {
         options |= SDWebImageCacheMemoryOnly;
         [self sd_internalSetImageWithURL:url
@@ -152,24 +152,24 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
                                    weakSelf.image = nil;
                                } else {
                                    if (image) {
-                                       
+
                                        if (image.size.width == weakSelf.frame.size.width || image.size.height == weakSelf.frame.size.height) {
                                            weakSelf.image = image;
-                                           
+
                                        }else{
                                            [FeedOptimizeImageSizeHelper cropEqualScaleImage:image toSize:weakSelf.frame.size completeBlock:^(UIImage *targetImage) {
                                                [[SDWebImageManager sharedManager].imageCache storeImage:targetImage forKey:[[SDWebImageManager sharedManager] cacheKeyForURL:url] toDisk:YES completion:nil];
-                                               
+
                                                weakSelf.image = targetImage;
-                                               
+
                                            }];
                                        }
-                                       
+
                                    }else{
                                        weakSelf.image = image;
                                    }
                                    weakSelf.animatedImage = nil;
-                                   
+
                                }
                            }
                                 progress:progressBlock
@@ -191,9 +191,9 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
                            }
                                 progress:progressBlock
                                completed:completedBlock];
-        
+
     }
- 
+
 }
 
 @end
@@ -221,7 +221,7 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
                            progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
                           completed:(nullable SDExternalCompletionBlock)completedBlock {
     __weak typeof(self)weakSelf = self;
-    
+
     if ([self isNeedOptimizeImageSize]) {
         options |= SDWebImageCacheMemoryOnly;
         options |= SDWebImageAvoidAutoSetImage;
@@ -232,7 +232,7 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
                            setImageBlock:nil
                                 progress:progressBlock
                                completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-                                   
+
                                    if (image) {
                                        if (image.size.width == weakSelf.frame.size.width || image.size.height == weakSelf.frame.size.height) {
                                            self.image = image;
@@ -247,7 +247,7 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
                                                    completedBlock(targetImage,error,cacheType,imageURL);
                                                }
                                            }];
-                                           
+
                                        }
                                    }else{
                                        self.image = nil;
@@ -264,10 +264,10 @@ static void MethodSwizzleForClass(Class class, SEL originalSelector, SEL swizzle
                            setImageBlock:nil
                                 progress:progressBlock
                                completed:completedBlock];
-        
+
     }
-    
-   
+
+
 }
 
 @end

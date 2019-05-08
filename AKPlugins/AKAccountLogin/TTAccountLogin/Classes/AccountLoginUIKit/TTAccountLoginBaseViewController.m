@@ -233,11 +233,11 @@ TTAccountMulticastProtocol
 
 - (void)refreshRegisterButton
 {
-//    if (self.registerButtonEnabled) {
-//        self.registerButton.alpha = 1.f;
-//    } else {
-//        self.registerButton.alpha = 0.5f;
-//    }
+    if (self.registerButtonEnabled) {
+        [self.registerButton setBackgroundColor:[UIColor colorWithHexString:@"FF0031"]];
+    } else {
+        [self.registerButton setBackgroundColor:[UIColor colorWithHexString:@"FF8098"]];
+    }
 }
 
 - (void)fitResendView
@@ -641,8 +641,7 @@ TTAccountMulticastProtocol
 
 - (BOOL)registerButtonEnabled
 {
-    _registerButtonEnabled = [self isContentValid];
-    return _registerButtonEnabled;
+    return [self isContentValid];
 }
 
 - (void)navigationBarTap:(UIGestureRecognizer *)gesture

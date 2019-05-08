@@ -12,9 +12,9 @@
 
 @protocol TTHorizontalHuoShanCollectionCellProtocol<NSObject>
 
-+ (CGFloat)heightForHuoShanVideoWithCellWidth:(CGFloat)width inScrollCard:(BOOL)inScrollCard originalCardItemsHasTitle:(BOOL)hasTitle cellStyle:(TTHorizontalCardStyle)style;
++ (CGFloat)heightForHuoShanVideoWithCellWidth:(CGFloat)width;
 
-- (void)setupDataSourceWithData:(ExploreOrderedData *)orderedData inScrollCard:(BOOL)inScrollCard;
+- (void)setupDataSourceWithData:(ExploreOrderedData *)orderedData;
 
 - (CGRect)coverImageViewFrame;
 

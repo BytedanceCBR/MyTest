@@ -8,7 +8,7 @@
 
 #import "TTLocationManager.h"
 #import "TTNetworkManager.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "SSCommonLogic.h"
 #import "TTThemedAlertController.h"
 
@@ -145,6 +145,8 @@ NSString *const TTLocationProvinceCacheKey = @"TTLocationProvinceCacheKey";
 
 @property(nonatomic, strong) NSMutableDictionary   *geocoders;
 @property(nonatomic, strong) TTLocationFeedback  *feedback;
+@property(nonatomic, strong) NSDictionary  *locationDictInfo;
+
 @property(nonatomic, strong) TTLocationCommandItem  *commandItem;
 @property(nonatomic, strong) TTLocationCommandItem  *preCommandItem;//先前cmd不等于0,op_type = 0的时候的commandItem,当前要显示alert,但是没有显示,保存下来,等待用户进入主页面的时候显示.
 @property(nonatomic, weak) NSObject  *alertController;
@@ -208,6 +210,17 @@ static TTLocationManager *_sharedManager;
     }
     return self;
 }
+
+- (void)setUpAmapInfo:(NSDictionary *)locationDict
+{
+    self.locationDictInfo = locationDict;
+}
+
+- (NSDictionary *)getAmapInfo
+{
+    return _locationDictInfo;
+}
+
 
 - (void)settingFeedbackFromUserDefault
 {
@@ -795,10 +808,10 @@ static TTLocationManager *_sharedManager;
 
 - (void)permissionDenied
 {
-    self.alertController = [[TTAuthorizeManager sharedManager].locationObj showAlertWhenLocationChanged:NULL authCompleteBlock:^(TTAuthorizeLocationArrayParamBlock arrayParamBlock) {
-        //连续弹窗
-        [[TTLocationManager sharedManager] regeocodeWithCompletionHandlerAfterAuthorization:arrayParamBlock];
-    } sysAuthFlag:0];
+//    self.alertController = [[TTAuthorizeManager sharedManager].locationObj showAlertWhenLocationChanged:NULL authCompleteBlock:^(TTAuthorizeLocationArrayParamBlock arrayParamBlock) {
+//        //连续弹窗
+//        [[TTLocationManager sharedManager] regeocodeWithCompletionHandlerAfterAuthorization:arrayParamBlock];
+//    } sysAuthFlag:0];
 }
 
 - (void)changeCityWithAlertConfirm:(TTLocationCommandItem *)commandItem
@@ -863,6 +876,11 @@ static TTLocationManager *_sharedManager;
 #endif
     }
     return needAlert;
+}
+
+- (NSNumber *)getLocationResult
+{
+    return @(self.placemarkItem.coordinate.longitude != 0);
 }
 
 - (void)processLocationCommand:(TTLocationCommandItem *)commandItem {

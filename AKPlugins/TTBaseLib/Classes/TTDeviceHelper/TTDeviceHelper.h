@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
 //分屏情况
 typedef NS_ENUM(NSUInteger, TTSplitScreenMode) {
@@ -20,6 +21,8 @@ typedef NS_ENUM(NSUInteger, TTSplitScreenMode) {
 typedef NS_ENUM(NSUInteger, TTDeviceMode) {
     //iPad
     TTDeviceModePad,
+    //iPhone XR XS Max
+    TTDeviceMode896,
     //iPhone X
     TTDeviceMode812,
     //iPhone6plus,iPhone6Splus
@@ -76,6 +79,13 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
  *  @return Yes or No
  */
 + (BOOL)isScreenWidthLarge320;
+
+/**
+ *  对375屏幕的比例
+ *
+ *  @return Yes or No
+ */
++ (CGFloat)scaleToScreen375;
 
 /**
  *  判断设备是iPhone X
@@ -185,5 +195,9 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
 
 //获取可用空间大小，单位Byte
 + (long long)getFreeDiskSpace;
+
++ (Boolean)is812Screen;
++ (Boolean)is896Screen2X;
++ (Boolean)is896Screen3X;
 
 @end

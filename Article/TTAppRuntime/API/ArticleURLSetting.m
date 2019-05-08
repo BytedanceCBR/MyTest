@@ -8,6 +8,8 @@
 
 #import "ArticleURLSetting.h"
 #import "SSCommonLogic.h"
+//#import "Bubble-Swift.h"
+#import <FHURLSettings.h>
 
 @implementation ArticleURLSetting
 
@@ -83,7 +85,7 @@
 
 + (NSString*)getFavoritesURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/2/data/v%@/favorites/", [self SNSBaseURL], [self streamAPIVersionString]];
+    return [NSString stringWithFormat:@"%@/2/data/v%@/favorites/", [self SNSBaseURL], [self streamAPIVersionString]];
 }
 
 + (NSString*)getHistoryURLString {
@@ -128,7 +130,7 @@
 //https://wiki.bytedance.net/pages/viewpage.action?title=information%20API&spaceKey=TTRD
 + (NSString *)newArticleInfoString
 {
-    return [NSString stringWithFormat:@"%@/f100/2/article/information/v23/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/2/article/information/v23/", [self baseURL]];
 }
 
 
@@ -187,12 +189,12 @@
 
 + (NSString*)momentDetailURLString
 {
-    return [NSString stringWithFormat:@"%@/f100/dongtai/detail/v7/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/dongtai/detail/v7/", [self baseURL]];
 }
 
 + (NSString*)momentDetailURLStringV8
 {
-    return [NSString stringWithFormat:@"%@/f100/dongtai/detail/v8/", [self baseURL]];
+    return [NSString stringWithFormat:@"%@/dongtai/detail/v8/", [self baseURL]];
 }
 
 + (NSString*)commentDetailURLString
@@ -347,7 +349,15 @@
 
 + (NSString*)userProtocolURLString
 {
-    return @"https://m.quduzixun.com/f100/download/user_agreement.html";
+    return [NSString stringWithFormat:@"%@/f100/download/user_agreement.html&title=幸福里用户协议",[FHURLSettings baseURL]];
+}
+
++ (NSString*)userPrivateProtocolURLString {
+    return [NSString stringWithFormat:@"%@/f100/download/private_policy.html&title=隐私协议",[FHURLSettings baseURL]];
+}
+
++ (NSString*)protectedProtocolURLString {
+    return [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明",[FHURLSettings baseURL]];
 }
 
 #pragma mark -- 删除
@@ -451,7 +461,7 @@
 
 + (NSString *)toutiaoVideoAPIURL
 {
-    NSString *string = [NSString stringWithFormat:@"%@/f100/video/play/%@", [self baseURL], [self toutiaoVideoAPIVersion]];
+    NSString *string = [NSString stringWithFormat:@"%@/video/play/%@", [self baseURL], [self toutiaoVideoAPIVersion]];
     string = [self mappedUrl:string];
     return string;
 }
@@ -575,3 +585,4 @@
 }
 
 @end
+

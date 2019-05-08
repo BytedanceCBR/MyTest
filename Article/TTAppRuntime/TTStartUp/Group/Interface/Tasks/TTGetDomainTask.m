@@ -7,7 +7,7 @@
 //
 
 #import "TTGetDomainTask.h"
-#import "TTRouteSelectionServerConfig.h" //add by songlu
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>//add by songlu
 
 @implementation TTGetDomainTask
 
@@ -27,7 +27,7 @@
             if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
                 if (!isChromiumEnabled) {
                     LOGD(@"Chromium is not Enabled and do refactorRequestURLDomains");
-                    [[CommonURLSetting sharedInstance] refactorRequestURLDomains];
+                    [[CommonURLSetting sharedInstance] requestURLDomains];//refactorRequestURLDomains];
                 } else {
                     LOGD(@"Chromium is Enabled and not do refactorRequestURLDomains");
                 }

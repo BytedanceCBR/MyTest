@@ -11,7 +11,7 @@
 
 #define kShareChannelFrom @"tt_from" //分享到社交网络的关键字
 #define kUTMSource @"utm_source"
-#define kUTMOther @"utm_medium=toutiao_ios&utm_campaign=client_share"
+#define kUTMOther @"utm_medium=f100_ios&utm_campaign=client_share"
 
 #define kShareChannelFromMail [NSString stringWithFormat:@"%@=email&%@=email&%@", kShareChannelFrom, kUTMSource, kUTMOther]
 #define kShareChannelFromQQ [NSString stringWithFormat:@"%@=mobile_qq&%@=mobile_qq&%@", kShareChannelFrom, kUTMSource, kUTMOther]

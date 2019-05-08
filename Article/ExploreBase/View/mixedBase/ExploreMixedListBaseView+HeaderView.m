@@ -59,14 +59,15 @@
 
 - (BOOL)needShowSubEntranceBar
 {
-    
-    //TODO: f100 与android确定这里是否可以通过配置控制
+    // add by zjing 去掉bar以fix contentOffset
+    return NO;
+
 //    NSArray *array = [TTSubEntranceManager subEntranceObjArrayForCategory:self.categoryID concernID:self.concernID];
 //    if (array.count > 0 && [TTSubEntranceManager subEntranceTypeForCategory:self.categoryID] == SubEntranceTypeHead && ![self.categoryID isEqualToString:@"__all__"]) {
 //        return YES;
 //    }
-    
-    return NO;
+//    
+//    return NO;
 }
 
 - (BOOL)needShowPGCBar
@@ -107,13 +108,13 @@
         self.listView.tableHeaderView = self.citySelectView;
     }
     else if ([self needShowSubEntranceBar]) {
-        [self refreshSubEntranceBar];
-        if (!self.window || !showSearchBar) {
-            /// 如果还没有加到父view上，就设置下offset
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.listView.contentOffset = CGPointMake(0, self.subEntranceBar.height - self.listView.contentInset.top);
-            });
-        }
+//        [self refreshSubEntranceBar];
+//        if (!self.window || !showSearchBar) {
+//            /// 如果还没有加到父view上，就设置下offset
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                self.listView.contentOffset = CGPointMake(0, self.subEntranceBar.height - self.listView.contentInset.top);
+//            });
+//        }
     }
     else {
         if (self.listView.tableHeaderView != nil) {
@@ -132,7 +133,9 @@
     [self.subEntranceBar refreshWithData:subEntranceObjArray];
     
     if (subEntranceObjArray.count > 0 && [TTSubEntranceManager subEntranceTypeForCategory:self.categoryID] == SubEntranceTypeHead && ![self.categoryID isEqualToString:@"__all__"]) {
-        self.listView.tableHeaderView = self.subEntranceBar;
+//        self.listView.tableHeaderView = self.subEntranceBar;
+        self.listView.tableHeaderView = nil;
+        self.listView.estimatedSectionHeaderHeight = 0;
     } else {
         if (nil != self.customListHeader) {
             self.listView.tableFooterView = self.customListHeader;

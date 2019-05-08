@@ -81,12 +81,13 @@
                                                                             lineBreakMode:NSLineBreakByTruncatingTail];
     self.userNameRange = NSMakeRange(0, replyModel.replyUserName.length);
     self.verifyIconRange = NSMakeRange(NSNotFound, 0);
-    if ([TTVerifyIconHelper isVerifiedOfVerifyInfo:replyModel.userAuthInfo]) {
-        TTVerifyIconTextAttachment *textAttachment = [TTVerifyIconTextAttachment textAttachmentWithVerifyInfo:replyModel.userAuthInfo bounds:CGRectMake(0, 0, 0, [self.class tt_vSize])];
-        NSAttributedString *verifyAttrString = [NSAttributedString attributedStringWithAttachment:textAttachment];
-        self.verifyIconRange = NSMakeRange(attrString.length, verifyAttrString.length);
-        [attrString appendAttributedString:verifyAttrString];
-    }
+    //去认证V
+//    if ([TTVerifyIconHelper isVerifiedOfVerifyInfo:replyModel.userAuthInfo]) {
+//        TTVerifyIconTextAttachment *textAttachment = [TTVerifyIconTextAttachment textAttachmentWithVerifyInfo:replyModel.userAuthInfo bounds:CGRectMake(0, 0, 0, [self.class tt_vSize])];
+//        NSAttributedString *verifyAttrString = [NSAttributedString attributedStringWithAttachment:textAttachment];
+//        self.verifyIconRange = NSMakeRange(attrString.length, verifyAttrString.length);
+//        [attrString appendAttributedString:verifyAttrString];
+//    }
 
     NSUInteger userRoleIndex = attrString.length;
 
@@ -162,7 +163,7 @@
         NSString *replyContent = [NSString stringWithFormat:@": %@", _replyModel.replyContent];
         NSAttributedString *replyAttrString = [TTUGCEmojiParser parseInTextKitContext:replyContent fontSize:[self.class tt_fontSize]];
         replyRange = [content rangeOfString:replyAttrString.string];
-        [mAttributedText addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(kColorText1) range:replyRange];
+        [mAttributedText addAttribute:NSForegroundColorAttributeName value:SSGetThemedColorWithKey(kFHColorCharcoalGrey) range:replyRange];
     }
     if ([TTVerifyIconHelper isVerifiedOfVerifyInfo:_replyModel.userAuthInfo]) {
         if (self.verifyIconRange.location != NSNotFound) {
@@ -187,8 +188,8 @@
         }
     }
 
-    NSDictionary *inactiveLinkAttributes = @{NSForegroundColorAttributeName:self.replyModel.notReplyMsg ? SSGetThemedColorWithKey(kColorText5) : [UIColor colorWithHexString:@"8D8D8D"] };
-    NSDictionary *activeLinkAttributes = @{NSForegroundColorAttributeName:SSGetThemedColorWithKey(kColorText5Highlighted)};
+    NSDictionary *inactiveLinkAttributes = @{NSForegroundColorAttributeName:self.replyModel.notReplyMsg ? SSGetThemedColorWithKey(kFHColorRed3) : SSGetThemedColorWithKey(kFHColorCoolGrey3) };
+    NSDictionary *activeLinkAttributes = @{NSForegroundColorAttributeName:SSGetThemedColorWithKey(kFHColorRed3)};
     _replyLabel.labelInactiveLinkAttributes = inactiveLinkAttributes;
     _replyLabel.labelActiveLinkAttributes = activeLinkAttributes;
     _replyLabel.attributedText = mAttributedText;

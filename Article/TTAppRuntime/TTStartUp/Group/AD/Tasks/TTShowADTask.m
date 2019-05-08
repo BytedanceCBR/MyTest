@@ -14,6 +14,8 @@
 #import "TTAdManagerProtocol.h"
 #import "TTAdManager.h"
 #import "TTAdSplashMediator.h"
+#import "FHUtils.h"
+#import "FHEnvContext.h"
 
 @implementation TTShowADTask
 
@@ -57,8 +59,11 @@
 //    LOGD(@"ingore....");
 //    [adManagerInstance setSplashADShowType:SSSplashADShowTypeIgnore];
     
-    [[TTAdSplashMediator  shareInstance] displaySplashOnWindow:SharedAppDelegate.window splashShowType:[TTAdSplashMediator shareInstance].splashADShowType];
     
+    BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
+    if (hasSelectedCity) {
+        [[TTAdSplashMediator  shareInstance] displaySplashOnWindow:SharedAppDelegate.window splashShowType:[TTAdSplashMediator shareInstance].splashADShowType];
+    }
 }
 
 + (BOOL)isFromAPNSWithOptions:(NSDictionary *)launchOptions {

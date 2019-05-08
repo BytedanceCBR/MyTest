@@ -284,15 +284,15 @@ TTAccountMulticastProtocol
 - (TTSectionType)sectionTypeAtIndex:(NSUInteger)index
 {
     TTSectionType sectionType = kTTSectionTypeNone;
-    if ([self isMe]) { // 访问他人不显示聚合信息
-        if (index == 0) {
-            sectionType = kTTSectionTypeMergeData;
-        } else if (index == 1) {
-            sectionType = kTTSectionTypeFollowingUser;
-        }
-    } else {
+//    if ([self isMe]) { // 访问他人不显示聚合信息
+//        if (index == 0) {
+//            sectionType = kTTSectionTypeMergeData;
+//        } else if (index == 1) {
+//            sectionType = kTTSectionTypeFollowingUser;
+//        }
+//    } else {
         sectionType = kTTSectionTypeFollowingUser;
-    }
+//    }
     return sectionType;
 }
 
@@ -334,11 +334,12 @@ TTAccountMulticastProtocol
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    if ([self isMe]) {
-        return 1 + ([_followingModels count] > 0 ? 1 : 0);
-    } else {
-        return [_followingModels count] > 0 ? 1 : 0;
-    }
+//    if ([self isMe]) {
+//        return 1 + ([_followingModels count] > 0 ? 1 : 0);
+//    } else {
+//        return [_followingModels count] > 0 ? 1 : 0;
+//    }
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -385,19 +386,19 @@ TTAccountMulticastProtocol
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     CGFloat height = 0.f;
-    switch ([self sectionTypeAtIndex:section]) {
-        case kTTSectionTypeMergeData: {
-            break;
-        }
-        case kTTSectionTypeFollowingUser: {
-            if ([self.followingMergeModels count] > 0 && [self.followingModels count] > 0) {
-                height = [TTDeviceUIUtils tt_padding:kTTProfileSpacingOfSection];
-            }
-            break;
-        }
-        default:
-            break;
-    }
+//    switch ([self sectionTypeAtIndex:section]) {
+//        case kTTSectionTypeMergeData: {
+//            break;
+//        }
+//        case kTTSectionTypeFollowingUser: {
+//            if ([self.followingMergeModels count] > 0 && [self.followingModels count] > 0) {
+//                height = [TTDeviceUIUtils tt_padding:kTTProfileSpacingOfSection];
+//            }
+//            break;
+//        }
+//        default:
+//            break;
+//    }
     return height;
 }
 

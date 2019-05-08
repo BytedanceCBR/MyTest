@@ -344,7 +344,7 @@
 #pragma mark - Layout
 
 + (CGFloat)lightAnswerAbstractContentFontSize {
-    CGFloat fontSize = [TTDeviceHelper isScreenWidthLarge320] ? 17.f : 15.f;
+    CGFloat fontSize = [TTDeviceHelper isScreenWidthLarge320] ? 16.f : 15.f;
     return [WDUIHelper wdUserSettingFontSizeWithFontSize:fontSize];
 }
 

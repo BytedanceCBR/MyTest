@@ -25,8 +25,7 @@
 #import "TTStringHelper.h"
 #import "TTNetworkManager.h"
 #import "Singleton.h"
-
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTTabBarProvider.h"
 #import "TTArticleTabBarController.h"
 #import "UITabBarController+TabbarConfig.h"
@@ -40,7 +39,7 @@ NSString *kTTTabBarZipDownloadSuccess = @"kTTTabBarZipDownloadSuccess";
 NSString *kTTTabHomeTabKey = @"tab_stream"; //首页tab 标题key&图片名
 NSString *kTTTabVideoTabKey = @"tab_video"; //视频tab 标题key&图片
 NSString *kTTTabFollowTabKey = @"tab_topic"; //关注tab 标题key&图片
-NSString *kTTTabMineTabKey = @"tab_mine"; //我的tab 图片&标题key
+NSString *kTTTabMineTabKey = @"tab_mine1"; //我的tab 图片&标题key
 NSString *kTTTabWeitoutiaoTabKey = @"tab_weitoutiao"; //微头条tab 图片&标题key
 NSString *kTTTabHTSTabKey = @"tab_huoshan";//火山小视频tab 标题&图片名
 NSString *kTTTabActivityTabKey = @"tab_activity"; //常驻运营活动tab 标题&图片名
@@ -48,9 +47,9 @@ NSString *kTTTabUnloginName = @"ak_mine_unlogin_tab"; //我的tab未登录图片
 NSString *kTTTabFeedPublishName = @"feed_publish"; //feed发布器图片
 NSString *kTTTabBigActivityTabKey = @"tab_redpackage_big"; //春节运营活动大tab 标题&图片名
 NSString *kAKTabActivityTabKey = @"tab_ak_activity";//爱看活动tab 标题key&图片名
-NSString *kFHouseHomeTabKey = @"tab_f_house";//房产首页ke y
-NSString *kFHouseMessageTabKey = @"tab_f_message";
-NSString *kFHouseMineTabKey = @"tab_f_mine"; //房产首页key
+NSString *kFHouseFindTabKey = @"tab_f_find";//房产找房key
+NSString *kFHouseMessageTabKey = @"tab_message";
+NSString *kFHouseMineTabKey = @"tab_mine"; //房产首页key
 //Path
 static NSString *kTTTabConfigurationPath = @"tabbar/configuration"; //tab配置信息存储路径
 static NSString *kTTTabImagesPath = @"tabbar/images"; //tab图片资源路径
@@ -161,42 +160,42 @@ SINGLETON_GCD(TTTabBarManager);
     
     _allTabKey = [NSSet setWithObjects:
                   kTTTabHomeTabKey,
-                  kTTTabVideoTabKey,
-                  kTTTabFollowTabKey,
-                  kTTTabMineTabKey,
-                  kTTTabWeitoutiaoTabKey,
-                  kTTTabHTSTabKey,
-                  kTTTabBigActivityTabKey,
-                  kAKTabActivityTabKey,
-                  kFHouseHomeTabKey,
-                  kFHouseMessageTabKey,
+//                  kTTTabVideoTabKey,
+//                  kTTTabFollowTabKey,
+//                  kTTTabMineTabKey,
+//                  kTTTabWeitoutiaoTabKey,
+//                  kTTTabHTSTabKey,
+//                  kTTTabBigActivityTabKey,
+//                  kAKTabActivityTabKey,
                   kFHouseMineTabKey,
+                  kFHouseMessageTabKey,
+                  kFHouseFindTabKey,
                   nil];
-    _defaultItemTitles = @{kTTTabHomeTabKey:@"发现",
+    _defaultItemTitles = @{kTTTabHomeTabKey:@"首页",
                            kTTTabVideoTabKey:@"视频",
-                           kAKTabActivityTabKey:@"任务",
+//                           kAKTabActivityTabKey:@"任务",
                            kTTTabHTSTabKey:@"小视频",
-                           kTTTabFollowTabKey:@"关注",
-                           kTTTabMineTabKey:@"我的",
-                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kKCUGCFeedNamesTab],
-                           kFHouseHomeTabKey: @"首页",
+//                           kTTTabFollowTabKey:@"关注",
                            kFHouseMessageTabKey: @"消息",
-                           kFHouseMineTabKey: @"我的"
-                           };
+                           kFHouseMineTabKey:@"我的",
+                           kFHouseFindTabKey:@"找房",
 
-    _defaultImageNames = @{kTTTabHomeTabKey:@"tab-find",
-                           kTTTabVideoTabKey:@"ak_video_tab",
-                           kTTTabFollowTabKey:@"newcare_tabbar",
-                           kTTTabMineTabKey:@"ak_mine_login_tab",
-                           kTTTabWeitoutiaoTabKey:@"weitoutiao_tabbar",
-                           kAKTabActivityTabKey:@"ak_activity_tab",
-                           kTTTabHTSTabKey:@"ak_small_video_tab",
-                           kFHouseHomeTabKey: @"tab-home",
+//                           kTTTabWeitoutiaoTabKey:[KitchenMgr getString:kKCUGCFeedNamesTab],
+                           };
+    
+    _defaultImageNames = @{kTTTabHomeTabKey:@"tab-home",
+//                           kTTTabVideoTabKey:@"video_tabbar",
+//                           kTTTabFollowTabKey:@"newcare_tabbar",
+//                           kTTTabMineTabKey:@"mine_tabbar",
+//                           kTTTabWeitoutiaoTabKey:@"weitoutiao_tabbar",
+//                           kAKTabActivityTabKey:@"ak_activity_tab",
                            kFHouseMessageTabKey: @"tab-message",
-                           kFHouseMineTabKey: @"tab-mine"
+                           kFHouseMineTabKey: @"tab-mine",
+                           kFHouseFindTabKey: @"tab-search",
+
+//                           kTTTabHTSTabKey:@"huoshan_tabbar",
                            };
-
-
+    
     _isUnloginImageInvalid = NO;
     _isRefreshImageInvalid = NO;
     _isBackgroundImageInvalid = NO;
@@ -316,7 +315,8 @@ SINGLETON_GCD(TTTabBarManager);
             }
         } else {
             item.normalTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleColor"];
-            item.highlightedTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleHighlightedColor"];
+            item.highlightedTitleColor = [UIColor colorWithHexString:@"#ff5869"];
+//            item.highlightedTitleColor = [UIColor tt_themedColorForKey:@"TabBarTitleHighlightedColor"];
             item.ttBadgeView.backgroundColorThemeKey = kColorBackground7;
         }
         
@@ -490,7 +490,7 @@ SINGLETON_GCD(TTTabBarManager);
         
         if ([obj isEqualToString:kTTTabWeitoutiaoTabKey]) {
             //微头条的底tab标题由微头条文案下发逻辑控制
-            title = [KitchenMgr getString:kKCUGCFeedNamesTab];
+            title = [TTKitchen getString:kKCUGCFeedNamesTab];
         }
         [mutableTabTitles setValue:title forKey:obj];
     }];
@@ -680,14 +680,14 @@ SINGLETON_GCD(TTTabBarManager);
     }
     NSString *title = [self.itemTitles tt_stringValueForKey:item.identifier];
     
-    if ([item.identifier isEqualToString:kTTTabMineTabKey] && ![TTAccountManager isLogin] && [TTTabBarProvider isMineTabOnTabBar]) {
-        if (self.tabConfigValid.boolValue && [self isUnloginTextValid]) {
-            title = [self unLoginText];
-        } else {
-            title = NSLocalizedString(@"未登录", nil);
-        }
-    }
-    
+//    if ([item.identifier isEqualToString:kTTTabMineTabKey] && ![TTAccountManager isLogin] && [TTTabBarProvider isMineTabOnTabBar]) {
+//        if (self.tabConfigValid.boolValue && [self isUnloginTextValid]) {
+//            title = [self unLoginText];
+//        } else {
+//            title = NSLocalizedString(@"未登录", nil);
+//        }
+//    }
+
     if (!item.isRegular) {
         NSString *normalImageName = self.middleModel.originalIdentifier;
         NSString *bigImageName = [normalImageName stringByAppendingString:@"_big"];
@@ -917,7 +917,9 @@ SINGLETON_GCD(TTTabBarManager);
 }
 
 - (UIColor *)customHighlightedColor {
-    return [UIColor colorWithDayColorName:[self.customTextColorArray objectAtIndex:2] nightColorName:[self.customTextColorArray objectAtIndex:3]];
+    //f100 暂时去掉云控设置颜色
+    return [UIColor colorWithHexString:@"#ff5869"];
+//    return [UIColor colorWithDayColorName:[self.customTextColorArray objectAtIndex:2] nightColorName:[self.customTextColorArray objectAtIndex:3]];
 }
 
 - (SSThemedButton *)customMiddleButton {

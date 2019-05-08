@@ -42,8 +42,8 @@
 #import "SettingNormalCell.h"
 #import "SettingSwitch.h"
 
-#import "TTABHelper.h"
-#import "revision.h"
+#import <TTABManager/TTABHelper.h>
+//#import "revision.h"
 
 #import "TTAuthorizeHintView.h"
 #import "TTDeviceHelper.h"
@@ -84,8 +84,9 @@
 #import "TTTabBarProvider.h"
 #import "TTSettingMineTabManager.h"
 #import "TTTabBarProvider.h"
-#import <BDAccount/BDAccountSDK.h>
-#import "Bubble-Swift.h"
+#import "TTURLUtils.h"
+#import <FHHouseBase/FHEnvContext.h>
+
 //爱看
 #import "AKTaskSettingHelper.h"
 
@@ -116,8 +117,8 @@ typedef NS_ENUM(NSUInteger, TTSettingSectionType) {
     kTTSettingSectionTypeTTCover,      // 头条封面、当前版本、使用帮助
     kTTSettingSectionTypeLogout,       // 退出登录
     //    kTTSettingSectionTypeUmengDebug,   // 友盟Debug
-    kTTSettingSectionTypeAbout,        //关于我们
-    
+    kTTSettingSectionTypeAbout,
+    kTTSettingSectionTypeLogoutUnRegister
 };
 
 typedef NS_ENUM(NSUInteger, TTSettingCellType) {
@@ -145,7 +146,12 @@ typedef NS_ENUM(NSUInteger, TTSettingCellType) {
     SettingCellTypeBlockUsersList,          // 黑名单
     
     SettingCellTypeLogout,                  // 退出登录
+    
     SettingCellTypeAbout,                   // 关于我们
+    SettingCellTypeUserProtocol,            // 用户协议
+    SettingCellTypePrivacyProtocol,         // 隐私协议
+    SettingCellTypeLogoutUnRegister         // 注销登录
+
 };
 typedef TTSettingCellType SettingCellType;
 
@@ -158,6 +164,7 @@ typedef NS_ENUM(NSUInteger, ArticleSettingViewCacheStatus) {
 };
 
 static NSString *const TTVideoTrafficTipSettingKey = @"TTVideoTrafficTipSettingKey";
+extern NSString *const kFHPLoginhoneNumberCacheKey;
 
 #pragma mark - SettingView
 
@@ -166,7 +173,6 @@ static NSString *const TTVideoTrafficTipSettingKey = @"TTVideoTrafficTipSettingK
 UITableViewDelegate,
 UITableViewDataSource,
 UIActionSheetDelegate,
-BDAccountEventListener,
 TTEditUserProfileViewControllerDelegate
 > {
     CGFloat     _fileSize;
@@ -192,7 +198,6 @@ TTEditUserProfileViewControllerDelegate
 @property (nonatomic, strong) TTIndicatorView * indicatorView;
 
 @property (nonatomic, strong) UIView *footerContainerView;
-@property (nonatomic, strong) SSThemedButton *userProtocolButton;
 @property (nonatomic, strong) SettingPushCell *pushCell;
 
 @property (nonatomic, assign) NSUInteger tapCount;
@@ -239,7 +244,7 @@ TTEditUserProfileViewControllerDelegate
         _tableView.dataSource = self;
         _tableView.backgroundView = nil;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.enableTTStyledSeparator = YES;
+        _tableView.enableTTStyledSeparator = NO;
         _tableView.separatorInsetLeft = [TTDeviceUIUtils tt_padding:15.f];
         _tableView.separatorColorThemeKey = kColorLine1;
         _tableView.separatorSecondColorThemeKey = kColorLine1;
@@ -255,6 +260,7 @@ TTEditUserProfileViewControllerDelegate
         [_readModeSwitch addTarget:self action:@selector(readModeChanged:) forControlEvents:UIControlEventValueChanged];
         
         self.pushNotificatoinSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
+        self.pushNotificatoinSwitch.onTintColor = [UIColor tt_themedColorForKey:kFHColorCoral];
         [_pushNotificatoinSwitch addTarget:self action:@selector(pushNotificationChanged:) forControlEvents:UIControlEventValueChanged];
         self.showAwardCoinTipSwitch = [[SettingSwitch alloc] initWithFrame:CGRectZero];
         [_showAwardCoinTipSwitch addTarget:self action:@selector(showAwardCoinTipSwitchAction:) forControlEvents:UIControlEventValueChanged];
@@ -279,18 +285,6 @@ TTEditUserProfileViewControllerDelegate
 {
     self.footerContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _tableView.width, 0)];
     
-    self.userProtocolButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-    [_userProtocolButton setTitle:NSLocalizedString(@"好多房用户协议", @"") forState:UIControlStateNormal];
-    _userProtocolButton.titleColorThemeKey = kColorText6;
-    _userProtocolButton.highlightedTitleColorThemeKey = kColorText6Highlighted;
-    _userProtocolButton.titleLabel.font = [UIFont systemFontOfSize:[SettingView fontSizeOfUserProtocolButton]];
-    [_userProtocolButton addTarget:self action:@selector(userProtocolButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [_userProtocolButton sizeToFit];
-    _userProtocolButton.centerX = _tableView.width / 2;
-    _userProtocolButton.top = 15.f + 5.f;
-    [_footerContainerView addSubview:_userProtocolButton];
-    
-    
     self.aboutLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(0, 0, _footerContainerView.width, 0)];
     _aboutLabel.numberOfLines = 0;
     _aboutLabel.textColorThemeKey = kColorText3;
@@ -305,25 +299,25 @@ TTEditUserProfileViewControllerDelegate
     else {
         channel = [NSString stringWithFormat:@"  %@",[TTSandBoxHelper getCurrentChannel]];
     }
-    _aboutLabel.text = [NSString stringWithFormat:NSLocalizedString(@"All Rights Reserved By Toutiao.com%@", nil), channel];
+    _aboutLabel.text = [NSString stringWithFormat:NSLocalizedString(@"©幸福里%@", nil), channel];
     
 #ifdef DEBUG
     
-    NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"All Rights Reserved By Toutiao.com %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-    [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
+    NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
+    [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
     
     _aboutLabel.text = string;
 #endif
     if ([TTSandBoxHelper isInHouseApp]) {
-        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"All Rights Reserved By Toutiao.com inHouse %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
+        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 inHouse %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
+        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
         _aboutLabel.text = string;
     }
     
     CGFloat aboutHeight = [TTLabelTextHelper heightOfText:_aboutLabel.text fontSize:[SettingView fontSizeOfAboutLabel] forWidth:_aboutLabel.width];
     CGSize aboutSize = CGSizeMake(_aboutLabel.width, aboutHeight);
     _aboutLabel.height = ceilf(aboutSize.height) + 10;
-    _aboutLabel.top = _userProtocolButton.bottom;
+    _aboutLabel.top = 20.0f;
     [_footerContainerView addSubview:_aboutLabel];
     
     _footerContainerView.height = _aboutLabel.bottom + 10;
@@ -345,22 +339,18 @@ TTEditUserProfileViewControllerDelegate
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(registPushNotification:) name:kSettingViewRegistPushNotification object:nil];
     
-    //TODO: f100 解决登出后，没有退出setting页面的问题
-    [BDAccount addListener:self];
-    
+    [TTAccount addMulticastDelegate:self];
 }
 
 - (void)unregisterNotifications {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    //TODO: f100 解决登出后，没有退出setting页面的问题
-    [BDAccount removeListener:self];
+    [TTAccount removeMulticastDelegate:self];
 }
 
 #pragma mark - TTAccountMulticastProtocol
 
 - (void)onAccountLogout
 {
-    //TODO: f100 解决登出后，没有退出setting页面的问题
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"退出成功", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(goBack:) object:nil];
@@ -380,22 +370,22 @@ TTEditUserProfileViewControllerDelegate
     self.tapCount++;
 
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = [NSString stringWithFormat:@"did: %@\nuid: %@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
+    pasteboard.string = [NSString stringWithFormat:@"did: %@\nuid: %@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
     if ([TTSandBoxHelper isInHouseApp]) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     }
     
     if (self.tapCount > 5) {
         
-        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"All Rights Reserved By Toutiao.com %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [[BDAccount sharedAccount] userIdString]];
+        NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
+        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
         
         _aboutLabel.text = string;
         
         CGFloat aboutHeight = [TTLabelTextHelper heightOfText:_aboutLabel.text fontSize:[SettingView fontSizeOfAboutLabel] forWidth:_aboutLabel.width];
         CGSize aboutSize = CGSizeMake(_aboutLabel.width, aboutHeight);
         _aboutLabel.height = ceilf(aboutSize.height) + 10;
-        _aboutLabel.top = _userProtocolButton.bottom;
+        _aboutLabel.top = 20.0f;
 
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     }
@@ -406,18 +396,6 @@ TTEditUserProfileViewControllerDelegate
     if (self.tapCount > 5) {
         //[[FLEXManager sharedManager] showExplorer];
     }
-}
-
-- (void)userProtocolButtonClicked:(id)sender
-{
-    SSWebViewController * webViewController = [[SSWebViewController alloc] initWithSupportIPhoneRotate:NO];
-    [webViewController setTitleText:NSLocalizedString(@"好多房用户协议", nil)];
-    [webViewController requestWithURLString:[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userProtocolURLString]]];
-    
-    
-    UINavigationController *topVC = [TTUIResponderHelper topNavigationControllerFor: self];
-    topVC.navigationBarHidden = NO;
-    [topVC pushViewController:webViewController animated:YES];
 }
 
 - (void)goBack:(id)sender
@@ -472,14 +450,12 @@ TTEditUserProfileViewControllerDelegate
     [super layoutSubviews];
     
     _footerContainerView.width = _tableView.width;
-    _userProtocolButton.centerX = _tableView.width / 2;
-    _userProtocolButton.top = 15.f + 5.f;
     
     CGFloat aboutHeight = [TTLabelTextHelper heightOfText:_aboutLabel.text fontSize:[SettingView fontSizeOfAboutLabel] forWidth:_aboutLabel.width];
     CGSize aboutSize = CGSizeMake(_aboutLabel.width, aboutHeight);
     _aboutLabel.width = _tableView.width;
     _aboutLabel.height = ceilf(aboutSize.height) + 10;
-    _aboutLabel.top = _userProtocolButton.bottom + 40;
+    _aboutLabel.top = 40;
     _footerContainerView.height = _aboutLabel.bottom + 10;
     
     _tableView.tableFooterView = _footerContainerView;
@@ -515,20 +491,11 @@ TTEditUserProfileViewControllerDelegate
 //        return [TTDeviceUIUtils tt_padding:kTTSettingNotificationCellHeight];
 //    }
     
-    if (cellType == SettingCellTypeLogout) {
-        return [TTEditUserLogoutCell cellHeight];
-    }
-    
     return [SettingView heightOfCell];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     CGFloat height = [TTDeviceUIUtils tt_padding:kTTSettingSpacingOfSection];
-    
-    if ([self isTableViewSectionOfLogoutModule] &&
-        [self sectionTypeAtSection:section] == kTTSettingSectionTypeLogout) {
-        height = [TTDeviceUIUtils tt_padding:kTTSettingLogoutSectionHeaderHeight];
-    }
     
     UIView * view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.width, height)];
     view.backgroundColor = [UIColor clearColor];
@@ -538,10 +505,6 @@ TTEditUserProfileViewControllerDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     CGFloat height = [TTDeviceUIUtils tt_padding:kTTSettingSpacingOfSection];
-    if ([self sectionTypeAtSection:section] == kTTSettingSectionTypeLogout &&
-        [self isTableViewSectionOfLogoutModule]) {
-        height = [TTDeviceUIUtils tt_padding:kTTSettingLogoutSectionHeaderHeight];
-    }
     return height;
 }
 
@@ -555,13 +518,10 @@ TTEditUserProfileViewControllerDelegate
         cell = [[SettingPushCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIndenitfier];
         self.pushCell = (SettingPushCell *)cell;
         self.pushCell.pushTitleLabel.font = [UIFont systemFontOfSize:[SettingView fontSizeOfCellLeftLabel]];
-    } else if (cellType == SettingCellTypeLogout) {
-        if ([self isTableViewSectionOfLogoutModule]) {
-            cell = [[TTEditUserLogoutCell alloc] initWithReuseIdentifier:cellIndenitfier];
-        }
     } else if (cellType == SettingCellTypeAccountManagement) {
         cell = [[TTEditUserProfileItemCell alloc] initWithReuseIdentifier:cellIndenitfier];
     } else {
+        // SettingCellTypeLogout
         cell = [[SettingNormalCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIndenitfier];
     }
     cell.backgroundColor = nil;
@@ -702,7 +662,7 @@ TTEditUserProfileViewControllerDelegate
             if (&UIApplicationOpenSettingsURLString != NULL) {
                 detailText = NSLocalizedString(@"你可能错过重要资讯通知，点击去设置允许通知", nil);
             } else {
-                detailText = NSLocalizedString(@"你可能错过重要资讯通知，请在“设置” - “通知” - “爱看”内允许通知", nil);
+                detailText = NSLocalizedString(@"你可能错过重要资讯通知，请在“设置” - “通知” - “幸福里”内允许通知", nil);
             }
             [_pushNotificatoinSwitch setOn:NO];
         } else {
@@ -739,8 +699,8 @@ TTEditUserProfileViewControllerDelegate
         self.flexTapGesture = tap;
     }
     else if (cellType == SettingCellTypeShowADSplash) {
-        cell.textLabel.text = NSLocalizedString(@"爱看封面", nil);
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        cell.textLabel.text = NSLocalizedString(@"头条封面", nil);
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -759,25 +719,42 @@ TTEditUserProfileViewControllerDelegate
     }
     else if (cellType == SettingCellTypeAccountBindingSetting) {
         cell.textLabel.text = NSLocalizedString(@"账号和隐私设置", nil);
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypeBlockUsersList) {
         cell.textLabel.text = NSLocalizedString(@"黑名单", nil);
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if (cellType == SettingCellTypeLogout) {
-        [((TTEditUserLogoutCell *)cell) reloadWithTitle:@"退出登录" themeKey:kColorText4];
     } else if (cellType == SettingCellTypeADRegisterEntrance) {
         cell.textLabel.text = NSLocalizedString(@"广告合作", nil);
         cell.detailTextLabel.text = NSLocalizedString(@"3步注册开户", nil);
-        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];;
+        cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     } else if (cellType == SettingCellTypeAbout) {
         cell.textLabel.text = @"关于我们";
-        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"setting_rightarrow"]];
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
         cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (cellType == SettingCellTypeUserProtocol) {
+        cell.textLabel.text = @"用户协议";
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
+        cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (cellType == SettingCellTypePrivacyProtocol) {
+        cell.textLabel.text = @"隐私协议";
+        UIImageView *accessoryImage = [[UIImageView alloc] initWithImage:[UIImage themedImageNamed:@"icon-youjiantou-hui"]];
+        cell.accessoryView = accessoryImage;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    } else if (cellType == SettingCellTypeLogout) {
+        cell.textLabel.text = @"退出登录";
+        cell.accessoryView = NULL;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    else if (cellType == SettingCellTypeLogoutUnRegister) {
+        cell.textLabel.text = @"注销账号";
+        cell.accessoryView = NULL;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
@@ -804,14 +781,13 @@ TTEditUserProfileViewControllerDelegate
 
 - (NSArray *)supportSettingSectionTypeArray
 {
-    if ([[BDAccount sharedAccount] isLogin]) {
-        return @[
-                 @(kTTSettingSectionTypeAbstractFont),
+    if ([TTAccountManager isLogin]) {
+//        return @[@(kTTSettingSectionTypeAccount),
+        return @[@(kTTSettingSectionTypeAbstractFont),
                  @(kTTSettingSectionTypeAbout),
-                 @(kTTSettingSectionTypeTTCover),
-                 @(kTTSettingSectionTypeLogout)];
+                 @(kTTSettingSectionTypeLogout),@(kTTSettingSectionTypeLogoutUnRegister)];
     } else {
-        return @[@(kTTSettingSectionTypeAbstractFont),@(kTTSettingSectionTypeTTCover)];
+        return @[@(kTTSettingSectionTypeAbstractFont),@(kTTSettingSectionTypeAbout)];
     }
 }
 
@@ -826,23 +802,26 @@ TTEditUserProfileViewControllerDelegate
             NSMutableArray *array = [NSMutableArray arrayWithArray:@[
                                                                      @(SettingCellTypeClearCache),
 //                                                                     @(SettingCellTypeFontMode),
-                                                                     @(SettingCellTypeLoadImageMode),
+//                                                                     @(SettingCellTypeLoadImageMode),
 //                                                                     @(SettingCellTypeVideoTrafficTip),
-                                                                     @(SettingCellTypePushNotification),]];
-//            if ([AKTaskSettingHelper shareInstance].akBenefitEnable) {
-//                [array addObject:@(SettingCellTypeCoinTaskSetting)];
-//            }
-//            if (_shouldShowBtn4RefreshSetting) {
-//                [array insertObject:@(SettingCellTypeShowBtn4Refresh) atIndex:3];
-//            }
+                                                                     @(SettingCellTypePushNotification),
+                                                                     @(SettingCellTypeCheckNewVersion),]];
+            if ([AKTaskSettingHelper shareInstance].akBenefitEnable) {
+                [array addObject:@(SettingCellTypeCoinTaskSetting)];
+            }
+            if (_shouldShowBtn4RefreshSetting) {
+                [array insertObject:@(SettingCellTypeShowBtn4Refresh) atIndex:3];
+            }
             return array;
         }
-        case kTTSettingSectionTypeTTCover:
-            return @[@(SettingCellTypeCheckNewVersion)];
+        case kTTSettingSectionTypeAbout:
+            return @[@(SettingCellTypeAbout),
+                     @(SettingCellTypeUserProtocol),
+                     @(SettingCellTypePrivacyProtocol)];
         case kTTSettingSectionTypeLogout:
             return @[@(SettingCellTypeLogout)];
-        case kTTSettingSectionTypeAbout:
-            return @[@(SettingCellTypeAbout)];
+        case kTTSettingSectionTypeLogoutUnRegister:
+            return @[@(SettingCellTypeLogoutUnRegister)];
         default:
             return @[];
     }
@@ -851,7 +830,7 @@ TTEditUserProfileViewControllerDelegate
 - (TTSettingSectionType)sectionTypeAtSection:(NSInteger)section
 {
     NSArray *sectionTypeList = [self supportSettingSectionTypeArray];
-    if (section > sectionTypeList.count) {
+    if (section >= sectionTypeList.count) {
         return kTTSettingSectionTypeNone;
     }
     NSNumber *sectionTypeObject = sectionTypeList[section];
@@ -862,7 +841,7 @@ TTEditUserProfileViewControllerDelegate
 {
     TTSettingSectionType sectionType = [self sectionTypeAtSection:indexpath.section];
     NSArray *cellTypeList = [self supportSettingCellTypeArrayWithSectionType:sectionType];
-    if (cellTypeList.count < indexpath.row) {
+    if (cellTypeList.count <= indexpath.row) {
         return SettingCellTypeNone;
     }
     NSNumber *cellType = cellTypeList[indexpath.row];
@@ -1262,7 +1241,7 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)_showIPhoneActionSheetForClearCache
 {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"您确定要清除缓存吗？清除之后浏览过的图片均会被清除", nil)
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"确定删除所有缓存？离线内容及图片均会被清除", nil)
                                                         delegate:self
                                                cancelButtonTitle:NSLocalizedString(@"取消", nil)
                                           destructiveButtonTitle:nil
@@ -1342,6 +1321,8 @@ TTEditUserProfileViewControllerDelegate
         [ self openUserBlacklistsDidSelectCell:nil];
     } else if (cellType == SettingCellTypeLogout) {
         [self triggerLogoutDidSelectCell];
+    } else if (cellType == SettingCellTypeLogoutUnRegister) {
+        [self triggerLogoutUnRegisterDidSelectCell];
     } else if (cellType == SettingCellTypeADRegisterEntrance) { // 广告合作
         if ([TTAccountManager isLogin]) {
             NSURL *url = [TTStringHelper URLWithURLString:@"https://ad.toutiao.com/m/self_service/?source2=ttappsetting"];
@@ -1353,6 +1334,18 @@ TTEditUserProfileViewControllerDelegate
         wrapperTrackEvent(@"ad_register", @"setting_ad_register_clk");
     } else if (cellType == SettingCellTypeAbout) {
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
+    } else if (cellType == SettingCellTypeUserProtocol) {
+        // 用户协议
+        NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        if (urlStr.length > 0) {
+            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
+        }
+    } else if (cellType == SettingCellTypePrivacyProtocol) {
+        // 隐私协议
+        NSString *urlStr = [[NSString stringWithFormat:@"%@&hide_more=1",[ArticleURLSetting userPrivateProtocolURLString]]stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
+        if (urlStr.length > 0) {
+            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]]];
+        }
     }
     
     if(_delegate) {
@@ -1365,7 +1358,7 @@ TTEditUserProfileViewControllerDelegate
 - (void)triggerLogoutDidSelectCell
 {
     if ([SSCommonLogic ttAlertControllerEnabled]) {
-        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前账号，将不能继续赚钱，不能同步收藏等", nil) preferredType:TTThemedAlertControllerTypeAlert];
+        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前账号，将不能同步收藏，发布评论等", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
         WeakSelf;
         [alert addActionWithTitle:NSLocalizedString(@"确认退出", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
@@ -1378,7 +1371,7 @@ TTEditUserProfileViewControllerDelegate
         // See details here: http://stackoverflow.com/questions/30606512/uialertview-delay-or-not-showing & http://openradar.appspot.com/19285091
         // Note that UIAlertView is already deprecated and it should not be used anymore.
         dispatch_async(dispatch_get_main_queue(), ^{
-            TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前账号，将不能继续赚钱，不能同步收藏等", nil) preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前账号，将不能同步收藏，发布评论等", nil) preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
             [alertVC addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             }];
@@ -1391,14 +1384,32 @@ TTEditUserProfileViewControllerDelegate
     }
 }
 
+- (void)triggerLogoutUnRegisterDidSelectCell
+{
+    
+    NSDictionary *params = @{@"category":@"event_v3",@"page_type":@"minetab"};
+    [FHEnvContext recordEvent:params andEventKey:@"account_cancellation"];
+    
+    
+    NSString *unencodedString = @"http://m.haoduofangs.com/f100/inner/valuation/delcount/";
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                    (CFStringRef)unencodedString,
+                                                                                                    NULL,
+                                                                                                    (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                    kCFStringEncodingUTF8));
+    NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+    
+    NSURL *url = [TTURLUtils URLWithString:urlStr];
+    [[TTRoute sharedRoute] openURLByPushViewController:url];
+}
+
 - (void)logout {
-    NSString *userID = [[BDAccount sharedAccount] userIdString];
-    // f100 logout
+    NSString *userID = [TTAccountManager userID];
+    
     WeakSelf;
-    [BDAccountNetworkAPI requestLogout:^(BOOL success, NSError * _Nullable error) {
+    [TTAccountManager startLogoutUserWithCompletion:^(BOOL success, NSError *error) {
         StrongSelf;
-        [[BDAccount sharedAccount] doLogout];
-        [[[EnvContext shared] client] setUserInfoWithUser: nil];
+        
         BOOL shouldIgnoreError = NO;
         //未设置密码也可以退出登录
         if (error.code == 1037) {
@@ -1427,6 +1438,9 @@ TTEditUserProfileViewControllerDelegate
                 wrapperTrackEvent(@"login", @"exit_password_setting_success");
             }
             self.resetPasswordAlertShowed = NO;
+            
+            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+            [sendPhoneNumberCache removeObjectForKey:kFHPLoginhoneNumberCacheKey];
         }
     }];
 }
@@ -1458,9 +1472,9 @@ TTEditUserProfileViewControllerDelegate
             }
             _isOpenSettingApp = YES;
         } else {
-            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"notice_alert");
-            TTAuthorizeHintView *hintview = [[TTAuthorizeHintView alloc]initAuthorizeHintWithImageName:@"img_popup_notice" title:NSLocalizedString(@"推送设置", nil) message:NSLocalizedString(@"请在系统“设置” - “通知”内，允许“爱看”通知", nil)  confirmBtnTitle:@"我知道了" animated:YES completed:nil];
-            [hintview show];
+//            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"notice_alert");
+//            TTAuthorizeHintView *hintview = [[TTAuthorizeHintView alloc]initAuthorizeHintWithImageName:@"img_popup_notice" title:NSLocalizedString(@"推送设置", nil) message:NSLocalizedString(@"请在系统“设置” - “通知”内，允许“幸福里”通知", nil)  confirmBtnTitle:@"我知道了" animated:YES completed:nil];
+//            [hintview show];
         }
         [_pushNotificatoinSwitch setOn:NO];
         return;
@@ -1530,7 +1544,7 @@ TTEditUserProfileViewControllerDelegate
 - (void)showEditUserView:(id)sender {
     wrapperTrackEvent(@"setting", @"enter_edit_profile");
     
-    if([[BDAccount sharedAccount] isLogin]) {
+    if([TTAccountManager isLogin]) {
         TTEditUserProfileViewController *profileVC = [TTEditUserProfileViewController new];
         profileVC.userType = [TTAccountManager accountUserType];
         profileVC.delegate = self;

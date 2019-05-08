@@ -20,6 +20,8 @@
     TTStartupADGroup *group = [[TTStartupADGroup alloc] init];
     
     [group.tasks addObject:[[self class] ADStartupForType:TTADStartupTypeShowAD]];
+//    [group.tasks addObject:[[self class] ADStartupForType:TTADStartupTypeActivateSDK]];
+//    [group.tasks addObject:[[self class] ADStartupForType:TTADStartupTypeShowAD]];
 //    [group.tasks addObject:[[self class] ADStartupForType:TTADStartupTypeRequestRefreshAD]];
     
     return group;

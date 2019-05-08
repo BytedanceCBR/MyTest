@@ -99,6 +99,7 @@ TTAccountMulticastProtocol
         return;
     }
     
+    /*
     WeakSelf;
     [[TTNetworkManager shareInstance] requestForJSONWithURL:[ArticleURLSetting functionExtensionURLString] params:nil method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         StrongSelf;
@@ -116,6 +117,7 @@ TTAccountMulticastProtocol
             }
         }
     }];
+     */
 }
 
 - (void)rebuildshVisibleSections
@@ -442,9 +444,10 @@ TTAccountMulticastProtocol
                                @(TTSettingMineTabEntyTypeiPadFavor)             : @"iPad_favor",
                                @(TTSettingMineTabEntyTypeiPadHistory)           : @"iPad_history",
 
-                               @(TTSettingMineTabEntyTypeMyFollow)              : @"my_follow",
+                               @(TTSettingMineTabEntyTypeMyFollow)              : @"mine_attention",
                                
                                @(TTSettingMineTabEntyTypeWorkLibrary)           : @"pgc",
+                               @(TTSettingMineTabEntyTypeMessage)               : @"msg_notification",
                                @(TTSettingMineTabEntyTypePrivateLetter)         : @"private_letter",
                                
                                @(TTSettingMineTabEntyTypeTTMall)                : @"mall",

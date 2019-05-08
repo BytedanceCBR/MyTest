@@ -83,7 +83,7 @@ typedef void (^TTVLoadCommentsCompletionHandler)(NSError* _Nullable error);
 // 评论操作行为
 - (void)commentViewController:(nonnull id<TTVCommentViewControllerProtocol>)ttController didClickCommentCellWithCommentModel:(nonnull id<TTVCommentModelProtocol>)model;
 - (void)commentViewController:(nonnull id<TTVCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(nonnull id<TTVCommentModelProtocol>)model;
-- (void)commentViewController:(nonnull id<TTVCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(nonnull id<TTVCommentModelProtocol>)model;
+- (void)commentViewController:(nonnull id<TTVCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(nonnull id<TTVCommentModelProtocol>)model position:(NSString *)position;
 - (void)commentViewController:(nonnull id<TTVCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(nonnull id<TTVCommentModelProtocol>)model;
 - (void)commentViewController:(nonnull id<TTVCommentViewControllerProtocol>)ttController startWriteComment:(nullable id<TTVCommentModelProtocol>)model;
 - (BOOL)commentViewController:(nonnull id<TTVCommentViewControllerProtocol>)ttController shouldPresentCommentDetailViewControllerWithCommentModel:(nullable id<TTVCommentModelProtocol>)model indexPath:(NSIndexPath *)indexPath showKeyBoard:(BOOL)showKeyBoard;

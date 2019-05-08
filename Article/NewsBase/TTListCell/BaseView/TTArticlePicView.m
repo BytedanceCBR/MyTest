@@ -37,9 +37,13 @@
 /** 初始化单个图片(视频)视图 */
 - (nonnull TTImageView *)initalizeImageView {
     TTImageView *imageView = [[TTImageView alloc] init];
+    imageView.borderColorThemeKey = kPicViewBorderColor();
     imageView.backgroundColorThemeKey = kPicViewBackgroundColor();
+    imageView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     imageView.imageContentMode = UIViewContentModeScaleAspectFill;
     [self addSubview:imageView];
+    imageView.layer.masksToBounds = YES;
+    imageView.layer.cornerRadius = 4;
     return imageView;
 }
 
@@ -50,8 +54,12 @@
     } else {
         imageView = [[TTImageView alloc] init];
     }
+    imageView.borderColorThemeKey = kPicViewBorderColor();
     imageView.backgroundColorThemeKey = kPicViewBackgroundColor();
+    imageView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     imageView.imageContentMode = UIViewContentModeScaleAspectFill;
+    imageView.layer.masksToBounds = YES;
+    imageView.layer.cornerRadius = 4;
     [self addSubview:imageView];
     return imageView;
 }
@@ -103,7 +111,9 @@
         _picView3 = [self initalizeImageView];
         
         _messageBackgroundView = [[SSThemedImageView alloc] init];
-        _messageBackgroundView.imageName = @"feed_pic_bg_four_corner";
+        UIImage * image = [UIImage themedImageNamed:@"message_background_view"];
+        image = [image resizableImageWithCapInsets:UIEdgeInsetsMake(image.size.height / 2, image.size.width / 2, image.size.height / 2 - 1, image.size.width / 2 - 1) resizingMode:UIImageResizingModeTile];
+        _messageBackgroundView.image = image;
         _messageBackgroundView.frame = CGRectMake(0, 0, 0, kPicMessageViewHeight());
         [self addSubview:_messageBackgroundView];
         
@@ -136,22 +146,14 @@
 /** 图片(视频)控件布局 */
 - (void)layoutPics {
     CGSize picSize = [TTArticleCellHelper resizablePicSize:self.width];
-    self.messageBackgroundView.imageName = @"feed_pic_bg_four_corner";
+    self.picView1.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     switch (self.style) {
         case TTArticlePicViewStyleNone:
             break;
         case TTArticlePicViewStyleRight:
-            if (self.isVideo && isEmptyString(self.messageView.text)) {
-                self.messageBackgroundView.imageName = @"feed_pic_bg_circle";
-            } else {
-                self.messageBackgroundView.imageName = @"feed_pic_bg_two_corner";
-            }
             self.picView1.frame = CGRectMake(0, 0, self.width, self.height);
             break;
         case TTArticlePicViewStyleLarge:
-            if (self.isVideo) {
-                self.messageBackgroundView.imageName = nil;
-            }
             self.picView1.layer.borderWidth = 0;
             self.picView1.frame = CGRectMake(0, 0, self.width, self.height);
             break;
@@ -190,7 +192,7 @@
     if (!self.messageBackgroundView.hidden) {
         // 如果是多图，则不显示图片
         if (!self.messageImageView.hidden) {
-            NSString *imageName = self.isVideo ? @"feed_play_icon_small" : @"picture_group_icon";
+            NSString *imageName = self.isVideo ? @"palyicon_video_textpage" : @"picture_group_icon";
             self.messageImageView.image = [UIImage imageNamed:imageName];
             [self.messageImageView sizeToFit];
             self.messageImageView.frame = CGRectIntegral(self.messageImageView.frame);
@@ -207,52 +209,21 @@
                 self.messageImageView.centerX = self.messageBackgroundView.width / 2;
                 self.messageImageView.centerY = self.messageBackgroundView.height / 2;
             }
-            self.messageBackgroundView.bottom = self.height - kPicMessageViewPaddingBottom();
-            if (self.playStyleBackgroundView.hidden) {
-                if (self.style == TTArticlePicViewStyleRight) {
-                    if (isEmptyString(self.messageView.text) && self.isVideo) {
-                        self.messageBackgroundView.bottom = self.height - 8;
-                        self.messageBackgroundView.right = self.width - 8;
-                        self.messageImageView.right = self.messageBackgroundView.width;
-                    } else {
-                        self.messageBackgroundView.right = self.width - kPicMessageViewPaddingRightVideo();
-                    }
-                } else {
-                    self.messageBackgroundView.right = self.width - kPicMessageViewPaddingRightPhoto();
-                }
-            } else {
-                self.messageBackgroundView.right = self.playStyleBackgroundView.left - 10;
-            }
         } else if (!isEmptyString(self.messageView.text)) {
-            if (self.isVideo && self.playButton && !self.playButton.hidden) {
-                [self insertSubview:self.messageBackgroundView aboveSubview:self.playButton];
-                self.messageBackgroundView.width = kPicMessageViewWidth();
-                [self.messageView sizeToFit];
-                self.messageView.frame = CGRectIntegral(self.messageView.frame);
-                self.messageView.centerX = self.messageBackgroundView.width / 2;
-                self.messageView.centerY = self.messageBackgroundView.height / 2;
-                self.messageBackgroundView.backgroundColor = [UIColor clearColor];
-                self.messageBackgroundView.centerX = self.width / 2;
-                self.messageBackgroundView.bottom = self.height / 2 + 30;
-            } else {
-                self.messageBackgroundView.width = kPicMessageViewWidth();
-                [self.messageView sizeToFit];
-                self.messageView.frame = CGRectIntegral(self.messageView.frame);
-                self.messageView.centerX = self.messageBackgroundView.width / 2;
-                self.messageView.centerY = self.messageBackgroundView.height / 2;
-                self.messageBackgroundView.bottom = self.height - kPicMessageViewPaddingBottom();
-                if (self.playStyleBackgroundView.hidden) {
-                    if (self.style == TTArticlePicViewStyleRight) {
-                        self.messageBackgroundView.right = self.width - kPicMessageViewPaddingRightVideo();
-                    } else {
-                        self.messageBackgroundView.right = self.width - kPicMessageViewPaddingRightPhoto();
-                    }
-                } else {
-                    self.messageBackgroundView.right = self.playStyleBackgroundView.left - 10;
-                }
-            }
+            self.messageBackgroundView.width = kPicMessageViewWidth();
+            [self.messageView sizeToFit];
+            self.messageView.frame = CGRectIntegral(self.messageView.frame);
+            self.messageView.centerX = self.messageBackgroundView.width / 2;
+            self.messageView.centerY = self.messageBackgroundView.height / 2;
         } else {
             self.messageBackgroundView.hidden = YES;
+        }
+        
+        self.messageBackgroundView.bottom = self.height - kPicMessageViewPaddingBottom();
+        if (self.playStyleBackgroundView.hidden) {
+            self.messageBackgroundView.right = self.width - kPicMessageViewPaddingRight();
+        } else {
+            self.messageBackgroundView.right = self.playStyleBackgroundView.left - 10;
         }
     }
 }

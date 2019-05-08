@@ -13,7 +13,7 @@
 
 extern NSString * const TTFollowSuccessForPushGuideNotification;
 
-static NSString * const TT_DOMAIN = @"https://m.quduzixun.com";
+static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
 
 @implementation AWEVideoUserInfoManager
 

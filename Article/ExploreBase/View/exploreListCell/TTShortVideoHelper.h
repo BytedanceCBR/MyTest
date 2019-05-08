@@ -39,6 +39,8 @@ typedef NS_ENUM(NSUInteger, TTHorizontalCardContentCellStyle){
 
 + (void)openShortVideoCategory;
 
++ (BOOL)shouldHandleClickWithData:(ExploreOrderedData *)orderedData;
+
 + (void)handleClickWithData:(ExploreOrderedData *)orderedData;
 
 + (NSString *)groupSourceForDownloadWithHorizontalCard:(HorizontalCard *)horizontalCard;

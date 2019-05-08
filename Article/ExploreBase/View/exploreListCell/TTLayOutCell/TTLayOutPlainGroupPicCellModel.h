@@ -18,10 +18,6 @@
 
 @end
 
-@interface TTLayOutPlainGroupPicCellModelS0AD : TTLayOutPlainGroupPicCellModel
-
-@end
-
 @interface TTLayOutPlainGroupPicCellModelS1 : TTLayOutPlainGroupPicCellModel
 
 @end

@@ -24,6 +24,7 @@ typedef NS_ENUM(NSUInteger, TTInterfaceStartupType) {
     TTInterfaceStartupTypeGetDomain,//获取域名
     TTInterfaceStartupTypeFeedbackCheck,//反馈
     TTInterfaceStartupTypeGetCategory,//获取频道列表
+    TTInterfaceStartupTypeMessageNotification,//消息通知轮询
     TTInterfaceStartupTypeProfileEntry,//我的页面入口通知注册
     TTInterfaceStartupTypeUploadContacts,//间隔时间自动上传通讯录
 //    TTInterfaceStartupTypeSFActivityData,//春节活动数据相关 

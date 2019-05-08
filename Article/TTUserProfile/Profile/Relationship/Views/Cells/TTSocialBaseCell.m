@@ -6,7 +6,6 @@
 //
 //
 
-#import "AKUIHelper.h"
 #import "TTSocialBaseCell.h"
 #import "TTProfileThemeConstants.h"
 #import "TTIconFontDefine.h"
@@ -19,7 +18,6 @@
 @property (nonatomic, strong) SSThemedImageView *statusImageView;
 
 @property (nonatomic, assign) TTFollowButtonStatusType followStatus;
-@property (nonatomic, strong) CAGradientLayer   *backGradientLayer;
 @end
 
 @implementation TTFollowButton
@@ -45,7 +43,6 @@
 - (void)initSubviews {
     _followStatus = FriendListCellUnitRelationButtonHide;
     
-    [self.layer addSublayer:self.backGradientLayer];
     [self addSubview:self.containerView];
     [self.containerView addSubview:self.statusImageView];
     [self.containerView addSubview:self.statusTextLabel];
@@ -107,12 +104,9 @@
     
     CGFloat spacing = imageName ? [TTDeviceUIUtils tt_padding:16.f/2] : 0;
     _containerView.size = CGSizeMake(_statusTextLabel.width + spacing + _statusImageView.width, MAX(_statusImageView.height, _statusTextLabel.height));
-    _backGradientLayer.frame = self.bounds;
     _containerView.center = CGPointMake(self.width/2, self.height/2);
     _statusImageView.frame = CGRectMake(0, (self.containerView.height - _statusImageView.height)/2, _statusImageView.width, _statusImageView.height);
     _statusTextLabel.frame = CGRectMake(_statusImageView.right + spacing, (self.containerView.height - _statusTextLabel.height)/2, _statusTextLabel.width , _statusTextLabel.height);
-    self.clipsToBounds = YES;
-    self.layer.cornerRadius = self.height / 2;
 }
 
 - (NSDictionary *)propertiesOfFollowStatus:(TTFollowButtonStatusType)type {
@@ -123,15 +117,12 @@
     NSString *backgroundColorKey = kColorBackground8;
     NSString *imageName = nil;
     BOOL isRed = [SSCommonLogic followButtonDefaultColorStyleRed];
-    [AKUIHelper CALayerDisableAnimationActionBlock:^{
-        self.backGradientLayer.hidden = YES;
-    }];
     switch (type) {
         case FriendListCellUnitRelationButtonFollowingFollowed: {
             text = NSLocalizedString(@"互相关注", nil);
             textColorKey = kColorText3;
             borderColorKey = kColorLine1;
-            backgroundColorKey= nil;
+            backgroundColorKey = nil;
             break;
         }
         case FriendListCellUnitRelationButtonCancelFollow: {
@@ -145,10 +136,7 @@
             text = NSLocalizedString(@"关注", nil);
             textColorKey = kColorText12;
             borderColorKey = nil;
-            backgroundColorKey = nil;
-            [AKUIHelper CALayerDisableAnimationActionBlock:^{
-                self.backGradientLayer.hidden = NO;
-            }];
+            backgroundColorKey = isRed ? kColorBackground7 : kColorBackground8;
             break;
         }
         case FriendListCellUnitRelationButtonInviteFriend: {
@@ -240,14 +228,6 @@
         _statusImageView.backgroundColor = [UIColor clearColor];
     }
     return _statusImageView;
-}
-
-- (CAGradientLayer *)backGradientLayer
-{
-    if (_backGradientLayer == nil) {
-        _backGradientLayer = [AKUIHelper AiKanBackGrandientLayer];
-    }
-    return _backGradientLayer;
 }
 
 + (CGFloat)width {

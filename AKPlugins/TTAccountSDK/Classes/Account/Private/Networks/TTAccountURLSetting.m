@@ -15,10 +15,10 @@
 /**
  *  Default URL domains
  */
-NSString * const kTTANormalBaseURLDomain   = @"ib.snssdk.com";
-NSString * const kTTASNSBaseURLDomain      = @"m.quduzixun.com";
-NSString * const kTTAChannelBaseURLDomain  = @"ichannel.snssdk.com";
-NSString * const kTTASecurityBaseURLDomain = @"security.snssdk.com";
+NSString * const kTTANormalBaseURLDomain   = @"ib.haoduofangs.com";
+NSString * const kTTASNSBaseURLDomain      = @"isub.haoduofangs.com";
+NSString * const kTTAChannelBaseURLDomain  = @"ichannel.haoduofangs.com";
+NSString * const kTTASecurityBaseURLDomain = @"security.haoduofangs.com";
 
 /**
  *  Keys of domain name
@@ -316,7 +316,7 @@ static NSString *kTTAccountNetworkHttpInterfaceDebugKey = @"com.account.http_int
 
 + (NSString *)TTALogoutURLPathString
 {
-    return (@"/2/user/logout/");
+    return (@"/passport/user/logout/");
 }
 
 + (NSString *)TTABindPhoneV1URLPathString
@@ -336,7 +336,7 @@ static NSString *kTTAccountNetworkHttpInterfaceDebugKey = @"com.account.http_int
 
 + (NSString *)TTAGetUserInfoURLPathString
 {
-    return (@"/2/user/info/");
+    return (@"/passport/user/info/");
 }
 
 + (NSString *)TTAValidateSMSCodeURLPathString

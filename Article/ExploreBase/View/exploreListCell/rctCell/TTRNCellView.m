@@ -7,7 +7,7 @@
 //
 
 #import "TTRNCellView.h"
-#import "TTRNView.h"
+//#import "TTRNView.h"
 #import "ExploreArticleCellViewConsts.h"
 #import "SSThemed.h"
 #import "ExploreOrderedData+TTBusiness.h"
@@ -17,26 +17,27 @@
 #import "ExploreArticleWebCellView.h"
 #import "RNData.h"
 #import <TTAccountBusiness.h>
-#import "TTRNBridge+Cell.h"
+//#import "TTRNBridge+Cell.h"
 #import <TTUserSettingsManager+FontSettings.h>
 #import "TTDeviceHelper.h"
 #import "TTThemeManager.h"
 #import "TTPlatformSwitcher.h"
 #import "TTFeedDislikeView.h"
-#import "TTRNBundleManager.h"
+//#import "TTRNBundleManager.h"
 #import "ExploreOrderedData+TTAd.h"
 
 // rncell高度缓存
 static NSMutableDictionary *rnCellHeightCache = nil;
 
 @implementation TTRNCell
-+ (Class)cellViewClass {
-    return [TTRNCellView class];
-}
+//+ (Class)cellViewClass {
+//    return [TTRNCellView class];
+//}
 @end
 
-@interface TTRNCellView () <TTRNViewDelegate>
-@property(nonatomic,strong)TTRNView *rnView;
+@interface TTRNCellView ()
+//<TTRNViewDelegate>
+//@property(nonatomic,strong)TTRNView *rnView;
 @property(nonatomic,strong)SSThemedView *loadingView;
 @property(nonatomic,strong)SSThemedView *bottomLineView;
 @property(nonatomic,strong)ExploreOrderedData *orderedData;
@@ -73,13 +74,13 @@ static NSMutableDictionary *rnCellHeightCache = nil;
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.rnView = [[TTRNView alloc] initWithFrame:self.bounds];
-        self.rnView.delegate = self;
-        [self.rnView loadModule:@"RNCellView" initialProperties:nil];
-        
-        [self addSubview:self.rnView];
-        [self.rnView setLoadingView:self.loadingView];
-        [self.rnView setSizeFlexibility:TTRNViewSizeFlexibilityHeight];
+//        self.rnView = [[TTRNView alloc] initWithFrame:self.bounds];
+//        self.rnView.delegate = self;
+//        [self.rnView loadModule:@"RNCellView" initialProperties:nil];
+//
+//        [self addSubview:self.rnView];
+//        [self.rnView setLoadingView:self.loadingView];
+//        [self.rnView setSizeFlexibility:TTRNViewSizeFlexibilityHeight];
         
         self.bottomLineView = [[SSThemedView alloc] initWithFrame:CGRectZero];
         self.bottomLineView.backgroundColorThemeKey = kColorLine1;
@@ -92,19 +93,19 @@ static NSMutableDictionary *rnCellHeightCache = nil;
 }
 
 - (void)addObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(closeCell:)
-                                                 name:kExploreMixListCloseWebCellNotification
-                                               object:self.rnView];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(showDislike:)
-                                                 name:kExploreMixListShowDislikeNotification
-                                               object:self.rnView];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFeedList)
-                                                 name:kTTRNBridgeActiveRefreshListViewNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(closeCell:)
+//                                                 name:kExploreMixListCloseWebCellNotification
+//                                               object:self.rnView];
+//
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(showDislike:)
+//                                                 name:kExploreMixListShowDislikeNotification
+//                                               object:self.rnView];
+//
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFeedList)
+//                                                 name:kTTRNBridgeActiveRefreshListViewNotification
+//                                               object:nil];
 }
 
 - (SSThemedView *)loadingView {
@@ -161,7 +162,7 @@ static NSMutableDictionary *rnCellHeightCache = nil;
     }
     
     if (self.height == 0) {
-        [self.rnView refreshSize];
+//        [self.rnView refreshSize];
     }
     
     /* iPad上cell整体有缩进，分割线如果再缩进就会比其他文章类型cell短一些，
@@ -228,7 +229,7 @@ static NSMutableDictionary *rnCellHeightCache = nil;
 //        [props setValue:@(i++) forKey:@"counter"];
 //    }
     
-    [self.rnView updateProperties:props];
+//    [self.rnView updateProperties:props];
 }
 
 - (id)cellData {
@@ -283,11 +284,11 @@ static NSMutableDictionary *rnCellHeightCache = nil;
         viewModel.logExtra = self.orderedData.log_extra;
         [dislikeView refreshWithModel:viewModel];
         CGPoint point = CGPointMake(x, y);
-        [dislikeView showAtPoint:point
-                        fromView:self.rnView
-                 didDislikeBlock:^(TTFeedDislikeView * _Nonnull view) {
-                     [self exploreDislikeViewOKBtnClicked:view];
-                 }];
+//        [dislikeView showAtPoint:point
+//                        fromView:self.rnView
+//                 didDislikeBlock:^(TTFeedDislikeView * _Nonnull view) {
+//                     [self exploreDislikeViewOKBtnClicked:view];
+//                 }];
     }
 }
 
@@ -307,7 +308,7 @@ static NSMutableDictionary *rnCellHeightCache = nil;
     }
     
     // 通知RN
-    [[self.rnView bridgeModule] dislikeConfirmed];
+//    [[self.rnView bridgeModule] dislikeConfirmed];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kExploreMixListNotInterestNotification object:self userInfo:userInfo];
 }
@@ -335,7 +336,8 @@ static NSMutableDictionary *rnCellHeightCache = nil;
 - (NSURL *)RNBundleUrl
 {
     // FIXME: `RNCellView`和`Profile`共用同一个Bundle
-    return [[TTRNBundleManager sharedManager] localBundleURLForModuleName:@"Profile"];
+    return nil;
+//    return [[TTRNBundleManager sharedManager] localBundleURLForModuleName:@"Profile"];
 }
 
 // RCTRootView会把点击事件传到TableViewCell上，这里做个特殊处理，所有touchEvent都不往cell上传

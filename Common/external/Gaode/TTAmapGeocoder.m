@@ -8,9 +8,7 @@
 
 #import "TTAmapGeocoder.h"
 #import "TTLocationTransform.h"
-#import <AMapFoundationKit/AMapFoundationKit.h>
 
-#import <AMapLocationKit/AMapLocationKit.h>
 @interface TTAmapGeocoder () <AMapSearchDelegate>
 
 @property(nonatomic, strong) AMapSearchAPI *searchAPI;
@@ -40,7 +38,8 @@ static TTAmapGeocoder *_sharedGeocoder;
 
 - (AMapSearchAPI *)searchAPI {
     if (!_searchAPI && [self isGeocodeSupported]) {
-        [AMapServices sharedServices].apiKey = [SSCommonLogic amapKey];
+        // f100
+        //[AMapSearchServices sharedServices].apiKey = [SSCommonLogic amapKey];
         _searchAPI = [[AMapSearchAPI alloc] init];
         _searchAPI.delegate = self;
     }

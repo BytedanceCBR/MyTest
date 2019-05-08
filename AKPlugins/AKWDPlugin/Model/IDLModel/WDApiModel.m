@@ -1184,7 +1184,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/answer/information";
+        self._uri = @"/wenda/v1/answer/information";
         self._response = @"WDWendaAnswerInformationResponseModel";
     }
 
@@ -1271,7 +1271,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/answer/list";
+        self._uri = @"/wenda/v1/answer/list";
         self._response = @"WDWendaAnswerListResponseModel";
     }
 
@@ -1319,7 +1319,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/answer/raw";
+        self._uri = @"/wenda/v1/answer/raw";
         self._response = @"WDWendaAnswerRawResponseModel";
     }
 
@@ -1365,7 +1365,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/category/brow";
+        self._uri = @"/wenda/v1/category/brow";
         self._response = @"WDWendaCategoryBrowResponseModel";
     }
 
@@ -1418,7 +1418,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/f100/wenda/v1/commit/buryanswer";
+        self._uri = @"/wenda/v1/commit/buryanswer";
         self._response = @"WDWendaCommitBuryanswerResponseModel";
     }
 
@@ -1464,7 +1464,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/deleteanswer";
+        self._uri = @"/wenda/v1/commit/deleteanswer";
         self._response = @"WDWendaCommitDeleteanswerResponseModel";
     }
 
@@ -1508,7 +1508,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/deletequestion";
+        self._uri = @"/wenda/v1/commit/deletequestion";
         self._response = @"WDWendaCommitDeletequestionResponseModel";
     }
 
@@ -1553,7 +1553,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/digganswer";
+        self._uri = @"/wenda/v1/commit/digganswer";
         self._response = @"WDWendaCommitDigganswerResponseModel";
     }
 
@@ -1599,7 +1599,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/editanswer";
+        self._uri = @"/wenda/v1/commit/editanswer";
         self._response = @"WDWendaCommitEditanswerResponseModel";
     }
 
@@ -1648,7 +1648,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/editquestion";
+        self._uri = @"/wenda/v1/commit/editquestion";
         self._response = @"WDWendaCommitEditquestionResponseModel";
     }
 
@@ -1698,7 +1698,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/editquestiontag";
+        self._uri = @"/wenda/v1/commit/editquestiontag";
         self._response = @"WDWendaCommitEditquestiontagResponseModel";
     }
 
@@ -1744,7 +1744,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/followquestion";
+        self._uri = @"/wenda/v1/commit/followquestion";
         self._response = @"WDWendaCommitFollowquestionResponseModel";
     }
 
@@ -1789,7 +1789,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/ignorequestion";
+        self._uri = @"/wenda/v1/commit/ignorequestion";
         self._response = @"WDWendaCommitIgnorequestionResponseModel";
     }
 
@@ -1833,7 +1833,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/inviteuser";
+        self._uri = @"/wenda/v1/commit/inviteuser";
         self._response = @"WDWendaCommitInviteuserResponseModel";
     }
 
@@ -1898,7 +1898,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/postanswer";
+        self._uri = @"/wenda/v1/commit/postanswer";
         self._response = @"WDWendaCommitPostanswerResponseModel";
     }
 
@@ -1952,7 +1952,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/postquestion";
+        self._uri = @"/wenda/v1/commit/postquestion";
         self._response = @"WDWendaCommitPostquestionResponseModel";
     }
 
@@ -2004,7 +2004,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/commit/report";
+        self._uri = @"/wenda/v1/commit/report";
         self._response = @"WDWendaCommitReportResponseModel";
     }
 
@@ -2051,7 +2051,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/concern/brow";
+        self._uri = @"/wenda/v1/concern/brow";
         self._response = @"WDWendaConcernBrowResponseModel";
     }
 
@@ -2105,7 +2105,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/concerntag/search";
+        self._uri = @"/wenda/v1/concerntag/search";
         self._response = @"WDWendaConcerntagSearchResponseModel";
     }
 
@@ -2151,7 +2151,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/delete/draft";
+        self._uri = @"/wenda/v1/delete/draft";
         self._response = @"WDWendaDeleteDraftResponseModel";
     }
 
@@ -2194,7 +2194,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/digg/userlist";
+        self._uri = @"/wenda/v1/digg/userlist";
         self._response = @"WDWendaDiggUserlistResponseModel";
     }
 
@@ -2241,7 +2241,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/fetch/answerdraft";
+        self._uri = @"/wenda/v1/fetch/answerdraft";
         self._response = @"WDWendaFetchAnswerdraftResponseModel";
     }
 
@@ -2306,7 +2306,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/fetch/tips";
+        self._uri = @"/wenda/v1/fetch/tips";
         self._response = @"WDWendaFetchTipsResponseModel";
     }
 
@@ -2350,7 +2350,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/icimage/brow";
+        self._uri = @"/wenda/v1/icimage/brow";
         self._response = @"WDWendaIcimageBrowResponseModel";
     }
 
@@ -2400,7 +2400,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/icimage/loadmore";
+        self._uri = @"/wenda/v1/icimage/loadmore";
         self._response = @"WDWendaIcimageLoadmoreResponseModel";
     }
 
@@ -2450,7 +2450,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/invite/userlist";
+        self._uri = @"/wenda/v1/invite/userlist";
         self._response = @"WDWendaInviteUserlistResponseModel";
     }
 
@@ -2496,7 +2496,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/invited/questionbrow";
+        self._uri = @"/wenda/v1/invited/questionbrow";
         self._response = @"WDWendaInvitedQuestionbrowResponseModel";
     }
 
@@ -2564,7 +2564,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/link/check";
+        self._uri = @"/wenda/v1/link/check";
         self._response = @"WDWendaLinkCheckResponseModel";
     }
 
@@ -2608,7 +2608,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/native/feedbrow";
+        self._uri = @"/wenda/v1/native/feedbrow";
         self._response = @"WDWendaNativeFeedbrowResponseModel";
     }
 
@@ -2662,7 +2662,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/opanswer/comment";
+        self._uri = @"/wenda/v1/opanswer/comment";
         self._response = @"WDWendaOpanswerCommentResponseModel";
     }
 
@@ -2707,7 +2707,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/post/dislike";
+        self._uri = @"/wenda/v1/post/dislike";
         self._response = @"WDWendaPostDislikeResponseModel";
     }
 
@@ -2752,7 +2752,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/post/draft";
+        self._uri = @"/wenda/v1/post/draft";
         self._response = @"WDWendaPostDraftResponseModel";
     }
 
@@ -2796,7 +2796,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/post/scoring";
+        self._uri = @"/wenda/v1/post/scoring";
         self._response = @"WDWendaPostScoringResponseModel";
     }
 
@@ -2841,7 +2841,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/question/association";
+        self._uri = @"/wenda/v1/question/association";
         self._response = @"WDWendaQuestionAssociationResponseModel";
     }
 
@@ -2887,7 +2887,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/question/brow";
+        self._uri = @"/wenda/v1/question/brow";
         self._response = @"WDWendaQuestionBrowResponseModel";
     }
 
@@ -2953,7 +2953,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/question/checktitle";
+        self._uri = @"/wenda/v1/question/checktitle";
         self._response = @"WDWendaQuestionChecktitleResponseModel";
     }
 
@@ -3000,7 +3000,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/question/defaulttag";
+        self._uri = @"/wenda/v1/question/defaulttag";
         self._response = @"WDWendaQuestionDefaulttagResponseModel";
     }
 
@@ -3046,7 +3046,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/question/loadmore";
+        self._uri = @"/wenda/v1/question/loadmore";
         self._response = @"WDWendaQuestionLoadmoreResponseModel";
     }
 
@@ -3096,7 +3096,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/question/status";
+        self._uri = @"/wenda/v1/question/status";
         self._response = @"WDWendaQuestionStatusResponseModel";
     }
 
@@ -3144,7 +3144,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/questionother/brow";
+        self._uri = @"/wenda/v1/questionother/brow";
         self._response = @"WDWendaQuestionotherBrowResponseModel";
     }
 
@@ -3192,7 +3192,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/questionother/loadmore";
+        self._uri = @"/wenda/v1/questionother/loadmore";
         self._response = @"WDWendaQuestionotherLoadmoreResponseModel";
     }
 
@@ -3287,7 +3287,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/refresh/nativewidget";
+        self._uri = @"/wenda/v1/refresh/nativewidget";
         self._response = @"WDWendaRefreshNativewidgetResponseModel";
     }
 
@@ -3349,7 +3349,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/search/invitelist";
+        self._uri = @"/wenda/v1/search/invitelist";
         self._response = @"WDWendaSearchInvitelistResponseModel";
     }
 
@@ -3394,7 +3394,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/upload/getvideouploadurl";
+        self._uri = @"/wenda/v1/upload/getvideouploadurl";
         self._response = @"WDWendaUploadGetvideouploadurlResponseModel";
     }
 
@@ -3458,7 +3458,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/upload/image";
+        self._uri = @"/wenda/v1/upload/image";
         self._response = @"WDWendaUploadImageResponseModel";
     }
 
@@ -3503,7 +3503,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/user/askprivilege";
+        self._uri = @"/wenda/v1/user/askprivilege";
         self._response = @"WDWendaUserAskprivilegeResponseModel";
     }
 
@@ -3551,7 +3551,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v1/usertag/brow";
+        self._uri = @"/wenda/v1/usertag/brow";
         self._response = @"WDWendaUsertagBrowResponseModel";
     }
 
@@ -3638,7 +3638,7 @@
     if (self) {
         self._method = @"POST";
         self._host = [WDCommonURLSetting baseURL];
-        self._uri = @"/f100/wenda/v2/question/brow";
+        self._uri = @"/wenda/v2/question/brow";
         self._response = @"WDWendaV2QuestionBrowResponseModel";
     }
 

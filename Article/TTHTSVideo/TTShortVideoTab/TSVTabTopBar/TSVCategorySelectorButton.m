@@ -35,7 +35,7 @@
             TTGlowLabel *label = [[TTGlowLabel alloc] initWithFrame:self.bounds];
             label.backgroundColor = [UIColor clearColor];
             label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = [UIColor colorWithHexString:@"383838"];
+            label.textColorThemeKey = kColorText1;
             label.font = [[self class] channelFont];
             [self addSubview:label];
             label;
@@ -45,9 +45,9 @@
             TTGlowLabel *label = [[TTGlowLabel alloc] initWithFrame:self.titleLabel.frame];
             label.backgroundColor = [UIColor clearColor];
             label.textAlignment = NSTextAlignmentCenter;
-            label.textColor = [UIColor whiteColor];
+            label.textColorThemeKey = kColorText4;
             label.alpha = 0;
-            label.font = [UIFont boldSystemFontOfSize:[[self class] channelFontSize]];
+            label.font = [[self class] channelFont];
             [self addSubview:label];
             label;
         });
@@ -70,7 +70,7 @@
     return self;
 }
 
-- (void)setText:(NSString*)text 
+- (void)setText:(NSString*)text
 {
     self.titleLabel.text = text;
     self.maskTitleLabel.text = text;
@@ -81,6 +81,15 @@
     [super layoutSubviews];
     self.titleLabel.bounds = self.bounds;
     self.maskTitleLabel.bounds = self.bounds;
+    [self updateBadgeViewFrame];
+}
+
+- (void)updateBadgeViewFrame
+{
+    CGFloat left = 0;
+    CGFloat top = 0;
+    left = self.width - 18.f;
+    top = 7.f;
 }
 
 - (void)tapped:(UITapGestureRecognizer *)recognizer
@@ -105,8 +114,8 @@
     void (^animationBlock)(void) = ^{
         self.titleLabel.alpha = 1;
         self.maskTitleLabel.alpha = 0;
-//        self.titleLabel.transform = CGAffineTransformIdentity;
-//        self.maskTitleLabel.transform = CGAffineTransformIdentity;
+        self.titleLabel.transform = CGAffineTransformIdentity;
+        self.maskTitleLabel.transform = CGAffineTransformIdentity;
     };
     if (animated) {
         [UIView animateWithDuration:.3 animations:^{
@@ -122,9 +131,9 @@
     void (^animationBlock)(void) = ^{
         self.titleLabel.alpha = 0;
         self.maskTitleLabel.alpha = 1;
-//        CGFloat scale = [[self class] channelSelectedFontSize] / [[self class] channelFontSize];
-//        self.titleLabel.transform = CGAffineTransformMakeScale(scale, scale);
-//        self.maskTitleLabel.transform = CGAffineTransformMakeScale(scale, scale);
+        CGFloat scale = [[self class] channelSelectedFontSize] / [[self class] channelFontSize];
+        self.titleLabel.transform = CGAffineTransformMakeScale(scale, scale);
+        self.maskTitleLabel.transform = CGAffineTransformMakeScale(scale, scale);
     };
     if (animated) {
         [UIView animateWithDuration:.3 animations:^{
@@ -154,6 +163,7 @@
         self.titleLabel.glowSize = self.textGlowSize;
         self.maskTitleLabel.glowSize = self.textGlowSize;
     }
+    
 }
 
 + (CGFloat)buttonWidthForText:(NSString *)text buttonCount:(NSInteger)buttonCount
@@ -222,12 +232,12 @@
     CGFloat padding = 0;
     if ([TTDeviceHelper isPadDevice]) {
         padding = 25;
-    } else if ([TTDeviceHelper is736Screen] ||
-               [TTDeviceHelper is667Screen] ||
-               [TTDeviceHelper isIPhoneXDevice]) {
-        padding = 20;
-    } else {
+    } else if ([TTDeviceHelper is736Screen]) {
+        padding = 19;
+    } else if ([TTDeviceHelper isScreenWidthLarge320]) {
         padding = 16;
+    } else {
+        padding = 15;
     }
     return padding;
 }

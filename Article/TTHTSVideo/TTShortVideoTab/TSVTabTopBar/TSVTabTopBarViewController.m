@@ -26,10 +26,6 @@
 #import "TSVRedPackPublishButton.h"
 #import "NewsBaseDelegate.h"
 #import "TTAccountLoginManager.h"
-
-//爱看
-#import "AKUIHelper.h"
-
 //#import "TTSFHelper.h"
 
 static const NSInteger kCategoryItemHeight = 44;
@@ -45,9 +41,6 @@ static const NSInteger kCategoryItemHeight = 44;
 @property (nonatomic, strong) CAGradientLayer *rightGradientLayer;
 @property (nonatomic, strong) SSThemedView *bottomLine;
 @property (nonatomic, strong) NSMutableArray *categoryButtons;
-
-@property (nonatomic, strong) UIView *selectedBackView;
-@property (nonatomic, strong) CAGradientLayer *selectedBackLayer;
 @property (nonatomic, copy) TSVTabTopBarViewControllerCategorySelectBlock categorySelectBlock;
 
 @end
@@ -65,20 +58,6 @@ static const NSInteger kCategoryItemHeight = 44;
     });
     [self.view addSubview:self.scrollView];
     
-    self.selectedBackView = ({
-        UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 52, 28)];
-        backView.layer.cornerRadius = backView.height / 2;
-        backView.clipsToBounds = YES;
-        backView.userInteractionEnabled = NO;
-        CAGradientLayer *layer = [AKUIHelper AiKanBackGrandientLayer];
-        layer.bounds = backView.bounds;
-        layer.position = CGPointMake(backView.width / 2, backView.height / 2);
-        [backView.layer addSublayer:layer];
-        self.selectedBackLayer = layer;
-        backView;
-    });
-    [self.scrollView addSubview:self.selectedBackView];
-    
     self.rightBackLayer = ({
         CALayer *layer = [CALayer layer];
         layer;
@@ -89,14 +68,6 @@ static const NSInteger kCategoryItemHeight = 44;
         gradientLayer.startPoint = CGPointMake(0, 0.5);
         gradientLayer.endPoint = CGPointMake(1, 0.5);
         gradientLayer;
-    });
-    
-    self.searchButton = ({
-        TTAlphaThemedButton *searchButton = [[TTAlphaThemedButton alloc] init];
-        searchButton.imageName = @"Search";
-        searchButton.enableHighlightAnim = YES;
-        [searchButton addTarget:self action:@selector(searchBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        searchButton;
     });
     
     self.publishButton = ({
@@ -195,10 +166,9 @@ static const NSInteger kCategoryItemHeight = 44;
             button.tapBlock = ^{
                 @strongify(self);
                 if (self.viewModel.currentIndex != index) {
-                    [self.categoryButtons[self.viewModel.currentIndex] setSelected:NO animated:NO];
-                    [self.categoryButtons[index] setSelected:YES animated:NO];
+                    [self.categoryButtons[self.viewModel.currentIndex] setSelected:NO animated:YES];
+                    [self.categoryButtons[index] setSelected:YES animated:YES];
                     [self scrollToIndex:index animated:YES];
-                    [self refreshSelectBackViewCenter:((UIButton *)self.categoryButtons[index]).center newButton:((TSVCategorySelectorButton *)self.categoryButtons[index]) with:NO];
                 }
                 if (self.categorySelectBlock) {
                     self.categorySelectBlock(index);
@@ -280,11 +250,6 @@ static const NSInteger kCategoryItemHeight = 44;
         } else {
             self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 5);
         }
-    }
-    
-    if (self.viewModel.currentIndex < self.categoryButtons.count) {
-        TSVCategorySelectorButton *button = self.categoryButtons[self.viewModel.currentIndex];
-        [self refreshSelectBackViewCenter:button.center newButton:button with:NO];
     }
 }
 
@@ -369,29 +334,6 @@ static const NSInteger kCategoryItemHeight = 44;
         buttonIndex ++;
     }
     self.viewModel.currentIndex = toIndex;
-    TSVCategorySelectorButton *toButton = self.categoryButtons[toIndex];
-    [self refreshSelectBackViewCenter:toButton.center newButton:toButton with:NO];
-}
-
-- (void)refreshSelectBackViewCenter:(CGPoint)position newButton:(TSVCategorySelectorButton *)categoryButton with:(BOOL)animation
-{
-    if (self.selectedBackView.alpha == 0) {
-        [UIView animateWithDuration:.25 animations:^{
-            self.selectedBackView.alpha = 1;
-        }];
-    }
-    if (fabs(self.selectedBackView.width - categoryButton.width) > 10) {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        self.selectedBackView.width = categoryButton.width;
-        self.selectedBackLayer.frame = self.selectedBackView.bounds;
-        [CATransaction commit];
-    }
-    if (animation && self.selectedBackView.alpha == 1) {
-        
-    } else {
-        self.selectedBackView.center = position;
-    }
 }
 
 - (void)searchBtnClicked:(id)sender
@@ -415,7 +357,7 @@ static NSString * const kTTNotificationNameRedpackIntroUpdated = @"kTTNotificati
 //        [self openSpringShortVideoTemplatePage];
 //    } else {
         [TTTrackerWrapper eventV3:@"click_publisher_shortvideo_top" params:@{
-                                                                             @"tab_name": @"hotsoon_video",
+                                                                             @"tab_name": kTTUGCVideoCategoryID,
                                                                              @"category_name": [self.viewModel currentCategoryName],
                                                                              }];
         [[TTModuleBridge sharedInstance_tt] triggerAction:@"TTRecordVideoViewControllerPresentAction"
@@ -424,7 +366,7 @@ static NSString * const kTTNotificationNameRedpackIntroUpdated = @"kTTNotificati
                                                             @"cid" : kTTShortVideoConcernID,
                                                             @"style" : @"shortvideo",
                                                             @"shoot_entrance" : @"shortvideo_top",
-                                                            @"tab_name" : @"hotsoon_video", //当前tap，从小视频右上角来肯定是小视频tab
+                                                            @"tab_name" : kTTUGCVideoCategoryID, //当前tap，从小视频右上角来肯定是小视频tab
                                                             @"category_name" : [self.viewModel currentCategoryName], //当前用户所在的小视频子频道
                                                             }
                                                  complete:nil];

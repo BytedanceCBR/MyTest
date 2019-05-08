@@ -48,6 +48,10 @@ typedef enum SSWebViewDismissType{
 @property (nonatomic, assign)BOOL shouldShowSafariAction;
 @property (nonatomic, assign)BOOL shouldShowShareAction;
 @property (nonatomic, assign)BOOL shouldDisableHash; // 是否需要拼接hash
+@property (nonatomic, assign)BOOL isWebControl; // 是否web控制返回按钮
+@property (nonatomic, assign)BOOL isShowCloseWebBtn; // 是否显示关闭x按钮
+@property (nonatomic, assign)BOOL isShowNaviBack; // 是否显示返回按钮
+@property (nonatomic, assign)NSInteger closeStackCounts;
 
 @property (nonatomic, copy)NSString *shareTitle;
 @property (nonatomic, copy)NSString *shareDesc;
@@ -67,7 +71,8 @@ typedef enum SSWebViewDismissType{
 //@property(nonatomic, retain)NSString * groupID;
 ////用于统计， 可以为空
 //@property(nonatomic, retain)NSString * adID;
-
+- (void)setupFShareBtn:(BOOL)isShowBtn;
+- (void)hiddeNaviBack:(BOOL)isShowBtn;
 - (void)loadWithURL:(NSURL *)requestURL;
 - (void)loadWithURL:(NSURL *)requestURL requestHeaders:(NSDictionary *)requestHeaders;
 - (void)loadWithURL:(NSURL *)requestURL shouldAppendQuery:(BOOL)shouldAppendQuery;

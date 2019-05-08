@@ -248,11 +248,17 @@
         return groupKey;
     }
 
+//    if ([self isInHouseApp]) {
+//        return @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";
+//    }
+//
+//    return @"group.todayExtenstionShareDefaults";
+//
     if ([self isInHouseApp]) {
-        return @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";
+        return @"group.com.fp1.extension";
     }
     
-    return @"group.todayExtenstionShareDefaults";
+    return @"group.com.f100.client.extension";
 }
 
 + (void)saveObj:(NSObject<NSCoding> *)obj forKey:(NSString *)key
@@ -290,7 +296,7 @@
 }
 
 + (BOOL)isInHouseApp {
-    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
+    NSRange isRange = [[self bundleIdentifier] rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
     if (isRange.location != NSNotFound) {
         return YES;
     }

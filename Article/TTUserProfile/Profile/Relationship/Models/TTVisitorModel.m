@@ -7,7 +7,7 @@
 //
 
 #import "TTVisitorModel.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 
 
 

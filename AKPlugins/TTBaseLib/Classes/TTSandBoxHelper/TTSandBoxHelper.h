@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  获取下载渠道
  *
  *  @return 下载渠道
- */
+*/
 + (nullable NSString *)getCurrentChannel;
 
 /**
@@ -131,6 +131,10 @@ NS_ASSUME_NONNULL_BEGIN
 // *  @return
 // */
 //+ (nullable NSString *)installID;
+
++ (BOOL)isAPPFirstLaunchForAd;
+
++ (void)setAppFirstLaunchForAd;
 
 /**
  *  判断APP是否第一次Launch

@@ -12,7 +12,4 @@ typedef void(^CompleteBlock)(BOOL result);
 
 - (instancetype)initWithCompleteBlock:(CompleteBlock)block;
 + (void)presentLoginTrafficViewControllerWithCompleteBlock:(CompleteBlock)block;
-
-+ (void)presentLoginTrafficViewControllerWithCompleteBlock:(CompleteBlock)block params:(NSDictionary *)params;
-
 @end

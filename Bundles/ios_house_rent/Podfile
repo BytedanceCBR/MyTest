@@ -1,0 +1,35 @@
+source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git'
+source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
+source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
+source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'git@code.byted.org:ugc/UGCSpecs.git'
+
+platform :ios, '8.0'
+
+target 'FHHouseRent' do
+  pod 'Masonry' , '1.0.1'
+  pod 'ReactiveObjC', '3.0.0'
+  pod 'JSONModel'
+  pod 'FHCommonUI' , :git => 'git@code.byted.org:fproject/ios_common_ui.git' , :branch => 'feature/develop' #,:path => '../fcommonui4ios/'
+  pod 'YYText'
+  pod 'MJRefresh'
+
+  target 'FHHouseRentTests' do
+      inherit! :search_paths
+      #pod 'OCMock', '~> 2.0.1'
+  end
+end
+
+target 'Demo' do
+    pod 'Masonry' , '1.0.1'
+    pod 'ReactiveObjC', '3.0.0'
+    pod 'JSONModel'
+    pod 'FHCommonUI' , :git => 'git@code.byted.org:fproject/ios_common_ui.git' , :branch => 'feature/develop' #,:path => '../fcommonui4ios/'
+    pod 'YYText'
+    pod 'MJRefresh'
+
+    target 'DemoTests' do
+        inherit! :search_paths
+        #pod 'OCMock', '~> 2.0.1'
+    end
+end

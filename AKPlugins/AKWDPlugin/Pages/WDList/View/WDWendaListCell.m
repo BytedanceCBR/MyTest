@@ -399,7 +399,9 @@
     [params setValue:@"answer_share_video" forKey:@"source"];
     [params setValue:@"list" forKey:@"position"];
     [params setValue:self.ansEntity.ansid forKey:@"group_id"];
-    [params setValue:shareHelper.sharePlatform forKey:@"platform"];
+    [params setValue:shareHelper.sharePlatform forKey:@"share_platform"];
+    params[@"event_type"] = @"house_app2c_v2";
+
     [TTTrackerWrapper eventV3:@"rt_share_to_platform" params:params];
 }
 
@@ -457,7 +459,10 @@
     NSString *categoryName = [self.gdExtJson objectForKey:@"category_name"];
     NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&refer=wenda", self.ansEntity.user.userID];
     NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"list_answer_wenda" groupId:self.ansEntity.ansid profileUserId:self.ansEntity.user.userID];
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:result] userInfo:nil];
+    
+    // add by zjing 去掉个人主页跳转
+    
+//    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:result] userInfo:nil];
 }
 
 - (void)listCellUserHeaderViewFollowButtonClick:(TTFollowThemeButton *)followBtn {
@@ -630,7 +635,7 @@
 
 - (NSAttributedString *)tokenAttributeString
 {
-    NSString *textColor = kColorText1;
+    NSString *textColor = kFHColorCharcoalGrey;
     CGFloat fontSize = [WDListCellLayoutModel answerAbstractContentFontSize];
     NSMutableAttributedString *token = [[NSMutableAttributedString alloc] initWithString:@"...全文"
                                                                               attributes:@{

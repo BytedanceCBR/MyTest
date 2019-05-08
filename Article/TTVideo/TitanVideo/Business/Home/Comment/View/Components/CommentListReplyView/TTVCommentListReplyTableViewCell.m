@@ -8,7 +8,7 @@
 
 #import "TTVCommentListReplyTableViewCell.h"
 
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 #import "TTIconFontDefine.h"
 #import "TTCommentTextAttachment.h"
 #import "TTCommentImageHelper.h"
@@ -16,7 +16,7 @@
 #import "TTArticleCellHelper.h"
 #import "TTTAttributedLabel.h"
 #import "UILabel+Tapping.h"
-#import "TTVerifyIconTextAttachment.h"
+#import <TTVerifyKit/TTVerifyIconTextAttachment.h>
 #import "SSThemed.h"
 #import <TTBaseLib/TTLabelTextHelper.h>
 #import "TTRoute.h"
@@ -218,7 +218,8 @@ extern UIColor *tt_ttuisettingHelper_detailViewCommentReplyUserNameColor(void);
 
     NSRange nameRange = [content rangeOfString:[NSString stringWithFormat:@"%@:", _replyModel.replyUserName]];
     if (self.userNameRange.location != NSNotFound) {
-        [_replyLabel addLinkToLabelWithURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] range:self.userNameRange];
+        // add by zjing 去掉作者点击
+//        [_replyLabel addLinkToLabelWithURL:[NSURL URLWithString:kTTCommentContentLabelQuotedCommentUserURLString] range:self.userNameRange];
     }
 
     if (_replyModel.replyContentRichSpanJSONString) {

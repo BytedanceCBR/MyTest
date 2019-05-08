@@ -22,8 +22,9 @@
 #import "DebugUmengIndicator.h"
 #import <TTTracker/TTTrackerCleaner.h>
 #import "SSWebViewUtil.h"
-#import "TTDebugAssistant.h"
-
+//#import "Bubble-Swift.h"
+#import "FHLocManager.h"
+#import "FHEnvContext.h"
 @implementation TTAppLogStartupTask
 
 + (void)load
@@ -56,10 +57,6 @@
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
     [[self class] startupTracker];
-
-#if INHOUSE
-    [TTDebugAssistant show];
-#endif
     [[SSImpressionManager shareInstance] setTodayExtensionBlock:^(void){
         //保存today extenstion的impression
         NSMutableDictionary * todayExtenstionImpressions = [ExploreExtenstionDataHelper fetchTodayExtenstionDict];
@@ -90,24 +87,46 @@
         NSMutableDictionary *eventDic = [NSMutableDictionary dictionary];
         [eventDic setValue:[[SSImpressionManager shareInstance] ImpressionsfromType:[TTTrackerCleaner sharedCleaner].fromType] forKey:@"item_impression"];
         [eventDic setValue:[[SSLogDataManager shareManager] needSendLogDatas] forKey:@"log_data"];
-        
+        [eventDic setValue:@"event_type" forKey:@"house_app2c_v2"];
         return [eventDic copy];
     }];
-    
-    [[TTTracker sharedInstance] setCustomHeaderBlock:^(void) {
-        NSMutableDictionary *customHeader = [NSMutableDictionary dictionary];
-        if ([SSCommonLogic isUAEnable]) {
-            [customHeader setValue:[self userAgentString] forKey:@"web_ua"];
+
+    [[TTTracker sharedInstance] setTransferBlock:^NSString * _Nonnull(TTTrackerURLType type) {
+        if (type == TTTrackerURLTypeBatchReport) {
+            return  [CommonURLSetting appLogURLString];
+        }else if (type == TTTrackerURLTypeImmediateReport){
+            return [CommonURLSetting rtAppLogURLString];
+        }else if (type == TTTrackerURLTypeConfig){
+            return [CommonURLSetting trackLogConfigURLString];
         }
-        return [customHeader copy];
+        return nil;
     }];
     
+    [[self class] updateCustomerHeader];
+
     [TTTracker startWithAppID:[TTSandBoxHelper ssAppID] channel:[TTSandBoxHelper getCurrentChannel]];
 
     if ([TTSandBoxHelper isInHouseApp]) {
         [[TTTracker sharedInstance] setIsInHouseVersion:YES];
         [self enableUmengLabelDisplay];
     }
+}
+
++(void)updateCustomerHeader {
+    [[TTTracker sharedInstance] setCustomHeaderBlock:^(void) {
+        NSMutableDictionary *customHeader = [NSMutableDictionary dictionary];
+        if ([SSCommonLogic isUAEnable]) {
+            [customHeader setValue:[self userAgentString] forKey:@"web_ua"];
+        }
+        //        NSString* currentCityName = [[EnvContext shared].client currentCityName];
+        //        NSString* provinceName = [[EnvContext shared].client currentProvince];
+        NSString* currentCityName = [FHLocManager sharedInstance].currentReGeocode.city;
+        NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.province;
+        customHeader[@"city_name"] = currentCityName;
+        customHeader[@"province_name"] = provinceName;
+        customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        return [customHeader copy];
+    }];
 }
 
 + (void)enableUmengLabelDisplay {

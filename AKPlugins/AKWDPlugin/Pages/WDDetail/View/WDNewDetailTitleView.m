@@ -65,6 +65,7 @@
         logoView.hidden = YES;
         logoView.userInteractionEnabled = YES;
         logoView.enableBlackMaskView = YES;
+        logoView.imageView.hidden = YES;
         [logoView setupVerifyViewForLength:AvatarViewHeightWithoutShowFans adaptationSizeBlock:nil];
         [self addSubview:logoView];
         self.logoView = logoView;
@@ -102,25 +103,25 @@
     if (self.logoView.imageView.layer.borderWidth){
         self.logoView.imageView.layer.borderWidth = 0;
     }
-    left = 2;
+    left = ([UIScreen mainScreen].bounds.size.width - (self.logoView.width + self.titleLabel.width + 80))/2.0f;
     self.logoView.left = left;
     self.logoView.centerY = self.height / 2;
     left = self.logoView.right + WDPadding(10.0f);
-    CGFloat maxTitleLabelWidth = self.width - left;
+    CGFloat maxTitleLabelWidth = [UIScreen mainScreen].bounds.size.width - left - 100;
     self.titleLabel.left = left;
     if (self.titleLabel.width > maxTitleLabelWidth){
         self.titleLabel.width = maxTitleLabelWidth;
     }
     self.fansLabel.left = left;
-    if (self.fansLabel.text){
-        CGFloat totalHeight = self.titleLabel.height + self.fansLabel.height;
-        self.titleLabel.top = (self.height - totalHeight) / 2;
-        self.fansLabel.top = self.titleLabel.bottom;
-    }else{
+//    if (self.fansLabel.text){
+//        CGFloat totalHeight = self.titleLabel.height + self.fansLabel.height;
+//        self.titleLabel.top = (self.height - totalHeight) / 2;
+//        self.fansLabel.top = self.titleLabel.bottom;
+//    }else{
         self.titleLabel.centerY = self.logoView.centerY;
-    }
+//    }
     self.titleLabel.hidden = NO;
-    self.fansLabel.hidden = NO;
+    self.fansLabel.hidden = YES;
     
 }
 
@@ -140,8 +141,8 @@
         self.fansLabel.text = nil;
     }
     
-    BOOL logoViewIsHiden = (isEmptyString(url));
-    [self showVerifyIconWithVerifyInfo:verifyInfo decoration:decoration logoViewIsHiden:logoViewIsHiden];
+//    BOOL logoViewIsHiden = (isEmptyString(url));
+    [self showVerifyIconWithVerifyInfo:verifyInfo decoration:decoration logoViewIsHiden:YES];
     
     if (!isEmptyString(url)) {
         [self.logoView setImageWithURLString:url];
@@ -157,12 +158,13 @@
         self.width = self.titleLabel.width + 9 + self.logoView.width;
     }
     self.width = CGRectGetWidth([UIScreen mainScreen].bounds);
-
+    
     [self setNeedsLayout];
 }
 
 - (void)showVerifyIconWithVerifyInfo:(NSString *)verifyInfo decoration:(NSString *)decoration logoViewIsHiden:(BOOL)logoViewIsHiden {
-    BOOL isVerified = [TTVerifyIconHelper isVerifiedOfVerifyInfo:verifyInfo];
+//    BOOL isVerified = [TTVerifyIconHelper isVerifiedOfVerifyInfo:verifyInfo];
+    BOOL isVerified = NO;
     [self.titleLabel removeAllIcons];
     [self.logoView hideVerifyView];
     if(logoViewIsHiden){
@@ -221,6 +223,7 @@
     CGFloat destY = self.height / 2;
     CGFloat destAlpha = bShow ? 1 : 0;
     self.logoView.hidden = NO;
+    self.logoView.imageView.hidden = NO;
     //    dispatch_async(dispatch_get_main_queue(), ^{
     if (animated) {
         _isAnimating = YES;
@@ -228,6 +231,7 @@
         UIViewAnimationOptions option = bShow ? UIViewAnimationOptionCurveEaseOut : UIViewAnimationOptionCurveEaseIn;
         
         self.logoView.centerY = destY;
+        /*
         if (self.fansLabel.text){
             CGFloat totalHeight = self.titleLabel.height + self.fansLabel.height;
             self.titleLabel.top = (self.height - totalHeight) / 2;
@@ -235,6 +239,9 @@
         }else{
             self.titleLabel.centerY = self.logoView.centerY;
         }
+         */
+        self.titleLabel.centerY = self.logoView.centerY;
+
         [UIView animateWithDuration:0.15 delay:0 options:option animations:^{
             [self setTitleAlpha:destAlpha];
         } completion:^(BOOL finished) {
@@ -242,6 +249,7 @@
         }];
     } else {
         self.logoView.centerY = destY;
+        /*
         if (self.fansLabel.text){
             CGFloat totalHeight = self.titleLabel.height + self.fansLabel.height;
             self.titleLabel.top = (self.height - totalHeight) / 2;
@@ -249,6 +257,8 @@
         }else{
             self.titleLabel.centerY = self.logoView.centerY;
         }
+         */
+        self.titleLabel.centerY = self.logoView.centerY;
         [self setTitleAlpha:destAlpha];
     }
     //    });

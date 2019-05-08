@@ -40,6 +40,8 @@ static NSString * const BASE_URL_SANDBOX    = @"https://hotsoon.snssdk.com/sandb
 
 + (void)fetchAppSetting
 {
+    return;
+    
     HTSNetworkServiceMode mode = [HTSNetworkDefaultIMP networkMode];
     NSString *urlString = @"/settings/";
     if (mode == HTSNetworkServiceModeSandBox) {

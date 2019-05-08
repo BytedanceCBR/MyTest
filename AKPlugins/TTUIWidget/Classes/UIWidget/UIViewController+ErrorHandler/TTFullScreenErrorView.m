@@ -82,7 +82,7 @@
         case TTFullScreenErrorViewTypeNoFriends: {
             [self.errorImage setImage:[UIImage themedImageNamed:@"not_login_loading"]];
             self.errorMsg.text = NSLocalizedString(@"你还没有关注任何人", nil);
-            self.actionBtn.hidden = NO;
+            self.actionBtn.hidden = YES;
             [self.actionBtn setTitle:NSLocalizedString(@"添加好友", nil) forState:UIControlStateNormal];
             break;
         }
@@ -94,7 +94,7 @@
         case TTFullScreenErrorViewTypeNoInterests: {
             [self.errorImage setImage:[UIImage themedImageNamed:@"not_login_loading"]];
             self.errorMsg.text = NSLocalizedString(@"你还没有兴趣", nil);
-            self.actionBtn.hidden = NO;
+            self.actionBtn.hidden = YES;
             [self.actionBtn setTitle:NSLocalizedString(@"添加兴趣", nil) forState:UIControlStateNormal];
             break;
         }
@@ -134,7 +134,7 @@
         case TTFullScreenErrorViewTypeLocationServiceDisabled: {
             [self.errorImage setImage:[UIImage themedImageNamed:@"not_location_loading"]];
             self.errorMsg.text = NSLocalizedString(@"定位服务不可用", nil);
-            self.errorSubMsg.text = NSLocalizedString(@"开启定位，添加你的位置（设置>隐私>定位服务>开启爱看定位服务",nil);
+            self.errorSubMsg.text = NSLocalizedString(@"开启定位，添加你的位置（设置>隐私>定位服务>开启幸福里定位服务",nil);
             self.actionBtn.hidden = NO;
             [self.actionBtn setTitle:NSLocalizedString(@"开启服务", nil) forState:UIControlStateNormal];
             break;

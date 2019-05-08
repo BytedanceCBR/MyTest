@@ -42,16 +42,35 @@ static TTDeviceMode tt_deviceMode;
 }
 
 + (BOOL)isIPhoneXDevice{
-    return [TTDeviceHelper getDeviceType] == TTDeviceMode812;
+    return [TTDeviceHelper getDeviceType] == TTDeviceMode812 || [TTDeviceHelper getDeviceType] == TTDeviceMode896;
 }
 
 + (BOOL)isPadDevice {
     return [TTDeviceHelper getDeviceType] == TTDeviceModePad;
 }
 
++ (Boolean)is812Screen {
+    return [TTDeviceHelper getDeviceType] == TTDeviceMode812;
+}
+
++ (Boolean)is896Screen2X {
+    CGFloat scale = [UIScreen mainScreen].scale;
+    return [TTDeviceHelper getDeviceType] == TTDeviceMode896 && scale == 2.f;
+}
+
++ (Boolean)is896Screen3X {
+    CGFloat scale = [UIScreen mainScreen].scale;
+    return [TTDeviceHelper getDeviceType] == TTDeviceMode896 && scale == 3.f;
+}
+
 + (BOOL)isScreenWidthLarge320 {
     CGFloat shortSide = MIN([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
     return shortSide > 320;
+}
+
++ (CGFloat)scaleToScreen375
+{
+    return [UIScreen mainScreen].bounds.size.width / 375.0f;
 }
 
 + (BOOL)isIpadProDevice {
@@ -86,8 +105,9 @@ static TTDeviceMode tt_deviceMode;
         }
         else if ([TTDeviceHelper judge812Screen]) {
             tt_deviceMode = TTDeviceMode812;
-        }
-        else if ([TTDeviceHelper judge736Screen]) {
+        }else if ([TTDeviceHelper judge896Screen]) {
+            tt_deviceMode = TTDeviceMode896;
+        }else if ([TTDeviceHelper judge736Screen]) {
             tt_deviceMode = TTDeviceMode736;
         }
         else if ([TTDeviceHelper judge667Screen]) {
@@ -113,6 +133,11 @@ static TTDeviceMode tt_deviceMode;
 + (BOOL)judge812Screen {
     CGFloat longSide = MAX([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
     return longSide == 812;
+}
+
++ (BOOL)judge896Screen {
+    CGFloat longSide = MAX([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    return longSide == 896;
 }
 
 + (BOOL)judge736Screen {

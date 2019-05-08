@@ -16,7 +16,7 @@
 #import <objc/runtime.h>
 //#import "TTShareToRepostManager.h"
 #import "TTActivityShareSequenceManager.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTWebImageManager.h"
 #import "TTShareConstants.h"
 
@@ -38,6 +38,8 @@
 #import <TTForwardWeitoutiaoActivity.h>
 #import <TTDirectForwardWeitoutiaoActivity.h>
 #import "AKAwardCoinManager.h"
+#import "FHTraceEventUtils.h"
+
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 
 @implementation TTArticleDetailViewController (Share)
@@ -78,8 +80,9 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         TTActivity * nightMode = [TTActivity activityOfNightMode];
         [activityItems addObject:nightMode];
         
-        TTActivity * fontSetting = [TTActivity activityOfFontSetting];
-        [activityItems addObject:fontSetting];
+        // add by zjing 去掉问答字体设置
+//        TTActivity * fontSetting = [TTActivity activityOfFontSetting];
+//        [activityItems addObject:fontSetting];
         
         TTActivity * reportActivity = [TTActivity activityOfReport];
         [activityItems addObject:reportActivity];
@@ -102,13 +105,15 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         actionSheet.delegate = self;
         [actionSheet showInView:self.view];
     }
+
+    self.activityActionManager.copyText = self.detailModel.article.shareURL;
     wrapperTrackEvent(@"detail", @"preferences");
     TLS_LOG(@"click_preference");
 }
 
 - (void)p_willShowSharePannel
 {
-    
+
     [self.activityActionManager clearCondition];
     if (!self.activityActionManager) {
         self.activityActionManager = [[TTActivityShareManager alloc] init];
@@ -116,7 +121,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         self.activityActionManager.miniProgramEnable = self.detailModel.article.articleType == ArticleTypeNativeContent;
         self.activityActionManager.delegate = self;
     }
-    
+
     NSMutableArray * activityItems = @[].mutableCopy;
     if ([self.articleInfoManager needShowAdShare]) {
         NSMutableDictionary *shareInfo = [self.articleInfoManager makeADShareInfo];
@@ -149,8 +154,9 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     
     
     self.curShareSourceType = TTShareSourceObjectTypeArticle;
+    self.activityActionManager.copyText = self.detailModel.article.shareURL;
     
-    [self.detailModel sendDetailTrackEventWithTag:@"detail" label:@"share_button"];
+//    [self.detailModel sendDetailTrackEventWithTag:@"detail" label:@"share_button"];
 }
 
 - (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image withSize:(CGFloat) size
@@ -506,7 +512,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [shareView addSubview:iconView];
             
             UIImageView *lineView = [[UIImageView alloc] initWithFrame:CGRectMake(0, shareView.bounds.size.height - 101, shareView.bounds.size.width, 1)];
-            lineView.backgroundColor = [UIColor colorWithHexString:@"d8d8d8"];
+            lineView.backgroundColor = [UIColor colorWithHexString:@"e8e8e8"];
             [shareView addSubview:lineView];
             
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(73, shareView.bounds.size.height - 73, shareView.bounds.size.width - 73 - 64 - 15, 25)];
@@ -585,9 +591,20 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     if ([SSCommonLogic accountABVersionEnabled]) {
         NSString *label;
         if (!self.detailModel.article.userRepined) {
-            label = @"favorite_button";
+//            label = @"favorite_button";
+//
+//            [self report_p_sendDetailLogicTrackWithLabel:label];
             
-            [self report_p_sendDetailLogicTrackWithLabel:label];
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+            [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+            [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+            //        [params setValue:model.userID.stringValue forKey:@"user_id"];
+            [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+            [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+            [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+            [params setValue:@"detail" forKey:@"position"];
+            [TTTrackerWrapper eventV3:@"rt_favourite" params:params];
             // 加入收藏吊起登录弹窗的代码
             TTAccountLoginAlertTitleType type = TTAccountLoginAlertTitleTypeFavor;
             NSString *source = @"article_detail_favor";
@@ -596,7 +613,45 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             if ([SSCommonLogic favorDetailActionType] == 0) {
                 // 策略0: 不需要登录
                 // 收藏操作都会正常进行,进行原来的收藏操作
+//                 add by zjing 去掉登录同步收藏功能
                 [self didFavorWithDismissHandler:nil];
+
+                if ([SSCommonLogic needShowLoginTipsForFavor]) {
+//                    UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:@"登录后云端同步保存收藏，建议先登录" preferredStyle:UIAlertControllerStyleAlert];
+//                    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//                        [self didFavorWithDismissHandler:nil];
+//                    }]];
+////                    [ac addAction:[UIAlertAction actionWithTitle:@"同步收藏" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                        [TTAccountManager showLoginAlertWithType:type source:source completion:^(TTAccountAlertCompletionEventType type, NSString *phoneNum) {
+//                            if (type == TTAccountAlertCompletionEventTypeDone) {
+//                                // 如果登录成功，后续功能会照常进行
+//                                // 进行收藏操作
+//                                if ([TTAccountManager isLogin]) {
+//                                    [self didFavorWithDismissHandler:nil];
+//                                }
+//                            } else if (type == TTAccountAlertCompletionEventTypeCancel) {
+//                                // 如果退出登录，登录不成功，则后续功能不会进行
+//                                // 添加收藏失败的统计埋点
+//                                // 收藏成功后，统计打点 favorite_fail
+//                                //                            [self p_sendDetailLogicTrackWithLabel:@"favorite_fail"];
+//                            } else if (type == TTAccountAlertCompletionEventTypeTip) {
+//                                [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:self] type:TTAccountLoginDialogTitleTypeDefault source:source subscribeCompletion:^(TTAccountLoginState state) {
+//                                    if (state == TTAccountLoginStateLogin) {
+//                                        // 如果登录成功，则进行收藏过程
+//                                        //                                    [self didFavorWithDismissHandler:nil];
+//                                    } else if (state == TTAccountLoginStateCancelled) {
+//                                        // 添加收藏失败的统计埋点
+//                                        // 收藏成功后，统计打点 favorite_fail
+//                                        //                                    [self p_sendDetailLogicTrackWithLabel:@"favorite_fail"];
+//                                    }
+//                                }];
+//                            }
+//                        }];
+//                    }]];
+//                    [self presentViewController:ac animated:YES completion:nil];
+                } else {
+                    [self didFavorWithDismissHandler:nil];
+                }
             } else if ([SSCommonLogic favorDetailActionType] == 1) {
                 // 策略1: 强制登录，需要客户端判断用户的登录状态
                 if ([TTAccountManager isLogin]) {
@@ -839,7 +894,7 @@ static char kCurShareSourceTypeKey;
                     title = self.activityActionManager.qqShareTitleText;
                 }
                 if (isEmptyString(title)) {
-                    title = NSLocalizedString(@"爱看", nil);
+                    title = NSLocalizedString(@"幸福里", nil);
                 }
                 UIImage *shareImage = self.activityActionManager.shareToWeixinMomentOrQZoneImage ? self.activityActionManager.shareToWeixinMomentOrQZoneImage : self.activityActionManager.shareImage;
                 TTQQZoneContentItem *qqZoneContentItem = [[TTQQZoneContentItem alloc] initWithTitle:title desc:qqZoneText webPageUrl:qqZoneShareURL thumbImage:shareImage imageUrl:self.activityActionManager.shareImageURL shareTye:TTShareWebPage];

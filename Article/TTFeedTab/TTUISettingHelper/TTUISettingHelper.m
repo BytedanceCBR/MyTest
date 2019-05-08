@@ -408,8 +408,7 @@ NSDictionary *tt_ttuisettingHelper_cellViewUISettingsDictionary(void) {
             return [UIColor colorWithDayColorName:dayColorHexString nightColorName:nightColorHexString];
         }
     }
-    //修改默认值为222222
-    return [UIColor colorWithHexString:@"222222"];
+    return [UIColor tt_themedColorForKey:kColorText1];
 }
 
 + (NSArray *)cellViewTitleColors
@@ -435,7 +434,7 @@ NSDictionary *tt_ttuisettingHelper_cellViewUISettingsDictionary(void) {
             return [UIColor colorWithDayColorName:dayColorHexString nightColorName:nightColorHexString];
         }
     }
-    return [UIColor colorWithHexString:@"B6B9C0"];
+    return [UIColor tt_themedColorForKey:kColorText1Highlighted];
 }
 
 + (NSArray *)cellViewHighlightedtTitleColors

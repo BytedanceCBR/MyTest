@@ -25,6 +25,14 @@
 + (id<TTAccountSessionTask>)requestLogout:(void (^)(BOOL success, NSError *error))completedBlock;
 
 
+/**
+ *  登出账户
+ *
+ *  @param completedBlock   完成后的回调
+ *  @return HTTP请求任务
+ */
++ (id<TTAccountSessionTask>)requestLogoutClearCookie:(void (^)(BOOL success, NSError *error))completedBlock;
+
 #pragma mark - 解绑第三方账号
 /**
  *  注销绑定的第三方平台账号

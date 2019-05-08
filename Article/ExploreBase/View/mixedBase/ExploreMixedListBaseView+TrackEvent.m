@@ -13,7 +13,9 @@
 #import "ExploreCellBase.h"
 #import "TTCategoryDefine.h"
 #import "TTMonitor.h"
-
+//#import "Bubble-Swift.h"
+#import "TTCategoryStayTrackManager.h"
+#import "FHEnvContext.h"
 
 @implementation ExploreMixedListBaseView (TrackEvent)
 
@@ -66,11 +68,19 @@
         return;
     }
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
+
+//    [dict setValue:self.concernID forKey:@"concern_id"];
+//    [dict setValue:@(self.refer) forKey:@"refer"];
+    
     [dict setValue:self.categoryID forKey:@"category_name"];
-    [dict setValue:self.concernID forKey:@"concern_id"];
-    [dict setValue:@(self.refer) forKey:@"refer"];
+    [dict setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
     [dict setValue:label forKey:@"refresh_type"];
+    
+//    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
+    
 //    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
+    
 }
 
 - (void)trackLoadStatusEventWithErorr:(NSError *)error isLoadMore:(BOOL)isLoadMore

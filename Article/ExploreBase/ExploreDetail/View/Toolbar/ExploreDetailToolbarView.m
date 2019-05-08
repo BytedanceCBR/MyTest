@@ -38,10 +38,10 @@
         TTAlphaThemedButton *writeButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
         [writeButton setTitle:[SSCommonLogic exploreDetailToolBarWriteCommentPlaceholderText] forState:UIControlStateNormal];
         writeButton.height = [TTDeviceHelper isPadDevice] ? 36 : [TTDeviceUIUtils tt_newPadding:32];
-        writeButton.titleLabel.font = [UIFont systemFontOfSize:(_isIPad ? 18 : 13)];
+        writeButton.titleLabel.font = [UIFont systemFontOfSize:(_isIPad ? 18 : 14)];
         writeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 8.f, 0, 0);
-        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, 0);
+//        writeButton.imageEdgeInsets = UIEdgeInsetsMake(0, 8.f, 0, 0);
+        writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, 0);
         writeButton.titleLabel.textAlignment = NSTextAlignmentLeft;
         [self addSubview:writeButton];
         _writeButton = writeButton;
@@ -65,7 +65,7 @@
         _topButton.hidden = YES;
 
         self.badgeLabel = [[SSThemedLabel alloc] init];
-        self.badgeLabel.backgroundColorThemeKey = kColorBackground7;
+        self.badgeLabel.backgroundColorThemeKey = kFHColorCoral;
         self.badgeLabel.textColorThemeKey = kColorText8;
         self.badgeLabel.font = [UIFont systemFontOfSize:8];
         self.badgeLabel.layer.cornerRadius = 5;
@@ -283,7 +283,7 @@
     _digButton.frame = digFrame;
     
     BOOL _isIPad = [TTDeviceHelper isPadDevice];
-    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 8, 0, _emojiButton.width + 4);
+    _writeButton.titleEdgeInsets = UIEdgeInsetsMake(0, _isIPad ? 25 : 16, 0, _emojiButton.width + 4);
     
     
     
@@ -361,6 +361,9 @@
         frame.size.height = ExploreDetailGetToolbarHeight();
     }
     [super setFrame:frame];
+    
+    self.separatorView.top = 0;
+
 }
 
 /*
@@ -472,7 +475,7 @@
 
         if ([TTDeviceHelper isPadDevice]) {
             
-            _writeButton.titleColorThemeKey = kColorText8;
+            _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
             _writeButton.backgroundColor = [UIColor clearColor];
             _writeButton.borderColorThemeKey = kColorLine8;
             _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
@@ -480,7 +483,7 @@
             
         } else {
             
-            _writeButton.titleColorThemeKey = kColorText3;
+            _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
             _writeButton.backgroundColor = [[UIColor colorWithHexString:@"#FFFFFF"] colorWithAlphaComponent:.1f];
             
             _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
@@ -500,14 +503,14 @@
         _collectButton.selectedImageName = @"tab_collect_press";
         _shareButton.imageName = [self _shareIconName];
         _writeButton.borderColors = nil;
-        _writeButton.borderColorThemeKey = kColorLine1;
+        _writeButton.borderColorThemeKey = kFHColorSilver2;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-        _writeButton.titleColorThemeKey = kColorText1;
+        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
-        _writeButton.backgroundColorThemeKey = kColorBackground3;
+        _writeButton.backgroundColorThemeKey = kFHColorPaleGrey;
         _writeButton.layer.masksToBounds = YES;
         
-        [_writeButton setImageName:@"write_new"];
+//        [_writeButton setImageName:@"write_new"];
         _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
     }
     else if (viewStyle == TTDetailViewStylePhotoComment) {
@@ -516,8 +519,8 @@
         _collectButton.imageName = @"icon_details_collect";
         _shareButton.imageName = [self _photoShareIconName];
         
-        _writeButton.titleColorThemeKey = kColorText12;
-        [_writeButton setImageName:@"write_new"];
+        _writeButton.titleColorThemeKey = kColorText7;
+//        [_writeButton setImageName:@"write_new"];
         _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText12];
         _writeButton.backgroundColorThemeKey = nil;
         _writeButton.backgroundColor = [SSGetThemedColorWithKey(kColorBackground4) colorWithAlphaComponent:0.15];
@@ -539,11 +542,11 @@
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _writeButton.borderColors = nil;
-        _writeButton.titleColorThemeKey = kColorText1;
+        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
         _writeButton.layer.masksToBounds = YES;
         _writeButton.backgroundColorThemeKey = kColorBackground3;
-        [_writeButton setImageName:@"write_new"];
+//        [_writeButton setImageName:@"write_new"];
         _separatorView.hidden = NO;
     }
     else if (viewStyle == TTDetailViewStyleCommentDetail) {
@@ -558,11 +561,11 @@
         _writeButton.borderColorThemeKey = kColorLine1;
         _writeButton.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _writeButton.borderColors = nil;
-        _writeButton.titleColorThemeKey = kColorText1;
+        _writeButton.titleColorThemeKey = kFHColorCoolGrey3;
         _writeButton.layer.cornerRadius = _writeButton.height / 2.f;
         _writeButton.layer.masksToBounds = YES;
         _writeButton.backgroundColorThemeKey = kColorBackground3;
-        [_writeButton setImageName:@"write_new"];
+//        [_writeButton setImageName:@"write_new"];
         
         _writeButton.tintColor = [UIColor tt_themedColorForKey:kColorText1];
     }

@@ -32,7 +32,7 @@ static CGFloat horizontalMargin = 0.0;
 - (instancetype)initWithWidth:(CGFloat)width {
     self = [super initWithWidth:width];
     if (self) {
-        [self addSubview:self.tagsView];
+//        [self addSubview:self.tagsView];
     }
     return self;
 }
@@ -63,14 +63,14 @@ static CGFloat horizontalMargin = 0.0;
     }
     NSArray * tags = [self _mappingTagsToModel:data];
     [self.tagsView refreshWithTagItems:[tags mutableCopy]];
-    
+
     [self refreshUI];
 }
 
 - (void)refreshUI {
     [super refreshUI];
     [self.tagsView sizeToFit];
-    self.height = self.tagsView.frame.size.height;
+    self.height = 0;
 }
 
 + (CGFloat)topPadding {

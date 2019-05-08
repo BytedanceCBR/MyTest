@@ -12,6 +12,7 @@
 #import "TTUISettingHelper.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "Article+TTAdDetailInnerArticleProtocolSupport.h"
+#import "TTDetailNatantRelateArticleGroupView.h"
 
 @implementation TTDetailNatantContainerView
 
@@ -136,6 +137,19 @@
     }else{
         for(TTDetailNatantViewBase<TTDetailNatantViewBase> * view in self.items){
             if (view && natantContentoffsetY > view.top) {
+                if ([view isKindOfClass:NSClassFromString(@"TTDetailNatantRelateArticleGroupView")])
+                {
+                    TTDetailNatantRelateArticleGroupView * groupView = (TTDetailNatantRelateArticleGroupView *)view;
+                    CGFloat relateOffset = natantContentoffsetY - view.frame.origin.y;
+                    if (relateOffset > 0) {
+                        CGFloat ratio = relateOffset/groupView.frame.size.height;
+                        if (ratio > 1) {
+                            ratio = 1;
+                        }
+                        NSString *indexV = [NSString stringWithFormat:@"%ld",(NSInteger)(ratio*groupView.items.count)];
+                        [groupView  sendRelateReadTrace:indexV];
+                    }
+                }
                 if (shouldSend) {
                     [view trackEventIfNeededWithStyle:style];
                 }
@@ -156,6 +170,7 @@
 {
     if (isScrollUp) {
         for(TTDetailNatantViewBase<TTDetailNatantViewBase> * view in self.items){
+            
             if (view && natantContentoffsetY < view.bottom) {
                 if (shouldSend) {
                     [view trackEventIfNeeded];

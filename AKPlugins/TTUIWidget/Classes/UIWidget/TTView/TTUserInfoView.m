@@ -271,7 +271,7 @@
         _fontSize = fontSize;
         _ownerType = TTOwnerType_CommentAuthor;
         self.centerY = baselineOriginPoint.y;
-        _textColorThemedKey = kColorText3;
+        _textColorThemedKey = kFHColorCharcoalGrey;
         _titleClickActionExtendToLogos = YES;
 
         _logoModelArray = [NSMutableArray arrayWithCapacity:logoCount];
@@ -280,8 +280,8 @@
         _titleLabel = [[TTAsyncLabel alloc] initWithFrame:CGRectZero];
         _titleLabel.backgroundColor = [UIColor clearColor];
 //        _titleLabel.textColorThemeKey = _textColorThemedKey;
-        _titleLabel.textColor = [UIColor tt_themedColorForKey:_textColorThemedKey];
-        _titleLabel.font = [UIFont systemFontOfSize:fontSize];
+        _titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:fontSize] ? : [UIFont boldSystemFontOfSize:fontSize];
         _titleLabel.numberOfLines = 1;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         
@@ -582,7 +582,7 @@
 - (void)themeChanged:(NSNotification *)notification
 {
 //    self.titleLabel.textColorThemeKey = _textColorThemedKey;
-    self.titleLabel.textColor = [UIColor tt_themedColorForKey:_textColorThemedKey];
+    self.titleLabel.textColor = [UIColor tt_themedColorForKey:kColorText3];
     self.backgroundColor = [UIColor clearColor];
 //    [self buildVerifiedViewsIfNeed];
 //    [self buildOwnerViewIfNeed];
@@ -591,6 +591,9 @@
 
 - (void)clickTitleWithAction:(TitleLinkBlock)block
 {
+    // add by zjing 去掉头像点击
+    return;
+    
     if (block) {
         _clickTitleAction = block;
     }

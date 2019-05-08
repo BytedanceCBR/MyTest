@@ -17,6 +17,7 @@
     newsTitleLabel.numberOfLines = kUFDongtaiTitleLineNumber();
     [self addSubview:newsTitleLabel];
     self.newsTitleLabel = newsTitleLabel;
+    
     SSThemedLabel *userNameLabel = [[SSThemedLabel alloc] init];
     userNameLabel.backgroundColor = [TTUISettingHelper cellViewBackgroundColor];
     userNameLabel.font = [UIFont tt_boldFontOfSize:kUFSourceLabelFontSize()];

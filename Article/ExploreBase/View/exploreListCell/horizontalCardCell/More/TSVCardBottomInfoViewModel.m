@@ -36,10 +36,6 @@ static NSString * const kTSVDownloadHost = @"ugc_video_download";
 {
     HorizontalCardMoreModel *moreModel = data.showMoreModel;
     
-    if (isEmptyString(moreModel.title) || isEmptyString(moreModel.urlString)) {
-        return NO;
-    }
-    
     NSURL *url = [TTStringHelper URLWithURLString:moreModel.urlString];
     TTRouteParamObj *params = [[TTRoute sharedRoute] routeParamObjWithURL:url];
     
@@ -88,13 +84,15 @@ static NSString * const kTSVDownloadHost = @"ugc_video_download";
     HorizontalCardMoreModel *moreModel = data.showMoreModel;
     
     NSURL *url = [TTStringHelper URLWithURLString:moreModel.urlString];
-    TTRouteParamObj *params = [[TTRoute sharedRoute] routeParamObjWithURL:url];
-    
-    if ([params.host isEqualToString:kTSVDownloadHost]) {
-        NSString *groupSource = [TTShortVideoHelper groupSourceForDownloadWithHorizontalCard:data];
+    if (url) {
+        TTRouteParamObj *params = [[TTRoute sharedRoute] routeParamObjWithURL:url];
         
-        if ([TSVDownloadManager shouldDownloadAppForGroupSource:groupSource]) {
-            return TSVCardBottomInfoContentStyleDownload;
+        if ([params.host isEqualToString:kTSVDownloadHost]) {
+            NSString *groupSource = [TTShortVideoHelper groupSourceForDownloadWithHorizontalCard:data];
+            
+            if ([TSVDownloadManager shouldDownloadAppForGroupSource:groupSource]) {
+                return TSVCardBottomInfoContentStyleDownload;
+            }
         }
     }
     

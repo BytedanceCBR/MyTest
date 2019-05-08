@@ -54,12 +54,14 @@
 
 - (BOOL)needShowSubEntranceBar
 {
-    NSArray *array = [TTSubEntranceManager subEntranceObjArrayForCategory:self.categoryID concernID:nil];
-    if (array.count > 0) {
-        return YES;
-    }
+    // add by zjing 去掉bar以fix contentOffset
 
-    return NO;
+//    NSArray *array = [TTSubEntranceManager subEntranceObjArrayForCategory:self.categoryID concernID:nil];
+//    if (array.count > 0) {
+//        return YES;
+//    }
+//
+//    return NO;
 }
 
 - (BOOL)needShowPGCBar
@@ -74,13 +76,13 @@
     self.customListHeader = nil;
 
     if ([self needShowSubEntranceBar]) {
-        [self refreshSubEntranceBar];
-        if (!self.view.window) {
-            /// 如果还没有加到父view上，就设置下offset
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.tableView.contentOffset = CGPointMake(0, self.subEntranceBar.height - self.tableView.contentInset.top);
-            });
-        }
+//        [self refreshSubEntranceBar];
+//        if (!self.view.window) {
+//            /// 如果还没有加到父view上，就设置下offset
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                self.tableView.contentOffset = CGPointMake(0, self.subEntranceBar.height - self.tableView.contentInset.top);
+//            });
+//        }
     }
     else {
         if (self.tableView.tableHeaderView != nil) {
@@ -111,7 +113,9 @@
     [self.subEntranceBar refreshWithData:subEntranceObjArray];
 
     if (subEntranceObjArray.count > 0) {
-        self.tableView.tableHeaderView = self.subEntranceBar;
+//        self.tableView.tableHeaderView = self.subEntranceBar;
+        self.tableView.tableHeaderView = nil;
+        self.tableView.estimatedSectionHeaderHeight = 0;
     } else {
         if (nil != self.customListHeader) {
             self.tableView.tableFooterView = self.customListHeader;

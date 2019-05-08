@@ -14,6 +14,8 @@
 #import "SSURLTracker.h"
 #import "TTVCommentModelProtocol.h"
 #import "TTRelevantDurationTracker.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 static NSInteger const vaildStayPageMinInterval = 1;
 static NSInteger const vaildStayPageMaxInterval = 7200;
@@ -158,19 +160,43 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
 
 - (void)endStayTrackV3WithDuration:(NSTimeInterval)duration
 {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[self event3CommonData]];
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[self event3CommonData]];
+//    if ([_gdExtDict isKindOfClass:[NSDictionary class]]) {
+//        dict = [NSMutableDictionary dictionaryWithDictionary:_gdExtDict];
+//    }
+//    [dict setValue: @"house_app2c_v2" forKey:@"event_type"];
+//    [dict setValue:_article.groupModel.itemID forKey:@"item_id"];
+//    [dict setValue:self.detailModel.relateReadFromGID forKey:@"from_gid"];
+//    [dict setValue:@(_article.groupModel.aggrType) forKey:@"aggr_type"];
+//    [dict setValue: [NSString stringWithFormat:@"%.0f",(duration*1000)] forKey:@"stay_time"];
+//    [dict setValue:@"video" forKey:@"page_type"];
+//    [dict setValue:_article.adModel.log_extra ? _article.adModel.log_extra : _articleExtraInfo.logExtra forKey:@"log_extra"];
+//    [dict setValue:@(round(self.commentShowTimeTotal)).stringValue forKey:@"stay_comment_time"];
+
+
+    NSMutableDictionary * dict;
     if ([_gdExtDict isKindOfClass:[NSDictionary class]]) {
         dict = [NSMutableDictionary dictionaryWithDictionary:_gdExtDict];
+    } else {
+        dict = [NSMutableDictionary dictionary];
     }
-    [dict setValue:_article.groupModel.itemID forKey:@"item_id"];
-    [dict setValue:self.detailModel.relateReadFromGID forKey:@"from_gid"];
-    [dict setValue:@(_article.groupModel.aggrType) forKey:@"aggr_type"];
-    [dict setValue: [NSString stringWithFormat:@"%.0f",(duration*1000)] forKey:@"stay_time"];
-    [dict setValue:@"video" forKey:@"page_type"];
+    id value = @(_article.uniqueID);
+    //    [dict setValue:value forKey:@"value"];
+    [dict setValue:@(duration) forKey:@"stay_time"];
+    //    [dict setValue:@"video" forKey:@"page_type"];
+    [dict setValue:value forKey:@"item_id"];
+    [dict setValue:self.article.groupModel.groupID forKey:@"group_id"];
+    [dict setValue:[self.detailStateStore.state ttv_fromGid] forKey:@"from_gid"];
     [dict setValue:_article.adModel.log_extra ? _article.adModel.log_extra : _articleExtraInfo.logExtra forKey:@"log_extra"];
-    [dict setValue:@(round(self.commentShowTimeTotal)).stringValue forKey:@"stay_comment_time"];
+    [dict setValue: @"house_app2c_v2" forKey:@"event_type"];
+
+    //    [dict setValue:@(_article.groupModel.aggrType) forKey:@"aggr_type"];
+    //    [dict setValue:@(round(self.commentShowTimeTotal)).stringValue forKey:@"stay_comment_time"];
+    [dict setValue:self.detailModel.logPb forKey:@"log_pb"];
+    [dict setValue:[self categoryName] forKey:@"category_name"];
+    [dict setValue:[self enterFrom] forKey:@"enter_from"];
     if (self.viewIsAppear) {
-//        [TTTrackerWrapper eventV3:@"stay_page" params:dict isDoubleSending:YES];
+        [TTTrackerWrapper eventV3:@"stay_page" params:dict isDoubleSending:YES];
     }
 }
 
@@ -200,22 +226,29 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
         dict = [NSMutableDictionary dictionary];
     }
     id value = @(_article.uniqueID);
-    [dict setValue:value forKey:@"value"];
-    [dict setValue:@(duration) forKey:@"ext_value"];
-    [dict setValue:@"video" forKey:@"page_type"];
+//    [dict setValue:value forKey:@"value"];
+    [dict setValue:@((NSInteger)(duration * 1000)) forKey:@"stay_time"];
+//    [dict setValue:@"video" forKey:@"page_type"];
     [dict setValue:value forKey:@"item_id"];
+    [dict setValue:self.article.groupModel.groupID forKey:@"group_id"];
     [dict setValue:[self.detailStateStore.state ttv_fromGid] forKey:@"from_gid"];
     [dict setValue:_article.adModel.log_extra ? _article.adModel.log_extra : _articleExtraInfo.logExtra forKey:@"log_extra"];
+    [dict setValue: @"house_app2c_v2" forKey:@"event_type"];
 
-    [dict setValue:@(_article.groupModel.aggrType) forKey:@"aggr_type"];
-    [dict setValue:@(round(self.commentShowTimeTotal)).stringValue forKey:@"stay_comment_time"];
+//    [dict setValue:@(_article.groupModel.aggrType) forKey:@"aggr_type"];
+//    [dict setValue:@(round(self.commentShowTimeTotal)).stringValue forKey:@"stay_comment_time"];
     [dict setValue:self.detailModel.logPb forKey:@"log_pb"];
+    [dict setValue:[self categoryName] forKey:@"category_name"];
+    [dict setValue:[self enterFrom] forKey:@"enter_from"];
+
     if (self.viewIsAppear) {
-        [TTTrackerWrapper category:@"umeng"
-                      event:@"stay_page"
-                      label:self.detailModel.clickLabel
-                       dict:dict];
-        [self endStayTrackV3WithDuration:duration];
+        [TTTracker eventV3:@"stay_page" params:dict];
+
+//        [TTTrackerWrapper category:@"umeng"
+//                      event:@"stay_page"
+//                      label:self.detailModel.clickLabel
+//                       dict:dict];
+//        [self endStayTrackV3WithDuration:duration];
         [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.article.groupModel.groupID
                                                                               itemID:self.article.groupModel.itemID
                                                                            enterFrom:self.enterFrom
@@ -283,7 +316,7 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [event3Dic setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
     [event3Dic setValue:@"video" forKey:@"article_type"];
     
-//    [TTTrackerWrapper eventV3:@"go_detail" params:event3Dic isDoubleSending:YES];
+    [TTTrackerWrapper eventV3:@"go_detail" params:event3Dic isDoubleSending:YES];
 
 }
 
@@ -293,33 +326,48 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     id value = [self.detailModel uniqueID];
-    [dic setValue:[self.detailStateStore.state ttv_adid].stringValue forKey:@"ext_value"];
+//    [dic setValue:[self.detailStateStore.state ttv_adid].stringValue forKey:@"ext_value"];
     [dic setValue:value forKey:@"item_id"];
-    [dic setValue:[self.detailStateStore.state ttv_aggrType] forKey:@"aggr_type"];
-    [dic setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
-    [dic setValue:@"video" forKey:@"article_type"];
+//    [dic setValue:[self.detailStateStore.state ttv_aggrType] forKey:@"aggr_type"];
+//    [dic setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
+//    [dic setValue:@"video" forKey:@"article_type"];
     if (self.detailModel.gdExtJsonDict && self.detailModel.gdExtJsonDict.count > 0){
         [dic addEntriesFromDictionary:self.detailModel.gdExtJsonDict];
     }
-    BOOL hasZzComment = self.detailModel.protocoledArticle.zzComments.count > 0;
-    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
-    if (hasZzComment) {
-        [dic setValue:self.detailModel.protocoledArticle.firstZzCommentMediaId forKey:@"mid"];
-    }
+//    BOOL hasZzComment = self.detailModel.protocoledArticle.zzComments.count > 0;
+//    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
+//    if (hasZzComment) {
+//        [dic setValue:self.detailModel.protocoledArticle.firstZzCommentMediaId forKey:@"mid"];
+//    }
+    
     [dic setValue:self.detailModel.logPb forKey:@"log_pb"];
+    
+    [dic setValue:[self.detailModel uniqueID] forKey:@"group_id"];
+    [dic setValue:self.enterFrom forKey:@"enter_from"];
+    [dic setValue:self.categoryName forKey:@"category_name"];
+    [dic setValue:self.detailModel.relateReadFromGID forKey:@"from_gid"];
+    
     if (![TTTrackerWrapper isOnlyV3SendingEnable]){
         if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloat)
         {
 //            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_headline", value, nil, dic);
+//            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+            [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
         }
         else if (self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloatRelated)
         {
             [self ttv_addFromGId:dic];
+//            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+            [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
+
 //            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_related", value, nil, dic);
         }
         else
         {
             [self ttv_addFromGId:dic];
+//            [[EnvContext shared].tracer writeEvent:TraceEventName.go_detail params:dic];
+            [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
+
 //            wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
         }
     }

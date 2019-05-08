@@ -15,8 +15,8 @@
 - (CGFloat)heightForLargePicRegionWithTop:(CGFloat)top
 {
     id<TTAdFeedModel> adModel = self.orderedData.adModel;
-    CGSize picSize = [TTArticleCellHelper getPicSizeByOrderedData:nil adModel:adModel.imageModel picStyle:TTArticlePicViewStyleLarge width:self.cellWidth];
-    CGRect picViewFrame = CGRectMake(0, top, picSize.width, picSize.height);
+    CGSize picSize = [TTArticleCellHelper getPicSizeByOrderedData:nil adModel:adModel.imageModel picStyle:TTArticlePicViewStyleLarge width:self.containWidth];
+    CGRect picViewFrame = CGRectMake(self.originX, top, picSize.width, picSize.height);
     self.picViewFrame = picViewFrame;
     self.picViewHidden = NO;
     self.picViewStyle = TTArticlePicViewStyleLarge;
@@ -26,7 +26,7 @@
     if ([TTLayOutCellDataHelper shouldShowPlayButtonWithOrderedData:self.orderedData]) {
         self.playButtonFrame = CGRectMake(0, 0, picSize.width, picSize.height);
         self.playButtonHidden = NO;
-        self.playButtonImageName = @"feed_play_icon";
+        self.playButtonImageName = [TTDeviceHelper isPadDevice] ? @"FullPlay" : @"Play";
         self.playButtonUserInteractionEnable = ![self.orderedData isPlayInDetailView];
     }
     
@@ -35,37 +35,32 @@
 
 - (CGFloat)heightForADActionRegionWithTop:(CGFloat)top
 {
-//    CGSize ADActionSize = [TTArticleCellHelper getADActionSize:self.containWidth];
-//    self.adBackgroundViewFrame = CGRectMake(0, top, ADActionSize.width, ADActionSize.height);
-    self.adBackgroundViewHidden = YES;
+    CGSize ADActionSize = [TTArticleCellHelper getADActionSize:self.containWidth];
+    self.adBackgroundViewFrame = CGRectMake(self.originX, top, ADActionSize.width, ADActionSize.height);
+    self.adBackgroundViewHidden = NO;
     
     CGFloat actionButtonWidth = 72;
     CGFloat actionButtonHeight = 28;
-    if (self.orderedData) {
-        id<TTAdFeedModel> adModel = self.orderedData.adModel;
-        if ([adModel showActionButtonIcon]) {
-            actionButtonWidth = 108.f;
-        }
-    }
+    
     NSString *adSubtitleStr = [TTLayOutCellDataHelper getSubtitleStringWithOrderedData:self.orderedData];
-    CGSize adSubtitleSize = [adSubtitleStr sizeWithAttributes:@{NSFontAttributeName : [UIFont tt_fontOfSize:15]}];
+    CGSize adSubtitleSize = [adSubtitleStr sizeWithAttributes:@{NSFontAttributeName : [UIFont tt_fontOfSize:14]}];
     adSubtitleSize = CGSizeMake(ceilf(adSubtitleSize.width), ceilf(adSubtitleSize.height));
-    CGRect adSubtitleFrame = CGRectMake(self.originX, top + [TTDeviceUIUtils tt_newPadding:18.f], self.containWidth - 8 - 20 - actionButtonWidth, adSubtitleSize.height);
+    CGRect adSubtitleFrame = CGRectMake(self.originX + 8, top + floor((ADActionSize.height - adSubtitleSize.height) / 2), ADActionSize.width - 8 - 20 - actionButtonWidth, adSubtitleSize.height);
     self.adSubtitleLabelFrame = adSubtitleFrame;
     self.adSubtitleLabelHidden = NO;
-    self.adSubtitleLabelFontSize = [TTDeviceUIUtils tt_newFontSize:15];
-    self.adSubtitleLabelTextColorHex = @"999999";
+    self.adSubtitleLabelFontSize = 14;
+    self.adSubtitleLabelTextColorThemeKey = kColorText2;
     self.adSubtitleLabelStr = adSubtitleStr;
     self.adSubtitleLabelUserInteractionEnabled = [TTLayOutCellDataHelper isADSubtitleUserInteractive:self.orderedData];
     
     self.separatorViewHidden = YES;
     
-    self.actionButtonFrame = CGRectMake(self.originX + self.containWidth - actionButtonWidth ,CGRectGetMidY(adSubtitleFrame) - actionButtonHeight / 2 , actionButtonWidth, actionButtonHeight);
+    self.actionButtonFrame = CGRectMake(self.originX + ADActionSize.width - actionButtonWidth - 8, top + floor((ADActionSize.height - actionButtonHeight) / 2), actionButtonWidth, actionButtonHeight);
     self.actionButtonHidden = NO;
     self.actionButtonFontSize = 14;
     self.actionButtonBorderWidth = 1.f;
     
-    return CGRectGetMaxY(self.actionButtonFrame) - top;
+    return ADActionSize.height;
 }
 
 - (void)calculateAllFrame

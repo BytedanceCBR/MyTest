@@ -28,6 +28,40 @@
 #import "TTSettingsManager.h"
 #import "TTRelevantDurationTracker.h"
 #import <TTMonitor.h>
+//#import "Bubble-Swift.h"
+#import "FHHomeConfigManager.h"
+#import "FHEnvContext.h"
+#import "TTFeedCollectionWebListCell.h"
+#import <FHUtils.h>
+
+@interface MyCollectionView : UICollectionView
+
+@end
+
+@implementation MyCollectionView
+
+- (void)setContentOffset:(CGPoint)contentOffset {
+    [super setContentOffset:contentOffset];
+}
+
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
+    [super setContentOffset:contentOffset
+                   animated:animated];
+}
+
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+}
+
+- (CGPoint)contentOffset {
+    return [super contentOffset];
+}
+
+- (void)setContentSize:(CGSize)contentSize {
+    [super setContentSize:contentSize];
+}
+
+@end
 
 @interface TTFeedCollectionViewController ()
 <UICollectionViewDelegate,
@@ -83,14 +117,19 @@ TTFeedCollectionCellDelegate>
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.view.backgroundColor = [UIColor whiteColor];
 
     // 刷新按钮
     [self.view addSubview:self.refreshView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleRefreshButtonSettingEnabledNotification:) name:kFeedRefreshButtonSettingEnabledNotification object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(themeChanged:) name:TTThemeManagerThemeModeChangedNotification object:nil];
+//    [self.collectionView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    NSLog(@"%@", change);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -137,6 +176,17 @@ TTFeedCollectionCellDelegate>
     [[TTLocationManager sharedManager] processLocationCommandIfNeeded];
     // 返回feed发送关联时长
     [[TTRelevantDurationTracker sharedTracker] sendRelevantDuration];
+    
+    NSArray *webCategorys = [[TTArticleCategoryManager sharedManager] webCategories];
+    for (TTCategory *categorySub in webCategorys) {
+        if ([categorySub isKindOfClass:[TTCategory class]]) {
+            [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:categorySub.categoryID];
+            NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",categorySub.categoryID];
+            if (![FHUtils contentForKey:categoryRedKey]) {
+                [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:categorySub.categoryID withClean:NO];
+            }
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -166,13 +216,16 @@ TTFeedCollectionCellDelegate>
             self.bottomInset = safeInset.bottom;
         }
     }
-    self.collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
+
     [_refreshView resetFrameWithSuperviewFrame:self.view.frame bottomInset:_bottomInset];
+//    self.collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
 }
 
 - (void)themeChanged:(NSNotification*)notification {
     if (_collectionView) {
-        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+//        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+        _collectionView.backgroundColor = [UIColor whiteColor];
+
     }
 }
 
@@ -200,7 +253,38 @@ TTFeedCollectionCellDelegate>
         }
         
         NSString *reuseIdentifier = NSStringFromClass(cellClass);
-        cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+        if ([reuseIdentifier isEqualToString:@"TTFeedCollectionWebListCell"]) {
+            NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+            NSString *cellKey = [NSString stringWithFormat:@"%@_%@",cityId ? cityId : @"",category.categoryID];
+            if (category.categoryID) {
+                [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:cellKey];
+            }
+            
+            @try {
+                // 可能会出现崩溃的代码
+                cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellKey forIndexPath:indexPath];
+            }
+            
+            @catch (NSException *exception) {
+                // 捕获到的异常exception
+            }
+            @finally {
+                // 结果处理
+            }
+            
+            if (!cell) {
+                if (category.categoryID) {
+                    [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:cellKey];
+                }
+                cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+            } 
+            
+            self.collectionView.bounces = NO;
+        }else
+        {
+            self.collectionView.bounces = YES;
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
+        }
         
         cell.delegate = self;
         
@@ -326,12 +410,26 @@ TTFeedCollectionCellDelegate>
     if ([cell respondsToSelector:@selector(didAppear)]) {
         [cell didAppear];
     }
-    
+    [self handleHomeTabBar];
+
     [cell refreshIfNeeded];
     
     // 切换频道时停止视频播放
     [ExploreMovieView removeAllExploreMovieView];
     
+    if (self.currentCategory.categoryID) {
+        [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:self.currentCategory.categoryID withClean:YES];
+        NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",self.currentCategory.categoryID];
+        [FHUtils setContent:@"1" forKey:categoryRedKey];
+    }
+}
+
+- (void)handleHomeTabBar
+{
+    NSString * currentCategory = [TTArticleCategoryManager currentSelectedCategoryID];
+    if (![currentCategory isEqualToString:@"f_find_house"]) {
+        [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -376,14 +474,37 @@ TTFeedCollectionCellDelegate>
             //log3.0
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
             [dict setValue:category.categoryID forKey:@"category_name"];
-            [dict setValue:category.concernID forKey:@"concern_id"];
-            [dict setValue:@(1) forKey:@"refer"];
+            [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dict setValue:userDrag?@"flip":@"click" forKey:@"enter_type"];
-            if (!isEmptyString(self.lastCategoryID)) {
-                NSString *enterFrom = [NSString stringWithFormat:@"%@_%@", userDrag ? @"flip" : @"click", self.lastCategoryID];
-                [dict setValue:enterFrom forKey:@"enter_from"];
+            
+            if ([FHHomeConfigManager sharedInstance].isTraceClickIcon)
+            {
+                [dict setValue:userDrag?@"flip":@"click_icon" forKey:@"enter_type"];
+                [FHHomeConfigManager sharedInstance].isTraceClickIcon = NO;
             }
-//            [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
+            
+            [FHHomeConfigManager sharedInstance].enterType = userDrag?@"flip":@"click";
+
+            if ([category.categoryID isEqualToString:@"f_find_house"])
+            {
+                [dict setValue:@"maintab_list" forKey:@"element_from"];
+                [dict setValue:@"maintab" forKey:@"enter_from"];
+                                
+                NSString * searchId = [FHEnvContext sharedInstance].getCommonParams.originSearchId;
+                NSString * categoryName = [FHEnvContext sharedInstance].getCommonParams.originFrom;
+
+                [dict setValue:categoryName forKey:@"origin_from"];
+                [dict setValue:searchId forKey:@"search_id"];
+                [dict setValue:searchId forKey:@"origin_search_id"];
+                [dict setValue:categoryName forKey:@"category_name"];
+
+                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            }else
+            {
+                [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
+            }
+                
+//            NSDictionary *dict =  [[EnvContext shared] homePageParams].paramsGetter([:])
             
             // 统计 - 进入订阅列表
             if ([category.categoryID isEqualToString:kTTSubscribeCategoryID]) {
@@ -454,6 +575,7 @@ TTFeedCollectionCellDelegate>
     if (self.isAutoLocateUserLastSelectCategory) {
         self.isAutoLocateUserLastSelectCategory = NO;
     }
+    
 }
 
 #pragma mark -
@@ -503,7 +625,7 @@ TTFeedCollectionCellDelegate>
         layout.minimumLineSpacing = 0;
         
         CGRect frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
-        _collectionView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
+        _collectionView = [[MyCollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _collectionView.pagingEnabled = YES;
         _collectionView.scrollsToTop = NO;
@@ -521,8 +643,9 @@ TTFeedCollectionCellDelegate>
         _collectionView.showsHorizontalScrollIndicator = NO;
         _collectionView.showsVerticalScrollIndicator = NO;
         
-        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
-        
+//        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+        _collectionView.backgroundColor = [UIColor whiteColor];
+
         // 设置默认CellHelper类
         [[TTFeedCollectionCellService sharedInstance] setDefaultFeedCollectionCellHelperClass:[TTFeedCollectionCellDefaultHelper class]];
         
@@ -533,18 +656,31 @@ TTFeedCollectionCellDelegate>
             }
         }];
         
+        NSArray *webCategorys = [[TTArticleCategoryManager sharedManager] webCategories];
+        
+        for (TTCategory *categorySub in webCategorys) {
+            if ([categorySub isKindOfClass:[TTCategory class]]) {
+                [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:categorySub.categoryID];
+                NSString *categoryRedKey = [NSString stringWithFormat:@"kFH_Red_Dot_%@",categorySub.categoryID];
+                if (![FHUtils contentForKey:categoryRedKey]) {
+                    [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:categorySub.categoryID withClean:NO];
+                }
+            }
+        }
+        
         [_collectionView registerClass:[TTFeedCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([TTFeedCollectionCell class])];
         
         [self.view addSubview:_collectionView];
         
         [self.view bringSubviewToFront:self.refreshView];
         
-//        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.view).offset(self.topInset - self.view.frame.origin.y);
-//            make.left.right.bottom.equalTo(self.view);
-//        }];
-        
-        _collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
+//        _collectionView.frame = CGRectMake(0, self.topInset, self.view.width, self.view.height - self.topInset);
+        //解决视频列表横屏播放，返回偏移问题
+        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view).offset(self.topInset - self.view.frame.origin.y);
+            make.left.right.bottom.equalTo(self.view);
+        }];
+
     }
     return _collectionView;
 }
@@ -601,18 +737,28 @@ TTFeedCollectionCellDelegate>
             index = MAX(0, [TTArticleCategoryManager sharedManager].preFixedCategories.count);
             index = MIN(index, [_pageCategories count] - 1);
             
-            NSInteger type = [SSCommonLogic firstCategoryStyle];
-            if (type == 1) {
-                startCategory = [[NSUserDefaults standardUserDefaults] valueForKey:@"kLastSelectCategory"];
-                if (!startCategory) {
-                    startCategory = @"__all__";
-                }
-            }
-            if (type == 2) {
-                startCategory = [SSCommonLogic feedStartCategory];
-                if (!startCategory) {
-                    startCategory = @"__all__";
-                }
+//            NSInteger type = [SSCommonLogic firstCategoryStyle];
+//            if (type == 1) {
+//                startCategory = [[NSUserDefaults standardUserDefaults] valueForKey:@"kLastSelectCategory"];
+//                if (!startCategory) {
+//                    startCategory = kNIHFindHouseCategoryID;
+//                }
+//            }
+//            if (type == 2) {
+//                startCategory = [SSCommonLogic feedStartCategory];
+//                if (!startCategory) {
+//                    startCategory = kNIHFindHouseCategoryID;
+//                }
+//            }
+            
+            // 默认展示频道
+            startCategory = [SSCommonLogic feedStartCategory];
+            
+//            if (!startCategory) {
+//                startCategory = kNIHFindHouseCategoryID;
+//            }
+            if (!startCategory) {
+                startCategory = kNIHFindHouseCategoryID;
             }
             
             if (startCategory) {
@@ -624,7 +770,7 @@ TTFeedCollectionCellDelegate>
                 }
             }
         }
-        
+
         [TTArticleCategoryManager sharedManager].lastAddedCategory = nil;
         [self.collectionView reloadData];
         self.isAutoLocateUserLastSelectCategory = _currentIndex != index;
@@ -707,13 +853,26 @@ TTFeedCollectionCellDelegate>
 - (void)enterCategory:(TTCategory *)category isFlip:(BOOL)flip {
     if (category) {
         NSString *enterType = flip ? @"flip" : @"click";
-        [[TTCategoryStayTrackManager shareManager] startTrackForCategoryID:category.categoryID concernID:category.concernID enterType:enterType];
+        if ([FHHomeConfigManager sharedInstance].isTraceClickIcon)
+        {
+            enterType = _userDrag?@"flip":@"click_icon";
+        }
+        
+        [FHHomeConfigManager sharedInstance].enterType = enterType;
+
+        if (![category.categoryID isEqualToString:@"f_find_house"])
+        {
+            [[TTCategoryStayTrackManager shareManager] startTrackForCategoryID:category.categoryID concernID:category.concernID enterType:enterType];
+        }
     }
 }
 
 - (void)leaveCategory:(TTCategory *)category {
     if (category) {
-        [[TTCategoryStayTrackManager shareManager] endTrackCategory:category.categoryID];
+        if (![category.categoryID isEqualToString:@"f_find_house"])
+        {
+            [[TTCategoryStayTrackManager shareManager] endTrackCategory:category.categoryID];
+        }
     }
 }
 
@@ -722,8 +881,7 @@ TTFeedCollectionCellDelegate>
 - (void)ttFeedCollectionCellStartLoading:(id<TTFeedCollectionCell>)feedCollectionCell
 {
     if ([self.delegate respondsToSelector:@selector(ttFeedCollectionViewControllerDidStartLoading:)]) {
-        //TODO: f100 解决双击这里，却刷新第一个tabitem的问题
-//        [self.delegate ttFeedCollectionViewControllerDidStartLoading:self];
+        [self.delegate ttFeedCollectionViewControllerDidStartLoading:self];
     }
     
     if (!_refreshView.hidden && ([feedCollectionCell.categoryModel.categoryID isEqualToString:self.currentCategory.categoryID]) &&

@@ -26,7 +26,8 @@
 
 - (void)launchIntoTSVTabIfNeedWithURL:(NSString *)openURL
 {
-    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:openURL]];
+    NSURL* theUrl = [TTStringHelper URLWithURLString:openURL];
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
     if ([paramObj.host isEqualToString:@"awemevideo"]){
         int tsvTabDefault = [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_push_launch_config" defaultValue:@(0) freeze:YES] intValue];
          if (tsvTabDefault == 1 && [SharedAppDelegate isColdLaunch]) {

@@ -16,7 +16,6 @@
 #import "TTTabBarManager.h"
 #import "TTTabBarCustomMiddleModel.h"
 
-#define kTTTabBarHeight 44.f
 
 @interface TTTabbar ()
 
@@ -27,6 +26,29 @@
 @end
 
 @implementation TTTabbar
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        
+        UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+        CGRect rect = self.bounds;
+        frost.frame = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, kTTTabBarHeight);
+        frost.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self insertSubview:frost atIndex:0];
+        
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+
+            UIView *bg = [[UIView alloc]initWithFrame:frost.bounds];
+            bg.width = [UIScreen mainScreen].bounds.size.width;
+            bg.backgroundColor = [UIColor colorWithWhite:1 alpha:0.4];
+            [self insertSubview:bg atIndex:1];
+        }
+
+    }
+    return self;
+}
 
 #pragma mark - Layout
 
@@ -44,10 +66,10 @@
     self.tabItemWidth = CGRectGetWidth(self.bounds) / itemsCount;
     CGFloat itemHeight = CGRectGetHeight(self.bounds);
 
-    if ([TTDeviceHelper isIPhoneXDevice]){
-        UIEdgeInsets safaInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
-        itemHeight -= safaInset.bottom;
-    }
+//    if ([TTDeviceHelper isIPhoneXDevice]){
+//        UIEdgeInsets safaInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
+//        itemHeight -= safaInset.bottom;
+//    }
     for (NSUInteger index = 0; index<itemsCount; index++) {
         if (index == middleCustomItemViewIndex) {
             //Layout middle custom item view
@@ -147,7 +169,7 @@
         _backImageView = [[TTImageView alloc] init];
         _backImageView.frame = self.bounds;
         _backImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self addSubview:_backImageView];
+//        [self addSubview:_backImageView];
     }
     return _backImageView;
 }

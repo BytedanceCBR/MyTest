@@ -29,7 +29,7 @@
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:13]];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TTDeviceUIUtils tt_fontSize:13]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:13]];
         _titleLabel.numberOfLines = 1;
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.textColor = [UIColor whiteColor];

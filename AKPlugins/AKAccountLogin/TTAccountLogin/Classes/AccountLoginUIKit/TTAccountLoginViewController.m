@@ -19,8 +19,8 @@
 #import "TTAccountLoginManager.h"
 #import "TTUserPrivacyView.h"
 #import "TTSandBoxHelper.h"
-#import <BDAccountSDK.h>
-#import <BDAccount+NetworkAPI.h>
+
+
 
 #define DEVICE_SYS_FLOAT_VERSION ([[[UIDevice currentDevice] systemVersion] floatValue])
 
@@ -239,7 +239,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 //        _switchButton.hidden = NO;
         _upTipLabel.hidden = NO;
         [_switchButton setTitle:NSLocalizedString(@"账号密码登录", nil) forState:UIControlStateNormal];
-        self.mobileInput.field.placeholder = NSLocalizedString(@"请输入手机号码", nil);
+        self.mobileInput.field.placeholder = NSLocalizedString(@"手机号", nil);
         self.captchaInput.field.placeholder = NSLocalizedString(@"请输入验证码", nil);
         self.captchaInput.field.secureTextEntry = NO;
         // self.captchaInput.field.keyboardType = UIKeyboardTypeDefault;
@@ -553,8 +553,9 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
 {
     __weak typeof(self) wself = self;
     [wself showWaitingIndicator];
-    [BDAccount requestSMSCodeWithMobile:self.mobileInput.field.text SMSCodeType:BDAccountSMSCodeTypeMobileSMSCodeLogin unbindExisted:NO completion:^(NSNumber * _Nullable retryTime, UIImage * _Nonnull captchaImage, NSError * _Nullable error) {
-
+    
+    [TTAccount sendSMSCodeWithPhone:self.mobileInput.field.text captcha:self.captchaString SMSCodeType:scenarioType unbindExist:NO completion:^(NSNumber *retryTime, UIImage *captchaImage, NSError *error) {
+        
         if (!error) {
             [wself startTimer];
             [wself dismissWaitingIndicator];
@@ -590,14 +591,13 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
     [self showWaitingIndicator];
     
     __weak typeof(self) wself = self;
-
-    [BDAccount requestQuickLoginWithMobile:self.mobileInput.field.text SMSCode:self.captchaInput.field.text completion:^(NSError * _Nullable error) {
-
+    [TTAccount quickLoginWithPhone:self.mobileInput.field.text SMSCode:self.captchaInput.field.text captcha:self.captchaString completion:^(UIImage *captchaImage, NSError *error) {
+        
         if (!error) {
             
             [TTAccountLoginManager setDefaultLoginUIStyleFor:TTAccountLoginStyleCaptcha];
             
-            BOOL isNewUser = [[BDAccount sharedAccount] user].newUser;
+            BOOL isNewUser = [[TTAccount sharedAccount] user].newUser;
             
             [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:1 extra:nil];
             wself.nonThirdPartySource = @"mobile";
@@ -659,29 +659,29 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
             [extra setValue:error.description forKey:@"error_description"];
             [extra setValue:@(error.code) forKey:@"error_code"];
             
-//            if (captchaImage) {
-//                [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:2 extra:extra];
-//
-//                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
-//
-//                    if (type == TTAccountAlertCompletionEventTypeDone) {
-//                        [wself showWaitingIndicator];
-//                        wself.captchaString = captchaStr;
-//                        [wself quickLogin];
-//                    } else {
-//                        [wself dismissWaitingIndicator];
-//                    }
-//                }];
-//                [wself dismissWaitingIndicator];
-//                [cAlert show];
-//            } else {
+            if (captchaImage) {
+                [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:2 extra:extra];
+                
+                TTAccountCaptchaAlert *cAlert = [[TTAccountCaptchaAlert alloc] initWithTitle:@"请输入图片中的字符" captchaImage:captchaImage placeholder:nil cancelBtnTitle:@"取消" confirmBtnTitle:@"确定" animated:YES completion:^(TTAccountAlertCompletionEventType type, NSString *captchaStr) {
+                    
+                    if (type == TTAccountAlertCompletionEventTypeDone) {
+                        [wself showWaitingIndicator];
+                        wself.captchaString = captchaStr;
+                        [wself quickLogin];
+                    } else {
+                        [wself dismissWaitingIndicator];
+                    }
+                }];
+                [wself dismissWaitingIndicator];
+                [cAlert show];
+            } else {
                 [[TTMonitor shareManager] trackService:@"account_mobile_quick_login" status:3 extra:extra];
                 [wself monitorUserLoginFailureWithError:error status:1];
                 
                 [wself dismissWaitingIndicator];
                 [wself.captchaInput showError];
                 wself.loginTipLabel.hidden = YES;
-//            }
+            }
         }
     }];
 }
@@ -1081,7 +1081,7 @@ static TTAccountLoginStyle s_preLoginStyle = 0;
         
         [self trackLoginSuccessByThirdPartyPlatform:platformName];
         
-        BOOL isNewUser = [[BDAccount sharedAccount] user].newUser;
+        BOOL isNewUser = [[TTAccount sharedAccount] user].newUser;
         if (isNewUser) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"DISMISS_MASK_AFTER_LOGIN_SUCCESS" object:nil userInfo:@{@"source": platformName ? : @""}];

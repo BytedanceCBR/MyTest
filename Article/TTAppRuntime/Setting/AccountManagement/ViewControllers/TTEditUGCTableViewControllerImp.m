@@ -31,9 +31,6 @@
 #import "TTEditUserPickView.h"
 #import "TTIndicatorView.h"
 
-#import "Bubble-Swift.h"
-
-
 typedef NS_ENUM(NSUInteger, TTSectionType) {
     kTTSectionTypeNone = 0,
     kTTSectionTypeUserInfo,
@@ -95,13 +92,12 @@ UIActionSheetDelegate
 #pragma mark - delegate for UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-//    NSInteger numberOfSections = 2;
-//    if ([self showTableviewSectionOfThirdAccounts])
-//        numberOfSections++;
-//    if ([self showTableviewSectionOfLogout])
-//        numberOfSections++;
-//    return numberOfSections;
+    NSInteger numberOfSections = 2;
+    if ([self showTableviewSectionOfThirdAccounts])
+        numberOfSections++;
+    if ([self showTableviewSectionOfLogout])
+        numberOfSections++;
+    return numberOfSections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -156,10 +152,6 @@ UIActionSheetDelegate
     switch ([self cellTypeOfIndexPath:indexPath]) {
         case kTTCellTypeUserAvatar: {
             [self changeAvatarDidClickCell:[tableView cellForRowAtIndexPath:indexPath]];
-            
-            NSDictionary *params = @{@"event_type":@"house_app2c",@"click_type":@"avatar", @"page_type":@"edit_info"};
-            [[EnvContext shared].tracer writeEvent:TraceEventName.click_minetab params:params];
-            
             break;
         }
             
@@ -170,19 +162,11 @@ UIActionSheetDelegate
             
         case kTTCellTypeUserUsername: {
             [self changeUsernameDidClickCell:[tableView cellForRowAtIndexPath:indexPath]];
-            
-            NSDictionary *params = @{@"event_type":@"house_app2c",@"click_type":@"nickname", @"page_type":@"edit_info"};
-            [[EnvContext shared].tracer writeEvent:TraceEventName.click_minetab params:params];
-            
             break;
-            
         }
             
         case kTTCellTypeUserSelfIntroduction: {
             [self changeDescriptionDidClickCell:[tableView cellForRowAtIndexPath:indexPath]];
-            
-            NSDictionary *params = @{@"event_type":@"house_app2c",@"click_type":@"motto", @"page_type":@"edit_info"};
-            [[EnvContext shared].tracer writeEvent:TraceEventName.click_minetab params:params];
             break;
         }
         case kTTCellTypeUserGender: {
@@ -269,9 +253,10 @@ UIActionSheetDelegate
         case kTTSectionTypeUserInfo:
             numberOfRows = 3; // remove backgroundImage
             break;
-        case kTTSectionTypeAttachUserInfo:
-            numberOfRows = 3;
-            break;
+            // add by zjing 去掉性别生日地区
+//        case kTTSectionTypeAttachUserInfo:
+//            numberOfRows = 3;
+//            break;
         default:
             break;
     }

@@ -87,6 +87,7 @@
     if (_detailModel.relateReadFromGID) {
         return [NSString stringWithFormat:@"%@",_detailModel.relateReadFromGID];
     }
+
     return nil;
 }
 @end

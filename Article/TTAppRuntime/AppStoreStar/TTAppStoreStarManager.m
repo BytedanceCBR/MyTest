@@ -362,20 +362,20 @@ NSString * const TTAppStoreStarManagerAdvancedDebugKey = @"TTAppStoreStarManager
 
 - (void)openAppInAppleStore
 {
-    NSString *bundleString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
-    NSString *appId;
-    if([bundleString rangeOfString:@"article.NewsSocial"].location !=NSNotFound)
-    {
-        appId = @"id582528844"; //专业版
-    }
-    else if([bundleString rangeOfString:@"article.Explore"].location !=NSNotFound)
-    {
-        appId = @"id672151725"; //探索版
-    }
-    else {
-        appId = @"id529092160"; //普通版
-    }
-    
+    NSString *appId = @"id1434642658";
+//    NSString *bundleString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+//    if([bundleString rangeOfString:@"article.NewsSocial"].location !=NSNotFound)
+//    {
+//        appId = @"id582528844"; //专业版
+//    }
+//    else if([bundleString rangeOfString:@"article.Explore"].location !=NSNotFound)
+//    {
+//        appId = @"id672151725"; //探索版
+//    }
+//    else {
+//        appId = @"id529092160"; //普通版
+//    }
+        
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"itms-apps://itunes.apple.com/cn/app/%@?mt=8",appId]];
     [[UIApplication sharedApplication] openURL:url];
 }

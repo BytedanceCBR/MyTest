@@ -49,6 +49,39 @@
     return self;
 }
 
+-(void)setEnterFrom:(NSString *)enterFrom {
+    
+    _enterFrom = enterFrom;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.enterFrom = enterFrom;
+        
+    }
+}
+
+-(void)setCategoryID:(NSString *)categoryID {
+    
+    _categoryID = categoryID;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.categoryID = categoryID;
+    }
+
+}
+
+-(void)setLogPb:(NSDictionary *)logPb {
+    
+    _logPb = logPb;
+    if ([self.middleware isKindOfClass:[TTMomentDetailMiddleware class]]) {
+        
+        TTMomentDetailMiddleware *middleware = (TTMomentDetailMiddleware *)self.middleware;
+        middleware.logPb = logPb;
+    }
+
+}
+
 - (void)dispatch:(Action *)action {
     if (action.shouldMiddlewareHandle) {
         action.shouldMiddlewareHandle = NO;

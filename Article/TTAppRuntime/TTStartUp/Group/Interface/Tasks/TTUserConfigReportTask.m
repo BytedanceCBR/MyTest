@@ -49,6 +49,7 @@
         
         return [params copy];
     }];
+    [TTUserSettingsReporter sharedInstance].reportUrl = [CommonURLSetting reportUserConfigurationString];
     [[TTUserSettingsReporter sharedInstance] startReportUserConfiguration];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];

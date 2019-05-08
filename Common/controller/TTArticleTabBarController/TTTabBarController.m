@@ -33,18 +33,20 @@ NSString * const kTTTabBarSelectedIndexChangedNotification = @"kTTTabBarSelected
     
     // 接管delegate
     self.delegate = self;
-    
+    UIEdgeInsets safeInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
+    self.tabbarHeight = [TTDeviceHelper isIPhoneXDevice] ? (safeInset.bottom + 49.f) : 49.f;
+
     //[self initTabbarBadge];
 }
 
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    if (CGAffineTransformIsIdentity(self.view.transform)) {
-        UIEdgeInsets safeInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
-        self.tabBar.frame = CGRectMake(0, self.view.frame.size.height - self.tabbarHeight - safeInset.bottom, self.view.frame.size.width, self.tabbarHeight + safeInset.bottom);
-    }
-}
+//- (void)viewWillLayoutSubviews
+//{
+//    [super viewWillLayoutSubviews];
+//    if (CGAffineTransformIsIdentity(self.view.transform)) {
+//        UIEdgeInsets safeInset = [TTUIResponderHelper mainWindow].tt_safeAreaInsets;
+//        self.tabBar.frame = CGRectMake(0, self.view.frame.size.height - self.tabbarHeight - safeInset.bottom, self.view.frame.size.width, self.tabbarHeight + safeInset.bottom);
+//    }
+//}
 
 #pragma mark - UITabBarControllerDelegate
 
@@ -56,6 +58,10 @@ NSString * const kTTTabBarSelectedIndexChangedNotification = @"kTTTabBarSelected
         self.lastSelectedIndex = self.selectedIndex;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTTabBarSelectedIndexChangedNotification object:nil userInfo:@{@"index":@(self.selectedIndex)}];
+    } else {
+        if ([vc isKindOfClass:[UINavigationController class]]) {
+            [(UINavigationController *)vc popToRootViewControllerAnimated:YES];
+        }
     }
 }
 

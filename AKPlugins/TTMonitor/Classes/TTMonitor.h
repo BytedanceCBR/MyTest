@@ -25,13 +25,6 @@ typedef NSURL *(^TTURLTransformBlock)(NSURL *url);
 
 + (TTMonitor *)shareManager;
 
-/**
- *  设置打包的类的class
- *
- *  @param packClass 设置打包的类的class
- */
-- (void)setPackagerClass:(Class<TTMonitorLogPackagerProtocol>)packClass;
-
 - (void)setMonitorConfiguration:(Class<TTMonitorConfigurationProtocol>)configurationClass;
 
 - (void)startIfNeed;

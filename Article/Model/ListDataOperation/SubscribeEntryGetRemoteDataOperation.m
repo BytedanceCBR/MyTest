@@ -67,25 +67,26 @@
 
 - (void)execute:(id)operationContext
 {
-    self.hasFinished = NO;
-    if (!self.shouldExecuteBlock(operationContext))
-    {
-        self.hasFinished = YES;
-        return;
-    }
-    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
-    if ([operationContext isKindOfClass:[NSDictionary class]]) {
-        userInfo = [[NSMutableDictionary alloc] initWithDictionary:operationContext];
-    }
-    WeakSelf;
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:self.urlString params:self.paramDict method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        StrongSelf;
-        if (!error) {
-            [userInfo setValue:jsonObj forKey:kExploreFetchListResponseRemoteDataKey];
-        }
-        [self notifyWithData:nil error:error userInfo:userInfo];
-        self.hasFinished = YES;
-    }];
+    self.hasFinished = YES;
+//    self.hasFinished = NO;
+//    if (!self.shouldExecuteBlock(operationContext))
+//    {
+//        self.hasFinished = YES;
+//        return;
+//    }
+//    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+//    if ([operationContext isKindOfClass:[NSDictionary class]]) {
+//        userInfo = [[NSMutableDictionary alloc] initWithDictionary:operationContext];
+//    }
+//    WeakSelf;
+//    [[TTNetworkManager shareInstance] requestForJSONWithURL:self.urlString params:self.paramDict method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+//        StrongSelf;
+//        if (!error) {
+//            [userInfo setValue:jsonObj forKey:kExploreFetchListResponseRemoteDataKey];
+//        }
+//        [self notifyWithData:nil error:error userInfo:userInfo];
+//        self.hasFinished = YES;
+//    }];
 }
 
 @end

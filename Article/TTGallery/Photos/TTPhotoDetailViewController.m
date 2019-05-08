@@ -43,7 +43,7 @@
 #import "TTURLTracker.h"
 #import <TTTracker/TTTrackerProxy.h>
 #import "TTServiceCenter.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 //爱看
 #import "AKHelper.h"
@@ -222,11 +222,11 @@
     if (self.detailModel.relateReadFromGID) {
         [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
     }
-    BOOL hasZzComment = self.detailModel.article.zzComments.count > 0;
-    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
-    if (hasZzComment) {
-        [dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
-    }
+//    BOOL hasZzComment = self.detailModel.article.zzComments.count > 0;
+//    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
+//    if (hasZzComment) {
+//        [dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
+//    }
     
     if (self.detailModel.gdExtJsonDict.count > 0) {
         [dic addEntriesFromDictionary:self.detailModel.gdExtJsonDict];
@@ -235,7 +235,7 @@
     id value = self.detailModel.article.groupModel.groupID;
     
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
+        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
     }
     
     //log3.0 doubleSending
@@ -254,16 +254,16 @@
     if (self.detailModel.relateReadFromGID) {
         [logv3Dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
     }
-    [logv3Dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
-    if (hasZzComment) {
-        [logv3Dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
-    }
-    
+//    [logv3Dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
+//    if (hasZzComment) {
+//        [logv3Dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
+//    }
+
     if (self.detailModel.gdExtJsonDict) {
         [logv3Dic setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
     }
 
-//    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
 }
 
 #pragma mark Life cycle & Components load
@@ -347,7 +347,7 @@
     [self.KVOController observe:self.view keyPath:@"ttLoadingView" options:NSKeyValueObservingOptionInitial|NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         StrongSelf;
         if ([self.view.ttLoadingView isKindOfClass:[SSThemedView class]]) {
-            ((SSThemedView *)self.view.ttLoadingView).themeMode = SSThemeModeAlwaysNight;
+            ((SSThemedView *)self.view.ttLoadingView).themeMode = SSThemeModeAlwaysDay;
         }
     }];
     [self buildTopView];
@@ -813,7 +813,9 @@
             self.topView.barType = ExploreDetailNavigationBarTypeDefault;
         }
         [self.topView updateAvartarViewWithArticleInfo:_detailModel.article isSelf:[[self.detailModel.article.userInfo tt_stringValueForKey:@"user_id"] isEqualToString:[TTAccountManager userID]]];
-        [self.topView.avatarView addTouchTarget:self action:@selector(orignialActionFired:)];
+        
+        // add by zjing 去掉图集头像点击
+//        [self.topView.avatarView addTouchTarget:self action:@selector(orignialActionFired:)];
         UITapGestureRecognizer * tapGestureRecognizer = [[UITapGestureRecognizer alloc] init];
         [tapGestureRecognizer addTarget:self action:@selector(orignialActionFired:)];
         [self.topView.mediaName addGestureRecognizer:tapGestureRecognizer];
@@ -1409,7 +1411,7 @@
 
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error {
     // toolbar 禁表情
-    BOOL  isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    BOOL  isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
     self.toolbarView.banEmojiInput = self.commentViewController.banEmojiInput || isBanRepostOrEmoji;
 }
 

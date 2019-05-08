@@ -196,7 +196,10 @@ authorizeHintComplete;
         _imageView =[[SSThemedImageView alloc] init];
         _imageView.contentMode = UIViewContentModeScaleAspectFill;
         _imageView.imageName = imageName;
-        _imageView.frame = CGRectMake(0, [TTDeviceUIUtils tt_padding:36],[TTDeviceUIUtils tt_padding:164.f*self.imageView.image.size.width/self.imageView.image.size.height], [TTDeviceUIUtils tt_padding:164.f]);
+        if (_imageView.image.size.height > 0) {
+             _imageView.frame = CGRectMake(0, [TTDeviceUIUtils tt_padding:36],[TTDeviceUIUtils tt_padding:164.f*self.imageView.image.size.width/self.imageView.image.size.height], [TTDeviceUIUtils tt_padding:164.f]);
+        }
+       
         
         _imageView.centerX = (_centerView.width)/2.0;
         [self _setImageViewAlpha];
@@ -242,7 +245,7 @@ authorizeHintComplete;
         [_cancelButton addTarget:self action:@selector(cancelBtnTouched:) forControlEvents:UIControlEventTouchUpInside];
         _cancelImageView = [[SSThemedImageView alloc]init];
         _cancelImageView.imageName = @"icon_popup_close";
-        _cancelImageView.enableNightCover = NO;
+        _cancelImageView.enableNightCover = NO;        
         _cancelImageView.frame = CGRectMake(CGRectGetWidth(_cancelButton.frame)-_cancelImageView.image.size.width-[TTDeviceUIUtils tt_padding:8], [TTDeviceUIUtils tt_padding:8], _cancelImageView.image.size.width, _cancelImageView.image.size.height);
         [_cancelButton addSubview:_cancelImageView];
         [_centerView addSubview:_cancelButton];

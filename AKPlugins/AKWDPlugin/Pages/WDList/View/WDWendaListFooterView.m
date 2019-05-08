@@ -13,6 +13,7 @@
 @interface WDWendaListFooterView()
 @property(nonatomic, copy)WDWendaListFooterViewClickedBlock clickedBlock;
 @property(nonatomic, strong)SSThemedLabel * tipLabel;
+@property(nonatomic, strong)SSThemedImageView * rightArrowImgV;
 @property(nonatomic, strong)SSThemedButton * bgButton;
 @end
 
@@ -34,17 +35,22 @@
         [_bgButton addTarget:self action:@selector(bgButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_bgButton];
         
-        self.backgroundColorThemeKey = kColorBackground3;
+        self.backgroundColorThemeKey = kColorBackground14;
         
-        CGRect tipFrame = CGRectMake(kWDCellLeftPadding, WDPadding(6), self.width - kWDCellLeftPadding - kWDCellRightPadding, 20);
+        CGRect tipFrame = CGRectMake(kWDCellLeftPadding, 20, self.width - kWDCellLeftPadding - kWDCellRightPadding, 20);
         self.tipLabel = [[SSThemedLabel alloc] initWithFrame:tipFrame];
         _tipLabel.frame = tipFrame;
-        _tipLabel.textColorThemeKey = kColorText1;
+        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
         _tipLabel.font = [UIFont systemFontOfSize:14];
         _tipLabel.textAlignment = NSTextAlignmentLeft;
         _tipLabel.verticalAlignment = ArticleVerticalAlignmentTop;
         [self addSubview:_tipLabel];
         _tipLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        self.rightArrowImgV = [[SSThemedImageView alloc] initWithImage:[UIImage imageNamed:@"all_card_arrow"]];
+        _rightArrowImgV.frame = CGRectMake(self.width - 32, _tipLabel.frame.origin.y, 18, 18);
+        [self addSubview:_rightArrowImgV];
+        
     }
     return self;
 }
@@ -61,15 +67,15 @@
         NSMutableAttributedString *attrTitle = [[NSMutableAttributedString alloc] initWithString:title
                                                                                       attributes:@{
                                                                                                    NSFontAttributeName : [UIFont systemFontOfSize:14],
-                                                                                                   NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText1]}];
-        NSMutableAttributedString *token = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",ask_arrow_right]
-                                                                                  attributes:@{NSBaselineOffsetAttributeName:@(1.5),
-                                                                                               NSFontAttributeName : [UIFont fontWithName:wd_iconfont size:10],
-                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText1]}
-                                            ];
-        
-        
-        [attrTitle appendAttributedString:token];
+                                                                                                   NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorCoolGrey3]}];
+//        NSMutableAttributedString *token = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",ask_arrow_right]
+//                                                                                  attributes:@{NSBaselineOffsetAttributeName:@(1.5),
+//                                                                                               NSFontAttributeName : [UIFont fontWithName:wd_iconfont size:10],
+//                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorCoolGrey3]}
+//                                            ];
+//
+//
+//  [attrTitle appendAttributedString:token];
         [_tipLabel setAttributedText:attrTitle];
     } else {
         [_tipLabel setText:title];
@@ -81,12 +87,12 @@
     CGFloat padding = 0;
     if (isNoAnswers) {
         padding = WDPadding(8) ;
-        _tipLabel.textColorThemeKey = kColorText3;
+        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
     } else {
         padding = [_viewModel hasNiceAnswers] ? WDPadding(6) : WDPadding(12) ;
-        _tipLabel.textColorThemeKey = kColorText1;
+        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
     }
-    _tipLabel.origin = CGPointMake(kWDCellLeftPadding, padding);
+    _tipLabel.origin = CGPointMake(kWDCellLeftPadding, 17.5);
     self.clickedBlock = block;
 }
 
@@ -114,7 +120,7 @@
     // 有回答 6 无回答 12 暂无回答 120
     CGFloat padding = 0 ;
     if (isNoAnswers) {
-        _tipLabel.textColorThemeKey = kColorText3;
+        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
         if (isNew) {
             padding = WDPadding(120);
             _tipLabel.top = padding;
@@ -125,7 +131,7 @@
         }
     } else {
         padding = [_viewModel hasNiceAnswers] ? WDPadding(6) : WDPadding(12) ;
-        _tipLabel.textColorThemeKey = kColorText1;
+        _tipLabel.textColorThemeKey = kFHColorCoolGrey3;
         _tipLabel.origin = CGPointMake(kWDCellLeftPadding, padding);
     }
     self.clickedBlock = block;

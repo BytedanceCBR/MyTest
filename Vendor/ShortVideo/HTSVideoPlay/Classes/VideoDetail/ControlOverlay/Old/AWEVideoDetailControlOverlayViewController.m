@@ -108,8 +108,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 @property (nonatomic, strong) UIButton *shareButton;
 @property (nonatomic, strong) CAGradientLayer *bottomGradientLayer;
 @property (nonatomic, strong) AWEAwemeMusicInfoView *musicInfoView;
-@property (nonatomic, strong) UIButton *wechatShareButton;
-@property (nonatomic, strong) UIButton *wechatMomentsShareButton;
 
 @property (nonatomic, strong) TSVRecommendCardViewController *recViewController;
 @property (nonatomic, strong) UIButton *recArrowButton;
@@ -212,67 +210,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidDisappear:) name:@"SKStoreProductViewDidDisappearKey" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 
-    void (^sendShareButtonApperanceTracking)(NSString *activityName) = ^(NSString *activityName) {
-        @strongify(self);
-        [AWEVideoDetailTracker trackEvent:@"share_to_platform_out"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"position": @"detail_bottom_bar_out",
-                                            @"share_platform": [AWEVideoShareModel labelForContentItemType:activityName] ?: @"",
-                                            }];
-    };
-
-    [[RACObserve(self, viewModel.showShareIconOnBottomBar)
-      distinctUntilChanged]
-     subscribeNext:^(id x) {
-         @strongify(self);
-         BOOL showShareIconOnBottomBar = [x boolValue];
-
-         if (showShareIconOnBottomBar && !self.viewModel.showOnlyOneShareIconOnBottomBar) {
-             [UIView animateWithDuration:0.15
-                    customTimingFunction:CustomTimingFunctionLinear
-                               animation:^{
-                                   self.shareButton.alpha = 0;
-                               }];
-
-             sendShareButtonApperanceTracking(TTActivityContentItemTypeWechat);
-             sendShareButtonApperanceTracking(TTActivityContentItemTypeWechatTimeLine);
-             [self.operationView addSubview:self.wechatMomentsShareButton];
-             [self.operationView addSubview:self.wechatShareButton];
-             self.wechatMomentsShareButton.alpha = self.wechatShareButton.alpha = 0;
-             self.wechatMomentsShareButton.center = self.wechatShareButton.center = self.shareButton.center;
-             [UIView animateWithDuration:0.45
-                    customTimingFunction:CustomTimingFunctionQuintOut
-                               animation:^{
-                                   self.wechatMomentsShareButton.alpha = self.wechatShareButton.alpha = 1;
-                                   self.shareButton.yoga.isIncludedInLayout = NO;
-                                   [self.view setNeedsLayout];
-                                   [self.view layoutIfNeeded];
-                               }];
-         } else if (showShareIconOnBottomBar && self.viewModel.showOnlyOneShareIconOnBottomBar) {
-             sendShareButtonApperanceTracking(self.viewModel.lastUsedShareActivityName);
-             UIButton *iconButton = [self singleShareButton];
-             [self.operationView addSubview:iconButton];
-             self.shareButton.yoga.isIncludedInLayout = NO;
-             [self.view setNeedsLayout];
-             [self.view layoutIfNeeded];
-             iconButton.alpha = 0;
-             [UIView animateWithDuration:0.15
-                    customTimingFunction:CustomTimingFunctionLinear
-                               animation:^{
-                                   iconButton.alpha = 1;
-                                   self.shareButton.alpha = 0;
-                               }];
-         } else {
-             self.shareButton.alpha = 1;
-             self.shareButton.yoga.isIncludedInLayout = YES;
-             [self.wechatMomentsShareButton removeFromSuperview];
-             [self.wechatShareButton removeFromSuperview];
-             [self.view setNeedsLayout];
-         }
-     }];
-
     [[[RACObserve(self, viewModel.isStartFollowLoading)
        deliverOnMainThread]
       distinctUntilChanged]
@@ -304,57 +241,6 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     });
 }
 
-- (UIButton *)singleShareButton
-{
-    NSString *lastUsedActivity = self.viewModel.lastUsedShareActivityName;
-    UIButton *iconView;
-    if ([lastUsedActivity isEqualToString:TTActivityContentItemTypeWechat]) {
-        iconView = self.wechatShareButton;
-    } else if ([lastUsedActivity isEqualToString:TTActivityContentItemTypeWechatTimeLine]) {
-        iconView = self.wechatMomentsShareButton;
-    }
-
-    return iconView;
-}
-
-- (UIButton *)wechatShareButton
-{
-    if (!_wechatShareButton) {
-        _wechatShareButton = [[UIButton alloc] init];
-        _wechatShareButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -10, -20, -10);
-        [_wechatShareButton setImage:[UIImage imageNamed:@"tsv_share_icon_wechat"] forState:UIControlStateNormal];
-        @weakify(self);
-        [[[_wechatShareButton rac_signalForControlEvents:UIControlEventTouchUpInside]
-          takeUntil:self.rac_willDeallocSignal]
-         subscribeNext:^(id x) {
-             @strongify(self);
-             [self sendShareTrakingWithActivityName:TTActivityContentItemTypeWechat];
-             [self.viewModel shareToActivityNamed:TTActivityContentItemTypeWechat];
-         }];
-    }
-
-    return _wechatShareButton;
-}
-
-- (UIButton *)wechatMomentsShareButton
-{
-    if (!_wechatMomentsShareButton) {
-        _wechatMomentsShareButton = [[UIButton alloc] init];
-        _wechatMomentsShareButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -10, -20, -10);
-        [_wechatMomentsShareButton setImage:[UIImage imageNamed:@"tsv_share_icon_wechat_moments"] forState:UIControlStateNormal];
-        @weakify(self);
-        [[[_wechatMomentsShareButton rac_signalForControlEvents:UIControlEventTouchUpInside]
-          takeUntil:self.rac_willDeallocSignal]
-         subscribeNext:^(id x) {
-             @strongify(self);
-             [self sendShareTrakingWithActivityName:TTActivityContentItemTypeWechatTimeLine];
-             [self.viewModel shareToActivityNamed:TTActivityContentItemTypeWechatTimeLine];
-         }];
-    }
-
-    return _wechatMomentsShareButton;
-}
-
 - (void)sendShareTrakingWithActivityName:(NSString *)activityName
 {
     NSString *type = [AWEVideoShareModel labelForContentItemType:activityName];
@@ -364,7 +250,8 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
                                         @"share_platform": type ?: @"",
-                                        @"position": @"detail_bottom_bar_out",
+                                        @"position": @"detail",
+                                        @"event_type": @"house_app2c_v2"
                                         }];
 
 }
@@ -377,14 +264,15 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
         _avatarImageView = [[TSVAvatarImageView alloc] initWithFrame:CGRectMake(0, 0, 40, 40) model:self.model.author disableNightMode:YES];
         [_userInfoContainerView addSubview:_avatarImageView];
-        [_avatarImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
+        // add by zjing 去掉小视频关注
+//        [_avatarImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAvatarClick:)]];
 
         _nameLabel = [[UILabel alloc] init];
         _nameLabel.textColor = [UIColor whiteColor];
         _nameLabel.numberOfLines = 1;
         _nameLabel.textAlignment = NSTextAlignmentLeft;
         _nameLabel.layer.shadowOffset = CGSizeZero;
-        _nameLabel.font = [UIFont boldSystemFontOfSize:17];
+        _nameLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:17] ? : [UIFont boldSystemFontOfSize:17.0];
         _nameLabel.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.6].CGColor;
         _nameLabel.layer.shadowRadius = 1.0;
         _nameLabel.layer.shadowOpacity = 1.0;
@@ -488,12 +376,16 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     [_moreButton setImage:[UIImage imageNamed:@"hts_vp_white_more_titlebar"] forState:UIControlStateNormal];
     [_moreButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
     [_moreButton addTarget:self action:@selector(handleReportClick:) forControlEvents:UIControlEventTouchUpInside];
+    _moreButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
     [self.topBarView addSubview:_moreButton];
 
     _closeButton = [[UIButton alloc] init];
     [_closeButton setImage:[UIImage imageNamed:@"hts_vp_close"] forState:UIControlStateNormal];
     [_closeButton setImageEdgeInsets:UIEdgeInsetsMake(8, 0, 8, 0)];
     [_closeButton addTarget:self action:@selector(handleCloseClick:) forControlEvents:UIControlEventTouchUpInside];
+    _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-12, -12, -12, -12);
+
     [_layoutContainerView addSubview:_closeButton];
     
     [_layoutContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -575,10 +467,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     self.shareButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     [self.shareButton setImage:[UIImage imageNamed:@"hts_vp_more"] forState:UIControlStateNormal];
     [self.shareButton addTarget:self action:@selector(_onShareButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    NSNumber *shareEnable = [[TTSettingsManager sharedManager] settingForKey:@"tt_lite_huoshan_share_enable" defaultValue:@NO freeze:NO];
-    if (shareEnable.boolValue){
-        [self.operationView addSubview:self.shareButton];
-    }
+    [self.operationView addSubview:self.shareButton];
 
     [self.view addSubview:self.userInfoContainerView];
     [self.view addSubview:self.followButton];
@@ -970,7 +859,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     self.nameLabel.text = self.model.author.name;
 
     self.logoViewController.view.hidden = ![self shouldShowLogoViewController];
-    self.followButton.hidden = self.viewModel.followButtonHidden;;
+    
+    // add by zjing 隐藏小视频关注按钮
+    self.followButton.hidden = YES;
+
+//    self.followButton.hidden = self.viewModel.followButtonHidden;
 
     if ([[TSVDebugInfoConfig config] debugInfoEnabled]) {
         self.debugInfoView.debugInfo = model.debugInfo;
@@ -1075,7 +968,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
                                         @"user_id": self.model.author.userID ?: @"",
-                                        @"position": @"detail_bottom_bar",
+                                        @"position": @"detail",
                                         }];
 
     if (!self.model.userDigg) {

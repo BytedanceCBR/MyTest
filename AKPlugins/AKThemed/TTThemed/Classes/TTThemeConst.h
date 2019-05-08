@@ -153,4 +153,24 @@
 
 #define kAKMainColorHex @"FF0031"
 
+#define kFHColorDarkIndigo @"blue1" //"#081f33"
+#define kFHColorClearBlue @"blue2" //= //"#299cff"
+#define kFHColorbMutedBlue @"blue3"//= "#3d6e99"
+#define kFHColorVeryLightBlue @"blue4"//= "#e6f3ff"
+
+#define kFHColorCharcoalGrey @"grey1"//= "#333333"
+#define kFHColorBattleShipGrey @"grey2"//= "#666666"
+#define kFHColorCoolGrey3 @"grey3"//= "#999999"
+#define kFHColorCoolGrey2 @"grey4"//= "#bbbbbb"
+#define kFHColorSilver @"grey5"//= "#dddddd"
+#define kFHColorSilver2 @"grey6"//= "#e8e8e8"
+#define kFHColorPaleGrey @"grey7"//= "#f5f5f5"
+
+#define kFHColorCoral @"red1"//= "#ff5869"
+#define kFHColorRed2 @"red2"//= "#fff2ed"
+#define kFHColorRed3 @"red3"//= "#ff8151"
+#define kFHColorLightishGreen @"green1"//= "#0cce6b"
+
+
+
 #endif

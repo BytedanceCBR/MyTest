@@ -105,9 +105,11 @@
         [self addSubview:_ssWebView];
         
         self.disableTTUserAgent = NO;
+        self.disableConnectCheck = NO;
         
         _progressView = [[TTRWebViewProgressView alloc] initWithFrame:self.bounds];
         _progressView.height = 2.f;
+        _progressView.lineFillColor = [UIColor tt_themedColorForKey:kFHColorCoral];
         [self.ssWebView addDelegate:(NSObject<YSWebViewDelegate> *)_progressView];
         [self addSubview:_progressView];
         
@@ -122,6 +124,8 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         
         _loadTime = 0;
+        
+        self.disableEndRefresh = NO;
     }
     return self;
 }
@@ -225,8 +229,9 @@
 #pragma mark -- YSWebViewDelegate
 
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
+    NSLog(@"call back request url = %@",request.URL.absoluteString);
     
-    if(!TTNetworkConnected())
+    if(!TTNetworkConnected() && !self.disableConnectCheck)
     {
         [self tt_endUpdataData:NO error:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
         
@@ -274,7 +279,9 @@
 
 - (void)webViewDidFinishLoad:(YSWebView *)webView {
     _longPressGesture.enabled = YES;
-    [self tt_endUpdataData];
+    if (!self.disableEndRefresh) {
+        [self tt_endUpdataData];
+    }
     // 发送统计事件
     self.webStayStat = SSWebViewStayStatLoadFinish;
     [self _sendStatEvent:SSWebViewStayStatLoadFinish error:nil];
@@ -293,7 +300,9 @@
     }
     
     if (!webView.isLoading) {
-        [self tt_endUpdataData];
+        if (!self.disableEndRefresh) {
+            [self tt_endUpdataData];
+        }
     }
 }
 

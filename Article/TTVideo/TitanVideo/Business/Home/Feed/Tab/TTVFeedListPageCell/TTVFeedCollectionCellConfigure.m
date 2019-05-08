@@ -27,6 +27,7 @@
     }
     switch (feedCategory.listDataType) {
         case TTFeedListDataTypeArticle:
+            NSLog(@"TTFeedListDataTypeArticle: %@", feedCategory.categoryID);
             if ([feedCategory.categoryID isEqualToString:kTTVideoCategoryID]) {
                 return [TTVFeedCollectionVideoCell class];
             }

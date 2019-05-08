@@ -10,7 +10,7 @@
 #import "ArticleBadgeManager.h"
 //#import "TTFollowWebViewController.h"
 #import "TTNotificationCenterDelegate.h"
-
+#import "TTLaunchTracer.h"
 @implementation TTFetchBadgeTask
 
 - (NSString *)taskIdentifier {
@@ -30,6 +30,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     if ([[UIApplication sharedApplication] applicationIconBadgeNumber] > 0) {
         wrapperTrackEvent(@"apn", @"badge");
+        [[TTLaunchTracer shareInstance] setBadgeNumber:[UIApplication sharedApplication].applicationIconBadgeNumber];
     }
     [[ArticleBadgeManager shareManger] startFetch];
 }

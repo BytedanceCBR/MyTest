@@ -109,7 +109,7 @@ static const CGFloat kSubTitleFontSize = 12;
     
     _scheme = [infoDict tt_stringValueForKey:@"installed_schema"];
     if (isEmptyString(_scheme)) {
-        _scheme = @"snssdk1112://main?gd_label=click_schema_huoshan2toutiao_banner&source_from=toutiao";
+        _scheme = @"snssdk1370://main?gd_label=click_schema_huoshan2toutiao_banner&source_from=toutiao";
     }
     
     if ([SSCommonLogic isHTSAppInstalled]) {

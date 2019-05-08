@@ -18,7 +18,7 @@
 #import "TTCommentDefines.h"
 #import "TTCommentDataManager.h"
 #import "TTCommentWriteView.h"
-
+#import "FHTraceEventUtils.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceDraftKey @"PersistenceDraftKey"
@@ -62,7 +62,6 @@ static bool isTTCommentPublishing = NO;
 @end
 
 @implementation TTCommentDetailReplyWriteManager
-
 
 - (void)dealloc {
 
@@ -176,6 +175,7 @@ static bool isTTCommentPublishing = NO;
             if (self.commentWriteView.isNeedTips) {
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"发布成功" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
             }
+        
         }
 
         // 传递给 publishCallback 处理
@@ -195,27 +195,41 @@ static bool isTTCommentPublishing = NO;
         self.commentViewStrong = self.commentWriteView;
         [self.commentWriteView dismissAnimated:YES];
 
-        TTAccountLoginAlert *loginAlertView =
-        [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypePost source:@"post_comment" completion:nil];
-        __weak typeof(loginAlertView) weakLoginAlertView = loginAlertView;
-        loginAlertView.phoneInputCompletedHandler = ^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-
+        
+        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 //登录成功 走发送逻辑
                 if ([TTAccountManager isLogin]) {
                     [self postCommentWithLoginCallback:loginCallback];
                 }
-            } else if (type == TTAccountAlertCompletionEventTypeTip) {
-                UIViewController *topViewController = [TTUIResponderHelper topViewControllerFor:weakLoginAlertView];
-                [TTAccountManager presentQuickLoginFromVC:topViewController type:TTAccountLoginDialogTitleTypeDefault source:@"post_comment" completion:^(TTAccountLoginState state) {
-
-                }];
-            } else if (type == TTAccountAlertCompletionEventTypeCancel) {
-
             }
-
+            
             self.commentViewStrong = nil;
-        };
+        }];
+        
+//        TTAccountLoginAlert *loginAlertView =
+//        [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypePost source:@"post_comment" completion:nil];
+//        __weak typeof(loginAlertView) weakLoginAlertView = loginAlertView;
+//        loginAlertView.phoneInputCompletedHandler = ^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+//
+//            if (type == TTAccountAlertCompletionEventTypeDone) {
+//                //登录成功 走发送逻辑
+//                if ([TTAccountManager isLogin]) {
+//                    [self postCommentWithLoginCallback:loginCallback];
+//                }
+//            } else if (type == TTAccountAlertCompletionEventTypeTip) {
+//                UIViewController *topViewController = [TTUIResponderHelper topViewControllerFor:weakLoginAlertView];
+//                [TTAccountManager presentQuickLoginFromVC:topViewController type:TTAccountLoginDialogTitleTypeDefault source:@"post_comment" completion:^(TTAccountLoginState state) {
+//                    if ([TTAccountManager isLogin]) {
+//                        [self postCommentWithLoginCallback:loginCallback];
+//                    }
+//                }];
+//            } else if (type == TTAccountAlertCompletionEventTypeCancel) {
+//
+//            }
+//
+//            self.commentViewStrong = nil;
+//        };
     }
 }
 
@@ -309,7 +323,13 @@ static bool isTTCommentPublishing = NO;
 - (void)setupTextViewPlaceholder {
     NSString *placeholder = nil;
     if (isEmptyString(self.replyCommentModel.user.name)) {
-        placeholder = self.commentDetailModel.commentPlaceholder ?: kCommentInputPlaceHolder;
+        
+        if ([self.commentDetailModel respondsToSelector:@selector(commentPlaceholder)]) {
+            
+            placeholder = self.commentDetailModel.commentPlaceholder ?: kCommentInputPlaceHolder;
+        }else {
+            placeholder = kCommentInputPlaceHolder;
+        }
     } else {
         placeholder = [NSString stringWithFormat:@"回复 %@：", self.replyCommentModel.user.name];
     }
@@ -351,6 +371,36 @@ static bool isTTCommentPublishing = NO;
 
 #pragma mark - post comment
 
+- (NSString *)enterFromString{
+    
+    NSString * enterFrom = self.enterFrom;
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        return enterFrom;
+    }else{
+        if (![enterFrom isEqualToString:@"click_headline"] && ![enterFrom isEqualToString:@"click_favorite"]) {
+            
+            enterFrom = @"click_category";
+        }
+    }
+    
+    return enterFrom;
+}
+
+- (NSString *)categoryName {
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        categoryName = [self.enterFrom stringByReplacingOccurrencesOfString:@"click_" withString:@""];
+    }else{
+        if (![self.enterFrom isEqualToString:@"click_headline"]) {
+            if ([categoryName hasPrefix:@"_"]) {
+                categoryName = [categoryName substringFromIndex:1];
+            }
+        }
+    }
+    return categoryName;
+}
+
 - (void)postCommentWithLoginCallback:(TTCommentDetailWriteCommentViewLoginCallback)callback  {
 
     TTRichSpanText *replyRichSpanText = self.commentWriteView.inputTextView.richSpanText;
@@ -377,6 +427,26 @@ static bool isTTCommentPublishing = NO;
                                                          @"source" : @"comment"
                                                          }];
 
+    NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] init];
+    [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
+    [paramsDict setValue:self.commentDetailModel.groupModel.groupID forKey:@"item_id"];
+    [paramsDict setValue:self.commentDetailModel.commentID forKey:@"comment_id"];
+    
+    if (self.logPb) {
+        
+        [paramsDict setValue:self.logPb forKey:@"log_pb"];
+    }else {
+        [paramsDict setValue:@"be_null" forKey:@"log_pb"];
+
+    }
+    [paramsDict setValue:[self categoryName] forKey:@"category_name"];
+    [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+    if (self.enterFrom.length > 0) {
+        [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName] enterFrom:[self enterFrom]]  forKey:@"enter_from"];
+    }
+    [TTTracker eventV3:@"rt_post_reply" params:paramsDict];
+    
+    
     NSMutableDictionary *userInfoDic = [[NSMutableDictionary alloc] init];
     if ([self.commentDetailModel respondsToSelector:@selector(groupModel)]) {
         [userInfoDic setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];

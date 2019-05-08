@@ -19,7 +19,7 @@
 #import "ExploreCellViewBase.h"
 #import "Card+CoreDataClass.h"
 #import "ExploreArticleCardCellView.h"
-
+#import "TSVFeedFollowCell.h"
 
 @interface TTFeedBaseDelegate ()
 
@@ -155,6 +155,7 @@
     else {
         ExploreCellBase *cell = [self cellForIndexPath:indexPath];
         [cell didSelectAtIndexPath:indexPath viewModel:self.viewModel];
+
     }
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
@@ -180,6 +181,10 @@
             [cell willDisplayAtIndexPath:indexPath viewModel:self.viewModel];
         }
     }
+    ExploreCellBase *cellV = (ExploreCellBase *)cell;
+    if ([self.delegate isKindOfClass:NSClassFromString(@"TTFavoriteViewController")]&&[self.delegate respondsToSelector:@selector(willDisplayCell: atIndexPath:)]) {
+        [self.delegate willDisplayCell:cellV atIndexPath:indexPath];
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -188,6 +193,10 @@
         if ([cell isKindOfClass:[ExploreCellBase class]]) {
             [cell didEndDisplayAtIndexPath:indexPath viewModel:self.viewModel];
         }
+    }
+    ExploreCellBase *cellV = (ExploreCellBase *)cell;
+    if ([self.delegate isKindOfClass:NSClassFromString(@"TTFavoriteViewController")]&&[self.delegate respondsToSelector:@selector(willDisplayCell: atIndexPath:)]) {
+        [self.delegate endDisplayCell:cellV atIndexPath:indexPath];
     }
 }
 

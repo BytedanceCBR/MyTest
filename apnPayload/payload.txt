@@ -1,0 +1,14 @@
+
+列表页 二手房
+
+{"o_url": "snssdk1370://house_list?house_type=2&facing[]=2&facing[]=3", "aps":{"alert":"This is some fancy message.","badge":7,"sound": "default"}}
+
+文章推送
+{"o_url": "snssdk1370://detail?groupid=6587735325622141443", "aps":{"alert":"This is some fancy message.","badge":7,"sound": "default"}}
+
+//问答
+{"o_url": "sslocal://wenda_detail?gd_ext_json=%7B%22log_pb%22%3A+%7B%22impr_id%22%3A+%222018080917534301000801620101918B%22%2C+%22wenda_tab_name%22%3A+%22wenda_hot%22%7D%2C+%22parent_enterfrom%22%3A+%22click_category%22%2C+%22qid%22%3A+%226587119153486758157%22%2C+%22enter_from%22%3A+%22click_next_answer%22%2C+%22enterfrom_answerid%22%3A+%226587481364646330637%22%2C+%22article_type%22%3A+%22wenda%22%2C+%22author_id%22%3A+%2276435528331%22%2C+%22ansid%22%3A+%226587247030458908936%22%2C+%22category_name%22%3A+%22answer_hot%22%7D&ansid=6587247030458908936&api_param=%7B%22origin_from%22%3A+%22native_wenda_home%22%2C+%22next_offset%22%3A+30%2C+%22answer_list%22%3A+%5B6587347690009395464%2C+6587543206659883272%2C+6587247030458908936%2C+6587263109809832199%2C+6587244297861464328%2C+6587232635423031566%2C+6587348712526184707%2C+6587228788596146440%2C+6587506505132540167%2C+6587530528965001486%2C+6587239383626154244%2C+6587319556040032525%2C+6587296695795581188%2C+6587297275255456007%2C+6587231637296120077%2C+6587497391115469069%2C+6587240564041711880%2C+6587506944817234184%2C+6587230502241960206%2C+6587466615112073476%2C+6587483673094783240%2C+6587507347961151757%2C+6587559533831258381%2C+6587366563957965070%2C+6587626335835783428%2C+6587244914973606148%2C+6587369269661532429%2C+6587377275874836749%5D%2C+%22answer_type%22%3A+%22nice_answer%22%2C+%22enter_from%22%3A+%22click_next_answer%22%2C+%22in_offset%22%3A+2%2C+%22scope%22%3A+%22toutiao_wenda%22%2C+%22show_toast%22%3A+false%2C+%22is_from_next%22%3A+true%2C+%22enter_ansid%22%3A+%226587481364646330637%22%7D", "aps":{"alert":"This is some fancy message.","badge":7,"sound": "default"}}
+
+
+
+{"o_url": "sslocal://message_detail_list?list_id=301&title=test", "aps":{"alert":"This is some fancy message.","badge":7,"sound": "default"}}

@@ -167,17 +167,17 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
                                                    object:nil];
                 
         NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
-        [dict setValue:@"enter" forKey:@"label"];
-        [dict setValue:model.answerEntity.ansid forKey:@"value"];
+//        [dict setValue:@"enter" forKey:@"label"];
+//        [dict setValue:model.answerEntity.ansid forKey:@"value"];
         [self sendTrackWithDict:dict];
         
         //go detail
 
         NSMutableDictionary * goDetailDict = [NSMutableDictionary dictionaryWithDictionary:model.gdExtJsonDict];
-        [goDetailDict setValue:@"go_detail" forKey:@"tag"];
-        [goDetailDict setValue:[self enterFrom] forKey:@"label"];
-        [goDetailDict setValue:model.answerEntity.ansid forKey:@"value"];
-        [goDetailDict setValue:@"umeng" forKey:@"category"];
+//        [goDetailDict setValue:@"go_detail" forKey:@"tag"];
+//        [goDetailDict setValue:[self enterFrom] forKey:@"label"];
+//        [goDetailDict setValue:model.answerEntity.ansid forKey:@"value"];
+//        [goDetailDict setValue:@"umeng" forKey:@"category"];
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
             [TTTracker eventData:goDetailDict];
         }
@@ -187,8 +187,19 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [v3Dic setValue:model.answerEntity.ansid forKey:@"group_id"];
         [v3Dic setValue:model.answerEntity.ansid forKey:@"ansid"];
         [v3Dic setValue:model.answerEntity.qid forKey:@"qid"];
+        [v3Dic setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [v3Dic setValue:@"answer" forKey:@"page_type"];
+        if ([v3Dic[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            [v3Dic setValue:v3Dic[@"log_pb"][@"impr_id"] forKey:@"impr_id"];
+        }
         
-//        [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
+        [v3Dic removeObjectForKey:@"origin_source"];
+        [v3Dic removeObjectForKey:@"author_id"];
+        [v3Dic removeObjectForKey:@"article_type"];
+        
+        [v3Dic removeObjectForKey:@"pct"];
+        
+        [TTTracker eventV3:@"go_detail" params:v3Dic isDoubleSending:NO];
         
         if (!isEmptyString(model.answerEntity.ansid)) {
             [TTFFantasyTracker sharedInstance].lastGid = model.answerEntity.ansid;
@@ -426,7 +437,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [v3Dic setValue:_detailModel.answerEntity.ansid forKey:@"group_id"];
     [v3Dic setValue:_detailModel.answerEntity.ansid forKey:@"ansid"];
     [v3Dic setValue:_detailModel.answerEntity.qid forKey:@"qid"];
-//    [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
+    [TTTrackerWrapper eventV3:@"go_detail" params:v3Dic isDoubleSending:YES];
     
     self.isViewDisplaying = YES;
     
@@ -623,7 +634,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 //        headerViewClass = [WDDetailHeaderView class];
 //    }
     self.headerView = [[headerViewClass alloc] initWithFrame:[self p_frameForHeaderView] detailModel:self.detailModel];
-    self.headerView.hidden = YES;
     self.headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.headerView.delegate = self;
 }
@@ -704,6 +714,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [buttons addObject:[[UIBarButtonItem alloc] initWithCustomView:view]];
     }
     
+    
     self.navigationItem.rightBarButtonItems = buttons;
 }
 
@@ -739,7 +750,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 {
     [self.profileTitleView updateNavigationTitle:self.detailModel.answerEntity.user.name imageURL:self.detailModel.answerEntity.user.avatarURLString verifyInfo:self.detailModel.answerEntity.user.userAuthInfo decoration:self.detailModel.answerEntity.user.userDecoration fansNum:self.detailModel.answerEntity.user.followerCount];
 
-    self.rightFollowButton.hidden = self.profileTitleView.isShow ? NO : YES;
+    self.rightFollowButton.hidden = YES;
 
     if (self.detailModel.redPack) {
         self.rightFollowButton.unfollowedType = [TTFollowThemeButton redpacketButtonUnfollowTypeButtonStyle:self.detailModel.redPack.button_style.integerValue defaultType:TTUnfollowedType201];
@@ -748,7 +759,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     
     CGPoint followButtonCenter = self.rightFollowButton.center;
-
     CGFloat width = self.rightFollowButton.width;
     [self.rightFollowButton refreshUI];
     if (width > self.rightFollowButton.width) {
@@ -782,28 +792,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_showTitle:(BOOL)show
 {
-//    BOOL isShow = self.profileTitleView.isShow;
-//    if (!self.hasTrackRedPacketShowEvent && show && self.detailModel.redPack) {
-//        self.hasTrackRedPacketShowEvent = YES;
-//        NSMutableDictionary *showEventExtraDic = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
-//        [showEventExtraDic setValue:self.detailModel.answerEntity.user.userID forKey:@"user_id"];
-//        [showEventExtraDic setValue:@"show" forKey:@"action_type"];
-//        [showEventExtraDic setValue:@"answer_detail_top_banner" forKey:@"source"];
-//        [showEventExtraDic setValue:@"detail" forKey:@"position"];
-//        [TTTrackerWrapper eventV3:@"red_button" params:showEventExtraDic];
-//    }
-//    [self.profileTitleView show:show animated:YES];
-//    self.rightFollowButton.hidden = !show;
-//    if (show) {
-//        self.navigationItem.titleView = self.profileTitleView;
-//    }
-//
-//    if (show && !isShow) {
-//        NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:2];
-//        [extra setValue:self.detailModel.answerEntity.ansid forKey:@"item_id"];
-//        [extra setValue:self.detailView.detailViewModel.person.userID forKey:@"user_id"];
-//        [TTTracker event:kWDDetailViewControllerUMEventName label:@"show_titlebar_pgc" value:@(self.detailModel.answerEntity.ansid.longLongValue) extValue:nil extValue2:nil dict:extra];
-//    }
+    BOOL isShow = self.profileTitleView.isShow;
+    [self.profileTitleView show:show animated:YES];
+    self.rightFollowButton.hidden = YES;
+    if (show) {
+        self.navigationItem.titleView = self.profileTitleView;
+    }
 }
 
 - (void)p_buildToolbarViewIfNeeded
@@ -832,7 +826,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)p_buildNatantView
 {
-    self.natantContainerView = [[WDDetailNatantContainerView alloc] initWithFrame:CGRectMake(0, 0, [TTUIResponderHelper splitViewFrameForView:self.view].size.width, 0)];
+    // add by zjing 去掉标签
+//    self.natantContainerView = [[WDDetailNatantContainerView alloc] initWithFrame:CGRectMake(0, 0, [TTUIResponderHelper splitViewFrameForView:self.view].size.width, 0)];
 }
 
 - (void)p_startLoadArticleInfo
@@ -1338,7 +1333,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         stayPageDict[@"tag"] = @"stay_page";
         stayPageDict[@"label"] = [self enterFrom];
         stayPageDict[@"value"] = self.detailModel.answerEntity.ansid;
-        stayPageDict[@"ext_value"] = @(duration);
+        stayPageDict[@"ext_value"] = @((NSInteger)duration);
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
             [TTTracker eventData:stayPageDict];
         }
@@ -1348,19 +1343,33 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [v3Dic setValue:self.detailModel.answerEntity.ansid forKey:@"group_id"];
         [v3Dic setValue:self.detailModel.answerEntity.ansid forKey:@"ansid"];
         [v3Dic setValue:self.detailModel.answerEntity.qid forKey:@"qid"];
-        [v3Dic setValue:@(duration) forKey:@"stay_time"];
+        [v3Dic setValue:[NSNumber numberWithInteger:(NSInteger)duration] forKey:@"stay_time"];
         [v3Dic setValuesForKeysWithDictionary:commentDic];
-//        [TTTrackerWrapper eventV3:@"stay_page" params:v3Dic isDoubleSending:YES];
         
-        [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.detailModel.answerEntity.ansid itemID:self.detailModel.answerEntity.ansid enterFrom:[self enterFrom] categoryName:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"] stayTime:duration logPb:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"] answerID:self.detailModel.answerEntity.ansid questionID:self.detailModel.answerEntity.qid enterFromAnswerID:[self.detailModel.gdExtJsonDict objectForKey:@"enterfrom_answerid"] parentEnterFrom:[self.detailModel.gdExtJsonDict objectForKey:@"parent_enterfrom"]];
+        [v3Dic setValue:@"answer" forKey:@"page_type"];
+        [v3Dic setValue:@"house_app2c_v2" forKey:@"event_type"];
+
+        [TTTracker eventV3:@"stay_page" params:v3Dic isDoubleSending:NO];
+
+        [[TTRelevantDurationTracker sharedTracker]
+         appendRelevantDurationWithGroupID:self.detailModel.answerEntity.ansid
+         itemID:self.detailModel.answerEntity.ansid
+         enterFrom:[self enterFrom]
+         categoryName:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]
+         stayTime:duration
+         logPb:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]
+         answerID:self.detailModel.answerEntity.ansid
+         questionID:self.detailModel.answerEntity.qid
+         enterFromAnswerID:[self.detailModel.gdExtJsonDict objectForKey:@"enterfrom_answerid"]
+         parentEnterFrom:[self.detailModel.gdExtJsonDict objectForKey:@"parent_enterfrom"]];
     }
 }
 
 - (NSString *)enterFrom
 {
     NSString * enterFrom = [self.detailModel enterFrom];
-    if (isEmptyString(enterFrom)) {
-        enterFrom = @"unknown";
+    if (isEmptyString(enterFrom) || [@"unknown" isEqualToString:enterFrom]) {
+        enterFrom = @"click_favorite";
     }
     return enterFrom;
 }
@@ -1588,7 +1597,11 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_removeIndicatorPolicyView];
     
     NSMutableArray *contentItems = @[].mutableCopy;
-    [contentItems addObject:[self.natantViewModel wd_shareItems]];
+    NSDictionary *dictSetting = [[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"];
+    
+    if ([dictSetting tta_boolForKey:@"f_wenda_share_enable"]){
+        [contentItems addObject:[self.natantViewModel wd_shareItems]];
+    }
     [contentItems addObject:[self.natantViewModel wd_customItems]];
     [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
     
@@ -1735,6 +1748,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
          clickedWith:(id<TTActivityProtocol>)activity
           sharePanel:(id<TTActivityPanelControllerProtocol>)panelController
 {
+    //TODO: 问答详情埋点
     NSString *label = [WDShareUtilsHelper labelNameForShareActivity:activity];
     if (!isEmptyString(label)) {
         [self.detailModel sendDetailTrackEventWithTag:kWDDetailViewControllerUMEventName label:label];
@@ -1746,6 +1760,55 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.actionManager setContext:context];
     DetailActionRequestType requestType = [WDShareUtilsHelper requestTypeForShareActivityType:activity];
     [self.actionManager startItemActionByType:requestType];
+    if (requestType != DetailActionTypeWeixinShare &&
+        requestType != DetailActionTypeWeixinFriendShare &&
+        requestType != DetailActionTypeQQShare &&
+        requestType != DetailActionTypeQQZoneShare) {
+        return;
+    }
+    NSMutableDictionary *dict = [self.detailModel.gdExtJsonDict mutableCopy];
+    dict[@"source"] = nil;
+    dict[@"parent_enterfrom"] = nil;
+    dict[@"from_gid"] = nil;
+    dict[@"enterfrom_answerid"] = nil;
+    dict[@"author_id"] = nil;
+    dict[@"article_type"] = nil;
+    dict[@"origin_source"] = nil;
+    dict[@"event_type"] = @"house_app2c_v2";
+    dict[@"enter_from"] = [self enterFrom];
+    WDAnswerEntity *answerEntity = self.detailModel.answerEntity;
+    [dict setValue:answerEntity.ansid forKey:@"group_id"];
+    [dict setValue:answerEntity.ansid forKey:@"ansid"];
+    [dict setValue:answerEntity.ansid forKey:@"qid"];
+    [dict setValue:@"detail" forKey:@"position"];
+    dict[@"category_name"] = self.detailModel.gdExtJsonDict[@"category_name"];
+    if (dict[@"category_name"] == nil) {
+        dict[@"category_name"] = @"favorite";
+    }
+
+    [dict setValue:[[self class] sharePlatformByRequestType: requestType] forKey:@"share_platform"];
+    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+
+}
+
++ (NSString*)sharePlatformByRequestType:(DetailActionRequestType)requestType {
+    switch (requestType) {
+        case DetailActionTypeWeixinShare:
+            return @"weixin_moments";
+            break;
+        case DetailActionTypeWeixinFriendShare:
+            return @"weixin";
+            break;
+        case DetailActionTypeQQShare:
+            return @"qq";
+            break;
+        case DetailActionTypeQQZoneShare:
+            return @"qzone";
+            break;
+        default:
+            return @"be_null";
+    }
+    return @"be_null";
 }
 
 - (void)shareManager:(TTShareManager *)shareManager
@@ -1966,8 +2029,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:answerEntity.ansid forKey:@"group_id"];
     [dict setValue:answerEntity.user.userID forKey:@"user_id"];
     [dict setValue:@(10) forKey:@"group_source"];
-    [dict setValue:@"detail_bottom" forKey:@"position"];
-
+    [dict setValue:@"detail" forKey:@"position"];
+    [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
+    
     if (self.detailModel.answerEntity.isDigg) {
         [TTTracker eventV3:@"rt_like" params:[dict copy]];
     } else {
@@ -2009,6 +2073,37 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 #pragma mark - TTCommentDelegate
+
+
+- (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(id<TTCommentModelProtocol>)model {
+    if (!model.userDigged) {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
+    } else {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+    }
+}
 
 - (void)tt_commentViewControllerDidFetchCommentsWithError:(NSError *)error 
 {
@@ -2067,6 +2162,9 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController tappedWithUserID:(NSString *)userID
 {
+    // add by zjing 去掉问答 回复@里面的点击
+    return;
+    
     if ([userID longLongValue] == 0) {
         return;
     }
@@ -2100,8 +2198,11 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     NSMutableDictionary *mdict = info.mutableCopy;
     //todo
     [mdict setValue:@"detail_wenda_comment_dig" forKey:@"fromPage"];
-    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category"]  forKey:@"categoryName"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category_name"]  forKey:@"categoryName"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"enter_from"]  forKey:@"enterFrom"];
     [mdict setValue:self.detailModel.answerEntity.ansid forKey:@"groupId"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"qid"] forKey:@"qid"];
+    [mdict setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"] forKey:@"logPb"];
     
     if (self.isNewVersion) {
         if ([self.wdDelegate respondsToSelector:@selector(wd_commentViewController:didSelectWithInfo:)]) {
@@ -2159,6 +2260,16 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
 {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"enter_from"]  forKey:@"enter_from"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"category_name"]  forKey:@"category_name"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"ansid"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
+    [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+    [TTTracker eventV3:@"rt_post_comment" params:params];
+    
     commentWriteManager.delegate = nil;
     self.commentViewController.hasSelfShown = YES;
     if(![responseData objectForKey:@"error"])  {

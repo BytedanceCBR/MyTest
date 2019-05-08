@@ -116,6 +116,7 @@ TTAccountMulticastProtocol
 
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHLogInAccountStatusChangedNotification object:@(reasonType)];
     // 只清理收藏和历史，清理所有orderedData可能会很慢
     [ExploreLogicSetting clearFavoriteCoreData];
     [ExploreLogicSetting clearReadHistoryCoreData];
@@ -143,10 +144,10 @@ TTAccountMulticastProtocol
 
 - (void)onAccountSessionExpired:(NSError *)error
 {
-    NSString *expirationText = [[error userInfo] objectForKey:kErrorDisplayMessageKey];
-    if (!expirationText) expirationText = [error.userInfo objectForKey:TTAccountErrMsgKey];
-    if (!expirationText) expirationText = [error.userInfo objectForKey:@"message"];
-    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:expirationText indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
+//    NSString *expirationText = [[error userInfo] objectForKey:kErrorDisplayMessageKey];
+//    if (!expirationText) expirationText = [error.userInfo objectForKey:TTAccountErrMsgKey];
+//    if (!expirationText) expirationText = [error.userInfo objectForKey:@"message"];
+//    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:expirationText indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
 }
 
 - (void)autoLoginFinished:(NSNotification*)notification

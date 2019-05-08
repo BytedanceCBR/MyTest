@@ -187,6 +187,7 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         [[ArticleAPNsManager sharedManager] handleRemoteNotification:userInfo];
     } else {
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
+        dict[@"post_back"] = userInfo[@"post_back"];
         [dict setValue:[userInfo tt_stringValueForKey:@"o_url"]
                 forKey:kSSAPNsAlertManagerSchemaKey];
         [dict setValue:[[[userInfo tt_dictionaryValueForKey:@"aps"]

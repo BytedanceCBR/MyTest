@@ -1,0 +1,11 @@
+framework module JXPhotoBrowser {
+  umbrella header "JXPhotoBrowser-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module JXPhotoBrowser.Swift {
+    header "JXPhotoBrowser-Swift.h"
+    requires objc
+}

@@ -42,10 +42,15 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     NSString *_gd_label;
     NSString *_extJson;
     
+    // 控制导航栏隐藏（保留返回和关闭按钮），1为隐藏，非1或者不传则显示；（5.2版本起支持）
     BOOL _shouldHideNavigationBar;
-    BOOL _shouldhideStatusBar;                //style_canvas = 1 沉浸式样式 隐藏 NavigationBar StatusBar
+    // 控制状态栏隐藏（保留返回和关闭按钮），1为隐藏（WAP页面以屏幕顶部作为顶部），非1或者不传则显示；（页面从屏幕顶部往下20pt开始作为顶部
+    // style_canvas = 1 时是沉浸式样式 隐藏 NavigationBar StatusBar
+    BOOL _shouldhideStatusBar;
     BOOL _webViewBounceEnable;
+    BOOL _shouldHideBackButton;             //是否隐藏左上角返回键
     
+    // 下面这个名字起得不好
     BOOL _shouldHideBackButtonView;         //是否用 backButton 替代 SSWebViewBackButtonView
 }
 @property(nonatomic, strong)SSWebViewControllerView * ssWebView;
@@ -56,6 +61,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, assign)SSWebViewBackButtonColorType backButtonColorType;
 @property(nonatomic, strong)TTAlphaThemedButton *backButton;
 @property(nonatomic, assign)BOOL hideMore;
+@property(nonatomic, assign)BOOL showShareBtn;
 @property(nonatomic, copy)NSDictionary *wapHeaders;
 @property(nonatomic, assign, readwrite) BOOL supportLandscapeOnly;
 @property(nonatomic, assign)BOOL shouldDisableHistory;
@@ -65,16 +71,27 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 @property(nonatomic, strong) NSDictionary *baseCondition;
 @property(nonatomic, strong) UIView *customeNavigationBar;
 @property(nonatomic, assign) NSInteger colorKey;
+@property(nonatomic, assign) long long closeStackCount;
 @property(nonatomic, assign) BOOL nightModeDisable;
 
 @property (nonatomic, assign) BOOL shouldDisableHash;
+@property (nonatomic, strong)   NSDictionary       *fhJSParams;
+/** 键盘谈起屏幕偏移量 */
+@property (nonatomic, assign) CGPoint keyBoardPoint;
+@property (nonatomic, assign)   BOOL       isFirstKeyBoardShow;/**/
 
 @end
 
 @implementation SSWebViewController
+
++ (void)load {
+    RegisterRouteObjWithEntryName(@"novel");
+}
+
 //这是我见过写的最乱的代码.
 - (void)dealloc
 {
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     self.requestURL = nil;
@@ -88,10 +105,22 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
-    NSDictionary *params = paramObj.allParams;
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params addEntriesFromDictionary:paramObj.allParams];
+    BOOL iOS8 = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0;
+    if (iOS8) {
+        params[@"use_wk"] = @"0";  // 添加默认支持使用WKWebView
+    } else {
+        params[@"use_wk"] = @"1";  // 添加默认支持使用WKWebView
+    }
+    if (![params valueForKey:@"bounce_disable"]) {
+        params[@"bounce_disable"] = @"1"; // 添加支持bounce_disable设置
+    }
     NSString * urlStr = nil;
+    self.closeStackCount = 0;
     if ([params.allKeys containsObject:@"url"]) {
         urlStr = [params objectForKey:@"url"];
+        
         if ([params.allKeys containsObject:@"ttencoding"]) {
             if ([[params objectForKey:@"ttencoding"] isEqualToString:@"base64"]) {
                 urlStr = [TTStringHelper decodeStringFromBase64Str:urlStr];
@@ -131,16 +160,24 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
         }
         
-        NSNumber *hideMore = [params valueForKey:@"hide_more"];
-        self.hideMore = hideMore.boolValue;
-
+//        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
+        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
+        if ([[params tt_stringValueForKey:@"share_enable"] isKindOfClass:[NSString class]]) {
+            self.showShareBtn = [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"true"] || [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"1"];
+        }
+        
         _shouldHideNavigationBar = NO;
         if ([params valueForKey:@"hide_bar"]) {
-            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"];
+            _shouldhideStatusBar = [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"1"] ||  [[NSString stringWithFormat:@"%@", params[@"hide_bar"]] isEqualToString:@"true"];
         }
         
         if ([params valueForKey:@"hide_nav_bar"]) {//hide_nav_bar 与 hide_bar 功能一致 王伟老师说要换个名字，但是老版本要兼容
-            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"];
+            _shouldHideNavigationBar = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bar"]] isEqualToString:@"true"];
+        }
+        
+        _shouldHideBackButton = NO;
+        if ([params valueForKey:@"hide_back_button"]) {
+            _shouldHideBackButton = [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_back_button"]] isEqualToString:@"true"];
         }
         
         _webViewBounceEnable = YES;
@@ -150,6 +187,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         
         if ([params valueForKey:@"background_colorkey"]) {
             self.colorKey = [params tt_intValueForKey:@"background_colorkey"];
+        }
+        
+        if ([params valueForKey:@"closeStack"]) {
+            self.closeStackCount = [params tt_intValueForKey:@"closeStack"];
         }
         
         if ([params valueForKey:@"nightbackground_disable"]) {
@@ -198,6 +239,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             if ([[params allKeys] containsObject:@"hide_back_buttonView"]) {
                 _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_buttonView"];
             }
+            
+            if ([[params allKeys] containsObject:@"hide_back_button"]) {
+                _shouldHideBackButtonView = [params tt_boolValueForKey:@"hide_back_button"];
+            }
         }
         
         _shouldDisableHistory = [params tt_boolValueForKey:@"disableHistory"];
@@ -214,8 +259,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             _shouldhideStatusBar = YES;
             _shouldHideNavigationBar = YES;
             _wapViewStartFromTop = YES;
+            _shouldHideBackButton = YES;
+            _shouldHideBackButtonView = YES;
         }
-        
+
         // wap_headers
         if ([params.allKeys containsObject:@"wap_headers"]) {
             NSString *json = [params stringValueForKey:@"wap_headers" defaultValue:nil];
@@ -251,8 +298,22 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         }
         //透传给下一级
         self.baseCondition = params;
+        if ([[params allKeys] containsObject:@"fhJSParams"]) {
+            self.fhJSParams = [params objectForKey:@"fhJSParams"];
+        }
+        if ([[params allKeys] containsObject:@"hide_nav_bottom_line"]) {
+            self.ttNeedHideBottomLine = [[NSString stringWithFormat:@"%@", params[@"hide_nav_bottom_line"]] isEqualToString:@"1"] || [[NSString stringWithFormat:@"%@", params[@"hide_nav_bottom_line"]] isEqualToString:@"true"];
+        }
+        
     }
     return self;
+}
+
+- (void)setUpBackBtnControl:(NSNumber *)isControl
+{
+    if (isControl) {
+        self.backButton.userInteractionEnabled = NO;
+    }
 }
 
 - (void)setupAdInfo
@@ -314,16 +375,21 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
     return self;
 }
-/*
-- (void)viewDidAppear:(BOOL)animated
+
+- (void)showShareButtonAcition
 {
-    [super viewDidAppear:animated];
-    
-    _statusBarHidden = [UIApplication sharedApplication].isStatusBarHidden;
-    if ([TTDeviceHelper OSVersionNumber] >= 7.f && _statusBarHidden) {
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    }
-}*/
+     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.ssWebView.navigationBar.rightBarView];
+}
+
+//- (void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//
+//    _statusBarHidden = [UIApplication sharedApplication].isStatusBarHidden;
+//    if ([TTDeviceHelper OSVersionNumber] >= 7.f && _statusBarHidden) {
+//        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+//    }
+//}
 
 - (void)viewDidLoad
 {
@@ -376,8 +442,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         }
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [self registerObserver];
     
     if (self.backButtonColorType == SSWebViewBackButtonColorTypeLightContent) {
         [self.ssWebView.backButtonView setStyle:SSWebViewBackButtonStyleLightContent];
@@ -407,48 +472,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         
         self.ttHideNavigationBar = YES;
         
-        __weak typeof(self) wSelf = self;
-        [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
-            
-            wSelf.iphoneSupportRotate = YES;
-
-            BOOL isLandscape = [[result valueForKey:@"orientation"] boolValue];
-            wSelf.supportLandscapeOnly = isLandscape;
-            if (isLandscape) {
-                [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait)
-                                            forKey:@"orientation"];
-                [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight)
-                                            forKey:@"orientation"];
-            } else {
-                [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight)
-                                            forKey:@"orientation"];
-                [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait)
-                                            forKey:@"orientation"];
-            }
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
-        } forMethodName:@"requestChangeOrientation"];
-        
-        // 控制页面顶部状态条风格和返回按钮颜色
-        [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
-            NSString *color = [result stringValueForKey:@"color" defaultValue:nil];
-            if ([color isEqualToString:@"white"]) {
-                [wSelf.ssWebView.backButtonView setStyle:SSWebViewBackButtonStyleLightContent];
-                wSelf.backButtonColorType = SSWebViewBackButtonColorTypeLightContent;
-            }
-            else if ([color isEqualToString:@"black"]) {
-                [wSelf.ssWebView.backButtonView setStyle:SSWebViewBackButtonStyleDefault];
-                wSelf.backButtonColorType = SSWebViewBackButtonColorTypeDefault;
-            }
-            if (![TTDeviceHelper isPadDevice]) {
-                [wSelf refreshBackButtonImage];
-            }
-        } forMethodName:@"backButton"];
-        
-        [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
-            NSString *color = [result stringValueForKey:@"color" defaultValue:@"black"];
-            wSelf.isStatusBarWhite = [color isEqualToString:@"white"];
-            [wSelf refreshStatusBarStyle];
-        } forMethodName:@"statusBar"];
+        [self registerJSBridgeForHideNavigationBar];
         
         if (!_shouldHideBackButtonView) {
             UIView *backButtonView = self.ssWebView.navigationBar.leftBarView;
@@ -460,12 +484,83 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         }
     }
     
+    [self registerJSBridge];
+    
+    [self refreshBackButton];
+    
+    // F项目JS注册
+    [self registerFHJSBridge];
+    
+    //注册基础服务
+//    [TTRealnameAuthServiceForWebManager supportNativeServiceForWebView:self.ssWebView.ssWebContainer.ssWebView];
+    [self setupAdInfo];
+    
+    [self.ssWebView setupFShareBtn:self.showShareBtn];
+    
+    [self showShareButtonAcition];
+    
+    self.ssWebView.closeStackCounts = self.closeStackCount;
+    
+    // iOS12 - 使用WKWebView出现input键盘将页面上顶 不下移问题 兼容
+    self.isFirstKeyBoardShow = YES;
+    [self registerKeybordObserver];
+}
+
+// iOS12 - 使用WKWebView出现input键盘将页面上顶 不下移问题 兼容
+- (void)registerKeybordObserver {
+    // 监听将要弹起
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardShow:) name:UIKeyboardWillShowNotification object:nil];
+    // 监听将要隐藏
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyBoardHidden:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)keyBoardShow:(NSNotification *)noti {
+    CGPoint point = self.ssWebView.ssWebContainer.ssWebView.scrollView.contentOffset;
+    if (self.isFirstKeyBoardShow) {
+        self.keyBoardPoint = point;
+        self.isFirstKeyBoardShow = NO;
+    }
+}
+
+- (void)keyBoardHidden:(NSNotification *)noti {
+    self.ssWebView.ssWebContainer.ssWebView.scrollView.contentOffset = self.keyBoardPoint;
+    self.isFirstKeyBoardShow = YES; // 下一次标记位标记
+}
+
+// 注册全局通知监听器
+- (void)registerObserver {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+// F项目JS注册，route参数中要传递：fhJSParams:{} url: title:
+-(void)registerFHJSBridge
+{
+    __weak typeof(self) wSelf = self;
+    [self.fhJSParams enumerateKeysAndObjectsUsingBlock:^(NSString*  _Nonnull methodName, NSDictionary*  _Nonnull obj, BOOL * _Nonnull stop) {
+        if ([methodName length] > 0) {
+            NSMutableDictionary *callBackData = [NSMutableDictionary dictionaryWithDictionary:obj];
+            [wSelf.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin  registerHandlerBlock:^(NSDictionary *params, TTRJSBResponse callback) {
+                [callBackData setObject:@(1) forKey:@"code"];
+                if ([params isKindOfClass:[NSDictionary class]]) {
+                    [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull temObj, BOOL * _Nonnull stop) {
+                        [callBackData setObject:temObj forKey:key];
+                    }];
+                }
+                callback(TTRJSBMsgSuccess, callBackData);
+            } forMethodName:methodName];
+        }
+    }];
+}
+
+// 注册JSBridge
+- (void)registerJSBridge {
     __weak typeof(self) wSelf = self;
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
         wSelf.shouldDisableHistory = [result tt_boolValueForKey:@"disableHistory"];
         wSelf.ssWebView.shouldDisableHistory = wSelf.shouldDisableHistory;
     } forMethodName:@"disableHistory"];
-
+    
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
         NSArray *data = [result arrayValueForKey:@"data" defaultValue:nil];
         if([data count] > 0){
@@ -513,13 +608,52 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         wSelf.ssWebView.isRepostWeitoutiaoFromWeb = [result tt_boolValueForKey:@"is_repost_weitoutiao"];
         
     } forMethodName:@"repostInfo"];
+}
+
+// 注册JSBridge（_shouldHideNavigationBar为true时才执行）
+- (void)registerJSBridgeForHideNavigationBar {
+    __weak typeof(self) wSelf = self;
+    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
+        
+        wSelf.iphoneSupportRotate = YES;
+        
+        BOOL isLandscape = [[result valueForKey:@"orientation"] boolValue];
+        wSelf.supportLandscapeOnly = isLandscape;
+        if (isLandscape) {
+            [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait)
+                                        forKey:@"orientation"];
+            [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight)
+                                        forKey:@"orientation"];
+        } else {
+            [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationLandscapeRight)
+                                        forKey:@"orientation"];
+            [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait)
+                                        forKey:@"orientation"];
+        }
+        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
+    } forMethodName:@"requestChangeOrientation"];
     
-    [self refreshBackButton];
+    // 控制页面顶部状态条风格和返回按钮颜色
+    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
+        NSString *color = [result stringValueForKey:@"color" defaultValue:nil];
+        if ([color isEqualToString:@"white"]) {
+            [wSelf.ssWebView.backButtonView setStyle:SSWebViewBackButtonStyleLightContent];
+            wSelf.backButtonColorType = SSWebViewBackButtonColorTypeLightContent;
+        }
+        else if ([color isEqualToString:@"black"]) {
+            [wSelf.ssWebView.backButtonView setStyle:SSWebViewBackButtonStyleDefault];
+            wSelf.backButtonColorType = SSWebViewBackButtonColorTypeDefault;
+        }
+        if (![TTDeviceHelper isPadDevice]) {
+            [wSelf refreshBackButtonImage];
+        }
+    } forMethodName:@"backButton"];
     
-    
-    //注册基础服务
-//    [TTRealnameAuthServiceForWebManager supportNativeServiceForWebView:self.ssWebView.ssWebContainer.ssWebView];
-    [self setupAdInfo];
+    [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
+        NSString *color = [result stringValueForKey:@"color" defaultValue:@"black"];
+        wSelf.isStatusBarWhite = [color isEqualToString:@"white"];
+        [wSelf refreshStatusBarStyle];
+    } forMethodName:@"statusBar"];
 }
 
 - (void)viewWillLayoutSubviews
@@ -588,12 +722,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     }
 }
 
--(void) applicationDidEnterBackground:(NSNotification *)notification {
+- (void)applicationDidEnterBackground:(NSNotification *)notification {
     [self _sendStayEventWithTimeInterval];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
     _startDate = [NSDate date];
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -604,6 +740,48 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
     } else {
         [[UIApplication sharedApplication] setStatusBarStyle:self.ttStatusBarStyle == UIStatusBarStyleDefault ? [[TTThemeManager sharedInstance_tt] statusBarStyle] : self.ttStatusBarStyle animated:YES];
+    }
+    
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"show" data:nil];
+    
+    [self setUpCloseCountVC];
+}
+
+- (void)setUpCloseCountVC
+{
+    
+    NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    
+    NSInteger closeStackCouuntResult = self.closeStackCount;
+    
+    if (closeStackCouuntResult == 0) {
+        return;
+    }
+    
+    if (vcStack.count > closeStackCouuntResult + 2) {
+        NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
+        if (retainVCs == 0) {
+            self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+        }else
+        {
+            NSMutableArray *viewControllersArray = [NSMutableArray new];
+            [viewControllersArray addObject:vcStack.firstObject];
+            
+            for (int i = 0; i < retainVCs; i++) {
+                if (vcStack.count > i) {
+                    [viewControllersArray addObject:vcStack[i + 1]];
+                }
+            }
+            
+            [viewControllersArray addObject:vcStack.lastObject];
+            
+            self.navigationController.viewControllers = viewControllersArray;
+        }
+    }else
+    {
+        if (self.navigationController.viewControllers.count >=2) {
+            self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject, nil];
+        }
     }
 }
 
@@ -616,6 +794,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     if (_shouldhideStatusBar) {
         [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
+    [self.ssWebView.ssWebContainer.ssWebView ttr_fireEvent:@"hide" data:nil];
 }
 
 - (void)setDismissType:(SSWebViewDismissType)type
@@ -641,6 +820,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         [self refreshBackButtonImage];
         [self refreshBackButtonPosition];
     }
+    if (_shouldHideBackButton && ![TTDeviceHelper isPadDevice]) {
+        self.backButton.hidden = YES;
+    }
 }
 
 - (void)refreshBackButtonImage
@@ -660,6 +842,24 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             break;
     }
 }
+
+- (void)setupCloseCallBackPreviousVC:(NSDictionary *)params
+{
+    NSString *jsCodeStr = [NSString stringWithFormat:@"ToutiaoJSBridge.trigger('pageResult',%@);",[params tt_JSONRepresentation]];
+    [self.ssWebView.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:jsCodeStr
+                                                        completionHandler:nil];
+}
+
+- (void)setupOpenPageTagStr:(NSString *)tagStr
+{
+    self.tagStr = tagStr;
+}
+
+- (NSString *)getOpenPageTagStr
+{
+    return _tagStr;
+}
+
 
 - (void)refreshBackButtonPosition
 {
@@ -845,7 +1045,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     else {
         [extraDic setValue:@"" forKey:@"log_extra"];
     }
-//    [TTTrackerWrapper category:@"wap_stat" event:@"stay_page" label:_gd_label dict:extraDic json:_extJson];
+    [TTTrackerWrapper category:@"wap_stat" event:@"stay_page" label:_gd_label dict:extraDic json:_extJson];
 }
 
 - (void)_sendTemailStayEvent {
@@ -891,6 +1091,36 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         [dict setValue:[extraDict JSONRepresentation] forKey:@"ad_extra_data"];
         [TTTrackerWrapper eventData:dict];
         
+    }
+}
+
+- (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl
+{
+    if ([isWebControl respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isWebControl = [isWebControl boolValue];
+    }
+}
+
+- (void)setupCloseStackVCCount:(NSNumber *)count
+{
+    if ([count respondsToSelector:@selector(integerValue)]) {
+        self.closeStackCount = [count longLongValue];
+        self.ssWebView.closeStackCounts = [count longLongValue];;
+    }
+}
+
+- (void)setUpCloseBtnControlForWeb:(NSNumber *)isShow
+{
+    if ([isShow respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isShowCloseWebBtn = [isShow boolValue];
+    }
+}
+
+- (void)setUpCloseBtnControlForNaviBackBtn:(NSNumber *)isShow
+{
+    if ([isShow respondsToSelector:@selector(boolValue)]) {
+        self.ssWebView.isShowNaviBack = [isShow boolValue];
+        [self.ssWebView hiddeNaviBack:[isShow boolValue]];
     }
 }
 

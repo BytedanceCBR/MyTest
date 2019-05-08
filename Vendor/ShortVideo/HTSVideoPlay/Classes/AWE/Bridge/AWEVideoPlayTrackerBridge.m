@@ -17,8 +17,11 @@
     NSMutableDictionary *moduleParams = [NSMutableDictionary new];
     [moduleParams setValue:event forKey:@"event"];
     NSMutableDictionary *mutParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    [mutParams setValue:@88 forKey:@"demand_id"];
-    
+
+//    if (![params[@"event_type"] isEqualToString:@"house_app2c_v2"])
+//    {
+//        [mutParams setValue:@88 forKey:@"demand_id"];
+//    }
     NSMutableArray *needRemoveKeys = [NSMutableArray array];
     for (id key in mutParams.allKeys) {
         id value = mutParams[key];

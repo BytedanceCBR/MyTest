@@ -32,10 +32,11 @@
 #import "UIView+CustomTimingFunction.h"
 #import "TTUIResponderHelper.h"
 #import <TTNewsAccountBusiness/TTAccountManager.h>
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "SSCommentInputHeader.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "AKHelper.h"
+#import "FHTraceEventUtils.h"
 
 #define  KPhotoCommentTipViewHeight    55
 
@@ -197,7 +198,7 @@
 
     // toolbar 禁表情
 
-    BOOL  isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    BOOL  isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
     if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
         self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
     }
@@ -243,6 +244,18 @@
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
         [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+    } else {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+        //        [params setValue:model.userID.stringValue forKey:@"user_id"];
+        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+         [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
 }
 
@@ -252,6 +265,10 @@
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
 {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     if ([model.userID longLongValue] == 0) {
         return;
     }

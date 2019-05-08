@@ -16,7 +16,7 @@
 #import <NSObject+FBKVOController.h>
 #import <Aspects.h>
 #import <TTSandBoxHelper.h>
-#import <RCTUtils.h>
+//#import <RCTUtils.h>
 #import "SSDebugViewController.h"
 //#import "TTKitchenViewController.h"
 #import "TTSettingsBrowserViewController.h"
@@ -89,7 +89,7 @@ static NSString *kTTShakeToShowFlexEnabledKey = @"TTShakeFlexEnabled";
     //    } error:nil];
     
     
-    RCTSwapInstanceMethods([UIWindow class], @selector(motionBegan:withEvent:), @selector(FLEX_motionBegan:withEvent:));
+//    RCTSwapInstanceMethods([UIWindow class], @selector(motionBegan:withEvent:), @selector(FLEX_motionBegan:withEvent:));
     
     /* UIApplication not working (test is OK) ??? */
     //    [UIWindow aspect_hookSelector:@selector(motionBegan:withEvent:) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> aspectInfo) {

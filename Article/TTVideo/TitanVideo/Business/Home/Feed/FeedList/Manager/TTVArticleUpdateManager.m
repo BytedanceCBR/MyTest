@@ -145,7 +145,7 @@ static TTVArticleUpdateManager *_sharedManager;
 }
 
 + (NSArray *)defaultArticleDetailURLHosts {
-    return @[@"m.quduzixun.com"];
+    return @[@"a3.bytecdn.cn", @"a3.pstatp.com"];
 }
 
 - (NSArray *)articleDetailURLHostsIsFull:(BOOL)full

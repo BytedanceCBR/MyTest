@@ -188,8 +188,10 @@ static NSString *FROMSOURCE = @"fromSource";
         }
         NSString *platForm = [activityName stringByReplacingOccurrencesOfString:@"share_" withString:@""];
         platForm = [platForm stringByReplacingOccurrencesOfString:@"_link" withString:@""];
-        [params setValue:platForm forKey:@"platform"];
+        [params setValue:platForm forKey:@"share_platform"];
         [params setValue:iconSeat forKey:@"icon_seat"];
+        params[@"event_type"] = @"house_app2c_v2";
+
     }
     return eventName;
 }

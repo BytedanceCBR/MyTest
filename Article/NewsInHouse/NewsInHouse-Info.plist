@@ -3,22 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>AppName</key>
-	<string>interesting_news</string>
+	<string>f100</string>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>好多房</string>
+	<string>幸福里</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFiles</key>
-	<array>
-		<string>Icon.png</string>
-		<string>Icon@2x.png</string>
-		<string>Icon-72.png</string>
-		<string>Icon-72@2x.png</string>
-	</array>
 	<key>CFBundleIcons</key>
 	<dict/>
 	<key>CFBundleIcons~ipad</key>
@@ -32,7 +25,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.1.0</string>
+	<string>0.6.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -41,10 +34,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>qqplugin</string>
+			<string>own</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>QQ05FA4F2C</string>
+				<string>snssdk1370</string>
 			</array>
 		</dict>
 		<dict>
@@ -54,17 +47,7 @@
 			<string>weixin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wxc41809a35822b397</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>sinaweibo</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>sinaweibosso.com.ss.iphone.article.news</string>
+				<string>wxe96ffc249b33057d</string>
 			</array>
 		</dict>
 		<dict>
@@ -81,111 +64,21 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>renren</string>
+			<string>tencent</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>rm2080814com.ss.iphone.article.News</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>tencentopenapi</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>tencent101444782</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.taobao.taesdk</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>tbopen23178686</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>com.ss.iphone.article.News</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>tbopen23261993</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>alipayShare</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>ap2015090200249164</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>kepler</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>jdf9a9dd25be324eaa980edc530c7a3266</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>jdmobile</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>jda40966f7a51ee8f7d</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>dingtalk</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>dingoamfoom0wrwiyexx2z</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>hotsoon</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bdefc41a8703eae8ce</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>aweme</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bd3ffc36cf30e111d0</string>
+				<string>tencent1107515843</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0.0.9</string>
+	<string>6.6.4.0</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
-		<string>3cdfc6c6eadeed9f2a22ccf99b0804112e43f5be</string>
+		<string>9326896ae10cccb4663d7148a33d58b63a5d0f0e</string>
 		<key>Kits</key>
 		<array>
 			<dict>
@@ -200,12 +93,11 @@
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>fschema</string>
-		<string>qqmap</string>
-		<string>iosamap</string>
-		<string>comgooglemaps</string>
-		<string>baidumap</string>
 		<string>bfsports</string>
+		<string>iosamap</string>
+		<string>baidumap</string>
+		<string>qqmap</string>
+		<string>comgooglemaps</string>
 		<string>qielive</string>
 		<string>mqqsecure</string>
 		<string>wtloginmqq2</string>
@@ -216,6 +108,7 @@
 		<string>wechat</string>
 		<string>mqq</string>
 		<string>mqqapi</string>
+		<string>mqqwpa</string>
 		<string>hybrid</string>
 		<string>tbopen</string>
 		<string>alipay</string>
@@ -247,7 +140,7 @@
 		<string>dingtalk-open</string>
 		<string>imgotv</string>
 		<string>kankanapp2</string>
-		<string>snssdk1112</string>
+		<string>snssdk1370</string>
 		<string>changba</string>
 		<string>cntvCBox</string>
 		<string>suning</string>
@@ -263,6 +156,7 @@
 		<string>hotsoonsso</string>
 		<string>awemesso</string>
 		<string>snssdk147</string>
+		<string>snssdk1370</string>
 		<string>youmischeme</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
@@ -273,19 +167,21 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>方便您使用拍照功能</string>
+	<string>方便您使用拍照功能上传头像</string>
 	<key>NSContactsUsageDescription</key>
 	<string>允许访问可帮您快速找到通讯录好友</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>方便为您推荐本地房源</string>
 	<key>NSLocationUsageDescription</key>
-	<string>方便为您推荐本地新闻</string>
+	<string>方便为您推荐本地房源</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>方便为您推荐本地新闻</string>
+	<string>幸福里将持续定位</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>方便您使用发语音功能</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>要允许好多房访问您设备上的照片、媒体内容和文件吗？</string>
+	<string>要允许幸福里访问您设备上的照片、媒体内容和文件吗？</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>要允许好多房访问您设备上的照片、媒体内容和文件吗？</string>
+	<string>要允许幸福里访问您设备上的照片、媒体内容和文件吗？</string>
 	<key>SSAppID</key>
 	<string>1370</string>
 	<key>SSMID</key>
@@ -303,8 +199,8 @@
 	</array>
 	<key>UIApplicationShortcutItems</key>
 	<array/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<key>UIBackgroundModes</key>
+	<array/>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -312,17 +208,13 @@
 		<string>armv7</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
-	<false/>
+	<true/>
 	<key>UIStatusBarHidden</key>
-	<false/>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -333,5 +225,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UPDATE_VERSION_CODE</key>
+	<string>66501</string>
 </dict>
 </plist>

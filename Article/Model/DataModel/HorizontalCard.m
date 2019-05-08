@@ -22,6 +22,9 @@ NSString *const kHorizontalCardCategoryID  =   @"kHorizontalCardCategoryID";
     if (self) {
         self.title = [data tt_stringValueForKey:@"title"];
         self.urlString = [data tt_stringValueForKey:@"url"];
+        if (isEmptyString(self.urlString)) {
+            self.urlString = @"sslocal://target?action=change_tab&id=tab_huoshan";
+        }
     }
     
     return self;

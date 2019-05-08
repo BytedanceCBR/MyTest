@@ -14,6 +14,8 @@
 
 @property(nonatomic, strong, nullable) NSMutableArray<UIView *> *items;
 @property(nonatomic, strong, nullable) TTDetailNatantRelateArticleGroupViewModel * viewModel;
+@property(nonatomic, strong)NSMutableDictionary * traceIdDict;
+
 /*
  *  wrapper中item的高度，要求wrapper中item高度一致
  */
@@ -32,5 +34,7 @@
 - (void)newBuildRelatedArticleViewsWithData:(ArticleInfoManager * _Nullable)infoManager;
 
 - (void)resetAllRelatedItemsWhenNatantDisappear;
+
+- (void)sendRelateReadTrace:(NSString *)index;
 
 @end

@@ -20,7 +20,7 @@
 #import "NetworkUtilities.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "ExploreDeleteManager.h"
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 #import "SSImpressionProtocol.h"
 #import "TTCommentModel.h"
 #import "TTCommentFooterCell.h"
@@ -124,11 +124,12 @@ TTCommentFooterCellDelegate>
     self.commentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.commentTableView.showsVerticalScrollIndicator = ![TTDeviceHelper isPadDevice];
     self.commentTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
+
     [self.commentTableView registerClass:[TTVCommentListCell class] forCellReuseIdentifier:kTTVCommentCellIdentifier];
     [self.commentTableView registerClass:[TTCommentFooterCell class] forCellReuseIdentifier:kTTCommentFooterCellReuseIdentifier];
     self.commentHeaderView = [self.commentViewModel.datasource commentHeaderView];
-    self.commentTableView.tableHeaderView = self.commentHeaderView? : [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, 0.f, CGFLOAT_MIN)]; //Grouped Style下height必须大于0.f 否则顶部会出现留白 @zengruihuan
+    self.commentTableView.tableHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 10)];
+
     [self.commentHeaderView addObserver:self
                              forKeyPath:@"frame"
                                 options:NSKeyValueObservingOptionNew
@@ -502,8 +503,8 @@ TTCommentFooterCellDelegate>
 
 - (void)commentCell:(UITableViewCell *)view digCommentWithCommentItem:(nonnull TTVCommentListItem *)item {
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(commentViewController:digCommentWithCommentModel:)]) {
-        [self.delegate commentViewController:self digCommentWithCommentModel:item.commentModel];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(commentViewController:digCommentWithCommentModel:position:)]) {
+        [self.delegate commentViewController:self digCommentWithCommentModel:item.commentModel position:@"comment"];
     }
 }
 
@@ -531,6 +532,15 @@ TTCommentFooterCellDelegate>
 
 - (void)commentCell:(UITableViewCell *)view replyButtonClickedWithCommentItem:(nonnull TTVCommentListItem *)item
 {
+    
+    if (!TTNetworkConnected()) {
+        NSString *tip = @"连接失败，请稍后再试";
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tip indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:^(BOOL isUserDismiss) {
+        }];
+        return;
+    }
+    
+    
     if (self.commentViewModel.goTopicDetail) {
         NSIndexPath *indexPath = [self.commentTableView indexPathForCell:view];
         if (indexPath) {
@@ -583,6 +593,10 @@ TTCommentFooterCellDelegate>
 
 - (void)commentCell:(UITableViewCell *)view replyListAvatarClickedWithUserID:(nonnull NSString *)userID commentItem:(nonnull TTVCommentListItem *)item
 {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     if (isEmptyString(userID)) {
         return;
     }
@@ -870,7 +884,14 @@ TTCommentFooterCellDelegate>
         
         return ;
     }
-        
+    
+    if (!TTNetworkConnected()) {
+        NSString *tip = @"连接失败，请稍后再试";
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tip indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:^(BOOL isUserDismiss) {
+        }];
+        return;
+    }
+    
     NSInteger rightIndex =  indexPath.row;
     id <TTVCommentModelProtocol, TTCommentDetailModelProtocol> comment = [commentItems objectAtIndex:rightIndex].commentModel;
     if ([comment conformsToProtocol:@protocol(TTVCommentModelProtocol)]) {

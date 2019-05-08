@@ -21,19 +21,18 @@
     CGFloat regionHeight = 0;
     CGFloat originTop = top;
     
-    CGSize picSize = [TTArticleCellHelper getPicSizeByOrderedData:nil adModel:nil picStyle:TTArticlePicViewStyleRight width:self.cellWidth];
+    CGSize picSize = [TTArticleCellHelper getPicSizeByOrderedData:nil adModel:nil picStyle:TTArticlePicViewStyleRight width:self.containWidth];
     CGSize titleSize = CGSizeMake(self.containWidth - kCellTitleRightPaddingToPic - picSize.width, 0);
     
     NSString *titleStr = [TTLayOutCellDataHelper getTitleStringWithOrderedData:self.orderedData];
-    NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kCellTitleLabelFontSize lineHeight:kCellTitleLineHeight lineBreakMode:NSLineBreakByTruncatingTail isBoldFontStyle:NO];
+    NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kCellTitleLabelFontSize lineHeight:kCellTitleLineHeight lineBreakMode:NSLineBreakByTruncatingTail];
     self.titleAttributedStr = titleAttributedStr;
-    titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:titleSize.width forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellRightPicTitleLabelMaxLine
-                        isBold:NO];
+    titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:titleSize.width forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellRightPicTitleLabelMaxLine];
     CGFloat titlePadding = kCellTitleLineHeight - kCellTitleLabelFontSize;
     CGFloat titleRealHeight = titleSize.height - titlePadding;
     CGFloat titleAndSourceHeight = titleRealHeight + kCellInfoBarHeight + kCellTitleBottomPaddingToInfo;
-    //不显示info
-    titleAndSourceHeight = titleRealHeight;
+//    不显示info
+//    titleAndSourceHeight = titleRealHeight;
     
     CGFloat titleY = 0;
     CGFloat picY = 0;
@@ -67,7 +66,7 @@
         regionHeight = picSize.height;
     }
     
-    CGRect titleFrame = CGRectMake(0, titleY, titleSize.width, titleSize.height);
+    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY - 6, titleSize.width, titleSize.height);
     self.titleLabelFrame = titleFrame;
     self.titleLabelHidden = NO;
     self.titleLabelNumberOfLines = kCellRightPicTitleLabelMaxLine;
@@ -79,7 +78,7 @@
     self.picViewHiddenMessage = NO;
     self.picViewUserInteractionEnabled = YES;
     
-    self.infoBarOriginY = top;
+    self.infoBarOriginY = top - 5;
     self.infoBarContainWidth = infoBarWidth;
     
     [self heightForArticleInfoRegionWithTop:self.infoBarOriginY containWidth:self.infoBarContainWidth];
@@ -97,10 +96,9 @@
     CGSize titleSize = CGSizeMake(self.containWidth - kCellTitleRightPaddingToPic - picSize.width, 0);
     
     NSString *titleStr = [TTLayOutCellDataHelper getTitleStringWithOrderedData:self.orderedData];
-    NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kCellTitleLabelFontSize lineHeight:kCellTitleLineHeight lineBreakMode:NSLineBreakByTruncatingTail isBoldFontStyle:NO];
+    NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kCellTitleLabelFontSize lineHeight:kCellTitleLineHeight lineBreakMode:NSLineBreakByTruncatingTail];
     self.titleAttributedStr = titleAttributedStr;
-    titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:titleSize.width forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellRightPicTitleLabelMaxLine
-                                                isBold:NO];
+    titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:titleSize.width forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellRightPicTitleLabelMaxLine];
     CGFloat titlePadding = kCellTitleLineHeight - kCellTitleLabelFontSize;
     CGFloat titleRealHeight = titleSize.height - titlePadding;
     CGFloat titleAndSourceHeight = titleRealHeight + kCellInfoBarHeight + kCellTitleBottomPaddingToInfo;
@@ -156,113 +154,10 @@
     height += [self heightForCommentRegionWithTop:height];
     height += [self heightForEntityWordViewRegionWithTop:height];
     height += [self heightForCellBottomPadding];
-    
+
     self.cellCacheHeight = ceilf(height);
     
     [self calculateBottomLineFrame];
-}
-
-@end
-
-
-@implementation TTLayOutPlainRightPicCellModelS0AD
-
-- (void)calculateAllFrame
-{
-    self.originX = kCellLeftPadding;
-    self.containWidth = self.cellWidth - kCellLeftPadding - kCellRightPadding;
-    
-    CGFloat height = 0;
-    
-    height += [self heightForCellTopPadding];
-    //右图 info和title和picview在一个区域
-    height += [self heightForTitleAndRightPicAndInfoRegionInPlainCellWithTop:height];
-    height += [self heightForAbstractRegionWithTop:height];
-    height += [self heightForCommentRegionWithTop:height];
-    height += [self heightForEntityWordViewRegionWithTop:height];
-    height += [self heightForCellBottomPadding];
-    
-    self.cellCacheHeight = ceilf(height);
-    
-    [self calculateBottomLineFrame];
-}
-
-- (CGFloat)heightForTitleAndRightPicAndInfoRegionInPlainCellWithTop:(CGFloat)top
-{
-    CGFloat regionHeight = 0;
-    CGFloat cellInfoBarTopPadding = 8;
-    CGSize picSize = [TTArticleCellHelper getPicSizeByOrderedData:nil adModel:nil picStyle:TTArticlePicViewStyleRight width:self.cellWidth];
-    CGSize titleSize = CGSizeMake(self.containWidth - kCellTitleRightPaddingToPic - picSize.width, 0);
-    
-    NSString *titleStr = [TTLayOutCellDataHelper getTitleStringWithOrderedData:self.orderedData];
-    NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kCellTitleLabelFontSize lineHeight:kCellTitleLineHeight lineBreakMode:NSLineBreakByTruncatingTail isBoldFontStyle:NO];
-    self.titleAttributedStr = titleAttributedStr;
-    titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:titleSize.width forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellRightPicTitleLabelMaxLine
-                                                isBold:NO];
-    CGFloat titlePadding = kCellTitleLineHeight - kCellTitleLabelFontSize;
-    CGFloat titleRealHeight = titleSize.height - titlePadding;
-    CGFloat titleAndSourceHeight = titleRealHeight + kCellInfoBarHeight + cellInfoBarTopPadding;
-    
-    CGFloat titleY = 0;
-    CGFloat picY = 0;
-    CGFloat picX = self.cellWidth - kCellRightPadding - picSize.width;
-    
-    CGFloat infoBarWidth = self.containWidth;
-    
-
-    self.hideTimeForRightPic = YES;
-    picY = top;
-    titleY = ceil(top + (picSize.height - titleAndSourceHeight) / 2 - titlePadding / 2);
-    top = titleY + titleSize.height - titlePadding / 2 + cellInfoBarTopPadding;
-    CGFloat padding = kCellUninterestedButtonRightPadding;
-    infoBarWidth = picX - kCellLeftPadding - padding;
-    self.originY = picY + picSize.height;
-    regionHeight = picSize.height;
-    
-    CGRect titleFrame = CGRectMake(kCellLeftPadding, titleY, titleSize.width, titleSize.height);
-    self.titleLabelFrame = titleFrame;
-    self.titleLabelHidden = NO;
-    self.titleLabelNumberOfLines = kCellRightPicTitleLabelMaxLine;
-    
-    CGRect picFrame = CGRectMake(picX, picY, picSize.width, picSize.height);
-    self.picViewFrame = picFrame;
-    self.picViewHidden = NO;
-    self.picViewStyle = TTArticlePicViewStyleRight;
-    self.picViewHiddenMessage = NO;
-    self.picViewUserInteractionEnabled = YES;
-    
-    self.infoBarOriginY = top;
-    self.infoBarContainWidth = infoBarWidth;
-    
-    [self heightForArticleInfoRegionWithTop:self.infoBarOriginY containWidth:self.infoBarContainWidth];
-    
-    return regionHeight;
-}
-
-- (CGFloat)heightForArticleInfoRegionWithTop:(CGFloat)top containWidth:(CGFloat)containWidth
-{
-    CGFloat left = self.originX;
-    CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2);;
-    NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
-
-    CGFloat sourceMaxWidth = containWidth - kCellUninterestedButtonWidth - 4;
-
-    if (!isEmptyString(typeString)) {
-        //优化，字符串相同时避免重复计算
-        if (![self.typeLabelStr isEqualToString:typeString]) {
-            CGSize typeSize = [typeString sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:kCellTypeLabelFontSize]}];
-            typeSize = CGSizeMake(ceilf(typeSize.width), ceilf(typeSize.height));
-            CGRect typeLabelFrame = CGRectMake(left, labelY, typeSize.width + kCellTypeLabelInnerPadding * 2, kCellTypeLabelHeight);
-            self.typeLabelFrame = typeLabelFrame;
-            self.typeLabelStr = typeString;
-        }
-        left += self.typeLabelFrame.size.width + kCellTypelabelRightPaddingToInfoLabel;
-        sourceMaxWidth -= (self.typeLabelFrame.size.width + kCellTypelabelRightPaddingToInfoLabel);
-        self.typeLabelHidden = NO;
-    }
-
-    self.unInterestedButtonHidden = YES;
-    return self.typeLabelFrame.size.height;
 }
 
 @end

@@ -73,6 +73,9 @@
 #import "TSVCategory.h"
 //#import "TSVStoryContainerView.h"
 #import "TSVMonitorManager.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
+#import "TTCategoryStayTrackManager.h"
 
 #define kDefaultDismissDuration 2.0f
 #define kColumnSpacing 1
@@ -113,6 +116,8 @@ TTAccountMulticastProtocol
 @property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> drawFetchManager; // draw data source
 @property (nonatomic, strong) TSVShortVideoFeedFetchManager *feedFetchManager;  // feed data source
 
+@property (nonatomic, strong) NSMutableDictionary *traceIdDict;  // feed data source
+
 @end
 
 @implementation TTHTSWaterfallCollectionView
@@ -148,6 +153,8 @@ TTAccountMulticastProtocol
         [self.feedFetchManager registerSpecialOriginalDataClass:[set copy]];
 
         [self addPullDownRefreshView];
+        
+        self.traceIdDict = [NSMutableDictionary dictionary];
 
         [[SSImpressionManager shareInstance] addRegist:self];
 
@@ -249,7 +256,8 @@ TTAccountMulticastProtocol
         _collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
-        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//        _collectionView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+        _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.alwaysBounceVertical = YES;
 
         if (@available(iOS 11.0, *)) {
@@ -776,7 +784,11 @@ TTAccountMulticastProtocol
 - (void)fetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore finishBlock:(TTFetchListFinishBlock)finishBlock
 {
     if (fromRemote) {
-        [self eventV3ForRefresh];
+        if (getMore && self.refreshFromType == ListDataOperationReloadFromTypeLoadMore) {
+            [self eventFHForLoadMore];
+        }else {
+            [self eventV3ForRefresh];
+        }
     }
 
     self.ttLoadingView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
@@ -1506,21 +1518,68 @@ TTAccountMulticastProtocol
     [params setValue:@(data.shortVideoOriginalData.shortVideo.author.isFollowing) forKey:@"is_follow"];
     [params setValue:@(data.shortVideoOriginalData.shortVideo.author.isFriend) forKey:@"is_friend"];
     [AWEVideoDetailTracker trackEvent:@"huoshan_video_show" model:data.shortVideoOriginalData.shortVideo commonParameter:[params copy] extraParameter:nil];
+    
+    if (![self.traceIdDict[data.shortVideoOriginalData.shortVideo.itemID] isEqualToString:@""]) {
+        
+        [self sendFTraceClientShow:data];
+        
+        [self.traceIdDict setValue:@"" forKey:data.shortVideoOriginalData.shortVideo.itemID];
+    }
+}
+
+- (void)sendFTraceClientShow:(ExploreOrderedData *)dictTraceData
+{
+    NSMutableDictionary *traceParams = [NSMutableDictionary dictionary];
+    
+    [traceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+    
+    [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.itemID forKey:@"item_id"];
+    [traceParams setValue:@"click_category" forKey:@"enter_from"];
+    [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.groupID forKey:@"group_id"];
+    [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.logPb[@"impr_id"] forKey:@"impr_id"];
+    [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.logPb forKey:@"log_pb"];
+    [traceParams setValue:dictTraceData.categoryID forKey:@"category_name"];
+    [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.groupSource forKey:@"group_source"];
+    [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
+
+    [TTTracker eventV3:@"client_show" params:traceParams];
 }
 
 - (void)eventV3ForRefresh
 {
+    if (self.refreshFromType != ListDataOperationReloadFromTypeLoadMore && self.refreshFromType != ListDataOperationReloadFromTypePull && self.refreshFromType != ListDataOperationReloadFromTypeClickCategory && self.refreshFromType != ListDataOperationReloadFromTypeClickCategoryWithTip && self.refreshFromType != ListDataOperationReloadFromTypeAuto) {
+        
+        return;
+    }
     NSString *refreshType = [[ExploreListHelper class] refreshTypeStrForReloadFromType:self.refreshFromType];
     if (!isEmptyString(refreshType)) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         [params setValue:self.categoryID forKey:@"category_name"];
         [params setValue:refreshType forKey:@"refresh_type"];
-        [params setValue:self.listEntrance forKey:@"list_entrance"];
-        [params setValue:@100380 forKey:@"demand_id"];
-//        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
+        [params setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
+
+//        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:params];
+        [FHEnvContext recordEvent:params andEventKey:@"category_refresh"];
     }
 
 }
+
+- (void)eventFHForLoadMore {
+
+    NSString *refreshType = [[ExploreListHelper class] refreshTypeStrForReloadFromType:self.refreshFromType];
+    if (!isEmptyString(refreshType)) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:self.categoryID forKey:@"category_name"];
+        [params setValue:refreshType forKey:@"refresh_type"];
+        [params setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
+        
+//        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:params];
+        [FHEnvContext recordEvent:params andEventKey:@"category_refresh"];
+
+    }
+    
+}
+
 
 #pragma mark - 列表页视频预加载
 - (void)startPrefetchVideo

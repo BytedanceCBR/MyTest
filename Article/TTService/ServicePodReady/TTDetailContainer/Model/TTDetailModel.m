@@ -100,7 +100,7 @@ extern NSString * const assertDesc_articleType;
             extValueDic[@"ext_value"] = adId;
         }
         [extValueDic setValue:@([self.article.itemID longLongValue]) forKey:@"item_id"];
-        [extValueDic setValue:self.article.aggrType forKey:@"aggr_type"];
+//        [extValueDic setValue:self.article.aggrType forKey:@"aggr_type"];
         NSString *source;
         if (!isEmptyString(_gdLabel)) {
             source = _gdLabel;
@@ -109,7 +109,23 @@ extern NSString * const assertDesc_articleType;
             //        source = [NSString stringWithFormat:@"click_%@", _orderedData.categoryID];
             source = self.clickLabel;
         }
-        wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
+        extValueDic[@"event_type"] = @"house_app2c_v2";
+        extValueDic[@"group_id"] = groupId;
+        extValueDic[@"position"] = @"detail";
+        if (_logPb) {
+            extValueDic[@"log_pb"] = _logPb;
+        } else {
+            extValueDic[@"log_pb"] = self.orderedData.logPb;
+        }
+        if (extValueDic[@"log_pb"] == nil) {
+            extValueDic[@"log_pb"] = @"be_null";
+        }
+        extValueDic[@"share_platform"] = label;
+        extValueDic[@"enter_from"] = [self enterFromString];
+        extValueDic[@"category_name"] = [self categoryName];
+        extValueDic[@"event_type"] = @"house_app2c_v2";
+        [TTTracker eventV3:@"rt_share_to_platform" params:extValueDic];
+//        wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
         return;
     }
     NSString *groupId = [NSString stringWithFormat:@"%lld", self.protocoledArticle.uniqueID];
@@ -119,7 +135,7 @@ extern NSString * const assertDesc_articleType;
         extValueDic[@"ext_value"] = adId;
     }
     [extValueDic setValue:@([self.protocoledArticle.itemID longLongValue]) forKey:@"item_id"];
-    [extValueDic setValue:self.protocoledArticle.aggrType forKey:@"aggr_type"];
+//    [extValueDic setValue:self.protocoledArticle.aggrType forKey:@"aggr_type"];
 
     NSString *source;
     if (!isEmptyString(_gdLabel)) {
@@ -129,7 +145,24 @@ extern NSString * const assertDesc_articleType;
         //        source = [NSString stringWithFormat:@"click_%@", _orderedData.categoryID];
         source = self.clickLabel;
     }
-    wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
+    extValueDic[@"event_type"] = @"house_app2c_v2";
+    extValueDic[@"group_id"] = groupId;
+    extValueDic[@"position"] = @"detail";
+    if (_logPb) {
+        extValueDic[@"log_pb"] = _logPb;
+    } else {
+        extValueDic[@"log_pb"] = self.orderedData.logPb;
+    }
+
+    if (extValueDic[@"log_pb"] == nil) {
+        extValueDic[@"log_pb"] = @"be_null";
+    }
+    extValueDic[@"share_platform"] = label;
+    extValueDic[@"enter_from"] = [self enterFromString];
+    extValueDic[@"category_name"] = [self categoryName];
+    extValueDic[@"event_type"] = @"house_app2c_v2";
+    [TTTracker eventV3:@"rt_share_to_platform" params:extValueDic];
+//    wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
 }
 
 - (NSString *)uniqueID
@@ -176,4 +209,26 @@ extern NSString * const assertDesc_articleType;
 - (Article *)fitArticle {
     return self.paidArticle? :self.article;
 }
+
+- (NSString *)categoryName
+{
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        categoryName = [[self enterFromString] stringByReplacingOccurrencesOfString:@"click_" withString:@""];
+    }else{
+        if (![[self enterFromString] isEqualToString:@"click_headline"]) {
+            if ([categoryName hasPrefix:@"_"]) {
+                categoryName = [categoryName substringFromIndex:1];
+            }
+        }
+    }
+
+    return categoryName;
+}
+
+- (NSString *)enterFromString {
+
+    return [NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.clickLabel categoryID:self.categoryID];
+}
+
 @end

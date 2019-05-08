@@ -117,7 +117,7 @@ NSString * const kTTCommentFooterCellReuseIdentifier = @"kTTCommentFooterCellReu
             self.descLabel.textColorThemeKey = kColorText3;
             self.descLabel.text = @"已显示全部评论";
             [self.descLabel sizeToFit];
-            self.descLabel.origin = CGPointMake([TTDeviceUIUtils tt_newPadding:60.f], self.separatorView.bottom + [TTDeviceUIUtils tt_newPadding:13.f]);
+            self.descLabel.origin = CGPointMake([TTDeviceUIUtils tt_newPadding:50.f], self.separatorView.bottom + [TTDeviceUIUtils tt_newPadding:13.f]);
             self.separatorView.hidden = NO;
             break;
         }

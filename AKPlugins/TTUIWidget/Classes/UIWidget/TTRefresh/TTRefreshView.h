@@ -17,7 +17,7 @@
 #define kTTPullRefreshTextTime                      @"最后一次更新 "
 
 #define kTTPUllRefreshTimeTextZero @"从未"
-#define kTTPullRefreshHeight 58
+#define kTTPullRefreshHeight 76 // 58
 #define kTTPullRefreshLoadingHeight 32
 #define kTTPullRefreshTitleFontSize 14
 #define kTTPUllRefreshSubTitleFontSize 12

@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'FHHouseHome_Example' do
+  pod 'FHHouseHome', :path => '../'
+  pod 'JSONModel'
+  target 'FHHouseHome_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

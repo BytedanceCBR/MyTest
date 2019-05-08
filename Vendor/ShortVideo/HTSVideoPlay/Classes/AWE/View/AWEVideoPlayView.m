@@ -46,7 +46,7 @@
 #import "YYCache.h"
 #import "TSVMonitorManager.h"
 #import <BDWebImage/SDWebImageAdapter.h>
-
+#import "TTReachability.h"
 static NSString * const VideoPlayTimeKey =  @"video_play_time";
 static NSString * const VideoStallTimeKey =  @"video_stall_time";
 static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
@@ -346,7 +346,11 @@ static NSString * const VideoPrepareTimeTechKey = @"prepare_time_tech";
         // 更改状态
         self.isPlaying = NO;
         [self _showLoadingIndicator:NO];
-        [HTSVideoPlayToast show:@"播放失败"];
+        if ([TTReachability isNetworkConnected]) {
+            [HTSVideoPlayToast show:@"播放失败"];
+        } else {
+            [HTSVideoPlayToast show:@"网络不可用"];
+        }
         
         // 停止并关闭缓存
         [self.playerController stop];

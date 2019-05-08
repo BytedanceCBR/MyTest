@@ -75,7 +75,7 @@
     return [self fitSizeWithiPhone6:14.f iPhone5:13.f];
 }
 + (NSString *)nameViewTextColorKey {
-    return kColorText5;
+    return kFHColorCharcoalGrey;
 }
 
 + (CGFloat)nameViewBottomPadding {
@@ -119,7 +119,7 @@
 }
 
 + (NSString *)timeLabelTextColorKey {
-    return kColorText13;
+    return kFHColorCoolGrey3;
 }
 
 #pragma mark - followButton
@@ -358,7 +358,7 @@
 }
 
 - (void)digButtonOnClick:(id)sender {
-    wrapperTrackEvent(self.trackTag, @"top_digg_click");
+//    wrapperTrackEvent(self.trackTag, @"top_digg_click");
     if (self.delegate && [self.delegate respondsToSelector:@selector(dynamicDetailHeader:digButtonOnClick:)]) {
         [self.delegate dynamicDetailHeader:self digButtonOnClick:sender];
     }
@@ -484,6 +484,10 @@
     self.likeView.left = self.contentLabel.left;
     
     [self.digButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.centerY = self.likeView.centerY;
     self.digButton.right = self.followButton.right;
     
@@ -508,6 +512,7 @@
         self.followButton.hidden = YES;
         return;
     }
+
     if (model.user.isBlocking) {
         [self.followButton setAttributedTitle:nil forState:UIControlStateNormal];
         [self.followButton setTitle:@"取消拉黑" forState:UIControlStateNormal];
@@ -528,6 +533,9 @@
     [self.followButton.titleLabel sizeToFit];
     [self.followButton sizeToFit];
     
+    // add by zjing 隐藏关注按钮
+    self.followButton.hidden = YES;
+
 }
 
 + (NSAttributedString *)_contentLabelAttributedStringWithModel:(TTCommentDetailModel *)model {
@@ -591,12 +599,12 @@
         _avatarView.cornerRadius = _avatarView.height / 2;
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         _avatarView.borderColor = [UIColor clearColor];
         [_avatarView setupVerifyViewForLength:[TTCommentDetailHeaderUIHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
             return [TTCommentDetailHeaderUIHelper verifyLogoSize:standardSize];
         }];
-        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        // add by zjing 去掉头像点击
+//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }
@@ -606,7 +614,7 @@
         CGFloat maxWidth = self.width - [TTCommentDetailHeaderUIHelper cellHorizontalPadding] -[TTCommentDetailHeaderUIHelper avatarSize] - [TTCommentDetailHeaderUIHelper avatarRightPadding] - [TTCommentDetailHeaderUIHelper nameViewRightPadding] - [TTCommentDetailHeaderUIHelper followButtonSize].width - [TTCommentDetailHeaderUIHelper cellHorizontalPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14]].lineHeight title:nil fontSize:[TTCommentDetailHeaderUIHelper nameViewFontSize] verifiedInfo:nil appendLogoInfoArray:nil];
         WeakSelf;
-        [_nameView setTextColorThemedKey:[TTCommentDetailHeaderUIHelper nameViewTextColorKey]];
+//        [_nameView setTextColorThemedKey:[TTCommentDetailHeaderUIHelper nameViewTextColorKey]];
         [_nameView clickTitleWithAction:^(NSString *title){
             StrongSelf;
             [self nameViewOnClick:nil];
@@ -620,6 +628,7 @@
         _digButton = [TTDiggButton diggButtonWithStyleType:TTDiggButtonStyleTypeCommentOnly];
         _digButton.frame = CGRectMake(0, 0, [TTDeviceUIUtils tt_newPadding:64], [TTDeviceUIUtils tt_newPadding:24]);
         _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, 0, 2, 0);
+        _digButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
         if ([TTDeviceHelper OSVersionNumber] >= 8.f && UIAccessibilityIsBoldTextEnabled()) {
             _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, -1, 2, 1);
         }
@@ -649,7 +658,7 @@
     if (!_timeLabel) {
         _timeLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         _timeLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12]];
-        _timeLabel.textColorThemeKey = kColorText1;
+        _timeLabel.textColorThemeKey = kFHColorCoolGrey3;
     }
     return _timeLabel;
 }
@@ -666,7 +675,7 @@
 
         NSDictionary *linkAttributes = @{
             NSParagraphStyleAttributeName: [TTCommentDetailHeaderUIHelper contentLabelParagraphStyle],
-            NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5],
+            NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
             NSFontAttributeName : [TTCommentDetailHeaderUIHelper contentLabelFont]
         };
         _contentLabel.linkAttributes = linkAttributes;
@@ -710,7 +719,7 @@
     if (!_reportButton) {
         _reportButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         _reportButton.titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12]];
-        _reportButton.titleColorThemeKey = kColorText1;
+        _reportButton.titleColorThemeKey = kFHColorCoral;
         _reportButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
         [_reportButton setTitle:@"举报" forState:UIControlStateNormal];
         [_reportButton sizeToFit];

@@ -7,7 +7,7 @@
 //
 
 #import "SSThemed.h"
-#import "TTVerifyIconImageView.h"
+#import <TTVerifyKit/TTVerifyIconImageView.h>
 
 @interface TTPersonalHomeIconView : SSThemedView
 

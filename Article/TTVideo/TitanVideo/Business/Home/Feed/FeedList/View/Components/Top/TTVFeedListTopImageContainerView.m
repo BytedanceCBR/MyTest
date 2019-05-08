@@ -49,7 +49,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 
 #define kVideoTitleX 15
 #define kVideoTitleY 12
-#define new_KVideoTitleY 12
+#define new_KVideoTitleY 8
 #define kSourceLabelFontSize 12
 #define kSourceLabelBottomGap 6
 #define kDurationLabelFontSize 10
@@ -109,30 +109,29 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         _playTimesLabel.textAlignment = NSTextAlignmentLeft;
         _playTimesLabel.text = @"                             ";
         [_playTimesLabel sizeToFit];
-//        [self.logo addSubview:_playTimesLabel];
+        [self.logo addSubview:_playTimesLabel];
 
         _videoRightBottomLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(0, 0, kCellPicLabelWidth, kCellPicLabelHeight)];
         _videoRightBottomLabel.backgroundColor = [UIColor clearColor];
-        _videoRightBottomLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:10]];
+        _videoRightBottomLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:10]];
         _videoRightBottomLabel.textColorThemeKey = kColorText12;
         _videoRightBottomLabel.textAlignment = NSTextAlignmentCenter;
 
         _videoRightBottomLabelImageView = [[UIImageView alloc] init];
         CGSize imageSize = CGSizeMake(_videoRightBottomLabel.size.width, _videoRightBottomLabel.size.height);
-        UIImage *videoRightBottomLabelImage = [UIImage imageWithSize:imageSize cornerRadius:MIN(imageSize.width, imageSize.height) / 2 backgroundColor:SSGetThemedColorWithKey(kColorBackground15)];
+        UIImage *videoRightBottomLabelImage = [UIImage imageWithSize:imageSize cornerRadius:MIN(imageSize.width, imageSize.height) / 2 backgroundColor:[UIColor colorWithHexString:@"00000080"]];
         videoRightBottomLabelImage = [videoRightBottomLabelImage stretchableImageWithLeftCapWidth:videoRightBottomLabelImage.size.width / 2.0 topCapHeight:videoRightBottomLabelImage.size.height / 2.0];
         _videoRightBottomLabelImageView.image = videoRightBottomLabelImage;
         [_videoRightBottomLabelImageView sizeToFit];
 
-//        [self.logo addSubview:_videoRightBottomLabelImageView];
+        [self.logo addSubview:_videoRightBottomLabelImageView];
         [self.logo addSubview:_videoRightBottomLabel];
         
         _playButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
-        NSString *imageName = @"feed_play_icon";
+        NSString *imageName = [TTDeviceHelper isPadDevice] ? @"FullPlay" : @"Play";
         _playButton.imageName = imageName;
         [_playButton addTarget:self action:@selector(playButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.logo addSubview:_playButton];
-        [self.logo addSubview:_videoRightBottomLabel];
         self.playMovie = [[TTVCellPlayMovie alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fontSizeChanged) name:kSettingFontSizeChangedNotification object:nil];
@@ -352,11 +351,11 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
     }
     _playTimesLabel.left = _videoTitleLabel.left;
     _playTimesLabel.top = _videoTitleLabel.bottom + 3;
-    
-    _playButton.frame = self.logo.bounds;
-    _videoRightBottomLabel.centerX = self.playButton.centerX;
-    _videoRightBottomLabel.bottom = self.playButton.centerY + 30;
 
+    _videoRightBottomLabel.right = self.logo.width - [TTDeviceUIUtils tt_padding:kDurationLabelRight];
+    _videoRightBottomLabel.bottom = self.logo.height - [TTDeviceUIUtils tt_padding:kSourceLabelBottomGap];
+    _videoRightBottomLabelImageView.frame = _videoRightBottomLabel.frame;
+    _playButton.frame = self.logo.bounds;
 }
 
 - (void)layoutPic

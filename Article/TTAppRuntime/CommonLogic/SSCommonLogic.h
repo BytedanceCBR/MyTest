@@ -664,6 +664,10 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (void)setFavorDetailActionTick:(NSArray *)actionTick;
 @end
 
+@interface SSCommonLogic (LoginDialogStrategyFavorDetailActionHasFavor)
++ (BOOL)needShowLoginTipsForFavor;
+@end
+
 @interface SSCommonLogic (LoginDialogStrategyFavorDetailDialogOrder)
 + (NSInteger)favorDetailDialogOrder ;
 + (void)setFavorDetailDialogOrder:(NSInteger)type;
@@ -1283,6 +1287,9 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (void)setFeedLoadLocalStrategy:(NSDictionary *)dict;
 + (BOOL)showMyAppFansView;
 + (BOOL)useImageVideoNewApi;
++ (NSInteger)configSwitchTimeDaysCount;
++ (BOOL)configSwitchFWebOffline;
++ (NSInteger)configEditProfileEntry;
 + (BOOL)useNewSearchTransitionAnimation;
 + (BOOL)useNewSearchTransitionAnimationForVideo;
 + (BOOL)useRealUnixTimeEnable;
@@ -1552,6 +1559,23 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (void)setEnableWXShareCallback:(BOOL)enable;
 + (BOOL)enableWXShareCallback;
 @end
+
+
+//f_settings配置 add by zjing
+@interface SSCommonLogic (FHSettings)
++ (void)setFHSettings:(NSDictionary *)fhSettings;
++ (NSDictionary *)fhSettings;
+
++ (BOOL)wendaShareEnable;
+// 找房tab是否显示房源展现 0 默认筛选器样式，1 房源列表
++ (NSInteger)findTabShowHouse;
+//首页推荐红点请求时间间隔
++ (NSInteger)categoryBadgeTimeInterval;
++ (BOOL)imCanStart;
+
+@end
+
+
 
 #endif
 

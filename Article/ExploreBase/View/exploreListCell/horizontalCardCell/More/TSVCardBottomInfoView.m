@@ -92,14 +92,13 @@
         self.imageView.left = self.titleLabel.right + kArrowGap;
     }
     
-    self.unInterestedButton.hidden = YES;
-//    if (style == TTHorizontalCardContentCellStyle5 || style == TTHorizontalCardContentCellStyle6 || style == TTHorizontalCardContentCellStyle7 || style == TTHorizontalCardContentCellStyle8) {
-//        self.unInterestedButton.hidden = NO;
-//        self.unInterestedButton.left = self.width - kLeft - (kUnInterestedButtonW / 2 + kUnInterestedIconW / 2);
-//        self.unInterestedButton.centerY = self.titleLabel.centerY;
-//    } else {
-//        self.unInterestedButton.hidden = YES;
-//    }
+    if (style == TTHorizontalCardContentCellStyle5 || style == TTHorizontalCardContentCellStyle6 || style == TTHorizontalCardContentCellStyle7 || style == TTHorizontalCardContentCellStyle8) {
+        self.unInterestedButton.hidden = NO;
+        self.unInterestedButton.left = self.width - kLeft - (kUnInterestedButtonW / 2 + kUnInterestedIconW / 2);
+        self.unInterestedButton.centerY = self.titleLabel.centerY;
+    } else {
+        self.unInterestedButton.hidden = YES;
+    }
     
     if (![TTShortVideoHelper canOpenShortVideoTab]) {
         self.moreButton.hidden = YES;

@@ -24,7 +24,8 @@
 #import "TTCommentDataManager.h"
 #import "TTCommentDefines.h"
 #import "TTCommentWriteView.h"
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
+#import "FHTraceEventUtils.h"
 
 #define Persistence [TTPersistence persistenceWithName:NSStringFromClass(self.class)]
 #define PersistenceGroupDraftKey @"PersistenceGroupDraftKey" // 对应文章、帖子
@@ -192,7 +193,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
     }
 
     //settings配置
-    BOOL isConfigureShow = [KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable];
+    BOOL isConfigureShow = [TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable];
 
     NSNumber *conditionIsShowRepostEntrance = [conditions tt_objectForKey:@"kQuickInputViewConditionShowRepostEntrance"];
     //外部条件
@@ -372,6 +373,36 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
 
 #pragma mark -- TTCommentWriteViewDelegate
 
+- (NSString *)enterFromString{
+    
+    NSString * enterFrom = self.enterFromStr;
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        return enterFrom;
+    }else{
+        if (![enterFrom isEqualToString:@"click_headline"] && ![enterFrom isEqualToString:@"click_favorite"]) {
+
+            enterFrom = @"click_category";
+        }
+    }
+
+    return enterFrom;
+}
+
+- (NSString *)categoryName {
+    NSString *categoryName = self.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        categoryName = [self.enterFromStr stringByReplacingOccurrencesOfString:@"click_" withString:@""];
+    }else{
+        if (![self.enterFromStr isEqualToString:@"click_headline"]) {
+            if ([categoryName hasPrefix:@"_"]) {
+                categoryName = [categoryName substringFromIndex:1];
+            }
+        }
+    }
+    return categoryName;
+}
+
 - (void)commentViewClickPublishButton {
 
     if (isTTArticleWritePublishing){
@@ -529,6 +560,23 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                                                                      @"with_emoticon_list" : (!emojiIds || emojiIds.count == 0) ? @"none" : [emojiIds componentsJoinedByString:@","],
                                                                      @"source" : @"comment"
                                                                      }];
+                
+                NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] init];
+                [paramsDict setValue:self.groupModel.groupID forKey:@"group_id"];
+                [paramsDict setValue:self.groupModel.itemID forKey:@"item_id"];
+                if (self.logPb) {
+                    
+                    [paramsDict setValue:self.logPb forKey:@"log_pb"];
+                }else {
+                    [paramsDict setValue:@"be_null" forKey:@"log_pb"];
+                    
+                }
+                [paramsDict setValue:[self categoryName] forKey:@"category_name"];
+                [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+                if (self.enterFrom.length > 0) {
+                    [paramsDict setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]]  forKey:@"enter_from"];
+                    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
+                }
 
                 if (self.publishStatusForTrack == 1) {
                     self.publishStatusForTrack = 2;
@@ -553,7 +601,25 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
             if ([TTDeviceHelper isPadDevice]) {
                 [self.commentWriteView dismissAnimated:NO];
             }
+            
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            if (self.enterFrom.length > 0) {
+                
+                [params setObject:self.enterFrom forKey:@"enter_from"];
+                [params setObject:@"comment" forKey:@"enter_type"];
+            }
 
+            [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                if (type == TTAccountAlertCompletionEventTypeDone) {
+                    //登录成功 走发送逻辑
+                    if ([TTAccountManager isLogin]) {
+                        sendLogic(TTCommentLoginStatePlatformLogin);
+                    }
+                }
+            }];
+
+
+           /*
             TTAccountLoginAlert *loginAlertView = [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypePost source:@"post_comment" completion:nil];
             __weak typeof(loginAlertView) weakLoginAlertView = loginAlertView;
 
@@ -574,6 +640,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 }
                 self.commentViewStrong = nil;
             };
+            */
         } else {
             sendLogic(TTCommentLoginStatePlatformLogin);
         }

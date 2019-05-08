@@ -57,10 +57,14 @@
 
 - (void)refreshUserInfoContent:(WDPersonModel *)user descInfo:(NSString *)descInfo followButtonHidden:(BOOL)hidden {
     [self.cellAvatarView setImageWithURLString:user.avatarURLString];
-    [self.cellAvatarView showOrHideVerifyViewWithVerifyInfo:user.userAuthInfo decoratorInfo:user.userDecoration];
+//    [self.cellAvatarView showOrHideVerifyViewWithVerifyInfo:user.userAuthInfo decoratorInfo:user.userDecoration];
     [self.userNameButton setTitle:user.name forState:UIControlStateNormal];
     [self.userDescLabel setText:descInfo];
-    [self.followButton setHidden:hidden];
+    
+    // add by zjing 去掉问答折叠cell的关注
+    [self.followButton setHidden:YES];
+
+//    [self.followButton setHidden:hidden];
     
     CGFloat availabelNameAndDescWidth = 0;
     if (hidden) {
@@ -183,6 +187,7 @@
 }
 
 - (void)avatarButtonClick:(id)sender {
+    
     if ([self.delegate respondsToSelector:@selector(listCellUserHeaderViewAvatarClick)]) {
         [self.delegate listCellUserHeaderViewAvatarClick];
     }
@@ -208,7 +213,9 @@
         _cellAvatarView.enableRoundedCorner = YES;
         _cellAvatarView.userInteractionEnabled = YES;
         _cellAvatarView.placeholder = @"big_defaulthead_head";
-        [_cellAvatarView addTouchTarget:self action:@selector(avatarButtonClick:)];
+        
+        // add by zjing 去掉问答折叠里面头像点击
+//        [_cellAvatarView addTouchTarget:self action:@selector(avatarButtonClick:)];
         [_cellAvatarView setupVerifyViewForLength:36 adaptationSizeBlock:nil];
         
         UIView *coverView = [[UIView alloc] initWithFrame:_cellAvatarView.bounds];
@@ -225,12 +232,13 @@
     if (!_userNameButton) {
         _userNameButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         _userNameButton.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _userNameButton.titleColorThemeKey = kColorText1;
+        _userNameButton.titleColorThemeKey = kFHColorCharcoalGrey;
         _userNameButton.highlightedTitleColorThemeKey = kColorText1Highlighted;
         _userNameButton.titleLabel.font = [UIFont boldSystemFontOfSize:kUserNameLabelFontSize];
         _userNameButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         _userNameButton.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
-        [_userNameButton addTarget:self action:@selector(avatarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+        // add by zjing 去掉问答折叠里面头像点击
+//        [_userNameButton addTarget:self action:@selector(avatarButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _userNameButton;
 }
@@ -251,6 +259,7 @@
         TTUnfollowedType unFollowType = TTUnfollowedType102;
         TTFollowedMutualType mutualType = TTFollowedMutualType102;
         _followButton = [[TTFollowThemeButton alloc] initWithUnfollowedType:unFollowType followedType:followType followedMutualType:mutualType];
+        
         [_followButton addTarget:self action:@selector(followButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _followButton;

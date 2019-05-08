@@ -1012,7 +1012,7 @@ static NSMutableDictionary * s_headerParameter;
             NSString *tmp = strArray[i];
             version = version * 10 + tmp.integerValue;
         }
-        version += 560;
+        version += 600;
         NSMutableArray *newStrArray = [NSMutableArray arrayWithCapacity:3];
         for (NSInteger i = 0; i < 2; i += 1) {
             NSInteger num = version % 10;

@@ -39,7 +39,7 @@
             else {
                 self.backgroundColor = [UIColor colorWithHexString:@"303030"];
             }
-            [self.titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]]];
+            [self.titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12.f]]];
             self.layer.cornerRadius = kCornerRadius;
 
         }
@@ -145,13 +145,13 @@
     
     if (self.isSelected) {
         if ([TTFeedDislikeView isFeedDislikeRefactorEnabled]) {
-            self.layer.borderColor = [UIColor tt_themedColorForKey:kColorLine2].CGColor;
+            self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
         }
         else {
-            self.layer.borderColor = [UIColor tt_themedColorForKey:kColorLine1Selected].CGColor;
+            self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
         }
     } else {
-        self.layer.borderColor = [UIColor tt_themedColorForKey:kColorLine1].CGColor;
+        self.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorBattleShipGrey].CGColor;
     }
 }
 
@@ -168,7 +168,7 @@
         if (self.isSelected) {
             self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
             self.layer.borderWidth = 1.f;
-            [self.titleLabel setFont:[UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]]];
+            [self.titleLabel setFont:[UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12.f]]];
         }
         else {
             if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay) {
@@ -178,7 +178,7 @@
                 self.backgroundColor = [UIColor colorWithHexString:@"303030"];
             }
             self.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-            [self.titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]]];
+            [self.titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12.f]]];
         }
     }
     [self refreshBorder];
@@ -208,12 +208,12 @@
     }*/
     
     if ([TTFeedDislikeView isFeedDislikeRefactorEnabled]) {
-        [self setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor tt_themedColorForKey:kColorText4] forState:UIControlStateSelected];
+        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorBattleShipGrey] forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoral] forState:UIControlStateSelected];
     }
     else {
-        [self setTitleColor:[UIColor tt_themedColorForKey:kColorText2] forState:UIControlStateNormal];
-        [self setTitleColor:[UIColor tt_themedColorForKey:kColorText1Selected] forState:UIControlStateSelected];
+        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorBattleShipGrey] forState:UIControlStateNormal];
+        [self setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoral] forState:UIControlStateSelected];
     }
     
     [self refreshBorder];

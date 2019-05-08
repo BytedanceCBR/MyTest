@@ -135,7 +135,6 @@
     if (!_nameView) {
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(_avatarView.right + kCellAvatarViewRightPadding, 0) maxWidth:maxWidth limitHeight:kCellNameLabelFontSize + 2 title:text fontSize:kCellNameLabelFontSize verifiedInfo:nil appendLogoInfoArray:userModel.authorBadgeList];
         _nameView.isBanShowAuthor = self.isBanShowAuthor;
-        [_nameView setTextColorThemedKey:kColorText1];
         [self.contentView addSubview:_nameView];
     }
     else {
@@ -147,8 +146,10 @@
         NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
         [baseCondition setValue:userModel.ID forKey:@"uid"];
         [baseCondition setValue:kFromFeedDetailDig forKey:@"from"];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
-        wrapperTrackEvent(@"update_detail", @"diggers_profile");
+        
+        // add by zjing 去掉头像点击
+//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
+//        wrapperTrackEvent(@"update_detail", @"diggers_profile");
     }];
     _avatarView.left = kCellAvatarViewLeftPadding;
     _avatarView.centerY = self.contentView.centerY;
@@ -401,7 +402,8 @@
         [baseCondition setValue:self.categoryName forKey:@"category_name"];
         [baseCondition setValue:self.fromPage forKey:@"from_page"];
         [baseCondition setValue:self.groupId forKey:@"group_id"];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
+        // add by zjing 去掉头像点击
+//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
         wrapperTrackEvent(@"update_detail", @"diggers_profile");
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

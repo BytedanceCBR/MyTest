@@ -17,7 +17,8 @@
 #import "NSDictionary+TTGeneratedContent.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "TTRelevantDurationTracker.h"
-
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @interface ExploreDetailManager()
 {
@@ -625,7 +626,20 @@
         }
     }
     
-    NSString *enterFromString = [NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.eventLabel categoryID:[self currentCategoryId]];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:self.article.groupModel.groupID forKey:@"group_id"];
+    [params setValue:self.article.groupModel.itemID forKey:@"item_id"];
+    [params setValue:self.logPb ? : @"be_null" forKey:@"log_pb"];
+    NSString* enterFrom = [self enterFromString];
+    [params setValue:enterFrom forKey:@"enter_from"];
+    if (![@"push" isEqualToString:enterFrom]) {
+        [params setValue:[self categoryName] forKey:@"category_name"];
+    }
+    [params setValue:self.paramDicts[kNewsDetailViewConditionRelateReadFromGID] forKey:@"from_gid"];
+    [params setValue:@((long long)(duration * 1000)).stringValue forKey:@"stay_time"];
+
+//    [[EnvContext shared].tracer writeEvent:@"stay_page" params:params];
+    [FHEnvContext recordEvent:params andEventKey:@"stay_page"];
 //    [TTTrackerWrapper eventV3:@"stay_page" params:({
 //        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJSONDict];
 //        [params setValue:self.article.groupModel.groupID forKey:@"group_id"];
@@ -643,10 +657,33 @@
     // 注入关联时长
     [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.article.groupModel.groupID
                                                                           itemID:self.article.groupModel.itemID
-                                                                       enterFrom:enterFromString
+                                                                       enterFrom:[self enterFromString]
                                                                     categoryName:[self currentCategoryId]
                                                                         stayTime:duration * 1000
                                                                            logPb:self.logPb];
+}
+
+- (NSString *)enterFromString {
+    
+    return [NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.eventLabel categoryID:[self currentCategoryId]];
+    
+}
+
+
+
+- (NSString *)categoryName
+{
+    NSString *categoryName = [self currentCategoryId];
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        categoryName = [[self enterFromString] stringByReplacingOccurrencesOfString:@"click_" withString:@""];
+    }else{
+        if (![[self enterFromString] isEqualToString:@"click_headline"]) {
+            if ([categoryName hasPrefix:@"_"]) {
+                categoryName = [categoryName substringFromIndex:1];
+            }
+        }
+    }
+    return categoryName;
 }
 
 /**

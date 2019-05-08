@@ -68,7 +68,7 @@
         _indicator.hidesWhenStopped = YES;
         [self addSubview:_indicator];
         
-        _emptyTipLabel.textColorThemeKey =  kColorText5;
+        _emptyTipLabel.textColorThemeKey =  kFHColorCoolGrey3;
     }
 
     return self;
@@ -89,7 +89,7 @@
     _emptyTipLabel.hidden = NO;
     _emptyTipLabel.backgroundColor = [UIColor clearColor];
     _emptyTipLabel.font = [UIFont systemFontOfSize:15.f];
-    _emptyTipLabel.textColorThemeKey = kColorText5;
+    _emptyTipLabel.textColorThemeKey = kFHColorCoolGrey3;
     _emptyTipLabel.top = 24.f;
     _emptyTipLabel.centerX = self.width / 2.f;
     _emptyButton.enabled = YES;

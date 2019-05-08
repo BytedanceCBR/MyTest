@@ -13,10 +13,10 @@
 + (float)titleFontSize {
     static NSDictionary *fontSizes = nil;
     if (!fontSizes) {
-        fontSizes = @{@"iPad" : @[@19, @22, @24, @29],
-                      @"iPhone667": @[@16,@18,@20,@23],
-                      @"iPhone736" : @[@16, @18, @20, @23],
-                      @"iPhone" : @[@14, @16, @18, @21]};
+        fontSizes = @{@"iPad" : @[@18, @21, @24, @29],
+                      @"iPhone667": @[@15,@17,@20,@23],
+                      @"iPhone736" : @[@15, @17, @20, @23],
+                      @"iPhone" : @[@14, @16, @17, @21]};
     }
     
     NSString *key = nil;

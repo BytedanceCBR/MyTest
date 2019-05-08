@@ -367,7 +367,7 @@ typedef NS_ENUM(NSInteger, LoadCityState) {
     if (!isEmptyString(cityName)) {
         if ([cityName isEqualToString:NotFindCityTip]) {
             if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
-                TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"定位服务未开启", nil) message:NSLocalizedString(@"请去系统设置-隐私-定位服务内开启爱看访问权限", nil) preferredType:TTThemedAlertControllerTypeAlert];
+                TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"定位服务未开启", nil) message:NSLocalizedString(@"请去系统设置-隐私-定位服务内开启头条访问权限", nil) preferredType:TTThemedAlertControllerTypeAlert];
                 [alertController addActionWithTitle:NSLocalizedString(@"知道了", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:nil];
                 [alertController showFrom:self.viewController animated:YES];
                 

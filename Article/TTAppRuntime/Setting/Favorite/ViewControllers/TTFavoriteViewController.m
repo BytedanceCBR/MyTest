@@ -31,9 +31,10 @@
 #import "TTUGCDefine.h"
 #import "TTLoginDialogStrategyManager.h"
 #import <TTAccountSDK.h>
-#import <BDAccountSDK.h>
 //#import "Thread.h"
 #import "ExploreMomentDefine.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 #define kHasBottomTipFavlistClosedUserDefaultKey @"kHasBottomTipFavlistClosedUserDefaultKey"
 
@@ -45,6 +46,8 @@
 @property (nonatomic, strong) SSThemedView *bottomTipView;
 @property (nonatomic, strong) TTFooterDeleteView *deleteView;
 @property (nonatomic, strong) ExploreItemActionManager *itemActionManager;
+@property(nonatomic, assign) NSTimeInterval timeIntervalForStayPage;
+@property (nonatomic, strong) NSMutableDictionary *traceIdDict;  // client show埋点
 
 @end
 
@@ -81,6 +84,14 @@
     self.tableViewDelegate.delegate = self;
     [self.tableViewDelegate updateTableView:self.tableView viewModel:self.viewModel];
     [self registerNotification];
+    self.traceIdDict = [NSMutableDictionary dictionary];
+
+    //log3.0
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
+    [dict setValue:@"favorite" forKey:@"category_name"];
+    [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [dict setValue:@"click" forKey:@"enter_type"];
+    [TTTracker eventV3:@"enter_category" params:dict isDoubleSending:NO];
 }
 
 - (void)setupTableView {
@@ -102,7 +113,15 @@
     WeakSelf;
     [self.tableView tt_addDefaultPullUpLoadMoreWithHandler:^{
         StrongSelf;
+        
+        if (!TTNetworkConnected()) {
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"网络异常" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+                [self.tableView finishPullUpWithSuccess:NO];
+            return ;
+        }
+        
         [self.viewModel startFetchDataLoadMore:YES fromLocal:NO fromRemote:YES reloadType:ListDataOperationReloadFromTypeUserManual];
+        [self trackFHRefreshEventBy:YES];
     }];
     
     [self setTableViewBottomInset:0];
@@ -116,6 +135,16 @@
              kTTPullRefreshHeight];
         }
     }];
+}
+
+- (void)trackFHRefreshEventBy:(BOOL)isLoadMore {
+
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
+    [dict setValue:@"favorite" forKey:@"category_name"];
+    [dict setValue:@"click" forKey:@"enter_type"];
+    [dict setValue:isLoadMore ? @"pre_load_more" : @"pull" forKey:@"refresh_type"];
+//    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
 }
 
 - (void)setupFooterView {
@@ -139,6 +168,8 @@
                     } else {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             [self.viewModel startFetchDataLoadMore:NO fromLocal:NO fromRemote:YES reloadType:ListDataOperationReloadFromTypeAuto];
+                            [self trackFHRefreshEventBy:NO];
+
                         });
                     }
                     
@@ -166,73 +197,83 @@
 }
 
 - (void)showLoginHintIfNeeded {
-    
-    if (![TTAccountManager isLogin] && ![TTDeviceHelper isPadDevice] && ![self hasBottomTipFavlistClosedUserDefaultKey] && [self hasTipFavlistLoginUserDefaultKey] && ![[TTLoginDialogStrategyManager sharedInstance] myFavorEnable]) {
-        if (!_bottomTipView) {
-            
-            CGFloat kBottomButtonHeight = [TTDeviceHelper isScreenWidthLarge320]? 54:44;
-            
-            
-            _bottomTipView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kBottomButtonHeight - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom,self.view.frame.size.width, kBottomButtonHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom)];
-            _bottomTipView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-            _bottomTipView.backgroundColorThemeKey = kColorBackground11;
-            [self.view addSubview:_bottomTipView];
-            
-            SSThemedLabel * lb = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 5, _bottomTipView.frame.size.width - 125, kBottomButtonHeight-10)];
-            lb.numberOfLines = 0;
-            lb.minimumScaleFactor = 0.6f;
-            lb.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-            lb.text = @"登录并同步收藏内容，云端永久保存！";
-            lb.font = [UIFont systemFontOfSize:14];
-            if (![TTDeviceHelper isScreenWidthLarge320]) {
-                lb.font = [UIFont systemFontOfSize:12];
-                lb.frame = CGRectMake(15, 5, _bottomTipView.frame.size.width - 105, kBottomButtonHeight-10);
-            }
-            lb.textColorThemeKey = kColorText10;
-            [_bottomTipView addSubview:lb];
-            
-            
-            SSThemedButton * closeButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-            closeButton.imageName = @"titlebar_close";
-            closeButton.frame = CGRectMake(_bottomTipView.frame.size.width-50, 5,50, kBottomButtonHeight-10);
-            closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-            
-            [closeButton addTarget:self action:@selector(closeButtonTouched) forControlEvents:UIControlEventTouchUpInside];
-            [_bottomTipView addSubview:closeButton];
-            
-            NSString * title = @"立即同步";
-            SSThemedButton * _bottomTipButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-            _bottomTipButton.titleColorThemeKey = kColorText8;
-            _bottomTipButton.backgroundColorThemeKey = kColorBackground7;
-            _bottomTipButton.layer.cornerRadius = 7.0f;
-            _bottomTipButton.frame = CGRectMake(_bottomTipView.frame.size.width-115 , (kBottomButtonHeight-30)/2,70, 30);
-            _bottomTipButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-            [_bottomTipButton setTitle:title forState:UIControlStateNormal];
-            [_bottomTipButton.titleLabel setFont:[UIFont systemFontOfSize:14.f]];
-            if (![TTDeviceHelper isScreenWidthLarge320]) {
-                [_bottomTipButton.titleLabel setFont:[UIFont systemFontOfSize:12.f]];
-                _bottomTipButton.frame = CGRectMake(_bottomTipView.frame.size.width-100 , (kBottomButtonHeight-24)/2,55, 24);
-                
-            }
-            [_bottomTipButton addTarget:self action:@selector(openLoginViewController) forControlEvents:UIControlEventTouchUpInside];
-            [_bottomTipView addSubview:_bottomTipButton];
-            
-            
+    /*
+    [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypeMyFavor source:@"favorite_fixed" completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if(type == TTAccountAlertCompletionEventTypeTip) {
+            [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:self] type:TTAccountLoginDialogTitleTypeDefault source:@"favorite_fixed" completion:nil];
         }
-        
-    }
+    }];
+     */
+
+//    if (![TTAccountManager isLogin] && ![TTDeviceHelper isPadDevice] && ![self hasBottomTipFavlistClosedUserDefaultKey] && [self hasTipFavlistLoginUserDefaultKey] && ![[TTLoginDialogStrategyManager sharedInstance] myFavorEnable]) {
+//        if (!_bottomTipView) {
+//
+//            CGFloat kBottomButtonHeight = [TTDeviceHelper isScreenWidthLarge320]? 54:44;
+//
+//
+//            _bottomTipView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kBottomButtonHeight - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom,self.view.frame.size.width, kBottomButtonHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom)];
+//            _bottomTipView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+//            _bottomTipView.backgroundColorThemeKey = kColorBackground11;
+//            [self.view addSubview:_bottomTipView];
+//
+//            SSThemedLabel * lb = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 5, _bottomTipView.frame.size.width - 125, kBottomButtonHeight-10)];
+//            lb.numberOfLines = 0;
+//            lb.minimumScaleFactor = 0.6f;
+//            lb.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+//            lb.text = @"登录并同步收藏内容，云端永久保存！";
+//            lb.font = [UIFont systemFontOfSize:14];
+//            if (![TTDeviceHelper isScreenWidthLarge320]) {
+//                lb.font = [UIFont systemFontOfSize:12];
+//                lb.frame = CGRectMake(15, 5, _bottomTipView.frame.size.width - 105, kBottomButtonHeight-10);
+//            }
+//            lb.textColorThemeKey = kColorText10;
+//            [_bottomTipView addSubview:lb];
+//
+//
+//            SSThemedButton * closeButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+//            closeButton.imageName = @"titlebar_close";
+//            closeButton.frame = CGRectMake(_bottomTipView.frame.size.width-50, 5,50, kBottomButtonHeight-10);
+//            closeButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//
+//            [closeButton addTarget:self action:@selector(closeButtonTouched) forControlEvents:UIControlEventTouchUpInside];
+//            [_bottomTipView addSubview:closeButton];
+//
+//            NSString * title = @"立即同步";
+//            SSThemedButton * _bottomTipButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+//            _bottomTipButton.titleColorThemeKey = kColorText8;
+//            _bottomTipButton.backgroundColorThemeKey = kColorBackground7;
+//            _bottomTipButton.layer.cornerRadius = 7.0f;
+//            _bottomTipButton.frame = CGRectMake(_bottomTipView.frame.size.width-115 , (kBottomButtonHeight-30)/2,70, 30);
+//            _bottomTipButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+//            [_bottomTipButton setTitle:title forState:UIControlStateNormal];
+//            [_bottomTipButton.titleLabel setFont:[UIFont systemFontOfSize:14.f]];
+//            if (![TTDeviceHelper isScreenWidthLarge320]) {
+//                [_bottomTipButton.titleLabel setFont:[UIFont systemFontOfSize:12.f]];
+//                _bottomTipButton.frame = CGRectMake(_bottomTipView.frame.size.width-100 , (kBottomButtonHeight-24)/2,55, 24);
+//
+//            }
+//            [_bottomTipButton addTarget:self action:@selector(openLoginViewController) forControlEvents:UIControlEventTouchUpInside];
+//            [_bottomTipView addSubview:_bottomTipButton];
+//
+//
+//        }
+//
+//    }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView setScrollsToTop:YES];
     [self tt_performSelector:@selector(fetchRemoteData) onlyOnceInSelector:_cmd];
-    if (![TTAccountManager isLogin] && ![self hasBottomTipFavlistClosedUserDefaultKey] && self.deleteView.hidden) {
-        _bottomTipView.hidden = NO;
-    }
-    else {
-        _bottomTipView.hidden = YES;
-    }
+//    if (![TTAccountManager isLogin] && ![self hasBottomTipFavlistClosedUserDefaultKey] && self.deleteView.hidden) {
+//        _bottomTipView.hidden = NO;
+//    }
+//    else {
+//        _bottomTipView.hidden = YES;
+//    }
+    
+    self.timeIntervalForStayPage = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -241,22 +282,14 @@
     if(myFavorEnable) {
         [self showFavorLoginDialogIfNeeded];
     } else {
-        if (![self hasTipFavlistLoginUserDefaultKey] && ![[BDAccount sharedAccount] isLogin]) {
+        if (![self hasTipFavlistLoginUserDefaultKey] && ![TTAccountManager isLogin]) {
             
             [self setHasTipFavlistLoginUserDefaultKey:YES];
             
             wrapperTrackEvent(@"auth", @"fav_pop");
             
+            // add by zjing 去掉登录页
 //            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://ak_login_traffic?"] userInfo:nil];
-            
-            [TTAccountManager presentQuickLoginFromVC:self type:TTAccountLoginDialogTitleTypeDefault source:nil completion:^(TTAccountLoginState state) {
-//                if (self.completeBlock) {
-//                    self.completeBlock(state == TTAccountLoginStateLogin);
-//                }
-//                if (state == TTAccountLoginStateLogin) {
-//                    [self dismissSelfWithNoAnimation];
-//                }
-            }];
         }
     }
 }
@@ -270,6 +303,21 @@
 {
     [super viewDidDisappear:animated];
     [self.tableView setScrollsToTop:NO];
+    
+    [self sendStayPageTrace];
+}
+
+- (void)sendStayPageTrace
+{
+    NSTimeInterval stayTime = [[NSDate date] timeIntervalSince1970] - self.timeIntervalForStayPage;
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
+    [dict setValue:@"favorite" forKey:@"category_name"];
+    [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [dict setValue:@"click" forKey:@"enter_type"];
+    NSString *stayTimeStr = [NSString stringWithFormat:@"%.0f", stayTime * 1000];
+    [dict setValue:stayTimeStr forKey:@"stay_time"];
+    [TTTracker eventV3:@"stay_category" params:dict isDoubleSending:NO];
 }
 
 - (void)fetchRemoteData {
@@ -277,11 +325,15 @@
     if(myFavorEnable) {
         if([TTAccountManager isLogin]) {
             [self.viewModel startFetchDataLoadMore:NO fromLocal:NO fromRemote:YES reloadType:ListDataOperationReloadFromTypeAuto];
+            [self trackFHRefreshEventBy:NO];
+
         } else {
             [self showNoLoginHintViewIfNeeded];
         }
     } else {
         [self.viewModel startFetchDataLoadMore:NO fromLocal:NO fromRemote:YES reloadType:ListDataOperationReloadFromTypeAuto];
+        [self trackFHRefreshEventBy:NO];
+
     }
 }
 
@@ -399,10 +451,10 @@
     [self.viewModel cleanupDataSource];
 }
 
-- (void)closeButtonTouched {
-    [_bottomTipView removeFromSuperview];
-    [self setHasBottomTipFavlistClosedUserDefaultKey:YES];
-}
+//- (void)closeButtonTouched {
+//    [_bottomTipView removeFromSuperview];
+//    [self setHasBottomTipFavlistClosedUserDefaultKey:YES];
+//}
 
 - (void)openLoginViewController {
     [TTAccountManager presentQuickLoginFromVC:self type:TTAccountLoginDialogTitleTypeFavor source:@"favor_bottom" isPasswordStyle:NO completion:^(TTAccountLoginState state) {
@@ -485,7 +537,7 @@
 }
 
 - (NSString *)categoryID {
-    return @"_favorite";
+    return @"favorite";
 }
 
 - (ExploreOrderedDataListType)listType {
@@ -547,6 +599,8 @@
 
 - (void)refreshData {
     [self.viewModel startFetchDataLoadMore:NO fromLocal:NO fromRemote:YES reloadType:ListDataOperationReloadFromTypeNone];
+    [self trackFHRefreshEventBy:NO];
+
 }
 
 #pragma mark -- CustomTableViewCellEditDelegate
@@ -685,11 +739,13 @@
 }
 
 - (void)showNoLoginHintViewIfNeeded {
+    /*
     if (![TTAccountManager isLogin]) {
         self.ttViewType = TTFullScreenErrorViewTypeSessionExpired;
         [self.view tt_endUpdataData:[self tt_hasValidateData] error:[NSError errorWithDomain:kCommonErrorDomain code:kSessionExpiredErrorCode userInfo:nil]];
         self.ttErrorView.errorMsg.text = NSLocalizedString(@"暂未登录", nil);
     }
+     */
 }
 
 - (void)sessionExpiredAction
@@ -704,6 +760,7 @@
 
 - (void)showFavorLoginDialogIfNeeded
 {
+    /*
     if([[TTLoginDialogStrategyManager sharedInstance] myFavorShouldShowDialogIfNeeded]) {
         wrapperTrackEvent(@"auth", @"fav_pop");
         NSInteger myFavorTotalTime = [[TTLoginDialogStrategyManager sharedInstance] myFavorTotalTime];
@@ -714,6 +771,63 @@
             }
         }];
     }
+    */
+}
+//我的收藏埋点
+- (void)sendFTraceClientShow:(ExploreOrderedData *)dictTraceData
+{
+    NSMutableDictionary *traceParams = [NSMutableDictionary dictionary];
+    
+    [traceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [traceParams setValue:dictTraceData.itemID forKey:@"item_id"];
+    [traceParams setValue:@"click_favorite" forKey:@"enter_from"];
+    if (isEmptyString(dictTraceData.article.groupModel.groupID)) {
+        [traceParams setValue:dictTraceData.itemID forKey:@"group_id"];
+    } else {
+        [traceParams setValue:dictTraceData.article.groupModel.groupID forKey:@"group_id"];
+    }
+    
+    
+    if (dictTraceData.logPb&&[dictTraceData.logPb isKindOfClass:[NSDictionary class]]) {
+        [traceParams setValue:dictTraceData.logPb[@"impr_id"] forKey:@"impr_id"];
+        [traceParams setValue:dictTraceData.logPb forKey:@"log_pb"];
+    }else
+    {
+        [traceParams setValue:@"be_null" forKey:@"log_pb"];
+    }
+    
+    [traceParams setValue:dictTraceData.categoryID forKey:@"category_name"];
+    [traceParams setValue:dictTraceData.groupSource forKey:@"group_source"];
+    [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
+
+    [TTTracker eventV3:@"client_show" params:traceParams];
+}
+
+#pragma mark  delegate
+- (void)willDisplayCell:(ExploreCellBase *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    ExploreOrderedData *data = (ExploreOrderedData *)cell.cellData;
+    if ([data isKindOfClass:[ExploreOrderedData class]] && cell.frame.size.height != 0) {
+        if (![self.traceIdDict[data.itemID] isEqualToString:@""]) {
+            [self sendFTraceClientShow:data];
+            [self.traceIdDict setValue:@"" forKey:data.itemID];
+        }
+    }
+}
+
+- (void)endDisplayCell:(ExploreCellBase *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    /*
+    ExploreOrderedData *data = (ExploreOrderedData *)cell.cellData;
+    if ([data isKindOfClass:[ExploreOrderedData class]]) {
+        if (![self.traceIdDict[data.itemID] isEqualToString:@""]&& cell.frame.size.height != 0) {
+            
+            [self sendFTraceClientShow:data];
+            
+            [self.traceIdDict setValue:@"" forKey:data.itemID];
+        }
+    }
+     */
 }
 
 @end

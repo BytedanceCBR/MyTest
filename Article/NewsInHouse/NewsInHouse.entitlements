@@ -20,7 +20,7 @@
 	<string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.ss.iphone.InHouse.article.News.ShareDefaults</string>
+		<string>group.com.f100.client.extension</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>

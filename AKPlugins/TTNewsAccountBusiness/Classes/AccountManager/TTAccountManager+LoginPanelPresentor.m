@@ -37,8 +37,13 @@
                 isPasswordStyle:(BOOL)isPasswordStyle
                      completion:(TTAccountLoginCompletionBlock)completedBlock
 {
+    
+    [TTAccountLoginManager showQuickFLoginVCWithParams:nil completeBlock:completedBlock];
+
+    /*
     vc = [self.class _validLoginPresentingViewController:vc];
     [TTAccountLoginManager presentLoginViewControllerFromVC:vc type:type source:source isPasswordStyle:isPasswordStyle completion:completedBlock];
+     */
 }
 
 + (void)presentQuickLoginFromVC:(UIViewController *)vc
@@ -46,8 +51,12 @@
                          source:(NSString *)source
                      completion:(TTAccountLoginCompletionBlock)completedBlock
 {
+    
+    [TTAccountLoginManager showQuickFLoginVCWithParams:nil completeBlock:completedBlock];
+    /*
     vc = [self.class _validLoginPresentingViewController:vc];
     [TTAccountLoginManager presentLoginViewControllerFromVC:vc type:type source:source completion:completedBlock];
+     */
 }
 
 + (void)presentQuickLoginFromVC:(UIViewController *)vc
@@ -81,10 +90,16 @@
                                          source:(NSString *)source
                                      completion:(TTAccountLoginAlertPhoneInputCompletionBlock)completedBlock
 {
+    
+    [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:completedBlock];
+    
+    return nil;
+    /*
     TTAccountLoginAlert *loginAlert = [TTAccountLoginManager showLoginAlertWithType:type
                                                                              source:source
                                                                          completion:completedBlock];
     return loginAlert;
+     */
 }
 
 + (TTAccountLoginAlert *)showQuickLoginAlertWithType:(TTAccountLoginAlertTitleType)type

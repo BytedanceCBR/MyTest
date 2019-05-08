@@ -69,3 +69,6 @@ static NSString * const HTSVideoListFetchManager = @"list_manager";
 static NSString * const HTSVideoDetailExitManager = @"exit_manager";
 
 static NSString * const TSVDetailPushFromProfileVC = @"push_from_profile_vc";
+
+// add by zjing ordered data
+static NSString * const HTSVideoDetailOrderedData = @"ordered_data";

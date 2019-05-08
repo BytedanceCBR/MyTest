@@ -21,7 +21,6 @@
 //#import "TTFantasyLogManager.h"
 #import "SSFetchSettingsManager.h"
 #import "TTPostDataHttpRequestSerializer.h"
-#import "TTIndicatorView.h"
 
 #define kNewestServerTypeFeedbackItemPubDateKey @"kNewestServerTypeFeedbackItemPubDateKey"//记录最新一条反馈的时间user default key
 #define kNewestFeedbackItemIDKey @"kNewestFeedbackItemIDKey" //类似kNewestFeedbackItemPubDateKey
@@ -259,14 +258,7 @@ static SSFeedbackManager *manager = nil;
 
 - (void)startFetchComments:(BOOL)isLoadMore contextID:(NSString *)cId
 {
-    if (!TTNetworkConnected()) {
-        
-        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"网络异常，请检查网络后重试", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
-        return;
-    }
-    
-    if ([_feedbackKey length] == 0) {
-        
+    if (!TTNetworkConnected() || [_feedbackKey length] == 0) {
         return;
     }
     
@@ -443,8 +435,7 @@ static SSFeedbackManager *manager = nil;
     if (model == nil) {
         return;
     }
-    //TODO f100 这里临时禁掉服务器下发的文案
-    model.content = @"你好~有任何产品问题或建议都可以在这里反馈给我们哦～也可以通过QQ3507049274与我们取得联系。";
+    model.feedbackType = @(feedbackTypeServer);
     NSData * arch = [NSKeyedArchiver archivedDataWithRootObject:model];
     [[NSUserDefaults standardUserDefaults] setObject:arch forKey:kSSFeedbackDefaultModelKey];
     [[NSUserDefaults standardUserDefaults] synchronize];

@@ -24,7 +24,6 @@
 @interface TTDetailNatantRelateReadSectionView : TTDetailNatantViewBase
 @property(nonatomic, strong)SSThemedLabel * titleLabel;
 @property(nonatomic, assign)CGFloat left;
-
 - (instancetype)initWithWidth:(CGFloat)width left:(CGFloat)left;
 
 - (void)refreshTitle:(NSString *)title;
@@ -97,6 +96,7 @@
         _items = [NSMutableArray array];
         self.viewModel = [[TTDetailNatantRelateArticleGroupViewModel alloc] init];
         self.viewModel.groupView = self;
+        self.traceIdDict = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -111,6 +111,51 @@
     if (subview) {
         [_items addObject:subview];
     }
+}
+
+- (void)sendRelateReadTrace:(NSString *)index
+{
+    if (![[self.traceIdDict objectForKey:index] isEqualToString:@""]) {
+        NSInteger indexV = [index integerValue];
+        if (self.viewModel.relatedItems.count > indexV) {
+            TTDetailNatantRelatedItemModel *itemModel = self.viewModel.relatedItems[indexV];            
+            [self sendArticleRelateClientShow:itemModel];
+            
+            [self.traceIdDict setValue:@"" forKey:index];
+        }
+    }
+    
+    if ([index integerValue] == self.items.count) {
+
+        for (NSInteger i=0; i<self.items.count; i++) {
+            if (![self.traceIdDict.allKeys containsObject:[NSString stringWithFormat:@"%ld",i]]) {
+                if (self.viewModel.relatedItems.count > i) {
+                    TTDetailNatantRelatedItemModel *itemModel = self.viewModel.relatedItems[i];
+                    
+                    [self sendArticleRelateClientShow:itemModel];
+                    
+                    [self.traceIdDict setValue:@"" forKey:index];
+                }
+            }
+        }
+    }
+}
+
+//相关阅读埋点
+- (void)sendArticleRelateClientShow:(TTDetailNatantRelatedItemModel *)dictTraceData
+{
+    NSMutableDictionary *traceParams = [NSMutableDictionary dictionary];
+    
+    [traceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [traceParams setValue:dictTraceData.itemId forKey:@"item_id"];
+    //[traceParams setValue:@"click_related" forKey:@"enter_from"]; to do 去掉enter_from
+    [traceParams setValue:dictTraceData.groupId forKey:@"group_id"];
+    [traceParams setValue:self.viewModel.articleInfoManager.detailModel.originalGroupID forKey:@"from_gid"];
+    [traceParams setValue:self.viewModel.articleInfoManager.detailModel.logPb forKey:@"log_pb"];
+    [traceParams setValue:@"related" forKey:@"category_name"];
+    [traceParams setValue:@"be_null" forKey:@"cell_type"];
+
+    [TTTracker eventV3:@"client_show" params:traceParams];
 }
 
 - (void)themeChanged:(NSNotification *)notification{

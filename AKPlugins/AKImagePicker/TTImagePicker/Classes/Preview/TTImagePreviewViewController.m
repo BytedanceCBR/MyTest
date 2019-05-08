@@ -371,14 +371,6 @@ typedef NS_ENUM(NSInteger, TTImagePreviewMoveDirection) {
 
 
 - (void)presentOn:(UIViewController *)parentViewController {
-    _naviBarHidden = self.navigationController.navigationBarHidden;
-    if ([UIDevice currentDevice].systemVersion.doubleValue < 8.f) {
-        if (self.navigationController.navigationBar == nil) {
-            _naviBarHidden = YES;
-        } else {
-            _naviBarHidden = self.navigationController.navigationBar.hidden;
-        }
-    }
     _statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
     _enterOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     UIViewController *rootViewController = parentViewController;
@@ -394,6 +386,7 @@ typedef NS_ENUM(NSInteger, TTImagePreviewMoveDirection) {
     
     [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
 
+    _naviBarHidden = self.navigationController.navigationBarHidden;
     if (self.previewType == TTImagePreviewTypeDelete) {
         TTImagePickerTrack(TTImagePickerTrackKeyPreviewPostEnter, nil);
     }

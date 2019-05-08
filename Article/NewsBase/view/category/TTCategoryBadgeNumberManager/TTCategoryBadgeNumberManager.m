@@ -111,6 +111,29 @@
     }
 }
 
+- (void)updateNotifyBadgeNumberOfCategoryID:(NSString *)categoryID withShow:(BOOL)isShow
+{
+    
+    TTCategoryBadgeNumberModel * modelCategory = [self.badgeNumberModels objectForKey:categoryID];
+    if (isShow) {
+        if (modelCategory)
+        {
+            modelCategory.hasNotifyPoint = isShow;
+            [self.badgeNumberModels setValue:modelCategory forKey:categoryID];
+        }else
+        {
+            TTCategoryBadgeNumberModel * model = [[TTCategoryBadgeNumberModel alloc] initWithCategoryID:categoryID];
+            model.hasNotifyPoint = isShow;
+            [self.badgeNumberModels setValue:model forKey:categoryID];
+        }
+    }else
+    {
+        [self.badgeNumberModels setValue:nil forKey:categoryID];
+    }
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kCategoryRefresh" object:nil userInfo:nil];
+}
+
 - (void)updateNotifyBadgeNumberOfCategoryID:(NSString *)categoryID withBadgeNumber:(NSUInteger)badgeNumber {
     TTCategoryBadgeNumberModel * model = [self getOrGenerateCategoryBadgeNumberModelWithCategoryID:categoryID];
     model.notifyNumber = badgeNumber;

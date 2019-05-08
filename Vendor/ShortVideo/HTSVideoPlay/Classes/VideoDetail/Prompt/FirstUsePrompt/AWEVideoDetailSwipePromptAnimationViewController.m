@@ -75,7 +75,7 @@ static CGFloat alphaThatTransparentButTouchable = 0.02;
         self.label.text = @"滑动查看更多视频";
     }
     self.label.textAlignment = NSTextAlignmentCenter;
-    self.label.font = [UIFont boldSystemFontOfSize:17];
+    self.label.font = [UIFont systemFontOfSize:17];
     self.label.textColor = [UIColor whiteColor];
     [self.containerView addSubview:self.label];
 

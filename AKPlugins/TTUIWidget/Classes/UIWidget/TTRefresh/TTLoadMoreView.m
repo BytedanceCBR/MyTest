@@ -234,7 +234,7 @@
     _isObserving = YES;
     _isObservingContentInset = YES;
     @try {
-        [_scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
+        [_scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:nil];
         [_scrollView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
         [_scrollView addObserver:self forKeyPath:@"contentInset" options:NSKeyValueObservingOptionNew context:nil];
 
@@ -354,14 +354,17 @@
 
 - (void)contentOffsetChange:(NSDictionary *)change
 {
-    CGPoint point = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
+    CGPoint old = [[change valueForKey:NSKeyValueChangeOldKey] CGPointValue];
+    CGPoint new = [[change valueForKey:NSKeyValueChangeNewKey] CGPointValue];
+
     if (!self.enabled) {
         return;
     }
   
-    if (point.y + self.scrollView.contentInset.top >= 0 && _direction == PULL_DIRECTION_UP) {
-        [self processPullUp:(float)point.y];
+    if (new.y + self.scrollView.contentInset.top >= 0 && _direction == PULL_DIRECTION_UP && new.y > old.y) {
+        [self processPullUp:(float)new.y];
     }
+
 }
 
 

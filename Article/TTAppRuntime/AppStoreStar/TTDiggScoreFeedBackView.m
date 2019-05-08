@@ -78,7 +78,7 @@
     self.titleLabel = [[SSThemedLabel alloc] init];
     self.titleLabel.font = [UIFont systemFontOfSize:[self fontSize]];
     self.titleLabel.textColorThemeKey = kColorText1;
-    self.titleLabel.text = @"喜欢“好多房”吗?";
+    self.titleLabel.text = @"喜欢“幸福里”吗?";
     [self.wrapperView addSubview:self.titleLabel];
     
     self.tipLabel = [[SSThemedLabel alloc] init];

@@ -55,17 +55,20 @@
 #import "SSInHouseDebugViewController.h"
 //#import "TTContactsUserDefaults.h"
 #import "TTSettingsBrowserViewController.h"
-//#if INHOUSE
-//#import "TTDebugAssistant.h"
-//#import <TTDebugAssistant/JIRAScreenshotManager.h>
-//#endif
-#import "TTRNBundleManager.h"
+#if INHOUSE
+#import "TTDebugAssistant.h"
+#import <TTDebugAssistant/JIRAScreenshotManager.h>
+#endif
+//#import "TTRNBundleManager.h"
 #import <TTSettingsManager/TTSettingsManager+SaveSettings.h>
 #import <AKWebViewBundlePlugin/TTDetailWebContainerDebugger.h>
 #import "TTVSettingsConfiguration.h"
 #import "SSFetchSettingsManager.h"
 #import "TTAppStoreStarManager.h"
 #import "TTClientABTestBrowserViewController.h"
+#import "FHUtils.h"
+#import "FHClientABTestDebugViewController.h"
+#import "LogViewerSettingViewController.h"
 //#import "TTFDashboardViewController.h"
 
 //#import "TTXiguaLiveManager.h"
@@ -109,6 +112,19 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     if ([SSDebugViewController supportDebugSubitem:SSDebugSubitemFlex]) {
         
         NSMutableArray *itemArray = [NSMutableArray array];
+
+        STTableViewCellItem *logViewItem = [[STTableViewCellItem alloc] initWithTitle:@"埋点验证" target:self action:@selector(_openLogViewSetting)];
+        logViewItem.switchStyle = NO;
+        [itemArray addObject:logViewItem];
+    
+        STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
+        clientABDebugItem.switchStyle = NO;
+        [itemArray addObject:clientABDebugItem];
+        
+        STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
+        htmlBridgeDebugItem.switchStyle = NO;
+        [itemArray addObject:htmlBridgeDebugItem];
+        
 
         STTableViewCellItem *shortVideoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"小视频调试选项点这里" target:self action:@selector(_openShortVideoDebug)];
         shortVideoDebugItem.switchStyle = NO;
@@ -507,12 +523,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         STTableViewCellItem *item0 = [[STTableViewCellItem alloc] initWithTitle:@"联机调试开关" target:self action:nil];
         item0.switchStyle = YES;
         item0.switchAction = @selector(toggleRNDevEnable:);
-        item0.checked = [TTRNBundleManager sharedManager].devEnable;
+//        item0.checked = [TTRNBundleManager sharedManager].devEnable;
         
         STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"调试host" target:self action:nil];
         item1.textFieldStyle = YES;
         item1.textFieldAction = @selector(setRNDevHost:);
-        item1.textFieldContent = [TTRNBundleManager sharedManager].devHost;
+//        item1.textFieldContent = [TTRNBundleManager sharedManager].devHost;
         
         STTableViewCellItem *item2 = [[STTableViewCellItem alloc] initWithTitle:@"跳转Bundle(ReactDemo)" target:self action:@selector(goToRNPage)];
         
@@ -632,10 +648,75 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [self.navigationController pushViewController:clientABVC animated:YES];
 }
 
+- (void)_openABTestSDKClientABTestVC
+{
+    FHClientABTestDebugViewController *clientABVC = [FHClientABTestDebugViewController new];
+    [self.navigationController pushViewController:clientABVC animated:YES];
+}
+
 - (void)_openShortVideoDebug
 {
     [self.navigationController pushViewController:[[TSVDebugViewController alloc] init]
                                          animated:YES];
+}
+
+- (void)_openLogViewSetting {
+    NSLog(@"_openLogViewSetting");
+    LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)_openHtmlBridge
+{
+    TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:@"请输入调试地址" message:nil preferredType:TTThemedAlertControllerTypeAlert];
+    
+//    [alertVC addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+//        textField.placeholder = @"请输入调试地址";
+//    }];
+    
+    [alertVC addTextViewWithConfigurationHandler:^(UITextView *textView) {
+        
+    }];
+    
+    if ([[FHUtils contentForKey:@"k_fh_debug_h5_bridge_test"] isKindOfClass:[NSString class]]) {
+        [alertVC uniqueTextView].text = [FHUtils contentForKey:@"k_fh_debug_h5_bridge_test"];
+    }
+    
+    alertVC.title = @"请输入调试地址";
+    
+    [alertVC addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
+        
+    }];
+    
+    __block TTThemedAlertController *alertVCWeak = alertVC;
+    [alertVC addActionWithTitle:@"前往" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        
+        NSString *urlStrInput = [alertVCWeak uniqueTextView].text;
+        if (!urlStrInput || urlStrInput.length == 0) {
+            return ;
+        }
+        NSString *stringToSave = [NSString stringWithString:urlStrInput];
+        
+        NSString *unencodedString = urlStrInput;
+        NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+                                                                                                        (CFStringRef)unencodedString,
+                                                                                                        NULL,
+                                                                                                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                                                                                        kCFStringEncodingUTF8));
+        NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+        
+        [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
+        
+        NSURL *url = [TTURLUtils URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url];
+        
+        alertVCWeak = nil;
+    }];
+    
+    UIViewController *topVC = [TTUIResponderHelper topmostViewController];
+    if (topVC) {
+        [alertVC showFrom:topVC animated:YES];
+    }
 }
 
 - (void)_openAdDebug
@@ -1032,16 +1113,16 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.on forKey:@"kTTAppMemoryMonitorKey"];
     
     if (uiswitch.isOn) {
-//#if INHOUSE
-//        [TTDebugAssistant show];
-//#endif
+#if INHOUSE
+        [TTDebugAssistant show];
+#endif
         //  [TTMemoryMonitor showMemoryMonitor];
         
     }
     else {
-//#if INHOUSE
-//        [TTDebugAssistant hide];
-//#endif
+#if INHOUSE
+        [TTDebugAssistant hide];
+#endif
         //  [TTMemoryMonitor hideMemoryMonitor];
     }
 }
@@ -1265,11 +1346,11 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 
 #pragma mark - React Native调试
 - (void)toggleRNDevEnable:(UISwitch *)sw {
-    [TTRNBundleManager sharedManager].devEnable = sw.on;
+//    [TTRNBundleManager sharedManager].devEnable = sw.on;
 }
 
 - (void)setRNDevHost:(UITextField *)textField {
-    [TTRNBundleManager sharedManager].devHost = textField.text;
+//    [TTRNBundleManager sharedManager].devHost = textField.text;
 }
 
 - (void)goToRNPage {

@@ -18,10 +18,6 @@
 
 @end
 
-@interface TTLayOutPlainLargePicCellModelS0AD : TTLayOutPlainLargePicCellModel
-
-@end
-
 @interface TTLayOutPlainLargePicCellModelS1 : TTLayOutPlainLargePicCellModel
 
 @end

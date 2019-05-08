@@ -23,7 +23,7 @@
 - (void)calculateBottomLineFrame
 {
     if (![self.orderedData nextCellHasTopPadding]) {
-        self.bottomLineViewFrame = CGRectMake(0, self.cellCacheHeight - [TTDeviceHelper ssOnePixel], self.cellWidth, [TTDeviceHelper ssOnePixel]);
+        self.bottomLineViewFrame = CGRectMake(kPaddingLeft(), self.cellCacheHeight - [TTDeviceHelper ssOnePixel], self.containWidth, [TTDeviceHelper ssOnePixel]);
         self.bottomLineViewHidden = NO;
     }
 }
@@ -35,11 +35,9 @@
     
     CGSize titleSize = CGSizeMake(self.containWidth, 0);
     NSString *titleStr = [TTLayOutCellDataHelper getTitleStringWithOrderedData:self.orderedData];
-    NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kTitleViewFontSize() lineHeight:kTitleViewLineHeight() lineBreakMode:NSLineBreakByTruncatingTail
-                                                                           isBoldFontStyle:NO];
+    NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kTitleViewFontSize() lineHeight:kTitleViewLineHeight() lineBreakMode:NSLineBreakByTruncatingTail];
     self.titleAttributedStr = titleAttributedStr;
-    titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kTitleViewFontSize() forWidth:self.containWidth forLineHeight:kTitleViewLineHeight() constraintToMaxNumberOfLines:kTitleViewLineNumber()
-                                                isBold:NO];
+    titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kTitleViewFontSize() forWidth:self.containWidth forLineHeight:kTitleViewLineHeight() constraintToMaxNumberOfLines:kTitleViewLineNumber()];
     CGFloat titlePadding = kTitleViewLineHeight() - kTitleViewFontSize();
     CGFloat titleY = top - titlePadding / 2;
     if (titleSize.height - titlePadding > 0) {
@@ -86,7 +84,6 @@
         self.listType == ExploreOrderedDataListTypeFavorite ||
         self.listType == ExploreOrderedDataListTypeReadHistory ||
         (self.orderedData.showDislike && ![self.orderedData.showDislike boolValue])){
-        self.unInterestedButtonHidden = YES;
     } else {
         unInterestedBtnX = ceil(self.originX + containWidth - kCellUninterestedButtonWidth / 2 - unInterestedBtnWidth / 2);
         unInterestedBtnY = ceil(top + regionHeight / 2 - unInterestedBtnHeight / 2);
@@ -96,7 +93,6 @@
         right += margin;
         self.unInterestedButtonHidden = NO;
     }
-    self.unInterestedButtonHidden = YES;
     
     self.adLocationIconHidden = YES;
     self.adLocationLabelHidden = YES;
@@ -158,7 +154,7 @@
         NSString *sourceStr = [TTLayOutCellDataHelper getADSourceStringWithOrderedDada:self.orderedData];
         if (isEmptyString(sourceStr) || ![TTLayOutCellDataHelper isAdShowSourece:self.orderedData]) {
             self.sourceLabelStr = @"";
-            self.sourceLabelHidden = NO;
+            self.sourceLabelHidden = YES;
         } else {
             CGFloat sourceMaxWidth = containWidth - left - right;
             NSString *fixedSourceString = [sourceStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -167,7 +163,7 @@
             CGFloat sourceLabelOriginY = ceilf(top + (regionHeight - sourceSize.height) / 2);
             self.sourceLabelFrame = CGRectMake(self.originX +left, sourceLabelOriginY, sourceSize.width, sourceSize.height);
             self.sourceLabelFontSize = kCellInfoLabelFontSize;
-            self.sourceLabelTextColorThemeKey = kCellInfoLabelTextColor;
+            self.sourceLabelTextColorThemeKey = kFHColorCoolGrey2;
             self.sourceLabelStr = fixedSourceString;
             self.sourceLabelHidden = NO;
             left += sourceSize.width;
@@ -198,7 +194,7 @@
             CGRect infoLabelFrame = CGRectMake(self.originX + left, infolLabelOriginY, infoLabelSize.width, infoLabelSize.height);
             self.infoLabelFrame = infoLabelFrame;
             self.infoLabelFontSize = kCellInfoLabelFontSize;
-            self.infoLabelTextColorThemeKey = kCellInfoLabelTextColor;
+            self.infoLabelTextColorThemeKey = kFHColorCoolGrey2;
             self.infoLabelStr = infoStr;
             self.infoLabelHidden = NO;
             left += infoLabelSize.width + margin;
@@ -211,12 +207,11 @@
 
 - (CGFloat)heightForADActionRegionWithTop:(CGFloat)top
 {
-    //    CGSize ADActionSize = [TTArticleCellHelper getADActionSize:self.containWidth];
-    //    self.adBackgroundViewFrame = CGRectMake(0, top, ADActionSize.width, ADActionSize.height);
-    self.adBackgroundViewHidden = YES;
+    CGSize ADActionSize = [TTArticleCellHelper getADActionSize:self.containWidth];
+    self.adBackgroundViewFrame = CGRectMake(self.originX, top, ADActionSize.width, ADActionSize.height);
+    self.adBackgroundViewHidden = NO;
     
-    CGFloat actionButtonWidth = 72;
-    CGFloat actionButtonHeight = 28;
+    CGFloat actionButtonWidth = 90;
     if (self.orderedData) {
         id<TTAdFeedModel> adModel = self.orderedData.adModel;
         if ([adModel showActionButtonIcon]) {
@@ -227,22 +222,24 @@
     NSString *adSubtitleStr = [TTLayOutCellDataHelper getSubtitleStringWithOrderedData:self.orderedData];
     CGSize adSubtitleSize = [adSubtitleStr sizeWithAttributes:@{NSFontAttributeName : [UIFont tt_fontOfSize:15]}];
     adSubtitleSize = CGSizeMake(ceilf(adSubtitleSize.width), ceilf(adSubtitleSize.height));
-    CGRect adSubtitleFrame = CGRectMake(self.originX, top + [TTDeviceUIUtils tt_newPadding:18.f], self.containWidth - 8 - 20 - actionButtonWidth, adSubtitleSize.height);
+    CGRect adSubtitleFrame = CGRectMake(self.originX + 8, top + floor((ADActionSize.height - adSubtitleSize.height) / 2), ADActionSize.width - 8 - 20 - 1 - actionButtonWidth , adSubtitleSize.height);
     self.adSubtitleLabelFrame = adSubtitleFrame;
     self.adSubtitleLabelHidden = NO;
-    self.adSubtitleLabelFontSize = [TTDeviceUIUtils tt_newFontSize:15];
-    self.adSubtitleLabelTextColorHex = @"999999";
+    self.adSubtitleLabelFontSize = 15;
+    self.adSubtitleLabelTextColorThemeKey = kColorText3;
     self.adSubtitleLabelStr = adSubtitleStr;
     self.adSubtitleLabelUserInteractionEnabled = [TTLayOutCellDataHelper isADSubtitleUserInteractive:self.orderedData];
     
-    self.separatorViewHidden = YES;
+    self.separatorViewFrame = CGRectMake(self.originX + ADActionSize.width - actionButtonWidth - 1, top + floor((ADActionSize.height - 16) / 2), 1, 16);
+    self.separatorViewBackgroundColorThemeKey = kColorLine1;
+    self.separatorViewHidden = NO;
     
-    self.actionButtonFrame = CGRectMake(self.originX + self.containWidth - actionButtonWidth ,CGRectGetMidY(adSubtitleFrame) - actionButtonHeight / 2 , actionButtonWidth, actionButtonHeight);
+    self.actionButtonFrame = CGRectMake(self.originX + ADActionSize.width - actionButtonWidth, top, actionButtonWidth, ADActionSize.height);
     self.actionButtonHidden = NO;
-    self.actionButtonFontSize = 14;
+    self.actionButtonFontSize = 15;
     self.actionButtonBorderWidth = 0.f;
     
-    return CGRectGetMaxY(self.actionButtonFrame) - top;
+    return ADActionSize.height;
 }
 
 @end

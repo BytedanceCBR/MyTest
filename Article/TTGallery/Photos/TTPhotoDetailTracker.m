@@ -216,53 +216,78 @@
         percent = 100;
     }
     
-    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
+//    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
+//    if (self.detailModel.gdExtJsonDict) {
+//        [dict setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
+//    }
+//
+//    [dict setValue:@"article" forKey:@"category"];
+//    [dict setValue:@"read_pct" forKey:@"tag"];
+//    [dict setValue:self.detailModel.clickLabel forKey:@"label"];
+//    [dict setValue:@(self.detailModel.article.uniqueID) forKey:@"value"];
+//    [dict setValue:self.detailModel.adID forKey:@"ext_value"];
+//    [dict setValue:self.detailModel.logPb forKey:@"log_pb"];
+//    [dict setValue:@(percent) forKey:@"pct"];
+//    [dict setValue:@(pageCount) forKey:@"page_count"];
+//    if (!isEmptyString(self.detailModel.article.groupModel.itemID)) {
+//        [dict setValue:@(self.detailModel.article.groupModel.aggrType) forKey:@"aggr_type"];
+//        [dict setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+//    }
+//
+//    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//        [TTTrackerWrapper eventData:dict];
+//    }
+
+
+    NSMutableDictionary *param = [[NSMutableDictionary alloc] initWithCapacity:10];
     if (self.detailModel.gdExtJsonDict) {
-        [dict setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
+        [param setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
     }
-    
-    [dict setValue:@"article" forKey:@"category"];
-    [dict setValue:@"read_pct" forKey:@"tag"];
-    [dict setValue:self.detailModel.clickLabel forKey:@"label"];
-    [dict setValue:@(self.detailModel.article.uniqueID) forKey:@"value"];
-    [dict setValue:self.detailModel.adID forKey:@"ext_value"];
-    [dict setValue:self.detailModel.logPb forKey:@"log_pb"];
-    [dict setValue:@(percent) forKey:@"pct"];
-    [dict setValue:@(pageCount) forKey:@"page_count"];
-    if (!isEmptyString(self.detailModel.article.groupModel.itemID)) {
-        [dict setValue:@(self.detailModel.article.groupModel.aggrType) forKey:@"aggr_type"];
-        [dict setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+    [param setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+    [param setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+    [param setValue:[self.detailModel.article.novelData tt_stringValueForKey:@"book_id"] forKey:@"novel_id"];
+    [param setValue:[NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.detailModel.clickLabel categoryID:self.detailModel.categoryID] forKey:@"enter_from"];
+    NewsGoDetailFromSource fromSource = self.detailModel.fromSource;
+    if (fromSource == NewsGoDetailFromSourceHeadline ||
+        fromSource == NewsGoDetailFromSourceCategory) {
+        [param setValue:self.detailModel.categoryID forKey:@"category_name"];
     }
-    
-    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTrackerWrapper eventData:dict];
-    }
-    
-    
-    [TTTrackerWrapper eventV3:@"read_pct" params:({
-        NSMutableDictionary *param = [[NSMutableDictionary alloc] initWithCapacity:10];
-        if (self.detailModel.gdExtJsonDict) {
-            [param setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
-        }
-        [param setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
-        [param setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
-        [param setValue:[self.detailModel.article.novelData tt_stringValueForKey:@"book_id"] forKey:@"novel_id"];
-        [param setValue:[NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.detailModel.clickLabel categoryID:self.detailModel.categoryID] forKey:@"enter_from"];
-        NewsGoDetailFromSource fromSource = self.detailModel.fromSource;
-        if (fromSource == NewsGoDetailFromSourceHeadline ||
-            fromSource == NewsGoDetailFromSourceCategory) {
-            [param setValue:self.detailModel.categoryID forKey:@"category_name"];
-        }
-        [param setValue:[self.detailModel.article.entityWordInfoDict tt_stringValueForKey:kEntityConcernID] forKey:@"concern_id"];
-        [param setValue:self.detailModel.orderedData.groupSource.stringValue forKey:@"group_source"];
-        [param setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
-        [param setValue:@(percent) forKey:@"percent"];
-        [param setValue:@(pageCount) forKey:@"page_count"];
-        [param setValue:self.detailModel.logPb forKey:@"log_pb"];
-        [param setValue:[self.detailModel.statParams tt_stringValueForKey:@"card_id"] forKey:@"card_id"];
-        [param setValue:[self.detailModel.statParams tt_stringValueForKey:@"card_position"] forKey:@"card_position"];
-        [param copy];
-    }) isDoubleSending:YES];
+    [param setValue:[self.detailModel.article.entityWordInfoDict tt_stringValueForKey:kEntityConcernID] forKey:@"concern_id"];
+    [param setValue:self.detailModel.orderedData.groupSource.stringValue forKey:@"group_source"];
+    [param setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
+    [param setValue:@(percent) forKey:@"percent"];
+    [param setValue:@(pageCount) forKey:@"page_count"];
+    [param setValue:self.detailModel.logPb forKey:@"log_pb"];
+    [param setValue:[self.detailModel.statParams tt_stringValueForKey:@"card_id"] forKey:@"card_id"];
+    [param setValue:[self.detailModel.statParams tt_stringValueForKey:@"card_position"] forKey:@"card_position"];
+    [param copy];
+
+    [TTTracker eventV3:@"read_pct" params:param];
+
+//    [TTTrackerWrapper eventV3:@"read_pct" params:({
+//        NSMutableDictionary *param = [[NSMutableDictionary alloc] initWithCapacity:10];
+//        if (self.detailModel.gdExtJsonDict) {
+//            [param setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
+//        }
+//        [param setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+//        [param setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+//        [param setValue:[self.detailModel.article.novelData tt_stringValueForKey:@"book_id"] forKey:@"novel_id"];
+//        [param setValue:[NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.detailModel.clickLabel categoryID:self.detailModel.categoryID] forKey:@"enter_from"];
+//        NewsGoDetailFromSource fromSource = self.detailModel.fromSource;
+//        if (fromSource == NewsGoDetailFromSourceHeadline ||
+//            fromSource == NewsGoDetailFromSourceCategory) {
+//            [param setValue:self.detailModel.categoryID forKey:@"category_name"];
+//        }
+//        [param setValue:[self.detailModel.article.entityWordInfoDict tt_stringValueForKey:kEntityConcernID] forKey:@"concern_id"];
+//        [param setValue:self.detailModel.orderedData.groupSource.stringValue forKey:@"group_source"];
+//        [param setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
+//        [param setValue:@(percent) forKey:@"percent"];
+//        [param setValue:@(pageCount) forKey:@"page_count"];
+//        [param setValue:self.detailModel.logPb forKey:@"log_pb"];
+//        [param setValue:[self.detailModel.statParams tt_stringValueForKey:@"card_id"] forKey:@"card_id"];
+//        [param setValue:[self.detailModel.statParams tt_stringValueForKey:@"card_position"] forKey:@"card_position"];
+//        [param copy];
+//    }) isDoubleSending:YES];
 
 }
 

@@ -55,19 +55,21 @@
 #import "NSObject+FBKVOController.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRoute.h"
+#import "TTMessageNotificationTipsManager.h"
+#import "TTMessageNotificationMacro.h"
 //#import "TTPLManager.h"
 #import <TTTracker.h>
 //#import "TTCommonwealManager.h"
 #import "BDTAccountClientManager.h"
 #import "TTAccountBindingMobileViewController.h"
 #import "TTTabBarProvider.h"
-
+#import "AKLoginTrafficViewController.h"
 #define PaddingTopBackButton 6
 #define kTTProfileTopCellHeight    (142.f/2)
 
 static NSString *const kTopFunctionKey = @"iPhone_top_function";
 static NSString *const kPadNightModeKey = @"iPad_night_mode";
-static NSString *const kMessageNotificationFuctionKey = @"msg_notification";
+static NSString *const kMessageNotificationFuctionKey = @"mine_notification";
 static NSString *const kPrivateLetterFunctionKey = @"private_letter";
 
 static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMessageFunctionCellIdentifier";
@@ -188,6 +190,19 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     } else {
         [self refreshUserInfoView];
     }
+    
+    TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
+    [manager saveLastImportantMessageID];
+    //切换到我的tab时
+    if([[TTSettingMineTabManager sharedInstance_tt] getEntryForType:TTSettingMineTabEntyTypeMessage]){
+        if(manager.isImportantMessage){
+            wrapperTrackEventWithCustomKeys(@"message_list", @"vip_show", manager.msgID, nil, kTTMessageNotificationTrackExtra(manager.actionType));
+        }
+        else if(manager.unreadNumber > 0){
+            wrapperTrackEventWithCustomKeys(@"message_list", @"show", nil, nil, kTTMessageNotificationTrackExtra(manager.actionType));
+        }
+    }
+    
     [self updateTaskEntryDisplayIfNeed];
 }
 
@@ -523,7 +538,11 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     } else {
         TTSettingMineTabEntry *entry = [[self class] entryForIndexPath:indexPath];
         if (entry.AKRequireLogin) {
-            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://ak_login_traffic?"] userInfo:nil];
+            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
+                if (result) {
+                    operation();
+                }
+            }];
         } else {
             operation();
         }
@@ -637,13 +656,11 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
     if ([TTAccount sharedAccount].isLogin) {
         operation();
     } else {
-        
-        NSDictionary *params = @{@"enter_from": @"minetab", @"enter_type": @"login"};
         [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
             if (result) {
                 operation();
             }
-        } params:params];
+        }];
     }
 }
 

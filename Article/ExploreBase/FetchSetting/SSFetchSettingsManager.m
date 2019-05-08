@@ -126,6 +126,13 @@ static SSFetchSettingsManager * manager;
     NSDictionary * temp = [dSettings objectForKey:@"share_templates"];
     [SSCommonLogic saveShareTemplate:temp];
     
+    // add by zjing
+    NSDictionary * category = [dSettings objectForKey:@"f_category_settings"];
+    [SSCommonLogic setFeedStartCategoryConfig:category];
+    
+    NSDictionary * settings = [dSettings objectForKey:@"f_settings"];
+    [SSCommonLogic setFHSettings:settings];
+    
     NSArray * urls = [dSettings objectForKey:@"intercept_urls"];
     [SSCommonLogic saveInterceptURLs:urls];
     
@@ -287,7 +294,7 @@ static SSFetchSettingsManager * manager;
 {
     BOOL result = [[NSUserDefaults standardUserDefaults] boolForKey:SSFetchSettingsManagerFetchedDefaultInfoKey];
     if (result) {
-        NSString * shareFrom = NSLocalizedString(@"分享来自 #爱看#", nil);
+        NSString * shareFrom = NSLocalizedString(@"分享来自 #幸福里#", nil);
         NSString * noShareURLStrings = [NSString stringWithFormat:@"【{title:50}】 (%@ )", shareFrom];
         NSString * twitterURLStrings = [NSString stringWithFormat:@"【{title:50}】{share_url} (%@ )", shareFrom];
         NSDictionary * defaultTemp =  @{
@@ -295,8 +302,8 @@ static SSFetchSettingsManager * manager;
                                         @"qzone_sns":   noShareURLStrings,
                                         @"twitter":     twitterURLStrings,
                                         @"renren_sns":  noShareURLStrings,
-                                        @"system":      [NSString stringWithFormat:@"%@：【{title:50}】{share_url}", NSLocalizedString(@"分享自爱看", nil)],
-                                        @"weixin":      [NSString stringWithFormat:@"%@【{title:50}", NSLocalizedString(@"爱看", nil)],
+                                        @"system":      [NSString stringWithFormat:@"%@：【{title:50}】{share_url}", NSLocalizedString(@"分享自幸福里", nil)],
+                                        @"weixin":      [NSString stringWithFormat:@"%@【{title:50}", NSLocalizedString(@"幸福里", nil)],
                                         @"qq_weibo":    [NSString stringWithFormat:@"【{title:50}】 (%@ @headlineapp )", NSLocalizedString(@"分享来自", nil)],
                                         @"facebook":    [NSString stringWithFormat:@"【{title:50}】{share_url} (%@ )", shareFrom],
                                         @"sina_weibo":  noShareURLStrings

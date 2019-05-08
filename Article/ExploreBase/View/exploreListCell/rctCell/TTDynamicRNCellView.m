@@ -7,7 +7,7 @@
 //
 
 #import "TTDynamicRNCellView.h"
-#import "TTRNView.h"
+//#import "TTRNView.h"
 #import "ExploreArticleCellViewConsts.h"
 #import "SSThemed.h"
 #import "ExploreOrderedData+TTBusiness.h"
@@ -18,18 +18,18 @@
 #import "ExploreArticleWebCellView.h"
 #import "RNData.h"
 #import <TTAccountBusiness.h>
-#import "TTRNBridge+Cell.h"
+//#import "TTRNBridge+Cell.h"
 #import "NewsUserSettingManager.h"
 #import "TTDeviceHelper.h"
 #import "TTThemeManager.h"
 #import "TTPlatformSwitcher.h"
 #import "TTFeedDislikeView.h"
-#import "TTRNBundleManager.h"
+//#import "TTRNBundleManager.h"
 #import "TTRNCellManager.h"
 #import <TTBaseLib/JSONAdditions.h>
-#import "RCTRootView.h"
-#import <React/RCTEventDispatcher.h>
-#import "TTRNBridge+Call.h"
+//#import "RCTRootView.h"
+//#import <React/RCTEventDispatcher.h>
+//#import "TTRNBridge+Call.h"
 
 
 @implementation TTDynamicRNCell
@@ -48,9 +48,9 @@ static NSMutableDictionary *rnCellHeightCache = nil;
 
 static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
 
-@interface TTDynamicRNCellView () <TTRNViewDelegate>
+@interface TTDynamicRNCellView ()
 
-@property(nonatomic, strong) TTRNView *rnView;
+//@property(nonatomic, strong) TTRNView *rnView;
 @property(nonatomic, strong) SSThemedView *loadingView;
 @property(nonatomic, strong) SSThemedView *bottomLineView;
 @property(nonatomic, strong) ExploreOrderedData *orderedData;
@@ -101,19 +101,19 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
 
 - (void)addObservers
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(closeCell:)
-                                                 name:kExploreMixListCloseWebCellNotification
-                                               object:self.rnView];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(showDislike:)
-                                                 name:kExploreMixListShowDislikeNotification
-                                               object:self.rnView];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFeedList)
-                                                 name:kTTRNBridgeActiveRefreshListViewNotification
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(closeCell:)
+//                                                 name:kExploreMixListCloseWebCellNotification
+//                                               object:self.rnView];
+//
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(showDislike:)
+//                                                 name:kExploreMixListShowDislikeNotification
+//                                               object:self.rnView];
+//
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshFeedList)
+//                                                 name:kTTRNBridgeActiveRefreshListViewNotification
+//                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationWillEnterForeground:)
                                                  name:UIApplicationWillEnterForegroundNotification
@@ -168,7 +168,7 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
     }
     
     if (self.height == 0) {
-        [self.rnView refreshSize];
+//        [self.rnView refreshSize];
     }
     
     /* iPad上cell整体有缩进，分割线如果再缩进就会比其他文章类型cell短一些，
@@ -201,25 +201,25 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
     
     self.isCellDisplay = YES;
     
-    if (needReload) {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:RCTJavaScriptDidLoadNotification object:self.rnView.rootView.bridge];
-        [self.rnView removeFromSuperview];
-        self.rnView = [[TTRNView alloc] initWithFrame:self.bounds];
-        self.rnView.delegate = self;
-        [self.rnView loadModule:self.orderedData.rnData.moduleName initialProperties:[self properties]];
-        
-        [self addSubview:self.rnView];
-        [self monitorRNLoad:self.orderedData.rnData.moduleName pageName:self.orderedData.rnData.typeName];
-        [self.rnView setLoadingView:self.loadingView];
-        [self.rnView setSizeFlexibility:TTRNViewSizeFlexibilityHeight];
-        WeakSelf;
-        [self.rnView setFatalHandler:^{
-            StrongSelf;
-            [[TTRNBundleManager sharedManager] setLocalBundleDirty:YES forModuleName:self.orderedData.rnData.moduleName];
-        }];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(javaScriptDidLoad:) name:RCTJavaScriptDidLoadNotification object:self.rnView.rootView.bridge];
-    }
+//    if (needReload) {
+//        [[NSNotificationCenter defaultCenter] removeObserver:self name:RCTJavaScriptDidLoadNotification object:self.rnView.rootView.bridge];
+//        [self.rnView removeFromSuperview];
+//        self.rnView = [[TTRNView alloc] initWithFrame:self.bounds];
+//        self.rnView.delegate = self;
+//        [self.rnView loadModule:self.orderedData.rnData.moduleName initialProperties:[self properties]];
+//
+//        [self addSubview:self.rnView];
+//        [self monitorRNLoad:self.orderedData.rnData.moduleName pageName:self.orderedData.rnData.typeName];
+//        [self.rnView setLoadingView:self.loadingView];
+//        [self.rnView setSizeFlexibility:TTRNViewSizeFlexibilityHeight];
+//        WeakSelf;
+//        [self.rnView setFatalHandler:^{
+//            StrongSelf;
+//            [[TTRNBundleManager sharedManager] setLocalBundleDirty:YES forModuleName:self.orderedData.rnData.moduleName];
+//        }];
+//
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(javaScriptDidLoad:) name:RCTJavaScriptDidLoadNotification object:self.rnView.rootView.bridge];
+//    }
     
     if (!isEmptyString(self.orderedData.rnData.dataUrl)) {
         if (!self.lastUpdateTime) {
@@ -237,7 +237,7 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
 - (void)javaScriptDidLoad:(id)notify
 {
     if (self.isDataPending) {
-        [self.rnView.rootView.bridge.eventDispatcher sendDeviceEventWithName:kTTDynamicRNCellViewDataRefreshEvent body:self.orderedData.rnData.dataContent];
+//        [self.rnView.rootView.bridge.eventDispatcher sendDeviceEventWithName:kTTDynamicRNCellViewDataRefreshEvent body:self.orderedData.rnData.dataContent];
         self.isDataPending = NO;
     }
 }
@@ -282,11 +282,11 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
     self.lastUpdateTime = self.orderedData.rnData.lastUpdateTime;
     
     // 动态数据
-    if (![self.rnView.rootView.bridge isLoading]) {
-        [self.rnView.rootView.bridge.eventDispatcher sendDeviceEventWithName:kTTDynamicRNCellViewDataRefreshEvent body:dict];
-    } else {
-        self.isDataPending = YES;
-    }
+//    if (![self.rnView.rootView.bridge isLoading]) {
+//        [self.rnView.rootView.bridge.eventDispatcher sendDeviceEventWithName:kTTDynamicRNCellViewDataRefreshEvent body:dict];
+//    } else {
+//        self.isDataPending = YES;
+//    }
 }
 
 - (void)didEndDisplaying
@@ -308,7 +308,7 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
     [props setValue:self.orderedData.rnData.rawData forKey:@"raw_data"];
     [props setValue:self.orderedData.rnData.dataContent forKey:@"dynamic_data"];
     
-    [self.rnView updateProperties:[self properties]];
+//    [self.rnView updateProperties:[self properties]];
 }
 
 - (NSDictionary *)properties
@@ -371,11 +371,11 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
         viewModel.logExtra = self.orderedData.log_extra;
         [dislikeView refreshWithModel:viewModel];
         CGPoint point = CGPointMake(x, y);
-        [dislikeView showAtPoint:point
-                        fromView:self.rnView
-                 didDislikeBlock:^(TTFeedDislikeView * _Nonnull view) {
-                     [self exploreDislikeViewOKBtnClicked:view];
-                 }];
+//        [dislikeView showAtPoint:point
+//                        fromView:self.rnView
+//                 didDislikeBlock:^(TTFeedDislikeView * _Nonnull view) {
+//                     [self exploreDislikeViewOKBtnClicked:view];
+//                 }];
     }
 }
 
@@ -412,7 +412,7 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
     }
     
     // 通知RN
-    [[self.rnView bridgeModule] dislikeConfirmed];
+//    [[self.rnView bridgeModule] dislikeConfirmed];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kExploreMixListNotInterestNotification object:self userInfo:userInfo];
 }
@@ -427,16 +427,16 @@ static NSString *const kTTDynamicRNCellViewDataRefreshEvent = @"RNCellRefresh";
     [extra setValue:@"native_init_start_bundle" forKey:@"page_status"];
     [[TTMonitor shareManager] trackService:@"native_init_start_bundle" status:1 extra:extra];
     WeakSelf;
-    [self.rnView.bridgeModule registerHandler:^(NSDictionary *result, RCTResponseSenderBlock callback) {
-        StrongSelf;
-        int time = (int)([[NSDate date] timeIntervalSinceDate:self.rnStartTime] * 1000);
-        NSMutableDictionary* params = [NSMutableDictionary dictionaryWithDictionary:result];
-        [params setValue:@(time) forKey:@"duration"];
-        NSString* seviceName = [result tt_stringValueForKey:@"page_status"];
-        if (!isEmptyString(seviceName)) {
-            [[TTMonitor shareManager] trackService:seviceName value:params extra:nil];
-        }
-    } forMethod:@"ReportPageStatus"];
+//    [self.rnView.bridgeModule registerHandler:^(NSDictionary *result, RCTResponseSenderBlock callback) {
+//        StrongSelf;
+//        int time = (int)([[NSDate date] timeIntervalSinceDate:self.rnStartTime] * 1000);
+//        NSMutableDictionary* params = [NSMutableDictionary dictionaryWithDictionary:result];
+//        [params setValue:@(time) forKey:@"duration"];
+//        NSString* seviceName = [result tt_stringValueForKey:@"page_status"];
+//        if (!isEmptyString(seviceName)) {
+//            [[TTMonitor shareManager] trackService:seviceName value:params extra:nil];
+//        }
+//    } forMethod:@"ReportPageStatus"];
 }
 
 

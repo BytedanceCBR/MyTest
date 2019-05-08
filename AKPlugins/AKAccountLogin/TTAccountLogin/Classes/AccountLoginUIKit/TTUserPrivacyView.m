@@ -145,7 +145,7 @@
         _agreementTextLabel = [SSThemedLabel new];
         _agreementTextLabel.textColorThemeKey = kColorText1;
         _agreementTextLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:12.f]];
-        _agreementTextLabel.text = @"注册即代表同意「爱看」";
+        _agreementTextLabel.text = @"我已阅读并同意";
         [_agreementTextLabel sizeToFit];
     }
     return _agreementTextLabel;

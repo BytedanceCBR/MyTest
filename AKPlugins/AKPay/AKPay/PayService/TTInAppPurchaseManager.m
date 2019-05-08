@@ -140,15 +140,15 @@ NSString *const kTTIAPUpdatedTransactionsNotification = @"kTTIAPUpdatedTransacti
 
 - (void)clearTransaction:(SKPaymentTransaction *)transaction inQueue:(SKPaymentQueue *)queue {
     [self.callbacks removeObjectForKey:transaction.payment.productIdentifier];
-    [queue finishTransaction:transaction];
+    if ([self shoudleHandleTransaction:transaction]) {
+        [queue finishTransaction:transaction];
+    }
+    
 }
 
 #pragma mark -- SKPaymentTransactionObserver
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions {
     for (SKPaymentTransaction *transaction in transactions) {
-        if (![self shoudleHandleTransaction:transaction]) {
-            return;
-        }
         
         TTIAPStatusHandler handler = self.callbacks[transaction.payment.productIdentifier];
         if (handler) {

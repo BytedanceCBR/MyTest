@@ -16,7 +16,7 @@
 #import "TTPersistence.h"
 #import "TTTrackerWrapper.h"
 #import "TTStringHelper.h"
-#import "TTHttpsControlManager.h"
+#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "NSStringAdditions.h"
 #import "NSString+URLEncoding.h"
 #import "TTNetworkHelper.h"

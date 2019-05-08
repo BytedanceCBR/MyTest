@@ -132,6 +132,9 @@
             break;
         case ExploreOrderedDataCellTypeLoadMoreTip:
             break;
+            
+        case ExploreOrderedDataCellTypeFHHouse:
+            break;
         default:
         {
             support = NO;
@@ -286,13 +289,23 @@
                               @(ListDataOperationReloadFromTypeAutoFromBackground): @"auto",
                               @(ListDataOperationReloadFromTypePull): @"pull",
                               @(ListDataOperationReloadFromTypeTab): @"tab",
-                              @(ListDataOperationReloadFromTypeTabWithTip): @"tab_tip",
+//                              @(ListDataOperationReloadFromTypeTabWithTip): @"tab_tip",
+                              @(ListDataOperationReloadFromTypeTabWithTip): @"tab_refresh_tip",
+
                               @(ListDataOperationReloadFromTypeClickCategory): @"click",
-                              @(ListDataOperationReloadFromTypeClickCategoryWithTip): @"click_tip",
-                              @(ListDataOperationReloadFromTypeLoadMore): @"load_more",
+//                              @(ListDataOperationReloadFromTypeClickCategoryWithTip): @"click_tip",
+                              @(ListDataOperationReloadFromTypeClickCategoryWithTip): @"click",
+
+//                              @(ListDataOperationReloadFromTypeLoadMore): @"load_more",
+//                              @(ListDataOperationReloadFromTypePreLoadMore): @"pre_load_more",
+//                              @(ListDataOperationReloadFromTypeLoadMoreDraw): @"load_more_draw",
+//                              @(ListDataOperationReloadFromTypePreLoadMoreDraw): @"pre_load_more_draw",
+                              
+                              @(ListDataOperationReloadFromTypeLoadMore): @"pre_load_more",
                               @(ListDataOperationReloadFromTypePreLoadMore): @"pre_load_more",
-                              @(ListDataOperationReloadFromTypeLoadMoreDraw): @"load_more_draw",
-                              @(ListDataOperationReloadFromTypePreLoadMoreDraw): @"pre_load_more_draw",
+                              @(ListDataOperationReloadFromTypeLoadMoreDraw): @"pre_load_more",
+                              @(ListDataOperationReloadFromTypePreLoadMoreDraw): @"pre_load_more",
+                              
                               @(ListDataOperationReloadFromTypeCardItem): @"card",
                               @(ListDataOperationReloadFromTypeCardMore): @"more",
                               @(ListDataOperationReloadFromTypeCardDraw): @"card_draw",

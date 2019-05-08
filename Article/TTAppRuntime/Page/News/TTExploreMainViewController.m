@@ -42,11 +42,19 @@
 #import "TTAdSplashMediator.h"
 #import "TTPushAlertManager.h"
 #import "TTArticleSearchManager.h"
-#import "TTRNView.h"
+//#import "TTRNView.h"
 //#import "TTContactsGuideManager.h"
 #import "TTTabBarProvider.h"
+#import "ExploreExtenstionDataHelper.h"
+#import <TTAppUpdateHelper.h>
+//#import "Bubble-Swift.h"
+#import "FHHomeSearchPanelViewModel.h"
+#import "FHEnvContext.h"
+#import "TTLaunchTracer.h"
+#import "TTCategoryStayTrackManager.h"
+#import <FHEnvContext.h>
 
-@interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol>
+@interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
 //新版首页
 @property (nonatomic, strong) TTFeedCollectionViewController *collectionVC;
@@ -54,6 +62,8 @@
 @property (nonatomic, copy) NSString *lastRefreshedCategoryID;
 @property (nonatomic, assign) BOOL hasReloadData;
 @property (nonatomic, assign) BOOL hasShownCategoryView;
+@property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
+//@property (nonatomic, strong) NIHSearchPanelViewModel *panelVM;
 @property (nonatomic, strong) TTTopBar *topBar;
 @property (nonatomic, strong) NSArray *guideControlArray;
 @property (nonatomic, strong) TTSeachBarView *searchBar;
@@ -102,6 +112,44 @@
 //    self.adShow = [SSADManager shareInstance].adShow;
     self.adShow = [TTAdSplashMediator shareInstance].isAdShowing;
 
+    self.ttStatusBarStyle = UIStatusBarStyleDefault;
+    
+    //如果是inhouse的，弹升级弹窗
+    #if INHOUSE
+    [self checkLocalTestUpgradeVersionAlert];
+    #endif
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[TTLaunchTracer shareInstance] writeEvent];
+}
+
+- (void)checkLocalTestUpgradeVersionAlert
+{
+    //内测弹窗
+    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
+    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
+    NSString * aidValue = @"1370";
+    NSString * baseUrl = [CommonURLSetting baseURL];
+//    NSString * baseUrl = @"https://i.snssdk.com";
+    
+    [TTAppUpdateHelper sharedInstance].delegate = self;
+    [[TTAppUpdateHelper sharedInstance] checkVersionUpdateWithInstallID:iidValue deviceID:didValue channel:channelValue aid:aidValue checkVersionBaseUrl:baseUrl correctVC:self completionBlock:^(__kindof UIView *view, NSError * _Nullable error) {
+        [self.view addSubview:view];
+    } updateBlock:^(BOOL isTestFlightUpdate, NSString *downloadUrl) {
+//        if (!downloadUrl) {
+//            return;
+//        }
+//        NSURL *url = [NSURL URLWithString:downloadUrl];
+//        [[UIApplication sharedApplication] openURL:url];
+    } closeBlock:^{
+        
+    }];
 }
 
 - (void)dealloc
@@ -126,6 +174,8 @@
         [self showFeedGuideView];
     }
     
+    self.ttStatusBarStyle = UIStatusBarStyleDefault;
+    UIApplication.sharedApplication.statusBarStyle= UIStatusBarStyleDefault;
 //    [self showPushAuthorizeAlertIfNeed];
     
     [TTPushAlertManager enterFeedPage:TTPushWeakAlertPageTypeMainFeed];
@@ -158,11 +208,14 @@
     CGFloat bottomPadding = 0;
     CGFloat topPadding = 0;
     
-    topPadding = 20 + kTopSearchButtonHeight + kSelectorViewHeight;
+    topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight;//幸福里设计稿整体topbar高度120
     bottomPadding = 44;
     
     if ([TTDeviceHelper isIPhoneXDevice]){
-        topPadding = 44.f + kTopSearchButtonHeight + kSelectorViewHeight;
+        topPadding = 54 + kTopSearchButtonHeight + kSelectorViewHeight ;
+    }else if ([TTDeviceHelper is667Screen])
+    {
+        topPadding = 40 + kTopSearchButtonHeight + kSelectorViewHeight ;
     }
     
     self.topInset = topPadding;
@@ -171,6 +224,16 @@
 
 - (void)setupTopBar {
     [self.view addSubview:self.topBar];
+    
+    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
+//    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
+    panelVM.viewController = self;
+    self.panelVM = panelVM;
+    
+//    if (kIsNSString([FHEnvContext getCurrentSelectCityIdFromLocal]))
+//    {
+//        [self.panelVM fetchSearchPanelRollData];
+//    }
 }
 
 // only get category when local storage only has default category
@@ -196,8 +259,30 @@
     [self.categorySelectorView refreshWithCategories:preFixedAndSubscribeCategories];
     
     self.collectionVC.pageCategories = preFixedAndSubscribeCategories;
-    TTCategory *model = [self.collectionVC currentCategory];
-    [self.categorySelectorView selectCategory:model];
+    TTCategory *modelCurrent = [self.collectionVC currentCategory];
+    TTCategory *modelDefault =[TTArticleCategoryManager categoryModelByCategoryID:[SSCommonLogic feedStartCategory]];
+    if (modelDefault) {
+        if ([[TTArticleCategoryManager sharedManager].allCategories containsObject:modelDefault])
+        {
+            [self.categorySelectorView selectCategory:modelDefault];
+            [self.collectionVC setCurrentIndex:[[TTArticleCategoryManager sharedManager].allCategories indexOfObject:modelDefault] scrollToPositionAnimated:NO];
+        }
+        else
+        {
+            [self.collectionVC setCurrentIndex:0 scrollToPositionAnimated:NO];
+            TTCategory *firstCategory = [TTArticleCategoryManager sharedManager].allCategories.firstObject;
+
+            if ([firstCategory isKindOfClass:[TTCategory class]])
+            {
+                [TTArticleCategoryManager setCurrentSelectedCategoryID:firstCategory.categoryID];
+                [self.categorySelectorView selectCategory:[TTArticleCategoryManager sharedManager].allCategories.firstObject];
+            }
+        }
+    }else
+    {
+        [self.categorySelectorView selectCategory:modelCurrent];
+    }
+    
 }
 
 - (void)categorySelectorView:(TTCategorySelectorView *)selectorView selectCategory:(TTCategory *)category
@@ -316,6 +401,13 @@
         
         NSString *eventStr = @"navigation";
         wrapperTrackEvent(eventStr, [NSString stringWithFormat:@"click_%@", category.categoryID]);
+    }else
+    {
+        id<TTFeedCollectionCell> currentCell = self.collectionVC.currentCollectionPageCell;
+
+        if ([category.categoryID isEqualToString:@"f_find_house"]) {
+            [currentCell refreshDataWithType:ListDataOperationReloadFromTypeClickCategoryWithTip];
+        }
     }
     
     if (![category.categoryID isEqualToString:self.lastRefreshedCategoryID]) {
@@ -361,7 +453,10 @@
     }
     
     //log3.0
-    [self trackRefreshEvent3Label:hasTip?@"click_tip":@"click" category:category];
+//    [self trackRefreshEvent3Label:hasTip?@"click_tip":@"click" category:category];
+    
+    [self trackRefreshEvent3Label: @"click" category:category];
+
 }
 
 #pragma mark - notifications
@@ -423,7 +518,7 @@
         }
     }
     //log3.0
-    [self trackRefreshEvent3Label:hasTip?@"tab_tip":@"tab" category:(TTCategory *)category];
+    [self trackRefreshEvent3Label:hasTip?@"tab_refresh_tip":@"tab" category:(TTCategory *)category];
 }
 
 - (void)trackRefreshEvent3Label:(NSString *)label category:(TTCategory *)category
@@ -433,9 +528,16 @@
     }
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
     [dict setValue:category.categoryID forKey:@"category_name"];
-    [dict setValue:category.concernID forKey:@"concern_id"];
-    [dict setValue:@(1) forKey:@"refer"];
+//    [dict setValue:category.concernID forKey:@"concern_id"];
+//    [dict setValue:@(1) forKey:@"refer"];
+    [dict setValue:[TTCategoryStayTrackManager shareManager].enterType forKey:@"enter_type"];
     [dict setValue:label forKey:@"refresh_type"];
+
+    if (![category.categoryID isEqualToString:@"f_find_house"]) {
+        [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
+//        [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
+    }
+
 //    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
 }
 
@@ -469,7 +571,9 @@
 
 - (void)themeChanged:(NSNotification *)notification
 {
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.view.backgroundColor = [UIColor whiteColor];
+
 }
 
 - (void)showFeedSearchGuideView {
@@ -526,7 +630,7 @@
 - (void)ttFeedCollectionViewControllerWillBeginDragging:(UIScrollView *)scrollView
 {
     //按住RNCell滑动列表时需要主动调用RCTRootView的cancelTouches方法，否则松手后仍会触发点击事件
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
 }
 
 - (void)ttFeedCollectionViewControllerDidStartLoading:(TTFeedCollectionViewController *)vc
@@ -563,6 +667,10 @@
         _categorySelectorView = [[TTCategorySelectorView alloc] initWithFrame:CGRectZero style:style
                                                                       tabType:TTCategorySelectorViewNewsTab];
         _categorySelectorView.delegate = self;
+        
+        //add by zjing 隐藏频道列表按钮
+        [_categorySelectorView hideExpandButton];
+
     }
     return _categorySelectorView;
 }
@@ -712,5 +820,57 @@
     additionalSafeAreaInsets.top += kTopSearchButtonHeight + kSelectorViewHeight;
     return additionalSafeAreaInsets;
 }
+
+#pragma mark upgrade alert delegate
+
+/** 通知代理对象已获取到弹窗升级Title和具体升级内容,如果自定义弹窗，必须实现此方法
+ @params title 弹窗升级title,ex: 6.x.x内测更新了..
+ @param content 更新具体内容
+ @params tipVersion 弹窗升级版本号,ex: 6.7.8
+ @param downloadUrl TF弹窗下载地址
+ */
+//- (void)showUpdateTipTitle:(NSString *)title content:(NSString *)content tipVersion:(NSString *)tipVersion updateButtonText:(NSString *)text downloadUrl:(NSString *)downloadUrl error:(NSError * _Nullable)error
+//{
+//
+//}
+
+/** 通知代理对象弹窗需要remove
+ *  代理对象需要在此方法里面将弹窗remove掉
+ */
+- (void)dismissTipView
+{
+    
+}
+
+///*
+// 判断是否是内测包，当打包注入与头条主工程不一致时
+// 可以实现自行进行判断，默认与头条判断方式相同
+// 通过检查bundleID是否有inHouse字段进行判断
+// */
+- (BOOL)decideIsInhouseApp
+{
+    return YES;
+}
+//
+///*
+// 判断是否是LR包，当打包注入与头条主工程不一致时
+// 可以实现自行进行判断，默认与头条判断方式相同
+// 通过检查buildinfo字段进行判断
+// 注意：只有lr包才弹内测弹窗，如果业务方没有
+// lr包的概念，则返回YES即可
+// */
+- (BOOL)decideIsLrPackage
+{
+    return YES;
+}
+//
+///*
+// 判断是否需要上报用户did，主要用来上报用户是否安装tTestFlight
+// 的情况，业务方可以自行通过开关控制
+// */
+//- (BOOL)decideShouldReportDid
+//{
+//
+//}
 
 @end

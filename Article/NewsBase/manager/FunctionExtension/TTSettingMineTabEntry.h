@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, TTSettingMineTabEntyType){
     
     TTSettingMineTabEntyTypeWorkLibrary,//作品管理
     TTSettingMineTabEntyTypePrivateLetter,//私信
-    
+    TTSettingMineTabEntyTypeMessage,//消息通知
     TTSettingMineTabEntyTypeTTMall,//头条商城 iPhone only
     
     TTSettingMineTabEntyTypeGossip,//我要爆料 iPhone only

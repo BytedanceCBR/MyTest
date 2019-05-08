@@ -77,6 +77,7 @@
         self.thumbView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 36, 36) allowCorner:YES];
         self.thumbView.placeholderName = @"hts_vp_head_icon";
         self.thumbView.cornerRadius = 18;
+        self.thumbView.borderWidth = 0;
         self.thumbView.userInteractionEnabled = YES;
         
         [self addSubview:self.thumbView];
@@ -89,7 +90,7 @@
         self.userLabel = [UILabel new];
         self.userLabel.text = nil;
         self.userLabel.font = [UIFont systemFontOfSize:14.0];
-        self.userLabel.textColor = [UIColor tt_themedColorForKey:kColorText5];
+        self.userLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         [self addSubview:self.userLabel];
         [self.userLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.thumbView.mas_top);
@@ -111,7 +112,7 @@
         self.timeLabel = [UILabel new];
         self.timeLabel.text = nil;
         self.timeLabel.font = [UIFont systemFontOfSize:12.0];
-        self.timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         [self addSubview:self.timeLabel];
         [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.commentLabel.mas_bottom).offset(8);
@@ -124,7 +125,7 @@
         [self.likeButton setTitle:@"赞" forState:UIControlStateNormal];
         [self.likeButton setTitle:@"赞" forState:UIControlStateSelected];
         self.likeButton.titleLabel.font = [UIFont systemFontOfSize:13.0];
-        self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 0);
+        self.likeButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, 0);
         [self.likeButton setImage:[UIImage themedImageNamed:@"hts_vp_comment_like"] forState:UIControlStateNormal];
         [self.likeButton setImage:[UIImage themedImageNamed:@"hts_vp_comment_like_h"] forState:UIControlStateSelected];
         [self.likeButton addTarget:self action:@selector(likeButtonTapped) forControlEvents:UIControlEventTouchUpInside];
@@ -141,8 +142,10 @@
         [self addSubview:self.deleteButton];
         
         //event
-        UITapGestureRecognizer *avartarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarTapped)];
-        [self.thumbView addGestureRecognizer:avartarTap];
+        
+        // add by zjing 去掉小视频评论头像点击
+//        UITapGestureRecognizer *avartarTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarTapped)];
+//        [self.thumbView addGestureRecognizer:avartarTap];
 
         self.userLabel.userInteractionEnabled = YES;
         UITapGestureRecognizer *nameTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(nameTapped)];
@@ -161,6 +164,10 @@
     [super layoutSubviews];
     
     [self.likeButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.likeButton.frame.size;
+    size.width += 6;
+    self.likeButton.size = size;
     [self.userLabel sizeToFit];
     
     self.userLabel.top = self.thumbView.top;

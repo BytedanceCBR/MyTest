@@ -404,8 +404,8 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
             model.isLoopPlay = YES;
             model.disableFinishUIShow = YES;
         }
-        model.enablePasterAd = NO
-        ;        model.isAdBusiness = YES;
+        model.enablePasterAd = NO;
+        model.isAdBusiness = YES;
     }else{//非广告使用贴片功能
         model.enablePasterAd = YES;
         model.pasterAdFrom = @"textlink";
@@ -730,11 +730,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
                     orderedData.layoutUIType = TTLayOutCellUITypePlainCellLargePicS2;
                 }
                 else{
-                    if (orderedData.isAd) {
-                        orderedData.cellLayOut = [[TTLayOutPlainLargePicCellModelS0AD alloc] init];
-                    } else {
-                        orderedData.cellLayOut = [[TTLayOutPlainLargePicCellModelS0 alloc] init];
-                    }
+                    orderedData.cellLayOut = [[TTLayOutPlainLargePicCellModelS0 alloc] init];
                     orderedData.layoutUIType = TTLayOutCellUITypePlainCellLargePicS0;
                 }
             }
@@ -922,10 +918,12 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     [dictionary setValue:[self enterFrom] forKey:@"enter_from"];
     [dictionary setValue:@"list" forKey:@"position"];
     [dictionary setValue:@"exposed" forKey:@"icon_seat"];
-    [dictionary setValue:@"weixin_moments" forKey:@"platform"];
+    [dictionary setValue:@"weixin_moments" forKey:@"share_platform"];
     [dictionary setValue:[NSString stringWithFormat:@"%lld", self.orderedData.article.uniqueID] forKey:@"group_id"];
     [dictionary setValue:self.orderedData.article.itemID forKey:@"item_id"];
     [dictionary setValue:self.orderedData.logPb forKey:@"log_pb"];
+    dictionary[@"event_type"] = @"house_app2c_v2";
+
     [TTTrackerWrapper eventV3:eventName params:dictionary isDoubleSending:NO];
 }
 
@@ -991,7 +989,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     if (!isEmptyString(self.orderedData.article.title)){
         timeLineTitle = [NSString stringWithFormat:@"%@", self.orderedData.article.title];
     }else{
-        timeLineTitle = NSLocalizedString(@"爱看", nil);
+        timeLineTitle = NSLocalizedString(@"好房就在幸福里", nil);
     }
     return timeLineTitle;
 }
@@ -999,7 +997,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 
 - (NSString *)shareDesc
 {
-    NSString *detail = isEmptyString(self.orderedData.article.abstract) ? NSLocalizedString(@"爱看", nil) : self.orderedData.article.abstract;
+    NSString *detail = isEmptyString(self.orderedData.article.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : self.orderedData.article.abstract;
     return detail;
 }
 

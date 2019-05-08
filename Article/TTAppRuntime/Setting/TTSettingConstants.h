@@ -20,7 +20,7 @@
 
 #define kTTSettingSpacingOfSection (8)
 
-#define kTTSettingCellHeight                (94.f/2)
+#define kTTSettingCellHeight                (100.f/2)
 #define kTTSettingNotificationCellHeight    (144.f/2)
 #define kTTSettingLogoutCellHeight          (94.f/2)
 
@@ -37,7 +37,7 @@
 #define kTTSettingTitleColorKey    (kColorText1)
 
 #define kTTSettingContentFontSize  (28.f/2) // 右边的文本
-#define kTTSettingContentColorKey  (kColorText3)
+#define kTTSettingContentColorKey  (kFHColorCoolGrey2)
 
 #define kTTSettingContentMaxWidth 140.f // 我的Tab入口的右边的文本最大宽度
 

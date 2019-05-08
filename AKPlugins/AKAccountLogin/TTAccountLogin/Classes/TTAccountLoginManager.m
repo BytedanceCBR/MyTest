@@ -16,6 +16,23 @@
 
 
 
+@implementation TTAcountFLoginDelegate
+
+- (void)loginSuccessed
+{
+    if (self.completeAlert)
+    {
+        self.completeAlert(TTAccountAlertCompletionEventTypeDone,nil);
+    }
+    
+    if (self.completeVC)
+    {
+        self.completeVC(TTAccountLoginStateLogin);
+    }
+}
+
+@end
+
 @implementation TTAccountLoginManager
 
 static BOOL s_loginAlertShowing = NO;
@@ -203,6 +220,7 @@ static BOOL s_loginAlertShowing = NO;
                                                  excludedPlatforms:(NSArray<NSString *> *)exPlatformNames
                                                         completion:(TTAccountLoginCompletionBlock)completedBlock
 {
+    return nil;
     if ([titleString length] == 0) titleString = NSLocalizedString(@"手机登录", nil);
     if (!vc) vc = [TTUIResponderHelper topNavigationControllerFor:[TTUIResponderHelper topmostViewController]];
     
@@ -241,6 +259,7 @@ static BOOL s_loginAlertShowing = NO;
                                                             source:(NSString *)source
                                                subscribeCompletion:(TTAccountLoginCompletionBlock)subscribeCompletedBlock
 {
+    return nil;
     if (!vc) vc = [TTUIResponderHelper topNavigationControllerFor:[TTUIResponderHelper topmostViewController]];
     
     TTAccountLoginViewController *accountLoginVC = [[TTAccountLoginViewController alloc] initWithTitle:[TTAccountLoginConfLogic loginDialogTitleForType:type] source:source isPasswordLogin:YES];
@@ -396,6 +415,52 @@ static BOOL s_loginAlertShowing = NO;
                                                                completion:completedBlock];
     loginAlert.moreButtonRespAction = moreActionRespMode;
     return loginAlert;
+}
+
++ (void)showAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete {
+    TTAcountFLoginDelegate *delegate = [[TTAcountFLoginDelegate alloc] init];
+    delegate.completeAlert = complete;
+    NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [delegateTable addObject:delegate];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    [dict setObject:delegateTable forKey:@"delegate"];
+
+    if (params.count > 0) {
+        if ([params tta_stringForKey:@"enter_from"] != nil) {
+            [dict setObject:[params tta_stringForKey:@"enter_from"] forKey:@"enter_from"];
+        }
+        if ([params tta_stringForKey:@"enter_type"] != nil) {
+            [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
+        }
+        if ([params tta_stringForKey:@"need_pop_vc"] != nil) {
+            [dict setObject:[params tta_stringForKey:@"need_pop_vc"] forKey:@"need_pop_vc"];
+        }
+    }
+
+    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:userInfo];
+}
+
+
++ (void)showQuickFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginCompletionBlock)complete
+{
+    TTAcountFLoginDelegate *delegate = [[TTAcountFLoginDelegate alloc] init];
+    delegate.completeVC = complete;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    [dict setObject:delegate forKey:@"delegate"];
+    if (params.count > 0) {
+        if ([params tta_stringForKey:@"enter_from"].length > 0) {
+            [dict setObject:[params tta_stringForKey:@"enter_from"] forKey:@"enter_from"];
+            
+        }
+        if ([params tta_stringForKey:@"enter_type"].length > 0) {
+            [dict setObject:[params tta_stringForKey:@"enter_type"] forKey:@"enter_type"];
+            
+        }
+    }
+//    NSDictionary *dict = [NSDictionary dictionaryWithObject:delegate forKey:@"delegate"];
+    TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:userInfo];
 }
 
 @end

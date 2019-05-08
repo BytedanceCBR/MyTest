@@ -106,7 +106,9 @@
     
     [self.view addSubview:self.webContainerVC.view];
     [self addChildViewController:self.webContainerVC];
-    self.webContainerVC.view.frame = CGRectMake(0, 0, self.view.width, self.view.height - 44.f - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom);
+    // add by zjing 44 -> 49
+    CGFloat tabBarHeight = [TTDeviceHelper isIPhoneXDevice] ? ([TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + 49.f) : 49.f;
+    self.webContainerVC.view.frame = CGRectMake(0, 0, self.view.width, self.view.height - tabBarHeight - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom);
 }
 
 #pragma mark - account state changed

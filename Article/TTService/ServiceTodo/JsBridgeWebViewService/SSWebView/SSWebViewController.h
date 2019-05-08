@@ -19,11 +19,18 @@
 - (void)requestWithURLString:(NSString *)urlString;
 - (void)requestWithURL:(NSURL *)url;
 - (void)setDismissType:(SSWebViewDismissType)type;
-
+- (void)setUpBackBtnControlForWeb:(NSNumber *)isWebControl;
+- (void)setUpCloseBtnControlForWeb:(NSNumber *)isShow;
+- (void)setUpCloseBtnControlForNaviBackBtn:(NSNumber *)isShow;
+- (void)setupCloseCallBackPreviousVC:(NSDictionary *)params;
+- (void)setupCloseStackVCCount:(NSNumber *)count;
+- (void)setupOpenPageTagStr:(NSString *)tagStr;
+- (NSString *)getOpenPageTagStr;
 /// 如果有adid，则上报impression
 @property (nonatomic, copy) NSString        *adID;
 @property (nonatomic, copy) NSString        *logExtra;
 @property (nonatomic, copy) NSString         *webViewTrackKey;
+@property (nonatomic, strong) NSString         *tagStr;
 /// 问答在库中，无法继承这个类，暂时污染这里，到时候沉库的时候请一并带走，联系一下问答的人
 @property (nonatomic, copy) NSDictionary *gdExtJsonDict;
 

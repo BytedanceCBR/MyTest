@@ -491,7 +491,7 @@ UIGestureRecognizerDelegate
 - (void)bindingMobileWithCaptcha:(NSString *)captchaString
 {
     if (self.privacyView && ![self.privacyView isChecked]) {
-        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请同意《好多房用户协议》", nil) preferredType:TTThemedAlertControllerTypeAlert];
+        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请同意《幸福里用户协议》", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
         [alert showFrom:self animated:YES];
         return;

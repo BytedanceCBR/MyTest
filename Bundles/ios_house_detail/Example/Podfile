@@ -1,0 +1,23 @@
+source 'git@code.byted.org:iOS_Library/publicthird_binary_repo.git'
+source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
+source 'git@code.byted.org:iOS_Library/privatethird_binary_repo.git'
+source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
+source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git'
+source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git'
+source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'git@code.byted.org:ugc/UGCSpecs.git'
+
+target 'FHHouseDetail_Example' do
+  pod 'FHHouseDetail', :path => '../'
+
+  target 'FHHouseDetail_Tests' do
+    inherit! :search_paths
+
+    
+  #summary -> 头条网络 基础网络库 
+  pod 'TTNetworkManager', '2.2.8.35'
+  #summary -> Reachability统一库，业务插件方接入 
+  pod 'TTReachability', '0.1.11'
+  
+  end
+end

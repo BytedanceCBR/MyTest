@@ -1,0 +1,16 @@
+PODS:
+  - FHHouseFind (0.1.0)
+
+DEPENDENCIES:
+  - FHHouseFind (from `../`)
+
+EXTERNAL SOURCES:
+  FHHouseFind:
+    :path: ../
+
+SPEC CHECKSUMS:
+  FHHouseFind: 1ac3175d71379d03dee33ab37d3feb386fe1c290
+
+PODFILE CHECKSUM: f0145441156cc84c20700ede07090660e283d297
+
+COCOAPODS: 1.4.0

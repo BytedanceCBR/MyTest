@@ -14,8 +14,8 @@
 #import "TTAdCanvasNavigationBar.h"
 #import "TTAdCanvasTracker.h"
 #import "TTImageView.h"
-#import "TTRNBridge+Call.h"
-#import "TTRNView.h"
+//#import "TTRNBridge+Call.h"
+//#import "TTRNView.h"
 #import "TTRoute.h"
 #import "UIView+CustomTimingFunction.h"
 #import "UIViewController+NavigationBarStyle.h"
@@ -34,7 +34,7 @@ NSString * const kTTAdCanvasNotificationViewDidDisappear   = @"kTTAdCanvasNotifi
 @property (nonatomic, assign) BOOL animateStart;
 @property (nonatomic, assign) BOOL animateEnd;
 
-@property (nonatomic, strong) TTRNView *rnView;
+//@property (nonatomic, strong) TTRNView *rnView;
 @property (nonatomic, assign) UIEdgeInsets safeEdgeInsets;
 
 @end
@@ -75,7 +75,7 @@ NSString * const kTTAdCanvasNotificationViewDidDisappear   = @"kTTAdCanvasNotifi
 - (void)dealloc {
     [self.tracker wap_staypage];
     [self.tracker trackLeave];
-    [_rnView removeFromSuperview];
+//    [_rnView removeFromSuperview];
     [[TTAdCanvasManager sharedManager] destroyRNView];
 }
 
@@ -137,30 +137,30 @@ NSString * const kTTAdCanvasNotificationViewDidDisappear   = @"kTTAdCanvasNotifi
     if (viewModel == nil) {
         return;
     }
-    [self.rnView removeFromSuperview];
-    
-    self.rnView = [[TTAdCanvasManager sharedManager] createRNView];
+//    [self.rnView removeFromSuperview];
+//
+//    self.rnView = [[TTAdCanvasManager sharedManager] createRNView];
     NSMutableDictionary *props = [NSMutableDictionary dictionary];
     [props setValue:self.viewModel.layoutInfo forKey:@"json"];
     [props setValue:self.viewModel.adInfo forKey:@"adInfo"];
     [props setValue:self.viewModel.createFeedData forKey:@"createFeedData"];
-    [self.rnView loadModule:kTTAdCanvasReatModule initialProperties:props];
-    [self.view addSubview:self.rnView];
-    self.rnView.hidden = self.viewModel.animationStyle != TTAdCanvasOpenAnimationPush;
-    WeakSelf;
-    [self.rnView.bridgeModule registerHandler:^(NSDictionary *result, RCTResponseSenderBlock callback) {
-        StrongSelf;
-        self.loadRnEnd = YES;
-        if (self.animateStart && !self.animateEnd) {
-            [self commitShowRNViewAnimation];
-        }
-        [self.tracker wap_loadfinish];
-        [self.tracker native_page];
-    } forMethod:@"load_finish_ad"];
+//    [self.rnView loadModule:kTTAdCanvasReatModule initialProperties:props];
+//    [self.view addSubview:self.rnView];
+//    self.rnView.hidden = self.viewModel.animationStyle != TTAdCanvasOpenAnimationPush;
+//    WeakSelf;
+//    [self.rnView.bridgeModule registerHandler:^(NSDictionary *result, RCTResponseSenderBlock callback) {
+//        StrongSelf;
+//        self.loadRnEnd = YES;
+//        if (self.animateStart && !self.animateEnd) {
+//            [self commitShowRNViewAnimation];
+//        }
+//        [self.tracker wap_loadfinish];
+//        [self.tracker native_page];
+//    } forMethod:@"load_finish_ad"];
     
-    if (self.viewModel.rootViewColor != nil) {
-        self.rnView.backgroundColor = self.viewModel.rootViewColor;
-    }
+//    if (self.viewModel.rootViewColor != nil) {
+//        self.rnView.backgroundColor = self.viewModel.rootViewColor;
+//    }
     
     [self.view bringSubviewToFront:self.naviView];
 }
@@ -203,7 +203,7 @@ NSString * const kTTAdCanvasNotificationViewDidDisappear   = @"kTTAdCanvasNotifi
     [super viewDidLayoutSubviews];
     UIEdgeInsets safeEdgeInset = self.safeEdgeInsets;
     CGFloat width = self.view.width - safeEdgeInset.left - safeEdgeInset.right;
-    self.rnView.frame = [self contentArea];
+//    self.rnView.frame = [self contentArea];
     self.naviView.frame = CGRectMake(safeEdgeInset.left, safeEdgeInset.top, width, kNavigationBarHeight);
     [self.view bringSubviewToFront:self.naviView];
 }
@@ -327,19 +327,19 @@ NSString * const kTTAdCanvasNotificationViewDidDisappear   = @"kTTAdCanvasNotifi
             [self.screenShotView removeFromSuperview];
             self.animateEnd = YES;
     };
-    if (self.rnView != nil) {
-        self.rnView.hidden = NO;
-        self.rnView.alpha = 0;
-        self.rnView.frame = [self contentArea];
-        WeakSelf;
-        [UIView animateWithDuration:startAnimationDuration customTimingFunction:CustomTimingFunctionExpoOut animation:^{
-            StrongSelf;
-            self.rnView.alpha = 1;
-            self.rnView.frame = [self contentArea];
-        } completion:animationCompletion];
-    } else {
-        animationCompletion(NO);
-    }
+//    if (self.rnView != nil) {
+//        self.rnView.hidden = NO;
+//        self.rnView.alpha = 0;
+//        self.rnView.frame = [self contentArea];
+//        WeakSelf;
+//        [UIView animateWithDuration:startAnimationDuration customTimingFunction:CustomTimingFunctionExpoOut animation:^{
+//            StrongSelf;
+//            self.rnView.alpha = 1;
+//            self.rnView.frame = [self contentArea];
+//        } completion:animationCompletion];
+//    } else {
+//        animationCompletion(NO);
+//    }
 }
 
 //一定要关闭视图

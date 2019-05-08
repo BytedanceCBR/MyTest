@@ -17,7 +17,9 @@
 #import "TTEditUGCProfileViewModel+Notification.h"
 #import "NSString+TTLength.h"
 #import "TTEditUserProfileViewModel+Network.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
+
 
 
 
@@ -123,7 +125,7 @@
             user.screenName = userEntity.screenName;
             user.userDescription = userEntity.userDescription;
             [[BDAccount sharedAccount] setUser:user];
-            [[[EnvContext shared] client] setUserInfoWithUser:user];
+//            [[[EnvContext shared] client] setUserInfoWithUser:user];
         }
 
         // update flags
@@ -139,7 +141,7 @@
             // 名字重复的问题等错误信息，由服务端返回
             NSString *hint = [error.userInfo objectForKey:@"description"];
             if (isEmptyString(hint)) hint = [error.userInfo objectForKey:TTAccountErrMsgKey];
-//            if (isEmptyString(hint)) hint = NSLocalizedString(@"修改失败，请稍后重试", nil);
+            if (isEmptyString(hint)) hint = NSLocalizedString(@"修改失败，请稍后重试", nil);
             
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:hint indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
         } else {
@@ -261,25 +263,20 @@
                     
                     NSString *hint = [error.userInfo objectForKey:@"description"];
                     if (isEmptyString(hint)) hint = [error.userInfo objectForKey:TTAccountErrMsgKey];
-//                    if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
+                    if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
                     
                     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:hint indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
                 } else {
-                    
-                    // f100 修改BDAccount的代码
-
-
                     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"头像修改成功", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+                    
                     NSString *imageURL = avatarOrBg ? [userEntity.auditInfoSet userAvatarURLString] : userEntity.bgImgURL;
-
                     if (!isEmptyString(imageURL)) {
                         if (avatarOrBg) {
-
                             BDAccountUser* user = [[BDAccount sharedAccount] user];
                             if (user != nil) {
                                 user.avatarURL = imageURL;
                                 [[BDAccount sharedAccount] setUser:user];
-                                [[[EnvContext shared] client] setUserInfoWithUser:user];
+//                                [[[EnvContext shared] client] setUserInfoWithUser:user];
                             }
                             sself2.editableAuditInfo.avatarURL = imageURL;
                         } else {

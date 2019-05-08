@@ -22,6 +22,7 @@
 #import "TTAdSplashVideoView.h"
 #import "TTAdSplashCache.h"
 #import "TTAdSplashImageInfosModel.h"
+#import "TTAdSplashManager+Action.h"
 
 @interface TTAdSplashSettingCell : UICollectionViewCell<TTAdSplashVideoViewDelegate, TTAdSplashVideoViewDelegate>
 

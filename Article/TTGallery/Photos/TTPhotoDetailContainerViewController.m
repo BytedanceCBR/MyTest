@@ -527,7 +527,7 @@ static NSInteger screenshotViewTag = 1119;
 
 - (void)p_cleanPhotoDetailViewControllersInNavIfNeed
 {
-    if (_hasCleanPreviousVCIfNeed) {
+    if (!_hasCleanPreviousVCIfNeed) {
         return;
     }
     
@@ -1077,13 +1077,13 @@ static TTPhotoDetailManager  * transitionManager;
         
         //iOS10 TabBar高斯模糊效果的子视图换成了UIVisualEffectview 直接截图是截不到的
         //https://developer.apple.com/reference/uikit/uivisualeffectview
-        if ([TTDeviceHelper OSVersionNumber] >= 10.f) {
-            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:[[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"] ? UIBlurEffectStyleDark : UIBlurEffectStyleLight];
+//        if ([TTDeviceHelper OSVersionNumber] >= 10.f) {
+            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:[[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"] ? UIBlurEffectStyleDark : UIBlurEffectStyleExtraLight];
             UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
             effectView.frame = tabBar.frame;
             [tabBarSnapShot addSubview:effectView];
-        }
-         
+//        }
+        
 
         //tabBar截图
         tabBar.layer.hidden = NO;
@@ -1105,12 +1105,12 @@ static TTPhotoDetailManager  * transitionManager;
         
         //iOS10 TabBar高斯模糊效果的子视图换成了UIVisualEffectview 直接截图是截不到的
         //https://developer.apple.com/reference/uikit/uivisualeffectview
-        if ([TTDeviceHelper OSVersionNumber] >= 10.f) {
-            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:[[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"] ? UIBlurEffectStyleDark : UIBlurEffectStyleLight];
+//        if ([TTDeviceHelper OSVersionNumber] >= 10.f) {
+            UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:[[TTThemeManager sharedInstance_tt].currentThemeName isEqualToString:@"night"] ? UIBlurEffectStyleDark : UIBlurEffectStyleExtraLight];
             UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
             effectView.frame = tabBar.frame;
             [tabBarSnapShot addSubview:effectView];
-        }
+//        }
         
         //tabBar截图
         tabBar.layer.hidden = NO;

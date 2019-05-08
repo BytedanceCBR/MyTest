@@ -517,8 +517,8 @@ static BOOL _transitonAnimationEnable = NO;
     if (SSIsEmptyDictionary(avatarIconModel)) {
         return nil;
     }
-    
-    return avatarIconModel;
+    return nil;
+//    return avatarIconModel;
 }
 
 + (NSArray<NSString *> *)userVerifyFeedShowArray

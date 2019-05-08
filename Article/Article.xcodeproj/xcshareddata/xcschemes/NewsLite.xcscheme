@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "6B813DB21DFFA7EA00E7C6A8"
+               BlueprintIdentifier = "3AA5027F15876A1F00EB27FA"
                BuildableName = "NewsLite.app"
                BlueprintName = "NewsLite"
                ReferencedContainer = "container:Article.xcodeproj">
@@ -26,14 +26,13 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6B813DB21DFFA7EA00E7C6A8"
+            BlueprintIdentifier = "3AA5027F15876A1F00EB27FA"
             BuildableName = "NewsLite.app"
             BlueprintName = "NewsLite"
             ReferencedContainer = "container:Article.xcodeproj">
@@ -46,7 +45,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -57,7 +55,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6B813DB21DFFA7EA00E7C6A8"
+            BlueprintIdentifier = "3AA5027F15876A1F00EB27FA"
             BuildableName = "NewsLite.app"
             BlueprintName = "NewsLite"
             ReferencedContainer = "container:Article.xcodeproj">
@@ -76,7 +74,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "6B813DB21DFFA7EA00E7C6A8"
+            BlueprintIdentifier = "3AA5027F15876A1F00EB27FA"
             BuildableName = "NewsLite.app"
             BlueprintName = "NewsLite"
             ReferencedContainer = "container:Article.xcodeproj">

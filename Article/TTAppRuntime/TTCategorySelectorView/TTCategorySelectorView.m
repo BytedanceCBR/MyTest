@@ -29,16 +29,18 @@
 
 #import "TTSettingsManager.h"
 #import "TTPushAlertManager.h"
+//#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import "TTCategory+ConfigDisplayName.h"
-
-//爱看
-#import "AKUIHelper.h"
-
+#import <FHLocManager.h>
+#import <UIFont+House.h>
+#import "UIColor+Theme.h"
 #define kFirstLeftMargin    15
 #define kLastRightMargin    68
 
 #define kFirstTopMargin     12
 #define kLastBottomMargin   13
+
+#define kCategroyDefaulHouse @"f_house_news"
 
 @class CategorySelectorButton;
 
@@ -60,6 +62,7 @@
 @property (nonatomic, weak)   NSObject<CategorySelectorButtonDelegate> *delegate;
 @property (nonatomic, strong) TTGlowLabel *titleLabel;
 @property (nonatomic, strong) TTGlowLabel *maskTitleLabel;
+@property (nonatomic, strong) SSThemedView *bottomSelectView;
 @property (nonatomic, strong) TTBadgeNumberView *badgeView;
 @property (nonatomic, assign) TTCategorySelectorViewStyle style;
 @property (nonatomic, assign) TTCategorySelectorViewTabType tabType;
@@ -102,6 +105,11 @@
         self.maskTitleLabel = [[TTGlowLabel alloc] initWithFrame:_titleLabel.frame];
         self.maskTitleLabel.backgroundColor = [UIColor clearColor];
         
+        self.bottomSelectView = [[SSThemedView alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 6, 20, 3)];
+        self.bottomSelectView.backgroundColor = [UIColor themeRed1];
+        self.bottomSelectView.alpha = 0;
+        self.bottomSelectView.layer.cornerRadius = 1.5;
+        
         _maskTitleLabel.alpha = 0;
         
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -111,8 +119,8 @@
             _titleLabel.textColorThemeKey = kColorText12;
             _maskTitleLabel.textColorThemeKey = kColorText12;
         }else if (self.style == TTCategorySelectorViewLightStyle || self.style == TTCategorySelectorViewNewVideoStyle) {
-            _titleLabel.textColor = [UIColor colorWithHexString:@"383838"];
-            _maskTitleLabel.textColor = [UIColor whiteColor];
+            _titleLabel.textColorThemeKey = kFHColorCoolGrey3;
+            _maskTitleLabel.textColorThemeKey = kFHColorCharcoalGrey;
         }else if (self.style == TTCategorySelectorViewVideoStyle) {
             _titleLabel.textColorThemeKey = kColorText1;
             _maskTitleLabel.textColorThemeKey = kColorText4;
@@ -141,11 +149,12 @@
             _maskTitleLabel.glowSize = glowSize;
         }
         
-        _titleLabel.font = [UIFont systemFontOfSize:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
+        _titleLabel.font = [UIFont themeFontRegular:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
         
-        _maskTitleLabel.font = [UIFont boldSystemFontOfSize:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
+        _maskTitleLabel.font = [UIFont themeFontSemibold:[TTCategorySelectorView channelFontSizeWithStyle:aStyle tabType:tabType]];
         
         [self addSubview:_maskTitleLabel];
+        [self addSubview:_bottomSelectView];
         
         if (![SSCommonLogic isNewLaunchOptimizeEnabled]) {
             [_maskTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -250,6 +259,21 @@
     self.frame = rect;
 }
 
+- (void)updateBottomSelectFrame
+{
+    CGRect rect = self.frame;
+    CGFloat bottomLeft = 0;
+    CGFloat bottomWidth = 20;
+    if (rect.size.width - 20 > 0) {
+        bottomLeft = (rect.size.width - 20)/2.0f;
+    }else
+    {
+        bottomLeft = 0;
+        bottomWidth = rect.size.width;
+    }
+    self.bottomSelectView.frame = CGRectMake(bottomLeft, rect.size.height - 6, bottomWidth, 3);
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -258,6 +282,8 @@
         _titleLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
         _maskTitleLabel.bounds = self.bounds;
         _maskTitleLabel.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+        _bottomSelectView.center = CGPointMake(CGRectGetWidth(self.bounds) / 2, CGRectGetHeight(self.bounds) / 2);
+
     }
     [self updateBadgeViewFrame];
 }
@@ -267,11 +293,11 @@
     CGFloat left = 0;
     CGFloat top = 0;
     if (TTBadgeNumberPoint == self.badgeView.badgeNumber) {
-        left = self.width - 16.f;
-        top = 4.f;
+        left = self.width - 11.f;
+        top = 9.f;
     }else {
-        left = self.width - 18.f;
-        top = 3.f;
+        left = self.width - 13.f;
+        top = 8.f;
     }
     self.badgeView.left = left;
     self.badgeView.top = top;
@@ -364,7 +390,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 @property (nonatomic, strong) SSThemedImageView *rightBorderIndicatorView;
 @property (nonatomic, strong) TTBadgeNumberView *hasNewCategoryBadgeView;
 @property (nonatomic, strong) NSString *cacheNewCategoryID;
-@property (nonatomic, strong) SSThemedView *bottomLineView;
 @property (nonatomic, assign) CGFloat lastContentOffset;
 //@property (nonatomic, strong) SSThemedView * padMaskView;
 // 保存所有带红点并且点击后自动消失的category的Id
@@ -372,9 +397,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 // videotab
 @property (nonatomic, strong) CALayer *rightBackLayer;
 @property (nonatomic, strong) CAGradientLayer *rightGradientLayer;
-
-@property (nonatomic, strong) UIView *selectedBackView;
-@property (nonatomic, strong) CAGradientLayer *selectedBackLayer;
 
 @end
 
@@ -391,8 +413,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     self.delegate = nil;
     self.expandButton = nil;
     self.categoryViews = nil;
-//    self.manageButton = nil;
-    self.bottomLineView = nil;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -408,7 +428,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         
         self.scrollView = [[UIScrollView alloc] init];
         self.scrollView.scrollsToTop = NO;
-        self.scrollView.scrollEnabled = NO;
         self.scrollView.showsVerticalScrollIndicator = NO;
         self.scrollView.showsHorizontalScrollIndicator = NO;
         self.scrollView.delegate = self;
@@ -416,11 +435,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
             self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
         [self addSubview:self.scrollView];
-        
-        [self createSelectedBackView];
-        [self.scrollView addSubview:self.selectedBackView];
-        self.selectedBackView.alpha = 1;
-        
         self.categoryViews = [NSMutableArray arrayWithCapacity:10];
         
         self.expandButton = [TTAlphaThemedButton buttonWithType:UIButtonTypeCustom];
@@ -455,15 +469,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
             self.rightGradientLayer.endPoint = CGPointMake(1, 0.5);
             [self.rightBorderIndicatorView.layer addSublayer:self.rightGradientLayer];
         } else if (style == TTCategorySelectorViewLightStyle || style == TTCategorySelectorViewNewVideoStyle) {
-            self.rightGradientLayer = [CAGradientLayer layer];
-            self.rightGradientLayer.colors = @[
-                                               (__bridge id)[UIColor.whiteColor colorWithAlphaComponent:.6].CGColor,
-                                               (__bridge id)[UIColor.whiteColor colorWithAlphaComponent:0.9].CGColor,
-                                               (__bridge id)[UIColor.whiteColor colorWithAlphaComponent:1].CGColor];
-            self.rightGradientLayer.locations = @[@0,@.3,@1];
-            self.rightGradientLayer.startPoint = CGPointMake(0, 0.5);
-            self.rightGradientLayer.endPoint = CGPointMake(1, 0.5);
-            [self.rightBorderIndicatorView.layer addSublayer:self.rightGradientLayer];
+            self.rightBorderIndicatorView.imageName = @"shadow_add_titlebar_new3.png";
         }
         else {
             self.rightBorderIndicatorView.imageName = @"shadow_addolder_titlebar.png";
@@ -472,49 +478,25 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         self.rightBorderIndicatorView.backgroundColor = [UIColor clearColor];
         
         if (style == TTCategorySelectorViewBlackStyle) {
-            
-            self.bottomLineView = [[SSThemedView alloc] init];
-            self.bottomLineView.backgroundColors = @[@"dddddd", @"464646"];
-            
-            [self addSubview:self.bottomLineView];
-            
-            [self setBottomLineFrame];
-            
             self.backgroundColorThemeKey = kColorBackground3;
         } else if (style == TTCategorySelectorViewVideoStyle) {
             if ([TTDeviceHelper isPadDevice]) {
-                self.bottomLineView = [[SSThemedView alloc] init];
-                self.bottomLineView.backgroundColors = @[@"dddddd", @"464646"];
-                
-                [self addSubview:self.bottomLineView];
-                
-                [self setBottomLineFrame];
-
                 self.backgroundColorThemeKey = kColorBackground3;
             } else {
                 self.backgroundColorThemeKey = kColorBackground4;
             }
         } else if (style == TTCategorySelectorViewLightStyle || style == TTCategorySelectorViewNewVideoStyle) {
-            self.bottomLineView = [[SSThemedView alloc] init];
-            self.bottomLineView.backgroundColorThemeKey = kColorLine1;
-            
-            [self addSubview:self.bottomLineView];
-            
-            [self setBottomLineFrame];
-
             self.backgroundColorThemeKey = kColorBackground4;
         }
         
         [self addSubview:self.rightBorderIndicatorView];
-//        [self addSubview:self.searchButton]; //search图片四周用很多空白，所以用expandButton覆盖
-//        [self addSubview:self.expandButton];
-        
+        [self addSubview:self.searchButton]; //search图片四周用很多空白，所以用expandButton覆盖
+        [self addSubview:self.expandButton];
+
         
         [self reloadThemeUI];
         
         [self changeHasNewCategoryBadge:nil];
-        
-        [self bringSubviewToFront:self.bottomLineView];
         
         if (self.tabType == TTCategorySelectorViewNewsTab) {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeHasNewCategoryBadge:) name:kArticleCategoryTipNewChangedNotification object:nil];
@@ -543,30 +525,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     return self;
 }
 
-- (void)createSelectedBackView
-{
-    UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 52, 28)];
-    backView.layer.cornerRadius = backView.height / 2;
-    backView.clipsToBounds = YES;
-    backView.userInteractionEnabled = NO;
-    CAGradientLayer *layer = [AKUIHelper AiKanBackGrandientLayer];
-    layer.bounds = backView.bounds;
-    layer.position = CGPointMake(backView.width / 2, backView.height / 2);
-    [backView.layer addSublayer:layer];
-    self.selectedBackView = backView;
-    self.selectedBackLayer = layer;
-}
-
-- (void)setBottomLineFrame
-{
-    if (![SSCommonLogic isNewLaunchOptimizeEnabled]) {
-        [self.bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.bottom.equalTo(self);
-            make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
-        }];
-    }
-}
-
 - (void)layoutSubviews
 {
     if ([NSThread isMainThread]) {
@@ -580,9 +538,6 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
 - (void)didDoLayoutSubViews
 {
-    if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
-        self.bottomLineView.frame = CGRectMake(0, CGRectGetHeight(self.bounds) - [TTDeviceHelper ssOnePixel], CGRectGetWidth(self.bounds), [TTDeviceHelper ssOnePixel]);
-    }
     if ([TTDeviceHelper isPadDevice]) {
         self.scrollView.frame = CGRectInset(self.bounds, [TTUIResponderHelper paddingForViewWidth:0], 0);
         self.scrollView.center = CGPointMake(CGRectGetWidth(self.bounds)/2, self.scrollView.center.y);
@@ -612,16 +567,9 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     [self refreshSelectorView];
     [self scrollToCategory:self.currentSelectedCategory];
     
-    if (self.style != TTCategorySelectorViewLightStyle && self.style != TTCategorySelectorViewNewVideoStyle) {
-        self.rightBorderIndicatorView.frame = viewFrame;
-        self.rightBackLayer.frame = self.rightBorderIndicatorView.bounds;
-        self.rightGradientLayer.frame = CGRectMake(-24, 0, 24, self.rightBorderIndicatorView.height);
-    } else {
-        self.rightBackLayer.frame = self.rightBorderIndicatorView.bounds;
-        self.rightBackLayer.position = CGPointMake(self.rightBackLayer.position.x + 22, self.rightBackLayer.position.y);
-        self.rightBackLayer.hidden = YES;
-        self.rightGradientLayer.frame = self.rightBorderIndicatorView.bounds;
-    }
+    self.rightBorderIndicatorView.frame = viewFrame;
+    self.rightBackLayer.frame = self.rightBorderIndicatorView.bounds;
+    self.rightGradientLayer.frame = CGRectMake(-24, 0, 24, self.rightBorderIndicatorView.height);
     
     [super layoutSubviews];
 }
@@ -640,34 +588,35 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
 + (CGFloat)channelFontSizeWithStyle:(TTCategorySelectorViewStyle)style tabType:(TTCategorySelectorViewTabType)tabType{
     if ([TTDeviceHelper isPadDevice]) {
-        return 17.f;
-    } else if ([TTDeviceHelper is736Screen]) {
-        return 17.f;
-    } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 17.f;
-    } else {
         return 16.f;
+    } else if ([TTDeviceHelper is736Screen]) {
+        return 16.f;
+    } else if ([TTDeviceHelper is667Screen]) {
+        return 16.f;
+    }else if ([TTDeviceHelper isIPhoneXDevice]) {
+        return 16.f;
+    } else {
+        return 13.f;
     }
 }
 
 + (CGFloat)channelSelectedFontSizeWithStyle:(TTCategorySelectorViewStyle)style tabType:(TTCategorySelectorViewTabType)tabType{
     if ([TTDeviceHelper isPadDevice]) {
-        return 17.f;
+        return 15.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 17.f;
-    } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 17.f;
-    } else {
         return 16.f;
+    }else if ([TTDeviceHelper isIPhoneXDevice]) {
+        return 16.f;
+    }else if ([TTDeviceHelper is667Screen]) {
+        return 16.f;
+    } else {
+        return 13.f;
     }
 }
 
 - (void)refreshExpandButton:(NSNotification *)notification
 {
     UIImage * tmpImage = nil;
-    
-    _expandButton.imageName = @"add_channel_titlbar_thin";
-    _searchButton.imageName = @"black_search_titlebar";
     
     switch (self.style) {
         case TTCategorySelectorViewBlackStyle:
@@ -719,34 +668,15 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         self.rightBorderIndicatorView.width = self.expandButton.width + ([TTDeviceHelper isPadDevice]? 4 : 8);
         self.rightBorderIndicatorView.right = self.scrollView.right + 1;
         self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, self.expandButton.hidden ? 0 : self.expandButton.width + 10);
-    } else if (self.style == TTCategorySelectorViewLightStyle ||
-               self.style == TTCategorySelectorViewNewVideoStyle){
-        if ([SSCommonLogic feedCaregoryAddHiddenEnable] || self.style == TTCategorySelectorViewNewVideoStyle){
-            self.expandButton.hidden = YES;
-        }
-        
-        self.searchButton.size = CGSizeMake(28, 28);
-        self.searchButton.right = self.scrollView.right - 10;
-        self.searchButton.centerY = self.height / 2;
-        
-        if (!self.expandButton.hidden) {
-            self.expandButton.size = CGSizeMake(28, 28);
-            self.expandButton.right = self.searchButton.left - 5;
-            self.expandButton.centerY = self.height / 2;
-        }
-        
-        self.rightBorderIndicatorView.imageName = nil;
-        self.rightBorderIndicatorView.width = self.scrollView.width - self.searchButton.left + [TTDeviceUIUtils tt_newPadding:22];
-        if (!self.expandButton.hidden) {
-            self.rightBorderIndicatorView.width = self.scrollView.width - self.expandButton.left + [TTDeviceUIUtils tt_newPadding:15];
-        }
-        self.rightBorderIndicatorView.top = 0;
-                self.rightBorderIndicatorView.height = self.height;
-        
-        self.rightBorderIndicatorView.right = self.scrollView.right;
-        self.rightGradientLayer.locations = @[@0,@(15 / self.rightBorderIndicatorView.width) ,@1];
-        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, self.rightBorderIndicatorView.width);
     } else {
+        if (self.style == TTCategorySelectorViewNewVideoStyle || [SSCommonLogic feedCaregoryAddHiddenEnable]){
+            self.searchButton.hidden = YES;
+            self.expandButton.hidden = YES;
+            self.rightBorderIndicatorView.hidden = YES;
+            self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+            return;
+        }
+        
         self.searchButton.hidden = YES;
         
         self.expandButton.right = self.searchButton.hidden == NO ? self.searchButton.left : self.scrollView.right;
@@ -760,7 +690,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
             self.expandButton.right = self.scrollView.right - 6;
         }
         self.rightBorderIndicatorView.right = self.scrollView.right;
-        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, self.rightBorderIndicatorView.width);
+        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, self.expandButton.hidden ? 5 : self.rightBorderIndicatorView.width);
     }
 }
 
@@ -850,9 +780,9 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 - (CGFloat)marginBetweenVisibleLabelAndButton {
     CGFloat margin = 19;
     if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        margin = 25;
+        margin = 28;
     } else if ([TTDeviceHelper is736Screen]) {
-        margin = 23;
+        margin = 28;
     } else if ([TTDeviceHelper isPadDevice]) {
         margin = 25;
     }
@@ -949,41 +879,16 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         }
         
         [self updateSelectButton:button];
-        [self refreshSelectBackViewCenter:button.center newButton:button with:NO];
-      //  [self scrollToCategory:category];
+        
+        [self scrollToCategory:category];
     }
     
     [self showDialogWhenChangeFeedTabCategory];
 }
 
-- (void)refreshSelectBackViewCenter:(CGPoint)position newButton:(CategorySelectorButton *)categoryButton with:(BOOL)animation
-{
-    if (categoryButton.height < 5) {
-        return;
-    }
-    if (self.selectedBackView.alpha == 0) {
-        [UIView animateWithDuration:.25 animations:^{
-            self.selectedBackView.alpha = 1;
-        }];
-    }
-    if (fabs(self.selectedBackView.width - categoryButton.width) > 10) {
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        self.selectedBackView.width = categoryButton.width;
-        self.selectedBackLayer.frame = self.selectedBackView.bounds;
-        [CATransaction commit];
-    }
-    if (animation && self.selectedBackView.alpha == 1) {
-        
-    } else {
-        self.selectedBackView.center = position;
-    }
-}
-
 - (void)showDialogWhenChangeFeedTabCategory
 {
     if ([self.currentSelectedCategory.categoryID isEqualToString:kTTNewsLocalCategoryID]) {
-        //TODO: removed
 //        [CLLocationManager ttdd_showLocationAtLocalChannel];
     }
     
@@ -1042,6 +947,16 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
             [self setButtonNormalColor:btn];
         }
     }
+
+    //判断离开首页推荐频道
+    if ([_lastSelectedButton.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse] && ![button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
+//        [messageMgr startSyncCategoryBadge];
+        [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+    }
+    
+    if ([button.categoryModel.categoryID isEqualToString:kCategroyDefaulHouse]) {
+        [[FHLocManager sharedInstance] stopCategoryRedDotRefresh];
+    }
     
     self.lastSelectedButton = button;
     
@@ -1049,23 +964,28 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     
     //红点/数字受TTCategoryBadgeNumberManager影响
     BOOL showPoint = [[TTCategoryBadgeNumberManager sharedManager] hasNotifyPointOfCategoryID:_lastSelectedButton.categoryModel.categoryID];
+    //判断当前频道是否是首页推荐
+
+    
     NSUInteger badgeNumber = [[TTCategoryBadgeNumberManager sharedManager] badgeNumberOfCategoryID:_lastSelectedButton.categoryModel.categoryID];
     [_lastSelectedButton showPoint:showPoint badgeNumber:badgeNumber style:_style];
     [_categoryClickAutoDismissBadgeSet removeObject:_lastSelectedButton.categoryModel.categoryID];
+    
+    
 }
 
-- (void)expandButtonClicked:(id)sender
-{
-    if(sender) {
-        if ([self.delegate respondsToSelector:@selector(categorySelectorView:didClickExpandButton:)]) {
-            [self.delegate categorySelectorView:self didClickExpandButton:sender];
-        }
-    }
-    if (!isEmptyString(self.cacheNewCategoryID) && self.hasNewCategoryBadgeView) {
-        [[self class] trackTipsWithLabel:@"click" position:@"channel_management" style:@"red_tips" categoryID:self.cacheNewCategoryID];
-    }
-    [self removeClickAutoDismissBadges];
-}
+//- (void)expandButtonClicked:(id)sender
+//{
+//    if(sender) {
+//        if ([self.delegate respondsToSelector:@selector(categorySelectorView:didClickExpandButton:)]) {
+//            [self.delegate categorySelectorView:self didClickExpandButton:sender];
+//        }
+//    }
+//    if (!isEmptyString(self.cacheNewCategoryID) && self.hasNewCategoryBadgeView) {
+//        [[self class] trackTipsWithLabel:@"click" position:@"channel_management" style:@"red_tips" categoryID:self.cacheNewCategoryID];
+//    }
+//    [self removeClickAutoDismissBadges];
+//}
 
 - (void)searchButtonClicked:(id)sender
 {
@@ -1100,12 +1020,11 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     }
     
     NSInteger idx = 0;
-    CGFloat offsetX = 5;
+    CGFloat offsetX = 10;
     
     BOOL isContainFollowCategory = NO;
     
     self.scrollView.height = self.height;
-    NSMutableArray * categoryViews = [[NSMutableArray alloc] init];
     for(; idx < _categories.count; idx ++)
     {
         TTCategory *category = _categories[idx];
@@ -1119,17 +1038,17 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
             NSArray<NSString *> *textColors = nil;
             NSArray<NSString *> *textGlowColors = nil;
             CGFloat glowSize = 0;
-//            if ([self.delegate respondsToSelector:@selector(categorySelectorTextColors)]) {
-//                textColors = [self.delegate categorySelectorTextColors];
-//            }
-//
-//            if ([self.delegate respondsToSelector:@selector(categorySelectorTextGlowColors)]) {
-//                textGlowColors = [self.delegate categorySelectorTextGlowColors];
-//            }
-//
-//            if ([self.delegate respondsToSelector:@selector(categorySelectorTextGlowSize)]) {
-//                glowSize = [self.delegate categorySelectorTextGlowSize];
-//            }
+            if ([self.delegate respondsToSelector:@selector(categorySelectorTextColors)]) {
+                textColors = [self.delegate categorySelectorTextColors];
+            }
+
+            if ([self.delegate respondsToSelector:@selector(categorySelectorTextGlowColors)]) {
+                textGlowColors = [self.delegate categorySelectorTextGlowColors];
+            }
+
+            if ([self.delegate respondsToSelector:@selector(categorySelectorTextGlowSize)]) {
+                glowSize = [self.delegate categorySelectorTextGlowSize];
+            }
             
             CategorySelectorButton *categoryButton = [[CategorySelectorButton alloc] initWithFrame:CGRectZero style:self.style tabType:self.tabType textColors:textColors textGlowColors:textGlowColors textGlowSize:glowSize];
             categoryButton.delegate = self;
@@ -1148,12 +1067,10 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         categoryButton.frame = buttonFrame;
         
         categoryButton.left = offsetX;
-        if (categoryButton) {
-            [categoryViews addObject:categoryButton];
-        }
+        [categoryButton updateBottomSelectFrame];
         [self.scrollView addSubview:categoryButton];
         
-        offsetX = categoryButton.right;
+        offsetX = categoryButton.right + 5;
         
         NSString *startCategoryID = kTTMainCategoryID;
         if (!_lastSelectedButton && [SSCommonLogic firstCategoryStyle] > 0) {
@@ -1190,16 +1107,8 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         NSUInteger badgeNumber = [[TTCategoryBadgeNumberManager sharedManager] badgeNumberOfCategoryID:category.categoryID];
         [categoryButton showPoint:autoDismissBadge||hasNotifyPoint badgeNumber:badgeNumber style:_style];
     }
-    if (offsetX <  SSScreenWidth) {
-        CGFloat  leftPadding = (SSScreenWidth - offsetX)/2.0;
-        for(UIView * view in categoryViews){
-            view.left = leftPadding;
-            leftPadding+=view.width;
-            NSLog(@"view.left=%f",view.left);
-        }
-    }
     
-    self.scrollView.contentSize = CGSizeMake(SSScreenWidth, self.height);
+    self.scrollView.contentSize = CGSizeMake(offsetX, self.height);
     self.scrollView.alwaysBounceHorizontal = YES;
     NSInteger originalCnt = _categoryViews.count;
     NSMutableArray *toBeRemoved = [NSMutableArray arrayWithCapacity:originalCnt];
@@ -1214,51 +1123,61 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
     [_categoryViews removeObjectsInArray:toBeRemoved];
     [self changeHasNewCategoryBadge:nil];
     
-    if (self.tabType == TTCategorySelectorViewNewsTab) {
+    if (self.tabType == TTCategorySelectorViewNewsTab || self.tabType == TTCategorySelectorViewVideoTab || self.tabType == TTCategorySelectorViewNewVideoTab) {
         if (isContainFollowCategory) {
             [[TTInfiniteLoopFetchNewsListRefreshTipManager sharedManager] startInfiniteLoopFetchFollowChannelRefreshTip];
-        }else {
+        }
+        
+        // 策略首页没有关注频道，则视频小视频也不会有，可以直接stop
+        if (self.tabType == TTCategorySelectorViewNewsTab && !isContainFollowCategory) {
             [[TTInfiniteLoopFetchNewsListRefreshTipManager sharedManager] stopInfiniteLoopFetchFollowChannelRefreshTip];
         }
+        
         //Category selector view 布局刷新，关注频道的位置可能发生变化，发送该通知使得消息提醒的badge number出现在正确的位置
         //消息提醒的badge number可能出现在关注频道也可能出现在top bar的头像上（或者第四个tab）
         [[NSNotificationCenter defaultCenter] postNotificationName:kArticleBadgeManagerRefreshedNotification
                                                             object:self
                                                           userInfo:nil];
     }
-   // if (self.lastSelectedButton == nil && self.currentSelectedCategory) {
+    if (self.lastSelectedButton == nil && self.currentSelectedCategory) {
         [self selectCategory:self.currentSelectedCategory];
-   // }
+    }
 }
 
 - (void)setButtonNormalColor:(CategorySelectorButton *)button
 {
-    button.titleLabel.alpha = ((self.style == TTCategorySelectorViewWhiteStyle) ? 0.76 : 1);
-    button.maskTitleLabel.alpha = 0;
-    button.titleLabel.transform = CGAffineTransformIdentity;
-    button.maskTitleLabel.transform = CGAffineTransformIdentity;
+    [UIView animateWithDuration:.3 animations:^{
+        button.titleLabel.alpha = ((self.style == TTCategorySelectorViewWhiteStyle) ? 0.76 : 1);
+        button.maskTitleLabel.alpha = 0;
+        button.titleLabel.transform = CGAffineTransformIdentity;
+        button.maskTitleLabel.transform = CGAffineTransformIdentity;
+        button.bottomSelectView.alpha = 0;
+    }];
 }
 
 - (void)setButtonHighlightColor:(CategorySelectorButton *)button
 {
-    button.titleLabel.alpha = 0;
-    button.maskTitleLabel.alpha = 1;
-    CGFloat scale = [[self class] channelSelectedFontSizeWithStyle:self.style tabType:self.tabType] / [[self class] channelFontSizeWithStyle:self.style tabType:self.tabType];
-    button.titleLabel.transform = CGAffineTransformMakeScale(scale, scale);
-    button.maskTitleLabel.transform = CGAffineTransformMakeScale(scale, scale);
+    [UIView animateWithDuration:.3 animations:^{
+        button.titleLabel.alpha = 0;
+        button.maskTitleLabel.alpha = 1;
+        CGFloat scale = [[self class] channelSelectedFontSizeWithStyle:self.style tabType:self.tabType] / [[self class] channelFontSizeWithStyle:self.style tabType:self.tabType];
+        button.titleLabel.transform = CGAffineTransformMakeScale(scale, scale);
+        button.maskTitleLabel.transform = CGAffineTransformMakeScale(scale, scale);
+        button.bottomSelectView.alpha = 1;
+    }];
 }
 
 - (void)refreshBorderIndicator
 {
     if (self.scrollView.contentOffset.x >= (self.scrollView.contentSize.width - self.scrollView.frame.size.width - 10)) {
-        //        if (!_rightBorderIndicatorView.hidden) {
-        //            _rightBorderIndicatorView.hidden = YES;
-        //        }
+//                if (!_rightBorderIndicatorView.hidden) {
+//                    _rightBorderIndicatorView.hidden = YES;
+//                }
     }
     else {
-        //        if (_rightBorderIndicatorView.hidden) {
-        //            _rightBorderIndicatorView.hidden = NO;
-        //        }
+//                if (_rightBorderIndicatorView.hidden) {
+//                    _rightBorderIndicatorView.hidden = NO;
+//                }
     }
 }
 
@@ -1281,32 +1200,34 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 
 - (void)moveSelectFrameFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex percentage:(CGFloat)percentage
 {
-//    if(fromIndex < _categoryViews.count && toIndex < _categoryViews.count && fromIndex >= 0 && toIndex >= 0 && fromIndex != toIndex)
-//    {
-//
-//        CategorySelectorButton *fromButton = _categoryViews[fromIndex];
-//        CategorySelectorButton *toButton = _categoryViews[toIndex];
-//
-//        CGFloat transformScaleDelta = ([[self class] channelSelectedFontSizeWithStyle:self.style tabType:self.tabType] / [[self class] channelFontSizeWithStyle:self.style tabType:self.tabType] - 1);
-//        CGFloat percent = fabs(percentage);
-//
-//        percent = MIN(1, MAX(0, percent));
-//
-//        CGFloat fromScale = 1 + transformScaleDelta * (1 - percent);
-//        CGFloat toScale = 1 + transformScaleDelta * percent;
+    if(fromIndex < _categoryViews.count && toIndex < _categoryViews.count && fromIndex >= 0 && toIndex >= 0 && fromIndex != toIndex)
+    {
+
+        CategorySelectorButton *fromButton = _categoryViews[fromIndex];
+        CategorySelectorButton *toButton = _categoryViews[toIndex];
+
+        CGFloat transformScaleDelta = ([[self class] channelSelectedFontSizeWithStyle:self.style tabType:self.tabType] / [[self class] channelFontSizeWithStyle:self.style tabType:self.tabType] - 1);
+        CGFloat percent = fabs(percentage);
+
+        percent = MIN(1, MAX(0, percent));
+
+        CGFloat fromScale = 1 + transformScaleDelta * (1 - percent);
+        CGFloat toScale = 1 + transformScaleDelta * percent;
     
-//        fromButton.titleLabel.transform = CGAffineTransformMakeScale(fromScale, fromScale);
-//        toButton.titleLabel.transform = CGAffineTransformMakeScale(toScale, toScale);
-//
-//        fromButton.maskTitleLabel.transform = fromButton.titleLabel.transform;
-//        toButton.maskTitleLabel.transform = toButton.titleLabel.transform;
+        fromButton.titleLabel.transform = CGAffineTransformMakeScale(fromScale, fromScale);
+        toButton.titleLabel.transform = CGAffineTransformMakeScale(toScale, toScale);
+
+        fromButton.maskTitleLabel.transform = fromButton.titleLabel.transform;
+        toButton.maskTitleLabel.transform = toButton.titleLabel.transform;
         
-//        fromButton.titleLabel.alpha = percent * ((self.style == TTCategorySelectorViewWhiteStyle) ? 0.76 : 1);
-//        toButton.titleLabel.alpha = (1 - percent) * ((self.style == TTCategorySelectorViewWhiteStyle) ? 0.76 : 1);
-//
-//        fromButton.maskTitleLabel.alpha = 1 - percent;
-//        toButton.maskTitleLabel.alpha = percent;
-//    }
+        fromButton.titleLabel.alpha = percent * ((self.style == TTCategorySelectorViewWhiteStyle) ? 0.76 : 1);
+        toButton.titleLabel.alpha = (1 - percent) * ((self.style == TTCategorySelectorViewWhiteStyle) ? 0.76 : 1);
+
+        fromButton.maskTitleLabel.alpha = 1 - percent;
+        toButton.maskTitleLabel.alpha = percent;
+        fromButton.bottomSelectView.alpha = 1 - percent;
+        toButton.bottomSelectView.alpha = percent;
+    }
 }
 
 #pragma mark -- UIScrollViewDelegate

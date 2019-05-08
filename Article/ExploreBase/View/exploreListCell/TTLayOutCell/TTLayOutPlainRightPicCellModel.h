@@ -21,10 +21,6 @@
 
 @end
 
-@interface TTLayOutPlainRightPicCellModelS0AD : TTLayOutPlainRightPicCellModel
-
-@end
-
 @interface TTLayOutPlainRightPicCellModelS1 : TTLayOutPlainRightPicCellModel
 
 @end

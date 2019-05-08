@@ -13,17 +13,24 @@
 #define kTTMainCategoryID       @"__all__"         //推荐, 4.3 修改， 以前是 news， 服务端大部分需要回传的都是 __all__，所以修改
 #define kTTNewsLocalCategoryID  @"news_local"      //本地
 #define kTTSubscribeCategoryID  @"subscription"    //订阅频道
-#define kTTVideoCategoryID      @"video"           //视频频道
+//#define kTTVideoCategoryID      @"video"           //视频频道
+#define kTTVideoCategoryID      @"f_shipin"           //视频频道
+
 #define kTTWeitoutiaoCategoryID @"weitoutiao"      //微头条频道
 #define kTTTeMaiCategoryID      @"jinritemai"      //特卖频道
 
-#define kTTUGCVideoCategoryID   @"hotsoon_video" //小视频频道
+//#define kTTUGCVideoCategoryID   @"hotsoon_video" //小视频频道
+#define kTTUGCVideoCategoryID   @"f_hotsoon_video" //房产小视频频道 add by zjing,记得修改时对应"hotsoon_video"也要对应替换
 
 #define kTTFollowCategoryID     @"关注"
 
 #define kTTMainConcernID        @"6286225228934679042"
 #define kTTWeitoutiaoConcernID  @"6368255615201970690"
 #define KTTFollowPageConcernID  @"6454692306795629069"
+
+#define kNIHFindHouseCategoryID   @"f_find_house" // 找房频道 add by zjing
+
+#define kNIHFeedHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 /**
  *  对应category的flags字段

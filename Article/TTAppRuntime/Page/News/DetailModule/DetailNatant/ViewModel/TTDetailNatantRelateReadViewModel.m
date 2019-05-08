@@ -47,6 +47,7 @@
                            @"group_id"          : @"groupId",
                            @"item_id"           : @"itemId",
                            @"item_id"           : @"aggrType",
+                           @"middle_image"           : @"middle_image",
                            @"impr_id"           : @"impressionID"};
     return [[JSONKeyMapper alloc] initWithDictionary:dict];
 }

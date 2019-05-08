@@ -20,7 +20,6 @@
 #import "ExploreLogicSetting.h"
 
 #import "TTTrackerWrapper.h"
-#import "FLEXManager.h"
 
 //#if GREY
 //#import "TTSparkRescue.h"
@@ -33,14 +32,14 @@
 #import <UserNotifications/UserNotifications.h>
 #import "TTNotificationCenterDelegate.h"
 
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTPostDataHttpRequestSerializer.h"
 
 #import <DTShareKit/DTOpenKit.h>
 #import "TTShareConstants.h"
-#import "SSPayManager.h"
+//#import "SSPayManager.h"
 
-#import "TTABHelper.h"
+#import <TTABManager/TTABHelper.h>
 #import "TTVersionHelper.h"
 #import "TTDeviceHelper.h"
 #import "TTURLUtils.h"
@@ -59,7 +58,7 @@
 #import "TTAuthorizeManager.h"
 
 #import "revision.h"
-#import "TTRouteSelectionServerConfig.h"
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>
 #import "TTOpenInSafariWindow.h"
 #import "TTLauchProcessManager.h"
 #import "TTStartupTask.h"
@@ -78,6 +77,7 @@
 #import "TTViewControllerHierarchyHelper.h"
 #import "TTLocalImageTracker.h"
 #import <TTDialogDirector/TTDialogDirector.h>
+#import <TTMonitor/TTExtensions.h>
 
 ///...
 //#import "TVLManager.h"
@@ -153,6 +153,10 @@ static NSTimeInterval lastTime;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
+    [TTExtensions networkStatus];
+    
     self.userLaunchTheAppDirectly = SSIsEmptyDictionary(launchOptions);
     if ([TTVersionHelper isFirstLaunchAfterUpdate]) {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"ArticleDetailTitleViewTip"];
@@ -242,7 +246,7 @@ static NSTimeInterval lastTime;
 #ifdef DEBUG
     [self didFinishDebugLaunchingForApplication:application WithOptions:launchOptions];
 #endif
-    [[FLEXManager sharedManager] showExplorer];
+    
     uint64_t mainEndTime = [NSObject currentUnixTime];
     dispatch_barrier_sync(self.barrierQueue, ^{
         LOGD(@"startup done!!!!!!!");
@@ -644,7 +648,7 @@ static NSTimeInterval lastTime;
     if ([TTDeviceHelper isPadDevice]) {
         _navigationController = (TTNavigationController*)(self.window.rootViewController);
     } else {
-        TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)[[self.window.rootViewController childViewControllers] firstObject];
+        TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
         if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
             _navigationController = (TTNavigationController*)rootTabController.selectedViewController;
         }
@@ -665,18 +669,10 @@ static NSTimeInterval lastTime;
     
     TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
     TTNavigationController * navigationController = (TTNavigationController*)(rootTabController.viewControllers.firstObject);
-
-    return [self exploreMainViewControllerFrom: navigationController.viewControllers];
-}
-
-- (TTExploreMainViewController*) exploreMainViewControllerFrom: (NSArray<UIViewController*>*) controllers {
-    for (UIViewController* v in controllers) {
-        if ([v isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
-            ArticleTabBarStyleNewsListViewController* vc = (ArticleTabBarStyleNewsListViewController*)v;
-            return [vc mainVC];
-        }
-    }
-    return nil;
+    
+    ArticleTabBarStyleNewsListViewController * tabbarNewsVC = navigationController.viewControllers.firstObject;
+    
+    return tabbarNewsVC.mainVC;
 }
 
 - (void)trackCurrentIntervalInMainThreadWithTag:(NSString *)tag {
@@ -700,7 +696,7 @@ static NSTimeInterval lastTime;
 #pragma mark - TTWeChatSharePayDelegate
 
 - (void)weChatShare:(TTWeChatShare *)weChatShare payResponse:(PayResp *)payResponse {
-    [[SSPayManager sharedPayManager] handleWXPayResponse:payResponse];
+//    [[SSPayManager sharedPayManager] handleWXPayResponse:payResponse];
 }
 
 #pragma mark - TTWeChatShareRequestDelegate

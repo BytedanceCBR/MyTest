@@ -29,8 +29,12 @@
 //#import "TTSFActivityManager.h"
 //#import "TTSFResourcesManager.h"
 #import "AKActivityViewController.h"
-#import "Bubble-Swift.h"
-#import "FTTNavigationController.h"
+//#import "Bubble-Swift.h"
+#import "FHHouseFindListViewController.h"
+#import "FHMessageViewController.h"
+#import "FHMineViewController.h"
+#import <FHHouseFind/FHHouseFindViewController.h>
+#import <BDABTestSDK/BDABTestManager.h>
 
 NSString *kTTMiddleTabDidChangeNotification = @"kTTMiddleTabDidChangeNotification";
 
@@ -53,20 +57,11 @@ static NSString *lastTabIdentifier;
         [userInfo setValue:curIndetifier forKey:@"current"];
         [[NSNotificationCenter defaultCenter] postNotificationName:kTTMiddleTabDidChangeNotification object:nil userInfo:[userInfo copy]];
         lastTabIdentifier = curIndetifier;
-        [EnvContext shared].client.jumpToDiscovery = ^() {
-            UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
-            TTArticleTabBarController * tvc = [TTTabBarProvider tabBarControllerFromWindow: mainWindow];
-            //暂时先写死通过相对位置判定跳转的页签
-            [tvc setSelectedIndexWithTag:kTTTabHomeTabKey];
-        };
     }
 }
 
 + (UINavigationController *)naviVCForIdentifier:(NSString *)identifier {
     UIViewController *rootVC = [self rootVCForIdentifier:identifier];
-    if ([identifier isEqualToString:kFHouseMineTabKey]) {
-        return [[FTTNavigationController alloc] initWithRootViewController:rootVC];
-    }
     UINavigationController *naviVC = [self naviWithRootVC:rootVC];
     
     return naviVC;
@@ -122,14 +117,23 @@ static NSString *lastTabIdentifier;
         AKActivityViewController *vc = [[AKActivityViewController alloc] init];
         [vc preloadPage];
         return vc;
-    } else if ([identifier isEqualToString:kFHouseHomeTabKey]) {
-        HomeViewController* vc = [[HomeViewController alloc] init];
-        return vc;
+    } else if ([identifier isEqualToString:kFHouseFindTabKey]) {
+
+        UIViewController *houseFindVC = nil;
+        if ([SSCommonLogic findTabShowHouse] == 1) {
+            houseFindVC = [[FHHouseFindListViewController alloc]init];
+
+        }else {
+            houseFindVC = [[FHHouseFindViewController alloc] init];
+        }
+        return houseFindVC;
+
     } else if ([identifier isEqualToString:kFHouseMessageTabKey]) {
-        ChatVC* vc = [[ChatVC alloc] init];
+        FHMessageViewController* vc = [[FHMessageViewController alloc] init];
         return vc;
     } else if ([identifier isEqualToString:kFHouseMineTabKey]) {
-        MineVC* vc = [[MineVC alloc] init];
+        FHMineViewController* vc = [[FHMineViewController alloc] init];
+//        MineVC* vc = [[MineVC alloc] init];
         return vc;
     }
     
@@ -227,11 +231,10 @@ static NSString *lastTabIdentifier;
 + (NSString *)currentSelectedTabTag {
     NSString *tag;
     UIWindow * mainWindow = [[UIApplication sharedApplication].delegate window];
-    TTArticleTabBarController* vc = [[self class] tabBarControllerFromWindow:mainWindow];
-    if (!vc) {
+    if (!mainWindow || ![mainWindow.rootViewController isKindOfClass:[TTArticleTabBarController class]]) {
         return @"unknown";
     }
-    TTArticleTabBarController * tabBarController = (TTArticleTabBarController *) vc;
+    TTArticleTabBarController * tabBarController = (TTArticleTabBarController *)mainWindow.rootViewController;
     
     NSUInteger index = tabBarController.selectedIndex;
     
@@ -244,17 +247,6 @@ static NSString *lastTabIdentifier;
     tag = [tabBar.tabItems objectAtIndex:index].identifier;
     
     return tag;
-}
-
-+ (TTArticleTabBarController*) tabBarControllerFromWindow: (UIWindow*) window {
-    UIViewController* vc = window.rootViewController;
-    if ([vc isKindOfClass: [TTArticleTabBarController class]]) {
-        return (TTArticleTabBarController*) vc;
-    } else if ([vc isKindOfClass: [BaseNavigationController class]]) {
-        TTArticleTabBarController* result = [vc.childViewControllers firstObject];
-        return result;
-    }
-    return nil;
 }
 
 + (BOOL)isValidForMiddleTabIdenftifier:(NSString *)identifier {

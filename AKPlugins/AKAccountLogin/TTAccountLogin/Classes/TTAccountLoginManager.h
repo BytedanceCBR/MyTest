@@ -16,13 +16,25 @@
 #import "TTAccountLoginConfLogic.h"
 
 
-
 typedef NS_ENUM(NSInteger, TTAccountLoginDialogTitleType) {
     TTAccountLoginDialogTitleTypeDefault = 0,//默认文案
     TTAccountLoginDialogTitleTypeRegister,   //注册引导文案
     TTAccountLoginDialogTitleTypeFavor,      //收藏提示
 };
 
+
+/**
+ *  登录成功回调
+ */
+@interface TTAcountFLoginDelegate : NSObject
+
+@property(nonatomic,copy)TTAccountLoginAlertPhoneInputCompletionBlock completeAlert;
+
+@property(nonatomic,copy)TTAccountLoginCompletionBlock completeVC;
+
+- (void)loginSuccessed;
+
+@end
 
 
 /**
@@ -264,6 +276,24 @@ typedef NS_ENUM(NSInteger, TTAccountLoginDialogTitleType) {
                                      inSuperView:(UIView *)superView
                                   moreActionConf:(TTAccountLoginMoreActionRespMode)moreActionRespMode
                                       completion:(TTAccountLoginAlertPhoneInputCompletionBlock)completedBlock;
+
+
+/**
+ *  F项目文章登录，统一处理为VC登录
+ *
+ *  @param complete 完成回调处理
+ */
+
++ (void)showAlertFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginAlertPhoneInputCompletionBlock)complete;
+
+/**
+ *  F项目文章登录，统一处理为VC登录
+ *
+ *  @param complete 完成回调处理
+ */
+
++ (void)showQuickFLoginVCWithParams:(NSDictionary *)params completeBlock:(TTAccountLoginCompletionBlock)complete;
+
 @end
 
 

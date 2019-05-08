@@ -26,7 +26,7 @@ static TTAccountLoginDynamicConfTextBlock s_quickRegisterPageTitleHandler;
     if (s_quickRegisterPageTitleHandler) {
         buttonText = s_quickRegisterPageTitleHandler();
     }
-    return [buttonText length] > 0 ? buttonText : NSLocalizedString(@"进入好多房", nil);
+    return [buttonText length] > 0 ? buttonText : NSLocalizedString(@"进入头条", nil);
 }
 
 static TTAccountLoginDynamicConfTextBlock s_quickRegisterButtonTextHandler;
@@ -42,7 +42,7 @@ static TTAccountLoginDynamicConfTextBlock s_quickRegisterButtonTextHandler;
     if (s_quickRegisterButtonTextHandler) {
         buttonText = s_quickRegisterButtonTextHandler();
     }
-    return [buttonText length] > 0 ? buttonText : NSLocalizedString(@"进入好多房", nil);
+    return [buttonText length] > 0 ? buttonText : NSLocalizedString(@"进入头条", nil);
 }
 
 static TTAccountLoginDynamicConfTextForTypeBlock s_loginDialogTitleHandler;
@@ -54,7 +54,7 @@ static TTAccountLoginDynamicConfTextForTypeBlock s_loginDialogTitleHandler;
 
 + (NSString *)loginDialogTitleForType:(NSInteger /*TTAccountLoginDialogTitleType*/)type
 {
-    NSString *defaultTitle = NSLocalizedString(@"手机快速登陆", nil);
+    NSString *defaultTitle = NSLocalizedString(@"登录你的头条,精彩永不丢失", nil);
     if (s_loginDialogTitleHandler) {
         NSString *exoticTitle = s_loginDialogTitleHandler(type);
         if ([exoticTitle length] > 0) {
@@ -73,7 +73,7 @@ static TTAccountLoginDynamicConfTextForTypeBlock s_loginAlertTitleHandler;
 
 + (NSString *)loginAlertTitleForType:(NSInteger /*TTAccountLoginAlertTitleType*/)type
 {
-    NSString *defaultTitle = NSLocalizedString(@"登录你的好多房,精彩永不丢失", nil);
+    NSString *defaultTitle = NSLocalizedString(@"登录你的头条,精彩永不丢失", nil);
     if (s_loginAlertTitleHandler) {
         NSString *exoticTitle = s_loginAlertTitleHandler(type);
         if ([exoticTitle length] > 0) {

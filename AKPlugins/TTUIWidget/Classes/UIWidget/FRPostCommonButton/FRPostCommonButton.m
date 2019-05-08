@@ -96,7 +96,7 @@ CGFloat fr_postCommentButtonHeight(void) {
         _button.titleColorThemeKey = kColorText1;
         _button.highlightedTitleColorThemeKey = kColorText1Highlighted;
         [_button setTitle:NSLocalizedString(@"回复...", nil) forState:UIControlStateNormal];
-        [_button setImageName:@"write_new"];
+//        [_button setImageName:@"write_new"];
         _button.tintColor = [UIColor tt_themedColorForKey:kColorText1];
         
         _button.layer.borderWidth = [TTDeviceHelper ssOnePixel];

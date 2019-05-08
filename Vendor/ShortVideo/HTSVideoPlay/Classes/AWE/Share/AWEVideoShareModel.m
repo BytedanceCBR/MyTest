@@ -17,7 +17,9 @@
 #import "TTDirectForwardWeitoutiaoContentItem.h"
 #import "TSVVideoDetailShareHelper.h"
 #import "TTSettingsManager.h"
-
+#import "TTAccountAuthWeChat.h"
+#import <TencentOpenAPI/QQApiInterface.h>
+#import "TTCopyContentItem.h"
 @interface AWEVideoShareModel ()
 
 @property (nonatomic, copy) NSString *shareTitle;
@@ -76,11 +78,11 @@
         }
         
         if ([model.groupSource isEqualToString:AwemeGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在抖音上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else if ([model.groupSource isEqualToString:HotsoonGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在火山星球上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else if ([model.groupSource isEqualToString:ToutiaoGroupSource]) {
-            _shareCopyContent = [NSString stringWithFormat:@"%@在爱看上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
+            _shareCopyContent = [NSString stringWithFormat:@"%@在幸福里上分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         } else {
             _shareCopyContent = [NSString stringWithFormat:@"%@分享了视频，快来围观！传送门戳我>>%@", model.author.name, model.shareUrl];
         }
@@ -93,36 +95,43 @@
 }
 
 - (NSArray<id<TTActivityContentItemProtocol>> *)forwardSharePanelContentItems {
-    NSArray *array = [TSVVideoShareManager synchronizeUserDefaultsWithItemArray:@[[self wechatMomentsContentItem],
+    NSArray *array = [TSVVideoShareManager synchronizeUserDefaultsWithItemArray:@[
+                                                                                     [self wechatMomentsContentItem],
                                                                                      [self wechatContentItem],
-                                                                                     [self forwardWeitoutiaoContentItem],
                                                                                      [self qqContentItem],
                                                                                      [self qqZoneContentItem]]];
-    NSMutableArray *mutableArray = [NSMutableArray arrayWithArray:array];
-    /// 底部分享入口
-//    [mutableArray addObject:[self systemContentItem]];
-//    [mutableArray addObject:[self copyContentItem]];
-    [mutableArray addObject:[self directForwardWeitoutiaoContentItem]];
-    return mutableArray;
+    return array;
 }
 
 - (NSArray<id<TTActivityContentItemProtocol>> *)shareContentItems
 {
     NSArray *shareContentItemsArray = nil;
-    NSArray *topArray = [TSVVideoShareManager synchronizeUserDefaultsWithItemArray:@[[self wechatMomentsContentItem],
-                                                                     [self wechatContentItem],
-                                                                     [self forwardWeitoutiaoContentItem],
-                                                                     [self qqContentItem],
-                                                                     [self qqZoneContentItem]]];
+    NSMutableArray* needAddItem = [[NSMutableArray alloc] initWithCapacity:4];
+
+//    if ([TTAccountAuthWeChat isAppInstalled]) {
+//        [needAddItem addObject: [self wechatMomentsContentItem]];
+//        [needAddItem addObject: [self wechatContentItem]];
+//    }
+    
+    [needAddItem addObject: [self wechatMomentsContentItem]];
+    [needAddItem addObject: [self wechatContentItem]];
+
+    
+    if ([QQApiInterface isQQInstalled]) {
+        [needAddItem addObject: [self qqContentItem]];
+        [needAddItem addObject: [self qqZoneContentItem]];
+    }
+
+    NSMutableArray *topArray = [[TSVVideoShareManager synchronizeUserDefaultsWithItemArray:needAddItem] mutableCopy];
     NSMutableArray *secondArray = [NSMutableArray array];
-    NSNumber *shareEnable = [[TTSettingsManager sharedManager] settingForKey:@"tt_lite_huoshan_share_enable" defaultValue:@NO freeze:NO];
+    NSNumber *shareEnable = @YES;
     switch (_shareType) {
         case AWEVideoShareTypeDefault:
         {
             /// 底部分享入口
             if (shareEnable.boolValue) {
 //                [secondArray addObject:[self systemContentItem]];
-//                [secondArray addObject:[self copyContentItem]];
+                [topArray addObject:[self copyContentItem]];
 //                if (![self.model isAuthorMyself]) {
 //                    //自己发的小视频不支持保存视频
 //                    [secondArray addObject:[self saveVideoContentItem]];
@@ -143,13 +152,15 @@
         {
             /// 顶部更多入口
             if (shareEnable.boolValue) {
+                
                 [secondArray addObject:[self favoriteContentItem]];
+                
                 if (![self.model isAuthorMyself]) {
                     //自己发的小视频不支持保存视频、举报、保存视频、分享链接
                     [secondArray addObject:[self dislikeContentItem]];
                     [secondArray addObject:[self reportContentItem]];
 //                    [secondArray addObject:[self saveVideoContentItem]];
-//                    [secondArray addObject:[self copyContentItem]];
+                    [secondArray addObject:[self copyContentItem]];
                 } else {
                     [secondArray addObject:[self deleteContentItem]];
                 }
@@ -175,10 +186,11 @@
             if (shareEnable.boolValue) {
                 shareContentItemsArray = @[
                                            topArray,
-                                           @[[self favoriteContentItem],
-                                             [self reportContentItem]
+                                           @[
+                                               [self favoriteContentItem],
+                                             [self reportContentItem],
 //                                             [self saveVideoContentItem],
-//                                             [self copyContentItem]],
+                                             [self copyContentItem],
                                            ]];
             } else {
                 shareContentItemsArray = @[
@@ -195,7 +207,7 @@
             if (shareEnable.boolValue) {
                 [secondArray addObject:[self dislikeContentItem]];
                 [secondArray addObject:[self reportContentItem]];
-//                [secondArray addObject:[self copyContentItem]];
+                [secondArray addObject:[self copyContentItem]];
                 NSArray *topArray = [TSVVideoShareManager synchronizeUserDefaultsWithItemArray:@[[self wechatMomentsContentItem],
                                                                                                  [self wechatContentItem],
                                                                                                  [self qqContentItem],
@@ -285,13 +297,13 @@
 //    TTSystemContentItem *systemContentItem = [[TTSystemContentItem alloc] initWithDesc:self.shareCopyContent webPageUrl:self.shareURL image:self.shareImage];
 //    return systemContentItem;
 //}
-//
-//- (TTCopyContentItem *)copyContentItem
-//{
-//    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:self.shareCopyContent];
-//    return copyContentItem;
-//}
-//
+
+- (TTCopyContentItem *)copyContentItem
+{
+    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:self.shareCopyContent];
+    return copyContentItem;
+}
+
 //- (TTSaveVideoContentItem *)saveVideoContentItem
 //{
 //    TTSaveVideoContentItem *saveVideoContentItem = [[TTSaveVideoContentItem alloc] init];
@@ -302,21 +314,6 @@
 {
     TTDeleteContentItem *deleteContentItem = [[TTDeleteContentItem alloc] init];
     return deleteContentItem;
-}
-
-- (TTForwardWeitoutiaoContentItem *)forwardWeitoutiaoContentItem
-{
-    TTForwardWeitoutiaoContentItem *forwardWeitoutiaoContentItem = [[TTForwardWeitoutiaoContentItem alloc] init];
-    forwardWeitoutiaoContentItem.repostParams = [TSVVideoDetailShareHelper repostParamsWithShortVideoModel:self.model];
-    return forwardWeitoutiaoContentItem;
-}
-
-- (TTDirectForwardWeitoutiaoContentItem *)directForwardWeitoutiaoContentItem
-{
-    TTDirectForwardWeitoutiaoContentItem *directForwardWeitoutiaoContentItem = [[TTDirectForwardWeitoutiaoContentItem alloc] init];
-    directForwardWeitoutiaoContentItem.customAction = nil;
-    directForwardWeitoutiaoContentItem.repostParams = [TSVVideoDetailShareHelper repostParamsWithShortVideoModel:self.model];
-    return directForwardWeitoutiaoContentItem;
 }
 
 @end

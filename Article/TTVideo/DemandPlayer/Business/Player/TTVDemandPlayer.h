@@ -26,6 +26,9 @@
 @class TTVVideoPlayerModel;
 @class TTVVideoPlayerStateStore;
 
+@class FHDemanderTrackerManager;
+
+
 @protocol TTVDemandPlayerDelegate <NSObject>
 @optional;
 - (void)playerPlaybackState:(TTVVideoPlaybackState)state;
@@ -44,7 +47,9 @@
 @property (nonatomic, strong ,readonly) TTVCommodityFloatView *commodityFloatView;
 @property (nonatomic, strong ,readonly) TTVCommodityButtonView *commodityButton;
 @property (nonatomic, strong, readonly) TTVVideoPlayerStateStore *playerStateStore;
-@property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;
+//@property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;
+@property (nonatomic, strong ,readonly) FHDemanderTrackerManager *commonTracker;
+
 @property (nonatomic, strong ,readonly) TTVDemandPlayerContextVideo *context;
 @property (nonatomic, weak) UIView *rotateView;//真实做旋转的view
 /**

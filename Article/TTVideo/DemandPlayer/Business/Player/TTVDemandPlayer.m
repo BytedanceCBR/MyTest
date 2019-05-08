@@ -14,7 +14,6 @@
 #import "TTMovieStore.h"
 #import "TTVPalyerTrafficAlertView.h"
 #import "TTVPlayerControlTipView.h"
-#import "TTVDemanderTrackerManager.h"
 #import "TTVCommodityFloatView.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTSharePanelTransformMessage.h"
@@ -32,6 +31,9 @@
 #import "TTVPlayerCacheProgressController.h"
 #import "TTVMidInsertADPlayer.h"
 #import "TTVCommodityView.h"
+
+//#import "TTVDemanderTrackerManager.h"
+#import "FHDemanderTrackerManager.h"
 
 extern NSString * const TTVPlayerFinishActionTypeNone;
 extern NSString * const TTVPlayerFinishActionTypeShare;
@@ -58,7 +60,9 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 @property (nonatomic, strong) TTVVideoPlayerStateStore *playerStateStore;
 @property (nonatomic, assign) TTVPlayerResolutionType currentResolution;
 @property (nonatomic, strong) NSHashTable *delegates;
-@property (nonatomic, strong) TTVDemanderTrackerManager *commonTracker;//通用的tracker
+//@property (nonatomic, strong) TTVDemanderTrackerManager *commonTracker;//通用的tracker
+@property (nonatomic, strong) FHDemanderTrackerManager *commonTracker;// add by zjing 修改video相关埋点
+
 @property (nonatomic, strong) TTVDemandPlayerContextVideo *context;
 @property (nonatomic, strong) NSHashTable *map;
 @property (nonatomic, strong) TTVCommodityFloatView *commodityFloatView;
@@ -90,7 +94,7 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     if (self) {
         REGISTER_MESSAGE(TTSharePanelTransformMessage, self);
         self.playerStateStore = [[TTVVideoPlayerStateStore alloc] init];
-        self.commonTracker = [[TTVDemanderTrackerManager alloc] init];
+        self.commonTracker = [[FHDemanderTrackerManager alloc] init];
         _parts = [NSMutableArray array];
         _delegates = [NSHashTable weakObjectsHashTable];
         _context = [[TTVDemandPlayerContextVideo alloc] init];
@@ -583,19 +587,19 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 
 - (void)ttv_addPlayerTracker
 {
-    TTVDemanderTrackerManager *tracker = self.commonTracker;
+    FHDemanderTrackerManager *tracker = self.commonTracker;
     tracker.trackLabel = self.playerModel.trackLabel;
     tracker.itemID = self.playerModel.itemID;
     tracker.groupID = self.playerModel.groupID;
-    tracker.aggrType = self.playerModel.aggrType;
-    tracker.adID = self.playerModel.adID;
-    tracker.logExtra = self.playerModel.logExtra;
+//    tracker.aggrType = self.playerModel.aggrType;
+//    tracker.adID = self.playerModel.adID;
+//    tracker.logExtra = self.playerModel.logExtra;
     tracker.categoryID = self.playerModel.categoryID;
-    tracker.videoSubjectID = self.playerModel.videoSubjectID;
+//    tracker.videoSubjectID = self.playerModel.videoSubjectID;
     tracker.logPb = self.playerModel.logPb;
     tracker.enterFrom = self.playerModel.enterFrom;
     tracker.categoryName = self.playerModel.categoryName;
-    tracker.authorId = self.playerModel.authorId;
+//    tracker.authorId = self.playerModel.authorId;
     tracker.playerStateStore = self.playerStateStore;
     [tracker configureData];
 }
@@ -882,9 +886,11 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     if (isFull) {
         [self.playerController exitFullScreen:YES completion:^(BOOL finished) {
             self.playerStateStore.state.exitFullScreeenType = TTVPlayerExitFullScreeenTypeUnknow;
+
         }];
     }else{
         [self.playerController enterFullScreen:YES completion:^(BOOL finished) {
+
         }];
     }
 }

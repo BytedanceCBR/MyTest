@@ -11,7 +11,7 @@
 #import "ExploreOrderedData+TTAd.h"
 #import "TTAdFeedModel.h"
 #import "TTUGCEmojiParser.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 
 @implementation TTLayOutPlainCellBaseModel
 
@@ -26,8 +26,8 @@
 - (void)calculateBottomLineFrame
 {
     if (![self.orderedData nextCellHasTopPadding]){
-        self.bottomLineViewFrame = CGRectMake(0, self.cellCacheHeight - [TTDeviceHelper ssOnePixel], self.cellWidth, [TTDeviceHelper ssOnePixel]);
-        self.bottomLineViewHidden = NO;
+        self.bottomLineViewFrame = CGRectMake(kCellLeftPadding, self.cellCacheHeight - [TTDeviceHelper ssOnePixel], self.containWidth, [TTDeviceHelper ssOnePixel]);
+        self.bottomLineViewHidden = YES;
     }
 }
 
@@ -53,15 +53,15 @@
     CGFloat height = 0;
     NSString *titleStr = [TTLayOutCellDataHelper getTitleStringWithOrderedData:self.orderedData];
     if (!isEmptyString(titleStr)) {
-        NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kCellTitleLabelFontSize lineHeight:kCellTitleLineHeight lineBreakMode:NSLineBreakByTruncatingTail isBoldFontStyle:NO];
+        NSAttributedString *titleAttributedStr = [TTLabelTextHelper attributedStringWithString:titleStr fontSize:kCellTitleLabelFontSize lineHeight:kCellTitleLineHeight lineBreakMode:NSLineBreakByTruncatingTail];
         CGSize titleSize = CGSizeMake(self.containWidth, 0);
-        titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:self.containWidth forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellTitleLabelMaxLine isBold:NO];
+        titleSize.height = [TTLabelTextHelper heightOfText:titleStr fontSize:kCellTitleLabelFontSize forWidth:self.containWidth forLineHeight:kCellTitleLineHeight constraintToMaxNumberOfLines:kCellTitleLabelMaxLine];
         CGFloat titlePadding = kCellTitleLineHeight - kCellTitleLabelFontSize;
         //上下剪去行高导致的留白
         CGFloat titleY = top - titlePadding / 2;
         height = titleSize.height - titlePadding;
-        // leo 这里必须通过增加30像素才能让布局正常，非常诡异
-        CGRect titleFrame = CGRectMake(0, titleY, titleSize.width + 30, titleSize.height);
+        CGRect titleFrame = CGRectMake(self.originX, titleY, titleSize.width, titleSize.height);
+        
         self.titleAttributedStr = titleAttributedStr;
         self.titleLabelFrame = titleFrame;
         self.titleLabelHidden = NO;
@@ -74,16 +74,13 @@
 
 - (CGFloat)heightForArticleInfoRegionWithTop:(CGFloat)top containWidth:(CGFloat)containWidth
 {
-//    if (!self.orderedData.isAd) {
-//        return 0;
-//    }
     CGFloat left = self.originX;
-    CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2);;
+    CGFloat labelY = top + floor((kCellInfoBarHeight - kCellTypeLabelHeight) / 2) + 5;
     CGFloat margin = 4;
     NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
-
+    
     CGFloat sourceMaxWidth = containWidth - kCellUninterestedButtonWidth - 4;
-
+    
     if (!isEmptyString(typeString)) {
         //优化，字符串相同时避免重复计算
         if (![self.typeLabelStr isEqualToString:typeString]) {
@@ -102,12 +99,27 @@
         [self layoutLocationArticleInfoRegionWidth:sourceMaxWidth left:left top:top margin:margin];
     }
     else{
-        [self layoutNormalArticleInfoRegionWidth:sourceMaxWidth left:left top:top labelY:labelY containWidth:containWidth];
+        [self layoutNormalArticleInfoRegionWidth:sourceMaxWidth - 6 left:left top:top labelY:labelY containWidth:containWidth];
     }
-    self.unInterestedButtonHidden = YES;
-    if (isEmptyString(self.typeLabelStr)) {
-        return 0;
+    
+    CGFloat unInterestedBtnWidth = 60;
+    CGFloat unInterestedBtnHeight = 44;
+    CGFloat unInterestedBtnX = ceil(self.originX + containWidth - kCellUninterestedButtonWidth / 2 - unInterestedBtnWidth / 2);
+    CGFloat unInterestedBtnY = ceil(top + kCellInfoBarHeight / 2 - unInterestedBtnHeight / 2);
+    CGRect unInterestedBtnFrame = CGRectMake(unInterestedBtnX, unInterestedBtnY + 4, unInterestedBtnWidth, unInterestedBtnHeight);
+    self.unInterestedButtonFrame = unInterestedBtnFrame;
+
+    if ([self.orderedData isInCard] ||
+        self.listType == ExploreOrderedDataListTypeFavorite ||
+        self.listType == ExploreOrderedDataListTypeReadHistory ||
+        self.listType == ExploreOrderedDataListTypePushHistory ||
+        (self.orderedData.showDislike && ![self.orderedData.showDislike boolValue])){
+        self.unInterestedButtonHidden = YES;
     }
+    else{
+        self.unInterestedButtonHidden = NO;
+    }
+    
     return kCellInfoBarHeight;
 }
 
@@ -116,7 +128,7 @@
     CGFloat infoMaxWidth = sourceMaxWidth;
     BOOL hideSource = [self.orderedData isAdButtonUnderPic] && ![TTLayOutCellDataHelper isAdShowSourece:self.orderedData];
     if (sourceMaxWidth > 0 && !isEmptyString(self.orderedData.article.source) && [self.orderedData isShowSourceLabel] && !hideSource) {
-        NSString *sourceString = self.orderedData.article.source;
+        NSString *sourceString = [TTArticleCellHelper fitlerSourceStr:self.orderedData.article.source];
         NSString *fixedSourceString = [sourceString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         //优化，字符串相同时避免重复计算
         if (![self.sourceLabelStr isEqualToString:fixedSourceString]) {
@@ -129,7 +141,7 @@
         }
         
         self.sourceLabelFontSize = kCellInfoLabelFontSize;
-        self.sourceLabelTextColorThemeKey = kCellInfoLabelTextColor;
+        self.sourceLabelTextColorThemeKey = kFHColorCoolGrey2;
         self.sourceLabelHidden = NO;
         left += self.sourceLabelFrame.size.width;
         infoMaxWidth -= self.sourceLabelFrame.size.width;
@@ -173,18 +185,17 @@
         infoLabelFrame = CGRectMake(left, labelY, 0, kCellTypeLabelHeight);
     }
     
-//    self.infoLabelFontSize = kCellInfoLabelFontSize;
-//    self.infoLabelTextColorThemeKey = kCellInfoLabelTextColor;
-//    self.infoLabelFrame = infoLabelFrame;
-    self.infoLabelFrame = CGRectZero;
-    self.infoLabelHidden = YES;
+    self.infoLabelFontSize = kCellInfoLabelFontSize;
+    self.infoLabelTextColorThemeKey = kFHColorCoolGrey2;
+    self.infoLabelFrame = infoLabelFrame;
+    self.infoLabelHidden = NO;
     
 }
 
 - (void)layoutLocationArticleInfoRegionWidth:(CGFloat)sourceMaxWidth left:(CGFloat)left top:(CGFloat)top margin:(CGFloat)margin
 {
-    self.sourceLabelHidden = NO;
-    self.infoLabelHidden = NO;
+    self.sourceLabelHidden = YES;
+    self.infoLabelHidden = YES;
     self.adLocationIconHidden = NO;
     self.adLocationLabelHidden = NO;
     TTAdFeedModel* rawAdModel = self.orderedData.raw_ad;
@@ -249,39 +260,37 @@
 
 - (CGFloat)heightForCommentRegionWithTop:(CGFloat)top
 {
-    self.commentLabelHidden = YES;
-    return 0;
-//    CGFloat height = 0;
-//    NSString *commentStr = [TTLayOutCellDataHelper getCommentStringWithOrderedData:self.orderedData];
-//    if ([ExploreCellHelper shouldDisplayComment:[self.orderedData article] listType:self.listType] && !isEmptyString(commentStr)) {
-//        NSAttributedString *commentAttributedStr = [TTLabelTextHelper attributedStringWithString:commentStr fontSize:kCellCommentViewFontSize lineHeight:kCellCommentViewLineHeight lineBreakMode:NSLineBreakByTruncatingTail];
-//
-//        NSAttributedString *emojiCommentStr = [TTUGCEmojiParser parseInTextKitContext:commentStr fontSize:kCellCommentViewFontSize];
-//        if (!emojiCommentStr) {
-//            self.commentLabelHidden = YES;
-//            return height;
-//        }
-//
-//        NSMutableAttributedString *mutableAttributedString = [emojiCommentStr mutableCopy];
-//        NSDictionary *attributes = [commentAttributedStr attributesAtIndex:0 effectiveRange:NULL];
-//        if (attributes) {
-//            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, emojiCommentStr.length)];
-//        }
-//
-//        self.commentAttributedStr = [mutableAttributedString copy];
-//        CGFloat commentHeight = [TTLabelTextHelper heightOfText:commentStr fontSize:kCellCommentViewFontSize forWidth:self.containWidth forLineHeight:kCellCommentViewLineHeight constraintToMaxNumberOfLines:kCellCommentViewMaxLine];
-//        CGRect commentFrame = CGRectMake(self.originX, top + kCellCommentTopPadding - cellCommentViewCorrect(), self.containWidth, commentHeight);
-//        height = kCellCommentTopPadding - cellCommentViewCorrect() + commentFrame.size.height;
-//        self.commentLabelFrame = commentFrame;
-//        self.commentLabelHidden = NO;
-//        self.commentLabelNumberOfLines = kCellCommentViewMaxLine;
-//        self.commentLabelTextColorThemeKey = kCellCommentViewTextColor;
-//        self.commentLabelUserInteractionEnabled = YES;
-//    }
-//    else{
-//        self.commentLabelHidden = YES;
-//    }
-//    return height;
+    CGFloat height = 0;
+    NSString *commentStr = [TTLayOutCellDataHelper getCommentStringWithOrderedData:self.orderedData];
+    if ([ExploreCellHelper shouldDisplayComment:[self.orderedData article] listType:self.listType] && !isEmptyString(commentStr)) {
+        NSAttributedString *commentAttributedStr = [TTLabelTextHelper attributedStringWithString:commentStr fontSize:kCellCommentViewFontSize lineHeight:kCellCommentViewLineHeight lineBreakMode:NSLineBreakByTruncatingTail];
+
+        NSAttributedString *emojiCommentStr = [TTUGCEmojiParser parseInTextKitContext:commentStr fontSize:kCellCommentViewFontSize];
+        if (!emojiCommentStr) {
+            self.commentLabelHidden = YES;
+            return height;
+        }
+
+        NSMutableAttributedString *mutableAttributedString = [emojiCommentStr mutableCopy];
+        NSDictionary *attributes = [commentAttributedStr attributesAtIndex:0 effectiveRange:NULL];
+        if (attributes) {
+            [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, emojiCommentStr.length)];
+        }
+
+        self.commentAttributedStr = [mutableAttributedString copy];
+        CGFloat commentHeight = [TTLabelTextHelper heightOfText:commentStr fontSize:kCellCommentViewFontSize forWidth:self.containWidth forLineHeight:kCellCommentViewLineHeight constraintToMaxNumberOfLines:kCellCommentViewMaxLine];
+        CGRect commentFrame = CGRectMake(self.originX, top + kCellCommentTopPadding - cellCommentViewCorrect(), self.containWidth, commentHeight);
+        height = kCellCommentTopPadding - cellCommentViewCorrect() + commentFrame.size.height;
+        self.commentLabelFrame = commentFrame;
+        self.commentLabelHidden = NO;
+        self.commentLabelNumberOfLines = kCellCommentViewMaxLine;
+        self.commentLabelTextColorThemeKey = kCellCommentViewTextColor;
+        self.commentLabelUserInteractionEnabled = YES;
+    }
+    else{
+        self.commentLabelHidden = YES;
+    }
+    return height;
 }
 
 - (CGFloat)heightForEntityWordViewRegionWithTop:(CGFloat)top

@@ -43,6 +43,7 @@
 #import <TSVDebugInfoView.h>
 #import <TSVDebugInfoConfig.h>
 #import <HTSVideoSwitch.h>
+#import "HuoShan.h"
 
 #define kIconH 16
 #define kDislikeH  12
@@ -145,7 +146,7 @@ static NSInteger const kTitleLabelNumberOfLines = 2;
     if (!_titleLabel) {
         _titleLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];
         _titleLabel.numberOfLines = kTitleLabelNumberOfLines;
-        _titleLabel.font = [UIFont boldSystemFontOfSize:[TSVWaterfallCollectionViewCellHelper titleFontSize]];
+        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:[TSVWaterfallCollectionViewCellHelper titleFontSize]] ? : [UIFont boldSystemFontOfSize:[TSVWaterfallCollectionViewCellHelper titleFontSize]];
         _titleLabel.extendsLinkTouchArea = NO;
         _titleLabel.longPressGestureRecognizer.enabled = NO;
         _titleLabel.backgroundColor = [UIColor clearColor];
@@ -518,6 +519,8 @@ static NSInteger const kTitleLabelNumberOfLines = 2;
 {
     TTFeedDislikeView *dislikeView = [[TTFeedDislikeView alloc] init];
     TTFeedDislikeViewModel *viewModel = [[TTFeedDislikeViewModel alloc] init];
+    // add by zjing 添加不感兴趣
+    viewModel.keywords = self.orderedData.shortVideoOriginalData.filterWords;
     viewModel.groupID = [NSString stringWithFormat:@"%lld", self.orderedData.originalData.uniqueID];
     viewModel.logExtra = self.orderedData.log_extra;
     [dislikeView refreshWithModel:viewModel];

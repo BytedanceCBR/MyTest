@@ -42,7 +42,7 @@
     if ([dictionary objectForKey:@"desc"]){
         self.content = [dictionary tt_stringValueForKey:@"content"];
     }else{
-        self.content = @"尝试下全新的爱看界面吧!";
+        self.content = @"尝试下全新的头条界面吧!";
     }
     if ([dictionary objectForKey:@"open_url"]){
         self.openURL = [dictionary tt_stringValueForKey:@"open_url"];

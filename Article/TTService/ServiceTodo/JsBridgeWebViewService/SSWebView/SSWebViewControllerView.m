@@ -9,7 +9,7 @@
 #import "SSWebViewControllerView.h"
 #import "TTActivityShareManager.h"
 #import "SSWebViewUtil.h"
-#import <TTNetworkUtilities.h>
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTAdManager.h"
 
 #import "ArticleShareManager.h"
@@ -38,8 +38,8 @@
 #import "TTActivityShareSequenceManager.h"
 #import "TTVSettingsConfiguration.h"
 #import "SSCommonLogic.h"
-#import "TTKitchenHeader.h"
-
+#import <TTKitchen/TTKitchenHeader.h>
+#import "TTCopyContentItem.h"
 #define toolBarHeight 40.f
 
 const NSInteger SSWebViewMoreActionSheetTag = 1001;
@@ -92,6 +92,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         self.shouldInterceptAutoJump = [SSCommonLogic shouldAutoJumpControlEnabled];
         
         self.isRepostWeitoutiaoFromWeb = NO;
+        self.isShowCloseWebBtn = YES;
         
         SSNavigationBar *navigationBar = [[SSNavigationBar alloc] initWithFrame:[self frameForTitleBarView]];
         self.navigationBar = navigationBar;
@@ -103,6 +104,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         navigationBar.leftBarView = backButton;
         self.backButtonView = backButton;
         
+        /*
         SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
         rightButton.frame = CGRectMake(0, 0, 76, 60);
         [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 40, 0, -6)];
@@ -110,6 +112,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         rightButton.highlightedImageName = @"new_more_titlebar_press.png";
         [rightButton addTarget:self action:@selector(moreActionFired:) forControlEvents:UIControlEventTouchUpInside];
         navigationBar.rightBarView = rightButton;
+         */
         //更多按钮自定义操作
         [self initMoreButtonActions];
         
@@ -131,6 +134,16 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         [self reloadThemeUI];
     }
     return self;
+}
+
+- (void)initShareButtonAcition
+{
+     SSThemedButton *rightButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
+     rightButton.frame = CGRectMake(10, 0, 30, 30);
+    [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    [rightButton setImage:[UIImage imageNamed:@"ic-navigation-share-dark"] forState:UIControlStateNormal];
+     [rightButton addTarget:self action:@selector(shareBtnClick)  forControlEvents:UIControlEventTouchUpInside];
+    _navigationBar.rightBarView = rightButton;
 }
 
 //从SSWebViewController透传的condition
@@ -162,6 +175,24 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     self.navigationBar.rightBarView.hidden = !rightButtonDisplayed;
 }
 
+- (void)setupFShareBtn:(BOOL)isShowBtn
+{
+    if (isShowBtn) {
+        [self initShareButtonAcition];
+        self.navigationBar.rightBarView.hidden = NO;
+    }
+}
+
+- (void)hiddeNaviBack:(BOOL)isShowBtn
+{
+    self.navigationBar.leftBarView.hidden = !isShowBtn;
+}
+
+- (void)shareBtnClick
+{
+    [self.ssWebContainer.ssWebView ttr_fireEvent:@"clickShare" data:nil];
+}
+
 - (void)getShareInfoFormWap
 {
     if (!self.shouldShowShareAction) {
@@ -178,11 +209,13 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     if (!_activityActionManager) {
         self.activityActionManager = [[TTActivityShareManager alloc] init];
         self.activityActionManager.forwardToWeitoutiao = self.isRepostWeitoutiaoFromWeb;
-        if ([KitchenMgr getBOOL:kKCUGCRepostLinkEnable]) {
+        if ([TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
             self.activityActionManager.forwardToWeitoutiao = YES;
         }
     }
     NSMutableArray * activityItems = [ArticleShareManager shareActivityManager:_activityActionManager setWapConditionWithTitle:self.shareTitle desc:self.shareDesc url:[self currentURLStr] imageUrl:self.shareImageUrl];
+    TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:[self currentURLStr]];
+    [activityItems addObject:copyContentItem];
     if (self.navMoreShareView){
         self.navMoreShareView = nil;
     }
@@ -261,7 +294,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         enableShare = YES;
     }
     if (!isEmptyString(host)) { // 如果host在白名单，也可以分享
-        NSArray *array = [KitchenMgr getArray:kKCUGCWhiteListOfShareHost];
+        NSArray *array = [TTKitchen getArray:kKCUGCWhiteListOfShareHost];
         for (NSString *whiteListHost in array) {
             if ([host containsString:whiteListHost]) {
                 enableShare = YES;
@@ -418,7 +451,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     NSInteger repostType = self.repostType;
 
     if (self.isRepostWeitoutiaoFromWeb == NO
-        && [KitchenMgr getBOOL:kKCUGCRepostLinkEnable]) {
+        && [TTKitchen getBOOL:kKCUGCRepostLinkEnable]) {
         
         NSURL *curURL = _ssWebContainer.ssWebView.currentURL;
         if ([curURL.host containsString:@"mp.weixin.qq.com"]) {
@@ -450,19 +483,72 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     [super themeChanged:notification];
 }
 
+- (void)showCloseButton
+{
+    NSLog(@"canGoBack = %d",self.ssWebContainer.ssWebView.canGoBack);
+    if (self.isShowCloseWebBtn) {
+        [self.backButtonView showCloseButton:self.ssWebContainer.ssWebView.canGoBack];
+    }else
+    {
+        [self.backButtonView showCloseButton:self.isShowCloseWebBtn];
+    }
+}
+
 - (void)backWebViewActionFired:(id) sender {
     
-    if (![self.backButtonView isCloseButtonShowing]) {
-        [self.backButtonView showCloseButton:self.ssWebContainer.ssWebView.canGoBack];
-    }
+//    if (![self.backButtonView isCloseButtonShowing]) {
+        [self performSelector:@selector(showCloseButton) withObject:nil afterDelay:0.1];
+//    }
     if ([self.ssWebContainer.ssWebView canGoBack] && !self.shouldDisableHistory) {
         [self.ssWebContainer.ssWebView goBack];
     } else {
+        
+        if (self.isWebControl) {
+            [self.ssWebContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"ToutiaoJSBridge.trigger('close');"
+                                                                completionHandler:nil];
+            return;
+        }
+        
         if (self.viewController.navigationController) {
             if (self.viewController.navigationController.viewControllers.count == 1 && self.viewController.navigationController.presentingViewController) {
                 [self.viewController.navigationController dismissViewControllerAnimated:YES completion:NULL];
             } else {
-                [self.viewController.navigationController popViewControllerAnimated:YES];
+                
+                NSMutableArray *vcStack = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+                
+                NSInteger closeStackCouuntResult = self.closeStackCounts;
+                
+                if (closeStackCouuntResult == 0) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                    return;
+                }
+                
+                if (vcStack.count > closeStackCouuntResult + 2) {
+                    NSInteger retainVCs = vcStack.count - closeStackCouuntResult - 2;
+                    if (retainVCs == 0) {
+                        self.navigationController.viewControllers = [NSArray arrayWithObjects:vcStack.firstObject,vcStack.lastObject,nil];
+                    }else
+                    {
+                        NSMutableArray *viewControllersArray = [NSMutableArray new];
+                        [viewControllersArray addObject:vcStack.firstObject];
+                        
+                        for (int i = 0; i < retainVCs; i++) {
+                            if (vcStack.count > i) {
+                                [viewControllersArray addObject:vcStack[i + 1]];
+                            }
+                        }
+                        
+                        [viewControllersArray addObject:vcStack.lastObject];
+                        
+                        self.navigationController.viewControllers = viewControllersArray;
+                    }
+                }else
+                {
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    return;
+                }
+                
+                [self.navigationController popViewControllerAnimated:YES];
             }
         } else {
             if (self.viewController.presentingViewController) {
@@ -471,6 +557,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         }
     }
 }
+
 
 - (void) backViewControllerActionFired:(id) sender {
     [self.viewController.navigationController popViewControllerAnimated:YES];
@@ -554,9 +641,9 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
     BOOL isDayModel = [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay;
     NSString *fontSizeType = [TTUserSettingsManager settedFontShortString];
     
-    urlString = [SSWebViewUtil jointFragmentParamsDict:@{@"tt_daymode": isDayModel? @"1": @"0",
-    @"tt_font": fontSizeType} toURL:origURL.absoluteString];
-    
+//    urlString = [SSWebViewUtil jointFragmentParamsDict:@{@"tt_daymode": isDayModel? @"1": @"0",
+//    @"tt_font": fontSizeType} toURL:origURL.absoluteString];
+    urlString = origURL.absoluteString;
     return urlString;
 }
 
@@ -587,6 +674,10 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
 
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
     BOOL result = YES;
+    
+    if ([self.ssWebContainer.ssWebView canGoBack] && self.isShowCloseWebBtn) {
+        [self.backButtonView showCloseButton:YES];
+    }
     
     //针对WKWebview 的下载做一个特殊处理 主动通过openURL去打开AppStore nick -5.6
     if ([ArticleWebViewToAppStoreManager isToAppStoreRequestURLStr:request.URL.absoluteString] && [webView isWKWebView]) {
@@ -645,6 +736,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         self.webTapGesture.enabled = YES;
         [webView stringByEvaluatingJavaScriptFromString:[SSCommonLogic shouldEvaluateActLogJsStringForAdID:self.ssWebContainer.adID] completionHandler:nil];
     }
+    
 }
 
 - (void)_sendJumpEventWithCount:(NSInteger) count {

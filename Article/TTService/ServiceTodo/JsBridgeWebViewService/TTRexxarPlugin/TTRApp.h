@@ -16,4 +16,6 @@ TTR_EXPORT_HANDLER(appInfo)
 TTR_EXPORT_HANDLER(config)
 TTR_EXPORT_HANDLER(deviceInfo)
 TTR_EXPORT_HANDLER(sendNotification)
+TTR_EXPORT_HANDLER(getStatusBarInfo)
+
 @end

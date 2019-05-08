@@ -117,10 +117,13 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
     if (!_subscribeButton) {
         _subscribeButton = [[TTFollowThemeButton alloc] initWithUnfollowedType:TTUnfollowedType102 followedType:TTFollowedType101];
         _subscribeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-9, -13, -9, -15);
-        _subscribeButton.constWidth = [TTDeviceUIUtils tt_newPadding: 58];
+        _subscribeButton.constWidth = [TTDeviceUIUtils tt_newPadding: 72];
         _subscribeButton.constHeight = [TTDeviceUIUtils tt_newPadding: 28];
         [_subscribeButton addTarget:self action:@selector(subscribeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        _subscribeButton.hidden = NO;
+//        _subscribeButton.hidden = NO;
+        // add by zjing 去掉关注按钮
+        self.subscribeButton.hidden = YES;
+
     }
     
     if (!_arrowImage) {
@@ -163,12 +166,15 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
         make.centerY.equalTo(self.pgcAvatar.mas_centerY);
     }];
     
-    if ([self isAuthorSelf]) {
-        self.subscribeButton.hidden = YES;
-    } else {
-        self.subscribeButton.hidden = NO;
-    }
+//    if ([self isAuthorSelf]) {
+//        self.subscribeButton.hidden = YES;
+//    } else {
+//        self.subscribeButton.hidden = NO;
+//    }
     
+    // add by zjing 去掉关注按钮
+    self.subscribeButton.hidden = YES;
+
     [self.subscribeIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self.subscribeButton);
     }];
@@ -187,7 +193,9 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
     if (!_backgroundView) {
         CGFloat  height = kPGCViewHeightOnTop;
         _backgroundView = [[TTAlphaThemedButton alloc] initWithFrame:CGRectMake(0, 0, self.width, [TTDeviceUIUtils tt_newPadding:height])];
-        [_backgroundView addTarget:self action:@selector(showPGCView) forControlEvents:UIControlEventTouchUpInside];
+        // add by zjing 去掉头像点击
+        _backgroundView.userInteractionEnabled = NO;
+//        [_backgroundView addTarget:self action:@selector(showPGCView) forControlEvents:UIControlEventTouchUpInside];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshPGCSubscribeState:) name:kEntrySubscribeStatusChangedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshPGCSubscribeState:) name:RelationActionSuccessNotification object:nil];
     }
@@ -234,7 +242,7 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
     self.subscribeButton.titleColorThemeKey = kColorText6;
     [self.subscribeButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@([TTDeviceUIUtils tt_newPadding:28]));
-        make.width.equalTo(@([TTDeviceUIUtils tt_newPadding:self.subscribeButton.constWidth - 2]));
+        make.width.equalTo(@([TTDeviceUIUtils tt_newPadding:70]));
         make.right.equalTo(self.backgroundView.mas_right).offset([TTDeviceUIUtils tt_newPadding:-15]);
         make.centerY.equalTo(self.pgcAvatar.mas_centerY);
     }];
@@ -308,7 +316,12 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
 - (void)refreshSubscribeButtonTitle
 {
     self.subscribeButton.followed = [self ttv_isSubCribed];
-    self.subscribeButton.hidden = [self isAuthorSelf];
+//    self.subscribeButton.hidden = [self isAuthorSelf];
+    
+    // add by zjing 去掉关注按钮
+    self.subscribeButton.hidden = YES;
+
+    
     self.isAnimating = NO;
 //    if (self.hasRedpacket) {
 //        self.subscribeButton.unfollowedType = [TTFollowThemeButton redpacketButtonUnfollowTypeButtonStyle:self.themedButtonStyle defaultType:TTUnfollowedType201];

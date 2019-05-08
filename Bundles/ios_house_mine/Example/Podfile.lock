@@ -1,0 +1,16 @@
+PODS:
+  - FHHouseMine (0.1.0)
+
+DEPENDENCIES:
+  - FHHouseMine (from `../`)
+
+EXTERNAL SOURCES:
+  FHHouseMine:
+    :path: ../
+
+SPEC CHECKSUMS:
+  FHHouseMine: 5895670e54e3df7effa28883817231876d2d6f51
+
+PODFILE CHECKSUM: 2f8c88881a7b38929893e73fd75b09a5da7ca8b1
+
+COCOAPODS: 1.4.0

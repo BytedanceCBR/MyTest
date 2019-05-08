@@ -12,7 +12,7 @@
 #import <TTPersistence/TTPersistence.h>
 #import "TTSettingsManager.h"
 
-static const CGFloat kTTTabBarItemTitleBottomOffset = 4.f;
+static const CGFloat kTTTabBarItemTitleBottomOffset = 2.f;
 static const CGFloat offsetRedDotV = 10.f;
 static NSString *const kTTTabBarItemBoundsFileName = @"kTTTabBarItemBounds.plist";
 static TTPersistence *tabBarItemPersistence;
@@ -130,7 +130,7 @@ static TTPersistence *tabBarItemPersistence;
     }
     
     [self.imageView sizeToFit];
-    self.imageView.top = 0;
+    self.imageView.top = 3;
     self.imageView.centerX = CGRectGetWidth(self.bounds) / 2;
     if (isEmptyString(self.title)) {
         self.imageView.centerY = CGRectGetHeight(self.bounds) / 2;
@@ -139,7 +139,8 @@ static TTPersistence *tabBarItemPersistence;
     self.titleLabel.font = self.titleFont;
     self.titleLabel.text = self.title;
     self.titleLabel.bottom = self.bottom - kTTTabBarItemTitleBottomOffset;
-    
+    self.titleLabel.top = self.imageView.bottom - 2;
+
     if ([[[TTSettingsManager sharedManager] settingForKey:@"tt_optimize_start_enabled" defaultValue:@1 freeze:YES] boolValue]) {
         NSString *bounds = [tabBarItemPersistence objectForKey:self.title];
         if (!isEmptyString(bounds)) {

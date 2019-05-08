@@ -20,13 +20,13 @@ static NSString * const kTSVListAutoRefreshRecorderLastTimeRefreshTimeKey = @"kT
     }
     NSDictionary *channelControlConfDict = [[TTSettingsManager sharedManager] settingForKey:@"channel_control_conf" defaultValue:
                                             @{
-                                              @"hotsoon_video": @{
+                                              @"f_hotsoon_video": @{
                                                       @"auto_refresh_interval": @"3600",
                                                       @"show_last_read": @0,
                                                       }
                                               }
                                                                                      freeze:NO];
-    NSDictionary *shortVideoCategoryRefreshConfDict = [channelControlConfDict tt_dictionaryValueForKey:@"hotsoon_video"];
+    NSDictionary *shortVideoCategoryRefreshConfDict = [channelControlConfDict tt_dictionaryValueForKey:kTTUGCVideoCategoryID];
     NSTimeInterval shortVideoCategoryRefreshInterval = [shortVideoCategoryRefreshConfDict tt_doubleValueForKey:@"auto_refresh_interval"];
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval lastTimeRefresh = [[NSUserDefaults standardUserDefaults] doubleForKey:[NSString stringWithFormat:@"%@%@", kTSVListAutoRefreshRecorderLastTimeRefreshTimeKey, category.categoryID]];

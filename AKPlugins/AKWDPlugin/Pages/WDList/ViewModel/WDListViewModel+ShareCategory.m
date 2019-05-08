@@ -139,7 +139,9 @@
 //    }
     
 //    [activityItems addObject:[TTNightModelContentItem new]];
-    [activityItems addObject:[TTFontSettingContentItem new]];
+    
+    // add by zjing 去掉字体设置
+//    [activityItems addObject:[TTFontSettingContentItem new]];
     [activityItems addObject:[self reportItem]];
     return [activityItems copy];
 }

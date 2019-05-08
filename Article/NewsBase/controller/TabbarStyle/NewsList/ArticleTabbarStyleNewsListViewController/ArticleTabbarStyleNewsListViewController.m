@@ -39,7 +39,7 @@
         if ([SSCommonLogic shouldUseOptimisedLaunch]) {
             self.hidesBottomBarWhenPushed = NO;
             self.statusBarStyle = SSViewControllerStatsBarDayBlackNightWhiteStyle;
-            self.ttStatusBarStyle = UIStatusBarStyleDefault;
+            self.ttStatusBarStyle = UIStatusBarStyleLightContent;
             self.ttNavBarStyle = @"White";
             self.ttHideNavigationBar = YES;
             self.ttTrackStayEnable = YES;
@@ -64,7 +64,9 @@
     
     [[TTCustomAnimationManager sharedManager] registerFromVCClass:[self class] toVCClass:NSClassFromString(@"AWEVideoDetailViewController") animationClass:[TSVShortVideoEnterDetailAnimation class]];
     
-    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//    self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+    self.view.backgroundColor = [UIColor whiteColor];
+
     //必须设置，否则scrollView会异常
     self.automaticallyAdjustsScrollViewInsets = NO;
 //延迟createMainVC会造成gif类型的开屏广告卡顿，这个优化先下线
@@ -85,7 +87,6 @@
         }
     }
     
-
 }
 
 -(void)createMainVC{
@@ -156,6 +157,7 @@
 //    }
     [[UIApplication sharedApplication] setStatusBarStyle:style animated:NO];
     self.ttStatusBarStyle = style;
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -177,7 +179,9 @@
 {
     [super themeChanged:notification];
     if ([self isViewLoaded]) {
-        self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+//        self.view.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
+        self.view.backgroundColor = [UIColor whiteColor];
+
     }
 }
 
@@ -196,7 +200,9 @@
         __weak TTExploreMainViewController *weakMainVC = _mainVC;
         _mainVC.startLoadingBlock = ^{
             if (weakMainVC.isRefreshByClickTabBar) {
-                [((TTTabbar *)wself.tabBarController.tabBar) setItemLoading:YES forIndex:0];
+                
+                // add by zjing 去掉tabbar的loading
+//                [((TTTabbar *)wself.tabBarController.tabBar) setItemLoading:YES forIndex:0];
             }
         };
     }

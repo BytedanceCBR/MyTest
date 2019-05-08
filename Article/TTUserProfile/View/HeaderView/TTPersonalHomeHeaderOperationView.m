@@ -46,7 +46,7 @@
     self.iconView = iconView;
     
     
-    CGFloat followViewW = [TTDeviceUIUtils tt_newPadding:58];
+    CGFloat followViewW = [TTDeviceUIUtils tt_newPadding:72];
     CGFloat followViewH = [TTDeviceUIUtils tt_newPadding:28];
     CGFloat followViewY = [TTDeviceUIUtils tt_newPadding:15];
     
@@ -168,7 +168,7 @@
         self.followButton.beFollowed = [self.infoModel.is_followed boolValue];
         if(self.infoModel.is_blocking.integerValue == 1) {
             self.followButton.hidden = YES;
-//            self.unBlockView.hidden = NO;
+            self.unBlockView.hidden = NO;
         } else {
             self.followButton.hidden = NO;
             self.unBlockView.hidden = YES;

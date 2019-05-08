@@ -14,7 +14,6 @@
 #import "TTDeviceHelper.h"
 
 #define kTTUGCToolbarHeight 80
-#define kTTUGCToolbarButtonSize 44
 #define EMOJI_INPUT_VIEW_HEIGHT ([TTDeviceHelper isScreenWidthLarge320] ? 216.f : 193.f)
 
 @interface TTUGCToolbar ()

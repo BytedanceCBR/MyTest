@@ -17,11 +17,11 @@ inline CGFloat cellTopPadding() {
     if ([TTDeviceHelper isPadDevice]) {
         return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 16.f;
+        return 10.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 16.f;
+        return 10.f;
     } else {
-        return 16.f;
+        return 10.f;
     }
 }
 
@@ -56,7 +56,7 @@ inline CGFloat cellBottomPaddingWithPic() {
     if ([TTDeviceHelper isPadDevice]) {
         return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 14.f;
+        return 15.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
         return 14.f;
     } else {
@@ -67,26 +67,26 @@ inline CGFloat cellBottomPaddingWithPic() {
 /** view左边距 */
 inline CGFloat cellLeftPadding() {
     if ([TTDeviceHelper isPadDevice]) {
-        return 15.f;
+        return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 15.f;
+        return 20.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 15.f;
+        return 20.f;
     } else {
-        return 15.f;
+        return 20.f;
     }
 }
 
 /** view右边距 */
 inline CGFloat cellRightPadding() {
     if ([TTDeviceHelper isPadDevice]) {
-        return 15.f;
+        return 20.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        return 10.f;
+        return 20.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        return 10.f;
+        return 20.f;
     } else {
-        return 15.f;
+        return 20.f;
     }
 }
 
@@ -244,9 +244,9 @@ inline CGFloat cellTitleLabelFontSize() {
         fontSize = 20.f;
         return [NewsUserSettingManager fontSizeFromNormalSize:fontSize isWidescreen:YES];
     } else if ([TTDeviceHelper is736Screen]) {
-        fontSize = 19.f;
-    } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        fontSize = 19.f;
+        fontSize = 17.f;
+    } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) { 
+        fontSize = 17.f;
     } else {
         fontSize = 17.f;
     }
@@ -262,13 +262,13 @@ inline CGFloat cellInfoBarHeight() {
 inline CGFloat cellTypeLabelFontSize() {
     CGFloat fontSize;
     if ([TTDeviceHelper isPadDevice]) {
-        fontSize = 10.f;
+        fontSize = 12.f;
     } else if ([TTDeviceHelper is736Screen]) {
-        fontSize = 10.f;
+        fontSize = 12.f;
     } else if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) {
-        fontSize = 10.f;
+        fontSize = 12.f;
     } else {
-        fontSize = 10.f;
+        fontSize = 12.f;
     }
     return fontSize;
 }

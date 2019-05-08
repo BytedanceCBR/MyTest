@@ -50,7 +50,10 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
                               @"huoshanzhibo.com", // 火山
                               @"huoshan.com",      //火山
                               @"wukong.com",        //悟空
-                              @"zjurl.cn"];        //汽车
+                              @"zjurl.cn",           //汽车
+                              @"m.quduzixun.com",    //爱看
+                              @"m.haoduofangs.com",  //幸福里
+                              @"i.haoduofangs.com"]; //幸福里
         
         [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRGallery.gallery" for:@"gallery"];
     }
@@ -173,6 +176,10 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 }
 
 - (BOOL)isInnerDomain:(NSString *)host {
+    
+    if ([[[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"] isEqualToString:@"local_test"]) {
+        return YES;
+    }
     
     for(NSString *innerDomain in self.innerDomains) {
         if([host rangeOfString:[innerDomain lowercaseString]].location != NSNotFound) {

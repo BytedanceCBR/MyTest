@@ -49,7 +49,7 @@
         }
         AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
         if (authStatus == AVAuthorizationStatusDenied || authStatus == AVAuthorizationStatusRestricted) {
-            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:@"无访问权限" message:@"请在手机的「设置-隐私-相机」选项中，允许爱看访问您的相机" preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:@"无访问权限" message:@"请在手机的「设置-隐私-相机」选项中，允许头条访问您的相机" preferredType:TTThemedAlertControllerTypeAlert];
             [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
             [alert showFrom:self animated:YES];
             return nil;

@@ -16,7 +16,7 @@
 
 #import <TTImage/TTImageView.h>
 
-static NSInteger const indicatorTextLabelMaxLineNumber = 2;
+static NSInteger const indicatorTextLabelMaxLineNumber = 6;
 static CGFloat const topPadding = 20.f;
 static CGFloat const bottomPadding = 20.f;
 static CGFloat const itemSpacing = 10.f;

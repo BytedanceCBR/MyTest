@@ -56,6 +56,7 @@ static struct timeval commentTimeval;
 
 @property (nonatomic, strong) id<TTCommentManagerProtocol> commentManager;
 
+@property (nonatomic, weak) UIViewController *belongVC; // 当前view所属VC
 @end
 
 @implementation TTCommentWriteView
@@ -146,6 +147,8 @@ static struct timeval commentTimeval;
         self.hasRemovedFromWindow = YES;
         if ([navigationController isKindOfClass:[TTNavigationController class]]) {
             navigationController.topViewController.ttDisableDragBack = NO;
+            self.belongVC.ttDisableDragBack = NO;
+
         }
     }
     if (newWindow && self.hasRemovedFromWindow) {
@@ -154,6 +157,8 @@ static struct timeval commentTimeval;
         }
         if ([navigationController isKindOfClass:[TTNavigationController class]]) {
             navigationController.topViewController.ttDisableDragBack = YES;
+            self.belongVC.ttDisableDragBack = YES;
+
         }
     }
 }
@@ -226,6 +231,8 @@ static struct timeval commentTimeval;
     if ([viewController isKindOfClass:[TTNavigationController class]]) {
         TTNavigationController *navigationController = (TTNavigationController *)viewController;
         navigationController.topViewController.ttDisableDragBack = YES;
+        self.belongVC = navigationController.topViewController;
+        self.belongVC.ttDisableDragBack = YES;
     }
 
     // 图片评论二级页采用了 present 方式，不包含 statusBar
@@ -315,11 +322,14 @@ static struct timeval commentTimeval;
         self.backgroundView.alpha = 0.f;
         self.containerView.top = self.bottom;
     };
+    
+    __weak typeof(self)wself = self;
     void (^completion)(BOOL) = ^(BOOL finished) {
         UIViewController * viewController = (UIViewController *)[TTUIResponderHelper topViewControllerFor: self.superview];
         if ([viewController isKindOfClass:[TTNavigationController class]]) {
             TTNavigationController * navigationController = (TTNavigationController *)viewController;
             navigationController.topViewController.ttDisableDragBack = NO;
+            wself.belongVC.ttDisableDragBack = NO;
         }
         [self removeFromSuperview];
     };
@@ -605,10 +615,10 @@ static struct timeval commentTimeval;
             _inputTextView.isBanAt = YES;
         }
         _inputTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _inputTextView.backgroundColorThemeKey = kColorBackground3;
-        _inputTextView.borderColorThemeKey = kColorLine1;
+        _inputTextView.backgroundColorThemeKey = kFHColorPaleGrey;
+//        _inputTextView.borderColorThemeKey = kColorLine1;
 
-        _inputTextView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
+//        _inputTextView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _inputTextView.layer.masksToBounds = YES;
         _inputTextView.textViewFontSize = [TTDeviceUIUtils tt_newFontSize:16.f];
         _inputTextView.typingAttributes = @{
@@ -624,8 +634,8 @@ static struct timeval commentTimeval;
         internalTextView.placeholder = kCommentInputPlaceHolder;
         internalTextView.backgroundColor = [UIColor clearColor];
         internalTextView.textColor = SSGetThemedColorWithKey(kColorText1);
-        internalTextView.placeholderColor = SSGetThemedColorWithKey(kColorText9);
-        internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
+        internalTextView.placeholderColor = SSGetThemedColorWithKey(kFHColorCoolGrey3);
+        internalTextView.internalTextView.placeHolderFont = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]];
         _inputTextView.layer.cornerRadius = _inputTextView.height / 2;
         _inputTextView.richSpanText = [[TTRichSpanText alloc] initWithText:@"" richSpans:nil];
     }
@@ -655,8 +665,8 @@ static struct timeval commentTimeval;
         _publishButton.titleLabel.font = [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]];
         [_publishButton sizeToFit];
         _publishButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin;
-        _publishButton.titleColorThemeKey = kColorText6;
-        _publishButton.disabledTitleColorThemeKey = kColorText9;
+        _publishButton.titleColorThemeKey = kFHColorCoral;
+        _publishButton.disabledTitleColorThemeKey = kFHColorCoolGrey2;
         [_publishButton addTarget:self action:@selector(publish:) forControlEvents:UIControlEventTouchUpInside];
         _publishButton.enabled = NO;
     }

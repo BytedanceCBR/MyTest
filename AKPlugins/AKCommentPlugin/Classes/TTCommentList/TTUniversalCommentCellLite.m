@@ -49,6 +49,7 @@
 @property (nonatomic, strong) DetailActionRequestManager *actionManager;
 @property (nonatomic, strong) NSArray *menuItems;
 @property (nonatomic, strong) TTActionSheetController *actionSheetController;
+
 @end
 
 @implementation TTUniversalCommentCellLite
@@ -130,6 +131,10 @@
     [self.digButton setDiggCount:[self.commentModel.digCount integerValue]];
     self.digButton.selected = self.commentModel.userDigged;
     [self.digButton sizeToFit];
+    // 由于sizeToFit没有将EdagesInset考虑进来，造成文字截断，尝试用UIButton也有同样的问题
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.centerY = self.nameView.centerY - [TTDeviceHelper ssOnePixel];
     self.digButton.right = self.right - [TTUniversalCommentCellLiteHelper cellRightPadding];
 }
@@ -160,7 +165,7 @@
 
     NSDictionary *linkAttributes = @{
         NSParagraphStyleAttributeName: [TTUniversalCommentCellLiteHelper contentLabelParagraphStyle],
-        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5],
+        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
         NSFontAttributeName : [TTUniversalCommentCellLiteHelper contentLabelFont]
     };
     self.contentLabel.linkAttributes = linkAttributes;
@@ -231,6 +236,10 @@
 }
 
 - (void)nameViewOnClick:(id)sender {
+    
+    // add by zjing 去掉关注页跳转
+    return;
+    
     if ([self isDetailComment]) {
         wrapperTrackEvent(@"comment", @"click_name");
     }
@@ -273,6 +282,9 @@
     
     [_digButton setDiggCount:[_commentModel.digCount intValue]];
     [self.digButton sizeToFit];
+    CGSize size = self.digButton.frame.size;
+    size.width += 6;
+    self.digButton.size = size;
     self.digButton.right = self.right - [TTUniversalCommentCellLiteHelper cellRightPadding];
 
     // TODO delegate 处理
@@ -290,7 +302,7 @@
     
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setValue:_commentModel.commentID.stringValue forKey:@"ext_value"];
-    wrapperTrackEventWithCustomKeys(@"comment", @"digg_button", _commentModel.groupModel.groupID, nil, dic);
+//    wrapperTrackEventWithCustomKeys(@"comment", @"digg_button", _commentModel.groupModel.groupID, nil, dic);
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:digCommentWithCommentModel:)]) {
         [self.delegate tt_commentCell:self digCommentWithCommentModel:_commentModel];
     }
@@ -309,8 +321,8 @@
 - (void)themeChanged:(NSNotification *)notification {
     [self refreshContent];
 
-    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
-    self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
+    self.timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
+    self.userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
 }
 
 #pragma mark - TTTAttributedLabel Delegate
@@ -362,12 +374,12 @@
 - (NSAttributedString *)attributedTruncationToken {
     NSMutableAttributedString *truncationToken = [[NSMutableAttributedString alloc] initWithString:@"...全文" attributes:@{
         NSFontAttributeName : [TTUniversalCommentCellLiteHelper contentLabelFont],
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kColorText5),
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCoral),
         NSLinkAttributeName : [NSURL URLWithString:kTTCommentContentLabelTruncationTokenURLString],
     }];
 
     [truncationToken addAttributes:@{
-        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kColorText1)
+        NSForegroundColorAttributeName : SSGetThemedColorWithKey(kFHColorCharcoalGrey)
     } range:NSMakeRange(0, 3)];
 
     return truncationToken;
@@ -474,12 +486,14 @@
         _avatarView.cornerRadius = [TTUniversalCommentCellLiteHelper avatarSize] / 2;
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
+        _avatarView.contentMode = UIViewContentModeScaleAspectFill;
         _avatarView.borderColor = [UIColor clearColor];
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
+//        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         [_avatarView setupVerifyViewForLength:[TTUniversalCommentCellLiteHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
             return [TTUniversalCommentCellLiteHelper verifyLogoSize:standardSize];
         }];
-        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        // add by zjing 去掉头像点击
+//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }
@@ -489,7 +503,7 @@
         CGFloat maxWidth = self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding] - [TTUniversalCommentCellLiteHelper cellRightPadding] - 30.f - [TTUniversalCommentCellLiteHelper nameViewRightPadding];
         _nameView = [[TTUserInfoView alloc] initWithBaselineOrigin:CGPointMake(0, 0) maxWidth:maxWidth limitHeight:[UIFont systemFontOfSize:[TTUniversalCommentCellLiteHelper nameViewFontSize]].lineHeight title:nil fontSize:[TTUniversalCommentCellLiteHelper nameViewFontSize] verifiedInfo:nil verified:NO owner:NO appendLogoInfoArray:nil];
         _nameView.frame = CGRectMake(self.avatarView.right + [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTUniversalCommentCellLiteHelper cellVerticalPadding], maxWidth, [TTDeviceUIUtils tt_newPadding:20.f]);
-        _nameView.titleLabel.textColor = [UIColor colorWithHexString:@"8D8D8D"];
+        _nameView.titleLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         WeakSelf;
         __weak typeof(_nameView) weakNameView = _nameView;
         [_nameView clickTitleWithAction:^(NSString *title) {
@@ -504,11 +518,13 @@
 - (TTDiggButton *)digButton {
     if (!_digButton) {
         _digButton = [TTDiggButton diggButtonWithStyleType:TTDiggButtonStyleTypeCommentOnly];
-        _digButton.frame = CGRectMake(self.nameView.right, [TTUniversalCommentCellLiteHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:80], [TTDeviceUIUtils tt_newPadding:15]);
-        _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, 0, 2, 0);
+
+        [_digButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 2, 0)];
+        [_digButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 6, 0, 0)];
+         _digButton.frame = CGRectMake(self.nameView.right, [TTUniversalCommentCellLiteHelper cellVerticalPadding], [TTDeviceUIUtils tt_newPadding:90], [TTDeviceUIUtils tt_newPadding:16]);
         _digButton.hitTestEdgeInsets = kTTCommentCellDigButtonHitTestInsets;
         if ([TTDeviceHelper OSVersionNumber] >= 8.f && UIAccessibilityIsBoldTextEnabled()) {
-            _digButton.imageEdgeInsets = UIEdgeInsetsMake(-2, -1, 2, 1);
+            [_digButton setImageEdgeInsets:UIEdgeInsetsMake(0, -1, 2, 6)];
         }
         WeakSelf;
         [_digButton setClickedBlock:^(TTDiggButtonClickType type) {
@@ -525,7 +541,7 @@
         _userInfoLabel = [[TTAsyncLabel alloc] init];
         _userInfoLabel.frame = CGRectMake(self.nameView.left, self.nameView.bottom, self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _userInfoLabel.font = [TTUniversalCommentCellLiteHelper userInfoLabelFont];
-        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
+        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _userInfoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _userInfoLabel.backgroundColor = [UIColor clearColor];
         _userInfoLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -539,7 +555,7 @@
         _timeLabel = [[TTAsyncLabel alloc] init];
         _timeLabel.frame = CGRectMake(self.nameView.left, self.contentLabel.bottom, self.width - [TTUniversalCommentCellLiteHelper cellHorizontalPadding] - [TTUniversalCommentCellLiteHelper avatarSize] - [TTUniversalCommentCellLiteHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _timeLabel.font = [TTUniversalCommentCellLiteHelper timeLabelFont];
-        _timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        _timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         _timeLabel.numberOfLines = 1;
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -551,7 +567,7 @@
     if (!_contentLabel) {
         _contentLabel = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectMake(self.nameView.left, self.timeLabel.bottom + [TTUniversalCommentCellLiteHelper contentLabelPadding], 0, 0)];
         _contentLabel.font = [TTCommentUIHelper tt_fontOfSize:[TTUniversalCommentCellLiteHelper contentLabelFont].pointSize]; // 采用苹方字体能正确居中对齐...
-        _contentLabel.textColor = SSGetThemedColorWithKey(kColorText1);
+        _contentLabel.textColor = SSGetThemedColorWithKey(kFHColorCharcoalGrey);
         _contentLabel.backgroundColor = [UIColor clearColor];
         _contentLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
         _contentLabel.attributedTruncationToken = [self attributedTruncationToken];
@@ -577,8 +593,8 @@
         _replyButton.hidden = YES;
         _replyButton.layer.cornerRadius = _replyButton.height / 2.f;
         _replyButton.layer.masksToBounds = YES;
-        _replyButton.backgroundColorThemeKey = kColorBackground3;
-        _replyButton.titleColorThemeKey = kColorText1;
+        _replyButton.backgroundColorThemeKey = kFHColorPaleGrey;
+        _replyButton.titleColorThemeKey = kFHColorBattleShipGrey;
         _replyButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     }
     return _replyButton;

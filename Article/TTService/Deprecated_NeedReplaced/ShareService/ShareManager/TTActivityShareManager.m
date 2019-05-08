@@ -288,7 +288,6 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     self.copyText = nil;
     self.facebookText = nil;
     self.twitterText = nil;
-    self.copyText = nil;
     self.copyContent = nil;
     self.hasImg = NO;
     self.itemTag = nil;
@@ -416,11 +415,11 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [_customActivities addObject:copyActivity];
     }
     //复制链接
-    if (!isEmptyString(_copyText)) {
+//    if (!isEmptyString(_copyText)) {
         TTActivity * copyActivity = [TTActivity activityOfCopy];
         [_customActivities addObject:copyActivity];
-    }
-    
+//    }
+
     if (!isAccountUser) {
         //举报
         TTActivity *reportActivity = [TTActivity activityOfReport];
@@ -616,11 +615,11 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [_customActivities addObject:copyActivity];
     }
     //复制链接
-    if (!isEmptyString(_copyText)) {
+//    if (!isEmptyString(_copyText)) {
         TTActivity * copyActivity = [TTActivity activityOfCopy];
         [_customActivities addObject:copyActivity];
-    }
-    
+//    }
+
     if (containReport) {
         //举报
         TTActivity * reportActivity = [TTActivity activityOfReport];
@@ -813,7 +812,8 @@ static BOOL isMovieFullScreen;
             title = _qqShareTitleText;
         }
         if (isEmptyString(title)) {
-            title = NSLocalizedString(@"爱看", nil);
+            //只有QQ空间写死了title。 TOTO:// 未来改成云控
+            title = NSLocalizedString(@"幸福里", nil);
         }
         
         UIImage *shareImage = _shareToWeixinMomentOrQZoneImage ? _shareToWeixinMomentOrQZoneImage : _shareImage;
@@ -1731,13 +1731,14 @@ static BOOL isMovieFullScreen;
         return @"share_twitter";
     }
     else if (activityType == TTActivityTypeCopy) {
-        return @"share_copy_link";
+        return @"copy";
+//        return @"share_copy_link";
     }
     else if (activityType == TTActivityTypeWeixinShare) {
-        return @"share_weixin";
+        return @"weixin";
     }
     else if (activityType == TTActivityTypeWeixinMoment) {
-        return @"share_weixin_moments";
+        return @"weixin_moments";
     }
     else if (activityType == TTActivityTypeSinaWeibo) {
         return @"share_weibo";
@@ -1746,7 +1747,7 @@ static BOOL isMovieFullScreen;
         return @"share_tweibo";
     }
     else if (activityType == TTActivityTypeQQZone) {
-        return @"share_qzone";
+        return @"qzone";
     }
     else if (activityType == TTActivityTypeKaiXin) {
         return @"share_kaixin";
@@ -1755,7 +1756,7 @@ static BOOL isMovieFullScreen;
         return @"share_renren";
     }
     else if (activityType == TTActivityTypeQQShare) {
-        return @"share_qq";
+        return @"qq";
     }
     else if (activityType == TTActivityTypeMyMoment) {
         return @"share_update";

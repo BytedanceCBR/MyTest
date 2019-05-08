@@ -6,12 +6,12 @@
 //
 
 #import "YSWebView.h"
-#import "TTHttpsControlManager.h"
+#import <TTNetBusiness/TTHttpsControlManager.h>
 #import "TTMonitor.h"
 #import "WKNavigation+TTAdditions.h"
 #import "TTURLUtils.h"
 #import <TTRexxar/TTRWKWebView.h>
-#import <TTNetworkUtilities.h>
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import <Masonry/Masonry.h>
 
 #define DESTROY_UIWEBVIEW_ARC(__WEBVIEW)   { __WEBVIEW.delegate = nil; [__WEBVIEW stopLoading]; __WEBVIEW = nil; }

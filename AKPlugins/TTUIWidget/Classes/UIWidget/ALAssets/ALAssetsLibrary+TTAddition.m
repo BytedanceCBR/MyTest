@@ -66,7 +66,7 @@
 {
     NSString * appName = [TTSandBoxHelper appDisplayName];
     if (isEmptyString(appName)) {
-        appName = NSLocalizedString(@"爱看", nil);
+        appName = NSLocalizedString(@"头条", nil);
     }
     [self saveImg:img toAlbum:appName withCompletionBlock:completionBlock];
 }

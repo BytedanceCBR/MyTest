@@ -32,6 +32,7 @@
 #import "TTCommentDetailCell.h"
 #import "TTCommentEmptyView.h"
 #import "TTCommentDetailToolbarView.h"
+#import "FHTraceEventUtils.h"
 
 
 #define kDeleteCommentNotificationKey   @"kDeleteCommentNotificationKey"
@@ -60,8 +61,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 @property (nonatomic, strong) NSString *groupId;
 @property (nonatomic, strong) NSString *fromPage;
 @property (nonatomic, assign) int64_t uniqueID;
+@property (nonatomic, strong) NSString *qid;
 
-@property (nonatomic,strong) NSDate *enterDate;
+@property (nonatomic, strong) NSDate *enterDate;
 @end
 
 @implementation TTCommentDetailViewController
@@ -101,6 +103,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     _follow = [baseCondition tt_stringValueForKey:@"follow"];
     _groupId = [baseCondition tt_stringValueForKey:@"groupId"];
     _fromPage = [baseCondition tt_stringValueForKey:@"fromPage"];
+    _qid = [baseCondition tta_stringForKey:@"qid"];
     if (_commentModel.commentID.longLongValue) {
         self.pageState.commentID = _commentModel.commentID.stringValue;
     }
@@ -110,6 +113,20 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     
     //一个trick的实现，转发需求临时方案，先把文章信息带到评论详情页 //xushuangqing....
     _article = [baseCondition tt_objectForKey:@"group" ofClass:[Article class]];
+
+    self.enterFrom = baseCondition[@"enterFrom"];
+    self.categoryID = baseCondition[@"categoryID"];
+    if (isEmptyString(self.categoryID)) {
+        self.categoryID = _categoryName;
+    }
+    self.logPb = baseCondition[@"logPb"];
+
+    self.store.enterFrom = self.enterFrom;
+    self.store.categoryID = self.categoryID;
+    self.store.logPb = self.logPb;
+
+    
+    
 }
 
 - (void)trySendCurrentPageStayTime {
@@ -144,7 +161,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [extra setValue:_pageState.detailModel.groupModel.itemID forKey:@"item_id"];
         [extra setValue:_recommendReason forKey:@"recommend_reason"];
         [extra setValue:@(duration/1000.0).stringValue forKey:@"ext_value"];
-//        wrapperTrackEventWithCustomKeys(@"stay_page", [@"click_" stringByAppendingString:_categoryName], _pageState.detailModel.groupModel.groupID, nil, extra);
+        wrapperTrackEventWithCustomKeys(@"stay_page", [@"click_" stringByAppendingString:_categoryName], _pageState.detailModel.groupModel.groupID, nil, extra);
         
         //新加的详情页关联时常
         NSString *enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
@@ -267,7 +284,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [goDetailExtraDic setValue:self.recommendReason forKey:@"recommend_reason"];
         NSString *enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-//            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"go_detail" label:enterFrom value:_groupId source:nil extraDic:goDetailExtraDic];
+            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"go_detail" label:enterFrom value:_groupId source:nil extraDic:goDetailExtraDic];
         }
         
         //log3.0 doubleSending
@@ -281,8 +298,12 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [logv3Dic setValue:_clickArea forKey:@"click_area"];
         [logv3Dic setValue:_follow forKey:@"follow"];
         [logv3Dic setValue:self.recommendReason forKey:@"recommend_reason"];
-//        [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+        [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
     }
+    
+    self.store.enterFrom = self.enterFrom;
+    self.store.categoryID = self.categoryID;
+    self.store.logPb = self.logPb;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -625,7 +646,19 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - actions
 
 - (void)toolbarDiggButtonOnClicked:(id)sender {
-    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
+    if (!self.pageState.detailModel.userDigg) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:_groupId forKey:@"group_Id"];
+        [params setValue:_groupId forKey:@"item_Id"];
+        [params setValue:_logPb  forKey:@"log_pd"];
+        [params setValue:_categoryName  forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+        [params setValue:@"comment_detail" forKey:@"position"];
+        [params setValue:@"comment_id" forKey:[self.commentModel.commentID stringValue]];
+        [TTTracker eventV3:@"rt_like" params:params];
+    }
+//    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
     [self.store dispatch:action];
 }
@@ -679,6 +712,10 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - TTDynamicDetailHeaderDelegate
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header avatarViewOnClick:(id)sender {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
     NSMutableDictionary *mdict = action.payload.mutableCopy;
     [mdict setValue:_categoryName forKey:@"categoryName"];
@@ -693,11 +730,34 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header nameViewOnClick:(id)sender {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.user.ID];
     [self.store dispatch:action];
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header digButtonOnClick:(id)sender {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:_groupId forKey:@"group_Id"];
+    [params setValue:_groupId forKey:@"item_Id"];
+    [params setValue:_logPb  forKey:@"log_pd"];
+    [params setValue:_categoryName  forKey:@"category_name"];
+    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+    [params setValue:@"comment_detail" forKey:@"position"];
+    if (!isEmptyString(_qid)) {
+        [params setValue:_groupId forKey:@"ansid"];
+        [params setValue:_qid forKey:@"qid"];
+    }
+    [params setValue:[self.commentModel.commentID stringValue] forKey:@"comment_id"];
+    if (!self.pageState.detailModel.userDigg) {
+        [TTTracker eventV3:@"rt_like" params:params];
+    } else {
+         [TTTracker eventV3:@"rt_unlike" params:params];
+    }
+    
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithCommentDetailModel:self.pageState.detailModel];
     [self.store dispatch:action];
 }
@@ -751,6 +811,10 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)dynamicDetailHeader:(TTCommentDetailHeader *)header quotedNameViewOnClick:(id)sender {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:self.pageState.detailModel.qutoedCommentModel.userID];
     [self.store dispatch:action];
 }
@@ -788,6 +852,10 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - TTCommentDetailCellDelegate
 
 - (void)tt_commentCell:(UITableViewCell *)view avatarTappedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID];
     [self.store dispatch:action];
 }
@@ -802,17 +870,42 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view digCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:_groupId forKey:@"group_Id"];
+    [params setValue:_groupId forKey:@"item_Id"];
+    [params setValue:_logPb forKey:@"log_pd"];
+    [params setValue:_categoryName  forKey:@"category_name"];
+    [params setValue:[FHTraceEventUtils generateEnterfrom:_categoryName] forKey:@"enter_from"];
+    [params setValue:@"replay" forKey:@"position"];
+    [params setValue:_commentModel.commentID forKey:@"comment_id"];
+    if (!isEmptyString(_qid)) {
+        [params setValue:_qid forKey:@"qid"];
+         [params setValue:_groupId forKey:@"ansid"];
+    }
+    
+    if (!model.userDigg) {
+        [TTTracker eventV3:@"rt_like" params:params];
+    }
     TTMomentDetailAction *action = [TTMomentDetailAction digActionWithReplyCommentModel:model];
     action.commentDetailModel = self.pageState.detailModel;
     [self.store dispatch:action];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view nameViewonClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.user.ID];
     [self.store dispatch:action];
 }
 
 - (void)tt_commentCell:(UITableViewCell *)view quotedNameOnClickedWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     TTMomentDetailAction *action = [TTMomentDetailAction enterProfileActionWithUserID:model.qutoedCommentModel.userID];
     [self.store dispatch:action];
 }

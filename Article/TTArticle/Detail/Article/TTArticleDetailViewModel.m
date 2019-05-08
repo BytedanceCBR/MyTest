@@ -30,7 +30,7 @@
 #import <TTBaseLib/UIDevice+TTAdditions.h>
 #import <TTBaseLib/JSONAdditions.h>
 #import <TTNetworkManager/TTNetworkManager.h>
-#import <TTABManagerUtil.h>
+#import <TTABManager/TTABManagerUtil.h>
 #import <AKWebViewBundlePlugin/TTDetailWebviewGIFManager.h>
 
 @interface TTArticleDetailViewModel ()
@@ -565,7 +565,8 @@
     if (![h5Extra objectForKey:@"h5_settings"]) {
         NSDictionary *h5Settings = [SSCommonLogic fetchH5SettingsForAuthor];
         NSMutableDictionary *h5SettingsDict = [NSMutableDictionary dictionaryWithDictionary:h5Settings];
-        
+        [h5SettingsDict setValue:@NO forKey:@"is_liteapp"];
+
         //头条认证展现需要透传
         [h5SettingsDict setValue:[SSCommonLogic userVerifyConfigs] forKey:@"user_verify_info_conf"];
         
@@ -611,7 +612,11 @@
     } else {
         [h5Extra setValue:@{@"status": @"-1"} forKey:@"pay_status"];
     }
+    // f100 去掉关注按钮
+    [h5Extra setValue:@YES forKey:@"hideFollowButton"];
+
     [h5Extra setValue:@YES forKey:@"is_lite"];
+
     return h5Extra;
 }
 

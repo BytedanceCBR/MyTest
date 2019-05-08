@@ -239,7 +239,7 @@ static CGFloat kAKRedPacketStatusBarHeight() {
 - (SSThemedLabel *)navBarTitleLabel {
     if (!_navBarTitleLabel) {
         _navBarTitleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake((self.width - [TTDeviceUIUtils tt_newPadding:200]) / 2, kAKRedPacketStatusBarHeight(), [TTDeviceUIUtils tt_newPadding:200], kAKRedPacketNavBarHeight)];
-        _navBarTitleLabel.text = @"爱看红包";
+        _navBarTitleLabel.text = @"头条红包";
         _navBarTitleLabel.textColorThemeKey = kColorText12;
         _navBarTitleLabel.textAlignment = NSTextAlignmentCenter;
         _navBarTitleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:17]];

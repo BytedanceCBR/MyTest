@@ -9,6 +9,13 @@
 #import <Foundation/Foundation.h>
 
 
+NSString * baseUrl(void);
+NSString * SNSBaseURL(void);
+NSString * securityURL(void);
+NSArray  * baseUrlMapping(void);
+NSString * logBaseURL(void);
+
+
 @interface CommonURLSetting : NSObject{
 }
 
@@ -25,6 +32,7 @@
 + (NSString *)channelBaseURL;
 + (NSString*)SNSBaseURL;
 + (NSString*)logBaseURL;
++ (NSString*)xlogBaseURL;
 + (NSString*)monitorBaseURL;
 
 #pragma mark - 详情页默认hosts
@@ -137,6 +145,8 @@
 + (NSString*)appLogConfigURLString;
 + (NSString*)appLogV3ConfigURLString;
 + (NSString*)appLogURLString;
++ (NSString*)rtAppLogURLString;
++ (NSString *)trackLogConfigURLString;
 + (NSString*)appLogV2ConfigURLString;
 + (NSString*)appLogV2URLString;
 #pragma mark - Auth URLs
@@ -255,4 +265,5 @@
 + (NSString *)searchSongListURLString;
 
 @end
+
 

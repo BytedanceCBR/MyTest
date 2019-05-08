@@ -57,6 +57,8 @@
 @class TTADTrackEventLinkModel;
 @class TTHotNewsData;
 
+@class FHExploreHouseItemData;
+
 
 @interface ExploreOrderedData (TTBusiness)
 
@@ -102,6 +104,8 @@
 @property (nonatomic, retain, nullable) TSVActivityEntranceOriginalData *tsvActivityEntranceOriginalData;
 @property (nonatomic, retain, nullable) TSVActivityBannerOriginalData *tsvActivityBannerOriginalData;
 @property (nonatomic, retain, nullable) TTHotNewsData *hotNewsData;
+
+@property (nonatomic, retain, nullable) FHExploreHouseItemData *houseItemsData;
 
 /**
  *  cell的Layout层

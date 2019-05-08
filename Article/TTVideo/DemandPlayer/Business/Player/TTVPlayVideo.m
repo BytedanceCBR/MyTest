@@ -13,7 +13,7 @@
 #import "TTVDemanderTrackerManager.h"
 #import "TTVPlayerUrlTracker.h"
 #import <TTImageView.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 //#import "SSADManager.h"
 #import "TTAdSplashMediator.h"
@@ -22,6 +22,7 @@
 #import "TTVVideoPlayerModel.h"
 #import "TTVPasterPlayer.h"
 #import "TTVMidInsertADPlayer.h"
+#import "TTVResolutionStore.h"
 
 extern NSString * const TTStrongPushNotificationWillShowNotification;
 extern NSString * const TTStrongPushNotificationWillHideNotification;
@@ -152,9 +153,13 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
 - (void)setPlayerModel:(TTVVideoPlayerModel *)playerModel
 {
     if (_playerModel != playerModel) {
-//        playerModel.urlBaseParameter = [TTNetworkUtilities commonURLParameters];
-        BOOL isMultiResolutionEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_multi_resolution_enabled" defaultValue:@NO freeze:NO] boolValue];
-        playerModel.enableResolution = isMultiResolutionEnabled && playerModel.enableResolution;
+//        playerModel.urlBaseParameter = [TTNetworkUtilities commonURLParameters];SSCommonLogic
+//        BOOL isMultiResolutionEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_multi_resolution_enabled" defaultValue:@NO freeze:NO] boolValue];
+        //获取f项目配置，根据配置是否显示标清和高清
+        BOOL isMultiResolutionEnabled = [[SSCommonLogic fhSettings] tta_boolForKey:@"video_multi_resolution_enabled"];
+        [TTVResolutionStore sharedInstance].userSelected = isMultiResolutionEnabled; //设置标清和普清是否自动
+        playerModel.enableResolution = isMultiResolutionEnabled && playerModel.enableResolution; //配置是否显示标清和高清
+        
         _playerModel = playerModel;
         [self ttv_addPlayer];
     }
@@ -204,7 +209,7 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
     [super layoutSubviews];
 }
 
-- (TTVDemanderTrackerManager *)commonTracker
+- (FHDemanderTrackerManager *)commonTracker
 {
     return _player.commonTracker;
 }

@@ -30,6 +30,8 @@
 @property (nonatomic, strong) id<TTVReplyModelProtocol> replyMomentCommentModel;
 @property (nonatomic, assign) BOOL isAdVideo;
 @property (nonatomic, strong) NSString *categoryID;
+@property (nonatomic, strong) NSString *enterFromStr;
+@property (nonatomic, strong) NSDictionary *logPb;
 @property (nonatomic, assign) BOOL isBanEmoji;
 
 - (instancetype)initWithViewFrame:(CGRect)viewFrame comment:(id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)commentModel showWriteComment:(BOOL)showWriteComment;

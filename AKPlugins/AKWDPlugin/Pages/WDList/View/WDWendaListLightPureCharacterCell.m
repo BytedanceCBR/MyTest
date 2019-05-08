@@ -317,7 +317,10 @@
     NSString *categoryName = [self.gdExtJson objectForKey:@"category_name"];
     NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&refer=wenda", self.ansEntity.user.userID];
     NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"list_answer_wenda" groupId:self.ansEntity.ansid profileUserId:self.ansEntity.user.userID];
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:result] userInfo:nil];
+    
+    // add by zjing 去掉个人主页跳转
+    
+//    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:result] userInfo:nil];
 }
 
 - (void)listCellUserHeaderViewFollowButtonClick:(TTFollowThemeButton *)followBtn {
@@ -432,7 +435,8 @@
     [dict setValue:@"answer_list_answer_cell" forKey:@"source"];
     [dict setValue:@"answer_list" forKey:@"position"];
     [dict setValue:self.ansEntity.ansid forKey:@"group_id"];
-    [dict setValue:@"weitoutiao" forKey:@"platform"];
+    [dict setValue:@"weitoutiao" forKey:@"share_platform"];
+    dict[@"event_type"] = @"house_app2c_v2";
     [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
 }
 

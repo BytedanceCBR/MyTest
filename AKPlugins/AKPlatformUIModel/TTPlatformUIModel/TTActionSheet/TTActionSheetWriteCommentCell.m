@@ -35,7 +35,7 @@
         [self.contentView addSubview:_contentLabel];
         [self.contentView addSubview:_arrowImageView];
         
-        [self setBackgroundColor:[UIColor colorWithDayColorName:@"f8f8f8" nightColorName:@"252525"]];
+        [self setBackgroundColor:[UIColor colorWithDayColorName:@"ffffff" nightColorName:@"252525"]];
         
     }
     return self;

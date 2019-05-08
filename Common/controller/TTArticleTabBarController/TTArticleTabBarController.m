@@ -85,14 +85,16 @@
 //#import "TTFantasyTimeCountDownManager.h"
 //#import "TTFantasyWindowManager.h"
 #import "AKActivityTabManager.h"
+#import "TTMessageNotificationTipsManager.h"
 //爱看
 #import "AKImageAlertManager.h"
 #import "AKActivityTabManager.h"
 #import "AKProfileBenefitManager.h"
 #import "AKLoginTrafficViewController.h"
-
-#import "Bubble-Swift.h"
-
+//#import "Bubble-Swift.h"
+#import <FHEnvContext.h>
+#import <BDABTestSDK/BDABTestManager.h>
+#import <HMDTTMonitor.h>
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -105,6 +107,23 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     TTTabbarTipViewTypeDefault  = 0,//针对的是关注tip和视频tip
     TTTabbarTipViewTypeRefresh,     //针对的是新用户刷新引导的tip
 };
+
+//@interface QuickLoginDelegate () <QuickLoginVCDelegate>
+//
+//@property (nonatomic, copy) void (^DidSelectItem)();
+//
+//@end
+//
+//
+//@implementation QuickLoginDelegate
+//
+//- (void)loginSuccessed {
+//    if (_DidSelectItem != nil) {
+//        _DidSelectItem();
+//    }
+//}
+//
+//@end
 
 @interface TTArticleTabBarController () <UITabBarControllerDelegate, UINavigationControllerDelegate, TTUIViewControllerTrackProtocol, TTAccountMulticastProtocol,TTInterfaceTabBarControllerProtocol>
 {
@@ -126,14 +145,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 @property (nonatomic, strong) LOTAnimationView *animationView1;
 
+@property (nonatomic, assign) BOOL isClickTab;
+
 @end
 
 @implementation TTArticleTabBarController
-
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    NSLog(@"TTArticleTabBarController test status Bar");
-    return UIStatusBarStyleLightContent;
-}
 
 - (void)dealloc
 {
@@ -145,7 +161,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [self registerNotification];
     
     if ([SSCommonLogic isNewLaunchOptimizeEnabled]) {
-        self.tabbarHeight = 44.f;
+        self.tabbarHeight = [TTDeviceHelper isIPhoneXDevice] ? ([TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + 49.f) : 49.f;
         self.ttTabBarStyle = @"White";
         self.ttHideNavigationBar = YES;
     }
@@ -183,7 +199,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTabbarIndex:) name:TTArticleTabBarControllerChangeSelectedIndexNotification object:nil];
-    
+    //消息通知优化重要的人消息未读提示
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(baiwanyingxiong:) name:@"kFantasyTimeCountDown" object:nil];
 }
 
@@ -261,8 +279,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [self reloadTheme];
     for (TTTabBarItem * item in ((TTTabbar *)self.tabBar).tabItems) {
         if ([item isEqual:[((TTTabbar *)self.tabBar).tabItems firstObject]]) {
-            item.ttBadgeView.badgeViewStyle = TTBadgeNumberPoint;
-            item.ttBadgeView.lastBadgeViewStyle = TTBadgeNumberPoint;
+            item.ttBadgeView.badgeViewStyle = TTBadgeNumberViewStyleDefaultWithBorder;
+            item.ttBadgeView.lastBadgeViewStyle = TTBadgeNumberViewStyleDefault;
         }
     }
 }
@@ -274,11 +292,31 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
     [self setupEssentialInitialization];
     [self constructTabItems];
+    
+    [UITabBar appearance].clipsToBounds = YES;
+    //添加自定义线
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0.5)];
+    lineView.backgroundColor = [UIColor clearColor];
+    [[UITabBar appearance] addSubview:lineView];
+
 //    [self addKVO];
     [[TSVTabTipManager sharedManager] setupShortVideoTabRedDotWhenStartupIfNeeded];
-    [self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
+    
+    [self addClientABTestLog];
 }
 
+// add by zjing 测试客户端AB分流清空
+- (void)addClientABTestLog
+{
+    id res1 = [BDABTestManager getExperimentValueForKey:@"show_house" withExposure:YES];
+    NSInteger status = -1;
+    if ([res1 respondsToSelector:@selector(integerValue)]) {
+        status = [res1 integerValue];
+    }
+    if (status != -1) {
+        [[HMDTTMonitor defaultManager]hmdTrackService:@"abtest_show_house" status:status extra:nil];
+    }
+}
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
@@ -304,14 +342,14 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     NSInteger htsTabStatus = 0;
     if ([[TSVTabManager sharedManager] indexOfShortVideoTab] == self.viewControllers.count - 1){
         htsTabStatus = 4;
-        [TTTrackerWrapper eventV3:@"launch_fourth_tab" params:@{@"tab_name":@"hotsoon_video"}];
+        [TTTrackerWrapper eventV3:@"launch_fourth_tab" params:@{@"tab_name":kTTUGCVideoCategoryID}];
     } else {
         [TTTrackerWrapper eventV3:@"launch_fourth_tab" params:@{@"tab_name":@"mine"}];
     }
     
     if ([[TSVTabManager sharedManager] indexOfShortVideoTab] == self.viewControllers.count - 2) {
         htsTabStatus = 3;
-        [TTTrackerWrapper eventV3:@"launch_third_tab" params:@{@"tab_name":@"hotsoon_video"}];
+        [TTTrackerWrapper eventV3:@"launch_third_tab" params:@{@"tab_name":kTTUGCVideoCategoryID}];
     } else {
         [TTTrackerWrapper eventV3:@"launch_third_tab" params:@{@"tab_name":@"weitoutiao"}];
     }
@@ -434,54 +472,67 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
 
     ((TTTabbar *)self.tabBar).tabItems = [TTTabBarManager sharedTTTabBarManager].tabItems;
-    
+
     WeakSelf;
     [((TTTabbar *)self.tabBar) setItemSelectedBlock:^(NSUInteger index){
         __strong typeof(wself) self = wself;
         
         void (^DidSelectItem)() = ^() {
+            
+            if (self.viewControllers.count > self.lastSelectedIndex && self.lastSelectedIndex >= 0) {
+                TTNavigationController *lastNav = self.viewControllers[self.lastSelectedIndex];
+                lastNav.shouldIgnorePushingViewControllers = YES;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    lastNav.shouldIgnorePushingViewControllers = NO;
+                });
+            }
+            
             self.selectedIndex = index;
             if(![[self currentTabIdentifier] isEqualToString:[self lastTabIdentifier]]) {
                 [(((TTTabbar *)self.tabBar).tabItems[self.lastSelectedIndex]) setState:TTTabBarItemStateNormal];
                 [(((TTTabbar *)self.tabBar).tabItems[self.selectedIndex]) setState:TTTabBarItemStateHighlighted];
             }
+            // add by zjing
+            if (![[self currentTabIdentifier] isEqualToString: kTTTabHomeTabKey]) {
+                TTTabBarItem *item = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kTTTabHomeTabKey];
+                [[TTTabBarManager sharedTTTabBarManager]reloadIconAndTitleForItem:item];
+            }
+
             [self tabBarController:self didSelectViewController:self.viewControllers[index]];
+            
         };
         
+
+        
         BOOL canItemSelected = YES;
-        NSString *toTabTag = ((TTTabbar *)self.tabBar).tabItems[index].identifier;
-        if (!tta_IsLogin() && [toTabTag isEqualToString:kFHouseMessageTabKey]) {
-            canItemSelected = NO;
-//            TTRouteUserInfo* obj = [[TTRouteUserInfo alloc] initWithInfo:@{@"callback": DidSelectItem}];
-//            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"fschema://flogin"] userInfo:obj];
-
-            NSDictionary *params = @{@"enter_from": @"messagetab", @"enter_type": @"tab"};
-            [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:^(BOOL result) {
-                
-                if (result) {
-                    DidSelectItem();
-                }
-            } params:params];
-                        
-            [self trackBadgeWithTabBarTag:kFHouseMessageTabKey];
-
-
-        }
-
+        //去掉消息tab强登录设定
+//        NSString *toTabTag = ((TTTabbar *)self.tabBar).tabItems[index].identifier;
+//        if (!tta_IsLogin() && [toTabTag isEqualToString:kFHouseMessageTabKey]) {
+//            canItemSelected = NO;
+//            QuickLoginDelegate* delegate = [[QuickLoginDelegate alloc] init];
+//            delegate.DidSelectItem = DidSelectItem;
+//            TTRouteUserInfo* obj = [[TTRouteUserInfo alloc] initWithInfo:@{@"delegate": delegate}];
+//            if ([TTDeviceHelper isIPhoneXDevice]) {
+//                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString: @"fschema://flogin"] userInfo:obj];
+//            } else {
+//                [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString: @"fschema://flogin"] userInfo: obj];
+//            }
+//            [self trackBadgeWithTabBarTag:kFHouseMessageTabKey enter_type:@"click_tab"];
+//
+//
+//        }
         if (canItemSelected) {
             DidSelectItem();
         }
     }];
-
-    //设置默认tabKey
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         //默认第一个Tab被选中（只有第一次生效）
 //        NSUInteger defaultIndex = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabHomeTabKey];
 //        [[TTTabBarManager sharedTTTabBarManager].tabItems[defaultIndex] setState:TTTabBarItemStateHighlighted];
         NSInteger type = [SSCommonLogic firstTabStyle];
-//        NSString *tabKey = kTTTabHomeTabKey;
-        NSString* tabKey = kFHouseHomeTabKey;
+        NSString *tabKey = kTTTabHomeTabKey;
         if (type == 1) {
             tabKey = [[NSUserDefaults standardUserDefaults] valueForKey:@"kLastSelectTab"];
             if (!tabKey) {
@@ -503,7 +554,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         } else if ([tabKey isEqualToString:kTTTabWeitoutiaoTabKey]) {
             tabInfo = @"weitoutiao";
         } else if ([tabKey isEqualToString:kTTTabHTSTabKey]) {
-            tabInfo = @"hotsoon_video";
+            tabInfo = kTTUGCVideoCategoryID;
         } else if ([tabKey isEqualToString:kTTTabMineTabKey]) {
             tabInfo = @"mine";
         } else if ([tabKey isEqualToString:kTTTabFollowTabKey]) {
@@ -527,6 +578,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         }
         NSInteger categoryType = [SSCommonLogic firstCategoryStyle];
         [TTTrackerWrapper eventV3:@"launch_position" params:@{@"tab_name":tabInfo, @"launch_type":@(categoryType), @"category_name":startCategory}];
+        
+        // add by zjing 首次默认tabBar 选中
+        [self trackBadgeWithTabBarTag:kTTTabHomeTabKey enter_type:@"default"];
         
         if ([tabKey isEqualToString:kTTTabHomeTabKey]) {
             NSUInteger defaultIndex = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabHomeTabKey];
@@ -673,6 +727,22 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [[TTTabBarManager sharedTTTabBarManager] reloadIconAndTitleForItem:item];
 }
 
+- (void)onAccountLogin
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
+    });
+}
+
+- (void)onAccountLogout
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
+    });
+}
+
 #pragma mark - Orientation
 
 - (BOOL)shouldAutorotate
@@ -715,7 +785,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 wrapperTrackEvent(@"video", @"video_tip_leave");
             }
         }];
-        
+        //跳转后隐藏消息通知
+        [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         [[NSNotificationCenter defaultCenter] postNotificationName:kExploreTopVCChangeNotification object:self];
     }
 }
@@ -725,6 +796,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     if (navigationController.viewControllers.count == 1 && NO == [TTAdSplashMediator shareInstance].isAdShowing) {
         //回到tabbar controller某个导航控制器的栈底，并且没有开屏广告
         [self showTipViewIfNeeded];
+        [self showMessageNotificationTips:nil];
     }
 }
 
@@ -991,7 +1063,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (BOOL)isTipsShowing
 {
-    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
+    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow ||
+        [TTMessageNotificationTipsManager sharedManager].isShowingTips) {
         return YES;
     }
     return NO;
@@ -1000,14 +1073,17 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 - (BOOL)tipsCouldShow
 {
     if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow ||
-        ![[TTGuideDispatchManager sharedInstance_tt] isQueueEmpty]) {
+        [TTMessageNotificationTipsManager sharedManager].isShowingTips || ![[TTGuideDispatchManager sharedInstance_tt] isQueueEmpty]) {
         //tip view动画消失或者已经展示
         return NO;
     }
-    
-    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
-    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {//进详情页
-        return NO;
+
+    // 修复线上发现的闪退问题
+    if ([self.viewControllers count] > self.lastSelectedIndex) {
+        UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
+        if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {//进详情页
+            return NO;
+        }
     }
     
     if (_categoryManagerView.isShowing){//频道管理
@@ -1034,6 +1110,41 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
     
     return YES;
+}
+
+- (void)showMessageNotificationTips:(NSNotification *)notification
+{
+    if (self.tabbarTipView.isAnimating || self.tabbarTipView.isShowing || self.tabbarTipView.willShow) {
+        //tip view动画消失或者已经展示
+        return;
+    }
+    
+    UIViewController *lastVC = self.viewControllers[self.lastSelectedIndex];
+    if ([lastVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)lastVC).viewControllers.count > 1) {
+        if([((UINavigationController *)lastVC).topViewController isKindOfClass:[TTProfileViewController class]]){
+            [[TTMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
+        }
+        return;
+    }
+    
+    if (_categoryManagerView.isShowing){
+        return;
+    }
+    
+    if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey] && [TTTabBarProvider isMineTabOnTabBar]) { // 在我的Tab页不显示浮窗，并且标记这条消息已读
+        [[TTMessageNotificationTipsManager sharedManager] saveLastImportantMessageID];
+        return;
+    }
+    
+    CGFloat tabCenterX = 0;
+    if ([TTTabBarProvider isMineTabOnTabBar]) {
+        NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabMineTabKey];
+        if (index < ((TTTabbar *)self.tabBar).tabItems.count) {
+            UIView *tabbarItemView = ((TTTabbar *)self.tabBar).tabItems[index];
+            tabCenterX = tabbarItemView.frame.origin.x + tabbarItemView.frame.size.width / 2;
+        }
+    }
+    [[TTMessageNotificationTipsManager sharedManager] showTipsInView:self.view tabCenterX:tabCenterX callback:nil];
 }
 
 - (void)topBarMineIconTap:(NSNotification *)notification
@@ -1071,13 +1182,17 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     else if ([[self currentTabIdentifier] isEqualToString:kTTTabHomeTabKey]) {
         [self trackBadgeWithLabel:@"click" tabBarTag:kTTTabHomeTabKey];
         [[TTFreeFlowTipManager sharedInstance] showHomeFlowAlert]; //流量统计弹窗
+        
+        [self trackBadgeWithTabBarTag:kTTTabHomeTabKey enter_type:@"click_tab"];
+
     }
     else if ([[self currentTabIdentifier] isEqualToString:kTTTabFollowTabKey]) {
         [self trackBadgeWithLabel:@"click" tabBarTag:kTTTabFollowTabKey];
     }
     else if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey]) {
         [self trackBadgeWithLabel:@"click" tabBarTag:kTTTabMineTabKey];
-        
+        //切换到我的tab后隐藏气泡
+        [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         // 标记能够展示绑定手机号逻辑
 //        [TTAccountBindingMobileViewController setShowBindingMobileEnabled:YES];
         //检查一下是否需要弹窗
@@ -1095,21 +1210,19 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //        }
         [self trackBadgeWithLabel:@"click" tabBarTag:kAKTabActivityTabKey];
         
-    } else if ([[self currentTabIdentifier] isEqualToString:kFHouseHomeTabKey]) {
-
-        [self trackBadgeWithTabBarTag:kFHouseHomeTabKey];
+    }else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+        
+        [self trackBadgeWithTabBarTag:kFHouseFindTabKey enter_type:@"click_tab"];
         
     }else if ([[self currentTabIdentifier] isEqualToString:kFHouseMessageTabKey]) {
         
-        [self trackBadgeWithTabBarTag:kFHouseMessageTabKey];
-
+        [self trackBadgeWithTabBarTag:kFHouseMessageTabKey enter_type:@"click_tab"];
+        
     }else if ([[self currentTabIdentifier] isEqualToString:kFHouseMineTabKey]) {
         
-        [self trackBadgeWithTabBarTag:kFHouseMineTabKey];
-
+        [self trackBadgeWithTabBarTag:kFHouseMineTabKey enter_type:@"click_tab"];
+        
     }
-    
-    
     TLS_LOG(@"didSelectViewController=%ld", self.selectedIndex);
     
 
@@ -1142,7 +1255,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
             [[NSNotificationCenter defaultCenter] postNotificationName:kMomentTabbarKeepClickedNotification object:self userInfo:nil];
             if (badgeView.hidden) {
-//                wrapperTrackEvent(@"navbar", @"click_follow");
+                wrapperTrackEvent(@"navbar", @"click_follow");
             } else {
                 wrapperTrackEvent(@"navbar", @"click_follow_tip");
             }
@@ -1192,20 +1305,20 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         }
         
         // enter_tab埋点
-        NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:1];
-        NSString *selectedTabName = [[self class] tabStayStringForIndex:self.selectedIndex];
-        [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
-        if ([selectedTabName isEqualToString:@"hotsoon_video"]) {//小视频tab 该埋点必须发
-            [logv3Dic setValue:self.autoEnterShortVideoTab ? @1 : @0 forKey:@"is_auto"];
-            [logv3Dic setValue:[[TSVTabTipManager sharedManager] isShowingRedDot] ? @1 : @0 forKey:@"with_tips"];
-            self.autoEnterShortVideoTab = NO;
+//        NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:1];
+//        NSString *selectedTabName = [[self class] tabStayStringForIndex:self.selectedIndex];
+//        [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
+//        if ([selectedTabName isEqualToString:@"f_hotsoon_video"]) {//小视频tab 该埋点必须发
+//            [logv3Dic setValue:self.autoEnterShortVideoTab ? @1 : @0 forKey:@"is_auto"];
+//            [logv3Dic setValue:[[TSVTabTipManager sharedManager] isShowingRedDot] ? @1 : @0 forKey:@"with_tips"];
+//            self.autoEnterShortVideoTab = NO;
 //            [TTTrackerWrapper eventV3:@"enter_tab" params:logv3Dic];
-        } else {
-            [logv3Dic setValue:badgeView.hidden?@0:@1 forKey:@"with_tips"];
-            [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
-            self.autoEnterTab = NO;
+//        } else {
+//            [logv3Dic setValue:badgeView.hidden?@0:@1 forKey:@"with_tips"];
+//            [logv3Dic setValue:self.autoEnterTab?@1:@0 forKey:@"is_auto"];
+//            self.autoEnterTab = NO;
 //            [TTTrackerWrapper eventV3:@"enter_tab" params:logv3Dic];
-        }
+//        }
         
         if ([[self currentTabIdentifier] isEqualToString:kTTTabHomeTabKey]) {
             eventName = @"click_bottom_home";
@@ -1218,7 +1331,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                     wrapperTrackEvent(@"navbar", @"enter_home_click");
 //                }
             }
+            
+
         }
+
         else if ([[self currentTabIdentifier] isEqualToString:kTTTabFollowTabKey]) {
             NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabFollowTabKey];
             TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
@@ -1378,13 +1494,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             //之前是多少，现在还是多少
             isTrackForShow = NO;
         }
-        if(displayRedPoint)
-        {
-            [badgeView setBadgeNumber:TTBadgeNumberPoint];
-        }
-        else
-        {
-            [badgeView setBadgeNumber:number];
+        if (index == 0) {
+            // 首页不显示红点 数字
+            [badgeView setBadgeNumber:TTBadgeNumberHidden];
+        } else {
+            if(displayRedPoint)
+            {
+                [badgeView setBadgeNumber:TTBadgeNumberPoint];
+            }
+            else
+            {
+                [badgeView setBadgeNumber:number];
+            }
         }
         
         if (isTrackForShow) {
@@ -1455,12 +1576,12 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
     __block BOOL shouldDisplayRedBadge = NO;
     __block BOOL isTrackForMineTabShow = NO;
-    
+    TTSettingGeneralEntry * messageEntry = [[TTSettingMineTabManager sharedInstance_tt] getEntryForType:TTSettingMineTabEntyTypeMessage];
     NSArray<TTSettingMineTabGroup *> *sections = [TTSettingMineTabManager sharedInstance_tt].visibleSections;
     [sections enumerateObjectsUsingBlock:^(TTSettingMineTabGroup*  _Nonnull group, NSUInteger idx, BOOL * _Nonnull stop1) {
         [group.items enumerateObjectsUsingBlock:^(TTSettingGeneralEntry * _Nonnull entry, NSUInteger idx, BOOL * _Nonnull stop2) {
             //如果entry是message entry，并且message hint count需要显示到关注频道，则过滤
-            if ( ![[TTCategoryBadgeNumberManager sharedManager] isFollowCategoryNeedShowMessageBadgeNumber]) {
+            if (entry != messageEntry || ![[TTCategoryBadgeNumberManager sharedManager] isFollowCategoryNeedShowMessageBadgeNumber]) {
                 if(entry.hintStyle == TTSettingHintStyleNumber)
                 {
                     number += entry.hintCount;
@@ -1546,6 +1667,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         [_categoryManagerView didShow:^{
             StrongSelf;
             [self sendLogForTabStayWithIndex:0 delayResetStayTime:YES];
+            //点击频道选择列表的时候隐藏气泡
+            [[TTMessageNotificationTipsManager sharedManager] forceRemoveTipsView];
         } didDisAppear:^{
             StrongSelf;
             UIViewController * trackVC = self.viewControllers.firstObject;
@@ -1553,6 +1676,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 trackVC = [(UINavigationController*)trackVC viewControllers].firstObject;
             }
             trackVC.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+            [self showMessageNotificationTips:nil];
         }];
     }
     return _categoryManagerView;
@@ -1605,6 +1729,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 #pragma mark -- Statistics Helper
 //因为时序问题，一些场景需要延迟重置对应VC的停留时长
+
+#pragma mark stay_tab埋点
 - (void)sendLogForTabStayWithIndex:(NSUInteger)index delayResetStayTime:(BOOL)delayReset {
     NSMutableDictionary * valueDict = [NSMutableDictionary dictionary];
     UIViewController * trackVC = [self viewControllers][self.lastSelectedIndex];
@@ -1625,20 +1751,34 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     
     [valueDict setValue:@(((long long)(stayTime * 1000))) forKey:@"value"];
     
-    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
 //        [TTTrackerWrapper category:@"umeng" event:@"stay_tab" label:[[self class] tabStayStringForIndex:index] dict:valueDict];
-    }
+//    }
     
     //log3.0 doubleSending
     NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:2];
     [logv3Dic setValue:@(((long long)(stayTime * 1000))) forKey:@"stay_time"];
     NSString *selectedTabName = [[self class] tabStayStringForIndex:index];
     [logv3Dic setValue:selectedTabName forKey:@"tab_name"];
-    if ([selectedTabName isEqualToString:@"hotsoon_video"]) {//小视频tab 该埋点必须发
-//        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic];
-    } else {
-//        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic isDoubleSending:YES];
+    [logv3Dic setValue:self.isClickTab ? @"click_tab":@"default" forKey:@"enter_type"];
+
+    if (index < self.viewControllers.count) {
+
+        TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
+        NSString *with_tips = badgeView.badgeNumber != 0 ? @"1" : @"0";
+        [logv3Dic setValue:with_tips forKey:@"with_tips"];
+
     }
+//    [[EnvContext shared].tracer writeEvent:TraceEventName.stay_tab params:logv3Dic];
+    self.isClickTab = YES;
+
+//    if ([selectedTabName isEqualToString:@"f_hotsoon_video"]) {//小视频tab 该埋点必须发
+//        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic];
+//    } else {
+//        [TTTrackerWrapper eventV3:@"stay_tab" params:logv3Dic isDoubleSending:YES];
+//    }
+
+    
 }
 
 + (NSString *)tabStayStringForIndex:(NSUInteger)index {
@@ -1653,10 +1793,15 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 + (NSDictionary *)tagToLogEventName {
     return @{
-             kTTTabHomeTabKey:@"stream",
+//             kTTTabHomeTabKey:@"stream",
+             kTTTabHomeTabKey:@"main",
+             kFHouseFindTabKey:@"find",
+             kFHouseMineTabKey:@"mine",
+             kFHouseMessageTabKey:@"message",
+
              kTTTabVideoTabKey:@"video",
              kTTTabFollowTabKey:@"follow",
-             kTTTabHTSTabKey:@"hotsoon_video",
+             kTTTabHTSTabKey:kTTUGCVideoCategoryID,
              kTTTabWeitoutiaoTabKey:@"weitoutiao",
              kTTTabMineTabKey:@"mine",
              kAKTabActivityTabKey:@"tab_task"
@@ -1739,9 +1884,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //    }
 //}
 
-#pragma mark - 红点统计
-- (void)trackBadgeWithTabBarTag:(NSString *)tag {
+#pragma mark - 点击埋点
 
+- (void)trackBadgeWithTabBarTag: (NSString *)tag enter_type: (NSString *)enter_type{
+    
     NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:tag];
     
     if (index >= self.viewControllers.count) {
@@ -1749,28 +1895,17 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     }
     TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
     NSString *tab_name = @"be_null";
-    NSString *enter_type = @"click_tab";
-    NSString *with_tips = @"0";
+    NSString *with_tips = badgeView.badgeNumber != 0 ? @"1" : @"0";
     
-    if ([tag isEqualToString:kFHouseHomeTabKey]) {
-        tab_name = @"main";
-    }
-    else if ([tag isEqualToString:kFHouseMessageTabKey]) {
-        tab_name = @"message";
-    }
-    else if ([tag isEqualToString:kFHouseMineTabKey]){
-        tab_name = @"mine";
-    }
-    if (badgeView.badgeValue) {
-        
-        with_tips = @"1";
-    }
+    tab_name = [[self class] tabStayStringForIndex:index] ? : @"be_null";
     
     NSMutableDictionary *params = @{@"with_tips": with_tips, @"enter_type": enter_type, @"tab_name": tab_name}.mutableCopy;
-    [[EnvContext shared].tracer writeEvent:TraceEventName.enter_tab params:params];
+//    FHEnvContext recordEvent:<#(nonnull NSDictionary *)#> andEventKey:<#(nonnull NSString *)#>
+//    [[EnvContext shared].tracer writeEvent:TraceEventName.enter_tab params:params];
     
 }
 
+#pragma mark - 红点统计
 
 - (void)trackBadgeWithLabel:(NSString *)label tabBarTag:(NSString *)tag
 {
@@ -1909,7 +2044,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
                 if ([curVC isKindOfClass:[UINavigationController class]] && ((UINavigationController *)curVC).viewControllers.count > 1) {
                     return;
                 }
-                
+                                                                  
                 self.autoEnterShortVideoTab = YES;
                 [TTShortVideoHelper openShortVideoTab];
             }

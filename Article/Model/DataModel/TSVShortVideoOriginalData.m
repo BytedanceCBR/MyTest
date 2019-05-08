@@ -38,6 +38,8 @@ NSString * const kTSVShortVideoDeleteUserInfoKeyGroupID = @"kTSVShortVideoDelete
                        @"originalDict",
                        @"userRepined",
                        @"primaryID",
+                       @"filterWords",
+
                        ];
     }
     return properties;
@@ -84,7 +86,10 @@ NSString * const kTSVShortVideoDeleteUserInfoKeyGroupID = @"kTSVShortVideoDelete
     
     self.userRepined = self.shortVideo.userRepin;
     
-    
+    // 不喜欢的理由
+    if ([self.originalDict objectForKey:@"filter_words"]) {
+        self.filterWords = [self.originalDict tt_arrayValueForKey:@"filter_words"];
+    }
     
     [self.shortVideo save];
 }

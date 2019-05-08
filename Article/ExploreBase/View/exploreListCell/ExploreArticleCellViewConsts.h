@@ -50,8 +50,6 @@
 #define kCellRightPicTitleLabelMaxLine 3                       //右小图titleLabel最大行数
 #define kCellTitleLineHeight           cellTitleLineHeight()   //titleLabel行高
 #define kCellTitleLabelFontSize        cellTitleLabelFontSize()//titleLabel字体大小
-#define kCellTitleLabelFont            [UIFont boldSystemFontOfSize:kCellTitleLabelFontSize]//titleLabel字体
-
 #define kCellTitleLabelTextColor       kColorText1             //titleLabel字体颜色
 //问答的为14号字
 #define kCellWenDaAbstractViewLineHeight cellWenDaAbstractViewLineHeight()//摘要行高

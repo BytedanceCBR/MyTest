@@ -8,7 +8,7 @@
 
 #import "TTIconLabel.h"
 #import "TTAsyncLabel.h"
-#import "TTVerifyNightMaskView.h"
+#import <TTVerifyKit/TTVerifyNightMaskView.h>
 #import "TTDeviceUIUtils.h"
 #import "UIViewAdditions.h"
 #import "TTThemeManager.h"

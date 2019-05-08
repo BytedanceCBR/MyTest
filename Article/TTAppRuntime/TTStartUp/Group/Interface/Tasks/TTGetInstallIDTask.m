@@ -40,6 +40,9 @@
         }
         [mDict setValue:@(needEncrypt) forKey:@"need_encrypt"];
         
+        NSString *url = [[CommonURLSetting logBaseURL] stringByAppendingString:@"/service/2/device_register/"];
+        [mDict setValue:url forKey:@"register_url_string"];
+        
         return [mDict copy];
     }];
     

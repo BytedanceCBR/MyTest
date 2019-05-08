@@ -14,6 +14,7 @@ typedef void(^TTPhotoScrollViewDismissBlock) ();
 typedef enum : NSUInteger {
     PhotosScrollViewSupportDownloadMode = 0, // default value
     PhotosScrollViewSupportSelectMode = 1,
+    PhotosScrollViewSupportBrowse = 2 , //仅仅浏览
 } PhotosScrollViewMode;
 
 typedef NS_ENUM(NSInteger, TTPhotoScrollViewMoveDirection) {
@@ -30,16 +31,33 @@ typedef NS_ENUM(NSInteger, TTPhotoScrollViewMoveDirection) {
 @property(nonatomic, assign, readonly)NSInteger currentIndex;
 /** 打开的时候需要展示的index */
 @property(nonatomic, assign)NSUInteger startWithIndex;
+
+@property(nonatomic, assign)BOOL isShowAlbumAndCloseButton;
+
 /** 图片个数 */
 @property(nonatomic, assign, readonly)NSInteger photoCount;
 /** 滚动引起index改变的时候调用 */
 @property(nonatomic, copy) void (^indexUpdatedBlock)(NSInteger lastIndex, NSInteger currentIndex);
+/** 图片保存的时候调用 */
+@property(nonatomic, copy) void (^saveImageBlock)(NSInteger currentIndex);
+
+/**点击全部图片*/
+@property(nonatomic, copy) void (^albumImageBtnClickBlock)(NSInteger index);
+
+@property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
+
 
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
 
+/** 图片title数组*/
+@property(nonatomic, strong)NSArray * imageTitles;
+
 /** TTImageInfosModel数组*/
 @property(nonatomic, strong)NSArray * imageInfosModels;
+
+/** 小图数组*/
+@property(nonatomic, strong)NSArray * smallImageInfosModels;
 
 /** Extended by luohuaqing to support selecting image on preview */
 @property (nonatomic, assign)PhotosScrollViewMode mode;
@@ -48,6 +66,9 @@ typedef NS_ENUM(NSInteger, TTPhotoScrollViewMoveDirection) {
 @property (nonatomic, strong)NSMutableArray * isSelecteds;
 @property (nonatomic, assign)NSUInteger selectLimit;
 @property (nonatomic, assign)BOOL autoSelectImageWhenClickDone;
+
+/** 是否支持长按保存，默认YES */
+@property (nonatomic, assign)BOOL longPressToSave;
 
 // Extended by lizhuoli to support drag down and drag up to close
 

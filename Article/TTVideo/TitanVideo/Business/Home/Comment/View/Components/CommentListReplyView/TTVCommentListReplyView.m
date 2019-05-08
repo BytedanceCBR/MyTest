@@ -10,6 +10,8 @@
 //#import "TTCommentReplyModel.h"
 #import "SSThemed.h"
 #import "TTRoute.h"
+#import "NetworkUtilities.h"
+#import "TTIndicatorView.h"
 
 #define kTopPadding [TTDeviceUIUtils tt_newPadding:12.f]
 
@@ -107,10 +109,11 @@ extern UIColor *tt_ttuisettingHelper_detailViewCommentReplyBackgroundColor(void)
 {
     _toComment = commentModel;
     _replyArr = [TTVCommentListReplyModel replyListForComment:commentModel];
-    _replyTableView.frame = CGRectMake(0, kTopPadding, self.width, [self.class heightForReplyTableViewWithReplyArr:_replyArr width:self.width toComment:_toComment]);
+     _replyTableView.frame = CGRectMake(0, kTopPadding, self.width, [self.class heightForReplyTableViewWithReplyArr:_replyArr width:self.width toComment:_toComment]);
     [_replyTableView reloadData];
-    _replyTableView.superview.height = _replyTableView.height + kTopPadding*2;
-    self.height = _replyTableView.height + kTopPadding*2;
+       _replyTableView.superview.height = _replyTableView.height + kTopPadding*2;
+       self.height = _replyTableView.height + kTopPadding*2;
+
 }
 
 
@@ -167,6 +170,12 @@ extern UIColor *tt_ttuisettingHelper_detailViewCommentReplyBackgroundColor(void)
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (!TTNetworkConnected()) {
+        NSString *tip = @"连接失败，请稍后再试";
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tip indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:^(BOOL isUserDismiss) {
+        }];
+        return;
+    }
     if (indexPath.row < _replyArr.count) {
         if (self.replyActionBlock) {
             self.replyActionBlock(_replyArr[indexPath.row]);

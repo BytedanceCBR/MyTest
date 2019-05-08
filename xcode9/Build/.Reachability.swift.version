@@ -1,0 +1,24 @@
+{
+  "Mac" : [
+    {
+      "name" : "Reachability",
+      "hash" : "d06b918ca9ee5f109c0cea6d66363d9199cf4a528ebf08376f7476c81ea60469"
+    }
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+    {
+      "name" : "Reachability",
+      "hash" : "2917c462e219be97814c127def8e58d8da37f8b11b80622aae6739aa1532260f"
+    }
+  ],
+  "commitish" : "v4.3.0",
+  "iOS" : [
+    {
+      "name" : "Reachability",
+      "hash" : "6ebdad3e139a7e8116fd20f036825448028834f12b483426e03411ea9e9d0594"
+    }
+  ]
+}

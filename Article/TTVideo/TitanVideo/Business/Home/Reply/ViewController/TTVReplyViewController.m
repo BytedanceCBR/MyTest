@@ -136,8 +136,12 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         isBanForward = [commentDetailModel banForwardToWeitoutiao].boolValue;
     }
     _detailView.isBanEmoji = commentDetailModel.banEmojiInput || self.isBanEmoji || self.isAdVideo || isBanForward;
-//    _detailView.hasDeleteReplyPermission = [GET_SERVICE_BY_PROTOCOL(TTUGCPermissionService) hasDeletePermissionWithOriginCommentOrThreadUserID:self.viewModel.commentModel.userID.stringValue];
-    _detailView.hasDeleteReplyPermission = YES;
+    BOOL hasDeleteReplyPermission = NO;
+    NSString *selfUID = [TTAccountManager userID];
+    if (!isEmptyString(selfUID) && [self.viewModel.commentModel.userID.stringValue isEqualToString:selfUID]) {
+        hasDeleteReplyPermission = YES;
+    };
+    _detailView.hasDeleteReplyPermission = hasDeleteReplyPermission;
     WeakSelf;
     _detailView.dismissBlock = ^ {
         StrongSelf;
@@ -412,6 +416,10 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 
 #pragma mark private(cell)
 - (void)p_enterProfileWithUserID:(NSString *)userID {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
@@ -479,6 +487,10 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         }
 
     } commentRepostWithPreRichSpanText:nil commentSource:nil];
+
+    replyManager.enterFrom = self.enterFromStr;
+    replyManager.categoryID = self.categoryID;
+    replyManager.logPb = self.logPb;
 
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
 
@@ -574,70 +586,6 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     }
 }
 
-//- (void)forwardToWeitoutiao {
-//    //文章新版评论的转发，实际转发对象为文章，操作对象为评论
-//    NSDictionary *repostParameters = [[self commonRepostParameters] copy];
-//    if (!SSIsEmptyDictionary(repostParameters)) {
-//        [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:@"sslocal://repost_page"] userInfo:TTRouteUserInfoWithDict(repostParameters)];
-//    }
-//}
-
-//- (NSDictionary *)commonRepostParameters{
-//
-//    TTCommentDetailModel *commentDetailModel = self.commentDetailModel;
-//
-//    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-//    if (!SSIsEmptyDictionary(commentDetailModel.repost_params)) {
-//        [parameters addEntriesFromDictionary:commentDetailModel.repost_params];
-//    }
-//    NSString *content;
-//    NSString *contentRichSpan;
-//
-//    NSMutableArray *segments = [[NSMutableArray alloc] init];
-//
-//    TTRichSpanText *contentRichSpanText = [[TTRichSpanText alloc] initWithText:commentDetailModel.content richSpansJSONString:commentDetailModel.contentRichSpanJSONString];
-//    TTRepostContentSegment *segment = [[TTRepostContentSegment alloc] initWithRichSpanText:contentRichSpanText userID:commentDetailModel.user.ID username:commentDetailModel.user.name];
-//
-//    if (segment) {
-//        [segments addObject:segment];
-//    }
-//
-//    TTRepostContentSegment *segment2 = nil;
-//    if (!isEmptyString(commentDetailModel.qutoedCommentModel.commentContent)) {
-//        TTRichSpanText *qutoedCommentRichSpanText = [[TTRichSpanText alloc] initWithText:commentDetailModel.qutoedCommentModel.commentContent richSpansJSONString:commentDetailModel.qutoedCommentModel.commentContentRichSpanJSONString];
-//        segment2 = [[TTRepostContentSegment alloc] initWithRichSpanText:qutoedCommentRichSpanText
-//                                                                 userID:commentDetailModel.qutoedCommentModel.userID
-//                                                               username:commentDetailModel.qutoedCommentModel.userName];
-//    }
-//    if (segment2) {
-//        [segments addObject:segment2];
-//    }
-//
-//    TTRepostContentSegment *segment3 = nil;
-//    if (!isEmptyString(commentDetailModel.groupContent)) {
-//
-//        TTRichSpans *groupRichSpans = [TTRichSpans richSpansForJSONString:commentDetailModel.groupContentRichSpan];
-//        TTRichSpanText *groupRichSpanText = [[TTRichSpanText alloc] initWithText:commentDetailModel.groupContent richSpans:groupRichSpans];
-//        segment3 = [[TTRepostContentSegment alloc] initWithRichSpanText:groupRichSpanText userID:commentDetailModel.groupUserId username:commentDetailModel.groupUserName];
-//    }
-//    if (segment3) {
-//        [segments addObject:segment3];
-//    }
-//
-//    TTRichSpanText *richSpanText = [TTRepostContentSegment richSpanTextForRepostSegments:segments];
-//    if (richSpanText) {
-//        content = richSpanText.text;
-//        if (richSpanText.richSpans) {
-//            contentRichSpan = [TTRichSpans JSONStringForRichSpans:richSpanText.richSpans];
-//        }
-//    }
-//    [parameters setValue:@(commentDetailModel.groupMediaType == 2) forKey:@"is_video"];
-//    [parameters setValue:content forKey:@"content"];
-//    [parameters setValue:contentRichSpan forKey:@"content_rich_span"];
-//
-//    return parameters;
-//}
-
 #pragma mark - UI
 
 #pragma mark - SSActivityViewDelegate
@@ -645,24 +593,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 {
     if (view == _phoneShareView) {
         TTShareSourceObjectType sourceType = TTShareSourceObjectTypeMoment;
-//        if (itemType == TTActivityTypeWeitoutiao) {
-//            NSMutableDictionary *extraDic = [[NSMutableDictionary alloc] init];
-//            [extraDic setValue:self.categoryID forKey:@"category_name"];
-//            [extraDic setValue:self.commentDetailModel.groupModel.groupID forKey:@"group_id"];
-//            [extraDic setValue:self.commentDetailModel.groupModel.itemID forKey:@"item_id"];
-//            [extraDic setValue:self.commentDetailModel.commentID forKey:@"comment_id"];
-//            [extraDic setValue:@"" forKey:@"log_pb"];
-//            [extraDic setValue:@"weitoutiao" forKey:@"share_platform"];
-//            [TTTrackerWrapper eventV3:@"rt_share_to_platform"
-//                               params:extraDic];
-//            [self forwardToWeitoutiao];
-//            if (ttvs_isShareIndividuatioEnable()){
-//                [[TTActivityShareSequenceManager sharedInstance_tt] instalAllShareActivitySequenceFirstActivity:itemType];
-//            }
-//        }
-//        else {
-            [_activityActionManager performActivityActionByType:itemType inViewController:[TTUIResponderHelper topViewControllerFor: self] sourceObjectType:sourceType uniqueId:self.commentDetailModel.groupModel.groupID];
-//        }
+        [_activityActionManager performActivityActionByType:itemType inViewController:[TTUIResponderHelper topViewControllerFor: self] sourceObjectType:sourceType uniqueId:self.commentDetailModel.groupModel.groupID];
         self.phoneShareView = nil;
     }
 }

@@ -153,7 +153,7 @@ static NSArray *s_localDefaultCategories;
 
 + (TSVCategory *)mainCategory
 {
-    TSVCategory *mainCategory = [self insertCategoryForName:NSLocalizedString(@"推荐",nil) categoryID:@"hotsoon_video" concernID:@"" orderIndex:@0 subscribed:NO categoryType:TTFeedListDataTypeShortVideo categoryTopType:TTCategoryModelTopTypeShortVideo save:YES];
+    TSVCategory *mainCategory = [self insertCategoryForName:NSLocalizedString(@"推荐",nil) categoryID:kTTUGCVideoCategoryID concernID:@"" orderIndex:@0 subscribed:NO categoryType:TTFeedListDataTypeShortVideo categoryTopType:TTCategoryModelTopTypeShortVideo save:YES];
     return mainCategory;
 }
 

@@ -12,9 +12,9 @@
 #import "TTFollowNotifyServer.h"
 #import "TTIconFontChatroomDefine.h"
 #import "UIButton+TTAdditions.h"
-#import "TTKitchenMgr.h"
-#import "TTKitchenHeader.h"
-#import "AKUIHelper.h"
+#import <TTKitchen/TTKitchenMgr.h>
+#import <TTKitchen/TTKitchenHeader.h>
+
 #define kFollowText NSLocalizedString(@"关注", nil)
 #define kHasFollowText NSLocalizedString(@"已关注", nil)
 #define kMutualFollowText NSLocalizedString(@"互相关注", nil)
@@ -34,7 +34,6 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
 @property (nonatomic, strong) SSThemedImageView *loadingView;
 
 @property (nonatomic, strong) SSThemedImageView *redPacketImageView;
-@property (nonatomic, strong) CAGradientLayer   *backGrandientLayer;
 @end
 
 @implementation TTFollowThemeButtonImp
@@ -80,15 +79,6 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
     return _redPacketImageView;
 }
 
-- (CAGradientLayer *)backGrandientLayer
-{
-    if (_backGrandientLayer == nil) {
-        _backGrandientLayer = [CAGradientLayer layer];
-        _backGrandientLayer.zPosition = -1;
-    }
-    return _backGrandientLayer;
-}
-
 - (int)constHeight {
     if (_constHeight <= 0) {
         return kDefaultFollowButtonHeight();
@@ -117,13 +107,13 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
 - (instancetype)initWithUnfollowedType:(TTUnfollowedType)unfollowedType followedType:(TTFollowedType)followedType followedMutualType:(TTFollowedMutualType)followedMutualType {
     self = [super initWithFrame:CGRectMake(0, 0, kDefaultFollowButtonWidth(), self.constHeight)];
     if (self) {
+        self.layer.cornerRadius = 4;
         _followed = NO;
         _loading = NO;
         _unfollowedType = unfollowedType;
         _followedType = followedType;
         _followedMutualType = followedMutualType;
         [self refreshUI];
-        [self.layer addSublayer:self.backGrandientLayer];
     }
     return self;
 }
@@ -186,7 +176,6 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
             [self refreshUnfollowedUI];
         }
     }
-    [self refreshBackGrandientLayer];
 }
 
 - (void)refreshLoadingUI {
@@ -202,10 +191,10 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
         } else {
             switch (_followedType) {
                 case TTFollowedType101:
+                case TTFollowedType102:
                 case TTFollowedType103:
                 case TTFollowedType104:
                 case TTFollowedType105:
-                case TTFollowedType102:
                     _loadingView.imageName = @"toast_keywords_refresh_gray";
                     break;
                 default:
@@ -264,7 +253,7 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
             _followLabel.text = @"关注";
             _followLabel.textColorThemeKey = kColorText12;
             
-            self.backgroundColor = [UIColor clearColor];
+            self.backgroundColorThemeKey = [SSCommonLogic followButtonDefaultColorStyleRed] ? kColorBackground7 : kColorBackground8;
             self.borderColorThemeKey = nil;
         }
             break;
@@ -306,7 +295,7 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
                 width = kRedPacketFollowButtonWidth();
             }
             self.followLabel.font = [UIFont systemFontOfSize:TTFollowButtonFloat(14.0)];
-            _followLabel.text = !isEmptyString([KitchenMgr getString:kKCUGCRedpacketNoIconStyleText]) ? [KitchenMgr getString:kKCUGCRedpacketNoIconStyleText] : @"关注领钱";
+            _followLabel.text = !isEmptyString([TTKitchen getString:kKCUGCRedpacketNoIconStyleText]) ? [TTKitchen getString:kKCUGCRedpacketNoIconStyleText] : @"关注领钱";
             _followLabel.textColorThemeKey = kColorText12;
             
             self.backgroundColorThemeKey = [SSCommonLogic followButtonDefaultColorStyleRed] ? kColorBackground7 : kColorBackground8;
@@ -335,7 +324,7 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
         case TTUnfollowedType204:
         {
             self.followLabel.font = [UIFont boldSystemFontOfSize:TTFollowButtonFloat(14.0)];
-            _followLabel.text = !isEmptyString([KitchenMgr getString:kKCUGCRedpacketNoIconStyleText]) ? [KitchenMgr getString:kKCUGCRedpacketNoIconStyleText] : @"关注领钱";
+            _followLabel.text = !isEmptyString([TTKitchen getString:kKCUGCRedpacketNoIconStyleText]) ? [TTKitchen getString:kKCUGCRedpacketNoIconStyleText] : @"关注领钱";
             _followLabel.textColorThemeKey = [SSCommonLogic followButtonDefaultColorStyleRed] ? kColorText4 : kColorText6;
             
             self.backgroundColorThemeKey = nil;
@@ -518,32 +507,6 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
     [self tryFitColor];
 }
 
-- (void)refreshBackGrandientLayer
-{
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    self.backGrandientLayer.hidden = _followed;
-    if (!_followed) {
-        switch (_unfollowedType) {
-            case TTUnfollowedType101:
-            {
-                CAGradientLayer *layer = self.backGrandientLayer;
-                layer.hidden = _followed;
-                [AKUIHelper setupLayerToAIKanStyleWithlayer:layer];
-                layer.frame = self.bounds;
-                layer.masksToBounds = YES;
-                layer.cornerRadius = self.height / 2;
-                layer.position = CGPointMake(self.width / 2, self.height / 2);
-            }
-                break;
-            default:
-            self.backGrandientLayer.hidden = YES;
-                break;
-        }
-    }
-    [CATransaction commit];
-}
-
 - (void)setHighlighted:(BOOL)highlighted {
     UIColor *borderColor = [UIColor colorWithCGColor:self.layer.borderColor];
     [super setHighlighted:highlighted];
@@ -567,15 +530,6 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
         self.backgroundColor = bgColor;
         self.layer.borderColor = borderColor.CGColor;
     }
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    self.backGrandientLayer.frame = self.bounds;
-    [CATransaction commit];
 }
 
 - (void)layoutSubviewsWithWidth:(int)width {
@@ -604,7 +558,6 @@ static UIColor *TTGetDayColorUsingArrayOrKey(NSArray *themeArray, NSString *key)
     } else {
         self.layer.borderWidth = 0;
     }
-    self.layer.cornerRadius = self.height / 2;
 }
 
 @end

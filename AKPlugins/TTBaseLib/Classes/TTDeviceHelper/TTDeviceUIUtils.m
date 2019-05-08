@@ -17,6 +17,7 @@
         case TTDeviceMode736: return size;
         case TTDeviceMode667:
         case TTDeviceMode812: return size;
+        case TTDeviceMode896: return size;
         case TTDeviceMode568: return size + (size > 15 ? -2 : -1);
         case TTDeviceMode480: return size + (size > 15 ? -2 : -1);
     }
@@ -30,6 +31,7 @@
         case TTDeviceMode736: return ceil(size * 1.1);
         case TTDeviceMode667:
         case TTDeviceMode812: return ceil(size);
+        case TTDeviceMode896: return ceil(size);
         case TTDeviceMode568: return ceil(size * 0.85);
         case TTDeviceMode480: return ceil(size * 0.85);
     }
@@ -46,6 +48,7 @@
         case TTDeviceMode736: return size;
         case TTDeviceMode667:
         case TTDeviceMode812: return size;
+        case TTDeviceMode896: return size;
         case TTDeviceMode568: return size + (size > 15 ? -2 : -1);
         case TTDeviceMode480: return size + (size > 15 ? -2 : -1);
     }
@@ -59,6 +62,7 @@
         case TTDeviceMode736: return ceil(size);
         case TTDeviceMode667:
         case TTDeviceMode812: return ceil(size);
+        case TTDeviceMode896: return ceil(size);
         case TTDeviceMode568: return ceil(size * 0.85);
         case TTDeviceMode480: return ceil(size * 0.85);
     }
@@ -71,6 +75,7 @@
         case TTDeviceMode736: return ceil(size);
         case TTDeviceMode667:
         case TTDeviceMode812: return ceil(size);
+        case TTDeviceMode896: return ceil(size);
         case TTDeviceMode568: return ceil(size * 0.9);
         case TTDeviceMode480: return ceil(size * 0.9);
     }
@@ -84,6 +89,7 @@
         case TTDeviceMode736: return ceil(size);
         case TTDeviceMode667:
         case TTDeviceMode812: return ceil(size);
+        case TTDeviceMode896: return ceil(size);
         case TTDeviceMode568: return ceil(size * 0.9);
         case TTDeviceMode480: return ceil(size * 0.9);
     }
@@ -96,6 +102,7 @@
         case TTDeviceMode736: return ceil(size);
         case TTDeviceMode667:
         case TTDeviceMode812: return ceil(size);
+        case TTDeviceMode896: return ceil(size);
         case TTDeviceMode568: return ceil(size);
         case TTDeviceMode480: return ceil(size);
     }

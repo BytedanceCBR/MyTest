@@ -17,6 +17,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#define WIDTHSCALE [UIScreen mainScreen].bounds.size.width / 375
+
 @interface UIView (TTCategory)
 
 /**

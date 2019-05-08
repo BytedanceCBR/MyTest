@@ -51,7 +51,7 @@ static BOOL preloadInvalid = NO;
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
     [super startWithApplication:application options:launchOptions];
-    return;
+    
     // 推荐频道数据预加载
     TTCategory *mainCategory = [TTArticleCategoryManager mainArticleCategory];
     

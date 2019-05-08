@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SSThemed.h"
 #import "TTTabBarItem.h"
+#define kTTTabBarHeight ([TTDeviceHelper isIPhoneXDevice] ? 83.f : 49.f)
 
 typedef void(^TabBarItemSelectedBlock)(NSUInteger index);
 

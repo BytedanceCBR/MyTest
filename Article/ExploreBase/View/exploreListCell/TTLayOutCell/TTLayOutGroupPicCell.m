@@ -49,11 +49,7 @@
                 orderedData.layoutUIType = TTLayOutCellUITypePlainCellGroupPicS2;
             }
             else{
-                if (orderedData.isAd) {
-                    orderedData.cellLayOut = [[TTLayOutPlainGroupPicCellModelS0AD alloc] init];
-                } else {
-                    orderedData.cellLayOut = [[TTLayOutPlainGroupPicCellModelS0 alloc] init];
-                }
+                orderedData.cellLayOut = [[TTLayOutPlainGroupPicCellModelS0 alloc] init];
                 orderedData.layoutUIType = TTLayOutCellUITypePlainCellGroupPicS0;
             }
         }

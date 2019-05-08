@@ -44,28 +44,28 @@
         id<TTActivityContentItemShareProtocol> contentItem = (id<TTActivityContentItemShareProtocol>)[activity contentItem];
         
         if ([TTShareMethodUtil isQQFriendShare:contentItem]) {
-            [self shareItem:contentItem extroInfo:kShareChannelFromQQ];
+//            [self shareItem:contentItem extroInfo:kShareChannelFromQQ];
             [self replaceQQImageURL:contentItem];
             if ([contentItem shareType] == TTShareVideo) {
                 TTQQFriendContentItem *qqItem = (TTQQFriendContentItem *)contentItem;
                 qqItem.image = [self videoImageWith:qqItem.image];
             }
         } else if ([TTShareMethodUtil isQQZoneShare:contentItem]) {
-            [self shareItem:contentItem extroInfo:kShareChannelFromQQZone];
+//            [self shareItem:contentItem extroInfo:kShareChannelFromQQZone];
             if ([contentItem shareType] == TTShareVideo) {
                 TTQQZoneContentItem *qqZoneItem = (TTQQZoneContentItem *)contentItem;
                 qqZoneItem.image = [self videoImageWith:qqZoneItem.image];
             }
         } else if([TTShareMethodUtil isWeChatShare:contentItem]) {
-            [self shareItem:contentItem extroInfo:kShareChannelFromWeixin];
-            [self shareItem:contentItem extroInfo:@"wxshare_count=1"];
+//            [self shareItem:contentItem extroInfo:kShareChannelFromWeixin];
+//            [self shareItem:contentItem extroInfo:@"wxshare_count=1"];
             if ([contentItem shareType] == TTShareVideo) {
                 TTWechatContentItem *wechatItem = (TTWechatContentItem *)contentItem;
                 wechatItem.thumbImage = [self videoImageWith:wechatItem.thumbImage];
             }
         } else if ([TTShareMethodUtil isWeChatTimeLineShare:contentItem]) {
-            [self shareItem:contentItem extroInfo:kShareChannelFromWeixinMoment];
-            [self shareItem:contentItem extroInfo:@"wxshare_count=1"];
+//            [self shareItem:contentItem extroInfo:kShareChannelFromWeixinMoment];
+//            [self shareItem:contentItem extroInfo:@"wxshare_count=1"];
         }
 //        } else if([TTShareMethodUtil isWeiboShare:contentItem]) {
 //            [self shareItem:contentItem extroInfo:@"wbshare_count=1"];

@@ -461,7 +461,7 @@ static inline NSTextCheckingTypes NSTextCheckingTypeFromUIDataDetectorType(UIDat
                     else {
                         
                         NSURL * url = [TTStringHelper URLWithURLString:actionURLString];
-                        if ([actionURLString hasPrefix:TTLocalScheme] || [actionURLString hasPrefix:@"interestingnews1206"] || [actionURLString hasPrefix:@"fschema"]) {
+                        if ([actionURLString hasPrefix:TTLocalScheme] || [actionURLString hasPrefix:@"snssdk35"]) {
                             [[TTRoute sharedRoute] openURLByPushViewController:url];
                         }
                         else {

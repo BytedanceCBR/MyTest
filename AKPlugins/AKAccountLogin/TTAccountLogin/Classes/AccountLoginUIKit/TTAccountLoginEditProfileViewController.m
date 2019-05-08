@@ -246,7 +246,7 @@ UIImagePickerControllerDelegate
 
 - (void)showAlertViewIfNeed
 {
-    TTAccountAlertView *alert = [[TTAccountAlertView alloc] initWithTitle:[NSString stringWithFormat:@"确认使用爱看默认用户名\"%@\"?", [[TTAccount sharedAccount] user].name] message:nil cancelBtnTitle:@"使用" confirmBtnTitle:@"去修改" animated:YES tapCompletion:^(TTAccountAlertCompletionEventType type) {
+    TTAccountAlertView *alert = [[TTAccountAlertView alloc] initWithTitle:[NSString stringWithFormat:@"确认使用头条默认用户名\"%@\"?", [[TTAccount sharedAccount] user].name] message:nil cancelBtnTitle:@"使用" confirmBtnTitle:@"去修改" animated:YES tapCompletion:^(TTAccountAlertCompletionEventType type) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             
         } else if(type == TTAccountAlertCompletionEventTypeCancel) {

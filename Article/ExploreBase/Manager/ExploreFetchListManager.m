@@ -35,7 +35,7 @@
 #import "HorizontalCard.h"
 
 #import "TSVRecUserCardOriginalData.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 //#import "TTFollowCategoryFetchExtraManager.h"
 
 
@@ -374,6 +374,12 @@
         }
 
         NSString * categoryID = [(NSDictionary *)[userInfo objectForKey:kExploreFetchListConditionKey] objectForKey:kExploreFetchListConditionListUnitIDKey];
+        
+        if (needUpdateItems && !isEmptyString(categoryID) && !isEmptyString(self.categoryID) && ![categoryID isEqualToString:self.categoryID]) {
+            //返回的是数据与当前显示的categoryID不一致，不更新数据
+            needUpdateItems = NO;
+        }
+        
 //        ExploreOrderedDataListType listType = [[userInfo objectForKey:kExploreFetchListListTypeKey] intValue];
 //        ExploreOrderedDataListLocation listLocaton = [[userInfo objectForKey:kExploreFetchListListLocationKey] intValue];
 
@@ -766,7 +772,7 @@
         return nil;
     }
 
-    BOOL postThreadInsertEnable = [KitchenMgr getBOOL:kKCUGCPostThreadInsertEnable];
+    BOOL postThreadInsertEnable = [TTKitchen getBOOL:kKCUGCPostThreadInsertEnable];
     if (!postThreadInsertEnable) {
         return nil;
     }

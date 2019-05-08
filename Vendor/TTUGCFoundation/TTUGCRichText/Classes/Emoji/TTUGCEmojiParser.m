@@ -173,24 +173,24 @@ static NSRegularExpression *emojiRegex;
         return;
     }
 
-    FRUserExpressionConfigRequestModel *requestModel = [[FRUserExpressionConfigRequestModel alloc] init];
-
-    [[TTNetworkManager shareInstance] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
-        if (!error && [responseModel isKindOfClass:[FRUserExpressionConfigResponseModel class]]) {
-            FRUserExpressionConfigResponseModel *response = (FRUserExpressionConfigResponseModel *)responseModel;
-
-            NSMutableArray <NSString *> *sortArray = [[NSMutableArray alloc] init];
-            for (NSNumber *idx in response.data.default_seq) {
-                [sortArray addObject:[idx stringValue]];
-            }
-
-            self.emojiSortArray = [sortArray copy];
-
-            [[NSUserDefaults standardUserDefaults] setObject:[sortArray copy] forKey:TTUserExpressionConfigSortArrayKey];
-            [[NSUserDefaults standardUserDefaults] setDouble:[[NSDate date] timeIntervalSince1970] forKey:TTUserExpressionConfigRequestDateKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-    }];
+//    FRUserExpressionConfigRequestModel *requestModel = [[FRUserExpressionConfigRequestModel alloc] init];
+//
+//    [[TTNetworkManager shareInstance] requestModel:requestModel callback:^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel) {
+//        if (!error && [responseModel isKindOfClass:[FRUserExpressionConfigResponseModel class]]) {
+//            FRUserExpressionConfigResponseModel *response = (FRUserExpressionConfigResponseModel *)responseModel;
+//
+//            NSMutableArray <NSString *> *sortArray = [[NSMutableArray alloc] init];
+//            for (NSNumber *idx in response.data.default_seq) {
+//                [sortArray addObject:[idx stringValue]];
+//            }
+//
+//            self.emojiSortArray = [sortArray copy];
+//
+//            [[NSUserDefaults standardUserDefaults] setObject:[sortArray copy] forKey:TTUserExpressionConfigSortArrayKey];
+//            [[NSUserDefaults standardUserDefaults] setDouble:[[NSDate date] timeIntervalSince1970] forKey:TTUserExpressionConfigRequestDateKey];
+//            [[NSUserDefaults standardUserDefaults] synchronize];
+//        }
+//    }];
 }
 
 - (BOOL)shouldRequestUserExpressionConfig {

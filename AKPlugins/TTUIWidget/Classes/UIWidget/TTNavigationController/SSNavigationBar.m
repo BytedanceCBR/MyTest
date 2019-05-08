@@ -66,7 +66,7 @@
 - (UIEdgeInsets)alignmentRectInsets {
     UIEdgeInsets insets = UIEdgeInsetsZero;
     if (self.orientation == SSNavigationButtonOrientationOfLeft) {
-        insets = UIEdgeInsetsMake(0.f, isEmptyString(_button.titleLabel.text) ? 14.f : 2.f, 0.f, 0.f);
+        insets = UIEdgeInsetsMake(0.f, isEmptyString(_button.titleLabel.text) ? 8.f : 2.f, 0.f, 0.f);
     } else if (self.orientation == SSNavigationButtonOrientationOfRight) {
         insets = UIEdgeInsetsMake(0.f, 0.f, 0.f, isEmptyString(_button.titleLabel.text) ? 14.f : 2.f);
     }

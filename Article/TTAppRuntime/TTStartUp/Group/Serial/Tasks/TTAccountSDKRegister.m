@@ -10,7 +10,7 @@
 #import <TTAccountBusiness.h>
 #import <TTAccountLoginConfLogic.h>
 #import <TTSandBoxHelper.h>
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "SSCookieManager.h"
 #import "TTInstallIDManager.h"
 #import "TTProjectLogicManager.h"
@@ -98,13 +98,11 @@
     wechatConf.platformType = TTAccountAuthTypeWeChat;
     wechatConf.consumerKey  = WXAppID;
     wechatConf.platformName = PLATFORM_WEIXIN;
-    // 爱看platformAppID
-    wechatConf.platformAppId = @"207";
-//#ifdef INHOUSE
-//    if ([TTSandBoxHelper isInHouseApp]) {
-//        wechatConf.platformAppId = @"55";
-//    }
-//#endif
+#ifdef INHOUSE
+    if ([TTSandBoxHelper isInHouseApp]) {
+        wechatConf.platformAppId = @"52";
+    }
+#endif
     [TTAccount registerPlatform:wechatConf];
     
     TTAccountPlatformConfiguration *QQConf = [TTAccountPlatformConfiguration new];

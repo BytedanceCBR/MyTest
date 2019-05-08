@@ -297,7 +297,8 @@
  */
 + (CGSize)resizablePicSize:(CGFloat)width {
     CGFloat w = (width - kPicViewPaddingInner() * 2) / 3;
-    CGFloat h = ceil(w * 0.6935);
+//    CGFloat h = ceil(w * 0.6935);
+    CGFloat h = ceil(w * 0.6548);
     w = ceil(w);
     return CGSizeMake(w, h);
 }
@@ -332,7 +333,7 @@
 + (CGSize)getADActionSize:(CGFloat)width {
     CGSize size = CGSizeZero;
     size.width = width;
-    size.height = 44;
+    size.height = 43;
     return size;
 }
 
@@ -383,6 +384,13 @@
         case TTDeviceMode568: return ceil(size * 0.85);
         case TTDeviceMode480: return ceil(size * 0.85);
     }
+}
+
+/**过滤F项目来源字符串*/
++ (NSString *)fitlerSourceStr:(NSString *)sourceStr
+{
+    NSString *resultSource = [sourceStr stringByReplacingOccurrencesOfString:@"悟空问答" withString:@"问答"];
+    return resultSource;
 }
 
 @end

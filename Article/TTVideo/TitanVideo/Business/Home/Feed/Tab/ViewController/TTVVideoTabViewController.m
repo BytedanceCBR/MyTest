@@ -42,6 +42,8 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTTabBarProvider.h"
 #import "TTTopBarManager.h"
+#import "TTVPlayVideo.h"
+#import "TTCustomAnimationDelegate.h"
 
 extern BOOL ttsettings_showRefreshButton(void);
 
@@ -98,7 +100,7 @@ extern BOOL ttsettings_showRefreshButton(void);
         BOOL result = [[[TTSettingsManager sharedManager] settingForKey:@"should_optimize_launch" defaultValue:@YES freeze:NO] boolValue];
         if (result) {
             self.hidesBottomBarWhenPushed = NO;
-            self.ttStatusBarStyle = UIStatusBarStyleDefault;
+            self.ttStatusBarStyle = UIStatusBarStyleLightContent;
 //            [[UIApplication sharedApplication] aspect_hookSelector:@selector(setStatusBarStyle:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> aspectInfo, UIStatusBarStyle x) {
 //                NSLog(@"x == %ld", x);
 //            }error:nil];
@@ -109,6 +111,7 @@ extern BOOL ttsettings_showRefreshButton(void);
     }
     return self;
 }
+
 
 - (void)viewDidLoad {
     
@@ -163,7 +166,7 @@ extern BOOL ttsettings_showRefreshButton(void);
             [self categorySelectorView:self.categorySelectorView selectCategory:self.categories[0]];
         }
     }
-    UIStatusBarStyle style = UIStatusBarStyleDefault;
+    UIStatusBarStyle style = UIStatusBarStyleLightContent;
     //TODO:Jason
 //    if ([TTTopBarManager sharedInstance_tt].topBarConfigValid.boolValue) {
 //        if (![TTTopBarManager sharedInstance_tt].isStatusBarLight) {
@@ -459,7 +462,7 @@ extern BOOL ttsettings_showRefreshButton(void);
             [dict setValue:@"click" forKey:@"enter_type"];
             NSString *enterFrom = [NSString stringWithFormat:@"%@_%@", @"click", category.categoryID];
             [dict setValue:enterFrom forKey:@"enter_from"];
-//            [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
+            [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
             
         } else {
             //5.7 新增对于视频Tab刷新统计
@@ -533,7 +536,7 @@ extern BOOL ttsettings_showRefreshButton(void);
         [dict setValue:@"flip" forKey:@"enter_type"];
         NSString *enterFrom = [NSString stringWithFormat:@"%@_%@", @"flip", currCategoryModel.categoryID];
         [dict setValue:enterFrom forKey:@"enter_from"];
-//        [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
+        [TTTrackerWrapper eventV3:@"enter_category" params:dict isDoubleSending:YES];
 
     }
 }
@@ -616,6 +619,55 @@ extern BOOL ttsettings_showRefreshButton(void);
         _topBar.delegate = self;
     }
     return _topBar;
+}
+
+#pragma TTTopBarDelegate
+- (void)searchActionFired:(id)sender {
+    [TTVPlayVideo removeAll];
+    [self searchBarButtonActionFired:sender];
+    wrapperTrackEvent(@"video", @"video_tab_search");
+}
+
+- (void)searchBarButtonActionFired:(id)sender {
+    [TTTrackerWrapper eventV3:@"search_tab_click" params:@{@"search_source":@"top_bar",
+                                                           @"from_tab_name" : @"video"}];
+    ExploreSearchViewController *searchViewController = [[ExploreSearchViewController alloc] initWithNavigationBar:NO showBackButton:NO queryStr:nil fromType:ListDataSearchFromTypeVideo];
+    searchViewController.fromTabName = _topBar.tab;
+    searchViewController.animatedWhenDismiss = YES;
+    [searchViewController view]; //preload view
+    searchViewController.searchView.isFromTopSearchbar = YES;
+    searchViewController.searchView.categoryID = [self.categorySelectorView categoryId];
+    
+    if ([SSCommonLogic useNewSearchTransitionAnimation] && [SSCommonLogic isSearchTransitionEnabled] && [SSCommonLogic useNewSearchTransitionAnimationForVideo]) {
+        searchViewController.ttNavBarStyle = @"Red";
+        if ([TTTopBarManager sharedInstance_tt].topBarConfigValid.boolValue) {
+            searchViewController.ttHideNavigationBar = YES;
+        }
+        TTCustomAnimationNavigationController *nav = [[TTCustomAnimationNavigationController alloc] initWithRootViewController:searchViewController animationStyle:TTCustomAnimationStyleUGCPostEntrance];
+        nav.useWhiteStyle = YES;
+        nav.ttNavBarStyle = @"White";
+        [self presentViewController:nav animated:YES completion:nil];
+    } else {
+        if (![TTTabBarProvider isMineTabOnTabBar] || ![SSCommonLogic isSearchTransitionEnabled] || ![SSCommonLogic useNewSearchTransitionAnimationForVideo]){
+            [self.navigationController pushViewController:searchViewController animated:YES];
+            [TTCustomAnimationManager sharedManager].pushSearchVCWithCustomAnimation = NO;
+        }
+        else{
+            TTCustomAnimationNavigationController *nav = [[TTCustomAnimationNavigationController alloc] initWithRootViewController:searchViewController animationStyle:TTCustomAnimationStyleUGCPostEntrance];
+            [self presentViewController:nav animated:YES completion:nil];
+        }
+    }
+}
+
+- (void)mineActionFired:(id)sender {
+    [TTVPlayVideo removeAll];
+    // 标记能够展示绑定手机号逻辑
+    [TTAccountBindingMobileViewController setShowBindingMobileEnabled:YES];
+    
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Profile" bundle:nil];
+    TTProfileViewController *profileVC = [sb instantiateInitialViewController];
+    profileVC.fromTab = _topBar.tab;
+    [self.navigationController pushViewController:profileVC animated:YES];
 }
 
 #pragma safeInset

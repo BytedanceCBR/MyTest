@@ -27,11 +27,11 @@
 		<key>navigationTextColorGray</key>
 		<string>ff001100</string>
 		<key>TabBarTitleColor</key>
-		<string>707070</string>
+		<string>999999</string>
 		<key>TabBarBackgroundWhite</key>
 		<string>252525</string>
 		<key>TabBarTitleHighlightedColor</key>
-		<string>935656</string>
+		<string>299cff</string>
 		<key>videoCellTitle</key>
 		<string>e0e0e0</string>
 		<key>TextColor1</key>
@@ -286,6 +286,36 @@
 		<string>927435</string>
 		<key>SkinGreen</key>
 		<string>56773d</string>
+		<key>blue1</key>
+		<string>081f33</string>
+		<key>blue2</key>
+		<string>299cff</string>
+		<key>blue3</key>
+		<string>3d6e99</string>
+		<key>blue4</key>
+		<string>e6f3ff</string>
+		<key>grey1</key>
+		<string>333333</string>
+		<key>grey2</key>
+		<string>666666</string>
+		<key>grey3</key>
+		<string>999999</string>
+		<key>grey4</key>
+		<string>bbbbbb</string>
+		<key>grey5</key>
+		<string>dddddd</string>
+		<key>grey6</key>
+		<string>e8e8e8</string>
+		<key>grey7</key>
+		<string>f5f5f5</string>
+		<key>red1</key>
+		<string>ff5869</string>
+		<key>red2</key>
+		<string>#ff5869</string>
+		<key>green1</key>
+		<string>0cce6b</string>
+		<key>darkblue1</key>
+		<string>0b1626</string>
 	</dict>
 	<key>images</key>
 	<dict>

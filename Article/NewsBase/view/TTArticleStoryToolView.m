@@ -190,7 +190,9 @@ typedef NS_ENUM(NSInteger, ToolItemType)
         jumpSchema = [self _jumpSchemaWithToolItemType:ToolItemTypeNext];
         label = @"click_next_group";
     }
+    
     NSURL *jumpUrl = [NSURL URLWithString:jumpSchema];
+    
     if ([[TTRoute sharedRoute] canOpenURL:jumpUrl]) {
         [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl];
     }

@@ -12,14 +12,13 @@
 #import "TTVisitorCell.h"
 #import "TTVisitorDateCell.h"
 #import "ArticleProfileFollowConst.h"
-
+#import "ArticleMomentProfileViewController.h"
 #import "TTNetworkManager.h"
 #import "TTVisitorRequestModel.h"
 #import "TTVisitorModel.h"
 #import "TTFriendModel.h"
 #import "TTVisitorHeaderView.h"
 #import "TTRelationFooterView.h"
-
 
 
 @interface TTVisitorViewController ()
@@ -219,6 +218,12 @@
     }
     
     wrapperTrackEvent(@"mine_visitor", @"enter_visitors_profile");
+    TTVisitorFormattedModelItem *aModel = _formattedModel.users[indexPath.row];
+    ArticleMomentProfileViewController *controller = [[ArticleMomentProfileViewController alloc] initWithUserID:aModel.user_id];
+    controller.from = fromString;
+    controller.fromPage = @"mine_visitors_list";
+    controller.categoryName = @"mine_tab";
+    [self.topNavigationController pushViewController:controller animated:YES];
 }
 
 #pragma mark - TTTableRefreshEventPageProtocol

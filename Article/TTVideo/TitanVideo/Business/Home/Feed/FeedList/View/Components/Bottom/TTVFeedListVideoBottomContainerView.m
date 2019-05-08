@@ -9,7 +9,7 @@
 #import "TTVFeedListVideoBottomContainerView.h"
 #import <TTVideoService/VideoFeed.pbobjc.h>
 #import <TTVideoService/Common.pbobjc.h>
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTIconLabel+VerifyIcon.h"
 #import "TTVFeedItem+Extension.h"
 #import "TTVFeedCellMoreActionManager.h"
@@ -31,11 +31,12 @@
 #import "TTWeChatShare.h"
 #import "TTQQShare.h"
 //#import "TTDingTalkShare.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "AKUILayout.h"
 #import "TTVDiggAction.h"
-#define kLeftPadding        15
-#define kRightPadding       15
+#import "UIColor+Theme.h"
+#define kLeftPadding        20
+#define kRightPadding       20
 #define kTopPadding         12
 #define kGapAvatarView      8
 #define KShareTitleWidth    36
@@ -88,8 +89,8 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
         _digButton.hitTestEdgeInsets = UIEdgeInsetsMake(0, -10, 0, -10);
         _digButton.highlightedTitleColorThemeKey = nil;
         _digButton.selectedTitleColorThemeKey = nil;
-        [_digButton setTitleColor:[UIColor colorWithHexString:@"ff0031"] forState:UIControlStateSelected];
-        [_digButton setTitleColor:[UIColor colorWithHexString:@"222222"] forState:UIControlStateNormal];
+        [_digButton setTitleColor:[UIColor themeRed1] forState:UIControlStateSelected];
+        [_digButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         _digButton.titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12.f]];
         _digButton.manuallySetSelectedEnabled = YES;
         [_digButton addTarget:self action:@selector(diggButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -315,7 +316,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
     }
 }
 
@@ -344,7 +345,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
          }
      }];
     
-    [[[RACObserve(self.cellEntity, originData.article.diggCount) distinctUntilChanged] takeUntil:self.cellEntity.cell.rac_prepareForReuseSignal]
+    [[RACObserve(self.cellEntity, originData.article.diggCount) takeUntil:self.cellEntity.cell.rac_prepareForReuseSignal]
      subscribeNext:^(NSNumber *commentCount){
          @strongify(self);
          [self configDiggButton];
@@ -352,6 +353,8 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     
     self.isShowShareView = self.cellEntity.article.userDigg;
     [self configureShareView];
+    self.avatarLabel.hidden = self.isShowShareView ? YES : NO;
+    self.avatarLabelButton.userInteractionEnabled = NO;
     
     [self configureUI];
     
@@ -427,17 +430,17 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     int32_t shareCnt = article.shareCount;
     shareText = shareCnt > 0 ? [TTBusinessManager formatCommentCount:shareCnt] : @"分享";
     
-    [self updateAvatarViewWithUrl:nil sourceText:nil];
-    [self updateAvatarVerifyWithAuthInfo:nil userDecoration:nil userId:@(userInfo.userId).stringValue];
-    [self updateAvatarLabelWithText:nil];
+    [self updateAvatarViewWithUrl:avatarUrl sourceText:sourceText];
+    [self updateAvatarVerifyWithAuthInfo:userInfo.userAuthInfo userDecoration:userInfo.userDecoration userId:@(userInfo.userId).stringValue];
+    [self updateAvatarLabelWithText:sourceText];
     [self updateTypeLabelWithText:typeText];
     [self configureCommentButton];
     [self configDiggButton];
     
     [self setNeedsLayout];
     
-    self.avatarLabelButton.enabled = YES;
-    self.avatarViewButton.enabled = YES;
+    self.avatarLabelButton.enabled = NO;
+    self.avatarViewButton.enabled = NO;
 }
 
 - (void)layoutSubviews
@@ -445,7 +448,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     [super layoutSubviews];
 
     self.commentButton.hidden = NO;
-    self.shareButton.hidden = NO;
+    self.shareButton.hidden = YES;
     self.typeLabel.hidden = YES;
 
     CGFloat rightMargin = [TTDeviceHelper isPadDevice] ? self.width * 0.25 : 16;
@@ -460,14 +463,72 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     }
     self.moreButton.right = [TTDeviceHelper isPadDevice] ? (self.width - 3) : (self.width - rightMargin + [self.moreButton contentEdgeInset].right);
     
+    CGFloat right = self.moreButton.left;
     [_shareButton updateFrames];
     [_commentButton updateFrames];
     
-    [AKUILayout horizontalLayoutViewWith:@[_commentButton,_digButton,_shareButton]
-                                 padding:22
-                                viewSize:nil
-                            firstPadding:15
-                                 centerY:self.height / 2];
+    _commentButton.centerY = self.height / 2;
+    _commentButton.right = right - 5;
+    
+    right = _commentButton.left;
+    
+    _digButton.centerY = self.height / 2;
+    _digButton.right = right - 20;
+    
+//    [AKUILayout horizontalLayoutViewWith:@[_commentButton,_digButton,_shareButton]
+//                                 padding:22
+//                                viewSize:nil
+//                            firstPadding:15
+//                                 centerY:self.height / 2];
+    
+    //头像
+    CGFloat left = kLeftPadding;
+    if (ttvs_isVideoFeedCellHeightAjust() > 1) {
+        self.avatarView.frame = CGRectMake(left, 8 - [self.class avatarHeight], [self.class avatarHeight], [self.class avatarHeight]);
+        self.avatarView.borderColor = [UIColor tt_themedColorForKey:kColorText7];
+        self.avatarView.borderWidth = [self.class avatarViewBorderWidth];
+    }else{
+        self.avatarView.frame = CGRectMake(left, (self.height - [self.class avatarHeight]) / 2, [self.class avatarHeight], [self.class avatarHeight]);
+        self.avatarView.borderWidth = 0.f;
+        left += (!self.avatarView.hidden? [self.class avatarHeight] + kGapAvatarView : 0);
+    }
+    
+    //名称
+    if (ttvs_isVideoFeedCellHeightAjust() > 1) {
+        self.avatarLabel.frame = CGRectMake(left, 9, self.avatarLabel.width, 28.f);
+    }else{
+        self.avatarLabel.left = left;
+        self.avatarLabel.height = [TTDeviceUIUtils tt_newPadding:32.0];
+        self.avatarLabel.centerY = self.moreButton.centerY;
+    }
+    
+    CGFloat avatarLabelWidth = avatarLabelWidth = _digButton.left - self.avatarLabel.left - (ttvs_isVideoFeedCellHeightAjust() > 1 ? 25 : 20);
+    if (!self.typeLabel.hidden) {
+        avatarLabelWidth -= (self.typeLabel.width + kGapAvatarView);
+    }
+    avatarLabelWidth = avatarLabelWidth < self.avatarLabel.width ? avatarLabelWidth : self.avatarLabel.width;
+    self.avatarLabel.width = avatarLabelWidth;
+    left += avatarLabelWidth + kGapAvatarView;
+    if (ttvs_isVideoFeedCellHeightAjust() > 1) {
+        if (avatarLabelWidth < [self.class avatarHeight]) {
+            self.avatarLabel.centerX = self.avatarView.centerX;
+            left = self.avatarLabel.right + kGapAvatarView;
+        }
+    }
+    
+    //类型标签
+    self.typeLabel.left = left;
+    self.typeLabel.height = 14;
+    self.typeLabel.centerY = self.avatarLabel.centerY;
+    
+    //控制头像以及名称透明度按钮
+    self.avatarViewButton.frame = self.avatarView.frame;
+    CGFloat labelButtonHeight = adBottomContainerViewHeight();
+    if (ttvs_isVideoFeedCellHeightAjust() > 2) {
+        labelButtonHeight += 4; //52+4
+    }
+    self.avatarLabelButton.frame = CGRectMake(self.avatarView.left, 0, self.avatarLabel.right - self.avatarView.left, labelButtonHeight);
+    
     //shareview
     [self layoutShareView];
 }
@@ -476,20 +537,20 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 {
     if (ttvs_isVideoFeedshowDirectShare()) {
         self.shareView.top = 0;
-        self.shareView.left = self.shareButton.left;
+        self.shareView.left = self.left;
         self.shareTitleButton.height = adBottomContainerViewHeight();
         self.shareView.alpha = self.isShowShareView ? 1.0 : 0.0;
         
         self.shareTitleButton.top = 0.f;
         self.firstShareButton.top = 0.f;
         self.secondShareButton.top = 0.f;
-        self.shareButton.hidden = self.isShowShareView;
+        
         if (!self.isShowShareView) {
             self.shareTitleButton.left = kShareButtonOffset;
             self.firstShareButton.left = kShareButtonOffset;
             self.secondShareButton.left = kShareButtonOffset;
         } else {
-            self.shareTitleButton.left = 0;
+            self.shareTitleButton.left = kShareButtonOffset;
             self.firstShareButton.left = self.shareTitleButton.right;
             self.secondShareButton.left = self.firstShareButton.right;
         }
@@ -503,6 +564,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 
 - (void)updateShareButtonWithText:(NSString *)shareText
 {
+    [self.shareButton setTitle:@""];
     self.shareButton.minWidth = 34.f;
     self.shareButton.centerAlignImage = YES;
 }
@@ -515,18 +577,18 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     [self.commentButton setImage:[UIImage themedImageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentButton setImage:[UIImage themedImageNamed:@"comment"] forState:UIControlStateHighlighted];
     [self.commentButton updateThemes];
-    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateNormal];
-    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateHighlighted];
+    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateNormal];
+    [self.commentButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateHighlighted];
     
     
     [self.shareButton setImage:[UIImage themedImageNamed:@"tab_share"] forState:UIControlStateNormal];
     [self.shareButton setImage:[UIImage themedImageNamed:@"tab_share"] forState:UIControlStateHighlighted];
     [self.shareButton updateThemes];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateNormal];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateHighlighted];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey3] forState:UIControlStateHighlighted];
     
-    [self.shareTitleButton setTitleColorThemeKey:kColorText1];
-    [self.shareTitleButton setHighlightedTitleColorThemeKey:kColorText1];
+    [self.shareTitleButton setTitleColorThemeKey:kFHColorCoolGrey3];
+    [self.shareTitleButton setHighlightedTitleColorThemeKey:kFHColorCoolGrey3];
     if (self.isShowShareView && self.shareView){
         UIImage *firstImg = [self activityImageNameWithActivity:self.firstShareButton.activityType];
         UIImage *secondImg = [self activityImageNameWithActivity:self.secondShareButton.activityType];
@@ -578,7 +640,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
         
         self.isShowShareView = NO;
         self.avatarLabel.hidden = NO;
-        self.avatarLabelButton.userInteractionEnabled = YES;
+        self.avatarLabelButton.userInteractionEnabled = NO;
         self.typeLabel.hidden = NO;
         if (self.avatarLabel.countOfIcons > 0) { // 显示认证图标时候隐藏推广
             self.typeLabel.hidden = YES;
@@ -613,12 +675,24 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     diggEntity.buryCount = model.buryCount;
     diggEntity.aggrType = model.aggrType;
     if (self.cellEntity.article.userDigg) {
+        self.cellEntity.article.userDigg = NO;
         self.cellEntity.article.diggCount -= 1;
     } else {
+        self.cellEntity.article.userDigg = YES;
         self.cellEntity.article.diggCount += 1;
     }
     TTVDiggAction *digAction = [[TTVDiggAction alloc] initWithEntity:diggEntity];
     digAction.diggActionDone = ^(BOOL digg) {
+        if (digg) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:@"house_app2c_v2" forKey:@"event_type"];
+            [params setObject:model.groupId forKey:@"group_id"];
+            [params setObject:model.groupId forKey:@"item_id"];
+            [params setObject:@"click_category" forKey:@"enter_from"];
+            [params setValue:self.cellEntity.originData.logPb forKey:@"log_pb"];
+            [params setValue:@"f_shipin" forKey:@"category_name"];
+            [TTTracker eventV3:@"rt_like" params:params];
+        }
         self.cellEntity.article.userDigg = digg;
     };
     [digAction execute:TTActivityTypeDigUp];

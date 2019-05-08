@@ -19,6 +19,7 @@
 #import "TTFeedValidator.h"
 #import "TTTrackerWrapper.h"
 #import "NSObject+TTAdditions.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 @implementation ArticlePreInsertOperation
 
@@ -138,6 +139,7 @@ static TTFeedValidator *_feedValidator;
         ExploreOrderedDataCellType cellType = [dict tt_intValueForKey:@"cell_type"];
         BOOL supportCellType = [ExploreListHelper supportForCellType:cellType];
         if (!supportCellType) {
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"article_cell_type_unsupport" attributes:@{@"cell_type":@(cellType),@"category_id":categoryID?:@"unknown"}];
             continue;
         }
         if (![[ArticlePreInsertOperation feedValidator] isValidObject:dict]) {
@@ -342,6 +344,24 @@ static TTFeedValidator *_feedValidator;
             [mutDict setValue:gid forKey:@"uniqueID"];
             [persistents addObject:mutDict];
         }
+        
+        else if (cellType == ExploreOrderedDataCellTypeFHHouse) {
+            if (![[dict allKeys] containsObject:@"id"]) {
+                //判断，如果没有group_id，就废弃这条数据
+                continue;
+            }
+            NSString *gid = [NSString stringWithFormat:@"%@", [dict objectForKey:@"id"]];
+            
+            if ([infoGIDSet containsObject:gid]) {
+                //如果本次返回的数据，已经有包含这个gid 的数据， 则消重
+                continue;
+            }
+            [infoGIDSet addObject:gid];
+            
+            [mutDict setValue:gid forKey:@"uniqueID"];
+            [persistents addObject:mutDict];
+        }
+        
         else if (cellType == ExploreOrderedDataCellTypeSurveyList) {
             if (![[dict allKeys] containsObject:@"id"]) {
                 //判断，如果没有group_id，就废弃这条数据

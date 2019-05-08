@@ -80,7 +80,7 @@ static NSString *WXAppID = nil;
 - (BOOL) canPayForURL:(NSURL *) URL {
     NSString * scheme = [URL scheme];
     NSString * host = [URL host];
-    return [scheme hasPrefix:@"interestingnews1206"] && [host isEqualToString:@"pay"];
+    return [scheme hasPrefix:@"snssdk35"] && [host isEqualToString:@"pay"];
 }
 
 - (BOOL) canPayForTrade:(NSDictionary *) trade {

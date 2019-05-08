@@ -20,19 +20,52 @@ platform :ios do
   lane :beta do |options|
     ENV["FASTLANE_PASSWORD"] = options[:itc_password]
     # add actions here: https://docs.fastlane.tools/actions
+ 
     get_certificates           # invokes cert
     get_provisioning_profile   # invokes sigh
     sh "rm -rf #{options[:output_directory]}"
     increment_build_number_in_plist(
-      scheme: "NewsInHouse",
+      scheme: "NewsLiteInHouse",
       build_number: options[:build_number]
     )
-    version = get_version_number_from_plist(scheme: "NewsInHouse")
-    build = get_build_number_from_plist(scheme: "NewsInHouse")
-    #build_app(scheme: "NewsInHouse",
+#    update_app_identifier(
+#	  xcodeproj: "Article.xcodeproj", 
+#	  plist_path: "NewsInHouse/NewsInHouse-Info.plist",
+#	  app_identifier: "com.bytedance.fp1" # The App Identifier
+#    )
+#    update_project_team(
+#	  path: "Article.xcodeproj",
+#	  teamid: "X46375UBYG"
+#    )
+    version = get_version_number_from_plist(scheme: "NewsLiteInHouse")
+    build = get_build_number_from_plist(scheme: "NewsLiteInHouse")
+    #build_app(scheme: "NewsLiteInHouse",
+#              workspace: "Article.xcworkspace")    
+    gym(
+      scheme: "NewsLiteInHouse",
+      clean: true,
+      silent: true,
+      output_directory: options[:output_directory],
+      output_name: "F100_#{version}_#{build}"
+    )
+  end
+  
+  lane :release do |options|
+    ENV["FASTLANE_PASSWORD"] = options[:itc_password]
+    # add actions here: https://docs.fastlane.tools/actions
+    get_certificates           # invokes cert
+    get_provisioning_profile   # invokes sigh
+    sh "rm -rf #{options[:output_directory]}"
+#    increment_build_number_in_plist(
+#      scheme: "News",
+#      build_number: options[:build_number]
+#    )
+    version = get_version_number_from_plist(scheme: "News")
+    build = get_build_number_from_plist(scheme: "News")
+    #build_app(scheme: "News",
 #              workspace: "Article.xcworkspace")
     gym(
-      scheme: "NewsInHouse",
+      scheme: "News",
       clean: true,
       silent: true,
       output_directory: options[:output_directory],

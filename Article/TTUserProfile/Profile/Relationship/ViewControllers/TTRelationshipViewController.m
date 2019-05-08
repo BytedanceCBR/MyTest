@@ -32,7 +32,6 @@ TTHorizontalCategoryBarDelegate
 @property (nonatomic, strong) TTHorizontalCategoryBar   *navCategoryBar;
 @property (nonatomic, strong) SSThemedView              *navigationView;
 @property (nonatomic, strong) TTAlphaThemedButton       *backButton;     /*返回按钮*/
-@property (nonatomic, strong) SSThemedButton            *addFriendButton;/*添加好友*/
 
 // model
 @property (nonatomic, strong) ArticleFriend             *friendModel;
@@ -66,8 +65,6 @@ TTHorizontalCategoryBarDelegate
     
     // default viewcontrollers
     TTFollowingViewController *followingVC;
-    TTFollowedViewController  *followedVC;
-    TTVisitorViewController   *visitorVC;
     NSArray *titleArray;
     NSArray *vcArray;
     
@@ -82,30 +79,14 @@ TTHorizontalCategoryBarDelegate
                 followingVC = [[TTFollowingViewController alloc] initWithArticleFriend:aFriend];
                 [mutableTitleArray addObject:[aFriend isAccountUser] ? @"关注" : @"TA的关注"];
                 [mutableVCArray addObject:followingVC];
-            } else if ([title isEqualToString:@"follower"]) {
-                if (followedVC) continue;
-                
-                followedVC = [[TTFollowedViewController alloc] initWithArticleFriend:aFriend];
-                [mutableTitleArray addObject:[aFriend isAccountUser] ? @"粉丝" : @"TA的粉丝"];
-                [mutableVCArray addObject:followedVC];
-            } else if ([title isEqualToString:@"visitor"]) {
-                if (visitorVC) continue;
-                
-                visitorVC = [aFriend isAccountUser] ? [[TTVisitorViewController alloc] initWithArticleFriend:aFriend] : nil;
-                if (visitorVC) {
-                    [mutableTitleArray addObject:@"访客"];
-                    [mutableVCArray addObject:visitorVC];
-                }
             }
         }
         titleArray = [mutableTitleArray copy];
         vcArray = [mutableVCArray copy];
     } else {
         followingVC = [[TTFollowingViewController alloc] initWithArticleFriend:aFriend];
-        followedVC  = [[TTFollowedViewController alloc] initWithArticleFriend:aFriend];
-        visitorVC   = [aFriend isAccountUser] ? [[TTVisitorViewController alloc] initWithArticleFriend:aFriend] : nil;
-        titleArray = [aFriend isAccountUser] ? @[@"关注", @"粉丝", @"访客"] : @[@"TA的关注", @"TA的粉丝"];
-        vcArray    = [aFriend isAccountUser] ? @[followingVC, followedVC, visitorVC] : @[followingVC, followedVC];
+        titleArray = [aFriend isAccountUser] ? @[@"关注"] : @[@"TA的关注"];
+        vcArray    = [aFriend isAccountUser] ? @[followingVC] : @[followingVC];
     }
     
     return [self initWithSelectedIndex:selectedIdx titles:titleArray viewControllers:vcArray friendModel:aFriend];
@@ -205,7 +186,7 @@ TTHorizontalCategoryBarDelegate
         [self.view addSubview:self.navigationView];
         [self.navigationView addSubview:self.navCategoryBar];
         
-        [self.navCategoryBar addSubview:self.addFriendButton];
+//        [self.navCategoryBar addSubview:self.addFriendButton];
         [self.navCategoryBar addSubview:self.backButton];
         [self.backButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.equalTo(@(24));
@@ -213,17 +194,15 @@ TTHorizontalCategoryBarDelegate
             make.centerY.equalTo(self.navCategoryBar);
             make.left.equalTo(self.navCategoryBar).with.offset([TTDeviceUIUtils tt_padding:9]);
         }];
-        [self.addFriendButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.height.equalTo(@(24));
-            make.width.equalTo(@(24));
-            make.centerY.equalTo(self.navCategoryBar);
-            make.right.equalTo(self.navCategoryBar.mas_right).with.offset(-[TTDeviceUIUtils tt_padding:13.f]);
-        }];
+//        [self.addFriendButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.height.equalTo(@(24));
+//            make.width.equalTo(@(24));
+//            make.centerY.equalTo(self.navCategoryBar);
+//            make.right.equalTo(self.navCategoryBar.mas_right).with.offset(-[TTDeviceUIUtils tt_padding:13.f]);
+//        }];
         [self buildCategoriesIfNeeded];
     } else {
         self.navigationItem.titleView = [SSNavigationBar navigationTitleViewWithTitle: NSLocalizedString([_titles firstObject], nil)];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.addFriendButton];
-        self.addFriendButton.size = CGSizeMake(24, 24);
     }
 }
 
@@ -311,13 +290,6 @@ TTHorizontalCategoryBarDelegate
     [self dismissSelf];
 }
 
-- (void)didTapAddFriendButton:(id)sender {
-    wrapperTrackEvent(@"friends", @"enter_add_friends");
-    
-//    TTAddFriendViewController *addFriendVC = [[TTAddFriendViewController alloc] init];
-//    [self.topNavigationController pushViewController:addFriendVC animated:YES];
-}
-
 #pragma mark - refresh scrollToTop of viewcontrollers
 
 - (void)refreshScrollToTopViewController {
@@ -403,18 +375,6 @@ TTHorizontalCategoryBarDelegate
         };
     }
     return _navCategoryBar;
-}
-
-- (SSThemedButton *)addFriendButton {
-    if (!_addFriendButton) {
-        _addFriendButton = [SSThemedButton buttonWithType:UIButtonTypeCustom];
-        _addFriendButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-        _addFriendButton.contentVerticalAlignment   = UIControlContentHorizontalAlignmentCenter;
-        _addFriendButton.imageName = @"weitoutiao_add_friend";
-        _addFriendButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
-        [_addFriendButton addTarget:self action:@selector(didTapAddFriendButton:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _addFriendButton;
 }
 
 - (TTAlphaThemedButton *)backButton {

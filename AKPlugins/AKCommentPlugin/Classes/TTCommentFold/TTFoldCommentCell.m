@@ -92,8 +92,8 @@ NSString *const kTTFoldCommentCellIdentifier = @"kTTFoldCommentCellIdentifier";
         [_avatarView setupVerifyViewForLength:36.f adaptationSizeBlock:^CGSize(CGSize standardSize) {
             return [TTVerifyIconHelper tt_newSize:standardSize];
         }];
-        
-        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        // add by zjing 去掉头像点击
+//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }

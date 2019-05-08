@@ -28,15 +28,27 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.isAppInstalled" for:@"isAppInstalled"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.appInfo" for:@"appInfo"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.config" for:@"config"];
-    
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRApp.getStatusBarInfo" for:@"getStatusBarInfo"];
+
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.fetch" for:@"fetch"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTNetwork.getNetCommonParams" for:@"getNetCommonParams"];
+
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.login" for:@"login"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.isLogin" for:@"is_login"];
-    
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLogin.logoutApp" for:@"logoutApp"];
+
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.close" for:@"close"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.open" for:@"open"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openPage" for:@"openPage"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.handleNavBack" for:@"handleNavBack"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openHotsoon" for:@"openHotsoon"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.openApp" for:@"openApp"];
-    
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.disableDragBack" for:@"disableDragBack"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setNativeTitle" for:@"setNativeTitle"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.setNativeDividerVisible" for:@"setNativeDividerVisible"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.onAccountCancellationSuccess" for:@"onAccountCancellationSuccess"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRNavi.showBackBtn" for:@"showBackBtn"];
+
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShare.share" for:@"share"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShare.sharePGC" for:@"share_pgc"];
@@ -48,7 +60,7 @@
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.openCommodity" for:@"openCommodity"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.callNativePhone" for:@"callNativePhone"];
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.getAddress" for:@"get_address"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRAd.getAddress" for:@"getAddress"];
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRUIWidget.toast" for:@"toast"];
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRUIWidget.alert" for:@"alert"];
@@ -65,6 +77,7 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRWenda.deleteAnswerDraft" for:@"delete_answer_draft"];
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShortVideo.getRedPackIntro" for:@"get_redpack_state"];
+
 }
 
 @end

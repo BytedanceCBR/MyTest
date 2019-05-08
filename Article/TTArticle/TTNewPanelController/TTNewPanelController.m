@@ -24,7 +24,7 @@
 #import "TTVPlayVideo.h"
 #import <Aspects/Aspects.h>
 #import "TTVSettingsConfiguration.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 //#ifndef TTModule
 //#import "TTSmallVideoManager.h"
@@ -285,7 +285,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rootViewWillTransitionToSize:) name:kRootViewWillTransitionToSize object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(movieViewFullScreenDidChange:) name:kExploreMovieViewDidChangeFullScreenNotifictaion object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(shouldDismiss:)
+                                                     name:@"kSharePanelShouldDismiss"
+                                                   object:nil];
         UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
         
         _backWindow = [[TTNewPanelControllerWindow alloc] init];
@@ -638,7 +641,7 @@
     TTPanelControllerItem *item = self.data[sender.row][sender.index];
 
     if ([ExploreMovieView isFullScreen] || [TTVPlayVideo currentPlayingPlayVideo].player.context.isFullScreen) {
-        if ([sender.nameLabel.text rangeOfString:@"举报"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:[KitchenMgr getString:kKCUGCRepostWordingShareIconTitle]].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"系统"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"邮件"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"短信"].location !=NSNotFound )
+        if ([sender.nameLabel.text rangeOfString:@"举报"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:[TTKitchen getString:kKCUGCRepostWordingShareIconTitle]].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"系统"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"邮件"].location !=NSNotFound || [sender.nameLabel.text rangeOfString:@"短信"].location !=NSNotFound )
         {
             ExploreMovieView *movieView = [ExploreMovieView currentFullScreenMovieView];
             [movieView exitFullScreen:NO completion:^(BOOL finished) {
@@ -835,6 +838,10 @@
         _bottomSafeAreaView.backgroundColorThemeKey = kColorBackground4;
     }
     return _bottomSafeAreaView;
+}
+
+-(void)shouldDismiss:(NSNotification*)notification {
+    [self cancelWithBlock:_cancelBlock];
 }
 
 @end

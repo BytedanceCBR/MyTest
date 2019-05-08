@@ -11,6 +11,7 @@
 #import <TTRoute/TTRoute.h>
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/UIViewAdditions.h>
+#import "NetworkUtilities.h"
 
 
 #define kTopPadding [TTDeviceUIUtils tt_newPadding:12.f]
@@ -83,8 +84,8 @@
 
 - (void)refreshReplyListBackgroundColors
 {
-    self.replyTableView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
-    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+    self.replyTableView.backgroundColor = [UIColor tt_themedColorForKey:kFHColorPaleGrey];
+    self.backgroundColor = [UIColor tt_themedColorForKey:kFHColorPaleGrey];
 }
 
 - (void)refreshFramesWithWidth:(CGFloat)width

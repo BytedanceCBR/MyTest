@@ -113,7 +113,9 @@ CGFloat const gestureMinimumTranslation = 20.0;
        
         
         self.bgView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, self.frame.size.height-800, self.frame.size.width, 800)];
-        self.bgView.backgroundColorThemeKey = kColorBackground3;
+//        self.bgView.backgroundColorThemeKey = kColorBackground3;
+        
+        self.bgView.backgroundColor = [UIColor whiteColor];
         [self addSubview:self.bgView];
         [self sendSubviewToBack:self.bgView];
         

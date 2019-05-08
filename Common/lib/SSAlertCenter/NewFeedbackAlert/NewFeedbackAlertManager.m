@@ -52,11 +52,11 @@ static NewFeedbackAlertManager * alertManger;
 
 - (NSArray *)handleAlert:(NSDictionary *)result
 {
-    SSBaseAlertModel * m = [[SSBaseAlertModel alloc] init];
-    m.title = NSLocalizedString(@"发现新的回复", nil);
-    m.actions = @"";
-    m.buttons = NSLocalizedString(@"查看,取消", nil);
-    return [NSArray arrayWithObject:m];
+//    SSBaseAlertModel * m = [[SSBaseAlertModel alloc] init];
+//    m.title = NSLocalizedString(@"发现新的回复", nil);
+//    m.actions = @"";
+//    m.buttons = NSLocalizedString(@"查看,取消", nil);
+    return [NSArray new];
 }
 
 - (void)clickedButtonAtIndex:(NSInteger)buttonIndex alertModel:(SSBaseAlertModel *)alertModel

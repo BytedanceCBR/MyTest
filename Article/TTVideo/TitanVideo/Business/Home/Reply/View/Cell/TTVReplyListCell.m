@@ -14,7 +14,7 @@
 #import "TTDeviceUIUtils.h"
 #import "DetailActionRequestManager.h"
 #import "TTActionSheetController.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTUGCAttributedLabel.h"
 #import "TTRichSpanText.h"
 #import "TTRichSpanText+Emoji.h"
@@ -174,7 +174,7 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
 
     NSDictionary *linkAttributes = @{
         NSParagraphStyleAttributeName: [TTVReplyListCellHelper contentLabelParagraphStyle],
-        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText5],
+        NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText3],
         NSFontAttributeName : [TTVReplyListCellHelper contentLabelFont]
     };
     self.contentLabel.linkAttributes = linkAttributes;
@@ -368,9 +368,9 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         _avatarView.cornerRadius = [TTVReplyListCellHelper avatarSize] / 2;
         _avatarView.placeholderName = @"big_defaulthead_head";
         _avatarView.borderWidth = 0;
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
         _avatarView.borderColor = [UIColor clearColor];
-        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        // add by zjing icon去掉点击
+//        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
     }
     return _avatarView;
 }
@@ -411,7 +411,7 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         _userInfoLabel = [[TTAsyncLabel alloc] init];
         _userInfoLabel.frame = CGRectMake(self.nameView.left, self.nameView.bottom, self.width - [TTVReplyListCellHelper cellHorizontalPadding] - [TTVReplyListCellHelper avatarSize] - [TTVReplyListCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _userInfoLabel.font = [TTVReplyListCellHelper userInfoLabelFont];
-        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kColorText13];
+        _userInfoLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCharcoalGrey];
         _userInfoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _userInfoLabel.backgroundColor = [UIColor clearColor];
         _userInfoLabel.layer.backgroundColor = [UIColor clearColor].CGColor;
@@ -425,7 +425,7 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         _timeLabel = [[TTAsyncLabel alloc] init];
         _timeLabel.frame = CGRectMake(self.nameView.left, self.contentLabel.bottom, self.width - [TTVReplyListCellHelper cellHorizontalPadding] - [TTVReplyListCellHelper avatarSize] - [TTVReplyListCellHelper avatarRightPadding], [TTDeviceUIUtils tt_newPadding:16.5f]);
         _timeLabel.font = [TTVReplyListCellHelper timeLabelFont];
-        _timeLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
+        _timeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         _timeLabel.numberOfLines = 1;
         _timeLabel.backgroundColor = [UIColor clearColor];
         _timeLabel.layer.backgroundColor = [UIColor clearColor].CGColor;

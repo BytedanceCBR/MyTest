@@ -15,7 +15,7 @@
 #import <TTPhotoScrollViewController.h>
 //#import "FRPhotoBrowserViewController.h"
 #import <TTDialogDirector/TTDialogDirector.h>
-
+#import <FHHouseDetail/FHDetailPictureViewController.h>
 
 
 NSString * const TTStrongPushHideOnlyResultKey = @"hide_result";
@@ -152,7 +152,7 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
     if ([self.class meetsWeakAlertCondition]) {
         [self.class showWeakAlertLocationDialog];
     }
-    
+
     return weakAlertView;
 }
 
@@ -180,30 +180,31 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
 
 + (BOOL)meetsWeakAlertCondition
 {
-    if ([self.class isFullScreenVideoPlaying]) {
-        return NO;
-    }
-    if ([self.class isFullScreenPhotoBrowsering]) {
-        return NO;
-    }
-    if ([TTAccountLoginManager isLoginAlertShowing]) {
-        return NO;
-    }
-    if ([TTStrongPushAlertView isShowing]) {
-        return NO;
-    }
-    if ([TTWeakPushAlertView isShowing]) {
-        return NO;
-    }
-    
-    if ([TTInAppPushSettings weakAlertShowPageScope] == 1) {
-        return YES;
-    }
-    if (TTPushWeakAlertPageTypeNone != s_currentPageType) {
-        return YES;
-    }
-    
-    return NO;
+//    if ([self.class isFullScreenVideoPlaying]) {
+//        return NO;
+//    }
+    return YES;
+//    if ([self.class isFullScreenPhotoBrowsering]) {
+//        return NO;
+//    }
+//    if ([TTAccountLoginManager isLoginAlertShowing]) {
+//        return NO;
+//    }
+//    if ([TTStrongPushAlertView isShowing]) {
+//        return NO;
+//    }
+//    if ([TTWeakPushAlertView isShowing]) {
+//        return NO;
+//    }
+//
+//    if ([TTInAppPushSettings weakAlertShowPageScope] == 1) {
+//        return YES;
+//    }
+//    if (TTPushWeakAlertPageTypeNone != s_currentPageType) {
+//        return YES;
+//    }
+//
+//    return NO;
 }
 
 + (BOOL)isFullScreenVideoPlaying
@@ -233,7 +234,7 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
 //    if ([FRPhotoBrowserViewController photoBrowserAtTop]) {
 //        return YES;
 //    }
-    if ([TTPhotoScrollViewController photoBrowserAtTop]) {
+    if ([TTPhotoScrollViewController photoBrowserAtTop] || [FHDetailPictureViewController photoBrowserAtTop]) {
         return YES;
     }
     return NO;

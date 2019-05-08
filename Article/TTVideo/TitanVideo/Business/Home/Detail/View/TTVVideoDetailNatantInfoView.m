@@ -23,7 +23,7 @@
 //#import "TTWeitoutiaoRepostIconDownloadManager.h"
 #import "TTMessageCenter.h"
 #import <TTSettingsManager/TTSettingsManager.h>
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTVVideoDetailNatantInfoShareView.h"
 
 #define kVerticalEdgeMargin             (([TTDeviceHelper isPadDevice]) ? 20 : 15)
@@ -183,25 +183,27 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
     
     if (!self.showShareView)
     {
-        if ([_viewModel showExtendLink]) {
-            if (!_videoExtendLinkButton) {
-                _videoExtendLinkButton = [[ArticleVideoActionButton alloc] init];
-                [_videoExtendLinkButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateNormal];
-                NSString *title = [_viewModel.infoModel.VExtendLinkDic valueForKey:@"button_text"];
-                title = title.length > 0 ? title : @"查看更多";
-                
-                if ([_viewModel.infoModel.VExtendLinkDic valueForKey:@"is_download_app"]) {
-                    
-                    if (title.length <= 0) {
-                        title = NSLocalizedString(@"立即下载", nil);
-                    }
-                }
-                
-                [_videoExtendLinkButton setTitle:title];
-                [_videoExtendLinkButton addTarget:self action:@selector(ExtendLinkAction:)];
-                [self addSubview:_videoExtendLinkButton];
-            }
-        }
+        
+        // add by zjing 隐藏了解更多
+//        if ([_viewModel showExtendLink]) {
+//            if (!_videoExtendLinkButton) {
+//                _videoExtendLinkButton = [[ArticleVideoActionButton alloc] init];
+//                [_videoExtendLinkButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateNormal];
+//                NSString *title = [_viewModel.infoModel.VExtendLinkDic valueForKey:@"button_text"];
+//                title = title.length > 0 ? title : @"查看更多";
+//
+//                if ([_viewModel.infoModel.VExtendLinkDic valueForKey:@"is_download_app"]) {
+//
+//                    if (title.length <= 0) {
+//                        title = NSLocalizedString(@"立即下载", nil);
+//                    }
+//                }
+//
+//                [_videoExtendLinkButton setTitle:title];
+//                [_videoExtendLinkButton addTarget:self action:@selector(ExtendLinkAction:)];
+//                [self addSubview:_videoExtendLinkButton];
+//            }
+//        }
         
         if (!_digButton) {
             _digButton = [[ArticleVideoActionButton alloc] init];
@@ -410,7 +412,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 //        return @"钉钉";
 //    }
     else {
-        return [KitchenMgr getString:kKCUGCRepostWordingShareIconTitle];
+        return [TTKitchen getString:kKCUGCRepostWordingShareIconTitle];
     }
 }
 
@@ -708,42 +710,42 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 {
     [super themeChanged:notification];
     [self.viewModel updateAttributeTitle];
-    _watchCountLabel.textColor = SSGetThemedColorWithKey(kColorText3);
+    _watchCountLabel.textColor = SSGetThemedColorWithKey(kFHColorCoolGrey2);
     _directShareLabel.textColor = SSGetThemedColorWithKey(kColorText1);
     [self updateVideoInfo];
     _detailButton.imageName = [TTDeviceHelper isPadDevice] ? @"Triangle" : @"Triangle";
     
-    [_digButton setImage:[UIImage themedImageNamed:@"like"] forState:UIControlStateNormal];
-    [_digButton setImage:[UIImage themedImageNamed:@"like_press"] forState:UIControlStateHighlighted];
-    [_digButton setImage:[UIImage themedImageNamed:@"like_press"] forState:UIControlStateSelected];
-    [_digButton setTintColor:SSGetThemedColorWithKey(kColorText1)];
+    [_digButton setImage:[UIImage themedImageNamed:@"white-like"] forState:UIControlStateNormal];
+    [_digButton setImage:[UIImage themedImageNamed:@"detail_like_press"] forState:UIControlStateHighlighted];
+    [_digButton setImage:[UIImage themedImageNamed:@"detail_like_press"] forState:UIControlStateSelected];
+    [_digButton setTintColor:SSGetThemedColorWithKey(kFHColorCoolGrey2)];
     [_digButton updateThemes];
     
-    [_digButton setTitleColor:SSGetThemedColorWithKey(kColorText1) forState:UIControlStateNormal];
-    [_digButton setTitleColor:SSGetThemedColorWithKey(kColorText4) forState:UIControlStateHighlighted];
-    [_digButton setTitleColor:SSGetThemedColorWithKey(kColorText4) forState:UIControlStateSelected];
+    [_digButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoolGrey2) forState:UIControlStateNormal];
+    [_digButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateHighlighted];
+    [_digButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateSelected];
     
     [_buryButton setImage:[UIImage themedImageNamed:@"step"] forState:UIControlStateNormal];
     [_buryButton setImage:[UIImage themedImageNamed:@"step_press"] forState:UIControlStateHighlighted];
     [_buryButton setImage:[UIImage themedImageNamed:@"step_press"] forState:UIControlStateSelected];
     [_buryButton updateThemes];
-    [_buryButton setTitleColor:SSGetThemedColorWithKey(kColorText1) forState:UIControlStateNormal];
-    [_buryButton setTitleColor:SSGetThemedColorWithKey(kColorText4) forState:UIControlStateHighlighted];
-    [_buryButton setTitleColor:SSGetThemedColorWithKey(kColorText4) forState:UIControlStateSelected];
+    [_buryButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoolGrey2) forState:UIControlStateNormal];
+    [_buryButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateHighlighted];
+    [_buryButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoral) forState:UIControlStateSelected];
     
     [_videoExtendLinkButton setImage:[UIImage themedImageNamed:@"link"] forState:UIControlStateNormal];
     [_videoExtendLinkButton setImage:[UIImage themedImageNamed:@"link_press"] forState:UIControlStateHighlighted];
     [_videoExtendLinkButton updateThemes];
-    [_videoExtendLinkButton setTitleColor:SSGetThemedColorWithKey(kColorText1) forState:UIControlStateNormal];
-    [_videoExtendLinkButton setTitleColor:[SSGetThemedColorWithKey(kColorText1) colorWithAlphaComponent:0.5] forState:UIControlStateHighlighted];
+    [_videoExtendLinkButton setTitleColor:SSGetThemedColorWithKey(kFHColorCoolGrey2) forState:UIControlStateNormal];
+    [_videoExtendLinkButton setTitleColor:[SSGetThemedColorWithKey(kFHColorCoolGrey2) colorWithAlphaComponent:0.5] forState:UIControlStateHighlighted];
     
     [self.shareButton setImage:[UIImage themedImageNamed:[self ttv_shareImageIcon]] forState:UIControlStateNormal];
     [self.shareButton setImage:[UIImage themedImageNamed:[self ttv_shareImageIcon]] forState:UIControlStateHighlighted];
     self.shareButton.imageSize = CGSizeMake(20.f, 20.f);
     
     [self.shareButton updateThemes];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateNormal];
-    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kColorText1] forState:UIControlStateHighlighted];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey2] forState:UIControlStateNormal];
+    [self.shareButton setTitleColor:[UIColor tt_themedColorForKey:kFHColorCoolGrey2] forState:UIControlStateHighlighted];
     if (_weixinMoment && _weixin) {
         [self addDirectShareButtons];
     }
@@ -983,6 +985,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
     [pramas setValue:self.viewModel.infoModel.groupId forKey:@"group_id"];
     [pramas setValue:self.viewModel.infoModel.authorId forKey:@"author_id"];
     [pramas setValue:@"video" forKey:@"article_type"];
+    [pramas setValue:@"house_app2c_v2" forKey:@"event_type"];
 
     [TTTrackerWrapper eventV3:eventName params:pramas isDoubleSending:isDouble];
     

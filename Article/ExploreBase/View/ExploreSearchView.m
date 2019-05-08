@@ -27,7 +27,7 @@
 
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ArticleURLSetting.h"
-#import <TTNetworkUtilities.h>
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTInstallIDManager.h"
 #import "TTUIResponderHelper.h"
 #import "TTURLUtils.h"

@@ -92,7 +92,7 @@
 
 #import "NSObject+MultiDelegates.h"
 #import "TTURLUtils.h"
-#import "TTRNBridge.h"
+//#import "TTRNBridge.h"
 
 #import "TTStringHelper.h"
 #import "NSObject+TTAdditions.h"
@@ -102,7 +102,7 @@
 #import "ExploreEntryManager.h"
 #import "UIImage+TTThemeExtension.h"
 
-#import "TTRNView.h"
+//#import "TTRNView.h"
 #import "NSObject+FBKVOController.h"
 #import "TTLayOutCellViewBase.h"
 #import <Crashlytics/Crashlytics.h>
@@ -149,12 +149,12 @@
 //#import "TTHashtagCardData.h"
 
 #import <TTDialogDirector/TTDialogDirector.h>
-//TODO: removed
+//f100
 //#import <TTDialogDirector/CLLocationManager+MutexDialogAdapter.h>
 #import <TTDialogDirector/TTDialogDirector+ClientAB.h>
 //#import "RecommendRedpacketData.h"
 //#import "FRThreadSmartDetailManager.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTVOwnPlayerPreloaderWrapper.h"
 #import "TTVSettingsConfiguration.h"
 //#import "TTFollowCategoryFetchExtraManager.h"
@@ -162,16 +162,23 @@
 #import "Article+TTADComputedProperties.h"
 #import "TTASettingConfiguration.h"
 #import "TTVVideoDetailViewController.h"
-
+#import "FHHomeConfigManager.h"
+#import "FHFeedHouseCellHelper.h"
+#import "FHFeedHouseItemCell.h"
+//#import "Bubble-Swift.h"
+#import <FHEnvContext.h>
+#import <FHLocManager.h>
+#import <FHHomeCellHelper.h>
 
 #define kPreloadMoreThreshold           10
 #define kInsertLastReadMinThreshold     5
 #define kMaxLastReadLookupInterval      (24 * 60 * 60 * 1000)  //毫秒
 #define kShowOldLastReadMinThreshold    60      //超过60篇旧文章后才可能显示“以下为24小时前的文章”
 
-//const NSUInteger ExploreMixedListBaseViewSectionUploadingCells = 0;
-const NSUInteger ExploreMixedListBaseViewSectionFunctionAreaCells = 1;
-const NSUInteger ExploreMixedListBaseViewSectionExploreCells = 2;
+const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
+//const NSUInteger ExploreMixedListBaseViewSectionFHouseCells = 0;
+//const NSUInteger ExploreMixedListBaseViewSectionFunctionAreaCells = 1;
+const NSUInteger ExploreMixedListBaseViewSectionExploreCells = 1;
 
 void tt_listView_preloadWebRes(Article *article, NSDictionary *rawAdData) {
     if (article) {
@@ -227,7 +234,7 @@ TTRefreshViewDelegate
 @property(nonatomic, retain)ExploreItemActionManager * itemActionManager;
 
 @property (nonatomic, strong) NSDate *disappearDate;
-
+@property (nonatomic, assign) BOOL isLoginStatusChanged;
 @property(nonatomic, assign) BOOL isLastReadRefresh;
 
 /**
@@ -288,6 +295,7 @@ TTRefreshViewDelegate
 @property(nonatomic, retain) ExploreMixedListSuggestionWordsView *suggestionWordsView;
 @property(nonatomic, assign) CGRect defaultRect;
 
+@property(nonatomic, strong) NSMutableDictionary *cellIdDict;
 @end
 
 @implementation ExploreMixedListBaseView
@@ -445,17 +453,28 @@ TTRefreshViewDelegate
         _listView.dataSource = self;
         _listView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _listView.separatorColor = [UIColor clearColor];
-        _listView.backgroundColor = [UIColor clearColor];
+//        _listView.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor whiteColor];
+        _listView.backgroundColor = [UIColor whiteColor];
         _listView.backgroundView = nil;
         _listView.estimatedRowHeight = 0;
         _listView.estimatedSectionHeaderHeight = 0;
         _listView.estimatedSectionFooterHeight = 0;
+        _listView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
+        _listView.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, [UIScreen mainScreen].bounds.size.width, 0.1)]; //to do:设置header0.1，防止系统自动设置高度
+        _listView.sectionHeaderHeight = 0;
+        _listView.sectionFooterHeight = 0;
+//        _listView.contentInset = UIEdgeInsetsMake(35, 0, 0, 0);
+        
+        
+        
         if (@available(iOS 11.0, *)) {
-            _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        } else {
+        _listView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
         }
+        
+        
         [ExploreCellHelper registerAllCellClassWithTableView:_listView];
-        _listView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        _listView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addSubview:_listView];
         
         self.fetchListManager = [[ExploreFetchListManager alloc] init];
@@ -468,7 +487,8 @@ TTRefreshViewDelegate
         [self addPullDownRefreshView];
         
         self.movieViews = [NSMutableArray array];
-        
+        self.cellIdDict = [NSMutableDictionary dictionary];
+
         WeakSelf;
         [[NSNotificationCenter defaultCenter] addObserverForName:kTTVPlayerIsOnRotateAnimation object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
             StrongSelf;
@@ -509,8 +529,29 @@ TTRefreshViewDelegate
             _animationView.frame = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
             _animationView.loopAnimation = YES;
         }
+        
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+            StrongSelf;
+            [self reloadFHHomeHeaderCell];
+        }];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(categoryGotFinished) name:kFHSwitchGetLightFinishedNotification object:nil];
     }
     return self;
+}
+
+- (void)categoryGotFinished
+{
+    if (![[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
+        [self.listView reloadData];
+    }
+}
+
+- (void)reloadFHHomeHeaderCell
+{
+    if ([_categoryID isEqualToString:@"f_house_news"]) {
+        [self.listView reloadData];
+    }
 }
 
 - (void)setupSilentFetchTimer
@@ -651,7 +692,13 @@ TTRefreshViewDelegate
                                  [wself.remindView refreshAndHide];
                              }
                              [wself fetchFromLocal:![wself tt_hasValidateData] fromRemote:YES getMore:NO];
-                             
+                             if (![FHHomeConfigManager sharedInstance].currentDataModel)
+                             {
+                                 [[FHLocManager sharedInstance] startCategoryRedDotRefresh];
+//                                 if ([[EnvContext shared] respondsToSelector:@selector(client)] && [[[EnvContext shared] client] respondsToSelector:@selector(onStart)]) {
+//                                     [[[EnvContext shared] client] onStart];
+//                                 }
+                             }
                          }];
     CGFloat barH = [SSCommonLogic articleNotifyBarHeight];
     self.ttMessagebarHeight = barH;
@@ -762,14 +809,14 @@ TTRefreshViewDelegate
 
 - (void)setCategoryID:(NSString *)categoryID
 {
-    if (!_suggestionWordsView) {
-        CGRect rect = [self frameForListView];
-        _suggestionWordsView = [[ExploreMixedListSuggestionWordsView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, 44)];
-        if (self.superview) {
-            [self.superview addSubview:_suggestionWordsView];
-            [self.superview bringSubviewToFront:self];
-        }
-    }
+//    if (!_suggestionWordsView) {
+//        CGRect rect = [self frameForListView];
+//        _suggestionWordsView = [[ExploreMixedListSuggestionWordsView alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, 44)];
+//        if (self.superview) {
+//            [self.superview addSubview:_suggestionWordsView];
+//            [self.superview bringSubviewToFront:self];
+//        }
+//    }
     
     if (!isEmptyString(categoryID) && !isEmptyString(_categoryID) && [_categoryID isEqualToString:categoryID]) {
         return;
@@ -907,12 +954,17 @@ TTRefreshViewDelegate
             }
         }
     }
+        
+    
+    self.listView.backgroundColor = [UIColor whiteColor];
 }
 
 - (void)willAppear
 {
     [super willAppear];
     _isShowing = YES;
+    self.isLoginStatusChanged = NO;
+
     if (!self.categoryID && [SSCommonLogic shouldUseOptimisedLaunch]) {
         return;
     }
@@ -942,6 +994,7 @@ TTRefreshViewDelegate
     NSUInteger originalCount = [_fetchListManager.items count];
     [_fetchListManager refreshItemsForListType:_listType];
 
+    
 //    if ([self.categoryID isEqualToString:kTTFollowCategoryID] &&  [KitchenMgr getBOOL:kKUGCFollowCategoryClearUnFollowThreadEnable]) {
 //        [_fetchListManager checkFollowCategoryFollowStatus];
 //    }
@@ -964,12 +1017,15 @@ TTRefreshViewDelegate
     self.shouldReloadBackAfterLeaveCurrentCategory = [self shouldReloadBackAfterLeaveCurrentCategory];
     
     //唤醒后刷新
-    if (self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) {
+    if ((self.shouldReloadBackAfterLeaveCurrentCategory && [_fetchListManager items].count > 0) || ([FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate && [_fetchListManager items].count > 0) || [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse) {
         self.refreshShouldLastReadUpate = YES;
         self.refreshFromType = ListDataOperationReloadFromTypeAuto;
         [self pullAndRefresh];
+        
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = NO;
+        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdateFowFindHouse = NO;
     }
-    
+
     for (ExploreCellBase * cell in  [_listView visibleCells]) {
         if ([cell isKindOfClass:[ExploreCellBase class]]) {
             NSIndexPath *indexPath = [_listView indexPathForCell:cell];
@@ -981,7 +1037,6 @@ TTRefreshViewDelegate
                 if ([cell isKindOfClass:[ExploreCellBase class]]) {
                     [cell willAppear];
                 }
-                
             }
         }
     }
@@ -990,6 +1045,11 @@ TTRefreshViewDelegate
         [[TTVAutoPlayManager sharedManager] continuePlayCachedMovie];
     }
     [[TTAdImpressionTracker sharedImpressionTracker] startTrackForce];
+    
+    //防止频道发生变化刷新推荐头部
+    if ([self.listView numberOfRowsInSection:0] > 0 && [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]]) {
+        [self.listView reloadData];
+    }
 }
 
 - (void)resumeTrackAdCellsInVisibleCells{
@@ -1083,7 +1143,6 @@ TTRefreshViewDelegate
                     ad_show_over(obj.ad_id);
                 }
             }
-
         }
     }
 }
@@ -1188,8 +1247,9 @@ TTRefreshViewDelegate
 - (void)themeChanged:(NSNotification *)notification
 {
     [super themeChanged:notification];
-    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+//    self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
     
+    self.backgroundColor = [UIColor whiteColor];
     self.listView.backgroundColor = self.backgroundColor;
 }
 
@@ -1202,8 +1262,12 @@ TTRefreshViewDelegate
 //        return ExploreMixedListBaseViewSectionFunctionAreaCells + 1;
 //    }
 //    //uploading section + function area section + explore section
-//    return ExploreMixedListBaseViewSectionExploreCells + 1;
-    return 1;
+    
+    if (_fetchListManager.items.count == 0) {
+        return ExploreMixedListBaseViewSectionFHouseCells + ExploreMixedListBaseViewSectionExploreCells;
+    } else {
+        return ExploreMixedListBaseViewSectionFHouseCells + ExploreMixedListBaseViewSectionExploreCells + 1;
+    }
 }
 
 
@@ -1214,9 +1278,32 @@ TTRefreshViewDelegate
 //    if (section == ExploreMixedListBaseViewSectionFunctionAreaCells) {
 //        return 1;
 //    }else {
+//        NSUInteger count = [[_fetchListManager items] count];
+//        return count;
+//    }
+    if (section == ExploreMixedListBaseViewSectionFHouseCells) {
+        if (isEmptyString(_categoryID))
+        {
+            return 0;
+        }
+        if ([_categoryID isEqualToString:@"f_house_news"]) {
+            BOOL isHasFindHouseCategory = [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
+            
+            if (_fetchListManager.items.count > 0 && !isHasFindHouseCategory) {
+                //修改头部类型
+                [FHHomeCellHelper sharedInstance].headerType = FHHomeHeaderCellPositionTypeForNews;
+                return 1;
+            }else
+            {
+                return 0;
+            }
+        }
+        return 0;
+    }else
+    {
         NSUInteger count = [[_fetchListManager items] count];
         return count;
-//    }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1226,21 +1313,28 @@ TTRefreshViewDelegate
 //    if ([indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
 //        return [self heightForFunctionAreaCell];
 //    }else {
-    if (indexPath.row < [self listViewMaxModelIndex]) {
-        id obj = [[_fetchListManager items] objectAtIndex:indexPath.row];
-        
-        if ([obj isKindOfClass:[ExploreOrderedData class]]) {
-            if (!((ExploreOrderedData *)obj).managedObjectContext || ! ((ExploreOrderedData *)obj).originalData.managedObjectContext) {
-                return 0;//fault的item高度返回0
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
+    }else
+    {
+        if (indexPath.row < [self listViewMaxModelIndex]) {
+            id obj = [[_fetchListManager items] objectAtIndex:indexPath.row];
+            
+            if ([obj isKindOfClass:[ExploreOrderedData class]]) {
+                if (!((ExploreOrderedData *)obj).managedObjectContext || ! ((ExploreOrderedData *)obj).originalData.managedObjectContext) {
+                    return 0;//fault的item高度返回0
+                }
             }
+            
+            CGFloat cellWidth = [TTUIResponderHelper splitViewFrameForView:tableView].size.width;
+            
+            return [ExploreCellHelper heightForData:obj cellWidth:cellWidth listType:_listType];
         }
         
-        CGFloat cellWidth = [TTUIResponderHelper splitViewFrameForView:tableView].size.width;
-        
-        return [ExploreCellHelper heightForData:obj cellWidth:cellWidth listType:_listType];
+        return 44;
     }
     
-    return 44;
 //    }
 }
 
@@ -1253,6 +1347,23 @@ TTRefreshViewDelegate
 //        return [self functionAreaCell];
 //    }
     
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //首页头部cell
+        NSString *cellIdentifier = NSStringFromClass([ExploreCellHelper cellClassFromCellViewType:ExploreCellViewTypeHomeHeaderTableViewCell data:nil]);
+        ExploreCellBase *tableCell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+        if (tableCell) {
+            [tableCell refreshUI];
+            return tableCell;
+        }
+        else {
+            Class cellClass = NSClassFromString(cellIdentifier);
+            tableCell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            [tableCell refreshUI];
+            return tableCell;
+        }
+        return tableCell;
+    }
+
     UITableViewCell * tableCell = nil;
     ExploreCellBase *cell = nil;
     
@@ -1337,16 +1448,24 @@ TTRefreshViewDelegate
     }
     
     return cell;
+        
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
+//    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
+//      return;
+//    }
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
         return;
     }
-    
+
     NSInteger modelRowIndex = indexPath.row;
     if (_delegate && [_delegate respondsToSelector:@selector(mixListView:didSelectRowAtIndex:)]) {
         [_delegate mixListView:self didSelectRowAtIndex:indexPath];
@@ -1401,7 +1520,14 @@ TTRefreshViewDelegate
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
+//    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
+//        return;
+//    }
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
         return;
     }
     
@@ -1410,8 +1536,52 @@ TTRefreshViewDelegate
         [self willFinishLoadTable];
     }
     
+    
     if (indexPath.row < [self listViewMaxModelIndex]) {
         ExploreOrderedData * obj = [[_fetchListManager items] objectAtIndex:indexPath.row];
+        
+        if (![_cellIdDict[obj.itemID] isEqual: @""]) {
+            
+            NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
+            
+            [dictTraceParams setValue:obj.categoryID forKey:@"category_name"];
+            
+//            [dictTraceParams setValue:@"click_category" forKey:@"enter_from"];
+            
+            if (!self.isLoginStatusChanged) {
+                if ([obj.categoryID isEqualToString:@"f_wenda"])
+                {
+                    [dictTraceParams setValue:obj.categoryID forKey:@"category_name"];
+                    [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+                    [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
+                    [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
+                    [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
+                    [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
+                    [dictTraceParams setValue:@"be_null" forKey:@"ansid"];
+                    [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"qid"];
+                    [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
+                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    
+                }else {
+                    
+                    [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+                    [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"group_id"];
+                    [dictTraceParams setValue:obj.itemID forKey:@"item_id"];
+                    [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
+                    [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
+                    [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
+                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    
+                    [_cellIdDict setObject:@"" forKey:obj.itemID];
+                    
+                }
+            }
+            
+        }else
+        {
+            NSLog(@"xx index.row = %ld",indexPath.row);
+        }
+        
         obj.witnessed = YES;
         if ([obj isKindOfClass:[ExploreOrderedData class]]) {
             //下载广告app store页面预加载
@@ -1627,7 +1797,14 @@ TTRefreshViewDelegate
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath*)indexPath
 {
-    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
+//    if (/*[indexPath section] == ExploreMixedListBaseViewSectionUploadingCells ||*/ [indexPath section] == ExploreMixedListBaseViewSectionFunctionAreaCells) {
+//        return;
+//    }
+    
+    if ([indexPath section] == ExploreMixedListBaseViewSectionFHouseCells) {
+        //to do
+
+
         return;
     }
     
@@ -1771,7 +1948,9 @@ TTRefreshViewDelegate
             if ([label rangeOfString:@"pre_load_more"].length > 0) {
                 [self trackRefershEvent3ForLabel:@"pre_load_more"];
             } else if ([label rangeOfString:@"load_more"].length > 0) {
-                [self trackRefershEvent3ForLabel:@"load_more"];
+//                [self trackRefershEvent3ForLabel:@"load_more"];
+                [self trackRefershEvent3ForLabel:@"pre_load_more"];
+
             }
         }
     }
@@ -1912,7 +2091,8 @@ TTRefreshViewDelegate
 
 - (void)fetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore
 {
-    self.ttLoadingView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+//    self.ttLoadingView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground3];
+    self.ttLoadingView.backgroundColor = [UIColor whiteColor];
     self.ttTargetView = self.listView;
     
     if (!self.ttLoadingView && [SSCommonLogic feedLoadingInitImageEnable]) {
@@ -1932,7 +2112,7 @@ TTRefreshViewDelegate
 //    }
 }
 
-- (void)tryOptimizeFetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore {
+- (void)tryOptimizeFetchFromLocal:(BOOL)fromLocal fromRemote:(BOOL)fromRemote getMore:(BOOL)getMore { 
     NSMutableDictionary * exploreMixedListConsumeTimeStamps = [NSMutableDictionary dictionary];
     [exploreMixedListConsumeTimeStamps setValue:@([NSObject currentUnixTime]) forKey:kExploreFetchListTriggerRequestTimeStampKey];
     
@@ -2000,7 +2180,7 @@ TTRefreshViewDelegate
     }
         
     //关注频道
-    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
+    if ([self.categoryID isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote) {
         [[TTCategoryBadgeNumberManager sharedManager] updateNotifyPointOfCategoryID:self.categoryID withClean:YES];
     }
 
@@ -2307,9 +2487,9 @@ TTRefreshViewDelegate
                                                          }
                                                      }
                                                      
-//                                                     if (![weakSelf needShowCitySelectBar]) {
-//                                                         [weakSelf refreshSubEntranceBar];
-//                                                     }
+                                                     if (![weakSelf needShowCitySelectBar]) {
+                                                         [weakSelf refreshSubEntranceBar];
+                                                     }
                                                  }
                                                  
                                                  if (!isResponseFromRemote) {
@@ -2453,7 +2633,6 @@ TTRefreshViewDelegate
                                              }
                                              
                                              if(isResponseFromRemote){
-                                                 [weakSelf tt_ShowTip: tip duration: duration tipTouchBlock:nil];
                                                  [weakSelf tt_endUpdataData:!isResponseFromRemote error:nil tip:tip duration:duration tipTouchBlock:^{
                                                      [weakSelf notifyBarAction:tipModel];
                                                      
@@ -2569,7 +2748,7 @@ TTRefreshViewDelegate
                                          [weakSelf tryFetchTipIfNeedWithForce:NO];
                                          
                                          //关注频道刷新后，告知提醒轮询manager
-                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
+                                         if ([cid isEqualToString:kTTFollowCategoryID] && (!getMore || [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) && fromRemote && isResponseFromRemote) {
                                              __block ExploreOrderedData * firstOrderedData = nil;
                                              [weakSelf.fetchListManager.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                                                  if ([obj isKindOfClass:[ExploreOrderedData class]]) {
@@ -2578,7 +2757,7 @@ TTRefreshViewDelegate
                                                  }
                                              }];
                                              NSTimeInterval minBehotTime =  [firstOrderedData behotTime];
-                                             if (getMore && [KitchenMgr getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) {
+                                             if (getMore && [TTKitchen getBOOL:kKCUGCFollowNotifyCleanWhenLoadMore]) {
                                                  minBehotTime = [[NSDate date] timeIntervalSince1970];
                                              }
                                              [[TTInfiniteLoopFetchNewsListRefreshTipManager sharedManager] newsListLastHadRefreshWithCategoryID:cid
@@ -2619,12 +2798,14 @@ TTRefreshViewDelegate
 
 - (void)refreshData
 {
+    [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
     [self.listView triggerPullDown];
 }
 
 - (void)emptyViewBtnAction {
     
     if (![self.categoryID isEqualToString:kTTNewsLocalCategoryID]) {
+        [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
         [self.listView triggerPullDown];
     }
     else {
@@ -2669,15 +2850,15 @@ TTRefreshViewDelegate
         [[UIApplication sharedApplication] openURL:url];
         
     } else {
-        TTAuthorizeHintView *hintView =
-        [[TTAuthorizeHintView alloc]
-         initAuthorizeHintWithImageName:@"img_popup_locate"
-         title:NSLocalizedString(@"开启定位服务设置", nil)
-         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“爱看”定位服务", nil)
-         confirmBtnTitle:@"我知道了"
-         animated:YES
-         completed:nil];
-        [hintView show];
+//        TTAuthorizeHintView *hintView =
+//        [[TTAuthorizeHintView alloc]
+//         initAuthorizeHintWithImageName:@"img_popup_locate"
+//         title:NSLocalizedString(@"开启定位服务设置", nil)
+//         message:NSLocalizedString(@"请在系统“设置”-“隐私”-“定位服务”内，开启“幸福里”定位服务", nil)
+//         confirmBtnTitle:@"我知道了"
+//         animated:YES
+//         completed:nil];
+//        [hintView show];
     }
 }
 
@@ -2687,6 +2868,7 @@ TTRefreshViewDelegate
 {
     //默认为none，如果是其他方式，在此方法外部重新赋值
     //self.refreshFromType = ListDataOperationReloadFromTypeNone;为了刷新统计时发送正确的refreshfromType给传过去
+    [[FHFeedHouseCellHelper sharedInstance]removeHouseCache];
     [self.listView triggerPullDown];
 }
 
@@ -3262,6 +3444,9 @@ TTRefreshViewDelegate
             }
         }
     }
+    
+//    [self addHouseItemHouseShowLog];
+    
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -3277,7 +3462,7 @@ TTRefreshViewDelegate
     [TTFeedDislikeView dismissIfVisible];
     
     //按住RNCell滑动列表时需要主动调用RCTRootView的cancelTouches方法，否则松手后仍会触发点击事件
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTTRNViewCancelTouchesNotification object:nil];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -3293,6 +3478,29 @@ TTRefreshViewDelegate
     }
     [[TTVideoAutoPlayManager sharedManager] tryAutoPlayInTableView:self.listView];
     [[TTVAutoPlayManager sharedManager] tryAutoPlayInTableView:self.listView];
+    
+    if (scrollView != self.listView) {
+        
+        return;
+    }
+    [self addHouseItemHouseShowLog];
+}
+
+-(void)addHouseItemHouseShowLog {
+    
+    NSArray *visibleCells = [self.listView visibleCells];
+    if (visibleCells.count < 1) {
+        return;
+    }
+    
+    for (ExploreCellBase *cell in visibleCells) {
+        
+        if ([cell isKindOfClass:[FHFeedHouseItemCell class]]) {
+            
+            FHFeedHouseItemCell *houseCell = (FHFeedHouseItemCell *)cell;
+            [houseCell addHouseShowLog];
+        }
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -3308,6 +3516,14 @@ TTRefreshViewDelegate
     if ([_fetchListManager canSilentFetchItems] && scrollView.contentOffset.y > 2) {
         [self trySilentFetchIfNeeded];
     }
+    
+    if (scrollView != self.listView) {
+        
+        return;
+    }
+    
+    [self addHouseItemHouseShowLog];
+
 }
 
 - (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView
@@ -3337,7 +3553,7 @@ TTRefreshViewDelegate
         self.ttLoadingView.frame = CGRectZero;
     }
     [self.listView finishPullDownWithSuccess:NO];
-    
+    self.isLoginStatusChanged = YES;
     [self reloadListView];
 }
 

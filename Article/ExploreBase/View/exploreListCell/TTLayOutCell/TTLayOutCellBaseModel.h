@@ -142,7 +142,6 @@
 @property (nonatomic, assign) BOOL adSubtitleLabelHidden;
 @property (nonatomic, assign) CGFloat adSubtitleLabelFontSize;
 @property (nonatomic, strong) NSString *adSubtitleLabelTextColorThemeKey;
-@property (nonatomic, strong) NSString *adSubtitleLabelTextColorHex;
 @property (nonatomic, assign) BOOL adSubtitleLabelUserInteractionEnabled;
 @property (nonatomic, strong) NSString *adSubtitleLabelStr;
 

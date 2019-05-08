@@ -7,9 +7,9 @@
 
 #import "AKWebContainerViewController.h"
 #import <TTFullScreenLoadingView.h>
-#import <TTNetworkUtilities.h>
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTURLUtils.h>
-#import <TTRouteSelectionServerConfig.h>
+#import <TTNetBusiness/TTRouteSelectionServerConfig.h>
 #import <UIViewController+NavigationBarStyle.h>
 #import <SSWebViewBackButtonView.h>
 #import <SDWebImageManager.h>
@@ -177,7 +177,7 @@ NSString * const kAKWebPageCommonPath = @"/score_task/page/";
     }
     return UIEdgeInsetsMake(topInset, 0, 0, 0);
 }
-
+    
 CGFloat const kBackButtonViewLeftPadding = 15.f;
 CGFloat const kBackButtonViewTopPadding = 20.f;
 
@@ -468,7 +468,7 @@ CGFloat const kBackButtonViewTopPadding = 20.f;
                     NSString *tmp = strArray[i];
                     version = version * 10 + tmp.integerValue;
                 }
-                version += 560;
+                version += 600;
                 NSMutableArray *newStrArray = [NSMutableArray arrayWithCapacity:3];
                 for (NSInteger i = 0; i < 2; i += 1) {
                     NSInteger num = version % 10;

@@ -10,6 +10,7 @@
 #import <TTBaseLib/JSONAdditions.h>
 #import "TTRoute.h"
 #import "WDDefines.h"
+#import "FHTraceEventUtils.h"
 
 NSString * const kWDLogPbFromKey = @"log_pb";
 NSString * const kWDOriginFromKey = @"origin_from";
@@ -35,6 +36,19 @@ NSString * const kWDSourceKey = @"source";
         }
         if (!isEmptyString(enterFrom)) {
             [dicts setValue:enterFrom forKey:@"enter_from"];
+        }
+    } else {
+        NSString *categoryname = nil;
+        NSString *enterfrom = nil;
+        if ([[dicts allKeys] containsObject:@"category_name"]) {
+            categoryname = [dicts objectForKey:@"category_name"];
+        }
+        if ([[dicts allKeys] containsObject:@"enter_from"]) {
+            enterfrom = [dicts objectForKey:@"enter_from"];
+        }
+        if (!isEmptyString(categoryname) && !isEmptyString(enterfrom) && [enterfrom hasSuffix:categoryname]) {
+            [dicts removeObjectForKey:@"enter_from"];
+            [dicts setValue:[FHTraceEventUtils generateEnterfrom:categoryname] forKey:@"enter_from"];
         }
     }
     return [dicts copy];

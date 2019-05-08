@@ -698,8 +698,11 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                                                                                     }];
     [self.tracker flushStayPageTime];
     
+    
     //NSAssert(cell.videoDetail.itemID, @"videoDetail awemeID must not be nil");
     cell.videoDetail.playCount = cell.videoDetail.playCount + 1;
+    
+    [self sendStayPageTracking];
 }
 
 - (void)sendVideoOverTracking
@@ -734,6 +737,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                                 model:self.currentVideoCell.videoDetail
                       commonParameter:self.commonTrackingParameter
                        extraParameter:paramters];
+    
 }
 
 - (void)sendStayPageTracking
@@ -746,10 +750,10 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     NSString *eventName = self.firstPageShown ? @"stay_page_draw" : @"stay_page";
     NSString *stayTime = [NSString stringWithFormat:@"%.0f", [self.tracker timeIntervalForStayPage] * 1000];
     NSMutableDictionary *paramters = @{}.mutableCopy;
-    paramters[@"user_id"] = self.currentVideoCell.videoDetail.author.userID;
+//    paramters[@"user_id"] = self.currentVideoCell.videoDetail.author.userID;
     paramters[@"stay_time"] = stayTime;
-    paramters[@"is_follow"] = @(self.currentVideoCell.videoDetail.author.isFollowing);
-    paramters[@"is_friend"] = @(self.currentVideoCell.videoDetail.author.isFriend);
+
+
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.currentVideoCell.videoDetail
                       commonParameter:self.commonTrackingParameter
@@ -764,6 +768,10 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                                                                     categoryName:categoryName
                                                                         stayTime:[self.tracker timeIntervalForStayPage] * 1000
                                                                            logPb:self.currentVideoCell.videoDetail.logPb];
+    
+    
+    
+
     
 }
 
@@ -851,7 +859,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)sendImpressionWithVideoDetail:(TTShortVideoModel *)videoDetail status:(SSImpressionStatus)status
 {
     NSString *currentCategoryName = videoDetail.categoryName ?: self.commonTrackingParameter[@"category_name"];
-    if (![currentCategoryName isEqualToString:@"hotsoon_video"]) {
+    if (![currentCategoryName isEqualToString:@"f_hotsoon_video"]) {
         // 目前只在小视频列表页进入的情况下发 impression
         return;
     }

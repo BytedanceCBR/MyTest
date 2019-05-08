@@ -67,7 +67,7 @@
 #import "TTShareMethodUtil.h"
 //#import "TTThreadDeleteContentItem.h"
 #import "ExploreOrderedData.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "BDPlayerObjManager.h"
 #import "TTDirectForwardWeitoutiaoContentItem.h"
 #import <TTDirectForwardWeitoutiaoActivity.h>
@@ -181,7 +181,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     _banEmojiInput = banEmojiInput;
     if ([self isViewLoaded]) {
 
-        BOOL isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0)  || ak_banEmojiInput();
+        BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0)  || ak_banEmojiInput();
         self.toolbarView.banEmojiInput = banEmojiInput || isBanRepostOrEmoji;
         if(self.commentWriteView) {
             self.commentWriteView.banEmojiInput = banEmojiInput;
@@ -214,6 +214,14 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
+    
+    // add by zjing safeArea
+    CGFloat safeInsetBottom = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        safeInsetBottom = 34;
+    }
+    self.view.height = ExploreDetailGetToolbarHeight() + safeInsetBottom;
+    
     self.toolbarView.frame = self.view.bounds;
 }
 
@@ -410,6 +418,17 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     }
     if (!isFinish) {
         [self _openCommentWithText:nil switchToEmojiInput:switchToEmojiInput];
+    }
+}
+
+- (void)_writeCommentActionFired
+{
+    BOOL isFinish = NO;
+    if (self.WriteButtonActionFired) {
+        isFinish = self.WriteButtonActionFired();
+    }
+    if (!isFinish) {
+        [self _openCommentWithText:nil switchToEmojiInput:NO];
     }
 }
 
@@ -620,7 +639,9 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     [paramsDict setValue:self.videoInfo.groupModel.groupID forKey:@"group_id"];
     [paramsDict setValue:self.videoInfo.groupModel.itemID forKey:@"item_id"];
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
-    [TTTrackerWrapper eventV3:@"rt_post_comment" params:paramsDict isDoubleSending:YES];
+    [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
+
+    [TTTracker eventV3:@"rt_post_comment" params:paramsDict];
 
     [commentView dismissAnimated:YES];
     commentWriteManager.delegate = nil;
@@ -1003,7 +1024,8 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 //    if (itemType == TTActivityTypeWeitoutiao) {
 //        [self p_forwardToWeitoutiao];
 //    }
-    else if (itemType == TTActivityTypeReport) {
+//    else if (itemType == TTActivityTypeReport) {
+    if (itemType == TTActivityTypeReport) {
         [self reportAction];
     } else if (itemType == TTActivityTypeDetele) {
         [self deleteAction];
@@ -1053,6 +1075,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         if ([[_shareSectionAndEventDic valueForKey:ISFULLSCREEN] isKindOfClass:[NSNumber class]]) {
             isFullScreen = [(NSNumber *)[_shareSectionAndEventDic valueForKey:ISFULLSCREEN] boolValue];
         }
+        self.activityActionManager.copyText = self.videoInfo.shareURL;
         
         [self.activityActionManager performActivityActionByType:itemType inViewController:self sourceObjectType:TTShareSourceObjectTypeVideoDetail uniqueId:groupId adID:adId platform:TTSharePlatformTypeOfMain groupFlags:self.detailModel.protocoledArticle.groupFlags isFullScreenShow:isFullScreen];
     }
@@ -1173,9 +1196,9 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (void)favoriteLog3{
     NSMutableDictionary *extra = [NSMutableDictionary dictionary];
     if (self.videoInfo.userRepined) {
-        [extra setValue:@"rt_favorite" forKey:@"favorite_name"];
+        [extra setValue:@"rt_favourite" forKey:@"favorite_name"];
     }else{
-        [extra setValue:@"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue:@"rt_unfavourite" forKey:@"favorite_name"];
     }
     [extra addEntriesFromDictionary:_shareSectionAndEventDic];
     Article *covertArticle = [self.videoInfo ttv_convertedArticle];
@@ -1266,7 +1289,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     if (itemType == TTActivityTypeFavorite)
     {
         BOOL userRepine = self.detailModel.protocoledArticle.userRepined;
-        [extra setValue: userRepine ? @"rt_favorite" : @"rt_unfavorite" forKey:@"favorite_name"];
+        [extra setValue: userRepine ? @"rt_favourite" : @"rt_unfavourite" forKey:@"favorite_name"];
     }
     
     NSString *fromSource = _activityActionManager.clickSource;
@@ -1434,21 +1457,21 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 
 #pragma safeInset
 
-- (void)viewSafeAreaInsetsDidChange
-{
-    [super viewSafeAreaInsetsDidChange];
-    if (self.view.superview){
-        CGRect frameInWindow = [self.view convertRect:self.view.bounds toView:nil];
-        UIEdgeInsets safeInset = self.view.safeAreaInsets;
-        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
-        if (ceil(ExploreDetailGetToolbarHeight() + safeInset.bottom) >= CGRectGetHeight(frameInWindow) &&
-            screenHeight == ceil(CGRectGetMaxY(frameInWindow))){
-            frameInWindow = CGRectMake(frameInWindow.origin.x, frameInWindow.origin.y - safeInset.bottom, self.view.width, (ExploreDetailGetToolbarHeight() + safeInset.bottom));
-            self.view.frame = [self.view.superview convertRect:frameInWindow fromView:nil];
-        }
-        self.toolbarView.frame = self.view.bounds;
-    }
-}
+//- (void)viewSafeAreaInsetsDidChange
+//{
+//    [super viewSafeAreaInsetsDidChange];
+//    if (self.view.superview){
+//        CGRect frameInWindow = [self.view convertRect:self.view.bounds toView:nil];
+//        UIEdgeInsets safeInset = self.view.safeAreaInsets;
+//        CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
+//        if (ceil(ExploreDetailGetToolbarHeight() + safeInset.bottom) >= CGRectGetHeight(frameInWindow) &&
+//            screenHeight == ceil(CGRectGetMaxY(frameInWindow))){
+//            frameInWindow = CGRectMake(frameInWindow.origin.x, frameInWindow.origin.y - safeInset.bottom, self.view.width, (ExploreDetailGetToolbarHeight() + safeInset.bottom));
+//            self.view.frame = [self.view.superview convertRect:frameInWindow fromView:nil];
+//        }
+//        self.toolbarView.frame = self.view.bounds;
+//    }
+//}
 
 - (void)shareManager:(TTShareManager *)shareManager
        completedWith:(id<TTActivityProtocol>)activity
@@ -1764,7 +1787,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     if (!isEmptyString(self.videoInfo.title)){
         timeLineTitle = [NSString stringWithFormat:@"%@-%@", self.videoInfo.title, @""];
     }else{
-        timeLineTitle = NSLocalizedString(@"爱看", nil);
+        timeLineTitle = NSLocalizedString(@"好房就在幸福里", nil);
     }
     return timeLineTitle;
 }
@@ -1773,7 +1796,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 - (NSString *)shareDesc
 {
     Article *convertedArticle = [self.videoInfo ttv_convertedArticle];
-    NSString *detail = isEmptyString(convertedArticle.abstract) ? NSLocalizedString(@"爱看", nil) : convertedArticle.abstract;
+    NSString *detail = isEmptyString(convertedArticle.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : convertedArticle.abstract;
     return detail;
 }
 

@@ -22,6 +22,7 @@
 #import "BDAccountSDK.h"
 
 
+
 @interface TTEditUserProfileViewModel ()
 <
 TTEditUserProfileViewDelegate
@@ -81,10 +82,8 @@ TTEditUserProfileViewDelegate
 
 - (void)refreshEditableUserInfo
 {
-    
-    BDAccountUser* userInfo = [[BDAccount sharedAccount] user];
     TTAccountUserAuditSet *newAuditInfo = [[TTAccountManager currentUser].auditInfoSet copy];
-    
+    BDAccountUser* userInfo = [[BDAccount sharedAccount] user];
     if (!newAuditInfo && !userInfo) return;
     
     if (!_editableAuditInfo) {
@@ -96,12 +95,11 @@ TTEditUserProfileViewDelegate
         } @finally {
         }
     }
-    // f100 取出TTAccount库
     _editableAuditInfo.isAuditing  = [newAuditInfo isAuditing];
     _editableAuditInfo.editEnabled = YES;//[newAuditInfo modifyUserInfoEnabled];
-    _editableAuditInfo.name        = userInfo.name;
-    _editableAuditInfo.avatarURL   = userInfo.avatarURL;
-    _editableAuditInfo.userDescription = userInfo.userDescription;
+    _editableAuditInfo.name        = [newAuditInfo username];
+    _editableAuditInfo.avatarURL   = [newAuditInfo userAvatarURLString];
+    _editableAuditInfo.userDescription = [newAuditInfo userDescription];
     _editableAuditInfo.gender = @([userInfo.gender integerValue]);
     _editableAuditInfo.birthday = userInfo.birthday;
     _editableAuditInfo.area = userInfo.area;

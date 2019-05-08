@@ -67,7 +67,8 @@ static CGFloat const rewardLabelLeftInset = 9;
 - (void)buildView
 {
     [self addSubview:self.rewardButton];
-    [self addSubview:self.digButton];
+    // add by zjing 去掉文章详情页的点赞
+//    [self addSubview:self.digButton];
     [self addSubview:self.reportButton];
     [self addSubview:self.avatarContainer];
     [self addSubview:self.rewardLabel];
@@ -104,7 +105,10 @@ static CGFloat const rewardLabelLeftInset = 9;
         self.rewardLabel.hidden = YES;
         
         self.digButton.left = self.width * 35.0f / 345.0f;
-        self.reportButton.left = self.digButton.right + self.width * 51.0f / 345.0f;
+//        self.reportButton.left = self.digButton.right + self.width * 51.0f / 345.0f;
+        
+        self.reportButton.centerX = self.width / 2;
+        
 //        self.digButton.left = self.width * 35.0f / 375.0f;
 //        self.reportButton.left = self.digButton.right + self.width * 51.0f / 375.0f;
     }
@@ -336,7 +340,7 @@ static CGFloat const rewardLabelLeftInset = 9;
         _digButton.hitTestEdgeInsets = UIEdgeInsetsMake(0, -10, 0, -10);
         _digButton.titleColorThemeKey = kColorText1;
         _digButton.titleLabel.font = [UIFont systemFontOfSize:12];
-        _digButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, -5);
+        _digButton.titleEdgeInsets = UIEdgeInsetsMake(0, 6, 0, -6);
         _digButton.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
         _digButton.layer.cornerRadius = ButtonHeight/2;
 //        _digButton.layer.cornerRadius = 20.0f / 375.0f * self.width;

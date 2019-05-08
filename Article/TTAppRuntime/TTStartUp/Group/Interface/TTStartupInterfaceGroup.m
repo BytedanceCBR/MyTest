@@ -20,6 +20,7 @@
 #import "TTFeedbackCheckTask.h"
 #import "TTGetCategoryTask.h"
 #import "TTProfileEntryStartupTask.h"
+#import "TTMessageNotificationStartupTask.h"
 //#import "TTUploadContactsStartupTask.h"
 //#import "TTSFActivityDataTask.h"
 #import "TTStartupTask.h"
@@ -46,6 +47,7 @@
     [group.tasks addObject:[[self class] interfaceStartupForType:TTInterfaceStartupTypeGetDomain]];
     [group.tasks addObject:[[self class] interfaceStartupForType:TTInterfaceStartupTypeFeedbackCheck]];
     [group.tasks addObject:[[self class] interfaceStartupForType:TTInterfaceStartupTypeGetCategory]];
+    [group.tasks addObject:[[self class] interfaceStartupForType:TTInterfaceStartupTypeMessageNotification]];
     [group.tasks addObject:[[self class] interfaceStartupForType:TTInterfaceStartupTypeProfileEntry]];
 //    [group.tasks addObject:[[self class] interfaceStartupForType:TTInterfaceStartupTypeUploadContacts]];
 //    [group.tasks addObject:[[self class] interfaceStartupForType:TTInterfaceStartupTypeSFActivityData]];
@@ -92,6 +94,9 @@
             break;
         case TTInterfaceStartupTypeProfileEntry:
             return [[TTProfileEntryStartupTask alloc] init];
+            break;
+        case TTInterfaceStartupTypeMessageNotification:
+            return [[TTMessageNotificationStartupTask alloc] init];
             break;
 //        case TTInterfaceStartupTypeUploadContacts:
 //            return [[TTUploadContactsStartupTask alloc] init];

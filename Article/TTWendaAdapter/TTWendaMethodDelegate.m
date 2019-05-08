@@ -11,8 +11,8 @@
 #import "FRApiModel.h"
 #import "UIViewController+BDTAccountModalPresentor.h"
 #import "TTCommentDetailViewController.h"
-#import "TTKitchenMgr.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenMgr.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 #import <TTUIWidget/TTModalContainerController.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -24,7 +24,8 @@
 #import "TTVPlayerTipShareCreater.h"
 #import "TTVVideoPlayerModel.h"
 #import "TTVVideoPlayerStateStore.h"
-#import <BDTBasePlayer/TTVDemanderTrackerManager.h>
+//#import <BDTBasePlayer/TTVDemanderTrackerManager.h>
+#import "FHDemanderTrackerManager.h"
 #import <TTServiceKit/TTModuleBridge.h>
 
 @interface TTWendaMethodDelegate () <WDAdapterMethodDelegate, TTModalContainerDelegate, TTVDemandPlayerDelegate, WDVideoPlayerTransferSender>
@@ -114,7 +115,7 @@
 
 - (BOOL)adapterCommentToolBarEnable
 {
-    return [KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable];
+    return [TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable];
 }
 
 #pragma mark - WDVideoPlayerTransferSender

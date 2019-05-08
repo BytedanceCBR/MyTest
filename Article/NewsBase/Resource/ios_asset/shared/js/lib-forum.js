@@ -1500,9 +1500,9 @@ s.prototype.open = u, s.prototype.send = l;
 t.exports = u;
 } ]);
 }), window.Slardar && window.Slardar.install({
-sampleRate: .01,
+sampleRate: .1,
 bid: "article_app",
-pid: "article",
+pid: "article_aikan",
 ignoreAjax: [],
 ignoreStatic: []
 }), SelfEvent.prototype.on = function(t, e) {
@@ -2570,7 +2570,7 @@ return null == t ? a : t.call(this, o, a);
 n = e.exports = i, n.getSerialize = o;
 }, {} ]
 }, {}, [ 4 ])(4);
-}), JSVERSION = 371;
+}), JSVERSION = 385;
 
 var globalErrors = [], startTimestamp = Date.now(), flushErrorsTimer;
 
@@ -2591,7 +2591,7 @@ var e = t.data || t;
 e && e.device_id && window.Raven && Raven.config("http://key@m.toutiao.com/log/sentry/v2/183", {
 tags: {
 bid: "article_app",
-pid: "article",
+pid: "article_aikan",
 ac: e.ac,
 aid: e.aid,
 channel: e.channel,

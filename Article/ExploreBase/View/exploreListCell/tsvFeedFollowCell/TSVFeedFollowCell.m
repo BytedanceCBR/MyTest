@@ -32,7 +32,7 @@
 #import <TSVPrefetchVideoManager.h>
 #import <ReactiveObjC.h>
 
-#define kCardRectPadding            6
+#define kCardRectPadding            10
 #define kMoreArrowW                 6
 #define kMoreArrowH                 10
 #define kMoreArrowLeftGap           4
@@ -90,9 +90,13 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 @property (nonatomic, strong) SSThemedView                  *topRect;
 @property (nonatomic, strong) SSThemedView                  *bottomRect;
 @property (nonatomic, strong) UIView                        *bottomInfoView;
+
+@property(nonatomic, strong) SSThemedLabel *titleLabel;           //标题
+@property(nonatomic, strong) SSThemedLabel *infoLabel;            //播放次数或者用户名
+
 @property (nonatomic, strong) SSThemedLabel                 *moreLabel;
 @property (nonatomic, strong) SSThemedImageView             *moreArrow;
-@property (nonatomic, strong) TTAlphaThemedButton           *moreButton;
+//@property (nonatomic, strong) TTAlphaThemedButton           *moreButton;
 
 //  data
 @property (nonatomic, strong) ExploreOrderedData            *orderedData;
@@ -111,17 +115,17 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     if ([data isKindOfClass:[ExploreOrderedData class]]) {
         ExploreOrderedData *orderedData = (ExploreOrderedData *)data;
         if ([orderedData.originalData isKindOfClass:[TSVShortVideoOriginalData class]]) {
+
+            NSString *str = orderedData.shortVideoOriginalData.shortVideo.title;
+            CGFloat itemHeight = [self itemHeightWithCellStr: str];
+            CGFloat height = itemHeight + 150 + 2 * kCardRectPadding;
             
-            CGFloat itemHeight = [self itemHeightWithCellWidth:width];
-            
-            CGFloat height = itemHeight + 2 * kCardRectPadding;
-            
-            if ([orderedData nextCellHasTopPadding]){
-                height -= kCardRectPadding;
-            }
-            if ([orderedData preCellHasBottomPadding]) {
-                height -= kCardRectPadding;
-            }
+//            if ([orderedData nextCellHasTopPadding]){
+//                height -= kCardRectPadding;
+//            }
+//            if ([orderedData preCellHasBottomPadding]) {
+//                height -= kCardRectPadding;
+//            }
             
             BOOL shouldShowTopInfoView = [TSVFeedFollowCellTopInfoViewModel shouldShowTopInfoViewWithData:data];
             if (shouldShowTopInfoView) {
@@ -129,12 +133,12 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
             } else {
                 height += kTopPadding;
             }
-            
-            if ([TTShortVideoHelper canOpenShortVideoTab]) {
-                height += kBottomHeight;
-            } else {
-                height += kTopPadding;
-            }
+//
+//            if ([TTShortVideoHelper canOpenShortVideoTab]) {
+//                height += kBottomHeight;
+//            } else {
+//                height += kTopPadding;
+//            }
             
             if (height > 0) {
                 return height;
@@ -144,9 +148,20 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     return 0.f;
 }
 
-+ (CGFloat)itemHeightWithCellWidth:(CGFloat)width
++ (CGFloat)itemHeightWithCellStr:(NSString *)str
 {
-    return width * kItemWidthRatio * kCoverAspectRatio;
+    UILabel *label = [[UILabel alloc]init];
+    label.numberOfLines = 2;
+    label.font = [UIFont systemFontOfSize:16];
+    label.text = str;
+    label.width = [UIScreen mainScreen].bounds.size.width - 30;
+    [label sizeToFit];
+    CGSize recommendSize = label.size;
+    recommendSize = CGSizeMake(ceilf(recommendSize.width), ceilf(recommendSize.height));
+    CGFloat itemHeight = recommendSize.height + 20;
+    
+    return itemHeight;
+    
 }
 
 #pragma mark -
@@ -171,45 +186,50 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     self.model = self.orderedData.shortVideoOriginalData.shortVideo;
     
     [self.topInfoView refreshWithData:data];
-    
     [self.contentView setupWithData:self.orderedData];
     
     self.moreLabel.text = self.model.showMoreModel.title?:@"精彩小视频";
-    
+    self.titleLabel.text = self.model.title;
+    self.infoLabel.text = [NSString stringWithFormat:@"%@次播放", [TTBusinessManager formatPlayCount:self.model.playCount]];
     [self setNeedsLayout];
+}
+
+- (ExploreOrderedData *)cellData
+{
+    return self.orderedData;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.topRect.width = self.width;
-    self.topRect.height = kCardRectPadding;
+//    self.topRect.width = self.width;
+//    self.topRect.height = kCardRectPadding;
+//
+//    self.bottomRect.width = self.width;
+//    self.bottomRect.height = kCardRectPadding;
     
-    self.bottomRect.width = self.width;
-    self.bottomRect.height = kCardRectPadding;
-    
-    if ([self.orderedData preCellHasBottomPadding]) {
-        CGRect bounds = self.bounds;
-        bounds.origin.y = 0;
-        self.bounds = bounds;
-        self.topRect.hidden = YES;
-    } else {
-        CGRect bounds = self.bounds;
-        bounds.origin.y = - kCardRectPadding;
-        self.bounds = bounds;
-        self.topRect.bottom = 0;
-        self.topRect.width = self.width;
-        self.topRect.hidden = NO;
-    }
-    
-    if (!([self.orderedData nextCellHasTopPadding])) {
-        self.bottomRect.bottom = self.height + self.bounds.origin.y;
-        self.bottomRect.width = self.width;
-        self.bottomRect.hidden = NO;
-    } else {
-        self.bottomRect.hidden = YES;
-    }
-    
+//    if ([self.orderedData preCellHasBottomPadding]) {
+//        CGRect bounds = self.bounds;
+//        bounds.origin.y = 0;
+//        self.bounds = bounds;
+//        self.topRect.hidden = YES;
+//    } else {
+//        CGRect bounds = self.bounds;
+//        bounds.origin.y = - kCardRectPadding;
+//        self.bounds = bounds;
+//        self.topRect.bottom = 0;
+//        self.topRect.width = self.width;
+//        self.topRect.hidden = NO;
+//    }
+//
+//    if (!([self.orderedData nextCellHasTopPadding])) {
+//        self.bottomRect.bottom = self.height + self.bounds.origin.y;
+//        self.bottomRect.width = self.width;
+//        self.bottomRect.hidden = NO;
+//    } else {
+//        self.bottomRect.hidden = YES;
+//    }
+
     [self refreshTopInfoView];
     [self refreshContentView];
     [self refreshBottomInfoView];
@@ -240,31 +260,29 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     } else {
         contentY = kLeftPadding;
     }
-    self.contentView.frame = CGRectMake(kLeftPadding, contentY, self.width * kItemWidthRatio, self.width * kItemWidthRatio * kCoverAspectRatio);
+    
+    CGFloat titleMaxWidth = self.width - 2 * 15;
+    self.titleLabel.width = titleMaxWidth;
+    [self.titleLabel sizeToFit];
+    self.titleLabel.left = 15;
+    self.titleLabel.top = contentY;
+    
+    contentY = self.titleLabel.bottom + 10;
+    
+    NSString *str = self.orderedData.shortVideoOriginalData.shortVideo.title;
+    self.contentView.frame = CGRectMake(15, contentY, 200, 150);
+
 }
 
 - (void)refreshBottomInfoView
 {
-    self.bottomInfoView.hidden = NO;
-    self.bottomInfoView.frame = CGRectMake(0, self.contentView.bottom, self.width, kBottomHeight);
     
-    [self.moreLabel sizeToFit];
-    self.moreLabel.hidden = NO;
-    self.moreLabel.left = kLeftPadding;
-    self.moreLabel.centerY = self.bottomInfoView.height / 2;
-    
-    if ([TTShortVideoHelper canOpenShortVideoTab]) {
-        self.moreArrow.hidden = NO;
-        self.moreArrow.left = self.moreLabel.right + kMoreArrowLeftGap;
-        self.moreArrow.centerY = self.moreLabel.centerY;
-        
-        self.moreButton.width = self.moreLabel.width + self.moreArrow.width + kMoreArrowLeftGap;
-        self.moreButton.height = kBottomHeight;
-        self.moreButton.centerY = self.moreLabel.centerY;
-        self.moreButton.left = self.moreLabel.left;
-    } else {
-        self.bottomInfoView.hidden = YES;
-    }
+    self.infoLabel.width = self.width - 30;
+    self.infoLabel.height = 10;
+    [self.infoLabel sizeToFit];
+    self.infoLabel.left = kLeftPadding;
+    self.infoLabel.top = self.contentView.bottom + 10;
+
 }
 
 - (void)themeChanged:(NSNotification *)notification
@@ -273,10 +291,11 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     self.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
 }
 
+
 - (void)didSelectWithContext:(nullable TTFeedCellSelectContext *)context
 {
     [super didSelectWithContext:context];
-    [[TTRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+//    [[TTRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
     
     [TSVTransitionAnimationManager sharedManager].listSelectedCellFrame = [self convertRect:self.contentView.frame toView:nil];
     NSURL *url = [TTStringHelper URLWithURLString:self.model.detailSchema];
@@ -291,10 +310,10 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
         
         id<TSVShortVideoDataFetchManagerProtocol> fetchManager;
         
-        if ([TSVChannelDecoupledConfig strategy] == TSVChannelDecoupledStrategyDisabled) {
-            fetchManager = [[TSVShortVideoCategoryFetchManager alloc] initWithOrderedDataArray:@[self.orderedData] cardID:nil];
-            fetchManager.currentIndex = index;
-        } else {
+//        if ([TSVChannelDecoupledConfig strategy] == TSVChannelDecoupledStrategyDisabled) {
+//            fetchManager = [[TSVShortVideoCategoryFetchManager alloc] initWithOrderedDataArray:@[self.orderedData] cardID:nil];
+//            fetchManager.currentIndex = index;
+//        } else {
             if (self.orderedData.shortVideoOriginalData.shortVideo) {
                 TTShortVideoModel *model = self.orderedData.shortVideoOriginalData.shortVideo;
                 model.listIndex = @0;
@@ -305,7 +324,9 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
                                                                        requestCategoryID:[NSString stringWithFormat:@"%@_feed_detail_draw", kTTUGCVideoCategoryID]
                                                                       trackingCategoryID:kTTUGCVideoCategoryID
                                                                             listEntrance:@"more_shortvideo"];
-            }
+                fetchManager.shouldShowNoMoreVideoToast = NO;
+                fetchManager.hasMoreToLoad = NO;
+//            }
         }
         
         WeakSelf;
@@ -317,10 +338,14 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
             return [self selectedViewWithFetchManager:fetchManager];
         }];
         
-        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
+        NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:3];
         [info setValue:fetchManager forKey:HTSVideoListFetchManager];
         [info setValue:exitManager forKey:HTSVideoDetailExitManager];
-        
+        if (self.cellData) {
+            
+            [info setValue:self.cellData forKey:HTSVideoDetailOrderedData];
+        }
+
         //自定义push方式打开火山详情页
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(info) pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
             if ([nav isKindOfClass:[TTNavigationController class]] &&
@@ -388,6 +413,31 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     return _bottomInfoView;
 }
 
+
+- (SSThemedLabel *)titleLabel{
+    if(!_titleLabel){
+        _titleLabel = [[SSThemedLabel alloc] init];
+        _titleLabel.textColorThemeKey = kColorText1;
+        _titleLabel.numberOfLines = 2;
+        _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        _titleLabel.font = [UIFont systemFontOfSize:16];
+        [self addSubview:_titleLabel];
+    }
+    return _titleLabel;
+}
+
+- (SSThemedLabel *)infoLabel{
+    if(!_infoLabel){
+        _infoLabel = [[SSThemedLabel alloc] init];
+        _infoLabel.textColorThemeKey = kFHColorCoolGrey2;
+        _infoLabel.numberOfLines = 1;
+        _infoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        _infoLabel.font = [UIFont systemFontOfSize:10];
+        [self addSubview:_infoLabel];
+    }
+    return _infoLabel;
+}
+
 - (SSThemedLabel *)moreLabel
 {
     if (!_moreLabel) {
@@ -400,33 +450,6 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
         [self.bottomInfoView addSubview:_moreLabel];
     }
     return _moreLabel;
-}
-
-- (TTAlphaThemedButton *)moreButton
-{
-    if (!_moreButton) {
-        _moreButton = [[TTAlphaThemedButton alloc] initWithFrame:CGRectZero];
-        _moreButton.backgroundColor = [UIColor clearColor];
-        WeakSelf;
-        [_moreButton addTarget:self withActionBlock:^{
-            StrongSelf;
-            [self handleClickWithModel:self.model];
-            [self sendClickMoreEventWithData:self.orderedData];
-        } forControlEvent:UIControlEventTouchUpInside];
-        [self.bottomInfoView addSubview:_moreButton];
-    }
-    return _moreButton;
-}
-
-- (SSThemedImageView *)moreArrow
-{
-    if (!_moreArrow) {
-        _moreArrow = [[SSThemedImageView alloc] initWithFrame:CGRectMake(0, 0, kMoreArrowW, kMoreArrowH)];
-        _moreArrow.backgroundColor = [UIColor clearColor];
-        _moreArrow.imageName = @"horizontal_more_arrow";
-        [self.bottomInfoView addSubview:_moreArrow];
-    }
-    return _moreArrow;
 }
 
 -(TSVFeedFollowCellContentView *)contentView
@@ -442,7 +465,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 {
     if (!_topRect) {
         _topRect = [[SSThemedView alloc] init];
-        _topRect.backgroundColorThemeKey = kColorBackground3;
+        _topRect.backgroundColorThemeKey = kColorLine8;
         [self addSubview:_topRect];
     }
     return _topRect;
@@ -452,7 +475,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 {
     if (!_bottomRect) {
         _bottomRect = [[SSThemedView alloc] init];
-        _bottomRect.backgroundColorThemeKey = kColorBackground3;
+        _bottomRect.backgroundColorThemeKey = kColorLine8;
         [self addSubview:_bottomRect];
     }
     return _bottomRect;
@@ -487,10 +510,17 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     NSString *categoryName = data.categoryID ?: @"";
     
     NSString *enterFrom;
-    if ([data.categoryID isEqualToString:@"__all__"]) {
-        enterFrom = @"click_headline";
-    } else {
+    if (!isEmptyString(data.categoryID)) {
+        if ([data.categoryID isEqualToString:@"__all__"]) {
+            enterFrom = @"click_headline";
+        }
+        else {
+            enterFrom = [NSString stringWithFormat:@"click_%@", categoryName];
+        }
+    }
+    else {
         enterFrom = @"click_category";
+
     }
     
     return @{@"category_name" : categoryName,
@@ -520,7 +550,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
     @weakify(self);
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIApplicationWillEnterForegroundNotification object:nil] takeUntil:self.rac_willDeallocSignal] subscribeNext:^(NSNotification * _Nullable x) {
         @strongify(self);
-        if (_isDisplaying) {
+        if (self.isDisplaying) {
             [self sendEventWithEventName:@"huoshan_video_show" orderedData:self.orderedData];
         }
     }];

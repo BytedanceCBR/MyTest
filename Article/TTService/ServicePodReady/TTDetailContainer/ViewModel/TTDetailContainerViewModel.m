@@ -556,7 +556,9 @@
        ![[@(self.detailModel.article.uniqueID) stringValue] isEqualToString:[@(newArticle.uniqueID) stringValue]]){
         if (self.fetchContentBlock) {
             self.fetchContentBlock(ExploreDetailManagerFetchResultTypeEndLoading);
-            self.fetchContentBlock = nil;
+            if (_hasLoadedArticle) {
+                self.fetchContentBlock = nil;
+            }
         }
         return;
     }
@@ -565,7 +567,7 @@
     {
         if(!_hasLoadedArticle)
         {
-            self.detailModel.article = newArticle;
+            self.detailModel.article = (Article *)newArticle;
             _hasLoadedArticle = YES;
             if (self.fetchContentBlock) {
                 self.fetchContentBlock(ExploreDetailManagerFetchResultTypeDone);

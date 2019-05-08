@@ -35,7 +35,7 @@ extern CGFloat adBottomContainerViewHeight(void);
     [_adActionButton removeFromSuperview];
     _adActionButton = adActionButton;
     
-    adActionButton.frame = CGRectMake(0, 0, 72, 28);
+    adActionButton.frame = CGRectMake(0, 0, 90, 28);
     [self addSubview:adActionButton];
 }
 
@@ -104,7 +104,7 @@ extern CGFloat adBottomContainerViewHeight(void);
     [self setNeedsLayout];
     
     self.avatarLabelButton.enabled = NO;
-    self.avatarViewButton.enabled = YES;
+    self.avatarViewButton.enabled = NO;
     
     
     BOOL isCanvas = NO;
@@ -142,7 +142,7 @@ extern CGFloat adBottomContainerViewHeight(void);
 {
     [super layoutSubviews];
     self.avatarLabel.hidden = NO;
-    self.avatarViewButton.hidden = YES;
+    
     if (self.avatarLabel.countOfIcons > 0) { // 显示认证图标时候隐藏推广
         self.typeLabel.hidden = YES;
     }
@@ -170,7 +170,6 @@ extern CGFloat adBottomContainerViewHeight(void);
         self.avatarView.borderWidth = 0.f;
         left += (!self.avatarView.hidden? [self.class avatarHeight] + kGapAvatarView : 0);
     }
-    self.avatarView.hidden = YES;
     
     //“查看详情”等按钮
     self.adActionButton.centerY = self.moreButton.centerY;
@@ -196,7 +195,7 @@ extern CGFloat adBottomContainerViewHeight(void);
     }
     
     //类型标签
-    self.typeLabel.left = self.avatarLabel.right + 6;
+    self.typeLabel.left = left;
     self.typeLabel.height = 14;
     self.typeLabel.centerY = self.avatarLabel.centerY;
         

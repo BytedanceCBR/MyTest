@@ -3,7 +3,7 @@
 //
 
 #import "FTTNavigationController.h"
-#import "Bubble-Swift.h"
+//#import "Bubble-Swift.h"
 @implementation FTTNavigationController
 
 //#pragma mark - UIGestureRecognizerDelegate

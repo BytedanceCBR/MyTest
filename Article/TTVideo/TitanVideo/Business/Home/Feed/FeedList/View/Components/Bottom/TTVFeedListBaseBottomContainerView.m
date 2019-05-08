@@ -23,7 +23,7 @@
 //#import "TTRepostOriginModels.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
 //#import "TTShareToRepostManager.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTAsyncCornerImageView+VerifyIcon.h"
 #import "TTRelevantDurationTracker.h"
 #import "TTUGCTrackerHelper.h"
@@ -91,14 +91,13 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
     if (!_avatarLabel) {
         _avatarLabel = [[TTIconLabel alloc] init];
         _avatarLabel.backgroundColor = [UIColor clearColor];
-//        if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-//            _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
-//        }else{
-//            _avatarLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
-//        }
-        _avatarLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:16]];
+        if (ttvs_isVideoFeedCellHeightAjust() > 1) {
+            _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
+        }else{
+            _avatarLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
+        }
         _avatarLabel.textAlignment = NSTextAlignmentLeft;
-        _avatarLabel.textColorThemeKey = kColorText1;
+        _avatarLabel.textColorThemeKey = kFHColorCharcoalGrey;
         [self addSubview:_avatarLabel];
     }
     return _avatarLabel;
@@ -107,6 +106,7 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
 - (TTAlphaThemedButton *)avatarLabelButton {
     if (!_avatarLabelButton) {
         _avatarLabelButton = [[TTAlphaThemedButton alloc] init];
+        _avatarLabelButton.enabled = NO;
         [_avatarLabelButton addTarget:self action:@selector(didClickAvatarButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_avatarLabelButton];
     }
@@ -119,6 +119,7 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
     }
     if (!_avatarViewButton) {
         _avatarViewButton = [[TTAlphaThemedButton alloc] init];
+        _avatarViewButton.enabled = NO;
         [_avatarViewButton addTarget:self action:@selector(didClickAvatarButton:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_avatarViewButton];
     }
@@ -130,10 +131,11 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
     if (!_typeLabel) {
         _typeLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _typeLabel.backgroundColor = [UIColor clearColor];
-        _typeLabel.font = [UIFont systemFontOfSize:12];
+        _typeLabel.font = [UIFont systemFontOfSize:10];
         _typeLabel.textAlignment = NSTextAlignmentCenter;
-        _typeLabel.textColor = [UIColor colorWithHexString:@"999999"];
-        
+        _typeLabel.layer.borderWidth = [TTDeviceHelper ssOnePixel];
+        _typeLabel.layer.cornerRadius = 3;
+        _typeLabel.clipsToBounds = YES;
         [self addSubview:_typeLabel];
     }
     return _typeLabel;
@@ -170,7 +172,7 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
             self.shouldHiddenAvatarView = YES;
         }
     }
-    self.avatarView.hidden = YES;
+    self.avatarView.hidden = self.shouldHiddenAvatarView;
 }
 
 - (void)updateAvatarVerifyWithAuthInfo:(NSString *)userAuthInfo userDecoration:(NSString *)userDecoration userId:(NSString *)userId
@@ -202,9 +204,8 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
 {
     [super layoutSubviews];
     
-    self.avatarLabelButton.hidden = YES;
-    self.avatarViewButton.hidden = YES;
-    self.avatarView.hidden = YES;
+    self.avatarLabelButton.hidden = NO;
+    self.avatarViewButton.hidden = NO;
     self.moreButton.hidden = NO;
     self.typeLabel.hidden = self.shouldHiddenTypeLabel;
 }
@@ -235,6 +236,10 @@ extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
     [self.moreButton setImage:[UIImage themedImageNamed:@"More"] forState:UIControlStateNormal];
     [self.moreButton setImage:[UIImage themedImageNamed:@"More"] forState:UIControlStateHighlighted];
     [self.moreButton updateThemes];
+    
+    UIColor *textClr =  [UIColor colorWithHexString:[[TTThemeManager sharedInstance_tt] selectFromDayColorName:@"2a90d7" nightColorName:@"67778b"]];
+    self.typeLabel.textColor = textClr;
+    self.typeLabel.layer.borderColor = textClr.CGColor;
 }
 
 static CGFloat sAvatarHeigth = 0;
@@ -412,6 +417,8 @@ static CGFloat avatarBorderWidth = 0;
 
 - (void)didClickAvatarButton:(id)sender
 {
+    return;
+    
     TTVFeedItem *videoFeed = self.cellEntity.originData;
     TTVVideoArticle *article = [videoFeed article];
     NSMutableDictionary * eventContext = [[NSMutableDictionary alloc] init];

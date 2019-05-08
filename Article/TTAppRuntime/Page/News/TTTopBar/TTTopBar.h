@@ -12,9 +12,11 @@
 #import "TTSeachBarView.h"
 #import "ExploreSearchView.h"
 #import "TTTopBarHeader.h"
+//#import "Bubble-Swift.h"
 
 @class TTCategorySelectorView;
 @class TTSeachBarView;
+@class FHHomeSearchPanelView;
 
 @protocol TTTopBarDelegate <NSObject>
 
@@ -27,6 +29,8 @@
 
 @property (nonatomic, weak) id<TTTopBarDelegate> delegate;
 @property (nonatomic, strong) NSString *tab;
+@property (nonatomic, strong) FHHomeSearchPanelView *pageSearchPanel;
+//@property (nonatomic, strong) HomePageSearchPanel *pageSearchPanel;
 
 - (void)addTTCategorySelectorView:(TTCategorySelectorView *)selectorView delegate:(id<TTCategorySelectorViewDelegate>)delegate;
 

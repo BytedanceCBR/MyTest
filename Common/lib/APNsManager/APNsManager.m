@@ -25,6 +25,11 @@
 //#import "TTSFShareManager.h"
 
 #import "TSVPushLaunchManager.h"
+#import "TTArticleTabBarController.h"
+//#import "Bubble-Swift.h"
+#import "TTLaunchTracer.h"
+#import "FHHouseBridgeManager.h"
+#import <FHLocManager.h>
 
 @interface APNsManager ()
 @end
@@ -74,6 +79,18 @@ static APNsManager *_sharedManager = nil;
 
 #pragma mark - public
 
+- (void)writeLaunchLogEvent:(id)extGrowth badgeNumber:(NSInteger)badgeNumber
+{
+    NSString* launchType = @"click_news_notify";
+    NSMutableDictionary *params = @{@"gd_label": launchType,
+                                    @"tips": @(badgeNumber),
+                                    @"event_type": @"house_app2c_v2"}.mutableCopy;
+    if (extGrowth) {
+        params[@"ext_growth"] = extGrowth;
+    }
+    [TTTracker eventV3:@"launch_log" params:params];
+}
+
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
     
@@ -84,34 +101,123 @@ static APNsManager *_sharedManager = nil;
         wrapperTrackEventWithCustomKeys(@"apn", @"news_notification_view", rid, nil, nil);
     }
     
-    //V3埋点
-//    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
-//    [params setValue:rid forKey:@"rule_id"];
-//    [params setValue:@"notify" forKey:@"click_position"];
-//    [TTTrackerWrapper eventV3:@"push_click" params:[params copy] isDoubleSending:YES];
-    
-    [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
-    
+
+//    [TouTiaoPushSDK trackerWithRuleId:rid clickPosition:@"notify" postBack:postBack];
+
     [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
-    
+    [[TTLaunchTracer shareInstance] setLaunchFrom:TTAPPLaunchFromRemotePush];
     if ([self tryForOldAPNsLogical:userInfo]) {
         return;
     }
     
     if ([userInfo.allKeys containsObject:@"o_url"]) {
-        NSString *openURL = [userInfo objectForKey:@"o_url"];
-        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:openURL]];
+        NSString* openURL = [userInfo objectForKey:@"o_url"];
+        NSURL *theUrl = [NSURL URLWithString:openURL];
+        if (theUrl == nil) {
+            theUrl = [TTStringHelper URLWithURLString:openURL];
+        }
+
+        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
+        if ([paramObj.allParams valueForKey:@"ext_growth"]) {
+            NSDictionary *apsDict = [userInfo tt_dictionaryValueForKey:@"aps"];
+            NSInteger badgeNumber = [apsDict[@"badge"]integerValue];
+            [self writeLaunchLogEvent:[paramObj.allParams valueForKey:@"ext_growth"] badgeNumber:badgeNumber];
+        }
         if (!isEmptyString(paramObj.host)) {
             [self trackWithPageName:paramObj.host params:paramObj.queryParams];
         }
-        
+
+        //V3埋点
+        NSMutableDictionary *param = [NSMutableDictionary dictionary];
+        [param setValue:rid  == nil ? @"be_null" : rid forKey:@"rule_id"];
+        [param setValue:@"notify" forKey:@"click_position"];
+        [param setValue:postBack == nil ? @"be_null" : postBack forKey:@"post_back"];
+        if ([paramObj.queryParams.allKeys containsObject:@"groupid"]) {
+            NSString* value = [paramObj.queryParams objectForKey:@"groupid"];
+            if (value != nil) {
+                [param setValue:value forKey:@"group_id"];
+            } else {
+                [param setValue:@"be_null" forKey:@"group_id"];
+            }
+        }
+        if ([paramObj.queryParams.allKeys containsObject:@"group_id"]) {
+            NSString* value = [paramObj.queryParams objectForKey:@"group_id"];
+            if (value != nil) {
+                [param setValue:value forKey:@"group_id"];
+            } else {
+                [param setValue:@"be_null" forKey:@"group_id"];
+            }
+        }
+
+        if ([[self class] f100ContentHasGroupId:paramObj.allParams]) {
+            [param setValue:[[self class] f100ContentGroupId:paramObj.allParams] forKey:@"group_id"];
+        }
+
+
+        param[@"event_type"] = @"house_app2c_v2";
+
+        [TTTracker eventV3:@"push_click" params:param];
+
+        [FHLocManager sharedInstance].isShowHomeViewController = NO;
+
         NSString *appURL = paramObj.scheme;
         if (isEmptyString(appURL) || [TTRoute conformsToRouteWithScheme:appURL]) {
             
             [self dealWithOpenURL:&openURL];
-            
+
             NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
-            [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];
+            if ([[handledOpenURL host] isEqualToString:@"main"]) {
+                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
+                NSDictionary* params = [obj queryParams];
+                if (params != nil) {
+                    NSString* target = params[@"select_tab"];
+                    if (target != nil && target.length > 0) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:TTArticleTabBarControllerChangeSelectedIndexNotification object:nil userInfo:@{@"tag": target}];
+                    } else {
+                        NSAssert(false, @"推送消息的tag为空");
+                    }
+                }
+            } else {
+                // push对消息特殊处理
+//                if ([[handledOpenURL host] isEqualToString:@"message_detail_list"]) {
+////                    if (![TTAccountManager isLogin]) {
+////                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+////                            if (type == TTAccountAlertCompletionEventTypeDone) {
+////                                //登录成功 走发送逻辑
+////                                if ([TTAccountManager isLogin]) {
+////                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+////                                    [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];                        }
+////                             }
+////                        }];
+////                    } else
+////                    {
+//                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+//                        [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL];
+////                    }
+//                    
+//                    return;
+//                }
+                
+                id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+                [envBridge setTraceValue:@"push" forKey:@"origin_from"];
+                [envBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
+                
+                NSDictionary* info = @{@"isFromPush": @(1),
+                                       @"tracer":@{@"enter_from": @"push",
+                                                   @"element_from": @"be_null",
+                                                   @"rank": @"be_null",
+                                                   @"card_type": @"be_null",
+                                                   @"origin_from": @"push",
+                                                   @"origin_search_id": @"be_null"
+//                                                   @"group_id": paramObj.allParams[@"group_id"],
+                                                   }};
+                TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                float fSystemVersion = [[UIDevice currentDevice].systemVersion floatValue];
+                if (fSystemVersion >= 10.0 && fSystemVersion < 11.0) { // 10.0
+                    userInfo.animated = @(0);
+                }
+                [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
+            }
         }
         else {
             if ([[UIApplication sharedApplication] canOpenURL:[TTStringHelper URLWithURLString:openURL]]) {
@@ -126,6 +232,25 @@ static APNsManager *_sharedManager = nil;
     else {
         [self sendTrackEvent:@"apn" lable:@"recall" value:nil];
     }
+}
+
++(BOOL)f100ContentHasGroupId:(NSDictionary*)userInfo {
+    NSArray* allKeys = [userInfo allKeys];
+    return [allKeys containsObject:@"neighborhood_id"] ||
+        [allKeys containsObject:@"court_id"] ||
+        [allKeys containsObject:@"house_id"];
+}
+
++(NSString*)f100ContentGroupId:(NSDictionary*)userInfo {
+    NSArray* allKeys = [userInfo allKeys];
+    if ([allKeys containsObject:@"neighborhood_id"]) {
+        return userInfo[@"neighborhood_id"];
+    } else if ([allKeys containsObject:@"court_id"]) {
+        return userInfo[@"court_id"];
+    } else if ([allKeys containsObject:@"house_id"]) {
+        return userInfo[@"house_id"];
+    }
+    return @"be_null";
 }
 
 - (void)sendAppNoticeStatus

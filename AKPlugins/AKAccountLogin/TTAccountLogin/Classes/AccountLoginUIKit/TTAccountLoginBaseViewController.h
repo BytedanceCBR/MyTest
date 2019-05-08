@@ -105,7 +105,7 @@ TTAccountLoginPlatformLoginViewDelegate
 @property (nonatomic, assign) NSInteger countdown;  // 重发倒计时
 @property (nonatomic, strong) NSTimer *timer; // 重发计时器
 
-@property (nonatomic, assign) BOOL registerButtonEnabled; // 登录按钮是否灰色（产品设计，灰色时仍可点击）
+@property (nonatomic, assign, readonly) BOOL registerButtonEnabled; // 登录按钮是否灰色（产品设计，灰色时仍可点击）
 @property (nonatomic, assign) BOOL resendButtonEnabled; // 重发按钮可否点击
 
 @property (nonatomic,   copy) NSString *captchaString;  // 用户输入的图片验证码字符串

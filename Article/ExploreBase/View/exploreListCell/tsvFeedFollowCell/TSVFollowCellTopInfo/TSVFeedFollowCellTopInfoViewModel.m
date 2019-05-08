@@ -22,15 +22,18 @@
 
 + (BOOL)shouldShowTopInfoViewWithData:(ExploreOrderedData *)orderedData
 {
-    if (orderedData.cellCtrls && [orderedData.cellCtrls isKindOfClass:[NSDictionary class]]) {
-        NSInteger layoutStyle = [orderedData.cellCtrls tt_integerValueForKey:@"cell_layout_style"];
-        if (layoutStyle == 100) {
-            return YES;
-        } else if (layoutStyle == 101) {
-            return NO;
-        }
-    }
-    return NO;
+    // add by zjing 小视频都展示
+    return YES;
+    
+//    if (orderedData.cellCtrls && [orderedData.cellCtrls isKindOfClass:[NSDictionary class]]) {
+//        NSInteger layoutStyle = [orderedData.cellCtrls tt_integerValueForKey:@"cell_layout_style"];
+//        if (layoutStyle == 100) {
+//            return YES;
+//        } else if (layoutStyle == 101) {
+//            return NO;
+//        }
+//    }
+//    return NO;
 }
 
 + (CGFloat)heightWithData:(ExploreOrderedData *)orderedData

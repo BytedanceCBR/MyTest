@@ -23,6 +23,12 @@
 
 @property (nonatomic, strong) NSString *serviceID;            // 评论服务所属 serviceID, 评论接口使用
 
+@property (nonatomic, copy) NSString *enterFrom;            // add by zjing 区分评论View来源，便于login_page埋点
+
+@property (nonatomic, copy) NSString *enterFromStr;
+@property (nonatomic, copy) NSString *categoryID;
+@property (nonatomic, strong) NSDictionary *logPb;
+
 /** 外部接口
  评论时使用
  @param conditions 主体评论

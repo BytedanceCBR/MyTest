@@ -16,10 +16,6 @@
 
 @end
 
-@interface TTLayOutPlainPureTitleCellModelS0AD : TTLayOutPlainPureTitleCellModel
-
-@end
-
 @interface TTLayOutPlainPureTitleCellModelS1 : TTLayOutPlainPureTitleCellModel
 
 @end

@@ -16,11 +16,13 @@
 #import "TTCategoryDefine.h"
 #import "TTFollowNotifyServer.h"
 #import "TTDeviceHelper.h"
+#import "TTMessageNotificationTipsManager.h"
 //#import "TTPLManager.h"
 #import "TTSettingMineTabManager.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRelationshipDefine.h"
-
+#import "TTMessageNotificationManager.h"
+#import "ArticleMessageManager.h"
 #define fetchUpdateCountTimeInterval 180
 
 #define subscribeHasNewUpdatesTimesInterval (3 * 3600)
@@ -133,6 +135,11 @@ static ArticleBadgeManager * badgeManager;
     
 }
 
+- (void)refreshFollowNumber
+{
+    [ArticleMessageManager forceRefreshFollowNum];
+}
+
 - (void)fetchUpdateCount
 {
     [self fetchUpdateCountPolling];
@@ -195,6 +202,12 @@ static ArticleBadgeManager * badgeManager;
         case TTAccountStatusChangedReasonTypeSessionExpiration: {
             //退出登录后 把关注数清空
             self.followNumber = @0;
+            [ArticleMessageManager invalidate];
+            //停止新版消息通知轮询
+            [[TTMessageNotificationManager sharedManager] stopPeriodicalFetchUnreadMessageNumber];
+            //新版消息通知，私信红点数清空
+            self.messageNotificationNumber = @0;
+            [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
             
             [self notify];
 
@@ -218,12 +231,49 @@ static ArticleBadgeManager * badgeManager;
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification
 {
-    
+    //新消息通知定时轮询未读消息
+    [[TTMessageNotificationManager sharedManager] startPeriodicalFetchUnreadMessageNumberWithChannel:nil];
+    [ArticleMessageManager startPeriodicalGetFollowNumber];
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
+    [ArticleMessageManager invalidate];
+    //停止新版消息通知轮询
+    [[TTMessageNotificationManager sharedManager] stopPeriodicalFetchUnreadMessageNumber];
+}
+
+- (void)receiveFollowBadgeChangeNotification:(NSNotification *)notification
+{
+   
+    if ([[[notification userInfo] objectForKey:kIsForceGetFollowNumberKey] boolValue]) {
+        //强制轮询，忽略
+        return;
+    }
+    [[TTFollowNotifyServer sharedServer] postFollowNotifyWithID:kFollowRefreshID
+                                                     actionType:TTFollowActionTypeFollow
+                                                       itemType:TTFollowItemTypeDefault
+                                                       userInfo:notification.userInfo];
+}
+
+- (void)receiveMessageNotificationBadgeChangeNotification:(NSNotification *)notification
+{
+    NSUInteger originNum = self.messageNotificationNumber.unsignedIntegerValue;
+    self.messageNotificationNumber = @([[TTMessageNotificationTipsManager sharedManager] unreadNumber]);
     
+    [self notify];
+    [[TTSettingMineTabManager sharedInstance_tt] reloadSectionsIfNeeded];
+    
+    if (originNum != self.messageNotificationNumber.unsignedIntegerValue) {
+        if (originNum > 99 && [_messageNotificationNumber intValue] > 99) {// > 99时不需要reload了，因为红点数一直是99+
+            return;
+        }
+        if ([_messageNotificationNumber intValue] > 0) {//消息通知有红点时，我的tab必定也展示红点
+            [[TTBadgeTrackerHelper class] trackTipsWithLabel:@"show" position:@"mine_tab_notify" style:@"num_tips"];
+            [[TTBadgeTrackerHelper class] trackTipsWithLabel:@"show" position:@"mine_tab" style:@"num_tips"];
+        }
+
+    }
 }
 
 //- (void)receivePrivateLetterBadgeChangeNotification:(NSNotification *)notification

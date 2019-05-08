@@ -21,14 +21,14 @@
     if (self) {
         // Initialization code
 //        self.backgroundColorThemeKey = kColorBackground4;
-        self.titleColorThemeKey = @"25265E";
-        self.borderColorThemeKey = @"25265E99";
+        self.titleColorThemeKey = kColorText6;
+        self.borderColorThemeKey = kColorText6;
         
-        self.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-        self.titleLabel.textColor = [UIColor colorWithHexString:@"25265E"];
-        self.layer.cornerRadius = 4;
+        self.titleLabel.font = [UIFont systemFontOfSize:12.0f];
+        self.titleLabel.textColor = [UIColor tt_themedColorForKey:kColorText6];
+        self.layer.cornerRadius = 6;
         self.layer.masksToBounds = YES;
-        self.layer.borderWidth = 1;
+        self.layer.borderWidth = 0;
         
         self.backgroundColorThemeKey = nil;
         self.backgroundColors = nil;
@@ -36,8 +36,8 @@
         self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         
-//        self.imageEdgeInsets = UIEdgeInsetsZero;
-//        self.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+        self.imageEdgeInsets = UIEdgeInsetsZero;
+        self.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 0);
     }
     return self;
 }
@@ -102,7 +102,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.imageName = @"download_ad_feed";
+        self.imageName = @"download_ad_feed";
     }
     return self;
 }
@@ -114,7 +114,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.imageName = @"view detail_ad_feed";
+        self.imageName = @"view detail_ad_feed";
     }
     return self;
 }
@@ -127,7 +127,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.imageName = @"cellphone_ad_feed";
+        self.imageName = @"cellphone_ad_feed";
     }
     return self;
 }
@@ -139,7 +139,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.imageName = @"view detail_ad_feed";
+        self.imageName = @"view detail_ad_feed";
     }
     return self;
 }
@@ -153,7 +153,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.imageName = @"counsel_ad_feed";
+        self.imageName = @"counsel_ad_feed";
     }
     return self;
 }
@@ -166,7 +166,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.imageName = @"view detail_ad_feed";
+        self.imageName = @"view detail_ad_feed";
     }
     return self;
 }

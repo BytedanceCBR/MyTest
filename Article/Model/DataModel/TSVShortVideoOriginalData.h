@@ -18,6 +18,7 @@ extern NSString * _Nullable const kTSVShortVideoDeleteUserInfoKeyGroupID;
 @property (nullable, nonatomic, copy) NSString *primaryID;
 @property (nullable, nonatomic, copy) NSDictionary *originalDict;
 @property (nullable, nonatomic, strong) TTShortVideoModel *shortVideo;
+@property (nullable, nonatomic, strong) NSArray *filterWords;
 
 + (NSString *_Nonnull)primaryIDByUniqueID:(int64_t)uniqueID
                          listType:(NSUInteger)listType;

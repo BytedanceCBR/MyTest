@@ -354,7 +354,7 @@
                 return;
             }
             else if (self.dislikeDictionary[@"report"]) {
-                [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"修改成功" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+                [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"举报成功" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
             }
             else if (parameters[@"report"]){
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"举报成功" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];

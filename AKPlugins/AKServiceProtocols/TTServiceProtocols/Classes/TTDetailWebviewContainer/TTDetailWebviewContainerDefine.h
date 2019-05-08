@@ -54,7 +54,7 @@ typedef enum JSMetaInsertImageType {
 #define kDomReady                           @"domReady"             //domReady事件
 
 #define kBytedanceScheme                    @"bytedance"
-#define kSNSSDKScheme                       @"interestingnews1206"
+#define kSNSSDKScheme                       @"snssdk35"
 #define kDownloadAppHost                    @"download_app"
 #define kCustomOpenHost                     @"custom_open"
 #define kTrackURLHost                       @"track_url"

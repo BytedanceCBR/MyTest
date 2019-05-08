@@ -12,20 +12,22 @@
 #import "SSCommonLogic.h"
 #import "ArticleFetchSettingsManager.h"
 #import "SSWebViewController.h"
-#import "TTNetworkUtilities.h"
+#import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTThemeManager.h"
 #import "PGCAccountManager.h"
+#import "TTMessageNotificationTipsManager.h"
 //#import "TTPLManager.h"
 #import "TTBadgeTrackerHelper.h"
 #import "TTRoute.h"
 
+#import "TTMessageNotificationMacro.h"
 #import <Crashlytics/Crashlytics.h>
 //#import "TTCommonwealManager.h"
 #import "TTURLUtils.h"
 #import "NSDictionary+TTAdditions.h"
-#import "TTRNBundleManager.h"
+//#import "TTRNBundleManager.h"
 #import "NSString+URLEncoding.h"
-
+#import "AKLoginTrafficViewController.h"
 #define kTTSettingEntryCommonwealDidClicKey @"kTTSettingEntryCommonwealDidClicKey"
 #define pgcEntryKey @"pgc"
 
@@ -81,6 +83,9 @@
             break;
         case TTSettingMineTabEntyTypeWorkLibrary:
             return [TTSettingMineTabEntry workLibraryEntry];
+            break;
+        case TTSettingMineTabEntyTypeMessage:
+            return [TTSettingMineTabEntry messageEntry];
             break;
 //        case TTSettingMineTabEntyTypePrivateLetter:
 //            return [TTSettingMineTabEntry privateLetterEntry];
@@ -188,7 +193,7 @@
 + (instancetype)followEntry {
     TTSettingMineTabEntry *entry = [[TTSettingMineTabEntry alloc] init];
     
-    entry.key = @"my_follow";
+    entry.key = @"mine_attention";
     entry.shouldBeDisplayed = ![TTDeviceHelper isPadDevice] && ![TTAccountManager isLogin];
     entry.hintStyle = TTSettingHintStyleNone;
     entry.hintCount = 0;
@@ -238,6 +243,33 @@
     return entry;
 }
 
++ (instancetype)messageEntry {
+    TTSettingMineTabEntry *entry = [[TTSettingMineTabEntry alloc] init];
+    
+    TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
+    NSUInteger number = manager.unreadNumber;
+    
+    entry.key = @"mine_notification";
+    entry.shouldBeDisplayed = YES;
+    entry.hintStyle = number > 0 ? TTSettingHintStyleNumber : TTSettingHintStyleNone;
+    entry.hintCount = number;
+    entry.urlString = @"sslocal://message";
+    entry.text = NSLocalizedString(@"消息", nil);
+    entry.accessoryText = nil;
+    entry.avatarUrlString = manager.thumbUrl;
+    entry.userAuthInfo = manager.userAuthInfo;
+    entry.msgID = manager.msgID;
+    entry.actionType = manager.actionType;
+    entry.userName = manager.userName;
+    entry.action = manager.action;
+    entry.tips = manager.tips;
+    entry.isImportantMessage = manager.isImportantMessage;
+    entry.iconName = @"messageicon_profile";
+    entry.lastImageUrl = manager.lastImageUrl;
+    
+    return entry;
+}
+
 //+ (instancetype)privateLetterEntry {
 //    TTSettingMineTabEntry *entry = [[TTSettingMineTabEntry alloc] init];
 //
@@ -262,8 +294,8 @@
     entry.shouldBeDisplayed = ![TTDeviceHelper isPadDevice];
     entry.hintStyle = TTSettingHintStyleNone;
     entry.hintCount = 0;
-    entry.urlString = @"sslocal://webview?url=http://lf.snssdk.com/2/wap/tt_mall/&bounce_disable=1&hide_bar=1&title=爱看商城";
-    entry.text = NSLocalizedString(@"爱看商城", nil);
+    entry.urlString = @"sslocal://webview?url=http://lf.quduzixun.com/2/wap/tt_mall/&bounce_disable=1&hide_bar=1&title=头条商城";
+    entry.text = NSLocalizedString(@"头条商城", nil);
     entry.accessoryText = [ArticleFetchSettingsManager mineTabSellIntroduce];
     entry.iconName = nil;
     
@@ -364,7 +396,7 @@
     }
 
     NSURL *url = [TTStringHelper URLWithURLString:interceptedEntry.urlString];
-    if ([url.scheme isEqualToString:@"sslocal"] || [url.scheme hasPrefix:@"interestingnews1206"] || [url.scheme hasPrefix:@"fschema"]) {
+    if ([url.scheme isEqualToString:@"sslocal"] || [url.scheme hasPrefix:@"snssdk35"]) {
         if ([url.absoluteString rangeOfString:@"jdkepler"].location != NSNotFound) {
             TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:[NSURL URLWithString:interceptedEntry.urlString]];
 
@@ -386,7 +418,7 @@
     if (!isEmptyString(interceptedEntry.key)) {
         wrapperTrackEvent(@"mine_tab", interceptedEntry.key);
     }
-    if ([interceptedEntry.key isEqualToString:@"msg_notification"]) {
+    if ([interceptedEntry.key isEqualToString:@"mine_notification"]) {
         wrapperTrackEvent(@"mine_tab", @"mine_msg");
     }
 }
@@ -434,6 +466,28 @@
                 [self extraStatisticsForEntry:weakEntry];
             }
         };
+    } else if ([entry.key isEqualToString:@"mine_notification"]) {
+        entry.enter = ^(){
+            
+            if(![TTAccountManager isLogin]){
+                wrapperTrackEvent(@"message_list", @"click_logoff");
+                [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:nil];
+            }
+            else{
+                if (weakEntry.isImportantMessage){
+                    wrapperTrackEventWithCustomKeys(@"message_list", @"click_with_vip",weakEntry.msgID, nil,kTTMessageNotificationTrackExtra(weakEntry.actionType));
+                }
+                else if (weakEntry.hintCount > 0) {
+                    wrapperTrackEventWithCustomKeys(@"message_list", @"click_with_badge",nil, nil, kTTMessageNotificationTrackExtra(weakEntry.actionType));
+                }else {
+                    wrapperTrackEventWithCustomKeys(@"message_list", @"click_without_badge", nil, nil, kTTMessageNotificationTrackExtra(weakEntry.actionType));
+                }
+                [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
+            
+                [self openURLForEntry:weakEntry clearHint:NO];
+                [self extraStatisticsForEntry:weakEntry];
+            }
+        };
     } else if ([entry.key isEqualToString:@"bd"]) { // 广告合作
         entry.enter = ^(){
             if ([TTAccountManager isLogin]) {
@@ -455,16 +509,35 @@
 
 + (void)setUpdateBlockForEntry:(TTSettingMineTabEntry *)entry {
     __weak typeof(entry) weakEntry = entry;
-    if ([entry.key isEqualToString:@"pgc"]) {
+    if ([entry.key isEqualToString:@"mine_notification"]) {
+        entry.update = ^BOOL{
+            [weakEntry setModified:NO];
+            TTMessageNotificationTipsManager *manager = [TTMessageNotificationTipsManager sharedManager];
+            NSUInteger unreadNumber = manager.unreadNumber;
+            weakEntry.hintStyle = unreadNumber > 0 ? TTSettingHintStyleNumber : TTSettingHintStyleNone;
+            weakEntry.hintCount = unreadNumber;
+            weakEntry.accessoryText = nil;
+            weakEntry.userName = manager.userName;
+            weakEntry.action = manager.action;
+            weakEntry.tips = manager.tips;
+            weakEntry.avatarUrlString = manager.thumbUrl;
+            weakEntry.userAuthInfo = manager.userAuthInfo;
+            weakEntry.msgID = manager.msgID;
+            weakEntry.actionType = manager.actionType;
+            weakEntry.isImportantMessage = manager.isImportantMessage;
+            weakEntry.lastImageUrl = manager.lastImageUrl;
+            
+            return weakEntry.isModified;
+        };
+    } else if ([entry.key isEqualToString:@"pgc"]) {
         entry.update = ^BOOL{
             [weakEntry setModified:NO];
             weakEntry.shouldBeDisplayed = [[PGCAccountManager shareManager] hasPGCAccount];
             return weakEntry.isModified;
         };
-    } else if ([entry.key isEqualToString:@"my_follow"]) {
+    } else if ([entry.key isEqualToString:@"mine_attention"]) {
         entry.update = ^BOOL{
             [weakEntry setModified:NO];
-            weakEntry.shouldBeDisplayed = ![TTDeviceHelper isPadDevice] && ![TTAccountManager isLogin];
             return weakEntry.isModified;
         };
     } else if ([entry.key isEqualToString:@"commonweal"]) {
@@ -489,7 +562,7 @@
 
 + (void)extraStatisticsForEntry:(TTSettingMineTabEntry *)entry {
     NSString *position = nil;
-    if ([entry.key isEqualToString:@"msg_notification"]) {
+    if ([entry.key isEqualToString:@"mine_notification"]) {
         position = @"mine_tab_notify";
     }
     else if ([entry.key isEqualToString:@"mall"]) {

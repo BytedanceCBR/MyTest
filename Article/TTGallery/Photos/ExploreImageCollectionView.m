@@ -193,7 +193,9 @@ NS_INLINE CGFloat MaxHeightOfLabel() {
         // Title Label
         _titleLbl = [[UILabel alloc] initWithFrame:CGRectZero];
         _titleLbl.font = [UIFont systemFontOfSize:TextFontSize()];
-        _titleLbl.textColor = [UIColor tt_defaultColorForKey:[TTDeviceHelper isPadDevice] ? kColorText8 : kColorText9];
+        
+        _titleLbl.textColor = [UIColor tt_defaultColorForKey:[TTDeviceHelper isPadDevice] ? kColorText8 : kColorText7];
+
         _titleLbl.numberOfLines = 2;
         _titleLbl.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:_titleLbl];
@@ -660,9 +662,9 @@ static NSString * const kTTImageRecommendOneSearchWordCellIdentifier = @"kTTImag
 }
 
 - (BOOL)p_needShowSingleSearchWordView{
-    if([_searchWordsArray count] == 1 && [(TTPhotoSearchWordModel *)_searchWordsArray[0] isValidSingleSearchWord]){
-        return YES;
-    }
+//    if([_searchWordsArray count] == 1 && [(TTPhotoSearchWordModel *)_searchWordsArray[0] isValidSingleSearchWord]){
+//        return YES;
+//    }
     return NO;
 }
 
@@ -880,7 +882,7 @@ static CGFloat toolbarHeight = 44.5f;
         self.carDetailLabel.attributedText = ({
             NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:@"查看详情 " attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:16.f]],
                                                                                                                      NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText8)}];
-            [attr appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:10.f], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText8), NSBaselineOffsetAttributeName : @(2.f)}]];
+            [attr appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:10.f] ? : [UIFont systemFontOfSize:10.f], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText8), NSBaselineOffsetAttributeName : @(2.f)}]];
             attr;
         });
         self.carDetailLabel.width = ceil([self.carDetailLabel.attributedText boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:0 context:nil].size.width);
@@ -1416,7 +1418,7 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
     }
     
     self.abstractView.contentOffset = CGPointZero;
-    _abstractView.textColor = [UIColor tt_defaultColorForKey:kColorLine1];
+    _abstractView.textColor = [UIColor tt_defaultColorForKey:kColorText7];
 }
 
 - (void)setNatantViewFrameWithFrame:(CGRect)frame Animation:(BOOL)animation{

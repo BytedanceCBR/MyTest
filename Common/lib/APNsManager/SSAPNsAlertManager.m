@@ -19,6 +19,9 @@
 //#import "TTSFShareManager.h"
 #import "TTAPNsRouting.h"
 #import "TTPushResourceMgr.h"
+#import "TTArticleTabBarController.h"
+#import "TTAccountManager.h"
+#import "FHHouseBridgeManager.h"
 
 #define kApnsAlertManagerCouldShowAlertViewKey @"kApnsAlertManagerCouldShowAlertViewKey"
 
@@ -87,7 +90,10 @@ static NSString * const kTTAPNsImportanceKey = @"important";
         schemaString = [NSString stringWithFormat:@"sslocal://detail?groupid=%@&gd_label=click_news_alert", gid];
     }
     
-    if (!([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"detail"] || [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"fantasy"])) {
+    if (!([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"detail"] ||
+          [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"fantasy"] ||
+          [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"wenda_detail"] ||
+          [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"awemevideo"])) {
         return;
     }
     
@@ -98,7 +104,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     BOOL hasRead = [self _hasReadOfArticle:schemaString];
     
     if (!hasRead) {
-        NSString *titleString  = NSLocalizedString(@"要闻推送", nil);
+        NSString *titleString  = NSLocalizedString(@"实时推送", nil);
         NSString *detailString = title;
         NSString *attachmentURLString = [dict tt_stringValueForKey:kSSAPNsAlertManagerAttachmentKey];
         NSString *importanceString    = [dict tt_stringValueForKey:kSSAPNsAlertManagerImportanceKey];
@@ -125,6 +131,31 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     //所以用让openURL操作慢0.1s，确保视频已经完全退出
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         NSURL *openURL = [TTStringHelper URLWithURLString:schemaReplaceString];
+
+                        TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
+                        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:5];
+                        [params setValue:rid  == nil ? @"be_null" : rid forKey:@"rule_id"];
+                        [params setValue:@"alert" forKey:@"click_position"];
+                        [params setValue:postBack == nil ? @"be_null" : postBack forKey:@"post_back"];
+                        if ([paramObj.queryParams.allKeys containsObject:@"groupid"]) {
+                            NSString* value = [paramObj.queryParams objectForKey:@"groupid"];
+                            if (value != nil) {
+                                [params setValue:value forKey:@"group_id"];
+                            } else {
+                                [params setValue:@"be_null" forKey:@"group_id"];
+                            }
+                        }
+                        if ([paramObj.queryParams.allKeys containsObject:@"group_id"]) {
+                            NSString* value = [paramObj.queryParams objectForKey:@"group_id"];
+                            if (value != nil) {
+                                [params setValue:value forKey:@"group_id"];
+                            } else {
+                                [params setValue:@"be_null" forKey:@"group_id"];
+                            }
+                        }
+                        params[@"event_type"] = @"house_app2c_v2";
+                        [TTTracker eventV3:@"push_click" params:params];
+
                         [[TTRoute sharedRoute] openURLByPushViewController:openURL];
                     });
                 }
@@ -181,12 +212,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
                             wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
                         }
-                        
-                        //V3埋点
-                        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
-                        [params setValue:rid forKey:@"rule_id"];
-                        [params setValue:@"alert" forKey:@"click_position"];
-                        [TTTrackerWrapper eventV3:@"push_click" params:[params copy] isDoubleSending:YES];
+
                     }
                 }];
                 
@@ -214,7 +240,10 @@ static NSString * const kTTAPNsImportanceKey = @"important";
     NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
     
     // 暂时兼容的逻辑，如果是detail，走原有弹窗逻辑；否则透传给路由处理
-    if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"detail"]) {
+    NSLog(@"%@", [[TTStringHelper URLWithURLString:schemaString] host]);
+    if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"detail"] ||
+        [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"wenda_detail"] ||
+        [[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"awemevideo"]) {
         if ([TTPushAlertManager newAlertEnabled]) {
             [self showRemoteNotificationNewAlert:dict];
             return;
@@ -246,7 +275,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
         BOOL hasRead = [self _hasReadOfArticle:schemaString];
         
         if (!hasRead) {
-            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"要闻推送", nil) message:title preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"实时推送", nil) message:title preferredType:TTThemedAlertControllerTypeAlert];
             [alert addActionWithTitle:NSLocalizedString(@"忽略", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
                 wrapperTrackEvent(@"apn", @"news_alert_close");
             }];
@@ -281,14 +310,20 @@ static NSString * const kTTAPNsImportanceKey = @"important";
             [alert showFrom:[TTUIResponderHelper topmostViewController] animated:YES];
             wrapperTrackEvent(@"apn", @"news_alert_show");
         }
-    }else if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"xigua_live"]){
-        //产品说暂时不出push弹窗
-        return ;
-    }else if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"fantasy"]) {
-//        if ([TTPushAlertManager newAlertEnabled]) {
-//            [self showRemoteNotificationNewAlert:dict];
-//        }
-    }else {
+    }
+//    else if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"xigua_live"]){
+//        //产品说暂时不出push弹窗
+//        return ;
+//    }
+    else if ([[self class] isF100PushUrl:[[TTStringHelper URLWithURLString:schemaString] host]]) {
+        [[self class] showF100PushNotificationInAppAlert:dict];
+    }
+//    else if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"fantasy"]) {
+////        if ([TTPushAlertManager newAlertEnabled]) {
+////            [self showRemoteNotificationNewAlert:dict];
+////        }
+//    }
+    else {
 //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //            NSURL *openURL = [TTStringHelper URLWithURLString:schemaString];
 //            // 此处为前台收到推送
@@ -303,6 +338,154 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 //        });
     }
     return;
+}
+
++ (BOOL)isF100PushUrl:(NSString*) host {
+    return [@"old_house_detail" isEqualToString:host] ||
+    [@"neighborhood_detail" isEqualToString:host] ||
+    [@"new_house_detail" isEqualToString:host] ||
+    [@"floor_plan_detail" isEqualToString:host] ||
+    [@"message_detail_list" isEqualToString:host] ||
+    [@"message_system_list" isEqualToString:host] ||
+    [@"house_list" isEqualToString:host] ||
+    [@"rent_detail" isEqualToString:host] ||
+    [@"renthouse_main" isEqualToString:host] ||
+    [@"mapfind_house" isEqualToString:host] ||
+    [@"mapfind_rent" isEqualToString:host] ||
+    [@"rent_main" isEqualToString:host] ||
+    [@"second_house_main" isEqualToString:host] ||
+    [@"webview" isEqualToString:host] ||
+    [@"realtor_detail" isEqualToString:host] ||
+    [@"second_house_main" isEqualToString:host] ||
+    [@"house_find" isEqualToString:host] ||
+    [@"city_market_trend" isEqualToString:host] ||
+    [@"city_market_hot_list" isEqualToString:host] ||
+    [@"main" isEqualToString:host];
+}
+
++ (void)showF100PushNotificationInAppAlert:(NSDictionary *)dict {
+    NSString* title = @"幸福里";
+    NSString* content = [dict tt_stringValueForKey:kSSAPNsAlertManagerTitleKey];
+    NSString *schemaString = [dict tt_stringValueForKey:kSSAPNsAlertManagerSchemaKey];
+
+    TTPushAlertModel *alertModel = [TTPushAlertModel modelWithTitle:title detail:content images:nil];
+    alertModel.images = nil;
+    alertModel.schemaString = schemaString;
+    // Unimportance弹窗样式，下载失败不显示图片
+    //    id<TTPushAlertViewProtocol> pushAlert =
+    [TTPushAlertManager showPushAlertViewWithModel:alertModel urgency:TTPushAlertUnimportance didTapBlock:^(NSInteger hideReason) {
+
+
+
+        //有可能当前有视频全屏，等视频完全退出后再打开推送来的文章
+        //在旧的navigation架构下，使用的是pushViewController:animated:方法，如果push的时候，还有presentedViewController在上面的话，UIKit会两次调用pushViewController:方法，而后一次由于TTNavigationController做了保护，而无法完成push操作
+        //所以用让openURL操作慢0.1s，确保视频已经完全退出
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSURL *openURL = [TTStringHelper URLWithURLString:schemaString];
+
+            TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
+            //V3埋点
+            NSMutableDictionary *param = [NSMutableDictionary dictionary];
+            [param setValue:@"be_null" forKey:@"rule_id"];
+            [param setValue:@"alert" forKey:@"click_position"];
+            [param setValue:@"be_null" forKey:@"post_back"];
+            if ([paramObj.queryParams.allKeys containsObject:@"groupid"]) {
+                NSString* value = [paramObj.queryParams objectForKey:@"groupid"];
+                if (value != nil) {
+                    [param setValue:value forKey:@"group_id"];
+                } else {
+                    [param setValue:@"be_null" forKey:@"group_id"];
+                }
+            }
+            if ([paramObj.queryParams.allKeys containsObject:@"group_id"]) {
+                NSString* value = [paramObj.queryParams objectForKey:@"group_id"];
+                if (value != nil) {
+                    [param setValue:value forKey:@"group_id"];
+                } else {
+                    [param setValue:@"be_null" forKey:@"group_id"];
+                }
+            }
+            if ([[self class] f100ContentHasGroupId:paramObj.allParams]) {
+                [param setValue:[[self class] f100ContentGroupId:paramObj.allParams] forKey:@"group_id"];
+            }
+            param[@"event_type"] = @"house_app2c_v2";
+            param[@"post_back"] = @"be_null";
+
+            [TTTracker eventV3:@"push_click" params:param];
+
+//            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
+            if ([[openURL host] isEqualToString:@"main"]) {
+                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:openURL];
+                NSDictionary* params = [obj queryParams];
+                if (params != nil) {
+                    NSString* target = params[@"select_tab"];
+                    if (target != nil && target.length > 0) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:TTArticleTabBarControllerChangeSelectedIndexNotification object:nil userInfo:@{@"tag": target}];
+                    } else {
+                        NSAssert(false, @"推送消息的tag为空");
+                    }
+                }
+            } else {
+                // push对消息特殊处理
+//                if ([[openURL host] isEqualToString:@"message_detail_list"]) {
+////                    if (![TTAccountManager isLogin]) {
+////                        [TTAccountLoginManager showAlertFLoginVCWithParams:nil completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+////                            if (type == TTAccountAlertCompletionEventTypeDone) {
+////                                //登录成功 走发送逻辑
+////                                if ([TTAccountManager isLogin]) {
+////                                    [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+////                                    [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+////                                }
+////                            }
+////                        }];
+////                    } else
+////                    {
+//                        [[EnvContext shared] setTraceValueWithValue:@"push" key:@"origin_from"];
+//                        [[TTRoute sharedRoute] openURLByPushViewController:openURL];
+////                    }
+//
+//                    return;
+//                }
+                NSDictionary* info = @{@"isFromPush": @(1),
+                                       @"tracer":@{@"enter_from": @"push",
+                                                   @"element_from": @"be_null",
+                                                   @"rank": @"be_null",
+                                                   @"card_type": @"be_null",
+                                                   @"origin_from": @"push",
+                                                   @"origin_search_id": @"be_null"
+//                                                   @"group_id": paramObj.allParams[@"group_id"],
+                                                   }};
+                id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
+                [envBridge setTraceValue:@"push" forKey:@"origin_from"];
+                [envBridge setTraceValue:@"be_null" forKey:@"origin_search_id"];
+                
+                TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+                [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
+            }
+            
+        });
+    } willHideBlock:nil didHideBlock:^(NSInteger hideReason) {
+
+    }];
+}
+
++(BOOL)f100ContentHasGroupId:(NSDictionary*)userInfo {
+    NSArray* allKeys = [userInfo allKeys];
+    return [allKeys containsObject:@"neighborhood_id"] ||
+    [allKeys containsObject:@"court_id"] ||
+    [allKeys containsObject:@"house_id"];
+}
+
++(NSString*)f100ContentGroupId:(NSDictionary*)userInfo {
+    NSArray* allKeys = [userInfo allKeys];
+    if ([allKeys containsObject:@"neighborhood_id"]) {
+        return userInfo[@"neighborhood_id"];
+    } else if ([allKeys containsObject:@"court_id"]) {
+        return userInfo[@"court_id"];
+    } else if ([allKeys containsObject:@"house_id"]) {
+        return userInfo[@"house_id"];
+    }
+    return @"be_null";
 }
 
 //+ (BOOL)inRemoteNotificationOnAppActiveSFBlackList:(NSURL *)url

@@ -21,7 +21,9 @@
  NOTE: 视频业务专用,其他业务请使用TTVBasePlayVideo
  这个包含视频业务个性化需求.
  */
-@class TTVDemanderTrackerManager;
+//@class TTVDemanderTrackerManager;
+@class FHDemanderTrackerManager;
+
 @class TTVVideoPlayerModel;
 typedef void(^TTVStopFinished)(void);
 @interface TTVPlayVideo : UIView<TTMovieStoreAction>

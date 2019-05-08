@@ -7,8 +7,8 @@
 //
 
 #import "ExploreAvatarView.h"
-#import "TTVerifyIconImageView.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconImageView.h>
+#import <TTVerifyKit/TTVerifyIconHelper.h>
 #import "TTAvatarDecoratorView.h"
 
 @interface ExploreAvatarView (VerifyIcon)

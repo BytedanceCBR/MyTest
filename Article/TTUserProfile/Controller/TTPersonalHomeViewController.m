@@ -23,6 +23,7 @@
 #import "TTProfileShareService.h"
 #import "TTPersonalHomeErrorView.h"
 #import "TTTrackerWrapper.h"
+#import "ExploreMomentDefine.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import <TTAccountBusiness.h>
 #import "TTNavigationController.h"
@@ -33,7 +34,9 @@
 //#import "TTCertificationConst.h"
 #import <UIView+CustomTimingFunction.h>
 #import "TTPersonalHomeSinglePlatformFollowersInfoModel.h"
-#import "TTVerifyIconHelper.h"
+#import <TTVerifyKit/TTVerifyIconHelper.h>
+#import <ExploreMomentDefine_Enums.h>
+#import "FriendModel.h"
 
 static CGFloat TTMinimumHeaderHeight() {
     if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -160,7 +163,7 @@ TTAccountMulticastProtocol
     _trickModelInLoading.followers_count = @(fansCount);
     
     if (!isEmptyString(userAuthInfo)) {
-        _trickModelInLoading.verified_agency = @"好多房认证";
+        _trickModelInLoading.verified_agency = @"头条认证";
         _trickModelInLoading.user_auth_info = userAuthInfo;
     }
 }
@@ -170,7 +173,10 @@ TTAccountMulticastProtocol
     self.isFirstEnter = YES;
     [self themedChange];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(blockUserNotification:) name:kTTJSOrRNBlockOrUnBlockUserNotificationName object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reportUserNotification:) name:kTTJSOrRNReportUserNotificationName object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followChangeNotification:) name:RelationActionSuccessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(friendModelChangedNotification:) name:KFriendModelChangedNotification object:nil];
     [TTAccount addMulticastDelegate:self];
     
     self.ttContentInset = UIEdgeInsetsMake(TTMinimumHeaderHeight(), 0, 0, 0);
@@ -357,9 +363,10 @@ TTAccountMulticastProtocol
         NSMutableArray *titles = [NSMutableArray array];
         NSMutableArray *tabArray = [self.userInfoModel.data.top_tab mutableCopy];
         if(self.userInfoModel.data.star_chart && self.userInfoModel.data.star_chart.Rate.integerValue <= 100 && self.userInfoModel.data.star_chart.Rate.integerValue > 0) {
-            TTPersonalHomeUserInfoDataItemResponseModel *item = [[TTPersonalHomeUserInfoDataItemResponseModel alloc] init];
-            item.show_name = @"频道";
-            [tabArray addObject:item];
+            // Lite尚不支持“频道”tab的跳转，此处先注释掉，后续接入UGC后再开启
+//            TTPersonalHomeUserInfoDataItemResponseModel *item = [[TTPersonalHomeUserInfoDataItemResponseModel alloc] init];
+//            item.show_name = @"频道";
+//            [tabArray addObject:item];
         }
         NSInteger selectedIndex = 0;
         for(NSInteger i = 0;i < tabArray.count;i++) {
@@ -1065,6 +1072,7 @@ TTAccountMulticastProtocol
             
             NSMutableDictionary *dict = [@{@"action_type": @(type)} mutableCopy];
             [dict setValue:result[@"result"][@"data"][@"user"] forKey:@"user_data"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:KFriendModelChangedNotification object:nil userInfo:dict];
         } else {
             if (isTopRequest) {
                 [self.topNavView.followBtn stopLoading:nil];
@@ -1162,6 +1170,7 @@ TTAccountMulticastProtocol
             self.headerView.infoView.infoModel = self.userInfoModel.data;
             NSMutableDictionary *dict = [@{@"action_type": @(type)} mutableCopy];
             [dict setValue:result[@"result"][@"data"][@"user"] forKey:@"user_data"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:KFriendModelChangedNotification object:nil userInfo:dict];
         } else {
             if (isTopRequest) {
                 [self.topNavView.followBtn stopLoading:nil];

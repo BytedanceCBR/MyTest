@@ -19,8 +19,9 @@
 
 @protocol ExploreMixedListBaseViewDelegate;
 
+extern const NSUInteger ExploreMixedListBaseViewSectionFHouseCells;
 //extern const NSUInteger ExploreMixedListBaseViewSectionUploadingCells;
-extern const NSUInteger ExploreMixedListBaseViewSectionFunctionAreaCells;
+//extern const NSUInteger ExploreMixedListBaseViewSectionFunctionAreaCells;
 extern const NSUInteger ExploreMixedListBaseViewSectionExploreCells;
 
 extern void tt_listView_preloadWebRes(Article *article, NSDictionary *rawAdData);

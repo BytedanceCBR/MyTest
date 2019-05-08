@@ -84,11 +84,7 @@
 //                orderedData.layoutUIType = TTLayOutCellUITypeUFCellLargePicS2;
 //            }
             else{
-                if (orderedData.isAd) {
-                    orderedData.cellLayOut = [[TTLayOutPlainRightPicCellModelS0AD alloc] init];
-                } else {
-                    orderedData.cellLayOut = [[TTLayOutPlainRightPicCellModelS0 alloc] init];
-                }
+                orderedData.cellLayOut = [[TTLayOutPlainRightPicCellModelS0 alloc] init];
                 orderedData.layoutUIType = TTLayOutCellUITypePlainCellRightPicS0;
             }
         }

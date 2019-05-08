@@ -94,6 +94,8 @@ void ttuserdefaults_setSubscribeCount(NSInteger count) {
 }
 
 static SSCommonLogic * s_manager;
+
+
 @implementation SSCommonLogic
 
 #ifndef SS_TODAY_EXTENSTION
@@ -881,7 +883,7 @@ NSString * const SSCommonLogicSettingQuickLoginAlertTitlesKey = @"SSCommonLogicS
     if ([userDefaults objectForKey:SSCommonLogicSettingQuickButtonTextKey]) {
         return [userDefaults objectForKey:SSCommonLogicSettingQuickButtonTextKey];
     }
-    return NSLocalizedString(@"进入好多房",nil);
+    return NSLocalizedString(@"进入头条",nil);
 }
 
 + (void)setQuickRegisterButtonText:(NSString *)quickRegisterButtonText {
@@ -913,7 +915,7 @@ NSString * const SSCommonLogicSettingQuickLoginAlertTitlesKey = @"SSCommonLogicS
 }
 
 + (NSString *)dialogTitleOfIndex:(NSUInteger)index {
-    NSString *defaultTtitle = NSLocalizedString(@"手机快速登录", nil);
+    NSString *defaultTtitle = NSLocalizedString(@"手机登录", nil);
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if ([userDefaults objectForKey:SSCommonLogicSettingQuickLoginDialogTitlesKey]) {
@@ -961,7 +963,7 @@ NSString * const SSCommonLogicSettingQuickLoginAlertTitlesKey = @"SSCommonLogicS
 }
 
 + (NSString *)loginAlertTitleOfIndex:(NSUInteger)index{
-    NSString *defaultTtitle = NSLocalizedString(@"登录爱看", nil);
+    NSString *defaultTtitle = NSLocalizedString(@"登录你的专属头条", nil);
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if ([userDefaults objectForKey:SSCommonLogicSettingQuickLoginAlertTitlesKey]) {
@@ -2761,6 +2763,28 @@ NSString *const SSCommonLogicDialogFavorDetailActionTick = @"SSCommonLogicDialog
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
+    
+@end
+
+
+@implementation SSCommonLogic (SSCommonLogicDialogFavorDetailActionHasFavor)
+NSString *const SSCommonLogicDialogFavorDetailActionHasFavor = @"SSCommonLogicDialogFavorDetailActionHasFavor";
+
++ (BOOL)needShowLoginTipsForFavor {
+    static BOOL hasShowLoginTips;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        hasShowLoginTips = [NSUserDefaults.standardUserDefaults boolForKey:SSCommonLogicDialogFavorDetailActionHasFavor];
+    });
+    if (hasShowLoginTips) {
+        return NO;
+    } else {
+        [NSUserDefaults.standardUserDefaults setBool:YES forKey:SSCommonLogicDialogFavorDetailActionHasFavor];
+        hasShowLoginTips = YES;
+        return YES;
+    }
+}
+
 @end
 
 @implementation SSCommonLogic (LoginDialogStrategyFavorDetailDialogOrder)
@@ -3707,7 +3731,7 @@ static NSString *const kAdShouldAutoJumpControlEnabledKey = @"kAd_ShouldAutoJump
 static NSString *const kAdSplashWhiteListForbidJumpKey = @"kAdSplash_WhiteList4ForbidJump";
 + (NSSet<NSString *> *)whiteListForAutoJump
 {
-    NSArray *defaultWhite = @[@"https", @"http", @"wss", @"ws", @"file", @"telnet", @"tcp", @"udp", @"tel", @"sslocal", @"snssdk141", @"snssdk32", @"snssdk51", @"snssdk1112", @"snssdk36", @"snssdk1128", @"snssdk1165", @"bytedance", @"about"];
+    NSArray *defaultWhite = @[@"https", @"http", @"wss", @"ws", @"file", @"telnet", @"tcp", @"udp", @"tel", @"sslocal", @"snssdk141", @"snssdk32", @"snssdk51", @"snssdk1112", @"snssdk36", @"snssdk1128", @"snssdk1165", @"snssdk1370", @"bytedance", @"about"];
     NSArray *dynamicWhite =  [[NSUserDefaults standardUserDefaults] stringArrayForKey:kAdSplashWhiteListForbidJumpKey];
     NSMutableSet *set = [NSMutableSet setWithArray:defaultWhite];
     if (dynamicWhite != nil) {
@@ -4090,12 +4114,11 @@ static NSString* const kTTAdRawAdDataEnableKey = @"kTTAdRawAdDataEnableKey";
 }
 
 + (BOOL)isRawAdDataEnable {
-//    NSNumber *enable = [[NSUserDefaults standardUserDefaults] objectForKey:kTTAdRawAdDataEnableKey];
-//    if (enable == nil) {
-//        return YES;
-//    }
-//    return [enable boolValue];
-    return YES;
+    NSNumber *enable = [[NSUserDefaults standardUserDefaults] objectForKey:kTTAdRawAdDataEnableKey];
+    if (enable == nil) {
+        return YES;
+    }
+    return [enable boolValue];
 }
 
 @end
@@ -4571,7 +4594,7 @@ static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLo
 
 + (BOOL)isHTSAppInstalled
 {
-    return [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"snssdk1112://"]];
+    return [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"snssdk1370://"]];
 }
 
 //火山tab列表点击cell是否跳转到火山app开关
@@ -5018,7 +5041,7 @@ static NSString *const kTTFeedHomeClickRefreshSetting = @"tt_home_click_refresh_
 }
 @end
 
-static NSString *const kTTFeedStartCategoryConfig = @"tt_start_category_config";
+static NSString *const kTTFeedStartCategoryConfig = @"f_category_settings";
 @implementation SSCommonLogic (FeedStartCategoryConfig)
 + (void)setFeedStartCategoryConfig:(NSDictionary *)dict
 {
@@ -5410,42 +5433,6 @@ static NSString *const kTTFeedRefreshHistoryStrategy = @"tt_feed_refresh_history
     }
 }
 
-+ (BOOL)feedLoadMoreWithNewData
-{
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
-    BOOL res = NO;
-    if (info && [info[@"load_more_new_data"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
-+ (BOOL)feedLastReadCellShowEnable{
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
-    BOOL res = YES;
-    if (info && [info[@"is_show_last_read_docker"] integerValue] != 1) {
-        res = NO;
-    }
-    
-    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
-        res = NO;
-    }
-    
-    return res;
-}
-
-+ (BOOL)feedRefreshClearAllEnable
-{
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
-    BOOL res = NO;
-    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
 + (BOOL)feedLoadingInitImageEnable
 {
     NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedRefreshStrategy];
@@ -5756,7 +5743,8 @@ static NSString *const kTTMonitorMemoryWarningViewHierarchy = @"kTTMonitorMemory
 
 + (BOOL)pushSDKEnable
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_push_sdk_upload_enable"];
+//    return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_push_sdk_upload_enable"];
+    return YES;
 }
 @end
 
@@ -6119,6 +6107,123 @@ static NSString *const kTTEnableWXShareCallbackKey = @"kTTEnableWXShareCallbackK
     return [[NSUserDefaults standardUserDefaults] boolForKey:kTTEnableWXShareCallbackKey];
 }
 @end
+
+
+//f_settings配置 add by zjing
+
+static NSString *const kFHSettingsKey = @"kFHSettingsKey";
+
+@implementation SSCommonLogic (FHSettings)
++ (void)setFHSettings:(NSDictionary *)fhSettings {
+    
+    [[NSUserDefaults standardUserDefaults] setObject:fhSettings forKey:kFHSettingsKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
++ (NSDictionary *)fhSettings {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kFHSettingsKey]){
+        return [[NSUserDefaults standardUserDefaults] dictionaryForKey:kFHSettingsKey];
+    } else {
+        return nil;
+    }
+}
+
++ (BOOL)wendaShareEnable {
+    NSDictionary *fhSettings = [self fhSettings];
+    return [fhSettings tta_boolForKey:@"f_wenda_share_enable"];
+}
+
++ (NSInteger)configSwitchTimeDaysCount
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger settingSwitchTime = [fhSettings tt_integerValueForKey:@"f_switch_city_time"];
+    return settingSwitchTime;
+}
+
++ (BOOL)configSwitchFWebOffline
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_web_offline"];
+    return boolOffline ? : NO;
+}
+
++ (NSInteger)configEditProfileEntry
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger settingSwitchTime = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+    return settingSwitchTime;
+}
+
++ (NSInteger)findTabShowHouse {
+    
+    NSDictionary *fhSettings = [self fhSettings];
+    return [fhSettings tt_intValueForKey:@"find_tab_show_house"];
+}
+
++ (NSInteger)categoryBadgeTimeInterval
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger timeInterval = [[fhSettings tta_stringForKey:@"f_category_tip_refresh_interval"] integerValue] / 1000; //配置已毫秒计算
+    if (timeInterval > 1) {
+        return timeInterval;
+    }else
+    {
+        return 60;
+    }
+}
+
+static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
+
++ (BOOL)feedLoadMoreWithNewData
+{
+    NSDictionary *info = [[self fhSettings] valueForKey:kFFeedRefreshStrategy];
+    BOOL res = NO;
+    if (info && [info[@"load_more_new_data"] integerValue] == 1) {
+        res = YES;
+    }
+    
+    return res;
+}
+
++ (BOOL)feedLastReadCellShowEnable{
+    NSDictionary *info = [[self fhSettings] valueForKey:kFFeedRefreshStrategy];
+    BOOL res = YES;
+    if (info && [info.allKeys containsObject:@"is_show_last_read_docker"] && [info[@"is_show_last_read_docker"] integerValue] == 0) {
+        res = NO;
+    }
+    
+    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
+        res = NO;
+    }
+    
+    return res;
+}
+
++ (BOOL)feedRefreshClearAllEnable
+{
+    NSDictionary *info = [[self fhSettings] valueForKey:kFFeedRefreshStrategy];
+    BOOL res = NO;
+    if (info && [info[@"refresh_clear_all_enable"] integerValue] == 1) {
+        res = YES;
+    }
+    
+    return res;
+}
+
++ (BOOL)imCanStart
+{
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_im_open"] != nil) {
+        NSInteger info = [[fhSettings objectForKey:@"f_im_open"] integerValue];
+        if (info == 0) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
+@end
+
+
 
 #endif
 

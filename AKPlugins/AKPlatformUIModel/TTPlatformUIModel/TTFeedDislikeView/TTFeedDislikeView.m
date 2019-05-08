@@ -18,6 +18,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
 #import "TTTracker.h"
+#import "UIColor+Theme.h"
 
 #define kMaskViewTag 20141209
 
@@ -71,7 +72,7 @@ static TTFeedDislikeView *__visibleDislikeView;
             }
         }
         else {
-            self.layer.cornerRadius = 6.f;
+            self.layer.cornerRadius = 4.f;
             UIWindow *window = SSGetMainWindow();
             self.width = MIN(window.frame.size.width - 30, 400);
         }
@@ -92,8 +93,8 @@ static TTFeedDislikeView *__visibleDislikeView;
         
         self.okBtn = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, [self buttonWidth], [self buttonHeight])];
         
-        _okBtn.backgroundColorThemeKey = kColorBackground7;
-        _okBtn.highlightedBackgroundColorThemeKey = kColorBackground7Highlighted;
+        _okBtn.backgroundColorThemeKey = kFHColorCoral;
+        _okBtn.highlightedBackgroundColorThemeKey = kFHColorCoral;
         [_okBtn addTarget:self action:@selector(okBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [_contentBgView addSubview:_okBtn];
         
@@ -111,12 +112,12 @@ static TTFeedDislikeView *__visibleDislikeView;
         
         self.dislikeBtn = [[SSThemedButton alloc] initWithFrame:CGRectMake(0, 0, [self dislikeButtonWidth], [self dislikeButtonHeight])];
         [_dislikeBtn.titleLabel setFont:[UIFont systemFontOfSize:[self fontSizeForDislikeButton]]];
-        _dislikeBtn.highlightedTitleColorThemeKey = kColorText7Highlighted;
-        _dislikeBtn.backgroundColorThemeKey = kColorBackground7;
-        _dislikeBtn.highlightedBackgroundColorThemeKey = kColorBackground7Highlighted;
+        _dislikeBtn.highlightedTitleColorThemeKey = kColorText8;
+        _dislikeBtn.backgroundColorThemeKey = kFHColorCoral;
+        _dislikeBtn.highlightedBackgroundColorThemeKey = kFHColorCoral;
 
         [_dislikeBtn addTarget:self action:@selector(okBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        _dislikeBtn.layer.cornerRadius = [self dislikeButtonHeight] / 2;
+        _dislikeBtn.layer.cornerRadius = 4;
         [self addSubview:_dislikeBtn];
         
         [self reloadThemeUI];
@@ -126,21 +127,23 @@ static TTFeedDislikeView *__visibleDislikeView;
         self.adLogExtra = @"";
         
         if ([TTFeedDislikeView isFeedDislikeRefactorEnabled]) {
-            [_okBtn.titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]]];
-            _okBtn.titleColorThemeKey = kColorText12;
+            [_okBtn.titleLabel setFont:[UIFont systemFontOfSize:13.f]];
+            [_okBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [_okBtn setTitle:NSLocalizedString(@"不喜欢", nil) forState:UIControlStateNormal];
-            [_titleLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:14.f]]];
+            [_titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:18] ? : [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:18.f]]];
             [_dislikeBtn setTitle:NSLocalizedString(@"不喜欢", nil) forState:UIControlStateNormal];
         }
         else {
-            _contentBgView.layer.cornerRadius = 6.f;
+            _contentBgView.layer.cornerRadius = 4.f;
             _contentBgView.clipsToBounds = YES;
-            [_okBtn.titleLabel setFont:[UIFont systemFontOfSize:[self fontSizeForButton]]];
-            _okBtn.titleColorThemeKey = kColorText7;
+            [_okBtn.titleLabel setFont:[UIFont systemFontOfSize:13.f]];
+            [_okBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [_okBtn setTitle:NSLocalizedString(@"不感兴趣", nil) forState:UIControlStateNormal];
+            [_titleLabel setFont:[UIFont fontWithName:@"PingFangSC-Medium" size:13] ? : [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:13.f]]];
             [_dislikeBtn setTitle:NSLocalizedString(@"不感兴趣", nil) forState:UIControlStateNormal];
-            _dislikeBtn.titleColorThemeKey = kColorText7;
-            _okBtn.layer.cornerRadius = [self buttonHeight] / 2;
+            [_dislikeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [_dislikeBtn.titleLabel setFont:[UIFont systemFontOfSize:14.f]];
+            _okBtn.layer.cornerRadius = 4;
         }
 
     }
@@ -227,10 +230,10 @@ static TTFeedDislikeView *__visibleDislikeView;
         _keywordsView.origin = CGPointMake(0, [TTDeviceUIUtils tt_newPadding:20.f]);
         _okBtn.origin = CGPointMake(_contentBgView.width - [self leftPadding] - _okBtn.width, _keywordsView.bottom +  12.f);
         _titleLabel.centerX = ceilf(self.width / 4);
-        _okBtn.width = [TTDeviceUIUtils tt_newPadding:140.f];
-        _okBtn.height = [TTDeviceUIUtils tt_newPadding:40.f];
+        _okBtn.width = [TTDeviceUIUtils tt_newPadding:90];
+        _okBtn.height = [TTDeviceUIUtils tt_newPadding:30.f];
         _okBtn.centerX = self.width * 3 / 4 - 5;
-        _okBtn.layer.cornerRadius = [TTDeviceUIUtils tt_newPadding:20.f];
+        _okBtn.layer.cornerRadius = [TTDeviceUIUtils tt_newPadding:4.f];
         
         _titleLabel.centerY = _okBtn.centerY;
         _contentBgView.height = _okBtn.bottom + [TTDeviceUIUtils tt_newPadding:20.f];
@@ -350,7 +353,7 @@ static TTFeedDislikeView *__visibleDislikeView;
         NSString * title = [NSString stringWithFormat:@"已选%lu个理由", (unsigned long)self.selectedWords.count];
         NSRange range = NSMakeRange(2, 1);
         NSMutableAttributedString * atrrTitle = [[NSMutableAttributedString alloc] initWithString:title];
-        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kColorText4] } range:range];
+        [atrrTitle setAttributes:@{ NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:kFHColorCoral] } range:range];
         [self.titleLabel setAttributedText:atrrTitle];
     } else {
         [self.titleLabel setText:@"可选理由，精准屏蔽"];
@@ -369,10 +372,10 @@ static TTFeedDislikeView *__visibleDislikeView;
     [super themeChanged:notification];
     _contentBgView.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
     if ([TTFeedDislikeView isFeedDislikeRefactorEnabled]) {
-        [self.titleLabel setTextColor:[UIColor tt_themedColorForKey:kColorText1]];
+        [self.titleLabel setTextColor:[UIColor themeGray1]];
     }
     else {
-        [self.titleLabel setTextColor:[UIColor tt_themedColorForKey:kColorText2]];
+        [self.titleLabel setTextColor:[UIColor themeGray1]];
     }
 }
 
@@ -560,11 +563,11 @@ static TTFeedDislikeView *__visibleDislikeView;
     static float fontSize = 0;
     if (fontSize == 0) {
         if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) { // iPhone6
-            fontSize = 15.f;
+            fontSize = 18.f;
         } else if ([TTDeviceHelper is736Screen] || [TTDeviceHelper isPadDevice]) { // iPhone6 plus
-            fontSize = 15.f;
+            fontSize = 18.f;
         } else {
-            fontSize = 13.f;
+            fontSize = 15.f;
         }
     }
     return fontSize;
@@ -588,11 +591,11 @@ static TTFeedDislikeView *__visibleDislikeView;
     static float w = 0;
     if (w == 0) {
         if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) { // iPhone6
-            w = 106.f;
+            w = 84.f;
         } else if ([TTDeviceHelper is736Screen] || [TTDeviceHelper isPadDevice]) { // iPhone6 plus
-            w = 106.f;
+            w = 84.f;
         } else {
-            w = 100.f;
+            w = 80.f;
         }
     }
     return w;
@@ -603,9 +606,9 @@ static TTFeedDislikeView *__visibleDislikeView;
     static float h = 0;
     if (h == 0) {
         if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) { // iPhone6
-            h = 32.f;
+            h = 30.f;
         } else if ([TTDeviceHelper is736Screen] || [TTDeviceHelper isPadDevice]) { // iPhone6 plus
-            h = 32.f;
+            h = 30.f;
         } else {
             h = 30.f;
         }
@@ -717,11 +720,11 @@ static TTFeedDislikeView *__visibleDislikeView;
     static float w = 0;
     if (w == 0) {
         if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) { // iPhone6
-            w = 106.f;
+            w = 84.f;
         } else if ([TTDeviceHelper is736Screen] || [TTDeviceHelper isPadDevice]) { // iPhone6 plus
-            w = 106.f;
+            w = 84.f;
         } else {
-            w = 100.f;
+            w = 80.f;
         }
     }
     return w;
@@ -731,9 +734,9 @@ static TTFeedDislikeView *__visibleDislikeView;
     static float h = 0;
     if (h == 0) {
         if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) { // iPhone6
-            h = 32.f;
+            h = 30.f;
         } else if ([TTDeviceHelper is736Screen] || [TTDeviceHelper isPadDevice]) { // iPhone6 plus
-            h = 32.f;
+            h = 30.f;
         } else {
             h = 30.f;
         }
@@ -745,9 +748,9 @@ static TTFeedDislikeView *__visibleDislikeView;
     static float fontSize = 0;
     if (fontSize == 0) {
         if ([TTDeviceHelper is667Screen] || [TTDeviceHelper isIPhoneXDevice]) { // iPhone6
-            fontSize = 17.f;
+            fontSize = 18.f;
         } else if ([TTDeviceHelper is736Screen] || [TTDeviceHelper isPadDevice]) { // iPhone6 plus
-            fontSize = 17.f;
+            fontSize = 18.f;
         } else {
             fontSize = 15.f;
         }

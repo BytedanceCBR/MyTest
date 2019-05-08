@@ -116,7 +116,7 @@
 
 - (void)fontSizeChanged
 {
-    _titleLabel.font = kCellTitleLabelFont;
+    _titleLabel.font = [UIFont systemFontOfSize:kCellTitleLabelFontSize];
     _titleLabel.lineHeight = kCellTitleLineHeight;
     _abstractLabel.font = [UIFont systemFontOfSize:kCellAbstractViewFontSize];
     _infoLabel.font = [UIFont systemFontOfSize:kCellInfoLabelFontSize];

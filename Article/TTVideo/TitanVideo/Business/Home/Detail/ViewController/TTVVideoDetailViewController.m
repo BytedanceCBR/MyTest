@@ -96,6 +96,7 @@
 #import "TTTabBarProvider.h"
 #import "TTCommentViewControllerProtocol.h"
 #import "AKAwardCoinVideoMonitorManager.h"
+#import "FHTraceEventUtils.h"
 
 #define kTopViewHeight  44.f
 
@@ -450,9 +451,13 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (NSString *)enterFromString{
     NSString * enterFrom = self.detailModel.clickLabel;
-   if (self.detailModel.fromSource == NewsGoDetailFromSourceCategory | self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloat) {
+    if (self.detailModel.fromSource == NewsGoDetailFromSourceCategory | self.detailModel.fromSource == NewsGoDetailFromSourceVideoFloat) {
         enterFrom = @"click_category";
-    }else if(self.detailModel.fromSource == NewsGoDetailFromSourceClickTodayExtenstion) {
+    } else if (self.detailModel.fromSource == NewsGoDetailFromSourceHeadline) {
+        enterFrom = @"click_headline";
+    }else if (self.detailModel.fromSource == NewsGoDetailFromSourceFavorite) {
+        enterFrom = @"click_favorite";
+    } else if(self.detailModel.fromSource == NewsGoDetailFromSourceClickTodayExtenstion) {
         enterFrom = @"click_widget";
     }
     if (isEmptyString(enterFrom) && !isEmptyString(self.detailModel.gdLabel)) {
@@ -473,6 +478,11 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
             }
         }
     }
+
+    // 这段代码是因为埋点文档不清楚加的，注释掉，不删除了
+//    if ([categoryName isEqualToString:@"f_shipin"]) {
+//        categoryName = @"video";
+//    }
     return categoryName;
 }
 
@@ -766,7 +776,12 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     
     {
         UIView *view = _toolbarVC.view;
-        view.frame = CGRectMake(0, 0, self.view.width, ExploreDetailGetToolbarHeight());
+        // add by zjing safeArea
+        CGFloat safeAreaBottom = 0;
+        if ([TTDeviceHelper isIPhoneXDevice]) {
+            safeAreaBottom = 34;
+        }
+        view.frame = CGRectMake(0, 0, self.view.width, ExploreDetailGetToolbarHeight() + safeAreaBottom);
         view.bottom = self.view.height;
         view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
         [self.view addSubview:view];
@@ -1206,6 +1221,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
             }else{
                 pgcModel.logPb = self.detailModel.gdExtJsonDict[@"log_pb"];
             }
+            
             TTVVideoDetailNatantPGCViewController *topPGCVC = [[TTVVideoDetailNatantPGCViewController alloc] initWithInfoModel:pgcModel andWidth:containerWidth];
             self.topPGCVC = topPGCVC;
             topPGCVC.authorView.delegate = self;
@@ -1213,6 +1229,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
             [self.view addSubview:self.topPGCVC.view];
             [self.topPGCVC didMoveToParentViewController:self];
             self.topPGCVC.view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+            
             self.commodityVC.pgcHeight = self.topPGCVC.view.height;
             
             {
@@ -1797,26 +1814,31 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)sendCommentDiggActionLogV3WithCommentID:(NSString *) commentId digg:(BOOL )isDigg commentPosition:(NSString *)position
 {
-    NSMutableDictionary *event3Dic = [NSMutableDictionary dictionary];
-    [event3Dic setValue:commentId forKey:@"comment_id"];
-    [event3Dic setValue:self.videoInfo.groupModel.groupID forKey:@"group_id"];
-    [event3Dic setValue:[self categoryName] forKey:@"category_name"];
-    [event3Dic setValue:[self enterFromString] forKey:@"enter_from"];
-    [event3Dic setValue:[self p_contentID] forKey:@"user_id"];
-    [event3Dic setValue:[self logPb] forKey:@"log_pb"];
-    [event3Dic setValue:@"detail" forKey:@"position"];
-    [event3Dic setValue:position forKey:@"comment_position"];
-    if (isDigg) {
-        [TTTrackerWrapper eventV3:@"comment_digg" params:event3Dic];
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:self.videoInfo.groupModel.groupID forKey:@"group_id"];
+    [params setValue:self.videoInfo.groupModel.itemID forKey:@"item_id"];
+    [params setValue:commentId forKey:@"comment_id"];
+    //        [params setValue:model.userID.stringValue forKey:@"user_id"];
+    if (self.detailModel.logPb) {
+        [params setValue:self.detailModel.logPb forKey:@"log_pb"];
     }else{
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:event3Dic];
+        [params setValue:self.detailModel.gdExtJsonDict[@"log_pb"] forKey:@"log_pb"];
+    }
+    [params setValue:[self categoryName] forKey:@"category_name"];
+    [params setValue:[FHTraceEventUtils generateEnterfrom:[self categoryName]] forKey:@"enter_from"];
+    [params setValue:position forKey:@"position"];
+    if (isDigg) {
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+    }else{
+        [TTTrackerWrapper eventV3:@"rt_unlike" params:params];
     }
 }
 
-- (void)commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model
+- (void)commentViewController:(id<TTCommentViewControllerProtocol>)ttController digCommentWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model position:(NSString *)position
 {
     [self p_sendDetailTTLogV2WithEvent:@"click_comment_like" eventContext:@{@"comment_id":model.commentIDNum.stringValue} referContext:nil];
-    [self sendCommentDiggActionLogV3WithCommentID:model.commentIDNum.stringValue digg:model.userDigged commentPosition:@"detail"];
+    [self sendCommentDiggActionLogV3WithCommentID:model.commentIDNum.stringValue digg:model.userDigged commentPosition:position];
 }
 
 - (void)commentViewController:(id<TTCommentViewControllerProtocol>)ttController didClickReplyButtonWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model
@@ -1832,6 +1854,10 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 }
 
 - (void)p_enterProfileWithUserID:(NSString *)userID {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     NSMutableDictionary *baseCondition = [[NSMutableDictionary alloc] init];
     [baseCondition setValue:userID forKey:@"uid"];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
@@ -1847,6 +1873,10 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)commentViewController:(id<TTVCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(nonnull id<TTVCommentModelProtocol, TTCommentDetailModelProtocol>)model
 {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     if ([model.userID longLongValue] == 0) {
         return;
     }
@@ -1997,6 +2027,10 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         }
     } getReplyCommentModelClassBlock:nil commentRepostWithPreRichSpanText:nil commentSource:nil];
 
+    replyManager.enterFrom = self.detailModel.clickLabel;
+    replyManager.categoryID = self.detailModel.categoryID;
+    replyManager.logPb = self.detailModel.logPb;
+
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
     self.replyWriteView.banEmojiInput = commentDetailModel.banEmojiInput;
 
@@ -2015,6 +2049,8 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     TTVReplyViewController *vc = [[TTVReplyViewController alloc] initWithViewFrame:CGRectMake(0, movieSize.height + movieViewContainer.top, movieSize.width, self.view.height - movieSize.height - movieViewContainer.top) comment:model showWriteComment:NO];
     vc.vcDelegate = self;
     vc.categoryID = self.detailModel.categoryID;
+    vc.enterFromStr = self.detailModel.clickLabel;
+    vc.logPb = self.detailModel.logPb;
     if (self.detailModel.adID && self.detailModel.adID.longLongValue > 0) {
         vc.isAdVideo = YES;
     }
@@ -2069,7 +2105,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
 
 - (void)videoDetailFloatCommentViewCellDidDigg:(BOOL)digged withModel:(id<TTVReplyModelProtocol>)model
 {
-    [self sendCommentDiggActionLogV3WithCommentID:model.commentID digg:!model.userDigg commentPosition:@"comment_detail"];
+    [self sendCommentDiggActionLogV3WithCommentID:model.commentID digg:!model.userDigg commentPosition:@"reply"];
 }
 #pragma mark - TTVVideoDetailMovieBannerDelegate
 

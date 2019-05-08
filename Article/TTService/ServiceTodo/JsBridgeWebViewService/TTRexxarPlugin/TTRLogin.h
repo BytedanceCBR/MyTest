@@ -14,4 +14,7 @@
 TTR_EXPORT_HANDLER(login)
 
 TTR_EXPORT_HANDLER(isLogin)
+
+TTR_EXPORT_HANDLER(logoutApp)
+
 @end

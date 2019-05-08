@@ -38,6 +38,9 @@
     [dict setValue:userId forKey:@"uid"];
     [dict setValue:@"ies_video" forKey:@"refer"];
     
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     NSString *scheme = @"sslocal://profile";
     NSURL *url = [TTURLUtils URLWithString:scheme queryItems:dict];
     if ([[TTRoute sharedRoute] canOpenURL:url]) {

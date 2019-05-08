@@ -107,6 +107,8 @@
 #import "TSVPrefetchVideoManager.h"
 #import <TTAudioSessionManager.h>
 
+#import "ExploreOrderedData.h"
+
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -217,6 +219,8 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, copy) NSString *ruleID;   //推送gid对应的唯一标识
 @property (nonatomic, copy) NSString *originalGroupID;  //schema中的初始gid
 
+@property (nonatomic, strong) ExploreOrderedData            *orderedData;
+;
 
 @end
 
@@ -336,6 +340,10 @@ static const CGFloat kFloatingViewOriginY = 230;
         }
         if (extraParams[TSVDetailPushFromProfileVC]) {
             self.pushFromProfileVC = [extraParams tt_boolValueForKey:TSVDetailPushFromProfileVC];
+        }
+        
+        if (extraParams[HTSVideoDetailOrderedData]) {
+            self.orderedData = extraParams[HTSVideoDetailOrderedData];
         }
     }
     return self;
@@ -488,8 +496,8 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
-    self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - kFloatingViewOriginY)];
-    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight([UIScreen mainScreen].bounds) - kFloatingViewOriginY)];
+//    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.commentView.layer.cornerRadius = 6.0;
     self.commentView.backgroundColorThemeKey = kColorBackground4;
     self.commentView.hidden = YES;
@@ -534,21 +542,21 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.fakeInputBar = fakeInputBar;
     
     SSThemedView *fakeTextBackgroundView = [[SSThemedView alloc] initWithFrame:CGRectMake(14, 6, CGRectGetWidth(fakeInputBar.bounds) - 28, CGRectGetHeight(fakeInputBar.bounds) - 12)];
-    fakeTextBackgroundView.backgroundColorThemeKey = kColorBackground3;
+    fakeTextBackgroundView.backgroundColorThemeKey = kFHColorPaleGrey;
     fakeTextBackgroundView.layer.cornerRadius = CGRectGetHeight(fakeTextBackgroundView.bounds) / 2;
     fakeTextBackgroundView.layer.masksToBounds = YES;
     fakeTextBackgroundView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
-    fakeTextBackgroundView.borderColorThemeKey = kColorLine1;
+    fakeTextBackgroundView.borderColorThemeKey = kFHColorPaleGrey;
     [fakeInputBar addSubview:fakeTextBackgroundView];
 
-    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
-    inputIcon.imageName = @"hts_vp_write_new";
-    [fakeTextBackgroundView addSubview:inputIcon];
+//    SSThemedImageView *inputIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(9, 4, 24, 24)];
+//    inputIcon.imageName = @"hts_vp_write_new";
+//    [fakeTextBackgroundView addSubview:inputIcon];
 
-    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(inputIcon.frame) + 4, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - (CGRectGetMaxX(inputIcon.frame) + 4 + 4) , 20)];
+    SSThemedLabel *inputLabel = [[SSThemedLabel alloc] initWithFrame:CGRectMake(15, 6, CGRectGetWidth(fakeTextBackgroundView.frame) - 15 , 20)];
     inputLabel.text = @"写评论...";
     inputLabel.font = [UIFont systemFontOfSize:14.0];
-    inputLabel.textColorThemeKey = kColorText1;
+    inputLabel.textColorThemeKey = kFHColorCoolGrey3;
     [fakeTextBackgroundView addSubview:inputLabel];
 
     [self.tableView registerClass:[AWEVideoCommentCell class] forCellReuseIdentifier:CommentCellIdentifier];
@@ -670,7 +678,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.commentScrollEnable = YES;
     self.profileScrollEnable = YES;
 
-//    RACChannelTo(self, tableView.scrollEnabled) = RACChannelTo(self, commentScrollEnable);
+    RACChannelTo(self, tableView.scrollEnabled) = RACChannelTo(self, commentScrollEnable);
 //    RAC(self, allowProfileSlideDown) = RACObserve(self, profileViewController.allowGesture);
 //    RACChannelTo(self, profileViewController.scrollEnable) = RACChannelTo(self, profileScrollEnable);
 //    RACChannelTo(self, profileBeginDragContentOffsetY) = RACChannelTo(self, profileViewController.beginDragContentOffsetY);
@@ -1016,10 +1024,11 @@ static const CGFloat kFloatingViewOriginY = 230;
         [AWEVideoPlayAccountBridge fetchTTAccount];
         if (![AWEVideoPlayAccountBridge isLogin]) {
             @weakify(self);
+            
+            [[TTModuleBridge sharedInstance_tt] removeListener:self forKey:@"HTSLoginResult"];
             [[TTModuleBridge sharedInstance_tt] registerListener:self object:nil forKey:@"HTSLoginResult" withBlock:^(id  _Nullable params) {
                 completion([params[@"success"] boolValue]);
                 @strongify(self);
-                [[TTModuleBridge sharedInstance_tt] removeListener:self forKey:@"HTSLoginResult"];
             }];
             [AWEVideoPlayAccountBridge showLoginView];
             return YES;
@@ -1176,7 +1185,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     @weakify(self);
     [UIView animateWithDuration:0.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
-        self.commentView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.commentView.bounds));
+        self.commentView.frame = CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.commentView.bounds));
     } completion:^(BOOL finished) {
         @strongify(self);
         self.commentView.hidden = YES;
@@ -1269,6 +1278,8 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.model.userRepin = !self.model.userRepin;
             [self.model save];
 
+            [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
+            
             contentItem.selected = self.model.userRepin;
             if(self.model.userRepin) {
                 TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
@@ -1320,7 +1331,10 @@ static const CGFloat kFloatingViewOriginY = 230;
             NSMutableArray *reason = [NSMutableArray new];
             for(NSString *type in reportType){
                 for(NSDictionary *item in self.videoReportOptions){
-                    if([type isEqualToString:[item[@"type"] stringValue]]){
+                    if ([item[@"type"] isKindOfClass:[NSString class]]&&[type isEqualToString:item[@"type"]]) {
+                        [reason addObject:item[@"text"]];
+                        break;
+                    }else if([item[@"type"] respondsToSelector:@selector(stringValue)]&&[type isEqualToString:[item[@"type"] stringValue]]){
                         [reason addObject:item[@"text"]];
                         break;
                     }
@@ -1468,10 +1482,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     AWEAwemeAddCommentResponseBlock callback = ^(AWECommentModel *model, NSError *error) {
         @strongify(self);
         if (!error) {
-            [AWEVideoDetailTracker trackEvent:@"rt_post_comment"
-                                        model:self.model
-                              commonParameter:self.commonTrackingParameter
-                               extraParameter:[self writeCommentExtraPositionDict]];
+            if (model.replyToComment == nil) {
+                [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
+                                            model:self.model
+                                  commonParameter:self.commonTrackingParameter
+                                   extraParameter:[self writeCommentExtraPositionDict]];
+            }
 
             [self.inputBar clearInputBar];
 
@@ -1638,7 +1654,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     AWECommentModel *commentModel = [self.commentManager commentForIndexPath:indexPath];
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithDictionary:[self commentExtraPositionDict]];
     [extra setValue:[commentModel.id stringValue] ?: @"" forKey:@"comment_id"];
-    [AWEVideoDetailTracker trackEvent:@"comment_reply"
+    [AWEVideoDetailTracker trackEvent:@"rt_post_reply"
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
                        extraParameter:extra];
@@ -1756,7 +1772,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     [AWEVideoDetailTracker trackEvent:@"comment_list_show"
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail_bottom_bar"}];
+                       extraParameter:@{@"position": @"detail"}];
 
     [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
 }
@@ -1816,11 +1832,11 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel
 {
-    NSString *eventName = commentModel.userDigg ? @"comment_undigg" : @"comment_digg";
+    NSString *eventName = commentModel.userDigg ? @"rt_unlike" : @"rt_like";
     [AWEVideoDetailTracker trackEvent:eventName
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail_bottom_bar",
+                       extraParameter:@{@"position": @"reply",
                                         @"comment_id": [commentModel.id stringValue]}];
 
     if ([self alertIfNotValid]) {
@@ -1968,8 +1984,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 //            [self updateProfileViewModelIfNeeded];
 //        }
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
-//        floatingView.hidden = NO;
-//        floatingView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - MIN(CGRectGetHeight(floatingView.bounds), MAX(- transition.y, 0)), CGRectGetWidth(self.view.bounds), CGRectGetHeight(floatingView.bounds));
+        floatingView.hidden = NO;
+        floatingView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - MIN(CGRectGetHeight(floatingView.bounds), MAX(- transition.y, 0)), CGRectGetWidth(self.view.bounds), CGRectGetHeight(floatingView.bounds));
     } else if (gesture.state == UIGestureRecognizerStateEnded ||
                gesture.state == UIGestureRecognizerStateCancelled) {
         if (CGRectGetMaxY(floatingView.frame) - CGRectGetHeight(self.view.bounds) >= CGRectGetHeight(floatingView.bounds) * 2.0 / 3.0 && - velocity.y < 500) {
@@ -2036,36 +2052,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 }
 
-//- (void)handleProfileSlideDownGesture:(UIPanGestureRecognizer *)gesture
-//{
-//    UIView *floatingView = self.profileViewController.view;
-//    CGPoint transition = [gesture translationInView:floatingView];
-//    CGPoint location = [gesture locationInView:floatingView];
-//    CGPoint velocity = [gesture velocityInView:floatingView];
-//
-//    if (gesture.state == UIGestureRecognizerStateBegan) {
-//        if (location.y <= 49) {
-//            //点击范围在标题栏，标志位清零
-//            self.allowProfileSlideDown = YES;
-//            self.profileBeginDragContentOffsetY = 0;
-//        }
-//    } else if (gesture.state == UIGestureRecognizerStateChanged) {
-//        if (self.allowProfileSlideDown) {
-//            self.profileScrollEnable = NO;
-//            CGFloat diff = transition.y - self.profileBeginDragContentOffsetY;
-//            floatingView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - CGRectGetHeight(floatingView.bounds) + MAX(0, diff), CGRectGetWidth(self.view.bounds), CGRectGetHeight(floatingView.bounds));
-//        }
-//    } else if (gesture.state == UIGestureRecognizerStateEnded ||
-//               gesture.state == UIGestureRecognizerStateCancelled) {
-//        if (CGRectGetMaxY(floatingView.frame) - CGRectGetHeight(self.view.bounds) >= CGRectGetHeight(floatingView.bounds) / 3.0 || (velocity.y >= 500 && !self.profileScrollEnable)) {
-//            [self dismissProfileViewWithCancelType:@"gesture"];
-//        } else {
-//            [self showProfileView];
-//        }
-//        self.profileScrollEnable = YES;
-//    }
-//}
-
 #pragma mark - UIGestureRecognizerDelegate
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
 {
@@ -2080,21 +2066,13 @@ static const CGFloat kFloatingViewOriginY = 230;
             angle += 360.f;
         }
         
-        if (angle > 195.f) {
+        if (angle > 225.f) {
             return NO;
         }
         
         if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-            return [self.slideUpGesture translationInView:self.view].y < 0 && self.commentView.hidden;
-        }
-//        else if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//            if (!self.profileViewController.parentViewController || self.profileViewController.view.hidden) {
-//                return [self.slideUpGesture translationInView:self.view].y < 0;
-//            } else {
-//                return NO;
-//            }
-//        }
-        else {
+            return y < 0 && self.commentView.hidden;
+        } else {
             return NO;
         }
     }
@@ -2299,11 +2277,11 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     id<TTActivityContentItemProtocol> contentItem = activity.contentItem;
     if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeFavourite]) {
-        [AWEVideoDetailTracker trackEvent:self.model.userRepin? @"rt_unfavorite" : @"rt_favorite"
+        [AWEVideoDetailTracker trackEvent:self.model.userRepin? @"rt_unfavourite" : @"rt_favourite"
                                     model:self.model
                           commonParameter:self.commonTrackingParameter
                            extraParameter:@{
-                                            @"position": @"detail_top_bar",
+                                            @"position": @"detail",
                                             }];
         [self handleFavoriteVideoWithContentItem:(TTFavouriteContentItem *)contentItem];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeDislike]) {
@@ -2330,7 +2308,8 @@ static const CGFloat kFloatingViewOriginY = 230;
                           commonParameter:self.commonTrackingParameter
                            extraParameter:@{
                                             @"share_platform":@"weitoutiao",
-                                            @"position": @"detail_top_bar",
+                                            @"position": @"detail",
+                                            @"event_type": @"house_app2c_v2"
                                             }];
         [TSVVideoDetailShareHelper handleForwardUGCVideoWithModel:self.model];
 //    } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeSaveVideo]) {
@@ -2348,7 +2327,8 @@ static const CGFloat kFloatingViewOriginY = 230;
                           commonParameter:self.commonTrackingParameter
                            extraParameter:@{
                                             @"share_platform": type?:@"",
-                                            @"position": @"detail_top_bar",
+                                            @"position": @"detail",
+                                            @"event_type": @"house_app2c_v2"
                                             }];
     } else {
         [AWEVideoDetailTracker trackEvent:@"click_more_cancel"
@@ -2384,6 +2364,7 @@ static const CGFloat kFloatingViewOriginY = 230;
                            extraParameter:@{
                                             @"share_platform": sharePlatform,
                                             @"position": @"detail_top_bar",
+                                            @"event_type": @"house_app2c_v2"
                                             }];
     }
     [TSVVideoShareManager synchronizeUserDefaultsWithAvtivityType:activity.contentItemType];
@@ -2397,7 +2378,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if (self.commentViewStatus == TSVDetailCommentViewStatusPopBySlideUp) {
         return @{@"position": @"draw_bottom"};
     } else {
-        return @{@"position": @"detail_bottom_bar"};
+        return @{@"position": @"detail"};
     }
 }
 
@@ -2409,7 +2390,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     } else if (self.commentViewStatus == TSVDetailCommentViewStatusPopByClick) {
         return @{@"position": @"comment_bottom"};
     } else {
-        return @{@"position": @"detail_bottom_bar"};
+        return @{@"position": @"detail"};
     }
 }
 

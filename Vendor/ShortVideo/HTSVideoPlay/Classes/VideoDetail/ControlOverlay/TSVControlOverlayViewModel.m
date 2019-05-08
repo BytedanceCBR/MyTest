@@ -41,7 +41,7 @@
 #import "TTCustomAnimationNavigationController.h"
 #import "TSVRecommendCardViewModel.h"
 #import "TTTracker.h"
-#import <TTKitchenHeader.h>
+#import <TTKitchen/TTKitchenHeader.h>
 
 NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
@@ -173,13 +173,13 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     self.playCount++;
 
     if ([self showShareIconAfterPlayCount:self.playCount]) {
-        self.showShareIconOnBottomBar = YES;
+        self.showShareIconOnBottomBar = NO;
     }
 }
 
 - (BOOL)showShareIconAfterDigg
 {
-    return [[self shareIconAppearTimingConfig][@"after_digg"] boolValue];
+    return NO;
 }
 
 - (BOOL)showShareIconAfterPlayCount:(NSInteger)playCount
@@ -336,7 +336,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 {
     NSString *userId = self.model.author.userID;
 
-    NSString *position = @"detail_bottom_bar";
+    NSString *position = @"detail";
 
     if ([AWEVideoPlayAccountBridge isCurrentLoginUser:self.model.author.userID]) {
         return;
@@ -407,7 +407,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 }
 - (void)clickUserNameButton
 {
-    NSString *position = @"detail_bottom_bar";
+    NSString *position = @"detail";
 
     [AWEVideoDetailTracker trackEvent:@"rt_click_nickname"
                                 model:self.model
@@ -421,7 +421,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
 - (void)clickAvatarButton
 {
-    NSString *position = @"detail_bottom_bar";
+    NSString *position = @"detail";
 
     [AWEVideoDetailTracker trackEvent:@"rt_click_avatar"
                                 model:self.model
@@ -455,7 +455,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
                                         @"user_id": self.model.author.userID ?: @"",
-                                        @"position": @"detail_bottom_bar",
+                                        @"position": @"detail",
                                         }];
 
     if (!self.model.userDigg) {
@@ -477,13 +477,13 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 - (void)doubleTapView
 {
     if (!self.isLiked) {
-        [AWEVideoDetailTracker trackEvent:@"rt_like"
-                                    model:self.model
-                          commonParameter:self.commonTrackingParameter
-                           extraParameter:@{
-                                            @"user_id": self.model.author.userID,
-                                            @"position": @"double_like",
-                                            }];
+//        [AWEVideoDetailTracker trackEvent:@"rt_like"
+//                                    model:self.model
+//                          commonParameter:self.commonTrackingParameter
+//                           extraParameter:@{
+//                                            @"user_id": self.model.author.userID,
+//                                            @"position": @"double_like",
+//                                            }];
 
         [self markLikeDirectly];
     }
@@ -524,7 +524,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                       commonParameter:self.commonTrackingParameter
                        extraParameter:@{
                                         @"user_id": self.model.author.userID ?: @"",
-                                        @"position": @"detail_bottom_bar",
+                                        @"position": @"detail",
                                         }];
     if (self.showCommentPopupBlock) {
         self.showCommentPopupBlock();
@@ -536,7 +536,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     [AWEVideoDetailTracker trackEvent:@"share_button"
                                 model:self.model
                       commonParameter:self.commonTrackingParameter
-                       extraParameter:@{@"position": @"detail_bottom_bar"}];
+                       extraParameter:@{@"position": @"detail"}];
 
     [self.detailPromptManager updateVisibleFloatingViewCountForVisibility:YES];
     //小视频暂时不出分享广告
@@ -548,7 +548,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
         @strongify(self);
         AWEVideoShareModel *shareModel = [[AWEVideoShareModel alloc] initWithModel:self.model image:image shareType:AWEVideoShareTypeDefault];
 
-        self.sharePosition = @"detail_bottom_bar";
+        self.sharePosition = @"detail";
 //        if ([[TTKitchenMgr sharedInstance] getBOOL:kKCShareBoardDisplayRepost]) {
 //            [self.shareManager displayForwardSharePanelWithContent:[shareModel forwardSharePanelContentItems]];
 //        } else {
@@ -643,6 +643,8 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
         params[@"item_id"] = self.model.itemID;
         params[@"log_pb"] = self.model.logPb ?: @{};
         params[@"share_platform"] = @"weitoutiao";
+        params[@"event_type"] = @"house_app2c_v2";
+
         [AWEVideoPlayTrackerBridge trackEvent:@"rt_share_to_platform"
                                        params:params];
         [TSVVideoDetailShareHelper handleForwardUGCVideoWithModel:self.model];
@@ -653,8 +655,9 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                                         model:self.model
                               commonParameter:self.commonTrackingParameter
                                extraParameter:@{
-                                                @"position": @"detail_bottom_bar",
-                                                @"share_platform": type ?: @""
+                                                @"position": @"detail",
+                                                @"share_platform": type ?: @"",
+                                                @"event_type": @"house_app2c_v2"
                                                 }];
         }
         
@@ -690,6 +693,7 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
                            extraParameter:@{
                                             @"share_platform": sharePlatform,
                                             @"position": self.sharePosition,
+                                            @"event_type": @"house_app2c_v2"
                                             }];
     }
     [TSVVideoShareManager synchronizeUserDefaultsWithAvtivityType:activity.contentItemType];

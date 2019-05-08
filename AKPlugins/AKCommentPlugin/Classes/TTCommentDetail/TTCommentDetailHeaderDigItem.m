@@ -26,7 +26,7 @@
     if (self) {
         _avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:self.bounds allowCorner:YES];
         _avatarView.cornerRadius = _avatarView.width / 2.f;
-        _avatarView.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
+        _avatarView.borderWidth = 0;
         _avatarView.userInteractionEnabled = NO;
         [_avatarView setupVerifyViewForLength:24.f adaptationSizeBlock:nil];
         [self.contentView addSubview:self.avatarView];
@@ -64,7 +64,7 @@
     NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1)
     }];
     if (self.commentModel.diggCount) {
-        [attributedTitle appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:7.f], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1), NSBaselineOffsetAttributeName : @(2.f)}]];
+        [attributedTitle appendAttributedString:[[NSAttributedString alloc] initWithString:iconfont_right_arrow attributes:@{NSFontAttributeName: [UIFont fontWithName:@"iconfont" size:7.f] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:7]], NSForegroundColorAttributeName: SSGetThemedColorWithKey(kColorText1), NSBaselineOffsetAttributeName : @(2.f)}]];
     }
     
     [_arrowButton setAttributedTitle:attributedTitle forState:UIControlStateNormal];
@@ -127,9 +127,11 @@
 #pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
 
-    if ([self.delegate respondsToSelector:@selector(commentDetailHeaderDigItem:diggUserAvatarClicked:)]) {
-        [self.delegate commentDetailHeaderDigItem:self diggUserAvatarClicked:self.commentModel.digUsers[indexPath.row]];
-    }
+    // add by zjing 去掉 xx人赞过的头像点击
+//    if ([self.delegate respondsToSelector:@selector(commentDetailHeaderDigItem:diggUserAvatarClicked:)]) {
+//        [self.delegate commentDetailHeaderDigItem:self diggUserAvatarClicked:self.commentModel.digUsers[indexPath.row]];
+//    }
+    
 }
 
 #pragma mark - UICollectionViewDataSource;

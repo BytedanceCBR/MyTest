@@ -322,7 +322,6 @@ static NewsFetchArticleDetailManager * sharedManager;
         [extra setValue:article.groupModel.itemID forKey:@"item_id"];
         [extra setValue:@(article.groupModel.aggrType) forKey:@"aggr_type"];
         [extra setValue:[requestURL copy] forKey:@"url"];
-
         if (error) {
             [sself tryFetchDetailForArticle:article withOperationPriority:priority notifyError:notifyError atIndex:(index + 1) processedError:error isFull:[NewsFetchArticleDetailManager needUseFullAPI:article] isWenda:isWenda];
             
@@ -377,7 +376,6 @@ static NewsFetchArticleDetailManager * sharedManager;
                 [notifyDict setObject:article forKey:@"data"];
             
                 [sself notifyFinish:notifyDict];
-                
                 [[TTMonitor shareManager] trackService:@"cdn_finish_load" status:1 extra:extra];
             }
         }

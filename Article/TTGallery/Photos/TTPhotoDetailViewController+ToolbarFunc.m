@@ -36,7 +36,7 @@
 //#import "TTRepostOriginModels.h"
 //#import <TTRepostServiceProtocol.h>
 //#import "TTRepostService.h"
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 #import "TTShareConstants.h"
 #import <TTActivityContentItemProtocol.h>
 #import <TTWechatTimelineContentItem.h>
@@ -556,6 +556,8 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
             
             NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
             [self.tracker tt_sendDetailTrackEventWithTag:tag label:label extra:nil];
+//            [self recordShareEvent:itemType];
+
         }
     }
     else if (view == self.currentGalleryShareView) {
@@ -572,7 +574,57 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
         NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:self.shareSourceType];
         NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
         [self.tracker tt_sendDetailTrackEventWithTag:tag label:label extra:nil];
+//        [self recordShareEvent:itemType];
     }
+}
+
+- (void)recordShareEvent:(TTActivityType) itemType {
+
+    NSMutableDictionary *dict = [self.detailModel.gdExtJsonDict mutableCopy];
+    dict[@"source"] = nil;
+    dict[@"parent_enterfrom"] = nil;
+    dict[@"from_gid"] = nil;
+    dict[@"enterfrom_answerid"] = nil;
+    dict[@"author_id"] = nil;
+    dict[@"article_type"] = nil;
+    dict[@"origin_source"] = nil;
+    dict[@"event_type"] = @"house_app2c_v2";
+
+    dict[@"enter_from"] = self.detailModel.gdExtJsonDict[@"enter_from"];
+    if (dict[@"enter_from"] == nil) {
+        dict[@"enter_from"] = @"be_null";
+    }
+    [dict setValue:self.detailModel.originalGroupID forKey:@"group_id"];
+    [dict setValue:self.detailModel.originalGroupID forKey:@"ansid"];
+    [dict setValue:self.detailModel.originalGroupID forKey:@"qid"];
+    [dict setValue:@"detail" forKey:@"position"];
+    dict[@"category_name"] = self.detailModel.gdExtJsonDict[@"category_name"];
+    if (dict[@"category_name"] == nil) {
+        dict[@"category_name"] = @"favorite";
+    }
+
+    [dict setValue:[[self class] sharePlatformByRequestType: itemType] forKey:@"share_platform"];
+    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+}
+
++ (NSString*)sharePlatformByRequestType:(TTActivityType) activityType {
+    switch (activityType) {
+        case TTActivityTypeWeixinMoment:
+            return @"weixin_moments";
+            break;
+        case TTActivityTypeWeixinShare:
+            return @"weixin";
+            break;
+        case TTActivityTypeQQShare:
+            return @"qq";
+            break;
+        case TTActivityTypeQQZone:
+            return @"qzone";
+            break;
+        default:
+            return @"be_null";
+    }
+    return @"be_null";
 }
 
 - (void)orignialActionFired:(id)sender {
@@ -586,7 +638,8 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
 - (void)activityShareManager:(TTActivityShareManager *)activityShareManager
     completeWithActivityType:(TTActivityType)activityType
                        error:(NSError *)error {
-//    if (!error && nil == activityShareManager.shareImageStyleImage && isEmptyString(activityShareManager.shareImageStyleImageURL)) {
+    if (!error && nil == activityShareManager.shareImageStyleImage && isEmptyString(activityShareManager.shareImageStyleImageURL)) {
+        NSLog(@"share image");
 //        [[TTShareToRepostManager sharedManager] shareToRepostWithActivityType:activityType
 //                                                                   repostType:TTThreadRepostTypeArticle
 //                                                            operationItemType:TTRepostOperationItemTypeArticle
@@ -596,7 +649,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
 //                                                               originShortVideoOriginalData:nil
 //                                                            originWendaAnswer:nil
 //                                                               repostSegments:nil];
-//    }
+    }
 }
 
 #pragma mark something abt tip flag
@@ -669,7 +722,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
                     title = self.activityActionManager.qqShareTitleText;
                 }
                 if (isEmptyString(title)) {
-                    title = NSLocalizedString(@"爱看", nil);
+                    title = NSLocalizedString(@"幸福里", nil);
                 }
                 UIImage *shareImage = self.activityActionManager.shareToWeixinMomentOrQZoneImage ? self.activityActionManager.shareToWeixinMomentOrQZoneImage : self.activityActionManager.shareImage;
                 TTQQZoneContentItem *qqZoneContentItem = [[TTQQZoneContentItem alloc] initWithTitle:title desc:qqZoneText webPageUrl:qqZoneShareURL thumbImage:shareImage imageUrl:self.activityActionManager.shareImageURL shareTye:TTShareWebPage];

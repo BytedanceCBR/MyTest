@@ -107,6 +107,9 @@ typedef NS_ENUM(NSUInteger, ExploreOrderedDataCellType)
     
     //当检测到orderdata.nextCellType == ExploreOrderedDataCellTypeNull代表是列表中最后一个cell，当preCellType == ExploreOrderedDataCellTypeNull代表是列表中的第一个cell
     ExploreOrderedDataCellTypeNull                      = 1002,//哨兵celltype
+    
+    ExploreOrderedDataCellTypeFHHouse                      = 1100,// add by zjing 房源卡片cell类型
+
 };
 
 typedef NS_ENUM(NSUInteger, ExploreOrderedDataThreadUIType) {

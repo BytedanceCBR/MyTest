@@ -267,47 +267,47 @@ static NSString *const kTTArticleSearchKeywordInboxType     = @"inbox";
         [params setValue:@(1) forKey:@"recom_cnt"];
     }
     
-    NSString *url = [ArticleURLSetting searchPlaceholderTextURLString];
+//    NSString *url = [ArticleURLSetting searchPlaceholderTextURLString];
     
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
-            NSError *jsonError = nil;
-            TTSearchHomeSugModel *model = [[TTSearchHomeSugModel alloc] initWithDictionary:jsonObj error:&jsonError];
-            if (!jsonError && model.data) {
-                if (flag & TTArticleSearchHomeFlagSuggest) {
-                    NSString *placeholder = model.data.homePageSearchSuggest;
-                    NSInteger call_per_refresh = [model.data.callPerRefresh intValue];
-                    
-                    [[NSUserDefaults standardUserDefaults] setInteger:call_per_refresh forKey:refreshCountForSerchTipKey];
-                    
-                    NSString *oldPlaceholder = [[NSUserDefaults standardUserDefaults] valueForKey:homePageSearchSuggestKey];
-                    
-                    if (!oldPlaceholder || ![oldPlaceholder isEqualToString:placeholder]) {
-                        [[NSUserDefaults standardUserDefaults] setValue:placeholder forKey:homePageSearchSuggestKey];
-                        
-                        if (!isEmptyString(tab)) {
-                            [[NSNotificationCenter defaultCenter] postNotificationName:@"kSearchPlaceHolderHasChanged" object:self userInfo:@{@"tab":tab}];
-                        }
-                    }
-                }
-                
-                if (flag & TTArticleSearchHomeFlagWeather) {
-                    if (model.data.weather) {
-                        NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:2];
-                        [userInfo setValue:tab forKey:@"tab"];
-                        [userInfo setValue:model.data.weather forKey:@"weatherModel"];
-                        
-                        NSInteger weatherRefreshInterval = [model.data.weather_refresh_interval intValue];
-                        [[NSUserDefaults standardUserDefaults] setInteger:weatherRefreshInterval forKey:TTWeatherIconRefreshIntervalKey];
-                        
-                        [self updateCachedWeather:model.data.weather];
-                        
-                        [[NSNotificationCenter defaultCenter] postNotificationName:TTWeatherHasChangeNotification object:self userInfo:userInfo];
-                    }
-                }
-            }
-        }
-    }];
+//    [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
+//        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
+//            NSError *jsonError = nil;
+//            TTSearchHomeSugModel *model = [[TTSearchHomeSugModel alloc] initWithDictionary:jsonObj error:&jsonError];
+//            if (!jsonError && model.data) {
+//                if (flag & TTArticleSearchHomeFlagSuggest) {
+//                    NSString *placeholder = model.data.homePageSearchSuggest;
+//                    NSInteger call_per_refresh = [model.data.callPerRefresh intValue];
+//
+//                    [[NSUserDefaults standardUserDefaults] setInteger:call_per_refresh forKey:refreshCountForSerchTipKey];
+//
+//                    NSString *oldPlaceholder = [[NSUserDefaults standardUserDefaults] valueForKey:homePageSearchSuggestKey];
+//
+//                    if (!oldPlaceholder || ![oldPlaceholder isEqualToString:placeholder]) {
+//                        [[NSUserDefaults standardUserDefaults] setValue:placeholder forKey:homePageSearchSuggestKey];
+//
+//                        if (!isEmptyString(tab)) {
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:@"kSearchPlaceHolderHasChanged" object:self userInfo:@{@"tab":tab}];
+//                        }
+//                    }
+//                }
+//
+//                if (flag & TTArticleSearchHomeFlagWeather) {
+//                    if (model.data.weather) {
+//                        NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithCapacity:2];
+//                        [userInfo setValue:tab forKey:@"tab"];
+//                        [userInfo setValue:model.data.weather forKey:@"weatherModel"];
+//
+//                        NSInteger weatherRefreshInterval = [model.data.weather_refresh_interval intValue];
+//                        [[NSUserDefaults standardUserDefaults] setInteger:weatherRefreshInterval forKey:TTWeatherIconRefreshIntervalKey];
+//
+//                        [self updateCachedWeather:model.data.weather];
+//
+//                        [[NSNotificationCenter defaultCenter] postNotificationName:TTWeatherHasChangeNotification object:self userInfo:userInfo];
+//                    }
+//                }
+//            }
+//        }
+//    }];
 
 }
 

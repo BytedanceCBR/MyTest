@@ -271,11 +271,11 @@ extern NSString *const kTTEditUserInfoDidFinishNotificationName;
 }
 
 - (BOOL)articleUserVerified {
-    BOOL result = NO;
-    if ([self.articleUserInfo objectForKey:@"user_verified"]) {
-        result = [self.articleUserInfo tt_boolValueForKey:@"user_verified"];
-    }
-    return result;
+//    BOOL result = NO;
+//    if ([self.articleUserInfo objectForKey:@"user_verified"]) {
+//        result = [self.articleUserInfo tt_boolValueForKey:@"user_verified"];
+//    }
+    return NO;
 }
 
 /**

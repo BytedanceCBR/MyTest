@@ -23,6 +23,8 @@
 - (TTFeedSectionHeaderFooterControl *)sectionFooterControlForSection:(NSUInteger)section;
 - (CGFloat)sectionFooterControlHeightForSection:(NSUInteger)section;
 - (void)didGenerateCell:(ExploreCellBase *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)willDisplayCell:(ExploreCellBase *)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)endDisplayCell:(ExploreCellBase *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 @end
 

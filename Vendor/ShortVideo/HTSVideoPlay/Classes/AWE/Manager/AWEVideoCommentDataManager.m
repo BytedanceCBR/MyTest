@@ -17,7 +17,7 @@
 
 extern NSString * const TTCommentSuccessForPushGuideNotification;
 
-static NSString * const TT_DOMAIN = @"https://m.quduzixun.com";
+static NSString * const TT_DOMAIN = @"http://i.haoduofangs.com";
 
 static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain";
 
@@ -109,7 +109,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
     }
     self.isSendingComments = YES;
     
-    NSString *urlString = [NSString stringWithFormat:@"%@/f100/2/data/v3/post_message/", TT_DOMAIN];
+    NSString *urlString = [NSString stringWithFormat:@"%@/2/data/v3/post_message/", TT_DOMAIN];
     NSMutableDictionary *commentParam = [NSMutableDictionary dictionaryWithCapacity:10];
     [commentParam setValue:groupID forKey:@"group_id"];
     [commentParam setValue:itemID forKey:@"item_id"];
@@ -219,7 +219,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
     NSString *monitorIdentifier = [[TSVMonitorManager sharedManager] startMonitorNetworkService:TSVMonitorNetworkServiceCommentList key:itemID];
     
     __weak typeof(self) weakSelf = self;
-    NSString *urlString = [NSString stringWithFormat:@"%@/f100/article/v2/tab_comments/", TT_DOMAIN];
+    NSString *urlString = [NSString stringWithFormat:@"%@/article/v2/tab_comments/", TT_DOMAIN];
     [[AWEVideoPlayNetworkManager sharedInstance] requestJSONFromURL:urlString params:commentParam method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
@@ -267,7 +267,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
     NSParameterAssert(itemID);
 
     NSString *actionName = cancelDigg ? @"cancel_digg" : @"digg";
-    NSString *urlString = [NSString stringWithFormat:@"%@/f100/2/data/comment_action/", TT_DOMAIN];
+    NSString *urlString = [NSString stringWithFormat:@"%@/2/data/comment_action/", TT_DOMAIN];
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:10];
     [params setValue:commentID forKey:@"comment_id"];
     [params setValue:groupID forKey:@"group_id"];

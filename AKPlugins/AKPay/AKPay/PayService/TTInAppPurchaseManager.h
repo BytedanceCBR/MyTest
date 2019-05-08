@@ -52,7 +52,7 @@ extern NSString *const kTTIAPUpdatedTransactionsNotification;
  @param applicationUsername 业务层传入的username
  @return 打标后的username
  */
-- (NSString *)markedApplicationUsername:(NSString *)applicationUsername;
+- (NSString *)markApplicationUsername:(NSString *)applicationUsername;
 
 /**
  删除打标

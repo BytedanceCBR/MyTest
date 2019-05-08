@@ -16,6 +16,8 @@
 #import <TTTracker/TTTrackerProxy.h>
 #import "MZMonitor.h"
 #import "SSMoviePlayerController.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 @implementation ExploreMovieViewTracker {
     NSUInteger _watchDurationLogIndex;
@@ -401,6 +403,9 @@
 
 - (void)sendEnterFullScreenTrack
 {
+    
+    [self sendFHEnterFullScreenTrack];
+    
     NSString *type = _enableRotate ? @"landscape" : @"portrait";
     [self addExtraValue:type forKey:@"fullscreen_type"];
     //umeng track
@@ -427,6 +432,23 @@
     }
     [self removeExtraValueForKey:@"fullscreen_type"];
     //data track
+}
+
+- (void)sendFHEnterFullScreenTrack
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setValue:@"list" forKey:@"position"];
+    [dict setValue:[_extraValue tt_dictionaryValueForKey:@"log_pb"]  forKey:@"log_pb"];
+    [dict setValue:[self enterFrom] forKey:@"enter_from"];
+    [dict setValue:_gModel.groupID forKey:@"group_id"];
+    [dict setValue:_gModel.itemID forKey:@"item_id"];
+    [dict setValue:[self categroyNameV3] forKey:@"category_name"];
+    NSDictionary *log_pb = [_extraValue tt_dictionaryValueForKey:@"log_pb"];
+    NSString *from_gid = [log_pb tt_stringValueForKey:@"from_gid"];
+    [dict setValue: from_gid forKey:@"from_gid"];
+
+//    [[EnvContext shared].tracer writeEvent:@"enter_fullscreen" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"enter_fullscreen"];
 }
 
 - (void)sendExistFullScreenTrack:(BOOL)sendByFullScreenButton
@@ -489,6 +511,7 @@
 {
     NSString * dataLabel = [self dataTrackLabel];
     NSString * event = nil;
+
     if (_type == ExploreMovieViewTypeVideoFloat_main) {
         event = @"video_play";
         dataLabel = [self dataTrackLabel];
@@ -501,18 +524,69 @@
     {
         event = @"video_play";
     }
+    
+   
+
     if (event) {
         if ([event isEqualToString:@"video_play"]) {
-            [self sendVideoPlayEventV3WithLabel:dataLabel isDoubleSending:YES];
+            
+            [self sendFHVideoPlayEventWithLabel:dataLabel];
+//            [self sendVideoPlayEventV3WithLabel:dataLabel isDoubleSending:YES];
         }
         if ([TTTrackerWrapper isOnlyV3SendingEnable] && [event isEqualToString:@"video_play"]) {
         } else {
-            [self event:event label:dataLabel value:_gModel.groupID extValue:_aID logExtra:_logExtra needPosition:YES needPercent:NO duration:NO groupModel:_gModel];
+//            [self event:event label:dataLabel value:_gModel.groupID extValue:_aID logExtra:_logExtra needPosition:YES needPercent:NO duration:NO groupModel:_gModel];
+            
         }
     }
 
 }
 
+- (void)sendTraceVideoOver:(NSDictionary *)dictVideo
+{
+    NSMutableDictionary *traceParams = [NSMutableDictionary dictionary];
+    [traceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [traceParams setValue:dictVideo[@"group_id"] forKey:@"group_id"];
+    
+    [traceParams setValue:dictVideo[@"item_id"] forKey:@"item_id"];
+    
+    NSDictionary *dictLogPb = dictVideo[@"log_pb"];
+    if ([dictLogPb isKindOfClass:[NSDictionary class]]) {
+        [traceParams setValue:dictLogPb[@"impr_id"] forKey:@"impr_id"];
+    }
+    
+    [traceParams setValue:@"click_category" forKey:@"enter_from"];
+    [traceParams setValue:[self categroyNameV3] forKey:@"category_name"];
+    
+    [traceParams setValue:dictVideo[@"log_pb"] forKey:@"log_pb"];
+    [traceParams setValue:dictVideo[@"position"] forKey:@"position"];
+    [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
+    [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
+    
+    [TTTracker eventV3:@"video_over" params:traceParams];
+}
+
+- (void)sendFHVideoPlayEventWithLabel:(NSString *)dataLabel{
+    
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setValue:_gModel.groupID forKey:@"group_id"];
+    [dict setValue:_gModel.itemID forKey:@"item_id"];
+    
+    [dict setValue:[self enterFrom] forKey:@"enter_from"];
+    [dict setValue:[self categroyNameV3] forKey:@"category_name"];
+    
+    NSString *position = [self positionString];
+    [dict setValue:position forKey:@"position"];
+
+    NSDictionary *log_pb = [_extraValue dictionaryValueForKey:@"log_pb" defalutValue:@{}];
+    if (log_pb.count > 0) {
+        
+        [dict setValue:log_pb forKey:@"log_pb"];
+    }
+
+//    [[EnvContext shared].tracer writeEvent:@"video_play" params:dict];
+    [FHEnvContext recordEvent:dict andEventKey:@"video_play"];
+}
 
 - (void)sendVideoPlayEventV3WithLabel:(NSString *)dataLabel isDoubleSending:(BOOL)animation{
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -546,6 +620,9 @@
     [dic setValue:[self categroyNameV3] forKey:@"category_name"];
     [dic addEntriesFromDictionary:_extraValue];
     [dic setValue:self.authorId forKey:@"author_id"];
+    
+    [self sendTraceVideoOver:dic];
+    
     [TTTrackerWrapper eventV3:@"video_over" params:dic isDoubleSending:animation];
 }
 
@@ -600,6 +677,7 @@
                 BOOL hasPrefix = [_cID hasPrefix:@"_"]; //特殊处理cID是_favorite的情况
                 NSString *click = hasPrefix ? @"click" : @"click_";
                 dataLabel = [NSString stringWithFormat:@"%@%@", click,_cID];
+
             }
         }
     }
@@ -854,6 +932,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
     if (self.ssTrackerDic) {
         [dict addEntriesFromDictionary:self.ssTrackerDic];
     }
+    
     
     if([TTTrackerWrapper isOnlyV3SendingEnable] && [event isEqualToString:@"video_over"]) {
     } else {

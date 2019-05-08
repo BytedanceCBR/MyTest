@@ -52,6 +52,7 @@
 
 @property (nonatomic, strong) UIView                        *containerView;
 @property (nonatomic, strong) SSThemedLabel                 *titleLabel;
+@property (nonatomic, strong) SSThemedLabel                 *subtitleLabel;
 @property (nonatomic, strong) SSThemedLabel                 *infoLabel;
 @property (nonatomic, strong) TTFollowThemeButton           *followButton;
 @property (nonatomic, strong) TTAlphaThemedButton           *unInterestedButton;
@@ -95,19 +96,24 @@
 - (void)refreshUIData
 {
     self.titleLabel.text = [self.viewModel title];
-    self.followButton.followed = [self.viewModel isFollowing];
+    self.infoLabel.text = [self.viewModel info];
+
+//    self.followButton.followed = [self.viewModel isFollowing];
     
-    if ([self.viewModel isFollowing] && !isEmptyString([self.viewModel info])) {
-        self.infoLabel.text =  [@"已关注·" stringByAppendingString:[self.viewModel info]];
-        self.followButton.hidden = YES;
-    } else if ([self.viewModel isFollowing]) {
-        self.infoLabel.text = @"已关注";
-        self.followButton.hidden = YES;
-    } else {
-        self.infoLabel.text = [self.viewModel info];
-        self.followButton.hidden = NO;
-    }
+//    if ([self.viewModel isFollowing] && !isEmptyString([self.viewModel info])) {
+//        self.infoLabel.text =  [@"已关注·" stringByAppendingString:[self.viewModel info]];
+//        self.followButton.hidden = YES;
+//    } else if ([self.viewModel isFollowing]) {
+//        self.infoLabel.text = @"已关注";
+//        self.followButton.hidden = YES;
+//    } else {
+//        self.infoLabel.text = [self.viewModel info];
+//        self.followButton.hidden = NO;
+//    }
     
+    self.followButton.hidden = YES;
+    self.unInterestedButton.hidden = YES;
+
     [self.avatarImageView tt_setImageWithURLString:[self.viewModel imageURL]];
     [self.avatarImageView showOrHideVerifyViewWithVerifyInfo:self.viewModel.model.author.userAuthInfo decoratorInfo:self.viewModel.model.author.userDecoration sureQueryWithID:YES userID:nil disableNightCover:NO];
 
@@ -169,7 +175,7 @@
         _titleLabel.font = [UIFont boldSystemFontOfSize:kTitleLabelFontSize];
         UITapGestureRecognizer *tapTitle = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapUserInfo:)];
         _titleLabel.userInteractionEnabled = YES;
-        [_titleLabel addGestureRecognizer:tapTitle];
+//        [_titleLabel addGestureRecognizer:tapTitle];
         [self.containerView addSubview:_titleLabel];
     }
     return _titleLabel;
@@ -179,14 +185,14 @@
 {
     if(!_infoLabel){
         _infoLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
-        _infoLabel.textColorThemeKey = kColorText3;
-        _infoLabel.backgroundColorThemeKey = kColorBackground4;
+        _infoLabel.textColorThemeKey = kFHColorCoolGrey3;
+//        _infoLabel.backgroundColorThemeKey = kColorBackground4;
         _infoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _infoLabel.numberOfLines = 1;
         _infoLabel.font = [UIFont systemFontOfSize:kInfoLabelFontSize];
         UITapGestureRecognizer *tapInfo = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapUserInfo:)];
         _infoLabel.userInteractionEnabled = YES;
-        [_infoLabel addGestureRecognizer:tapInfo];
+//        [_infoLabel addGestureRecognizer:tapInfo];
         [self.containerView addSubview:_infoLabel];
     }
     return _infoLabel;
@@ -198,7 +204,7 @@
         _avatarImageView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(kAvatarLeftPadding, kAvatarTopPadding, kAvatarSize, kAvatarSize) allowCorner:YES];
         _avatarImageView.cornerRadius = kAvatarSize / 2.f;
         _avatarImageView.placeholderName = @"default_avatar";
-        [_avatarImageView addTouchTarget:self action:@selector(tapAvatar:)];
+//        [_avatarImageView addTouchTarget:self action:@selector(tapAvatar:)];
         [_avatarImageView setupVerifyViewForLength:kAvatarSize adaptationSizeBlock:^CGSize(CGSize standardSize) {
             return [TTVerifyIconHelper tt_newSize:standardSize];
         }];
@@ -214,7 +220,7 @@
         _unInterestedButton.imageName = @"add_textpage.png";
         _unInterestedButton.backgroundColor = [UIColor clearColor];
         [_unInterestedButton addTarget:self action:@selector(unInterestButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.containerView addSubview:_unInterestedButton];
+//        [self.containerView addSubview:_unInterestedButton];
     }
     return _unInterestedButton;
 }
@@ -226,7 +232,7 @@
                                                                followedType:TTFollowedType102
                                                          followedMutualType:TTFollowedMutualType101];
         [_followButton addTarget:self action:@selector(handleFollowClick:) forControlEvents:UIControlEventTouchUpInside];
-        [self.containerView addSubview:_followButton];
+//        [self.containerView addSubview:_followButton];
     }
     return _followButton;
 }

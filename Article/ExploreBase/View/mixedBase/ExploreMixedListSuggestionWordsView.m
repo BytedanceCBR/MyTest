@@ -30,19 +30,25 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _words = [[NSMutableArray alloc] init];
-        _oldWords = [[NSMutableArray alloc] init];
-        _showWords = [[NSMutableArray alloc] init];
-        _oldButtons = [[NSMutableArray alloc] init];
-        _showButtons = [[NSMutableArray alloc] init];
-        _dataList = [[NSMutableArray alloc] init];
-        [self loadData];
+    
+        self.hidden = YES;
+        
+//        _words = [[NSMutableArray alloc] init];
+//        _oldWords = [[NSMutableArray alloc] init];
+//        _showWords = [[NSMutableArray alloc] init];
+//        _oldButtons = [[NSMutableArray alloc] init];
+//        _showButtons = [[NSMutableArray alloc] init];
+//        _dataList = [[NSMutableArray alloc] init];
+//        [self loadData];
     }
     return self;
 }
 
 - (void)loadData
 {
+    
+    return;
+    
     _oldWords = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
     _showWords = [NSMutableArray arrayWithObjects:@"", @"", @"", @"", nil];
     
@@ -107,6 +113,8 @@
 
 - (void)refreshWithData:(NSArray *)array animated:(BOOL)animated superviewIsShowing:(BOOL)superviewIsShowing
 {
+    return;
+    
     BOOL hidden = NO;
     if (!array || (([array isKindOfClass:[NSArray class]] && array.count == 0))) {
         hidden = YES;
@@ -221,6 +229,8 @@
 
 - (void)didClick:(UIButton *)button
 {
+    return;
+    
     NSMutableDictionary *paras  = [NSMutableDictionary dictionary];
     [paras setValue:@"feed_channel_search" forKey:@"tag"];
     [paras setValue:@"click" forKey:@"label"];

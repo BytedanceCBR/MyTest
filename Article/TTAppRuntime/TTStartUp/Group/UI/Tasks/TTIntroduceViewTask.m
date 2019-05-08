@@ -38,7 +38,7 @@
 //    BOOL isSplashDisplaying = [[SSADManager shareInstance] isSplashADShowed];
     BOOL isSplashDisplaying = [TTAdSplashMediator shareInstance].isAdShowing;
     if ((shouldShowIntroductionView && !isTrying && !isSplashDisplaying) && [SharedAppDelegate appTopNavigationController]) {
-        [[self class] showIntroductionView];
+//        [[self class] showIntroductionView];
     }
     else {
         [NewsBaseDelegate startRegisterRemoteNotificationAfterDelay:0.5];

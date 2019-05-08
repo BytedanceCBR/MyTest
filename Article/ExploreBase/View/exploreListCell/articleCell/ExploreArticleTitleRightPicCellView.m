@@ -16,13 +16,13 @@
 #import "NetworkUtilities.h"
 #import "ExploreListHelper.h"
 #import "Article.h"
-#import "TTRNView.h"
+//#import "TTRNView.h"
 #import "TTArticleCellHelper.h"
 #import "NSString-Extension.h"
 #import "TTDeviceHelper.h"
 
 @interface ExploreArticleTitleRightPicCellView ()
-@property(nonatomic, strong)TTRNView *rnview;
+//@property(nonatomic, strong)TTRNView *rnview;
 @end
 
 @implementation ExploreArticleTitleRightPicCellView

@@ -124,7 +124,7 @@ static char keyboardShowingKey;
         } else if (type == ListDataSearchFromTypeWeitoutiao) {
             _from = @"weitoutiao";
         } else if (type == ListDataSearchFromTypeHotsoonVideo) {
-            _from = @"hotsoon_video";
+            _from = kTTUGCVideoCategoryID;
         }
         
         self.queryStr = queryStr;

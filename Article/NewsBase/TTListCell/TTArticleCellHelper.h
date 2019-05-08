@@ -147,6 +147,9 @@
 /** 根据设备对间距进行调整 */
 + (CGFloat)padding:(CGFloat)size;
 
+/**过滤F项目来源字符串*/
++ (NSString *)fitlerSourceStr:(NSString *)sourceStr;
+
 @end
 
 @interface UIFont (TTFont)

@@ -227,11 +227,12 @@
     }
     openURL = [TTUGCTrackerHelper schemaTrackForPersonalHomeSchema:openURL categoryName:[self _currentCategoryName] fromPage:fromPage ?: @"detail_follow_card" groupId:nil profileUserId:[self _currentUniqueId]];
     
-    if ([[TTRoute sharedRoute] canOpenURL:[TTStringHelper URLWithURLString:openURL]]) {
-        [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:openURL]];
+    // add by zjing 去掉个人主页跳转
+//    if ([[TTRoute sharedRoute] canOpenURL:[TTStringHelper URLWithURLString:openURL]]) {
+//        [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:openURL]];
         //        [self trackWithEvent:@"enter_homepage" extraDic:@{@"action_type":@"click_avatar",
         //                                                       @"to_user_id":model.userId}];
-    }
+//    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(nonnull UICollectionViewCell *)cell forItemAtIndexPath:(nonnull NSIndexPath *)indexPath

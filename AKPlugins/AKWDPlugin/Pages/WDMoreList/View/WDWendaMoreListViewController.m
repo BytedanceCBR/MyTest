@@ -40,7 +40,8 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
 @interface WDWendaMoreListViewController ()<UIViewControllerErrorHandler, TTShareManagerDelegate>
 @property (nonatomic, strong) TTViewWrapper *wrapperView;
 
-@property (nonatomic, strong) WDWendaMoreListHeaderView *listHeaderView;
+// add by zjing隐藏为什么折叠
+//@property (nonatomic, strong) WDWendaMoreListHeaderView *listHeaderView;
 
 @property (nonatomic, assign) BOOL isViewAppear;//用于记录声明周期函数如viewDidAppear等
 @property (nonatomic, strong) DetailActionRequestManager * actionManager;
@@ -133,7 +134,7 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
     self.answerListView.backgroundColorThemeKey = kColorBackground3;
     self.answerListView.delegate = self;
     self.answerListView.dataSource = self;
-    self.answerListView.tableHeaderView = self.listHeaderView;
+//    self.answerListView.tableHeaderView = self.listHeaderView;
     self.answerListView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     if ([TTDeviceHelper isPadDevice]) {
@@ -335,18 +336,18 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
 
 #pragma mark - getter
 
-- (WDWendaMoreListHeaderView *)listHeaderView {
-    if (!_listHeaderView) {
-        _listHeaderView = [[WDWendaMoreListHeaderView alloc] initWithFrame:CGRectMake(0, 0, SSWidth(self.answerListView), kWDWendaMoreListHeaderViewHeight)];
-        typeof(self) __weak weakSelf = self;
-        [_listHeaderView setTitle:weakSelf.viewModel.questionEntity.foldReasonEntity.title clickedBlock:^{
-            NSURL *url = [TTStringHelper URLWithURLString:weakSelf.viewModel.questionEntity.foldReasonEntity.openURL];
-            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
-            [weakSelf sendTrackWithLabel:@"why"];
-        }];
-    }
-    return _listHeaderView;
-}
+//- (WDWendaMoreListHeaderView *)listHeaderView {
+//    if (!_listHeaderView) {
+//        _listHeaderView = [[WDWendaMoreListHeaderView alloc] initWithFrame:CGRectMake(0, 0, SSWidth(self.answerListView), kWDWendaMoreListHeaderViewHeight)];
+//        typeof(self) __weak weakSelf = self;
+//        [_listHeaderView setTitle:weakSelf.viewModel.questionEntity.foldReasonEntity.title clickedBlock:^{
+//            NSURL *url = [TTStringHelper URLWithURLString:weakSelf.viewModel.questionEntity.foldReasonEntity.openURL];
+//            [[TTRoute sharedRoute] openURLByViewController:url userInfo:nil];
+//            [weakSelf sendTrackWithLabel:@"why"];
+//        }];
+//    }
+//    return _listHeaderView;
+//}
 
 - (TTAlphaThemedButton *)moreButton
 {
@@ -361,7 +362,14 @@ extern NSString * const kWDWendaListViewControllerUMEventName;
         [moreButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, -4)];
     }
     [moreButton addTarget:self action:@selector(moreButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    return moreButton;
+    
+    NSDictionary *dictSetting = [[NSUserDefaults standardUserDefaults] objectForKey:@"kFHSettingsKey"];
+    if ([dictSetting tt_boolValueForKey:@"f_wenda_share_enable"]){
+        return moreButton;
+    }else
+    {
+        return nil;
+    }
 }
 
 - (DetailActionRequestManager *)actionManager

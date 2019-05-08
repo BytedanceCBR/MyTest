@@ -50,8 +50,8 @@ NS_INLINE CGFloat TTHuoShanCollectionCellInfobarLabelMinWidth() {
 @property(nonatomic, strong) TTImageView *coverImageView;         //封面图
 @property(nonatomic, strong) UIImageView *bottomMaskImage;        //底部阴影
 @property(nonatomic, strong) SSThemedImageView *playIcon;         //播放icon
-@property(nonatomic, strong) SSThemedLabel *titleLabel;           //标题
-@property(nonatomic, strong) SSThemedLabel *infoLabel;            //播放次数或者用户名
+//@property(nonatomic, strong) SSThemedLabel *titleLabel;           //标题
+//@property(nonatomic, strong) SSThemedLabel *infoLabel;            //播放次数或者用户名
 @property(nonatomic, strong) SSThemedLabel *extraLabel;           //评论/点赞数
 
 @property(nonatomic, strong) ExploreOrderedData *orderedData;
@@ -77,11 +77,11 @@ NS_INLINE CGFloat TTHuoShanCollectionCellInfobarLabelMinWidth() {
 
     [self.coverImageView setImageWithModel:imageModel placeholderImage:nil];
     
-    self.titleLabel.text = self.model.title;
+//    self.titleLabel.text = self.model.title;
+//
+//    self.infoLabel.text = [NSString stringWithFormat:@"%@次播放", [TTBusinessManager formatPlayCount:self.model.playCount]];
     
-    self.infoLabel.text = [NSString stringWithFormat:@"%@次播放", [TTBusinessManager formatPlayCount:self.model.playCount]];
-    
-    self.extraLabel.text = [self extraLabelText];
+//    self.extraLabel.text = [self extraLabelText];
     
     self.debugInfoView.debugInfo = self.model.debugInfo;
     
@@ -123,41 +123,10 @@ NS_INLINE CGFloat TTHuoShanCollectionCellInfobarLabelMinWidth() {
 
 - (void)layoutSubviews
 {
-    self.coverImageView.frame = CGRectMake(0, 0, self.width, self.width * kCoverAspectRatio);
-    self.bottomMaskImage.width = self.coverImageView.width;
-    self.bottomMaskImage.height = ceilf(self.bottomMaskImage.width * kMaskAspectRatio);
-    self.bottomMaskImage.bottom = self.coverImageView.bottom;
-    self.bottomMaskImage.left = 0;
     
-    self.playIcon.bottom = self.bottomMaskImage.height - 11.f;
-    self.playIcon.left = kLeftGapOnTop;
-    
-    CGFloat labelMaxWidth = self.bottomMaskImage.width - 2 * kLeftGapOnTop  - kPlayIconRightGap - kPlayIconSize;
-    [self.infoLabel sizeToFit];
-    self.infoLabel.width = MIN(labelMaxWidth, self.infoLabel.width);
-    if (self.infoLabel.width < TTHuoShanCollectionCellInfobarLabelMinWidth()) {
-        self.infoLabel.width = 0.f;
-        self.infoLabel.hidden = YES;
-    } else {
-        self.infoLabel.hidden = NO;
-    }
-    self.infoLabel.left = self.playIcon.right + kPlayIconRightGap;
-    self.infoLabel.centerY = self.playIcon.centerY;
-    
-    labelMaxWidth = labelMaxWidth - self.infoLabel.width - kInfoLabeRightGap;
-    [self.extraLabel sizeToFit];
-    self.extraLabel.width = MIN(labelMaxWidth, self.extraLabel.width);
-    self.extraLabel.left = self.infoLabel.right + kInfoLabeRightGap;
-    self.extraLabel.centerY = self.playIcon.centerY;
-    
-    CGFloat titleMaxWidth = self.bottomMaskImage.width - 2 * kLeftGapOnTop;
-    self.titleLabel.hidden = NO;
-    [self.titleLabel sizeToFit];
-    self.titleLabel.width = titleMaxWidth;
-    self.titleLabel.left = kLeftGapOnTop;
-    self.titleLabel.bottom = self.playIcon.top - kPlayIconTitleGap;
-    
-    [self refreshDebugInfo];
+    self.coverImageView.frame = CGRectMake(0, 0, 200, 150);
+    self.playIcon.center = self.coverImageView.center;
+
 }
 
 
@@ -170,6 +139,8 @@ NS_INLINE CGFloat TTHuoShanCollectionCellInfobarLabelMinWidth() {
         _coverImageView.backgroundColorThemeKey = kColorBackground3;
         _coverImageView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
         _coverImageView.borderColorThemeKey = kColorLine1;
+        _coverImageView.layer.cornerRadius = 4;
+        _coverImageView.layer.masksToBounds = YES;
         [self addSubview:_coverImageView];
     }
     return _coverImageView;
@@ -184,44 +155,22 @@ NS_INLINE CGFloat TTHuoShanCollectionCellInfobarLabelMinWidth() {
                                                    orientation:UIImageOrientationDown];
         _bottomMaskImage.backgroundColor = [UIColor clearColor];
         _bottomMaskImage.contentMode = UIViewContentModeScaleToFill;
-        [self.coverImageView addSubview:_bottomMaskImage];
+//        [self.coverImageView addSubview:_bottomMaskImage];
     }
     return _bottomMaskImage;
 }
 
 - (SSThemedImageView *)playIcon{
     if(!_playIcon){
-        _playIcon = [[SSThemedImageView alloc] initWithFrame:CGRectMake(0, 0, kPlayIconSize, kPlayIconSize)];
+        _playIcon = [[SSThemedImageView alloc] init];
         _playIcon.contentMode = UIViewContentModeScaleAspectFill;
-        _playIcon.imageName = @"horizontal_play_icon";
-        [self.bottomMaskImage addSubview:_playIcon];
+        _playIcon.imageName = @"Play";
+        [_playIcon sizeToFit];
+        [self addSubview:_playIcon];
     }
     return _playIcon;
 }
 
-- (SSThemedLabel *)titleLabel{
-    if(!_titleLabel){
-        _titleLabel = [[SSThemedLabel alloc] init];
-        _titleLabel.textColorThemeKey = kColorText10;
-        _titleLabel.numberOfLines = 1;
-        _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _titleLabel.font = [UIFont boldSystemFontOfSize:17];
-        [self.bottomMaskImage addSubview:_titleLabel];
-    }
-    return _titleLabel;
-}
-
-- (SSThemedLabel *)infoLabel{
-    if(!_infoLabel){
-        _infoLabel = [[SSThemedLabel alloc] init];
-        _infoLabel.textColorThemeKey = kColorText10;
-        _infoLabel.numberOfLines = 1;
-        _infoLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _infoLabel.font = [UIFont systemFontOfSize:12];
-        [self.bottomMaskImage addSubview:_infoLabel];
-    }
-    return _infoLabel;
-}
 
 - (SSThemedLabel *)extraLabel{
     if(!_extraLabel){
@@ -230,7 +179,7 @@ NS_INLINE CGFloat TTHuoShanCollectionCellInfobarLabelMinWidth() {
         _extraLabel.numberOfLines = 1;
         _extraLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _extraLabel.font = [UIFont systemFontOfSize:12];
-        [self.bottomMaskImage addSubview:_extraLabel];
+//        [self addSubview:_extraLabel];
     }
     return _extraLabel;
 }

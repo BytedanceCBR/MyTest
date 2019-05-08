@@ -210,7 +210,7 @@
 }
 
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
-    if ([request.URL.scheme isEqualToString:@"sslocal"] || [request.URL.scheme hasPrefix:@"interestingnews1206"] || [request.URL.scheme hasPrefix:@"fschema"]) {
+    if ([request.URL.scheme isEqualToString:@"sslocal"] || [request.URL.scheme hasPrefix:@"snssdk35"]) {
         
         [[TTRoute sharedRoute] openURLByPushViewController:request.URL];
         

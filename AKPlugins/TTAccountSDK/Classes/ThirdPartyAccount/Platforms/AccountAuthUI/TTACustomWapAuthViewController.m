@@ -256,7 +256,7 @@ NSURLSessionTaskDelegate
     _slidingBack      = YES;
     _snsBarHidden     = NO;
     _numberOfRequests = 0;
-    _schemePrefix     = @"interestingnews1206";
+    _schemePrefix     = @"snssdk35";
     _additionalSafeInsetBottom = 0;
 }
 
@@ -606,7 +606,7 @@ NSURLSessionTaskDelegate
         appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
         if (!appName) appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     }
-    return appName ? : @"今日头条";
+    return appName ? : @"幸福里";
 }
 
 - (NSString *)__SNSText__

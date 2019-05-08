@@ -376,9 +376,10 @@
         [self addSubview:logoView];
         self.logoView = logoView;
    
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTitleView:)];
-        tap.delegate = self;
-        [self addGestureRecognizer:tap];
+        // add by zjing 去掉个人主页跳转
+//        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickTitleView:)];
+//        tap.delegate = self;
+//        [self addGestureRecognizer:tap];
         
         [self show:NO animated:NO];
     }
@@ -542,8 +543,8 @@
         self.fansLabel.text = nil;
     }
     
-    BOOL logoViewIsHiden = (self.type == TTArticleDetailNavigationTitleViewTypeFollow || self.type == TTArticleDetailNavigationTitleViewTypeFollowLeft || isEmptyString(url));
-    [self showVerifyIconWithVerifyInfo:verifyInfo decoratorURL:decoratorURL logoViewIsHiden:logoViewIsHiden];
+//    BOOL logoViewIsHiden = (self.type == TTArticleDetailNavigationTitleViewTypeFollow || self.type == TTArticleDetailNavigationTitleViewTypeFollowLeft || isEmptyString(url));
+    [self showVerifyIconWithVerifyInfo:verifyInfo decoratorURL:decoratorURL logoViewIsHiden:YES];
     
     if (!isEmptyString(url)) {
         [self.logoView setImageWithURLString:url];
@@ -566,7 +567,7 @@
 }
 
 - (void)showVerifyIconWithVerifyInfo:(NSString *)verifyInfo decoratorURL:(NSString *)decoratorURL logoViewIsHiden:(BOOL)logoViewIsHiden{
-    BOOL isVerified = [TTVerifyIconHelper isVerifiedOfVerifyInfo:verifyInfo];
+    BOOL isVerified = NO;
     [self.titleLabel removeAllIcons];
     [self.logoView showOrHideVerifyViewWithVerifyInfo:nil decoratorInfo:nil];
     if(logoViewIsHiden){

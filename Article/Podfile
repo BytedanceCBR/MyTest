@@ -1,23 +1,96 @@
 #—————————————pod私有源--------------------------------------
-source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
-source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
-source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'git@code.byted.org:iOS_Library/toutiao_binary_repo.git' #TTRNKit 二进制版本在此仓库中
+source 'git@code.byted.org:iOS_Library/toutiao_source_repo.git' #TTRNKit 源码在此仓库中
+source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'#一定要把这个源放在publicthird_source_repo.git之前，才能引用到正确的React组件
+source 'git@code.byted.org:iOS_Library/publicthird_source_repo.git'
 source 'git@code.byted.org:ugc/UGCSpecs.git'
-source 'git@code.byted.org:iOS_Library/privatethird_source_repo.git'
-platform :ios, '8.0'
+
+
+source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+
+require File.dirname(__FILE__)+'/pod_binary.rb'
+install! 'cocoapods', :warn_for_multiple_pod_sources => false
+
+# 用于开启Pods的源码与二进制快速转化服务
+plugin 'cocoapods-bytedance-transform'
+# 用于开启依赖解析加速的服务，传true表示使用，false表示不使用
+bytedanceAnalyzeSpeed(true)
+bd_use_app("thirdParty","public","toutiao")
+
+#全部使用源码
+#bd_use_source!
+
+#全部使用二进制
+bd_use_binary!
+
+
+platform :ios, '8.0' 
 
 inhibit_all_warnings!
 def appPods
+    
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
     #---------------------------------------------------各业务线插件化库--------------------------------------------------#
+    pod 'FHCommonUI'  , :path => '../Bundles/ios_common_ui' # :git => 'git@code.byted.org:fproject/ios_common_ui.git'  ,:branch => 'feature/develop' #
+    pod 'FHHouseBase' , :path => '../Bundles/ios_house_base' # :git => 'git@code.byted.org:fproject/ios_house_base.git' ,:branch => 'feature/develop' #
+#    pod 'FHHouseRent' , :path => '../Bundles/ios_house_rent' #:git => 'git@code.byted.org:fproject/ios_house_rent.git' ,:branch => 'feature/develop' #
+    pod 'FHMapSearch' , :path => '../Bundles/ios_map_search' # :git => 'git@code.byted.org:fproject/ios_map_search.git' ,:branch => 'feature/develop' #
+    pod 'FHHouseHome' , :path => '../Bundles/ios_house_home' # :git => 'git@code.byted.org:fproject/ios_house_home.git' ,:branch => 'feature/develop' #
+    pod 'FHHouseDetail' , :path => '../Bundles/ios_house_detail' # :git => 'git@code.byted.org:fproject/ios_house_detail.git' , :branch => 'feature/develop'
+    pod 'FHHouseMessage' , :path => '../Bundles/ios_house_message' # :git => 'git@code.byted.org:fproject/ios_house_message.git' , :branch => 'feature/develop'
+    pod 'FHHouseList' , :path => '../Bundles/ios_house_list' # :git => 'git@code.byted.org:fproject/ios_house_list.git' , :branch => 'feature/develop'
+    pod 'FHHouseFind' , :path => '../Bundles/ios_house_find'
+    pod 'FHHouseMine' , :path => '../Bundles/ios_house_mine'
+    pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend'
+
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '66541148a531f14f936f4a38a24d012cdfe701ca' #:branch => 'feature/develop'
+#    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
+#    pod 'ios_house_im' , :path => '../../../f_pods/ios_house_im'
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
+#    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :tag => '0.5.2'
+#    pod 'ios_house_filter' , :path => '../../ios_house_filter'
+
+    pod 'SecGuard', '0.8.10.1'
+
 #    pod 'SimulatorRemoteNotifications', '~> 0.0.3'
 
-    #-----安全组sdk-----#
-    pod 'IESSafeGuard', '0.6.5'
+#    #-----安全组sdk-----#
+#    pod 'IESSafeGuard', '0.6.5'
+
+    pod 'TTRNKit', '0.3.3'
+    pod 'IESGeckoKit', '0.4.0'
+    pod 'IESWebKit', '0.1.4'
+#    pod 'IESWebKit/Falcon', :git => 'git@code.byted.org:ugc/IESWebKit.git', :branch => 'master'
+    pod 'React', '0.55.9-alpha.22', :subspecs => [ #可根据需要选择相应子库以减少包大小
+    'Core',
+    'CxxBridge',
+    'RCTActionSheet',
+    'RCTImage',
+    'RCTNetwork',
+    'RCTText',
+    'jschelpers',
+    'cxxreact',
+    'PrivateDatabase',
+    'RCTBlob',
+    'fishhook',
+    'jsinspector',
+    'RCTLinkingIOS',
+    'RNFetchBlob',
+    'base',
+    'runtime',
+#    'yoga',
+    'third-party',
+    'RCTAnimation', # Needed for FlatList and animations running on native UI thread
+    'DevSupport', # Include this to enable In-App Devmenu if RN >= 0.43
+    'RCTWebSocket', # Needed for debugging
+    'Extra'
+    ]
+    
+    pod 'yoga', :path => '../ReactCommon/yoga'
 
     #-----视频业务库-----#
-    pod 'TTVideoService', '0.1.40'
-    pod 'TTVideoService/TTBusinessService', '0.1.40'
+    pod_binary 'TTVideoService', '0.1.71'
+    pod_binary 'TTVideoService/TTBusinessService', '0.1.71'
     #-----问答业务库-----#
 #    pod 'TTWenda', '0.14.0'
 #    pod 'TTWenda', :git => 'git@code.byted.org:TTIOS/tt_business_wenda.git', branch: 'feature_aikan_beta'
@@ -33,32 +106,38 @@ def appPods
 #    pod 'HTSLive', '1.0.8'
     #-----小视频-----
     pod 'HTSVideoPlay', :path => '../Vendor/ShortVideo', :inhibit_warnings => false
-    pod 'TSVToolkit', '0.1.2'
-    pod 'lottie-ios', '2.1.5'
+    pod_binary 'TSVToolkit', '0.1.2'
+    pod_binary 'lottie-ios', '2.1.5'
 
     #-----UGC-----
 #    pod 'TTUGCFeature', :path => '../Vendor/TTUGCFeature', :inhibit_warnings => false
     pod 'TTUGCFoundation', :path => '../Vendor/TTUGCFoundation', :inhibit_warnings => false
-    pod 'TTKitchen', '1.0.2'
+    pod_binary 'TTKitchen', '1.0.2'
 
+#    pod 'TTKitchen', '1.3.9', :subspecs => [
+#    'Core',
+#    'TTCommonConfig',
+#    ]
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     #--------------------------------------------------业务上的可通用服务库-----------------------------------------------#
     pod 'BDTArticle', '0.2.3'
     pod 'BDTExploreOrderedData', '0.1.6'
 
-    pod 'BDTFactoryConfigurator', '0.1.0'
-    pod 'BDTBasePlayer', '0.3.48'
+    pod_binary 'BDTFactoryConfigurator', '0.1.0'
+#    pod_binary 'BDTBasePlayer' , '0.3.78'
+    pod 'BDTBasePlayer' , :path => '../AKPlugins/BDTBasePlayer', :inhibit_warnings => false
+#pod 'BDTBasePlayer',:git=>'git@code.byted.org:TTIOS/BDTBasePlayer',:branch=>'0.3.48-bugfix'
     pod 'BDTSharedHeaders', :path => '../Vendor/BDTSharedHeaders'
     #-----支付封装库-----  modified 6.2.1 alipay加回来
-    pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
+#    pod 'AKPay', :path => '../AKPlugins/AKPay', :inhibit_warnings => false
     #-----三方服务封装库-----  modified 6.2.1 alipay加回来
     pod 'TTThirdPartySDKs/QQSDK', '0.0.4'
     pod 'TTThirdPartySDKs/WeChatSDK', '0.0.4'
 #    pod 'TTThirdPartySDKs/AlipaySDK', '0.0.4'
-#    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
+    pod 'TTThirdPartySDKs/WeiboSDK', '0.0.4'
 #    pod 'TTThirdPartySDKs/DingDingSDK', '0.0.4'
     #-----免流量统计-----
-    pod 'TTFlowStatisticsManager', '0.0.8'
+    pod_binary 'TTFlowStatisticsManager', '0.0.10'
     #----- 新分享库 -----
 #    pod 'TTShare', '0.3.3'
     ## subspects
@@ -68,7 +147,8 @@ def appPods
     pod 'TTShare/TTShareBusiness', '0.3.3', :subspecs => [
     'TTShareWeChatBusiness',
     'TTShareQQBusiness',
-    'TTShareCopyBusiness'
+    'TTShareCopyBusiness',
+    'TTActivity'
     ]
     
     pod 'TTShare/TTShareBasic', '0.3.3', :subspecs => [
@@ -77,12 +157,12 @@ def appPods
     ]
 
     #-----头条视频播放器库，依赖自研播放器库，还包含系统播放器-----
-    pod 'TTVideo', '1.1.1'
+    pod_binary 'TTVideo', '1.1.1'
     #-----视频重构基础库-----
-    pod 'TTVContainerScrollView', '0.1.2'
-    pod 'TTVTableViewItem', '0.1.0'
-    pod 'TTVTLIndexPathTools', '0.4.4'
-    pod 'TTVTableViewProtocolInterceptor', '0.1.2'
+    pod_binary 'TTVContainerScrollView', '0.1.2'
+    pod_binary 'TTVTableViewItem', '0.1.0'
+    pod_binary 'TTVTLIndexPathTools', '0.4.4'
+    pod_binary 'TTVTableViewProtocolInterceptor', '0.1.2'
     #-----火山直播推流SDK-----
 #    pod 'TTLiveSDK', :git => 'git@code.byted.org:ugc/HTSStreamerSDK.git', :commit => '1f9fbbcee72e569bc073b9aa8657ee6152439b0f'
     #------主端接直播库-------
@@ -100,51 +180,65 @@ def appPods
 #    pod 'HTSLiveRoomSDK/Player', :git => 'git@code.byted.org:ugc/HTSLiveRoom.git', :branch => 'update_KVOController'
 #    pod 'HTSStore', '0.2.3'
     #-----火山播放器 ----
+#    pod_binary 'IESVideoPlayer', '0.2.22.1'
+#    pod_binary 'AWEVideoPlayer', '0.3.20'
+#    pod 'Mantle' , '2.1.2'
     pod 'IESVideoPlayer', '0.1.16'
     pod 'AWEVideoPlayer', '0.3.20'
+    pod 'Mantle' , '2.1.2'
+    pod_binary 'CocoaLumberjack' , '3.4.2'
+    
 
     #-----头条获取installID---
-    pod 'TTInstallService', '1.0.0.6'
+    pod_binary 'TTInstallService', '1.0.0.6'
     #-----头条图片滑动浏览器----
     pod 'TTPhotoScrollVC', :path => '../AKPlugins/TTPhotoScrollVC', :inhibit_warnings => false
     #-----头条用户设置库--------
-    pod 'TTUserSettings', '0.3.4'
+    pod_binary 'TTUserSettings', '0.3.4'
     #----头条webview库-----
 #    pod 'TTWebViewBundle', '0.8.15'
     pod 'AKWebViewBundlePlugin', :path => '../AKPlugins/AKWebViewBundlePlugin', :inhibit_warnings => false
-    pod 'TTRexxar', '0.8.1', subspecs:['Core', 'WebView', 'PackageApp’, 'Plugins']
+    pod 'TTRexxar', '0.8.1', subspecs:['Core', 'WebView', 'PackageApp', 'Plugins']
     #----头条组件协议库-----
 
     pod 'TTServiceProtocols', :path => '../AKPlugins/AKServiceProtocols', :inhibit_warnings => false
     
     #-----头条图片/视频选择器-----
-    pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false,
-    :subspecs => [
-    'Category',
-    'Model'
-    ]
+    pod 'TTImagePicker', :path => '../AKPlugins/AKImagePicker', :inhibit_warnings => false
+#    :subspecs => [
+#    'Category',
+#    'Model'
+#    ]
 
     #-----头条头像-----
 #    pod 'TTAvatar', '0.4.13'
     pod 'TTAvatar', :path => '../AKPlugins/TTAvatar', :inhibit_warnings => false
     #-----头条加v认证工具-----
-    pod 'TTVerifyKit',  '0.3.0'
+    pod_binary 'TTVerifyKit',  '0.3.0'
     #-----举报-----
     pod 'TTReporter', '0.2.1'
     #-----头条号---
-    pod 'TTAdModule', '0.1.25'
-    pod 'TTAdSplashSDK', '0.1.0'
+    pod 'TTAdModule', :path => '../AKPlugins/TTAdModule' #'0.1.25'
+    pod 'TTAdSplashSDK', '0.4.4'
+#    pod 'TTAdSplashSDK', :git=> 'git@code.byted.org:TTIOS/tt_splash_sdk.git', :branch=> 'feature_multi_log_version_tgq'
 
-    pod 'TTEntry', '0.1.6'
-
+    pod_binary 'TTEntry', '0.1.7'
+    
+    pod 'TTBridgeUnify', '0.3.19',:subspecs => [
+    'TTBridge',#核心模块，必须引入
+    'WebView',#默认实现的 webview engine,具体可参考此文档的 engine 的使用姿势一节
+    # 'React', #默认的 RN engine, 如果业务没有使用 RN，可以不用依赖
+    'TTBridgeAuthManager' #默认的鉴权类，如果业务自身鉴权流程和主端不一致，可以自己实现，初始化 engine 时，修改 engine 的 authorization 为自定义实现即可
+    ]
+    
     #-----朋友关系-----
     pod 'TTFriendRelation', :path => '../AKPlugins/TTFriendRelation', :inhibit_warnings => false
     #-----点赞分享顶踩不感兴趣----
-    pod 'TTBatchItemAction','0.1.7'
+    pod_binary 'TTBatchItemAction','0.1.8'
     #-------AB测库--------
-    pod 'TTABManager', '0.0.7'
+    pod_binary 'TTABManager', '0.0.7'
     #-----头条网络业务库------
-    pod 'TTNetBusiness', '0.0.10'
+    pod_binary 'TTNetBusiness', '0.0.10'
 
     #-----授权----
     pod 'TTPushAuthorizationManager', :path => '../AKPlugins/AKPushAuthorizationManager', :inhibit_warnings => false
@@ -152,7 +246,7 @@ def appPods
     #----头条Settihngs----
     pod 'TTSettingsManager', '0.3.1'
     #-----手机通讯录操作库---
-#    pod 'TTAddressBookService', '0.1.3'
+    pod 'TTAddressBookService', '0.1.4'
     #-----电信取号服务---
 #    pod 'TTTelecomGettingMobile', '0.2.0'
 
@@ -171,16 +265,19 @@ def appPods
     pod 'TTUIWidget', :path => '../AKPlugins/TTUIWidget', :inhibit_warnings => false
 
     #-----头条网络库-----
-    pod 'TTNetworkManager'
+#    pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'fea3c88cb586f624970bdf5629f11aa1dc9c8521'
+#pod 'TTNetworkManager', git:'git@code.byted.org:TTIOS/tt_pods_network.git', :commit => 'e2434b5'
+    pod_binary 'TTNetworkManager' , '2.2.8.55-rc.1'
+
 #    pod 'TTNetworkManager', '2.2.8.16'#httpdns can config timeout
     #pod 'IESAntiSpam', '0.5.9', :subspecs => ['RequestEncrypt']
 #    pod 'IESAntiSpam/RequestEncrypt', '0.6.5.2'
     #-----播放器SDK相关-----
-    pod 'TTPlayerSDK', '2.9.3.14'
-    pod 'TTFFmpeg', '1.2.5'
-    pod 'TTVideoEngine', '1.8.3.8'
-    pod 'TTPreloaderSDK', '1.4.16'
-#    pod 'TTFileUploadClient', ‘1.5.1.1'
+    pod 'TTPlayerSDK', '2.9.9.10'
+    pod 'TTFFmpeg', '1.4.3'
+    pod 'TTVideoEngine', '1.9.3.24'
+    pod 'TTPreloaderSDK', '1.4.20-rc.0'
+#    pod 'TTFileUploadClient', '1.5.1.1'
 
     #----点赞按钮-----
     pod 'TTDiggButton', :path => '../AKPlugins/AKDiggButton', :inhibit_warnings => false
@@ -189,46 +286,82 @@ def appPods
     #pod 'ConnectSDK/Core' ,'1.6.1-ttv'
 
     #-----头条sercive中间件-----
-    pod 'TTServiceKit', '0.4.1'
+    pod_binary 'TTServiceKit', '0.4.1'
     #-----头条端监控库-----
 #    pod 'TTMonitor', '0.7.9.42'
     pod 'TTMonitor', :path => '../AKPlugins/TTMonitor', :inhibit_warnings => false
+    pod 'Heimdallr','0.6.27', :subspecs => [
+    'Core',
+    'Monitors',
+    'TTMonitor',
+    'TTNet',
+    'HMDStart',
+    'Mach',
+    'Utility',
+    'DeviceInfo',
+    'HMDANR',
+    'HMDOOM',
+    'CrashDetector',
+    'Log',
+    'UITracker',
+    'MemorySnapshot',
+    'Upload',
+    'HMDSession',
+    'HMDConfig',
+    'HMDStore',
+    'ALog',
+    'FMDB' ,
+    'CloudCommand'
+#    'DiskManager'
+    ]
+    
+    pod_source 'AWECloudCommand' , '1.0.7'
+
+    pod 'BDALog' , '0.1.12'
+    pod 'BDAlogProtocol', '0.1.6'
+    
     #----- 长连接 & IM -----
 #    pod 'TTIMSDK', '0.1.9' # 依赖于 'TTLCSService'、'TTMonitor'、'ProtocolBuffers' 、'FMDB'、 'JSONModel'
-    pod 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
-    pod 'TTPushManager', '0.0.10'
-    pod 'TTReachability', '0.1.8'
+    pod_binary 'TTLCSService', '0.1.1' # 依赖于 'TTPushManager' 和 'TTReachability'
+    pod 'TTPushManager', '0.0.13.4'
+    pod_binary 'TTReachability', '0.1.8'
     pod 'Protobuf', '3.0.1-ttv'
     #----- 存储库 -----
     pod 'TTPersistence', '0.2.3'
-    pod 'TTEntityBase', '0.2.1'
+    pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
-    pod 'TTImage', '0.8.0'
-    pod 'BDWebImage', '0.2.2' , :subspecs => [
+    pod_binary 'TTImage', '0.8.4'
+    pod 'BDWebImage', '0.2.2',:subspecs => [
     'Core',
-    'Download',
     'Decoder',
-    'SDAdapter'
+    'Download',
+    'Download/Chromium',
+    'Download/DownloadBase',
+    'Download/URLSession',
+    'SDAdapter',
+    'Monitor'
     ]
+    pod_binary 'FLAnimatedImage' , '1.0.12'
     #-----头条交互式退出手势----
-    pod 'TTImagePreviewAnimateManager', '1.0.13'
+    pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod 'TTTracker', '1.0.0.6'
+    pod 'TTTracker', '1.0.6-rc.2'
     #-----头条推送SDK----
-    pod 'TTPushSDK', '0.1.1'
+    pod_binary 'TTPushSDK', '0.1.1'
     #-----路由-----
-    pod 'TTRoute', '0.2.25'
-#    pod 'TTRoute', git:'git@code.byted.org:TTIOS/tt_pods_route.git', :commit => '7fa71c20b4545d0f963a0100106dc203a420b08f'
+#    pod 'TTRoute', '0.2.25'
+    pod 'TTRoute', git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'array_type_query'
     #-----头条impression库-----
-    pod 'TTImpression', '0.0.26'
+    pod_binary 'TTImpression', '0.0.26'
     #-----平台化基础库-----
-    #pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :commit =>'6e2f44378650a7086b45f1d07d3f9bd379254152'
-    pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble'
-    #
-   #-----平台化UIModel库-----
+    #pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :commit => '36ce9794e63c3aa58bb2cc125453c68dec035e18'
+    
+    pod 'TTPlatformBaseLib', git:'git@code.byted.org:TTIOS/tt_pod_platformBaseLib.git', :branch =>'dev_bubble',:commit => 'be740facc849bf022c4265a19bea8d6657de0741'
+
+    #-----平台化UIModel库-----
     pod 'TTPlatformUIModel', :path => '../AKPlugins/AKPlatformUIModel', :inhibit_warnings => false
     #-----音频相关库---
-    pod 'TTAudio', '0.1.4'
+    pod 'TTAudio', '0.1.5'
     #----热修复库---
 #    pod 'TTSparkRescue','2.3.1'
 
@@ -243,6 +376,12 @@ def appPods
     'UserNotification',
     'Contacts',
 #    'Location'
+    ]
+
+    #----内测升级弹窗----
+    pod 'TTAppUpdateHelper', '1.0.9', :subspecs => [
+    'TTUpdateHelper',
+    'TTUpdateView'
     ]
 
 #    #——头条OpenSDK和PlatformSDK库----
@@ -264,8 +403,10 @@ def appPods
 ##    'TTHotsoonAccount'
 #    ]
     pod 'TTAccountSDK', :path => '../AKPlugins/TTAccountSDK', :inhibit_warnings => false, :subspecs => [
-    'Account',
-    'WeChatAccount'
+        'Account',
+        'Logger',
+        'WeChatAccount',
+        'ThirdPartyAccountFoundation'
     #    'SinaWeiboAccount',
     #    'TencentQQAccount',
     #    'TencentWBAccount',
@@ -287,73 +428,155 @@ def appPods
 
     #--------------------------------------------------三方库-----------------------------------------------#
     #--------------------------------------------------三方库-----------------------------------------------#
-    #pod 'GPUImage', :git => 'https://github.com/pretouch/GPUImageFramewrok.git', :commit => '1d77041' ‘#’火山依赖
-#    pod 'YYImage', '1.0.3'
-    pod 'YYWebImage', '1.0.4'
+    #pod 'GPUImage', :git => 'https://github.com/pretouch/GPUImageFramewrok.git', :commit => '1d77041' '#'火山依赖
+    pod_binary 'YYImage', '1.0.3'
+    pod_binary 'YYCache', '1.0.4'
+    pod_binary 'YYModel', '1.0.4'
+    
+    pod_binary 'YYWebImage', '1.0.4'
+    pod_binary 'libwebp' , '0.6.1'
 #    pod 'MBProgressHUD'
-    pod 'TTTAttributedLabel', '1.13.3'
+    pod_binary 'TTTAttributedLabel', '1.13.3'
     pod 'UMengAnalytics', '4.1.4'
     pod 'JSONModel', '1.7.0-private'
     pod 'Fabric', '1.6.7'
-    pod 'MJExtension', '3.0.12'
+    pod_binary 'MJExtension', '3.0.12'
+    pod_binary 'MJRefresh' , '3.1.15.7'
     pod 'Crashlytics', '3.7.2'
-    pod 'KVOController', '1.2.0'
-    pod 'RSSwizzle', '0.1.0'
-    pod 'RNCryptor-objc', '3.0.5'
-    pod 'OHHTTPStubs', '4.2.1', :configurations => ['Debug']
-    pod 'CHTCollectionViewWaterfallLayout', '0.9.5'
+    pod_binary 'KVOController', '1.2.0'
+    pod_binary 'RSSwizzle', '0.1.1'
+    #pod 'AMapSearch', '3.0.1'
+    pod_binary 'RNCryptor-objc', '3.0.5'
+    pod_source 'OHHTTPStubs', '4.2.1', :configurations => ['Debug']
+    pod_binary 'CHTCollectionViewWaterfallLayout', '0.9.5'
 #    pod 'CocoaSecurity', '1.2.4'
-    pod 'Aspects', '1.4.1'
-    pod 'SSZipArchive', '1.6.2'
-    pod 'libextobjc', '0.4.1'
+    pod_binary 'Aspects', '1.4.1'
+    pod_binary 'SSZipArchive', '1.6.3'
+    pod_binary 'libextobjc', '0.4.1'
     ##...
     #pod 'ProtocolBuffers', '1.9.11'
-    pod 'libextobjc', '0.4.1'
-    pod 'ReactiveObjC', '3.0.0'
-    pod 'SDWebImage', '4.1.0'
-    pod 'React', git:'https://github.com/facebook/react-native.git', :tag => 'v0.37.0', :subspecs => [
+#    pod 'libextobjc', '0.4.1'
+    pod_binary 'ReactiveObjC', '3.0.0'
+    pod 'SDWebImage', '4.4.1', :subspecs => [
     'Core',
-    'RCTText',
-    'RCTImage',
-    'RCTNetwork',
-    'RCTActionSheet',
-    'RCTWebSocket', # needed for debugging
+    'GIF',
+    'WebP'
     ]
-    
+
 #    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
     #-----只越狱渠道接入-----
     #pod 'Appsee', '2.2'
     #-----测试  内存泄漏时开启-----
 #    pod 'MLeaksFinder', '0.2.0'
 
-    pod 'BDAccount', :git => 'git@code.byted.org:iOS_Library/BDAccount.git', :commit => 'aa8be5a2824245b4253cf8a8a5ccf3fae382d75e', :subspecs => [
+    pod 'BDAccount', :git => 'git@code.byted.org:iOS_Library/BDAccount.git', :tag => 'fixAvatarURL', :subspecs => [
         'Account',
+        'AccountCore',
         'NetWorkCore',
         'Flow',
+        'PlatformCore',
         'PlatformCustomAuth',
         'WeChat',
         'TencentQQ',
         'SinaWeibo'
     ]
-    pod 'YYText'
-    pod 'AMapLocation'
-    pod 'AMap3DMap'
-    pod 'AMapSearch'
-    pod  'OpenUDID', '0.1.0'
-    pod 'TTDebugAssistant', '0.2.31'
+    pod_binary 'YYText' , '1.0.7'
+    pod_source 'AMapLocation' , '2.6.0'
+    pod_source 'AMap3DMap', '6.2.0'
+    pod_source 'AMapSearch' , '6.1.1'
+    pod_binary 'AMapFoundation' , '1.5.2'
+    pod_binary 'OpenUDID', '0.1.0'
+    
+    #支持自动约束cell缓存高度
+    pod_binary 'UITableView+FDTemplateLayoutCell', '1.6'
+
+
+    pod 'TTIMSDK', '0.7.7', :subspecs => [
+    'IMKit',
+    'IMKit_WebSocket',
+    'Feature_ApplicationStatus',
+    'IMKit_Core',
+    'Foundation_Plugin_TTNetwork',
+    'Foundation',
+    'Feature_WebSocket',
+    'Feature_Essential_PB',
+    'Feature_Essential',
+    'Feature_Core_Store',
+    'Feature_Core_Sender',
+    'Feature_Core_Puller',
+    'Feature_Core_Notifier',
+    'Feature_Core_Logger',
+    'Feature_Core_ErrorHandler',
+    'Feature_Core_CurrentUser',
+    'Feature_Core_ConversationInfo',
+    'Feature_Core_Config',
+    'Feature_Core',
+    'Feature_ApplicationStatus',
+    'Bridges'
+    ]
+    
+    pod 'IGListKit'
+    pod 'Bolts'
+    pod 'ToutiaoFrontierWebSocket'
+    pod_binary 'WCDB', '1.0.7.5'
+    pod_binary 'SQLiteRepairKit' , '1.2.1'
+    pod_binary 'WCDBOptimizedSQLCipher' , '1.2.1'
+    pod 'SocketRocket', '0.5.1'
+    
+    
+    pod 'TTFileUploadClient', '1.7.6.3'
+    pod 'RXCollections'
+
+    pod_binary 'MBProgressHUD' , '1.1.0'
+    
+    pod_binary 'Masonry' , '1.0.1'
+    
+    pod_binary 'Godzippa' , '1.1.0'
+    
+    pod        'OpenSSL-Universal' , '1.0.1.20'
+    
+    pod         'boringssl' , '0.0.7'
+    
+    pod_binary 'AFNetworking' , '2.5.1'
+    
+    pod_binary 'FMDB' , '2.6.2'
+    
+    pod_binary 'AFgzipRequestSerializer' , '0.0.2'
+    
+    # ab test sdk
+    pod  'BDABTestSDK', '1.0.2-rc.3'
+    #pod 'BDABTestSDK', '1.0.0'
+
+
 end
-target 'News' do
+target 'NewsLite' do
     appPods
 end
 
-target 'NewsInHouse' do
+target 'f100' do
+    appPods
+    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
+end
+
+target 'NewsLiteInHouse' do
+    pod 'TTDebugAssistant', '0.2.31'
     pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
     appPods
+    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
+
 end
+
+target 'NewsLiteChannel' do
+    pod 'TTDebugAssistant', '0.2.31'
+    pod 'FLEX', '2.1.1'#, :configurations=>['Debug']
+    appPods
+    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
+    
+end
+
 
 # POD POST_INSTALL
 post_install do |installer|
-
     installer.aggregate_targets.each do |target|
         copy_pods_resources_path = "Pods/Target Support Files/#{target.name}/#{target.name}-resources.sh"
         string_to_replace = '--compile "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"'
@@ -364,7 +587,26 @@ post_install do |installer|
     end
 
     installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            # Fix libstdc++.6在Xcode10编译报错问题
 
+            if target.name == "Pods-NewsLiteInHouse"
+                xcconfig_path = config.base_configuration_reference.real_path
+                xcconfig = File.read(xcconfig_path)
+                new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
+                new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
+
+                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            end
+            if target.name == "Pods-f100"
+                xcconfig_path = config.base_configuration_reference.real_path
+                xcconfig = File.read(xcconfig_path)
+                new_xcconfig = xcconfig.sub('stdc++.6.0.9', 'c++')
+                new_xcconfig = new_xcconfig.sub('stdc++.6', 'c++')
+
+                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            end
+        end
         #账号
         if target.name == "TTAccountSDK"
             target.build_configurations.each do |config|

@@ -230,7 +230,10 @@ NSString * const WDMoreListCellUnDiggButtonClickTrackerEvent = @"rt_unlike";
     NSString *categoryName = [self.gdExtJson objectForKey:@"category_name"];
     NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&refer=wenda", self.ansEntity.user.userID];
     NSString *result = [WDTrackerHelper schemaTrackForPersonalHomeSchema:schema categoryName:categoryName fromPage:@"list_answer_wenda" groupId:self.ansEntity.ansid profileUserId:self.ansEntity.user.userID];
-    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:result] userInfo:nil];
+    
+    // add by zjing 去掉个人主页跳转
+
+    //    [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:result] userInfo:nil];
 }
 
 - (void)listCellUserHeaderViewFollowButtonClick:(TTFollowThemeButton *)followBtn {
@@ -327,7 +330,7 @@ NSString * const WDMoreListCellUnDiggButtonClickTrackerEvent = @"rt_unlike";
 #pragma mark - getter
 
 - (NSAttributedString *)tokenAttributeString {
-    NSString *textColor = kColorText1;
+    NSString *textColor = kFHColorCharcoalGrey;
     CGFloat fontSize = [WDMoreListCellLayoutModel answerAbstractContentFontSize];
     NSMutableAttributedString *token = [[NSMutableAttributedString alloc] initWithString:@"...全文"
                                                                               attributes:@{

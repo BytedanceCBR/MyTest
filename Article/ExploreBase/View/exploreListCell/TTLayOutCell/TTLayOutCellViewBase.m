@@ -146,8 +146,12 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         BOOL hasRead = [self.orderedData hasRead];
         if ([self.orderedData.categoryID isEqualToString:kTTFollowCategoryID]) {
             hasRead = NO;
-        }
+        }        
         self.titleLabel.highlighted = hasRead;
+        if (hasRead)
+        {
+            [self layoutTitleLabel];
+        }
         self.commentLabel.highlighted = hasRead;
         self.abstractLabel.highlighted = hasRead;
         if ([self.orderedData isUGCCell]) {
@@ -158,27 +162,30 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             self.sourceLabel.highlighted = hasRead;
         }
     }
+
 }
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
-    if (highlighted)
-    {
-        if (!self.isViewHighlighted) {
-            [self setLabelsColorClear:YES];
-            self.backgroundView.alpha = 0.5f;
-            self.backgroundColor = [TTUISettingHelper cellViewHighlightedBackgroundColor];
-            self.isViewHighlighted = YES;
-        }
-    }
-    else
-    {
-        if (self.isViewHighlighted) {
-            [self setLabelsColorClear:NO];
-            self.backgroundView.alpha = 1.f;
-            self.backgroundColor = [TTUISettingHelper cellViewBackgroundColor];
-            self.isViewHighlighted = NO;
-        }
-    }
+    
+    // add by zjing 去掉cell的点击效果
+//    if (highlighted)
+//    {
+//        if (!self.isViewHighlighted) {
+//            [self setLabelsColorClear:YES];
+//            self.backgroundView.alpha = 0.5f;
+//            self.backgroundColor = [TTUISettingHelper cellViewHighlightedBackgroundColor];
+//            self.isViewHighlighted = YES;
+//        }
+//    }
+//    else
+//    {
+//        if (self.isViewHighlighted) {
+//            [self setLabelsColorClear:NO];
+//            self.backgroundView.alpha = 1.f;
+//            self.backgroundColor = [TTUISettingHelper cellViewBackgroundColor];
+//            self.isViewHighlighted = NO;
+//        }
+//    }
 }
 
 - (void)setLabelsColorClear:(BOOL)clear
@@ -268,9 +275,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     return _adButton;
 }
 
-/**
- 设置列表cell基本样式
- */
 - (void)setupSubViewsForCommon
 {
     [self setupSubviewsForUGCCell];
@@ -421,7 +425,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     
     /** 背景view */
     SSThemedView *adBackgroundView = [[SSThemedView alloc] init];
-    adBackgroundView.backgroundColor = [UIColor clearColor];
+    adBackgroundView.backgroundColorThemeKey = kColorBackground3;
     [self addSubview:adBackgroundView];
     [self sendSubviewToBack:adBackgroundView];
     self.adBackgroundView = adBackgroundView;
@@ -458,8 +462,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     /** 广告下载按钮 */
     ExploreActionButton *actionButton = [[ExploreActionButton alloc] init];
     
-    [actionButton setTitleColor:[UIColor colorWithHexString:@"25265E"] forState:UIControlStateNormal];
-    actionButton.layer.borderColor = [UIColor colorWithHexString:@"25265E99"].CGColor;
+    actionButton.titleColorThemeKey = kColorText6;
+    actionButton.borderColorThemeKey = kColorText6;
     actionButton.layer.masksToBounds = YES;
     actionButton.backgroundColorThemeKey = nil;
     actionButton.backgroundColors = nil;
@@ -601,7 +605,11 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         self.titleLabel.numberOfLines = cellLayOut.titleLabelNumberOfLines;
         self.titleLabel.attributedText = cellLayOut.titleAttributedStr;
         self.titleLabel.frame = cellLayOut.titleLabelFrame;
-        
+//        self.titleLabel.frame = CGRectMake(cellLayOut.titleLabelFrame.origin.x, 10, cellLayOut.titleLabelFrame.size.width, cellLayOut.titleLabelFrame.size.height);
+        self.titleLabel.textColorThemeKey = kFHColorCharcoalGrey;
+        if ([cellLayOut.orderedData.article.hasRead isKindOfClass:[NSNumber class]] && [cellLayOut.orderedData.article.hasRead isEqualToNumber:@(1)]) {
+            self.titleLabel.textColorThemeKey = kFHColorCoolGrey3;
+        }
         // 增加@和hashtag功能
         [self.titleLabel removeAllLinkAttributes];
         self.titleLabel.labelInactiveLinkAttributes = nil;
@@ -680,8 +688,14 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.sourceLabel.hidden = cellLayOut.sourceLabelHidden;
     if (!self.sourceLabel.hidden) {
         self.sourceLabel.frame = cellLayOut.sourceLabelFrame;
+//        self.sourceLabel.frame = CGRectMake(cellLayOut.sourceLabelFrame.origin.x, cellLayOut.cellCacheHeight - cellLayOut.sourceLabelFrame.size.height - 10, cellLayOut.sourceLabelFrame.size.width, cellLayOut.sourceLabelFrame.size.height);
         self.sourceLabel.textColorThemeKey = cellLayOut.sourceLabelTextColorThemeKey;
-        self.sourceLabel.font = [UIFont tt_fontOfSize:cellLayOut.sourceLabelFontSize];
+        if ([TTDeviceHelper isScreenWidthLarge320]) {
+            self.sourceLabel.font = [UIFont tt_fontOfSize:12];
+        }else
+        {
+            self.sourceLabel.font = [UIFont tt_fontOfSize:10];
+        }
         self.sourceLabel.userInteractionEnabled = cellLayOut.sourceLabelUserInteractionEnabled;
         self.sourceLabel.text = cellLayOut.sourceLabelStr;
     }
@@ -693,7 +707,16 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.infoLabel.hidden = cellLayOut.infoLabelHidden;
     if (!self.infoLabel.hidden) {
         self.infoLabel.frame = cellLayOut.infoLabelFrame;
-        self.infoLabel.font = [UIFont systemFontOfSize:cellLayOut.infoLabelFontSize];
+//        if (!self.sourceLabel.hidden && self.sourceLabel.frame.size.width != 0)
+//        {
+//            self.infoLabel.frame = CGRectMake(self.sourceLabel.origin.x + self.sourceLabel.size.width, cellLayOut.cellCacheHeight - cellLayOut.infoLabelFrame.size.height - 10, cellLayOut.infoLabelFrame.size.width, cellLayOut.infoLabelFrame.size.height);
+//        }
+        if ([TTDeviceHelper isScreenWidthLarge320]) {
+            self.infoLabel.font = [UIFont systemFontOfSize:12];
+        }else
+        {
+            self.infoLabel.font = [UIFont systemFontOfSize:10];
+        }
         self.infoLabel.textColorThemeKey = cellLayOut.infoLabelTextColorThemeKey;
         self.infoLabel.text = self.orderedData.cellLayOut.infoLabelStr;
     }
@@ -714,13 +737,17 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.typeLabel.hidden = cellLayOut.typeLabelHidden;
     if (!self.typeLabel.hidden) {
         self.typeLabel.frame = cellLayOut.typeLabelFrame;
+//        if (!self.sourceLabel.hidden && self.sourceLabel.frame.size.width != 0)
+//        {
+//            self.typeLabel.frame = CGRectMake(cellLayOut.typeLabelFrame.origin.x, self.sourceLabel.frame.origin.y, cellLayOut.typeLabelFrame.size.width, cellLayOut.typeLabelFrame.size.height);
+//        }
         NSString *typeString = [TTLayOutCellDataHelper getTypeStringWithOrderedData:self.orderedData];
         self.typeLabel.text = typeString;
         if ([self.orderedData isPlainCell]){
             if (self.orderedData.originalData.userRepined &&
                 self.listType != ExploreOrderedDataListTypeFavorite && self.listType != ExploreOrderedDataListTypeReadHistory && self.listType != ExploreOrderedDataListTypePushHistory) {
-                self.typeLabel.textColor = [UIColor tt_themedColorForKey:kCellTypeLabelTextRed];
-                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kCellTypeLabelLineRed].CGColor;
+                self.typeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoral];
+                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
             }
             else{
                 [ExploreCellHelper colorTypeLabel:self.typeLabel orderedData:self.orderedData];
@@ -728,11 +755,11 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         }
         else{
             if ([self.orderedData.adModel isCreativeAd] || [self.orderedData labelStyle] == 3) {
-                self.typeLabel.textColor = [UIColor colorWithHexString:@"999999"];
-                self.typeLabel.layer.borderColor = [UIColor clearColor].CGColor;
+                self.typeLabel.textColor = [UIColor tt_themedColorForKey:kTagViewLineColorBlue()];
+                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kTagViewLineColorBlue()].CGColor;
             } else {
-                self.typeLabel.textColor = [UIColor tt_themedColorForKey:kTagViewTextColorRed()];
-                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kTagViewLineColorRed()].CGColor;
+                self.typeLabel.textColor = [UIColor tt_themedColorForKey:kFHColorCoral];
+                self.typeLabel.layer.borderColor = [UIColor tt_themedColorForKey:kFHColorCoral].CGColor;
             }
         }
     }
@@ -803,7 +830,11 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     TTLayOutCellBaseModel *cellLayOut = self.orderedData.cellLayOut;
     self.unInterestedButton.hidden = cellLayOut.unInterestedButtonHidden || ugcVideoBelongToUser;
     if (!self.unInterestedButton.hidden) {
-        self.unInterestedButton.frame = cellLayOut.unInterestedButtonFrame;
+        self.unInterestedButton.frame = cellLayOut.unInterestedButtonFrame; //外部透明大按钮mask
+//        if (!self.sourceLabel.hidden && self.sourceLabel.frame.size.width != 0)
+//        {
+//            self.unInterestedButton.frame = CGRectMake(cellLayOut.unInterestedButtonFrame.origin.x, self.sourceLabel.frame.origin.y - self.sourceLabel.frame.size.height, cellLayOut.unInterestedButtonFrame.size.width, cellLayOut.unInterestedButtonFrame.size.height);
+//        }
     }
 }
 
@@ -931,6 +962,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 {
     TTLayOutCellBaseModel *cellLayOut = self.orderedData.cellLayOut;
     self.bottomLineView.hidden = cellLayOut.bottomLineViewHidden || self.hideBottomLine;
+    self.bottomLineView.hidden = YES;
     if (!self.bottomLineView.hidden) {
         self.bottomLineView.frame = cellLayOut.bottomLineViewFrame;
     }
@@ -956,12 +988,11 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (!self.adSubtitleLabel.hidden) {
         self.adSubtitleLabel.frame = cellLayOut.adSubtitleLabelFrame;
         self.adSubtitleLabel.font = [UIFont tt_fontOfSize:cellLayOut.adSubtitleLabelFontSize];
-        self.adSubtitleLabel.textColor = [UIColor colorWithHexString:cellLayOut.adSubtitleLabelTextColorHex];
+        self.adSubtitleLabel.textColorThemeKey = cellLayOut.adSubtitleLabelTextColorThemeKey;
         self.adSubtitleLabel.text = cellLayOut.adSubtitleLabelStr;
         self.adSubtitleLabel.userInteractionEnabled = cellLayOut.adSubtitleLabelUserInteractionEnabled;
     }
 }
-
 
 -(void)layoutADLocationIcon{
     
@@ -1111,7 +1142,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             NSMutableDictionary *extraDic = [NSMutableDictionary dictionaryWithDictionary:self.extraDicForUFCell];
             [extraDic setValue:@(0) forKey:@"click_area"];
             [extraDic setValue:comment.aggrType forKey:@"aggr_type"];
-//            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
+            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
         }
     }
 }
@@ -1252,7 +1283,16 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 {
     TTFeedDislikeView *dislikeView = [[TTFeedDislikeView alloc] init];
     TTFeedDislikeViewModel *viewModel = [[TTFeedDislikeViewModel alloc] init];
-    viewModel.keywords = self.orderedData.article.filterWords;
+    NSMutableArray<NSDictionary *> *keywordsFilter = [NSMutableArray arrayWithArray:self.orderedData.article.filterWords];
+    [self.orderedData.article.filterWords enumerateObjectsUsingBlock:^(NSDictionary * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString *stringName = obj[@"name"];
+        if ([stringName isKindOfClass:[NSString class]] && [stringName containsString:@"悟空问答"]) {
+            NSMutableDictionary *filterDict = [NSMutableDictionary dictionaryWithDictionary:obj];
+            filterDict[@"name"] = [stringName stringByReplacingOccurrencesOfString:@"悟空问答" withString:@"问答"];
+            [keywordsFilter setObject:filterDict atIndexedSubscript:idx];
+        }
+    }];
+    viewModel.keywords = keywordsFilter;
     viewModel.groupID = [NSString stringWithFormat:@"%lld", self.orderedData.article.uniqueID];
     viewModel.logExtra = self.orderedData.log_extra;
     [dislikeView refreshWithModel:viewModel];
@@ -1504,7 +1544,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 [self ad_trackWithTag:@"embeded_ad" label:@"comment_click" extra:nil];
                 NSMutableDictionary *extraDic = [NSMutableDictionary dictionaryWithDictionary:self.extraDicForUFCell];
                 [extraDic setValue:@(0) forKey:@"click_area"];
-//                [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
+                [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
             }
         }
     }
@@ -2266,7 +2306,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
             NSMutableDictionary *extraDic = [NSMutableDictionary dictionaryWithDictionary:[TTLayOutCellDataHelper getLogExtraDictionaryWithOrderedData:self.orderedData]];
             [extraDic setValue:@(1) forKey:@"click_area"];
             //产品用的埋点 这里发两个埋点，没毛病
-//            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
+            [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:comment.groupID source:nil extraDic:extraDic];
             [extraDic setValue:self.orderedData.itemID forKey:@"item_id"];
             [extraDic setValue:comment.aggrType forKey:@"aggr_type"];
         }

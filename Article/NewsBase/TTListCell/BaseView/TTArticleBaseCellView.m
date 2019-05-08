@@ -528,11 +528,11 @@
 //                                    if ([TTFirstConcernManager firstTimeGuideEnabled]) {
 //                                        TTFirstConcernManager *manager = [[TTFirstConcernManager alloc] init];
 //                                        [manager showFirstConcernAlertViewWithDismissBlock:^{
-//                                            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"将增加推荐此号内容", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"] autoDismiss:YES dismissHandler:nil];
+//                                            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"将增加推荐此头条号内容", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"] autoDismiss:YES dismissHandler:nil];
 //                                        }];
 //                                    }
 //                                    else{
-                                        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"将增加推荐此爱看号内容", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"] autoDismiss:YES dismissHandler:nil];
+                                        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"将增加推荐此头条号内容", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage"] autoDismiss:YES dismissHandler:nil];
 //                                    }
                                     [TTTrackerWrapper ttTrackEventWithCustomKeys:@"new_list" label:@"pgc_subscribe" value:[[TTActionPopView shareGroupId] stringValue] source:nil extraDic:self.extraDic];
                                 }];

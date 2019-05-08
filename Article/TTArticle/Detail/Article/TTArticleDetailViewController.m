@@ -94,7 +94,7 @@
 #import "TTMemoryMonitor.h"
 #import "TTArticleDetailMemoryMonitor.h"
 #import <TTNetworkUtil.h>
-#import "TTKitchenHeader.h"
+#import <TTKitchen/TTKitchenHeader.h>
 
 #import "TTWebImageManager.h"
 #import "TTImageView.h"
@@ -104,8 +104,12 @@
 #import "TTCommentViewControllerProtocol.h"
 #import "TTUGCTrackerHelper.h"
 #import <ExploreMomentDefine_Enums.h>
+#import "FHTraceEventUtils.h"
+
 //爱看
 #import "AKHelper.h"
+//#import "Bubble-Swift.h"
+#import "FHEnvContext.h"
 
 #define CASE(str)                       if ([__s__ isEqualToString:(str)])
 #define SWITCH(s)                       for (NSString *__s__ = (s); ; )
@@ -192,7 +196,6 @@
         _detailModel = model;
         _novelManager = [[TTNovelRecordManager alloc] initWithArticle:model.article];
         [self p_addObservers];
-        self.ttNeedHideBottomLine = YES;
     }
     return self;
 }
@@ -457,7 +460,11 @@
     
     [_detailView didDisappear];
     NSDictionary *commentDic = @{@"stay_comment_time":[[NSNumber numberWithDouble:round(self.commentShowTimeTotal)] stringValue]};
-    [self.detailModel.sharedDetailManager extraTrackerDic:commentDic];
+    NSMutableDictionary *commentMutiDict = [[NSMutableDictionary alloc] initWithDictionary:commentDic];
+    if ([self.detailModel.reportParams isKindOfClass:[NSDictionary class]]) {
+        [commentMutiDict addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    [self.detailModel.sharedDetailManager extraTrackerDic:commentMutiDict];
     [self.detailModel.sharedDetailManager endStayTracker];
     _isAppearing = NO;
     [self.natantContainerView resetAllRelatedItemsWhenNatantDisappear];
@@ -871,7 +878,7 @@
             if (!self.shouldShowTipsOnNavBar) {
                 self.titleView.hidden = NO;
             }
-            self.rightFollowButton.hidden = NO;
+            self.rightFollowButton.hidden = YES;
         }
         
         if ([self.detailModel.article.mediaInfo objectForKey:@"subcribed"]) {
@@ -883,7 +890,8 @@
     }
     
     [self p_updateNavigationTitleViewInfo];
-    self.rightFollowButton.hidden = self.titleView.isShow ? NO : YES;
+    // self.rightFollowButton.hidden = self.titleView.isShow ? NO : YES; //F项目隐藏关注
+    self.rightFollowButton.hidden = YES; //F项目隐藏关注
     [self p_updateRightFollowButton];
 }
 - (void)p_hideTitleView {
@@ -997,35 +1005,35 @@
 
 - (void)p_showTitle:(BOOL)show
 {
-    self.navigationItem.titleView = nil;
-//    BOOL hasMediaInfo = self.detailModel.article.mediaInfo[@"media_id"];
-//    show = show && hasMediaInfo;
-//    BOOL isShow = self.titleView.isShow;
-//    BOOL animated = self.detailModel.article.articleType == ArticleTypeNativeContent;
-//    if (show) {
-//        if (self.navigationItem.titleView != self.titleView) {
-//            self.navigationItem.titleView = self.titleView;
-//        }
-//    } else {
-//        if (self.shouldShowLogoView) {
-//            if (self.navigationItem.titleView != self.logoTitleView) {
-//                self.navigationItem.titleView = self.logoTitleView;
-//                [self p_sendLogoViewEventWithEventName:@"logo_show"];
-//            }
-//        }
-//    }
-//    [self.titleView show:show animated:animated];
-//
-//    self.rightFollowButton.hidden = !show;
-//
-//    if (show && !isShow) {
-//        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-//        [params setValue:@"top_title_bar" forKey:@"position"];
-//        [params setValue:@"article_detail" forKey:@"source"];
-//        [params setValue:self.detailModel.article.mediaUserID forKey:@"user_id"];
-//        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
-//        [TTTrackerWrapper eventV3:@"follow_show" params:params];
-//    }
+    BOOL hasMediaInfo = self.detailModel.article.mediaInfo[@"media_id"];
+    show = show && hasMediaInfo;
+    BOOL isShow = self.titleView.isShow;
+    BOOL animated = self.detailModel.article.articleType == ArticleTypeNativeContent;
+    if (show) {
+        if (self.navigationItem.titleView != self.titleView) {
+            self.navigationItem.titleView = self.titleView;
+        }
+    } else {
+        if (self.shouldShowLogoView) {
+            if (self.navigationItem.titleView != self.logoTitleView) {
+                self.navigationItem.titleView = self.logoTitleView;
+                [self p_sendLogoViewEventWithEventName:@"logo_show"];
+            }
+        }
+    }
+    [self.titleView show:show animated:animated];
+    
+    // self.rightFollowButton.hidden = !show;
+    self.rightFollowButton.hidden = YES;  //F项目隐藏关注按钮
+
+    if (show && !isShow) {
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        [params setValue:@"top_title_bar" forKey:@"position"];
+        [params setValue:@"article_detail" forKey:@"source"];
+        [params setValue:self.detailModel.article.mediaUserID forKey:@"user_id"];
+        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+        [TTTrackerWrapper eventV3:@"follow_show" params:params];
+    }
 }
 
 - (void)p_triggerStoryToolViewAnimation:(BOOL)show
@@ -1212,6 +1220,7 @@
             if ([natantView isKindOfClass:[TTDetailNatantRewardView class]]) {
                 TTDetailNatantRewardView *rewardView = (TTDetailNatantRewardView *)natantView;
                 rewardView.goDetailLabel = self.detailModel.clickLabel;
+                rewardView.hidden = YES;
                 TTActionSheetSourceType source = TTActionSheetSourceTypeDislike;
                 NSString *trackSource = nil;
                 NSString *style = nil;
@@ -1230,12 +1239,19 @@
                     StrongSelf;
                     [self report_showReportOnNatantView:style source:source trackSource:trackSource];
                 };
+            }else
+            {
+                if ([natantView isKindOfClass:[ExploreDetailADContainerView class]]) {
+                    ((ExploreDetailADContainerView*)natantView).delegate = self;
+                }
+          
+                [natantItems addObject:natantView];
+                [natantItems addObject:[self p_natantSpacingItemForClass:className]];
+                
+                if ([natantView isKindOfClass:[TTDetailNatantRelateArticleGroupView class]]) {
+                    [natantItems addObject:[self p_natantSpacingItemForClass:@"topMargin"]];
+                }
             }
-            if ([natantView isKindOfClass:[ExploreDetailADContainerView class]]) {
-                ((ExploreDetailADContainerView*)natantView).delegate = self;
-            }
-            [natantItems addObject:natantView];
-            [natantItems addObject:[self p_natantSpacingItemForClass:className]];
         }
     }];
     
@@ -1282,6 +1298,7 @@
     SWITCH (className) {
         CASE (@"topMargin") {
             paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] topMargin];
+//            paddingHeight = 0;
             break;
         }
         CASE (@"TTDetailNatantRiskWarningView") {
@@ -1294,7 +1311,8 @@
             break;
         }
         CASE (@"TTDetailNatantRewardView") {
-            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] spaceBeweenNantants];
+            paddingHeight = 0;
+//            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] spaceBeweenNantants];
             break;
         }
         CASE (@"ExploreDetailADContainerView") {
@@ -1302,7 +1320,7 @@
             break;
         }
         CASE (@"TTDetailNatantRelateArticleGroupView"){
-            paddingHeight = [[TTDetailNatantLayout sharedInstance_tt] bottomMargin];
+            paddingHeight = 0;
             break;
         }
         CASE (@"ExploreDetailTextlinkADView"){
@@ -1377,7 +1395,7 @@
             self.toolbarView.hidden = NO;
             
             // toolbar 禁表情，改变 toolbarType 会重置 button 的状态
-            BOOL isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+            BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
             if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
                 self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
             }
@@ -1459,9 +1477,9 @@
     if (![self p_needShowToolBarView]) {
         return CGRectZero;
     }
-    
+    self.toolbarView.height = ExploreDetailGetToolbarHeight() + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
     if ([SSCommonLogic detailNewLayoutEnabled]) {
-        return CGRectMake(0, self.view.height - self.toolbarView.height - [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom, self.view.width, self.toolbarView.height);
+        return CGRectMake(0, self.view.height - self.toolbarView.height, self.view.width, self.toolbarView.height);
     }
     
     CGFloat toolbarOriginY = [self p_frameForDetailView].size.height - self.toolbarView.height;
@@ -1482,6 +1500,13 @@
     TTDetailArchType detailType = [self.detailView.detailViewModel tt_articleDetailType];
     if (detailType == TTDetailArchTypeNormal) {
         visableHeight -= self.toolbarView.height;
+
+        // add by zjing 兼容评论条高度
+        if (@available(iOS 11.0, *)) {
+            UIEdgeInsets safeInset = self.view.safeAreaInsets;
+            visableHeight += safeInset.bottom;
+        }
+
     }
     return CGRectMake(0, 0, [TTUIResponderHelper splitViewFrameForView:self.view].size.width, visableHeight);
 }
@@ -1786,6 +1811,11 @@
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
+    commentManager.enterFrom = @"article";
+
+    commentManager.enterFromStr = self.detailModel.clickLabel;
+    commentManager.categoryID = self.detailModel.categoryID;
+    commentManager.logPb = self.detailModel.logPb;
 
     self.commentWriteView = [[TTCommentWriteView alloc] initWithCommentManager:commentManager];
 
@@ -2254,54 +2284,95 @@
 
 - (void)p_sendGoDetailTrack
 {
+    NSString* enterFrom = [self enterFromString];
+
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-    [dic setValue:self.detailModel.adID.stringValue forKey:@"ext_value"];
+//    [dic setValue:self.detailModel.adID.stringValue forKey:@"ext_value"];
     [dic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
-    [dic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
-    if (self.detailModel.relateReadFromGID) {
-        [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
+//    [dic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
+
+    if (![@"push" isEqualToString: enterFrom]) {
+        if (self.detailModel.relateReadFromGID) {
+            [dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
+        }
     }
-    BOOL hasZzComment = self.detailModel.article.zzComments.count > 0;
-    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
-    if (hasZzComment) {
-        [dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
+
+//    BOOL hasZzComment = self.detailModel.article.zzComments.count > 0;
+//    [dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
+//    if (hasZzComment) {
+//        [dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
+//    }
+    
+//    if (self.detailModel.gdExtJsonDict) {
+//        [dic setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
+//    }
+    
+    [dic setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+
+    [dic setValue:enterFrom forKey:@"enter_from"];
+    if (![@"push" isEqualToString: enterFrom]) {
+        [dic setValue:[self categoryName] forKey:@"category_name"];
     }
     
-    if (self.detailModel.gdExtJsonDict) {
-        [dic setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
+    if (self.detailModel.reportParams) {
+        [dic setValue:self.detailModel.reportParams[@"enter_from"] forKey:@"enter_from"];
     }
-    [dic setValue:self.detailModel.logPb forKey:@"log_pb"];
-    id value = self.detailModel.article.groupModel.groupID;
-    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+    
+    [dic setValue:self.detailModel.logPb == nil ? @"be_null" : self.detailModel.logPb forKey:@"log_pb"];
+//     [[EnvContext shared].tracer writeEvent:@"go_detail" params:dic];
+    
+    [FHEnvContext recordEvent:dic andEventKey:@"go_detail"];
+//    id value = self.detailModel.article.groupModel.groupID;
+//    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
 //        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
-    }
+//    }
     
     //log3.0 doubleSending
-    NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:5];
-    [logv3Dic setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
-    [logv3Dic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
-    [logv3Dic setValue:[NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.detailModel.clickLabel categoryID:self.detailModel.categoryID] forKey:@"enter_from"];
-    NewsGoDetailFromSource fromSource = self.detailModel.fromSource;
-    if (fromSource == NewsGoDetailFromSourceHeadline ||
-        fromSource == NewsGoDetailFromSourceCategory) {
-        [logv3Dic setValue:self.detailModel.categoryID forKey:@"category_name"];
-    }
-    [logv3Dic setValue:self.detailModel.logPb forKey:@"log_pb"];
-    [logv3Dic setValue:self.detailModel.adID.stringValue forKey:@"ad_id"];
-    [logv3Dic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
-    if (self.detailModel.relateReadFromGID) {
-        [logv3Dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
-    }
-    [logv3Dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
-    if (hasZzComment) {
-        [logv3Dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
-    }
-    
-    if (self.detailModel.gdExtJsonDict) {
-        [logv3Dic setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
-    }
-    
+//    NSMutableDictionary *logv3Dic = [NSMutableDictionary dictionaryWithCapacity:5];
+//    [logv3Dic setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+//    [logv3Dic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+//    [logv3Dic setValue:[NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.detailModel.clickLabel categoryID:self.detailModel.categoryID] forKey:@"enter_from"];
+//    NewsGoDetailFromSource fromSource = self.detailModel.fromSource;
+//    if (fromSource == NewsGoDetailFromSourceHeadline ||
+//        fromSource == NewsGoDetailFromSourceCategory) {
+//        [logv3Dic setValue:self.detailModel.categoryID forKey:@"category_name"];
+//    }
+//    [logv3Dic setValue:self.detailModel.logPb forKey:@"log_pb"];
+//    [logv3Dic setValue:self.detailModel.adID.stringValue forKey:@"ad_id"];
+//    [logv3Dic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
+//    if (self.detailModel.relateReadFromGID) {
+//        [logv3Dic setValue:[NSString stringWithFormat:@"%@",self.detailModel.relateReadFromGID] forKey:@"from_gid"];
+//    }
+//    [logv3Dic setValue:@(hasZzComment?1:0) forKey:@"has_zz_comment"];
+//    if (hasZzComment) {
+//        [logv3Dic setValue:self.detailModel.article.firstZzCommentMediaId forKey:@"mid"];
+//    }
+//
+//    if (self.detailModel.gdExtJsonDict) {
+//        [logv3Dic setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
+//    }
+//
 //    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+}
+
+- (NSString *)enterFromString {
+    
+    return [NewsDetailLogicManager enterFromValueForLogV3WithClickLabel:self.detailModel.clickLabel categoryID:self.detailModel.categoryID];
+}
+- (NSString *)categoryName
+{
+    NSString *categoryName = self.detailModel.categoryID;
+    if (!categoryName || [categoryName isEqualToString:@"xx"] ) {
+        categoryName = [[self enterFromString] stringByReplacingOccurrencesOfString:@"click_" withString:@""];
+    }else{
+        if (![[self enterFromString] isEqualToString:@"click_headline"]) {
+            if ([categoryName hasPrefix:@"_"]) {
+                categoryName = [categoryName substringFromIndex:1];
+            }
+        }
+    }
+    
+    return categoryName;
 }
 
 - (void)p_sendDetailDeallocTrack
@@ -2577,7 +2648,7 @@
     }
     
     // toolbar 禁表情
-    BOOL isBanRepostOrEmoji = ![KitchenMgr getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
+    BOOL isBanRepostOrEmoji = ![TTKitchen getBOOL:KKCCommentRepostFirstDetailEnable] || (self.detailModel.adID > 0) || ak_banEmojiInput();
     if ([self.commentViewController respondsToSelector:@selector(tt_banEmojiInput)]) {
         self.toolbarView.banEmojiInput = self.commentViewController.tt_banEmojiInput || isBanRepostOrEmoji;
     }
@@ -2589,6 +2660,7 @@
 {
     if (!model.userDigged) {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
         [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
         [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
@@ -2597,6 +2669,18 @@
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
         [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+    } else {
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
+        [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+        [params setValue:self.detailModel.article.groupModel.groupID forKey:@"group_id"];
+        [params setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
+        [params setValue:model.commentID.stringValue forKey:@"comment_id"];
+//        [params setValue:model.userID.stringValue forKey:@"user_id"];
+        [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
+        [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
+        [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
+        [params setValue:@"comment" forKey:@"position"];
+        [TTTrackerWrapper eventV3:@"rt_like" params:params];
     }
 }
 
@@ -2610,6 +2694,9 @@
 
 - (void)tt_commentViewController:(id<TTCommentViewControllerProtocol>)ttController avatarTappedWithCommentModel:(id<TTCommentModelProtocol>)model
 {
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     if ([model.userID longLongValue] == 0) {
         return;
     }
@@ -2655,7 +2742,17 @@
     [mdict setValue:self.detailModel.categoryID forKey:@"categoryName"];
     [mdict setValue:self.detailModel.article.groupModel.groupID forKey:@"groupId"];
     [mdict setValue:self.detailModel.article forKey:@"group"];
+    
+    [mdict setValue:self.detailModel.categoryID forKey:@"categoryID"];
+    [mdict setValue:self.detailModel.clickLabel forKey:@"enterFrom"];
+    [mdict setValue:self.detailModel.logPb forKey:@"logPb"];
+
     TTCommentDetailViewController *detailRoot = [[TTCommentDetailViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(mdict.copy)];
+    
+    detailRoot.categoryID = self.detailModel.categoryID;
+    detailRoot.enterFrom = self.detailModel.clickLabel;
+    detailRoot.logPb = self.detailModel.logPb;
+
     TTModalContainerController *navVC = [[TTModalContainerController alloc] initWithRootViewController:detailRoot];
     navVC.containerDelegate = self;
     if ([TTDeviceHelper OSVersionNumber] < 8.0f) {

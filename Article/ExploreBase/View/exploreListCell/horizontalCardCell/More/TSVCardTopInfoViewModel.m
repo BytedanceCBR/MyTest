@@ -25,10 +25,11 @@
 
 + (BOOL)shouldShowTopInfoViewForCollectionViewCellStyle:(TTHorizontalCardContentCellStyle)style
 {
-    if (style == TTHorizontalCardContentCellStyle5 || style == TTHorizontalCardContentCellStyle6 || style == TTHorizontalCardContentCellStyle7 || style == TTHorizontalCardContentCellStyle8) {
-        return NO;
-    }
-    return YES;
+    return NO;
+//    if (style == TTHorizontalCardContentCellStyle5 || style == TTHorizontalCardContentCellStyle6 || style == TTHorizontalCardContentCellStyle7 || style == TTHorizontalCardContentCellStyle8) {
+//        return NO;
+//    }
+//    return YES;
 }
 
 + (CGFloat)heightForData:(HorizontalCard *)data;

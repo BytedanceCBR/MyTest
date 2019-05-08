@@ -13,6 +13,10 @@
 // 3.x code
 
 #import "AppDelegate.h"
+#import "TTLaunchTracer.h"
+#import "FHEnvContext.h"
+#import "TTAppLogStartupTask.h"
+
 #define APPSEE_ENABLE 0
 
 extern NSString * const SSCommonLogicSettingWebViewQueryStringEnableKey;
@@ -26,14 +30,7 @@ extern NSString * const SSCommonLogicSettingWebViewQueryStringListKey;
 
 - (NSString*)weixinAppID
 {
-//#if INHOUSE
-//    return @"wx1186e32012d8a997";
-//#else
-//    return @"wx50d801314d9eb858";
-//#endif
-    
-    // 爱看微信appid
-    return @"wxc41809a35822b397";
+    return @"wxe96ffc249b33057d";
 }
 
 - (NSString *)dingtalkAppID {
@@ -99,6 +96,7 @@ extern NSString *const kTTAppseeEnableKey;
     /// 注意，这里必须初始化这个Manager.勿删
     
     [self initWebViewCommonQueryStatus];
+    [[TTLaunchTracer shareInstance] setLaunchFrom:TTAPPLaunchFromInitialState];
 
 #if APPSEE_ENABLE
     //越狱渠道开启Appsee监控初始化
@@ -107,12 +105,18 @@ extern NSString *const kTTAppseeEnableKey;
     }
 #endif
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didUserChangeCity) name:kFHSwitchGetLightFinishedNotification object:nil];
     
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
     
 }
 
+-(void)didUserChangeCity {
+    [TTAppLogStartupTask updateCustomerHeader];
+}
+
 - (void) applicationWillEnterForeground:(UIApplication *)application {
+    [[TTLaunchTracer shareInstance] willEnterForeground];
     [super applicationWillEnterForeground:application];
 }
 

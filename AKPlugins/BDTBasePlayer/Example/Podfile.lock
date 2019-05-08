@@ -1,0 +1,378 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.2):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Aspects (1.4.1)
+  - BDTBasePlayer (0.3.43):
+    - Aspects
+    - KVOController
+    - libextobjc
+    - Masonry
+    - ReactiveObjC
+    - TTAdModule
+    - TTBaseLib
+    - TTFlowStatisticsManager
+    - TTNetBusiness
+    - TTPlatformBaseLib/TTTrackerWrapper
+    - TTPlatformBaseLib/TTURLDomainHelper
+    - TTSettingsManager
+    - TTThemed
+    - TTTracker
+    - TTUGCFoundation/TTUGCRichText
+    - TTUIWidget/TTIndicatorView
+    - TTVideo
+    - TTVideoEngine
+  - BDTFactoryConfigurator (0.1.0)
+  - FLAnimatedImage (1.0.12)
+  - FMDB (2.6.2):
+    - FMDB/standard (= 2.6.2)
+  - FMDB/standard (2.6.2)
+  - Godzippa (1.1.0)
+  - JSONModel (1.7.0)
+  - KVOController (1.1.0)
+  - libextobjc (0.4.1):
+    - libextobjc/EXTADT (= 0.4.1)
+    - libextobjc/EXTConcreteProtocol (= 0.4.1)
+    - libextobjc/EXTKeyPathCoding (= 0.4.1)
+    - libextobjc/EXTNil (= 0.4.1)
+    - libextobjc/EXTSafeCategory (= 0.4.1)
+    - libextobjc/EXTScope (= 0.4.1)
+    - libextobjc/EXTSelectorChecking (= 0.4.1)
+    - libextobjc/EXTSynthesize (= 0.4.1)
+    - libextobjc/NSInvocation+EXT (= 0.4.1)
+    - libextobjc/NSMethodSignature+EXT (= 0.4.1)
+    - libextobjc/RuntimeExtensions (= 0.4.1)
+    - libextobjc/UmbrellaHeader (= 0.4.1)
+  - libextobjc/EXTADT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTConcreteProtocol (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTKeyPathCoding (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTNil (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSafeCategory (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTScope (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSelectorChecking (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/EXTSynthesize (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSInvocation+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/NSMethodSignature+EXT (0.4.1):
+    - libextobjc/RuntimeExtensions
+  - libextobjc/RuntimeExtensions (0.4.1)
+  - libextobjc/UmbrellaHeader (0.4.1)
+  - libwebp (0.6.0):
+    - libwebp/core (= 0.6.0)
+    - libwebp/dec (= 0.6.0)
+    - libwebp/demux (= 0.6.0)
+    - libwebp/dsp (= 0.6.0)
+    - libwebp/enc (= 0.6.0)
+    - libwebp/mux (= 0.6.0)
+    - libwebp/utils (= 0.6.0)
+    - libwebp/webp (= 0.6.0)
+  - libwebp/core (0.6.0):
+    - libwebp/webp
+  - libwebp/dec (0.6.0):
+    - libwebp/core
+  - libwebp/demux (0.6.0):
+    - libwebp/core
+  - libwebp/dsp (0.6.0):
+    - libwebp/core
+  - libwebp/enc (0.6.0):
+    - libwebp/core
+  - libwebp/mux (0.6.0):
+    - libwebp/core
+  - libwebp/utils (0.6.0):
+    - libwebp/core
+  - libwebp/webp (0.6.0)
+  - Masonry (1.0.1)
+  - MJExtension (3.0.13)
+  - MJRefresh (3.1.15.1)
+  - ReactiveObjC (3.0.0)
+  - SDWebImage/Core (4.1.0)
+  - SDWebImage/GIF (4.1.0):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - SDWebImage/WebP (4.1.0):
+    - libwebp
+    - SDWebImage/Core
+  - SSZipArchive (1.6.2)
+  - TTABManager (0.0.8):
+    - TTBaseLib
+  - TTAdModule (0.1.23):
+    - JSONModel
+    - MJRefresh
+    - TTBaseLib
+    - TTImage
+    - TTInstallService
+    - TTMonitor
+    - TTUIWidget
+  - TTAvatar (0.4.5):
+    - SDWebImage/Core
+    - TTBaseLib
+    - TTImage
+    - TTThemed
+    - TTUserSettings
+    - TTVerifyKit
+  - TTBaseLib (1.0.29):
+    - TTBaseLib/TTBaseTool (= 1.0.29)
+    - TTBaseLib/TTBusinessManager (= 1.0.29)
+    - TTBaseLib/TTCategory (= 1.0.29)
+    - TTBaseLib/TTDeviceHelper (= 1.0.29)
+    - TTBaseLib/TTNetworkHelper (= 1.0.29)
+    - TTBaseLib/TTRobust (= 1.0.29)
+    - TTBaseLib/TTSandBoxHelper (= 1.0.29)
+    - TTBaseLib/TTUIResponderHelper (= 1.0.29)
+  - TTBaseLib/TTBaseTool (1.0.29)
+  - TTBaseLib/TTBusinessManager (1.0.29)
+  - TTBaseLib/TTCategory (1.0.29)
+  - TTBaseLib/TTDeviceHelper (1.0.29)
+  - TTBaseLib/TTNetworkHelper (1.0.29):
+    - TTReachability
+  - TTBaseLib/TTRobust (1.0.29)
+  - TTBaseLib/TTSandBoxHelper (1.0.29)
+  - TTBaseLib/TTUIResponderHelper (1.0.29)
+  - TTDialogDirector/Core (0.1.1)
+  - TTEntityBase (0.2.1):
+    - FMDB (= 2.6.2)
+  - TTFFmpeg (1.2.5):
+    - TTFFmpeg/libavcodec (= 1.2.5)
+    - TTFFmpeg/libavdevice (= 1.2.5)
+    - TTFFmpeg/libavfilter (= 1.2.5)
+    - TTFFmpeg/libavformat (= 1.2.5)
+    - TTFFmpeg/libavresample (= 1.2.5)
+    - TTFFmpeg/libavutil (= 1.2.5)
+    - TTFFmpeg/libpostproc (= 1.2.5)
+    - TTFFmpeg/libswresample (= 1.2.5)
+    - TTFFmpeg/libswscale (= 1.2.5)
+  - TTFFmpeg/libavcodec (1.2.5)
+  - TTFFmpeg/libavdevice (1.2.5)
+  - TTFFmpeg/libavfilter (1.2.5)
+  - TTFFmpeg/libavformat (1.2.5)
+  - TTFFmpeg/libavresample (1.2.5)
+  - TTFFmpeg/libavutil (1.2.5)
+  - TTFFmpeg/libpostproc (1.2.5)
+  - TTFFmpeg/libswresample (1.2.5)
+  - TTFFmpeg/libswscale (1.2.5)
+  - TTFileUploadClient (1.5.1.1):
+    - TTPlayerSDK (~> 2.0)
+  - TTFlowStatisticsManager (0.0.8):
+    - JSONModel
+    - TTBaseLib
+    - TTNetworkManager (< 3)
+    - TTPlatformBaseLib/TTURLDomainHelper
+  - TTImage (0.7.8):
+    - SDWebImage/Core (= 4.1.0)
+    - SDWebImage/GIF (= 4.1.0)
+    - SDWebImage/WebP (= 4.1.0)
+    - TTThemed
+  - TTInstallService (1.1.1):
+    - TTNetworkManager (>= 2.1.0)
+  - TTMonitor (0.8.1):
+    - FMDB (= 2.6.2)
+    - TTNetworkManager
+    - TTReachability
+  - TTNetBusiness (0.0.9):
+    - JSONModel
+    - TTABManager
+    - TTBaseLib
+    - TTInstallService
+    - TTMonitor
+    - TTNetworkManager
+    - TTPersistence
+    - TTServiceKit
+    - TTThemed
+    - TTTracker
+    - TTUserSettings
+  - TTNetworkManager (2.2.8.9):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.5.1)
+  - TTPersistence (0.2.3)
+  - TTPlatformBaseLib/TTTrackerWrapper (0.2.11):
+    - SSZipArchive (~> 1.6.2)
+    - TTTracker
+  - TTPlatformBaseLib/TTURLDomainHelper (0.2.11):
+    - SSZipArchive (~> 1.6.2)
+  - TTPlatformUIModel/HPGrowingTextView (0.2.30.3):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTDialogDirector/Core
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTModel (0.2.30.3):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTDialogDirector/Core
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlatformUIModel/TTSeachBarView (0.2.30.3):
+    - JSONModel
+    - MJExtension
+    - TTBaseLib
+    - TTDialogDirector/Core
+    - TTEntityBase
+    - TTImage
+    - TTRoute
+    - TTUIWidget
+  - TTPlayerSDK (2.9.3.14):
+    - TTFFmpeg (~> 1.0)
+  - TTPreloaderSDK (1.4.16):
+    - TTPlayerSDK (~> 2.0)
+  - TTReachability (0.1.10)
+  - TTRoute (0.2.21)
+  - TTServiceKit (0.4.2)
+  - TTSettingsManager (0.3.1):
+    - libextobjc
+    - TTMonitor
+  - TTThemed (0.1.8):
+    - TTBaseLib
+  - TTTracker (1.1.1):
+    - FMDB (~> 2.6.2)
+    - TTInstallService (>= 1.1.1)
+    - TTNetworkManager (>= 2.1.0)
+  - TTUGCFoundation/TTUGCApiModel (0.1.5):
+    - JSONModel
+    - TTBaseLib
+    - TTNetworkManager
+  - TTUGCFoundation/TTUGCRichText (0.1.5):
+    - BDTFactoryConfigurator
+    - JSONModel
+    - KVOController
+    - TTAvatar
+    - TTBaseLib
+    - TTNetworkManager
+    - TTPlatformBaseLib/TTTrackerWrapper
+    - TTPlatformBaseLib/TTURLDomainHelper
+    - TTPlatformUIModel/HPGrowingTextView
+    - TTPlatformUIModel/TTModel
+    - TTPlatformUIModel/TTSeachBarView
+    - TTServiceKit
+    - TTThemed
+    - TTUGCFoundation/TTUGCApiModel
+    - TTUIWidget
+  - TTUIWidget (0.8.46):
+    - KVOController (= 1.1.0)
+    - Masonry (= 1.0.1)
+    - TTBaseLib
+    - TTImage
+    - TTRoute
+    - TTThemed
+    - TTUIWidget/TTIndicatorView (= 0.8.46)
+    - TTVerifyKit
+  - TTUIWidget/TTIndicatorView (0.8.46):
+    - KVOController (= 1.1.0)
+    - Masonry (= 1.0.1)
+    - TTBaseLib
+    - TTImage
+    - TTRoute
+    - TTThemed
+    - TTVerifyKit
+  - TTUserSettings (0.3.4):
+    - TTBaseLib
+    - TTNetworkManager (< 3.0)
+  - TTVerifyKit (0.3.1):
+    - SDWebImage/WebP (>= 4.1)
+    - TTBaseLib
+    - TTThemed
+  - TTVideo (1.1.1):
+    - TTPlayerSDK
+  - TTVideoEngine (1.8.3.8):
+    - TTPlayerSDK (~> 2.8)
+
+DEPENDENCIES:
+  - BDTBasePlayer (from `../`)
+  - TTFFmpeg (= 1.2.5)
+  - TTFileUploadClient (= 1.5.1.1)
+  - TTPlayerSDK (= 2.9.3.14)
+  - TTPreloaderSDK (= 1.4.16)
+  - TTVideoEngine (= 1.8.3.8)
+
+EXTERNAL SOURCES:
+  BDTBasePlayer:
+    :path: ../
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  Aspects: 7595ba96a6727a58ebcbfc954497fc5d2fdde546
+  BDTBasePlayer: 6031073a872aa1e7d65507c0f9a860c628da10d1
+  BDTFactoryConfigurator: 1ee2028af5006409976ff725d18e602d680de165
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
+  FMDB: 854a0341b4726e53276f2a8996f06f1b80f9259a
+  Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
+  JSONModel: 840bc0fcffb24b8454d2c026bf26fea454b8e98d
+  KVOController: 321b5fc59300fcaabd42c0f679baa7a27efbb2fd
+  libextobjc: a650fc1bf489a3d3a9bc2e621efa3e1006fc5471
+  libwebp: 1d5a07c2eb97f9c31bd5f154bb82efc0ea67c6a2
+  Masonry: a1a931a0d08870ed8ae415a2ea5ea68ebcac77df
+  MJExtension: 5932755f451458eefa24239358817f8d291240c7
+  MJRefresh: 5f8552bc25ca8751c010f621c1098dbdaacbccd6
+  ReactiveObjC: ce79989e8684b9086b5f8d0c74bc7b81a8729c9e
+  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+  SSZipArchive: 428eb1ac8d37dd133404d30f422b23958c1f9acc
+  TTABManager: b57b5ef660a17fdbe85c40d885b91d67478a0013
+  TTAdModule: 8f583d7748de13bf547f9d3aa87ea0c6da3f8525
+  TTAvatar: 96f37dda51a91c834f79197fa3a4cf7ba3d99ec9
+  TTBaseLib: 136b610caadf65d224c15fa2a13a0bebfafd7421
+  TTDialogDirector: c5a357e6fd9fb47941e82ea8b1c6ec9e319bc8cd
+  TTEntityBase: 2a3c254d18dfdb80e7f4f0c4ab5b19b35a5763fa
+  TTFFmpeg: 5308e3b13de50e4d0a3f796972299b6c1a4002f0
+  TTFileUploadClient: 0d1607b0c4c9eddf930bdb2bfc119706ed181c07
+  TTFlowStatisticsManager: 550abf3d38167f8e2c5cc7e238ed3ac30d561447
+  TTImage: 1adddb87a5911c4b63f5669c321644bc0a7f250c
+  TTInstallService: 4a8901c9b0b71ababc06a19b09ef0d1c8152e7dc
+  TTMonitor: 81d9415841e0997fa1780af08f5bb1bd2bd10b50
+  TTNetBusiness: e79985fad981ee94a6ef97698065a20ec560882d
+  TTNetworkManager: 62757b7d4f75420d1712facace9cb5aa28380733
+  TTPersistence: efdb5743bbe6b3413570363d29ccb1a83f415426
+  TTPlatformBaseLib: b6023b0c684fa8a3c685ccf1cceadf302a8041f0
+  TTPlatformUIModel: 53bce6622abc659dee28787551339c8afedabc39
+  TTPlayerSDK: 47f24a5d30223e072ec7fbf27af3e2ae83d763b9
+  TTPreloaderSDK: 733b12e6405545ad494818bfe3095c036abb1838
+  TTReachability: 56ed3fd585815fd34cbb613ad6fe28b762c42e80
+  TTRoute: ec25782645d9c8af0e2549caab37c0cdf43464f3
+  TTServiceKit: 77b50aa5724a7a5e2aeecae59066c5bc47b041c3
+  TTSettingsManager: 5f210d19575ae35dde7e3a00c8293d3b1fb46e4c
+  TTThemed: 4b4316dd108957d45ed6c2f3d4c89c969ebf48b2
+  TTTracker: 50dfda709636c94e9e5b9775b3ca9c0ed4852833
+  TTUGCFoundation: 120644665c90d3d49d57441723dbdbc50d0eee3b
+  TTUIWidget: 5bcf71821d0f3895765cda5acecb92a82e979e13
+  TTUserSettings: 8214e9b9707b42dc450c2337ef5e9ca77456e0a4
+  TTVerifyKit: 0481fd3dbf2edf40fe77e6bcb0fdb273ebd2937f
+  TTVideo: dae14d8b5c4426ee458257eae45b0cd13b4cb02c
+  TTVideoEngine: 6a02e42372cdff140cd97195633eb4d5e1b8e0e8
+
+PODFILE CHECKSUM: 61d69a81c2264e260c0c0321f4c03a24672bd9df
+
+COCOAPODS: 1.4.0

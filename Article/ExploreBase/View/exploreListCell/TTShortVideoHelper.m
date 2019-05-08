@@ -72,6 +72,25 @@ static NSString * const kTSVDownloadHost = @"ugc_video_download";
     [[NSNotificationCenter defaultCenter] postNotificationName:kCategoryManagementViewCategorySelectedNotification object:self userInfo:userInfo];
 }
 
+
+
+#pragma mark - More Button Click
++ (BOOL)shouldHandleClickWithData:(ExploreOrderedData *)orderedData
+{
+    BOOL shouldHandleClick = NO;
+    HorizontalCard *horizontalCard = orderedData.horizontalCard;
+    NSString *urlStr = horizontalCard.showMoreModel.urlString;
+    if (!isEmptyString(urlStr)) {
+        NSURL *url = [TTStringHelper URLWithURLString:urlStr];
+        TTRouteParamObj *params = [[TTRoute sharedRoute] routeParamObjWithURL:url];
+        NSString *host = params.host;
+        if ([host isEqualToString:kTSVOpenTabHost]) {
+            shouldHandleClick = YES;
+        }
+    }
+    return shouldHandleClick;
+}
+
 #pragma mark - Cell Style
 + (TTHorizontalCardStyle)cardStyleWithData:(ExploreOrderedData *)orderedData
 {

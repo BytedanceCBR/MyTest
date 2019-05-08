@@ -9,6 +9,7 @@
 
 
 #import "SSThemed.h"
+#define kTTUGCToolbarButtonSize 44
 
 
 @class TTUGCEmojiInputView;

@@ -110,7 +110,7 @@
     //u11
     if ([orderedData isU11Cell]) {
         NSDictionary *extraDic = [TTLayOutCellDataHelper getLogExtraDictionaryWithOrderedData:orderedData];
-//        [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:orderedData.uniqueID source:nil extraDic:extraDic];
+        [TTTrackerWrapper ttTrackEventWithCustomKeys:@"cell" label:@"go_detail" value:orderedData.uniqueID source:nil extraDic:extraDic];
     }
     
     Article *article = (Article *)orderedData.originalData;
@@ -327,6 +327,7 @@
 //                    [[TTCommonwealManager sharedInstance] trackerWithSource:@"feed"];
 //                }
                 [[TTRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+                // add by zjing 问答走这里
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(statParams)];
                 //针对广告不能通过sdk打开，但是传的有内部schema的情况
                 if(!isEmptyString(orderedData.ad_id)){
@@ -468,7 +469,7 @@
                 if ([orderedData.raw_ad isFullScreenVideoStyle]) {
                     [statParams setValue:@(0) forKey:@"animated"];
                 }
-                
+                 // add by zjing 家居走这里
                 [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
                 
                 // 文章、图集等 启动关联时长统计
@@ -520,7 +521,7 @@
         }
 
         [statParams setValue:shareMovie forKey:@"movie_shareMovie"];
-        [statParams setValue:[NSNumber numberWithBool:YES] forKey:@"disableNewVideoDetailViewController"];
+        [statParams setValue:[NSNumber numberWithBool:YES] forKey:@"disableNewVideoDetailViewController"]; //决定是TTVVideoDetailViewController 还是 TTVideoDetailViewController, 如果选择TTVideoDetailViewController，点击评论按钮进入详情页会出现白屏和闪退问题。
 
         if ([cellView.cell conformsToProtocol:@protocol(ExploreMovieViewCellProtocol)]) {
             if ([[TTVideoAutoPlayManager sharedManager] dataIsAutoPlaying:orderedData]) {

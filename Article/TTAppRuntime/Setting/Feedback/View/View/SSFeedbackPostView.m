@@ -55,12 +55,14 @@
         [self pickedImage:_editedImg withReferenceURL:_editedImgReferenceURL];
         self.editedImgWebURI = [SSFeedbackManager needPostImgURI];
         self.inputTextView.placeHolder = @"如需传图，请点右边--->";
-        self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:kColorText3];
+        self.inputTextView.placeHolderColor = [UIColor tt_themedColorForKey:kFHColorCoolGrey3];
         self.inputTextView.text = [SSFeedbackManager needPostMsg];
         [self.inputTextView showOrHidePlaceHolderTextView];
         self.inputTextView.delegate = self;
+        
+        // add by zjing 去掉初始化截屏
         //当画面初始化时，初始化截屏图片
-         _screenImg = [self getCurrentFeedImage];
+//         _screenImg = [self getCurrentFeedImage];
         
     }
     return self;
@@ -102,7 +104,7 @@
     
     NSMutableDictionary * postParameter = [NSMutableDictionary dictionaryWithCapacity:10];
     [postParameter setValue:[TTSandBoxHelper appName] forKey:@"app_name"];
-    [postParameter setValue:[NSNumber numberWithInteger:1] forKey:@"watermark"];
+    [postParameter setValue:[NSNumber numberWithInteger:0] forKey:@"watermark"];
     [postParameter setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
     
     __weak typeof(self) wself = self;

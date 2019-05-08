@@ -49,24 +49,26 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
 
 - (void)dealloc
 {
-    [_avatarLabelButton removeObserver:self forKeyPath:@"alpha"];
+//    [_avatarLabelButton removeObserver:self forKeyPath:@"alpha"];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
-{
-    //头像添加点击态
-    if (object == _avatarLabelButton && [keyPath isEqualToString:@"alpha"]) {
-        _avatarLabel.alpha = _avatarLabelButton.alpha;
-        _avatarView.alpha = _avatarLabelButton.alpha;
-    }
-}
+//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+//{
+//    //头像添加点击态
+//    if (object == _avatarLabelButton && [keyPath isEqualToString:@"alpha"]) {
+//        _avatarLabel.alpha = _avatarLabelButton.alpha;
+//        _avatarView.alpha = _avatarLabelButton.alpha;
+//    }
+//}
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.schemeType = TTVideoCellActionBarLayoutSchemeDefault;
-        [self.avatarLabelButton addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:nil];
-        [self.avatarButton addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:nil];
+        
+        // add by zjing remove 头像点击效果
+//        [self.avatarLabelButton addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:nil];
+//        [self.avatarButton addObserver:self forKeyPath:@"alpha" options:NSKeyValueObservingOptionNew context:nil];
     }
     return self;
 }
@@ -556,8 +558,8 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     self.avatarButton.hidden = YES;
     self.shouldHiddenTypeLabel = YES;
     self.shouldHiddenAvatarView = YES;
-    self.avatarLabelButton.userInteractionEnabled = YES;
-    self.avatarButton.userInteractionEnabled = YES;
+    self.avatarLabelButton.userInteractionEnabled = NO;
+    self.avatarButton.userInteractionEnabled = NO;
     self.followButton.hidden = YES;
     self.redPacketFollowButton.hidden = YES;
     [self.avatarView hideVerifyView];
@@ -742,7 +744,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     _avatarLabel.height = KButtonsMinHeight - 4;
 
     if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
+        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         _avatarLabel.frame = CGRectMake(kLeftPadding, 9, _avatarLabel.width, 28.f);
     }else{
         _avatarLabel.left = left;
@@ -820,7 +822,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     //名称
     _avatarLabel.height = KButtonsMinHeight - 4;
     if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
+        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         _avatarLabel.frame = CGRectMake(kLeftPadding, 9, _avatarLabel.width, 28.f);
     }else{
         _avatarLabel.left = left;
@@ -889,6 +891,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
         _avatarView.borderColor = [UIColor tt_themedColorForKey:kColorText7];;
         _avatarView.borderWidth = 0.f;
     }
+    _avatarView.userInteractionEnabled = NO;
 
     //名称
     _avatarLabel.height = KButtonsMinHeight;
@@ -896,7 +899,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     avatarLabelWidth = avatarLabelWidth < _avatarLabel.width ? avatarLabelWidth :_avatarLabel.width;
     _avatarLabel.width = avatarLabelWidth;
     if (ttvs_isVideoFeedCellHeightAjust() > 1) {
-        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]];
+        _avatarLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:[TTDeviceUIUtils tt_fontSize:14]] ? : [UIFont boldSystemFontOfSize:[TTDeviceUIUtils tt_fontSize:14]];
         _avatarLabel.frame = CGRectMake(kLeftPadding, 9, _avatarLabel.width, 28.f);
         if (avatarLabelWidth < [self.class avatarHeight]) {
             _avatarLabel.centerX = _avatarView.centerX;

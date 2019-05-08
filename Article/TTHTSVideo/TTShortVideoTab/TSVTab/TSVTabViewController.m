@@ -201,7 +201,7 @@
 
 - (void)tsvCategoryContainerViewController:(TSVCategoryContainerViewController *)vc scrollFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex completePercent:(CGFloat)percent
 {
-//    [self.topBarViewController scrollFromIndex:fromIndex toIndex:toIndex completePercent:percent];
+	[self.topBarViewController scrollFromIndex:fromIndex toIndex:toIndex completePercent:percent];
 }
 
 - (void)tsvCategoryContainerViewController:(TSVCategoryContainerViewController *)vc willScrollToIndex:(NSInteger)toIndex

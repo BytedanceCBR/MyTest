@@ -42,6 +42,7 @@
 @property (nonatomic, copy) NSString *message;
 @property (nonatomic, assign) CGFloat tableViewWidth;
 @property (nonatomic, assign) BOOL isPopover;
+@property (nonatomic, assign) BOOL isGrayCancelTitle;
 
 @property (nonatomic, strong) NSMutableArray *actionBlockArr;
 @property (nonatomic, strong) NSMutableArray *textFieldArr;
@@ -361,9 +362,10 @@
             
             [self.actionSheetView addSubview:self.actionSheetCancelButtonBgView];
             [self.actionSheetView addSubview:self.actionSheetCancelButton];
+            
+            
         }
         
-
         [self.actionSheetView addSubview:self.contentTableView];
         addedContentView = self.actionSheetView;
 
@@ -392,7 +394,7 @@
     self.headerView.backgroundColor = SSGetThemedColorWithKey(kColorBackground4);
     self.contentTableView.separatorColor = SSGetThemedColorWithKey(kColorLine1);
     
-    [self.actionSheetCancelButton setTitleColor:self.actionSheetCancelAction.actionElementModel.elementColor forState:UIControlStateNormal];
+    [self.actionSheetCancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.actionSheetCancelButton setBackgroundColor:SSGetThemedColorWithKey(kColorBackground4)];
     
     self.actionSheetCancelButtonBgView.backgroundColor = SSGetThemedColorWithKey(kColorBackground4);
@@ -476,6 +478,25 @@
             actionType == TTThemedAlertActionTypeCancel) {
             self.actionSheetCancelAction = action;
         }
+    }
+}
+
+- (void)addActionWithGrayTitle:(nullable NSString *)title actionType:(TTThemedAlertActionType)actionType actionBlock:(nullable TTThemedAlertActionBlock)actionBlock
+{
+    if (title) {
+        TTThemedAlertActionModel *action = [[TTThemedAlertActionModel alloc] initWithAlertType:self.alertType
+                                                                                    actionType:actionType
+                                                                                   actionTitle:title
+                                                                                   actionBlock:actionBlock];
+        action.actionElementModel.elementColor = [UIColor grayColor];
+        [self.actionBlockArr addObject:action];
+        
+        //特殊处理actionSheet的cancelAction
+        if (self.alertType == TTThemedAlertControllerTypeActionSheet &&
+            actionType == TTThemedAlertActionTypeCancel) {
+            self.actionSheetCancelAction = action;
+        }
+        self.isGrayCancelTitle = YES;
     }
 }
 

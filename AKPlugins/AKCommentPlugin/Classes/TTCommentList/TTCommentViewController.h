@@ -21,4 +21,5 @@
 - (nonnull instancetype)initWithViewFrame:(CGRect)frame
                                dataSource:(nullable id<TTCommentDataSource>)dataSource
                                  delegate:(nullable id<TTCommentViewControllerDelegate>)delegate NS_DESIGNATED_INITIALIZER;
+- (void) bindTraceDic:(NSMutableDictionary *)params;
 @end

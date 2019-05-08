@@ -45,7 +45,8 @@
 {
     NSMutableArray *activityItems = @[].mutableCopy;
 //    [activityItems addObject:[TTNightModelContentItem new]];
-    [activityItems addObject:[TTFontSettingContentItem new]];
+    // add by zjing 去掉字体设置
+//    [activityItems addObject:[TTFontSettingContentItem new]];
     return [activityItems copy];
 }
 

@@ -12,7 +12,7 @@
 #import <TTModuleBridge.h>
 #import "DetailActionRequestManager.h"
 
-static NSString * const TT_DOMAIN = @"https://m.quduzixun.com";
+static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
 
 @implementation AWEVideoDetailManager
 

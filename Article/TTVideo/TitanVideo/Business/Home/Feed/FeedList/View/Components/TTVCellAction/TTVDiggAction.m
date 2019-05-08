@@ -18,7 +18,6 @@
 
 @implementation TTVDiggActionEntity
 
-
 @end
 
 @interface TTVDiggAction ()
@@ -65,6 +64,7 @@
             self.entity.userDigg = @(NO);
             self.buryAction.entity.userDigg = @(NO);
             int diggCount = [self.entity.diggCount intValue] - 1;
+            self.entity.diggCount = @(diggCount);
             SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:[self.entity.userDigg boolValue] uniqueIDStr:unique_id);
             SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
         }];
@@ -92,6 +92,7 @@
             self.entity.userDigg = @(YES);
             self.buryAction.entity.userDigg = @(YES);
             int diggCount = [self.entity.diggCount intValue] + 1;
+            self.entity.diggCount = @(diggCount);
            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
         }];

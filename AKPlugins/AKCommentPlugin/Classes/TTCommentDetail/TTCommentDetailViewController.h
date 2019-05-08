@@ -27,5 +27,11 @@ extern NSString *const kTTCommentDetailForwardCommentNotification;
 @property (nonatomic, strong) TTCommentDetailToolbarView *toolbarView;
 @property (nonatomic, strong) Article *article;
 
+// 埋点用
+@property (nonatomic, copy) NSString *enterFrom;
+@property (nonatomic, copy) NSString *categoryID;
+@property (nonatomic, strong) NSDictionary *logPb;
+
+
 @end
 

@@ -150,7 +150,7 @@ static NewsDetailLogicManager * shareManager;
     if ([clickLabel isEqualToString:@"click_news_alert"]) {
         return clickLabel;
     } else if ([clickLabel isEqualToString:@"click_apn"]) {
-        return @"click_news_notify";
+        return @"push";
     }
     
     //小说详情页各入口，因为enter_from定义非常恶心，拎出来特殊处理
@@ -167,18 +167,30 @@ static NewsDetailLogicManager * shareManager;
     }
     
     //categoryID非空表示从feed进入
-    if (isEmptyString(categoryID) || [categoryID isEqualToString:@"xx"]) {
+    if (isEmptyString(categoryID)) {
         if ([clickLabel isEqualToString:@"click_apn"]) {
-            return @"click_news_notify";
-        }
-        else {
-            return clickLabel;
+            return @"push";
+        } else {
+            return @"push";
         }
     }
     else {
         if ([categoryID isEqualToString:kTTMainCategoryID] ||
             [clickLabel isEqualToString:@"click_headline"]) {
             return clickLabel;
+        }else if ([categoryID isEqualToString:@"xx"]) {
+            
+            if ([clickLabel isEqualToString:@"click_apn"] || [@"" isEqualToString:clickLabel]) {
+                return @"push";
+            } else {
+                return clickLabel;
+            }
+            
+        } else if ([clickLabel isEqualToString:@"click_favorite"] || [clickLabel isEqualToString:@"click_related"]) {
+            return clickLabel;
+        }
+        else  if ([categoryID isEqualToString:@"f_house_news"]) {
+            return @"click_headline";
         }
         else {
             return @"click_category";

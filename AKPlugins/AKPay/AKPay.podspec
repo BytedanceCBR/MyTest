@@ -22,8 +22,8 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '7.0'
   s.requires_arc = true
 
-  s.source_files = 'AKPay/PayService/**/SSPayManager.{h,m}'
-  s.public_header_files = 'AKPay/PayService/**/SSPayManager.h'
+  s.source_files = 'AKPay/PayService/**/*.{h,m}'
+  s.public_header_files = 'AKPay/PayService/**/*.h'
   s.resources = 'AKPay/PaySDK/Resource/*'
   s.dependency 'TTThirdPartySDKs/WeChatSDK'
 

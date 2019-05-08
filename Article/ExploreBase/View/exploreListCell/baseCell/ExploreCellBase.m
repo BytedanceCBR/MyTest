@@ -42,7 +42,7 @@
 #import <TSVDebugInfoConfig.h>
 
 NSInteger const kCustomEditControlWidth = 53.f;
-NSInteger const kCellPadding = 15;
+
 @interface ExploreCellBase ()
 @property (nonatomic, assign) UITableViewCellStateMask willChangeToCellState;
 @property (nonatomic, assign) BOOL isfakeEditting;
@@ -190,7 +190,7 @@ NSInteger const kCellPadding = 15;
     [super layoutSubviews];
     CGRect rect = [TTUIResponderHelper splitViewFrameForView:self];
     CGFloat topPadding = [self paddingTopBottomForCellView];
-    self.cellView.frame = CGRectMake(kCellPadding, topPadding, rect.size.width - kCellPadding * 2, rect.size.height - topPadding * 2);
+    self.cellView.frame = CGRectMake(0, topPadding, rect.size.width, rect.size.height - topPadding * 2);
     
     if ([TTDeviceHelper isPadDevice])
     {
@@ -227,7 +227,7 @@ NSInteger const kCellPadding = 15;
             self.cellView.left = -30;
             self.willChangeToCellState = 0;//如果cell被delete后，貌似本cell是被复用的 但本变量未被重置，这样是有问题的，手动把变量状态清0. 是改动最小的办法
         }else{
-            self.cellView.left = kCellPadding;
+            self.cellView.left = 0;
         }
     }
     
@@ -529,6 +529,7 @@ NSInteger const kCellPadding = 15;
                     [statParams setValue:NSStringFromCGRect(picViewFrame) forKey:@"picViewFrame"];
                     [statParams setValue:@(picViewStyle) forKey:@"picViewStyle"];
                     [statParams setValue:self.cellView forKey:@"targetView"];
+                    statParams[@"ordered_data"] = orderedData;
                 }
                 
                 
@@ -653,8 +654,15 @@ NSInteger const kCellPadding = 15;
 //        }
 //    }
 else if ([((ExploreOrderedData *)self.cellData).originalData isKindOfClass:[TSVShortVideoOriginalData class]]) {
-        [self didSelectWithContext:nil];
-    }
+
+    TTFeedCellSelectContext *context = [TTFeedCellSelectContext new];
+    context.refer = viewModel.refer;
+    
+    ExploreOrderedData *orderedData = (ExploreOrderedData *)self.cellData;
+    context.orderedData = orderedData;
+    //            context.categoryId = self.categoryID;
+    [self didSelectWithContext:context];
+}
 }
 
 - (void)willDisplayAtIndexPath:(nonnull NSIndexPath *)indexPath viewModel:(nonnull TTFeedContainerViewModel *)viewModel{

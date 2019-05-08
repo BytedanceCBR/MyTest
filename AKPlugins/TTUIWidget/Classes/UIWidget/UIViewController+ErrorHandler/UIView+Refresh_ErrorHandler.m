@@ -440,8 +440,54 @@ CGFloat const kTipDurationInfinite = -1.0f;
         }//如果没有错误 看看需不需要加入空白页
         else {
             
-            if (![target performSelector:@selector(tt_hasValidateData)]){
+            if (tip.length > 0 && !self.ttDisableNotifyBar && [target performSelector:@selector(tt_hasValidateData)]){
                 
+                self.ttAssociatedScrollView.ttHasIntegratedMessageBar = YES;
+                
+                if (!self.ttErrorToastView) {
+                    
+                    NSLog(@"ttErrorToastView is nil");
+                    return;
+                    
+                }
+                self.ttErrorToastView.frame = CGRectMake(self.ttContentInset.left,self.ttContentInset.top, self.width - self.ttContentInset.left - self.ttContentInset.right, self.ttMessagebarHeight);
+                [self addSubview:self.ttErrorToastView];
+                
+                
+                __weak typeof(self) wself = self;
+                
+                [(UIView<ErrorToastProtocal> *)self.ttErrorToastView showMessage:tip actionButtonTitle:nil delayHide:kTipDefaultDuration == kTipDurationInfinite? NO:YES duration:kTipDefaultDuration bgButtonClickAction:^(UIButton* btn){
+                    
+                    if (block) {
+                        block();
+                    }
+                    if (duration != kTipDurationInfinite) {
+                        [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
+                        
+                    }
+                    
+                } actionButtonClickBlock:^(UIButton *button) {
+                    
+                    [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
+                    
+                }  didHideBlock:^(id barView) {
+                    [wself.ttAssociatedScrollView.pullDownView messageBarResetContentInset];
+                }];
+                
+                if(duration>0)
+                {
+                    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(resetMessageBarInset) object:nil];
+                    [self performSelector:@selector(resetMessageBarInset) withObject:nil afterDelay:duration];
+                }
+                
+                
+                if ([target respondsToSelector:@selector(handleError:)]) {
+                    
+                    [target performSelector:@selector(handleError:) withObject:error];
+                }
+                
+            } else if (![target performSelector:@selector(tt_hasValidateData)]){
+            
                 if (!self.ttErrorView) {
                     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"TTUIWidgetResources" ofType:@"bundle"];
                     NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];

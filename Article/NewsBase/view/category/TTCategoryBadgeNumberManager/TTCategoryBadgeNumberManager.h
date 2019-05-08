@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateNotifyPointOfCategoryID:(NSString *)categoryID withClean:(BOOL)clean;
 - (void)updateNotifyBadgeNumberOfCategoryID:(NSString *)categoryID withBadgeNumber:(NSUInteger)badgeNumber;
+//新增控制频道红点
+- (void)updateNotifyBadgeNumberOfCategoryID:(NSString *)categoryID withShow:(BOOL)isShow;
 
 - (NSUInteger)badgeNumberOfCategoryID:(NSString *)categoryID;
 - (BOOL)hasNotifyPointOfCategoryID:(NSString *)categoryID;

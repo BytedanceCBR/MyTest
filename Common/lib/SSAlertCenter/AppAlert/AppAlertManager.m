@@ -272,7 +272,7 @@ static AppAlertManager *_alertManager = nil;
                     NSString * eventString = [NSString stringWithFormat:@"appalert_%@_%@", @(count), @(buttonIndex + 1)];
                     wrapperTrackerEvent([TTSandBoxHelper appName], eventString, appAlertModel.actions);
                     
-                    if ([openURL hasPrefix:@"interestingnews1206"] || [openURL hasPrefix:@"fschema"]) {
+                    if ([openURL hasPrefix:@"snssdk1370"]) {
                         NSURL *tURL = [NSURL URLWithString:openURL];
                         if ([[TTRoute sharedRoute] canOpenURL:tURL]) {
                             [[TTRoute sharedRoute] openURLByPushViewController:tURL];

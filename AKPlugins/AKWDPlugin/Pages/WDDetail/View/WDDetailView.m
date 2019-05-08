@@ -164,26 +164,37 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
         [dict setValuesForKeysWithDictionary:self.detailModel.gdExtJsonDict];
     }
     
-    [dict setValue:@"article" forKey:@"category"];
-    [dict setValue:@"read_pct" forKey:@"tag"];
-    [dict setValue:self.detailModel.enterFrom forKey:@"label"];
-    [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
+//    [dict setValue:@"article" forKey:@"category"];
+//    [dict setValue:@"read_pct" forKey:@"tag"];
+//    [dict setValue:self.detailModel.enterFrom forKey:@"label"];
+//    [dict setValue:self.detailModel.answerEntity.ansid forKey:@"value"];
     [dict setValue:@(percent) forKey:@"pct"];
     [dict setValue:@(pageCount) forKey:@"page_count"];
     if (!isEmptyString(self.detailModel.answerEntity.ansid)) {
         [dict setValue:self.detailModel.answerEntity.ansid forKey:@"item_id"];
     }
-    
-    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTracker eventData:dict];
-    }
+    [dict removeObjectForKey:@"origin_source"];
+//    if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
+//        [TTTracker eventData:dict];
+//    }
     
     //Wenda_V3_DoubleSending
     NSMutableDictionary *v3Dic = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     [v3Dic setValue:self.detailModel.answerEntity.ansid forKey:@"group_id"];
     [v3Dic setValue:@(percent) forKey:@"percent"];
     [v3Dic setValue:@(pageCount) forKey:@"page_count"];
-    [TTTrackerWrapper eventV3:@"read_pct" params:v3Dic isDoubleSending:YES];
+    if ([self.detailModel.gdExtJsonDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+        [v3Dic setValue:self.detailModel.gdExtJsonDict[@"log_pb"][@"impr_id"] forKey:@"impr_id"];
+    }
+    [v3Dic setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [v3Dic setValue:[self.detailModel.gdExtJsonDict tt_stringValueForKey:@"category_name"] forKey:@"category_name"];
+    [v3Dic removeObjectForKey:@"origin_source"];
+    [v3Dic removeObjectForKey:@"author_id"];
+    [v3Dic removeObjectForKey:@"article_type"];
+    [v3Dic removeObjectForKey:@"pct"];
+    v3Dic[@"event_type"] = @"house_app2c_v2";
+
+    [TTTracker eventV3:@"read_pct" params:v3Dic isDoubleSending:NO];
 }
 
 - (void)tt_sendStayTimeImpresssion
@@ -1143,6 +1154,10 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
 
 - (void)processRequestShowUserProfileForUserID:(NSString *)userID
 {
+    
+    // add by zjing 去掉个人主页跳转
+    return;
+    
     NSString *schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@&enter_from=com",userID];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:schema]];
 }

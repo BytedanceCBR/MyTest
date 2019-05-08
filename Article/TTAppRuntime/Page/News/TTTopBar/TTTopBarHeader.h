@@ -8,8 +8,8 @@
 #ifndef TTTopBarHeader_h
 #define TTTopBarHeader_h
 
-#define kTopSearchButtonHeight (![TTDeviceHelper isPadDevice] ? 0 : 0.f)
-#define kSelectorViewHeight 44
+#define kTopSearchButtonHeight (![TTDeviceHelper isPadDevice] ? ([TTDeviceHelper is667Screen] ? 40 : 44) : 0.f)
+#define kSelectorViewHeight (![TTDeviceHelper isPadDevice] ? 40 : 48)
 
 #define kMineIconLeft 10
 #define kMineIconW  28
@@ -18,6 +18,8 @@
 //搜索框在背景图上左边距
 #define kSearchFieldLeft (kMineIconLeft + kMineIconW + kMineIconRightGap)
 #define kSearchFieldExtendLeft 15
+#define kSearchImageBackLeft 15
+#define kSearchLabelBackColor [UIColor colorWithHexString:@"#f5f5f5"]
 #define kSearchFieldExtendRight 15
 #define kLogoSearchFieldLeft (kTopBarIconWidth + kLogoIconRight + kLogoIconLeft)
 //搜索label在搜索框上的左边距
