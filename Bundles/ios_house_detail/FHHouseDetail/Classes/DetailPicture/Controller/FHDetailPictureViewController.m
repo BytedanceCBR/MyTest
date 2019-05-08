@@ -495,7 +495,6 @@
     self.topBar.frame = CGRectMake(0, 0, self.view.width, kFHDPTopBarHeight + topInset);
     self.naviView.frame = CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight);
     self.pictureTitleView.frame = CGRectMake(0, topInset + kFHDPTopBarHeight, self.view.width, 42);
-    [self.pictureTitleView.colletionView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -523,6 +522,7 @@
         }
     }
     self.disableAutoPlayVideo = NO;
+    [self.pictureTitleView.colletionView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
