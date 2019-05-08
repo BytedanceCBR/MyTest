@@ -152,7 +152,10 @@
         self.noDataImageView.hidden = YES;
         if (images.count > 1) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            __weak typeof(self) weakSelf = self;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            });
         }
     }else{
         self.infoLabel.hidden = YES;
