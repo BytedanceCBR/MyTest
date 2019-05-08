@@ -195,12 +195,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                 
                 
                 if ([self.tableViewV numberOfSections] > 0 && [self.tableViewV numberOfRowsInSection:0] > 0) {
-                    [self.tableViewV beginUpdates];
                     NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
                     [UIView performWithoutAnimation:^{
                         [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
                     }];
-                    [self.tableViewV endUpdates];
                 }
                 
 //                [UIView performWithoutAnimation:^{
