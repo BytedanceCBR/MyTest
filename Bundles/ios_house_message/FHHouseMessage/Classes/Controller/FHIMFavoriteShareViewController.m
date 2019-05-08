@@ -372,7 +372,7 @@
     trace[@"event_type"] = @"house_app2c_v2";
     trace[@"page_type"] = @"conversation_detail";
     trace[@"house_type"] = [self houseTypeByIndex:self.shareViewModel.currentPage];
-    trace[@"converation_id"] = self.shareViewModel.conversactionId ? : @"";
+    trace[@"conversation_id"] = self.shareViewModel.conversactionId ? : @"";
     trace[@"log_pb"] = @"be_null";
     trace[@"send_total"] = @([self.shareViewModel.selectedItems count]);
     [TTTracker eventV3:@"click_send" params:trace];
