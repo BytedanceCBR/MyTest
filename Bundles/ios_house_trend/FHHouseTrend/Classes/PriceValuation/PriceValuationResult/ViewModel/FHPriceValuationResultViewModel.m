@@ -431,10 +431,6 @@ extern NSString *const kFHToastCountKey;
     }
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"estimate_id"] = self.viewController.model.data.estimateId;
-    params[@"house_type"] = @(2);
-    params[@"phone"] = phoneNum;
-    // add by zjing for test
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : self.neighborhoodDetailModel.data.chooseAgencyList;
     if (selectAgencyList.count > 0) {
         NSMutableArray *array = @[].mutableCopy;
@@ -448,7 +444,7 @@ extern NSString *const kFHToastCountKey;
         }
         params[@"choose_agency_list"] = array;
     }
-    [FHPriceValuationAPI requestSubmitPhoneWithParams:params completion:^(BOOL success, NSError * _Nonnull error) {
+    [FHPriceValuationAPI requestSubmitPhoneWithEstimateId:self.viewController.model.data.estimateId houseType:2 phone:phoneNum params:params completion:^(BOOL success, NSError * _Nonnull error) {
         if(success && !error){
             [wself.alertView dismiss];
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];

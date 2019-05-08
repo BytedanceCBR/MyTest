@@ -78,10 +78,17 @@
     } callbackInMainThread:YES];
 }
 
-+ (TTHttpTask *)requestSubmitPhoneWithParams:(NSDictionary *)params completion:(void (^)(BOOL, NSError * _Nonnull))completion {
++ (TTHttpTask *)requestSubmitPhoneWithEstimateId:(NSString *)estimateId houseType:(FHHouseType)houseType phone:(NSString *)phone params:(NSDictionary *)params completion:(void (^)(BOOL, NSError * _Nonnull))completion {
     NSString *queryPath = @"/f100/api/submit_phone";
     
-    NSString *url = QURL(queryPath);
+    NSMutableString *url = QURL(queryPath).mutableCopy;
+    [url appendString:[NSString stringWithFormat:@"?house_type=%ld",houseType]];
+    if (phone.length > 0) {
+        [url appendString:[NSString stringWithFormat:@"&phone=%@",phone]];
+    }
+    if (estimateId.length > 0) {
+        [url appendString:[NSString stringWithFormat:@"&estimate_id=%@",estimateId]];
+    }
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:POST needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
         BOOL success = NO;
         NSMutableDictionary *result = [NSMutableDictionary dictionary];
