@@ -672,10 +672,9 @@
                                                       category:@{@"status":@(0),@"desc":res}
                                                          extra:@{@"device_id":did}];
                 // 上报Alog
-                BDALOG_WARN(self.condition);
+                BDALOG_WARN_TAG(@"search_house_params", self.condition);
             }
         }
-        
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
    
