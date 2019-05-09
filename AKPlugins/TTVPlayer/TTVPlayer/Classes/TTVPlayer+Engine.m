@@ -90,7 +90,7 @@ static NSString *platformString;
     self.playbackTimeInterval = 0.5;
     
     // 设置缓存为 YES
-//    [self setOptions:@{@(VEKKeyCacheCacheEnable_BOOL):@(YES)}];
+    //    [self setOptions:@{@(VEKKeyCacheCacheEnable_BOOL):@(YES)}];
     self.videoEngine.cacheEnable = YES;
     
     [TTVideoEngine setIgnoreAudioInterruption:YES];
@@ -106,10 +106,10 @@ static NSString *platformString;
             NSString *videoID = self.videoID;
             TTVProgressContext *cachedContext = [self cachedContextForKey:videoID];
             NSTimeInterval startTime = [cachedContext.playbackTime doubleValue];
-//            [self.videoEngine setOptions:@{@(VEKKeyPlayerStartTime_CGFloat):@(startTime)}];
+            //            [self.videoEngine setOptions:@{@(VEKKeyPlayerStartTime_CGFloat):@(startTime)}];
             self.videoEngine.startTime = startTime;
         }
-
+        
         TTVPlayerAction * action = [[TTVPlayerAction alloc] initWithPlayer:self];
         [self.playerStore dispatch:[action startPlayAction]];
     }
@@ -150,15 +150,17 @@ static NSString *platformString;
 
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime complete:(void(^)(BOOL success))finished {
     // 当播放结束的时候，拖动进度条，重新起播
-    if (self.finishStatus && self.playbackState == TTVPlaybackState_Stopped) {
-//        [self.videoEngine setOptions:@{@(VEKKeyPlayerStartTime_CGFloat):@(currentPlaybackTime)}];
-        self.videoEngine.startTime = currentPlaybackTime;
-        [self play];
-        if (finished) {
-            finished(YES);
+    if (self.supportSeekAfterPlayerFinish) {
+        if (self.finishStatus && self.playbackState == TTVPlaybackState_Stopped) {
+            self.videoEngine.startTime = currentPlaybackTime;
+            [self play];
+            if (finished) {
+                finished(YES);
+            }
+            return;
         }
-        return;
     }
+    
     // 播放过程中，设置进度条进度
     @weakify(self);
     self.isSeeking = YES;
@@ -234,12 +236,6 @@ static NSString *platformString;
     if (![self ttv_isvalidNumber:self.videoEngine.currentPlaybackTime]) {
         return;
     }
-//    Debug_NSLog(@"time:currentPlaybackTime%f",self.playbackTime.currentPlaybackTime);
-//    Debug_NSLog(@"time:playableDuration%f",self.videoEngine.playableDuration);
-//    self.playbackTime.currentPlaybackTime;
-//    self.playbackTime.duration;
-//    self.playbackTime.playableDuration;
-//    self.playbackTime.durationWatched;
     
     // 发 action，需要做判断是否有变化
     [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_PlayBackTimeChanged]];
@@ -397,7 +393,7 @@ static NSString *platformString;
     self.readyForDisplay = NO;
     self.firstCallPlay = YES;
     [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_ReadyForDisplayChanged]];
-
+    
     [self updatePlaybackTime];
     
     TTVPlayFinishStatus * finishStatus = [[TTVPlayFinishStatus alloc] init];
@@ -637,7 +633,6 @@ static NSString *platformString;
 - (void)setReadyForDisplay:(BOOL)readyForDisplay {
     objc_setAssociatedObject(self, @selector(readyForDisplay), @(readyForDisplay), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
 - (NSInteger)playStateVirtualStack {
     return [objc_getAssociatedObject(self, @selector(playStateVirtualStack)) integerValue];
 }
@@ -656,25 +651,24 @@ static NSString *platformString;
 - (void)setStartPlayFromLastestCache:(BOOL)startPlayFromLastestCache {
     objc_setAssociatedObject(self, @selector(startPlayFromLastestCache), @(startPlayFromLastestCache), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
-
-- (NSString *)authToken
-{
+- (NSString *)authToken {
     return objc_getAssociatedObject(self, @selector(authToken));
 }
-
-- (void)setAuthToken:(NSString *)authToken
-{
+- (void)setAuthToken:(NSString *)authToken {
     objc_setAssociatedObject(self, @selector(authToken), authToken, OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
-
-- (NSString *)playAuthToken
-{
+- (NSString *)playAuthToken {
     return objc_getAssociatedObject(self, @selector(playAuthToken));
 }
-
-- (void)setPlayAuthToken:(NSString *)playAuthToken
-{
+- (void)setPlayAuthToken:(NSString *)playAuthToken {
     objc_setAssociatedObject(self, @selector(playAuthToken), playAuthToken, OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+- (BOOL)supportSeekAfterPlayerFinish {
+    return [objc_getAssociatedObject(self, @selector(supportSeekAfterPlayerFinish)) boolValue];
+}
+- (void)setSupportSeekAfterPlayerFinish:(BOOL)supportSeekAfterPlayerFinish {
+    objc_setAssociatedObject(self, @selector(supportSeekAfterPlayerFinish), @(supportSeekAfterPlayerFinish), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
+

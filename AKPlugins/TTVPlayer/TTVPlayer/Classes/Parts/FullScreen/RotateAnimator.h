@@ -23,5 +23,7 @@
 
 /// 旋转之前的 frame，用于恢复
 @property (nonatomic) CGRect frameBeforePresent;
+/// 测试，传入需要旋转的 view
+@property (nonatomic) UIView * rotateView;
 
 @end

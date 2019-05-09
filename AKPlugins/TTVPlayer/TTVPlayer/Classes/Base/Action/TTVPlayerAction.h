@@ -122,7 +122,6 @@ extern NSString * const TTVPlayerActionType_ShowSpeedSelectView;
 - (TTVReduxAction *)actionForKey:(NSString *)key;
 
 
-
 ///-----------------------------------------------------------------
 /// @name action 返回
 ///-----------------------------------------------------------------

@@ -20,9 +20,21 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setTitle:@"返回" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [button sizeToFit];
+    [button addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    button.frame = CGRectMake(0, 44, 80, 40);
+    [self.view addSubview:button];
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor whiteColor];
     [self initVideoVC];
+    
+    UIView * testRotateView = [UIView new];
+    testRotateView.frame = CGRectMake(70, self.videoVC.view.bottom+50, 100, 100);
+    testRotateView.backgroundColor = [UIColor grayColor];
+    [self.view addSubview:testRotateView];
 }
 
 - (void)initVideoVC {
@@ -33,5 +45,18 @@
     [self.videoVC updateData];
 }
 
+- (void)back {
+    [self dismissViewControllerAnimated:YES completion:^{
+        
+    }];
+}
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
 
 @end

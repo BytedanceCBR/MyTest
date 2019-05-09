@@ -16,7 +16,6 @@
 #import "TTVIdleTimeService.h"
 #import "TTVLoadingReducer.h"
 #import "TTVSeekReducer.h"
-#import "TTVNetworkMonitorReducer.h"
 #import "TTVPlayerAction.h"
 #import "TTVSpeedReducer.h"
 
@@ -75,7 +74,6 @@ static NSMutableDictionary<NSString *, NSDictionary *> * configDict;// 用来保
         [_playerStore setSubReducer:playReducer forKey:@"TTVPlayerReducer"];
         [_playerStore setSubReducer:[[TTVLoadingReducer alloc] initWithPlayer:self] forKey:@"TTVLoadingReducer"];
         [_playerStore setSubReducer:[[TTVSeekReducer alloc] initWithPlayer:self] forKey:@"TTVSeekReducer"];
-        [_playerStore setSubReducer:[[TTVNetworkMonitorReducer alloc] initWithPlayer:self] forKey:@"TTVNetworkMonitorReducer"];
         [_playerStore setSubReducer:[[TTVSpeedReducer alloc] initWithPlayer:self] forKey:@"TTVSpeedReducer"];
         
         // 前后台
@@ -163,7 +161,7 @@ static NSMutableDictionary<NSString *, NSDictionary *> * configDict;// 用来保
     // 有问题，会盖住
     [self.view addSubview:self.playerView];
     self.playerView.backgroundColor = [UIColor blackColor]; // playerView的背景应该是黑色
-    self.view.clipsToBounds = YES;
+    self.view.clipsToBounds = NO;
     self.playerView.frame = self.view.bounds;
 
     // 设置音频

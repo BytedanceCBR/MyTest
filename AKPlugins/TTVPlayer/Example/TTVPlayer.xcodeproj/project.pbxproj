@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		421671E2222F7B7200EF2E25 /* TTVPlayerStyle-Mini.plist in Resources */ = {isa = PBXBuildFile; fileRef = 421671E1222F7B7200EF2E25 /* TTVPlayerStyle-Mini.plist */; };
 		42582AAD224F10CD0004D60C /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42582AAB224F10CD0004D60C /* TTVPlayerStyle.plist */; };
 		42DC68ED226854BE0075FD91 /* TTVPlayerStyle-Presentation.plist in Resources */ = {isa = PBXBuildFile; fileRef = 42DC68EC226854BE0075FD91 /* TTVPlayerStyle-Presentation.plist */; };
 		42FA8F85221566BB002558C6 /* TTVReplayDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42FA8F84221566BB002558C6 /* TTVReplayDemoViewController.m */; };
@@ -52,7 +51,6 @@
 		052AEDAEBF479AC522CBD5EA /* Pods-TTVPlayer_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTVPlayer_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-TTVPlayer_Example/Pods-TTVPlayer_Example.release.xcconfig"; sourceTree = "<group>"; };
 		2C4D6DFD292C7A8BF36DB184 /* libPods-TTVPlayer_Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TTVPlayer_Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CA415428742F3D23F85A0DD /* Pods-TTVPlayer_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTVPlayer_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-TTVPlayer_Tests/Pods-TTVPlayer_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		421671E1222F7B7200EF2E25 /* TTVPlayerStyle-Mini.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TTVPlayerStyle-Mini.plist"; sourceTree = "<group>"; };
 		42582AAB224F10CD0004D60C /* TTVPlayerStyle.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TTVPlayerStyle.plist; sourceTree = "<group>"; };
 		42DC68EC226854BE0075FD91 /* TTVPlayerStyle-Presentation.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "TTVPlayerStyle-Presentation.plist"; sourceTree = "<group>"; };
 		42FA8F83221566BB002558C6 /* TTVReplayDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TTVReplayDemoViewController.h; sourceTree = "<group>"; };
@@ -148,7 +146,6 @@
 			isa = PBXGroup;
 			children = (
 				42FA8F8622156760002558C6 /* TTVPlayerStyle-EV.plist */,
-				421671E1222F7B7200EF2E25 /* TTVPlayerStyle-Mini.plist */,
 				42582AAB224F10CD0004D60C /* TTVPlayerStyle.plist */,
 				42DC68EC226854BE0075FD91 /* TTVPlayerStyle-Presentation.plist */,
 				60FF7A9C1954A5C5007DD14C /* Podspec Metadata */,
@@ -347,7 +344,6 @@
 				42FA8F8722156760002558C6 /* TTVPlayerStyle-EV.plist in Resources */,
 				6003F5A9195388D20070C39A /* Images.xcassets in Resources */,
 				6003F598195388D20070C39A /* InfoPlist.strings in Resources */,
-				421671E2222F7B7200EF2E25 /* TTVPlayerStyle-Mini.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

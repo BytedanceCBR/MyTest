@@ -9,7 +9,6 @@
 #import "TTVPlayer.h"
 #import "TTVFullScreenReducer.h"
 #import "TTVLandscapeFullScreenViewController.h"
-#import "RotateAnimator.h"
 
 @interface TTVFullScreenPart ()
 @property (nonatomic, strong) RotateAnimator* customAnimator;
@@ -18,6 +17,8 @@
 @property (nonatomic, assign) BOOL isTransitioning;
 //@property (nonatomic, assign) BOOL blockMonitoring;
 //@property (nonatomic, assign) UIDeviceOrientation lastDeviceOrientation;
+
+
 
 @end
 
@@ -120,7 +121,8 @@
     self.isTransitioning = YES;
     TTVLandscapeFullScreenViewController * horizontallyVideoVC = [[TTVLandscapeFullScreenViewController alloc] init];
     horizontallyVideoVC.transitioningDelegate = self.customAnimator;
-    self.customAnimator.frameBeforePresent = self.player.view.frame;
+    self.customAnimator.frameBeforePresent = self.customAnimator.rotateView?self.customAnimator.rotateView.frame:self.player.view.frame;
+
     // find top vc
     UIViewController * topVC = [TTVPlayerUtility lm_topmostViewController];
     [topVC presentViewController:horizontallyVideoVC animated:YES completion:^{
@@ -191,9 +193,10 @@
     else if (deviceOrientation == UIDeviceOrientationPortrait){
         [self.playerStore dispatch:[self.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
     }
-    
-    
-   
-    
 }
+
+//- (void)setRotateView:(UIView *)rotateView {
+//    _rotateView = rotateView;
+//    self.customAnimator.rotateView = rotateView;
+//}
 @end

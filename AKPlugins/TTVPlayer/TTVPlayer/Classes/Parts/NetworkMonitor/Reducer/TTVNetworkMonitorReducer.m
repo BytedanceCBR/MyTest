@@ -12,9 +12,10 @@
 #import <TTReachability.h>
 #import "TTVPlayer+Engine.h"
 
+/// 只出现一次，所以需要全局标志
+BOOL _ignoreInterrupt;
 
 @interface TTVNetworkMonitorReducer () {
-    BOOL _ignoreInterrupt;
     BOOL _pauseByCellularNetwork;
 }
 @property (nonatomic,weak) TTVPlayer * player;
@@ -38,7 +39,7 @@
 }
 
 - (TTVPlayerState *)executeWithAction:(TTVReduxAction *)action
-                                 state:(TTVPlayerState *)state {
+                                state:(TTVPlayerState *)state {
     
     if ([action.type isEqualToString:TTVPlayerActionType_ReadyForDisplayChanged]) { // 播放开始判断是否改变
         BOOL isReady = self.player.readyForDisplay;
@@ -83,7 +84,7 @@
     }
     
     BOOL cellularNetwork = !TTNetworkWifiConnected() && TTNetworkConnected();
-//    BOOL currentMovieAllowAlert = !self.allowPlayWithoutWiFi;
+    //    BOOL currentMovieAllowAlert = !self.allowPlayWithoutWiFi;
     BOOL isLocalVideo = self.player.isLocalVideo;
     if (cellularNetwork && !isLocalVideo) {
         // 暂停当前播放
@@ -93,7 +94,7 @@
             _pauseByCellularNetwork = YES;
             [self.player.playerStore dispatch:[self.player.playerAction pauseAction]];
             return YES;
-
+            
         }
         
     }

@@ -385,7 +385,12 @@
 }
 
 - (NSObject<TTVPlayerPartProtocol> *)partForKey:(TTVPlayerPartKey)key {
-    return self.allLoadedPartsDic[@(key)];
+    NSObject<TTVPlayerPartProtocol> * part = self.allLoadedPartsDic[@(key)];
+    // 有一些做了装饰模式，这里需要直接返回实际工作的 part
+    if ([part conformsToProtocol:@protocol(TTVConfigedPartProtocol)]) {
+        return((NSObject<TTVConfigedPartProtocol> * )part).part;
+    }
+    return part;
 }
 
 /// 所有的 parts

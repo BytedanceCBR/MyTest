@@ -3,7 +3,7 @@ install! 'cocoapods', :warn_for_multiple_pod_sources => false
 ENV["COCOAPODS_DISABLE_STATS"] = "true"
 
 require File.dirname(__FILE__)+'/pod_binary.rb'
-bd_use_app('xigua','thirdParty','toutiao', 'public', 'huoshan')
+bd_use_app('xigua','thirdParty','toutiao', 'public')
 
 
 bd_enable_DevelopMode

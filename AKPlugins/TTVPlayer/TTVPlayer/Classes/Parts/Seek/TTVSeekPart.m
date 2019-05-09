@@ -38,7 +38,7 @@
                 if (self.immersiveSlider.superview != self.player.containerView.playbackControlView_Lock.immersiveContentView) {
                     [self.player.containerView.playbackControlView_Lock.immersiveContentView addSubview:self.immersiveSlider];
                     [self.player.containerView setNeedsLayout];
-//                    [self viewDidLayoutSubviews:self.player];
+                    //                    [self viewDidLayoutSubviews:self.player];
                 }
             }
             else {
@@ -46,14 +46,14 @@
                     if (self.immersiveSlider.superview != self.player.containerView.playbackControlView.immersiveContentView) {
                         [self.player.containerView.playbackControlView.immersiveContentView addSubview:self.immersiveSlider];
                         [self.player.containerView setNeedsLayout];
-//                        [self viewDidLayoutSubviews:self.player];
+                        //                        [self viewDidLayoutSubviews:self.player];
                     }
                 }
                 else {
                     if (self.immersiveSlider.superview != self.player.containerView.playbackControlView_Lock.immersiveContentView) {
                         [self.player.containerView.playbackControlView_Lock.immersiveContentView addSubview:self.immersiveSlider];
                         [self.player.containerView setNeedsLayout];
-//                        [self viewDidLayoutSubviews:self.player];
+                        //                        [self viewDidLayoutSubviews:self.player];
                     }
                 }
             }
@@ -72,44 +72,53 @@
             }
         }
     }
-
+    // hud 在切换时，需要隐藏自身
+    if (newState.fullScreenState.isFullScreen != lastState.fullScreenState.isFullScreen) {
+        [self hudDismiss];
+    }
+    
     //
-    if (newState.readyForDisplay != lastState.readyForDisplay && newState.readyForDisplay) {
-        @weakify(self);
-        _slider.userInteractionEnabled = YES;
-        _slider.seekingToProgress = ^(CGFloat progress, BOOL cancel, BOOL end) {
-            @strongify(self);
-            if (end || cancel) { // 有可能取消了，不需要 seek，但是也算结束了,但是还会回调到didSeekToProgress中
-                return;
-            }
-            // 避免多次发送一个 action
-            if (!self.isSliderPanning) {
-                [self.playerStore dispatch:[TTVReduxAction actionWithType:TTVPlayerActionType_SliderPan info:@{TTVPlayerActionInfo_isSliderPanning:@(YES)}]];
-                [self hudShow];
-            }
-            self.isSliderPanning = YES;
-            self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:progress duration:self.duration];
-            self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:self.duration];
-            [self setCurrentAndTotalTimeWith:progress duration:self.duration];
-            [self.hud setProgress:progress animated:NO];
-            
-            // delegate
-            if ([self.player.delegate respondsToSelector:@selector(playerSliderDidProgressSeeking:)]) {
-                [self.player.delegate playerSliderDidProgressSeeking:self.slider];
-            }
-        };
+    if (newState.readyForDisplay != lastState.readyForDisplay) {
+        if (newState.readyForDisplay) {
+            @weakify(self);
+            _slider.userInteractionEnabled = YES;
+            _slider.seekingToProgress = ^(CGFloat progress, BOOL cancel, BOOL end) {
+                @strongify(self);
+                if (end || cancel) { // 有可能取消了，不需要 seek，但是也算结束了,但是还会回调到didSeekToProgress中
+                    return;
+                }
+                // 避免多次发送一个 action
+                if (!self.isSliderPanning) {
+                    [self.playerStore dispatch:[TTVReduxAction actionWithType:TTVPlayerActionType_SliderPan info:@{TTVPlayerActionInfo_isSliderPanning:@(YES)}]];
+                    [self hudShow];
+                }
+                self.isSliderPanning = YES;
+                self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:progress duration:self.duration];
+                self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:self.duration];
+                [self setCurrentAndTotalTimeWith:progress duration:self.duration];
+                [self.hud setProgress:progress animated:NO];
+                
+                // delegate
+                if ([self.player.delegate respondsToSelector:@selector(playerSliderDidProgressSeeking:)]) {
+                    [self.player.delegate playerSliderDidProgressSeeking:self.slider];
+                }
+            };
+        }
+        else {
+            self.slider.userInteractionEnabled = self.player.supportSeekAfterPlayerFinish?YES:NO;
+        }
     }
     
     // 如果没有拖动事件和 seeking，那就正常更新 progress 和 cachedProgress
     if (!newState.seekStatus.isSliderPanning && !newState.seekStatus.isPanningOutOfSlider && !newState.isSeeking) { // 同步内核的进度
         if (newState.readyForDisplay) {
-//            Debug_NSLog(@"isSeeking++++++ = %d,%f", newState.readyForDisplay, newState.playbackTime.progress);
+            //            Debug_NSLog(@"isSeeking++++++ = %d,%f", newState.readyForDisplay, newState.playbackTime.progress);
             [self.immersiveSlider setProgress:newState.playbackTime.progress animated:NO];
             [self.immersiveSlider setCacheProgress:newState.playbackTime.cachedProgress animated:NO];
             [self.slider setProgress:newState.playbackTime.progress animated:NO];
             [self.slider setCacheProgress:newState.playbackTime.cachedProgress animated:NO];
             [self.hud setProgress:newState.playbackTime.progress animated:NO];
-//            [self.hud setForward:YES];
+            //            [self.hud setForward:YES];
             self.hud.totalTime = newState.playbackTime.duration;
             self.duration = newState.playbackTime.duration;
             self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:newState.playbackTime.progress duration:newState.playbackTime.duration];
@@ -118,13 +127,14 @@
         }
     }
     else if (newState.seekStatus.isPanningOutOfSlider && !newState.isSeeking /*&& newState.controlViewState.isPanning*/) {   // 手势滑动中，同步控件的进度
-        if (newState.playbackTime.currentPlaybackTime > 0 && newState.readyForDisplay || (newState.playbackTime.currentPlaybackTime == newState.playbackTime.duration && newState.finishStatus != nil)) {
+        if (newState.playbackTime.currentPlaybackTime > 0 && newState.readyForDisplay ||
+            (newState.playbackTime.currentPlaybackTime == newState.playbackTime.duration && newState.finishStatus != nil && self.player.supportSeekAfterPlayerFinish)) {
             UIGestureRecognizerState gestureState = newState.seekStatus.panSeekingOutOfSliderInfo.gestureState;
             if (gestureState == UIGestureRecognizerStateChanged ) {
                 //            Debug_NSLog(@"isSeeking---- = %d,%f", newState.isSeeking,newState.seekStatus.panSeekingOutOfSliderInfo.progress);
                 [self.slider setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
                 [self.hud setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
-//                [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
+                //                [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
                 self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:newState.seekStatus.panSeekingOutOfSliderInfo.progress duration:newState.playbackTime.duration];
                 self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:newState.playbackTime.duration];
                 self.hud.showCancel = newState.seekStatus.panSeekingOutOfSliderInfo.isCancelledOutArea;
@@ -142,7 +152,7 @@
                     //                Debug_NSLog(@"isSeeking---- = %d,%f", newState.isSeeking,newState.seekStatus.panSeekingOutOfSliderInfo.progress);
                     [self.slider setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
                     [self.hud setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
-//                    [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
+                    //                    [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
                     self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:newState.seekStatus.panSeekingOutOfSliderInfo.progress duration:newState.playbackTime.duration];
                     self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:newState.playbackTime.duration];
                     [self setCurrentAndTotalTimeWith:newState.playbackTime.progress duration:newState.playbackTime.duration];
@@ -155,6 +165,7 @@
             }
         }
     }
+    
 }
 
 - (void)subscribedStoreSuccess:(TTVReduxStore *)store {
@@ -215,7 +226,7 @@
     else if (key == TTVPlayerPartControlKey_Slider) {
         self.slider = (UIView<TTVSliderControlProtocol> *)controlView;
         _slider.userInteractionEnabled = NO;
-
+        
         @weakify(self)
         // 会不会有多次设置的问题 TODO >>>>>>>>>
         _slider.didSeekToProgress = ^(CGFloat progress, CGFloat fromProgress) {
@@ -307,3 +318,4 @@
 
 
 @end
+

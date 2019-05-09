@@ -15,8 +15,7 @@
 #import <TTVPlayerPod/TTVPlayerBottomToolBar.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTVPlayerTokenManager.h"
-//#import <TTVSpeedPart.h>
-//#import <TTVConfiguredControlPart.h>
+
 
 @interface TTVHalfDemoViewController ()<TTVPlayerDelegate,TTVReduxStateObserver, TTVPlayerCustomPartDelegate>
 @property (nonatomic, strong) TTVPlayer * player;
@@ -37,7 +36,7 @@
     
     UIView * containerView = [UIView new];
     [self.view addSubview:containerView];
-    containerView.frame = CGRectMake(0, 100, self.view.width, self.view.width*9/16.0);
+    containerView.frame = CGRectMake(10, 100, self.view.width-20, self.view.width*9/16.0);
     
     UIView * c2 = [UIView new];
     [containerView addSubview:c2];

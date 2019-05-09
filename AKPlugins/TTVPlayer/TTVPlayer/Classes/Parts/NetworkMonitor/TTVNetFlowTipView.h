@@ -10,8 +10,6 @@
 
 
 @interface TTVNetFlowTipView : UIView<TTVFlowTipViewProtocol>
-- (instancetype)initWithFrame:(CGRect)frame tipText:(NSString *)text isSubscribe:(BOOL)isSubscribe;
+- (instancetype)initWithFrame:(CGRect)frame tipText:(NSString *)text;
 @property (nonatomic, copy) dispatch_block_t continuePlayBlock;
-@property (nonatomic, copy) dispatch_block_t subscribeBlock;
-@property (nonatomic, assign) BOOL isSubscribe;
 @end

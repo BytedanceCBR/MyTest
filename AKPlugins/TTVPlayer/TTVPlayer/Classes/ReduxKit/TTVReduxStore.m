@@ -16,9 +16,7 @@
 @property (nonatomic, strong) NSObject<TTVReduxReducerProtocol> * rootReducer;// 根 reducer
 @property (nonatomic, strong) NSHashTable<NSObject<TTVReduxStateObserver> *> * observers; // 都需要通知，不能重复注册, 弱持有
 
-
 @end
-
 
 @implementation TTVReduxStore
 
@@ -86,13 +84,12 @@
 //    __block NSObject<TTVReduxStateProtocol> * stateCopyed = [self.rootState copy];
 
     // 获取所有的 reducer TODO
-    NSArray * allreducers = [self.rootReducer allSubreducers];//[[self.rootReducer allSubreducers] arrayByAddingObject:self.rootReducer];
+    NSArray * allreducers = [[self.rootReducer allSubreducers] arrayByAddingObject:self.rootReducer];
 
     __weak typeof(self) weakSelf = self;
     [allreducers enumerateObjectsUsingBlock:^(NSObject<TTVReduxReducerProtocol> *  _Nonnull subReducer, NSUInteger idx, BOOL * _Nonnull stop) {
 //        @autoreleasepool {
             __strong typeof(self) strongSelf = weakSelf;
-
             // 记录lastState
             NSObject<TTVReduxStateProtocol> *lastState = [strongSelf.rootState copy];
             // 计算 newStat

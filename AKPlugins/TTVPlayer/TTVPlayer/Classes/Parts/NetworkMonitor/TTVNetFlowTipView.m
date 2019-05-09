@@ -6,10 +6,7 @@
 //
 
 #import "TTVNetFlowTipView.h"
-//#import <TTThemed/SSThemed.h>
-//#import "TTAlphaThemedButton.h"
 #import "UIViewAdditions.h"
-//#import "TTFreeFlowTipManager.h"
 
 static const CGFloat kTipAndBtnPadding = 24.f;
 static CGFloat kcontinuePlayBtnPadding = 42.f;
@@ -19,8 +16,6 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
 @property (nonatomic, strong) UILabel *tipLabel;
 
 @property (nonatomic, strong) UIButton *continuePlayBtn;
-
-@property (nonatomic, strong) UIButton *subscribeBtn;
 @property (nonatomic, copy) NSString *tipText;
 
 
@@ -29,19 +24,16 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
 @implementation TTVNetFlowTipView
 
 
-- (instancetype)initWithFrame:(CGRect)frame tipText:(NSString *)text isSubscribe:(BOOL)isSubscribe {
+- (instancetype)initWithFrame:(CGRect)frame tipText:(NSString *)text{
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor blackColor];
         
         _tipText = text;
-        _isSubscribe = isSubscribe;
         
         [self addSubview:self.tipLabel];
         self.tipLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:self.continuePlayBtn];
         self.continuePlayBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-        [self addSubview:self.subscribeBtn];
-        self.subscribeBtn.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
         
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
@@ -58,15 +50,7 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
     
     self.continuePlayBtn.top = self.tipLabel.bottom + kTipAndBtnPadding;
     
-    if (self.subscribeBtn.hidden) {
-        
-        self.continuePlayBtn.centerX = self.centerX;
-    } else {
-        
-        self.subscribeBtn.centerY = self.continuePlayBtn.centerY;
-        self.continuePlayBtn.left = (self.width - kcontinuePlayBtnPadding - self.continuePlayBtn.width - self.subscribeBtn.width) / 2;
-        self.subscribeBtn.right = self.width - self.continuePlayBtn.left;
-    }
+    self.continuePlayBtn.centerX = self.centerX;
 }
 
 - (void)refreshTipLabel:(CGFloat)mergin {
@@ -149,35 +133,6 @@ static CGFloat kcontinuePlayBtnPadding = 42.f;
     if ([self respondsToSelector:@selector(continuePlayBlock)]) {
         (!self.continuePlayBlock) ?: self.continuePlayBlock();
     }
-}
-
-- (UIButton *)subscribeBtn {
-    if (!_subscribeBtn) {
-        _subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _subscribeBtn.size = CGSizeMake(88.f, 32.f);
-        _subscribeBtn.hidden = !_isSubscribe;
-        _subscribeBtn.layer.cornerRadius = 4.f;
-        _subscribeBtn.layer.masksToBounds = YES;
-//        [_subscribeBtn setTitle:NSLocalizedString([TTFreeFlowTipManager getSubcribeButtonText], nil) forState:UIControlStateNormal];
-        [_subscribeBtn setTitleColor:[TTVPlayerUtility colorWithHexString:@"0xffffff"] forState:UIControlStateNormal];
-        _subscribeBtn.titleLabel.font = [UIFont systemFontOfSize:14.f];
-        _subscribeBtn.backgroundColor = [TTVPlayerUtility colorWithHexString:@"0x2a90d7"];
-        [_subscribeBtn addTarget:self action:@selector(clickSubscribeButton) forControlEvents:UIControlEventTouchUpInside];
-//        WeakSelf;
-//        [[_subscribeBtn rac_signalForControlEvents:UIControlEventTouchUpInside] subscribeNext:^(__kindof UIControl * _Nullable x) {
-//            StrongSelf;
-//            (!self.subscribeBlock) ?: self.subscribeBlock();
-//        }];
-    }
-    
-    return _subscribeBtn;
-}
-
-- (void)clickSubscribeButton {
-    if ([self respondsToSelector:@selector(subscribeBlock)]) {
-        (!self.subscribeBlock) ?: self.subscribeBlock();
-    }
-
 }
 
 @end

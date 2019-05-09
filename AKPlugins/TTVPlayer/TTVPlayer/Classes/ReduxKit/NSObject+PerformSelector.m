@@ -27,6 +27,7 @@
             [invocation setArgument:&parameter atIndex:i];
         }
     }
+
     [invocation retainArguments];
     [invocation invokeWithTarget:self];
     const char *type = methodSignature.methodReturnType;

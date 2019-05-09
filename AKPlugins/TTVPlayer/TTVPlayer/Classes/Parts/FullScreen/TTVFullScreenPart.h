@@ -10,6 +10,7 @@
 #import "TTVReduxKit.h"
 #import "TTVPlayerPartProtocol.h"
 #import "TTVPlayerCustomViewDelegate.h"
+#import "RotateAnimator.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -18,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// 全屏button
 @property (nonatomic, strong) UIView<TTVToggledButtonProtocol> * fullButton;
-
+@property (nonatomic, strong, readonly) RotateAnimator* customAnimator;
 
 @end
 

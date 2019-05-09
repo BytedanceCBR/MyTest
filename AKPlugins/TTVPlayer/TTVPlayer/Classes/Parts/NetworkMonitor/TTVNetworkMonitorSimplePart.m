@@ -11,6 +11,7 @@
 #import "TTVIndicatorView.h"
 #import "TTVPlayer.h"
 #import "TTVPlayer+Engine.h"
+#import "TTVNetworkMonitorReducer.h"
 
 static BOOL _currentMovieHasTouchedContinue = NO;
 
@@ -35,7 +36,7 @@ static BOOL _currentMovieHasTouchedContinue = NO;
                 CGFloat videoSize = [self.player videoSizeForType:self.player.currentResolution] / 1024.f / 1024.f;
                 tipText = [NSString stringWithFormat:self.cellularNetworkText, videoSize];
             }
-            [self addFreeFlowTipViewWithTipText:tipText isSubscribe:NO];
+            [self addFreeFlowTipViewWithTipText:tipText];
         }
         else {
             [self removeFreeTipView];
@@ -44,6 +45,7 @@ static BOOL _currentMovieHasTouchedContinue = NO;
 }
 
 - (void)subscribedStoreSuccess:(TTVReduxStore *)store {
+    [self.player.playerStore setSubReducer:[[TTVNetworkMonitorReducer alloc] initWithPlayer:self.player] forKey:@"TTVNetworkMonitorReducer"];
 }
 
 - (void)unsubcribedStoreSuccess:(id<TTVReduxStoreProtocol>)store {
@@ -80,8 +82,7 @@ static BOOL _currentMovieHasTouchedContinue = NO;
     return YES;
 }
 
-- (void)addFreeFlowTipViewWithTipText:(NSString *)tipText isSubscribe:(BOOL)isSubscribe {
-    self.freeFlowTipView.isSubscribe = isSubscribe;
+- (void)addFreeFlowTipViewWithTipText:(NSString *)tipText {
     if (!self.freeFlowTipView.superview) {
         [self.player addViewOverlayPlaybackControls:self.freeFlowTipView];
         self.freeFlowTipView.frame = self.player.containerView.bounds;

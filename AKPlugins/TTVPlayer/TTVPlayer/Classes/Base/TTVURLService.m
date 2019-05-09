@@ -116,18 +116,26 @@ static NSMutableDictionary *ttv_common = nil;
     return [self urlForV1WithVideoId:videoId businessToken:nil];
 }
 
-+ (NSString *)urlForV1WithVideoId:(NSString *)videoId businessToken:(NSString *)businessToken {
-    
++ (NSString *)baseUrl
+{
     NSString *apiPrefix = [self staticDic][kToutiaoHostKey];
     // 有传入的 host 不带 https，这里应该叫做 baseUrl
     if (![apiPrefix hasPrefix:@"http"] && ![apiPrefix hasPrefix:@"https"]) {
         apiPrefix = [@"https://" stringByAppendingString:apiPrefix];
     }
-    
+    return apiPrefix;
+}
+
++ (NSString *)videoAPIURL
+{
+    return [NSString stringWithFormat:@"%@/video/openapi/v1/", [self baseUrl]];
+}
+
++ (NSString *)urlForV1WithVideoId:(NSString *)videoId businessToken:(NSString *)businessToken {
     if ([businessToken isKindOfClass:[NSString class]] && businessToken.length > 0) {
-        return [NSString stringWithFormat:@"%@?action=GetPlayInfo&video_id=%@&ptoken=%@", apiPrefix, videoId, businessToken];
+        return [NSString stringWithFormat:@"%@?action=GetPlayInfo&video_id=%@&ptoken=%@", [self videoAPIURL], videoId, businessToken];
     } else {
-        return [NSString stringWithFormat:@"%@?action=GetPlayInfo_VIP&video_id=%@", apiPrefix, videoId];
+        return [NSString stringWithFormat:@"%@?action=GetPlayInfo_VIP&video_id=%@", [self videoAPIURL], videoId];
     }
 }
 

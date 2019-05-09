@@ -13,6 +13,7 @@
 #import "FHVideoErrorView.h"
 #import "FHVideoNetFlowTipView.h"
 #import "FHUserTracker.h"
+#import <TTVFullScreenPart.h>
 
 @interface FHVideoViewController ()<FHVideoViewDelegate,TTVPlayerDelegate,TTVPlayerCustomViewDelegate>
 
@@ -239,6 +240,13 @@
 
 #pragma mark - TTVPlayerDelegate
 
+// control layout的代理
+- (void)viewDidLoad:(TTVPlayer *)player state:(TTVPlayerState *)state {
+    ///传入旋转 view
+    TTVFullScreenPart * part = (TTVFullScreenPart *)[self.player partForKey:TTVPlayerPartKey_Full];
+    part.customAnimator.rotateView = self.view;
+}
+
 /// 播放器展示第一帧
 - (void)playerReadyToDisplay:(TTVPlayer *)player {
     
@@ -375,6 +383,10 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidExitFullscreen)]){
         [self.delegate playerDidExitFullscreen];
     }
+}
+
+- (void)playerSliderDidStopPanning:(UIView<TTVSliderControlProtocol> *)slider {
+    NSLog(@"stop11111");
 }
 
 #pragma mark - 埋点相关

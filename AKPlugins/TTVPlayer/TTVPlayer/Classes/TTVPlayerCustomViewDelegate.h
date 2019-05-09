@@ -199,11 +199,6 @@ typedef NS_ENUM(NSUInteger, TTVToggledButtonStatus) {
 @optional
 
 @property (nonatomic, copy)  dispatch_block_t quitBlock;         // 退出
-
-// 不一定会有获取流量
-@property (nonatomic, copy)   dispatch_block_t subscribeBlock; // 流量订阅点击回调
-@property (nonatomic, assign) BOOL             isSubscribe;    // 是否订阅？？？
-
 @end
 
 ///-----------------------------------------------------------------

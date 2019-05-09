@@ -35,14 +35,14 @@
 
 /**
  设置本地视频地址
-
+ 
  @param url 本地 bundle 视频地址
  */
 - (void)setLocalURL:(NSString *)url;
 
 /**
  设置远程直接播放的地址，而不是 vid
-
+ 
  @param url remote url
  */
 - (void)setDirectPlayURL:(NSString *)url;
@@ -124,13 +124,15 @@
 /// 播放时间相关的类：常用的有 currentPlaybackTime， duration，progress 等；如果外界不重新设置 timer，那么此对象将500ms 被更新一次 @see - (void)player:(TTVPlayer *)player playbackTimeChanged:(TTVPlaybackTime *)playbackTime;
 @property (nonatomic, strong, readonly) TTVPlaybackTime * playbackTime;
 /**
-  设置播放时间到哪里，起播也可以调用此方法进行播放时间设置
-
+ 设置播放时间到哪里，起播也可以调用此方法进行播放时间设置
+ 
  @param currentPlaybackTime 需要跳播的时间
  @param finished 完成回调 block
  */
 - (void)setCurrentPlaybackTime:(NSTimeInterval)currentPlaybackTime complete:(void(^)(BOOL success))finished;
 
+/// 是否可以结束后，拖动进度条起播播放
+@property (nonatomic) BOOL supportSeekAfterPlayerFinish;
 /**
  设置 timer
  
@@ -162,7 +164,7 @@
 ///-----------------------------------------------------------------
 /**
  设置音频是否可以被中断，默认是NO
-
+ 
  @param ignore  是否可以被中断
  */
 + (void)setIgnoreAudioInterruption:(BOOL)ignore;
@@ -217,4 +219,5 @@
 
 
 @end
+
 

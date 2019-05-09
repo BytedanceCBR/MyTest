@@ -167,7 +167,8 @@ NSString * const TTVPlayerActionType_ShowSpeedSelectView        = @"TTVPlayerAct
 }
 
 - (TTVReduxAction *)changeSpeedToAction:(CGFloat)speed {
-    TTVReduxAction * action = [[TTVReduxAction alloc] initWithType:TTVPlayerActionType_ChangeSpeed];//[[TTVReduxAction alloc] initWithTarget:self.player selector:@selector(setPlaybackSpeed:) params:@[@(speed)] actionType:TTVPlayerActionType_ChangeSpeed];
+//    return [[TTVReduxAction alloc] initWithTarget:self.player selector:@selector(setPlaybackSpeed:) params:@[@(speed)] actionType:TTVPlayerActionType_ChangeSpeed];
+    TTVReduxAction * action = [[TTVReduxAction alloc] initWithType:TTVPlayerActionType_ChangeSpeed];
     self.player.playbackSpeed = speed;
     return action;
 }

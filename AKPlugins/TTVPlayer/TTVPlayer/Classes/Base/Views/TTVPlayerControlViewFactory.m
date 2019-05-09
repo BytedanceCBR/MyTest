@@ -227,7 +227,7 @@
     return control;
 }
 - (UIView <TTVFlowTipViewProtocol> *)customCellularNetTipView {
-    UIView <TTVFlowTipViewProtocol> * control = [[TTVNetFlowTipView alloc] initWithFrame:CGRectZero tipText:@"正在使用非WiFi网络\n「继续播放」将消耗%.2fMB流量" isSubscribe:NO];
+    UIView <TTVFlowTipViewProtocol> * control = [[TTVNetFlowTipView alloc] initWithFrame:CGRectZero tipText:@"正在使用非WiFi网络\n「继续播放」将消耗%.2fMB流量"];
     return control;
 }
 // slider TODO

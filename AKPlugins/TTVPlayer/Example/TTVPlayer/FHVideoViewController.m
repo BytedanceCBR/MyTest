@@ -12,6 +12,8 @@
 #import <UIViewAdditions.h>
 #import <TTVPlayerPod/TTVPlayerBottomToolBar.h>
 #import "TTVPlayerKitHeader.h"
+#import <TTVFullScreenPart.h>
+
 
 @interface FHVideoViewController ()<TTVPlayerDelegate>
 
@@ -31,6 +33,10 @@
     
     [self initViews];
     [self initConstaints];
+    
+    ///传入旋转 view
+    TTVFullScreenPart * part = (TTVFullScreenPart *)[self.player partForKey:TTVPlayerPartKey_Full];
+    part.customAnimator.rotateView = self.view;
 }
 
 - (void)initViews {
@@ -53,9 +59,11 @@
     [self.player.playerStore subscribe:self];
 }
 
-
 #pragma mark - TTVPlayerDelegate
 // control layout的代理
+- (void)viewDidLoad:(TTVPlayer *)player state:(TTVPlayerState *)state {
+
+}
 - (void)playerViewDidLayoutSubviews:(TTVPlayer *)player state:(TTVPlayerState *)state {
     
     BOOL fullScreen = state.fullScreenState.fullScreen;
