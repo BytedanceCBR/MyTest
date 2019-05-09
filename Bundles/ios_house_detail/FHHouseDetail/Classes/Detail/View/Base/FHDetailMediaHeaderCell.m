@@ -67,14 +67,14 @@
     }
     [self.imageList removeAllObjects];
     self.currentData = data;
+
+    [self generateModel];
+    [self.mediaView updateWithModel:self.model];
     
     //有视频才传入埋点
     if(self.vedioCount > 0){
         self.mediaView.tracerDic = [self tracerDic];
     }
-
-    [self generateModel];
-    [self.mediaView updateWithModel:self.model];
 }
 
 - (NSDictionary *)tracerDic {
