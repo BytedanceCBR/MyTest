@@ -140,7 +140,7 @@
                                  playView.center = CGPointMake(fromViewController.view.center.y - (containerView.frame.size.height - toRect.size.height)/2.0 + toRect.origin.y, fromViewController.view.center.x);
                              }
                              else if (self.lastOrientation == UIDeviceOrientationLandscapeRight){
-                                 playView.center = CGPointMake(fromViewController.view.center.x + (containerView.frame.size.height - toRect.size.height)/2.0 - toRect.origin.y, fromViewController.view.center.y);
+                                 playView.center = CGPointMake(fromViewController.view.center.y + (containerView.frame.size.height - toRect.size.height)/2.0 - toRect.origin.y, fromViewController.view.center.x);
                              }
                              [self changePlayViewTransform:playView isPrensent:NO];
                              fromViewController.view.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0];

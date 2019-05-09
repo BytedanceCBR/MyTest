@@ -315,9 +315,11 @@
 
     NSInteger sliderEdge = 8;
     slider.width = totalTimeLabel.left - sliderEdge * 2 - currentTimeLabel.right;
-    slider.height = 12;
+    slider.height = toolbar.height/2;
     slider.left = currentTimeLabel.right + sliderEdge;
     slider.centerY = currentTimeLabel.centerY;
+    
+    
 }
 
 - (void)player:(TTVPlayer *)player didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus {
