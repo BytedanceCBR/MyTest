@@ -9,7 +9,7 @@
 #import "TTStartupServiceGroup.h"
 #import "TTMonitorStartupTask.h"
 #import "TTABHelperTask.h"
-#import "TTCustomUISettingTask.h"
+//#import "TTCustomUISettingTask.h"
 #import "TTCellRegisterTask.h"
 #import "TTMapperRegisterTask.h"
 #import "TTAVPlayerTask.h"
@@ -43,7 +43,7 @@
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeHMDMonitor]];
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCellRegister]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMapperRegister]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAVPlayer]];
@@ -75,9 +75,9 @@
         case TTServiceStartupTypeMonitor:
             return [[TTMonitorStartupTask alloc] init];
             break;
-        case TTServiceStartupTypeCustomUISetting:
-            return [[TTCustomUISettingTask alloc] init];
-            break;
+//        case TTServiceStartupTypeCustomUISetting:
+//            return [[TTCustomUISettingTask alloc] init];
+//            break;
         case TTServiceStartupTypeCellRegister:
             return [[TTCellRegisterTask alloc] init];
             break;
