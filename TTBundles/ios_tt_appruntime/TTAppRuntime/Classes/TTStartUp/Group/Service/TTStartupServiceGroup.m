@@ -58,7 +58,7 @@
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeiOS10NotificationCheck]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeReporter]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeLaunchTime]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeStatistics]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeStatistics]];
     if ([[[TTSettingsManager sharedManager] settingForKey:@"tt_optimize_start_enabled" defaultValue:@1 freeze:YES] boolValue]) {
         [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeFeedPreload]];
     }
