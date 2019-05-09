@@ -34,6 +34,8 @@
 
 @interface FHRNBridgePlugin ()
 @property (nonatomic, strong) NSMutableArray<NSString *> *events;
+@property (nonatomic, weak) UIViewController *currentVC;
+@property (nonatomic, assign) BOOL canOpenJump;
 @end
 
 @implementation FHRNBridgePlugin
@@ -353,7 +355,20 @@
             }
         }
     }
-
+    
+    if (self.currentVC == currentVC && !self.canOpenJump) {
+        return;
+    }
+    
+    self.currentVC = currentVC;
+    self.canOpenJump = NO;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.canOpenJump = YES;
+        });
+    });
+    
     if (!isEmptyString(openURL)) {
         NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         if(openUrlResultUTF8)
