@@ -16,10 +16,12 @@
 #import "TTStringHelper.h"
 #import "TTDeviceHelper.h"
 #import "UIView+Refresh_ErrorHandler.h"
-
+#import <FHErrorView.h>
+#import <FHEnvContext.h>
+#import <Masonry.h>
 #import "NewsListLogicManager.h"
-#import "SSCommonLogic.h"
-#import <TTBaseLib/TTUIResponderHelper.h>
+#import <SSCommonLogic.h>
+#import <TTUIResponderHelper.h>
 
 @interface ArticleWebListView()<YSWebViewDelegate>
 @property(nonatomic, retain)SSWebViewContainer * webContainer;
@@ -51,7 +53,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
-
+        
         self.webContainer = [[SSWebViewContainer alloc] initWithFrame:[self frameForListView]];
         [_webContainer.ssWebView addDelegate:self];
         [_webContainer hiddenProgressView:YES];
@@ -59,7 +61,7 @@
         _webContainer.ssWebView.opaque = NO;
         _webContainer.ssWebView.backgroundColor = [UIColor colorWithHexString:@"f5f5f5"];
         _webContainer.disableEndRefresh = YES;
-        
+        _webContainer.disableConnectCheck = YES;
         if ([TTDeviceHelper isPadDevice]) {
             TTViewWrapper *wrapperView = [[TTViewWrapper alloc] initWithFrame:self.bounds];
             [wrapperView addSubview:self.webContainer];
@@ -69,48 +71,74 @@
         else {
             [self addSubview:_webContainer];
         }
-
+        
         WeakSelf;
         NSString *loadingText = [SSCommonLogic isNewPullRefreshEnabled] ? nil : @"推荐中";
         [_webContainer.ssWebView.scrollView addPullDownWithInitText:@"下拉推荐"
-                                  pullText:@"松开推荐"
-                               loadingText:loadingText
-                                noMoreText:@"暂无新数据"
-                                  timeText:nil
-                               lastTimeKey:nil
-                             actionHandler:^{
-            StrongSelf;
-            NSString * url = self.currentCategory.webURLStr;
-            if (isEmptyString(url)) {
-                return;
-            }
-            
-            // 频道下拉刷新统计
-            if (self.webContainer.ssWebView.scrollView.pullDownView.isUserPullAndRefresh) {
-                [self trackPullDownEventForLabel:@"refresh_pull"];
-            }
-            
-            if ([self supportJS]) {//支持js
-                
-                if ([url rangeOfString:@"#"].location == NSNotFound) {
-                    url = [NSString stringWithFormat:@"%@#tt_from=app&tt_daymode=%i", url, [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay ? 1 : 0];
-                }
-                else {
-                    url = [NSString stringWithFormat:@"%@&tt_daymode=%i", url, [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay ? 1 : 0];
-                }
-            }
-            NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:url]];
-            self.currentRequestUrl = url;
-             [self.webContainer.ssWebView loadRequest:request];
-             if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
-                 [self.delegate listViewStartLoading:self];
-             }
-        }];
+                                                           pullText:@"松开推荐"
+                                                        loadingText:loadingText
+                                                         noMoreText:@"暂无新数据"
+                                                           timeText:nil
+                                                        lastTimeKey:nil
+                                                      actionHandler:^{
+                                                          StrongSelf;
+                                                          NSString * url = self.currentCategory.webURLStr;
+                                                          if (isEmptyString(url)) {
+                                                              return;
+                                                          }
+                                                          
+                                                          // 频道下拉刷新统计
+                                                          if (self.webContainer.ssWebView.scrollView.pullDownView.isUserPullAndRefresh) {
+                                                              [self trackPullDownEventForLabel:@"refresh_pull"];
+                                                          }
+                                                          
+                                                          if ([self supportJS]) {//支持js
+                                                              
+                                                              if ([url rangeOfString:@"#"].location == NSNotFound) {
+                                                                  url = [NSString stringWithFormat:@"%@#tt_from=app&tt_daymode=%i", url, [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay ? 1 : 0];
+                                                              }
+                                                              else {
+                                                                  url = [NSString stringWithFormat:@"%@&tt_daymode=%i", url, [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay ? 1 : 0];
+                                                              }
+                                                          }
+                                                          NSURLRequest * request = [[NSURLRequest alloc] initWithURL:[TTStringHelper URLWithURLString:url]];
+                                                          self.currentRequestUrl = url;
+                                                          [self.webContainer.ssWebView loadRequest:request];
+                                                          if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
+                                                              [self.delegate listViewStartLoading:self];
+                                                          }
+                                                          
+                                                      }];
         
         [_webContainer setTtContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
         [_webContainer.ssWebView.scrollView setContentInset:UIEdgeInsetsMake(topInset, 0, bottomInset, 0)];
         
         [self registerIsVisibleJSBridgeHandler];
+        
+        
+        if (![FHEnvContext isNetworkConnected]) {
+            FHErrorView * noDataErrorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height * 0.7)];
+            //        [noDataErrorView setBackgroundColor:[UIColor redColor]];
+            [self addSubview:noDataErrorView];
+            
+            __weak typeof(self) weakSelf = self;
+            FHErrorView * noDataErrorViewWeak = noDataErrorView;
+            noDataErrorView.retryBlock = ^{
+                if (weakSelf.webContainer.ssWebView.request && [FHEnvContext isNetworkConnected]) {
+                    [noDataErrorViewWeak hideEmptyView];
+                    [weakSelf.webContainer.ssWebView loadRequest:weakSelf.webContainer.ssWebView.request];
+                }
+            };
+            
+            [noDataErrorView showEmptyWithTip:@"网络异常,请检查网络链接" errorImageName:@"group-4"
+                                    showRetry:YES];
+            noDataErrorView.retryButton.userInteractionEnabled = YES;
+            [noDataErrorView.retryButton setTitle:@"刷新" forState:UIControlStateNormal];
+            [noDataErrorView setBackgroundColor:self.backgroundColor];
+            [noDataErrorView.retryButton mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(CGSizeMake(104, 30));
+            }];
+        }
         
     }
     return self;
@@ -125,7 +153,8 @@
 
 - (BOOL)needTrackVisibleInvisibleByJS
 {
-    return [self.currentCategory.categoryID isEqualToString:kTTTeMaiCategoryID];
+    return YES;
+    //    return [self.currentCategory.categoryID isEqualToString:kTTTeMaiCategoryID];
 }
 
 - (void)registerIsVisibleJSBridgeHandler
@@ -207,7 +236,7 @@
             return;
         }
         if ([self supportJS]) {//支持js
-
+            
             if ([url rangeOfString:@"#"].location == NSNotFound) {
                 url = [NSString stringWithFormat:@"%@#tt_from=app&tt_daymode=%i", url, [[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay ? 1 : 0];
             }
@@ -225,11 +254,13 @@
             }
             [_webContainer tt_startUpdate];
             [_webContainer.ssWebView loadRequest:request];
+            [ _webContainer.ssWebView ttr_fireEvent:@"update" data:nil];
         }
         self.currentRequestUrl = url;
         //记录用户下拉刷新时间
         [[NewsListLogicManager shareManager] saveHasReloadForCategoryID:self.currentCategory.categoryID];
     }
+    
     
 }
 
@@ -273,12 +304,12 @@
 
 - (void)pullAndRefresh
 {
-//      [_webContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"window.TouTiao && TouTiao.update()" completionHandler:nil];
+    //      [_webContainer.ssWebView stringByEvaluatingJavaScriptFromString:@"window.TouTiao && TouTiao.update()" completionHandler:nil];
     //[_webContainer.ssWebView reload];
-//    [_webContainer.ssWebView.scrollView triggerPullDown];
+    //    [_webContainer.ssWebView.scrollView triggerPullDown];
     
     [ _webContainer.ssWebView ttr_fireEvent:@"update" data:nil];
-
+    
 }
 
 
@@ -292,21 +323,21 @@
 
 - (void)webViewDidFinishLoad:(YSWebView *)webView
 {
-//    if (self.currentRequestUrl) {
-//        if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
-//            [self.delegate listViewStopLoading:self];
-//        }
-//        [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
-//    }
-//    [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
-
+    //    if (self.currentRequestUrl) {
+    //        if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStopLoading:)]) {
+    //            [self.delegate listViewStopLoading:self];
+    //        }
+    //        [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+    //    }
+    //    [_webContainer.ssWebView.scrollView  finishPullDownWithSuccess:YES];
+    
 }
 
 - (void)webViewDidStartLoad:(YSWebView *)webView
 {
-//    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
-//        [self.delegate listViewStartLoading:self];
-//    }
+    //    if (self.delegate && [self.delegate respondsToSelector:@selector(listViewStartLoading:)]) {
+    //        [self.delegate listViewStartLoading:self];
+    //    }
 }
 
 - (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
