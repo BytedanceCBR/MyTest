@@ -97,6 +97,8 @@
         self.player.looping = model.repeated;
         self.videoView.coverView.imageUrl = model.coverImageUrl;
         
+//        [self.player removePartForKey:TTVPlayerPartKey_NetworkMonitor];
+        
         if(model.isShowControl){
             self.player.enableNoPlaybackStatus = NO;
             [self.player addPartFromConfigForKey:TTVPlayerPartKey_Gesture];
@@ -255,6 +257,8 @@
 
     UIView * defaultBackButton = [player partControlForKey:TTVPlayerPartControlKey_BackButton];
     UIView * defaultTitleLable = [player partControlForKey:TTVPlayerPartControlKey_TitleLabel];
+    UIView * defaultLoadingView = [player partControlForKey:TTVPlayerPartControlKey_LoadingView];
+    [defaultLoadingView setNeedsLayout];
     [defaultTitleLable sizeToFit];
 
     UIView * playCenter = [player partControlForKey:TTVPlayerPartControlKey_PlayCenterToggledButton];

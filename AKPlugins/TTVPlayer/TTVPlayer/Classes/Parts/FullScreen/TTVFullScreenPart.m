@@ -120,6 +120,7 @@
     self.isTransitioning = YES;
     TTVLandscapeFullScreenViewController * horizontallyVideoVC = [[TTVLandscapeFullScreenViewController alloc] init];
     horizontallyVideoVC.transitioningDelegate = self.customAnimator;
+    self.customAnimator.frameBeforePresent = self.player.view.frame;
     // find top vc
     UIViewController * topVC = [TTVPlayerUtility lm_topmostViewController];
     [topVC presentViewController:horizontallyVideoVC animated:YES completion:^{
@@ -149,7 +150,6 @@
 - (RotateAnimator *)customAnimator {
     if (!_customAnimator) {
         _customAnimator = [[RotateAnimator alloc] initWithRotateViewTag:self.player.view.tag playerVC:self.player];
-        _customAnimator.frameBeforePresent = self.player.view.frame;
     }
     return _customAnimator;
 }
