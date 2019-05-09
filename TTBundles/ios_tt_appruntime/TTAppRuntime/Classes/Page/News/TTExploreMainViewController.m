@@ -130,26 +130,42 @@
 //#endif
     }
     
-//    if(self.adShow)
-//    {
-//        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
-//            if (!isClicked) {
-//                FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-//                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://new_house_detail?court_id=6581052197591580942"]];
-//
-//            }
-//        };
-//    }else
-//    {
-//        WeakSelf;
-//        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-//            StrongSelf;
-//            if (!self.adColdHadJump) {
-//                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://new_house_detail?court_id=6581052197591580942"]];
-//            }
-//            self.adColdHadJump = YES;
-//        }];
-//    }
+ 
+    
+    if(self.adShow)
+    {
+        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
+            if (!isClicked) {
+                if (!self.adColdHadJump) {
+                    self.adColdHadJump = YES;
+                    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                    if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                    }
+                }
+            }
+        };
+    }else
+    {
+        WeakSelf;
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+            StrongSelf;
+            if (!self.adColdHadJump) {
+                FHConfigDataModel *currentDataModel = x;
+                if ([currentDataModel isKindOfClass:[FHConfigDataModel class]] && [currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+
+                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:currentDataModel.jump2AdRecommend] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
+                        UIViewController *vc =  (UIViewController *)routeObj.instance;
+                        vc.hidesBottomBarWhenPushed = YES;
+                        if ([vc isKindOfClass:[UIViewController class]]) {
+                            [self.navigationController pushViewController:vc animated:YES];
+                        }
+                    }];
+                }
+            }
+            self.adColdHadJump = YES;
+        }];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
