@@ -73,6 +73,7 @@ extern NSString *const kFHToastCountKey;
         [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
         alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
             
+            [alert endEditing:YES];
             NSMutableDictionary *info = @{}.mutableCopy;
             info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
             NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -153,6 +154,7 @@ extern NSString *const kFHToastCountKey;
         [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
         alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
             
+            [alert endEditing:YES];
             NSMutableDictionary *info = @{}.mutableCopy;
             info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
             NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
