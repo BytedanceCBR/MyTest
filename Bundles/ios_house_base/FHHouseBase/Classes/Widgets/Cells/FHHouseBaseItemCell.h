@@ -13,6 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHSingleImageInfoCellModel;
 @class FHHomeHouseDataItemsModel;
 @interface FHHouseBaseItemCell : UITableViewCell
+@property(nonatomic, strong) UIImageView *mainImageView;
+
+-(void)initUI;
 
 -(void)updateWithHouseCellModel:(FHSingleImageInfoCellModel *)cellModel;
 
