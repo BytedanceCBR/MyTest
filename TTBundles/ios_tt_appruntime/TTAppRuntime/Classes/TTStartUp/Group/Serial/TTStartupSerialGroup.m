@@ -20,7 +20,7 @@
 #import "TTHandleShorcutItemTask.h"
 #import "TTHandleFirstLauchTask.h"
 #import "TTNetworkNotifyTask.h"
-#import "TTWatchConnectionTask.h"
+//#import "TTWatchConnectionTask.h"
 #import "TTOrientationTask.h"
 #import "TTFabricSDKRegister.h"
 #import "TTCrashAttemptFixTask.h"
@@ -61,7 +61,7 @@
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeHandleShortcutItem]];
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeNetworkNotify]];
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeHanleAPNS]];
-    [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeWatchConnetion]];
+//    [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeWatchConnetion]];
     [group.tasks addObject:[[self class] serialStartupForType:TTServiceStartupTypeOrientation]];
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeHandleFirstLaunch]];
     [group.tasks addObject:[[self class] serialStartupForType:TTSerialStartupTypeSetHook]];
@@ -127,9 +127,9 @@
         case TTSerialStartupTypeHanleAPNS:
             return [[FHCHandleAPNSTask alloc] init];
             break;
-        case TTSerialStartupTypeWatchConnetion:
-            return [[TTWatchConnectionTask alloc] init];
-            break;
+//        case TTSerialStartupTypeWatchConnetion:
+//            return [[TTWatchConnectionTask alloc] init];
+//            break;
         case TTServiceStartupTypeOrientation:
             return [[TTOrientationTask alloc] init];
             break;
