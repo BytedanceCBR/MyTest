@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *descriptionStr;
+@property (nonatomic, copy , nullable) NSString *addDescription;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ItemsImageModel> *image;
 @property (nonatomic, copy , nullable) NSString *textColor;
@@ -52,6 +53,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ItemsModel> *items;
 @property (nonatomic, copy , nullable) NSString *opStyle;
+
+@end
+
+
+@interface  FHConfigDataOpData2ListModel  : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ItemsModel> *opDataList;
+@property (nonatomic, copy , nullable) NSString *opData2Type;
 
 @end
 
