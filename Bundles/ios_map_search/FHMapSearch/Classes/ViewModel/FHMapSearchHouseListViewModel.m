@@ -157,7 +157,7 @@
 {
     if (self.listController.showNeighborhoodDetailBlock) {
 //        [self addShowNeighborDetailLog:self.neighbor];
-        self.listController.showNeighborhoodDetailBlock(self.neighbor);
+        self.listController.showNeighborhoodDetailBlock(self.neighbor,self.currentBubble);
     }
 }
 
@@ -227,12 +227,12 @@
     if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
         FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
         if (self.listController.showRentHouseDetailBlock) {
-            self.listController.showRentHouseDetailBlock(rentModel, indexPath.row);
+            self.listController.showRentHouseDetailBlock(rentModel, indexPath.row,self.currentBubble);
         }
     }else if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
         FHSearchHouseDataItemsModel *houseModel = (FHSearchHouseDataItemsModel *)model;
         if (self.listController.showHouseDetailBlock) {
-            self.listController.showHouseDetailBlock(model,indexPath.row);
+            self.listController.showHouseDetailBlock(model,indexPath.row,self.currentBubble);
         }
     }
 }
@@ -718,7 +718,7 @@
     param[@"stay_time"] = [NSNumber numberWithInteger:duration*1000];
 
     param[@"enter_type"] = @"slide_up";
-    param[@"enter_from"] = @"mapfind";
+    param[@"enter_from"] = [self enterFrom];
 
     [FHUserTracker writeEvent:@"stay_category" params:param];
     _startTimestamp = 0;
@@ -729,7 +729,8 @@
    NSMutableDictionary *param = [self logBaseParams];
     param[@"refresh_type"] = @"pre_load_more";
     param[@"enter_type"] = @"slide_up";
-    param[@"enter_from"] = @"mapfind";
+    param[@"enter_from"] = [self enterFrom];
+    param[UT_LOG_PB] = UT_BE_NULL;
     [FHUserTracker writeEvent:@"category_refresh" params:param];
 }
 
@@ -738,7 +739,7 @@
     NSMutableDictionary *param = [self logBaseParams];
     
     param[@"house_type"] = @"neighborhood";
-    param[@"page_type"] = @"mapfind";
+    param[@"page_type"] =  [self enterFrom];
     param[@"card_type"] = @"no_pic";
     param[@"element_type"] = @"half_category";
     param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
@@ -802,7 +803,12 @@
     param[@"category_name"] = nil;
     param[@"element_from"] = nil;
     
-    [FHUserTracker writeEvent:@"mapfind_half_category" params:param];
+    if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+        param[UT_ENTER_FROM] = @"mapfind";
+        TRACK_EVENT(@"circlefind_half_category", param);
+    }else{
+        TRACK_EVENT(@"mapfind_half_category", param);
+    }
 }
 
 @end

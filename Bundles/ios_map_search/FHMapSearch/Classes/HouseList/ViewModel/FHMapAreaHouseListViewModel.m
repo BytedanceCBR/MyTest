@@ -218,6 +218,7 @@
     }
     
     if(self.houseType == FHHouseTypeSecondHandHouse){
+        param[CHANNEL_ID] = CHANNEL_ID_CIRCEL_SEARCH;
         self.requestTask = [self requsetSecondHouse:query param:param isHead:isHead];
     }else if (self.houseType == FHHouseTypeRentHouse){
         self.requestTask = [self requsetRentHouse:query param:param isHead:isHead];

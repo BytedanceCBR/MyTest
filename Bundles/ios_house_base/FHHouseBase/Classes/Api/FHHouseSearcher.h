@@ -18,6 +18,9 @@ extern NSString const * EXCLUDE_ID_KEY ;
 extern NSString const * NEIGHBORHOOD_ID_KEY;
 extern NSString const *HOUSE_TYPE_KEY ;
 extern NSString const *SUGGESTION_PARAMS_KEY;
+extern NSString const *CHANNEL_ID ;
+extern NSString const *CHANNEL_ID_CIRCEL_SEARCH ;
+
 
 @interface FHHouseSearcher : NSObject
 

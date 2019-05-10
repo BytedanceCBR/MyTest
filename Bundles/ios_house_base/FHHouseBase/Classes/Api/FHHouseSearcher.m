@@ -93,3 +93,5 @@ NSString const * NEIGHBORHOOD_ID_KEY = @"neighborhood_id";
 NSString const *HOUSE_TYPE_KEY = @"house_type";
 NSString const *SUGGESTION_PARAMS_KEY = @"suggestion_params";
 
+NSString const *CHANNEL_ID = @"channel_id";
+NSString const *CHANNEL_ID_CIRCEL_SEARCH = @"94349537358";

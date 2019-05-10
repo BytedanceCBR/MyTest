@@ -370,16 +370,16 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController.movingBlock = ^(CGFloat top) {
             [wself changeNavbarAlpha:NO];
         };
-        _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model , NSInteger rank) {
-            [wself showHoseDetailPage:model rank:rank];
+        _houseListViewController.showHouseDetailBlock = ^(FHSearchHouseDataItemsModel * _Nonnull model , NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
+            [wself showHoseDetailPage:model rank:rank fromBubble:fromBubble];
         };
         
-        _houseListViewController.showNeighborhoodDetailBlock = ^(FHMapSearchDataListModel * _Nonnull model) {
-            [wself showNeighborhoodDetailPage:model];;
+        _houseListViewController.showNeighborhoodDetailBlock = ^(FHMapSearchDataListModel * _Nonnull model ,FHMapSearchBubbleModel *fromBubble) {
+            [wself showNeighborhoodDetailPage:model fromBubble:fromBubble];
         };
         
-        _houseListViewController.showRentHouseDetailBlock = ^(FHHouseRentDataItemsModel * _Nonnull model, NSInteger rank) {
-            [wself showRentHouseDetailPage:model rank:rank];
+        _houseListViewController.showRentHouseDetailBlock = ^(FHHouseRentDataItemsModel * _Nonnull model, NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
+            [wself showRentHouseDetailPage:model rank:rank fromBubble:fromBubble];
         };
                 
         _houseListViewController.viewModel.configModel = self.configModel;
@@ -1128,15 +1128,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     return self.houseListOpenUrl;
 }
 
--(void)showHoseDetailPage:(FHSearchHouseDataItemsModel *)model rank:(NSInteger)rank
+-(void)showHoseDetailPage:(FHSearchHouseDataItemsModel *)model rank:(NSInteger)rank fromBubble:(FHMapSearchBubbleModel *)fromBubble
 {
     //fschema://old_house_detail?house_id=xxx
+    NSString *enterFrom =  @"mapfind";
+    if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+        enterFrom = @"circlefind";
+    }
+    
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?house_id=%@",model.hid];
     TTRouteUserInfo *userInfo = nil;
     NSMutableDictionary *tracerDic = [NSMutableDictionary new];
     [tracerDic addEntriesFromDictionary:self.logBaseParams];
     tracerDic[@"card_type"] = @"left_pic";
-    tracerDic[@"enter_from"] = @"mapfind";
+    tracerDic[@"enter_from"] = enterFrom;
     tracerDic[@"element_from"] = @"half_category";
     tracerDic[@"rank"] = @(rank);
     if (model.logPb) {
@@ -1151,13 +1156,17 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
 
--(void)showNeighborhoodDetailPage:(FHMapSearchDataListModel *)neighborModel
+-(void)showNeighborhoodDetailPage:(FHMapSearchDataListModel *)neighborModel fromBubble:(FHMapSearchBubbleModel *)fromBubble
 {
+    NSString *enterFrom =  @"mapfind";
+    if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+        enterFrom = @"circlefind";
+    }
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
     NSMutableDictionary *tracerDic = [NSMutableDictionary new];
     [tracerDic addEntriesFromDictionary:self.logBaseParams];
     tracerDic[@"card_type"] = @"no_pic";
-    tracerDic[@"enter_from"] = @"mapfind";
+    tracerDic[@"enter_from"] = enterFrom;
     tracerDic[@"element_from"] = @"half_category";
     tracerDic[@"rank"] = @"0";
     TTRouteUserInfo *userInfo = nil;
@@ -1178,15 +1187,19 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
 }
 
--(void)showRentHouseDetailPage:(FHHouseRentDataItemsModel *)model rank:(NSInteger)rank
+-(void)showRentHouseDetailPage:(FHHouseRentDataItemsModel *)model rank:(NSInteger)rank fromBubble:(FHMapSearchBubbleModel *)fromBubble
 {
+    NSString *enterFrom =  @"mapfind";
+    if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+        enterFrom = @"circlefind";
+    }
     NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://rent_detail?house_id=%@&card_type=left_pic&enter_from=mapfind&element_from=half_category&rank=%ld",model.id,rank];
     TTRouteUserInfo *userInfo = nil;
     
     NSMutableDictionary *tracer = [[NSMutableDictionary alloc]init];
     
     [tracer addEntriesFromDictionary:[self logBaseParams]];
-    tracer[@"enter_from"] = @"mapfind";
+    tracer[@"enter_from"] = enterFrom;
     tracer[@"element_from"] = @"half_category";
     tracer[@"log_pb"] = model.logPb;
     tracer[@"card_type"] = @"left_pic";
@@ -1347,6 +1360,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)chooseDrawLine
 {
+    [self addClickDrawLineLog];
+    [self addEnterCircleFindLog];
     if (self.mapView.zoomLevel < 13) {
         
         [FHMapSearchLevelPopLayer showInView:self.viewController.view atPoint:CGPointMake(self.chooseView.centerX, self.chooseView.top)];
@@ -1371,6 +1386,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)closeBottomBar
 {
+    [self addStayCircelFineLog];
+    
     [self.mapView removeOverlay:self.drawLayer];
     [self.viewController switchToNormalMode];
     self.showMode = FHMapSearchShowModeMap;
@@ -1517,8 +1534,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     if(annotation.houseData.logPb){
         param[@"log_pb"] = [annotation.houseData.logPb toDictionary];
     }
+    NSString *event = @"mapfind_click_bubble";
+    if (self.showMode == FHMapSearchShowModeDrawLine) {
+        event = @"circlefind_click_bubble";
+    }else if (self.showMode == FHMapSearchShowModeSubway){
+        event = @"subwayfind_click_bubble";
+    }
     
-    [FHUserTracker writeEvent:@"mapfind_click_bubble" params:param];
+    [FHUserTracker writeEvent:event params:param];
 }
 
 -(void)addHouseListShowLog:(FHMapSearchDataListModel*)model houseListModel:(FHSearchHouseDataModel *)houseDataModel
@@ -1573,10 +1596,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     FHTracerModel *tracer = self.viewController.tracerModel;
     
     param[@"click_type"] = @"circlefind";
-    param[UT_ENTER_FROM] = tracer.enterFrom?:UT_BE_NULL;
+    param[UT_ENTER_FROM] = @"mapfind";
     param[UT_ENTER_TYPE] = @"click";
-    param[UT_ELEMENT_FROM] = tracer.elementFrom?:UT_BE_NULL;
-    param[UT_LOG_PB] = tracer.logPb;
+    param[UT_ELEMENT_FROM] = nil;
+    param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
     
     TRACK_EVENT(@"click_circlefind", param);
 }
@@ -1593,7 +1616,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
      5. origin_search_id
      6. log_pb"
      */
-    
+    _enterDrawLineTime = [NSDate date];
     NSMutableDictionary *param = [self logBaseParams];
     FHTracerModel *tracer = self.viewController.tracerModel;
     param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
@@ -1619,7 +1642,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSMutableDictionary *param = [self logBaseParams];
     FHTracerModel *tracer = self.viewController.tracerModel;
     param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
-    param[UT_ELEMENT_FROM] = @"";
+    param[UT_ELEMENT_FROM] = nil;
+    param[UT_ENTER_FROM] = @"mapfind";
     param[UT_STAY_TIME] = [NSString stringWithFormat:@"%.0f",[[NSDate date]timeIntervalSinceDate:self.enterDrawLineTime]*1000];
     
     TRACK_EVENT(@"stay_circlefind", param);
