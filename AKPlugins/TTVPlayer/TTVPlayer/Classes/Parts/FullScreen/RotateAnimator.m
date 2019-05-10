@@ -78,7 +78,7 @@
         self.superViewOfPlayer = playView.superview;
         
         // 添加转屏通知
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenRotate:) name:UIDeviceOrientationDidChangeNotification object:nil];
         
         // 这里加一个覆盖的view，因为旋转时候可能导致原来view布局问题，盖一个view只看到playview就够了
         CGSize size = containerView.frame.size;
@@ -113,7 +113,7 @@
                          }];
     }else{
         // 移除转屏通知
-        [[NSNotificationCenter defaultCenter] removeObserver:self];
+//        [[NSNotificationCenter defaultCenter] removeObserver:self];
         
         [containerView bringSubviewToFront:fromViewController.view];
         
