@@ -656,6 +656,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_id"] = params[@"realtor_id"] ?: @"be_null";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"online";
+    tracerDic[@"conversation_id"] = @"be_null";// 和wanran确认
     if (params[@"item_id"]) {
         tracerDic[@"item_id"] = params[@"item_id"];
     }
