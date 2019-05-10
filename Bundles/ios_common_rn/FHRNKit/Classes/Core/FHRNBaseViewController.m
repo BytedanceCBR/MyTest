@@ -335,7 +335,9 @@
     {
         if (![FHEnvContext isNetworkConnected]) {
             [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",0]}];
-//            [self sendEventName:@"enter_unAvalable" andParams:nil];
+        }else
+        {
+            [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",1]}];
         }
     }
 }

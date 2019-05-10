@@ -323,6 +323,24 @@ static TTDeviceMode tt_deviceMode;
     return [[UIScreen mainScreen] scale];
 }
 
++ (CGFloat)getTotalCacheSpace
+{
+   
+   return [TTDeviceHelper cacheSizeToGB:[NSProcessInfo processInfo].physicalMemory];
+}
+
++(CGFloat)cacheSizeToGB:(unsigned long long)fileSize
+{
+    NSInteger KB = 1024;
+    NSInteger MB = KB*KB;
+    NSInteger GB = MB*KB;
+    CGFloat cacheSizeT = ((CGFloat)fileSize)/GB;
+    if (cacheSizeT < 1) {
+        cacheSizeT = 1.0;
+    }
+    return cacheSizeT;
+}
+
 + (CGSize)resolution {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     float scale = [[UIScreen mainScreen] scale];

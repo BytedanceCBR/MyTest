@@ -34,4 +34,22 @@
     _realtorPosition = params[@"realtor_position"];
     _itemId = params[@"item_id"];
 }
+
+- (void)setLogPbWithNSString:(NSString *)logpb
+{
+    if ([@"be_null" isEqualToString:logpb]) {
+        self.logPb = nil;
+    }else if ([logpb isKindOfClass:[NSString class]]) {
+        @try {
+            NSData *data = [logpb dataUsingEncoding:NSUTF8StringEncoding];
+            NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            self.logPb = dict;
+        } @catch (NSException *exception) {
+#if DEBUG
+            NSLog(@"exception is: %@",exception);
+#endif
+        }
+    }
+}
+
 @end

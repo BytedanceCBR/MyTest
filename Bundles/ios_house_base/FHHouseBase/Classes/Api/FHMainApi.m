@@ -56,7 +56,7 @@
     {
         requestParam[@"city_name"] = nil;
     }
-    
+
     if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
         requestParam[@"app_first_start"] = @(1);
     }else
