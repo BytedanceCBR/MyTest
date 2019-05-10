@@ -57,6 +57,9 @@
         [self addSubview:_retryButton];
         
         self.backgroundColor = [UIColor blackColor];
+        
+        UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+        [self addGestureRecognizer:singleTap];
     }
     return self;
 }
@@ -156,6 +159,10 @@
     
     NSURL *url = [NSURL URLWithString:imageUrl];
     [self.bgImageView bd_setImageWithURL:url placeholder:nil];
+}
+
+-(void)handleSingleTap:(UITapGestureRecognizer *)sender {
+    //什么都不做，就是为了不让下面的view可以点击
 }
 
 @end
