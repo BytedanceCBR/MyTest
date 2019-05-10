@@ -60,6 +60,7 @@
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "TTTabBarController.h"
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -191,7 +192,7 @@
     
     [TTPushAlertManager enterFeedPage:TTPushWeakAlertPageTypeMainFeed];
     
-    
+    //开屏广告启动不会展示，保留逻辑代码
     if(self.adShow)
     {
         [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
@@ -212,10 +213,13 @@
             self.adColdHadJump = YES;
             FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
             if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                        }
                     });
                 });
             }
