@@ -55,7 +55,7 @@
 
 - (void)updateData {
     self.player.videoTitle = @"五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者五分钟告诉你,谁是通货膨胀的受害者和受益者";
-    [self.player setVideoID:@"v037d19d0000bipisrckkk8gd9d1rqjg" host:@"is.snssdk.com" commonParameters:nil];
+    [self.player setVideoID:@"v0284e120000bj8k13c9hq5utdvukiag" host:@"is.snssdk.com" commonParameters:nil];
     [self.player.playerStore subscribe:self];
 }
 
@@ -187,6 +187,13 @@
         playBottom.hidden = YES;
     }
     
+}
+
+/// 播放器播放状态变化通知
+- (void)player:(TTVPlayer *)player playbackStateDidChanged:(TTVPlaybackState)playbackState {
+    if(playbackState == TTVPlaybackState_Stopped){
+        [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
+    }
 }
 
 

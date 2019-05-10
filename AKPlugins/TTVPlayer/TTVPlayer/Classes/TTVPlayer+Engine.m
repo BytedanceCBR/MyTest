@@ -90,7 +90,7 @@ static NSString *platformString;
     self.playbackTimeInterval = 0.5;
     
     // 设置缓存为 YES
-    //    [self setOptions:@{@(VEKKeyCacheCacheEnable_BOOL):@(YES)}];
+//    [self setOptions:@{@(VEKKeyCacheCacheEnable_BOOL):@(YES)}];
     self.videoEngine.cacheEnable = YES;
     
     [TTVideoEngine setIgnoreAudioInterruption:YES];
@@ -106,10 +106,10 @@ static NSString *platformString;
             NSString *videoID = self.videoID;
             TTVProgressContext *cachedContext = [self cachedContextForKey:videoID];
             NSTimeInterval startTime = [cachedContext.playbackTime doubleValue];
-            //            [self.videoEngine setOptions:@{@(VEKKeyPlayerStartTime_CGFloat):@(startTime)}];
+//            [self.videoEngine setOptions:@{@(VEKKeyPlayerStartTime_CGFloat):@(startTime)}];
             self.videoEngine.startTime = startTime;
         }
-        
+
         TTVPlayerAction * action = [[TTVPlayerAction alloc] initWithPlayer:self];
         [self.playerStore dispatch:[action startPlayAction]];
     }
@@ -236,6 +236,11 @@ static NSString *platformString;
     if (![self ttv_isvalidNumber:self.videoEngine.currentPlaybackTime]) {
         return;
     }
+    
+//    self.playbackTime.currentPlaybackTime;
+//    self.playbackTime.duration;
+//    self.playbackTime.durationWatched;
+//    self.playbackTime.playableDuration;
     
     // 发 action，需要做判断是否有变化
     [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_PlayBackTimeChanged]];
@@ -393,7 +398,7 @@ static NSString *platformString;
     self.readyForDisplay = NO;
     self.firstCallPlay = YES;
     [self.playerStore dispatch:[[TTVReduxAction alloc] initWithType:TTVPlayerActionType_ReadyForDisplayChanged]];
-    
+
     [self updatePlaybackTime];
     
     TTVPlayFinishStatus * finishStatus = [[TTVPlayFinishStatus alloc] init];
@@ -671,4 +676,3 @@ static NSString *platformString;
 }
 
 @end
-

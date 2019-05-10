@@ -39,7 +39,7 @@ BOOL _ignoreInterrupt;
 }
 
 - (TTVPlayerState *)executeWithAction:(TTVReduxAction *)action
-                                state:(TTVPlayerState *)state {
+                                 state:(TTVPlayerState *)state {
     
     if ([action.type isEqualToString:TTVPlayerActionType_ReadyForDisplayChanged]) { // 播放开始判断是否改变
         BOOL isReady = self.player.readyForDisplay;
@@ -84,7 +84,7 @@ BOOL _ignoreInterrupt;
     }
     
     BOOL cellularNetwork = !TTNetworkWifiConnected() && TTNetworkConnected();
-    //    BOOL currentMovieAllowAlert = !self.allowPlayWithoutWiFi;
+//    BOOL currentMovieAllowAlert = !self.allowPlayWithoutWiFi;
     BOOL isLocalVideo = self.player.isLocalVideo;
     if (cellularNetwork && !isLocalVideo) {
         // 暂停当前播放
@@ -94,7 +94,7 @@ BOOL _ignoreInterrupt;
             _pauseByCellularNetwork = YES;
             [self.player.playerStore dispatch:[self.player.playerAction pauseAction]];
             return YES;
-            
+
         }
         
     }

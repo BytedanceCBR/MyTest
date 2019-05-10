@@ -36,9 +36,9 @@
         state.playbackState = self.player.playbackState;
     }
     else if ([action.type isEqualToString:TTVPlayerActionType_PlayBackTimeChanged]) {
-        if (!state.playbackTime.currentPlaybackTime) {
+//        if (!state.playbackTime.currentPlaybackTime) {
             state.playbackTime = self.player.playbackTime;
-        }
+//        }
     }
     else if ([action.type isEqualToString:TTVPlayerActionType_FinishStatusChanged]) {
         if (action.info[TTVPlayerActionInfo_FinishStatus]) {

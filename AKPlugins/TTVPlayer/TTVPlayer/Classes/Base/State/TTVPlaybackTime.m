@@ -51,6 +51,9 @@
 }
 
 - (BOOL)isEqualToPlaybackTime:(TTVPlaybackTime *)other {
+//    NSLog(@"--new %@", other);
+//    NSLog(@"--old %@", self);
+    
     if (self.currentPlaybackTime == other.currentPlaybackTime &&
         self.duration == other.duration &&
         self.durationWatched == other.durationWatched &&
@@ -68,7 +71,7 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<%@:%p>:%@",[self class],&self,@{@"currentTime":@(_currentPlaybackTime),@"duration":@(_duration),@"durationWatched":@(_durationWatched), @"playableDuration":@(_playableDuration), @"progress":@(_progress), @"cacheProgress":@(_cachedProgress)}];
+    return [NSString stringWithFormat:@"<%@:%p>:%@",[self class],&self,@{@"currentTime":@(self.currentPlaybackTime)}];
 }
 
 - (BOOL)ttv_isvalidNumber:(NSTimeInterval)number {
@@ -77,13 +80,17 @@
 #pragma mark - getters & setters
 - (NSTimeInterval)currentPlaybackTime {
     if (self.adaptor) {
+        _currentPlaybackTime = self.adaptor.currentPlaybackTime;
+//        NSLog(@"!!!1 %f ",self.adaptor.currentPlaybackTime);
         return self.adaptor.currentPlaybackTime;
     }
-    return _currentPlaybackTime;
+//    NSLog(@"!!!2 %f", _currentPlaybackTime);
+    return 0;
 }
 
 - (NSTimeInterval)duration {
     if (self.adaptor) {
+        _duration = self.adaptor.duration;
         return self.adaptor.duration;
     }
     return _duration;
@@ -91,6 +98,7 @@
 
 - (NSTimeInterval)durationWatched {
     if (self.adaptor) {
+        _durationWatched = self.adaptor.durationWatched;
         return self.adaptor.durationWatched;
     }
     return _durationWatched;
@@ -98,6 +106,7 @@
 
 - (NSTimeInterval)playableDuration {
     if (self.adaptor) {
+        _playableDuration = self.adaptor.playableDuration;
         return self.adaptor.playableDuration;
     }
     return _playableDuration;

@@ -38,7 +38,7 @@
                 if (self.immersiveSlider.superview != self.player.containerView.playbackControlView_Lock.immersiveContentView) {
                     [self.player.containerView.playbackControlView_Lock.immersiveContentView addSubview:self.immersiveSlider];
                     [self.player.containerView setNeedsLayout];
-                    //                    [self viewDidLayoutSubviews:self.player];
+//                    [self viewDidLayoutSubviews:self.player];
                 }
             }
             else {
@@ -46,14 +46,14 @@
                     if (self.immersiveSlider.superview != self.player.containerView.playbackControlView.immersiveContentView) {
                         [self.player.containerView.playbackControlView.immersiveContentView addSubview:self.immersiveSlider];
                         [self.player.containerView setNeedsLayout];
-                        //                        [self viewDidLayoutSubviews:self.player];
+//                        [self viewDidLayoutSubviews:self.player];
                     }
                 }
                 else {
                     if (self.immersiveSlider.superview != self.player.containerView.playbackControlView_Lock.immersiveContentView) {
                         [self.player.containerView.playbackControlView_Lock.immersiveContentView addSubview:self.immersiveSlider];
                         [self.player.containerView setNeedsLayout];
-                        //                        [self viewDidLayoutSubviews:self.player];
+//                        [self viewDidLayoutSubviews:self.player];
                     }
                 }
             }
@@ -76,7 +76,7 @@
     if (newState.fullScreenState.isFullScreen != lastState.fullScreenState.isFullScreen) {
         [self hudDismiss];
     }
-    
+
     //
     if (newState.readyForDisplay != lastState.readyForDisplay) {
         if (newState.readyForDisplay) {
@@ -93,13 +93,13 @@
     // 如果没有拖动事件和 seeking，那就正常更新 progress 和 cachedProgress
     if (!newState.seekStatus.isSliderPanning && !newState.seekStatus.isPanningOutOfSlider && !newState.isSeeking) { // 同步内核的进度
         if (newState.readyForDisplay) {
-            //            Debug_NSLog(@"isSeeking++++++ = %d,%f", newState.readyForDisplay, newState.playbackTime.progress);
+            Debug_NSLog(@"isSeeking++++++ = %d,%f", newState.readyForDisplay, newState.playbackTime.progress);
             [self.immersiveSlider setProgress:newState.playbackTime.progress animated:NO];
             [self.immersiveSlider setCacheProgress:newState.playbackTime.cachedProgress animated:NO];
             [self.slider setProgress:newState.playbackTime.progress animated:NO];
             [self.slider setCacheProgress:newState.playbackTime.cachedProgress animated:NO];
             [self.hud setProgress:newState.playbackTime.progress animated:NO];
-            //            [self.hud setForward:YES];
+//            [self.hud setForward:YES];
             self.hud.totalTime = newState.playbackTime.duration;
             self.duration = newState.playbackTime.duration;
             self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:newState.playbackTime.progress duration:newState.playbackTime.duration];
@@ -115,7 +115,7 @@
                 //            Debug_NSLog(@"isSeeking---- = %d,%f", newState.isSeeking,newState.seekStatus.panSeekingOutOfSliderInfo.progress);
                 [self.slider setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
                 [self.hud setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
-                //                [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
+//                [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
                 self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:newState.seekStatus.panSeekingOutOfSliderInfo.progress duration:newState.playbackTime.duration];
                 self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:newState.playbackTime.duration];
                 self.hud.showCancel = newState.seekStatus.panSeekingOutOfSliderInfo.isCancelledOutArea;
@@ -133,7 +133,7 @@
                     //                Debug_NSLog(@"isSeeking---- = %d,%f", newState.isSeeking,newState.seekStatus.panSeekingOutOfSliderInfo.progress);
                     [self.slider setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
                     [self.hud setProgress:newState.seekStatus.panSeekingOutOfSliderInfo.progress animated:NO];
-                    //                    [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
+//                    [self.hud setForward:newState.seekStatus.panSeekingOutOfSliderInfo.isMovingForward];
                     self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:newState.seekStatus.panSeekingOutOfSliderInfo.progress duration:newState.playbackTime.duration];
                     self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:newState.playbackTime.duration];
                     [self setCurrentAndTotalTimeWith:newState.playbackTime.progress duration:newState.playbackTime.duration];
@@ -207,7 +207,7 @@
     else if (key == TTVPlayerPartControlKey_Slider) {
         self.slider = (UIView<TTVSliderControlProtocol> *)controlView;
         _slider.userInteractionEnabled = NO;
-        
+
         @weakify(self)
         // 会不会有多次设置的问题 TODO >>>>>>>>>
         _slider.didSeekToProgress = ^(CGFloat progress, CGFloat fromProgress) {
