@@ -232,6 +232,21 @@
     }
 }
 
+- (void)exitFullScreen {
+//    dispatch_time_t delayTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0/*延迟执行时间*/ * NSEC_PER_SEC));
+//    dispatch_after(delayTime, dispatch_get_main_queue(), ^{
+        if(self.playbackState == TTVPlaybackState_Stopped && self.isFullScreen){
+            [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
+        }
+//    });
+}
+
+- (void)resetNetFlowState {
+    if(self.playbackState == TTVPlaybackState_Playing){
+        self.isShowingNetFlow = NO;
+    }
+}
+
 #pragma mark - FHVideoViewDelegate
 
 - (void)startPlayVideo {
@@ -345,15 +360,11 @@
     //埋点
     [self resetTime];
     [self trackPlayBackState];
-    
-    if(self.playbackState == TTVPlaybackState_Stopped && self.isFullScreen){
-        [self.player.playerStore dispatch:[self.player.playerAction actionForKey:TTVPlayerActionType_RotateToInlineScreen]];
-    }
-    
-    if(self.playbackState == TTVPlaybackState_Playing){
-        self.isShowingNetFlow = NO;
-    }
-    
+    //退出全屏播放
+    [self exitFullScreen];
+    //重置4g网络弹窗的状态
+    [self resetNetFlowState];
+    //暂停时显示或者隐藏按钮
     [self showStartBtnWhenPause];
     
     self.lastPlaybackState = playbackState;
@@ -383,10 +394,6 @@
     if(self.delegate && [self.delegate respondsToSelector:@selector(playerDidExitFullscreen)]){
         [self.delegate playerDidExitFullscreen];
     }
-}
-
-- (void)playerSliderDidStopPanning:(UIView<TTVSliderControlProtocol> *)slider {
-    NSLog(@"stop11111");
 }
 
 #pragma mark - 埋点相关
