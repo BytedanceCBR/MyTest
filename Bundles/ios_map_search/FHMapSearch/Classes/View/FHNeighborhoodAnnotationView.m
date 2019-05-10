@@ -60,7 +60,7 @@
     
     CGFloat maxWidth = MIN(_contentLabel.width, 171);
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(maxWidth+30, 35);
+    frame.size = CGSizeMake(maxWidth+30, 38);
     self.frame = frame;
     
     [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
@@ -86,8 +86,7 @@
         
         switch (houseAnnotation.type) {
             case FHHouseAnnotationTypeSelected:
-            case FHHouseAnnotationTypeOverSelected:
-            { //不区分选中还是选过
+            {
                 bgImageName = @"mapsearch_annotation_bg_red";
                 arrowImageName = @"mapsearch_annotation_arrow_red";
                 textColor = [UIColor whiteColor];
@@ -103,6 +102,7 @@
                 
             default:
             {
+                //不区分选中还是选过
                 bgImageName = @"mapsearch_annotation_bg";
                 arrowImageName = @"mapsearch_annotation_arrow";
                 textColor = [UIColor themeGray1];
@@ -122,7 +122,7 @@
     [super layoutSubviews];
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
-    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 29-arrowWidth/2, arrowWidth, arrowWidth);
+    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 30-arrowWidth/2, arrowWidth, arrowWidth);
     self.contentLabel.frame = CGRectMake(15, 8, self.width-30, 17);
 }
 

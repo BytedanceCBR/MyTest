@@ -250,13 +250,13 @@
     self.dismissing = YES;
     self.tableView.scrollEnabled = false;
     if (self.listController.willSwipeDownDismiss) {
-        self.listController.willSwipeDownDismiss(duration);
+        self.listController.willSwipeDownDismiss(duration,self.currentBubble);
     }
     [UIView animateWithDuration:duration animations:^{
         self.listController.view.top = self.listController.parentViewController.view.height;
     } completion:^(BOOL finished) {
         if (self.listController.didSwipeDownDismiss) {
-            self.listController.didSwipeDownDismiss();
+            self.listController.didSwipeDownDismiss(self.currentBubble);
         }
         self.tableView.scrollEnabled = true;
         self.dismissing = NO;

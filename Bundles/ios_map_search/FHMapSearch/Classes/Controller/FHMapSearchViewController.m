@@ -421,9 +421,9 @@
     }];
     
     [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(20);
-        make.top.mas_equalTo(self.navBar.mas_bottom).offset(20);
-        make.size.mas_equalTo(CGSizeMake(46, 46));
+        make.left.mas_equalTo(14);
+        make.top.mas_equalTo(self.navBar.mas_bottom).offset(kFilterBarHeight+20);
+        make.size.mas_equalTo(CGSizeMake(58, 58));
     }];
     
     CGFloat bottomMargin = -(39+bottomSafeInset);
@@ -431,13 +431,13 @@
     [self.chooseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.view).offset(bottomMargin);
         make.centerX.mas_equalTo(self.view);
-        make.size.mas_equalTo(CGSizeMake(186, 46));
+        make.size.mas_equalTo(CGSizeMake(160, 58));
     }];
     
     [self.bottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(bottomMargin);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(58);
     }];    
 }
 
@@ -473,12 +473,14 @@
     if (!animated) {
         self.filterPanel.alpha =  alpha;
         self.navBar.alpha =  alpha;
+        self.locationButton.alpha = alpha;
         return;
     }
     
     [UIView animateWithDuration:0.3 animations:^{
         self.filterPanel.alpha =  alpha;
         self.navBar.alpha =  alpha;
+        self.locationButton.alpha = alpha;
     }completion:^(BOOL finished) {
     }];
 }
@@ -524,6 +526,7 @@
     [self.houseFilterBridge closeConditionFilterPanel];
     self.chooseView.hidden = YES;
     self.bottomBar.hidden = YES;
+    self.locationButton.alpha = 0;
     
     [self.view addSubview:self.drawMaskView];
     TTNavigationController *navController = (TTNavigationController *)self.navigationController;

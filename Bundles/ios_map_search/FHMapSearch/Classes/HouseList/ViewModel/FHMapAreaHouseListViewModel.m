@@ -75,6 +75,11 @@
         self.coordinateEnclosure = userInfo[COORDINATE_ENCLOSURE];
         self.neighborhoodIds = userInfo[NEIGHBORHOOD_IDS];
         
+        NSString *filter = userInfo[@"filter"];
+        if (!IS_EMPTY_STRING(filter)) {
+            self.filterCondition = filter;
+        }
+        
     }
     return self;
 }
@@ -89,7 +94,7 @@
     
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
-        [wself requestData:YES];
+        [wself requestData:NO];
     }];
     self.tableView.mj_footer = _refreshFooter;
     [_refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
@@ -165,7 +170,9 @@
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:0.3 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsZero;
+            UIEdgeInsets finset = self.tableView.contentInset;
+            finset.top = 0;
+            self.tableView.contentInset = finset;
         }];
     });
     
@@ -261,23 +268,36 @@
         NSString *searchId = @"";
         NSArray *items = NULL;
         NSString *refreshTip = nil;
+        NSString *openUrl = nil;
         if ([model isKindOfClass:[FHSearchHouseDataModel class]]) {
             FHSearchHouseDataModel *dataModel = (FHSearchHouseDataModel *)model;
             searchId = dataModel.searchId;
             hasMore = dataModel.hasMore;
             items = dataModel.items;
             refreshTip = dataModel.refreshTip;
+            openUrl = dataModel.houseListOpenUrl;
         }else if ([model isKindOfClass:[FHHouseRentDataModel class]]){
             FHHouseRentDataModel *dataModel = (FHHouseRentDataModel *)model;
             searchId = dataModel.searchId;
             hasMore = dataModel.hasMore;
             items = dataModel.items;
             refreshTip = dataModel.refreshTip;
+            openUrl = dataModel.houseListOpenUrl;
         }
         
         if (searchId.length > 0) {
             self.searchId = searchId;
         }
+        if (isHead) {
+            if (openUrl) {
+                [self overwriteFilter:openUrl];
+            }
+        
+            [self.houseList removeAllObjects];
+            [self.houseShowTracerDic removeAllObjects];
+        }
+        
+        
         if (items.count > 0) {
             self.listController.hasValidateData = YES;
             [self.listController.emptyView hideEmptyView];
@@ -293,19 +313,15 @@
             
             if (isHead) {
                 if (refreshTip.length > 0){
-                    [self showNotify:refreshTip];
+                    [self showNotify:refreshTip];                    
+                    self.listController.title = refreshTip;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
                 });
             }
-            
         } else {
             [self processError:FHEmptyMaskViewTypeNoDataForCondition tips:NULL isHead:isHead];
-        }
-        
-        if (isHead) {
-            [self.houseShowTracerDic removeAllObjects];
         }
         
         //enter category
@@ -342,6 +358,16 @@
     }
 }
 
+
+-(void)overwriteFilter:(NSString *)openUrl
+{
+    NSURL *url = [NSURL URLWithString:openUrl];
+    TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
+    if (paramObj) {
+        [self.houseFilterBridge resetFilter:self.houseFilterViewModel withQueryParams:paramObj.queryParams updateFilterOnly:YES];
+    }
+    
+}
 
 #pragma mark - UITableViewDelegate UITableViewDataSource
 

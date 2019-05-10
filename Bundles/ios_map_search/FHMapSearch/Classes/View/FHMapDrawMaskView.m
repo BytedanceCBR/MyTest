@@ -10,7 +10,7 @@
 #import <FHHouseBase/FHCommonDefines.h>
 
 #define MIN_POINTS 20
-#define CLOSE_WIDTH 46
+#define CLOSE_WIDTH 58
 
 @interface FHMapDrawMaskView ()
 
@@ -29,8 +29,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close_bg") forState:UIControlStateNormal];
-        [_closeButton setImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];
+        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];        
         [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
         
         [self addSubview:_closeButton];
@@ -88,6 +87,10 @@
     [self.ycoords removeAllObjects];
     [self.bezierPath removeAllPoints];
     
+    if (touches.count > 1) {
+        return;
+    }
+    
     UITouch *touch = [touches anyObject];
     CGPoint loc = [touch locationInView:self];
     [_bezierPath moveToPoint:loc];
@@ -97,6 +100,9 @@
 -(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [super touchesMoved:touches withEvent:event];
+    if (touches.count > 1) {
+        return;
+    }
     UITouch *touch = [touches anyObject];
     CGPoint loc = [touch locationInView:self];
     [self appendTouch:loc];
@@ -107,7 +113,9 @@
 -(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [super touchesEnded:touches withEvent:event];
-    
+    if (touches.count > 1) {
+        return;
+    }
     if (self.xcoords.count < MIN_POINTS) {
         [self.bezierPath removeAllPoints];
     }else{
@@ -143,7 +151,7 @@
     if (@available(iOS 11.0 , *)) {
         bottomSafeInset = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
     }
-    _closeButton.frame = CGRectMake(39, CGRectGetHeight(self.bounds) - 30 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
+    _closeButton.frame = CGRectMake(14, CGRectGetHeight(self.bounds) - 24 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
 }
 
 -(void)drawRect:(CGRect)rect

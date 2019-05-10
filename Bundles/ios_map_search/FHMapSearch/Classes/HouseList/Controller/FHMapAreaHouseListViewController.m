@@ -149,6 +149,7 @@
 - (void)setupData {
     
     self.viewModel.houseFilterBridge = self.houseFilterBridge;
+    self.viewModel.houseFilterViewModel = self.houseFilterViewModel;
     [self.houseFilterBridge setViewModel:self.houseFilterViewModel withDelegate:self.viewModel];
 }
 

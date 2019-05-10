@@ -15,7 +15,6 @@
 @interface FHMapSearchBottomBar ()
 
 @property(nonatomic , strong) UIButton *closeButton;
-@property(nonatomic , strong) UIView *drawLineShadowBgView;
 @property(nonatomic , strong) UIControl *drawLineBgView;
 @property(nonatomic , strong) UILabel *drawLineLabel;
 @property(nonatomic , strong) UIImageView *drawLineIndicator;
@@ -33,8 +32,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         _closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close_bg") forState:UIControlStateNormal];
-        [_closeButton setImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];
+        [_closeButton setBackgroundImage:SYS_IMG(@"mapsearch_close") forState:UIControlStateNormal];
         [_closeButton addTarget:self action:@selector(onCloseAction) forControlEvents:UIControlEventTouchUpInside];
         
         [self addSubview:_closeButton];
@@ -43,23 +41,19 @@
         [self initSubways];
         
         [self initConstraints];
+        
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
 
 -(void)initDrawLines
 {
-    
-    _drawLineShadowBgView = [[UIView alloc] init];
-    _drawLineShadowBgView.layer.shadowRadius = 6;
-    _drawLineShadowBgView.layer.shadowColor = [[UIColor colorWithWhite:0 alpha:0.4] CGColor];
-    _drawLineShadowBgView.layer.shadowOffset = CGSizeMake(0, 2);
-    _drawLineShadowBgView.layer.shadowOpacity = 1;
+    UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
+    img = [img resizableImageWithCapInsets:UIEdgeInsetsMake(15, 15, 15, 15)];
     
     _drawLineBgView = [[UIControl alloc] init];
-    _drawLineBgView.backgroundColor = [UIColor whiteColor];
-    _drawLineBgView.layer.cornerRadius = 4;
-    _drawLineBgView.layer.masksToBounds = YES;
+    _drawLineBgView.layer.contents = (id)[img CGImage];
     [_drawLineBgView addTarget:self action:@selector(onDrawLineInfo) forControlEvents:UIControlEventTouchUpInside];
     
     _drawLineLabel = [[UILabel alloc]init];
@@ -71,8 +65,9 @@
     [_drawLineBgView addSubview:_drawLineLabel];
     [_drawLineBgView addSubview:_drawLineIndicator];
     
-    [self addSubview:_drawLineShadowBgView];
     [self addSubview:_drawLineBgView];
+    
+    _drawLineBgView.hidden = YES;
 }
 
 -(void)initSubways
@@ -83,8 +78,8 @@
 -(void)initConstraints
 {
     [_closeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(HOR_MARGIN);
-        make.size.mas_equalTo(CGSizeMake(46, 46));
+        make.left.mas_equalTo(HOR_MARGIN - 6);
+        make.size.mas_equalTo(CGSizeMake(58, 58));
         make.top.mas_equalTo(0);
     }];
     
@@ -94,16 +89,13 @@
     [_drawLineBgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(88);
 //        make.width.mas_equalTo(200);
-        make.top.bottom.mas_equalTo(self);
+        make.top.mas_equalTo(self).offset(0);
+        make.bottom.mas_equalTo(self).offset(0);
         make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(20);
     }];
     
-    [_drawLineShadowBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.drawLineBgView);
-    }];
-    
     [_drawLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.drawLineBgView);
+        make.centerY.mas_equalTo(self.drawLineBgView).offset(-2);
         make.left.mas_equalTo(20);
     }];
     
@@ -137,6 +129,8 @@
     [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(left);
     }];
+        
+    _drawLineBgView.hidden = NO;
     
 }
 

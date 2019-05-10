@@ -26,17 +26,17 @@
     self = [super initWithFrame:frame];
     if (self) {
         
-        UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
-        frost.frame = CGRectMake(0, 0,[[UIScreen mainScreen]bounds].size.width , kViewHeight);
-        [self addSubview:frost];
+//        UIVisualEffectView *frost = [[UIVisualEffectView alloc]initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+//        frost.frame = CGRectMake(0, 0,[[UIScreen mainScreen]bounds].size.width , kViewHeight);
+//        [self addSubview:frost];
         
         _tipLabel = [[UILabel alloc] init];
         _tipLabel.font = [UIFont systemFontOfSize:12];
         _tipLabel.textAlignment = NSTextAlignmentCenter;
-        _tipLabel.textColor = [UIColor themeGray1];
+        _tipLabel.textColor = [UIColor themeRed3];
         [self addSubview:_tipLabel];
         
-        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor themeRed2];
         self.clipsToBounds = YES;
     }
     return self;

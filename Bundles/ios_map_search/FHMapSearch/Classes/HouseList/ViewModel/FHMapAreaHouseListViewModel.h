@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , assign)FHHouseType houseType;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
+@property(nonatomic , strong) id houseFilterViewModel;
 @property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 
 -(instancetype)initWithWithController:(FHMapAreaHouseListViewController *)viewController tableView:(UITableView *)table userInfo:(NSDictionary *)userInfo;
@@ -24,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)viewWillAppear:(BOOL)animated;
 
 -(void)viewWillDisappear:(BOOL)animated;
+
+-(void)updateFilter;
 
 -(void)loadData;
 

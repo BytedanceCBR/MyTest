@@ -19,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMapSearchHouseListViewController : FHBaseViewController
 
 @property(nonatomic , strong) FHMapSearchHouseListViewModel *viewModel;
-@property(nonatomic , copy)   void (^willSwipeDownDismiss)(CGFloat duration);
-@property(nonatomic , copy)   void (^didSwipeDownDismiss)();
+@property(nonatomic , copy)   void (^willSwipeDownDismiss)(CGFloat duration,FHMapSearchBubbleModel *fromBubble);
+@property(nonatomic , copy)   void (^didSwipeDownDismiss)(FHMapSearchBubbleModel *fromBubble);
 @property(nonatomic , copy)   void (^moveToTop)(); //滑动到顶部
 @property(nonatomic , copy)   void (^moveDock)(); //滑动到一半
 @property(nonatomic , copy)   void (^showHouseDetailBlock)(FHSearchHouseDataItemsModel *model , NSInteger rank , FHMapSearchBubbleModel *fromBubble);
