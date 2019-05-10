@@ -261,9 +261,15 @@ TTFeedCollectionCellDelegate>
         
         NSString *reuseIdentifier = NSStringFromClass(cellClass);
         if ([reuseIdentifier isEqualToString:@"TTFeedCollectionWebListCell"]) {
+            NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+            NSString *cellKey = [NSString stringWithFormat:@"%@_%@",cityId ? cityId : @"",category.categoryID];
+            if (category.categoryID) {
+                [_collectionView registerClass:[TTFeedCollectionWebListCell class] forCellWithReuseIdentifier:cellKey];
+            }
+            
             @try {
                 // 可能会出现崩溃的代码
-                cell = [collectionView dequeueReusableCellWithReuseIdentifier:category.categoryID forIndexPath:indexPath];
+                cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellKey forIndexPath:indexPath];
             }
             
             @catch (NSException *exception) {

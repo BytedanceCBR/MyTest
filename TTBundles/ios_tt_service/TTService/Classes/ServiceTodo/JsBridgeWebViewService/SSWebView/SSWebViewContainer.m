@@ -59,7 +59,7 @@
 
 + (void)load {
     if ([[[TTSettingsManager sharedManager] settingForKey:@"tt_wk_cookie" defaultValue:@(YES) freeze:NO] boolValue]) {
-//        [TTRCookiesSyncer autoSyncHttpCookiesToWKCookies];
+        //        [TTRCookiesSyncer autoSyncHttpCookiesToWKCookies];
     }
 }
 
@@ -70,7 +70,7 @@
         self.webStayStat = SSWebViewStayStatCancel;
         [self _sendStatEvent:SSWebViewStayStatCancel error:nil];
     }
-
+    
     [self _sendJumpLinks];
     if (!isEmptyString(self.adID)) {
         [self _sendLandingPageEvent];
@@ -92,7 +92,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         [SSWebViewUtil registerUserAgent:YES];
-
+        
         self.backgroundColor = [UIColor clearColor];
         
         BOOL forceUseWK = [baseCondition tt_boolValueForKey:@"use_wk"];
@@ -105,6 +105,7 @@
         [self addSubview:_ssWebView];
         
         self.disableTTUserAgent = NO;
+        self.disableConnectCheck = NO;
         
         _progressView = [[TTRWebViewProgressView alloc] initWithFrame:self.bounds];
         _progressView.height = 2.f;
@@ -117,7 +118,7 @@
         _longPressGesture.delegate = self;
         _longPressGesture.enabled = NO;
         [_ssWebView addGestureRecognizer:_longPressGesture];
-
+        
         self.jumpLinks = [NSMutableArray arrayWithCapacity:5];
         [self p_registerADInfo];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
@@ -186,7 +187,7 @@
 }
 
 #pragma mark -- long press gesture response
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {    
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
 
@@ -230,14 +231,14 @@
 - (BOOL)webView:(YSWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(YSWebViewNavigationType)navigationType {
     NSLog(@"call back request url = %@",request.URL.absoluteString);
     
-    if(!TTNetworkConnected())
+    if(!TTNetworkConnected() && !self.disableConnectCheck)
     {
         [self tt_endUpdataData:NO error:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
         
         if (self.ssWebView.delegate && [self.ssWebView.delegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
             [self.ssWebView.delegate webView:self.ssWebView didFailLoadWithError:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
         }
-    
+        
         return NO;
     }
     
@@ -255,7 +256,7 @@
     }
     
     if (self.webViewTrackKey) {
-            /// 统计跳转到某个URL
+        /// 统计跳转到某个URL
         if (!isEmptyString(request.URL.absoluteString)) {
             [self.jumpLinks addObject:request.URL.absoluteString];
         }
@@ -284,7 +285,7 @@
     // 发送统计事件
     self.webStayStat = SSWebViewStayStatLoadFinish;
     [self _sendStatEvent:SSWebViewStayStatLoadFinish error:nil];
-
+    
 }
 
 - (void)webView:(YSWebView *)webView didFailLoadWithError:(NSError *)error {
@@ -400,7 +401,7 @@
         }
         else {
             [dict setValue:@"" forKey:@"log_extra"];
-
+            
         }
         //添加三方广告落地页预加载打点字段
         if (!isEmptyString(self.adID)) {
@@ -456,13 +457,13 @@
     [dict setValue:@"1" forKey:@"is_ad_event"];
     TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
     [dict setValue:@(connectionType) forKey:@"nt"];
-
+    
     if (!isEmptyString(self.logExtra)) {
         [dict setValue:self.logExtra forKey:@"log_extra"];
     } else {
         [dict setValue:@"" forKey:@"log_extra"];
     }
-
+    
     /// 需要减去后台停留时间
     NSTimeInterval timeInterval;
     NSMutableDictionary *ad_extra_data = [NSMutableDictionary dictionary];
@@ -482,7 +483,7 @@
     } else {
         [ad_extra_data setValue:@0 forKey:@"preload"];
     }
-
+    
     NSString* timeStr = nil;
     @try {
         timeStr = [self.ssWebView stringByEvaluatingJavaScriptFromString:@"performance.timing.domComplete - performance.timing.navigationStart" completionHandler:nil];
@@ -500,9 +501,9 @@
     }
     [ad_extra_data setValue:@(timeInterval) forKey:@"dom_complete_time"];
     [ad_extra_data setValue:self.loadState forKey:@"load_status"];
-
+    
     //添加三方广告落地页预加载打点字段
-
+    
     if ([TTAdManageInstance preloadWebRes_hasPreloadResource:self.adID] == YES) {
         NSInteger preload_total = [TTAdManageInstance preloadWebRes_preloadTotalAdID:self.adID];
         if (preload_total > 0) {
@@ -526,7 +527,7 @@
         }
     }
     [dict setValue:[ad_extra_data tt_JSONRepresentation] forKey:@"ad_extra_data"];
-
+    
     [TTTrackerWrapper eventData:dict];
     
     // 这里要把这个变成空的，下次如果看到时间是空的，则不重新发送统计。

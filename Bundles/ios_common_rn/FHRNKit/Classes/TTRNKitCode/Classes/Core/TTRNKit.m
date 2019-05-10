@@ -72,7 +72,7 @@ static NSString *geckoParamsKey = @"kGeckoParams";
 }
 
 - (void)syncGeckoBundle {
-    [TTRNKitGeckoWrapper syncWithGeckoParams:self.geckoParams completion:nil];
+//    [TTRNKitGeckoWrapper syncWithGeckoParams:self.geckoParams completion:nil];
 }
 
 #pragma mark - public method

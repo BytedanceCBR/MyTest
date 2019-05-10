@@ -27,6 +27,7 @@
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
 #import "FHIESGeckoManager.h"
+#import <TTDeviceHelper.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -283,6 +284,17 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.citycode;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
     
+    
+    CGFloat f_density = [UIScreen mainScreen].scale;
+    CGFloat f_memory = [TTDeviceHelper getTotalCacheSpace];
+
+    if (f_density) {
+        requestParam[@"f_density"] = @(f_density);
+    }
+    
+    if (f_memory) {
+        requestParam[@"f_memory"] = @(f_memory);
+    }
     
     if (longitude != 0 && longitude != 0) {
         requestParam[@"gaode_lng"] = @(longitude);

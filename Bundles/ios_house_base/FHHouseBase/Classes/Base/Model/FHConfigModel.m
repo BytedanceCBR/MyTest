@@ -185,6 +185,7 @@
                            @"rentBanner": @"rent_banner",
                            @"entranceSwitch": @"entrance_switch",
                            @"houseTypeDefault":@"house_type_default",
+                           @"jump2AdRecommend":@"jump_2_ad_recommend",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
