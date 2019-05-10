@@ -314,7 +314,7 @@
             if (isHead) {
                 if (refreshTip.length > 0){
                     [self showNotify:refreshTip];                    
-                    self.listController.title = refreshTip;
+//                    self.listController.title = refreshTip;
                 }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
