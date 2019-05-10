@@ -1363,11 +1363,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self addClickDrawLineLog];
     [self addEnterCircleFindLog];
     if (self.mapView.zoomLevel < 13) {
-        
         [FHMapSearchLevelPopLayer showInView:self.viewController.view atPoint:CGPointMake(self.chooseView.centerX, self.chooseView.top)];
-        
         return;
     }
+    
     [self.tipView removeFromSuperview];
     self.showMode = FHMapSearchShowModeDrawLine;
     [self.viewController enterMapDrawMode];
@@ -1377,9 +1376,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         return;
     }
 
-    self.bottomBar.hidden = YES;
+    self.drawMaskView.hidden = YES;
+    
     [FHMapSearchDrawGuideView showInView:self.viewController.view dismiss:^{
-        self.bottomBar.hidden = NO;        
+        self.drawMaskView.hidden = NO;
     }];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:showedGuide];
 }

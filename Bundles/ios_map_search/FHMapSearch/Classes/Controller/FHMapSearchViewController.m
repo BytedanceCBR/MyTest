@@ -421,7 +421,7 @@
     }];
     
     [self.locationButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(20);
         make.top.mas_equalTo(self.navBar.mas_bottom).offset(20);
         make.size.mas_equalTo(CGSizeMake(46, 46));
     }];
@@ -510,8 +510,9 @@
     if (!_drawMaskView) {
         _drawMaskView = [[FHMapDrawMaskView alloc] initWithFrame:self.view.bounds];
         _drawMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        _drawMaskView.backgroundColor = RGBA(0, 0, 0, 0.5);
+        _drawMaskView.backgroundColor = RGBA(0, 0, 0, 0.0);
         _drawMaskView.delegate = self.viewModel;
+        self.viewModel.drawMaskView = _drawMaskView;
     }
     return _drawMaskView;
 }

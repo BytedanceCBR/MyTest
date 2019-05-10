@@ -55,6 +55,7 @@
     button.titleLabel.font = [UIFont themeFontRegular:14];
     
     [button setImage:icon forState:UIControlStateNormal];
+    [button setImage:icon forState:UIControlStateHighlighted];
     
     [button setBackgroundColor:[UIColor whiteColor]];
     
