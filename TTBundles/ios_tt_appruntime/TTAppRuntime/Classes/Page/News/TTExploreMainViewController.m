@@ -130,42 +130,6 @@
 //#endif
     }
     
- 
-    
-    if(self.adShow)
-    {
-        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
-            if (!isClicked) {
-                if (!self.adColdHadJump) {
-                    self.adColdHadJump = YES;
-                    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-                    if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
-                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                    }
-                }
-            }
-        };
-    }else
-    {
-        WeakSelf;
-        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-            StrongSelf;
-            if (!self.adColdHadJump) {
-                FHConfigDataModel *currentDataModel = x;
-                if ([currentDataModel isKindOfClass:[FHConfigDataModel class]] && [currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
-
-                    [[TTRoute sharedRoute] openURL:[NSURL URLWithString:currentDataModel.jump2AdRecommend] userInfo:nil objHandler:^(TTRouteObject *routeObj) {
-                        UIViewController *vc =  (UIViewController *)routeObj.instance;
-                        vc.hidesBottomBarWhenPushed = YES;
-                        if ([vc isKindOfClass:[UIViewController class]]) {
-                            [self.navigationController pushViewController:vc animated:YES];
-                        }
-                    }];
-                }
-            }
-            self.adColdHadJump = YES;
-        }];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -227,6 +191,44 @@
     
     [TTPushAlertManager enterFeedPage:TTPushWeakAlertPageTypeMainFeed];
     
+    
+    if(self.adShow)
+    {
+        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
+            if (!isClicked) {
+                if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+                    self.adColdHadJump = YES;
+                    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                    if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                    }
+                }
+            }
+        };
+    }else
+    {
+        if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+            self.adColdHadJump = YES;
+            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                    });
+                });
+            }
+        }
+    }
+}
+
+- (void)traceJump2AdEvent:(NSString *)urlString
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
+    [dict setValue:@"1" forKey:@"result"];
+    [dict setValue:urlString forKey:@"url"];
+    [FHEnvContext recordEvent:dict andEventKey:@"link_jump"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

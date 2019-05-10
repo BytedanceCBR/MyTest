@@ -375,10 +375,10 @@
         {
             [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
         }
+        callback(TTBridgeMsgSuccess, @{@"code": @0});
         return;
     }
     
-    callback(TTBridgeMsgSuccess, @{@"code": @0});
 }
 
 - (void)alertTestWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
