@@ -82,29 +82,10 @@
         if (newState.readyForDisplay) {
             @weakify(self);
             _slider.userInteractionEnabled = YES;
-            _slider.seekingToProgress = ^(CGFloat progress, BOOL cancel, BOOL end) {
-                @strongify(self);
-                if (end || cancel) { // 有可能取消了，不需要 seek，但是也算结束了,但是还会回调到didSeekToProgress中
-                    return;
-                }
-                // 避免多次发送一个 action
-                if (!self.isSliderPanning) {
-                    [self.playerStore dispatch:[TTVReduxAction actionWithType:TTVPlayerActionType_SliderPan info:@{TTVPlayerActionInfo_isSliderPanning:@(YES)}]];
-                    [self hudShow];
-                }
-                self.isSliderPanning = YES;
-                self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:progress duration:self.duration];
-                self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:self.duration];
-                [self setCurrentAndTotalTimeWith:progress duration:self.duration];
-                [self.hud setProgress:progress animated:NO];
-                
-                // delegate
-                if ([self.player.delegate respondsToSelector:@selector(playerSliderDidProgressSeeking:)]) {
-                    [self.player.delegate playerSliderDidProgressSeeking:self.slider];
-                }
-            };
         }
         else {
+            // 说明结束了，需要将 sliderpanning 设置为 NO
+            
             self.slider.userInteractionEnabled = self.player.supportSeekAfterPlayerFinish?YES:NO;
         }
     }
@@ -239,6 +220,36 @@
             [self.player setCurrentPlaybackTime:currentPlaybackTime complete:nil];
             [self.playerStore dispatch:[TTVReduxAction actionWithType:TTVPlayerActionType_SliderPan info:@{TTVPlayerActionInfo_isSliderPanning:@(NO)}]];
         };
+        
+        _slider.seekingToProgress = ^(CGFloat progress, BOOL cancel, BOOL end) {
+            @strongify(self);
+            // 如果 cancel 是 YES，将不会走到 didSeekToProgress 中，需要停止
+            if (cancel) {
+                self.isSliderPanning = NO;
+                [self.playerStore dispatch:[TTVReduxAction actionWithType:TTVPlayerActionType_SliderPan info:@{TTVPlayerActionInfo_isSliderPanning:@(NO)}]];
+                return;
+            }
+            // 如果是 end 会走到didSeekToProgress，不用处理
+            if (end) {
+                return;
+            }
+            
+            // 避免多次发送一个 action
+            if (!self.isSliderPanning) {
+                [self.playerStore dispatch:[TTVReduxAction actionWithType:TTVPlayerActionType_SliderPan info:@{TTVPlayerActionInfo_isSliderPanning:@(YES)}]];
+                [self hudShow];
+            }
+            self.isSliderPanning = YES;
+            self.currentTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:progress duration:self.duration];
+            self.totalTimeLabel.text = [TTVPlayerUtility transformProgressToTimeString:1 duration:self.duration];
+            [self setCurrentAndTotalTimeWith:progress duration:self.duration];
+            [self.hud setProgress:progress animated:NO];
+            
+            // delegate
+            if ([self.player.delegate respondsToSelector:@selector(playerSliderDidProgressSeeking:)]) {
+                [self.player.delegate playerSliderDidProgressSeeking:self.slider];
+            }
+        };
     }
     else if (key == TTVPlayerPartControlKey_SeekingHUD) {
         self.hud = (UIView<TTVProgressHudOfSliderProtocol> *)controlView;
@@ -318,4 +329,3 @@
 
 
 @end
-

@@ -183,9 +183,9 @@
                 }
             } else {
                 self.interactive = NO;
-//                if (self.seekingToProgress) {
-//                    self.seekingToProgress(self.progressBeforeDragging, YES, YES);
-//                }
+                if (self.seekingToProgress) {
+                    self.seekingToProgress(self.progressBeforeDragging, YES, YES);
+                }
             }
         }
             break;
