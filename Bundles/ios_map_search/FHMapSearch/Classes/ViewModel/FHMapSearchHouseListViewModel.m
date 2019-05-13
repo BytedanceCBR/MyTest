@@ -118,6 +118,11 @@
     
 }
 
+-(FHMapSearchShowMode)enterShowMode
+{
+    return self.currentBubble.lastShowMode;
+}
+
 -(void)updateWithHouseData:(FHSearchHouseDataModel *_Nullable)data neighbor:(FHMapSearchDataListModel *)neighbor bubble:(FHMapSearchBubbleModel *)bubble
 {
     if (self.requestTask.state == TTHttpTaskStateRunning) {

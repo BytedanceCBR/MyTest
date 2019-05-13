@@ -824,7 +824,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction
 {
-    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway) {
+    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway || (self.showMode == FHMapSearchShowModeHalfHouseList && ([self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeDrawLine || [self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeSubway))) {
         return;
     }
     
@@ -958,9 +958,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView didSingleTappedAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
+    
     if (_showMode == FHMapSearchShowModeHalfHouseList) {
         //点击空白退出房源列表
         [self dismissHouseListView];
+    }else if (_showMode == FHMapSearchShowModeDrawLine || _showMode == FHMapSearchShowModeSubway){
+        //画圈找房 不做处理
     }else{
         //强制显示导航栏，增加保护
         [self.viewController showNavTopViews:1 animated:NO];        
