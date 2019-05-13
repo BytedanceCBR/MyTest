@@ -691,9 +691,9 @@ static inline CGFloat navigationBarTop() {
         self.originalColor = self.view.backgroundColor;
         self.view.backgroundColor = [UIColor blackColor];
         [UIView animateWithDuration:0.15 customTimingFunction:CustomTimingFunctionQuadIn animation:^{
-            fromViewController.view.transform = CGAffineTransformMakeTranslation(CGRectGetWidth(viewController.view.frame), 0);
+            fromViewController.view.transform = CGAffineTransformMakeTranslation(CGRectGetWidth(fromVCFrame), 0);
             viewController.view.transform = CGAffineTransformIdentity;
-            _maskView.alpha = 0.0;
+            self->_maskView.alpha = 0.0;
         } completion:^(BOOL finished) {
             self.view.backgroundColor = self.originalColor;
             self.originalColor = nil;
@@ -701,7 +701,7 @@ static inline CGFloat navigationBarTop() {
                 [fromViewController.view removeFromSuperview];
                 fromViewController.view.transform = CGAffineTransformIdentity;
             }
-            [_maskView removeFromSuperview];
+            [self->_maskView removeFromSuperview];
             fromViewController.view.userInteractionEnabled = YES;
             viewController.view.transform = CGAffineTransformIdentity;
             [self removeTabBarSnapshotForSuperView:viewController.view];
