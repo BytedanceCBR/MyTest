@@ -180,6 +180,7 @@
     }
 
     if (callParams[@"follow_id"]) {
+        callParams[@"hide_toast"] = @(YES);
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
     }
 
