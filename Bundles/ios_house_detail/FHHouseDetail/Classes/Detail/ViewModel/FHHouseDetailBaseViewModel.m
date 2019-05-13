@@ -281,6 +281,9 @@
     if (self.contactViewModel.contactPhone) {
         info[@"contact_phone"] = self.contactViewModel.contactPhone;
     }
+    if (self.contactViewModel.chooseAgencyList) {
+        info[@"choose_agency_list"] = self.contactViewModel.chooseAgencyList;
+    }
     info[@"house_type"] = @(self.houseType);
     switch (_houseType) {
         case FHHouseTypeNewHouse:

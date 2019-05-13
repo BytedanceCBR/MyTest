@@ -12,7 +12,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHHouseFillFormConfigModel;
+@class FHHouseFillFormConfigModel,FHFillFormAgencyListItemModel;
 
 @interface FHHouseFillFormHelper : NSObject
 
@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *realtorId; // 在线联系时必填
 @property (nonatomic, copy) NSString *phone;
 @property (nonatomic, assign) FHFollowActionType actionType;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
 
 #pragma mark 埋点
 // 必填
@@ -61,5 +62,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTraceParams:(NSDictionary *)params;
 @end
+
 
 NS_ASSUME_NONNULL_END

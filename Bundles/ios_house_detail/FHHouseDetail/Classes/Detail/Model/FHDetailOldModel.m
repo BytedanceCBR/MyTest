@@ -263,7 +263,8 @@
                            @"priceAnalyze": @"price_analyze",
                            @"neighborhoodPriceRange": @"neighborhood_price_range",
                            @"comfortInfo": @"comfort_info",
-            
+                           @"chooseAgencyList": @"choose_agency_list",
+                           
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

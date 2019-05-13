@@ -7,6 +7,7 @@
 
 #import "FHPriceValuationAPI.h"
 #import "FHHouseDetailAPI.h"
+#import "FHPostDataHTTPRequestSerializer.h"
 
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
 #define GET @"GET"
@@ -77,20 +78,29 @@
     } callbackInMainThread:YES];
 }
 
-+ (TTHttpTask *)requestSubmitPhoneWithParams:(NSDictionary *)params completion:(void (^)(BOOL, NSError * _Nonnull))completion {
++ (TTHttpTask *)requestSubmitPhoneWithEstimateId:(NSString *)estimateId houseType:(FHHouseType)houseType phone:(NSString *)phone params:(NSDictionary *)params completion:(void (^)(BOOL, NSError * _Nonnull))completion {
     NSString *queryPath = @"/f100/api/submit_phone";
     
-    NSString *url = QURL(queryPath);
-    
-    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:GET needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:nil responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    NSMutableString *url = QURL(queryPath).mutableCopy;
+    [url appendString:[NSString stringWithFormat:@"?house_type=%ld",houseType]];
+    if (phone.length > 0) {
+        [url appendString:[NSString stringWithFormat:@"&phone=%@",phone]];
+    }
+    if (estimateId.length > 0) {
+        [url appendString:[NSString stringWithFormat:@"&estimate_id=%@",estimateId]];
+    }
+    NSDictionary *postParams = params.count > 0 ? params : nil;
+    return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:postParams method:POST needCommonParams:YES headerField:nil enableHttpCache:NO requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:nil progress:nil callback:^(NSError *error, id obj, TTHttpResponse *response) {
         BOOL success = NO;
         NSMutableDictionary *result = [NSMutableDictionary dictionary];
-        @try{
-            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
-            success = ([json[@"status"] integerValue] == 0);
-        }
-        @catch(NSException *e){
-            error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+        if (obj) {
+            @try{
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                success = ([json[@"status"] integerValue] == 0);
+            }
+            @catch(NSException *e){
+                error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo];
+            }
         }
         
         if (completion) {
