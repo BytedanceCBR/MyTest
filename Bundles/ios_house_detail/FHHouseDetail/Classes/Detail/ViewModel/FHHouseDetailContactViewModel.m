@@ -42,6 +42,7 @@
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
 #import <FHHouseBase/FHHouseFillFormHelper.h>
+#import <HMDTTMonitor.h>
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -334,6 +335,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     @catch (NSException *exception) {
         // 捕获到的异常exception
         if (exception) {
+            NSString* descriptionExc = [exception description];
+            NSMutableDictionary *excepDict = [NSMutableDictionary dictionary];
+            [excepDict setValue:descriptionExc forKey:@"exception"];
+            
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:1 extra:excepDict];
             self.phoneCallViewModel.rnIsUnAvalable = YES;
         }
     }
@@ -412,6 +418,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         [fillFormConfig setTraceParams:params];
         fillFormConfig.searchId = self.searchId;
         fillFormConfig.imprId = self.imprId;
+        fillFormConfig.chooseAgencyList = self.chooseAgencyList;
         [FHHouseFillFormHelper fillOnlineFormActionWithConfigModel:fillFormConfig];
         return;
     }
@@ -442,6 +449,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
+    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
 
@@ -484,6 +492,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [fillFormConfig setTraceParams:params];
     fillFormConfig.searchId = self.searchId;
     fillFormConfig.imprId = self.imprId;
+    fillFormConfig.chooseAgencyList = self.chooseAgencyList;
     [FHHouseFillFormHelper fillFormActionWithConfigModel:fillFormConfig];
 }
 

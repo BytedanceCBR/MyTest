@@ -47,6 +47,8 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 @property (nonatomic, assign) BOOL isNotFirst;
 
+@property (nonatomic, assign) BOOL isNotClicked;
+
 @end
 
 @implementation TTAdSplashMediator
@@ -172,7 +174,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 //设置域名,app实现选路
 - (NSString *)splashBaseUrl
 {
-    return @"https://i.haoduofangs.com";
+    return @"http://i.haoduofangs.com";
 }
 
 //接入方可自由定制path,拼接后url:https://is.snssdk.com/api/ad/splash/news_article_inhouse/v15/
@@ -255,6 +257,7 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 - (void)splashViewWillAppear
 {
     [FHLocManager sharedInstance].isShowSplashAdView = YES;
+    self.isNotClicked = NO;
 }
 
 - (void)splashViewDidDisappear
@@ -265,6 +268,11 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
             [[FHLocManager sharedInstance] showCitySwitchAlert:[NSString stringWithFormat:@"是否切换到当前城市:%@",model.citySwitch.cityName] openUrl:model.citySwitch.openUrl];
         }
     }
+    
+    if (self.adShowCompletion) {
+        self.adShowCompletion(self.isNotClicked);
+    }
+    
 }
 
 - (void)trackWithTag:(NSString *)tag label:(NSString *)label extra:(NSDictionary *)extra
@@ -326,6 +334,9 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
     NSString *actionType = [condition valueForKey:TT_ACTION_TYPE];
     NSString *appleid = [condition valueForKey:TT_APPLE_ID];
     NSString *download_url = [condition valueForKey:TT_DOWN_URL];
+    
+    self.isNotClicked = YES;
+    
     if (!isEmptyString(open_url) && [[TTRoute sharedRoute] canOpenURL:[TTStringHelper URLWithURLString:open_url]]) {
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:5];
         [params setValue:@"splash" forKey:@"gd_label"];

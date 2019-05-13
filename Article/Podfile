@@ -46,9 +46,10 @@ def appPods
 #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
 
     pod 'FHRNKit' , :path => '../Bundles/ios_common_rn'
-    
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '7ebb8e14d3768897f3cd16966dd7e29e292846b8' #:branch => 'feature/develop'
+
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git',:commit => '9d9b3fc44cc9f21c96fcc62858e1c3755ae8d9f2' #:branch => 'feature/develop'
 #    pod 'ios_house_im' , :path => '../../lab/ios_house_im'
+
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git' , :commit => '9423cbfa9bb1c30d2b87c1542b862b457b7c141a' #:branch => 'feature/develop'
 
     #---------------------------------------------------头条业务源码库--------------------------------------------------#
