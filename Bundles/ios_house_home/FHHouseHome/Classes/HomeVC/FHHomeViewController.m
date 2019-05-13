@@ -209,15 +209,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-//    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-//    if (!configDataModel.cityAvailability.enable.boolValue) {
-//        [self.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
-//    }
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
