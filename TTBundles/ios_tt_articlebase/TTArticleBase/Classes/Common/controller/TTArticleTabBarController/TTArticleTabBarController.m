@@ -51,7 +51,6 @@
 //#import "TTUGCPermissionService.h"
 //#import "TTPostUGCEntrance.h"
 #import <TTIndicatorView.h>
-#import "PGCAccountManager.h"
 #import "TTAdSplashMediator.h"
 //#import "TTPLManager.h"
 #import "TTBadgeTrackerHelper.h"
