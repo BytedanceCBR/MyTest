@@ -39,8 +39,6 @@
 + (TTStartupServiceGroup *)serviceGroup {
     TTStartupServiceGroup *group = [[TTStartupServiceGroup alloc] init];
     
-//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeHMDMonitor]];
-//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
 //    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCellRegister]];
@@ -131,9 +129,6 @@
         case TTServiceStartupTypeAkLaunch:
             return [[TTStartupAKLaunchTask alloc] init];
             break;
-//        case TTServiceStartupTypeHMDMonitor:
-//            return [[TTHMDMonitorStartupTask alloc]init];
-//            break;
         default:
             return [[TTStartupTask alloc] init];
             break;
