@@ -333,7 +333,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         __weak typeof(self) wself = self;
         _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration , FHMapSearchBubbleModel *fromBubble) {
             if (wself) {
-                if (wself.lastBubble == FHMapSearchShowModeDrawLine) {
+                if (wself.lastShowMode == FHMapSearchShowModeDrawLine) {
                     [wself changeNavbarAppear:NO];
                     wself.showMode = FHMapSearchShowModeDrawLine;
                 }else{
@@ -356,14 +356,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController.didSwipeDownDismiss = ^(FHMapSearchBubbleModel *fromBubble){
             if (wself) {
                 
-                if (wself.lastBubble == FHMapSearchShowModeDrawLine) {
+                if (wself.lastShowMode == FHMapSearchShowModeDrawLine) {
                     [wself changeNavbarAppear:NO];
-                    wself.showMode = FHMapSearchShowModeDrawLine;
+                    wself.showMode = FHMapSearchShowModeDrawLine;                    
                 }else{
                     [wself changeNavbarAppear:YES];
                     wself.showMode = FHMapSearchShowModeMap;
                 }
-                wself.lastBubble = FHMapSearchShowModeMap;
+                
             }
         };
         _houseListViewController.moveToTop = ^{
@@ -1674,6 +1674,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSMutableDictionary *param = [self logBaseParams];
     FHTracerModel *tracer = self.viewController.tracerModel;
     param[UT_LOG_PB] = tracer.logPb?:UT_BE_NULL;
+    param[UT_ENTER_FROM] = @"mapfind";
     
     TRACK_EVENT(@"enter_circlefind", param);
 }
