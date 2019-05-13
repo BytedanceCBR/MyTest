@@ -80,6 +80,14 @@
     [super willMoveToSuperview:newSuperview];
 }
 
+-(void)clear
+{
+    [self.xcoords removeAllObjects];
+    [self.ycoords removeAllObjects];
+    [self.bezierPath removeAllPoints];
+    [self setNeedsDisplay];
+}
+
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [super touchesBegan:touches withEvent:event];
@@ -135,6 +143,7 @@
 {
     [super touchesCancelled:touches withEvent:event];
     [self.bezierPath removeAllPoints];
+    [self.xcoords removeAllObjects];
     [self setNeedsDisplay];
 }
 

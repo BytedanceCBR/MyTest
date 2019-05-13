@@ -84,6 +84,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSArray *drawLineYCoords;
 @property(nonatomic , strong) NSArray *drawLineNeighbors;
 @property(nonatomic , strong) NSDate *enterDrawLineTime;
+@property(nonatomic , assign) FHMapSearchShowMode lastShowMode;//画圈使用
 
 @end
 
@@ -332,7 +333,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         __weak typeof(self) wself = self;
         _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration , FHMapSearchBubbleModel *fromBubble) {
             if (wself) {
-                if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+                if (wself.lastBubble == FHMapSearchShowModeDrawLine) {
                     [wself changeNavbarAppear:NO];
                     wself.showMode = FHMapSearchShowModeDrawLine;
                 }else{
@@ -355,13 +356,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _houseListViewController.didSwipeDownDismiss = ^(FHMapSearchBubbleModel *fromBubble){
             if (wself) {
                 
-                if (fromBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+                if (wself.lastBubble == FHMapSearchShowModeDrawLine) {
                     [wself changeNavbarAppear:NO];
                     wself.showMode = FHMapSearchShowModeDrawLine;
                 }else{
                     [wself changeNavbarAppear:YES];
                     wself.showMode = FHMapSearchShowModeMap;
                 }
+                wself.lastBubble = FHMapSearchShowModeMap;
             }
         };
         _houseListViewController.moveToTop = ^{
@@ -743,8 +745,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             //待地图缩放完之后
             [self requestHouses:NO showTip:YES];
         });
-        
-        
     }else{
         //show house list
 //        if (![TTReachability isNetworkConnected]) {
@@ -809,6 +809,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    [self checkAccuracy];
 //}
 
+//是否忽略 用户地图 点击、缩放等操作
+-(BOOL)shouldIgnoreUserMapOperation
+{
+    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway || (self.showMode == FHMapSearchShowModeHalfHouseList && ([self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeDrawLine || [self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeSubway))) {
+        return YES;
+    }
+    return NO;
+}
+
 
 - (void)mapViewDidFinishLoadingMap:(MAMapView *)mapView
 {
@@ -824,7 +833,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
  */
 - (void)mapView:(MAMapView *)mapView mapDidMoveByUser:(BOOL)wasUserAction
 {
-    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway || (self.showMode == FHMapSearchShowModeHalfHouseList && ([self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeDrawLine || [self.houseListViewController.viewModel enterShowMode] == FHMapSearchShowModeSubway))) {
+    if ([self shouldIgnoreUserMapOperation]) {
         return;
     }
     
@@ -852,7 +861,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         return;
     }
     
-    if (self.showMode == FHMapSearchShowModeDrawLine || self.showMode == FHMapSearchShowModeSubway) {
+    if ([self shouldIgnoreUserMapOperation]) {
         return;
     }
     
@@ -1029,7 +1038,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 -(void)showNeighborHouseList:(FHMapSearchDataListModel *)model
 {
     [self changeNavbarAppear:NO];
-    FHMapSearchShowMode lastMode = self.showMode;
     self.showMode = FHMapSearchShowModeHalfHouseList;
     [self.tipView removeTip];
     
@@ -1044,7 +1052,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self.mapView setCenterCoordinate:destCenter animated:YES];
     
     FHMapSearchBubbleModel *houseListBubble = [self bubleFromOpenUrl:model.houseListOpenUrl];
-    houseListBubble.lastShowMode = lastMode;
+    houseListBubble.lastShowMode = self.lastShowMode;
     
     [self.houseListViewController showNeighborHouses:model bubble:houseListBubble];
     
@@ -1295,6 +1303,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         
     }
+    
+    CGFloat minDelta = 0.0001;
+    if (max.latitude - min.latitude < minDelta || max.longitude - min.longitude < minDelta) {
+        //画的线
+        [view clear];
+        return;
+    }
+    
     MAPolygon *polygon = [MAPolygon polygonWithCoordinates:coords count:count];
     if (self.drawLayer) {
         [self.mapView removeOverlay:self.drawLayer];
@@ -1376,6 +1392,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [view removeFromSuperview];
     [self.mapView removeOverlay:self.drawLayer];
     self.showMode = FHMapSearchShowModeMap;
+    self.lastShowMode = FHMapSearchShowModeMap;
     [self.viewController switchToNormalMode];
     [self requestHouses:YES showTip:NO];
 }
@@ -1397,6 +1414,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self addEnterCircleFindLog];
     [self.tipView removeFromSuperview];
     self.showMode = FHMapSearchShowModeDrawLine;
+    self.lastShowMode = self.showMode;
     [self.viewController enterMapDrawMode];
     
     //FHHouseAnnotation
@@ -1493,15 +1511,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)tryAddMapZoomLevelTrigerby:(FHMapZoomTrigerType)trigerType currentLevel:(CGFloat)zoomLevel
 {
-    if (fabs(ceil(_lastRecordZoomLevel) - ceil(zoomLevel)) > 1) {
-        //添加视野埋点
-        FHMapZoomViewLevelType destType = [self mapZoomViewType:zoomLevel];
-        FHMapZoomViewLevelType lastType = [self mapZoomViewType:_lastRecordZoomLevel];
-        if (destType != lastType) {
-            [self addMapZoomLevelTrigerby:trigerType viewTye:destType];
-            _lastRecordZoomLevel = zoomLevel;
-        }
+//    if (fabs(ceil(_lastRecordZoomLevel) - ceil(zoomLevel)) > 1) {
+    //添加视野埋点
+    FHMapZoomViewLevelType destType = [self mapZoomViewType:zoomLevel];
+    FHMapZoomViewLevelType lastType = [self mapZoomViewType:_lastRecordZoomLevel];
+    if (destType != lastType) {
+        [self addMapZoomLevelTrigerby:trigerType viewTye:destType];
+        _lastRecordZoomLevel = zoomLevel;
     }
+//    }
 }
 
 -(void)addMapZoomLevelTrigerby:(FHMapZoomTrigerType)trigerType viewTye:(FHMapZoomViewLevelType)viewType
