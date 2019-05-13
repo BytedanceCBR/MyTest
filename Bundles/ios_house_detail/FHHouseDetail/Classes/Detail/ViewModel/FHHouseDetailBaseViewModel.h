@@ -49,8 +49,13 @@ typedef enum : NSUInteger {
 - (NSString *)cellIdentifierForEntity:(id)model;
 - (void)startLoadData;
 
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated;
+- (void)vc_viewDidDisappear:(BOOL)animated;
+
 // 刷新数据
 - (void)reloadData;
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 // 二级页所需数据
 - (NSDictionary *)subPageParams;

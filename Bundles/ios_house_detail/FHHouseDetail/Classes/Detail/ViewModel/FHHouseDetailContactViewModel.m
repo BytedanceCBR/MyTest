@@ -56,6 +56,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
+@property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
 
 @end
 
@@ -186,12 +187,17 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 - (void)followAction
 {
+    [self followActionWithExtra:nil];
+}
+
+// 关注
+- (void)followActionWithExtra:(NSDictionary *)extra {
     NSMutableDictionary *extraDict = @{}.mutableCopy;
-//    extraDict[@"realtor_id"] = contact.realtorId;
-//    extraDict[@"realtor_rank"] = @(index);
-//    extraDict[@"realtor_position"] = @"detail_related";
     if (self.tracerDict) {
         [extraDict addEntriesFromDictionary:self.tracerDict];
+    }
+    if (extra.count > 0) {
+        [extraDict addEntriesFromDictionary:extra];
     }
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
     configModel.houseType = self.houseType;
@@ -221,8 +227,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [self.phoneCallViewModel licenseActionWithPhone:self.contactPhone];
 }
 
-- (void)shareAction
-{
+// 详情页分享
+- (void)shareAction {
+    [self shareActionWithShareExtra:nil];
+}
+
+// 携带埋点参数的分享
+- (void)shareActionWithShareExtra:(NSDictionary *)extra {
+    self.shareExtraDic = extra;
     [self addClickShareLog];
     
     if (!self.shareInfo) {
@@ -427,7 +439,18 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (params && [params isKindOfClass:[NSDictionary class]]) {
         realtor_pos = params[@"realtor_position"] ? : @"detail_button";
     }
-    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:realtor_pos];
+    // 目前需要添加：realtor_position element_from item_id
+    NSMutableDictionary *imExtra = @{}.mutableCopy;
+    imExtra[@"realtor_position"] = realtor_pos;
+    if (extraDict && [extraDict isKindOfClass:[NSDictionary class]]) {
+        if (extraDict[@"element_from"]) {
+            imExtra[@"element_from"] = extraDict[@"element_from"];
+        }
+        if (extraDict[@"item_id"]) {
+            imExtra[@"item_id"] = extraDict[@"item_id"];
+        }
+    }
+    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
 
 - (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict
@@ -555,6 +578,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
+    if (self.shareExtraDic) {
+        [params addEntriesFromDictionary:self.shareExtraDic];
+    }
     [FHUserTracker writeEvent:@"click_share" params:params];
 }
 
@@ -563,7 +589,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSMutableDictionary *params = @{}.mutableCopy;
     [params addEntriesFromDictionary:[self baseParams]];
     params[@"platform"] = platform ? : @"be_null";
+    if (self.shareExtraDic) {
+        [params addEntriesFromDictionary:self.shareExtraDic];
+    }
     [FHUserTracker writeEvent:@"share_platform" params:params];
+    self.shareExtraDic = nil;// 分享都会走当前方法
 }
 
 - (void)addRealtorShowLog:(FHDetailContactModel *)contactPhone
@@ -636,6 +666,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_id"] = params[@"realtor_id"] ?: @"be_null";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"online";
+    tracerDic[@"conversation_id"] = @"be_null";// 和wanran确认
+    if (params[@"item_id"]) {
+        tracerDic[@"item_id"] = params[@"item_id"];
+    }
     TRACK_EVENT(@"click_online", tracerDic);
 }
 

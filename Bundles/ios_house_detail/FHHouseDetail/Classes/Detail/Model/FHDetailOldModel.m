@@ -195,6 +195,44 @@
 }
 @end
 
+@implementation FHVideoHouseVideoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"videoInfos": @"video_infos",
+                           @"infoSubTitle": @"info_sub_title",
+                           @"infoTitle": @"info_title",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHVideoHouseVideoVideoInfosModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"vHeight": @"v_height",
+                           @"imageHeight": @"image_height",
+                           @"vWidth": @"v_width",
+                           @"imageWidth": @"image_width",
+                           @"coverImageUrl": @"cover_image_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -205,6 +243,7 @@
                            @"neighborhoodInfo": @"neighborhood_info",
                            @"logPb": @"log_pb",
                            @"houseImage": @"house_image",
+                           @"houseVideo": @"house_video",
                            @"houseImageDictList": @"house_image_dict_list",
                            @"shareInfo": @"share_info",
                            @"priceChangeHistory": @"price_change_history",

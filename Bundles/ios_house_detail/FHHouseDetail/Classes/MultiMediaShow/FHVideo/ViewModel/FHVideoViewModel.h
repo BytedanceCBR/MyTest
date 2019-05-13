@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHVideoView.h"
 #import "FHVideoViewController.h"
+#import "TTVPlayerKitHeader.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -15,9 +16,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithView:(FHVideoView *)view controller:(FHVideoViewController *)viewController;
 
-- (void)invalidatePlaybackTimer;
+- (void)didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus;
 
-- (void)startPlayBackTimer;
+- (void)hideCoverView;
+
+- (void)showCoverViewStartBtn;
+
+- (void)hideCoverViewStartBtn;
 
 @end
 

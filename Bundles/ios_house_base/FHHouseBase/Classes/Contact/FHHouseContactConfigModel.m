@@ -32,6 +32,7 @@
     _searchId = params[@"search_id"];
     _imprId = params[@"impr_id"];
     _realtorPosition = params[@"realtor_position"];
+    _itemId = params[@"item_id"];
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb

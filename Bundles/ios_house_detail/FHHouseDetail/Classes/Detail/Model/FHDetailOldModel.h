@@ -210,6 +210,26 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@protocol FHVideoHouseVideoVideoInfosModel<NSObject>
+@end
+
+@interface FHVideoHouseVideoVideoInfosModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *vid;
+@property (nonatomic, assign) NSInteger imageWidth;
+@property (nonatomic, assign) NSInteger vHeight;
+@property (nonatomic, assign) NSInteger imageHeight;
+@property (nonatomic, assign) NSInteger vWidth;
+@property (nonatomic, copy , nullable) NSString *coverImageUrl;
+@end
+
+@interface FHVideoHouseVideoModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHVideoHouseVideoVideoInfosModel> *videoInfos;
+@property (nonatomic, copy , nullable) NSString *infoSubTitle;
+@property (nonatomic, copy , nullable) NSString *infoTitle;
+@end
+
 @interface FHDetailOldDataModel : JSONModel
 
 @property (nonatomic, assign) NSInteger status;
@@ -232,6 +252,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsTagsModel> *tags;
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseDataItemsHouseImageModel> *houseImage;
 @property (nonatomic, strong , nullable) NSArray<FHDetailOldDataHouseImageDictListModel> *houseImageDictList;
+@property (nonatomic, strong , nullable) FHVideoHouseVideoModel *houseVideo ;
 @property (nonatomic, strong , nullable) FHDetailShareInfoModel *shareInfo ;
 @property (nonatomic, copy , nullable) NSString *uploadAt;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;

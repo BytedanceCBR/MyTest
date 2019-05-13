@@ -44,6 +44,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)fillFormActionWithActionType:(FHFollowActionType)actionType;
 
+// 关注
+- (void)followActionWithExtra:(NSDictionary *)extra;
+// 取消关注
+- (void)cancelFollowAction;
+
+// 携带埋点参数的分享
+- (void)shareActionWithShareExtra:(NSDictionary *)extra;
+
 //为IM提供房源卡片
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice;
 - (void)refreshMessageDot;

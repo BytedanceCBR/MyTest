@@ -27,7 +27,8 @@ typedef void(^LoadingImageCompletedAnimationBlock)(void);
 @property(nonatomic, weak)id<TTShowImageViewDelegate>delegate;
 /** 如果不循环的话，播放结束停在最后一帧 */
 @property(nonatomic, assign)BOOL gifRepeatIfHave;
-
+/** 大图 */
+@property(nonatomic, strong)UIImageView * largeImageView;
 
 /** 拿到图片的元信息 */
 @property(nonatomic, strong)UIImage * image;

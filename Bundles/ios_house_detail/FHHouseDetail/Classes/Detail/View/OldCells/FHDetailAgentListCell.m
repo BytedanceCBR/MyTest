@@ -168,7 +168,9 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
-        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] position:@"detail_related"];
+        NSMutableDictionary *imExtra = @{}.mutableCopy;
+        imExtra[@"realtor_position"] = @"detail_related";
+        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }
 }
 

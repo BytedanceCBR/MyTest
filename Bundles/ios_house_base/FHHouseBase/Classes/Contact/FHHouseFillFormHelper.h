@@ -53,11 +53,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *cardType;
 @property (nonatomic , copy) NSString *rank; 
 @property (nonatomic , strong) NSDictionary *logPb;
-@property (nonatomic, copy) NSString *searchId;
-@property (nonatomic, copy) NSString *imprId;
+@property (nonatomic , copy) NSString *searchId;
+@property (nonatomic , copy) NSString *imprId;
 // 非必填
 @property (nonatomic , copy) NSString *position;
 @property (nonatomic , copy) NSString *realtorPosition;
+@property (nonatomic , copy) NSString *itemId;
 
 - (void)setTraceParams:(NSDictionary *)params;
 @end
