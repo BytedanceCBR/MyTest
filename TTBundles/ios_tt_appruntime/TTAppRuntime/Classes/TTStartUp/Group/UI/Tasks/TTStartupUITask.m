@@ -24,7 +24,6 @@
 #import "TTTabBarProvider.h"
 #import "TTTabBar.h"
 //#import "TTFantasyTimeCountDownManager.h"
-#import "AKActivityTabManager.h"
 #import "AKTaskSettingHelper.h"
 //#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
@@ -116,9 +115,6 @@
     if (isEmptyString(schema) && [TTTabBarProvider hasPriorMiddleTab] &&[[TTTabBarProvider allSupportedTags] containsObject:identifier]) {
         [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:identifier atIndex:2 isRegular:NO];
     }
-    
-    //aikan tab
-    [[AKActivityTabManager sharedManager] updateActivityTabHiddenState:![[AKTaskSettingHelper shareInstance] isEnableShowTaskEntrance]];
 }
 
 - (void)constructDefaultTabs {
@@ -162,7 +158,7 @@
 //        return kTTTabMineTabKey;
 //    }
 
-    return kAKTabActivityTabKey;
+    return kTTTabMineTabKey;
 }
 
 //第五个tab

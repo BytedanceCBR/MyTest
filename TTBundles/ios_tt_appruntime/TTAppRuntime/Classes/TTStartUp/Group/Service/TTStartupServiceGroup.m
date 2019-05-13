@@ -27,7 +27,6 @@
 #import "TTFeedPreloadTask.h"
 #import "TTSettingsManager.h"
 #import "TTIESPlayerTask.h"
-#import "TTStartupAKActivityTabTask.h"
 #import "TTStartupAKLaunchTask.h"
 //#import "TTHMDMonitorStartupTask.h"
 
@@ -63,7 +62,7 @@
         [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeFeedPreload]];
     }
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeIESPlayer]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAkActivityTab]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAkActivityTab]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAkLaunch]];
     
     
@@ -126,9 +125,9 @@
         case TTServiceStartupTypeIESPlayer:
             return [[TTIESPlayerTask alloc] init];
             break;
-        case TTServiceStartupTypeAkActivityTab:
-            return [[TTStartupAKActivityTabTask alloc] init];
-            break;
+//        case TTServiceStartupTypeAkActivityTab:
+//            return [[TTStartupAKActivityTabTask alloc] init];
+//            break;
         case TTServiceStartupTypeAkLaunch:
             return [[TTStartupAKLaunchTask alloc] init];
             break;

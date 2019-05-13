@@ -28,7 +28,6 @@
 #import "TTSegmentedControl.h"
 //#import "TTSFActivityManager.h"
 //#import "TTSFResourcesManager.h"
-#import "AKActivityViewController.h"
 //#import "Bubble-Swift.h"
 #import "FHHouseFindListViewController.h"
 #import "FHMessageViewController.h"
@@ -115,11 +114,13 @@ static NSString *lastTabIdentifier;
             shortVideoTabVC = [[TTHTSTabViewController alloc] init];
         }
         return shortVideoTabVC;
-    } else if ([identifier isEqualToString:kAKTabActivityTabKey]) {
-        AKActivityViewController *vc = [[AKActivityViewController alloc] init];
-        [vc preloadPage];
-        return vc;
-    } else if ([identifier isEqualToString:kFHouseFindTabKey]) {
+    }
+//    else if ([identifier isEqualToString:kAKTabActivityTabKey]) {
+//        AKActivityViewController *vc = [[AKActivityViewController alloc] init];
+//        [vc preloadPage];
+//        return vc;
+//    }
+    else if ([identifier isEqualToString:kFHouseFindTabKey]) {
 
         UIViewController *houseFindVC = nil;
         if ([SSCommonLogic findTabShowHouse] == 1) {
@@ -152,7 +153,7 @@ static NSString *lastTabIdentifier;
 }
 
 + (NSArray<NSString *> *)allSupportedTags {
-    return @[kTTTabHomeTabKey,kTTTabVideoTabKey,kTTTabFollowTabKey,kTTTabMineTabKey,kTTTabWeitoutiaoTabKey,kTTTabHTSTabKey,kAKTabActivityTabKey];
+    return @[kTTTabHomeTabKey,kTTTabVideoTabKey,kTTTabFollowTabKey,kTTTabMineTabKey,kTTTabWeitoutiaoTabKey,kTTTabHTSTabKey];//,kAKTabActivityTabKey];
 }
 
 + (NSString *)priorMiddleTabIdentifier {

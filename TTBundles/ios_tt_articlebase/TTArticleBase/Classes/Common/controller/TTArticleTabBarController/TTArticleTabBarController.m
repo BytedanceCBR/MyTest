@@ -84,11 +84,9 @@
 #import "TTTabBarCustomMiddleModel.h"
 //#import "TTFantasyTimeCountDownManager.h"
 //#import "TTFantasyWindowManager.h"
-#import "AKActivityTabManager.h"
 #import "TTMessageNotificationTipsManager.h"
 //爱看
 #import "AKImageAlertManager.h"
-#import "AKActivityTabManager.h"
 #import "AKProfileBenefitManager.h"
 #import "AKLoginTrafficViewController.h"
 //#import "Bubble-Swift.h"
@@ -1203,17 +1201,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             [AKImageAlertManager checkProfileImageAlertShowIfNeed];
         }
     }
-    else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
-//        // 单击刷新。首次切到tab不刷
-//        static BOOL firstLoad = YES;
-//        if (!firstLoad) {
-//            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
-//        } else {
-//            firstLoad = NO;
-//        }
-        [self trackBadgeWithLabel:@"click" tabBarTag:kAKTabActivityTabKey];
-        
-    }else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+//    else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
+////        // 单击刷新。首次切到tab不刷
+////        static BOOL firstLoad = YES;
+////        if (!firstLoad) {
+////            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
+////        } else {
+////            firstLoad = NO;
+////        }
+//        [self trackBadgeWithLabel:@"click" tabBarTag:kAKTabActivityTabKey];
+//
+//    }
+    else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
         
         [self trackBadgeWithTabBarTag:kFHouseFindTabKey enter_type:@"click_tab"];
         
@@ -1285,9 +1284,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         else if([[self currentTabIdentifier] isEqualToString:kTTTabHTSTabKey]) {
             [self keepTapShortVideoTab];
         }
-        else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
-            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
-        }
+//        else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
+//            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
+//        }
     } else {
         if (self.tabbarTipView) {
             [self.tabbarTipView removeFromSuperview];
@@ -1806,8 +1805,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
              kTTTabFollowTabKey:@"follow",
              kTTTabHTSTabKey:kTTUGCVideoCategoryID,
              kTTTabWeitoutiaoTabKey:@"weitoutiao",
-             kTTTabMineTabKey:@"mine",
-             kAKTabActivityTabKey:@"tab_task"
+             kTTTabMineTabKey:@"mine"
+//             kAKTabActivityTabKey:@"tab_task"
              };
 }
 

@@ -1919,7 +1919,6 @@
     if ([dSettings objectForKey:@"tt_wechat_oldshare_callback_enable"]) {
         [SSCommonLogic setEnableWXShareCallback:[dSettings tt_boolValueForKey:@"tt_wechat_oldshare_callback_enable"]];
     }
-    [[AKTaskSettingHelper shareInstance] updateBenefitValue];
 }
 
 static NSString *const kShowMallUserDefaultsKey = @"kShowMallUserDefaultsKey";
