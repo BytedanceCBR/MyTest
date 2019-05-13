@@ -93,7 +93,6 @@
     // 如果没有拖动事件和 seeking，那就正常更新 progress 和 cachedProgress
     if (!newState.seekStatus.isSliderPanning && !newState.seekStatus.isPanningOutOfSlider && !newState.isSeeking) { // 同步内核的进度
         if (newState.readyForDisplay) {
-            Debug_NSLog(@"isSeeking++++++ = %d,%f", newState.readyForDisplay, newState.playbackTime.progress);
             [self.immersiveSlider setProgress:newState.playbackTime.progress animated:NO];
             [self.immersiveSlider setCacheProgress:newState.playbackTime.cachedProgress animated:NO];
             [self.slider setProgress:newState.playbackTime.progress animated:NO];

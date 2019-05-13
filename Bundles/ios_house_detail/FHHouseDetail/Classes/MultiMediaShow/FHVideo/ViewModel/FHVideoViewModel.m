@@ -11,18 +11,16 @@
 
 @property(nonatomic, strong) FHVideoView *view;
 @property(nonatomic, weak) FHVideoViewController *viewController;
-@property(nonatomic, weak) TTVPlayer *player;
 
 @end
 
 @implementation FHVideoViewModel
 
-- (instancetype)initWithView:(FHVideoView *)view controller:(FHVideoViewController *)viewController player:(nonnull TTVPlayer *)player {
+- (instancetype)initWithView:(FHVideoView *)view controller:(FHVideoViewController *)viewController {
     self = [super init];
     if (self) {
         _view = view;
         _viewController = viewController;
-        _player = player;
     }
     return self;
 }
@@ -35,12 +33,14 @@
 }
 
 - (void)hideCoverView {
-    [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        self.view.coverView.alpha = 0;
-    } completion:^(BOOL finished) {
-        self.view.coverView.alpha = 0;
-        self.view.coverView.coverView.hidden = YES;
-    }];
+    if(self.view.coverView.alpha == 1){
+        [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            self.view.coverView.alpha = 0;
+        } completion:^(BOOL finished) {
+            self.view.coverView.alpha = 0;
+            self.view.coverView.coverView.hidden = YES;
+        }];
+    }
 }
 
 - (void)showCoverView {

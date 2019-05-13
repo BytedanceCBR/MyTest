@@ -9,25 +9,19 @@
 
 @interface FHVideoView ()<FHVideoCoverViewDelegate>
 
-@property(nonatomic ,strong) UIView *playerView;
-
 @end
 
 @implementation FHVideoView
 
-- (instancetype)initWithFrame:(CGRect)frame playerView:(UIView *)playerView {
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _playerView = playerView;
         [self initViews];
     }
     return self;
 }
 
 - (void)initViews {
-    if(self.playerView){
-        [self addSubview:self.playerView];
-    }
     //未播放视频时的封面视图
     self.coverView = [[FHVideoCoverView alloc] initWithFrame:CGRectZero];
     _coverView.delegate = self;
@@ -38,6 +32,14 @@
     [super layoutSubviews];
     self.coverView.frame = self.bounds;
     self.playerView.frame = self.bounds;
+}
+
+- (void)setPlayerView:(UIView *)playerView {
+    if(!_playerView){
+        _playerView = playerView;
+        _playerView.frame = self.bounds;
+        [self insertSubview:_playerView belowSubview:_coverView];
+    }
 }
 
 #pragma mark - FHVideoCoverViewDelegate

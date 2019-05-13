@@ -32,6 +32,8 @@
 
 @property (nonatomic, strong) FHVideoErrorView *errorView;
 
+@property (nonatomic, assign) BOOL isFirstDisplay;
+
 @end
 
 @implementation FHVideoViewController
@@ -42,6 +44,7 @@
     
     //很关键，防止全屏时候view尺寸改变
 //    self.view.autoresizingMask = UIViewAutoresizingNone;
+    self.isFirstDisplay = YES;
     
     [self initViews];
     [self initConstaints];
@@ -49,13 +52,13 @@
 }
 
 - (void)initViews {
-    self.player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
-    self.player.delegate = self;
-    self.player.customViewDelegate = self;
-    self.player.showPlaybackControlsOnViewFirstLoaded = NO;
-    self.player.enableNoPlaybackStatus = YES;
+//    self.player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
+//    self.player.delegate = self;
+//    self.player.customViewDelegate = self;
+//    self.player.showPlaybackControlsOnViewFirstLoaded = NO;
+//    self.player.enableNoPlaybackStatus = YES;
     
-    self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero playerView:self.player.view];
+    self.videoView = [[FHVideoView alloc] initWithFrame:CGRectZero];
     _videoView.delegate = self;
     [self.view addSubview:_videoView];
 }
@@ -64,6 +67,17 @@
     [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
+}
+
+- (TTVPlayer *)player {
+    if(!_player){
+        _player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
+        _player.delegate = self;
+        _player.customViewDelegate = self;
+        _player.showPlaybackControlsOnViewFirstLoaded = NO;
+        _player.enableNoPlaybackStatus = YES;
+    }
+    return _player;
 }
 
 - (CGFloat)videoWidth {
@@ -83,7 +97,7 @@
 }
 
 - (void)initViewModel {
-    self.viewModel = [[FHVideoViewModel alloc] initWithView:self.videoView controller:self player:self.player];
+    self.viewModel = [[FHVideoViewModel alloc] initWithView:self.videoView controller:self];
 }
 
 - (void)updateData:(FHVideoModel *)model {
@@ -93,34 +107,47 @@
             _playState = TTVPlaybackState_Stopped;
         }
         _model = model;
-        [self.player setVideoID:model.videoID host:@"is.snssdk.com" commonParameters:nil];
-        self.player.muted = model.muted;
-        self.player.looping = model.repeated;
-        self.videoView.coverView.imageUrl = model.coverImageUrl;
+        self.videoView.coverView.imageUrl = _model.coverImageUrl;
         
-//        [self.player removePartForKey:TTVPlayerPartKey_NetworkMonitor];
-        
-        if(model.isShowControl){
-            self.player.enableNoPlaybackStatus = NO;
-            [self.player addPartFromConfigForKey:TTVPlayerPartKey_Gesture];
-        }else{
-            self.player.enableNoPlaybackStatus = YES;
-            [self.player removePartForKey:TTVPlayerPartKey_Gesture];
-        }
-        
-        [self showStartBtnWhenPause];
-        
-        if(model.isShowMiniSlider){
-            self.player.controlView.immersiveContentView.alpha = 1;
-        }else{
-            self.player.controlView.immersiveContentView.alpha = 0;
+        if(!self.isFirstDisplay){
+            [self updateVideo];
         }
     }
 }
 
-- (void)play {
-    [self.viewModel hideCoverView];
+- (void)updateVideo {
+    [self.player setVideoID:_model.videoID host:@"is.snssdk.com" commonParameters:nil];
+    self.player.muted = _model.muted;
+    self.player.looping = _model.repeated;
+
+    if(_model.isShowControl){
+        self.player.enableNoPlaybackStatus = NO;
+        [self.player addPartFromConfigForKey:TTVPlayerPartKey_Gesture];
+    }else{
+        self.player.enableNoPlaybackStatus = YES;
+        [self.player removePartForKey:TTVPlayerPartKey_Gesture];
+    }
     
+    [self showStartBtnWhenPause];
+    
+    if(_model.isShowMiniSlider){
+        self.player.controlView.immersiveContentView.alpha = 1;
+    }else{
+        self.player.controlView.immersiveContentView.alpha = 0;
+    }
+}
+
+- (void)readyToPlay {
+    if(self.isFirstDisplay){
+        self.videoView.playerView = self.player.view;
+        [self updateVideo];
+    }
+    [self.viewModel hideCoverView];
+}
+
+- (void)play {
+    [self readyToPlay];
+
     if(!self.isShowingNetFlow && self.playbackState != TTVPlaybackState_Playing){
         [self.player play];
     }
@@ -355,6 +382,10 @@
     
     if(self.delegate && [self.delegate respondsToSelector:@selector(playbackStateDidChanged:)]){
         [self.delegate playbackStateDidChanged:playbackState];
+    }
+    
+    if(playbackState == TTVPlaybackState_Playing && self.isFirstDisplay){
+        self.isFirstDisplay = NO;
     }
     
     //埋点

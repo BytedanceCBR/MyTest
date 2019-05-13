@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHVideoViewModel : NSObject
 
-- (instancetype)initWithView:(FHVideoView *)view controller:(FHVideoViewController *)viewController player:(TTVPlayer *)player;
+- (instancetype)initWithView:(FHVideoView *)view controller:(FHVideoViewController *)viewController;
 
 - (void)didFinishedWithStatus:(TTVPlayFinishStatus *)finishStatus;
 
