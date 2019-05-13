@@ -18,6 +18,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showSubway:(NSString *)line;
 
+-(void)hideContentBgView;
+
 @end
 
 @protocol FHMapSearchBottomBarDelegate <NSObject>

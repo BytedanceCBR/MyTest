@@ -426,7 +426,7 @@
         make.size.mas_equalTo(CGSizeMake(58, 58));
     }];
     
-    CGFloat bottomMargin = -(39+bottomSafeInset);
+    CGFloat bottomMargin = -(31+bottomSafeInset);
     
     [self.chooseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.view).offset(bottomMargin);

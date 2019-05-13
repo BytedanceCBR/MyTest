@@ -109,11 +109,15 @@
     
 }
 
+-(void)hideContentBgView
+{
+    _drawLineBgView.hidden = YES;
+}
+
 -(void)showDrawLine:(NSString *)content showIndicator:(BOOL)showIndicator
 {
 //    content = @"区域内共找到2000000012345套房源";
     _drawLineLabel.text = content;
-    _drawLineBgView.hidden = NO;
     _subwayBgView.hidden = YES;
     
     [_drawLineLabel sizeToFit];

@@ -1310,10 +1310,13 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     //move mapview
     MACoordinateRegion region;
     region.center = CLLocationCoordinate2DMake((min.latitude+max.latitude)/2, (min.longitude+max.longitude)/2);
-    region.span = MACoordinateSpanMake(max.latitude - min.latitude , max.longitude - min.longitude);
+    region.span = MACoordinateSpanMake((max.latitude - min.latitude)*1.05 , (max.longitude - min.longitude)*1.05);
+    
     [self.mapView setRegion:region animated:YES];
     
     self.bottomBar.hidden = NO;
+    
+    [self.bottomBar hideContentBgView];
     
     if ([TTReachability isNetworkConnected]) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

@@ -151,7 +151,7 @@
     if (@available(iOS 11.0 , *)) {
         bottomSafeInset = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
     }
-    _closeButton.frame = CGRectMake(14, CGRectGetHeight(self.bounds) - 24 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
+    _closeButton.frame = CGRectMake(14, CGRectGetHeight(self.bounds) - 31 - bottomSafeInset - CLOSE_WIDTH, CLOSE_WIDTH, CLOSE_WIDTH);
 }
 
 -(void)drawRect:(CGRect)rect
