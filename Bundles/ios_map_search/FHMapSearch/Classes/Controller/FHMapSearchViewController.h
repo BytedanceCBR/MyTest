@@ -24,6 +24,8 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 @property(nonatomic , copy)   void (^_Nullable choosedConditionFilter)(NSDictionary<NSString * , NSObject *> *_Nullable conditions , NSString *_Nullable suggestion);
 @property(nonatomic , weak) id <FHMapSearchOpenUrlDelegate> openUrlDelegate;
 
+@property(nonatomic , strong , readonly) UIButton *locationButton;
+
 -(instancetype)initWithConfigModel:(FHMapSearchConfigModel *)configModel ;//NS_DESIGNATED_INITIALIZER
 
 -(CGFloat)contentViewHeight;

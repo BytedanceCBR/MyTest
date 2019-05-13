@@ -557,7 +557,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             if (error.code != NSURLErrorCancelled) {
                 //请求取消
                 strongSelf->onSaleHouseCount = 0;
-                [strongSelf.bottomBar showDrawLine:@"区域内共找到0套房源"];
+                [strongSelf.bottomBar showDrawLine:@"区域内共找到0套房源" showIndicator:NO];
                 [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 if ([TTReachability isNetworkConnected]) {
                     [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
@@ -570,7 +570,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             NSString *tip = model.tips;
             if (tip) {
                 CGFloat topY = [wself.viewController topBarBottom];
-                [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:kTipDuration above:self.mapView];
+                [wself.tipView showIn:wself.viewController.view at:CGPointMake(0, topY) content:tip duration:kTipDuration above:wself.viewController.locationButton];
             }
         }
         wself.searchId = model.searchId;
@@ -590,7 +590,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [wself addEnterMapLog];
         }
         if (wself.showMode == FHMapSearchShowModeDrawLine) {
-            [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"区域内共找到%ld套房源",strongSelf->onSaleHouseCount]];
+            [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"区域内共找到%ld套房源",strongSelf->onSaleHouseCount] showIndicator:strongSelf->onSaleHouseCount > 0];
         }
         //handle open url
         [wself updateBubble:model.mapFindHouseOpenUrl];
@@ -1316,18 +1316,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     self.bottomBar.hidden = NO;
     
     if ([TTReachability isNetworkConnected]) {
-       [self requestHouses:YES showTip:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self requestHouses:YES showTip:NO];
+        });
     }else{
         SHOW_TOAST(@"网络异常");
         self->onSaleHouseCount = 0;
-        [self.bottomBar showDrawLine:@"区域内共找到0套房源"];
+        [self.bottomBar showDrawLine:@"区域内共找到0套房源" showIndicator:NO];
     }
     
-    //send request
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-    
-//    });
-
 }
 
 //画圈的坐标数组

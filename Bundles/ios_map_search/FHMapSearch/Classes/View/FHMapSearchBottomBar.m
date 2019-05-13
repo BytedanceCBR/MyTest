@@ -109,7 +109,7 @@
     
 }
 
--(void)showDrawLine:(NSString *)content
+-(void)showDrawLine:(NSString *)content showIndicator:(BOOL)showIndicator
 {
 //    content = @"区域内共找到2000000012345套房源";
     _drawLineLabel.text = content;
@@ -117,7 +117,12 @@
     _subwayBgView.hidden = YES;
     
     [_drawLineLabel sizeToFit];
-    CGFloat padding = 40 + 24; //左右间距 箭头
+    CGFloat padding = 40 ; //左右间距 箭头
+    if (showIndicator) {
+        padding += 24;
+    }
+
+    self.drawLineIndicator.hidden = !showIndicator;
     CGFloat width = MIN(_drawLineLabel.width, (SCREEN_WIDTH - 98 - padding));
     CGFloat left = (SCREEN_WIDTH - width - padding)/2;
     if (left < 88) {
@@ -129,6 +134,16 @@
     [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(left);
     }];
+    
+    if (showIndicator) {
+        [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(20);
+        }];
+    }else{
+        [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(-4);
+        }];
+    }
         
     _drawLineBgView.hidden = NO;
     

@@ -473,14 +473,19 @@
     if (!animated) {
         self.filterPanel.alpha =  alpha;
         self.navBar.alpha =  alpha;
-        self.locationButton.alpha = alpha;
+        if (!self.locationButton.hidden) {
+            self.locationButton.alpha = alpha;
+        }
+    
         return;
     }
     
     [UIView animateWithDuration:0.3 animations:^{
         self.filterPanel.alpha =  alpha;
         self.navBar.alpha =  alpha;
-        self.locationButton.alpha = alpha;
+        if (!self.locationButton.hidden) {
+            self.locationButton.alpha = alpha;
+        }
     }completion:^(BOOL finished) {
     }];
 }
