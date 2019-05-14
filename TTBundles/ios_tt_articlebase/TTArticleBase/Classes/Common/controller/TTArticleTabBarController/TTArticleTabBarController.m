@@ -564,9 +564,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kApplicationMainViewDidShowNotification object:nil];
-    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kApplicationMainViewDidShowNotification object:nil];
     self.isInvisble = NO;
     
     //在这缓存tabbar label的尺寸，此时都已经布局好

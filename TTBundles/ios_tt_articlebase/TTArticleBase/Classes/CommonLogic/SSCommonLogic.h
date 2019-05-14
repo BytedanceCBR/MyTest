@@ -769,7 +769,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @end
 
 @interface SSCommonLogic (Optimise)
-
 + (BOOL)shouldUseALBBService;
 + (void)setShouldUseALBBService:(BOOL)useOptimised;
 
@@ -1545,12 +1544,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (NSArray *)clearLocalFeedDataList;
 + (void)setClearLocalFeedDataList:(NSArray *)list;
 @end
-
-@interface SSCommonLogic (WXShareConfig)
-+ (void)setEnableWXShareCallback:(BOOL)enable;
-+ (BOOL)enableWXShareCallback;
-@end
-
 
 //f_settings配置 add by zjing
 @interface SSCommonLogic (FHSettings)

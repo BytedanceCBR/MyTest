@@ -6050,22 +6050,6 @@ static NSString *const kTTVideoTabMainCategoryNameKey = @"kTTVideoTabMainCategor
 }
 @end
 
-// 微信老share接口回调配置
-static NSString *const kTTEnableWXShareCallbackKey = @"kTTEnableWXShareCallbackKey";
-@implementation SSCommonLogic (WXShareConfig)
-+ (void)setEnableWXShareCallback:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kTTEnableWXShareCallbackKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)enableWXShareCallback
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kTTEnableWXShareCallbackKey];
-}
-@end
-
-
 //f_settings配置 add by zjing
 
 static NSString *const kFHSettingsKey = @"kFHSettingsKey";

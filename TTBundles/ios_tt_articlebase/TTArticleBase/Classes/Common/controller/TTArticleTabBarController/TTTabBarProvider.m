@@ -71,27 +71,16 @@ static NSString *lastTabIdentifier;
 + (UIViewController *)rootVCForIdentifier:(NSString *)identifier {
     if ([identifier isEqualToString:kTTTabHomeTabKey]) {
         UIViewController *homeVC;
-        if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-            homeVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
-        } else {
-            UIStoryboard *sb = [UIStoryboard storyboardWithName:@"News" bundle:nil];
-            homeVC = [sb instantiateInitialViewController];
-        }
+        homeVC = [[ArticleTabBarStyleNewsListViewController alloc] init];
         return homeVC;
     } else if ([identifier isEqualToString:kTTTabVideoTabKey]) {
         UIViewController *videoVC;
         BOOL isTitanVideoBusiness = ttvs_isTitanVideoBusiness();
-        if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-            if (isTitanVideoBusiness) {
-                videoVC = [[TTVVideoTabViewController alloc] init];
-            }
-            else{
-                videoVC = [[TTVideoTabViewController alloc] init];
-            }
-        } else {
-            NSString *stroyBoradName = isTitanVideoBusiness? @"TTVTab":@"Video";
-            UIStoryboard *sb = [UIStoryboard storyboardWithName:stroyBoradName bundle:nil];
-            videoVC = [sb instantiateInitialViewController];
+        if (isTitanVideoBusiness) {
+            videoVC = [[TTVVideoTabViewController alloc] init];
+        }
+        else{
+            videoVC = [[TTVideoTabViewController alloc] init];
         }
         return videoVC;
     }

@@ -945,10 +945,7 @@ typedef BOOL(^CheckArea)(SSADModel *model);
 - (void)splashControllerViewShowFinished:(SSADSplashControllerView *)view animation:(BOOL)animation {
     DLog(@"AD: %@", NSStringFromSelector(_cmd));
     
-    CGFloat duration = 0.4;
-    if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-        duration = 0.2f;
-    }
+    CGFloat duration = 0.2f;
     
     if (!animation) {
         _controllerView.alpha = 0.f;
