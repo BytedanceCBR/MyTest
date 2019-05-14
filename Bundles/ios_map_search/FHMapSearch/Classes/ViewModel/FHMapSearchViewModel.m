@@ -1515,10 +1515,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     //添加视野埋点
     FHMapZoomViewLevelType destType = [self mapZoomViewType:zoomLevel];
     FHMapZoomViewLevelType lastType = [self mapZoomViewType:_lastRecordZoomLevel];
-    if (destType != lastType) {
+//    if (destType != lastType) {
         [self addMapZoomLevelTrigerby:trigerType viewTye:destType];
         _lastRecordZoomLevel = zoomLevel;
-    }
+//    }
 //    }
 }
 
@@ -1552,8 +1552,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             break;
     }
     param[@"view_level"] = viewTypeStr;
+    param[UT_ELEMENT_FROM] = @"map";
     if (self.showMode == FHMapSearchShowModeDrawLine) {
-        
         param[UT_ENTER_FROM] = @"mapfind";
         param[UT_LOG_PB] = self.viewController.tracerModel.logPb?:UT_BE_NULL;
         TRACK_EVENT(@"circlefind_view", param);
