@@ -337,7 +337,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _mapView.zoomLevel  = 15;
     [_mapContainer addSubview:_mapView];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
-    [_mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_mapView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.equalTo(self.mapContainer);
     }];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
@@ -367,8 +367,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 - (void)dealloc
 {
     [self cleanAllAnnotations];
-    [self.mapView removeConstraints:self.mapView.constraints];
-    [self.mapView removeFromSuperview];
     [[FHDetailMapView sharedInstance] resetDetailMapView];
 }
 
