@@ -113,6 +113,7 @@
         self.tempLabel.textColor = [UIColor blackColor];
         self.tempLabel.hidden = NO;
         CGSize size = [self.tempLabel sizeThatFits:CGSizeMake(200, 22)];
+        size.height = 22;
         self.tempLabel.hidden = YES;
         return size;
     }

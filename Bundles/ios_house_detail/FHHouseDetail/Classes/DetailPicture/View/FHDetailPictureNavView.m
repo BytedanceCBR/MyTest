@@ -13,7 +13,6 @@
 @interface FHDetailPictureNavView ()
 @property (nonatomic, strong)   UIImage       *backWhiteImage;
 @property(nonatomic , strong) UIButton *backBtn;
-@property (nonatomic, strong)   UILabel       *titleLabel;// 图片
 
 @end
 
@@ -42,6 +41,21 @@
     _titleLabel.font = [UIFont themeFontMedium:18];
     _titleLabel.textColor = [UIColor whiteColor];
     [self addSubview:_titleLabel];
+    
+    // 视频 图片title
+    CGFloat videoTitleWidth = 102; //  34 * 3
+    CGFloat leftOffset = ([UIScreen mainScreen].bounds.size.width - videoTitleWidth) / 2;
+    _videoTitle = [[FHDetailVideoTitle alloc] initWithFrame:CGRectMake(leftOffset, 10, 102, 34)];
+    [self addSubview:_videoTitle];
+    
+    // 默认无视频
+    self.hasVideo = NO;
+}
+
+- (void)setHasVideo:(BOOL)hasVideo {
+    _hasVideo = hasVideo;
+    _titleLabel.hidden = hasVideo;
+    _videoTitle.hidden = !hasVideo;
 }
 
 - (void)backAction:(UIButton *)sender
@@ -59,5 +73,110 @@
     return _backWhiteImage;
 }
 
+
+@end
+
+
+// FHDetailVideoTitle
+
+@interface FHDetailVideoTitle ()
+
+@property (nonatomic, strong)   UIControl       *videoControl;// 视频
+@property (nonatomic, strong)   UIControl       *picControl;// 图片
+@property (nonatomic, strong)   UILabel       *videoLabel;// 视频
+@property (nonatomic, strong)   UILabel       *picLabel;// 图片
+@property (nonatomic, strong)   UIView       *bottomLine;
+
+@end
+
+@implementation FHDetailVideoTitle
+
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI {
+    self.backgroundColor = [UIColor clearColor];
+    _videoControl = [[UIControl alloc] initWithFrame:CGRectMake(2, 0, 35, 34)];
+    _videoControl.tag = 1;
+    [_videoControl addTarget:self action:@selector(controlTap:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_videoControl];
+    
+    _videoLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 0, 35, 24)];
+    _videoLabel.text = @"视频";
+    _videoLabel.textAlignment = NSTextAlignmentCenter;
+    _videoLabel.font = [UIFont themeFontMedium:17];
+    _videoLabel.textColor = [UIColor whiteColor];
+    [self addSubview:_videoLabel];
+    
+    _picControl = [[UIControl alloc] initWithFrame:CGRectMake(66, 0, 35, 34)];
+    _picControl.tag = 2;
+    [_picControl addTarget:self action:@selector(controlTap:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_picControl];
+    
+    _picLabel = [[UILabel alloc] initWithFrame:CGRectMake(66, 0, 35, 24)];
+    _picLabel.text = @"图片";
+    _picLabel.textAlignment = NSTextAlignmentCenter;
+    _picLabel.font = [UIFont themeFontMedium:17];
+    _picLabel.textColor = [UIColor themeGray3];
+    [self addSubview:_picLabel];
+    
+    _bottomLine = [[UIView alloc] initWithFrame:CGRectMake(9, 32, 20, 2)];
+    _bottomLine.backgroundColor = [UIColor whiteColor];
+    _bottomLine.layer.cornerRadius = 1;
+    [self addSubview:_bottomLine];
+    
+    self.isSelectVideo = YES;
+}
+
+- (void)controlTap:(UIControl *)control {
+    if (control) {
+        if (control.tag == 1) {
+            if (self.isSelectVideo) {
+                return;
+            }
+            self.isSelectVideo = YES;
+            // 回调业务
+            if (self.currentTitleBlock) {
+                self.currentTitleBlock(1);
+            }
+        } else if (control.tag == 2) {
+            if (!self.isSelectVideo) {
+                return;
+            }
+            self.isSelectVideo = NO;
+            // 回调业务
+            if (self.currentTitleBlock) {
+                self.currentTitleBlock(2);
+            }
+        }
+    }
+}
+
+- (void)setIsSelectVideo:(BOOL)isSelectVideo {
+    _isSelectVideo = isSelectVideo;
+    CGRect lineFrame = CGRectMake(9, 32, 20, 2);
+    if (isSelectVideo) {
+        // 视频
+        _videoLabel.textColor = [UIColor whiteColor];
+        _picLabel.textColor = [UIColor themeGray3];
+        lineFrame = CGRectMake(9, 32, 20, 2);
+    } else {
+        // 图片
+        _videoLabel.textColor = [UIColor themeGray3];
+        _picLabel.textColor = [UIColor whiteColor];
+        lineFrame = CGRectMake(73, 32, 20, 2);
+    }
+    [UIView animateWithDuration:0.35 animations:^{
+        self.bottomLine.frame = lineFrame;
+    } completion:^(BOOL finished) {
+        
+    }];
+}
 
 @end

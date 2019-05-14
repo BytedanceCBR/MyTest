@@ -200,11 +200,7 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
                         [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
                     }];
                 }
-                
-//                [UIView performWithoutAnimation:^{
-//                    [self.tableViewV reloadData];
-//                }];
-                
+
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
                     [self.homeViewController.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];

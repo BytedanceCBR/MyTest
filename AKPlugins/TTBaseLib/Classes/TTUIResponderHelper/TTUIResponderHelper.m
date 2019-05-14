@@ -311,5 +311,30 @@
     return topController;
 }
 
++ (UIViewController *)visibleTopViewController
+{
+    UIViewController *resultVC;
+    resultVC = [self _visibleTopViewController:[[UIApplication sharedApplication].keyWindow rootViewController]];
+    while (resultVC.presentedViewController) {
+        resultVC = [self _visibleTopViewController:resultVC.presentedViewController];
+    }
+    
+    return resultVC;
+}
+
++ (UIViewController *)_visibleTopViewController:(UIViewController *)vc
+{
+    if ([vc isKindOfClass:[UINavigationController class]]) {
+        return [self _visibleTopViewController:[(UINavigationController *)vc topViewController]];
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        return [self _visibleTopViewController:[(UITabBarController *)vc selectedViewController]];
+    } else {
+        return vc;
+    }
+    
+    return nil;
+}
+
+
 @end
 

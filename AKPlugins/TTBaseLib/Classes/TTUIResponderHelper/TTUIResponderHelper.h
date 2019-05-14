@@ -73,5 +73,6 @@
 + (nullable UIView*)topmostView;
 /** 获取当前应用顶层的UIView对象，使用correctTopViewControllerFor: */
 + (nullable UIView*)correctTopmostView;
++ (UIViewController *)visibleTopViewController;
 
 @end

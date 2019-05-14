@@ -13,6 +13,7 @@
 #import "FHMultiMediaImageCell.h"
 #import "FHMultiMediaVideoCell.h"
 #import "FHVideoAndImageItemView.h"
+#import "FHVideoModel.h"
 
 #define k_VIDEOCELLID @"video_cell_id"
 #define k_IMAGECELLID @"image_cell_id"
@@ -27,6 +28,9 @@
 @property(nonatomic, strong) FHVideoAndImageItemView *itemView;
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
+@property(nonatomic, strong) UICollectionViewCell *lastCell;
+@property(nonatomic, strong) FHMultiMediaVideoCell *firstVideoCell;
+@property(nonatomic, assign) CGFloat beginX;
 
 @end
 
@@ -35,15 +39,15 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        _isShowenPictureVC = NO;
         [self initViews];
+//        [self initVideoVC];
         [self initConstaints];
     }
     return self;
 }
 
 - (void)initViews {
-    //    _pictureShowDict = [NSMutableDictionary dictionary];
-    
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.itemSize = CGSizeMake(SCREEN_WIDTH, self.bounds.size.height);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -84,6 +88,24 @@
     _noDataImageView = [[UIImageView alloc] init];
     [self addSubview:_noDataImageView];
     _noDataImageView.hidden = YES;
+}
+
+//- (void)initVideoVC {
+//    self.videoVC = [[FHVideoViewController alloc] init];
+//    _videoVC.view.frame = self.bounds;
+//}
+
+- (FHVideoViewController *)videoVC {
+    if(!_videoVC){
+        _videoVC = [[FHVideoViewController alloc] init];
+        _videoVC.view.frame = self.bounds;
+    }
+    return _videoVC;
+}
+
+- (void)setTracerDic:(NSDictionary *)tracerDic {
+    _tracerDic = tracerDic;
+    self.videoVC.tracerDic = tracerDic;
 }
 
 - (void)initConstaints {
@@ -128,6 +150,21 @@
         if(self.delegate && [self.delegate respondsToSelector:@selector(selectItem:)]){
             [self.delegate selectItem:self.itemArray[index]];
         }
+        
+        [self.colletionView layoutIfNeeded];
+        UICollectionViewCell *currentCell = [self.colletionView cellForItemAtIndexPath:indexPath];
+        if (index == 0) {
+            self.currentMediaCell = currentCell;
+        }
+        
+        if([_lastCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Playing){
+            [self.videoVC pause];
+        }
+
+        if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Paused){
+            [self.videoVC play];
+        }
+        self.lastCell = currentCell;
     }
 }
 
@@ -136,6 +173,22 @@
         _placeHolder = [UIImage imageNamed:@"default_image"];
     }
     return _placeHolder;
+}
+
+- (void)updateVideo:(FHMultiMediaItemModel *)model {
+
+    FHVideoModel *videoModel = [[FHVideoModel alloc] init];
+    videoModel.videoID = model.videoID;
+    videoModel.coverImageUrl = model.imageUrl;
+    videoModel.muted = NO;
+    videoModel.repeated = NO;
+    videoModel.isShowControl = NO;
+    videoModel.isShowMiniSlider = YES;
+    videoModel.isShowStartBtnWhenPause = YES;
+    videoModel.vWidth = model.vWidth;
+    videoModel.vHeight = model.vHeight;
+    
+    [self.videoVC updateData:videoModel];
 }
 
 - (NSInteger)indexForIndexPath:(NSIndexPath *)indexPath {
@@ -178,15 +231,32 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHMultiMediaBaseCell *cell = nil;
     NSInteger index = [self indexForIndexPath:indexPath];
+    NSInteger row = indexPath.row;
     if(index < self.medias.count){
         FHMultiMediaItemModel *model = _medias[index];
         if(model.mediaType == FHMultiMediaTypeVideo){
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VIDEOCELLID forIndexPath:indexPath];
+            model.playerView = self.videoVC.view;
+            model.currentPlaybackTime = self.videoVC.currentPlaybackTime;
+            if (!self.isShowenPictureVC) {
+                [self updateVideo:model];
+            }
         }else{
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
         }
+        cell.isShowenPictureVC = self.isShowenPictureVC;
+        
         [cell updateViewModel:model];
+        
+        if(!self.lastCell){
+            self.lastCell = cell;
+        }
+        
+        if(!self.currentMediaCell && model.mediaType == FHMultiMediaTypeVideo){
+            self.currentMediaCell = cell;
+        }
     }
+    
     return cell;
 }
 
@@ -197,27 +267,67 @@
     }
 }
 
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    NSInteger curPage = (NSInteger)(scrollView.contentOffset.x / scrollView.frame.size.width);
-    if (_medias.count > 1) {
-        if (curPage == 0) {
-            curPage = _medias.count;
-        }else if (curPage == _medias.count + 1){
-            curPage = 0;
-        }
-    }
-    if (curPage == 0 ){
-        curPage = 1;
-    }
-    self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+//- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+//    NSInteger curPage = (NSInteger)(scrollView.contentOffset.x / scrollView.frame.size.width);
+//    if (_medias.count > 1) {
+//        if (curPage == 0) {
+//            curPage = _medias.count;
+//        }else if (curPage == _medias.count + 1){
+//            curPage = 0;
+//        }
+//    }
+//    if (curPage == 0 ){
+//        curPage = 1;
+//    }
+//    self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+//}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    self.beginX = scrollView.contentOffset.x;
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self updateItemAndInfoLabel];
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self updateVideoState];
+}
+
 - (void)updateItemAndInfoLabel {
+    int diff = abs(self.colletionView.contentOffset.x - self.beginX);
+    
+    if(diff < self.colletionView.frame.size.width/2 && !self.isShowenPictureVC){
+        return;
+    }
+    
     NSInteger curPage = (NSInteger)(self.colletionView.contentOffset.x / self.colletionView.frame.size.width);
+    
+    if (_medias.count > 1) {
+        NSIndexPath *indexPath = nil;
+        if (curPage == 0) {
+            //show last page
+            curPage = _medias.count;
+            indexPath = [NSIndexPath indexPathForItem:_medias.count inSection:0];
+        }else if (curPage == _medias.count + 1) {
+            //show first page
+            curPage = 1;
+            indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
+        }
+        
+        NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
+        FHMultiMediaItemModel *itemModel = self.medias[index];
+        NSString *groupType = itemModel.groupType;
+        [self.itemView selectedItem:groupType];
+        
+        self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+    }
+}
+
+- (void)updateVideoState {
+    NSInteger curPage = (NSInteger)(self.colletionView.contentOffset.x / self.colletionView.frame.size.width);
+    NSInteger originCurPage = (NSInteger)(self.colletionView.contentOffset.x / self.colletionView.frame.size.width);
+    
     if (_medias.count > 1) {
         NSIndexPath *indexPath = nil;
         if (curPage == 0) {
@@ -230,18 +340,36 @@
             indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
         }
         if (indexPath) {
+            //循环滚动
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
         
         NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
-        FHMultiMediaItemModel *itemModel = self.medias[index];
-        NSString *groupType = itemModel.groupType;
-        [self.itemView selectedItem:groupType];
         
-        self.infoLabel.text = [NSString stringWithFormat:@"%ld/%ld",curPage,self.medias.count];
+        if(!indexPath){
+            indexPath = [NSIndexPath indexPathForItem:originCurPage inSection:0];
+        }
+        //视频控制
+        [self.colletionView layoutIfNeeded];
+        UICollectionViewCell *currentCell = [self.colletionView cellForItemAtIndexPath:indexPath];
+        if (index == 0) {
+            self.currentMediaCell = currentCell;
+        }
+        
+        if(currentCell != _lastCell) {
+            if (!self.isShowenPictureVC) {
+                if(_lastCell && [_lastCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVPlaybackState_Playing){
+                    [self.videoVC pause];
+                }
+                
+//                if([currentCell isKindOfClass:[FHMultiMediaVideoCell class]] && self.videoVC.playbackState == TTVideoEnginePlaybackStatePaused){
+//                    [self.videoVC play];
+//                }
+            }
+            self.lastCell = currentCell;
+        }
     }
 }
-
 
 - (void)updateWithModel:(FHMultiMediaModel *)model {
     self.medias = model.medias;
