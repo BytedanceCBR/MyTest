@@ -5329,60 +5329,6 @@ static NSString *const kTTFeedSearchEntryEnable = @"tt_feed_search_entry_enable"
 }
 @end
 
-static NSString *const kTTFeedFantasyLocalSettings = @"tt_feed_fantasy_local_settings";
-@implementation SSCommonLogic (Fantasy)
-+ (void)setFeedFantasyLocalSettings:(NSDictionary *)dict
-{
-    [[NSUserDefaults standardUserDefaults] setValue:dict forKey:kTTFeedFantasyLocalSettings];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)fantasyCountDownEnable
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    BOOL res = NO;
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedFantasyLocalSettings];
-    if ([info[@"count_down_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
-+ (BOOL)fantasyWindowResizeable
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    BOOL res = NO;
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedFantasyLocalSettings];
-    if ([info[@"fantasy_window_resize_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
-+ (BOOL)fantasyWindowAlwaysResizeable
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    BOOL res = NO;
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedFantasyLocalSettings];
-    if ([info[@"fantasy_window_always_resize_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-@end
-
 static NSString *const kTTFeedTipsShowStrategy = @"tt_feed_tips_show_strategy";
 @implementation SSCommonLogic (FeedTipsShowStrategy)
 + (void)setFeedTipsShowStrategyDict:(NSDictionary *)dict{

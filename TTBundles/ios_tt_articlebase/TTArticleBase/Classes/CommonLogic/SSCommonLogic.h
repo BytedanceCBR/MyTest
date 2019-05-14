@@ -1329,13 +1329,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)feedSearchEntryEnable;
 @end
 
-@interface SSCommonLogic (Fantasy)
-+ (void)setFeedFantasyLocalSettings:(NSDictionary *)dict;
-+ (BOOL)fantasyCountDownEnable;
-+ (BOOL)fantasyWindowResizeable;
-+ (BOOL)fantasyWindowAlwaysResizeable;
-@end
-
 @interface SSCommonLogic (FeedTipsShowStrategy)
 + (void)setFeedTipsShowStrategyDict:(NSDictionary *)dict;
 + (BOOL)feedTipsShowStrategyEnable;

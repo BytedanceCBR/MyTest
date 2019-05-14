@@ -1703,12 +1703,6 @@
         [SSCommonLogic setFeedTipsShowStrategyDict:nil];
     }
     
-    if ([dSettings objectForKey:@"tt_feed_fantasy_local_settings"]) {
-        [SSCommonLogic setFeedFantasyLocalSettings:[dSettings tt_dictionaryValueForKey:@"tt_feed_fantasy_local_settings"]];
-    }else{
-        [SSCommonLogic setFeedFantasyLocalSettings:nil];
-    }
-    
     if ([dSettings objectForKey:@"tt_feed_refresh_settings"]) {
         [SSCommonLogic setFeedRefreshStrategyDict:[dSettings tt_dictionaryValueForKey:@"tt_feed_refresh_settings"]];
     }else{
