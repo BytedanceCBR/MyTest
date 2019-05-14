@@ -769,8 +769,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @end
 
 @interface SSCommonLogic (Optimise)
-+ (BOOL)shouldUseOptimisedLaunch;
-+ (void)setShouldUseOptimisedLaunch:(BOOL)useOptimised;
 
 + (BOOL)shouldUseALBBService;
 + (void)setShouldUseALBBService:(BOOL)useOptimised;

@@ -235,8 +235,12 @@
 
 - (void)dealAppSettingResult:(NSDictionary *)dSettings
 {
+    NSTimeInterval start = CFAbsoluteTimeGetCurrent();
+
     [super dealAppSettingResult:dSettings];
     
+    NSTimeInterval afterSetting = CFAbsoluteTimeGetCurrent();
+
     [[TTSettingsManager sharedManager] saveSettings:dSettings];
     
     // 固化settings配置的实验数据
@@ -1104,10 +1108,7 @@
     if ([dSettings objectForKey:@"poster_ad_click_enabled"]) {
         [SSCommonLogic setPosterADClickEnabled:[dSettings tt_boolValueForKey:@"poster_ad_click_enabled"]];
     }
-    
-    if ([dSettings objectForKey:@"should_optimize_launch"]) {
-        [SSCommonLogic setShouldUseOptimisedLaunch:[[dSettings objectForKey:@"should_optimize_launch"] boolValue]];
-    }
+
     //是否用重构后的导航栏
     if([dSettings objectForKey:@"refactor_navi_enable"]) {
         [SSCommonLogic setRefactorNaviEnabled:[dSettings tt_boolValueForKey:@"refactor_navi_enable"]];
@@ -1913,6 +1914,11 @@
     if ([dSettings objectForKey:@"tt_wechat_oldshare_callback_enable"]) {
         [SSCommonLogic setEnableWXShareCallback:[dSettings tt_boolValueForKey:@"tt_wechat_oldshare_callback_enable"]];
     }
+    
+    NSTimeInterval end = CFAbsoluteTimeGetCurrent();
+    double settingsTime = (afterSetting - start) * 1000;
+    double logicTime = (end - afterSetting) * 1000;
+    NSLog(@"zjing-settingsTime:%f logicTime:%f",settingsTime,logicTime);
 }
 
 static NSString *const kShowMallUserDefaultsKey = @"kShowMallUserDefaultsKey";

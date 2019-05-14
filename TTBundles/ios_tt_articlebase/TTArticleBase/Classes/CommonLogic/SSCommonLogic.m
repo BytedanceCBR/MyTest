@@ -3219,20 +3219,7 @@ static NSString *const kSSCommonLogicVideoOwnPlayerEnabledKey = @"video_own_play
 
 @end
 
-NSString * const SSCommonLogicUseOptimizedAPPLaunchKey = @"SSCommonLogicUseOptimizedAPPLaunchKey";
 @implementation SSCommonLogic (Optimise)
-
-+ (BOOL)shouldUseOptimisedLaunch{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:SSCommonLogicUseOptimizedAPPLaunchKey]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicUseOptimizedAPPLaunchKey];
-    }
-    return  YES;
-}
-
-+ (void)setShouldUseOptimisedLaunch:(BOOL)useOptimised{
-    [[NSUserDefaults standardUserDefaults] setBool:useOptimised forKey:SSCommonLogicUseOptimizedAPPLaunchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 NSString * const SSCommonLogicUseALBBServiceKey = @"SSCommonLogicUseALBBServiceKey";
 + (BOOL)shouldUseALBBService{
