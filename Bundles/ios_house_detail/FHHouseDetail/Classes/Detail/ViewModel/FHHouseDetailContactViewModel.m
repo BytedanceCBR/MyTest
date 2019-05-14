@@ -419,7 +419,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (params && [params isKindOfClass:[NSDictionary class]]) {
         realtor_pos = params[@"realtor_position"] ? : @"detail_button";
     }
-    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" position:realtor_pos];
+    [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" from: @"app_oldhouse" position:realtor_pos];
 }
 
 - (void)fillFormActionWithExtraDict:(NSDictionary *)extraDict

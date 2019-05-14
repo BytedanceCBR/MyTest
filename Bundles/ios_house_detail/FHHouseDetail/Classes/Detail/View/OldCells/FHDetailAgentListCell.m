@@ -168,7 +168,10 @@
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     if (index >= 0 && model.recommendedRealtors.count > 0 && index < model.recommendedRealtors.count) {
         FHDetailContactModel *contact = model.recommendedRealtors[index];
-        [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] position:@"detail_related"];
+        [model.phoneCallViewModel imchatActionWithPhone:contact
+                                            realtorRank:[NSString stringWithFormat:@"%d", index]
+                                                   from:@"app_oldhouse_mulrealtor"
+                                               position:@"detail_related"];
     }
 }
 
