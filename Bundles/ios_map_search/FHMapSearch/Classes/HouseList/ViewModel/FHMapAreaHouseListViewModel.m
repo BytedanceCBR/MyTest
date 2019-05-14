@@ -230,6 +230,9 @@
     }else if (self.houseType == FHHouseTypeRentHouse){
         self.requestTask = [self requsetRentHouse:query param:param isHead:isHead];
     }
+    if (!isHead) {
+        [self addCategoryRefreshLog];
+    }
 }
 
 -(TTHttpTask *)requsetSecondHouse:(NSString *)query param:(NSDictionary *)param isHead:(BOOL)isHead
