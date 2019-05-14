@@ -538,6 +538,11 @@
     navController.panRecognizer.enabled = NO;
 }
 
+-(BOOL)isShowingMaskView
+{
+    return _drawMaskView.superview && !_drawMaskView.hidden;
+}
+
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations
 {

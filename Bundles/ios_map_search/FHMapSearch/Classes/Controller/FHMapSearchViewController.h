@@ -46,6 +46,8 @@ typedef  void (^_Nullable HouseListOpenUrlCallback)(NSString *openUrl);
 
 -(void)switchToNormalMode;
 
+-(BOOL)isShowingMaskView;
+
 @end
 
 

@@ -585,7 +585,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
         }
         wself.searchId = model.searchId;
-        [wself addAnnotations:model.list];
+        if (![wself.viewController isShowingMaskView]) {
+            //只有不展示maskview时才显示
+            [wself addAnnotations:model.list];
+        }
+        
         wself.houseListOpenUrl = model.houseListOpenUrl;
         if (!wself.configModel.searchId) {
             //first time
@@ -1431,6 +1435,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         [FHMapSearchLevelPopLayer showInView:self.viewController.view atPoint:CGPointMake(self.chooseView.centerX, self.chooseView.top)];
         return;
     }
+    
+    [self.requestHouseTask cancel];
     
     [self addClickDrawLineLog];
     [self addEnterCircleFindLog];
