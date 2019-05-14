@@ -1584,8 +1584,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     param[@"view_level"] = viewTypeStr;
     param[UT_ELEMENT_FROM] = @"map";
     if (self.showMode == FHMapSearchShowModeDrawLine) {
-        param[UT_ENTER_FROM] = @"mapfind";
-        param[UT_LOG_PB] = self.viewController.tracerModel.logPb?:UT_BE_NULL;
+        param[UT_ENTER_FROM] = @"mapfind";        
         TRACK_EVENT(@"circlefind_view", param);
     }else{
         param[@"trigger_type"] = triger;
