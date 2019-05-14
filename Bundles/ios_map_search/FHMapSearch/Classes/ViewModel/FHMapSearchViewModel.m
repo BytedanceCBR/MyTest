@@ -85,6 +85,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 @property(nonatomic , strong) NSArray *drawLineNeighbors;
 @property(nonatomic , strong) NSDate *enterDrawLineTime;
 @property(nonatomic , assign) FHMapSearchShowMode lastShowMode;//画圈使用
+@property(nonatomic , strong) NSDictionary *filterParam;
 
 @end
 
@@ -333,9 +334,14 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         __weak typeof(self) wself = self;
         _houseListViewController.willSwipeDownDismiss = ^(CGFloat duration , FHMapSearchBubbleModel *fromBubble) {
             if (wself) {
-                if (wself.lastShowMode == FHMapSearchShowModeDrawLine) {
+                if (wself.lastShowMode == FHMapSearchShowModeDrawLine || wself.lastShowMode == FHMapSearchShowModeSubway) {
                     [wself changeNavbarAppear:NO];
                     wself.showMode = wself.lastShowMode;
+                    //恢复筛选器
+                    if (wself.resetConditionBlock && wself.filterParam) {
+                        wself.resetConditionBlock(wself.filterParam);
+                    }
+                    
                 }else{
                     [wself changeNavbarAppear:YES];
                     wself.showMode = FHMapSearchShowModeMap;
@@ -1085,10 +1091,21 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //-(void)onConditionChangedWithCondition:(NSString *)condition
 -(void)onConditionChanged:(NSString *)condition
 {
-    [self.lastBubble overwriteFliter:condition];
+    BOOL mapViewFilterShouldChange = NO;
+    if (!(self.showMode == FHMapSearchShowModeHouseList && (self.lastShowMode == FHMapSearchShowModeDrawLine || self.lastShowMode == FHMapSearchShowModeSubway))) {
+        //在非画圈找房进入列表页时才更新
+        mapViewFilterShouldChange = YES;
+    }
+    if (mapViewFilterShouldChange) {
+        [self.lastBubble overwriteFliter:condition];
+    }
     
     if (![self.filterConditionParams isEqualToString:condition]) {
-        self.filterConditionParams = condition;
+        
+        if (mapViewFilterShouldChange) {
+            //在非画圈找房进入列表页时才更新
+            self.filterConditionParams = condition;
+        }
         if (![TTReachability isNetworkConnected]) {
             [[FHMainManager sharedInstance]showToast:@"网络异常" duration:1];
             if (self.showMode != FHMapSearchShowModeMap) {
@@ -1096,9 +1113,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }            
             return;
         }
-        if (self.showMode != FHMapSearchShowModeMap) {
+        if (self.showMode == FHMapSearchShowModeHouseList || self.showMode == FHMapSearchShowModeHalfHouseList) {
             [self.houseListViewController.viewModel reloadingHouseData:condition];
-            self.needReload = YES;
+            self.needReload = mapViewFilterShouldChange;
         }else{
             [self requestHouses:NO showTip:YES];
         }
@@ -1126,6 +1143,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSURL *url = [NSURL URLWithString:openUrl];
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
     if (self.resetConditionBlock) {
+        self.filterParam = paramObj.queryParams;
         self.resetConditionBlock(paramObj.queryParams);
     }
     
@@ -1141,6 +1159,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         NSURL *url = [NSURL URLWithString:condition];
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:url];
         if (self.resetConditionBlock) {
+            self.filterParam = paramObj.queryParams;
             self.resetConditionBlock(paramObj.queryParams);
         }
         
