@@ -252,11 +252,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)typeButtonClick:(UIButton *)button
 {
-//    if (button == self.previouseIconButton) {
-//
-//        return;
-//    }
-//
     UILabel *buttonLabel = [self getLabelFromTag:button.tag];
     
     if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
@@ -304,7 +299,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 - (void)setUpMapView
 {
     _mapContainer = [UIView new];
-    //[TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom
     [self.view addSubview:_mapContainer];
     [_mapContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -326,7 +320,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         bottomHeight = 43;
     }
     CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
-//    _mapView = [[MAMapView alloc] init];
+    // _mapView = [[MAMapView alloc] init];
     _mapView = [[FHDetailMapView sharedInstance] nearbyMapviewWithFrame:mapFrame];
     _mapView.delegate = self;
     _mapView.showsCompass = NO;
@@ -341,26 +335,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         make.left.right.top.bottom.equalTo(self.mapContainer);
     }];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
-//    __weak typeof(self) wSelf = self;
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        wSelf.mapView.frame = mapFrame;
-//        [wSelf.mapView setCenterCoordinate:wSelf.centerPoint];
-//    });
-    
-    
-    
-//    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style" ofType:@"data"];
-//    if ([stylePath isKindOfClass:[NSString class]]) {
-//        NSURL *styleUrl = [NSURL URLWithString:stylePath];
-//        if ([styleUrl isKindOfClass: [NSURL class]]) {
-//            NSData *dataStype = [NSData dataWithContentsOfFile:styleUrl];
-//            if ([dataStype isKindOfClass:[NSData class]]) {
-//                _mapView.customMapStyleEnabled = YES;
-//                [_mapView setCustomMapStyleWithWebData:dataStype];
-//            }
-//        }
-//    }
-    
     [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
 }
 
@@ -570,16 +544,5 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     }
     return height;
 }
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

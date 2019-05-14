@@ -88,7 +88,7 @@
     return self.mapView;
 }
 
-// 位置和周边地图实例，外部修改中心点
+// 位置和周边地图实例，外部修改中心点，记录先前的delegate和中心点
 - (MAMapView *)nearbyMapviewWithFrame:(CGRect)mapFrame {
     MAMapView *map = [self defaultMapViewWithFrame:mapFrame];
     self.origin_delegate = map.delegate;
@@ -97,7 +97,7 @@
     return map;
 }
 
-// 重置详情页地图实例
+// 重置详情页地图实例，恢复状态数据
 - (void)resetDetailMapView {
     self.mapView.hidden = YES;
     [self clearAnnotationDatas];
