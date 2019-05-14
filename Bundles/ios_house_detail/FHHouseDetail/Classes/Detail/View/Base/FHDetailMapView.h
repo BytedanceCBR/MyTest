@@ -26,7 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (MAMapView *)defaultMapView;
 - (MAMapView *)defaultMapViewWithFrame:(CGRect)mapFrame;
 - (MAMapView *)defaultMapViewWithPoint:(CLLocationCoordinate2D)center frame:(CGRect)mapFrame;
-
+// 位置和周边
+- (MAMapView *)nearbyMapviewWithFrame:(CGRect)mapFrame;
+- (void)resetDetailMapView;
 @end
 
 NS_ASSUME_NONNULL_END

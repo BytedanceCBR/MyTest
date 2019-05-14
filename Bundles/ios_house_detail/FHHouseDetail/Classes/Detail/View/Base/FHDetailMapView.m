@@ -15,6 +15,7 @@
 @property (nonatomic, assign)   CLLocationCoordinate2D       centerPoint;
 @property (nonatomic, assign)   CGRect       originDetailFrame;
 @property (nonatomic, assign)   CLLocationCoordinate2D       origin_centerPoint;
+@property (nonatomic, weak) id<MAMapViewDelegate> origin_delegate;
 
 @end
 
@@ -85,6 +86,7 @@
 // 位置和周边地图实例，外部修改中心点
 - (MAMapView *)nearbyMapviewWithFrame:(CGRect)mapFrame {
     MAMapView *map = [self defaultMapViewWithFrame:mapFrame];
+    self.origin_delegate = map.delegate;
     map.hidden = NO;
     return map;
 }
@@ -92,9 +94,17 @@
 // 重置详情页地图实例
 - (void)resetDetailMapView {
     self.mapView.hidden = YES;
+    self.mapView.runLoopMode = NSRunLoopCommonModes;
+    self.mapView.showsCompass = NO;
+    self.mapView.showsScale = NO;
+    self.mapView.zoomEnabled = NO;
+    self.mapView.scrollEnabled = NO;
+    self.mapView.zoomLevel = 14;
+    self.mapView.showsUserLocation = NO;
     [self clearAnnotationDatas];
     self.mapView.frame = self.originDetailFrame;
     self.centerPoint = self.origin_centerPoint;
+    self.mapView.delegate = self.origin_delegate;
     [[[UIApplication sharedApplication] keyWindow] addSubview:self.mapView];
 }
 

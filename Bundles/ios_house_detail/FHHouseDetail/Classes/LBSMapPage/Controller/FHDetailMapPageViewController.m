@@ -24,6 +24,8 @@
 #import <FHEnvContext.h>
 #import <HMDTTMonitor.h>
 #import "FHMyMAAnnotation.h"
+#import "FHDetailMapView.h"
+#import "FHFakeInputNavbar.h"
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
@@ -31,7 +33,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @interface FHDetailMapPageViewController () <TTRouteInitializeProtocol,AMapSearchDelegate,MAMapViewDelegate>
 
 @property (nonatomic, strong) FHDetailMapPageNaviBarView *naviBar;
-@property (nonatomic, strong) MAMapView *mapView;
+@property (nonatomic, weak) MAMapView *mapView;
 @property (nonnull, strong) UIView *mapContainer;
 @property (nonatomic, strong) UIView * bottomBarView;
 @property (nonatomic, strong) UIButton * previouseIconButton;
@@ -316,8 +318,16 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     }];
     [_mapContainer setBackgroundColor:[UIColor whiteColor]];
     
-    
-    _mapView = [[MAMapView alloc] init];
+    CGFloat navHeight = [FHFakeInputNavbar perferredHeight];
+    CGFloat bottomHeight = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        bottomHeight = 83;
+    } else {
+        bottomHeight = 43;
+    }
+    CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
+//    _mapView = [[MAMapView alloc] init];
+    _mapView = [[FHDetailMapView sharedInstance] nearbyMapviewWithFrame:mapFrame];
     _mapView.delegate = self;
     _mapView.showsCompass = NO;
     _mapView.showsScale = YES;
@@ -331,7 +341,12 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         make.left.right.top.bottom.equalTo(self.mapContainer);
     }];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
-    [_mapView setCenterCoordinate:self.centerPoint];
+//    __weak typeof(self) wSelf = self;
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        wSelf.mapView.frame = mapFrame;
+//        [wSelf.mapView setCenterCoordinate:wSelf.centerPoint];
+//    });
+    
     
     
 //    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style" ofType:@"data"];
@@ -347,6 +362,14 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 //    }
     
     [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
+}
+
+- (void)dealloc
+{
+    [self cleanAllAnnotations];
+    [self.mapView removeConstraints:self.mapView.constraints];
+    [self.mapView removeFromSuperview];
+    [[FHDetailMapView sharedInstance] resetDetailMapView];
 }
 
 - (void)createMenu
