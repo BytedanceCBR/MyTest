@@ -1454,13 +1454,21 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         return;
     }
     //TODO: handle show house list
+    NSMutableDictionary *logParam = [self logBaseParams];
+    logParam[UT_ENTER_FROM] = @"circlefind";
+    logParam[UT_ENTER_TYPE] = @"click";
+    logParam[UT_ELEMENT_FROM] = @"bottom_district";
+    logParam[UT_CATEGORY_NAME] = (self.configModel.houseType == FHHouseTypeRentHouse)?@"rent_list":@"old_list";
+    
     NSURL *url = [NSURL URLWithString:@"sslocal://mapfind_area_house_list"];
     NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
                                    NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
                                    HOUSE_TYPE_KEY:@(self.configModel.houseType),
                                    @"filter":self.filterConditionParams?:@"",
-                                   @"title":[NSString stringWithFormat:@"共找到%d套房源",self->onSaleHouseCount]
+                                   @"title":[NSString stringWithFormat:@"共找到%d套房源",self->onSaleHouseCount],
+                                   TRACER_KEY:logParam
                                    };
+    
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
     [[TTRoute sharedRoute] openURLByViewController:url userInfo:userInfo];
 }

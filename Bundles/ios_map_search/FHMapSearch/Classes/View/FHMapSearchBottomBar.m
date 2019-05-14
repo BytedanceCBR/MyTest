@@ -96,7 +96,7 @@
     
     [_drawLineLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.drawLineBgView).offset(-2);
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(26);
     }];
     
     [_drawLineIndicator mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -121,7 +121,7 @@
     _subwayBgView.hidden = YES;
     
     [_drawLineLabel sizeToFit];
-    CGFloat padding = 40 ; //左右间距 箭头
+    CGFloat padding = 46 ; //左右间距 箭头
     if (showIndicator) {
         padding += 24;
     }
