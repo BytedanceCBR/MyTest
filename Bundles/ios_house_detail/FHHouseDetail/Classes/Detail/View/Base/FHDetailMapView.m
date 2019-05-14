@@ -13,6 +13,8 @@
 @property (nonatomic, strong)   MAMapView       *mapView;
 @property (nonatomic, assign)   CGFloat       mapHightScale;
 @property (nonatomic, assign)   CLLocationCoordinate2D       centerPoint;
+@property (nonatomic, assign)   CGRect       originDetailFrame;
+@property (nonatomic, assign)   CLLocationCoordinate2D       origin_centerPoint;
 
 @end
 
@@ -37,7 +39,8 @@
 }
 
 - (void)setupUI {
-    self.mapView = [[MAMapView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 160)];
+    self.originDetailFrame = CGRectMake(0, 0, SCREEN_WIDTH, 160);
+    self.mapView = [[MAMapView alloc] initWithFrame:self.originDetailFrame];
     self.mapView.runLoopMode = NSRunLoopCommonModes;
     self.mapView.showsCompass = NO;
     self.mapView.showsScale = NO;
@@ -51,6 +54,7 @@
 
 - (void)setCenterPoint:(CLLocationCoordinate2D)centerPoint {
     _centerPoint = centerPoint;
+    _origin_centerPoint = centerPoint;
     [self.mapView setCenterCoordinate:centerPoint animated:NO];
 }
 
@@ -76,6 +80,22 @@
     }
     self.mapView.frame = mapFrame;
     return self.mapView;
+}
+
+// 位置和周边地图实例，外部修改中心点
+- (MAMapView *)nearbyMapviewWithFrame:(CGRect)mapFrame {
+    MAMapView *map = [self defaultMapViewWithFrame:mapFrame];
+    map.hidden = NO;
+    return map;
+}
+
+// 重置详情页地图实例
+- (void)resetDetailMapView {
+    self.mapView.hidden = YES;
+    [self clearAnnotationDatas];
+    self.mapView.frame = self.originDetailFrame;
+    self.centerPoint = self.origin_centerPoint;
+    [[[UIApplication sharedApplication] keyWindow] addSubview:self.mapView];
 }
 
 @end
