@@ -783,7 +783,7 @@
     NSMutableDictionary *param = [self logBaseParams];
     
     param[@"house_type"] = [_configModel houseTypeName]?:@"old";
-    param[@"page_type"] = @"mapfind";
+    param[@"page_type"] =  [self enterFrom];
     param[@"card_type"] = @"left_pic";
     param[@"group_id"] = logPb[@"group_id"] ?: @"be_null";
     param[@"search_id"] = logPb[@"search_id"] ?: @"be_null";
