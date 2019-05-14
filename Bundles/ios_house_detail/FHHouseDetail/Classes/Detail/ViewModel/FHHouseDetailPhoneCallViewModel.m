@@ -74,6 +74,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     if (extra) {
         [dict addEntriesFromDictionary:extra];
     }
+
+    NSString* from = extra[@"from"] ? : @"be_null";
     
     [FHUserTracker writeEvent:@"click_im" params:dict];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
