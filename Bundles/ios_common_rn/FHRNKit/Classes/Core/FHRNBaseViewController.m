@@ -185,10 +185,10 @@
 
 - (void)updateLoadFinish
 {
-    self.isLoadFinish = YES;
-    if (!_canPreLoad) {
+    if (!_canPreLoad && !self.isLoadFinish) {
         [self sendEventName:@"host_resume" andParams:nil];
     }
+    self.isLoadFinish = YES;
 }
 
 - (void)setupUI

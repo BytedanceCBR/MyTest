@@ -159,6 +159,9 @@ typedef enum : NSUInteger {
     params[@"has_associate"] = [NSNumber numberWithInteger:isVirtual];
     params[@"is_dial"] = @(1);
     params[@"conversation_id"] = @"be_null";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     [FHUserTracker writeEvent:@"click_call" params:params];
 }
 

@@ -255,11 +255,48 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     // 清空数据源
     [self.items removeAllObjects];
-    // 添加头滑动图片
-    if (model.data.houseImageDictList.count > 0) {
+    // 添加头滑动图片 && 视频
+    BOOL hasVideo = NO;
+    
+    if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
+        hasVideo = YES;
+    }
+    if (model.data.houseImageDictList.count > 0 || hasVideo) {
+        FHMultiMediaItemModel *itemModel = nil;
+        if (hasVideo) {
+            FHVideoHouseVideoVideoInfosModel *info = model.data.houseVideo.videoInfos[0];
+            itemModel = [[FHMultiMediaItemModel alloc] init];
+            itemModel.mediaType = FHMultiMediaTypeVideo;
+            // 测试id
+            // @"v03004b60000bh57qrtlt63p5lgd20d0";
+            // @"v0200c940000bh9r6mna1haoho053neg";
+            if (info.coverImageUrl.length <= 0) {
+                // 视频没有url
+                if (model.data.houseImageDictList.count > 0) {
+                    for (int i = 0; i < model.data.houseImageDictList.count; i++) {
+                        FHDetailOldDataHouseImageDictListModel *item = model.data.houseImageDictList[i];
+                        if (item.houseImageList.count > 0) {
+                            FHDetailHouseDataItemsHouseImageModel *imageModel = item.houseImageList[0];
+                            if (imageModel.url.length > 0) {
+                                info.coverImageUrl = imageModel.url;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            itemModel.videoID = info.vid;
+            itemModel.imageUrl = info.coverImageUrl;
+            itemModel.vWidth = info.vWidth;
+            itemModel.vHeight = info.vHeight;
+            itemModel.infoTitle = model.data.houseVideo.infoTitle;
+            itemModel.infoSubTitle = model.data.houseVideo.infoSubTitle;
+            itemModel.groupType = @"视频";
+        }
+        
         FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
-        headerCellModel.vedioModel = nil;// 添加视频模型数据
+        headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
         [self.items addObject:headerCellModel];
     }else{
@@ -479,7 +516,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     [self reloadData];
 }
 
@@ -603,7 +640,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];

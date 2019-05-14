@@ -61,6 +61,7 @@
 #import "CommonURLSetting.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTTabBarController.h"
+#import <FHCommuteManager.h>
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -202,7 +203,13 @@
                     FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
                     if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
                         [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                            //通勤找房
+                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                        }else
+                        {
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                        }
                     }
                 }
             }
@@ -218,7 +225,13 @@
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
                             [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                                //通勤找房
+                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                            }else
+                            {
+                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                            }
                         }
                     });
                 });

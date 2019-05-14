@@ -21,8 +21,8 @@
 #import "IMManager.h"
 #import <HMDTTMonitor.h>
 #import "FHHousePhoneCallUtils.h"
-#import "FHDetailBaseModel.h"
 #import "FHHouseFollowUpHelper.h"
+#import "FHFillFormAgencyListItemModel.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHToastCountKey;
@@ -60,10 +60,34 @@ extern NSString *const kFHToastCountKey;
     }
     [self addInformShowLog:configModel];
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    if (configModel.chooseAgencyList.count > 0) {
+        NSInteger selectCount = 0;
+        for (FHFillFormAgencyListItemModel *item in configModel.chooseAgencyList) {
+            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
+                continue;
+            }
+            if (item.checked) {
+                selectCount += 1;
+            }
+        }
+        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
+        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
+            
+            [alert endEditing:YES];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
+            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+            [delegateTable addObject:alert];
+            info[@"delegate"] = delegateTable;
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+            NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
+            [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+        };
+    }
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [self fillFormRequest:configModel phone:phoneNum alertView:alert];
-        [self addClickConfirmLog:configModel];
+        [self addClickConfirmLog:configModel alertView:alertView];
     };
 
     alertView.tipClickBlock = ^{
@@ -108,13 +132,37 @@ extern NSString *const kFHToastCountKey;
         };
         alertView.leftClickBlock = ^(NSString * _Nonnull phoneNum,FHDetailNoticeAlertView *alert) {
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [wself addClickConfirmLog:configModel];
+            [self addClickConfirmLog:configModel alertView:alertView];
         };
     }else {
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
             [wself fillFormRequest:configModel phone:phoneNum alertView:alert];
-            [wself addClickConfirmLog:configModel];
+            [self addClickConfirmLog:configModel alertView:alertView];
+        };
+    }
+    if (configModel.chooseAgencyList.count > 0) {
+        NSInteger selectCount = 0;
+        for (FHFillFormAgencyListItemModel *item in configModel.chooseAgencyList) {
+            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
+                continue;
+            }
+            if (item.checked) {
+                selectCount += 1;
+            }
+        }
+        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
+        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
+            
+            [alert endEditing:YES];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"choose_agency_list"] = [alert selectAgencyList] ? : configModel.chooseAgencyList;
+            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+            [delegateTable addObject:alert];
+            info[@"delegate"] = delegateTable;
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+            NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
+            [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
         };
     }
     alertView.phoneNum = phoneNum;
@@ -161,7 +209,9 @@ extern NSString *const kFHToastCountKey;
     }
     NSString *houseId = customHouseId.length > 0 ? customHouseId : configModel.houseId;
     NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:configModel.houseType];
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    // add by zjing for test
+    NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             
@@ -221,6 +271,9 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_from"] = configModel.originFrom ? : @"be_null";
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     return params;
 }
 // 表单展示
@@ -236,6 +289,9 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = @"online";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     [FHUserTracker writeEvent:@"reservation_show" params:params];
 }
 
@@ -252,11 +308,14 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = configModel.position ? : @"button";
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
 
 // 表单提交
-+ (void)addClickConfirmLog:(FHHouseFillFormConfigModel *)configModel
++ (void)addClickConfirmLog:(FHHouseFillFormConfigModel *)configModel alertView:(FHDetailNoticeAlertView *)alertView
 {
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"page_type"] = configModel.pageType ? : @"be_null";
@@ -268,6 +327,20 @@ extern NSString *const kFHToastCountKey;
     params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
     params[@"log_pb"] = configModel.logPb ? : @"be_null";
     params[@"position"] = configModel.position ? : @"button";
+
+    if (configModel.itemId.length > 0) {
+        params[@"item_id"] = configModel.itemId;
+    }
+
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
+    for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
+        if (item.agencyId.length > 0) {
+            [dict setValue:[NSNumber numberWithInt:item.checked] forKey:item.agencyId];
+        }
+    }
+    params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
+
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 
@@ -320,6 +393,7 @@ extern NSString *const kFHToastCountKey;
     _imprId = params[@"impr_id"];
     _position = params[@"position"];
     _realtorPosition = params[@"realtor_position"];
+    _itemId = params[@"item_id"];
 }
 
 - (void)setLogPbWithNSString:(NSString *)logpb

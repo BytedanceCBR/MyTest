@@ -50,10 +50,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     return self;
 }
 
-- (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone
-                  realtorRank:(NSString *)rank
-                         from:(NSString*)from
-                     position:(NSString *)position {
+// extra:realtor_position element_from item_id
+- (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank extraDic:(NSDictionary *)extra {
     
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"event_type"] = @"house_app2c_v2";
@@ -72,8 +70,10 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"realtor_id"] = contactPhone.realtorId;
     dict[@"realtor_rank"] = rank ?: @"0";
-    dict[@"realtor_position"] = position ?: @"detail_button";
     dict[@"conversation_id"] = @"be_null";
+    if (extra) {
+        [dict addEntriesFromDictionary:extra];
+    }
     
     [FHUserTracker writeEvent:@"click_im" params:dict];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
