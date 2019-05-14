@@ -1486,7 +1486,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
                                    NEIGHBORHOOD_IDS:[self drawLineNeighborIds]?:@"",
                                    HOUSE_TYPE_KEY:@(self.configModel.houseType),
-                                   @"filter":self.filterConditionParams?:@"",
+                                   @"filter":self.lastBubble.query?:@"",
                                    @"title":[NSString stringWithFormat:@"共找到%d套房源",self->onSaleHouseCount],
                                    TRACER_KEY:logParam
                                    };

@@ -48,6 +48,7 @@
 @property(nonatomic , assign) CGPoint panStartLocation;
 @property(nonatomic , assign) CGFloat panStartDockLocation;
 @property(nonatomic , strong) NSMutableDictionary *houseLogs;
+@property(nonatomic , strong) NSString *condition;
 
 //for rent house list
 
@@ -347,6 +348,7 @@
     if (condition) {
         [self.currentBubble overwriteFliter:condition];
     }
+    self.condition = condition;
 }
 
 -(void)reloadingHouseData:(NSString *)condition
@@ -354,6 +356,7 @@
     if (condition) {
         [self.currentBubble overwriteFliter:condition];
     }
+    self.condition = condition;
     
     CGPoint offset = CGPointMake(0, -(self.listController.view.bottom - self.listController.view.superview.height));
     [self.listController showLoadingAlert:nil offset:offset];
@@ -455,7 +458,7 @@
                 //没有数据 提示数据走丢了
                 NSString *tip = nil;
                 BOOL showRetry = YES;
-                if ([wself.configModel.conditionQuery containsString:@"&"]) {
+                if ([wself.condition containsString:@"&"]) {
                     tip = @"暂无搜索结果";
                     showRetry = NO;
                 }else{
@@ -577,7 +580,7 @@
                 //没有数据 提示数据走丢了
                 NSString *tip = nil;
                 BOOL showRetry = YES;
-                if ([wself.configModel.conditionQuery containsString:@"&"]) {
+                if ([wself.condition containsString:@"&"]) {
                     tip = @"暂无搜索结果";
                     showRetry = NO;
                 }else{
