@@ -12,19 +12,24 @@
 #import "FHMapSearchShowMode.h"
 #import "FHConditionPanelNodeSelection.h"
 #import "FHConditionFilterViewModel.h"
+#import "FHMapSearchBottomBar.h"
+#import "FHMapSearchWayChooseView.h"
 
 @class FHMapSearchViewController;
 //@protocol HouseFilterViewModelDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
-
-@interface FHMapSearchViewModel : NSObject <MAMapViewDelegate, FHConditionFilterViewModelDelegate>
+@class FHMapDrawMaskView;
+@interface FHMapSearchViewModel : NSObject <MAMapViewDelegate, FHConditionFilterViewModelDelegate,FHMapSearchBottomBarDelegate>
 
 @property(nonatomic , weak) FHMapSearchViewController *viewController;
 @property(nonatomic , strong) MAMapView *mapView;
 @property(nonatomic , strong) FHMapSearchTipView *tipView;
 @property(nonatomic , copy , readonly) NSString *navTitle;
 @property(nonatomic , assign) FHMapSearchShowMode showMode;
+@property(nonatomic , strong) FHMapSearchBottomBar *bottomBar;
+@property(nonatomic , strong) FHMapSearchWayChooseView *chooseView;
+@property(nonatomic , strong) FHMapDrawMaskView *drawMaskView;
 @property(nonatomic , copy)  NSString *filterConditionParams;
 @property(nonatomic , copy) void (^resetConditionBlock)(NSDictionary *condition);
 @property(nonatomic , copy) NSString *_Nullable (^conditionNoneFilterBlock)(NSDictionary *params);//获取非过滤器显示的过滤条件

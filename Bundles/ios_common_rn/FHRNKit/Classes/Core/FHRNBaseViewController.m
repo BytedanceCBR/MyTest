@@ -30,6 +30,7 @@
 #import <HMDTTMonitor.h>
 #import <TTReachability.h>
 #import <FHEnvContext.h>
+#import <TTCommonBridgeManager.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -82,7 +83,6 @@
     
     [rnKitParams setValue:_bundleNameStr forKey:TTRNKitBundleName];
     
-    [rnKitParams setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"bundle_cache_key"];
     
     NSDictionary *rnAinimateParams = @{TTRNKitLoadingViewClass : @"loading",
                                        TTRNKitLoadingViewSize : [NSValue valueWithCGSize:CGSizeMake(100, 100)]
@@ -177,8 +177,13 @@
 {
     if (!_isDebug) {
         // Do any additional setup after loading the view.
-        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
+        if (self.hash) {
+            NSString *hashString = [NSString stringWithFormat:@"&bundle_cache_key=%ld",self.hash];
+            _shemeUrlStr = [_shemeUrlStr stringByAppendingString:hashString];
+        }
         
+        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
+   
         self.ttRNKit.delegate = self;
         [self.ttRNKit handleUrl:url];
     }else
@@ -282,8 +287,6 @@
     if (_viewWrapper) {
         [self addViewWrapper:_viewWrapper];
     }
-    
-    [self sendEventName:@"host_resume" andParams:[self getHashDict]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -301,6 +304,7 @@
 {
     if (((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine) {
         TTRNBridgeEngine *bridgeEngine = ((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine;
+        
         if (![bridgeEngine.events containsObject:stringName]) {
             if (stringName) {
                 [bridgeEngine.events addObject:stringName];
@@ -317,11 +321,16 @@
     [[FHRNHelper sharedInstance] removeCountChannel:_channelStr];
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
+        
+        TTCommonBridgeInfo *commonBrideInfo = (TTCommonBridgeInfo *)self.ttRNKit.bridgeInfos[_channelStr];
+        [commonBrideInfo.bridge invalidate];
+        self.ttRNKit.bridgeInfos = nil;
+        
+//        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
             ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
             [self.ttRNKit clearRNResourceForChannel:_channelStr];
             [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
-        }
+//        }
         [_container removeFromSuperview];
         self.container = nil;
         [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
@@ -354,6 +363,7 @@
             [paras setValue:[NSString stringWithFormat:@"%ld",1] forKey:@"available"];
             [self sendEventName:@"net_status" andParams:paras];
         }
+        [self sendEventName:@"host_resume" andParams:[self getHashDict]];
     }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{

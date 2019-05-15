@@ -18,6 +18,9 @@ extern NSString const * EXCLUDE_ID_KEY ;
 extern NSString const * NEIGHBORHOOD_ID_KEY;
 extern NSString const *HOUSE_TYPE_KEY ;
 extern NSString const *SUGGESTION_PARAMS_KEY;
+extern NSString const *CHANNEL_ID ;
+extern NSString const *CHANNEL_ID_CIRCEL_SEARCH ;
+
 
 @interface FHHouseSearcher : NSObject
 
@@ -35,9 +38,14 @@ extern NSString const *SUGGESTION_PARAMS_KEY;
 
 /**
  * 地图找房 api
- 
+ * target_type: 指定返回的数据类型 画圈找房等场景需要
+ *      district 区域
+        area 商圈
+        neighborhood 小区
+        line 地铁线
+        station 地铁站
  */
-+(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback;
++(TTHttpTask *_Nullable)mapSearch:(FHMapSearchType)houseType searchId:(NSString *_Nullable)searchId query:(NSString *_Nullable)query maxLocation:(CLLocationCoordinate2D)maxLocation minLocation:(CLLocationCoordinate2D)minLocation resizeLevel:(CGFloat)reizeLevel targetType:(NSString *_Nullable)targetType  suggestionParams:(NSString *_Nullable)suggestionParams callback:(void(^_Nullable)(NSError *_Nullable error , FHMapSearchDataModel *_Nullable model))callback;
 
 @end
 

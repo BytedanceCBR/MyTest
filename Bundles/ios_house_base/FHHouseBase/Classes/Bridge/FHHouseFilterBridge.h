@@ -24,10 +24,10 @@
                     showSort:(BOOL)showSort
           safeBottomPandding:(CGFloat)safeBottomPandding;
 
--(id)filterViewModelWithType:(FHHouseType)houseType
-            showAllCondition:(BOOL)showAllCondition
-                    showSort:(BOOL)showSort
-          safeBottomPandding:(CGFloat)safeBottomPandding;
+//-(id)filterViewModelWithType:(FHHouseType)houseType
+//            showAllCondition:(BOOL)showAllCondition
+//                    showSort:(BOOL)showSort
+//          safeBottomPandding:(CGFloat)safeBottomPandding;
 
 // 交易历史过滤器
 -(id)filterSaleHistoryViewModelWithType:(FHHouseType)houseType;

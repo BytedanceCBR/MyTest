@@ -199,20 +199,52 @@
     }
 }
 
-- (void)createRCTRootViewWithModuleName:(NSString *)moduleName {
-    RCTRootView *rnView = [[RCTRootView alloc] initWithBridge:[self.manager rctBridgeForChannel:self.channel]
-                                                   moduleName:moduleName
-                                            initialProperties:_urlParams];
-    _rnView = rnView;
-    NSString *hex = _urlParams[@"placeholderColor"];
-    if (hex) {
-        _rnView.backgroundColor = [self.class colorWithHexString:hex];
+ - (NSString *)getGeckoKey
+{
+    if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"]) {
+        return @"adc27f2b35fb3337a4cb1ea86d05db7a";
+    }else
+    {
+        return @"7838c7618ea608a0f8ad6b04255b97b9";
     }
-    _rnView.translatesAutoresizingMaskIntoConstraints = NO;
+}
+
+- (void)createRCTRootViewWithModuleName:(NSString *)moduleName {
+    NSMutableDictionary *urlsPrams = [NSMutableDictionary dictionaryWithDictionary:_urlParams];
+    [urlsPrams setValue:[self getGeckoKey] forKey:@"gecko_key"];
+    NSString *geckoBundlePath = geckoBundlePathForGeckoParams(urlsPrams, _channel);
+    geckoBundlePath = [geckoBundlePath stringByAppendingString:[NSString stringWithFormat:@"/%@",_urlParams[@"bundle_name"]]];
+ 
+    NSURL *urlJSBundle1 = [NSURL URLWithString:geckoBundlePath];
+    
+    TTRNKitBridgeModule *bridgeModule = [[TTRNKitBridgeModule alloc] initWithBundleUrl:urlJSBundle1];
+    [self.manager registerObserver:bridgeModule];
+    RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:bridgeModule launchOptions:nil];
+    RCTRootView *rnView = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:_urlParams];
+    rnView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.rnView = rnView;
     [self addSubview:self.rnView];
     [self addConstraintsToView:self.rnView];
-    [self sendSubviewToBack:self.rnView];
-    [self renderJsBundleSucceed];
+//    TTRNKitBridgeModule *bridgeModule = [[TTRNKitBridgeModule alloc] initWithBundleUrl:urlJSBundle1];
+//    RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:bridgeModule launchOptions:nil];
+//
+//
+//    RCTRootView *rnView = [[RCTRootView alloc] initWithBridge:bridge
+//                                                   moduleName:moduleName
+//                                            initialProperties:_urlParams];
+////    RCTRootView *rnView = [[RCTRootView alloc] initWithBridge:[self.manager rctBridgeForChannel:self.channel]
+////                                                   moduleName:moduleName
+////                                            initialProperties:_urlParams];
+//    _rnView = rnView;
+//    NSString *hex = _urlParams[@"placeholderColor"];
+//    if (hex) {
+//        _rnView.backgroundColor = [self.class colorWithHexString:hex];
+//    }
+//    _rnView.translatesAutoresizingMaskIntoConstraints = NO;
+//    [self addSubview:self.rnView];
+//    [self addConstraintsToView:self.rnView];
+//    [self sendSubviewToBack:self.rnView];
+//    [self renderJsBundleSucceed];
 }
 
 - (void)renderJsBundleSucceed {
