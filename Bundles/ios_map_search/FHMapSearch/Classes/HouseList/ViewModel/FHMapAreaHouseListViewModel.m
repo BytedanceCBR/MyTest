@@ -119,9 +119,9 @@
     }
     FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
     if (cellModel) {
-        NSString *origin_from = self.listController.tracerDict[@"origin_from"];
-        NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
-        NSString *page_type = self.listController.tracerDict[@"category_name"];
+//        NSString *origin_from = self.listController.tracerDict[@"origin_from"];
+//        NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
+//        NSString *page_type = self.listController.tracerDict[@"category_name"];
         NSString *urlStr = NULL;
         if (self.houseType == FHHouseTypeSecondHandHouse) {
             // 二手房
@@ -141,11 +141,11 @@
         if (urlStr.length > 0) {
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             traceParam[@"card_type"] = @"left_pic";
-            traceParam[@"enter_from"] = page_type ? : @"be_null";
-            traceParam[@"element_from"] = @"be_null";
+            traceParam[@"enter_from"] = self.listController.tracerModel.categoryName ? : UT_BE_NULL;
+            traceParam[@"element_from"] = self.listController.tracerModel.elementFrom?:UT_BE_NULL;
             traceParam[@"log_pb"] = [cellModel logPb];
-            traceParam[@"origin_from"] = origin_from ? : @"be_null";
-            traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
+            traceParam[@"origin_from"] = self.listController.tracerModel.elementFrom ? : UT_BE_NULL;
+            traceParam[@"origin_search_id"] = self.listController.tracerModel.originSearchId ? : UT_BE_NULL;
             traceParam[@"search_id"] = self.searchId;
             traceParam[@"rank"] = @(indexPath.row);
             
