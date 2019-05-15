@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "NewsBaseDelegate.h"
 
+extern const char * build_rev();
+
 @interface AppDelegate : NewsBaseDelegate
 
 @end

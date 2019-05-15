@@ -1,0 +1,10 @@
+Example/Pods
+Example/Podfile.lock
+Example/TTVPlayer.xcodeproj/project.xcworkspace/xcuserdata
+Example/TTVPlayer.xcodeproj/xcuserdata
+Example/TTVPlayer.xcworkspace/xcuserdata
+.DS_Store
+Example/TTVPlayer.xcworkspace
+Example/Podfile.lock
+TTVPlayer/Classes/doc/
+

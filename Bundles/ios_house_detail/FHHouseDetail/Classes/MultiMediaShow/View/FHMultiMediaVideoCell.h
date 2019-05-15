@@ -11,9 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMultiMediaVideoCell : FHMultiMediaBaseCell
 
-- (void)play;
-
-- (void)pause;
+@property(nonatomic, strong) UIView *playerView;
 
 @end
 

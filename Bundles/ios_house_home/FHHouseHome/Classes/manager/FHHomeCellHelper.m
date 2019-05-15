@@ -26,7 +26,7 @@
 #import <TTArticleCategoryManager.h>
 #import <UIFont+House.h>
 #import "FHHomeScrollBannerCell.h"
-
+#import <FHHouseList/FHCommuteManager.h>
 
 #define kFHHomeIconRowCount 4 //每行icon个数
 
@@ -73,6 +73,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeScrollBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeScrollBannerCell class])];
     
     [tableView registerClass:[FHHomeCityTrendCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeCityTrendCell class])];
+    
+    [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate
@@ -142,7 +144,9 @@ static NSMutableArray  * _Nullable identifierArr;
         [tableView reloadData];
     }
     
-    if ([FHHomeConfigManager sharedInstance].currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+
+    if (currentDataModel && dataModel.currentCityId && ![self.traceShowCache.allKeys containsObject:dataModel.currentCityId] && ![FHHomeCellHelper sharedInstance].isFirstLanuch) {
         [FHHomeCellHelper sendCellShowTrace];
         [self.traceShowCache setValue:@"1" forKey:dataModel.currentCityId];
     }
@@ -150,9 +154,9 @@ static NSMutableArray  * _Nullable identifierArr;
 
 + (void)sendCellShowTrace
 {
-    
-    FHConfigDataOpData2Model *modelOpdata2 = [FHHomeConfigManager sharedInstance].currentDataModel.opData2;
-    FHConfigDataCityStatsModel *cityStatsModel = [FHHomeConfigManager sharedInstance].currentDataModel.cityStats;
+    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataOpData2Model *modelOpdata2 = currentDataModel.opData2;
+    FHConfigDataCityStatsModel *cityStatsModel = currentDataModel.cityStats;
     
     if (modelOpdata2.items > 0)
     {
@@ -401,8 +405,10 @@ static NSMutableArray  * _Nullable identifierArr;
                     [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
                     [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-                }else
-                {
+                }else if ([itemModel.openUrl containsString:@"://commute_list"]){
+                    //通勤找房
+                    [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
+                }else{
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
                 }
             }
@@ -414,8 +420,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     [cellEntrance setNeedsLayout];
-    [cellEntrance layoutIfNeeded];
-    
+//    [cellEntrance layoutIfNeeded];
+
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
@@ -584,8 +590,8 @@ static NSMutableArray  * _Nullable identifierArr;
     //    }];
     
     [cellBanner setNeedsLayout];
-    [cellBanner layoutIfNeeded];
-    
+//    [cellBanner layoutIfNeeded];
+
 }
 
 // 首页轮播banner

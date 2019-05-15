@@ -28,6 +28,7 @@
 @property (nonatomic, assign) NSInteger followStatus;
 @property (nonatomic, copy) NSString *customHouseId; //
 @property (nonatomic, copy) NSString *fromStr; //
+@property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @end
 
@@ -37,6 +38,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         
+        _paramObj = paramObj;
         self.houseType = FHHouseTypeNewHouse;
         if (paramObj.allParams[@"house_type"]) {
             self.houseType = [paramObj.allParams[@"house_type"] integerValue];
@@ -99,6 +101,11 @@
             NSDictionary *logPbDict = allInfo[@"log_pb"];
             self.searchId = logPbDict[@"search_id"];
             self.imprId = logPbDict[@"impr_id"];
+        }else if ([allInfo[@"tracer"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *tracerDict = allInfo[@"tracer"];
+            NSDictionary *logPbDict = tracerDict[@"log_pb"];
+            self.searchId = logPbDict[@"search_id"];
+            self.imprId = logPbDict[@"impr_id"];
         }
     }
     return self;
@@ -152,7 +159,10 @@
     self.contactViewModel.belongsVC = self;
     self.contactViewModel.contactPhone = self.contactPhone;
     self.contactViewModel.followStatus = self.followStatus;
-    
+    NSDictionary *allInfo = _paramObj.allParams;
+    if (allInfo[@"choose_agency_list"]) {
+        self.contactViewModel.chooseAgencyList = allInfo[@"choose_agency_list"];
+    }
     [self.navBar refreshAlpha:1];
     [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];    
 }
@@ -197,6 +207,9 @@
     if (self.contactViewModel.contactPhone) {
         info[@"contact_phone"] = self.contactViewModel.contactPhone;
     }
+    if (self.contactViewModel.chooseAgencyList) {
+        info[@"choose_agency_list"] = self.contactViewModel.chooseAgencyList;
+    }
     switch (_houseType) {
         case FHHouseTypeNewHouse:
             info[@"court_id"] = self.houseId;
@@ -214,7 +227,6 @@
             info[@"house_id"] = self.houseId;
             break;
     }
-    info[@"contact_phone"] = self.contactViewModel.contactPhone;
     info[@"page_type"] = [self pageTypeString];
     if (self.tracerDict) {
         

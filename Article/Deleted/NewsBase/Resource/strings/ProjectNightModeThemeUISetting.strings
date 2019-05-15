@@ -1,0 +1,17 @@
+
+"SSMenuItemButtonTitleNormalColor"="999999";
+"SSMenuItemButtonTitlePressColor"="1a1a1a7f";
+"SSMenuItemButtonTitleDisabledColor"="935656";
+"ExploreLeftDrawerViewAvatarBorderColor"="363636";
+"ArticleMainDrawerViewControllerAvatarViewBorderColor"="cacaca";
+"menuItemNormalBackgroundColor" = "0000007f";
+"menuItemHighlightBackgroundColor" = "464646";
+"menuItemValue1NormalBackgroundColor" = "252525";
+"menuItemValue1HighlightBackgroundColor" = "1a1a1a";
+"SSMenuItemValue1ButtonTitleHighlightColor" = "ffffff7f";
+"SSMenuItemValue1ButtonTitleDisabledcolor" = "fe3232";
+"NewsDetailViewTitleBarBottomLineColor"="2b2b2b";
+"ArticleUserIntroViewAvatarViewBorderColorName"="b1b1b1";
+"ArticleMomentCellNameLabelPressedColor"="4d5866";
+"ArticleMomentListCellNameLikeViewNameHighlightColor"="4d5866";
+"ArticleCommentListCellCommentItemLabelBgHighlightColor"="353535";

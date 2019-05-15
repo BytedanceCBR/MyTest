@@ -9,6 +9,7 @@
 #import <TTNetworkManager.h>
 #import "FHURLSettings.h"
 #import "FHMainApi.h"
+#import <FHHouseBase/FHHouseType.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 //用户评价
 + (TTHttpTask *)requestEvaluateEstimateWithParams:(NSDictionary *)params completion:(void(^_Nullable)(BOOL success, NSError *error))completion;
 //提交手机号
-+ (TTHttpTask *)requestSubmitPhoneWithParams:(NSDictionary *)params completion:(void(^_Nullable)(BOOL success, NSError *error))completion;
++ (TTHttpTask *)requestSubmitPhoneWithEstimateId:(NSString *)estimateId houseType:(FHHouseType)houseType phone:(NSString *)phone params:(NSDictionary *)postParams completion:(void (^)(BOOL, NSError * _Nonnull))completion;
 //立即评估同时获取小区详情
 + (void)requestEvaluateResultWithParams:(NSDictionary *)params neighborhoodId:(NSString *)neighborhoodId completion:(void(^_Nullable)(NSDictionary *response , NSError *error))completion;
 

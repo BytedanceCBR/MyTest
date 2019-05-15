@@ -71,8 +71,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     self.view.backgroundColor = [UIColor whiteColor];
     self.mainTableView.backgroundColor = [UIColor whiteColor];
-    
-    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
+    FHConfigDataModel *configModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!configModel) {
         self.mainTableView.hidden = YES;
         [self tt_startUpdate];
@@ -194,22 +193,17 @@ static CGFloat const kSectionHeaderHeight = 38;
             [self.emptyView showEmptyWithTip:@"网络异常，请检查网络连接" errorImage:[UIImage imageNamed:@"group-4"] showRetry:YES];
         }
     }
+    
     self.homeListViewModel.enterType = [TTCategoryStayTrackManager shareManager].enterType != nil ? [TTCategoryStayTrackManager shareManager].enterType : @"default";
     if (self.mainTableView.contentOffset.y > MAIN_SCREENH_HEIGHT) {
         [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:YES];
     }
-    //
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (!configDataModel.cityAvailability.enable.boolValue) {
-        [self.emptyView showEmptyWithTip:@"当前城市暂未开通服务，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
-    }
     
     [self scrollToTopEnable:YES];
     

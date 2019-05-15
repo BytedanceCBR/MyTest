@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'FHCHousePush_Example' do
+  pod 'FHCHousePush', :path => '../'
+
+  target 'FHCHousePush_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

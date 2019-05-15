@@ -20,9 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) NSArray <JSONModel *>*modelsArray;
 @property (nonatomic, strong) FHHomeSectionHeader *categoryView;
 @property (nonatomic, assign) BOOL showPlaceHolder;
+@property (nonatomic, assign) BOOL showNoDataErrorView;
+@property (nonatomic, assign) BOOL showRequestErrorView;
 @property (nonatomic, assign) FHHouseType currentHouseType;
 @property (nonatomic, strong) NSString * originSearchId;
 @property (nonatomic,assign) BOOL isHasFindHouseCategory;
+@property(nonatomic,copy) void (^requestErrorRetry)(void);
 
 - (NSString *)pageTypeString;
 

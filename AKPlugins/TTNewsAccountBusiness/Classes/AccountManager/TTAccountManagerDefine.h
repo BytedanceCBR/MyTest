@@ -10,7 +10,7 @@
 #define TTAccountManagerDefine_h
 
 #import <TTAccountSDK.h>
-
+#import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 
 
 /**

@@ -365,6 +365,7 @@
                            @"houseImageTag": @"house_image_tag",
                            @"floorpanList": @"floorpan_list",
                            @"houseType": @"house_type",
+                           @"houseVideo": @"house_video",
                            @"coreInfo": @"core_info",
                            @"houseImage": @"house_image",
                            };

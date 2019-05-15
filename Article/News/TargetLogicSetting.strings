@@ -8,7 +8,6 @@
 "ssFeedbackAppKey" = "f100-ios";
 "sinaAppScheme" = "sinaweibosso.com.ss.iphone.article.news://";
 "ADUmengUFPSlotID"="40729";
-
 //"qqOAuthAppID" = "1107515843";//用于腾讯QQ SSO,分享,由于目前Sever只能支持一个App ID，所以SSO功能仅用于头条普通版本
 "qqOAuthAppID" = "1107515843";
 //"qqOAuthSecret" = "bd6d20e3dfbf55d92753dffb4ad44664";//用于腾讯QQ SSO， 分享
