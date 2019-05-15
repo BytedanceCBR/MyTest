@@ -628,10 +628,6 @@
         [SSCommonLogic setEnableJSONModelMonitor:[[dSettings objectForKey:@"enable_jsonmodel_monitor"] boolValue]];
     }
     
-    if ([dSettings objectForKey:@"mytab_search_enabled"]) {
-        [SSCommonLogic setMineTabSearchEnabled:[[dSettings objectForKey:@"mytab_search_enabled"] boolValue]];
-    }
-    
     if ([dSettings valueForKey:@"monitor_white_web"]) {
         [SSCommonLogic setEnabledWhitePageMonitor:[[dSettings valueForKey:@"monitor_white_web"] boolValue]];
     }
@@ -1125,10 +1121,6 @@
         [SSCommonLogic setNewFeedImpressionEnabled:[dSettings tt_boolValueForKey:@"new_feed_impression"]];
     }
     
-    if ([dSettings objectForKey:@"tt_article_api_cdn_version"]) {
-        [SSCommonLogic setDetailCDNVersion:[dSettings tt_integerValueForKey:@"tt_article_api_cdn_version"]];
-    }
-    
     //是否使用严格的详情页类型区分
     if ([dSettings objectForKey:@"strict_detail_judgement"]) {
         [SSCommonLogic setStrictDetailJudgementEnabled:[dSettings tt_boolValueForKey:@"strict_detail_judgement"]];
@@ -1168,15 +1160,7 @@
     if ([dSettings valueForKey:@"user_verify_info_conf"]) {
         [SSCommonLogic setUserVerifyConfigs:[dSettings tt_dictionaryValueForKey:@"user_verify_info_conf"]];
     }
-    
-    //微头条tab列表更新tips展示类型
-    if ([dSettings objectForKey:@"toutiaoquan_tab_tips"]) {
-        NSNumber * type = [dSettings objectForKey:@"toutiaoquan_tab_tips"];
-        if ([type isKindOfClass:[NSNumber class]]) {
-            [SSCommonLogic setWeitoutiaoTabListUpdateTipType:type.unsignedIntegerValue];
-        }
-    }
-    
+
     if ([dSettings objectForKey:@"ugc_user_medal"]) {
         [WDCommonLogic setUGCMedalsWithDictionay:[dSettings tt_dictionaryValueForKey:@"ugc_user_medal"]];
     }
@@ -1521,10 +1505,6 @@
     }
     
     [TTBubbleViewManager shareManager];
-    if ([dSettings objectForKey:@"tab_show_tips"]) {
-        NSDictionary *dict = [dSettings dictionaryValueForKey:@"tab_show_tips" defalutValue:nil];
-        [[TTBubbleViewManager shareManager] saveShowTips:dict];
-    }
     // 视频详情页播放上一个UI样式开关
     if ([dSettings objectForKey:@"tt_video_detail_playlast_showtext"]) {
         [SSCommonLogic setVideoDetailPlayLastShowText:[dSettings tt_boolValueForKey:@"tt_video_detail_playlast_showtext"]];
@@ -1793,11 +1773,6 @@
     
     if ([dSettings objectForKey:@"tt_share_with_pgcname_enable"]) {
         [SSCommonLogic setArticleShareWithPGCName:[dSettings tt_boolValueForKey:@"tt_share_with_pgcname_enable"]];
-    }
-    
-    //article title logo
-    if ([dSettings objectForKey:@"tt_enable_detail_title_logo"]) {
-        [SSCommonLogic setArticleTitleLogoEnbale:[dSettings tt_boolValueForKey:@"tt_enable_detail_title_logo"]];
     }
     
     //mine tab auth entry

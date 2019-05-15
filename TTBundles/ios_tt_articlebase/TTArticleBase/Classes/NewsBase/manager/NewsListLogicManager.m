@@ -424,15 +424,7 @@ static NewsListLogicManager * shareManager;
 {
     if ([categoryID isEqualToString:kTTWeitoutiaoCategoryID] && listLocation == ExploreOrderedDataListLocationWeitoutiao) {
         //微头条频道更新tip展示类型单独控制
-        NSUInteger type = [SSCommonLogic WeitoutiaoTabListUpdateTipType];
-        switch (type) {
-            case 1:
-                return TTExploreMixedListUpdateTipTypeTabbarRedPoint;
-            case 2:
-                return TTExploreMixedListUpdateTipTypeBlueBar;
-            default:
-                return TTExploreMixedListUpdateTipTypeNone;
-        }
+        return TTExploreMixedListUpdateTipTypeNone;
     }
     
     if ([categoryID isEqualToString:kTTFollowCategoryID]) {

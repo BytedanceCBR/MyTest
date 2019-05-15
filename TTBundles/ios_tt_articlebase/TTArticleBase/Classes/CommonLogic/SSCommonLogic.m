@@ -1337,22 +1337,6 @@ NSString * const SSCommonLogicSettingSearchTransitionEnabel = @"SSCommonLogicSet
 
 @end
 
-@implementation SSCommonLogic (MineTabSearch)
-
-NSString * const SSCommonLogicMineTabSearchKey = @"SSCommonLogicMineTabSearchKey";
-+ (BOOL)mineTabSearchEnabled {
-    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicMineTabSearchKey];
-    return enabled;
-}
-
-+ (void)setMineTabSearchEnabled:(BOOL)mineTabSearchEnabled {
-    [[NSUserDefaults standardUserDefaults] setBool:mineTabSearchEnabled forKey:SSCommonLogicMineTabSearchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-@end
-
-
 @implementation SSCommonLogic (WKWebViewSwitch)
 
 // 5.4中 控制是否使用WKWebview
@@ -3177,20 +3161,6 @@ NSString * const SSCommonLogicSettingNetworkDebugKey = @"debug_disable_network";
 
 @end
 
-@implementation SSCommonLogic (CDN)
-
-+ (NSUInteger)detailCDNVersion {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:@"tt_article_api_cdn_version"];
-}
-
-+ (void)setDetailCDNVersion:(NSUInteger)version {
-    [[NSUserDefaults standardUserDefaults] setInteger:version forKey:@"tt_article_api_cdn_version"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-@end
-
-
 @implementation SSCommonLogic (NewFeedImpression)
 static NSString *const kSSCommonLogicNewFeedImpressionEnabledKey =
 @"kSSCommonLogicNewFeedImpressionEnabledKey";
@@ -3433,29 +3403,6 @@ static NSString * const kSSCommonLogicUserVerifyConfigKey = @"kSSCommonLogicUser
     return nil;
 }
 @end
-
-static NSString * const kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey = @"kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey";
-@implementation SSCommonLogic (WeitoutiaoTabListUpdateTipType)
-
-+ (void)setWeitoutiaoTabListUpdateTipType:(NSUInteger)type {
-    // 0：不作更新提醒；1：tab bar上出红点；2：列表顶部出蓝条
-    if (type > 2) {
-        type = 0;
-    }
-    [[NSUserDefaults standardUserDefaults] setInteger:type forKey:kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSUInteger)WeitoutiaoTabListUpdateTipType {
-    NSUInteger type = [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey];
-    if (type > 2) {
-        type = 2;
-    }
-    return type;
-}
-
-@end
-
 
 static NSString *const kSSCommonLogicCollectDiskSpaceEnableKey = @"kSSCommonLogicCollectDiskSpaceEnableKey";
 
@@ -4342,35 +4289,6 @@ static BOOL _transitonAnimationEnable = NO;
     });
     return _transitonAnimationEnable;
 }
-@end
-
-@implementation SSCommonLogic (IMServer)
-
-+ (void)setIMServerEnabled:(BOOL)enable {
-    /*
-     if (enable && [SSCommonLogic isIMServerEnable] != enable) {
-     [[TTIMManager sharedManager] accountDidChanged];
-     [[TTIMSDKService sharedInstance] queryCenterMsgList];
-     }
-     [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"im_server_enabled"];
-     [[NSUserDefaults standardUserDefaults] synchronize];
-     [[TTPLManager sharedManager] refreshUnreadNumber];
-     [[TTSettingMineTabManager sharedInstance_tt] refreshPrivateLetterEntry:enable];
-     */
-    
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"im_server_enabled"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-//    [[TTPLManager sharedManager] resetIMServerEnabled:enable];
-}
-
-+ (BOOL)isIMServerEnable {
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"im_server_enabled"]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:@"im_server_enabled"];
-    }
-    return NO;
-}
-
 @end
 
 static NSString *const KSSCommonLogicImageTransitionAnimationEnableKey = @"KSSCommonLogicImageTransitionAnimationEnableKey";
@@ -5748,19 +5666,6 @@ static NSString * const kSSCommonLogicArticleShareWithPGCNameEnableKey = @"kSSCo
 
 @end
 
-static NSString *const kTTCommonLoigcArticleTitleLogoSettingsKey = @"tt_enable_detail_title_logo";
-@implementation SSCommonLogic (ArticleTitleLogoSettings)
-+ (void)setArticleTitleLogoEnbale:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kTTCommonLoigcArticleTitleLogoSettingsKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)articleTitleLogoEnable
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kTTCommonLoigcArticleTitleLogoSettingsKey];
-}
-@end
 
 static NSString *const kTTSearchCancelClickActionChange = @"tt_search_cancel_click_action_change_enable";
 @implementation SSCommonLogic (SearchCancelClickActionChange)

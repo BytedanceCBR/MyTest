@@ -19,8 +19,6 @@
 
 extern NSString *TTLaunchTimerTaskLaunchTimeIntervalKey;
 
-static NSString *const TTBubbleViewManagerShowTipsKey = @"TTBubbleViewManagerShowTipsKey";
-
 static NSString *const TTBubbleViewGeneralTypeStreamTipKey = @"tab_stream";
 static NSString *const TTBubbleViewGeneralTypeVideoTipKey = @"tab_video";
 static NSString *const TTBubbleViewGeneralTypePublisherTipKey = @"tab_publisher";
@@ -55,7 +53,7 @@ static NSString *const TTBubbleViewGeneralTypeHuoShanKey = @"tab_huoshan";
 - (instancetype)init{
     self = [super init];
     if (self) {
-        _showTipsDict = [[NSUserDefaults standardUserDefaults] objectForKey:TTBubbleViewManagerShowTipsKey];
+        _showTipsDict = @{};
         _isValid = NO;
 
         BOOL tipHasShow = [_showTipsDict tt_boolValueForKey:@"tip_has_show"];
@@ -147,21 +145,6 @@ static NSString *const TTBubbleViewGeneralTypeHuoShanKey = @"tab_huoshan";
     return @"unknown";
 }
 
-- (void)saveShowTips:(NSDictionary *)dict
-{
-    if (dict && [dict count] > 0) {
-        NSDictionary *lastDict = [[NSUserDefaults standardUserDefaults] objectForKey:TTBubbleViewManagerShowTipsKey];
-        if ([dict objectForKey:@"content_id"]) {
-            NSInteger lastContentID = [lastDict tt_integerValueForKey:@"content_id"];
-            NSInteger currentContentID = [dict tt_integerValueForKey:@"content_id"];
-            if (lastContentID == 0 || currentContentID > lastContentID) {
-                [[NSUserDefaults standardUserDefaults] setValue:dict forKey:TTBubbleViewManagerShowTipsKey];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-        }
-    }
-}
-
 - (void)sendTrackForTipsShow
 {
     wrapperTrackEventWithCustomKeys(@"navbar", [NSString stringWithFormat:@"%@_show_notice",self.trackLabelForTipType], nil, nil, self.extraDic);
@@ -231,15 +214,15 @@ static NSString *const TTBubbleViewGeneralTypeHuoShanKey = @"tab_huoshan";
         [mutDict setValue:@(YES) forKey:@"tip_has_show"];
         _showTipsDict = [mutDict copy];
         
-        NSDictionary *lastDict = [[NSUserDefaults standardUserDefaults] objectForKey:TTBubbleViewManagerShowTipsKey];
-        if ([mutDict objectForKey:@"content_id"]) {
-            NSInteger lastContentID = [lastDict tt_integerValueForKey:@"content_id"];
-            NSInteger currentContentID = [mutDict tt_integerValueForKey:@"content_id"];
-            if (currentContentID == lastContentID) {//确保只修改当前id的dict
-                [[NSUserDefaults standardUserDefaults] setValue:[mutDict copy] forKey:TTBubbleViewManagerShowTipsKey];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-        }
+//        NSDictionary *lastDict = [[NSUserDefaults standardUserDefaults] objectForKey:TTBubbleViewManagerShowTipsKey];
+//        if ([mutDict objectForKey:@"content_id"]) {
+//            NSInteger lastContentID = [lastDict tt_integerValueForKey:@"content_id"];
+//            NSInteger currentContentID = [mutDict tt_integerValueForKey:@"content_id"];
+//            if (currentContentID == lastContentID) {//确保只修改当前id的dict
+//                [[NSUserDefaults standardUserDefaults] setValue:[mutDict copy] forKey:TTBubbleViewManagerShowTipsKey];
+//                [[NSUserDefaults standardUserDefaults] synchronize];
+//            }
+//        }
         _isValid = NO;
     }
 }

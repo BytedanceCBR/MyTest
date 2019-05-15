@@ -285,12 +285,6 @@ typedef NS_ENUM(NSInteger, SSCommentRedirectReportType)  {
 
 @end
 
-@interface SSCommonLogic (CDN)
-
-+ (NSUInteger)detailCDNVersion;
-+ (void)setDetailCDNVersion:(NSUInteger)version;
-
-@end
 @interface SSCommonLogic (RefreshButtonSettingEnabled)
 
 + (BOOL)refreshButtonSettingEnabled;
@@ -342,14 +336,6 @@ typedef NS_ENUM(NSInteger, SSCommentRedirectReportType)  {
 
 + (BOOL)searchInitialPageWapEnabled;
 + (void)enableSearchInitialPageWap:(BOOL)enable;
-
-@end
-
-@interface SSCommonLogic (MineTabSearch)
-
-// 我的Tab搜索按钮
-+ (BOOL)mineTabSearchEnabled;
-+ (void)setMineTabSearchEnabled:(BOOL)mineTabSearchEnabled;
 
 @end
 
@@ -825,13 +811,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (NSArray<NSString *> *)userVerifyFeedShowArray;
 @end
 
-@interface SSCommonLogic (WeitoutiaoTabListUpdateTipType)
-
-+ (void)setWeitoutiaoTabListUpdateTipType:(NSUInteger)type;
-+ (NSUInteger)WeitoutiaoTabListUpdateTipType;
-
-@end
-
 // 是否收集用户手机空间和相册图片数目，为时光相册收集数据
 @interface SSCommonLogic (CollectDiskSpace)
 + (void)setCollectDiskSpaceEnable:(BOOL)enable;
@@ -1090,13 +1069,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @interface SSCommonLogic (TransitonAnimationEnable)
 + (void)setTransitionAnimationEnable:(BOOL)enable;
 + (BOOL)transitionAnimationEnable;
-@end
-
-@interface SSCommonLogic (IMServer)
-
-+ (void)setIMServerEnabled:(BOOL)enable;
-+ (BOOL)isIMServerEnable;
-
 @end
 
 @interface SSCommonLogic (ImageTransitionAnimationControl)
