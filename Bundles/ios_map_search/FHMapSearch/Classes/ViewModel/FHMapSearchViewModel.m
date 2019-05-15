@@ -1733,8 +1733,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     NetworkStatus status = [reachability currentReachabilityStatus];
     if (status != NotReachable) {
         //有网络了，重新请求
-        [self requestHouses:YES showTip:YES];
-        
+        if (self.lastShowMode != FHMapSearchShowModeDrawLine && self.lastShowMode != FHMapSearchShowModeSubway  ) {
+            [self requestHouses:YES showTip:YES];
+        }        
         [self.houseListViewController.viewModel reloadingHouseData:nil];
     }
 }
