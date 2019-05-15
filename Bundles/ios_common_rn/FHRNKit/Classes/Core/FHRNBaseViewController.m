@@ -82,6 +82,8 @@
     
     [rnKitParams setValue:_bundleNameStr forKey:TTRNKitBundleName];
     
+    [rnKitParams setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"bundle_cache_key"];
+    
     NSDictionary *rnAinimateParams = @{TTRNKitLoadingViewClass : @"loading",
                                        TTRNKitLoadingViewSize : [NSValue valueWithCGSize:CGSizeMake(100, 100)]
                                        };
@@ -148,8 +150,11 @@
     {
         netStatusV = 0;
     }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"hashcode"];
+    [params setValue:[NSString stringWithFormat:@"%ld",netStatusV] forKey:@"available"];
     
-    [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",netStatusV]}];
+    [self sendEventName:@"net_status" andParams:params];
 }
 
 - (void)processParams:(NSDictionary *)params
@@ -186,9 +191,16 @@
 - (void)updateLoadFinish
 {
     if (!_canPreLoad && !self.isLoadFinish) {
-        [self sendEventName:@"host_resume" andParams:nil];
+        [self sendEventName:@"host_resume" andParams:[self getHashDict]];
     }
     self.isLoadFinish = YES;
+}
+
+- (NSMutableDictionary *)getHashDict
+{
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"hashcode"];
+    return params;
 }
 
 - (void)setupUI
@@ -238,7 +250,6 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    
     [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
 }
 
@@ -272,13 +283,13 @@
         [self addViewWrapper:_viewWrapper];
     }
     
-    [self sendEventName:@"host_resume" andParams:nil];
+    [self sendEventName:@"host_resume" andParams:[self getHashDict]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self sendEventName:@"host_pause" andParams:nil];
+    [self sendEventName:@"host_pause" andParams:[self getHashDict]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -334,10 +345,14 @@
     }else
     {
         if (![FHEnvContext isNetworkConnected]) {
-            [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",0]}];
+            NSMutableDictionary *paras = [self getHashDict];
+            [paras setValue:[NSString stringWithFormat:@"%ld",0] forKey:@"available"];
+            [self sendEventName:@"net_status" andParams:paras];
         }else
         {
-            [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",1]}];
+            NSMutableDictionary *paras = [self getHashDict];
+            [paras setValue:[NSString stringWithFormat:@"%ld",1] forKey:@"available"];
+            [self sendEventName:@"net_status" andParams:paras];
         }
     }
 }
@@ -349,7 +364,7 @@
             [self destroyRNView];
         }else
         {
-            [self sendEventName:@"host_destroy" andParams:nil];
+            [self sendEventName:@"host_destroy" andParams:[self getHashDict]];
         }
     }
 }
@@ -373,11 +388,11 @@
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
-    [self sendEventName:@"host_pause" andParams:nil];
+    [self sendEventName:@"host_pause" andParams:[self getHashDict]];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
-    [self sendEventName:@"host_resume" andParams:nil];
+    [self sendEventName:@"host_resume" andParams:[self getHashDict]];
 }
 
 #pragma mark
@@ -444,7 +459,8 @@
     NSMutableDictionary *initParams = [NSMutableDictionary dictionaryWithDictionary:_paramCurrentObj.allParams];
     initParams[RNModuleName] = moduleName ?: _moduleNameStr;
     [initParams setValue:self forKey:@"sourcevc"];
-    
+    [initParams setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"bundle_cache_key"];
+
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
     _viewWrapper = wrapper;
