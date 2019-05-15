@@ -118,6 +118,11 @@
     
 }
 
+-(FHMapSearchShowMode)enterShowMode
+{
+    return self.currentBubble.lastShowMode;
+}
+
 -(void)updateWithHouseData:(FHSearchHouseDataModel *_Nullable)data neighbor:(FHMapSearchDataListModel *)neighbor bubble:(FHMapSearchBubbleModel *)bubble
 {
     if (self.requestTask.state == TTHttpTaskStateRunning) {
@@ -157,7 +162,7 @@
 {
     if (self.listController.showNeighborhoodDetailBlock) {
 //        [self addShowNeighborDetailLog:self.neighbor];
-        self.listController.showNeighborhoodDetailBlock(self.neighbor);
+        self.listController.showNeighborhoodDetailBlock(self.neighbor,self.currentBubble);
     }
 }
 
@@ -227,12 +232,12 @@
     if([model isKindOfClass:[FHHouseRentDataItemsModel class]]){
         FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
         if (self.listController.showRentHouseDetailBlock) {
-            self.listController.showRentHouseDetailBlock(rentModel, indexPath.row);
+            self.listController.showRentHouseDetailBlock(rentModel, indexPath.row,self.currentBubble);
         }
     }else if([model isKindOfClass:[FHSearchHouseDataItemsModel class]]){
         FHSearchHouseDataItemsModel *houseModel = (FHSearchHouseDataItemsModel *)model;
         if (self.listController.showHouseDetailBlock) {
-            self.listController.showHouseDetailBlock(model,indexPath.row);
+            self.listController.showHouseDetailBlock(model,indexPath.row,self.currentBubble);
         }
     }
 }
@@ -250,13 +255,13 @@
     self.dismissing = YES;
     self.tableView.scrollEnabled = false;
     if (self.listController.willSwipeDownDismiss) {
-        self.listController.willSwipeDownDismiss(duration);
+        self.listController.willSwipeDownDismiss(duration,self.currentBubble);
     }
     [UIView animateWithDuration:duration animations:^{
         self.listController.view.top = self.listController.parentViewController.view.height;
     } completion:^(BOOL finished) {
         if (self.listController.didSwipeDownDismiss) {
-            self.listController.didSwipeDownDismiss();
+            self.listController.didSwipeDownDismiss(self.currentBubble);
         }
         self.tableView.scrollEnabled = true;
         self.dismissing = NO;
@@ -342,6 +347,7 @@
     if (condition) {
         [self.currentBubble overwriteFliter:condition];
     }
+    self.condition = condition;
 }
 
 -(void)reloadingHouseData:(NSString *)condition
@@ -349,6 +355,7 @@
     if (condition) {
         [self.currentBubble overwriteFliter:condition];
     }
+    self.condition = condition;
     
     CGPoint offset = CGPointMake(0, -(self.listController.view.bottom - self.listController.view.superview.height));
     [self.listController showLoadingAlert:nil offset:offset];
@@ -385,7 +392,6 @@
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
     }
-    
     if (showLoading) {
         self.tableView.scrollEnabled = NO;
     }
@@ -451,7 +457,7 @@
                 //没有数据 提示数据走丢了
                 NSString *tip = nil;
                 BOOL showRetry = YES;
-                if ([wself.configModel.conditionQuery containsString:@"&"]) {
+                if ([wself.condition containsString:@"&"]) {
                     tip = @"暂无搜索结果";
                     showRetry = NO;
                 }else{
@@ -573,7 +579,7 @@
                 //没有数据 提示数据走丢了
                 NSString *tip = nil;
                 BOOL showRetry = YES;
-                if ([wself.configModel.conditionQuery containsString:@"&"]) {
+                if ([wself.condition containsString:@"&"]) {
                     tip = @"暂无搜索结果";
                     showRetry = NO;
                 }else{
@@ -660,6 +666,14 @@
 
 #pragma mark - log
 
+-(NSString *)enterFrom
+{
+    if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+        return @"circlefind";
+    }
+    return @"mapfind";
+}
+
 -(NSMutableDictionary *)logBaseParams
 {
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -689,7 +703,7 @@
     NSMutableDictionary *param = [self logBaseParams];
     param[@"category_name"] = @"same_neighborhood_list";
     param[@"enter_type"] = @"slide_up";
-    param[@"enter_from"] = @"mapfind"; // 地图找房页
+    param[@"enter_from"] = [self enterFrom]; // 地图找房页
     
     [FHUserTracker writeEvent:@"enter_category" params:param];
 }
@@ -711,7 +725,7 @@
     param[@"stay_time"] = [NSNumber numberWithInteger:duration*1000];
 
     param[@"enter_type"] = @"slide_up";
-    param[@"enter_from"] = @"mapfind";
+    param[@"enter_from"] = [self enterFrom];
 
     [FHUserTracker writeEvent:@"stay_category" params:param];
     _startTimestamp = 0;
@@ -722,7 +736,8 @@
    NSMutableDictionary *param = [self logBaseParams];
     param[@"refresh_type"] = @"pre_load_more";
     param[@"enter_type"] = @"slide_up";
-    param[@"enter_from"] = @"mapfind";
+    param[@"enter_from"] = [self enterFrom];
+    param[UT_LOG_PB] = UT_BE_NULL;
     [FHUserTracker writeEvent:@"category_refresh" params:param];
 }
 
@@ -731,7 +746,7 @@
     NSMutableDictionary *param = [self logBaseParams];
     
     param[@"house_type"] = @"neighborhood";
-    param[@"page_type"] = @"mapfind";
+    param[@"page_type"] =  [self enterFrom];
     param[@"card_type"] = @"no_pic";
     param[@"element_type"] = @"half_category";
     param[@"group_id"] = neighbor.logPb.groupId ?: @"be_null";
@@ -767,7 +782,7 @@
     NSMutableDictionary *param = [self logBaseParams];
     
     param[@"house_type"] = [_configModel houseTypeName]?:@"old";
-    param[@"page_type"] = @"mapfind";
+    param[@"page_type"] =  [self enterFrom];
     param[@"card_type"] = @"left_pic";
     param[@"group_id"] = logPb[@"group_id"] ?: @"be_null";
     param[@"search_id"] = logPb[@"search_id"] ?: @"be_null";
@@ -795,7 +810,12 @@
     param[@"category_name"] = nil;
     param[@"element_from"] = nil;
     
-    [FHUserTracker writeEvent:@"mapfind_half_category" params:param];
+    if (self.currentBubble.lastShowMode == FHMapSearchShowModeDrawLine) {
+        param[UT_ENTER_FROM] = @"mapfind";
+        TRACK_EVENT(@"circlefind_half_category", param);
+    }else{
+        TRACK_EVENT(@"mapfind_half_category", param);
+    }
 }
 
 @end

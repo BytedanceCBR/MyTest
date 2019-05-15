@@ -8,6 +8,7 @@
 #import "FHDistrictAreaAnnotationView.h"
 #import <UIViewAdditions.h>
 #import "UIColor+Theme.h"
+#import <FHHouseBase/FHCommonDefines.h>
 
 #define RGBA(r, g, b, a)    [UIColor colorWithRed:(r)/255.f green:(g)/255.f blue:(b)/255.f alpha:(a) * 1.f]
 
@@ -30,21 +31,20 @@
                      reuseIdentifier:reuseIdentifier];
     if (self) {
         
-        int width = 68;
+        int width = 80;
         
         self.frame = CGRectMake(0, 0, width, width);
-        self.layer.cornerRadius = width/2;
-        self.layer.masksToBounds = YES;
-        self.backgroundColor = [[UIColor themeRed1] colorWithAlphaComponent:0.9];
+        UIImage *bgImg = SYS_IMG(@"mapsearch_area_bg");
+        self.layer.contents = (id)[bgImg CGImage];
         
         UIFont *font = [UIFont systemFontOfSize:12];
-        UIColor *textColor = [UIColor whiteColor];
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(1, 16, MAX_WIDTH, 17)];
+        UIColor *textColor = [UIColor themeGray1];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 21, MAX_WIDTH, 17)];
         _nameLabel.font = font;
         _nameLabel.textColor = textColor;
         _nameLabel.textAlignment = NSTextAlignmentCenter;
 
-        _descLabel = [[UILabel alloc]initWithFrame:CGRectMake(1, 32, MAX_WIDTH, 17)];
+        _descLabel = [[UILabel alloc]initWithFrame:CGRectMake(8, 38, MAX_WIDTH, 17)];
         _descLabel.font = font;
         _descLabel.textColor = textColor;
         _descLabel.textAlignment = NSTextAlignmentCenter;
@@ -52,11 +52,6 @@
         [self addSubview:_nameLabel];
         [self addSubview:_descLabel];
         
-//        _nameLabel.text = annotation.title;
-//        _descLabel.text = annotation.subtitle;
-//
-//        _upDownImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 12, 12)];
-//        [self addSubview:_upDownImageView];
     }
     return self;
     
