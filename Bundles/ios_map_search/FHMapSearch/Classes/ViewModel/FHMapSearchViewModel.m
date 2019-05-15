@@ -1739,8 +1739,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         //有网络了，重新请求
         if (self.lastShowMode != FHMapSearchShowModeDrawLine && self.lastShowMode != FHMapSearchShowModeSubway  ) {
             [self requestHouses:YES showTip:YES];
-        }
-        [self.houseListViewController.viewModel reloadingHouseData:nil];
+        }        
+        [self.houseListViewController.viewModel reloadingHouseData:self.houseListViewController.viewModel.condition];
     }
 }
 

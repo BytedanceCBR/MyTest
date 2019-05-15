@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , strong) FHErrorMaskView *maskView;
-
+@property(nonatomic , strong) NSString *condition;
 
 -(instancetype)initWithController:(FHMapSearchHouseListViewController *)viewController tableView:(UITableView *)tableView;
 

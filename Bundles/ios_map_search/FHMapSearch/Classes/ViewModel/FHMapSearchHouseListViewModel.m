@@ -48,7 +48,6 @@
 @property(nonatomic , assign) CGPoint panStartLocation;
 @property(nonatomic , assign) CGFloat panStartDockLocation;
 @property(nonatomic , strong) NSMutableDictionary *houseLogs;
-@property(nonatomic , strong) NSString *condition;
 
 //for rent house list
 

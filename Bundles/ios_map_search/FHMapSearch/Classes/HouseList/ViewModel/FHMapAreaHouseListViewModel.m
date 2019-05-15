@@ -337,7 +337,7 @@
             self.tableView.mj_footer.hidden = YES;
         }
     } else {
-        [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常" isHead:isHead];
+        [self processError:FHEmptyMaskViewTypeNoNetWorkAndRefresh tips:@"网络异常" isHead:isHead];
     }
     
 }
