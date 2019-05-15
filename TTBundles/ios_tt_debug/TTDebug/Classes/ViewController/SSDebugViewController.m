@@ -81,7 +81,7 @@
 //#import "TTXiguaLiveManager.h"
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
-extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
+
 extern NSDictionary *ttvs_videoMidInsertADDict(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
@@ -247,13 +247,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item_30.switchAction = @selector(_switchImageTransitionAnimation:);
         item_30.checked = [SSCommonLogic imageTransitionAnimationEnable];
         [itemArray addObject:item_30];
-        
-        STTableViewCellItem *item_31 = [[STTableViewCellItem alloc] initWithTitle:@"视频详情播放上一个" target:self action:NULL];
-        item_31.switchStyle = YES;
-        item_31.switchAction = @selector(videoDetailPlayLastBtnEnableActionFired:);
-        item_31.checked = ttvs_isVideoDetailPlayLastEnabled();
-        [itemArray addObject:item_31];
-        
+
         STTableViewCellItem *item_32 = [[STTableViewCellItem alloc] initWithTitle:@"播放上一个按钮样式" target:self action:NULL];
         item_32.switchStyle = YES;
         item_32.switchAction = @selector(videoDetailPlayLastShowTextActionFired:);
@@ -1226,10 +1220,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 - (void)iCloudEableAction:(UISwitch *)uiswitch
 {
     [SSCommonLogic setIcloudBtnEnabled:uiswitch.isOn];
-}
-
-- (void)videoDetailPlayLastBtnEnableActionFired:(UISwitch *)uiswitch {
-    [[TTSettingsManager sharedManager] updateSetting:@(uiswitch.isOn) forKey:@"tt_video_detail_playlast_enable"];
 }
 
 - (void)videoDetailPlayLastShowTextActionFired:(UISwitch *)uiswitch {

@@ -4181,19 +4181,6 @@ static NSString * const kVideoCompressRefactorEnabled = @"kVideoCompressRefactor
 }
 @end
 
-@implementation SSCommonLogic (VideoAdAutoPlayedHalfShow)
-+ (void)setVideoAdAutoPlayedWhenHalfShow:(BOOL)enabled  {
-    [[NSUserDefaults standardUserDefaults] setBool: enabled forKey:@"tt_video_autoplayad_halfshow"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-+ (BOOL)isVideoAdAutoPlayedWhenHalfShow {
-    if ([TTDeviceHelper isPadDevice]){
-        return NO;
-    }
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_video_autoplayad_halfshow"];
-}
-@end
-
 static NSString * const kWeitoutiaoRepostOriginalReviewHintKey = @"kWeitoutiaoRepostOriginalReviewHintKey";
 @implementation SSCommonLogic (WeitoutiaoRepostOriginalStatusHint)
 
@@ -4557,22 +4544,6 @@ static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLo
 {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_play_image_enhancement"] && [TTDeviceHelper OSVersionNumber] >= 9;
 }
-@end
-
-static NSString *const kVideoDetailPlayLastShowText = @"tt_video_detail_playlast_showtext";
-@implementation SSCommonLogic (VideoDetailPlayLastShowText)
-
-+ (void)setVideoDetailPlayLastShowText:(BOOL)enabled {
-    
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kVideoDetailPlayLastShowText];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isVideoDetailPlayLastShowText {
-    
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kVideoDetailPlayLastShowText];
-}
-
 @end
 
 static NSString *const kUGCThreadPostImageUserWebP = @"tt_ugc_threadpost_uploadimage_webp";

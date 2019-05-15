@@ -1045,11 +1045,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (NSInteger)isVideoFeedCellHeightAjust;
 @end
 
-@interface SSCommonLogic (VideoAdAutoPlayedHalfShow)
-+ (void)setVideoAdAutoPlayedWhenHalfShow:(BOOL)enabled;
-+ (BOOL)isVideoAdAutoPlayedWhenHalfShow;
-@end
-
 @interface SSCommonLogic (WeitoutiaoRepostOriginalStatusHint)
 + (NSString *)repostOriginalReviewHint;
 + (void)setRepostOriginalReviewHint:(NSString *)reviewHint;

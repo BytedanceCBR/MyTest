@@ -1433,11 +1433,7 @@
     if ([dSettings objectForKey:@"tt_video_feed_cellui_height_adjust"]){
         [SSCommonLogic setVideoFeedCellHeightAjust:[dSettings tt_integerValueForKey:@"tt_video_feed_cellui_height_adjust"]];
     }
-    
-    if ([dSettings objectForKey:@"tt_video_autoplayad_halfshow"]){
-        [SSCommonLogic setVideoAdAutoPlayedWhenHalfShow:[dSettings tt_boolValueForKey:@"tt_video_autoplayad_halfshow"]];
-    }
-    
+
     if ([dSettings objectForKey:@"tt_video_business_refactor"]) {
         [TTVSettingsConfiguration setTitanVideoBusiness:[dSettings tt_boolValueForKey:@"tt_video_business_refactor"]];
     }
@@ -1505,10 +1501,6 @@
     }
     
     [TTBubbleViewManager shareManager];
-    // 视频详情页播放上一个UI样式开关
-    if ([dSettings objectForKey:@"tt_video_detail_playlast_showtext"]) {
-        [SSCommonLogic setVideoDetailPlayLastShowText:[dSettings tt_boolValueForKey:@"tt_video_detail_playlast_showtext"]];
-    }
     
     // ugc的图片上传是否采用webp压缩
     if ([dSettings objectForKey:@"ugc_image_post_encodewebp"]) {

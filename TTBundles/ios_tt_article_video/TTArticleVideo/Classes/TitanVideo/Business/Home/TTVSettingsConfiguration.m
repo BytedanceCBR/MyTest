@@ -112,15 +112,6 @@ extern NSString * ttvs_playerFinishedRelatedType(void)
     return [dic valueForKey:@"style"];
 }
 
-BOOL ttvs_isVideoDetailPlayLastEnabled(void)
-{
-    if ([TTSandBoxHelper isInHouseApp]) {
-        return YES;
-    }else{
-        return [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_detail_playlast_enable" defaultValue:@NO freeze:NO] boolValue];
-    }
-}
-
 BOOL ttvs_videoMidInsertADEnable(void) {
     return NO;
 }

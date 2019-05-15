@@ -52,7 +52,7 @@
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
-extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
+
 extern BOOL ttvs_isPlayerShowRelated(void);
 
 @interface TTVDetailPlayControl ()<TTVDemandPlayerDelegate, TTVCommodityViewDelegate ,TTVCommodityButtonViewDelegate>
