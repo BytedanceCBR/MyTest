@@ -32,6 +32,7 @@
 #import "FHMapSearchDrawGuideView.h"
 #import "FHMapSearchLevelPopLayer.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
+#import <BDALog/BDAgileLog.h>
 
 #define kTipDuration 3
 
@@ -217,6 +218,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             [_mapView setCenterCoordinate:center animated:NO];
         }else{
             [[HMDTTMonitor defaultManager] hmdTrackService:@"map_location_failed" attributes:@{@"longitude":@(center.longitude),@"latitude":@(center.latitude)}];
+            BDALOG_ERROR(@"map_search_location : (longitude:%fmlatitude:%f) ",center.longitude,center.latitude);
         }
         
 //        MAUserLocationRepresentation *r = [[MAUserLocationRepresentation alloc] init];
@@ -572,6 +574,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
                 [[FHMainManager sharedInstance] showToast:@"房源请求失败" duration:2];
                 if ([TTReachability isNetworkConnected]) {
                     [[HMDTTMonitor defaultManager] hmdTrackService:@"map_house_request_failed" attributes:@{@"message":error.domain?:@""}];
+                    BDALOG_ERROR(@"map_search_params : msg:  %s query is: %s",[error.domain UTF8String]?:"",[query UTF8String]?:"");
                 }
                 [wself.viewController switchToNormalMode];
             }
@@ -1591,7 +1594,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     param[@"view_level"] = viewTypeStr;
     param[UT_ELEMENT_FROM] = @"map";
     if (self.showMode == FHMapSearchShowModeDrawLine) {
-        param[UT_ENTER_FROM] = @"mapfind";        
+        param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"circlefind_view", param);
     }else{
         param[@"trigger_type"] = triger;
