@@ -171,6 +171,10 @@
     return self.viewController.tracerModel.originSearchId;
 }
 
+-(FHTracerModel *)tracerModel
+{
+    return self.viewController.tracerModel;
+}
 
 -(void)setErrorMaskView:(FHErrorView *)errorMaskView
 {
@@ -639,12 +643,15 @@
         }
         if (![self.mapFindHouseOpenUrl containsString:UT_ELEMENT_FROM]) {
             [query appendString:[NSString stringWithFormat:@"&element_from=%@",self.tracerModel.elementFrom ? : @"be_null"]];
-            
         }
         if (![self.mapFindHouseOpenUrl containsString:UT_SEARCH_ID]) {
             [query appendString:[NSString stringWithFormat:@"&search_id=%@",self.searchId ? : @"be_null"]];
-            
         }
+        
+        if (![self.mapFindHouseOpenUrl containsString:UT_ORIGIN_FROM]) {
+            [query appendString:[NSString stringWithFormat:@"&%@=%@", UT_ORIGIN_FROM ,self.tracerModel.originFrom?:UT_BE_NULL]];
+        }
+        
         if (query.length > 0) {
             
             openUrl = [NSString stringWithFormat:@"%@&%@",openUrl,query];

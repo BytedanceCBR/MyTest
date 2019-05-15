@@ -38,7 +38,6 @@ static NSString *geckoParamsKey = @"kGeckoParams";
 
 @interface TTRNKit ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString*,TTCommonBridgeInfo*> *bridgeInfos;
 @property (nonatomic, strong) NSMutableArray<ViewWrapper*> *viewHierarchy;
 @property (nonatomic, strong) TTCommonBridgeInfo *webviewBridgeInfo;
 
