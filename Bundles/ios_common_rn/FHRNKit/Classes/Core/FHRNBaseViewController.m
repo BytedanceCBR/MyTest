@@ -82,7 +82,6 @@
     
     [rnKitParams setValue:_bundleNameStr forKey:TTRNKitBundleName];
     
-    [rnKitParams setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"bundle_cache_key"];
     
     NSDictionary *rnAinimateParams = @{TTRNKitLoadingViewClass : @"loading",
                                        TTRNKitLoadingViewSize : [NSValue valueWithCGSize:CGSizeMake(100, 100)]
@@ -177,8 +176,13 @@
 {
     if (!_isDebug) {
         // Do any additional setup after loading the view.
-        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
+        if (self.hash) {
+            NSString *hashString = [NSString stringWithFormat:@"&bundle_cache_key=%ld",self.hash];
+            _shemeUrlStr = [_shemeUrlStr stringByAppendingString:hashString];
+        }
         
+        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
+   
         self.ttRNKit.delegate = self;
         [self.ttRNKit handleUrl:url];
     }else
