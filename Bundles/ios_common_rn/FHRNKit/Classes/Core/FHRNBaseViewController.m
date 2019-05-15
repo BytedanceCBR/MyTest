@@ -286,8 +286,6 @@
     if (_viewWrapper) {
         [self addViewWrapper:_viewWrapper];
     }
-    
-    [self sendEventName:@"host_resume" andParams:[self getHashDict]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -358,6 +356,7 @@
             [paras setValue:[NSString stringWithFormat:@"%ld",1] forKey:@"available"];
             [self sendEventName:@"net_status" andParams:paras];
         }
+        [self sendEventName:@"host_resume" andParams:[self getHashDict]];
     }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
