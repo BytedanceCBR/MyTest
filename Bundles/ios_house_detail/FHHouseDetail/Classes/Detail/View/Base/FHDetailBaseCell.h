@@ -69,4 +69,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+// cell 需要知道VC页面是否消失时的代理
+@protocol FHDetailVCViewLifeCycleProtocol <NSObject>
+
+- (void)vc_viewDidAppear:(BOOL)animated;
+- (void)vc_viewDidDisappear:(BOOL)animated;
+
+@end
+
 NS_ASSUME_NONNULL_END

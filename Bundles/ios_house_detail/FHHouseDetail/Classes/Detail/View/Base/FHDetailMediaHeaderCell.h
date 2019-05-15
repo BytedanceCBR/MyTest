@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailMediaHeaderCell : FHDetailBaseCell
 
++ (CGFloat)cellHeight;
+
 @end
 
 NS_ASSUME_NONNULL_END

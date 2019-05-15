@@ -117,6 +117,7 @@
                            @"userStatus": @"user_status",
                            @"camplaintUrl": @"camplaint_url",
                            @"imShareInfo": @"im_share_info",
+                           @"chooseAgencyList": @"choose_agency_list",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -27,6 +27,8 @@
 #import "FHMessageManager.h"
 #import <HMDTTMonitor.h>
 #import "FHIESGeckoManager.h"
+#import <TTDeviceHelper.h>
+#import <BDALog/BDAgileLog.h>
 
 static NSInteger kGetLightRequestRetryCount = 3;
 
@@ -108,9 +110,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         retryGetLightCount--;
                         [[TTArticleCategoryManager sharedManager] startGetCategory];
                     }
+                    if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                        BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
+                    }
                 }];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];
+                
             }else
             {
                 if(completion)
@@ -122,6 +128,10 @@ static NSInteger kGetLightRequestRetryCount = 3;
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
+                
+                if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
+                    BDALOG_WARN_TAG(@"config_error_reason", [paramsExtra description]);
+                }
             }
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kArticleCategoryHasChangeNotification object:nil];
@@ -283,6 +293,17 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.citycode;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
     
+    
+    CGFloat f_density = [UIScreen mainScreen].scale;
+    CGFloat f_memory = [TTDeviceHelper getTotalCacheSpace];
+
+    if (f_density) {
+        requestParam[@"f_density"] = @(f_density);
+    }
+    
+    if (f_memory) {
+        requestParam[@"f_memory"] = @(f_memory);
+    }
     
     if (longitude != 0 && longitude != 0) {
         requestParam[@"gaode_lng"] = @(longitude);

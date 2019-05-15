@@ -18,6 +18,7 @@
 @property (nonatomic, strong)   NSMutableDictionary       *cellHeightCaches;
 @property (nonatomic, strong)   NSMutableDictionary       *elementShowCaches;
 @property (nonatomic, strong)   NSHashTable               *weakedCellTable;
+@property (nonatomic, strong)   NSHashTable               *weakedVCLifeCycleCellTable;
 @property (nonatomic, assign)   CGPoint       lastPointOffset;
 
 @end
@@ -54,6 +55,7 @@
         _elementShowCaches = [NSMutableDictionary new];
         _lastPointOffset = CGPointZero;
         _weakedCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+        _weakedVCLifeCycleCellTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
         self.houseType = houseType;
         self.detailController = viewController;
         self.tableView = tableView;
@@ -77,6 +79,33 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.tableView.frame = frame;
     });
+}
+
+// 回调方法
+- (void)vc_viewDidAppear:(BOOL)animated {
+    if (self.weakedVCLifeCycleCellTable.count > 0) {
+        NSArray *arr = self.weakedVCLifeCycleCellTable.allObjects;
+        [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+                if ([obj conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)]) {
+                    [((id<FHDetailVCViewLifeCycleProtocol>)obj) vc_viewDidAppear:animated];
+                }
+            }
+        }];
+    }
+}
+
+- (void)vc_viewDidDisappear:(BOOL)animated {
+    if (self.weakedVCLifeCycleCellTable.count > 0) {
+        NSArray *arr = self.weakedVCLifeCycleCellTable.allObjects;
+        [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+                if ([obj conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)]) {
+                    [((id<FHDetailVCViewLifeCycleProtocol>)obj) vc_viewDidDisappear:animated];
+                }
+            }
+        }];
+    }
 }
 
 #pragma mark - 需要子类实现的方法
@@ -165,6 +194,9 @@
     if ([cell conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)] && ![self.weakedCellTable containsObject:cell]) {
         [self.weakedCellTable addObject:cell];
     }
+    if ([cell conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)] && ![self.weakedVCLifeCycleCellTable containsObject:cell]) {
+        [self.weakedVCLifeCycleCellTable addObject:cell];
+    }
     // 添加element_show埋点
     if (!self.elementShowCaches[tempKey]) {
         self.elementShowCaches[tempKey] = @(YES);
@@ -207,20 +239,17 @@
     if (scrollView != self.tableView) {
         return;
     }
-    // 解决类似周边房源列表页的house_show问题
+    // 解决类似周边房源列表页的house_show问题，视频播放逻辑
     CGPoint offset = scrollView.contentOffset;
-    if (offset.y > self.lastPointOffset.y) {
-        // 向上滑动
-        if (self.weakedCellTable.count > 0) {
-            NSArray *arr = self.weakedCellTable.allObjects;
-            [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
-                    if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
-                        [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
-                    }
+    if (self.weakedCellTable.count > 0) {
+        NSArray *arr = self.weakedCellTable.allObjects;
+        [arr enumerateObjectsUsingBlock:^(FHDetailBaseCell *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHDetailBaseCell class]] && self.detailController) {
+                if ([obj conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)]) {
+                    [((id<FHDetailScrollViewDidScrollProtocol>)obj) fhDetail_scrollViewDidScroll:self.detailController.view];
                 }
-            }];
-        }
+            }
+        }];
     }
     self.lastPointOffset = offset;
     
@@ -251,6 +280,9 @@
     }
     if (self.contactViewModel.contactPhone) {
         info[@"contact_phone"] = self.contactViewModel.contactPhone;
+    }
+    if (self.contactViewModel.chooseAgencyList) {
+        info[@"choose_agency_list"] = self.contactViewModel.chooseAgencyList;
     }
     info[@"house_type"] = @(self.houseType);
     switch (_houseType) {

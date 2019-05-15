@@ -512,6 +512,13 @@ PODS:
     - TTVideoService/TTBusinessService (= 0.1.71.1-binary)
   - TTVideoService/Core (0.1.71.1-binary)
   - TTVideoService/TTBusinessService (0.1.71.1-binary)
+  - TTVPlayerPod (0.1.0):
+    - TTVPlayerPod/Base (= 0.1.0)
+    - TTVPlayerPod/Parts (= 0.1.0)
+    - TTVPlayerPod/ReduxKit (= 0.1.0)
+  - TTVPlayerPod/Base (0.1.0)
+  - TTVPlayerPod/Parts (0.1.0)
+  - TTVPlayerPod/ReduxKit (0.1.0)
   - TTVTableViewItem (0.1.0.1-binary)
   - TTVTableViewProtocolInterceptor (0.1.2.1-binary):
     - TTVTableViewProtocolInterceptor/Core (= 0.1.2.1-binary)
@@ -612,7 +619,7 @@ DEPENDENCIES:
   - IESWebKit (= 0.2.0-rc.3.1.binary)
   - IGListKit (= 3.4.0.1-binary)
   - ios_house_filter (from `git@code.byted.org:fproject/ios_house_filter.git`, commit `9423cbfa9bb1c30d2b87c1542b862b457b7c141a`)
-  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `f5d2009bac6ca1d2e0f9dd4fe6f766285f7d0488`)
+  - ios_house_im (from `git@code.byted.org:fproject/ios_house_im.git`, commit `9d9b3fc44cc9f21c96fcc62858e1c3755ae8d9f2`)
   - JSONModel (= 1.7.0-private.1-binary)
   - KVOController (= 1.2.0.1-binary)
   - libextobjc (= 0.4.1.1-binary)
@@ -770,6 +777,7 @@ DEPENDENCIES:
   - TTVideoEngine (= 1.9.3.24.1-binary)
   - TTVideoService (= 0.1.71.1-binary)
   - TTVideoService/TTBusinessService (= 0.1.71.1-binary)
+  - TTVPlayerPod (from `../AKPlugins/TTVPlayer`)
   - TTVTableViewItem (= 0.1.0.1-binary)
   - TTVTableViewProtocolInterceptor (= 0.1.2.1-binary)
   - TTVTLIndexPathTools (= 0.4.4.1-binary)
@@ -831,7 +839,7 @@ EXTERNAL SOURCES:
     :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: f5d2009bac6ca1d2e0f9dd4fe6f766285f7d0488
+    :commit: 9d9b3fc44cc9f21c96fcc62858e1c3755ae8d9f2
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTAccountLogin:
     :path: ../AKPlugins/AKAccountLogin
@@ -908,6 +916,8 @@ EXTERNAL SOURCES:
     :path: ../AKPlugins/TTUIWidget
   TTUserProfile:
     :path: ../TTBundles/ios_tt_userprofile
+  TTVPlayerPod:
+    :path: ../AKPlugins/TTVPlayer
   yoga:
     :path: ../ReactCommon/yoga
 
@@ -916,7 +926,7 @@ CHECKOUT OPTIONS:
     :commit: 9423cbfa9bb1c30d2b87c1542b862b457b7c141a
     :git: git@code.byted.org:fproject/ios_house_filter.git
   ios_house_im:
-    :commit: f5d2009bac6ca1d2e0f9dd4fe6f766285f7d0488
+    :commit: 9d9b3fc44cc9f21c96fcc62858e1c3755ae8d9f2
     :git: git@code.byted.org:fproject/ios_house_im.git
   TTDialogDirector:
     :commit: 8ed5beb
@@ -1079,6 +1089,7 @@ SPEC CHECKSUMS:
   TTVideo: f4a5d888a2bbd06c82e906e449c1f419d63f1e5b
   TTVideoEngine: 96de9bfd7a80a311a51a9042a973e4eab4135ee1
   TTVideoService: 24104b18dd058cf284d1c5dff0af9a5d55f604a0
+  TTVPlayerPod: a8eb95ea9e207a70a1a36cee8271887551dad387
   TTVTableViewItem: edf61da588fddd2f8dcc6e1ed0796b764241fcfd
   TTVTableViewProtocolInterceptor: b40445eb84a3de5ded2f9869c4f6c946df4898e7
   TTVTLIndexPathTools: 2f6c23b4990f3aee6e7ceb867f632d4d02ea5384
@@ -1093,6 +1104,6 @@ SPEC CHECKSUMS:
   YYText: d15f70a8b9abac84a5e87099655c377982445a9a
   YYWebImage: d0f55734ca925bbdd30fff83ef49cfc1bc22635e
 
-PODFILE CHECKSUM: 41f1e53f0b7013f4c8b98d19e0ccfa79b68a7df7
+PODFILE CHECKSUM: 7fc3db17b149a4b553d34cb055f8e55a3a66b210
 
 COCOAPODS: 1.4.0

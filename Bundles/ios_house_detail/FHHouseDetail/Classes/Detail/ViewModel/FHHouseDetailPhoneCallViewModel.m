@@ -49,8 +49,8 @@ extern NSString *const kFHPhoneNumberCacheKey;
     }
     return self;
 }
-
-- (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank position:(NSString *)position {
+// extra:realtor_position element_from item_id
+- (void)imchatActionWithPhone:(FHDetailContactModel *)contactPhone realtorRank:(NSString *)rank extraDic:(NSDictionary *)extra {
     
     NSMutableDictionary *dict = @{}.mutableCopy;
     dict[@"event_type"] = @"house_app2c_v2";
@@ -69,8 +69,10 @@ extern NSString *const kFHPhoneNumberCacheKey;
     dict[@"is_login"] = [[TTAccount sharedAccount] isLogin] ? @"1" : @"0";
     dict[@"realtor_id"] = contactPhone.realtorId;
     dict[@"realtor_rank"] = rank ?: @"0";
-    dict[@"realtor_position"] = position ?: @"detail_button";
     dict[@"conversation_id"] = @"be_null";
+    if (extra) {
+        [dict addEntriesFromDictionary:extra];
+    }
     
     [FHUserTracker writeEvent:@"click_im" params:dict];
     dict[@"group_id"] = self.tracerDict[@"group_id"] ? : @"be_null";
@@ -82,7 +84,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         dict[@"group_id"] = logPbDict[@"group_id"] ? : @"be_null";
     }
     NSURL *openUrl = [NSURL URLWithString:contactPhone.imOpenUrl];
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":dict}];
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"source": @"1.13", @"tracer":dict}];
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
@@ -236,6 +238,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
     NSMutableDictionary *imdic = [NSMutableDictionary dictionaryWithDictionary:_imParams];
     [imdic setValue:contactPhone.realtorId forKey:@"target_user_id"];
     [imdic setValue:contactPhone.realtorName forKey:@"chat_title"];
+    imdic[@"source"] = @"1.81";
     NSString *imParams = nil;
     NSError *imParseError = nil;
     NSData *imJsonData = [NSJSONSerialization dataWithJSONObject:imdic options:0 error:&imParseError];
@@ -290,6 +293,7 @@ extern NSString *const kFHPhoneNumberCacheKey;
         }
         
         dict[@"impr_id"] = dict[@"impr_id"] ? : @"be_null";
+        dict[@"source"] = @"1.81";
         
         NSURL *openUrlRn = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://react?module_name=FHRNAgentDetailModule_home&realtorId=%@&can_multi_preload=%ld&channelName=f_realtor_detail&debug=0&report_params=%@&im_params=%@&bundle_name=%@&is_login=%@",contactPhone.realtorId,isPre ? 1 : 0,[FHUtils getJsonStrFrom:dict],[FHUtils getJsonStrFrom:imdic],@"agent_detail.bundle",islogin ? @"1" : @"0"]];
         

@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showTip;
 @property (nonatomic, assign) FHFollowActionType actionType;
 @property (nonatomic, assign) BOOL hideToast;
-
+@property (nonatomic, copy)     NSString       *itemId; // 视频id等
 #pragma mark 埋点
 // 必填
 @property (nonatomic , copy) NSString *originSearchId;

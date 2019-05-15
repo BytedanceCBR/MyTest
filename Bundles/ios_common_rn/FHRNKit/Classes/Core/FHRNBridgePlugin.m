@@ -34,6 +34,8 @@
 
 @interface FHRNBridgePlugin ()
 @property (nonatomic, strong) NSMutableArray<NSString *> *events;
+@property (nonatomic, weak) UIViewController *currentVC;
+@property (nonatomic, assign) BOOL canOpenJump;
 @end
 
 @implementation FHRNBridgePlugin
@@ -54,7 +56,17 @@
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, call_phone), @"app.call_phone");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, open), @"app.open");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, alertTest), @"app.alertTest");
+    TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, toast), @"app.toast");
     TTRegisterRNBridge(TTClassBridgeMethod(FHRNBridgePlugin, fetch), TTAppFetchBridgeName);
+}
+
+- (void)toastWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
+{
+    NSString *title = [param tt_stringValueForKey:@"title"];
+
+    if ([title isKindOfClass:[NSString class]] && title.length > 0) {
+        [[ToastManager manager] showToast:title];
+    }
 }
 
 - (void)appInfoWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
@@ -133,16 +145,24 @@
         [callParams setValue:houseType forKey:@"house_type"];
     }
     
-    if(callParams[@"group_id"])
+    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
     {
-        callParams[@"follow_id"] = callParams[@"group_id"];
+        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+            callParams[@"follow_id"] = callParams[@"group_id"];
+        }
     }
     
-    if(callParams[@"group_id"])
+    if([callParams[@"group_id"] isKindOfClass:[NSString class]])
     {
-        callParams[@"house_id"] = callParams[@"group_id"];
+        if (![callParams[@"group_id"] isEqualToString:@"be_null"]) {
+            callParams[@"house_id"] = callParams[@"group_id"];
+        }
     }
-
+    
+    if ([callParams[@"log_pb"] isKindOfClass:[NSString class]]) {
+        callParams[@"log_pb"] = [FHUtils dictionaryWithJsonString:callParams[@"log_pb"]];
+    }
+    
     if (!TTNetworkConnected() && !callParams[@"phone"]) {
         if (callback) {
             callback(TTBridgeMsgSuccess, nil);
@@ -160,6 +180,7 @@
     }
 
     if (callParams[@"follow_id"]) {
+        callParams[@"hide_toast"] = @(YES);
         [FHHouseFollowUpHelper silentFollowHouseWithConfig:callParams];
     }
 
@@ -289,7 +310,7 @@
             
 //            callback(TTBridgeMsgSuccess,nil);
             if (callback) {
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
+                callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),
                                                           @"beginReqNetTime": startTime
@@ -304,7 +325,7 @@
                 if([obj isKindOfClass:[NSData class]]){
                     result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
                 }
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
+                callback(TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
                                                           @"response": result,
                                                           @"status": @(response.statusCode),
                                                           @"code": error?@(0): @(1),
@@ -335,17 +356,30 @@
             }
         }
     }
-
+    
+    if (self.currentVC == currentVC && !self.canOpenJump) {
+        return;
+    }
+    
+    self.currentVC = currentVC;
+    self.canOpenJump = NO;
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.canOpenJump = YES;
+        });
+    });
+    
     if (!isEmptyString(openURL)) {
         NSURL *openUrlResultUTF8 =  [NSURL URLWithString:[openURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         if(openUrlResultUTF8)
         {
             [[TTRoute sharedRoute] openURLByViewController:openUrlResultUTF8 userInfo:nil];
         }
+        callback(TTBridgeMsgSuccess, @{@"code": @0});
         return;
     }
     
-    callback(TTBridgeMsgSuccess, @{@"code": @0});
 }
 
 - (void)alertTestWithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller

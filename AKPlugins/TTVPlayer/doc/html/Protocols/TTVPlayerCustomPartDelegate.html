@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>TTVPlayerCustomPartDelegate Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">TTVPlayer </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">bytedance</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/additionalPartConfigWhenInitForMode:">- additionalPartConfigWhenInitForMode:</option>
+		
+		<option value="//api/name/additionalPartKeysWhenInitForMode:">- additionalPartKeysWhenInitForMode:</option>
+		
+		<option value="//api/name/customPartForKey:">- customPartForKey:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">TTVPlayerCustomPartDelegate Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>TTVPlayerCustomPartDelegate.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>自定义 part, 可以覆盖已有的 part 以及新增外部 part</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/customPartForKey:" title="customPartForKey:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/customPartForKey:">&ndash;&nbsp;customPartForKey:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>不同的 key，返回不同的 自定义的 part，适合在想修改已经存在的内置的 part，可以使用此方式，这里函数默认是已经注册到了partManager 中了</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSObject&lt;TTVPlayerPartProtocol&gt; *)customPartForKey:(TTVPlayerPartKey)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>@see <a href="../Constants/TTVPlayerPartKey.html">TTVPlayerPartKey</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>part</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>不同的 key，返回不同的 自定义的 part，适合在想修改已经存在的内置的 part，可以使用此方式，这里函数默认是已经注册到了partManager 中了</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayerCustomPartDelegate.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/additionalPartKeysWhenInitForMode:" title="additionalPartKeysWhenInitForMode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/additionalPartKeysWhenInitForMode:">&ndash;&nbsp;additionalPartKeysWhenInitForMode:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>额外注册到partManager 中的 part，并由 partManager 在最开始就初始化就创建出来，时机不能控制，如果要自己控制时机，需要调用 addPart 方法进行添加
+此方法注册后，不会影响内置的 part，如果 额外的 key 跟内置相同
+场景：一些业务的 part 加入到框架中来，比如统计 part</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSArray&lt;NSNumber*&gt; *)additionalPartKeysWhenInitForMode:(TTVPlayerDisplayMode)<em>mode</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>mode</code></th>
+						<td><p>@see <a href="../Constants/TTVPlayerDisplayMode.html">TTVPlayerDisplayMode</a> 播放器的展示模式</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>@[@(1),@(2)]</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>额外注册到partManager 中的 part，并由 partManager 在最开始就初始化就创建出来，时机不能控制，如果要自己控制时机，需要调用 addPart 方法进行添加
+此方法注册后，不会影响内置的 part，如果 额外的 key 跟内置相同
+场景：一些业务的 part 加入到框架中来，比如统计 part</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayerCustomPartDelegate.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/additionalPartConfigWhenInitForMode:" title="additionalPartConfigWhenInitForMode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/additionalPartConfigWhenInitForMode:">&ndash;&nbsp;additionalPartConfigWhenInitForMode:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>额外注册到partManager 中的 part，并由 partManager 在最开始就初始化就创建出来，时机不能控制，如果要自己控制时机，需要调用 addPart 方法进行添加</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSArray&lt;NSDictionary*&gt; *)additionalPartConfigWhenInitForMode:(TTVPlayerDisplayMode)<em>mode</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>mode</code></th>
+						<td><p>@see <a href="../Constants/TTVPlayerDisplayMode.html">TTVPlayerDisplayMode</a> 播放器的展示模式</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>类似于内置配置的功能配置文件 <a href="https://bytedance.feishu.cn/space/sheet/shtcnXivxqXVBTnIxvRQjJ">https://bytedance.feishu.cn/space/sheet/shtcnXivxqXVBTnIxvRQjJ</a>#ba2e02</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>额外注册到partManager 中的 part，并由 partManager 在最开始就初始化就创建出来，时机不能控制，如果要自己控制时机，需要调用 addPart 方法进行添加</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayerCustomPartDelegate.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 bytedance. All rights reserved. Updated: 2019-04-25</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

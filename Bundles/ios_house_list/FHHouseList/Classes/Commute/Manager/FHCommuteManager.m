@@ -7,6 +7,9 @@
 
 #import "FHCommuteManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <FHHouseBase/FHBaseViewController.h>
+#import <FHHouseBase/FHUserTrackerDefine.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 #define COMMUTE_CONFIG    @"_COMMUTE_CONFIG_"
 #define COMMUTE_LOCATION  @"LOCATION"
@@ -16,10 +19,15 @@
 #define COMMUTE_LONGITUDE @"LONGITUDE"
 #define COMMUTE_CITY_ID   @"CITY_ID"
 
+extern NSString *const COMMUTE_CONFIG_DELEGATE;
+
 
 @interface FHCommuteManager ()
 
 @property(nonatomic , strong) NSMutableDictionary *configDict;
+
+@property(nonatomic , copy) NSString *openUrl;
+@property(nonatomic , strong) NSDictionary *logParam;
 
 @end
 
@@ -139,6 +147,79 @@
 {
     [[NSUserDefaults standardUserDefaults] setObject:_configDict forKey:COMMUTE_CONFIG];
 //    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+
+-(void)tryEnterCommutePage:(NSString *)openUrl logParam:(NSDictionary *)logParam
+{
+    self.openUrl = openUrl;
+    self.logParam = logParam;
+    
+    NSString *destLocation = [[FHCommuteManager sharedInstance] destLocation];
+    NSString *cityId = [[FHCommuteManager sharedInstance] cityId];
+    NSString *currentCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if (cityId.length == 0 || ![cityId isEqualToString:currentCityId] || destLocation.length == 0) {
+        [[FHCommuteManager sharedInstance] clear];
+        [self showCommuteConfigPage];
+    }else{
+        [self gotoCommuteList:nil];
+    }
+    
+}
+
+-(void)showCommuteConfigPage
+{
+    id delegate = WRAP_WEAK(self);
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    param[COMMUTE_CONFIG_DELEGATE] = delegate;
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary new];
+//    tracer[UT_ENTER_FROM] = @"renting";
+//    tracer[UT_ELEMENT_FROM] = @"commuter_info";
+//    tracer[UT_ORIGIN_FROM] = UT_OF_COMMUTE;
+
+    [tracer addEntriesFromDictionary:self.logParam];
+    
+    
+    param[TRACER_KEY] = tracer;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:param];
+    
+    NSURL *url = [NSURL URLWithString:@"sslocal://commute_config"];
+    [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+    
+}
+
+-(void)commuteWithDest:(NSString *)location type:(FHCommuteType)type duration:(NSString *)duration inController:(UIViewController *)controller
+{
+    [self gotoCommuteList:controller];
+}
+
+-(void)gotoCommuteList:(UIViewController *)popController
+{
+    NSURL *url = [NSURL URLWithString:_openUrl];
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param addEntriesFromDictionary:self.logParam];
+    
+    NSMutableDictionary *userInfoDict = [NSMutableDictionary new];
+    userInfoDict[TRACER_KEY] = param;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:userInfoDict];
+    if (popController) {
+        __weak typeof(self) wself = self;
+        [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+            NSMutableArray *controllers = [[NSMutableArray alloc] initWithArray:nav.viewControllers];
+            [controllers removeObject:popController];
+            [controllers addObject:routeObj.instance];
+            [nav setViewControllers:controllers animated:YES];
+        }];
+    }else{
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+    
+    self.openUrl = nil;
+    self.logParam = nil;
+    
 }
 
 

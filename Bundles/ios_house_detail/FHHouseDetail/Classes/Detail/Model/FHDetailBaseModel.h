@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
+#import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
 @class FHDetailNewDataSmallImageGroupModel;
 

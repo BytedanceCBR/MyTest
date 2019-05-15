@@ -10,6 +10,7 @@
 #import "FHDetailNavBar.h"
 #import "FHHouseType.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
+#import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *customHouseId;// floor_plan_detail:floor_plan_id
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
+@property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
+
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar houseType:(FHHouseType)houseType houseId:(NSString *)houseId;
 // 在线联系点击
@@ -40,6 +43,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)baseParams;
 
 - (void)fillFormActionWithActionType:(FHFollowActionType)actionType;
+
+// 关注
+- (void)followActionWithExtra:(NSDictionary *)extra;
+// 取消关注
+- (void)cancelFollowAction;
+
+// 携带埋点参数的分享
+- (void)shareActionWithShareExtra:(NSDictionary *)extra;
 
 //为IM提供房源卡片
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice;

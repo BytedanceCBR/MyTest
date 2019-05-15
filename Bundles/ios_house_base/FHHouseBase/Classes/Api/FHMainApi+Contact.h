@@ -13,6 +13,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHFillFormAgencyListItemModel;
 @interface FHMainApi (Contact)
 
 
@@ -20,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (TTHttpTask*)requestSendPhoneNumbserByHouseId:(NSString*)houseId
                                           phone:(NSString*)phone
                                            from:(NSString*)from
+                                     agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
                                      completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 中介转接电话
 + (TTHttpTask*)requestVirtualNumber:(NSString*)realtorId

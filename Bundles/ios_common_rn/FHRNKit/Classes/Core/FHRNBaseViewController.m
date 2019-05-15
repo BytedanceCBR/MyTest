@@ -82,6 +82,7 @@
     
     [rnKitParams setValue:_bundleNameStr forKey:TTRNKitBundleName];
     
+    
     NSDictionary *rnAinimateParams = @{TTRNKitLoadingViewClass : @"loading",
                                        TTRNKitLoadingViewSize : [NSValue valueWithCGSize:CGSizeMake(100, 100)]
                                        };
@@ -103,9 +104,9 @@
     }
     return self;
 }
+
 - (void)initRNKit
 {
-    [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
     self.ttRNKit = [self extracted];
 }
 
@@ -129,6 +130,8 @@
             [self initRNKit];
         }
         
+        [[FHRNHelper sharedInstance] addObjectCountforChannel:_channelStr];
+        
         if (_canPreLoad) {
             [self processPreloadAction];
         }
@@ -146,8 +149,11 @@
     {
         netStatusV = 0;
     }
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"hashcode"];
+    [params setValue:[NSString stringWithFormat:@"%ld",netStatusV] forKey:@"available"];
     
-    [self sendEventName:@"net_status" andParams:@{@"available":[NSString stringWithFormat:@"%ld",netStatusV]}];
+    [self sendEventName:@"net_status" andParams:params];
 }
 
 - (void)processParams:(NSDictionary *)params
@@ -170,8 +176,13 @@
 {
     if (!_isDebug) {
         // Do any additional setup after loading the view.
-        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
+        if (self.hash) {
+            NSString *hashString = [NSString stringWithFormat:@"&bundle_cache_key=%ld",self.hash];
+            _shemeUrlStr = [_shemeUrlStr stringByAppendingString:hashString];
+        }
         
+        NSString *url = [NSString stringWithFormat:@"%@",_shemeUrlStr];
+   
         self.ttRNKit.delegate = self;
         [self.ttRNKit handleUrl:url];
     }else
@@ -183,10 +194,17 @@
 
 - (void)updateLoadFinish
 {
-    self.isLoadFinish = YES;
-    if (!_canPreLoad) {
-        [self sendEventName:@"host_resume" andParams:nil];
+    if (!_canPreLoad && !self.isLoadFinish) {
+        [self sendEventName:@"host_resume" andParams:[self getHashDict]];
     }
+    self.isLoadFinish = YES;
+}
+
+- (NSMutableDictionary *)getHashDict
+{
+    NSMutableDictionary *params = [NSMutableDictionary new];
+    [params setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"hashcode"];
+    return params;
 }
 
 - (void)setupUI
@@ -236,7 +254,6 @@
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    
     [[HMDTTMonitor defaultManager] hmdTrackService:@"rn_monitor_error" status:0 extra:nil];
 }
 
@@ -269,14 +286,12 @@
     if (_viewWrapper) {
         [self addViewWrapper:_viewWrapper];
     }
-    
-    [self sendEventName:@"host_resume" andParams:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self sendEventName:@"host_pause" andParams:nil];
+    [self sendEventName:@"host_pause" andParams:[self getHashDict]];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -288,6 +303,7 @@
 {
     if (((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine) {
         TTRNBridgeEngine *bridgeEngine = ((RCTRootView *)_viewWrapper.rnView).bridge.tt_engine;
+        
         if (![bridgeEngine.events containsObject:stringName]) {
             if (stringName) {
                 [bridgeEngine.events addObject:stringName];
@@ -303,21 +319,18 @@
 
     [[FHRNHelper sharedInstance] removeCountChannel:_channelStr];
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
-                ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
-                [self.ttRNKit clearRNResourceForChannel:_channelStr];
-                [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
-            }
-        
-            self.ttRNKit.delegate = nil;
-            self.ttRNKit = nil;
-            [_container removeFromSuperview];
-            self.container = nil;
-            [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
-            _viewWrapper.rnView = nil;
-            [_viewWrapper removeFromSuperview];
-            self.viewWrapper = nil;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
+            ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
+            [self.ttRNKit clearRNResourceForChannel:_channelStr];
+            [((RCTRootView *)_viewWrapper.rnView).bridge invalidate];
+//        }
+        [_container removeFromSuperview];
+        self.container = nil;
+        [(RCTRootView *)_viewWrapper.rnView removeFromSuperview];
+        _viewWrapper.rnView = nil;
+        [_viewWrapper removeFromSuperview];
+         self.viewWrapper = nil;
     });
 }
 
@@ -335,8 +348,16 @@
     }else
     {
         if (![FHEnvContext isNetworkConnected]) {
-            [self sendEventName:@"enter_unAvalable" andParams:nil];
+            NSMutableDictionary *paras = [self getHashDict];
+            [paras setValue:[NSString stringWithFormat:@"%ld",0] forKey:@"available"];
+            [self sendEventName:@"net_status" andParams:paras];
+        }else
+        {
+            NSMutableDictionary *paras = [self getHashDict];
+            [paras setValue:[NSString stringWithFormat:@"%ld",1] forKey:@"available"];
+            [self sendEventName:@"net_status" andParams:paras];
         }
+        [self sendEventName:@"host_resume" andParams:[self getHashDict]];
     }
 }
 - (void)didMoveToParentViewController:(UIViewController*)parent{
@@ -347,7 +368,7 @@
             [self destroyRNView];
         }else
         {
-            [self sendEventName:@"host_destroy" andParams:nil];
+            [self sendEventName:@"host_destroy" andParams:[self getHashDict]];
         }
     }
 }
@@ -371,11 +392,11 @@
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
-    [self sendEventName:@"host_pause" andParams:nil];
+    [self sendEventName:@"host_pause" andParams:[self getHashDict]];
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)notification {
-    [self sendEventName:@"host_resume" andParams:nil];
+    [self sendEventName:@"host_resume" andParams:[self getHashDict]];
 }
 
 #pragma mark
@@ -442,7 +463,8 @@
     NSMutableDictionary *initParams = [NSMutableDictionary dictionaryWithDictionary:_paramCurrentObj.allParams];
     initParams[RNModuleName] = moduleName ?: _moduleNameStr;
     [initParams setValue:self forKey:@"sourcevc"];
-    
+    [initParams setValue:[NSString stringWithFormat:@"%ld",self.hash] forKey:@"bundle_cache_key"];
+
     TTRNKitViewWrapper *wrapper = [[TTRNKitViewWrapper alloc] init];
     [self.manager registerObserver:wrapper];
     _viewWrapper = wrapper;
