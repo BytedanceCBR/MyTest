@@ -289,10 +289,6 @@
         [ExploreListHelper setPreloadCount:count userSettingStatus:TTNetworkTrafficSave];
     }
     
-    if ([[dSettings allKeys] containsObject:@"report_send_html"]) {
-        [TTReportManager setNeedPostArticleHTML:[[dSettings objectForKey:@"report_send_html"] boolValue]];
-    }
-    
     if ([[dSettings allKeys] containsObject:@"report_options"]) {
         [TTReportManager updateReportArticleOptions:[dSettings tt_arrayValueForKey:@"report_options"]];
     }
@@ -866,15 +862,7 @@
     if ([dSettings objectForKey:@"tt_refector_adphotoalbum_enable"]) {
         [SSCommonLogic setRefacorPhotoAlbumControlAble:[[dSettings objectForKey:@"tt_refector_adphotoalbum_enable"] boolValue]];
     }
-    
-    // 新浪微博分享过期提醒间隔时间
-    if ([[dSettings allKeys] containsObject:@"notify_platform_expired_period"]) {
-        NSNumber *seconds = [NSNumber numberWithLongLong:([[dSettings valueForKey:@"notify_platform_expired_period"] intValue] * 24 * 3600)];
-        [[NSUserDefaults standardUserDefaults] setValue:seconds forKey:@"weiboExpiredShowInterval"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    
-    
+
     [[TTAuthorizeManager sharedManager].authorizeModel saveData];
 
     if ([dSettings objectForKey:@"video_tab_bubble_interval"]) {
