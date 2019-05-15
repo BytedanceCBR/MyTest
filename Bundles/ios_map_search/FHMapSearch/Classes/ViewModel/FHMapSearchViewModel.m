@@ -1486,7 +1486,8 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     logParam[UT_ENTER_FROM] = @"circlefind";
     logParam[UT_ENTER_TYPE] = @"click";
     logParam[UT_ELEMENT_FROM] = @"bottom_district";
-    logParam[UT_CATEGORY_NAME] = (self.configModel.houseType == FHHouseTypeRentHouse)?@"rent_list":@"old_list";
+    logParam[UT_CATEGORY_NAME] = @"circlefind_list";//(self.configModel.houseType == FHHouseTypeRentHouse)?@"rent_list":@"old_list";
+    
     
     NSURL *url = [NSURL URLWithString:@"sslocal://mapfind_area_house_list"];
     NSDictionary *userInfoDict = @{COORDINATE_ENCLOSURE:[self drawLineCoordinates]?:@"",
@@ -1735,7 +1736,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         //有网络了，重新请求
         if (self.lastShowMode != FHMapSearchShowModeDrawLine && self.lastShowMode != FHMapSearchShowModeSubway  ) {
             [self requestHouses:YES showTip:YES];
-        }        
+        }
         [self.houseListViewController.viewModel reloadingHouseData:nil];
     }
 }
