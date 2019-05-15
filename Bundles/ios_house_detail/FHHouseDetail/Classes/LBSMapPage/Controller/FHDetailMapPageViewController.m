@@ -312,6 +312,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     }];
     [_mapContainer setBackgroundColor:[UIColor whiteColor]];
     
+    // mapFrame 暂时没有用到
     CGFloat navHeight = [FHFakeInputNavbar perferredHeight];
     CGFloat bottomHeight = 0;
     if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -329,6 +330,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _mapView.scrollEnabled = YES;
     _mapView.showsUserLocation = NO;
     _mapView.zoomLevel  = 15;
+    [_mapView setCenterCoordinate:self.centerPoint];
     [_mapContainer addSubview:_mapView];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
     [_mapView mas_remakeConstraints:^(MASConstraintMaker *make) {
