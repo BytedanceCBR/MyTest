@@ -20,7 +20,6 @@
 #import "TTProfileViewController.h"
 #import "TTSettingsManager.h"
 #import "TSVTabViewController.h"
-#import "TTHTSTabViewController.h"
 #import "TTTabBarProvider.h"
 #import "TTTabBar.h"
 //#import "TTFantasyTimeCountDownManager.h"

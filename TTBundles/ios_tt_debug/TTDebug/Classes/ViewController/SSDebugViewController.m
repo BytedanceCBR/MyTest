@@ -242,12 +242,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item_25.checked = [SSCommonLogic transitionAnimationEnable];
         [itemArray addObject:item_25];
         
-        STTableViewCellItem *item_27 = [[STTableViewCellItem alloc] initWithTitle:@"开启跳转到火山app" target:self action:NULL];
-        item_27.switchStyle = YES;
-        item_27.switchAction = @selector(_switchLaunchHuoShanAppEnabled:);
-        item_27.checked = [SSCommonLogic isLaunchHuoShanAppEnabled];
-        [itemArray addObject:item_27];
-        
         STTableViewCellItem *item_30 = [[STTableViewCellItem alloc] initWithTitle:@"图集开启随手拖动动画" target:self action:NULL];
         item_30.switchStyle = YES;
         item_30.switchAction = @selector(_switchImageTransitionAnimation:);
@@ -445,26 +439,26 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         [dataSource addObject:relatedVideoSection];
     }
     
-    if (YES) {
-        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始时间(毫秒)" target:self action:nil];
-        item1.textFieldStyle = YES;
-        item1.textFieldAction = @selector(videoMidInsertADReqStartTimeChange:);
-        item1.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqStartTime()];
-        
-        STTableViewCellItem *item2 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始结束(毫秒)" target:self action:nil];
-        item2.textFieldStyle = YES;
-        item2.textFieldAction = @selector(videoMidInsertADReqEndTimeChange:);
-        item2.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqEndTime()];
-        
-        STTableViewCellItem *item3 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开关" target:self action:nil];
-        item3.switchStyle = YES;
-        item3.checked = [SSCommonLogic isRefactorGetDomainsEnabled];
-        item3.switchAction = @selector(videoMidInsertADReqActionFired:);
-        
-        STTableViewSectionItem *relatedVideoSection = [[STTableViewSectionItem alloc] initWithSectionTitle:@"中插广告" items:@[item1, item2, item3]];
-        
-        [dataSource addObject:relatedVideoSection];
-    }
+//    if (YES) {
+//        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始时间(毫秒)" target:self action:nil];
+//        item1.textFieldStyle = YES;
+//        item1.textFieldAction = @selector(videoMidInsertADReqStartTimeChange:);
+//        item1.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqStartTime()];
+//
+//        STTableViewCellItem *item2 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始结束(毫秒)" target:self action:nil];
+//        item2.textFieldStyle = YES;
+//        item2.textFieldAction = @selector(videoMidInsertADReqEndTimeChange:);
+//        item2.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqEndTime()];
+//
+//        STTableViewCellItem *item3 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开关" target:self action:nil];
+//        item3.switchStyle = YES;
+//        item3.checked = [SSCommonLogic isRefactorGetDomainsEnabled];
+//        item3.switchAction = @selector(videoMidInsertADReqActionFired:);
+//
+//        STTableViewSectionItem *relatedVideoSection = [[STTableViewSectionItem alloc] initWithSectionTitle:@"中插广告" items:@[item1, item2, item3]];
+//
+//        [dataSource addObject:relatedVideoSection];
+//    }
     
     
     if (YES) {
@@ -818,10 +812,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 
 - (void)_switchTransitionAnimation:(UISwitch *)uiswitch {
     [[TTSettingsManager sharedManager] updateSetting:@(uiswitch.isOn) forKey:@"transition_animation_enabled"];
-}
-
-- (void)_switchLaunchHuoShanAppEnabled:(UISwitch *)uiswitch {
-    [SSCommonLogic setLaunchHuoShanAppEnabled:uiswitch.isOn];
 }
 
 - (void)_switchImageTransitionAnimation:(UISwitch *)uiswitch {
@@ -1260,31 +1250,31 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     }
 }
 
-- (void)videoMidInsertADReqStartTimeChange:(UITextField *)field {
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *result = [formatter numberFromString:field.text];
-    if (result) {
-        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
-        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_start"];
-        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
-    }
-}
-
-- (void)videoMidInsertADReqEndTimeChange:(UITextField *)field {
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *result = [formatter numberFromString:field.text];
-    if (result) {
-        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
-        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_end"];
-        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
-    }
-}
-
-- (void)videoMidInsertADReqActionFired:(UISwitch *)uiswitch {
-    NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
-    [videoMidInsertADMutableDict setObject:@(uiswitch.isOn) forKey:@"tt_video_midpatch_req_not_ad"];
-    [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
-}
+//- (void)videoMidInsertADReqStartTimeChange:(UITextField *)field {
+//    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+//    NSNumber *result = [formatter numberFromString:field.text];
+//    if (result) {
+//        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
+//        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_start"];
+//        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
+//    }
+//}
+//
+//- (void)videoMidInsertADReqEndTimeChange:(UITextField *)field {
+//    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+//    NSNumber *result = [formatter numberFromString:field.text];
+//    if (result) {
+//        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
+//        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_end"];
+//        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
+//    }
+//}
+//
+//- (void)videoMidInsertADReqActionFired:(UISwitch *)uiswitch {
+//    NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
+//    [videoMidInsertADMutableDict setObject:@(uiswitch.isOn) forKey:@"tt_video_midpatch_req_not_ad"];
+//    [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
+//}
 
 - (void)forceRefreshSettings
 {

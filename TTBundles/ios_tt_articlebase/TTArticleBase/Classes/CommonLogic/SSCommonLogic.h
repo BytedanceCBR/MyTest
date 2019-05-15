@@ -14,7 +14,6 @@ extern NSString * const kIntroductionViewControllerRemovedNotification;
 extern NSString * const kFeedRefreshButtonSettingEnabledNotification;
 extern NSString * const kFirstRefreshTipsSettingEnabledNotification;
 extern NSString * const kTTArticleDislikeRefactor;
-extern NSString * const kTTArticleFeedDislikeRefactor;
 
 extern NSError *ttcommonlogic_handleError(NSError *error, NSDictionary *result, NSString **exceptionInfo);
 
@@ -93,13 +92,6 @@ typedef enum SSCommonLogicTimeDictKey{
 //评论/转发/回复时，如果输入框内容为空，出一条提示，此提示由服务端控制
 + (NSString *)commentInputViewPlaceHolder;
 + (void)saveCommentInputViewPlaceHolder:(NSString *)placeHolder;
-
-#pragma mark -- 感知最近使用的App及安装的App
-+ (NSString *)getRecentAppsInterval;
-+ (void)saveRecentAppsInterval:(NSString *)recentAppsInterval;
-
-+ (NSString *)getInstallAppsInterval;
-+ (void)saveInstallAppsInterval:(NSString *)installAppsInterval;
 
 #endif
 
@@ -254,11 +246,6 @@ typedef NS_ENUM(NSInteger, SSCommentRedirectReportType)  {
 + (BOOL)LastReadRefreshEnabled;
 + (void)setLastReadRefreshEnabled:(BOOL)lastReadRefreshEnabled;
 
-+ (void)setLastReadStyle:(NSInteger)style;
-
-+ (void)setShowFloatingRefreshBtn:(BOOL)show;
-
-+ (void)setAutoFloatingRefreshBtnInterval:(NSInteger)interval;
 @end
 // feed show show_over打点流程重构开关
 @interface SSCommonLogic (ShowWithScenes)
@@ -322,13 +309,6 @@ typedef NS_ENUM(NSInteger, SSCommentRedirectReportType)  {
 
 + (BOOL)showGestureTip;
 + (void)setShowGestureTip:(BOOL)showGestureTip;
-
-@end
-
-@interface SSCommonLogic (ShowAlwaysOriginImageAlertRepeatly)
-
-+ (BOOL)enabledShowAlwaysOriginImageAlertRepeatly;
-+ (void)setEnabledShowAlwaysOriginImageAlertRepeatly:(BOOL)showAlwaysOriginImageAlertRepeatly;
 
 @end
 
@@ -1100,18 +1080,11 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (void)setDislikeRefactorEnabled:(BOOL)enabled;
 + (BOOL)isDislikeRefactorEnabled;
 
-+ (void)setFeedDislikeRefactorEnabled:(BOOL)enabled;
-+ (BOOL)isFeedDislikeRefactorEnabled;
 @end
 
 @interface SSCommonLogic (RealnameAuth)
 + (void)setRealnameAuthEncryptDisabled:(BOOL)disabled; //实名认证参数加密
 + (BOOL)isRealnameAuthEncryptDisabled;
-@end
-
-@interface SSCommonLogic (ReportTyposAlert)
-+ (void)setReportTyposEnabled:(BOOL)enabled;
-+ (BOOL)isReportTyposEnabled;
 @end
 
 @interface SSCommonLogic (TransitonAnimationEnable)
@@ -1180,9 +1153,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (NSInteger)forthTabInitialVisibleCategoryIndex;
 //火山app是否已安装
 + (BOOL)isHTSAppInstalled;
-//火山tab列表点击cell是否跳转到火山app开关
-+ (void)setLaunchHuoShanAppEnabled:(BOOL)enabled;
-+ (BOOL)isLaunchHuoShanAppEnabled;
 //火山tab顶部banner
 + (void)setHTSTabBannerInfoDict:(NSDictionary *)dict;
 + (NSDictionary *)htsTabBannerInfoDict;
@@ -1190,9 +1160,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 //火山tab出现时，我的在左上角展示，我的icon的默认图的url
 + (void)setHTSTabMineIconURL:(NSString *)url;
 + (NSString *)htsTabMineIconURL;
-//火山app下载所需apple_id
-+ (void)setHTSAppDownloadInfoDict:(NSDictionary *)dict;
-+ (NSDictionary *)htsAppDownloadInfoDict;
 
 + (NSString *)htsAPPAppleID;
 
@@ -1238,11 +1205,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (void)setFollowChannelMessageEnable:(BOOL)enable;
 + (BOOL)followChannelMessageEnable;
 
-+ (void)setFollowChannelUploadContactsEnable:(BOOL)enable;
-+ (BOOL)followChannelUploadContactsEnable;
-
-+ (void)setFollowChannelUploadContactsText:(NSString *)text;
-+ (NSString *)followChannelUploadContactsText;
 @end
 
 @interface SSCommonLogic (WeiboExpiration)

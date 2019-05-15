@@ -35,7 +35,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 extern BOOL ttvs_isTitanVideoBusiness(void);
 extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
 extern NSString *ttvs_playerFinishedRelatedType(void);
-extern NSDictionary *ttvs_videoMidInsertADDict(void);
 extern BOOL ttvs_videoMidInsertADEnable(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);

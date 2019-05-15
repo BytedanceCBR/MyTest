@@ -121,20 +121,16 @@ BOOL ttvs_isVideoDetailPlayLastEnabled(void)
     }
 }
 
-NSDictionary *ttvs_videoMidInsertADDict(void) {
-    return [[TTSettingsManager sharedManager] settingForKey:@"tt_video_midpatch_settings" defaultValue:@{} freeze:NO];
-}
-
 BOOL ttvs_videoMidInsertADEnable(void) {
-    return [ttvs_videoMidInsertADDict() tta_boolForKey:@"tt_video_midpatch_req_not_ad"];
+    return NO;
 }
 
 NSInteger ttvs_getVideoMidInsertADReqStartTime(void) {
-    return [ttvs_videoMidInsertADDict() integerValueForKey:@"tt_video_midpatch_req_start" defaultValue:15000];
+    return 15000;
 }
 
 NSInteger ttvs_getVideoMidInsertADReqEndTime(void) {
-    return [ttvs_videoMidInsertADDict() integerValueForKey:@"tt_video_midpatch_req_end" defaultValue:50000];
+    return 50000;
 }
 
 //播放器内增加分享、更多入口 0:无 1:全屏右上角显示分享按钮 2:全屏右上角展示更多按钮

@@ -149,20 +149,6 @@ static SSFetchSettingsManager * manager;
         [SSCommonLogic saveCommentInputViewPlaceHolder:nil];
     }
     
-    if ([[dSettings allKeys] containsObject:@"send_install_apps_interval"]) {
-        NSString* sendInstallAppsInterval = [NSString stringWithFormat:@"%@",[dSettings objectForKey:@"send_install_apps_interval"]];
-        [SSCommonLogic saveInstallAppsInterval:sendInstallAppsInterval];
-    } else {
-        [SSCommonLogic saveInstallAppsInterval:nil];
-    }
-    
-    if([[dSettings allKeys] containsObject:@"send_recent_apps_interval"]) {
-        NSString* sendRecentAppsInterval = [NSString stringWithFormat:@"%@",[dSettings objectForKey:@"send_recent_apps_interval"]];
-        [SSCommonLogic saveRecentAppsInterval:sendRecentAppsInterval];
-    } else {
-        [SSCommonLogic saveRecentAppsInterval:nil];
-    }
-    
     NSNumber *appseeSetting = [dSettings objectForKey:@"appsee_enable"];
     if ([appseeSetting isKindOfClass:[NSNumber class]]) {
         [SSCommonLogic setAppseeSampleSetting:appseeSetting];
