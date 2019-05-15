@@ -1838,31 +1838,6 @@
         [SSCommonLogic setArticleShareWithPGCName:[dSettings tt_boolValueForKey:@"tt_share_with_pgcname_enable"]];
     }
     
-//    if ([dSettings tt_dictionaryValueForKey:@"rp_config"]) {
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_network_settings"]) {
-//            [SSCommonLogic setSFNetworkSettings:[[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_network_settings"]];
-//        }
-//
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_tab_config"]) {
-//            [SSCommonLogic setTTSFActivitySetting:[[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_tab_config"]];
-//        }
-//
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_resources_settings"]) {
-//            [SSCommonLogic setTTSFResourcesSetting:[[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_resources_settings"]];
-//        }
-//
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] objectForKey:@"rp_resources_available"]) {
-//            BOOL canBeUsed = [[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_boolValueForKey:@"rp_resources_available"];
-//            [TTSFResourcesManager setResourceCanBeUsed:canBeUsed];
-//        }
-//    }
-    
-//    //fantasy settings
-//    if ([dSettings objectForKey:@"hproject_settings"]) {
-//        [TTFantasy ttf_updateSettings:[dSettings tt_dictionaryValueForKey:@"hproject_settings"]];
-//        [[TTToutiaoFantasyManager sharedManager] updateHProjectSettings:[dSettings tt_dictionaryValueForKey:@"hproject_settings"]];
-//    }
-    
     //article title logo
     if ([dSettings objectForKey:@"tt_enable_detail_title_logo"]) {
         [SSCommonLogic setArticleTitleLogoEnbale:[dSettings tt_boolValueForKey:@"tt_enable_detail_title_logo"]];
