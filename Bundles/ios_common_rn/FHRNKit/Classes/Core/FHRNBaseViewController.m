@@ -30,6 +30,7 @@
 #import <HMDTTMonitor.h>
 #import <TTReachability.h>
 #import <FHEnvContext.h>
+#import <TTCommonBridgeManager.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -320,6 +321,11 @@
     [[FHRNHelper sharedInstance] removeCountChannel:_channelStr];
 
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        TTCommonBridgeInfo *commonBrideInfo = (TTCommonBridgeInfo *)self.ttRNKit.bridgeInfos[_channelStr];
+        [commonBrideInfo.bridge invalidate];
+        self.ttRNKit.bridgeInfos = nil;
+        
 //        if ([[FHRNHelper sharedInstance] isNeedCleanCacheForChannel:_channelStr]) {
             ((RCTRootView *)_viewWrapper.rnView).delegate = nil;
             [self.ttRNKit clearRNResourceForChannel:_channelStr];
