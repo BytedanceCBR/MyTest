@@ -220,7 +220,8 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, copy) NSString *originalGroupID;  //schema中的初始gid
 
 @property (nonatomic, strong) ExploreOrderedData            *orderedData;
-;
+
+@property (nonatomic, assign) BOOL loadingShareImage;//加载分享图片时 点击分享按钮
 
 @end
 
@@ -1708,6 +1709,12 @@ static const CGFloat kFloatingViewOriginY = 230;
         return;
     }
 
+    if (self.loadingShareImage) {
+        //正在加载分享图片 不显示分享弹窗
+        return;
+    }
+    self.loadingShareImage = YES;
+    
     @weakify(self);
     [AWEVideoDetailTracker trackEvent:@"click_more"
                                 model:self.model
@@ -1725,6 +1732,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     NSString *imageURL = [self.model.video.originCover.urlList firstObject];
     [AWEVideoPlayShareBridge loadImageWithUrl:imageURL completion:^(UIImage * _Nonnull image) {
         @strongify(self);
+        self.loadingShareImage = NO;
         AWEVideoShareType shareType = AWEVideoShareTypeMore;
         if ([self entrance] == TSVShortVideoListEntranceStory) {
             shareType = AWEVideoShareTypeMoreForStory;

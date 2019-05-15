@@ -1,0 +1,21 @@
+source 'git@code.byted.org:TTIOS/tt_pods_specs.git'
+source 'git@code.byted.org:TTIOS/cocoapods-master-specs-mirror.git'
+source 'git@code.byted.org:TTVideo/ttvideo-pods.git'
+source 'git@code.byted.org:ugc/UGCSpecs.git'
+
+platform :ios, '7.0'
+
+target 'BDTArticle_Example' do
+  pod 'BDTArticle', :path => '../'
+  pod 'TTTracker', '~> 0.9.2.5'
+  pod 'TTPersistence'
+  pod 'TTNetBusiness'
+  pod 'TTPlatformBaseLib/TTURLDomainHelper'
+  pod 'TTEntry'
+
+  target 'BDTArticle_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

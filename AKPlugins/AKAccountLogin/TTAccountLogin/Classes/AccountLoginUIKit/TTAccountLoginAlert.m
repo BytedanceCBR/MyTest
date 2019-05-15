@@ -19,6 +19,8 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountLoginEditProfileViewController.h"
 #import "NSTimer+TTNoRetainRef.h"
+#import <TTAccountSDK/TTAccountAuthWeChat.h>
+#import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 
 
 

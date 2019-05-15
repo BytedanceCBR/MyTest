@@ -9,6 +9,7 @@
 #import "FHBaseViewController.h"
 #import "TTPhotoScrollViewController.h"
 #import "FHDetailMediaHeaderCell.h"
+#import "FHVideoViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 // 支持房源图片以及视频相关功能
@@ -19,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign, readonly)NSInteger currentIndex;
 /** 打开的时候需要展示的index */
 @property(nonatomic, assign)NSUInteger startWithIndex;
+
+@property (nonatomic, weak)     FHVideoViewController      *videoVC;
 
 /** 图片个数 */
 @property(nonatomic, assign, readonly)NSInteger photoCount;
@@ -33,7 +36,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void (^albumImageStayBlock)(NSInteger index,NSInteger stayTime);
 
 /** 图片数据 */
-@property (nonatomic, strong)   FHDetailMediaHeaderModel       *mediaHeaderModel;
+
+- (void)setMediaHeaderModel:(FHDetailMediaHeaderModel *)mediaHeaderModel mediaImages:(NSArray *)images;
+
+/** 详情页数据 */
+@property (nonatomic, copy)     NSString       *houseId;
+@property (nonatomic, copy)     NSString       *priceStr;
+@property (nonatomic, copy)     NSString       *infoStr;
+@property (nonatomic, assign)   NSInteger       followStatus;// 收藏状态
+@property(nonatomic , copy) void (^shareActionBlock)(void);
+@property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
 /** 图片URL数组*/
 @property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
@@ -87,7 +99,6 @@ NS_ASSUME_NONNULL_BEGIN
  @return YES / NO
  */
 + (BOOL)photoBrowserAtTop;
-
 
 @end
 

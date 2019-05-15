@@ -187,6 +187,7 @@
 
 -(void)showHouseList
 {
+    [self.houseFilterBridge closeConditionFilterPanel];
     [self.viewModel addNavSwitchHouseListLog];
     
     if ([self.configModel.enterFrom isEqualToString:@"city_market"]) {
@@ -214,6 +215,7 @@
 
 -(void)showMap
 {
+    [self.houseFilterBridge closeConditionFilterPanel];
     [self switchNavbarMode:FHMapSearchShowModeMap];
     [self.viewModel showMap];
 }

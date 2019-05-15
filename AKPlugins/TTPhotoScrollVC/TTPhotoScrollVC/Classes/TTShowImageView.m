@@ -38,7 +38,6 @@
 @interface TTShowImageView()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
 
 @property(nonatomic, strong)UIScrollView * imageContentScrollView;
-@property(nonatomic, strong)UIImageView * largeImageView;
 @property(nonatomic, strong)TTUIShortTapGestureRecognizer * tapTwiceGestureRecognizer;
 @property(nonatomic, strong)UILongPressGestureRecognizer * longPressGestureRecognizer;
 @property(nonatomic, strong)ALAssetsLibrary * assetsLbr;

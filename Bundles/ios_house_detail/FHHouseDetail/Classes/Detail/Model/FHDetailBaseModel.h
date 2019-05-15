@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHHouseListModel.h"
 #import "FHBaseModelProtocol.h"
+#import <FHHouseBase/FHFillFormAgencyListItemModel.h>
 
 @class FHDetailNewDataSmallImageGroupModel;
 
@@ -75,6 +76,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *reportButtonText;
 
 @property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
+@property (nonatomic, assign) BOOL isFormReport; //是否包含填表单
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *imprId;
 
@@ -93,43 +95,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)toDictionary;
 
 - (NSDictionary *)toDictionaryWithKeys:(NSArray *)propertyNames;
-
-@end
-
-@interface  FHDetailResponseModel  : JSONModel <FHBaseModelProtocol>
-
-@property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, copy , nullable) NSString *message;
-
-@end
-
-@interface  FHDetailVirtualNumModel  : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *realtorId;
-@property (nonatomic, copy , nullable) NSString *virtualNumber;
-@property (nonatomic, assign) NSInteger isVirtual;
-
-@end
-
-@interface  FHDetailVirtualNumResponseModel  : JSONModel <FHBaseModelProtocol>
-
-@property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, strong , nullable) FHDetailVirtualNumModel *data;
-
-@end
-
-@interface  FHDetailUserFollowStatusModel  : JSONModel
-
-@property (nonatomic, assign) NSInteger followStatus;
-
-@end
-
-@interface  FHDetailUserFollowResponseModel  : JSONModel <FHBaseModelProtocol>
-
-@property (nonatomic, copy , nullable) NSString *status;
-@property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, strong , nullable) FHDetailUserFollowStatusModel *data;
 
 @end
 

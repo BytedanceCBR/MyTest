@@ -56,7 +56,7 @@
     {
         requestParam[@"city_name"] = nil;
     }
-    
+
     if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
         requestParam[@"app_first_start"] = @(1);
     }else
@@ -79,10 +79,17 @@
     }
     
     return [[TTNetworkManager shareInstance]requestForBinaryWithURL:url params:requestParam method:GET needCommonParams:false callback:^(NSError *error, id obj) {
-        FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&error];
-        if (completion) {
-            completion(model,error);
-        }
+        __block NSError *backError = error;
+
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            FHConfigModel *model = [self generateModel:obj class:[FHConfigModel class] error:&backError];
+
+            if (completion) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    completion(model,backError);
+                });
+            }
+        });
     }];
     
 }

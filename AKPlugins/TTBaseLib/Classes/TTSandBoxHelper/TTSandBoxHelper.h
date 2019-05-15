@@ -99,6 +99,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (BOOL)isAppStoreChannel;
 
+/**
+ *  f100发布版本号，在info.plist基础上+600，为了兼容主端
+ *
+ *  @return 可能为nil
+ */
++ (nullable NSString *)fhVersionCode;
+
+
 @end
 
 @interface TTSandBoxHelper (TTUserDefault)
