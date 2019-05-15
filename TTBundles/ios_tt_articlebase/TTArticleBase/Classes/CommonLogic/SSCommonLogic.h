@@ -216,8 +216,6 @@ typedef NS_ENUM(NSInteger, SSCommentRedirectReportType)  {
 @interface SSCommonLogic (ExploreDetailToolBarWriteCommentPlaceholderText)
 
 + (NSString *)exploreDetailToolBarWriteCommentPlaceholderText;
-+ (void)setExploreDetailToolBarWriteCommentPlaceholderText:(NSString *)placeHolderText;
-
 @end
 
 @interface SSCommonLogic (TTJsActLogURLString)
@@ -320,7 +318,6 @@ typedef NS_ENUM(NSInteger, SSCommentRedirectReportType)  {
 + (BOOL)isSearchTransitionEnabled;
 // 搜索框文案可控
 + (NSString *)searchBarTipForNormal;
-+ (void)setSearchBarTipForNormal:(NSString *)tip;
 + (NSString *)searchBarTipForVideo;
 + (void)setSearchBarTipForVideo:(NSString *)tip;
 + (NSString *)searchBarTip;
@@ -430,7 +427,6 @@ extern NSString * const SSCommonLogicLaunchedTimes4ShowIntroductionViewKey;
 @interface SSCommonLogic (VideoTip)
 
 + (BOOL)videoTipServerSettingEnabled;
-+ (void)setVideoTipServerEnabled:(BOOL)enabled;
 
 + (NSTimeInterval)videoTipServerInterval;
 + (void)setVideoTipServerInterval:(NSTimeInterval)interval;
@@ -564,7 +560,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @interface SSCommonLogic (UGCCellLineNumber)
 
 + (NSInteger)getUgcCellLineNumber:(NSUInteger)type;
-+ (void)setUgcCellLineNumber:(NSDictionary *)dic;
 
 @end
 
@@ -594,7 +589,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @interface SSCommonLogic (TeMaiControls)
 + (BOOL)isTeMaiURL:(NSString*)url;
 + (NSArray *)getTeMaiURLs;
-+ (void)saveTeMaiURLs:(NSArray *)ary;
 @end
 
 @interface SSCommonLogic (TBJDSDK)
@@ -784,8 +778,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @end
 
 @interface SSCommonLogic (ImageDisplayMode)
-+ (void)setImageDisplayModeFor3GIsSameAs2GEnable:(BOOL)enabled;
-+ (BOOL)imageDisplayModeFor3GIsSameAs2G;
+
 + (void)setIsUpgradeUserAfterImageDisplayModeControlled:(BOOL)upgrade;
 + (BOOL)isUpgradeUserAfterImageDisplayModelControlled;
 @end
@@ -1081,11 +1074,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (void)setAppLogSendOptimizeEnabled:(BOOL)enabled;
 + (BOOL)isAppLogSendOptimizeEnabled;
 
-@end
-
-@interface SSCommonLogic (VideoPasterADReplay)
-+ (void)setVideoADReplayBtnEnabled:(BOOL)enabled;
-+ (BOOL)isVideoADReplayBtnEnabled;
 @end
 
 @interface SSCommonLogic (IsIcloudEabled)

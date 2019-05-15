@@ -1212,8 +1212,6 @@ NSString * const SSCommonLogicSettingDiscoverRefreshKey = @"SSCommonLogicSetting
 
 @end
 
-NSString * const SSCommonLogicSettingTopSearchBarTipForNormalKey = @"SSCommonLogicSettingTopSearchBarTipForNormalKey";
-
 NSString * const SSCommonLogicSettingTopSearchBarTipForVideoKey = @"SSCommonLogicSettingTopSearchBarTipForVideoKey";
 
 NSString * const SSCommonLogicSettingTopSearchResultSourceKey = @"SSCommonLogicSettingTopSearchResultSourceKey";
@@ -1252,17 +1250,7 @@ NSString * const SSCommonLogicSettingSearchTransitionEnabel = @"SSCommonLogicSet
             return placeholder;
         }
     }
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey]) {
-        return [userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey];
-    }
     return @"搜索";
-}
-
-+ (void)setSearchBarTipForNormal:(NSString *)tip {
-    [[NSUserDefaults standardUserDefaults] setValue:tip forKey:SSCommonLogicSettingTopSearchBarTipForNormalKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSString *)searchBarTipForVideo {
@@ -1271,11 +1259,6 @@ NSString * const SSCommonLogicSettingSearchTransitionEnabel = @"SSCommonLogicSet
         if (!isEmptyString(placeholder)) {
             return placeholder;
         }
-    }
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey]) {
-        return [userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey];
     }
     return @"搜索";
 }
@@ -1521,23 +1504,11 @@ NSString * const SSCommonLogicWebContentArticleTimeoutIntervalKey = @"SSCommonLo
 
 @end
 
-NSString * const SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey = @"SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey";
 @implementation SSCommonLogic (ExploreDetailToolBarWriteCommentPlaceholderText)
 
 + (NSString *)exploreDetailToolBarWriteCommentPlaceholderText
 {
-    if ([[NSUserDefaults standardUserDefaults] stringForKey:SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey]) {
-        return [[NSUserDefaults standardUserDefaults] stringForKey:SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey];
-    }
-    else {
-        return NSLocalizedString(@"写评论...", nil);
-    }
-}
-
-+ (void)setExploreDetailToolBarWriteCommentPlaceholderText:(NSString *)placeHolderText
-{
-    [[NSUserDefaults standardUserDefaults] setObject:placeHolderText forKey:SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    return NSLocalizedString(@"写评论...", nil);
 }
 
 @end
@@ -1942,23 +1913,13 @@ NSString * const SSCommonLogicShowRefreshButtonKey = @"SSCommonLogicShowRefreshB
 @end
 
 
-NSString * const SSCommonLogicVideoTipServerSettingKey = @"SSCommonLogicVideoTipServerSettingKey";
 NSString * const SSCommonLogicVideoTipServerIntervalKey = @"SSCommonLogicVideoTipServerIntervalKey";
 
 @implementation SSCommonLogic (VideoTip)
 
 + (BOOL)videoTipServerSettingEnabled
 {
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:SSCommonLogicVideoTipServerSettingKey]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicVideoTipServerSettingKey];
-    }
     return YES;
-}
-
-+ (void)setVideoTipServerEnabled:(BOOL)enabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:SSCommonLogicVideoTipServerSettingKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSTimeInterval)videoTipServerInterval
@@ -2243,15 +2204,6 @@ typedef NS_ENUM(NSUInteger, SSCrashReportSettingType)
 
 @end
 
-NSString * const TTUgcCellSingleImage = @"TTUgcCellSingleImage";
-NSString * const TTUgcCellNormal = @"TTUgcCellNormal";
-NSString * const TTUgcCellArticleAbstract = @"TTUgcCellArticleAbstract";
-NSString * const TTUgcCellArticlePostContent = @"TTUgcCellArticlePostContent";
-NSString * const TTUgcCellArticleComment = @"TTUgcCellArticleComment";
-NSString * const TTUgcCellTopicComment = @"TTUgcCellTopicComment";
-NSString * const TTUgcCellTopicTitle = @"TTUgcCellTopicTitle";
-NSString * const TTUgcCellTopicContent = @"TTUgcCellTopicContent";
-
 @implementation SSCommonLogic (UGCCellLineNumber)
 typedef NS_ENUM(NSUInteger, TTUgcCellLineNumber) {
     TTUgcCellLineNumberSingleImage = 0,
@@ -2267,75 +2219,21 @@ typedef NS_ENUM(NSUInteger, TTUgcCellLineNumber) {
 + (NSInteger)getUgcCellLineNumber:(NSUInteger)type {
     switch ((TTUgcCellLineNumber)type) {
         case TTUgcCellLineNumberSingleImage:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellSingleImage]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellSingleImage];
-            }
             return 3;
         case TTUgcCellLineNumberNormal:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellNormal]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellNormal];
-            }
             return 2;
         case TTUgcCellLineNumberArticleAbstract:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleAbstract]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleAbstract];
-            }
             return 4;
         case TTUgcCellLineNumberArticlePostContent:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticlePostContent]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticlePostContent];
-            }
             return 3;
         case TTUgcCellLineNumberArticleComment:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleComment]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleComment];
-            }
             return 2;
         case TTUgcCellLineNumberTopicComment:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicComment]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicComment];
-            }
             return 5;
         case TTUgcCellLineNumberTopicTitle:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicTitle]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicTitle];
-            }
             return 2;
         case TTUgcCellLineNumberTopicContent:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicContent]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicContent];
-            }
             return 10;
-    }
-}
-
-+ (void)setUgcCellLineNumber:(NSDictionary *)dic {
-    if (dic != nil) {
-        if ([dic objectForKey:@"single_image"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"single_image"] forKey:TTUgcCellSingleImage];
-        }
-        if ([dic objectForKey:@"normal"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"normal"] forKey:TTUgcCellNormal];
-        }
-        if ([dic objectForKey:@"article_abstract"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"article_abstract"] forKey:TTUgcCellArticleAbstract];
-        }
-        if ([dic objectForKey:@"article_post_content"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"article_post_content"] forKey:TTUgcCellArticlePostContent];
-        }
-        if ([dic objectForKey:@"article_comment"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"article_comment"] forKey:TTUgcCellArticleComment];
-        }
-        if ([dic objectForKey:@"topic_comment"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"topic_comment"] forKey:TTUgcCellTopicComment];
-        }
-        if ([dic objectForKey:@"topic_title"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"topic_title"] forKey:TTUgcCellTopicTitle];
-        }
-        if ([dic objectForKey:@"topic_content"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"topic_content"] forKey:TTUgcCellTopicContent];
-        }
-        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
@@ -2526,8 +2424,6 @@ NSString * const TTTaobaoSDKEnabbleKey = @"TTTaobaoSDKEnabbleKey";
 
 @end
 
-NSString * const TTTeMaiURLKey = @"TTTeMaiURLKey";
-
 @implementation SSCommonLogic (TeMaiControls)
 
 + (BOOL)isTeMaiURL:(NSString*)url {
@@ -2542,22 +2438,8 @@ NSString * const TTTeMaiURLKey = @"TTTeMaiURLKey";
 
 + (NSArray *)getTeMaiURLs
 {
-    NSArray * ary = [[NSUserDefaults standardUserDefaults] objectForKey:TTTeMaiURLKey];
-    if (ary == nil) {
-        ary = @[@"www.jinritemai.com",@"temai.snssdk.com",@"temai.toutiao.com"];
-    }
+    NSArray * ary = @[@"www.jinritemai.com",@"temai.snssdk.com",@"temai.toutiao.com"];
     return ary;
-}
-
-+ (void)saveTeMaiURLs:(NSArray *)ary
-{
-    if ([ary count] == 0) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:TTTeMaiURLKey];
-    }
-    else {
-        [[NSUserDefaults standardUserDefaults] setObject:ary forKey:TTTeMaiURLKey];
-    }
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
@@ -3235,22 +3117,8 @@ static NSString * const kSSCommonLogicDisableSearchOptimize = @"kSSCommonLogicDi
 @end
 
 @implementation SSCommonLogic (ImageDisplayMode)
-static NSString *const kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey = @"kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey";
-static NSString *const kSSCommonLogicImageDisplayModeIsUpgradeUserKey = @"kSSCommonLogicImageDisplayModeIsUpgradeUserKey";
-+ (void)setImageDisplayModeFor3GIsSameAs2GEnable:(BOOL)enabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
-+ (BOOL)imageDisplayModeFor3GIsSameAs2G
-{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey]) {
-        BOOL isEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey];
-        return isEnabled;
-    }
-    return YES;
-}
+static NSString *const kSSCommonLogicImageDisplayModeIsUpgradeUserKey = @"kSSCommonLogicImageDisplayModeIsUpgradeUserKey";
 
 + (void)setIsUpgradeUserAfterImageDisplayModeControlled:(BOOL)upgrade
 {
@@ -4212,22 +4080,6 @@ NSString *const kTTArticleDislikeRefactor = @"tt_article_dislike_refactor";
         return NO;
     }
     return [[NSUserDefaults standardUserDefaults] boolForKey:kTTArticleDislikeRefactor];
-}
-
-@end
-
-static NSString *const kVideoADReplayBtnEnabled = @"video_ad_replay_btn_enabled";
-@implementation SSCommonLogic (VideoPasterADReplay)
-
-+ (void)setVideoADReplayBtnEnabled:(BOOL)enabled {
-    
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kVideoADReplayBtnEnabled];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isVideoADReplayBtnEnabled {
-    
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kVideoADReplayBtnEnabled];
 }
 
 @end

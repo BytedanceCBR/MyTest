@@ -501,15 +501,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     }
     
     if (YES) {
-        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"贴片广告重播按钮开关" target:self action:NULL];
-        item1.switchStyle = YES;
-        item1.checked = [SSCommonLogic isVideoADReplayBtnEnabled];
-        item1.switchAction = @selector(VideoADReplayBtnEnabledActionFired:);
-        STTableViewSectionItem *sectionVideoAD = [[STTableViewSectionItem alloc] initWithSectionTitle:@"QA_video_AD" items:@[item1]];
-        
-        [dataSource addObject:sectionVideoAD];
-    }
-    if (YES) {
         STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"跳转到详情gid" target:self action:nil];
         item1.textFieldStyle = YES;
         item1.textFieldAction = @selector(_goToDetail:);
@@ -1208,15 +1199,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [[TTSettingsManager sharedManager] updateSetting:@(uiswitch.isOn) forKey:@"video_cell_show_share"];
 }
 
-- (void)VideoADReplayBtnEnabledActionFired:(UISwitch *)uiswitch
-{
-    if (uiswitch.isOn) {
-        [SSCommonLogic setVideoADReplayBtnEnabled:YES];
-    }
-    else {
-        [SSCommonLogic setVideoADReplayBtnEnabled:NO];
-    }
-}
 - (void)iCloudEableAction:(UISwitch *)uiswitch
 {
     [SSCommonLogic setIcloudBtnEnabled:uiswitch.isOn];

@@ -255,11 +255,6 @@
         [NewsFetchArticleDetailManager saveArticleDetailURLHosts:detailCotentHosts isFull:NO];
     }
     
-    NSArray * temaiUrls = [dSettings objectForKey:@"temai_url_list"];
-    if ([temaiUrls isKindOfClass:[NSArray class]]) {
-        [SSCommonLogic saveTeMaiURLs:temaiUrls];
-    }
-    
     if ([[dSettings allKeys] containsObject:@"category_refresh_interval"]) {
         NSTimeInterval timeInterval = [[dSettings objectForKey:@"category_refresh_interval"] doubleValue];
         [NewsListLogicManager saveListAutoReloadInterval:timeInterval];
@@ -277,11 +272,6 @@
     if ([[dSettings allKeys] containsObject:@"category_force_stream_interval"]) {
         NSTimeInterval timeInterval = [[dSettings objectForKey:@"category_force_stream_interval"] doubleValue];
         [NewsListLogicManager saveSwitchToRecommendChannelInterval:timeInterval];
-    }
-    
-    if ([[dSettings allKeys] containsObject:@"category_tip_duration"]) {
-        NSTimeInterval timeInterval = [[dSettings objectForKey:@"category_tip_duration"] doubleValue];
-        [NewsListLogicManager saveListTipDisplayInterval:timeInterval];
     }
     
     if ([[dSettings allKeys] containsObject:@"preload_count_max"]) {
@@ -510,10 +500,7 @@
     [SSCommonLogic setWebContentArticleProtectionTimeoutDisabled:disabled];
     NSTimeInterval webContentTimeoutInterval = [[dSettings valueForKey:@"web_transform_delay_sec_float"] doubleValue];
     [SSCommonLogic setWebContentArticleProtectionTimeoutInterval:webContentTimeoutInterval];
-    
-    NSString *toolbarPlaceholderString = [dSettings valueForKey:@"write_comment_hint"];
-    [SSCommonLogic setExploreDetailToolBarWriteCommentPlaceholderText:toolbarPlaceholderString];
-    
+
     NSArray *taobaoSlotIDs = [dSettings valueForKey:@"slot_ids"];
     [SSCommonLogic setTaobaoSlotIDs:taobaoSlotIDs];
     
@@ -544,10 +531,7 @@
     
     BOOL essayCommentDetailEnabled = [[dSettings valueForKey:@"essay_comment_detail_enabled"] boolValue];
     [SSCommonLogic setEssayCommentDetailEnabled:essayCommentDetailEnabled];
-    
-    NSDictionary *ugcCellLineNumber = [dSettings valueForKey:@"feed_text_max_line"];
-    [SSCommonLogic setUgcCellLineNumber: ugcCellLineNumber];
-    
+
     if ([dSettings valueForKey:@"use_tab_tip"]) {
         [NewsListLogicManager setTipListUpdateUseTabbar:[[dSettings objectForKey:@"use_tab_tip"] boolValue]];
     }
@@ -892,17 +876,7 @@
     
     
     [[TTAuthorizeManager sharedManager].authorizeModel saveData];
-    
-    // 视频出顶踩全局控制
-    if ([dSettings objectForKey:@"show_list_digg"]) {
-        [ExploreCellHelper setShowListDig:[[dSettings objectForKey:@"show_list_digg"] intValue]];
-    }
-    
-    // 视频tab 气泡tip控制
-    if ([dSettings objectForKey:@"enable_video_tab_bubble"]) {
-        [SSCommonLogic setVideoTipServerEnabled:[[dSettings objectForKey:@"enable_video_tab_bubble"] boolValue]];
-    }
-    
+
     if ([dSettings objectForKey:@"video_tab_bubble_interval"]) {
         [SSCommonLogic setVideoTipServerInterval:[[dSettings objectForKey:@"video_tab_bubble_interval"] doubleValue]];
     }
@@ -931,11 +905,7 @@
     //    if ([dSettings objectForKey:@"quick_login"]) {
     //        [SSCommonLogic setQuickLoginSwitch:[dSettings tt_boolValueForKey:@"quick_login"]];
     //    }
-    
-    // 搜索框提示语
-    if ([dSettings objectForKey:@"top_search_bar_tips_style"]) {
-        [SSCommonLogic setSearchBarTipForNormal:[dSettings tt_stringValueForKey:@"top_search_bar_tips_style"]];
-    }
+
     
     // 详情页顶部搜索
     if ([dSettings objectForKey:@"detail_search_tab_style"]) {
@@ -972,10 +942,6 @@
     
     [WDSettingHelper saveWendaAppInfoDict:[dSettings objectForKey:@"wenda_settings"]];
         
-    //列表页UI设置
-    [TTUISettingHelper saveCellViewUISettingInfoDict:[dSettings objectForKey:@"list_ui_option"]];
-    //详情页UI设置
-    [TTUISettingHelper saveDetailViewUISettingInfoDict:[dSettings objectForKey:@"detail_ui_option"]];
     //频道导航UI设置
     [TTUISettingHelper saveCategoryViewUISettingInfoDict:[dSettings objectForKey:@"category_ui_option"]];
     //tabbarUI设置
@@ -1057,10 +1023,6 @@
         int imageMode = [dSettings tt_intValueForKey:@"image_display_mode"];
         TTNetworkTrafficSetting settingType = imageMode == 0 ? TTNetworkTrafficOptimum : (imageMode == 1 ? TTNetworkTrafficMedium : TTNetworkTrafficSave);
         [TTUserSettingsManager setNetworkTrafficSetting:settingType];
-    }
-    
-    if ([dSettings objectForKey:@"3g_image_display_mode"]) {
-        [SSCommonLogic setImageDisplayModeFor3GIsSameAs2GEnable:[dSettings tt_boolValueForKey:@"3g_image_display_mode"]];
     }
     
     //阅读位置默认开启
@@ -1436,11 +1398,6 @@
 
     if ([dSettings objectForKey:@"tt_video_business_refactor"]) {
         [TTVSettingsConfiguration setTitanVideoBusiness:[dSettings tt_boolValueForKey:@"tt_video_business_refactor"]];
-    }
-    
-    if ([dSettings objectForKey:@"video_ad_replay_btn_enabled"]) {
-        
-        [SSCommonLogic setVideoADReplayBtnEnabled:[dSettings tt_boolValueForKey:@"video_ad_replay_btn_enabled"]];
     }
     
     if([dSettings objectForKey:@"tt_push_sdk_upload_enable"]) {
