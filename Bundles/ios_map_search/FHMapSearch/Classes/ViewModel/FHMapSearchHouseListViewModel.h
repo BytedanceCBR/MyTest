@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHErrorMaskView.h"
+#import "FHMapSearchShowMode.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHMapSearchHouseListViewController;
@@ -23,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) FHHouseAreaHeaderView *headerView;
 @property(nonatomic , strong) FHMapSearchConfigModel *configModel;
 @property(nonatomic , strong) FHErrorMaskView *maskView;
-
+@property(nonatomic , strong) NSString *condition;
 
 -(instancetype)initWithController:(FHMapSearchHouseListViewController *)viewController tableView:(UITableView *)tableView;
 
@@ -36,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)viewWillAppear:(BOOL)animated;
 -(void)viewWillDisappear:(BOOL)animated;
+
+-(FHMapSearchShowMode)enterShowMode;
 
 @end
 

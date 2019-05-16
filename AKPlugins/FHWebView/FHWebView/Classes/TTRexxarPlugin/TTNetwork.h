@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <TTRexxar/TTRDynamicPlugin.h>
+#import "BDTDefaultHTTPRequestSerializer.h"
+
+@interface FHCommonJSONHTTPRequestSerializer : BDTDefaultHTTPRequestSerializer
+
+@end
 
 @interface TTNetwork : TTRDynamicPlugin
 TTR_EXPORT_HANDLER(fetch)
