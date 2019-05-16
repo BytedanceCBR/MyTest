@@ -50,6 +50,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, strong) NSMutableDictionary *traceDict;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
 @property (nonatomic , strong) NSString *titleStr;
+@property (nonatomic, weak)     UIScrollView       *bottomScrollView;
 
 @end
 
@@ -196,6 +197,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     UIScrollView *scrollViewItem = [[UIScrollView alloc] init];
     scrollViewItem.tag = kBottomBarTagValue;
     [_bottomBarView addSubview:scrollViewItem];
+    self.bottomScrollView = scrollViewItem;
     
     CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 6.5;
     scrollViewItem.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, bottomBarHeight);
@@ -238,9 +240,25 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         [buttonLabel setFrame:CGRectMake(0, 30, itemWidth, 13)];
         [iconView addSubview:buttonLabel];
     }
-    
+    [self changeBottomItemViewOffsetByIndex:self.selectedIndex];
     self.searchCategory = self.nameArray[self.selectedIndex];
-    
+}
+
+- (void)changeBottomItemViewOffsetByIndex:(NSInteger)selectIndex {
+    if (selectIndex < 0) {
+        return;
+    }
+    CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 6.5;
+    NSInteger currentIndex = selectIndex;
+    CGFloat winWidth = [UIScreen mainScreen].bounds.size.width;
+    if ((currentIndex + 1) * itemWidth > winWidth ) {
+        [self.bottomScrollView setContentOffset:CGPointMake((currentIndex + 1) * itemWidth - winWidth, 0) animated:YES];
+    } else {
+        CGFloat offsetX = self.bottomScrollView.contentOffset.x;
+        if (currentIndex * itemWidth < offsetX) {
+            [self.bottomScrollView setContentOffset:CGPointMake(currentIndex * itemWidth, 0) animated:YES];
+        }
+    }
 }
 
 - (UILabel *)getLabelFromTag:(NSInteger)index
@@ -264,6 +282,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         self.searchCategory = self.nameArray[button.tag];
         [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
     }
+    [self changeBottomItemViewOffsetByIndex:button.tag];
     self.previouseIconButton = button;
     self.previouseLabel = buttonLabel;
 }
