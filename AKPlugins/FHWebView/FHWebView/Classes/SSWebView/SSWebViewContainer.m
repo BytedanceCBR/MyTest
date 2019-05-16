@@ -54,6 +54,8 @@
 @property(nonatomic, assign) NSInteger preload_num;
 @property(nonatomic, assign) NSInteger match_num;
 
+@property (nonatomic, strong) UIView *emptyView;
+
 @end
 
 @implementation SSWebViewContainer
@@ -234,7 +236,11 @@
     
     if(!TTNetworkConnected() && !self.disableConnectCheck)
     {
-        [self tt_endUpdataData:NO error:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
+        if([FHWebViewConfig appVersion] == FHAppVersionC){
+            [self tt_endUpdataData:NO error:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
+        }else{
+            [self showEmptyMaskView];
+        }
         
         if (self.ssWebView.delegate && [self.ssWebView.delegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
             [self.ssWebView.delegate webView:self.ssWebView didFailLoadWithError:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
@@ -554,4 +560,39 @@
 - (UIScrollView *)scrollView {
     return self.ssWebView.scrollView;
 }
+
+//emptyView
+//-(void)showEmptyMaskView {
+//    [self _setupEmptyView];
+//    [_emptyView showEmptyWithType:type showRetry:showRetry];
+//}
+//
+//-(void)hideEmptyMaskView
+//{
+//    [_emptyView hideEmptyView];
+//}
+//
+//- (void)_setupEmptyView {
+//    if (!_emptyView) {
+//        _emptyView = [[FHBErrorView alloc] init];
+//        _emptyView.backgroundColor = [UIColor whiteColor];
+//        _emptyView.hidden = YES;
+//        __weak typeof(self) wself = self;
+//        _emptyView.retryBlock = ^{
+//            [wself retryLoadData];
+//        };
+//    }
+//    if (!_emptyView.superview || _emptyView.superview != self) {
+//        [self addSubview:_emptyView];
+//        [_emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.edges.mas_equalTo(self);
+//        }];
+//    }
+//}
+//
+//- (void)retryLoadData {
+//    // 重新加载数据
+//    [self refreshData];
+//}
+
 @end

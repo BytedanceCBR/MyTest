@@ -10,18 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, FHAppVersion)
-{
-    FHAppVersionC = 0,
-    FHAppVersionB,
-};
-
 @interface FHWebViewConfig : NSObject<FHWebViewConfigProtocol>
 
 // 单例
 + (instancetype)sharedInstance;
-
-+ (FHAppVersion)appVersion;
 
 @end
 
