@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSUInteger)numberOfSection;
 -(NSUInteger)numberOfRowInSection:(NSUInteger)section;
 -(BOOL)isDisplayData;
+-(void)notifyDataChange;
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;
