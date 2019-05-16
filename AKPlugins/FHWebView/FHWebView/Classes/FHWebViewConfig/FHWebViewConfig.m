@@ -22,4 +22,8 @@
     return [UIColor themeRed1];
 }
 
++ (FHAppVersion)appVersion {
+    return FHAppVersionC;
+}
+
 @end
