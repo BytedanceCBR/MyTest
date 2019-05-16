@@ -279,7 +279,11 @@
 }
 
 - (void)webViewDidStartLoad:(YSWebView *)webView {
-    [self tt_startUpdate];
+    if([FHWebViewConfig appVersion] == FHAppVersionC){
+        [self tt_startUpdate];
+    }else{
+        [self showLoading];
+    }
     _longPressGesture.enabled = NO;
 }
 
@@ -287,8 +291,13 @@
 - (void)webViewDidFinishLoad:(YSWebView *)webView {
     _longPressGesture.enabled = YES;
     if (!self.disableEndRefresh) {
-        [self tt_endUpdataData];
+        if([FHWebViewConfig appVersion] == FHAppVersionC){
+            [self tt_endUpdataData];
+        }else{
+            [self hideLoading];
+        }
     }
+    [self hideEmptyMaskView];
     // 发送统计事件
     self.webStayStat = SSWebViewStayStatLoadFinish;
     [self _sendStatEvent:SSWebViewStayStatLoadFinish error:nil];
@@ -302,13 +311,23 @@
     [self _sendStatEvent:SSWebViewStayStatLoadFail error:error];
     
     if ([error.domain isEqualToString:kCommonErrorDomain] && error.code == TTNetworkErrorCodeNoNetwork) {
-        [self tt_endUpdataData:NO error:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
+        
+        if([FHWebViewConfig appVersion] == FHAppVersionC){
+            [self tt_endUpdataData:NO error:[NSError errorWithDomain:kCommonErrorDomain code:TTNetworkErrorCodeNoNetwork userInfo:nil]];
+        }else{
+            [self showEmptyMaskView];
+        }
+
         return;
     }
     
     if (!webView.isLoading) {
         if (!self.disableEndRefresh) {
-            [self tt_endUpdataData];
+            if([FHWebViewConfig appVersion] == FHAppVersionC){
+                [self tt_endUpdataData];
+            }else{
+                [self hideLoading];
+            }
         }
     }
 }
@@ -561,38 +580,20 @@
     return self.ssWebView.scrollView;
 }
 
-//emptyView
-//-(void)showEmptyMaskView {
-//    [self _setupEmptyView];
-//    [_emptyView showEmptyWithType:type showRetry:showRetry];
-//}
-//
-//-(void)hideEmptyMaskView
-//{
-//    [_emptyView hideEmptyView];
-//}
-//
-//- (void)_setupEmptyView {
-//    if (!_emptyView) {
-//        _emptyView = [[FHBErrorView alloc] init];
-//        _emptyView.backgroundColor = [UIColor whiteColor];
-//        _emptyView.hidden = YES;
-//        __weak typeof(self) wself = self;
-//        _emptyView.retryBlock = ^{
-//            [wself retryLoadData];
-//        };
-//    }
-//    if (!_emptyView.superview || _emptyView.superview != self) {
-//        [self addSubview:_emptyView];
-//        [_emptyView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//            make.edges.mas_equalTo(self);
-//        }];
-//    }
-//}
-//
-//- (void)retryLoadData {
-//    // 重新加载数据
-//    [self refreshData];
-//}
+- (void)showEmptyMaskView {
+    [[FHWebViewConfig sharedInstance] showEmptyView:self];
+}
+
+- (void)hideEmptyMaskView {
+    [[FHWebViewConfig sharedInstance] hideEmptyView];
+}
+
+- (void)showLoading {
+    [[FHWebViewConfig sharedInstance] showLoading:self];
+}
+
+- (void)hideLoading {
+    [[FHWebViewConfig sharedInstance] hideLoading];
+}
 
 @end

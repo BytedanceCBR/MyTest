@@ -26,4 +26,24 @@
     return FHAppVersionC;
 }
 
+- (void)showEmptyView:(UIView *)view {
+    
+}
+
+- (void)hideEmptyView {
+    
+}
+
+- (void)showLoading:(UIView *)view {
+    
+}
+
+- (void)hideLoading {
+    
+}
+
++ (UILabel *)defaultTitleView {
+    return nil;
+}
+
 @end

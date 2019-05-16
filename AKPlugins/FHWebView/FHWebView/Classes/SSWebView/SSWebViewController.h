@@ -42,6 +42,8 @@
 
 @property (nonatomic, assign) BOOL useSystemNavigationbarHeight; // 为了登录界面用户协议trick加的
 
+@property(nonatomic , strong) TTRouteParamObj *paramObj;
+
 @end
 
 extern NSString *const  SSViewControllerBaseConditionADIDKey;

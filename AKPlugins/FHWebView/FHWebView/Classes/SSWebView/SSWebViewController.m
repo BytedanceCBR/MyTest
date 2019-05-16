@@ -34,6 +34,7 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
+#import "FHWebViewConfig.h"
 
 NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseConditionADIDKey";
 
@@ -82,6 +83,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 /** 键盘谈起屏幕偏移量 */
 @property (nonatomic, assign) CGPoint keyBoardPoint;
 @property (nonatomic, assign)   BOOL       isFirstKeyBoardShow;/**/
+@property(nonatomic , strong) UILabel *titleLabel;
 
 @end
 
@@ -397,6 +399,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self initNavbar];
     SSThemedView * baseView = [[SSThemedView alloc] initWithFrame:self.view.bounds];
     baseView.backgroundColorThemeKey = kColorBackground4;//@"BackgroundColor1";
     baseView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
@@ -507,6 +510,19 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     // iOS12 - 使用WKWebView出现input键盘将页面上顶 不下移问题 兼容
     self.isFirstKeyBoardShow = YES;
     [self registerKeybordObserver];
+}
+
+-(void)initNavbar {
+    //可以设置导航条标题的字体和颜色
+    UILabel *label = [FHWebViewConfig defaultTitleView];
+    if(label){
+        if(!isEmptyString([self.paramObj.allParams tt_stringValueForKey:@"title"])){
+            label.text = [self.paramObj.allParams tt_stringValueForKey:@"title"];
+        }
+        [label sizeToFit];
+        self.navigationItem.titleView = label;
+        self.titleLabel = label;
+    }
 }
 
 // iOS12 - 使用WKWebView出现input键盘将页面上顶 不下移问题 兼容

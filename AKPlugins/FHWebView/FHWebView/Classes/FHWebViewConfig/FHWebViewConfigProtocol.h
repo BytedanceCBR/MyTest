@@ -21,9 +21,15 @@ typedef NS_ENUM(NSInteger, FHAppVersion)
 
 + (UIColor *)progressViewLineFillColor;
 
-- (void)showEmptyView;
+- (void)showEmptyView:(UIView *)view;
 
 - (void)hideEmptyView;
+
+- (void)showLoading:(UIView *)view;
+
+- (void)hideLoading;
+//返回自定义导航栏标题label
++ (UILabel *)defaultTitleView;
 
 @end
 
