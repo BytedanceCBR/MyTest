@@ -7,18 +7,21 @@
 //
 
 #import "TTRLogin.h"
-
-#import <TTAccountBusiness.h>
-
+#import <TTBaseLib/TTBaseMacro.h>
+#import "TTAccount.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTRexxar/TTRWebViewApplication.h>
+#import "TTAccount+Multicast.h"
+#import "NSDictionary+TTAdditions.h"
+#import <TTRoute.h>
+#import "TTAccount+NetworkTasks.h"
+#import "FHWebViewConfig.h"
 
-@interface TTRLogin()
-<
-TTAccountMulticastProtocol
->
+@interface TTRLogin()<TTAccountMulticastProtocol>
+
 @property (nonatomic, weak) UIView<TTRexxarEngine> *webview;
 @property (nonatomic, copy) TTRJSBResponse response;
+
 @end
 
 @implementation TTRLogin
@@ -35,13 +38,12 @@ TTAccountMulticastProtocol
 - (void)loginWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     
     NSString *platform = [param objectForKey:@"platform"];
-    TTAccountLoginAlertTitleType type = [param tt_integerValueForKey:@"title_type"];
     NSString *source = [param tt_stringValueForKey:@"login_source"];
     NSString *title = [param tt_stringValueForKey:@"title"];
     NSString *alertTitle = [param tt_stringValueForKey:@"alert_title"];
 
     // 已登录并且不是qq、微信、weibo等其他登录方式时，直接返回登录成功
-    if ([TTAccountManager isLogin] && isEmptyString(platform)) {
+    if ([[TTAccount sharedAccount] isLogin] && isEmptyString(platform)) {
         callback(TTRJSBMsgSuccess, @{@"code": @1});
         return;
     }
@@ -65,59 +67,11 @@ TTAccountMulticastProtocol
         }
     }
     
-    NSDictionary *callbackResult = nil;
-    if (isEmptyString(platform)) //全平台
-    {
-        if (title.length > 0 || alertTitle.length > 0) {
-            [TTAccountLoginManager showLoginAlertWithTitle:alertTitle source:source completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-                if (type == TTAccountAlertCompletionEventTypeTip) {
-                    [TTAccountLoginManager presentLoginViewControllerFromVC:[TTUIResponderHelper topNavigationControllerFor:webview] title:title source:source completion:^(TTAccountLoginState state) {
-                        
-                    }];
-                }
-            }];
-        } else {
-            [TTAccountManager showLoginAlertWithType:type source:source completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-                if (type == TTAccountAlertCompletionEventTypeTip) {
-                    [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:webview] type:TTAccountLoginDialogTitleTypeDefault source:source completion:^(TTAccountLoginState state) {
-                        
-                    }];
-                }
-            }];
-        }
-    }
-    else if ([platform isEqualToString:@"qq"])
-    {
-        [TTAccountLoginManager requestLoginPlatformByType:TTAccountAuthTypeTencentQQ completion:^(BOOL success, NSError *error) {
-            
-        }];
-    }
-    else if ([platform isEqualToString:@"weibo"])
-    {
-        [TTAccountLoginManager requestLoginPlatformByType:TTAccountAuthTypeSinaWeibo completion:^(BOOL success, NSError *error) {
-            
-        }];
-    }
-    else if ([platform isEqualToString:@"weixin"])
-    {
-        [TTAccountLoginManager requestLoginPlatformByType:TTAccountAuthTypeWeChat completion:^(BOOL success, NSError *error) {
-            
-        }];
-    }
-    else if ([platform isEqualToString:@"qq_weibo"])
-    {
-        [TTAccountLoginManager requestLoginPlatformByType:TTAccountAuthTypeTencentWB completion:^(BOOL success, NSError *error) {
-            
-        }];
-    }
-    else
-    {
-        callbackResult = @{@"code": @0};
-    }
+    [FHWebViewConfig loginWithParam:param webView:webview];
 }
 
 - (void)isLoginWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    callback(TTRJSBMsgSuccess, @{@"is_login": @([TTAccountManager isLogin])});
+    callback(TTRJSBMsgSuccess, @{@"is_login": @([[TTAccount sharedAccount] isLogin])});
 }
 
 #pragma mark - TTAccountMulticastProtocol
@@ -179,7 +133,7 @@ TTAccountMulticastProtocol
 
 - (void)loginClosed:(NSNotification*)notification
 {
-    if(![TTAccountManager isLogin])
+    if(![[TTAccount sharedAccount] isLogin])
     {
         if (self.response) {
             self.response(TTRJSBMsgSuccess, @{@"code": @0});

@@ -9,9 +9,21 @@
 #import "TTNetwork.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTNetworkManager/TTNetworkManager.h>
-#import "TTBridgeDefines.h"
-#import "FHEnvContext.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "FHWebViewConfig.h"
+
+typedef enum : NSInteger {
+    FHBridgeMsgSuccess = 1,
+    FHBridgeMsgFailed = 0,
+    FHBridgeMsgParamError = -3,
+    FHBridgeMsgNoHandler = -2,
+    FHBridgeMsgNoPermission = -1
+} FHBridgeMsg;
+
+#define TTBRIDGE_CALLBACK_WITH_MSG(status, msg) \
+if (callback) {\
+callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWithFormat:msg] :@""});\
+}\
 
 @implementation FHCommonJSONHTTPRequestSerializer
 
@@ -42,7 +54,7 @@
 @implementation TTNetwork
 
 - (void)getNetCommonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+    NSDictionary *commonParams = [FHWebViewConfig getRequestCommonParams];
     
     if (!commonParams) {
         if (callback) {
@@ -57,7 +69,7 @@
 }
 
 - (void)commonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+    NSDictionary *commonParams = [FHWebViewConfig getRequestCommonParams];
     
     if (!commonParams) {
         if (callback) {
@@ -104,7 +116,7 @@
     BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
     
     if (!url.length) {
-        TTBRIDGE_CALLBACK_WITH_MSG(TTBridgeMsgFailed, @"url不能为空");
+        TTBRIDGE_CALLBACK_WITH_MSG(FHBridgeMsgFailed, @"url不能为空");
         return;
     }
     
@@ -116,7 +128,7 @@
             if([obj isKindOfClass:[NSData class]]){
                 result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
             }
-            callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
+            callback(error? -1: FHBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
                                                       @"response": result,
                                                       @"status": @(response.statusCode),
                                                       @"code": error?@(0): @(1),

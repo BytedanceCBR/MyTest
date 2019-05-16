@@ -14,9 +14,9 @@
 + (void)load {
        
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShortVideo.redpackWebIntroClicked" for:@"redpackWebIntroClicked"];
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRPageState.isVisible" for:@"is_visible"];
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRPageState.pageStateChange" for:@"page_state_change"];
-    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRPageState.addEventListener" for:@"addEventListener"];
+//    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRPageState.isVisible" for:@"is_visible"];
+//    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRPageState.pageStateChange" for:@"page_state_change"];
+//    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRPageState.addEventListener" for:@"addEventListener"];
     
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRPay.pay" for:@"pay"];
     

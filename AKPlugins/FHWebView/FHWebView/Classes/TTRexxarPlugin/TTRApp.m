@@ -13,10 +13,14 @@
 
 #import <TTRexxar/TTRexxarNotificationCenter.h>
 #import <TTRexxar/TTRJSBForwarding.h>
-#import <TTNewsAccountBusiness/TTAccountManager.h>
+//#import <TTNewsAccountBusiness/TTAccountManager.h>
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "NSDictionary+TTAdditions.h"
+#import <TTBaseLib/TTBaseMacro.h>
+#import "TTAccount.h"
+#import "TTDeviceHelper.h"
 
 @implementation TTRApp
 

@@ -6,6 +6,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TTRJSBDefine.h"
+#import <TTRexxar/TTRDynamicPlugin.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +32,12 @@ typedef NS_ENUM(NSInteger, FHAppVersion)
 - (void)hideLoading;
 //返回自定义导航栏标题label
 + (UILabel *)defaultTitleView;
+
++ (NSDictionary *)getRequestCommonParams;
+
++ (void)onAccountCancellationSuccessCallback:(TTRJSBResponse)callback controller:(UIViewController *)controller;
+
++ (void)loginWithParam:(NSDictionary *)param webView:(UIView<TTRexxarEngine> *)webview;
 
 @end
 

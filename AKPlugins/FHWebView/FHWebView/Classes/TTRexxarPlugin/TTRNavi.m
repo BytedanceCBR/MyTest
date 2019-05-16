@@ -7,36 +7,22 @@
 //
 
 #import "TTRNavi.h"
-#import <TTAccountBusiness.h>
 #import <TTBaseLib/TTURLUtils.h>
 #import <TTRoute/TTRoute.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
-#import <FHEnvContext.h>
 #import <TTAccountSDK.h>
-#import <FHHomeConfigManager.h>
 #import <TTBaseLib/TTStringHelper.h>
+#import <TTBaseLib/TTBaseMacro.h>
+#import "TTDeviceHelper.h"
+#import "NSDictionary+TTAdditions.h"
+#import "FHWebViewConfig.h"
 
 @implementation TTRNavi
 
 TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 
 - (void)closeWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    
-    //close page回传上一个bVC
-    //    if (controller.navigationController.viewControllers.count >= 2) {
-    //        UIViewController *previousVC = controller.navigationController.viewControllers[controller.navigationController.viewControllers.count - 2];
-    //        NSMutableDictionary * resultDict = [NSMutableDictionary new];
-    //        [resultDict setValue:param forKey:@"data"];
-    //        if ([previousVC respondsToSelector:@selector(getOpenPageTagStr)]) {
-    //            NSString *tagStr = [previousVC performSelector:@selector(getOpenPageTagStr) withObject:nil];
-    //            [resultDict setValue:tagStr  forKey:@"tag"];
-    //        }
-    //
-    //        if ([previousVC respondsToSelector:@selector(setupCloseCallBackPreviousVC:)]) {
-    //            [previousVC performSelector:@selector(setupCloseCallBackPreviousVC:) withObject:resultDict];
-    //        }
-    //    }
     
     //返回数据给上级native页面
     if ([controller respondsToSelector:@selector(backAction:)]) {
@@ -199,7 +185,7 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
     }
     // 充值
     else if ([type isEqualToString:@"charge"]) {
-        if ([TTAccountManager isLogin]) {
+        if ([[TTAccount sharedAccount] isLogin]) {
             schema = @"sslocal://huoshancharge";
         } else {
             schema = @"sslocal://login";
@@ -290,28 +276,7 @@ TTR_PROTECTED_HANDLER(@"TTRNavi.open", @"TTRNavi.openHotsoon")
 
 - (void)onAccountCancellationSuccessWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller
 {
-    NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    
-    if ([cityId isKindOfClass:[NSString class]] && cityId.length > 0) {
-        
-        [controller.navigationController popToRootViewControllerAnimated:NO];
-
-        if (![[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isCurrentTabFirst]) {
-            [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance jumpToTabbarFirst];
-        }
-        
-        NSString *url = [NSString stringWithFormat:@"fschema://fhomepage?city_id=%@",cityId];
-        // 注销登录
-//        [TTAccount logoutAndClearCookie:^(BOOL success, NSError * _Nullable error) {
-        [TTAccount logout:^(BOOL success, NSError * _Nullable error) {
-            callback(TTRJSBMsgSuccess, @{@"code": @(success ? 1 : 0)});
-        }];
-        
-        
-        [FHEnvContext openLogoutSuccessURL:url completion:^(BOOL isSuccess) {
-        
-        }];
-    }
+    [FHWebViewConfig onAccountCancellationSuccessCallback:callback controller:controller];
 }
 
 - (void)showBackBtnWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller

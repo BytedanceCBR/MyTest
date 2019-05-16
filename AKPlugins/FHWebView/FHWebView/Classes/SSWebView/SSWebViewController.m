@@ -27,7 +27,7 @@
 #import <TTServiceKit/TTServiceCenter.h>
 #import <TTTracker/TTTrackerProxy.h>
 #import "TTAdManagerProtocol.h"
-#import <AKWDPlugin/WDParseHelper.h>
+//#import <AKWDPlugin/WDParseHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTThemed/TTThemeManager.h>
@@ -149,7 +149,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         self.webViewTrackKey = [params valueForKey:@"webview_track_key"];
         
         // 问答用字段，原因是没法继承，沉库以后记得转移一下
-        self.gdExtJsonDict = [WDParseHelper gdExtJsonFromBaseCondition:params];
+//        self.gdExtJsonDict = [WDParseHelper gdExtJsonFromBaseCondition:params];
         
         //wap_enter事件
         _gd_label = [params stringValueForKey:@"gd_label" defaultValue:nil];

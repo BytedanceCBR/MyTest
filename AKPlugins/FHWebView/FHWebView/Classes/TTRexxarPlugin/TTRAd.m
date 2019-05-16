@@ -20,6 +20,7 @@
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <TTDeviceHelper.h>
 
 @implementation TTRAd
 + (TTRJSBInstanceType)instanceType {
@@ -115,7 +116,8 @@
 
 - (void)getAddressWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     
-    NSMutableDictionary* locationDict = [NSMutableDictionary dictionaryWithDictionary:[[TTLocationManager sharedManager] getAmapInfo]];
+//    NSMutableDictionary* locationDict = [NSMutableDictionary dictionaryWithDictionary:[[TTLocationManager sharedManager] getAmapInfo]];
+    NSMutableDictionary* locationDict = [NSMutableDictionary dictionaryWithCapacity:5];
     
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
     NSString* provice = placemarkItem.province;
