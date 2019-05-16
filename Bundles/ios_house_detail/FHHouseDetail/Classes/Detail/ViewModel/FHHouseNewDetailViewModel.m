@@ -178,8 +178,8 @@
         }];
     }
     
-    if (model.data.imageGroup) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+    if (model.data.imageGroup) {        
         NSMutableArray *arrayHouseImage = [NSMutableArray new];
         for (NSInteger i = 0; i < model.data.imageGroup.count; i++) {
             FHDetailNewDataImageGroupModel * groupModel = model.data.imageGroup[i];
@@ -191,8 +191,13 @@
         headerCellModel.isNewHouse = YES;
         headerCellModel.smallImageGroup = model.data.smallImageGroup;
         headerCellModel.houseImage = arrayHouseImage;
-        [self.items addObject:headerCellModel];
+        
+    }else{
+        //无图片时增加默认图
+        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        headerCellModel.houseImage = @[imgModel];
     }
+    [self.items addObject:headerCellModel];
     
     FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
     // 添加标题

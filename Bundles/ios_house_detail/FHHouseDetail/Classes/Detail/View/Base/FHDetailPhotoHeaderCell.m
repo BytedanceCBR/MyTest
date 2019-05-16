@@ -319,7 +319,12 @@
     id<FHDetailPhotoHeaderModelProtocol> img = _images[index];
 
     NSURL *url = [NSURL URLWithString:img.url];
-    [cell.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
+    if (url) {
+        [cell.imageView bd_setImageWithURL:url placeholder:self.placeHolder];
+    }else{
+        cell.imageView.image = self.placeHolder;
+    }
+    
     
     return cell;
 }
