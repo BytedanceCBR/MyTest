@@ -97,7 +97,8 @@
 
 - (void)updateWithModel:(FHDetailNeighborhoodDataTotalSalesListModel *)model {
     self.namelabel.text = [NSString stringWithFormat:@"%@/%@",model.floorplan,model.squaremeter];
-    self.descLabel.text = [NSString stringWithFormat:@"%@，%@",model.dealDate,model.dataSource];
+    //冯康说 用agencyName , 使用datasource 有法律风险 2019.05.14
+    self.descLabel.text = [NSString stringWithFormat:@"%@，%@",model.dealDate,model.agencyName];
     self.totalPriceLabel.text = model.pricing;
     self.pricePreSqmLabel.text = model.pricingPerSqm;
 }

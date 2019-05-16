@@ -15,6 +15,7 @@
 @class TTRNKitViewWrapper;
 @class TTRNKitBridgeModule;
 @class TTRNKit;
+@class TTCommonBridgeInfo;
 
 @protocol TTRNKitObserverProtocol <NSObject>
 
@@ -28,6 +29,8 @@
 @property (nonatomic, weak) id<TTRNKitProtocol> delegate;
 
 @property (nonatomic, weak, readonly) TTRNKitViewWrapper *currentViewWrapper;
+
+@property (nonatomic, strong) NSMutableDictionary<NSString*,TTCommonBridgeInfo*> *bridgeInfos;
 
 @property (nonatomic, copy, readonly) NSDictionary *geckoParams;
 
