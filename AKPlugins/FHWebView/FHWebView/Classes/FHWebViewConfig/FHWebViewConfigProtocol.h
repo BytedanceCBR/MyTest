@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHWebViewConfigProtocol <NSObject>
 
++ (UIColor *)progressViewLineFillColor;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -6,6 +6,7 @@
 //
 
 #import "FHWebViewConfig.h"
+#import "UIColor+Theme.h"
 
 @implementation FHWebViewConfig
 
@@ -15,6 +16,10 @@
         _sharedInstance = [[FHWebViewConfig alloc] init];
     }
     return _sharedInstance;
+}
+
++ (UIColor *)progressViewLineFillColor {
+    return [UIColor themeRed1];
 }
 
 @end

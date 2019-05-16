@@ -29,6 +29,7 @@
 #import <TTtracker/TTTracker.h>
 #import <TTRoute/TTRoute.h>
 #import <TTSettingsManager/TTSettingsManager.h>
+#import "FHWebViewConfig.h"
 
 #define kSaveImgActionSheetTagKey 111
 
@@ -109,7 +110,7 @@
         
         _progressView = [[TTRWebViewProgressView alloc] initWithFrame:self.bounds];
         _progressView.height = 2.f;
-        _progressView.lineFillColor = [UIColor tt_themedColorForKey:kFHColorCoral];
+        _progressView.lineFillColor = [FHWebViewConfig progressViewLineFillColor];
         [self.ssWebView addDelegate:(NSObject<YSWebViewDelegate> *)_progressView];
         [self addSubview:_progressView];
         
