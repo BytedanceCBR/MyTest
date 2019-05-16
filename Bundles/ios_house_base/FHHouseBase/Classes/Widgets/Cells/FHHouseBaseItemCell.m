@@ -389,6 +389,16 @@
 }
 
 
+-(void)updateMainImageWithUrl:(NSString *)url
+{
+    NSURL *imgUrl = [NSURL URLWithString:url];
+    if (imgUrl) {
+        [self.mainImageView bd_setImageWithURL:imgUrl placeholder:[FHHouseBaseItemCell placeholderImage]];
+    }else{
+        self.mainImageView.image = [FHHouseBaseItemCell placeholderImage];
+    }
+}
+
 -(void)updateHomeHouseCellModel:(FHHomeHouseDataItemsModel *)commonModel andType:(FHHouseType)houseType
 {
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
@@ -398,13 +408,13 @@
     self.tagLabel.attributedText =  attributeString;
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
-    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
+//    UIImage *placeholder = [FHHouseBaseItemCell placeholderImage];
     FHSearchHouseDataItemsHouseImageModel *imageModel = commonModel.images.firstObject;
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:placeholder];
+    [self updateMainImageWithUrl:imageModel.url];
     
     if (houseType == FHHouseTypeSecondHandHouse) {
         FHHomeHouseDataItemsImagesModel *imageModel = commonModel.houseImage.firstObject;
-        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:placeholder];
+        [self updateMainImageWithUrl:imageModel.url];
         self.subTitleLabel.text = commonModel.displaySubtitle;
         self.priceLabel.text = commonModel.displayPrice;
         self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
@@ -426,7 +436,7 @@
         self.priceLabel.text = commonModel.pricing;
         self.pricePerSqmLabel.text = nil;
         FHSearchHouseDataItemsHouseImageModel *imageModel = [commonModel.houseImage firstObject];
-        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:placeholder];
+        [self updateMainImageWithUrl:imageModel.url];
         
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
             
@@ -475,7 +485,7 @@
     self.houseVideoImageView.hidden = YES;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
+    [self updateMainImageWithUrl:imageModel.url];
     
     self.imageTagLabelBgView.hidden = YES;
     [self updateImageTopLeft];
@@ -508,7 +518,7 @@
     self.houseVideoImageView.hidden = YES;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
+    [self updateMainImageWithUrl:imageModel.url];
     
     self.imageTagLabelBgView.hidden = YES;
     [self updateImageTopLeft];
@@ -559,7 +569,7 @@
         
         self.priceLabel.text = model.displayPricePerSqm;
         FHSearchHouseDataItemsHouseImageModel *imageModel = model.images.firstObject;
-        [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
+        [self updateMainImageWithUrl:imageModel.url];
     }
 }
 
@@ -569,7 +579,7 @@
     self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
     _priceBgView.yoga.justifyContent = YGJustifyFlexStart;
     FHSearchHouseDataItemsHouseImageModel *imageModel = model.houseImage.firstObject;
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
+    [self updateMainImageWithUrl:imageModel.url];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
         self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
@@ -687,7 +697,7 @@
     }
     
     FHSearchHouseDataItemsHouseImageModel *imageModel = [model.houseImage firstObject];
-    [self.mainImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[FHHouseBaseItemCell placeholderImage]];
+    [self updateMainImageWithUrl:imageModel.url];
     
     if (model.houseImageTag.text && model.houseImageTag.backgroundColor && model.houseImageTag.textColor) {
         self.imageTagLabel.textColor = [UIColor colorWithHexString:model.houseImageTag.textColor];
