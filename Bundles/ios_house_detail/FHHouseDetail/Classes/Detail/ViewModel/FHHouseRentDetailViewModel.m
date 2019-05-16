@@ -167,7 +167,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
-        self.bottomStatusBar.text = @"停止出租";
+        self.bottomStatusBar.text = @"该房源停止出租";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -219,11 +219,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
     // 清空数据源
     [self.items removeAllObjects];
+    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
     if (model.data.houseImage) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.houseImage;
-        [self.items addObject:headerCellModel];
+    }else{
+        //无图片时增加默认图
+        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        headerCellModel.houseImage = @[imgModel];
     }
+    [self.items addObject:headerCellModel];
+    
     // 添加标题
     if (model.data) {
         FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
