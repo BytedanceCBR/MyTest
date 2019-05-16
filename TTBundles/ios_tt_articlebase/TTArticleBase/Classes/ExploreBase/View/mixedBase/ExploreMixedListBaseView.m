@@ -2690,9 +2690,9 @@ TTRefreshViewDelegate
                                                  
                                              }
                                              
-                                             if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0) {
+//                                             if (!isResponseFromRemote && weakSelf.listView.pullDownView.state == PULL_REFRESH_STATE_INIT && weakSelf.listView.customTopOffset != 0) {
                                                  [weakSelf.listView setContentOffset:CGPointMake(0, weakSelf.listView.customTopOffset - weakSelf.listView.contentInset.top) animated:NO];
-                                             }
+//                                             }
                                              [weakSelf reportDelegateLoadFinish:isFinish isUserPull:weakSelf.listView.pullDownView.isUserPullAndRefresh isGetMore:getMore];
                                          }
                                          else {
