@@ -251,12 +251,24 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 6.5;
     NSInteger currentIndex = selectIndex;
     CGFloat winWidth = [UIScreen mainScreen].bounds.size.width;
-    if ((currentIndex + 1) * itemWidth > winWidth ) {
-        [self.bottomScrollView setContentOffset:CGPointMake((currentIndex + 1) * itemWidth - winWidth, 0) animated:YES];
+    // +2 后一个是否也没显示完全，显示出来方便点击（+1也可）
+    if ((currentIndex + 2) * itemWidth > winWidth ) {
+        NSInteger namesCount = self.nameArray.count;
+        if (currentIndex < namesCount - 1) {
+            // 说明后面还有内容可显示
+            [self.bottomScrollView setContentOffset:CGPointMake((currentIndex + 2) * itemWidth - winWidth, 0) animated:YES];
+        } else {
+            [self.bottomScrollView setContentOffset:CGPointMake((currentIndex + 1) * itemWidth - winWidth, 0) animated:YES];
+        }
     } else {
         CGFloat offsetX = self.bottomScrollView.contentOffset.x;
-        if (currentIndex * itemWidth < offsetX) {
-            [self.bottomScrollView setContentOffset:CGPointMake(currentIndex * itemWidth, 0) animated:YES];
+        // 前一个是否也没显示完全，显示出来方便点击
+        if ((currentIndex - 1) * itemWidth < offsetX) {
+            if (currentIndex == 0) {
+                [self.bottomScrollView setContentOffset:CGPointMake(currentIndex * itemWidth, 0) animated:YES];
+            } else {
+                [self.bottomScrollView setContentOffset:CGPointMake((currentIndex - 1) * itemWidth, 0) animated:YES];
+            }
         }
     }
 }
