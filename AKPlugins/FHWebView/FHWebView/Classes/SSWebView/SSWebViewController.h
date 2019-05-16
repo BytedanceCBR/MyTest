@@ -59,3 +59,5 @@ extern NSString *const  SSViewControllerBaseConditionADIDKey;
 static inline void ssOpenWebView(NSURL * requestURL, NSString * title, UINavigationController * naviController, BOOL supportRotate, NSDictionary *parameters) {
     [SSWebViewController openWebViewForNSURL:requestURL title:title navigationController:naviController supportRotate:supportRotate conditions:parameters];
 }
+
+NSObject *unwrap_weak3(NSHashTable *table);

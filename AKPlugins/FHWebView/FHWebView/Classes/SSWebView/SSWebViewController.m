@@ -8,11 +8,8 @@
 
 
 #import "SSWebViewController.h"
-//#import "SSActivityView.h"
 #import "TTTrackerWrapper.h"
 #import "SSCommonLogic.h"
-//#import "TTActivityShareManager.h"
-//#import "TTRealnameAuthServiceForWebManager.h"
 
 #import <TTUIWidget/TTNavigationController.h>
 #import <TTUIWidget/UIViewController+NavigationBarStyle.h>
@@ -110,6 +107,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
+    self.paramObj = paramObj;
     NSMutableDictionary *params = [NSMutableDictionary new];
     [params addEntriesFromDictionary:paramObj.allParams];
     BOOL iOS8 = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0;
@@ -125,7 +123,6 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     self.closeStackCount = 0;
     if ([params.allKeys containsObject:@"url"]) {
         urlStr = [params objectForKey:@"url"];
-        
         if ([params.allKeys containsObject:@"ttencoding"]) {
             if ([[params objectForKey:@"ttencoding"] isEqualToString:@"base64"]) {
                 urlStr = [TTStringHelper decodeStringFromBase64Str:urlStr];
@@ -137,7 +134,9 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     
     self = [self initWithSupportIPhoneRotate:supportIphoneRotate paramObj:paramObj];
     if (self) {
-        self.navigationItem.title = isEmptyString([params tt_stringValueForKey:@"title"])? @"网页浏览": [params tt_stringValueForKey:@"title"];
+//        if([FHWebViewConfig appVersion] == FHAppVersionC){
+//            self.navigationItem.title = isEmptyString([params tt_stringValueForKey:@"title"])? @"": [params tt_stringValueForKey:@"title"];
+//        }
         self.titleImageName = [params tt_stringValueForKey:@"titleImageName"]; //显示为logo
         self.requestURL = [TTStringHelper URLWithURLString:urlStr];
         if ([params valueForKey:SSViewControllerBaseConditionADIDKey]) {
@@ -165,7 +164,6 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
         }
         
-//        self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         self.hideMore = [params tt_boolValueForKey:@"hide_more"];
         if ([[params tt_stringValueForKey:@"share_enable"] isKindOfClass:[NSString class]]) {
             self.showShareBtn = [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"true"] || [[params tt_stringValueForKey:@"share_enable"] isEqualToString:@"1"];
@@ -485,7 +483,6 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             _customeNavigationBar = [[UIView alloc] initWithFrame:CGRectMake(0, 20, CGRectGetWidth(backButtonView.frame), 44)];
             [self.view addSubview:_customeNavigationBar];
             [_customeNavigationBar addSubview:backButtonView];
-            // customeNavigationBar.backgroundColor = [UIColor yellowColor];
             backButtonView.left = 8;
         }
     }
@@ -522,6 +519,8 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         [label sizeToFit];
         self.navigationItem.titleView = label;
         self.titleLabel = label;
+    }else{
+        self.navigationItem.title = isEmptyString([self.paramObj.allParams tt_stringValueForKey:@"title"])? @"": [self.paramObj.allParams tt_stringValueForKey:@"title"];
     }
 }
 
@@ -949,7 +948,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         return;
     }
     
-    self.navigationItem.title = title;
+    if([FHWebViewConfig appVersion] == FHAppVersionC){
+        self.navigationItem.title = title;
+    }else{
+        self.titleLabel.text = title;
+        [self.titleLabel sizeToFit];
+    }
 }
 
 - (void)requestWithURL:(NSURL *)url
@@ -1148,3 +1152,12 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
 }
 
 @end
+
+NSObject *unwrap_weak3(NSHashTable *table)
+{
+    if([table isKindOfClass:[NSHashTable class]]){
+        NSHashTable *t = (NSHashTable *)table;
+        return [t anyObject];
+    }
+    return nil;
+}
