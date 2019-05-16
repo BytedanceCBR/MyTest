@@ -1087,11 +1087,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (NSString *)awemeAPPAppleID;
 @end
 
-@interface SSCommonLogic (VideoDetailPlayLastShowText)
-+ (void)setVideoDetailPlayLastShowText:(BOOL)enabled;
-+ (BOOL)isVideoDetailPlayLastShowText;
-@end
-
 @interface SSCommonLogic (UGCThreadPost)
 + (void)setUGCThreadPostImageWebP:(BOOL)enabled;
 + (BOOL)isUGCThreadPostImageWebP;

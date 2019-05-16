@@ -242,13 +242,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item_30.checked = [SSCommonLogic imageTransitionAnimationEnable];
         [itemArray addObject:item_30];
 
-        STTableViewCellItem *item_32 = [[STTableViewCellItem alloc] initWithTitle:@"播放上一个按钮样式" target:self action:NULL];
-        item_32.switchStyle = YES;
-        item_32.switchAction = @selector(videoDetailPlayLastShowTextActionFired:);
-        item_32.checked = [SSCommonLogic isVideoDetailPlayLastShowText];
-        [itemArray addObject:item_32];
-    
-        
         STTableViewCellItem *item_35 = [[STTableViewCellItem alloc] initWithTitle:@"重置上传通讯录状态" target:self action:@selector(_resetContactsActionFired)];
         [itemArray addObject:item_35];
     
@@ -1191,16 +1184,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 - (void)iCloudEableAction:(UISwitch *)uiswitch
 {
     [SSCommonLogic setIcloudBtnEnabled:uiswitch.isOn];
-}
-
-- (void)videoDetailPlayLastShowTextActionFired:(UISwitch *)uiswitch {
-    
-    if (uiswitch.isOn) {
-        [SSCommonLogic setVideoDetailPlayLastShowText:YES];
-    }
-    else {
-        [SSCommonLogic setVideoDetailPlayLastShowText:NO];
-    }
 }
 
 - (void)videoDetailRelatedStyleChange:(UITextField *)field{
