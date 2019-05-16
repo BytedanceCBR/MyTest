@@ -167,7 +167,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
-        self.bottomStatusBar.text = @"该房源停止出租";
+        self.bottomStatusBar.text = @"该房源已停止出租";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
