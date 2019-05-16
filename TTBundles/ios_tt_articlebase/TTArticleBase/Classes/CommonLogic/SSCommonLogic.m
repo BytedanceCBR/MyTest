@@ -1805,20 +1805,10 @@ NSString * const SSCommonLogicLaunchedTimes4ShowIntroductionViewKey = @"SSCommon
 @end
 
 ///...
-NSString * const SSCommonLogicFeedRefreshADDisableKey = @"SSCommonLogicFeedRefreshADDisableKey";
 @implementation SSCommonLogic (FeedRefreshADDisable)
 + (BOOL)feedRefreshADDisable
 {
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:SSCommonLogicFeedRefreshADDisableKey]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicFeedRefreshADDisableKey];
-    }
     return NO;
-}
-
-+ (void)setFeedRefreshADDisable:(BOOL)disabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:disabled forKey:SSCommonLogicFeedRefreshADDisableKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 @end
 
@@ -2346,23 +2336,11 @@ NSString *const kTTGallerySlideDownOutTipKey =  @"gallerySlideDownOut";
 
 @end
 
-NSString *const kTTGalleryTileSwitchKey =  @"galleryTileSwitch";
-
 @implementation SSCommonLogic (TTGalleryTileSwitch)
 
 + (BOOL)appGalleryTileSwitchOn
 {
-    NSNumber *tileSwitch =  [[NSUserDefaults standardUserDefaults] objectForKey:kTTGalleryTileSwitchKey];
-    if (tileSwitch.integerValue == 1) {
-        return YES;
-    }
     return NO;
-}
-
-+ (void)setGalleryTileSwitch:(NSNumber *)value
-{
-    [[NSUserDefaults standardUserDefaults] setObject:value forKey:kTTGalleryTileSwitchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
@@ -2373,17 +2351,7 @@ NSString *const kTTGallerySlideOutSwitchKey =  @"gallerySlideOutSwitch";
 
 + (BOOL)appGallerySlideOutSwitchOn
 {
-    NSNumber *tileSwitch =  [[NSUserDefaults standardUserDefaults] objectForKey:kTTGallerySlideOutSwitchKey];
-    if (tileSwitch.integerValue == 1) {
-        return YES;
-    }
     return YES;
-}
-
-+ (void)setGallerySlideOutSwitch:(NSNumber *)value
-{
-    [[NSUserDefaults standardUserDefaults] setObject:value forKey:kTTGallerySlideOutSwitchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
@@ -2812,59 +2780,10 @@ static NSString *const kSSCommonLogicVideoFloating = @"kSSCommonLogicVideoFloati
 }
 @end
 
-
-
-@implementation SSCommonLogic (FollowTabTips)
-static NSString *const kSSCommonLogicFollowTabTipsEnalbe = @"kSSCommonLogicFollowTabTipsEnalbe";
-static NSString *const kSSCommonLogicFollowTabTipsString = @"kSSCommonLogicFollowTabTipsString";
-+ (void)setFollowTabTipsEnable:(BOOL)allowed
-{
-    [[NSUserDefaults standardUserDefaults] setBool:allowed forKey:kSSCommonLogicFollowTabTipsEnalbe];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isFollowTabTipsEnable
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicFollowTabTipsEnalbe];
-}
-
-+ (void)setFollowTabTipsString:(NSString *)string
-{
-    [[NSUserDefaults standardUserDefaults] setValue:string forKey:kSSCommonLogicFollowTabTipsString];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSString *)followTabTipsString
-{
-    return [[NSUserDefaults standardUserDefaults] stringForKey:kSSCommonLogicFollowTabTipsString];
-}
-@end
-
-@implementation SSCommonLogic (PreloadFollow)
-static NSString *const kSSCommonLogicPreloadFollowEnable = @"kSSCommonLogicPreloadFollowEnable";
-+ (void)setPreloadFollowEnable:(BOOL)allowed
-{
-    [[NSUserDefaults standardUserDefaults] setBool:allowed forKey:kSSCommonLogicPreloadFollowEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isPreloadFollowEnable
-{
-    BOOL isEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicPreloadFollowEnable];
-    return isEnable;
-}
-@end
-
 @implementation SSCommonLogic (Article)
-static NSString *const kSSCommonLogicArticeReadPositionEnable = @"kSSCommonLogicArticeReadPositionEnable";
-
-+ (void)setArticleReadPositionEnable:(BOOL)enable {
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kSSCommonLogicArticeReadPositionEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 + (BOOL)isEnableArticleReadPosition {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicArticeReadPositionEnable];
+    return YES;
 }
 @end
 
@@ -3131,53 +3050,6 @@ static NSString *const kSSCommonLogicImageDisplayModeIsUpgradeUserKey = @"kSSCom
     BOOL isUpgrade = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicImageDisplayModeIsUpgradeUserKey];
     return isUpgrade;
 }
-@end
-
-static NSString *const kSSCommonLogicThirdTabWeitoutiaoEnabledKey = @"kSSCommonLogicThirdTabWeitoutiaoEnabledKey";
-@implementation SSCommonLogic (ThirdTabSwitch)
-
-+ (void)setThirdTabWeitoutiaoEnabled:(BOOL)enabled {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kSSCommonLogicThirdTabWeitoutiaoEnabledKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isThirdTabWeitoutiaoEnabled {
-    //确保在整个app生命周期内isThirdTabWeitoutiaoEnabled不变
-    if ([SSCommonLogic isThirdTabHTSEnabled]) {
-        return NO;
-    }
-    static BOOL isThirdTabWeitoutiaoEnabled = YES;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        //第三个tab默认是微头条
-        NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicThirdTabWeitoutiaoEnabledKey];
-        if (nil != enable && [enable isKindOfClass:[NSNumber class]]) {
-            isThirdTabWeitoutiaoEnabled = [enable boolValue];
-        }
-    });
-    return isThirdTabWeitoutiaoEnabled;
-}
-
-+ (BOOL)isThirdTabFollowEnabled {
-    if ([SSCommonLogic isThirdTabWeitoutiaoEnabled]) {
-        return NO;
-    } else if ([SSCommonLogic isThirdTabHTSEnabled]) {
-        return NO;
-    } else {
-        return YES;
-    }
-}
-
-+ (BOOL)isMyFollowSwitchEnabled {
-    if ([SSCommonLogic isThirdTabWeitoutiaoEnabled]) {
-        return YES;
-    } else if ([SSCommonLogic isThirdTabHTSEnabled]) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
 @end
 
 @implementation SSCommonLogic (UserVerifyConfig)
@@ -3765,27 +3637,6 @@ static NSString* const kWebDomCompleteEnableKey = @"kWebDomCompleteEnableKey";
 
 @end
 
-@implementation SSCommonLogic (TTAdMZSDKEnable)
-
-static NSString* const kMZSDKEnableKey = @"kMZSDKEnableKey";
-
-+ (void)setMZSDKEnable:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kMZSDKEnableKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isMZSDKEnable
-{
-    NSNumber *enable = [[NSUserDefaults standardUserDefaults] objectForKey:kMZSDKEnableKey];
-    if (!enable || [enable boolValue]) {
-        return YES;
-    }
-    return NO;
-}
-
-@end
-
 @implementation SSCommonLogic (TTAdUAEnable)
 
 static NSString* const kTTAdUAEnableKey = @"kTTAdUAEnableKey";
@@ -4036,19 +3887,6 @@ static NSString * const kVideoCompressRefactorEnabled = @"kVideoCompressRefactor
 
 @end
 
-@implementation SSCommonLogic (VideoFeedCellHeightAjust)
-+ (void)setVideoFeedCellHeightAjust:(NSInteger)enabled {
-    [[NSUserDefaults standardUserDefaults] setInteger:enabled forKey:@"tt_video_feed_cellui_height_adjust"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-+ (NSInteger)isVideoFeedCellHeightAjust {
-    if ([TTDeviceHelper isPadDevice]) {
-        return 0;
-    }
-    return [[NSUserDefaults standardUserDefaults] integerForKey:@"tt_video_feed_cellui_height_adjust"];
-}
-@end
-
 static NSString * const kWeitoutiaoRepostOriginalReviewHintKey = @"kWeitoutiaoRepostOriginalReviewHintKey";
 @implementation SSCommonLogic (WeitoutiaoRepostOriginalStatusHint)
 
@@ -4193,7 +4031,6 @@ static NSString * const kNewMessageNotificationEnabledKey = @"kNewMessageNotific
 
 @end
 
-static NSString *const kSSCommonLogicForthTabHTSEnabledKey = @"kSSCommonLogicForthTabHTSEnabledKey";
 static NSString *const kSSCommonLogicForthTabInitialVisibleCategoryIndexKey = @"kSSCommonLogicForthTabInitialVisibleCategoryIndexKey";
 static NSString *const kSSCommonLogicHTSTabBannerInfoDictKey = @"kSSCommonLogicHTSTabBannerInfoDictKey";
 static NSString *const kSSCommonLogicHTSTabMineIconURLKey = @"kSSCommonLogicHTSTabMineIconURLKey";
@@ -4202,46 +4039,6 @@ static NSString *const kSSCommonLogicHTSVideoPlayerTypeKey = @"kSSCommonLogicHTS
 static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLogicAWEVideoDetailFirstFrameKey";
 
 @implementation SSCommonLogic (HTSTabSettings)
-
-+ (void)setHTSTabSwitch:(NSInteger)tabSwitch {
-    [[NSUserDefaults standardUserDefaults] setInteger:tabSwitch forKey:kSSCommonLogicForthTabHTSEnabledKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isThirdTabHTSEnabled {
-    static BOOL isThirdTabHTSEnabled = NO;
-    //确保在整个app生命周期内isThirdTabHTSEnabled不变
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if ([TTDeviceHelper isPadDevice] || [TTDeviceHelper OSVersionNumber] < 8 || [SSCommonLogic isForthTabHTSEnabled]){
-            isThirdTabHTSEnabled = NO;//ipad 或者iOS 7及以下不支持,第四个tab是火山的话第三个tab一定不是
-        }
-        else if ([[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicForthTabHTSEnabledKey]){
-            NSInteger tabSwitch = [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicForthTabHTSEnabledKey];
-            isThirdTabHTSEnabled = tabSwitch == 2;
-        }
-    });
-    return isThirdTabHTSEnabled;
-}
-
-+ (BOOL)isForthTabHTSEnabled {
-    //确保在整个app生命周期内isForthTabHTSEnabledd不变
-    if ([TTDeviceHelper isPadDevice] || [TTDeviceHelper OSVersionNumber] < 8){
-        return NO;//ipad 或者iOS 7及以下不支持
-    }
-    static BOOL isForthTabHTSEnabled = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        //第四个tab默认是我的tab
-        NSInteger tabSwitch = [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicForthTabHTSEnabledKey];
-        if (tabSwitch > 0 && tabSwitch != 2) {
-            isForthTabHTSEnabled = YES;
-        } else{
-            isForthTabHTSEnabled = NO;
-        }
-    });
-    return isForthTabHTSEnabled;
-}
 
 //火山tab 首次进入显示火山／抖音频道
 + (void)setForthTabInitialVisibleCategoryIndex:(NSInteger)index
@@ -4438,18 +4235,6 @@ static NSString *const kTTChatroomInterrupt = @"tt_chatroom_handle_interrupt";
 
 + (BOOL)handleInterruptTrickMethodEnable{
     return [[NSUserDefaults standardUserDefaults] boolForKey:kTTChatroomInterrupt];
-}
-@end
-
-static NSString *const kUGCEmojiQuickInputEnabled = @"tt_ugc_emoji_quick_input_enabled";
-@implementation SSCommonLogic (UGCEmojiQuickInput)
-+ (void)setUGCEmojiQuickInputEnabled:(BOOL)enabled {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kUGCEmojiQuickInputEnabled];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isUGCEmojiQuickInputEnabled {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kUGCEmojiQuickInputEnabled];
 }
 @end
 
@@ -4960,18 +4745,6 @@ static NSString *const kTTFeedRefreshHistoryStrategy = @"tt_feed_refresh_history
     }
     
     return res;
-}
-@end
-
-static NSString *const kTTDetailPushTipsEnable = @"tt_detail_push_tips_enable";
-@implementation SSCommonLogic (PushTipsEnable)
-+ (void)setDetailPushTipsEnable:(BOOL)enable{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kTTDetailPushTipsEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)detailPushTipsEnable{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kTTDetailPushTipsEnable];
 }
 @end
 

@@ -154,16 +154,6 @@ static SSFetchSettingsManager * manager;
         [SSCommonLogic setAppseeSampleSetting:appseeSetting];
     }
     
-    NSNumber *galleryTileSwitch = [dSettings objectForKey:@"is_gallery_laied_flat"];
-    if ([galleryTileSwitch isKindOfClass:[NSNumber class]]) {
-        [SSCommonLogic setGalleryTileSwitch:galleryTileSwitch];
-    }
-    
-    NSNumber *gallerySlideOutSwitch = [dSettings objectForKey:@"is_gallery_up_return"];
-    if ([gallerySlideOutSwitch isKindOfClass:[NSNumber class]]) {
-        [SSCommonLogic setGallerySlideOutSwitch:gallerySlideOutSwitch];
-    }
-    
     if ([[dSettings allKeys] containsObject:@"show_apns_alert_view"]) {
         [SSAPNsAlertManager setCouldShowAPNsAlert:[[dSettings objectForKey:@"show_apns_alert_view"] boolValue]];
     }
@@ -204,6 +194,7 @@ static SSFetchSettingsManager * manager;
         BOOL enable = [dSettings tt_boolValueForKey:@"gallery_detail_page_follow_button_enabled"];
         [SSCommonLogic setPicsFollowEnabled:enable];
     }
+
     if ([[dSettings allKeys] containsObject:@"tt_comment_bindmobile_text_settings"]) {
         NSDictionary *dic = [dSettings tt_objectForKey:@"tt_comment_bindmobile_text_settings"];
         if (dic.allKeys.count > 0 && dic) {

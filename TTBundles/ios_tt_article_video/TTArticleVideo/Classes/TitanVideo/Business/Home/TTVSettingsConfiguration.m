@@ -55,7 +55,7 @@ void ttvs_setIsVideoNewRotateEnabled(BOOL enabled)
 
 NSInteger ttvs_isVideoFeedCellHeightAjust(void)
 {
-    return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_feed_cellui_height_adjust" defaultValue:@0 freeze:NO] integerValue];
+    return 0;
 }
 
 NSInteger ttvs_autoPlayModeServerSetting(void)
@@ -139,7 +139,7 @@ NSInteger ttvs_isVideoShowDirectShare(void)
 
 BOOL ttvs_isVideoDetailCenterStrongShare(void)
 {
-    return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_detail_share_strong" defaultValue:@NO freeze:NO] boolValue];
+    return YES;
 }
 
 BOOL ttvs_isVideoFeedshowDirectShare(void)
@@ -160,7 +160,7 @@ extern BOOL ttvs_isPlayerShowRelated(void)
 
 BOOL ttvs_isVideoPlayFullScreenShowDirectShare(void)
 {
-    return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_fullscreen_share_enable" defaultValue:@NO freeze:NO] boolValue];
+    return NO;
 }
 
 BOOL ttvs_enabledVideoRecommend(void)
@@ -190,7 +190,7 @@ BOOL ttvs_playerImageScaleEnable(void)
 
 BOOL ttvs_threeTopBarEnable(void)
 {
-    return [[[TTSettingsManager sharedManager] settingForKey:@"tt_three_top_bar" defaultValue:@YES freeze:YES] boolValue];
+    return NO;
 }
 
 BOOL ttvs_isShareIndividuatioEnable(void)
@@ -217,7 +217,7 @@ BOOL ttvs_isDoubleTapForDiggEnabled(void)
 
 BOOL ttvs_isEnhancePlayerTitleFont(void)
 {
-    return [TTDeviceHelper isPadDevice] ? NO : [[[TTSettingsManager sharedManager] settingForKey:@"tt_feed_title_enhance_style" defaultValue:@NO freeze:NO] integerValue];
+    return NO;
 }
 
 @implementation TTVSettingsConfiguration

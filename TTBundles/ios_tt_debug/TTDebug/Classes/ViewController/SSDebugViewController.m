@@ -192,12 +192,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item_14.checked = [SSCommonLogic isPosterADClickEnabled];
         [itemArray addObject:item_14];
         
-        STTableViewCellItem *item_15 = [[STTableViewCellItem alloc] initWithTitle:@"图集上下滑退出" target:self action:NULL];
-        item_15.switchStyle = YES;
-        item_15.switchAction = @selector(picturesSlideOutActionFired:);
-        item_15.checked = [SSCommonLogic appGallerySlideOutSwitchOn];
-        [itemArray addObject:item_15];
-        
         STTableViewCellItem *item_16 = [[STTableViewCellItem alloc] initWithTitle:@"日志加密" target:self action:NULL];
         item_16.switchStyle = YES;
         item_16.switchAction = @selector(_encryActionFired:);
@@ -1035,11 +1029,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 - (void)_posterADActionFired:(UISwitch *)uiswitch
 {
     [SSCommonLogic setPosterADClickEnabled:uiswitch.isOn];
-}
-
-- (void)picturesSlideOutActionFired:(UISwitch *)uiswitch
-{
-    [SSCommonLogic setGallerySlideOutSwitch:@(uiswitch.isOn)];
 }
 
 -(void)_crashActionFired{

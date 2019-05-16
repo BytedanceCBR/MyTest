@@ -353,7 +353,6 @@ extern NSString * const SSCommonLogicLaunchedTimes4ShowIntroductionViewKey;
 ///...
 @interface SSCommonLogic (FeedRefreshADDisable)
 + (BOOL)feedRefreshADDisable;
-+ (void)setFeedRefreshADDisable:(BOOL)disabled;
 @end
 
 
@@ -406,14 +405,11 @@ extern NSString * const SSCommonLogicLaunchedTimes4ShowIntroductionViewKey;
 @interface SSCommonLogic (TTGalleryTileSwitch)
 //0 表示关闭，1 表示开启
 + (BOOL)appGalleryTileSwitchOn;
-+ (void)setGalleryTileSwitch:(NSNumber *)value;
-
 @end
 
 @interface SSCommonLogic (TTGallerySlideOutSwitch)
 //0 表示关闭，1 表示开启
 + (BOOL)appGallerySlideOutSwitchOn;
-+ (void)setGallerySlideOutSwitch:(NSNumber *)value;
 
 @end
 
@@ -677,18 +673,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isVideoFloatingEnabled;
 @end
 
-@interface SSCommonLogic (FollowTabTips)
-+ (void)setFollowTabTipsEnable:(BOOL)allowed;
-+ (BOOL)isFollowTabTipsEnable;
-+ (void)setFollowTabTipsString:(NSString *)string;
-+ (NSString *)followTabTipsString;
-@end
-
-@interface SSCommonLogic (PreloadFollow)
-+ (void)setPreloadFollowEnable:(BOOL)allowed;
-+ (BOOL)isPreloadFollowEnable;
-@end
-
 @interface SSCommonLogic (ChannelControl)
 + (void)setChannelControlDict:(NSDictionary *)channelControlDict;
 + (NSDictionary *)getChannelControlDict;
@@ -699,7 +683,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 //文章相关的开关.都放在这把.
 @interface SSCommonLogic (Article)
 + (BOOL)isEnableArticleReadPosition;
-+ (void)setArticleReadPositionEnable:(BOOL)enable;
 @end
 
 @interface SSCommonLogic (HomepageUIConfig)
@@ -781,15 +764,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 
 + (void)setIsUpgradeUserAfterImageDisplayModeControlled:(BOOL)upgrade;
 + (BOOL)isUpgradeUserAfterImageDisplayModelControlled;
-@end
-
-@interface SSCommonLogic (ThirdTabSwitch)
-+ (void)setThirdTabWeitoutiaoEnabled:(BOOL)enabled;
-+ (BOOL)isThirdTabWeitoutiaoEnabled;
-//第三个tab是关注tab
-+ (BOOL)isThirdTabFollowEnabled;
-//我的tab里收藏下面出关注
-+ (BOOL)isMyFollowSwitchEnabled;
 @end
 
 @interface SSCommonLogic (UserVerifyConfig)
@@ -939,14 +913,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isWebDomCompleteEnable;
 @end
 
-@interface SSCommonLogic (TTAdMZSDKEnable)
-
-+ (void)setMZSDKEnable:(BOOL)enable;
-
-+ (BOOL)isMZSDKEnable;
-
-@end
-
 @interface SSCommonLogic (TTAdUAEnable)
 
 + (void)setUAEnable:(BOOL)enable;
@@ -1033,11 +999,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isVideoCompressRefactorEnabled;
 @end
 
-@interface SSCommonLogic (VideoFeedCellHeightAjust)
-+ (void)setVideoFeedCellHeightAjust:(NSInteger)enabled;
-+ (NSInteger)isVideoFeedCellHeightAjust;
-@end
-
 @interface SSCommonLogic (WeitoutiaoRepostOriginalStatusHint)
 + (NSString *)repostOriginalReviewHint;
 + (void)setRepostOriginalReviewHint:(NSString *)reviewHint;
@@ -1099,10 +1060,7 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @end
 
 @interface SSCommonLogic (HTSTabSettings)
-//火山tab总开关
-+ (void)setHTSTabSwitch:(NSInteger)tabSwitch;
-+ (BOOL)isForthTabHTSEnabled;
-+ (BOOL)isThirdTabHTSEnabled;
+
 //火山tab 首次进入显示火山／抖音频道
 + (void)setForthTabInitialVisibleCategoryIndex:(NSInteger)index;
 + (NSInteger)forthTabInitialVisibleCategoryIndex;
@@ -1260,11 +1218,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)feedLoadingInitImageEnable;
 @end
 
-@interface SSCommonLogic (PushTipsEnable)
-+ (void)setDetailPushTipsEnable:(BOOL)enable;
-+ (BOOL)detailPushTipsEnable;
-@end
-
 @interface SSCommonLogic (FeedAutoInsertEnable)
 + (void)setFeedAutoInsertDict:(NSDictionary *)dict;
 + (BOOL)feedAutoInsertEnable;
@@ -1311,11 +1264,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @interface SSCommonLogic (ThreeTopBar)
 + (void)setThreeTopBarEnable:(BOOL)enable;
 + (BOOL)threeTopBarEnable;
-@end
-
-@interface SSCommonLogic (UGCEmojiQuickInput)
-+ (void)setUGCEmojiQuickInputEnabled:(BOOL)enabled;
-+ (BOOL)isUGCEmojiQuickInputEnabled;
 @end
 
 @interface SSCommonLogic (VideoDetailRelatedStyle)

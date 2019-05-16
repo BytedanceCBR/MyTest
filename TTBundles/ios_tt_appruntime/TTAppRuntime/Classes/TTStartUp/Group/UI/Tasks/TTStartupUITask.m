@@ -136,30 +136,6 @@
 
 }
 
-- (NSString *)thirdTabBarIdentifier {
-    return kTTTabHTSTabKey;
-//    if ([SSCommonLogic isThirdTabHTSEnabled]) {
-//        return kTTTabHTSTabKey;
-//    } else if ([SSCommonLogic isThirdTabWeitoutiaoEnabled]) {
-//        return kTTTabWeitoutiaoTabKey;
-//    }
-//
-//    return kTTTabWeitoutiaoTabKey;
-}
-
-//第四个tab
-- (NSString *)forthTabBarIdentifier
-{
-//    if ([SSCommonLogic isForthTabHTSEnabled]) {
-//        return kTTTabHTSTabKey;
-//    }
-//    else {
-//        return kTTTabMineTabKey;
-//    }
-
-    return kTTTabMineTabKey;
-}
-
 //第五个tab
 - (NSString *)fifthTabBarIdentifier
 {
