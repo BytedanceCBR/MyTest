@@ -11,15 +11,7 @@
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTBridgeDefines.h"
 #import "FHEnvContext.h"
-#import "FHPostDataHTTPRequestSerializer.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-
-
-#define TTBRIDGE_CALLBACK_WITH_MSG(status, msg) \
-if (callback) {\
-callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWithFormat:msg] :@""});\
-}\
-
 
 @implementation FHCommonJSONHTTPRequestSerializer
 
@@ -35,7 +27,6 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     
     if ([@"POST" isEqualToString: method] && [params isKindOfClass:[NSDictionary class]]) {
-        
         NSData *data = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:nil];
         if (data) {
             request.HTTPBody = data;
