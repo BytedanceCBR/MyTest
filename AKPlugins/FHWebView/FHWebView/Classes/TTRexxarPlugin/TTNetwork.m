@@ -14,9 +14,58 @@
 #import "FHPostDataHTTPRequestSerializer.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
+
+#define TTBRIDGE_CALLBACK_WITH_MSG(status, msg) \
+if (callback) {\
+callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWithFormat:msg] :@""});\
+}\
+
+
+@implementation FHCommonJSONHTTPRequestSerializer
+
+- (TTHttpRequest *)URLRequestWithURL:(NSString *)URL
+                              params:(NSDictionary *)params
+                              method:(NSString *)method
+               constructingBodyBlock:(TTConstructingBodyBlock)bodyBlock
+                        commonParams:(NSDictionary *)commonParam
+{
+    TTHttpRequest *request = [super URLRequestWithURL:URL params:params method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
+    
+    [request setValue:@"application/json; encoding=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    if ([@"POST" isEqualToString: method] && [params isKindOfClass:[NSDictionary class]]) {
+        
+        NSData *data = [NSJSONSerialization dataWithJSONObject:params options:kNilOptions error:nil];
+        if (data) {
+            request.HTTPBody = data;
+        }
+    }
+    
+    
+    return request;
+}
+
+@end
+
 @implementation TTNetwork
 
 - (void)getNetCommonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+    
+    if (!commonParams) {
+        if (callback) {
+            callback(TTRJSBMsgFailed, @{@"msg": @"通用参数为空..请联系客户端相关人士"});
+        }
+        return;
+    }
+    
+    if (callback) {
+        callback(TTRJSBMsgSuccess, @{@"data": commonParams});
+    }
+}
+
+- (void)commonParamsWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
     
     if (!commonParams) {
@@ -38,9 +87,28 @@
     method = [method.uppercaseString isEqualToString:@"POST"]? @"POST": @"GET";
     
     NSDictionary *header = [param tt_dictionaryValueForKey:@"header"];
-    NSString *stringKey = [method isEqualToString:@"GET"] ? @"params" : @"data";
-    
-    NSDictionary *params = [param tt_objectForKey:stringKey];
+    NSDictionary *params = nil;
+    id tempParams = [param objectForKey:[method isEqualToString:@"GET"]? @"params": @"data"];
+    if([tempParams isKindOfClass:[NSDictionary class]]){
+        param = tempParams;
+    }else if ([tempParams isKindOfClass:[NSString class]]) {
+        NSString *stringJson = (NSString *)tempParams;
+        //json字符串
+        NSData *jsonData = [stringJson dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *err;
+        @try {
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                options:NSJSONReadingMutableContainers
+                                                                  error:&err];
+            if(!err){
+                params = dic;
+            }
+        } @catch (NSException *exception) {
+            
+        } @finally {
+            
+        }
+    }
     
     BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
     
@@ -49,91 +117,23 @@
         return;
     }
     
-    if (![params isKindOfClass:[NSDictionary class]]) {
-        if ([params isKindOfClass:[NSString class]]) {
-            NSString *stringJson = (NSString *)params;
-            //json字符串
-            NSData *jsonData = [stringJson dataUsingEncoding:NSUTF8StringEncoding];
-            NSError *err;
-            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                                options:NSJSONReadingMutableContainers
-                                                                  error:&err];
-            if(!err){
-                params = dic;
-            }
-        }else
-        {
-            return;
-        }
-    }
-    
-    /*
-     if (callback) {
-     callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
-     @"status": @(response.statusCode),
-     @"code": error?@(0): @(1),
-     @"beginReqNetTime": startTime
-     });
-     }
-     */
     NSString *startTime = [NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970] * 1000];
-    if ([method isEqualToString:@"GET"]) {
-        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams callback:^(NSError *error, id obj, TTHttpResponse *response) {
+    
+    [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHCommonJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        if (callback) {
             NSString *result = @"";
-            
             if([obj isKindOfClass:[NSData class]]){
                 result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
             }
-            if (callback) {
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": result,
-                                                          @"status": @(response.statusCode),
-                                                          @"code": error?@(0): @(1),
-                                                          @"beginReqNetTime": startTime
-                                                          });
-            }
-        }];
-    }else
-    {
-        [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:params method:method needCommonParams:needCommonParams requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
-            if (callback) {
-                NSString *result = @"";
-                if([obj isKindOfClass:[NSData class]]){
-                    result = [[NSString alloc] initWithData:obj encoding:NSUTF8StringEncoding];
-                }
-                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
-                                                          @"response": result,
-                                                          @"status": @(response.statusCode),
-                                                          @"code": error?@(0): @(1),
-                                                          @"beginReqNetTime":startTime
-                                                          });
-            }
-        }];
-    }
-
-//    :url
-//                                                          params:params
-//                                                          method:method
-//                                                needCommonParams:needCommonParams
-//                                                     headerField:header
-//                                               requestSerializer:nil
-//                                              responseSerializer:nil
-//                                                      autoResume:YES
-//                                                        callback:^(NSError *error, id obj, TTHttpResponse *response) {
-//                                                            if (callback) {
-//                                                                callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""), @"response": [obj JSONRepresentation]? : @"",
-//                                                                                                                         @"status": @(response.statusCode),
-//                                                                                                                         @"code": error?@(0): @(1),
-//                                                                                                                         @"beginReqNetTime": startTime
-//                                                                                                                         });
-    
-//                                                                NSLog(@"callback pramas = %@",@{@"headers" : response.allHeaderFields, @"response": [obj JSONRepresentation]? :@"",
-//                                                                                                @"status": @(response.statusCode),
-//                                                                                                @"code": error?@(0): @(1),
-//                                                                                                @"beginReqNetTime": startTime
-//                                                                                                });
-//                                                            }
-//
-//                                                        }];
+            callback(error? -1: TTBridgeMsgSuccess, @{@"headers" : (response.allHeaderFields ? response.allHeaderFields : @""),
+                                                      @"response": result,
+                                                      @"status": @(response.statusCode),
+                                                      @"code": error?@(0): @(1),
+                                                      @"beginReqNetTime": startTime
+                                                      });
+        }
+    }];
 }
+
 
 @end
