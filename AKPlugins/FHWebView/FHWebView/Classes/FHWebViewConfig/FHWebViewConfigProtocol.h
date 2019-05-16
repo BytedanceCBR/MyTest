@@ -9,7 +9,21 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSInteger, FHAppVersion)
+{
+    FHAppVersionC = 0,
+    FHAppVersionB,
+};
+
 @protocol FHWebViewConfigProtocol <NSObject>
+
++ (FHAppVersion)appVersion;
+
++ (UIColor *)progressViewLineFillColor;
+
+- (void)showEmptyView;
+
+- (void)hideEmptyView;
 
 @end
 
