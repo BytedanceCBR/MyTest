@@ -463,8 +463,6 @@ typedef NS_ENUM(NSUInteger, TTAutoPlaySettingMode) {
 + (void)setToolbarLabelEnabled:(BOOL)enabled;
 + (BOOL)toolbarLabelEnabled;
 
-+ (void)setShareIconStyle:(NSInteger)style;
-+ (NSInteger)shareIconStye;
 @end
 
 @interface SSCommonLogic (VideoTabBadge)
@@ -1060,10 +1058,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @end
 
 @interface SSCommonLogic (HTSTabSettings)
-
-//火山tab 首次进入显示火山／抖音频道
-+ (void)setForthTabInitialVisibleCategoryIndex:(NSInteger)index;
-+ (NSInteger)forthTabInitialVisibleCategoryIndex;
 //火山app是否已安装
 + (BOOL)isHTSAppInstalled;
 //火山tab顶部banner
@@ -1191,13 +1185,12 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @end
 
 @interface SSCommonLogic (PreloadmoreOutScreenNumber)
-+ (void)setPreloadmoreOutScreenNumber:(NSInteger)number;
 + (NSInteger)preloadmoreOutScreenNumber;
 @end
 
 @interface SSCommonLogic (FeedSearchEntry)
-+ (void)setFeedSearchEntryEnable:(BOOL)enable;
 + (BOOL)feedSearchEntrySettingsSaved;
+// tt_feed_search_entry_enable feed顶部出搜索推荐词
 + (BOOL)feedSearchEntryEnable;
 @end
 
@@ -1283,11 +1276,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 
 @end
 
-@interface SSCommonLogic (ShortVideoFirstUsePromptType)
-+(void)setShortVideoFirstUsePromptType:(NSNumber *)direction;
-+(NSNumber *)shortVideoFirstUsePromptType;
-@end
-
 @interface SSCommonLogic (ShortVideoDetailInfiniteScrollEnable)
 
 +(void)setShortVideoDetailInfiniteScrollEnable:(BOOL)enable;
@@ -1367,11 +1355,6 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 @interface SSCommonLogic (ChatroomVideoLiveSDK)
 + (void)setChatroomVideoLiveSDKEnable:(BOOL)enable;
 + (BOOL)chatroomVideoLiveSDKEnable;
-@end
-
-@interface SSCommonLogic (ArticleShareWithPGCName)
-+ (void)setArticleShareWithPGCName:(BOOL)enable;
-+ (BOOL)shouldArticleShareWithPGCName;
 @end
 
 @interface SSCommonLogic (ArticleTitleLogoSettings)

@@ -97,21 +97,6 @@ BOOL ttvs_isVideoCellShowShareEnabled(void)
 //    return [[[TTSettingsManager sharedManager] settingForKey:@"video_cell_show_share" defaultValue:@NO freeze:NO] boolValue];
 }
 
-/**
- 0:simple 1:red 2:image icon 3:app icon
- ("only_title", "查看更多", ),
- ("change_colour", "立即下载", ),
- ("with_icon", "立即下载", ),
- ("with_picture", "立即下载", ),
- 文案做成可配置：查看更多和立即下载，做成更明确的下载提示
- 四种样式：banner_type: only_title, change_colour, with_icon, with_picture
- */
-extern NSString * ttvs_playerFinishedRelatedType(void)
-{
-    NSDictionary *dic = (NSDictionary *)[[TTSettingsManager sharedManager] settingForKey:@"video_finish_download" defaultValue:@{} freeze:NO];
-    return [dic valueForKey:@"style"];
-}
-
 BOOL ttvs_videoMidInsertADEnable(void) {
     return NO;
 }
@@ -145,17 +130,6 @@ BOOL ttvs_isVideoDetailCenterStrongShare(void)
 BOOL ttvs_isVideoFeedshowDirectShare(void)
 {
     return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_video_feed_enable" defaultValue:@NO freeze:NO] boolValue];
-}
-
-extern BOOL ttvs_isPlayerShowRelated(void)
-{
-    if ([ttvs_playerFinishedRelatedType() isEqualToString:@"only_title"] ||
-        [ttvs_playerFinishedRelatedType() isEqualToString:@"change_colour"] ||
-        [ttvs_playerFinishedRelatedType() isEqualToString:@"with_icon"] ||
-        [ttvs_playerFinishedRelatedType() isEqualToString:@"with_picture"]) {
-        return YES;
-    }
-    return NO;
 }
 
 BOOL ttvs_isVideoPlayFullScreenShowDirectShare(void)
@@ -195,7 +169,7 @@ BOOL ttvs_threeTopBarEnable(void)
 
 BOOL ttvs_isShareIndividuatioEnable(void)
 {
-    return [TTDeviceHelper isPadDevice] ? NO : [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_individuation_enable" defaultValue:@NO freeze:NO] integerValue];
+    return NO;
 }
 
 //朋友圈分享样式优化，0:线上，1:无icon，2:三角形icon，3:无icon，title修改。

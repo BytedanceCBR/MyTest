@@ -961,11 +961,6 @@
     if ([dSettings objectForKey:@"tt_user_interactive_action_guide_enable"]) {
         [SSCommonLogic setToolbarLabelEnabled:[dSettings tt_boolValueForKey:@"tt_user_interactive_action_guide_enable"]];
     }
-    
-    if ([dSettings objectForKey:@"tt_share_icon_type"]) {
-        [SSCommonLogic setShareIconStyle:[dSettings tt_integerValueForKey:@"tt_share_icon_type"]];
-    }
-    
     if ([dSettings objectForKey:@"new_natant_style"]) {
         BOOL res = [dSettings tt_boolValueForKey:@"new_natant_style"];
         [SSCommonLogic setNewNatantStyleEnabled:res];
@@ -1380,10 +1375,6 @@
         [SSCommonLogic setPlayerImageEnhancementEnabel:[dSettings tt_boolValueForKey:@"tt_play_image_enhancement"]];
     }
     
-    if ([dSettings objectForKey:@"tt_huoshan_tab_default_index"]) {
-        [SSCommonLogic setForthTabInitialVisibleCategoryIndex:[dSettings tt_integerValueForKey:@"tt_huoshan_tab_default_index"]];
-    }
-    
     if ([dSettings objectForKey:@"tt_mine_icon_url"]) {
         [SSCommonLogic setHTSTabMineIconURL:[dSettings tt_stringValueForKey:@"tt_mine_icon_url"]];
     }
@@ -1394,10 +1385,6 @@
     
     if ([dSettings objectForKey:@"tt_short_video_ios_player_type"]) {
         [SSCommonLogic setHTSVideoPlayerType:[dSettings tt_integerValueForKey:@"tt_short_video_ios_player_type"]];
-    }
-    
-    if ([dSettings objectForKey:@"tt_huoshan_first_frame"]) {
-        [SSCommonLogic setAWEVideoDetailFirstFrame:[dSettings objectForKey:@"tt_huoshan_first_frame"]];
     }
     
     [TTBubbleViewManager shareManager];
@@ -1504,19 +1491,7 @@
     }else{
         [SSCommonLogic setFeedCaregoryAddHiddenEnable:NO];
     }
-    
-    if ([dSettings objectForKey:@"tt_feed_search_entry_enable"]) {
-        [SSCommonLogic setFeedSearchEntryEnable:[dSettings tt_boolValueForKey:@"tt_feed_search_entry_enable"]];
-    }else{
-        [SSCommonLogic setFeedSearchEntryEnable:NO];
-    }
-    
-    if ([dSettings objectForKey:@"tt_pre_load_more_out_screen_number"]) {
-        [SSCommonLogic setPreloadmoreOutScreenNumber:[dSettings tt_integerValueForKey:@"tt_pre_load_more_out_screen_number"]];
-    }else{
-        [SSCommonLogic setPreloadmoreOutScreenNumber:100];
-    }
-    
+
     if ([dSettings objectForKey:@"tt_feed_tips_show_strategy"]) {
         [SSCommonLogic setFeedTipsShowStrategyDict:[dSettings tt_dictionaryValueForKey:@"tt_feed_tips_show_strategy"]];
     }else{
@@ -1583,10 +1558,6 @@
         [SSCommonLogic setShortVideoScrollDirection:[dSettings objectForKey:@"tt_huoshan_detail_scroll_direction"]];
     }
     
-    if ([dSettings objectForKey:@"tt_huoshan_swipe_prompt"]){
-        [SSCommonLogic setShortVideoFirstUsePromptType:[dSettings objectForKey:@"tt_huoshan_swipe_prompt"]];
-    }
-    
     if ([dSettings objectForKey:@"tt_huoshan_detail_infinite_scrolling"]) {
         [SSCommonLogic setShortVideoDetailInfiniteScrollEnable:[dSettings tt_boolValueForKey:@"tt_huoshan_detail_infinite_scrolling"]];
     }
@@ -1641,14 +1612,6 @@
     
     if ([dSettings objectForKey:@"tt_ugc_mediamaker_max_duration"]) {
         [SSCommonLogic setRecorderMaxLength:[dSettings tt_doubleValueForKey:@"tt_ugc_mediamaker_max_duration"]];
-    }
-    
-//    if ([dSettings objectForKey:@"tt_live_TTVideoLive_enable"]) {
-//        [SSCommonLogic setChatroomVideoLiveSDKEnable:[dSettings tt_boolValueForKey:@"tt_live_TTVideoLive_enable"]];
-//    }
-    
-    if ([dSettings objectForKey:@"tt_share_with_pgcname_enable"]) {
-        [SSCommonLogic setArticleShareWithPGCName:[dSettings tt_boolValueForKey:@"tt_share_with_pgcname_enable"]];
     }
     
     //mine tab auth entry

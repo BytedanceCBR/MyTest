@@ -2015,14 +2015,6 @@ NSString * const SSCommonLogicDetailSharedWebViewSettingKey = @"SSCommonLogicDet
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_user_interactive_action_guide_enable"];
 }
 
-+ (void)setShareIconStyle:(NSInteger)style {
-    [[NSUserDefaults standardUserDefaults] setInteger:style forKey:@"tt_share_icon_type"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSInteger)shareIconStye {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:@"tt_share_icon_type"];
-}
 @end
 
 NSString * const SSCommonLogicVideoTabSpotServerSettingKey = @"SSCommonLogicVideoTabSpotServerSettingKey";
@@ -4031,26 +4023,12 @@ static NSString * const kNewMessageNotificationEnabledKey = @"kNewMessageNotific
 
 @end
 
-static NSString *const kSSCommonLogicForthTabInitialVisibleCategoryIndexKey = @"kSSCommonLogicForthTabInitialVisibleCategoryIndexKey";
 static NSString *const kSSCommonLogicHTSTabBannerInfoDictKey = @"kSSCommonLogicHTSTabBannerInfoDictKey";
 static NSString *const kSSCommonLogicHTSTabMineIconURLKey = @"kSSCommonLogicHTSTabMineIconURLKey";
 static NSString *const kSSCommonLogicHTSTabMineIconTipsHasShowKey = @"kSSCommonLogicHTSTabMineIconTipsHasShowKey";
 static NSString *const kSSCommonLogicHTSVideoPlayerTypeKey = @"kSSCommonLogicHTSVideoPlayerTypeKey";
-static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLogicAWEVideoDetailFirstFrameKey";
 
 @implementation SSCommonLogic (HTSTabSettings)
-
-//火山tab 首次进入显示火山／抖音频道
-+ (void)setForthTabInitialVisibleCategoryIndex:(NSInteger)index
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:index forKey:kSSCommonLogicForthTabInitialVisibleCategoryIndexKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSInteger)forthTabInitialVisibleCategoryIndex
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicForthTabInitialVisibleCategoryIndexKey];
-}
 
 + (BOOL)isHTSAppInstalled
 {
@@ -4118,13 +4096,6 @@ static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLo
         playType = 0;
     }
     [[NSUserDefaults standardUserDefaults] setInteger:playType forKey:kSSCommonLogicHTSVideoPlayerTypeKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-//小视频详情页是否开启显示首帧
-+ (void)setAWEVideoDetailFirstFrame:(NSNumber *)type;
-{
-    [[NSUserDefaults standardUserDefaults] setObject:type forKey:kSSCommonLogicAWEVideoDetailFirstFrameKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -4601,17 +4572,11 @@ static NSString *const kTTFeedCaregoryAddHidden = @"tt_feed_category_add_hidden"
 }
 @end
 
-static NSString *const kTTPreloadmoreOutScreenNumber = @"tt_pre_load_more_out_screen_number";
 @implementation SSCommonLogic (PreloadmoreOutScreenNumber)
-+ (void)setPreloadmoreOutScreenNumber:(NSInteger)number
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:number forKey:kTTPreloadmoreOutScreenNumber];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 + (NSInteger)preloadmoreOutScreenNumber
 {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:kTTPreloadmoreOutScreenNumber];
+    return 5;
 }
 @end
 
@@ -4629,36 +4594,16 @@ static NSString *const kTTSearchHintSuggestEnable = @"tt_search_hint_homepage_su
 }
 @end
 
-static NSString *const kTTFeedSearchEntryEnable = @"tt_feed_search_entry_enable";
 @implementation SSCommonLogic (FeedSearchEntry)
-+ (void)setFeedSearchEntryEnable:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setObject:@(enable) forKey:kTTFeedSearchEntryEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 + (BOOL)feedSearchEntrySettingsSaved
 {
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:kTTFeedSearchEntryEnable];
-    if (value) {
-        return YES;
-    } else {
-        return NO;
-    }
+    return NO;
 }
 
 + (BOOL)feedSearchEntryEnable
 {
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:kTTFeedSearchEntryEnable];
-    return [value boolValue];
+    return NO;
 }
 @end
 
@@ -4990,17 +4935,6 @@ static NSString *const kSSCommonLogicShortVideoDetailScrollDirectionKey = @"kSSC
 }
 @end
 
-static NSString *const kSSCommonLogicShortVideoFirstUsePromptTypeKey = @"kSSCommonLogicShortVideoFirstUsePromptTypeKey";
-@implementation SSCommonLogic (ShortVideoFirstUsePromptType)
-+(void)setShortVideoFirstUsePromptType:(NSNumber *)direction {
-    [[NSUserDefaults standardUserDefaults] setObject:direction forKey:kSSCommonLogicShortVideoFirstUsePromptTypeKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-+(NSNumber *)shortVideoFirstUsePromptType {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicShortVideoFirstUsePromptTypeKey];
-}
-@end
-
 static NSString *const kSSCommonLogicShortVideoDetailInfiniteScrollEnableKey = @"kSSCommonLogicShortVideoDetailInfiniteScrollEnableKey";
 @implementation SSCommonLogic (ShortVideoDetailInfiniteScrollEnable)
 +(void)setShortVideoDetailInfiniteScrollEnable:(BOOL)enable {
@@ -5242,26 +5176,6 @@ static NSString * const kSSCommonLogicSensetimeLicenceMd5Key = @"kSSCommonLogicS
 }
 
 @end
-
-static NSString * const kSSCommonLogicArticleShareWithPGCNameEnableKey = @"kSSCommonLogicArticleShareWithPGCNameEnableKey";
-@implementation SSCommonLogic (ArticleShareWithPGCName)
-
-+ (void)setArticleShareWithPGCName:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kSSCommonLogicArticleShareWithPGCNameEnableKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)shouldArticleShareWithPGCName
-{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicArticleShareWithPGCNameEnableKey]){
-        return [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicArticleShareWithPGCNameEnableKey];
-    }
-    return 1;
-}
-
-@end
-
 
 static NSString *const kTTSearchCancelClickActionChange = @"tt_search_cancel_click_action_change_enable";
 @implementation SSCommonLogic (SearchCancelClickActionChange)

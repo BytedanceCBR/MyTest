@@ -946,35 +946,9 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     BOOL isFreeFlow = [[TTFlowStatisticsManager sharedInstance] hts_isFreeFlow];
 
     if (!isFreeFlow && self.needCellularAlert && BTDNetworkConnected() && !BTDNetworkWifiConnected()) {
-        NSInteger cellularAlertStrategy = [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_cellular_alert_strategy" defaultValue:@0 freeze:YES] integerValue];
-        
-        if (cellularAlertStrategy == 1) {
-            if (kTSVCellularAlertShouldShow) {
-                kTSVCellularAlertShouldShow = NO;
-                [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"正在使用流量播放" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-            }
-        } else {
-            if (!self.cellularAlertHasShown && !kBDTAllowCellularVideoPlay) { //防止切到后台又弹一次
-                self.cellularAlertHasShown = YES;
-                
-                TTThemedAlertController *alertController = [[TTThemedAlertController alloc] initWithTitle:@"您当前正在使用移动网络，继续播放将消耗流量"
-                                                                                                  message:nil
-                                                                                            preferredType:TTThemedAlertControllerTypeAlert];
-                [alertController addActionWithTitle:@"停止播放"
-                                         actionType:TTThemedAlertActionTypeCancel
-                                        actionBlock:^{
-                                            !completion ?: completion(NO);
-                                        }];
-                [alertController addActionWithTitle:@"继续播放"
-                                         actionType:TTThemedAlertActionTypeNormal
-                                        actionBlock:^{
-                                            kBDTAllowCellularVideoPlay = YES;
-                                            !completion ?: completion(YES);
-                                        }];
-                [alertController showFrom:self animated:YES];
-                
-                return;
-            }
+        if (kTSVCellularAlertShouldShow) {
+            kTSVCellularAlertShouldShow = NO;
+            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"正在使用流量播放" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
         }
     }
     
