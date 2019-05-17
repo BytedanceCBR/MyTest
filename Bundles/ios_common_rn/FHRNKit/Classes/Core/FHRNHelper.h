@@ -5,12 +5,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TTRoute.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHRNHelper : NSObject
 
 @property(nonatomic,strong)NSMutableDictionary *channelCache;
+@property(nonatomic,strong)NSMutableDictionary *rnPreloadCache;
+
 
 +(instancetype)sharedInstance;
 
@@ -29,6 +32,18 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray *)fhRNPreLoadChannels;
 //可用的渠道
 + (NSArray *)fhRNEnableChannels;
+
+//开始缓存RN view
+- (void)addCacheViewOpenUrl:(NSString *)url andCacheKey:(NSInteger)cacheKey;
+
+- (void)addCacheViewOpenUrl:(NSString *)url andUserInfo:(TTRouteUserInfo *)userInfo andCacheKey:(NSInteger)cacheKey;
+
+//获取缓存
+- (TTRouteObject *)getRNCacheForCacheKey:(NSInteger)cacheKey;
+
+//清理缓存
+- (void)clearCacheForCacheKey:(NSInteger)cacheKey;
+
 @end
 
 NS_ASSUME_NONNULL_END
