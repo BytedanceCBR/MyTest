@@ -17,8 +17,8 @@
 #import "FHUserTracker.h"
 #import "FHHouseType.h"
 #import <TTDeviceHelper.h>
-
-@interface FHMyFavoriteViewController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol>
+#import "IFHMyFavoriteController.h"
+@interface FHMyFavoriteViewController ()<UIViewControllerErrorHandler,TTRouteInitializeProtocol, IFHMyFavoriteController>
 
 @property(nonatomic, strong) FHMyFavoriteViewModel *viewModel;
 @property(nonatomic, assign) FHHouseType type;

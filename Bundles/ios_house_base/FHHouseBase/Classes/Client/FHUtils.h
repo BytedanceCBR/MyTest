@@ -18,6 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 //json 字符串转dic
 + (NSDictionary *)dictionaryWithJsonString:(NSString *)jsonString;
 
+//字典转json字符串
++ (NSString *)getJsonStrFrom:(NSDictionary *)dic;
+
 /**
  * @method
  *

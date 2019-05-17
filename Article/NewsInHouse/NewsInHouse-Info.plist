@@ -4,6 +4,8 @@
 <dict>
 	<key>AppName</key>
 	<string>f100</string>
+	<key>BuildInfo</key>
+	<string></string>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -25,7 +27,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.6.5</string>
+	<string>0.6.7</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -72,7 +74,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>6.6.4.0</string>
+	<string>6.6.4.5</string>
 	<key>CHANNEL_NAME</key>
 	<string>local_test</string>
 	<key>Fabric</key>
@@ -226,6 +228,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>66501</string>
+	<string>66701</string>
 </dict>
 </plist>

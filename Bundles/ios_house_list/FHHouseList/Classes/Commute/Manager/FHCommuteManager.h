@@ -27,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)sync;
 
+//进入通勤找房
+-(void)tryEnterCommutePage:(NSString *)openUrl logParam:(NSDictionary *)logparam;
+
 @end
 
 NS_ASSUME_NONNULL_END

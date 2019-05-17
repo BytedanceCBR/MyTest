@@ -38,6 +38,8 @@
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHDetailMediaHeaderCell.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
+#import <FHHouseBase/FHMainApi+Contact.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -253,20 +255,63 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     // 清空数据源
     [self.items removeAllObjects];
-    // 添加头滑动图片
-    if (model.data.houseImageDictList.count > 0) {
+    // 添加头滑动图片 && 视频
+    BOOL hasVideo = NO;
+    
+    if (model.data.houseVideo && model.data.houseVideo.videoInfos.count > 0) {
+        hasVideo = YES;
+    }
+    if (model.data.houseImageDictList.count > 0 || hasVideo) {
+        FHMultiMediaItemModel *itemModel = nil;
+        if (hasVideo) {
+            FHVideoHouseVideoVideoInfosModel *info = model.data.houseVideo.videoInfos[0];
+            itemModel = [[FHMultiMediaItemModel alloc] init];
+            itemModel.mediaType = FHMultiMediaTypeVideo;
+            // 测试id
+            // @"v03004b60000bh57qrtlt63p5lgd20d0";
+            // @"v0200c940000bh9r6mna1haoho053neg";
+            if (info.coverImageUrl.length <= 0) {
+                // 视频没有url
+                if (model.data.houseImageDictList.count > 0) {
+                    for (int i = 0; i < model.data.houseImageDictList.count; i++) {
+                        FHDetailOldDataHouseImageDictListModel *item = model.data.houseImageDictList[i];
+                        if (item.houseImageList.count > 0) {
+                            FHDetailHouseDataItemsHouseImageModel *imageModel = item.houseImageList[0];
+                            if (imageModel.url.length > 0) {
+                                info.coverImageUrl = imageModel.url;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            itemModel.videoID = info.vid;
+            itemModel.imageUrl = info.coverImageUrl;
+            itemModel.vWidth = info.vWidth;
+            itemModel.vHeight = info.vHeight;
+            itemModel.infoTitle = model.data.houseVideo.infoTitle;
+            itemModel.infoSubTitle = model.data.houseVideo.infoSubTitle;
+            itemModel.groupType = @"视频";
+        }
+        
         FHDetailMediaHeaderModel *headerCellModel = [[FHDetailMediaHeaderModel alloc] init];
         headerCellModel.houseImageDictList = model.data.houseImageDictList;
-        headerCellModel.vedioModel = nil;// 添加视频模型数据
+        headerCellModel.vedioModel = itemModel;// 添加视频模型数据
         headerCellModel.contactViewModel = self.contactViewModel;
         [self.items addObject:headerCellModel];
     }else{
         // 添加头滑动图片
-        if (model.data.houseImage.count > 0) {
-            FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        if (model.data.houseImage.count > 0) {            
             headerCellModel.houseImage = model.data.houseImage;
-            [self.items addObject:headerCellModel];
+        }else{
+            //无图片时增加默认图
+            FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+            headerCellModel.houseImage = @[imgModel];
         }
+        
+        [self.items addObject:headerCellModel];
+        
     }
     // 添加标题
     if (model.data) {
@@ -363,12 +408,13 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         NSString *searchId = self.listLogPB[@"search_id"];
         NSString *imprId = self.listLogPB[@"impr_id"];
         agentListModel.tableView = self.tableView;
+        agentListModel.belongsVC = self.detailController;
         agentListModel.recommendedRealtors = model.data.recommendedRealtors;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
@@ -455,15 +501,28 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
+    
+    FHDetailContactModel *contactPhone = nil;
     if (model.data.highlightedRealtor) {
-        self.contactViewModel.contactPhone = model.data.highlightedRealtor;
+        contactPhone = model.data.highlightedRealtor;
     }else {
-        model.data.contact.unregistered = YES;
-        self.contactViewModel.contactPhone = model.data.contact;
+        contactPhone = model.data.contact;
+        contactPhone.unregistered = YES;
     }
+    if (contactPhone.phone.length > 0) {
+        
+        if ([self isShowSubscribe]) {
+            contactPhone.isFormReport = YES;
+        }else {
+            contactPhone.isFormReport = NO;
+        }
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     [self reloadData];
 }
 
@@ -587,7 +646,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_oldhouse_subscription";
-    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -604,7 +663,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
     }];
     // 静默关注功能
-    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
 
 - (BOOL)isShowSubscribe {

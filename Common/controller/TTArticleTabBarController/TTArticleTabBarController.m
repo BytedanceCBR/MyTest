@@ -45,7 +45,7 @@
 //#import "TTWeitoutiaoViewController.h"
 #import "TTProfileViewController.h"
 #import "TTAccountBindingMobileViewController.h"
-#import "TTHTSTabViewController.h"
+//#import "TTHTSTabViewController.h"
 #import <Crashlytics/Crashlytics.h>
 
 //#import "TTUGCPermissionService.h"
@@ -73,7 +73,7 @@
 #import "TTSettingsManager.h"
 #import "TSVStartupTabManager.h"
 #import "TTShortVideoHelper.h"
-#import "TSVTabViewController.h"
+//#import "TSVTabViewController.h"
 #import "TSVTabTipManager.h"
 #import "TTTabBarProvider.h"
 #import "TSVTabManager.h"

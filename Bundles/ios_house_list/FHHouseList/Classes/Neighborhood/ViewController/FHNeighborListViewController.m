@@ -108,7 +108,7 @@
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.filterPanel.mas_bottom);
         make.bottom.mas_equalTo(self.view);
-    }];
+    }];    
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(44, 0, 0, 0)];
     [self.view bringSubviewToFront:self.filterBgControl];
 }

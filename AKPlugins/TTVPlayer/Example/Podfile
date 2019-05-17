@@ -1,0 +1,58 @@
+
+install! 'cocoapods', :warn_for_multiple_pod_sources => false
+ENV["COCOAPODS_DISABLE_STATS"] = "true"
+
+require File.dirname(__FILE__)+'/pod_binary.rb'
+bd_use_app('xigua','thirdParty','toutiao', 'public')
+
+
+bd_enable_DevelopMode
+
+platform :ios, '8.0'
+inhibit_all_warnings!# ignore all warnings from all pods
+#inhibit_all_warnings!
+
+
+target 'TTVPlayer_Example' do
+  pod 'TTVPlayerPod', :path => '../'
+  #-----播放器内核-----
+  pod_source 'TTPlayerSDK', git:'git@code.byted.org:TTVideo/ttplayer_sdk.git', :tag => '2.9.11.6'
+  pod_source 'TTVideoEngine', '1.9.6.16'
+  pod_source 'TTFFmpeg', :git =>'git@code.byted.org:ttmp/TTFFmpeg.git', :tag => '1.6.6'
+
+#pod 'TTPlayerSDK', '2.9.9.10'
+#pod 'TTFFmpeg', '1.4.3'
+#pod_binary 'TTVideoEngine', '1.9.3.24'
+
+  #-----视频预加载库-----
+  pod_source 'TTPreloaderSDK', git:'git@code.byted.org:TTVideo/ttpreloader_sdk.git', :tag => '1.4.19'   # 这个包含 stdc++.6
+
+  pod_binary 'TTNetworkManager', '2.2.8.76-rc.11'
+  pod_binary 'AFNetworking', '2.5.4'
+  pod_binary 'AFgzipRequestSerializer', '0.0.3'
+
+  pod_source 'JSONModel'
+#  pod_binary 'TTTracker', '1.0.0.6'
+  pod_binary 'FLEX', '2.1.1'
+
+  
+  target 'TTVPlayer_Tests' do
+    inherit! :search_paths
+
+  end
+end
+
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            if config.base_configuration_reference then
+                xcconfig_path = config.base_configuration_reference.real_path
+                xcconfig = File.read(xcconfig_path)
+                new_xcconfig = xcconfig.sub(' -l"stdc++.6"', '')
+                new_xcconfig = new_xcconfig.sub(' -l"stdc++.6.0.9"', '')
+                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+            end
+        end
+    end
+end

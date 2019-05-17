@@ -27,7 +27,8 @@
 #import "FHDetailHouseSubscribeCell.h"
 #import "FHEnvContext.h"
 #import "NSDictionary+TTAdditions.h"
-#import "FHHouseDetailFollowUpViewModel.h"
+#import <FHHouseBase/FHHouseFollowUpHelper.h>
+#import <FHHouseBase/FHMainApi+Contact.h>
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -166,7 +167,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
-        self.bottomStatusBar.text = @"停止出租";
+        self.bottomStatusBar.text = @"该房源已停止出租";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -196,10 +197,21 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
     //当前IM全是非B端注册经纪人
     model.data.contact.unregistered = YES;
-    self.contactViewModel.contactPhone = model.data.contact;
+    FHDetailContactModel *contactPhone = model.data.contact;
+    if (contactPhone.phone.length > 0) {
+        
+        if ([self isShowSubscribe]) {
+            contactPhone.isFormReport = YES;
+        }else {
+            contactPhone.isFormReport = NO;
+        }
+    }else {
+        contactPhone.isFormReport = YES;
+    }
+    self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-    
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -207,11 +219,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
     // 清空数据源
     [self.items removeAllObjects];
+    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
     if (model.data.houseImage) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.houseImage;
-        [self.items addObject:headerCellModel];
+    }else{
+        //无图片时增加默认图
+        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        headerCellModel.houseImage = @[imgModel];
     }
+    [self.items addObject:headerCellModel];
+    
     // 添加标题
     if (model.data) {
         FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
@@ -410,7 +427,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_renthouse_subscription";
-    [FHHouseDetailAPI requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
@@ -427,7 +444,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
     }];
     // 静默关注功能
-    [self.contactViewModel.followUpViewModel silentFollowHouseByFollowId:self.houseId houseType:self.houseType actionType:self.houseType showTip:NO];
+    NSMutableDictionary *params = @{}.mutableCopy;
+    if (self.detailTracerDic) {
+        [params addEntriesFromDictionary:self.detailTracerDic];
+    }
+    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
+    configModel.houseType = self.houseType;
+    configModel.followId = self.houseId;
+    configModel.actionType = self.houseType;
+    // 静默关注功能
+    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
 
 - (BOOL)isShowSubscribe {

@@ -74,6 +74,15 @@
     self.navigationController.navigationBar.hidden = NO;
 }
 
+-(void)setTitle:(NSString *)title
+{
+    [super setTitle:title];
+    if ([self.navigationItem.titleView isKindOfClass:[UILabel class]]) {
+        UILabel *titleLabel = (UILabel *)self.navigationItem.titleView;
+        titleLabel.text = title;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // push过来的页面默认状态栏是隐藏的

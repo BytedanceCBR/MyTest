@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <FHHouseType.h>
+#import "FHMapSearchShowMode.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMapSearchBubbleModel : NSObject
@@ -19,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , strong) NSMutableDictionary *queryDict;
 @property(nonatomic , strong , readonly) NSString *query;
+
+@property(nonatomic , assign) FHMapSearchShowMode lastShowMode;//跳转之前的展示模式
 
 +(instancetype)bubbleFromUrl:(NSString *)url;
 

@@ -11,6 +11,7 @@
 #define WeakSelf   __weak typeof(self) wself = self
 #define StrongSelf __strong typeof(wself) self = wself
 
+API_AVAILABLE(ios(10.0))
 @interface TTNotificationServiceExtensionBase ()
 
 @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
@@ -19,6 +20,12 @@
 @end
 
 @implementation TTNotificationServiceExtensionBase
+//
+//- (instancetype)init
+//{
+//    self = [super init];
+//    return self;
+//}
 
 - (void)downloadAttatchmentWithURL:(NSURL *)url
                         completion:(void (^)(NSURL *localURL))completion {
@@ -56,16 +63,22 @@
 - (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
     self.contentHandler = contentHandler;
     self.bestAttemptContent = [request.content mutableCopy];
-    
+
     // iOS 10 Push锁屏统计相关，参照：
     // http://stackoverflow.com/questions/27933666/finding-out-if-the-device-is-locked-from-a-notification-widget
-    NSString *suiteName = @"group.todayExtenstionShareDefaults";
+//    NSString *suiteName = @"group.todayExtenstionShareDefaults";
+//    NSString *bundleInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+//    NSRange resRange = [bundleInfo rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
+//    if (resRange.location != NSNotFound) {
+//        suiteName = @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";;
+//    }
+    //
+    NSString *suiteName = @"group.com.f100.client.extension";
     NSString *bundleInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
-    NSRange resRange = [bundleInfo rangeOfString:@"inHouse" options:NSCaseInsensitiveSearch];
+    NSRange resRange = [bundleInfo rangeOfString:@"fp1" options:NSCaseInsensitiveSearch];
     if (resRange.location != NSNotFound) {
-        suiteName = @"group.com.ss.iphone.InHouse.article.News.ShareDefaults";;
+        suiteName = @"group.com.fp1.extension";;
     }
-    
     NSURL *directoryURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:suiteName];
     NSString *checkfilePath = [directoryURL.path stringByAppendingPathComponent:@"security.dummy"];
     NSError *error = nil;
@@ -73,6 +86,7 @@
     
     BOOL locked = NO;
     if (error != nil && error.code == 257) {
+        NSLog(@"**** the keychain appears to be locked, using the file method");
         locked = YES;
     }
     if (locked) {

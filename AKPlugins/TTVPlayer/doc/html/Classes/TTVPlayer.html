@@ -1,0 +1,4143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>TTVPlayer Class Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">TTVPlayer </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">bytedance</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/backButton">backButton</option>
+		
+		<option value="//api/name/containerView">containerView</option>
+		
+		<option value="//api/name/controlOverlayView">controlOverlayView</option>
+		
+		<option value="//api/name/controlUnderlayView">controlUnderlayView</option>
+		
+		<option value="//api/name/controlView">controlView</option>
+		
+		<option value="//api/name/controlViewLocked">controlViewLocked</option>
+		
+		<option value="//api/name/currentResolution">currentResolution</option>
+		
+		<option value="//api/name/customPartDelegate">customPartDelegate</option>
+		
+		<option value="//api/name/enableAudioSession">enableAudioSession</option>
+		
+		<option value="//api/name/isLocalVideo">isLocalVideo</option>
+		
+		<option value="//api/name/isPlaybackEnded">isPlaybackEnded</option>
+		
+		<option value="//api/name/muted">muted</option>
+		
+		<option value="//api/name/netClient">netClient</option>
+		
+		<option value="//api/name/playbackState">playbackState</option>
+		
+		<option value="//api/name/playerAction">playerAction</option>
+		
+		<option value="//api/name/playerView">playerView</option>
+		
+		<option value="//api/name/shouldPlay">shouldPlay</option>
+		
+		<option value="//api/name/showPlaybackControlsOnViewFirstLoaded">showPlaybackControlsOnViewFirstLoaded</option>
+		
+		<option value="//api/name/startPlayFromLastestCache">startPlayFromLastestCache</option>
+		
+		<option value="//api/name/state">state</option>
+		
+		<option value="//api/name/supportBackgroundPlayback">supportBackgroundPlayback</option>
+		
+		<option value="//api/name/supportPlaybackControlAutohide">supportPlaybackControlAutohide</option>
+		
+		<option value="//api/name/videoID">videoID</option>
+		
+		<option value="//api/name/videoTitle">videoTitle</option>
+		
+		<option value="//api/name/volume">volume</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Class Methods">
+		
+		<option value="//api/name/allActivePlayers">+ allActivePlayers</option>
+		
+		<option value="//api/name/setIgnoreAudioInterruption:">+ setIgnoreAudioInterruption:</option>
+		
+		<option value="//api/name/startOpenGLESActivity">+ startOpenGLESActivity</option>
+		
+		<option value="//api/name/stopOpenGLESActivity">+ stopOpenGLESActivity</option>
+		
+	</optgroup>
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/addPart:">- addPart:</option>
+		
+		<option value="//api/name/addPartFromConfigForKey:">- addPartFromConfigForKey:</option>
+		
+		<option value="//api/name/addPeriodicTimeObserverForInterval:queue:usingBlock:">- addPeriodicTimeObserverForInterval:queue:usingBlock:</option>
+		
+		<option value="//api/name/addPlaybackControl:addToContainer:">- addPlaybackControl:addToContainer:</option>
+		
+		<option value="//api/name/addPlaybackControlLocked:addToContainer:">- addPlaybackControlLocked:addToContainer:</option>
+		
+		<option value="//api/name/addViewOverlayPlaybackControls:">- addViewOverlayPlaybackControls:</option>
+		
+		<option value="//api/name/addViewUnderlayPlaybackControls:">- addViewUnderlayPlaybackControls:</option>
+		
+		<option value="//api/name/allParts">- allParts</option>
+		
+		<option value="//api/name/cacheProgress">- cacheProgress</option>
+		
+		<option value="//api/name/close">- close</option>
+		
+		<option value="//api/name/closeAysnc">- closeAysnc</option>
+		
+		<option value="//api/name/createPartManager">- createPartManager</option>
+		
+		<option value="//api/name/getOptionBykey:">- getOptionBykey:</option>
+		
+		<option value="//api/name/initWithOwnPlayer:">- initWithOwnPlayer:</option>
+		
+		<option value="//api/name/initWithOwnPlayer:configFileName:">- initWithOwnPlayer:configFileName:</option>
+		
+		<option value="//api/name/initWithOwnPlayer:configFileName:bundle:">- initWithOwnPlayer:configFileName:bundle:</option>
+		
+		<option value="//api/name/initWithOwnPlayer:style:">- initWithOwnPlayer:style:</option>
+		
+		<option value="//api/name/initializeEngineWithOwnPlayer:">- initializeEngineWithOwnPlayer:</option>
+		
+		<option value="//api/name/partControlForKey:">- partControlForKey:</option>
+		
+		<option value="//api/name/partForKey:">- partForKey:</option>
+		
+		<option value="//api/name/pause">- pause</option>
+		
+		<option value="//api/name/play">- play</option>
+		
+		<option value="//api/name/removeAllParts">- removeAllParts</option>
+		
+		<option value="//api/name/removePart:">- removePart:</option>
+		
+		<option value="//api/name/removePartForKey:">- removePartForKey:</option>
+		
+		<option value="//api/name/removePlayer">- removePlayer</option>
+		
+		<option value="//api/name/removeProgressCacheIfNeeded">- removeProgressCacheIfNeeded</option>
+		
+		<option value="//api/name/removeTimeObserver">- removeTimeObserver</option>
+		
+		<option value="//api/name/resume">- resume</option>
+		
+		<option value="//api/name/setCurrentPlaybackTime:complete:">- setCurrentPlaybackTime:complete:</option>
+		
+		<option value="//api/name/setCustomViewDelegate:">- setCustomViewDelegate:</option>
+		
+		<option value="//api/name/setDirectPlayURL:">- setDirectPlayURL:</option>
+		
+		<option value="//api/name/setLocalURL:">- setLocalURL:</option>
+		
+		<option value="//api/name/setOptions:">- setOptions:</option>
+		
+		<option value="//api/name/setPlayAPIVersion:auth:">- setPlayAPIVersion:auth:</option>
+		
+		<option value="//api/name/setPreloaderItem:">- setPreloaderItem:</option>
+		
+		<option value="//api/name/setVideoID:host:commonParameters:">- setVideoID:host:commonParameters:</option>
+		
+		<option value="//api/name/setVideoID:host:commonParameters:businessToken:">- setVideoID:host:commonParameters:businessToken:</option>
+		
+		<option value="//api/name/stop">- stop</option>
+		
+		<option value="//api/name/supportedResolutionTypes">- supportedResolutionTypes</option>
+		
+		<option value="//api/name/videoSizeForType:">- videoSizeForType:</option>
+		
+		<option value="//api/name/videoSizeOfCurrentResolution">- videoSizeOfCurrentResolution</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">TTVPlayer Class Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Inherits from</th>
+	<td>UIViewController</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>TTVPlayer.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>TTVPlayer 是带有界面功能的播放器，继承自 UIViewController，具体功能如下：
+1、提供 Engine 的视频播放等基础功能；@see TTVPlayer+Engine category
+2、提供播放器整体内置功能 UI 以及 内置功能自定义 UI 功能，@see TTVPlayerCustomViewDelegate @see TTVPlayerDelegate
+3、提供静态动态对播放器模块（part：携带的 UI 相关功能）进行增加以及移除功能；达到使用一个类，配置不同功能的播放器的目的 @see TTVPlayerPartProtocol
+4、自定义 part，当内置 part 不满足需求时，可以在此系统结构上，自定义 part进行功能改造和增加，@see TTVPlayerCustomPartDelegate
+历史都使用TTVideoEngine，TTVPlayer把 videoEngine 包装起来，隐藏内核的一切, 用于未来切换成 TTAVPlayer 或者加入直播 TTLiveVideo, 对外都可以无感知。请大家使用 TTVPlayer，代替 TTVideoEngine.
+请参考接入文档 <a href="https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV">https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV</a>#</p>
+
+<p>player 中管理 part 的部分</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						<a title="Initialization" name="task_Initialization"></a>
+						<h2 class="task-title">Initialization</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initWithOwnPlayer:style:" title="initWithOwnPlayer:style:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithOwnPlayer:style:">&ndash;&nbsp;initWithOwnPlayer:style:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>创建 player， 内置的标准化播放器已经可以满足需求，不用写布局函数以及不需要单独引入配置文件进行配置
+一个 style 对应着一个 plist(默认) 配置文件和一个布局样式
+展示 style 配置以及 config配置时机：分两个阶段加载：第一次播放时：loading、手势、播放错误、弱网； 第一次需要出现 <a href="#//api/name/controlView">controlView</a> 的时候
+setIgnoreAudioInterruption = YES</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithOwnPlayer:(BOOL)<em>isOwnPlayer</em> style:(TTVPlayerStyle)<em>style</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>isOwnPlayer</code></th>
+						<td><p>是否自研</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>style</code></th>
+						<td><p>plist 配置文件和一个布局样式</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>self</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>创建 player， 内置的标准化播放器已经可以满足需求，不用写布局函数以及不需要单独引入配置文件进行配置
+一个 style 对应着一个 plist(默认) 配置文件和一个布局样式
+展示 style 配置以及 config配置时机：分两个阶段加载：第一次播放时：loading、手势、播放错误、弱网； 第一次需要出现 <a href="#//api/name/controlView">controlView</a> 的时候
+setIgnoreAudioInterruption = YES</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection see-also-section">
+				<h4 class="method-subtitle">See Also</h4>
+				<ul>
+					
+					<li><code><p><a href="../Constants/TTVPlayerStyle.html">TTVPlayerStyle</a></p></code></li>
+					
+				</ul>
+			</div>
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initWithOwnPlayer:configFileName:" title="initWithOwnPlayer:configFileName:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithOwnPlayer:configFileName:">&ndash;&nbsp;initWithOwnPlayer:configFileName:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>创建player,内置的播放器无法满足需求，需要通过配置文件进行对功能模块以及 UI 样式的定制, 默认采用一种 @see <a href="../Constants/TTVPlayerStyle.html">TTVPlayerStyle</a>  的布局，
+并有必要时同时实现@see TTVPlayerDelegate中viewDidLayoutSubviews 的方法，有必要还需要实现viewDidLayoutSubviews 对 UI 进行布局调整
+展示 style 配置以及 config配置时机：分两个阶段加载：第一次播放时：loading、手势、播放错误、弱网； 第一次需要出现 <a href="#//api/name/controlView">controlView</a> 的时候
+setIgnoreAudioInterruption = YES</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithOwnPlayer:(BOOL)<em>isOwnPlayer</em> configFileName:(NSString *)<em>configFileName</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>isOwnPlayer</code></th>
+						<td><p>是否自研</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>configFileName</code></th>
+						<td><p>配置文件的名称</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>self</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>创建player,内置的播放器无法满足需求，需要通过配置文件进行对功能模块以及 UI 样式的定制, 默认采用一种 @see <a href="../Constants/TTVPlayerStyle.html">TTVPlayerStyle</a>  的布局，
+并有必要时同时实现@see TTVPlayerDelegate中viewDidLayoutSubviews 的方法，有必要还需要实现viewDidLayoutSubviews 对 UI 进行布局调整
+展示 style 配置以及 config配置时机：分两个阶段加载：第一次播放时：loading、手势、播放错误、弱网； 第一次需要出现 <a href="#//api/name/controlView">controlView</a> 的时候
+setIgnoreAudioInterruption = YES</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initWithOwnPlayer:configFileName:bundle:" title="initWithOwnPlayer:configFileName:bundle:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithOwnPlayer:configFileName:bundle:">&ndash;&nbsp;initWithOwnPlayer:configFileName:bundle:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>上面函数的 bundle 可以支持从外部传入</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithOwnPlayer:(BOOL)<em>isOwnPlayer</em> configFileName:(NSString *)<em>configFileName</em> bundle:(NSBundle *)<em>bundle</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>isOwnPlayer</code></th>
+						<td><p>是否自研</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>configFileName</code></th>
+						<td><p>配置文件的名称</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>bundle</code></th>
+						<td><p>不传的版本为 mainbundle，可以支持从别的 bundle 组件传入，注意，后面自定义的图片等资源默认都是来自这个自定义的 bundle</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>self</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>上面函数的 bundle 可以支持从外部传入</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/initWithOwnPlayer:" title="initWithOwnPlayer:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initWithOwnPlayer:">&ndash;&nbsp;initWithOwnPlayer:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>创建原始的 player，不带 可配置 part 任何功能, 无手势和 control 等相关功能
+不能通过UI 控制播放器，适用于只有一个播放视频的界面的产品
+注意：使用此方式也无法动态加入配置，如果需要自定义配置，需要通过上面两个函数进行修改
+setIgnoreAudioInterruption = YES</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (instancetype)initWithOwnPlayer:(BOOL)<em>isOwnPlayer</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>isOwnPlayer</code></th>
+						<td><p>是否自研</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>self</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>创建原始的 player，不带 可配置 part 任何功能, 无手势和 control 等相关功能
+不能通过UI 控制播放器，适用于只有一个播放视频的界面的产品
+注意：使用此方式也无法动态加入配置，如果需要自定义配置，需要通过上面两个函数进行修改
+setIgnoreAudioInterruption = YES</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/startOpenGLESActivity" title="startOpenGLESActivity"></a>
+	<h3 class="method-title"><code><a href="#//api/name/startOpenGLESActivity">+&nbsp;startOpenGLESActivity</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>激活OpenGLES 环境
+请在- (void)applicationDidBecomeActive:(UIApplication *)application {中调用, 否则会无法展示播放器，如果发现有黑屏，请查看此处设置</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)startOpenGLESActivity</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>激活OpenGLES 环境
+请在- (void)applicationDidBecomeActive:(UIApplication *)application {中调用, 否则会无法展示播放器，如果发现有黑屏，请查看此处设置</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/stopOpenGLESActivity" title="stopOpenGLESActivity"></a>
+	<h3 class="method-title"><code><a href="#//api/name/stopOpenGLESActivity">+&nbsp;stopOpenGLESActivity</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>关闭OpenGLES 环境
+You should call this method in app delegate&rsquo;s applicationWillResignActive: method, or it may leads to crash</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)stopOpenGLESActivity</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>关闭OpenGLES 环境
+You should call this method in app delegate&rsquo;s applicationWillResignActive: method, or it may leads to crash</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="delegate" name="task_delegate"></a>
+						<h2 class="task-title">delegate</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/setCustomViewDelegate:" title="setCustomViewDelegate:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setCustomViewDelegate:">&ndash;&nbsp;setCustomViewDelegate:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>自定义 view 提供内置播放器控件相关的自定义API @see <a href="../Protocols/TTVPlayerCustomViewDelegate.html">TTVPlayerCustomViewDelegate</a></p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setCustomViewDelegate:(NSObject&lt;TTVPlayerCustomViewDelegate&gt; *)<em>customViewDelegate</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>自定义 view 提供内置播放器控件相关的自定义API @see <a href="../Protocols/TTVPlayerCustomViewDelegate.html">TTVPlayerCustomViewDelegate</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/customPartDelegate" title="customPartDelegate"></a>
+	<h3 class="method-title"><code><a href="#//api/name/customPartDelegate">&nbsp;&nbsp;customPartDelegate</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>自定义 part, 提供自定义 part, 可以覆盖已有的 part 以及新增外部 part @see <a href="../Protocols/TTVPlayerCustomPartDelegate.html">TTVPlayerCustomPartDelegate</a></p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) NSObject&lt;TTVPlayerCustomPartDelegate&gt; *customPartDelegate</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>自定义 part, 提供自定义 part, 可以覆盖已有的 part 以及新增外部 part @see <a href="../Protocols/TTVPlayerCustomPartDelegate.html">TTVPlayerCustomPartDelegate</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="播放器 UI" name="task_播放器 UI"></a>
+						<h2 class="task-title">播放器 UI</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/playerView" title="playerView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/playerView">&nbsp;&nbsp;playerView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>播放视频的 view, Engine提供的</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) UIView *playerView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>播放视频的 view, Engine提供的</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/containerView" title="containerView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/containerView">&nbsp;&nbsp;containerView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>除了视频播放view之外，看到的所有 view 都加在这个 view 上；这个 view 可以响应单击、双击、滑动等手势以及处理相关冲突 @see <a href="../Classes/TTVPlayerGestureContainerView.html">TTVPlayerGestureContainerView</a></p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) TTVPlayerGestureContainerView *containerView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>除了视频播放view之外，看到的所有 view 都加在这个 view 上；这个 view 可以响应单击、双击、滑动等手势以及处理相关冲突 @see <a href="../Classes/TTVPlayerGestureContainerView.html">TTVPlayerGestureContainerView</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/controlView" title="controlView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/controlView">&nbsp;&nbsp;controlView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>unlock 状态下可以控制播放的 UI 都加在这个 view 上, 上面的control 可以自动消失，是 <a href="#//api/name/containerView">containerView</a> 的一个 subview @see <a href="../Classes/TTVPlayerGestureContainerView.html">TTVPlayerGestureContainerView</a></p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) TTVPlaybackControlView *controlView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>unlock 状态下可以控制播放的 UI 都加在这个 view 上, 上面的control 可以自动消失，是 <a href="#//api/name/containerView">containerView</a> 的一个 subview @see <a href="../Classes/TTVPlayerGestureContainerView.html">TTVPlayerGestureContainerView</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/controlViewLocked" title="controlViewLocked"></a>
+	<h3 class="method-title"><code><a href="#//api/name/controlViewLocked">&nbsp;&nbsp;controlViewLocked</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>lock 状态下可以控制播放的 UI 都加在这个 view 上, 上面的control 可以自动消失，是 <a href="#//api/name/containerView">containerView</a> 的一个 subview @see <a href="../Classes/TTVPlayerGestureContainerView.html">TTVPlayerGestureContainerView</a></p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) TTVPlaybackControlView *controlViewLocked</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>lock 状态下可以控制播放的 UI 都加在这个 view 上, 上面的control 可以自动消失，是 <a href="#//api/name/containerView">containerView</a> 的一个 subview @see <a href="../Classes/TTVPlayerGestureContainerView.html">TTVPlayerGestureContainerView</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/controlUnderlayView" title="controlUnderlayView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/controlUnderlayView">&nbsp;&nbsp;controlUnderlayView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>在 <a href="#//api/name/controlView">controlView</a> 和 <a href="#//api/name/controlViewLocked">controlViewLocked</a> 下面的 view</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) UIView *controlUnderlayView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>在 <a href="#//api/name/controlView">controlView</a> 和 <a href="#//api/name/controlViewLocked">controlViewLocked</a> 下面的 view</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/controlOverlayView" title="controlOverlayView"></a>
+	<h3 class="method-title"><code><a href="#//api/name/controlOverlayView">&nbsp;&nbsp;controlOverlayView</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>在 <a href="#//api/name/controlView">controlView</a> 和 <a href="#//api/name/controlViewLocked">controlViewLocked</a> 上面的 view</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) UIView *controlOverlayView</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>在 <a href="#//api/name/controlView">controlView</a> 和 <a href="#//api/name/controlViewLocked">controlViewLocked</a> 上面的 view</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/backButton" title="backButton"></a>
+	<h3 class="method-title"><code><a href="#//api/name/backButton">&nbsp;&nbsp;backButton</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>返回 button，默认隐藏，需要外界使用者来控制显示状态 TODO</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) UIButton *backButton</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>返回 button，默认隐藏，需要外界使用者来控制显示状态 TODO</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addViewOverlayPlaybackControls:" title="addViewOverlayPlaybackControls:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addViewOverlayPlaybackControls:">&ndash;&nbsp;addViewOverlayPlaybackControls:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>在 player 的  <a href="../Classes/TTVPlaybackControlView.html">TTVPlaybackControlView</a> 上面添加 view， 主要用户添加提示控件</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addViewOverlayPlaybackControls:(UIView *)<em>view</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>view</code></th>
+						<td><p>不可以控制播放器，主要是提示类型的比如 loading 等</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>在 player 的  <a href="../Classes/TTVPlaybackControlView.html">TTVPlaybackControlView</a> 上面添加 view， 主要用户添加提示控件</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection see-also-section">
+				<h4 class="method-subtitle">See Also</h4>
+				<ul>
+					
+					<li><code><p><a href="https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV">https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV</a>#eh7tny 查看 view 层级</p></code></li>
+					
+				</ul>
+			</div>
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addPlaybackControl:addToContainer:" title="addPlaybackControl:addToContainer:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addPlaybackControl:addToContainer:">&ndash;&nbsp;addPlaybackControl:addToContainer:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>在 player 的 @see <a href="../Classes/TTVPlaybackControlView.html">TTVPlaybackControlView</a> (unlock 状态下的)区域添加控件；</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addPlaybackControl:(UIView *)<em>view</em> addToContainer:(NSString *)<em>containerString</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>view</code></th>
+						<td><p>需要加入到控制层的 view
+@param containerString</p>
+
+<h1>define TTVPlayerPartControlType_TopNavBar      @&ldquo;top_bar&rdquo;</h1>
+
+<h1>define TTVPlayerPartControlType_BottomToolBar  @&ldquo;bottom_bar&rdquo;</h1>
+
+<h1>define TTVPlayerPartControlType_Content        @&ldquo;content&rdquo;</h1></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>在 player 的 @see <a href="../Classes/TTVPlaybackControlView.html">TTVPlaybackControlView</a> (unlock 状态下的)区域添加控件；</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection see-also-section">
+				<h4 class="method-subtitle">See Also</h4>
+				<ul>
+					
+					<li><code><p><a href="https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV">https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV</a>#eh7tny 查看 view 层级</p></code></li>
+					
+				</ul>
+			</div>
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addPlaybackControlLocked:addToContainer:" title="addPlaybackControlLocked:addToContainer:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addPlaybackControlLocked:addToContainer:">&ndash;&nbsp;addPlaybackControlLocked:addToContainer:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>在 player 的 @see <a href="../Classes/TTVPlaybackControlView.html">TTVPlaybackControlView</a> (lock 状态下的)区域添加控件；</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addPlaybackControlLocked:(UIView *)<em>view</em> addToContainer:(NSString *)<em>containerString</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>view</code></th>
+						<td><p>需要加入到控制层的 view
+@param containerString</p>
+
+<h1>define TTVPlayerPartControlType_TopNavBar      @&ldquo;top_bar&rdquo;</h1>
+
+<h1>define TTVPlayerPartControlType_BottomToolBar  @&ldquo;bottom_bar&rdquo;</h1>
+
+<h1>define TTVPlayerPartControlType_Content        @&ldquo;content&rdquo;</h1></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>在 player 的 @see <a href="../Classes/TTVPlaybackControlView.html">TTVPlaybackControlView</a> (lock 状态下的)区域添加控件；</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection see-also-section">
+				<h4 class="method-subtitle">See Also</h4>
+				<ul>
+					
+					<li><code><p><a href="https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV">https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV</a>#eh7tny 查看 view 层级</p></code></li>
+					
+				</ul>
+			</div>
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addViewUnderlayPlaybackControls:" title="addViewUnderlayPlaybackControls:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addViewUnderlayPlaybackControls:">&ndash;&nbsp;addViewUnderlayPlaybackControls:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>在 Player Control 的下面加入 view</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addViewUnderlayPlaybackControls:(UIView *)<em>view</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>view</code></th>
+						<td><p>要加入到 Playcontrol 上面的 view，不会随着 playbackControl 的消失而消失</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>在 Player Control 的下面加入 view</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection see-also-section">
+				<h4 class="method-subtitle">See Also</h4>
+				<ul>
+					
+					<li><code><p><a href="https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV">https://bytedance.feishu.cn/space/doc/doccnG2WtLMqCbYPyNywKV</a>#eh7tny 查看 view 层级</p></code></li>
+					
+				</ul>
+			</div>
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/partControlForKey:" title="partControlForKey:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/partControlForKey:">&ndash;&nbsp;partControlForKey:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>通过 view 的 key 获取到已经加入到 player 的view，key 需要跟 control 可以对应上,系统只认 key
+需要有函数能够使用需要这个 view 的时候提供这个 view 的创建方法</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (UIView *)partControlForKey:(TTVPlayerPartControlKey)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>控件的 key</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>已经加入到 player 的 view 上的 控件</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>通过 view 的 key 获取到已经加入到 player 的view，key 需要跟 control 可以对应上,系统只认 key
+需要有函数能够使用需要这个 view 的时候提供这个 view 的创建方法</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/showPlaybackControlsOnViewFirstLoaded" title="showPlaybackControlsOnViewFirstLoaded"></a>
+	<h3 class="method-title"><code><a href="#//api/name/showPlaybackControlsOnViewFirstLoaded">&nbsp;&nbsp;showPlaybackControlsOnViewFirstLoaded</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>当第一次load player 的 view 之后，是否展示control 控件，默认是 YES，展示</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) BOOL showPlaybackControlsOnViewFirstLoaded</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>当第一次load player 的 view 之后，是否展示control 控件，默认是 YES，展示</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/supportPlaybackControlAutohide" title="supportPlaybackControlAutohide"></a>
+	<h3 class="method-title"><code><a href="#//api/name/supportPlaybackControlAutohide">&nbsp;&nbsp;supportPlaybackControlAutohide</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>播放控件是否会自动隐藏掉，默认为 YES 会自动隐藏</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) BOOL supportPlaybackControlAutohide</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>播放控件是否会自动隐藏掉，默认为 YES 会自动隐藏</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/videoTitle" title="videoTitle"></a>
+	<h3 class="method-title"><code><a href="#//api/name/videoTitle">&nbsp;&nbsp;videoTitle</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>视频标题</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy) NSString *videoTitle</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>视频标题</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/videoSizeForType:" title="videoSizeForType:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/videoSizeForType:">&ndash;&nbsp;videoSizeForType:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>获取某个清晰度下，视频的大小，可以用于流量提示</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSInteger)videoSizeForType:(TTVPlayerResolutionType)<em>type</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>type</code></th>
+						<td><p>@see <a href="../Constants/TTVPlayerResolutionType.html">TTVPlayerResolutionType</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>视频大小，单位是 bit，需要自行转化为 kb 或者 M 进行显示</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>获取某个清晰度下，视频的大小，可以用于流量提示</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/videoSizeOfCurrentResolution" title="videoSizeOfCurrentResolution"></a>
+	<h3 class="method-title"><code><a href="#//api/name/videoSizeOfCurrentResolution">&ndash;&nbsp;videoSizeOfCurrentResolution</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>当前清晰度下，视频尺寸</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSInteger)videoSizeOfCurrentResolution</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>视频大小，单位是 bit，需要自行转化为 kb 或者 M 进行显示</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>当前清晰度下，视频尺寸</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="redux（播放器相关的功能模块）状态管理，其他@ TTVPlayer+Part" name="task_redux（播放器相关的功能模块）状态管理，其他@ TTVPlayer+Part"></a>
+						<h2 class="task-title">redux（播放器相关的功能模块）状态管理，其他@ TTVPlayer+Part</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/playerAction" title="playerAction"></a>
+	<h3 class="method-title"><code><a href="#//api/name/playerAction">&nbsp;&nbsp;playerAction</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>播放器相关的 action，发送action 之后，可以改变播放器的state，同时改变播放器的行为</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) TTVPlayerAction *playerAction</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>播放器相关的 action，发送action 之后，可以改变播放器的state，同时改变播放器的行为</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/allActivePlayers" title="allActivePlayers"></a>
+	<h3 class="method-title"><code><a href="#//api/name/allActivePlayers">+&nbsp;allActivePlayers</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>由于可以同时存在多个 player，可以通过这个方法获取全部用本类创建的 player</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (NSArray *)allActivePlayers</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>player</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>由于可以同时存在多个 player，可以通过这个方法获取全部用本类创建的 player</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removePlayer" title="removePlayer"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removePlayer">&ndash;&nbsp;removePlayer</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>移除掉 player，停止播放</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)removePlayer</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>移除掉 player，停止播放</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="BecomeResignActive Methods" name="task_BecomeResignActive Methods"></a>
+						<h2 class="task-title">BecomeResignActive Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/supportBackgroundPlayback" title="supportBackgroundPlayback"></a>
+	<h3 class="method-title"><code><a href="#//api/name/supportBackgroundPlayback">&nbsp;&nbsp;supportBackgroundPlayback</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>是否支持后台播放, 默认是 NO，如果设置为 YES，需要在 plist 同时对UIBackgroundModes进行设置</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) BOOL supportBackgroundPlayback</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>是否支持后台播放, 默认是 NO，如果设置为 YES，需要在 plist 同时对UIBackgroundModes进行设置</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+BecomeResignActive.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Engine Methods" name="task_Engine Methods"></a>
+						<h2 class="task-title">Engine Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/initializeEngineWithOwnPlayer:" title="initializeEngineWithOwnPlayer:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/initializeEngineWithOwnPlayer:">&ndash;&nbsp;initializeEngineWithOwnPlayer:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>TTVPlayer 调用TTVideoEngine的初始化</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)initializeEngineWithOwnPlayer:(BOOL)<em>isOwnPlayer</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>TTVPlayer 调用TTVideoEngine的初始化</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setVideoID:host:commonParameters:" title="setVideoID:host:commonParameters:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setVideoID:host:commonParameters:">&ndash;&nbsp;setVideoID:host:commonParameters:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置播放器播放源相关的参数，此方法 将3个参数会拼接一个 url，进行真实播放地址的获取,获取视频地址的url不加密</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setVideoID:(NSString *)<em>videoID</em> host:(NSString *)<em>host</em> commonParameters:(NSDictionary *)<em>commonParameters</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>videoID</code></th>
+						<td><p>vid</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>host</code></th>
+						<td><p>服务端 host</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>commonParameters</code></th>
+						<td><p>url 后添加的通用参数，比如机型等</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置播放器播放源相关的参数，此方法 将3个参数会拼接一个 url，进行真实播放地址的获取,获取视频地址的url不加密</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setVideoID:host:commonParameters:businessToken:" title="setVideoID:host:commonParameters:businessToken:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setVideoID:host:commonParameters:businessToken:">&ndash;&nbsp;setVideoID:host:commonParameters:businessToken:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置播放器播放源相关的参数，此方法 将3个参数会拼接一个 url，进行真实播放地址的获取,获取视频地址的url加密</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setVideoID:(NSString *)<em>videoID</em> host:(NSString *)<em>host</em> commonParameters:(NSDictionary *)<em>commonParameters</em> businessToken:(NSString *)<em>businessToken</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>videoID</code></th>
+						<td><p>vid</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>host</code></th>
+						<td><p>服务端 host</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>commonParameters</code></th>
+						<td><p>url 后添加的通用参数，比如机型等</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>businessToken</code></th>
+						<td><p>加密秘钥，用于对此方法形成的 url 进行加密</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置播放器播放源相关的参数，此方法 将3个参数会拼接一个 url，进行真实播放地址的获取,获取视频地址的url加密</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setLocalURL:" title="setLocalURL:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setLocalURL:">&ndash;&nbsp;setLocalURL:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置本地视频地址</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setLocalURL:(NSString *)<em>url</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>url</code></th>
+						<td><p>本地 bundle 视频地址</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置本地视频地址</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setDirectPlayURL:" title="setDirectPlayURL:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setDirectPlayURL:">&ndash;&nbsp;setDirectPlayURL:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置远程直接播放的地址，而不是 vid</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setDirectPlayURL:(NSString *)<em>url</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>url</code></th>
+						<td><p>remote url</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置远程直接播放的地址，而不是 vid</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setPreloaderItem:" title="setPreloaderItem:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setPreloaderItem:">&ndash;&nbsp;setPreloaderItem:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>从预加载 item播放视频</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setPreloaderItem:(TTAVPreloaderItem *)<em>preloaderItem</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>preloaderItem</code></th>
+						<td><p>预加载 item</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>从预加载 item播放视频</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setPlayAPIVersion:auth:" title="setPlayAPIVersion:auth:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setPlayAPIVersion:auth:">&ndash;&nbsp;setPlayAPIVersion:auth:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置播放器选用哪个 API 的版本进行获取播放地址 @see <a href="../Constants/TTVPlayerAPIVersion.html">TTVPlayerAPIVersion</a></p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setPlayAPIVersion:(TTVPlayerAPIVersion)<em>apiVersion</em> auth:(NSString *)<em>auth</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置播放器选用哪个 API 的版本进行获取播放地址 @see <a href="../Constants/TTVPlayerAPIVersion.html">TTVPlayerAPIVersion</a></p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/netClient" title="netClient"></a>
+	<h3 class="method-title"><code><a href="#//api/name/netClient">&nbsp;&nbsp;netClient</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置获取视频源的网络</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong) id&lt;TTVideoEngineNetClient&gt; netClient</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置获取视频源的网络</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/videoID" title="videoID"></a>
+	<h3 class="method-title"><code><a href="#//api/name/videoID">&nbsp;&nbsp;videoID</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>setVideoID 设置vid 之后，当前播放视频的vid</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, copy, readonly) NSString *videoID</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>setVideoID 设置vid 之后，当前播放视频的vid</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isLocalVideo" title="isLocalVideo"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isLocalVideo">&nbsp;&nbsp;isLocalVideo</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>当前播放视频是否是本地 bundle 获取的视频</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) BOOL isLocalVideo</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>当前播放视频是否是本地 bundle 获取的视频</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/playbackState" title="playbackState"></a>
+	<h3 class="method-title"><code><a href="#//api/name/playbackState">&nbsp;&nbsp;playbackState</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>播放状态，调用了 <a href="#//api/name/play">play</a> <a href="#//api/name/stop">stop</a> 等改变</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) TTVPlaybackState playbackState</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>播放状态，调用了 <a href="#//api/name/play">play</a> <a href="#//api/name/stop">stop</a> 等改变</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/state" title="state"></a>
+	<h3 class="method-title"><code><a href="#//api/name/state">&nbsp;&nbsp;state</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>播放器 整体状态</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) TTVPlayerEngineState state</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>播放器 整体状态</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/shouldPlay" title="shouldPlay"></a>
+	<h3 class="method-title"><code><a href="#//api/name/shouldPlay">&nbsp;&nbsp;shouldPlay</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>如果 pause了，return NO, 没明白是干啥的</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) BOOL shouldPlay</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>如果 pause了，return NO, 没明白是干啥的</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isPlaybackEnded" title="isPlaybackEnded"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isPlaybackEnded">&nbsp;&nbsp;isPlaybackEnded</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>是否播放结束</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) BOOL isPlaybackEnded</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>是否播放结束</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/play" title="play"></a>
+	<h3 class="method-title"><code><a href="#//api/name/play">&ndash;&nbsp;play</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>视频播放，尤其用于第一次起播，后面调用 <a href="#//api/name/resume">resume</a> 继续播放</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)play</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>视频播放，尤其用于第一次起播，后面调用 <a href="#//api/name/resume">resume</a> 继续播放</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/startPlayFromLastestCache" title="startPlayFromLastestCache"></a>
+	<h3 class="method-title"><code><a href="#//api/name/startPlayFromLastestCache">&nbsp;&nbsp;startPlayFromLastestCache</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>起播从最近一次缓存处开始播放, 默认为 NO</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) BOOL startPlayFromLastestCache</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>起播从最近一次缓存处开始播放, 默认为 NO</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/resume" title="resume"></a>
+	<h3 class="method-title"><code><a href="#//api/name/resume">&ndash;&nbsp;resume</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>视频继续播放，主要用于起播后，加入了播放调用栈，用于控制前后台切换等无法还原现场等情况
+NOTE：调用此方法，有可能导致 <a href="#//api/name/play">play</a> 方法无法调用，他与 <a href="#//api/name/pause">pause</a> 成对出现</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)resume</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>视频继续播放，主要用于起播后，加入了播放调用栈，用于控制前后台切换等无法还原现场等情况
+NOTE：调用此方法，有可能导致 <a href="#//api/name/play">play</a> 方法无法调用，他与 <a href="#//api/name/pause">pause</a> 成对出现</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/pause" title="pause"></a>
+	<h3 class="method-title"><code><a href="#//api/name/pause">&ndash;&nbsp;pause</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>视频暂停，主要用于起播后，加入了播放调用栈，用于控制前后台切换等操作错误继续等情况
+同时还缓存了当前进度</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)pause</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>视频暂停，主要用于起播后，加入了播放调用栈，用于控制前后台切换等操作错误继续等情况
+同时还缓存了当前进度</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/stop" title="stop"></a>
+	<h3 class="method-title"><code><a href="#//api/name/stop">&ndash;&nbsp;stop</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>停止视频播放</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)stop</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>停止视频播放</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/close" title="close"></a>
+	<h3 class="method-title"><code><a href="#//api/name/close">&ndash;&nbsp;close</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>释放播放器</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)close</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>释放播放器</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/closeAysnc" title="closeAysnc"></a>
+	<h3 class="method-title"><code><a href="#//api/name/closeAysnc">&ndash;&nbsp;closeAysnc</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>异步释放播放器</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)closeAysnc</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>异步释放播放器</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setCurrentPlaybackTime:complete:" title="setCurrentPlaybackTime:complete:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setCurrentPlaybackTime:complete:">&ndash;&nbsp;setCurrentPlaybackTime:complete:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>  设置播放时间到哪里，起播也可以调用此方法进行播放时间设置</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setCurrentPlaybackTime:(NSTimeInterval)<em>currentPlaybackTime</em> complete:(void ( ^ ) ( BOOL success ))<em>finished</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>currentPlaybackTime</code></th>
+						<td><p>需要跳播的时间</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>finished</code></th>
+						<td><p>完成回调 block</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>  设置播放时间到哪里，起播也可以调用此方法进行播放时间设置</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addPeriodicTimeObserverForInterval:queue:usingBlock:" title="addPeriodicTimeObserverForInterval:queue:usingBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addPeriodicTimeObserverForInterval:queue:usingBlock:">&ndash;&nbsp;addPeriodicTimeObserverForInterval:queue:usingBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置 timer</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addPeriodicTimeObserverForInterval:(NSTimeInterval)<em>interval</em> queue:(dispatch_queue_t)<em>queue</em> usingBlock:(dispatch_block_t)<em>block</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>interval</code></th>
+						<td><p>timer 通知间隔</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>queue</code></th>
+						<td><p>通知队列</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>block</code></th>
+						<td><p>回调</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置 timer</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removeTimeObserver" title="removeTimeObserver"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removeTimeObserver">&ndash;&nbsp;removeTimeObserver</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>移除掉 addPeriodicTimeObserverForInterval 生成的 timer</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)removeTimeObserver</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>移除掉 addPeriodicTimeObserverForInterval 生成的 timer</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/currentResolution" title="currentResolution"></a>
+	<h3 class="method-title"><code><a href="#//api/name/currentResolution">&nbsp;&nbsp;currentResolution</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>返回当前的清晰度</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) TTVPlayerResolutionType currentResolution</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>返回当前的清晰度</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/supportedResolutionTypes" title="supportedResolutionTypes"></a>
+	<h3 class="method-title"><code><a href="#//api/name/supportedResolutionTypes">&ndash;&nbsp;supportedResolutionTypes</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>支持的清晰度</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSArray&lt;NSNumber*&gt; *)supportedResolutionTypes</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>支持的清晰度</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setIgnoreAudioInterruption:" title="setIgnoreAudioInterruption:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setIgnoreAudioInterruption:">+&nbsp;setIgnoreAudioInterruption:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置音频是否可以被中断，默认是NO</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>+ (void)setIgnoreAudioInterruption:(BOOL)<em>ignore</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>ignore</code></th>
+						<td><p>是否可以被中断</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置音频是否可以被中断，默认是NO</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/enableAudioSession" title="enableAudioSession"></a>
+	<h3 class="method-title"><code><a href="#//api/name/enableAudioSession">&nbsp;&nbsp;enableAudioSession</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>初始化的时候，占用音轨</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) BOOL enableAudioSession</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>初始化的时候，占用音轨</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/volume" title="volume"></a>
+	<h3 class="method-title"><code><a href="#//api/name/volume">&nbsp;&nbsp;volume</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置音量大小</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) CGFloat volume</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置音量大小</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/muted" title="muted"></a>
+	<h3 class="method-title"><code><a href="#//api/name/muted">&nbsp;&nbsp;muted</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>设置静音：默认 NO</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic) BOOL muted</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>设置静音：默认 NO</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getOptionBykey:" title="getOptionBykey:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getOptionBykey:">&ndash;&nbsp;getOptionBykey:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Get option that you care about.
+Example: get video width.
+NSInteger videoWidth = [[self getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] integerValue];
+|                                  |                    |           |
+value                             Gen key               Filed      valueType</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (id)getOptionBykey:(VEKKeyType)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>Please use VEKKEY(key) to prodect a valid key.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>Value correspod the key. The key include value type.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Get option that you care about.
+Example: get video width.
+NSInteger videoWidth = [[self getOptionBykey:VEKKEY(VEKGetKeyPlayerVideoWidth_NSInteger)] integerValue];
+|                                  |                    |           |
+value                             Gen key               Filed      valueType</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setOptions:" title="setOptions:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setOptions:">&ndash;&nbsp;setOptions:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Set options by VEKKey
+Example:
+[self setOptions:@{VEKKEY(VEKKeyPlayerTestSpeedMode_ENUM),@(TTVideoEngineTestSpeedModeContinue)}];
+|                   |          |                          |
+Generate key            Filed     valueType                   value</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)setOptions:(NSDictionary&lt;VEKKeyType,id&gt; *)<em>options</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>options</code></th>
+						<td><p>key is one of VEKKeys, value defined id type.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Set options by VEKKey
+Example:
+[self setOptions:@{VEKKEY(VEKKeyPlayerTestSpeedMode_ENUM),@(TTVideoEngineTestSpeedModeContinue)}];
+|                   |          |                          |
+Generate key            Filed     valueType                   value</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Engine.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="Part Methods" name="task_Part Methods"></a>
+						<h2 class="task-title">Part Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/createPartManager" title="createPartManager"></a>
+	<h3 class="method-title"><code><a href="#//api/name/createPartManager">&ndash;&nbsp;createPartManager</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>初始化 partmanager</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (TTVPlayerPartManager *)createPartManager</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>partmanager</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>初始化 partmanager</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addPart:" title="addPart:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addPart:">&ndash;&nbsp;addPart:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>用于加入不从配置文件配置的 part, 直接挂载到系统中，调用后立即生效</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addPart:(NSObject&lt;TTVPlayerPartProtocol&gt; *)<em>part</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>part</code></th>
+						<td><p>@see <a href="../Protocols/TTVPlayerPartProtocol.html">TTVPlayerPartProtocol</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>用于加入不从配置文件配置的 part, 直接挂载到系统中，调用后立即生效</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removePart:" title="removePart:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removePart:">&ndash;&nbsp;removePart:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>移除 part，立即生效，同时移除他所关联到UI, 调用后立即生效</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)removePart:(NSObject&lt;TTVPlayerPartProtocol&gt; *)<em>part</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>part</code></th>
+						<td><p>@see <a href="../Protocols/TTVPlayerPartProtocol.html">TTVPlayerPartProtocol</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>移除 part，立即生效，同时移除他所关联到UI, 调用后立即生效</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addPartFromConfigForKey:" title="addPartFromConfigForKey:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addPartFromConfigForKey:">&ndash;&nbsp;addPartFromConfigForKey:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>通过配置文件的配置，创建一个 part，并把它挂载到系统中, 调用后立即生效</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addPartFromConfigForKey:(TTVPlayerPartKey)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>plist中配置的 key @see <a href="../Constants/TTVPlayerPartKey.html">TTVPlayerPartKey</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>通过配置文件的配置，创建一个 part，并把它挂载到系统中, 调用后立即生效</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removePartForKey:" title="removePartForKey:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removePartForKey:">&ndash;&nbsp;removePartForKey:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>移除 part, 调用后立即生效</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)removePartForKey:(TTVPlayerPartKey)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>plist中配置的 key @see <a href="../Constants/TTVPlayerPartKey.html">TTVPlayerPartKey</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>移除 part, 调用后立即生效</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removeAllParts" title="removeAllParts"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removeAllParts">&ndash;&nbsp;removeAllParts</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>移除所有的 parts包括他们对应的 UI, 调用后立即生效</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)removeAllParts</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>移除所有的 parts包括他们对应的 UI, 调用后立即生效</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/allParts" title="allParts"></a>
+	<h3 class="method-title"><code><a href="#//api/name/allParts">&ndash;&nbsp;allParts</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>获取所有的 parts</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSArray&lt;NSObject&lt;TTVPlayerPartProtocol&gt; *&gt; *)allParts</code></div>
+
+		    
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>allparts</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>获取所有的 parts</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/partForKey:" title="partForKey:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/partForKey:">&ndash;&nbsp;partForKey:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>从已经加载的 parts 中，获取当前的 part</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSObject&lt;TTVPlayerPartProtocol&gt; *)partForKey:(TTVPlayerPartKey)<em>key</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>key</code></th>
+						<td><p>@see <a href="../Constants/TTVPlayerPartKey.html">TTVPlayerPartKey</a></p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>part （already loaded）</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>从已经加载的 parts 中，获取当前的 part</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+Part.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+
+						<a title="CacheProgress Methods" name="task_CacheProgress Methods"></a>
+						<h2 class="task-title">CacheProgress Methods</h2>
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/cacheProgress" title="cacheProgress"></a>
+	<h3 class="method-title"><code><a href="#//api/name/cacheProgress">&ndash;&nbsp;cacheProgress</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Cache current player progress. Must called before player <a href="#//api/name/stop">stop</a> or <a href="#//api/name/pause">pause</a>, after <a href="#//api/name/videoID">videoID</a> was set up</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)cacheProgress</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Cache current player progress. Must called before player <a href="#//api/name/stop">stop</a> or <a href="#//api/name/pause">pause</a>, after <a href="#//api/name/videoID">videoID</a> was set up</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+CacheProgress.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removeProgressCacheIfNeeded" title="removeProgressCacheIfNeeded"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removeProgressCacheIfNeeded">&ndash;&nbsp;removeProgressCacheIfNeeded</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Remove the progress cached before if less 5 sec left. Called when <a href="#//api/name/play">play</a> finished, after <a href="#//api/name/videoID">videoID</a> was set up</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)removeProgressCacheIfNeeded</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Remove the progress cached before if less 5 sec left. Called when <a href="#//api/name/play">play</a> finished, after <a href="#//api/name/videoID">videoID</a> was set up</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">TTVPlayer+CacheProgress.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2019 bytedance. All rights reserved. Updated: 2019-04-25</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
