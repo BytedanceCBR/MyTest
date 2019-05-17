@@ -136,8 +136,8 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
         return;
     }
     
-    if (!_channelCache) {
-        _channelCache = [NSMutableDictionary new];
+    if (!_rnPreloadCache) {
+        _rnPreloadCache = [NSMutableDictionary new];
     }
     
     NSURL *openUrlRn = [NSURL URLWithString:url];
@@ -157,8 +157,8 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
         return;
     }
     
-    if (!_channelCache) {
-        _channelCache = [NSMutableDictionary new];
+    if (!_rnPreloadCache) {
+        _rnPreloadCache = [NSMutableDictionary new];
     }
     
     NSURL *openUrlRn = [NSURL URLWithString:url];
