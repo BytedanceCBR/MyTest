@@ -73,9 +73,11 @@
     if(!_player){
         _player = [[TTVPlayer alloc] initWithOwnPlayer:YES configFileName:@"TTVPlayerStyle.plist"];
         _player.delegate = self;
-        _player.customViewDelegate = self;
         _player.showPlaybackControlsOnViewFirstLoaded = NO;
         _player.enableNoPlaybackStatus = YES;
+    }
+    if(!_player.customViewDelegate){
+        _player.customViewDelegate = self;
     }
     return _player;
 }

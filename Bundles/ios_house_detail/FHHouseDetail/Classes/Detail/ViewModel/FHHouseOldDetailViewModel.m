@@ -301,11 +301,17 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:headerCellModel];
     }else{
         // 添加头滑动图片
-        if (model.data.houseImage.count > 0) {
-            FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
+        if (model.data.houseImage.count > 0) {            
             headerCellModel.houseImage = model.data.houseImage;
-            [self.items addObject:headerCellModel];
+        }else{
+            //无图片时增加默认图
+            FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+            headerCellModel.houseImage = @[imgModel];
         }
+        
+        [self.items addObject:headerCellModel];
+        
     }
     // 添加标题
     if (model.data) {
