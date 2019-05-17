@@ -23,7 +23,7 @@ typedef NS_ENUM(NSInteger, FHAppVersion)
 
 + (UIColor *)progressViewLineFillColor;
 
-- (void)showEmptyView:(UIView *)view;
+- (void)showEmptyView:(UIView *)view retryBlock:(void (^)(void))retryBlock;
 
 - (void)hideEmptyView;
 
@@ -42,3 +42,4 @@ typedef NS_ENUM(NSInteger, FHAppVersion)
 @end
 
 NS_ASSUME_NONNULL_END
+

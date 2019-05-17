@@ -252,9 +252,9 @@
     
     if ([request.URL.scheme isEqualToString:@"sslocal"] && [request.URL.host isEqualToString:@"refresh_user_info"]) {
         // 登录
-//        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
-//        [TTAccountManager setIsLogin:YES];
-//        [TTAccountManager startGetAccountStatus:NO];
+        //        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
+        //        [TTAccountManager setIsLogin:YES];
+        //        [TTAccountManager startGetAccountStatus:NO];
         
         return NO;
     }
@@ -272,9 +272,9 @@
     }
     
     // stay_page统计需求  需求：https://wiki.bytedance.net/pages/viewpage.action?pageId=89884456
-//    if ([ArticleWebViewToAppStoreManager isToAppStoreRequestURLStr:request.URL.absoluteString]) {
-//        [self _sendJumpOutAppEvent];
-//    }
+    //    if ([ArticleWebViewToAppStoreManager isToAppStoreRequestURLStr:request.URL.absoluteString]) {
+    //        [self _sendJumpOutAppEvent];
+    //    }
     
     return YES;
 }
@@ -318,7 +318,7 @@
         }else{
             [self showEmptyMaskView];
         }
-
+        
         return;
     }
     
@@ -397,73 +397,73 @@
     }
     // 如果没有发送，则发送。之前是针对ad的 现在扩展到所有详情页 -- add 5.1 nick
     if (self.startLoadDate) {
-//        NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
-//        NSString * articleUrl = self.request.URL.absoluteString;
-//        if (articleUrl && [[TTAdSiteWebPreloadManager sharedManager].preloadURLSet containsObject:articleUrl]) {
-//            [dict setValue:@1 forKey:@"preload"];
-//        } else {
-//            [dict setValue:@0 forKey:@"preload"];
-//        }
-//        [dict setValue:@"wap_stat" forKey:@"category"];
-//        [dict setValue:tags[stat] forKey:@"tag"];
-//        [dict setValue:self.adID forKey:@"ext_value"];
-//        if (_userHasClickLink) {
-//            [dict setValue:@(YES) forKey:@"click_link"];
-//        }
-//        // 这里的加载时间是指从一开始LoadRequest就开始记时，到加载结束
-//        if (stat == SSWebViewStayStatLoadFail && error) {
-//            [dict setValue:[NSString stringWithFormat:@"%ld", (long)error.code] forKey:@"error"];
-//        } else {
-//            /// 需要减去后台停留时间
-//            NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:_startLoadDate];
-//            // 转换成毫秒
-//            if (self.adID.longLongValue > 0 && timeInterval >90) {//超过90秒 当90秒处理
-//                timeInterval = 90;
-//            }
-//            self.loadTime = timeInterval;
-//            [dict setValue:[NSString stringWithFormat:@"%.0f", timeInterval*1000] forKey:@"load_time"];
-//        }
-//        if (!isEmptyString(self.logExtra)) {
-//            [dict setValue:self.logExtra forKey:@"log_extra"];
-//        }
-//        else {
-//            [dict setValue:@"" forKey:@"log_extra"];
-//
-//        }
-//        //添加三方广告落地页预加载打点字段
-//        if (!isEmptyString(self.adID)) {
-//            if ([TTAdManageInstance preloadWebRes_isFirstEnterPageAdid:self.adID]) {
-//                [dict setValue:@"1" forKey:@"first_open"];
-//            }
-//            else{
-//                [dict setValue:@"0" forKey:@"first_open"];
-//            }
-//            if ([TTAdManageInstance preloadWebRes_hasPreloadResource:self.adID] == YES) {
-//                [dict setValue:@"ad_wap_stat" forKey:@"label"];
-//                [dict setValue:self.adID forKey:@"value"];
-//                [dict setValue:@"1" forKey:@"is_ad_event"];
-//                NSInteger preload_total = [TTAdManageInstance preloadWebRes_preloadTotalAdID:self.adID];
-//                if (preload_total > 0) {
-//                    NSInteger rate = 0;
-//                    NSInteger preload_num = [TTAdManageInstance preloadWebRes_preloadNumInWebView];
-//                    self.preload_num = preload_num;
-//                    rate =100 * preload_num / preload_total;
-//                    NSMutableDictionary *ad_extra_data = [NSMutableDictionary dictionary];
-//                    [ad_extra_data setValue:@(rate<100?rate:100) forKey:@"load_percent"];
-//
-//                    CGFloat match_rate = 0;
-//                    NSInteger match_num = [TTAdManageInstance preloadWebRes_matchNumInWebView];
-//                    self.match_num = match_num;
-//                    match_rate = 100* match_num / preload_total;
-//                    [ad_extra_data setValue:@(match_rate>100? 100:match_rate) forKey:@"match_percent"];
-//                    [dict setValue:[ad_extra_data tt_JSONRepresentation]
-//                            forKey:@"ad_extra_data"];
-//                    [dict setValue:@1 forKey:@"preload"];
-//                    [TTAdManageInstance preloadWebRes_finishCaptureThePage];
-//                }
-//            }
-//        }
-//        [TTTrackerWrapper eventData:dict];
+        //        NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
+        //        NSString * articleUrl = self.request.URL.absoluteString;
+        //        if (articleUrl && [[TTAdSiteWebPreloadManager sharedManager].preloadURLSet containsObject:articleUrl]) {
+        //            [dict setValue:@1 forKey:@"preload"];
+        //        } else {
+        //            [dict setValue:@0 forKey:@"preload"];
+        //        }
+        //        [dict setValue:@"wap_stat" forKey:@"category"];
+        //        [dict setValue:tags[stat] forKey:@"tag"];
+        //        [dict setValue:self.adID forKey:@"ext_value"];
+        //        if (_userHasClickLink) {
+        //            [dict setValue:@(YES) forKey:@"click_link"];
+        //        }
+        //        // 这里的加载时间是指从一开始LoadRequest就开始记时，到加载结束
+        //        if (stat == SSWebViewStayStatLoadFail && error) {
+        //            [dict setValue:[NSString stringWithFormat:@"%ld", (long)error.code] forKey:@"error"];
+        //        } else {
+        //            /// 需要减去后台停留时间
+        //            NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:_startLoadDate];
+        //            // 转换成毫秒
+        //            if (self.adID.longLongValue > 0 && timeInterval >90) {//超过90秒 当90秒处理
+        //                timeInterval = 90;
+        //            }
+        //            self.loadTime = timeInterval;
+        //            [dict setValue:[NSString stringWithFormat:@"%.0f", timeInterval*1000] forKey:@"load_time"];
+        //        }
+        //        if (!isEmptyString(self.logExtra)) {
+        //            [dict setValue:self.logExtra forKey:@"log_extra"];
+        //        }
+        //        else {
+        //            [dict setValue:@"" forKey:@"log_extra"];
+        //
+        //        }
+        //        //添加三方广告落地页预加载打点字段
+        //        if (!isEmptyString(self.adID)) {
+        //            if ([TTAdManageInstance preloadWebRes_isFirstEnterPageAdid:self.adID]) {
+        //                [dict setValue:@"1" forKey:@"first_open"];
+        //            }
+        //            else{
+        //                [dict setValue:@"0" forKey:@"first_open"];
+        //            }
+        //            if ([TTAdManageInstance preloadWebRes_hasPreloadResource:self.adID] == YES) {
+        //                [dict setValue:@"ad_wap_stat" forKey:@"label"];
+        //                [dict setValue:self.adID forKey:@"value"];
+        //                [dict setValue:@"1" forKey:@"is_ad_event"];
+        //                NSInteger preload_total = [TTAdManageInstance preloadWebRes_preloadTotalAdID:self.adID];
+        //                if (preload_total > 0) {
+        //                    NSInteger rate = 0;
+        //                    NSInteger preload_num = [TTAdManageInstance preloadWebRes_preloadNumInWebView];
+        //                    self.preload_num = preload_num;
+        //                    rate =100 * preload_num / preload_total;
+        //                    NSMutableDictionary *ad_extra_data = [NSMutableDictionary dictionary];
+        //                    [ad_extra_data setValue:@(rate<100?rate:100) forKey:@"load_percent"];
+        //
+        //                    CGFloat match_rate = 0;
+        //                    NSInteger match_num = [TTAdManageInstance preloadWebRes_matchNumInWebView];
+        //                    self.match_num = match_num;
+        //                    match_rate = 100* match_num / preload_total;
+        //                    [ad_extra_data setValue:@(match_rate>100? 100:match_rate) forKey:@"match_percent"];
+        //                    [dict setValue:[ad_extra_data tt_JSONRepresentation]
+        //                            forKey:@"ad_extra_data"];
+        //                    [dict setValue:@1 forKey:@"preload"];
+        //                    [TTAdManageInstance preloadWebRes_finishCaptureThePage];
+        //                }
+        //            }
+        //        }
+        //        [TTTrackerWrapper eventData:dict];
         
         // 这里要把这个变成空的，下次如果看到时间是空的，则不重新发送统计。
         self.startLoadDate = nil;
@@ -475,87 +475,87 @@
         return;
     }
     
-//    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
-//    NSString * articleUrl = self.request.URL.absoluteString;
-//    [dict setValue:@"umeng" forKey:@"category"];
-//    [dict setValue:@"wap_stat" forKey:@"tag"];
-//    [dict setValue:@"landing_page" forKey:@"label"];
-//    [dict setValue:self.adID forKey:@"value"];
-//    [dict setValue:@"1" forKey:@"is_ad_event"];
-//    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-//    [dict setValue:@(connectionType) forKey:@"nt"];
-//
-//    if (!isEmptyString(self.logExtra)) {
-//        [dict setValue:self.logExtra forKey:@"log_extra"];
-//    } else {
-//        [dict setValue:@"" forKey:@"log_extra"];
-//    }
-//
-//    /// 需要减去后台停留时间
-//    NSTimeInterval timeInterval;
-//    NSMutableDictionary *ad_extra_data = [NSMutableDictionary dictionary];
-//    if (_startLoadDate) {
-//        timeInterval = [[NSDate date] timeIntervalSinceDate:_startLoadDate];
-//        // 转换成毫秒
-//        if (self.adID.longLongValue > 0 && timeInterval >90) {//超过90秒 当90秒处理
-//            timeInterval = 90;
-//        }
-//    } else {
-//        timeInterval = self.loadTime;
-//    }
-//
-//    [ad_extra_data setValue:[NSString stringWithFormat:@"%.0f", timeInterval*1000] forKey:@"load_time"];
-//    if (articleUrl && [[TTAdSiteWebPreloadManager sharedManager].preloadURLSet containsObject:articleUrl]) {
-//        [ad_extra_data setValue:@1 forKey:@"preload"];
-//    } else {
-//        [ad_extra_data setValue:@0 forKey:@"preload"];
-//    }
-//
-//    NSString* timeStr = nil;
-//    @try {
-//        timeStr = [self.ssWebView stringByEvaluatingJavaScriptFromString:@"performance.timing.domComplete - performance.timing.navigationStart" completionHandler:nil];
-//    } @catch (NSException *exception) {
-//        NSLog(@"performance.timing.domComplete--exception:%@",exception.description);
-//    } @finally {
-//
-//    }
-//    if (isEmptyString(timeStr)) {
-//        timeStr = @"90000";
-//    }
-//    timeInterval = timeStr.longLongValue;
-//    if (timeStr.longLongValue < 0 || timeStr.longLongValue >90000) {
-//        timeInterval = 90000;
-//    }
-//    [ad_extra_data setValue:@(timeInterval) forKey:@"dom_complete_time"];
-//    [ad_extra_data setValue:self.loadState forKey:@"load_status"];
-//
-//    //添加三方广告落地页预加载打点字段
-//
-//    if ([TTAdManageInstance preloadWebRes_hasPreloadResource:self.adID] == YES) {
-//        NSInteger preload_total = [TTAdManageInstance preloadWebRes_preloadTotalAdID:self.adID];
-//        if (preload_total > 0) {
-//            NSInteger rate = 0;
-//            NSInteger preload_num = [TTAdManageInstance preloadWebRes_preloadNumInWebView];
-//            if (self.preload_num || self.match_num) {
-//                preload_num = self.preload_num;
-//            }
-//            rate =100 * preload_num / preload_total;
-//            [ad_extra_data setValue:@(rate<100?rate:100) forKey:@"load_percent"];
-//
-//            CGFloat match_rate = 0;
-//            NSInteger match_num = [TTAdManageInstance preloadWebRes_matchNumInWebView];
-//            if (self.preload_num || self.match_num) {
-//                match_num = self.preload_num;
-//            }
-//            match_rate = 100* match_num / preload_total;
-//            [ad_extra_data setValue:@(match_rate>100? 100:match_rate) forKey:@"match_percent"];
-//            [ad_extra_data setValue:@1 forKey:@"preload"];
-//            [TTAdManageInstance preloadWebRes_finishCaptureThePage];
-//        }
-//    }
-//    [dict setValue:[ad_extra_data tt_JSONRepresentation] forKey:@"ad_extra_data"];
-//
-//    [TTTrackerWrapper eventData:dict];
+    //    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
+    //    NSString * articleUrl = self.request.URL.absoluteString;
+    //    [dict setValue:@"umeng" forKey:@"category"];
+    //    [dict setValue:@"wap_stat" forKey:@"tag"];
+    //    [dict setValue:@"landing_page" forKey:@"label"];
+    //    [dict setValue:self.adID forKey:@"value"];
+    //    [dict setValue:@"1" forKey:@"is_ad_event"];
+    //    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
+    //    [dict setValue:@(connectionType) forKey:@"nt"];
+    //
+    //    if (!isEmptyString(self.logExtra)) {
+    //        [dict setValue:self.logExtra forKey:@"log_extra"];
+    //    } else {
+    //        [dict setValue:@"" forKey:@"log_extra"];
+    //    }
+    //
+    //    /// 需要减去后台停留时间
+    //    NSTimeInterval timeInterval;
+    //    NSMutableDictionary *ad_extra_data = [NSMutableDictionary dictionary];
+    //    if (_startLoadDate) {
+    //        timeInterval = [[NSDate date] timeIntervalSinceDate:_startLoadDate];
+    //        // 转换成毫秒
+    //        if (self.adID.longLongValue > 0 && timeInterval >90) {//超过90秒 当90秒处理
+    //            timeInterval = 90;
+    //        }
+    //    } else {
+    //        timeInterval = self.loadTime;
+    //    }
+    //
+    //    [ad_extra_data setValue:[NSString stringWithFormat:@"%.0f", timeInterval*1000] forKey:@"load_time"];
+    //    if (articleUrl && [[TTAdSiteWebPreloadManager sharedManager].preloadURLSet containsObject:articleUrl]) {
+    //        [ad_extra_data setValue:@1 forKey:@"preload"];
+    //    } else {
+    //        [ad_extra_data setValue:@0 forKey:@"preload"];
+    //    }
+    //
+    //    NSString* timeStr = nil;
+    //    @try {
+    //        timeStr = [self.ssWebView stringByEvaluatingJavaScriptFromString:@"performance.timing.domComplete - performance.timing.navigationStart" completionHandler:nil];
+    //    } @catch (NSException *exception) {
+    //        NSLog(@"performance.timing.domComplete--exception:%@",exception.description);
+    //    } @finally {
+    //
+    //    }
+    //    if (isEmptyString(timeStr)) {
+    //        timeStr = @"90000";
+    //    }
+    //    timeInterval = timeStr.longLongValue;
+    //    if (timeStr.longLongValue < 0 || timeStr.longLongValue >90000) {
+    //        timeInterval = 90000;
+    //    }
+    //    [ad_extra_data setValue:@(timeInterval) forKey:@"dom_complete_time"];
+    //    [ad_extra_data setValue:self.loadState forKey:@"load_status"];
+    //
+    //    //添加三方广告落地页预加载打点字段
+    //
+    //    if ([TTAdManageInstance preloadWebRes_hasPreloadResource:self.adID] == YES) {
+    //        NSInteger preload_total = [TTAdManageInstance preloadWebRes_preloadTotalAdID:self.adID];
+    //        if (preload_total > 0) {
+    //            NSInteger rate = 0;
+    //            NSInteger preload_num = [TTAdManageInstance preloadWebRes_preloadNumInWebView];
+    //            if (self.preload_num || self.match_num) {
+    //                preload_num = self.preload_num;
+    //            }
+    //            rate =100 * preload_num / preload_total;
+    //            [ad_extra_data setValue:@(rate<100?rate:100) forKey:@"load_percent"];
+    //
+    //            CGFloat match_rate = 0;
+    //            NSInteger match_num = [TTAdManageInstance preloadWebRes_matchNumInWebView];
+    //            if (self.preload_num || self.match_num) {
+    //                match_num = self.preload_num;
+    //            }
+    //            match_rate = 100* match_num / preload_total;
+    //            [ad_extra_data setValue:@(match_rate>100? 100:match_rate) forKey:@"match_percent"];
+    //            [ad_extra_data setValue:@1 forKey:@"preload"];
+    //            [TTAdManageInstance preloadWebRes_finishCaptureThePage];
+    //        }
+    //    }
+    //    [dict setValue:[ad_extra_data tt_JSONRepresentation] forKey:@"ad_extra_data"];
+    //
+    //    [TTTrackerWrapper eventData:dict];
     
     // 这里要把这个变成空的，下次如果看到时间是空的，则不重新发送统计。
     self.startLoadDate = nil;
@@ -566,15 +566,15 @@
     if (isEmptyString(self.adID) || self.adID.longLongValue == 0) {
         return;
     }
-//    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
-//    [dict setValue:@"wap_stat" forKey:@"category"];
-//    [dict setValue:@"jump_out_app" forKey:@"tag"];
-//    [dict setValue:self.adID forKey:@"value"];
-//    [dict setValue:self.logExtra forKey:@"log_extra"];
-//    [dict setValue:@"1" forKey:@"is_ad_event"];
-//    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-//    [dict setValue:@(connectionType) forKey:@"nt"];
-//    [TTTrackerWrapper eventData:dict];
+    //    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithCapacity:10];
+    //    [dict setValue:@"wap_stat" forKey:@"category"];
+    //    [dict setValue:@"jump_out_app" forKey:@"tag"];
+    //    [dict setValue:self.adID forKey:@"value"];
+    //    [dict setValue:self.logExtra forKey:@"log_extra"];
+    //    [dict setValue:@"1" forKey:@"is_ad_event"];
+    //    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
+    //    [dict setValue:@(connectionType) forKey:@"nt"];
+    //    [TTTrackerWrapper eventData:dict];
 }
 
 - (UIScrollView *)scrollView {
@@ -582,7 +582,10 @@
 }
 
 - (void)showEmptyMaskView {
-    [[FHWebViewConfig sharedInstance] showEmptyView:self];
+    //这里不能用weak，因为block回来时候self被释放了
+    [[FHWebViewConfig sharedInstance] showEmptyView:self retryBlock:^{
+        [self retryLoadData];
+    }];
 }
 
 - (void)hideEmptyMaskView {
@@ -597,4 +600,10 @@
     [[FHWebViewConfig sharedInstance] hideLoading];
 }
 
+- (void)retryLoadData {
+    // 重新加载数据
+    [self refreshData];
+}
+
 @end
+
