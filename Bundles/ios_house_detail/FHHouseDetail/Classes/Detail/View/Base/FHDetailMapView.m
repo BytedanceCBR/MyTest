@@ -53,7 +53,7 @@
     self.mapView.zoomLevel = 14;
     self.mapView.showsUserLocation = NO;
     self.mapView.hidden = YES;
-    [[[UIApplication sharedApplication] keyWindow] addSubview:self.mapView];
+    [[[UIApplication sharedApplication] keyWindow] insertSubview:self.mapView atIndex:0];
     [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(0);
         make.height.mas_equalTo(160);
@@ -119,7 +119,7 @@
     self.mapView.showsUserLocation = NO;
     self.centerPoint = self.origin_centerPoint;
     self.mapView.delegate = self.origin_delegate;
-    [[[UIApplication sharedApplication] keyWindow] addSubview:self.mapView];
+    [[[UIApplication sharedApplication] keyWindow] insertSubview:self.mapView atIndex:0];
     [self.mapView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
         make.left.right.mas_equalTo(0);
