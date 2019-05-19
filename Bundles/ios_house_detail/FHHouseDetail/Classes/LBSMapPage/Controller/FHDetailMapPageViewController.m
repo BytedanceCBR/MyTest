@@ -291,8 +291,11 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         [button setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[button.tag]]] forState:UIControlStateNormal];
     }
     if (self.nameArray.count > button.tag) {
-        self.searchCategory = self.nameArray[button.tag];
-        [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
+        NSString *category = self.nameArray[button.tag];
+        if (![category isEqualToString:self.searchCategory]) {
+            self.searchCategory = category;
+            [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
+        }
     }
     [self changeBottomItemViewOffsetByIndex:button.tag];
     self.previouseIconButton = button;
@@ -491,6 +494,22 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 #pragma poi Delegate
 - (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response
 {
+    AMapPOIKeywordsSearchRequest *searchReqeust = (AMapPOIKeywordsSearchRequest *)request;
+    if (![searchReqeust isKindOfClass:[AMapPOIKeywordsSearchRequest class]]) {
+        return;
+    }
+    NSString *keyWords = searchReqeust.keywords;
+    if (keyWords.length <= 0) {
+        return;
+    }
+    NSInteger index = [self.nameArray indexOfObject:keyWords];
+    if (index < 0 || index >= self.nameArray.count) {
+        return;
+    }
+    if (![self.searchCategory isEqualToString:keyWords]) {
+        return;
+    }
+    
     [self cleanAllAnnotations];
     
     if (response.count == 0) {
