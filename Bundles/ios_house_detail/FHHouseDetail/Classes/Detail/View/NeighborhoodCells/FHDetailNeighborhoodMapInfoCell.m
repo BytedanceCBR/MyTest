@@ -76,6 +76,7 @@
     [self.contentView addSubview:self.mapImageView];
     [self.mapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.contentView);
+        make.height.mas_equalTo(160);
     }];
     
     CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, 160);
