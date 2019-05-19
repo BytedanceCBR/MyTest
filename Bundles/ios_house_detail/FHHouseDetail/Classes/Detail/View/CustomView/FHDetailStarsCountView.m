@@ -84,6 +84,52 @@
     }
 }
 
+- (void)updateStarsCountWithoutLabel:(NSInteger)scoreValue
+{
+    NSInteger startCount = scoreValue / 10;
+    BOOL isShowHalfStart = scoreValue > startCount * 10;
+    CGFloat scoreTotal = scoreValue / 10.0;
+    self.starsName.hidden = YES;
+    [self.starsName mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(0);
+        make.width.mas_equalTo(0);
+    }];
+    [self.starsCountView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.right.top.mas_equalTo(self);
+        make.left.mas_equalTo(0);
+        make.height.mas_equalTo(50);
+    }];
+    UIView *privousView = nil;
+    for (UIView *v in self.starsCountView.subviews) {
+        [v removeFromSuperview];
+    }
+    for (int index = 1; index <= 5; index++) {
+        UIImageView *starImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"star_evaluation_default"]];
+        [self.starsCountView addSubview:starImageView];
+        [starImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            if (privousView != nil) {
+                make.left.mas_equalTo(privousView.mas_right).offset(5);
+            } else {
+                make.left.mas_equalTo(self.starsCountView).offset(5);
+            }
+            make.width.height.mas_equalTo(self.starsSize);
+            make.centerY.mas_equalTo(self.starsCountView);
+        }];
+        if (startCount == 0) {
+            if (isShowHalfStart) {
+                [self createHalfStarView:starImageView ratio:scoreValue % 10];
+            }
+            return;
+        }
+        if (index <= startCount) {
+            starImageView.image = [UIImage imageNamed:@"star_evaluation"];
+        } else if (index == startCount + 1 && isShowHalfStart) {
+            [self createHalfStarView:starImageView ratio:scoreValue % 10];
+        }
+        privousView = starImageView;
+    }
+}
+
 - (void)createHalfStarView:(UIView *)superView ratio:(NSInteger)ratio {
     for (UIView *v in superView.subviews) {
         [v removeFromSuperview];
