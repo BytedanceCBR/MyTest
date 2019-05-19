@@ -38,7 +38,6 @@
 @interface TTRNBridgeEngine ()
 
 @property (nonatomic, weak) NSObject *sourceObject;
-@property (nonatomic, strong) NSMutableArray<NSString *> *events;
 
 @end
 
