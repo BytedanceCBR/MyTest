@@ -132,7 +132,7 @@ typedef enum : NSUInteger {
             return @"app_neighbourhood";
             break;
         case FHHouseTypeRentHouse:
-            return @"app_rent";
+            return @"app_renthouse";
             break;
         default:
             break;
