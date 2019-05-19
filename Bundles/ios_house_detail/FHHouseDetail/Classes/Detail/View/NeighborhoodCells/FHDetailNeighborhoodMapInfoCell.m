@@ -60,25 +60,6 @@
     return self;
 }
 
-- (void)setUpMapViewSetting:(BOOL)isRetry
-{
-    _mapView.delegate = self;
-    [_mapView forceRefresh];
-    
-    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
-    WeakSelf;
-    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        StrongSelf;
-        if (resultImage) {
-            self.mapImageView.image = resultImage;
-        }
-    }];
-    
-    if (self.centerPoint.latitude && self.centerPoint.longitude) {
-        [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
-    }
-}
-
 - (void)setupUI {
     _mapHightScale = 0.36;
 
@@ -97,19 +78,11 @@
     
     CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, 160);
     __weak typeof(self) weakSelf = self;
-    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        weakSelf.mapImageView.image = resultImage;
-    }];
-    
-    //3秒如果截图失败则重试一次
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (weakSelf.mapImageView.image == nil) {
-                [weakSelf setUpMapViewSetting:YES];
-            }
-        });
+    // 延时绘制地图
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf snapshotMap];
     });
-
+    
     UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(mapViewClick)];
     [self.mapImageView addGestureRecognizer:tapGes];
     self.mapImageView.userInteractionEnabled = YES;
@@ -150,13 +123,23 @@
     [self snapshotMap];
 }
 
+// 地图截屏
 - (void)snapshotMap {
-    UIView *annotionView = [self.mapView viewForAnnotation:self.pointAnnotation];
-    UIView *superAnnotionView = annotionView.superview;
-    if ([superAnnotionView isKindOfClass:[UIView class]]) {
-        self.mapImageView.image = [self getImageFromView:superAnnotionView];
-    } else {
-        self.mapImageView.image = nil;
+    // 截屏
+    __weak typeof(self) weakSelf = self;
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, 160);
+    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        // 注意点，如果进入周边地图页面，截屏可能不正确
+        BOOL isVCDidDisappear = weakSelf.baseViewModel.detailController.isViewDidDisapper; // 是否 不可见
+        if (!isVCDidDisappear) {
+            weakSelf.mapImageView.image = resultImage;
+        }
+    }];
+}
+
+- (void)fh_willDisplayCell {
+    if (self.mapImageView.image == nil) {
+        [self snapshotMap];
     }
 }
 

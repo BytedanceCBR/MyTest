@@ -37,7 +37,6 @@
 @property (nonatomic, copy)   NSString* imprId;
 @property (nonatomic, assign)   BOOL isDisableGoDetail;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
-@property (nonatomic, assign)   BOOL     isViewDidDisapper;
 
 @end
 

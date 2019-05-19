@@ -98,8 +98,11 @@
     
     self.origin_centerPoint = self.mapView.centerCoordinate;
     
-    MAMapView *map = [self defaultMapViewWithFrame:mapFrame];
+    __weak MAMapView *map = [self defaultMapViewWithFrame:mapFrame];
     map.hidden = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [map forceRefresh];
+    });
     return map;
 }
 
@@ -118,17 +121,23 @@
     self.mapView.delegate = self.origin_delegate;
     [[[UIApplication sharedApplication] keyWindow] addSubview:self.mapView];
     [self.mapView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.left.right.mas_equalTo(0);
         make.height.mas_equalTo(160);
     }];
     // 标注点恢复，周边配套，切换“交通 购物 医院 教育”时标注点可能绘制不上去问题
+    __weak typeof(self) wSelf = self;
     if (self.origin_annos.count > 0) {
-        __weak typeof(self) wSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             wSelf.centerPoint = wSelf.origin_centerPoint;
             wSelf.mapView.delegate = wSelf.origin_delegate;
             [wSelf.mapView addAnnotations:wSelf.origin_annos];
             [wSelf.origin_annos removeAllObjects];
+            [wSelf.mapView forceRefresh];
+        });
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [wSelf.mapView forceRefresh];
         });
     }
 }

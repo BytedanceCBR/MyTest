@@ -197,6 +197,11 @@
     if ([cell conformsToProtocol:@protocol(FHDetailVCViewLifeCycleProtocol)] && ![self.weakedVCLifeCycleCellTable containsObject:cell]) {
         [self.weakedVCLifeCycleCellTable addObject:cell];
     }
+    // will display
+    if ([cell isKindOfClass:[FHDetailBaseCell class]]) {
+        FHDetailBaseCell *tCell = (FHDetailBaseCell *)cell;
+        [tCell fh_willDisplayCell];
+    }
     // 添加element_show埋点
     if (!self.elementShowCaches[tempKey]) {
         self.elementShowCaches[tempKey] = @(YES);

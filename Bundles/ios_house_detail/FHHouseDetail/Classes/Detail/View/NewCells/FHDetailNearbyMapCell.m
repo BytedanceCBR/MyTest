@@ -171,42 +171,18 @@ static const float kSegementedPadingTop = 5;
     }];
 }
 
-- (void)setUpMapViewSetting:(BOOL)isRetry
-{
-    _mapView.delegate = self;
-    [_mapView forceRefresh];
-    
-    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
-    WeakSelf;
-    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        StrongSelf;
-        if (resultImage) {
-            self.mapImageView.image = resultImage;
-        }
-    }];
-    
-    if (self.centerPoint.latitude && self.centerPoint.longitude) {
-        [self.mapView setCenterCoordinate:self.centerPoint animated:NO];
-    }
-}
-
 - (void)setUpMapImageView
 {
     CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
     
     _mapView = [[FHDetailMapView sharedInstance] defaultMapViewWithFrame:mapRect];
     
-    //3秒如果截图失败则重试一次
-     __weak typeof(self) weakSelf = self;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (weakSelf.mapImageView.image == nil) {
-                [weakSelf setUpMapViewSetting:YES];
-            }
-        });
+    CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
+    __weak typeof(self) weakSelf = self;
+    // 延时绘制地图
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [weakSelf snapshotMap];
     });
-    
-    [self setUpMapViewSetting:NO];
 
     _mapImageView = [[UIImageView alloc] initWithFrame:mapRect];
     _mapImageView.backgroundColor = [UIColor themeGray7];
@@ -382,7 +358,7 @@ static const float kSegementedPadingTop = 5;
     self.pointCenterAnnotation = userAnna;
     
     [self.mapView setCenterCoordinate:self.centerPoint];
-    [self snapShotAnnotationImage];
+    [self snapshotMap];
     //改变显示的tableview数据
     [self changePoiData];
 }
@@ -616,16 +592,24 @@ static const float kSegementedPadingTop = 5;
     NSLog(@"table cell click!!!");
 }
 
-- (void)snapShotAnnotationImage
-{
-    CGRect mapRect = CGRectMake(0.0f, 0.0f, MAIN_SCREEN_WIDTH, 160);
-    WeakSelf;
-    [_mapView takeSnapshotInRect:mapRect withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
-        StrongSelf;
-        if (resultImage) {
-            self.mapImageView.image = resultImage;
+// 地图截屏
+- (void)snapshotMap {
+    // 截屏
+    __weak typeof(self) weakSelf = self;
+    CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
+    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        // 注意点，如果进入周边地图页面，截屏可能不正确
+        BOOL isVCDidDisappear = weakSelf.baseViewModel.detailController.isViewDidDisapper; // 是否 不可见
+        if (!isVCDidDisappear) {
+            weakSelf.mapImageView.image = resultImage;
         }
     }];
+}
+
+- (void)fh_willDisplayCell {
+    if (self.mapImageView.image == nil) {
+        [self snapshotMap];
+    }
 }
 
 - (UIImage *)getImageFromView:(UIView *)view
