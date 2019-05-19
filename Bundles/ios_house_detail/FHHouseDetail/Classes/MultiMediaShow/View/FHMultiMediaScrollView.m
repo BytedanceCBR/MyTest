@@ -68,12 +68,12 @@
     [self addSubview:_colletionView];
     
     _infoLabel = [[UILabel alloc] init];
-    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
+//    _infoLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
     _infoLabel.textAlignment = NSTextAlignmentCenter;
-    _infoLabel.font = [UIFont themeFontRegular:12];
+    _infoLabel.font = [UIFont themeFontRegular:14];
     _infoLabel.textColor = [UIColor whiteColor];
-    _infoLabel.layer.cornerRadius = 10;
-    _infoLabel.layer.masksToBounds = YES;
+//    _infoLabel.layer.cornerRadius = 10;
+//    _infoLabel.layer.masksToBounds = YES;
     
     [self addSubview:_infoLabel];
     
@@ -113,12 +113,12 @@
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(20);
         make.right.mas_equalTo(self).offset(-20);
-        make.bottom.mas_equalTo(self).offset(-10);
+        make.bottom.mas_equalTo(self).offset(-24);
     }];
     
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self);
+        make.bottom.mas_equalTo(self).offset(-14);
         make.width.mas_equalTo(self.bounds.size.width);
         make.height.mas_equalTo(40);
     }];
@@ -411,7 +411,7 @@
         
         CGFloat itemViewWidth = 0;
         if(_itemArray.count > 0){
-            itemViewWidth = 10 + 44 * _itemArray.count + 10 * (_itemArray.count - 1);
+            itemViewWidth = 10 + 44 * _itemArray.count;
         }
         
         [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
