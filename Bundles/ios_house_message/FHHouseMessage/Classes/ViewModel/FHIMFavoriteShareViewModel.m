@@ -95,6 +95,7 @@
                                 KSCHEMA_HOUSE_TYPE:[@(obj.houseType) stringValue],
                                 KSCHEMA_HOUSE_TITLE:obj.displayTitle ? : @"",
                                 KSCHEMA_HOUSE_DES:obj.displaySubTitle ? : @"",
+                                KSCHEMA_HOUSE_FROM:@"app_liked_house",
                                 KSCHEMA_HOUSE_PRICE:obj.displayPrice ? : @"",
                                 KSCHEMA_HOUSE_AVG_PRICE:obj.displayPricePerSqm ? : @""
                                 };

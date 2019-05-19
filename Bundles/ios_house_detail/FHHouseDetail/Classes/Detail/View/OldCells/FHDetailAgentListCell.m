@@ -171,6 +171,7 @@
         FHDetailContactModel *contact = model.recommendedRealtors[index];
         NSMutableDictionary *imExtra = @{}.mutableCopy;
         imExtra[@"realtor_position"] = @"detail_related";
+		imExtra[@"from"] = @"app_oldhouse_mulrealtor";
         [model.phoneCallViewModel imchatActionWithPhone:contact realtorRank:[NSString stringWithFormat:@"%d", index] extraDic:imExtra];
     }
 }
