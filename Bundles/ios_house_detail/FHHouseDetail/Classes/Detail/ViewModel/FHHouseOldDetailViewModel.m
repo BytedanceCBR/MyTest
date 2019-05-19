@@ -388,6 +388,19 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseType = [NSString stringWithFormat:@"%d", self.houseType];
     NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
+
+    // 房源概况
+    if (model.data.houseOverreview.list.count > 0) {
+        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+        [self.items addObject:grayLine];
+        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
+        infoModel.houseOverreview = model.data.houseOverreview;
+        infoModel.baseViewModel = self;
+        [self.items addObject:infoModel];
+    }
+    
+    // add by zjing for test 购房攻略
     
     // 房源榜单
     if (model.data.listEntrance.count > 0) {
@@ -398,7 +411,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         entranceModel.listEntrance = model.data.listEntrance;
         [self.items addObject:entranceModel];
     }
-
+    
     // 推荐经纪人
     if (model.data.recommendedRealtors.count > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
@@ -413,24 +426,15 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         agentListModel.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeSecondHandHouse houseId:self.houseId];
         [agentListModel.phoneCallViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
         agentListModel.phoneCallViewModel.tracerDict = self.detailTracerDic.mutableCopy;
-//        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
-//        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
+        //        agentListModel.phoneCallViewModel.followUpViewModel = self.contactViewModel.followUpViewModel;
+        //        agentListModel.phoneCallViewModel.followUpViewModel.tracerDict = self.detailTracerDic;
         agentListModel.searchId = searchId;
         agentListModel.imprId = imprId;
         agentListModel.houseId = self.houseId;
         agentListModel.houseType = self.houseType;
         [self.items addObject:agentListModel];
     }
-    // 房源概况
-    if (model.data.houseOverreview.list.count > 0) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailHouseOutlineInfoModel *infoModel = [[FHDetailHouseOutlineInfoModel alloc] init];
-        infoModel.houseOverreview = model.data.houseOverreview;
-        infoModel.baseViewModel = self;
-        [self.items addObject:infoModel];
-    }
+    
     // 小区信息
     if (model.data.neighborhoodInfo.id.length > 0) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线

@@ -15,7 +15,6 @@
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
 #import "FHExtendHotAreaButton.h"
-#import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHHousePhoneCallUtils.h>
@@ -24,7 +23,7 @@
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
-@property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
+@property (nonatomic, strong)   UIButton       *foldButton;
 @property (nonatomic, strong)   NSMutableDictionary       *tracerDicCache;
 
 @end
@@ -52,6 +51,13 @@
         [v removeFromSuperview];
     }
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
+    // add by zjing for test
+//    NSMutableArray *mutable = @[].mutableCopy;
+//    for (NSInteger index = 0;index < 6;index++) {
+//        FHDetailContactModel *contactModel = model.recommendedRealtors[0];
+//        [mutable addObject:contactModel];
+//    }
+//    model.recommendedRealtors = mutable;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         CGFloat vHeight = 66.0;
@@ -89,20 +95,29 @@
             [_foldButton removeFromSuperview];
             _foldButton = nil;
         }
-        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
+        _foldButton = [[UIButton alloc] init];
+        _foldButton.titleLabel.font = [UIFont themeFontRegular:14];
+        [_foldButton setTitle:@"查看全部" forState:UIControlStateNormal];
+        [_foldButton setTitle:@"查看全部" forState:UIControlStateHighlighted];
+        [_foldButton setTitleColor:[UIColor themeRed3] forState:UIControlStateNormal];
+        [_foldButton setTitleColor:[UIColor themeRed3] forState:UIControlStateHighlighted];
+        _foldButton.backgroundColor = [UIColor themeRed2];
+        _foldButton.layer.cornerRadius = 4;
+        _foldButton.layer.masksToBounds = YES;
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView.mas_bottom);
-            make.height.mas_equalTo(58);
-            make.left.right.mas_equalTo(self.contentView);
+            make.top.mas_equalTo(self.containerView.mas_bottom).mas_offset(30);
+            make.height.mas_equalTo(40);
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-58);
+            make.bottom.mas_equalTo(self.contentView).offset(-40 - 30 - 30);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-20);
+            make.bottom.mas_equalTo(self.contentView).offset(-30);
         }];
     }
     [self updateItems:NO];
@@ -178,7 +193,13 @@
 - (void)foldButtonClick:(UIButton *)button {
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)self.currentData;
     model.isFold = !model.isFold;
-    self.foldButton.isFold = model.isFold;
+    if (model.isFold) {
+        [_foldButton setTitle:@"查看全部" forState:UIControlStateNormal];
+        [_foldButton setTitle:@"查看全部" forState:UIControlStateHighlighted];
+    } else {
+        [_foldButton setTitle:@"收起" forState:UIControlStateNormal];
+        [_foldButton setTitle:@"收起" forState:UIControlStateHighlighted];
+    }
     [self updateItems:YES];
 }
 
