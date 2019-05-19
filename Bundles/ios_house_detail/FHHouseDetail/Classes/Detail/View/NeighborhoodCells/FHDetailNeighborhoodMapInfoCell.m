@@ -32,7 +32,7 @@
 #import <HMDTTMonitor.h>
 #import "FHDetailMapView.h"
 
-@interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate>
+@interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate,FHDetailVCViewLifeCycleProtocol>
 
 @property (nonatomic, strong)   UIImageView       *mapImageView;
 @property (nonatomic, weak)     MAMapView       *mapView;
@@ -213,7 +213,17 @@
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
 
-
+// FHDetailVCViewLifeCycleProtocol
+- (void)vc_viewDidAppear:(BOOL)animated {
+    // 判断地图截屏是不是没成功，重新截屏
+    if (self.mapImageView.image == nil) {
+        __weak typeof(self) weakSelf = self;
+        // 延时绘制地图
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf snapshotMap];
+        });
+    }
+}
 
 @end
 

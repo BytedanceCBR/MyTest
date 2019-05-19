@@ -31,7 +31,11 @@ static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
 static const float kSegementedPadingTop = 5;
 
-@interface FHDetailNearbyMapCell () <AMapSearchDelegate,MAMapViewDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface FHDetailNearbyMapCell () <AMapSearchDelegate,
+MAMapViewDelegate,
+UITableViewDelegate,
+UITableViewDataSource,
+FHDetailVCViewLifeCycleProtocol>
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic , assign) NSInteger requestIndex;
@@ -633,6 +637,18 @@ static const float kSegementedPadingTop = 5;
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+// FHDetailVCViewLifeCycleProtocol
+- (void)vc_viewDidAppear:(BOOL)animated {
+    // 判断地图截屏是不是没成功，重新截屏
+    if (self.mapImageView.image == nil) {
+        __weak typeof(self) weakSelf = self;
+        // 延时绘制地图
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf snapshotMap];
+        });
+    }
 }
 
 @end
