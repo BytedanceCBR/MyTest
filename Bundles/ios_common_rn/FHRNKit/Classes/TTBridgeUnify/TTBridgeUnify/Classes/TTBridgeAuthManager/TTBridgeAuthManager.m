@@ -26,9 +26,9 @@ static NSString *kRemoteInnerDomainsKey = @"kRemoteInnerDomainsKey";
 
 @interface TTBridgeAuthManager ()
 
-@property (nonatomic, strong) NSMutableDictionary<NSString*, TTBridgeAuthInfo*> *friendDomainMethods;
-@property (nonatomic, copy) NSArray<NSString*> *remoteInnerDomains;
-@property (nonatomic, copy) NSArray<NSString*> *innerDomains;
+@property(nonatomic, strong) NSMutableDictionary<NSString*, TTBridgeAuthInfo*> *friendDomainMethods;
+@property(nonatomic, copy) NSArray<NSString*> *remoteInnerDomains;
+@property(nonatomic, copy) NSArray<NSString*> *innerDomains;
 
 @end
 
@@ -55,6 +55,7 @@ static TTBridgeAuthManager *s = nil;
 {
     self = [super init];
     if (self) {
+        _authRequesthHost = @"https://i.snssdk.com";
         _authEnabled = YES;
         _friendDomainMethods = [NSMutableDictionary dictionary];
         _remoteInnerDomains = [[NSUserDefaults standardUserDefaults] arrayForKey:kRemoteInnerDomainsKey];
@@ -76,19 +77,14 @@ static TTBridgeAuthManager *s = nil;
 + (BOOL)hasAuthForCommand:(TTBridgeCommand *)command
                    engine:(id<TTBridgeEngine>)engine
                    domain:(NSString *)domain {
-    //如果是RN，判断资源渠道
-    if (engine.engineType == TTBridgeRegisterRN) {
-        __auto_type paths = [engine.sourceURL pathComponents];
-        __auto_type channel = @"";
-        if (paths.count >= 2) {
-            channel = paths[paths.count - 2];
-        }
-        return [channel rangeOfString:@"external_"].location != 0;
-    }
     NSString *aliasName = [[TTBridgeForwarding sharedInstance] aliasForOrig:command.origName];
     TTBridgeMethodInfo *methodInfo = [[TTBridgeRegister sharedRegister].registedMethods objectForKey:command.origName] ?:
     [[TTBridgeRegister sharedRegister].registedMethods objectForKey:aliasName];
-    NSInteger authType = [[methodInfo.authTypes objectForKey:@([engine engineType])] integerValue];
+    TTBridgeAuthType authType = [[methodInfo.authTypes objectForKey:@([engine engineType])] unsignedIntegerValue];
+    if (TTBridgeAuthNotRegistered == authType) {
+        return NO;
+    }
+    
     if (TTBridgeAuthPublic == authType) {//方法的权限为公共，则所有域名都可以使用
         return YES;
     }
@@ -124,15 +120,6 @@ static TTBridgeAuthManager *s = nil;
 - (BOOL)engine:(id<TTBridgeEngine>)engine isAuthorizedMeta:(NSString *)meta domain:(NSString *)domain {
     if (!self.authEnabled) {
         return YES;
-    }
-    
-    if (engine.engineType == TTBridgeRegisterRN) {
-        __auto_type paths = [engine.sourceURL pathComponents];
-        __auto_type channel = @"";
-        if (paths.count >= 2) {
-            channel = paths[paths.count - 2];
-        }
-        return [channel rangeOfString:@"external_"].location != 0;
     }
     
     if ([self.class isInnerDomain:domain]) {
@@ -185,14 +172,16 @@ static TTBridgeAuthManager *s = nil;
     [getParam setValue:clientKey forKey:@"client_id"];
     [getParam setValue:domain forKey:@"partner_domain"];
     
-    static NSString *hostDomain = @"ib.snssdk.com";
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:[hostDomain stringByAppendingString:@"/client_auth/js_sdk/config/v1/"] params:getParam method:@"GET" needCommonParams:NO callback:^(NSError *error, id jsonObj) {
+    [[TTNetworkManager shareInstance] requestForJSONWithURL:[self.authRequesthHost stringByAppendingString:@"/client_auth/js_sdk/config/v1/"] params:getParam method:@"GET" needCommonParams:NO callback:^(NSError *error, id jsonObj) {
         if (error) {
             return finish(NO);
         }
+        if (![jsonObj[@"data"] isKindOfClass:[NSDictionary class]]) {
+            return finish(NO);
+        }
         
-        NSDictionary *data = jsonObj[@"data"];
-            
+        NSDictionary *data = jsonObj[@"data"] ;
+
         TTBridgeAuthInfo *infoModel = [[TTBridgeAuthInfo alloc] init];
         NSMutableArray *methodList = [NSMutableArray array];
         if ([data[@"call"] isKindOfClass:[NSArray class]]) {
@@ -202,7 +191,9 @@ static TTBridgeAuthManager *s = nil;
             [methodList addObjectsFromArray:data[@"event"]];
         }
         infoModel.methodList = methodList;
-        infoModel.metaList = data[@"info"];
+        if ([data[@"info"] isKindOfClass:[NSArray class]]) {
+            infoModel.metaList = data[@"info"];
+        }
         @synchronized (self.friendDomainMethods) {
             [self.friendDomainMethods setValue:infoModel forKey:domain];
         }

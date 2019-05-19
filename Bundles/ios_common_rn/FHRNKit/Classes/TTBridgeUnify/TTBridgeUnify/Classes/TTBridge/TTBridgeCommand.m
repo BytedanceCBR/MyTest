@@ -40,12 +40,18 @@
 
 - (void)amendDynamicPluginNameWithFullName:(NSString *)fullName {
     NSArray<NSString *> *components = [fullName componentsSeparatedByString:@"."];
-    if (components.count != 2) {
+    if (components.count < 2) {
         return;
     }
-    
-    self.className = components[0];
-    self.methodName = components[1];
+    NSMutableString *className = [[NSMutableString alloc] init];
+    for (int i=0; i<components.count-1; i++) {
+        [className appendString:components[i]];
+        if (i != components.count-2) {
+            [className appendString:@"."];
+        }
+    }
+    self.className = className.copy;
+    self.methodName = components.lastObject;
 }
 
 - (void)setFullName:(NSString *)fullName {
@@ -63,6 +69,10 @@
     [jsonDic setValue:[self.callbackID copy]forKey:@"__callback_id"];
     [jsonDic setValue:self.params forKey:@"__params"];
     NSData * data = [NSJSONSerialization dataWithJSONObject:jsonDic options:0 error:nil];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    string = [string stringByReplacingOccurrencesOfString:@"\u2028" withString:@"\\u2028"];
+    string = [string stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\\u2029"];
+    return string;
 }
+
 @end

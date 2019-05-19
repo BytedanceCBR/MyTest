@@ -22,7 +22,6 @@
 ((void)(NO && ((void)[((CLASS *)(nil)) METHOD##WithParam:nil callback:nil engine:nil controller:nil], NO)), @selector(METHOD##WithParam:callback:engine:controller:))
 
 
-typedef void(^TTBridgePluginHandler)(NSDictionary *params, TTBridgeCallback callback);
 
 //推荐使用动态的方式
 /**
@@ -58,30 +57,23 @@ typedef void(^TTBridgePluginHandler)(NSDictionary *params, TTBridgeCallback call
  */
 + (void)registerHandlerBlock:(TTBridgePluginHandler)handler forEngine:(id<TTBridgeEngine>)engine selector:(SEL)selector;
 
++ (void)performCallbackForEngine:(id<TTBridgeEngine>)engine selector:(SEL)selector msg:(TTBridgeMsg)msg params:(NSDictionary *)params __deprecated_msg("Use -[TTBridgeEngine callbackBridge:msg:params:");
+
 /**
  native主动回调plugin实现的某个birdge
-
+ 
  @param engine 对应的engine实例
  @param selector 注册bridge时的实现方法,可以通过TTBridgeSEL宏来避免硬编码
  @param msg 回传msg
  @param params 参数
+ @resultBlock resultBlock 异步获取返回值
  */
-+ (void)performCallbackForEngine:(id<TTBridgeEngine>)engine selector:(SEL)selector msg:(TTBridgeMsg)msg params:(NSDictionary *)params;
-
++ (void)performCallbackForEngine:(id<TTBridgeEngine>)engine selector:(SEL)selector msg:(TTBridgeMsg)msg params:(NSDictionary *)params resultBlock:(void (^)(NSString *result))resultBlock __deprecated_msg("Use -[TTBridgeEngine callbackBridge:msg:params:resultBlock:");
 
 /**
- bridge在forwarding到plugin之前会调用这个方法，如果返回NO，则不会调用plugin中的方法，默认会判断有没有注册的外部实现，如果有则跳转到外部实现并返回NO
+ 如果返回 YES 则不会执行 forwarding 逻辑,而是直接调用外部注册的 block 实现
  */
-- (BOOL)shoudHandleBridgeForMethod:(NSString *)method params:(NSDictionary *)params callback:(TTBridgeCallback)callback;
-
-/**
- bridge在forwarding到plugin后调用这个方法，由子类实现
-
- @param method 注册时的native方法名
- @param params 参数
- @param callback 回调
- */
-- (void)handleBridgeForMethod:(NSString *)method params:(NSDictionary *)params callback:(TTBridgeCallback)callback;
+- (BOOL)hasExternalHandleForMethod:(NSString *)method params:(NSDictionary *)params callback:(TTBridgeCallback)callback;
 
 /**
  保存当前的callback供后续调用，一般用于回调on开头的bridge

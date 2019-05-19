@@ -33,15 +33,16 @@ NS_ASSUME_NONNULL_BEGIN
 //可用的渠道
 + (NSArray *)fhRNEnableChannels;
 
-//开始缓存RN view
+//开始缓存RN对象
 - (void)addCacheViewOpenUrl:(NSString *)url andCacheKey:(NSInteger)cacheKey;
 
+//开始缓存RN对象
 - (void)addCacheViewOpenUrl:(NSString *)url andUserInfo:(TTRouteUserInfo *)userInfo andCacheKey:(NSInteger)cacheKey;
 
-//获取缓存
+//获取缓存RN对象
 - (TTRouteObject *)getRNCacheForCacheKey:(NSInteger)cacheKey;
 
-//清理缓存
+//清理某个缓存RN对象的资源
 - (void)clearCacheForCacheKey:(NSInteger)cacheKey;
 
 @end

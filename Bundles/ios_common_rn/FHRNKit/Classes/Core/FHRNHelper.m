@@ -170,6 +170,10 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
 //获取缓存
 - (TTRouteObject *)getRNCacheForCacheKey:(NSInteger)cacheKey
 {
+    if (!cacheKey) {
+        return nil;
+    }
+    
    TTRouteObject * routeObj = [self.rnPreloadCache objectForKey:[NSString stringWithFormat:@"%ld",cacheKey]];
     if ([routeObj isKindOfClass:[TTRouteObject class]]) {
         return routeObj;
@@ -182,7 +186,15 @@ static NSString *const kFHSettingsKey = @"kFHSettingsKey";
 //清理缓存
 - (void)clearCacheForCacheKey:(NSInteger)cacheKey
 {
+    if (!cacheKey) {
+        return;
+    }
+    
     TTRouteObject * routeObj = [self.rnPreloadCache objectForKey:[NSString stringWithFormat:@"%ld",cacheKey]];
+    if (routeObj) {
+        [self.rnPreloadCache removeObjectForKey:[NSString stringWithFormat:@"%ld",cacheKey]];
+    }
+    
     if ([routeObj isKindOfClass:[TTRouteObject class]]) {
         if ([routeObj.instance respondsToSelector:@selector(destroyRNView)]) {
             [routeObj.instance performSelector:@selector(destroyRNView)];
