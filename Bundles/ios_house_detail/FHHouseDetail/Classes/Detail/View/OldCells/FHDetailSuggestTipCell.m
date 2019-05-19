@@ -14,6 +14,7 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "UILabel+House.h"
+#import "FHDetailStarsCountView.h"
 
 @interface FHDetailSuggestTipCell ()
 
@@ -22,6 +23,7 @@
 @property (nonatomic, strong)   UILabel       *subtitleLabel;
 @property (nonatomic, strong)   UIImageView       *trendIcon;
 @property (nonatomic, strong)   UIView       *bgView;
+@property(nonatomic, strong) FHDetailStarsCountView *starView;
 
 @end
 
@@ -50,15 +52,9 @@
     if (model.buySuggestion && model.buySuggestion.type.length > 0) {
         self.trendIcon.hidden = NO;
         self.subtitleLabel.text = model.buySuggestion.content;
-        if ([model.buySuggestion.type isEqualToString:@"1"]) {
-            self.trendIcon.image = [UIImage imageNamed:@"sentiment-satisfied-material"];
-        } else if ([model.buySuggestion.type isEqualToString:@"2"]) {
-            self.trendIcon.image = [UIImage imageNamed:@"sentiment-neutral-material"];
-        } if ([model.buySuggestion.type isEqualToString:@"3"]) {
-            self.trendIcon.image = [UIImage imageNamed:@"sentiment-dissatisfied-material"];
-        }
     }
-//    [self layoutIfNeeded];
+    // add by zjing for test
+    [self.starView updateStarsCountWithoutLabel:30];
 }
 
 
@@ -96,6 +92,9 @@
     _subtitleLabel.numberOfLines = 0;
     [self.bgView addSubview:_subtitleLabel];
     
+    _starView = [[FHDetailStarsCountView alloc]init];
+    [self.bgView addSubview:_starView];
+    
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(20);
         make.right.bottom.mas_equalTo(-20);
@@ -119,6 +118,11 @@
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.bottom.mas_equalTo(-15);
+    }];
+    [self.starView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.tipLabel);
+        make.width.mas_equalTo(110);
+        make.right.mas_equalTo(-20);
     }];
 }
 
