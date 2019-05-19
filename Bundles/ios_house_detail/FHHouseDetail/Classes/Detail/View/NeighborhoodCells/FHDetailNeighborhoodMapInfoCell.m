@@ -32,13 +32,14 @@
 #import <HMDTTMonitor.h>
 #import "FHDetailMapView.h"
 
-@interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate,FHDetailVCViewLifeCycleProtocol>
+@interface FHDetailNeighborhoodMapInfoCell ()<MAMapViewDelegate>
 
 @property (nonatomic, strong)   UIImageView       *mapImageView;
 @property (nonatomic, weak)     MAMapView       *mapView;
 @property (nonatomic, assign)   CGFloat       mapHightScale;
 @property (nonatomic, assign)   CLLocationCoordinate2D       centerPoint;
 @property (nonatomic, strong)   MAPointAnnotation       *pointAnnotation;
+@property (nonatomic, assign)  BOOL isFirstSnapshot;// 首次截屏
 
 @end
 
@@ -61,6 +62,7 @@
 }
 
 - (void)setupUI {
+    _isFirstSnapshot = YES;
     _mapHightScale = 0.36;
 
     //
@@ -129,17 +131,39 @@
     __weak typeof(self) weakSelf = self;
     CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH, 160);
     [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        weakSelf.isFirstSnapshot = NO;
         // 注意点，如果进入周边地图页面，截屏可能不正确
         BOOL isVCDidDisappear = weakSelf.baseViewModel.detailController.isViewDidDisapper; // 是否 不可见
         if (!isVCDidDisappear) {
             weakSelf.mapImageView.image = resultImage;
         }
     }];
+    // 预处理
+    [self preShowMapviewSnapshot];
 }
 
 - (void)fh_willDisplayCell {
     if (self.mapImageView.image == nil) {
         [self snapshotMap];
+    }
+}
+
+// mapview 的 takeSnapshotInRect 方法有可能等很久（10s）才返回
+- (void)preShowMapviewSnapshot {
+    if (self.mapImageView.image == nil && self.isFirstSnapshot) {
+        __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (weakSelf.mapImageView.image == nil && !weakSelf.baseViewModel.detailController.isViewDidDisapper) {
+                weakSelf.mapView.hidden = NO;
+                weakSelf.mapImageView.image = [weakSelf getImageFromView:weakSelf.mapView];
+                weakSelf.mapView.hidden = YES;
+            }
+            weakSelf.isFirstSnapshot = NO;
+        });
+    } else {
+        self.mapView.hidden = NO;
+        self.mapImageView.image = [self getImageFromView:self.mapView];
+        self.mapView.hidden = YES;
     }
 }
 
@@ -149,7 +173,7 @@
         return nil;
     }
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
     UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return imageResult;
@@ -211,18 +235,6 @@
     
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
-}
-
-// FHDetailVCViewLifeCycleProtocol
-- (void)vc_viewDidAppear:(BOOL)animated {
-    // 判断地图截屏是不是没成功，重新截屏
-    if (self.mapImageView.image == nil) {
-        __weak typeof(self) weakSelf = self;
-        // 延时绘制地图
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf snapshotMap];
-        });
-    }
 }
 
 @end

@@ -34,8 +34,7 @@ static const float kSegementedPadingTop = 5;
 @interface FHDetailNearbyMapCell () <AMapSearchDelegate,
 MAMapViewDelegate,
 UITableViewDelegate,
-UITableViewDataSource,
-FHDetailVCViewLifeCycleProtocol>
+UITableViewDataSource>
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic , assign) NSInteger requestIndex;
@@ -57,6 +56,7 @@ FHDetailVCViewLifeCycleProtocol>
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
 @property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
+@property (nonatomic, assign)  BOOL isFirstSnapshot;// 首次截屏
 
 @end
 
@@ -67,6 +67,7 @@ FHDetailVCViewLifeCycleProtocol>
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        _isFirstSnapshot = YES;
         _isFirst = YES;
          self.searchCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
@@ -603,16 +604,38 @@ FHDetailVCViewLifeCycleProtocol>
     CGRect frame = CGRectMake(0, 0, MAIN_SCREEN_WIDTH, 160);
     [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
         // 注意点，如果进入周边地图页面，截屏可能不正确
+        weakSelf.isFirstSnapshot = NO;
         BOOL isVCDidDisappear = weakSelf.baseViewModel.detailController.isViewDidDisapper; // 是否 不可见
         if (!isVCDidDisappear) {
             weakSelf.mapImageView.image = resultImage;
         }
     }];
+    // 预处理
+    [self preShowMapviewSnapshot];
 }
 
 - (void)fh_willDisplayCell {
     if (self.mapImageView.image == nil) {
         [self snapshotMap];
+    }
+}
+
+// mapview 的 takeSnapshotInRect 方法有可能等很久（10s）才返回
+- (void)preShowMapviewSnapshot {
+    if (self.mapImageView.image == nil && self.isFirstSnapshot) {
+         __weak typeof(self) weakSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if (weakSelf.mapImageView.image == nil && !weakSelf.baseViewModel.detailController.isViewDidDisapper) {
+                weakSelf.mapView.hidden = NO;
+                weakSelf.mapImageView.image = [weakSelf getImageFromView:weakSelf.mapView];
+                weakSelf.mapView.hidden = YES;
+            }
+            weakSelf.isFirstSnapshot = NO;
+        });
+    } else {
+        self.mapView.hidden = NO;
+        self.mapImageView.image = [self getImageFromView:self.mapView];
+        self.mapView.hidden = YES;
     }
 }
 
@@ -622,7 +645,7 @@ FHDetailVCViewLifeCycleProtocol>
         return nil;
     }
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
     UIImage *imageResult = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return imageResult;
@@ -637,18 +660,6 @@ FHDetailVCViewLifeCycleProtocol>
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
-}
-
-// FHDetailVCViewLifeCycleProtocol
-- (void)vc_viewDidAppear:(BOOL)animated {
-    // 判断地图截屏是不是没成功，重新截屏
-    if (self.mapImageView.image == nil) {
-        __weak typeof(self) weakSelf = self;
-        // 延时绘制地图
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [weakSelf snapshotMap];
-        });
-    }
 }
 
 @end
