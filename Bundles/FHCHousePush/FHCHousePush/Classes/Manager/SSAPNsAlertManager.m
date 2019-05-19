@@ -347,7 +347,8 @@ static NSString * const kTTAPNsImportanceKey = @"important";
 + (BOOL)isF100PushUrl:(NSString*) host {
     
     NSString *result = [[TTProjectLogicManager sharedInstance_tt] logicStringForKey:host];
-    return result.length > 0;
+    BOOL isOtherUrl = [@"main" isEqualToString:host];
+    return result.length > 0 || isOtherUrl;
     
     //    return [@"old_house_detail" isEqualToString:host] ||
 //    [@"neighborhood_detail" isEqualToString:host] ||

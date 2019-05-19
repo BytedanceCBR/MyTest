@@ -1,0 +1,4 @@
+Documentation set was installed to Xcode!
+
+Path: /Users/lisa/Library/Developer/Shared/Documentation/DocSets/com.bytedance.ttvplayer.TTVPlayer.docset
+Time: 2019-02-28 07:08:26 +0000

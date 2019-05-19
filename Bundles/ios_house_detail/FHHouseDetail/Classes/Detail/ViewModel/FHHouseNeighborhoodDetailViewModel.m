@@ -150,18 +150,23 @@
     FHDetailContactModel *contactPhone = [[FHDetailContactModel alloc]init];
     contactPhone.isFormReport = YES;
     self.contactViewModel.contactPhone = contactPhone;
-    
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.detailData = model;
     [self addDetailCoreInfoExcetionLog];
 
     // 清空数据源
     [self.items removeAllObjects];
     // 添加头滑动图片
+    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];        
     if (model.data.neighborhoodImage.count > 0) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.neighborhoodImage;
-        [self.items addObject:headerCellModel];
+    }else{
+        //无图片时增加默认图
+        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        headerCellModel.houseImage = @[imgModel];
     }
+    [self.items addObject:headerCellModel];
+    
     // 添加标题
     if (model.data && model.data.neighborhoodInfo.id.length > 0) {
         FHDetailNeighborhoodNameModel *houseName = [[FHDetailNeighborhoodNameModel alloc] init];

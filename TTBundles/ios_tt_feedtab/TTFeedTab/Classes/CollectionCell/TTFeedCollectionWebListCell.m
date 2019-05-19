@@ -99,7 +99,7 @@
     if (self.category) {
         BOOL shouldAutoReload = [[NewsListLogicManager shareManager] shouldAutoReloadFromRemoteForCategory:self.category.categoryID];
         ListDataOperationReloadFromType type = shouldAutoReload ? ListDataOperationReloadFromTypeAuto : ListDataOperationReloadFromTypeNone;
-
+        
         if (shouldAutoReload) {
             [self.listView refreshListViewForCategory:self.category isDisplayView:YES fromLocal:NO fromRemote:shouldAutoReload reloadFromType:type];
         } else {
@@ -116,7 +116,7 @@
 - (void)refreshDataWithType:(ListDataOperationReloadFromType)refreshType
 {
     [self.listView pullAndRefresh];
-//    [self triggerPullRefresh];
+    //    [self triggerPullRefresh];
 }
 
 #pragma mark - ArticleBaseListViewDelegate

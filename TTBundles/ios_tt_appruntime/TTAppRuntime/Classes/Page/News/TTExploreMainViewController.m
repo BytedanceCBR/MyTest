@@ -60,6 +60,8 @@
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import "TTTabBarController.h"
+#import <FHCommuteManager.h>
 
 @interface TTExploreMainViewController () <TTCategorySelectorViewDelegate, ExploreSearchViewDelegate, TTTopBarDelegate, UINavigationControllerDelegate, TTFeedCollectionViewControllerDelegate, TTInteractExitProtocol, TTAppUpdateHelperProtocol>
 
@@ -82,6 +84,8 @@
 @property (nonatomic) BOOL adShow;
 
 @property (nonatomic, weak) TTFeedGuideView *feedGuideView;
+
+@property (nonatomic) BOOL adColdHadJump;
 
 @end
 
@@ -188,6 +192,60 @@
 //    [self showPushAuthorizeAlertIfNeed];
     
     [TTPushAlertManager enterFeedPage:TTPushWeakAlertPageTypeMainFeed];
+    
+    //开屏广告启动不会展示，保留逻辑代码
+    if(self.adShow && [TTSandBoxHelper isAPPFirstLaunchForAd])
+    {
+        [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
+            if (!isClicked) {
+                if (!self.adColdHadJump) {
+                    self.adColdHadJump = YES;
+                    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+                    if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                            //通勤找房
+                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                        }else
+                        {
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                        }
+                    }
+                }
+            }
+        };
+    }else
+    {
+        if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+            self.adColdHadJump = YES;
+            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                                //通勤找房
+                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                            }else
+                            {
+                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                            }
+                        }
+                    });
+                });
+            }
+        }
+    }
+}
+
+- (void)traceJump2AdEvent:(NSString *)urlString
+{
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
+    [dict setValue:@"1" forKey:@"result"];
+    [dict setValue:urlString forKey:@"url"];
+    [FHEnvContext recordEvent:dict andEventKey:@"link_jump"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

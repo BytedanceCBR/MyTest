@@ -14,7 +14,6 @@
 #import "AKTaskSettingHelper.h"
 #import "AKProfileBenefitManager.h"
 #import "AKMinePhotoCarouselEntry.h"
-#import "AKWebContainerViewController.h"
 #import "AKLoginTrafficViewController.h"
 #import "AKProfilePhotoCarouselViewCell.h"
 #import "TTProfileFunctionCell.h"

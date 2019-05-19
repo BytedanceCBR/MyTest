@@ -185,6 +185,7 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
  */
 + (nullable NSString *)resolutionString;
 
++ (BOOL)isIPhoneXSeries;
 
 @end
 
@@ -195,6 +196,8 @@ typedef NS_ENUM(NSUInteger, TTDeviceMode) {
 
 //获取可用空间大小，单位Byte
 + (long long)getFreeDiskSpace;
+
++ (CGFloat)getTotalCacheSpace;
 
 + (Boolean)is812Screen;
 + (Boolean)is896Screen2X;

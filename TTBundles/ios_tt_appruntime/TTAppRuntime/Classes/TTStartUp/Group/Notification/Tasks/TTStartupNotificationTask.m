@@ -40,6 +40,7 @@
 #import <TTDialogDirector/TTDialogDirector.h>
 #import "SSCommonLogic.h"
 #import <TTArticleBase/ExploreLogicSetting.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 @interface TTStartupNotificationTask ()
 <
@@ -79,6 +80,7 @@ TTAccountMulticastProtocol
     [[TTInstallIDManager sharedInstance] setDidRegisterBlock:^(NSString *deviceID, NSString *installID) {
         TTChannelRequestParam *param = [TTChannelRequestParam requestParam];
         param.notice = [NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]];
+        param.versionCode = [TTSandBoxHelper fhVersionCode];
         [TouTiaoPushSDK sendRequestWithParam:param completionHandler:^(TTBaseResponse *response) {
             
         }];

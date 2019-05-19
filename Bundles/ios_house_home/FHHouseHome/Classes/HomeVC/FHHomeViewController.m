@@ -205,13 +205,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewWillAppear:animated];
     
-    FHConfigDataModel *configDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (!configDataModel.cityAvailability.enable.boolValue) {
-        [self.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
-    }
-    
     [self scrollToTopEnable:YES];
     
+    if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue && [FHEnvContext sharedInstance].isRefreshFromCitySwitch)
+    {
+        [self.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated

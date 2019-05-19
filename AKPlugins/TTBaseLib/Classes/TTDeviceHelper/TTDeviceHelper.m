@@ -13,6 +13,7 @@
 #include <sys/xattr.h>
 #include <net/if.h>
 #include <net/if_dl.h>
+#import <sys/utsname.h>
 
 static TTDeviceMode tt_deviceMode;
 
@@ -322,6 +323,24 @@ static TTDeviceMode tt_deviceMode;
     return [[UIScreen mainScreen] scale];
 }
 
++ (CGFloat)getTotalCacheSpace
+{
+   
+   return [TTDeviceHelper cacheSizeToGB:[NSProcessInfo processInfo].physicalMemory];
+}
+
++(CGFloat)cacheSizeToGB:(unsigned long long)fileSize
+{
+    NSInteger KB = 1024;
+    NSInteger MB = KB*KB;
+    NSInteger GB = MB*KB;
+    CGFloat cacheSizeT = ((CGFloat)fileSize)/GB;
+    if (cacheSizeT < 1) {
+        cacheSizeT = 1.0;
+    }
+    return cacheSizeT;
+}
+
 + (CGSize)resolution {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     float scale = [[UIScreen mainScreen] scale];
@@ -333,6 +352,27 @@ static TTDeviceMode tt_deviceMode;
 + (NSString *)resolutionString {
     CGSize resolution = [self resolution];
     return [NSString stringWithFormat:@"%d*%d", (int)resolution.width, (int)resolution.height];
+}
+
++ (BOOL)isIPhoneXSeries {
+    static BOOL iPhoneXSeries = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        NSString *platform = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+        if ([platform isEqualToString:@"iPhone10,3"] || [platform isEqualToString:@"iPhone10,6"] || [platform isEqualToString:@"iPhone11,8"] || [platform isEqualToString:@"iPhone11,2"] || [platform isEqualToString:@"iPhone11,4"] || [platform isEqualToString:@"iPhone11,6"]) {
+            iPhoneXSeries = YES;
+        } else if ([[UIDevice currentDevice].model isEqualToString: @"iPhone"]) {
+            if (@available(iOS 11.0, *)) {
+                UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
+                if (mainWindow.safeAreaInsets.bottom > 0.0) {
+                    iPhoneXSeries = YES;
+                }
+            }
+        }
+    });
+    return iPhoneXSeries;
 }
 
 @end

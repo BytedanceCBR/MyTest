@@ -85,8 +85,9 @@
 "ad_full_screen_video"  = "TTAdFullScreenVideoViewController";
 
 // map search
-"mapfind_house"        = "FHMapSearchViewController";
-"mapfind_rent"         = "FHMapSearchViewController";
+"mapfind_house"          = "FHMapSearchViewController";
+"mapfind_rent"           = "FHMapSearchViewController";
+"mapfind_area_house_list"  = "FHMapAreaHouseListViewController";
 
 "renthouse_main"  = "FHBaseMainListViewController";
 //"FHHouseRentHomeVC";
@@ -112,6 +113,7 @@
 //im 单聊
 "open_single_chat" = "ChatRootViewController";
 "im_house_share" = "FHIMSharedUserListViewController";
+"im_share_favorite_house" = "FHIMFavoriteShareViewController";
 //会话列表
 "message_conversation_list" = "FHTempMessageViewController";
 
@@ -148,3 +150,7 @@
 
 //房源详情价格对比房源列表
 "house_search_result_list" = "FHOldPriceComparisonListController";
+//视频测试
+"video_test" = "VideoTestViewController";
+// 填表单经纪人选择列表
+"house_agency_list" = "FHHouseAgencyListViewController";

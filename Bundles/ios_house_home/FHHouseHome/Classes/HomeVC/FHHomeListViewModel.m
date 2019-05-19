@@ -193,24 +193,20 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
                 [self resetAllOthersCacheData];
                 
-                [self.tableViewV beginUpdates];
                 
-                if ([self.tableViewV numberOfSections] > 0) {
+                if ([self.tableViewV numberOfSections] > 0 && [self.tableViewV numberOfRowsInSection:0] > 0 && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
                     NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
                     [UIView performWithoutAnimation:^{
                         [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
                     }];
+                }else
+                {
+                    [self.tableViewV reloadData];
                 }
-                
-                [self.tableViewV endUpdates];
-                
-//                [UIView performWithoutAnimation:^{
-//                    [self.tableViewV reloadData];
-//                }];
-                
+
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
-                    [self checkCityStatus];
+                    [self.homeViewController.emptyView showEmptyWithTip:@"找房服务即将开通，敬请期待" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
                     isShowLocalTest = YES;
                 }else
                 {

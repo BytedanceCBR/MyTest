@@ -22,6 +22,7 @@
 #import "FHDetailFloorPanDetailInfoModel.h"
 #import "FHTransactionHistoryModel.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <BDAgileLog.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -46,7 +47,9 @@
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         
         FHDetailNewModel *model = nil;
-        model = [[FHDetailNewModel alloc] initWithDictionary:jsonObj error:&error];
+        if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
+            model = [[FHDetailNewModel alloc] initWithDictionary:jsonObj error:&error];
+        }
         if (model && !error) {
             if ([model.status isEqualToString:@"0"] && [model.message isEqualToString:@"success"]) {
                 error = nil;
@@ -280,7 +283,7 @@
     }
     __weak typeof(self)wself = self;
     return [[TTNetworkManager shareInstance]requestForJSONWithURL:url params:paramDic method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
-        
+
         FHDetailRelatedHouseResponseModel *model = nil;
         if (!error && [jsonObj isKindOfClass:[NSDictionary class]]) {
             model = [[FHDetailRelatedHouseResponseModel alloc] initWithDictionary:jsonObj error:nil];
@@ -604,7 +607,10 @@
     attr[@"message"] = message;
     attr[@"house_id"] = houseId;
     attr[@"url"] = urlStr;
-    attr[@"user_info"] = userInfo;
+    if (userInfo.count > 0 && [userInfo valueForKey:@"NSErrorFailingURLKey"]) {
+        NSString *str =[NSString stringWithFormat:@"%@",[userInfo valueForKey:@"NSErrorFailingURLKey"]];
+        BDALOG_WARN_TAG(@"house_detail",str);
+    }
     [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_related_failed" status:status.integerValue extra:attr];
 }
 

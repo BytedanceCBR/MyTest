@@ -229,7 +229,30 @@ extern NSString *const kFHToastCountKey;
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
     tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
     tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
+
     TRACK_EVENT(key, tracer);
+}
+
+- (void)addClickConfirmationLogWithAlertView:(FHDetailNoticeAlertView *)alertView
+{
+    NSMutableDictionary *tracerDict = [self.viewController.tracerModel logDict];
+    
+    NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
+    tracer[@"enter_from"] = tracerDict[@"enter_from"] ? tracerDict[@"enter_from"] : @"be_null";
+    tracer[@"page_type"] = [self pageType];
+    tracer[@"click_position"] = @"sale";
+    tracer[@"group_id"] = self.viewController.model.data.estimateId;
+    tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
+    tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSArray *selectAgencyList = [alertView selectAgencyList] ? : self.neighborhoodDetailModel.data.chooseAgencyList;
+    for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
+        if (item.agencyId.length > 0) {
+            [dict setValue:[NSNumber numberWithInt:item.checked] forKey:item.agencyId];
+        }
+    }
+    tracer[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
+    TRACK_EVENT(@"click_confirmation", tracer);
 }
 
 - (void)addClickExpectedTracer:(NSString *)result {
@@ -362,10 +385,34 @@ extern NSString *const kFHToastCountKey;
         subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:subtitle btnTitle:@"提交"];
+    if (_neighborhoodDetailModel.data.chooseAgencyList.count > 0) {
+        NSInteger selectCount = 0;
+        for (FHFillFormAgencyListItemModel *item in _neighborhoodDetailModel.data.chooseAgencyList) {
+            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
+                continue;
+            }
+            if (item.checked) {
+                selectCount += 1;
+            }
+        }
+        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
+        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
+            
+            [alert endEditing:YES];
+            NSMutableDictionary *info = @{}.mutableCopy;
+            info[@"choose_agency_list"] = [alert selectAgencyList] ? : _neighborhoodDetailModel.data.chooseAgencyList;
+            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+            [delegateTable addObject:alert];
+            info[@"delegate"] = delegateTable;
+            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
+            NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
+            [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
+        };
+    }
     alertView.phoneNum = phoneNum;
-    alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alertView){
-        [wself addInfomationTracer:@"click_confirmation"];
-        [wself fillFormRequest:phoneNum];
+    alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
+        [wself addClickConfirmationLogWithAlertView:alert];
+        [wself fillFormRequest:phoneNum alertView:alert];
     };
     alertView.tipClickBlock = ^{
         NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
@@ -377,7 +424,7 @@ extern NSString *const kFHToastCountKey;
     self.alertView = alertView;
 }
 
-- (void)fillFormRequest:(NSString *)phoneNum {
+- (void)fillFormRequest:(NSString *)phoneNum alertView:(FHDetailNoticeAlertView *)alertView {
     __weak typeof(self)wself = self;
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
@@ -385,11 +432,20 @@ extern NSString *const kFHToastCountKey;
     }
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    params[@"estimate_id"] = self.viewController.model.data.estimateId;
-    params[@"house_type"] = @(2);
-    params[@"phone"] = phoneNum;
-    
-    [FHPriceValuationAPI requestSubmitPhoneWithParams:params completion:^(BOOL success, NSError * _Nonnull error) {
+    NSArray *selectAgencyList = [alertView selectAgencyList] ? : self.neighborhoodDetailModel.data.chooseAgencyList;
+    if (selectAgencyList.count > 0) {
+        NSMutableArray *array = @[].mutableCopy;
+        for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
+            NSMutableDictionary *dict = @{}.mutableCopy;
+            dict[@"agency_id"] = item.agencyId;
+            dict[@"checked"] = [NSNumber numberWithInt:item.checked];
+            if (dict.count > 0) {
+                [array addObject:dict];
+            }
+        }
+        params[@"choose_agency_list"] = array;
+    }
+    [FHPriceValuationAPI requestSubmitPhoneWithEstimateId:self.viewController.model.data.estimateId houseType:2 phone:phoneNum params:params completion:^(BOOL success, NSError * _Nonnull error) {
         if(success && !error){
             [wself.alertView dismiss];
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];

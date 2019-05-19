@@ -26,7 +26,7 @@
 #import <TTArticleCategoryManager.h>
 #import <UIFont+House.h>
 #import "FHHomeScrollBannerCell.h"
-
+#import <FHHouseList/FHCommuteManager.h>
 
 #define kFHHomeIconRowCount 4 //每行icon个数
 
@@ -405,8 +405,10 @@ static NSMutableArray  * _Nullable identifierArr;
                     [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
                     [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-                }else
-                {
+                }else if ([itemModel.openUrl containsString:@"://commute_list"]){
+                    //通勤找房
+                    [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
+                }else{
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
                 }
             }

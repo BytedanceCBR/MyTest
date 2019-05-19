@@ -33,6 +33,8 @@
 // 启动时 NO； 无论是否启动开屏广告，检查完标记为YES； 进入后台前标记为 NO
 @property (nonatomic, assign) BOOL finishCheck;
 
+//冷启动全屏广告消失时
+@property (nonatomic, copy) void (^adShowCompletion)(BOOL isClicked);
 /**
  单例
  

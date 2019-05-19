@@ -167,7 +167,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
-        self.bottomStatusBar.text = @"停止出租";
+        self.bottomStatusBar.text = @"该房源已停止出租";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -211,6 +211,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.detailData = model;
     if (model.data.status != -1) {
         [self addDetailCoreInfoExcetionLog];
@@ -218,11 +219,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
     // 清空数据源
     [self.items removeAllObjects];
+    FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
     if (model.data.houseImage) {
-        FHDetailPhotoHeaderModel *headerCellModel = [[FHDetailPhotoHeaderModel alloc] init];
         headerCellModel.houseImage = model.data.houseImage;
-        [self.items addObject:headerCellModel];
+    }else{
+        //无图片时增加默认图
+        FHDetailHouseDataItemsHouseImageModel *imgModel = [FHDetailHouseDataItemsHouseImageModel new];
+        headerCellModel.houseImage = @[imgModel];
     }
+    [self.items addObject:headerCellModel];
+    
     // 添加标题
     if (model.data) {
         FHDetailHouseNameModel *houseName = [[FHDetailHouseNameModel alloc] init];
@@ -421,7 +427,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseId = self.houseId;
     NSString *from = @"app_renthouse_subscription";
-    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
         if (model.status.integerValue == 0 && !error) {
             [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];

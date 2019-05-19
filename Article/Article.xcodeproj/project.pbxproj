@@ -129,6 +129,10 @@
 		6BF694581CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */; };
 		6BF6945C1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */; };
 		6F6DFCAD76A181C548065CBB /* libPods-NewsLiteChannel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B0D256FBEA8FC685618E1CB /* libPods-NewsLiteChannel.a */; };
+		7623E3B02275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
+		7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
+		7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
+		7623E3B32275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		8416BB2E1C8EAE9A00BB9C97 /* Account.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */; };
 		91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BA3BB6E310AA5E3DA1FC486 /* libPods-NewsLite.a */; };
 		A8350A031BB501AC008D8D92 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8350A021BB501AC008D8D92 /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -209,7 +213,7 @@
 		C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC01B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg */; };
 		C2AE9FC81B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = C2AE9FC11B95920F00D2B937 /* synchronize_banner_add_friends_press-736h@3x.jpg */; };
 		C607D950E31143302DEC034E /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C69183A1551F2595D7E8A663 /* libPods-f100.a */; };
-		C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		D01379621DFE8F4A0020C6BD /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D013795E1DFE8BEF0020C6BD /* libresolv.tbd */; };
 		D08BFBDB1B8729AA00E6D9A1 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
 		D08BFBE01B8729B800E6D9A1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */; };
@@ -561,6 +565,7 @@
 		6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = NewsInHouseWatchKitExtension.release.xcconfig; sourceTree = "<group>"; };
 		6E8B2F64C7E8EB6C5CFB985C /* Pods-f100.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.debug.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.debug.xcconfig"; sourceTree = "<group>"; };
 		75FE9F321DE80D7E59EC4567 /* Pods-NewsLiteChannel.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteChannel.release.xcconfig"; path = "Pods/Target Support Files/Pods-NewsLiteChannel/Pods-NewsLiteChannel.release.xcconfig"; sourceTree = "<group>"; };
+		7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TTVPlayerStyle.plist; sourceTree = "<group>"; };
 		7E63708B6103B01655BC0894 /* Pods-f100.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.debug.xcconfig"; path = "Pods/Target Support Files/Pods-f100/Pods-f100.debug.xcconfig"; sourceTree = "<group>"; };
 		8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Account.xcassets; sourceTree = "<group>"; };
 		858DF41D3B9C9929D8ECF0AD /* libPods-NewsInHouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewsInHouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -649,7 +654,7 @@
 				3AA5028915876A1F00EB27FA /* CoreGraphics.framework in Frameworks */,
 				4895D827169C0F85005BFA5F /* libz.1.dylib in Frameworks */,
 				48C000B116F748BD00FC365B /* AssetsLibrary.framework in Frameworks */,
-				C9CCF48F99D53897C3CE4795 /* (null) in Frameworks */,
+				C9CCF48F99D53897C3CE4795 /* BuildFile in Frameworks */,
 				056BDCEE27CD2508CF254096 /* libPods-NewsLite.a in Frameworks */,
 				91D94FE2D9C7361EFCB878ED /* libPods-NewsLite.a in Frameworks */,
 			);
@@ -1015,6 +1020,7 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */,
 				3D7D2F3722704CAA00A95FAF /* AppIcon */,
 				8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */,
 				01FA60521E9F5D7300CE6FD3 /* area.plist */,
@@ -1381,6 +1387,7 @@
 				2E14CCEC1FE007C30093E05D /* sound1.caf in Resources */,
 				6114B09D21B3E78C00331D12 /* house_refresh.json in Resources */,
 				6BF694501CF2E5A5009997F0 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
+				7623E3B02275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				2D33175E1F30AE6D009D2936 /* PushNotification.xcassets in Resources */,
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				C2AE9FC41B95920F00D2B937 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
@@ -1452,6 +1459,7 @@
 				B373CE9B2174587A008F9905 /* sound1.caf in Resources */,
 				6114B09F21B3E78C00331D12 /* house_refresh.json in Resources */,
 				B373CE9E2174587A008F9905 /* NewsInHouseWatchKitApp.debug.xcconfig in Resources */,
+				7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				B373CEA42174587A008F9905 /* PushNotification.xcassets in Resources */,
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
 				B373CEA52174587A008F9905 /* synchronize_banner_add_friends_press-667h@2x.jpg in Resources */,
@@ -1503,6 +1511,7 @@
 				D479579B21ECC94E00548965 /* tt_video_doubleClickApprove.bundle in Resources */,
 				D479579C21ECC94E00548965 /* Images.xcassets in Resources */,
 				3D7D2F4B22704CAB00A95FAF /* Icon@2x.png in Resources */,
+				7623E3B32275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				D479579D21ECC94E00548965 /* Settings.xcassets in Resources */,
 				D479579F21ECC94E00548965 /* sound4.caf in Resources */,
 				D47957A121ECC94E00548965 /* sound1.caf in Resources */,
@@ -1582,6 +1591,7 @@
 				3DB49F8E2265E34900A0780E /* ProjectNightModeThemeUISetting.strings in Resources */,
 				FEFA5A15205FB1A8001F50D8 /* NewsInHouse.debug.xcconfig in Resources */,
 				FEFA5A16205FB1A8001F50D8 /* NewsInHouseWatchKitExtension.debug.xcconfig in Resources */,
+				7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */,
 				3D7D2F3D22704CAA00A95FAF /* Icon.png in Resources */,
 				FEFA5A1C205FB1A8001F50D8 /* NewsResource.xcassets in Resources */,
 				FEFA5A1D205FB1A8001F50D8 /* FrameworkResource.xcassets in Resources */,
@@ -1786,6 +1796,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/commute_banner.jpg",
+				"${PODS_ROOT}/../../Bundles/ios_house_message/FHHouseMessage/Assets/FHHouseMessage.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
@@ -1837,6 +1848,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
@@ -1892,6 +1904,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseMessage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
@@ -1943,6 +1956,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
@@ -2066,6 +2080,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/commute_banner.jpg",
+				"${PODS_ROOT}/../../Bundles/ios_house_message/FHHouseMessage/Assets/FHHouseMessage.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
@@ -2117,6 +2132,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
@@ -2172,6 +2188,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseMessage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
@@ -2223,6 +2240,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
@@ -2288,6 +2306,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/commute_banner.jpg",
+				"${PODS_ROOT}/../../Bundles/ios_house_message/FHHouseMessage/Assets/FHHouseMessage.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
@@ -2339,6 +2358,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
@@ -2393,6 +2413,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseMessage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
@@ -2444,6 +2465,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",
@@ -2805,6 +2827,7 @@
 				"${PODS_ROOT}/../../Bundles/ios_house_home/FHHouseHome/Assets/home.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/HouseList.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_list/FHHouseList/Assets/commute_banner.jpg",
+				"${PODS_ROOT}/../../Bundles/ios_house_message/FHHouseMessage/Assets/FHHouseMessage.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_house_trend/FHHouseTrend/Assets/HouseTrend.xcassets",
 				"${PODS_ROOT}/../../Bundles/ios_map_search/FHMapSearch/Assets/MapSearch.xcassets",
 				"${PODS_ROOT}/../../Vendor/ShortVideo/HTSVideoPlay/Assets/HTSVideoPlay.xcassets",
@@ -2856,6 +2879,7 @@
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUGCFoundation/TTUGCRichText.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTUIWidget/TTUIWidgetResources.bundle",
 				"${PODS_ROOT}/../../TTBundles/ios_tt_userprofile/TTUserProfile/Assets/Profile.storyboard",
+				"${PODS_CONFIGURATION_BUILD_DIR}/TTVPlayerPod/TTVPlayerResource.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTVideoService.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/TTVideoService/TTBusinessService.bundle",
 				"${PODS_ROOT}/ios_house_filter/ios_house_filter/Assets/FilterUI.xcassets",
@@ -2910,6 +2934,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/home.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseList.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/commute_banner.jpg",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FHHouseMessage.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HouseTrend.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MapSearch.xcassets",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HTSVideoPlay.xcassets",
@@ -2961,6 +2986,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUGCRichText.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTUIWidgetResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Profile.storyboardc",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVPlayerResource.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTVideoService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/TTBusinessService.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FilterUI.xcassets",

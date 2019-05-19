@@ -6,21 +6,14 @@
 //
 
 #import "FHVideoView.h"
-#import "AWEVideoPlayerController.h"
-#import "FHVideoMiniSliderView.h"
 
-@interface FHVideoView ()
-
-@property(nonatomic, strong) AWEVideoPlayerController *playerController;
-@property(nonatomic, strong) FHVideoMiniSliderView *miniSliderView;
-@property(nonatomic, assign) BOOL isRefreshingSlider;
+@interface FHVideoView ()<FHVideoCoverViewDelegate>
 
 @end
 
 @implementation FHVideoView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self initViews];
@@ -29,62 +22,32 @@
 }
 
 - (void)initViews {
-    _playerController = [[AWEVideoPlayerController alloc] init];
-    _playerController.view.backgroundColor = [UIColor blackColor];
-    [self addSubview:_playerController.view];
-    
-    self.miniSliderView = [[FHVideoMiniSliderView alloc] initWithFrame:CGRectZero];
-    self.miniSliderView.hidden = YES;
-    [self addSubview:_miniSliderView];
+    //未播放视频时的封面视图
+    self.coverView = [[FHVideoCoverView alloc] initWithFrame:CGRectZero];
+    _coverView.delegate = self;
+    [self addSubview:_coverView];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    _playerController.view.frame = self.bounds;
-    _miniSliderView.frame = CGRectMake(0, self.bounds.size.height - 2, self.bounds.size.width, 2);
+    self.coverView.frame = self.bounds;
+    self.playerView.frame = self.bounds;
 }
 
-- (void)updateData:(FHVideoModel *)model {
-    // 加载、播放
-    [_playerController setContentURLString:model.contentUrl];
-    // 其他配置
-    _playerController.muted = model.muted;
-    _playerController.useCache = model.useCache;
-    _playerController.repeated = model.repeated;
-    _playerController.scalingMode = model.scalingMode;
-    _miniSliderView.hidden = !model.isShowMiniSlider;
-}
-
-- (void)play {
-    [_playerController prepareToPlay];
-    [_playerController play];
-}
-
-- (void)pause {
-    [_playerController pause];
-}
-
-- (void)refreshMiniSlider {
-    if (_isRefreshingSlider) {
-        return;
-    }
-    NSTimeInterval duration = self.playerController.duration;
-    NSTimeInterval currentPlaybackTime = self.playerController.currentPlaybackTime;
-    if (isnan(duration) || duration == NAN || duration <= 0 || isnan(currentPlaybackTime) || currentPlaybackTime == NAN || currentPlaybackTime < 0) {
-        return;
-    }
-    CGFloat progress = ((currentPlaybackTime / duration) * 100.f);
-    [self.miniSliderView setWatchedProgress:progress];
-    
-    NSTimeInterval playableDuration = self.playerController.playableDuration;
-    if (playableDuration > 0 && !isnan(playableDuration) && playableDuration != NAN) {
-        progress = (playableDuration / duration) * 100;
-        [self.miniSliderView setCacheProgress:progress];
-    }
-    else {
-        [self.miniSliderView setCacheProgress:0];
+- (void)setPlayerView:(UIView *)playerView {
+    if(!_playerView){
+        _playerView = playerView;
+        _playerView.frame = self.bounds;
+        [self insertSubview:_playerView belowSubview:_coverView];
     }
 }
 
+#pragma mark - FHVideoCoverViewDelegate
+
+- (void)playVideo {
+    if(self.delegate && [self.delegate respondsToSelector:@selector(startPlayVideo)]){
+        [self.delegate startPlayVideo];
+    }
+}
 
 @end

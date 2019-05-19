@@ -42,6 +42,7 @@
 #import "FHCommuteManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import <AMapLocationKit/AMapLocationKit.h>
+#import <BDALog/BDAgileLog.h>
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -614,6 +615,7 @@
         NSString *refreshTip;
         FHSearchHouseDataRedirectTipsModel *redirectTips;
         FHRecommendSecondhandHouseDataModel *recommendHouseDataModel;
+        BOOL needUploadMapFindHouseUrlEvent = NO;
 
         if ([model isKindOfClass:[FHRecommendSecondhandHouseModel class]]) {
             recommendHouseDataModel = ((FHRecommendSecondhandHouseModel *)model).data;
@@ -661,6 +663,9 @@
             FHNewHouseListDataModel *houseModel = ((FHNewHouseListResponseModel *)model).data;
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
+            if (self.houseListOpenUrl.length <= 0) {
+                needUploadMapFindHouseUrlEvent = YES;
+            }
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
@@ -672,6 +677,9 @@
             self.searchId = houseModel.searchId;
             self.houseListOpenUrl = houseModel.houseListOpenUrl;
             self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
+            if (self.houseListOpenUrl.length <= 0) {
+                needUploadMapFindHouseUrlEvent = YES;
+            }
             hasMore = houseModel.hasMore;
             refreshTip = houseModel.refreshTip;
             itemArray = houseModel.items;
@@ -691,6 +699,24 @@
             }
         }
         
+        // 二手房、租房应该有 houseListOpenUrl
+        if (needUploadMapFindHouseUrlEvent) {
+            if (self.houseListOpenUrl.length <= 0 && (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse)) {
+                // 上报事件
+                NSString *res = [NSString stringWithFormat:@"列表页地图openurl为空:%ld",self.houseType];
+                // device_id
+                NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+                if (did.length == 0) {
+                    did = @"null";
+                }
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"house_list_no_map_openurl"
+                                                        metric:@{@"device_id":did}
+                                                      category:@{@"status":@(0),@"desc":res}
+                                                         extra:@{@"device_id":did}];
+                // 上报Alog
+                BDALOG_WARN_TAG(@"search_house_params", self.condition);
+            }
+        }
         if (self.isFirstLoad) {
             self.originSearchId = self.searchId;
    

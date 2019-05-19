@@ -7,6 +7,8 @@
 
 #import <UIKit/UIKit.h>
 #import "FHMultiMediaModel.h"
+#import "FHVideoViewController.h"
+#import "FHMultiMediaVideoCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,13 +24,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMultiMediaScrollView : UIView
 
+@property (nonatomic, assign) BOOL isShowenPictureVC;
+@property(nonatomic, strong) FHVideoViewController *videoVC;
+@property(nonatomic, strong) FHMultiMediaVideoCell *currentMediaCell;
 @property(nonatomic , weak) id<FHMultiMediaScrollViewDelegate> delegate;
+@property(nonatomic, strong) NSDictionary *tracerDic;
 
 - (void)updateWithModel:(FHMultiMediaModel *)model;
 
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
 
 - (void)updateItemAndInfoLabel;
+
+- (void)updateVideoState;
 
 @end
 

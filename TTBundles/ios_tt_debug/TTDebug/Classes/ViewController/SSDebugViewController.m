@@ -73,6 +73,11 @@
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
 
+#import "TTRNKitHelper.h"
+#import "TTRNKit.h"
+#import "TTRNKitMacro.h"
+#import "FHRNDebugViewController.h"
+
 //#import "TTXiguaLiveManager.h"
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -102,6 +107,7 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 @property(nonatomic, weak)   STTableViewCellItem *item52;
 @property(nonatomic, weak)   STTableViewCellItem *item53;
 @property(nonatomic, weak)   STTableViewCellItem *item54;
+@property (nonatomic, strong) TTRNKit *ttRNKit;
 
 @end
 
@@ -126,6 +132,10 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         STTableViewCellItem *htmlBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"H5与原生交互测试" target:self action:@selector(_openHtmlBridge)];
         htmlBridgeDebugItem.switchStyle = NO;
         [itemArray addObject:htmlBridgeDebugItem];
+        
+        STTableViewCellItem *rnBridgeDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"RN_Debug" target:self action:@selector(_openRNBridge)];
+        rnBridgeDebugItem.switchStyle = NO;
+        [itemArray addObject:rnBridgeDebugItem];
         
 
         STTableViewCellItem *shortVideoDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"小视频调试选项点这里" target:self action:@selector(_openShortVideoDebug)];
@@ -666,6 +676,15 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     NSLog(@"_openLogViewSetting");
     LogViewerSettingViewController* controller = [[LogViewerSettingViewController alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)_openRNBridge
+{
+    self.ttRNKit = [[TTRNKit alloc] initWithGeckoParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitGeckoParams] ?: @{}
+                                        animationParams:[TTRNKitStartUpSetting startUpParameterForKey:TTRNKitInitAnimationParams] ?: @{}];
+    self.ttRNKit.delegate = self;
+    FHRNDebugViewController *vc = [[FHRNDebugViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)_openHtmlBridge
