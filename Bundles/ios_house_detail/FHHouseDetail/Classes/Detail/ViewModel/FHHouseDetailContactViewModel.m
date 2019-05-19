@@ -537,6 +537,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     contactConfig.searchId = self.searchId;
     contactConfig.imprId = self.imprId;
     contactConfig.showLoading = YES;
+    if (extraDict[@"from"]) {
+        contactConfig.from = extraDict[@"from"];
+    }
     [FHHousePhoneCallUtils callWithConfigModel:contactConfig completion:nil];
     
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];

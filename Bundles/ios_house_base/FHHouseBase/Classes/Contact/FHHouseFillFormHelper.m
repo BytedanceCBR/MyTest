@@ -127,6 +127,7 @@ extern NSString *const kFHToastCountKey;
     if (leftBtnTitle.length > 0) {
         alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle leftBtnTitle:leftBtnTitle];
         alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
+            // add by zjing for test from 区分
             [self phoneCallAction:configModel];
             [alert dismiss];
         };

@@ -442,6 +442,8 @@
         if ([vid length] > 0) {
             extraDic[@"item_id"] = vid;
         }
+        extraDic[@"from"] = @"app_oldhouse_picview";
+        // add by zjing for test from 区分
         [self.mediaHeaderModel.contactViewModel contactActionWithExtraDict:extraDic];
     }
 }
