@@ -627,6 +627,7 @@ UITableViewDataSource>
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (weakSelf.mapImageView.image == nil && !weakSelf.baseViewModel.detailController.isViewDidDisapper) {
                 weakSelf.mapView.hidden = NO;
+                [weakSelf.mapView forceRefresh];
                 weakSelf.mapImageView.image = [weakSelf getImageFromView:weakSelf.mapView];
                 weakSelf.mapView.hidden = YES;
             }
@@ -634,6 +635,7 @@ UITableViewDataSource>
         });
     } else {
         self.mapView.hidden = NO;
+        [self.mapView forceRefresh];
         self.mapImageView.image = [self getImageFromView:self.mapView];
         self.mapView.hidden = YES;
     }
