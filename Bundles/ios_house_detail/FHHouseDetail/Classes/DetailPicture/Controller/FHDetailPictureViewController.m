@@ -421,7 +421,8 @@
     if (self.mediaHeaderModel.contactViewModel) {
         NSMutableDictionary *extraDic = @{@"realtor_position":@"online",
                                    @"position":@"online",
-                                   @"element_from":[self elementFrom]
+                                   @"element_from":[self elementFrom],
+                                   @"from":@"app_oldhouse_picview"
                                    }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {
