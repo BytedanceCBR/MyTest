@@ -450,6 +450,28 @@
 
 @end
 
+@implementation  FHConfigDataOpData2ListModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"opData2Type": @"op_data_2_type",
+                           @"opDataList": @"op_data_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
+
 
 @implementation  FHConfigDataCityListModel
 
@@ -501,6 +523,7 @@
                            @"openUrl": @"open_url",
                            @"descriptionStr": @"description",
                            @"backgroundColor": @"background_color",
+                           @"addDescription":@"add_description",
                            @"textColor": @"text_color",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

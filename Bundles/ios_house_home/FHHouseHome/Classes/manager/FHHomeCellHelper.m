@@ -27,6 +27,7 @@
 #import <UIFont+House.h>
 #import "FHHomeScrollBannerCell.h"
 #import <FHHouseList/FHCommuteManager.h>
+#import "FHhomeHouseTypeBannerCell.h"
 
 #define kFHHomeIconRowCount 4 //每行icon个数
 
@@ -67,6 +68,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
     [tableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
+    
+    [tableView registerClass:[FHhomeHouseTypeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
     
     [tableView registerClass:[FHHomeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBannerCell class])];
     
