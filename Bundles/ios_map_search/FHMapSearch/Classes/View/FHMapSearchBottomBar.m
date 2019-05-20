@@ -145,7 +145,7 @@
         }];
     }else{
         [_drawLineBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(-4);
+            make.right.mas_equalTo(self.drawLineIndicator.mas_right).offset(2);
         }];
     }
         

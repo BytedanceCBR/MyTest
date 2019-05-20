@@ -40,6 +40,10 @@
 /**
  Bridge授权器, 每个业务方可自行注入. 默认为nil, 全部public权限
  */
-@property (nonatomic, strong) id<TTBridgeAuthorization> authorization;
+@property (nonatomic, strong, readonly) id<TTBridgeAuthorization> authorization;
+
+- (void)callbackBridge:(TTBridgeName)bridgeName params:(NSDictionary *)params;
+- (void)callbackBridge:(TTBridgeName)bridgeName params:(NSDictionary *)params resultBlock:(void (^)(NSString *))resultBlock;
+- (void)callbackBridge:(TTBridgeName)bridgeName msg:(TTBridgeMsg)msg params:(NSDictionary *)params resultBlock:(void (^)(NSString *))resultBlock;
 
 @end
