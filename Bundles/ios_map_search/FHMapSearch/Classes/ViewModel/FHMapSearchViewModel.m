@@ -1507,9 +1507,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)showSubwayInBottombar:(FHMapSearchBottomBar *)bottomBar
 {
+    UIPickerView *picker = [[UIPickerView alloc] init];
     
 }
 
+#pragma mark - subway
+-(void)showSubwayPicker
+{
+    UIPickerView *picker = [[UIPickerView alloc] init];
+}
 
 #pragma mark log
 -(NSMutableDictionary *)logBaseParams

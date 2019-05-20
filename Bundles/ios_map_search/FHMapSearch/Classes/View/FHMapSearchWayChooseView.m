@@ -15,6 +15,7 @@
 @property(nonatomic , strong) UIButton *subwayButton;
 @property(nonatomic , strong) UIButton *drawLineButton;
 @property(nonatomic , strong) UIView *contentView;
+@property(nonatomic , strong) CALayer *splitLine;
 
 @end
 
@@ -24,7 +25,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _subwayButton = [self buttonWithTitle:@"地铁找房" icon:nil];
+        _subwayButton = [self buttonWithTitle:@"地铁找房" icon:SYS_IMG(@"mapsearch_subway")];
         _drawLineButton = [self buttonWithTitle:@"画圈找房" icon:SYS_IMG( @"mapsearch_draw_line")];
         
         UIImage *img = SYS_IMG(@"mapsearch_round_white_bg");
@@ -32,8 +33,14 @@
         
         _contentView = [[UIView alloc] initWithFrame:self.bounds];
         _contentView.layer.contents = (id)[img CGImage];
+        
+        [_contentView addSubview:_subwayButton];
         [_contentView addSubview:_drawLineButton];
-                
+        
+        _splitLine = [CALayer layer];
+        _splitLine.backgroundColor =  [RGB(0xf2, 0xf4, 0xf5) CGColor];
+        [_contentView.layer addSublayer:_splitLine];
+        
         [self addSubview:_contentView];
         self.backgroundColor = [UIColor clearColor];
     }
@@ -78,7 +85,13 @@
 {
     [super layoutSubviews];
     _contentView.frame = self.bounds;
-    _drawLineButton.frame = self.contentView.bounds;
+    CGRect frame = self.bounds;
+    frame.size.width /= 2;
+    _subwayButton.frame = frame;
+    frame.origin.x = frame.size.width;
+    _drawLineButton.frame = frame;
+    
+    _splitLine.frame = CGRectMake(CGRectGetMidX(self.bounds), 21, ONE_PIXEL, 18);
     
 }
 

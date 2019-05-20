@@ -1,0 +1,204 @@
+//
+//  FHMapSubwayPickerView.m
+//  DemoFunTwo
+//
+//  Created by 春晖 on 2019/5/20.
+//  Copyright © 2019 chunhui. All rights reserved.
+//
+
+#import "FHMapSubwayPickerView.h"
+#import "UIColor+Theme.h"
+#import "UIFont+House.h"
+#import <Masonry/Masonry.h>
+
+#define BAR_HEIGHT 42
+#define PICKER_HEIGHT 216
+#define ACTION_BTN_WIDTH 72
+
+@interface FHMapSubwayPickerView ()<UIPickerViewDelegate,UIPickerViewDataSource>
+
+@property(nonatomic , strong) UIControl *topBgControl;
+@property(nonatomic , strong) UIPickerView *picker;
+@property(nonatomic , strong) UIView *chooseBar;
+@property(nonatomic , strong) UIButton *cancelButton;
+@property(nonatomic , strong) UIButton *okButton;
+@property(nonatomic , strong) UIView *bottomView;
+
+@end
+
+@implementation FHMapSubwayPickerView
+
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        _chooseBar = [[UIView alloc] init];
+        _chooseBar.backgroundColor = [UIColor themeGray7];
+        
+        _cancelButton = [self button:@"取消" color:[UIColor themeGray1] action:@selector(cancelAction)];
+        _okButton = [self button:@"完成" color:[UIColor themeRed1] action:@selector(okAction)];
+        
+        [_chooseBar addSubview:_cancelButton];
+        [_chooseBar addSubview:_okButton];
+        
+        _picker = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), PICKER_HEIGHT)];
+        _picker.delegate = self;
+        _picker.dataSource = self;
+        _picker.backgroundColor = [UIColor whiteColor];
+        
+        _bottomView = [[UIView alloc] init];
+        _bottomView.backgroundColor = [UIColor whiteColor];
+        
+        _topBgControl = [[UIControl alloc] init];
+        [_topBgControl addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self addSubview:_topBgControl];
+        [self addSubview:_chooseBar];
+        [self addSubview:_picker];
+        [self addSubview:_bottomView];
+     
+        self.backgroundColor = [UIColor clearColor];
+        
+        [self initConstraints];
+    }
+    return self;
+}
+
+
+-(UIButton *)button:(NSString *)title color:(UIColor *)color action:(SEL)action
+{
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [button setTitle:title forState:UIControlStateNormal];
+    [button setTitleColor:color forState:UIControlStateNormal];
+    [button addTarget:self action:action forControlEvents:UIControlEventTouchUpInside];
+    button.titleLabel.font =  [UIFont themeFontRegular:16];
+    
+    return button;
+    
+}
+
+-(void)cancelAction
+{
+    [self dismiss];
+}
+
+-(void)okAction
+{
+    NSInteger mainIndex = [self.picker selectedRowInComponent:0];
+    NSInteger subIndex = [self.picker selectedRowInComponent:1];
+    [self chooseMainIndex:mainIndex subIndex:subIndex];
+    [self dismiss];
+}
+
+
+-(void)initConstraints
+{
+    UIEdgeInsets safeInsets = UIEdgeInsetsZero;
+    if (@available(iOS 11.0 , *)) {
+        safeInsets = [[[[UIApplication sharedApplication]delegate ] window] safeAreaInsets];
+    }
+    
+    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self);
+        make.height.mas_equalTo(safeInsets.bottom);
+    }];
+    
+    [_picker mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self);
+        make.height.mas_equalTo(PICKER_HEIGHT);
+        make.bottom.mas_equalTo(self.bottomView.mas_top);
+    }];
+    
+    [_chooseBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self.picker.mas_top);
+        make.height.mas_equalTo(BAR_HEIGHT);
+    }];
+    
+    
+    [_cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.mas_equalTo(self.chooseBar);
+        make.width.mas_equalTo(ACTION_BTN_WIDTH);
+    }];
+    
+    [_okButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.top.bottom.mas_equalTo(self.chooseBar);
+        make.width.mas_equalTo(ACTION_BTN_WIDTH);
+    }];
+    
+    [_topBgControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.right.mas_equalTo(self);
+        make.bottom.mas_equalTo(self.chooseBar.mas_top);
+    }];
+}
+
+
+-(void)showWithSubwayData:(id)data inView:(UIView *)view
+{
+    [view addSubview:self];
+    self.frame = view.bounds;
+    
+    [_picker reloadAllComponents];
+}
+
+-(void)dismiss
+{
+    [self removeFromSuperview];
+}
+
+-(void)chooseMainIndex:(NSInteger)component subIndex:(NSInteger)index
+{
+    if (self.chooseStation) {
+        self.chooseStation(nil, nil);
+    }
+}
+
+
+#pragma mark - picker delegate
+
+-(NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 2;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    if (component == 0) {
+        return 15;
+    }
+    return 30;
+}
+
+- (nullable NSAttributedString *)pickerView:(UIPickerView *)pickerView attributedTitleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    
+    NSString *content = nil;
+    if (component == 0) {
+        content = [NSString stringWithFormat:@"%ld号线",row+1];
+    }else{
+        content = [NSString stringWithFormat:@"测试 %ld 站",row+1];
+    }
+    
+    return [[NSAttributedString alloc] initWithString:content attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16],NSForegroundColorAttributeName:[UIColor blueColor]}];
+    
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    
+    NSInteger componentIndex = [pickerView selectedRowInComponent:0];
+    [self chooseMainIndex:componentIndex subIndex:row];
+}
+
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect {
+    // Drawing code
+}
+*/
+
+@end
