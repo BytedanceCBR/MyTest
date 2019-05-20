@@ -8,6 +8,8 @@
 #import "FHhomeHouseTypeBannerCell.h"
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
+#import "FHEnvContext.h"
+#import "FHConfigModel.h"
 
 @implementation FHhomeHouseTypeBannerCell
 
@@ -24,9 +26,22 @@
 
 - (void)refreshData:(id)data
 {
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    
+    if (![[FHEnvContext sharedInstance] getConfigFromCache].opData2list || [[FHEnvContext sharedInstance] getConfigFromCache].opData2list.count == 0) {
+        return;
+    }
+    
+    if (![[[FHEnvContext sharedInstance] getConfigFromCache].opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
+        return;
+    }
+    
+    NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)[[FHEnvContext sharedInstance] getConfigFromCache].opData2list.firstObject).opDataList.items;
     CGFloat viewWidth = ([UIScreen mainScreen].bounds.size.width - 28) / 4.0f;
     
-    for (NSInteger i = 0; i < 4; i++) {
+    for (NSInteger i = 0; i < items.count; i++) {
+        FHConfigDataOpData2ItemsModel *itemModel = items[i];
+
         UIView *containView = [UIView new];
         [containView setFrame:CGRectMake( i * viewWidth + 14, 0.0f, viewWidth, 80)];
         switch (i) {
@@ -47,7 +62,7 @@
         }
         
         UILabel *titleLabel = [UILabel new];
-        titleLabel.text = @"值得买榜单";
+        titleLabel.text = itemModel.title;
         titleLabel.textAlignment = NSTextAlignmentCenter;
         [titleLabel setFrame:CGRectMake(0, 0, viewWidth, 20)];
         titleLabel.font = [UIFont themeFontMedium:14];

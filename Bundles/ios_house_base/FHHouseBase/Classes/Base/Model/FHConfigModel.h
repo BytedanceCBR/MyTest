@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *addDescription;
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ItemsImageModel> *image;
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ItemsImageModel> *tagImage;
 @property (nonatomic, copy , nullable) NSString *textColor;
 @property (nonatomic, copy , nullable) NSString *backgroundColor;
 @property (nonatomic, copy , nullable) NSString *id;
@@ -52,15 +53,19 @@ NS_ASSUME_NONNULL_BEGIN
 @interface  FHConfigDataOpData2Model  : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ItemsModel> *items;
-@property (nonatomic, copy , nullable) NSString *opStyle;
+@property (nonatomic, copy , nullable) NSNumber *opStyle;
+
+@end
+
+@protocol FHConfigDataOpData2ListModel<NSObject>
 
 @end
 
 
 @interface  FHConfigDataOpData2ListModel  : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ItemsModel> *opDataList;
-@property (nonatomic, copy , nullable) NSString *opData2Type;
+@property (nonatomic, strong , nullable) FHConfigDataOpData2Model *opDataList;
+@property (nonatomic, copy , nullable) NSNumber *opData2Type;
 
 @end
 
@@ -356,6 +361,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray *houseTypeList;
 @property (nonatomic, strong , nullable) FHConfigDataOpData2Model *opData2 ;
+@property (nonatomic, strong , nullable) NSArray<FHConfigDataOpData2ListModel> *opData2list;
 //@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *rentOpData ;
