@@ -28,15 +28,15 @@
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     
-    if (![[FHEnvContext sharedInstance] getConfigFromCache].opData2list || [[FHEnvContext sharedInstance] getConfigFromCache].opData2list.count == 0) {
+    if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
         return;
     }
     
-    if (![[[FHEnvContext sharedInstance] getConfigFromCache].opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
+    if (![dataModel.opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
         return;
     }
     
-    NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)[[FHEnvContext sharedInstance] getConfigFromCache].opData2list.firstObject).opDataList.items;
+    NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
     CGFloat viewWidth = ([UIScreen mainScreen].bounds.size.width - 28) / 4.0f;
     
     for (NSInteger i = 0; i < items.count; i++) {

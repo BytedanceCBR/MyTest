@@ -54,7 +54,10 @@
     }
     
     if (section == kFHHomeListHouseTypeBannerViewSection) {
-        return 1;
+        if (self.showOpDataListEntrance) {
+            return 1;
+        }
+        return 0;
     }
     
     if (self.showNoDataErrorView || self.showRequestErrorView)

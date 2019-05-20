@@ -140,6 +140,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             StrongSelf;
             self.isRequestFromSwitch = NO;
             
+            self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
+            
             //切换城市先显示横条
             if([FHEnvContext sharedInstance].isRefreshFromCitySwitch)
             {
@@ -193,13 +195,14 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
                 [self resetAllOthersCacheData];
                 
-                self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
-                
                 //切换城市之后刷新数据
-                if ([self.tableViewV numberOfSections] > 0 && [self.tableViewV numberOfRowsInSection:0] > 0 && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
-                    NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
+                if ([self.tableViewV numberOfSections] > 1 && [self.tableViewV numberOfRowsInSection:0] > 0 && [self.tableViewV numberOfRowsInSection:1] > 0 && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
+                    NSIndexSet *indexSetIcon=[[NSIndexSet alloc] initWithIndex:0];
+                    NSIndexSet *indexSetEntrance=[[NSIndexSet alloc] initWithIndex:1];
+                    
                     [UIView performWithoutAnimation:^{
-                        [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
+                        [self.tableViewV reloadSections:indexSetIcon withRowAnimation:UITableViewRowAnimationNone];
+                        [self.tableViewV reloadSections:indexSetEntrance withRowAnimation:UITableViewRowAnimationNone];
                     }];
                 }else
                 {
@@ -832,9 +835,10 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
 - (BOOL)checkIsHaveEntrancesList
 {
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     //判断是否有新增样式入口
-    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData2list isKindOfClass:[FHConfigDataOpData2ListModel class]] && [[FHEnvContext sharedInstance] getConfigFromCache].opData2list.count > 0 && [[[FHEnvContext sharedInstance] getConfigFromCache].opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
-        NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)[[FHEnvContext sharedInstance] getConfigFromCache].opData2list.firstObject).opDataList.items;
+    if ([dataModel.opData2list isKindOfClass:[NSArray class]] && [dataModel.opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
+        NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
         if (items.count > 0) {
             return YES;
         }
