@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef enum : NSUInteger {
     FHSugListSearchTypeDefault,
-    FHSugListSearchTypePriceValuation,
-    FHSugListSearchTypeNeighborDealList,
+    FHSugListSearchTypePriceValuation, // 查房价
+    FHSugListSearchTypeNeighborDealList, // 小区查成交
 } FHSugListSearchType;
 
 @interface FHBaseSugListViewModel : NSObject
