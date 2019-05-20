@@ -9,7 +9,7 @@
 #import <TTHttpTask.h>
 #import <TTRoute.h>
 #import "FHMineBaseCell.h"
-#import "FHMineFocusCell.h"
+#import "FHMineMutiItemCell.h"
 #import "FHMineAPI.h"
 #import "FHHouseType.h"
 #import "TTAccount.h"
@@ -26,7 +26,7 @@
 @property(nonatomic, weak) FHMineViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *focusItemTitles;
-@property (nonatomic , assign) BOOL hasLogin;
+@property(nonatomic , assign) BOOL hasLogin;
 
 @end
 
@@ -55,9 +55,9 @@
 - (void)initDefaultData {
     self.defaultList = @[
                          @{
-                             @"name":@"我的关注",
+                             @"name":@"",
                              @"cellId":@"focusCellId",
-                             @"cellClassName":@"FHMineFocusCell"
+                             @"cellClassName":@"FHMineMutiItemCell"
                              },
                          @{
                              @"name":@"我的收藏",
@@ -140,6 +140,8 @@
     if([TTAccount sharedAccount].isLogin){
         NSDictionary *fhSettings = [self fhSettings];
         NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+        //测试数据
+        state = 2;
         if(state == 1){
             [[ToastManager manager] showToast:@"个人资料功能升级中，敬请期待"];
         }else if(state == 2){
@@ -154,7 +156,7 @@
                                         };
             TRACK_EVENT(@"click_minetab", clickTrackDic);
             
-            NSURL* url = [NSURL URLWithString:@"snssdk1370://editUserProfile"];
+            NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
         }
     }else{
@@ -182,21 +184,23 @@
     NSString *name = [TTAccountManager userName];
     TTAccountUserEntity *userInfo = [TTAccount sharedAccount].user;
     
+    NSDictionary *fhSettings = [self fhSettings];
+    NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
+    //测试数据
+    state = 2;
+    [self.viewController.headerView setUserInfoState:state];
+    
     if (userInfo != nil) {
         self.viewController.headerView.userNameLabel.text = name?:@"";
-        self.viewController.headerView.descLabel.text = @"查看并编辑个人资料";
+        self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
         self.viewController.headerView.editIcon.hidden = NO;
         _hasLogin = YES;
     } else {
-        self.viewController.headerView.userNameLabel.text = @"登录";
-        self.viewController.headerView.descLabel.text = @"登录后，关注房源永不丢失";
+        self.viewController.headerView.userNameLabel.text = @"登录/注册";
+        self.viewController.headerView.descLabel.text = @"关注房源永不丢失";
         self.viewController.headerView.editIcon.hidden = YES;
         _hasLogin = NO;
     }
-    
-    NSDictionary *fhSettings = [self fhSettings];
-    NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
-    [self.viewController.headerView setUserInfoState:state hasLogin:_hasLogin];
 }
 
 - (NSDictionary *)fhSettings {
@@ -215,11 +219,16 @@
     }
 }
 
+- (void)goToSystemSetting {
+    NSURL* url = [NSURL URLWithString:@"sslocal://more"];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+}
+
 #pragma mark - FHMineFocusCellDelegate
 
 - (void)goToFocusDetail:(FHHouseType)type {
     if ([TTReachability isNetworkConnected]) {
-        NSURL* url = [NSURL URLWithString:@"snssdk1370://myFavorite"];
+        NSURL* url = [NSURL URLWithString:@"snssdk1370://myFocus"];
         
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         tracerDict[@"enter_from"] = @"minetab";
@@ -271,8 +280,8 @@
     FHMineBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     [cell updateCell:_dataList[indexPath.row]];
     
-    if([cell isKindOfClass:[FHMineFocusCell class]]){
-        FHMineFocusCell *focusCell = (FHMineFocusCell *)cell;
+    if([cell isKindOfClass:[FHMineMutiItemCell class]]){
+        FHMineMutiItemCell *focusCell = (FHMineMutiItemCell *)cell;
         focusCell.delegate = self;
         if(self.focusItemTitles.count == 4){
             [focusCell setItemTitles:self.focusItemTitles];
@@ -286,7 +295,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *cellClassName = _dataList[indexPath.row][@"cellClassName"];
-    if([cellClassName isEqualToString:@"FHMineFocusCell"]){
+    if([cellClassName isEqualToString:@"FHMineMutiItemCell"]){
         return UITableViewAutomaticDimension;
     }
     return 50.0f;
@@ -322,5 +331,13 @@
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
     }
 }
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.viewController refreshContentOffset:scrollView.contentOffset];
+}
+
+
 
 @end

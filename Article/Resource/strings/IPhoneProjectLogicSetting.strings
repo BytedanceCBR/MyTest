@@ -21,8 +21,9 @@
 "message_detail_list"   = "FHMessageListViewController";
 "message_system_list"   = "FHMessageListViewController";
 "house_list_in_neighborhood" = "FHNeighborListViewController";
-"myFavorite"            = "FHMyFavoriteViewController";
-"editUserProfile"       = "TTEditUserProfileViewController";
+"myFocus"            = "FHMyFavoriteViewController";
+//"editUserProfile"       = "TTEditUserProfileViewController";
+"editUserProfile"       = "FHEditUserController";
 // SSAppPageController
 "home"                  = "SSAppPageManagerNotificationHome";
 "profile"               = "ArticleMomentProfileViewController";

@@ -44,7 +44,7 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewClicked)];
     [self addGestureRecognizer:tapGesture];
     
-    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
+    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray2]];
     _nameLabel.text = self.name;
     [self addSubview:_nameLabel];
     
@@ -58,14 +58,15 @@
 {
     [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.top.mas_equalTo(15);
-        make.width.height.mas_equalTo(24*(UIScreen.mainScreen.bounds.size.width/320));
+        make.top.mas_equalTo(10);
+        make.width.height.mas_equalTo(34*(UIScreen.mainScreen.bounds.size.width/375));
     }];
 
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.iconView.mas_bottom).offset(9);
+        make.top.mas_equalTo(self.iconView.mas_bottom).offset(1);
         make.centerX.mas_equalTo(self.iconView);
-        make.bottom.equalTo(self).offset(-18);
+        make.height.mas_equalTo(20);
+        make.bottom.equalTo(self).offset(-10);
     }];
 }
 

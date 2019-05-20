@@ -14,7 +14,6 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
 
 @property (nonatomic, strong) UIView    *rightView;
 @property (nonatomic, strong) NSMutableArray *rightViewsArray;
-@property (nonatomic, strong) UIView    *seperatorLine;
 
 @end
 
@@ -161,7 +160,7 @@ static const CGFloat kNaviLeftRightMargin = 18.0f;
 }
 
 - (void)refreshAlpha:(CGFloat)alpha {
-    self.backgroundColor = [UIColor colorWithWhite:1 alpha:alpha];
+    self.backgroundColor = [self.backgroundColor colorWithAlphaComponent:alpha];
     if (alpha >= 1) {
         self.seperatorLine.hidden = NO;
     }else {

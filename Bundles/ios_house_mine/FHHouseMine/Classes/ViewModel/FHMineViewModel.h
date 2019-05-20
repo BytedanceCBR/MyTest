@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateHeaderView;
 //-(void)addEnterUserProfileLog;
 
+- (void)goToSystemSetting;
+
 @end
 
 NS_ASSUME_NONNULL_END

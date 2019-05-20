@@ -22,6 +22,10 @@
 @property (nonatomic, strong) FHMineViewModel *viewModel;
 @property (nonatomic, strong) NSDate *enterDate;
 @property (nonatomic, assign) NSTimeInterval lastRequestFavoriteTime;
+@property (nonatomic, strong) UIButton *phoneBtn;
+@property (nonatomic, strong) UIButton *settingBtn;
+@property (nonatomic, assign) CGFloat headerViewHeight;
+@property (nonatomic, assign) CGFloat naviBarHeight;
 
 @end
 
@@ -29,6 +33,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     self.ttTrackStayEnable = YES;
     
     [self initNavbar];
@@ -43,6 +48,14 @@
     [self loadData];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if(self.emptyView && !self.emptyView.hidden){
+        return;
+    }
+    [self refreshContentOffset:self.tableView.contentOffset];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
@@ -50,14 +63,47 @@
     [self tt_resetStayTime];
 }
 
-- (void)initNavbar {
-    self.ttHideNavigationBar = YES;
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
+- (void)initNavbar {
+    [self setupDefaultNavBar:NO];
+    self.customNavBarView.title.text = @"我的";
+    self.customNavBarView.title.textColor = [UIColor whiteColor];
+    self.customNavBarView.title.alpha = 0;
+    self.customNavBarView.seperatorLine.alpha = 0;
+    self.customNavBarView.leftBtn.hidden = YES;
+    self.customNavBarView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_mine_header_bg"]];
+//    [self setNavBar:YES];
+    
+    self.settingBtn = [[UIButton alloc] init];
+    [_settingBtn setBackgroundImage:[UIImage imageNamed:@"fh_mine_setting"] forState:UIControlStateNormal];
+    [_settingBtn addTarget:self action:@selector(goToSystemSetting) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.phoneBtn = [[UIButton alloc] init];
+    [_phoneBtn setBackgroundImage:[UIImage imageNamed:@"fh_mine_phone"] forState:UIControlStateNormal];
+    [self.customNavBarView addRightViews:@[_settingBtn,_phoneBtn] viewsWidth:@[@24,@24] viewsHeight:@[@24,@24] viewsRightOffset:@[@20,@30]];
+    
+    [self.view layoutIfNeeded];
+    self.naviBarHeight = CGRectGetMaxY(self.customNavBarView.frame);
+}
+
+//- (void)setNavBar:(BOOL)error {
+//    if(error){
+//        self.customNavBarView.title.textColor = [UIColor themeGray1];
+//        [self.customNavBarView setNaviBarTransparent:NO];
+//    }else{
+//        self.customNavBarView.title.textColor = [UIColor whiteColor];
+//        [self.customNavBarView setNaviBarTransparent:YES];
+//    }
+//}
+
 - (void)initView {
-    self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _tableView.backgroundColor = [UIColor themeGray7];
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     _tableView.tableHeaderView = headerView;
     [self.view addSubview:_tableView];
@@ -68,15 +114,12 @@
 
 - (void)initConstraints {
     CGFloat bottom = 49;
-    CGFloat top = 20;
     if (@available(iOS 11.0 , *)) {
         bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
-        top = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
     }
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.view).offset(top);
-        make.left.right.mas_equalTo(self.view);
+        make.top.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.view).offset(-bottom);
     }];
 }
@@ -86,7 +129,14 @@
 }
 
 - (void)setupHeaderView {
-    FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 141)];
+    CGFloat top = 20;
+    if (@available(iOS 11.0 , *)) {
+        top = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+    }
+    
+    self.headerViewHeight = 118 + top;
+    
+    FHMineHeaderView *headerView = [[FHMineHeaderView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, self.headerViewHeight) naviBarHeight:self.naviBarHeight];
     headerView.userInteractionEnabled = YES;
     _tableView.tableHeaderView = headerView;
     self.headerView = headerView;
@@ -127,6 +177,19 @@
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:duration];
     TRACK_EVENT(@"stay_tab", tracerDict);
+}
+
+- (void)refreshContentOffset:(CGPoint)contentOffset {
+    CGFloat alpha = contentOffset.y / (self.headerViewHeight + 32 - self.naviBarHeight);
+    self.customNavBarView.title.alpha = alpha;
+    if(alpha > 1){
+        alpha = 1;
+    }
+    [self.customNavBarView refreshAlpha:alpha];
+}
+
+- (void)goToSystemSetting {
+    [self.viewModel goToSystemSetting];
 }
 
 @end

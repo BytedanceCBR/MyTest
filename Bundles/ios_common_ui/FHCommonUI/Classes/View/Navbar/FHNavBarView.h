@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView    *bgView;
 @property (nonatomic, strong) UILabel   *title;
 @property (nonatomic, strong) UIButton  *leftBtn;
+@property (nonatomic, strong) UIView    *seperatorLine;
 @property (nonatomic , copy) void (^leftButtonBlock)();
 
 // 添加导航栏右边视图，移除之前视图，从右向左排列，默认第一个viewRightOffset：@18.0，NSNumber类型

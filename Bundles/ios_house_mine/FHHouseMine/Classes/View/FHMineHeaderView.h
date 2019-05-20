@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMineHeaderView : UIView
 
+@property(nonatomic, strong) UIImageView *beforeHeaderView;
+@property (nonatomic, strong) UIImageView *headerImageView;
 @property (nonatomic, strong) UILabel *userNameLabel;
 @property (nonatomic, strong) UILabel *descLabel;
 @property (nonatomic, strong) UIImageView *icon;
@@ -18,7 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateAvatar:(NSString *)avatarUrl;
 
-- (void)setUserInfoState:(NSInteger)state hasLogin:(BOOL)hasLogin;
+- (void)setUserInfoState:(NSInteger)state;
+
+- (instancetype)initWithFrame:(CGRect)frame naviBarHeight:(CGFloat)naviBarHeight;
 
 @end
 
