@@ -60,7 +60,7 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     [tableView registerClass:[FHHomeHeaderTableViewCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeHeaderTableViewCell class])];
     
-    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseBaseItemCell class])];
+    [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     
     [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
     

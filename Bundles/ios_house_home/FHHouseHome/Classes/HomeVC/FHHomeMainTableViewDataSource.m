@@ -118,13 +118,13 @@
         }
         
         //to do 房源cell
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseBaseItemCell class])];
+        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         BOOL isFirstCell = (indexPath.row == 0);
         BOOL isLastCell = (indexPath.row == self.modelsArray.count - 1);
         if (indexPath.row < self.modelsArray.count) {
             JSONModel *model = self.modelsArray[indexPath.row];
-            [cell refreshTopMargin: 20];
-            [cell updateHomeHouseCellModel:model andType:self.currentHouseType];            
+//            [cell refreshTopMargin: 20];
+            [cell updateHomeSmallImageHouseCellModel:model andType:self.currentHouseType];
         }
         return cell;
     }
@@ -155,10 +155,10 @@
     }
     
     if (self.showPlaceHolder) {
-        return 105;
+        return 75;
     }
     
-    return 105;
+    return 75;
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
