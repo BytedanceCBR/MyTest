@@ -60,7 +60,12 @@
 
 - (void)updateStarsCount:(NSInteger)scoreValue
 {
-    [self.starView updateStarsCountWithoutLabel:scoreValue];
+    if (scoreValue > 0) {
+        [self.starView updateStarsCountWithoutLabel:scoreValue];
+        self.starView.hidden = NO;
+    }else {
+        self.starView.hidden = YES;
+    }
 }
 
 - (void)updateTitle:(NSString *)title

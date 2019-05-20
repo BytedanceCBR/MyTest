@@ -479,7 +479,12 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     priceTrendModel.priceTrends = model.data.priceTrend;
     priceTrendModel.neighborhoodInfo = model.data.neighborhoodInfo;
     priceTrendModel.pricingPerSqmV = model.data.pricingPerSqmV;
-    priceTrendModel.hasSuggestion = (model.data.housePricingRank.buySuggestion.content.length > 0) ? YES : NO;
+    priceTrendModel.priceAnalyze = model.data.priceAnalyze;
+    if (model.data.neighborhoodPriceRange && model.data.priceAnalyze) {
+        priceTrendModel.bottomHeight = 0;
+    }else {
+        priceTrendModel.bottomHeight = (model.data.housePricingRank.buySuggestion.content.length > 0) ? 0 : 20;
+    }
     priceTrendModel.tableView = self.tableView;
     [self.items addObject:priceTrendModel];
     // 均价对比

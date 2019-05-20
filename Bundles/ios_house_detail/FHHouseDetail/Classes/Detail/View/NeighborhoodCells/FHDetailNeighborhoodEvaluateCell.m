@@ -19,11 +19,14 @@
 #import "UILabel+House.h"
 #import "FHDetailMultitemCollectionView.h"
 #import "FHDetailStarsCountView.h"
+#import "FHDetailStarHeaderView.h"
 
 @interface FHDetailNeighborhoodEvaluateCell ()
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+//@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, strong)   UIView       *containerView;
-@property (nonatomic, strong)   FHDetailStarsCountView       *starsContainer;
+@property (nonatomic, strong)   FHDetailStarHeaderView       *starHeaderView;
+
+//@property (nonatomic, strong)   FHDetailStarsCountView       *starsContainer;
 @end
 
 @implementation FHDetailNeighborhoodEvaluateCell
@@ -49,18 +52,20 @@
     }
     //
     FHDetailNeighborhoodEvaluateModel *model = (FHDetailNeighborhoodEvaluateModel *)data;
+    
     if (model.evaluationInfo) {
         // starsContainer
-        self.starsContainer = [[FHDetailStarsCountView alloc] init];
+        self.starHeaderView = [[FHDetailStarHeaderView alloc] init];
         UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoDetail)];
-        [self.starsContainer addGestureRecognizer:tapGes];
-        [self.containerView addSubview:_starsContainer];
-        [_starsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+        [self.starHeaderView addGestureRecognizer:tapGes];
+        [self.containerView addSubview:_starHeaderView];
+        [self.starHeaderView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(self.containerView);
-            make.top.mas_equalTo(10);
-            make.height.mas_equalTo(50);
+            make.top.mas_equalTo(0);
+            make.height.mas_equalTo(110);
         }];
-        [self.starsContainer updateStarsCount:[model.evaluationInfo.totalScore integerValue]];
+        [self.starHeaderView updateTitle:@"小区评测"];
+        [self.starHeaderView updateStarsCount:[model.evaluationInfo.totalScore integerValue]];
         if (model.evaluationInfo.subScores.count > 0) {
             UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
             flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
@@ -75,16 +80,16 @@
                 [wSelf collectionCellClick:index];
             };
             [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.starsContainer.mas_bottom).offset(8);
+                make.top.mas_equalTo(self.starHeaderView.mas_top).offset(110 - 43);
                 make.left.right.mas_equalTo(self.containerView);
                 make.bottom.mas_equalTo(self.containerView);
             }];
             [colView reloadData];
         } else {
-            [_starsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [_starHeaderView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.right.mas_equalTo(self.containerView);
                 make.top.mas_equalTo(10);
-                make.height.mas_equalTo(50);
+                make.height.mas_equalTo(110);
                 make.bottom.mas_equalTo(self.containerView).offset(6);
             }];
         }
@@ -104,33 +109,33 @@
 }
 
 - (void)setupUI {
-    _headerView = [[FHDetailHeaderView alloc] init];
-    _headerView.label.text = @"小区评测";
-    _headerView.isShowLoadMore = YES;
-    [self.contentView addSubview:_headerView];
-    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(46);
-    }];
-    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+//    _headerView = [[FHDetailHeaderView alloc] init];
+//    _headerView.label.text = @"小区评测";
+//    _headerView.isShowLoadMore = YES;
+//    [self.contentView addSubview:_headerView];
+//    [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.top.right.mas_equalTo(self.contentView);
+//        make.height.mas_equalTo(46);
+//    }];
+//    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.top.mas_equalTo(0);
         make.left.right.mas_equalTo(self.contentView);
         make.bottom.mas_equalTo(self.contentView).offset(-20);
     }];
 }
 
 // 查看更多
-- (void)moreButtonClick:(UIButton *)button {
-    FHDetailNeighborhoodEvaluateModel *model = (FHDetailNeighborhoodEvaluateModel *)self.currentData;
-    if (model.evaluationInfo.detailUrl.length > 0) {
-        [self gotoDetail];
-    }
-}
+//- (void)moreButtonClick:(UIButton *)button {
+//    FHDetailNeighborhoodEvaluateModel *model = (FHDetailNeighborhoodEvaluateModel *)self.currentData;
+//    if (model.evaluationInfo.detailUrl.length > 0) {
+//        [self gotoDetail];
+//    }
+//}
 // cell 点击
 - (void)collectionCellClick:(NSInteger)index {
     FHDetailNeighborhoodEvaluateModel *model = (FHDetailNeighborhoodEvaluateModel *)self.currentData;
