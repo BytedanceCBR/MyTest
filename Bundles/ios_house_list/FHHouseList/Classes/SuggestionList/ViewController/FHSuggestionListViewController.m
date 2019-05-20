@@ -331,6 +331,13 @@
 - (void)textFiledTextChangeNoti:(NSNotification *)noti {
     NSInteger maxCount = 80;
     NSString *text = self.naviBar.searchInput.text;
+    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
+    // 没有高亮选择的字，说明不是拼音输入
+    if (position) {
+        return;
+    }
     if (text.length > maxCount) {
         text = [text substringToIndex:maxCount];
         self.naviBar.searchInput.text = text;

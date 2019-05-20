@@ -221,11 +221,21 @@
 {
     NSInteger maxCount = 80;
     NSString *text = nil;
+    UITextField *textField = nil;
     if (self.searchType == FHSugListSearchTypePriceValuation) {
-        text = self.searchView.searchInput.text;
+        textField = self.searchView.searchInput;
     } else {
-        text = self.naviBar.searchInput.text;
+        textField = self.naviBar.searchInput;
     }
+    text = textField.text;
+    UITextRange *selectedRange = [textField markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [textField positionFromPosition:selectedRange.start offset:0];
+    // 没有高亮选择的字，说明不是拼音输入
+    if (position) {
+        return;
+    }
+
     if (text.length > maxCount) {
         text = [text substringToIndex:maxCount];
         self.naviBar.searchInput.text = text;
@@ -246,6 +256,8 @@
 {
     NSMutableString *content = [[NSMutableString alloc] initWithString:textField.text];
     [content replaceCharactersInRange:range withString:string];
+     // add by zjing for test
+    NSLog(@"zjing---textField:%@,content:%@,string:%@",textField.text,content,string);
     if (content.length > MAX_INPUT) {
         return NO;
     }

@@ -124,6 +124,13 @@
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
+    UITextRange *selectedRange = [self.naviBar.searchInput markedTextRange];
+    //获取高亮部分
+    UITextPosition *position = [self.naviBar.searchInput positionFromPosition:selectedRange.start offset:0];
+    // 没有高亮选择的字，说明不是拼音输入
+    if (position) {
+        return;
+    }
     if (self.naviBar.searchInput.markedTextRange == NULL) {
         NSString *text = self.naviBar.searchInput.text;
         [self.viewModel requestSearchCityByQuery:text];
