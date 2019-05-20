@@ -29,10 +29,6 @@
 #import <FHHouseList/FHCommuteManager.h>
 #import "FHhomeHouseTypeBannerCell.h"
 
-#define kFHHomeIconRowCount 4 //每行icon个数
-
-#define kFHHomeBannerRowCount 2 //每行banner个数
-
 static NSMutableArray  * _Nullable identifierArr;
 
 @interface FHHomeCellHelper ()
@@ -220,9 +216,9 @@ static NSMutableArray  * _Nullable identifierArr;
         NSInteger countValue = dataModel.opData.items.count;
         
         if (countValue > 0) {
-            if (countValue > 8)
+            if (countValue > kFHHomeIconRowCount * 2)
             {
-                countValue = 8;
+                countValue = kFHHomeIconRowCount * 2;
             }
 
             CGFloat heightPadding = 20;
@@ -307,8 +303,8 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     NSInteger countItems = model.items.count;
-    if (countItems > 8) {
-        countItems = 8;
+    if (countItems > kFHHomeIconRowCount * 2) {
+        countItems = kFHHomeIconRowCount * 2;
     }
     
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
@@ -362,7 +358,6 @@ static NSMutableArray  * _Nullable identifierArr;
             UIFont *font = [UIFont themeFontRegular:12];
             itemView.nameLabel.font = font;
             itemView.nameLabel.text = itemModel.title;
-            itemView.nameLabel.textColor = [UIColor themeGray2];
             
             [itemView.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(itemView.iconView.mas_bottom).mas_offset(0);
