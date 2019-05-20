@@ -146,6 +146,7 @@
 //房屋估价补充信息
 "price_valuation_more_info" = "FHPriceValuationMoreInfoController";
 
+// 查成交小区搜索页面
 "house_search_deal_neighborhood" = "FHBaseSugListViewController";
 
 //房源详情价格对比房源列表

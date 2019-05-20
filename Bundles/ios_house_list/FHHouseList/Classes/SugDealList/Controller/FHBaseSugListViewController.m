@@ -76,19 +76,19 @@
 - (void)setupUI
 {
     [self setupNaviBar];
-    if (self.searchType == FHSugListSearchTypePriceValuation) {
-        self.searchView = [[FHPriceValuationNSearchView alloc] init];
-        [self.view addSubview:self.searchView];
-    }
     self.suggestTableView = [self createTableView];
     self.viewModel = [[FHBaseSugListViewModel alloc] initWithTableView:self.suggestTableView paramObj:_paramObj];
     self.viewModel.houseType = self.houseType;
     self.viewModel.searchType = self.searchType;
     self.viewModel.listController = self;
     self.viewModel.naviBar = _naviBar;
-    self.viewModel.searchView = _searchView;
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     self.emptyView.hidden = NO;
+    if (self.searchType == FHSugListSearchTypePriceValuation) {
+        self.searchView = [[FHPriceValuationNSearchView alloc] init];
+        [self.view addSubview:self.searchView];
+        self.viewModel.searchView = _searchView;
+    }
     BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     CGFloat searchHeight = 0;

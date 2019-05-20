@@ -79,7 +79,7 @@
 {
     _naviBar = naviBar;
     if (self.searchType == FHSugListSearchTypeNeighborDealList) {
-        [_naviBar setSearchPlaceHolderText:@"请输入小区"];
+        [_naviBar setSearchPlaceHolderText:@"请输入小区/商圈/地铁"];
     }
     _naviBar.searchInput.delegate = self;
 }
