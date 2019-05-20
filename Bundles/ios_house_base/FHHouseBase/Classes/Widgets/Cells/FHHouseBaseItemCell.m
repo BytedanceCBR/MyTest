@@ -641,6 +641,14 @@
     self.tagLabel.attributedText = self.cellModel.tagsAttrStr;
     self.priceLabel.text = model.pricing;
     self.pricePerSqmLabel.text = nil;
+    self.originPriceLabel.text = nil;
+    if (!self.originPriceLabel.hidden) {
+        self.originPriceLabel.hidden = YES;
+        [self.originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = NO;
+        }];
+    }
+    
     
     NSArray *firstRow = [model.bottomText firstObject];
     NSDictionary *bottomText = nil;
