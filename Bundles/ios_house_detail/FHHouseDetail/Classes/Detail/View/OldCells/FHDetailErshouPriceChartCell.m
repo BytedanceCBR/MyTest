@@ -355,12 +355,6 @@
     }
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-
-}
-
 - (void)updateChartConstraints:(BOOL)animated
 {
     FHDetailPriceTrendCellModel *model = (FHDetailPriceTrendCellModel *)self.currentData;

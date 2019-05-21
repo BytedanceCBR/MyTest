@@ -194,11 +194,11 @@
     [TTPushAlertManager enterFeedPage:TTPushWeakAlertPageTypeMainFeed];
     
     //开屏广告启动不会展示，保留逻辑代码
-    if(self.adShow)
+    if(self.adShow && [TTSandBoxHelper isAPPFirstLaunchForAd])
     {
         [TTAdSplashMediator shareInstance].adShowCompletion = ^(BOOL isClicked) {
             if (!isClicked) {
-                if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+                if (!self.adColdHadJump) {
                     self.adColdHadJump = YES;
                     FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
                     if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {

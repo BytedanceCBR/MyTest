@@ -34,7 +34,7 @@
 @property (nonatomic, assign) BOOL finishCheck;
 
 //冷启动全屏广告消失时
-@property (nonatomic, assign) void (^adShowCompletion)(BOOL isClicked);
+@property (nonatomic, copy) void (^adShowCompletion)(BOOL isClicked);
 /**
  单例
  
