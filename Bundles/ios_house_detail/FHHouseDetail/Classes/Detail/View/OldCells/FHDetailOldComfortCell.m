@@ -96,8 +96,7 @@
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {
-    // add by zjing for test
-    return @"trade_tips";
+    return @"neighborhood_surroundings";
 }
 
 - (void)setupUI
