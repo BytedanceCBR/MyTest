@@ -24,6 +24,8 @@
 #import <FHEnvContext.h>
 #import <HMDTTMonitor.h>
 #import "FHMyMAAnnotation.h"
+#import "FHDetailMapView.h"
+#import "FHFakeInputNavbar.h"
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
@@ -31,7 +33,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @interface FHDetailMapPageViewController () <TTRouteInitializeProtocol,AMapSearchDelegate,MAMapViewDelegate>
 
 @property (nonatomic, strong) FHDetailMapPageNaviBarView *naviBar;
-@property (nonatomic, strong) MAMapView *mapView;
+@property (nonatomic, weak) MAMapView *mapView;
 @property (nonnull, strong) UIView *mapContainer;
 @property (nonatomic, strong) UIView * bottomBarView;
 @property (nonatomic, strong) UIButton * previouseIconButton;
@@ -48,6 +50,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 @property (nonatomic, strong) NSMutableDictionary *traceDict;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
 @property (nonatomic , strong) NSString *titleStr;
+@property (nonatomic, weak)     UIScrollView       *bottomScrollView;
 
 @end
 
@@ -194,6 +197,7 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     UIScrollView *scrollViewItem = [[UIScrollView alloc] init];
     scrollViewItem.tag = kBottomBarTagValue;
     [_bottomBarView addSubview:scrollViewItem];
+    self.bottomScrollView = scrollViewItem;
     
     CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 6.5;
     scrollViewItem.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, bottomBarHeight);
@@ -236,9 +240,37 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         [buttonLabel setFrame:CGRectMake(0, 30, itemWidth, 13)];
         [iconView addSubview:buttonLabel];
     }
-    
+    [self changeBottomItemViewOffsetByIndex:self.selectedIndex];
     self.searchCategory = self.nameArray[self.selectedIndex];
-    
+}
+
+- (void)changeBottomItemViewOffsetByIndex:(NSInteger)selectIndex {
+    if (selectIndex < 0) {
+        return;
+    }
+    CGFloat itemWidth = [UIScreen mainScreen].bounds.size.width / 6.5;
+    NSInteger currentIndex = selectIndex;
+    CGFloat winWidth = [UIScreen mainScreen].bounds.size.width;
+    // +2 后一个是否也没显示完全，显示出来方便点击（+1也可）
+    if ((currentIndex + 2) * itemWidth > winWidth ) {
+        NSInteger namesCount = self.nameArray.count;
+        if (currentIndex < namesCount - 1) {
+            // 说明后面还有内容可显示
+            [self.bottomScrollView setContentOffset:CGPointMake((currentIndex + 2) * itemWidth - winWidth, 0) animated:YES];
+        } else {
+            [self.bottomScrollView setContentOffset:CGPointMake((currentIndex + 1) * itemWidth - winWidth, 0) animated:YES];
+        }
+    } else {
+        CGFloat offsetX = self.bottomScrollView.contentOffset.x;
+        // 前一个是否也没显示完全，显示出来方便点击
+        if ((currentIndex - 1) * itemWidth < offsetX) {
+            if (currentIndex == 0) {
+                [self.bottomScrollView setContentOffset:CGPointMake(currentIndex * itemWidth, 0) animated:YES];
+            } else {
+                [self.bottomScrollView setContentOffset:CGPointMake((currentIndex - 1) * itemWidth, 0) animated:YES];
+            }
+        }
+    }
 }
 
 - (UILabel *)getLabelFromTag:(NSInteger)index
@@ -250,11 +282,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 
 - (void)typeButtonClick:(UIButton *)button
 {
-//    if (button == self.previouseIconButton) {
-//
-//        return;
-//    }
-//
     UILabel *buttonLabel = [self getLabelFromTag:button.tag];
     
     if (button.tag < [_imageNameArray count] && self.previouseIconButton.tag < [_imageNameArray count]) {
@@ -264,9 +291,13 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
         [button setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[button.tag]]] forState:UIControlStateNormal];
     }
     if (self.nameArray.count > button.tag) {
-        self.searchCategory = self.nameArray[button.tag];
-        [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
+        NSString *category = self.nameArray[button.tag];
+        if (![category isEqualToString:self.searchCategory]) {
+            self.searchCategory = category;
+            [self requestPoiInfo:self.centerPoint andKeyWord:self.nameArray[button.tag]];
+        }
     }
+    [self changeBottomItemViewOffsetByIndex:button.tag];
     self.previouseIconButton = button;
     self.previouseLabel = buttonLabel;
 }
@@ -302,7 +333,6 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 - (void)setUpMapView
 {
     _mapContainer = [UIView new];
-    //[TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom
     [self.view addSubview:_mapContainer];
     [_mapContainer mas_makeConstraints:^(MASConstraintMaker *make) {
         if ([TTDeviceHelper isIPhoneXDevice]) {
@@ -316,8 +346,17 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     }];
     [_mapContainer setBackgroundColor:[UIColor whiteColor]];
     
-    
-    _mapView = [[MAMapView alloc] init];
+    // mapFrame 暂时没有用到
+    CGFloat navHeight = [FHFakeInputNavbar perferredHeight];
+    CGFloat bottomHeight = 0;
+    if ([TTDeviceHelper isIPhoneXDevice]) {
+        bottomHeight = 83;
+    } else {
+        bottomHeight = 43;
+    }
+    CGRect mapFrame = CGRectMake(0, 0, self.view.width, self.view.height - navHeight - bottomHeight);
+    // _mapView = [[MAMapView alloc] init];
+    _mapView = [[FHDetailMapView sharedInstance] nearbyMapviewWithFrame:mapFrame];
     _mapView.delegate = self;
     _mapView.showsCompass = NO;
     _mapView.showsScale = YES;
@@ -325,28 +364,20 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     _mapView.scrollEnabled = YES;
     _mapView.showsUserLocation = NO;
     _mapView.zoomLevel  = 15;
+    [_mapView setCenterCoordinate:self.centerPoint];
     [_mapContainer addSubview:_mapView];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
-    [_mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_mapView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.equalTo(self.mapContainer);
     }];
     [_mapView setBackgroundColor:[UIColor whiteColor]];
-    [_mapView setCenterCoordinate:self.centerPoint];
-    
-    
-//    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_map_style" ofType:@"data"];
-//    if ([stylePath isKindOfClass:[NSString class]]) {
-//        NSURL *styleUrl = [NSURL URLWithString:stylePath];
-//        if ([styleUrl isKindOfClass: [NSURL class]]) {
-//            NSData *dataStype = [NSData dataWithContentsOfFile:styleUrl];
-//            if ([dataStype isKindOfClass:[NSData class]]) {
-//                _mapView.customMapStyleEnabled = YES;
-//                [_mapView setCustomMapStyleWithWebData:dataStype];
-//            }
-//        }
-//    }
-    
     [self requestPoiInfo:self.centerPoint andKeyWord:self.searchCategory];
+}
+
+- (void)dealloc
+{
+    [self cleanAllAnnotations];
+    [[FHDetailMapView sharedInstance] resetDetailMapView];
 }
 
 - (void)createMenu
@@ -463,6 +494,22 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
 #pragma poi Delegate
 - (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response
 {
+    AMapPOIKeywordsSearchRequest *searchReqeust = (AMapPOIKeywordsSearchRequest *)request;
+    if (![searchReqeust isKindOfClass:[AMapPOIKeywordsSearchRequest class]]) {
+        return;
+    }
+    NSString *keyWords = searchReqeust.keywords;
+    if (keyWords.length <= 0) {
+        return;
+    }
+    NSInteger index = [self.nameArray indexOfObject:keyWords];
+    if (index < 0 || index >= self.nameArray.count) {
+        return;
+    }
+    if (![self.searchCategory isEqualToString:keyWords]) {
+        return;
+    }
+    
     [self cleanAllAnnotations];
     
     if (response.count == 0) {
@@ -549,16 +596,5 @@ static NSInteger const kBottomButtonLabelTagValue = 1000;
     }
     return height;
 }
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
