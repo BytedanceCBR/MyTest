@@ -17,4 +17,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface FHDetailOldNearbyMapModel : NSObject
+
+@property (nonatomic, weak , nullable) UITableViewCell *cell;
+@property (nonatomic, copy , nullable) NSString *gaodeLng;
+@property (nonatomic, copy , nullable) NSString *gaodeLat;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *houseId;
+@property (nonatomic, copy , nullable) NSString *houseType;
+@property (nonatomic, copy , nullable) NSString *score;
+
+@end
+
 NS_ASSUME_NONNULL_END

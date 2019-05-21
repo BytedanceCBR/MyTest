@@ -136,7 +136,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         return [FHDetailOldEvaluateCell class];
     }
     // 周边地图
-    if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
+    if ([model isKindOfClass:[FHDetailOldNearbyMapModel class]]) {
         return [FHDetailOldNearbyMapCell class];
     }
     // 购房小建议
@@ -466,10 +466,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     // 周边地图
     if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
-        FHDetailNearbyMapModel *infoModel = [[FHDetailNearbyMapModel alloc] init];
+        FHDetailOldNearbyMapModel *infoModel = [[FHDetailOldNearbyMapModel alloc] init];
         infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
-        infoModel.title = model.data.neighborhoodInfo.name;
+        infoModel.title = model.data.neighborEval.title;
+        infoModel.score = model.data.neighborEval.score;
         
         [self.items addObject:infoModel];
         

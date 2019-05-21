@@ -26,6 +26,7 @@
 #import "TTRoute.h"
 #import <HMDTTMonitor.h>
 #import "FHDetailMapView.h"
+#import "FHDetailStarHeaderView.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedHeight = 56;
@@ -36,7 +37,7 @@ MAMapViewDelegate,
 UITableViewDelegate,
 UITableViewDataSource>
 
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
+@property (nonatomic, strong)   FHDetailStarHeaderView       *headerView;
 @property (nonatomic , assign) NSInteger requestIndex;
 @property (nonatomic , strong) HMSegmentedControl *segmentedControl;
 @property (nonatomic , strong) UIImageView *mapImageView;
@@ -55,7 +56,7 @@ UITableViewDataSource>
 @property (nonatomic , assign) BOOL isFirst;
 @property (nonatomic , strong) NSMutableDictionary *countCategoryDict;
 @property (nonatomic , strong) NSMutableDictionary *poiDatasDict;
-@property (nonatomic , strong) FHDetailNearbyMapModel *dataModel;
+@property (nonatomic , strong) FHDetailOldNearbyMapModel *dataModel;
 @property (nonatomic, assign)  BOOL isFirstSnapshot;// 首次截屏
 
 @end
@@ -94,12 +95,12 @@ UITableViewDataSource>
 
 - (void)setUpHeaderView
 {
-    _headerView = [[FHDetailHeaderView alloc] init];
-    _headerView.label.text = @"便捷指数";
+    _headerView = [[FHDetailStarHeaderView alloc] init];
+    [_headerView updateTitle:@"便捷指数"];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(110);
     }];
 }
 
@@ -117,13 +118,17 @@ UITableViewDataSource>
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailNearbyMapModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[FHDetailOldNearbyMapModel class]]) {
         return;
     }
     
-    FHDetailNearbyMapModel *dataModel = (FHDetailNearbyMapModel *)data;
+    FHDetailOldNearbyMapModel *dataModel = (FHDetailOldNearbyMapModel *)data;
     dataModel.cell = self;
     _dataModel = dataModel;
+    if (dataModel.title.length > 0) {
+        [_headerView updateTitle:dataModel.title];
+    }
+    [self.headerView updateStarsCount:[dataModel.score integerValue]];
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     [self.mapView setCenterCoordinate:self.centerPoint];
     
@@ -653,3 +658,7 @@ UITableViewDataSource>
 
 @end
 
+@implementation FHDetailOldNearbyMapModel
+
+
+@end
