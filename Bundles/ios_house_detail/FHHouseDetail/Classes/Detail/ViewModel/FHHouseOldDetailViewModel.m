@@ -40,6 +40,7 @@
 #import "FHDetailMediaHeaderCell.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
+#import "FHDetailOldComfortCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -81,6 +82,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonCell class])];
+    [self.tableView registerClass:[FHDetailOldComfortCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldComfortCell class])];
 
 }
 // cell class
@@ -175,6 +177,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     // 均价对比
     if ([model isKindOfClass:[FHDetailAveragePriceComparisonModel class]]) {
         return [FHDetailAveragePriceComparisonCell class];
+    }
+    // 舒适指数
+    if ([model isKindOfClass:[FHDetailOldComfortModel class]]) {
+        return [FHDetailOldComfortCell class];
     }
     return [FHDetailBaseCell class];
 }
@@ -451,6 +457,13 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.log_pb = model.data.neighborhoodInfo.logPb;
         [self.items addObject:infoModel];
     }
+    // 舒适指数
+    if (model.data.comfortInfo) {
+        FHDetailOldComfortModel *comfortModel = [[FHDetailOldComfortModel alloc]init];
+        comfortModel.comfortInfo = model.data.comfortInfo;
+        [self.items addObject:comfortModel];
+    }
+    
     // 地图
     if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
         FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
@@ -462,18 +475,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:infoModel];
     }
 
-//    if (model.data.housePricingRank.analyseDetail.length > 0) {
-//        
-//        // 价格分析
-//        FHDetailPureTitleModel *titleModel = [[FHDetailPureTitleModel alloc] init];
-//        titleModel.title = @"价格分析";
-//        [self.items addObject:titleModel];
-//        if (model.data.housePricingRank.analyseDetail.length > 0) {
-//            FHDetailPriceRankModel *priceRankModel = [[FHDetailPriceRankModel alloc] init];
-//            priceRankModel.priceRank = model.data.housePricingRank;
-//            [self.items addObject:priceRankModel];
-//        }
-//    }
     // 均价走势
     FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
     priceTrendModel.priceTrends = model.data.priceTrend;
