@@ -20,6 +20,7 @@
 #import "FHDetailMultitemCollectionView.h"
 #import "FHDetailStarsCountView.h"
 #import "FHDetailStarHeaderView.h"
+#import "FHUtils.h"
 
 @interface FHDetailOldEvaluateCell ()
 @property (nonatomic, strong)   FHDetailStarHeaderView       *headerView;
@@ -57,11 +58,11 @@
         if (model.evaluationInfo.subScores.count > 0) {
             UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
             flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
-            flowLayout.itemSize = CGSizeMake(140, 122);
+            flowLayout.itemSize = CGSizeMake(140, 134);// 实际高度122，有阴影
             flowLayout.minimumLineSpacing = 10;
             flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
             NSString *identifier = NSStringFromClass([FHDetailOldEvaluationItemCollectionCell class]);
-            FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:122 cellIdentifier:identifier cellCls:[FHDetailOldEvaluationItemCollectionCell class] datas:model.evaluationInfo.subScores];
+            FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:134 cellIdentifier:identifier cellCls:[FHDetailOldEvaluationItemCollectionCell class] datas:model.evaluationInfo.subScores];
             [self.containerView addSubview:colView];
             colView.backgroundColor = [UIColor clearColor];
             colView.collectionContainer.backgroundColor = [UIColor clearColor];
@@ -112,9 +113,9 @@
     _containerView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(66);
+        make.top.mas_equalTo(self.contentView).offset(60);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView).offset(-30);
+        make.bottom.mas_equalTo(self.contentView).offset(-24);
     }];
 }
 
@@ -186,9 +187,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.layer.masksToBounds = YES;
-        self.layer.cornerRadius = 4.0;
-        self.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor clearColor];
         [self setupUI];
     }
     return self;
@@ -222,8 +221,7 @@
     
     _backView = [[UIView alloc] init];
     _backView.layer.cornerRadius = 4.0;
-    _backView.layer.masksToBounds = YES;
-    _backView.backgroundColor = [UIColor themeGray8];
+    _backView.backgroundColor = [UIColor whiteColor];
     
     _descLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _descLabel.textColor = [UIColor themeGray3];
@@ -277,6 +275,12 @@
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.nameLabel);
     }];
+
+    // 添加阴影
+    self.backView.layer.shadowColor = [UIColor blackColor].CGColor;//shadowColor阴影颜色
+    self.backView.layer.shadowOffset = CGSizeMake(0, 2);//shadowOffset阴影偏移，默认(0, -3),这个跟shadowRadius配合使用
+    self.backView.layer.shadowOpacity = 0.1;//0.8;//阴影透明度，默认0
+    self.backView.layer.shadowRadius = 4;//8;//阴影半径，默认3
 }
 
 - (void)layoutDescLabelForText:(NSString *)text
