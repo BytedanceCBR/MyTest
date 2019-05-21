@@ -9,38 +9,16 @@
 #import "TTBridgeDefines.h"
 #import "TTBridgePlugin.h"
 
-extern TTBridgeName const TTDeviceSetClipboardDataBridgeName;
 
-extern TTBridgeName const TTViewOpenBridgeName;
-extern TTBridgeName const TTViewCloseBridgeName;
-extern TTBridgeName const TTViewShowLoadingBridgeName;
-extern TTBridgeName const TTViewHideLoadingBridgeName;
-extern TTBridgeName const TTViewSetBackButtonStyleBridgeName;
-extern TTBridgeName const TTViewSetStatusBarStyleBridgeName;
-extern TTBridgeName const TTViewSetTitleBridgeName;
-extern TTBridgeName const TTViewOnPageVisibleBridgeName;
-extern TTBridgeName const TTViewOnPageInvisibleBridgeName;
+/**
+ 注册 bridge
 
-extern TTBridgeName const TTMediaPlayVideoBridgeName;
-extern TTBridgeName const TTMediaPlayNativeVideoBridgeName;
-
-extern TTBridgeName const TTAppLoginBridgeName;
-extern TTBridgeName const TTAppGetAppInfoBridgeName;
-extern TTBridgeName const TTAppCheckLoginStatusBridgeName;
-extern TTBridgeName const TTAppPayBridgeName;
-extern TTBridgeName const TTAppShareBridgeName;
-extern TTBridgeName const TTAppSetShareInfoBridgeName;
-extern TTBridgeName const TTAppShowSharePanelBridgeName;
-extern TTBridgeName const TTAppCommentBridgeName;
-extern TTBridgeName const TTAppOnCommentPublishBridgeName;
-extern TTBridgeName const TTAppGalleryBridgeName;
-extern TTBridgeName const TTAppConfigBridgeName;
-extern TTBridgeName const TTAppToastBridgeName;
-extern TTBridgeName const TTAppAlertBridgeName;
-extern TTBridgeName const TTAppSendLogV3BridgeName;
-extern TTBridgeName const TTAppFetchBridgeName;
-extern TTBridgeName const TTAppSendALogBridgeName;
-
+ @param engineType bridge 支持的平台，目前支持 RN/webview
+ @param nativeName 对应的 native 名
+ @param bridgeName bridge 名
+ @param authType 权限
+ @param domains 如果权限为 private, 需传入其支持的域名
+ */
 extern void TTRegisterBridge(TTBridgeRegisterEngineType engineType,
                              NSString *nativeName,
                              TTBridgeName bridgeName,
@@ -63,10 +41,12 @@ extern void TTRegisterAllBridge(NSString *nativeName, TTBridgeName bridgeName);
 
 + (instancetype)sharedRegister;
 
-- (void)registerMethod:(NSString *)method
+- (void)registerMethod:(TTBridgeName)bridgeName
             engineType:(TTBridgeRegisterEngineType)engineType
               authType:(TTBridgeAuthType)authType
                domains:(NSArray<NSString *> *)domains;
+
+- (BOOL)bridgeHasRegistered:(TTBridgeName)bridgeName;
 
 @property (nonatomic, copy, readonly) NSDictionary<NSString*, TTBridgeMethodInfo*> *registedMethods;
 @property (nonatomic, copy, readonly) NSDictionary<NSString*, NSMutableArray*> *domain2PrivateMethods;

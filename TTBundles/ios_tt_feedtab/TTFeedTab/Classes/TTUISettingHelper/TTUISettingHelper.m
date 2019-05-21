@@ -21,8 +21,6 @@
 #define kColorText5Array                        @[ [UIColor colorWithHexString:@"406599"],[UIColor colorWithHexString:@"67778b"] ]
 #define kColorBackground3Array                  @[ [UIColor colorWithHexString:@"f4f5f6"],[UIColor colorWithHexString:@"1b1b1b"] ]
 
-NSString *const kCellViewUserDefaultKey = @"kCellViewUserDefaultKey";
-NSString *const kDetailViewUserDefaultKey = @"kDetailViewUserDefaultKey";
 NSString *const kCategoryViewUserDefaultKey = @"kCategoryViewUserDefaultKey";
 NSString *const kTabBarViewUserDefaultKey = @"kTabBarViewUserDefaultKey";
 
@@ -96,154 +94,6 @@ NSDictionary *tt_ttuisettingHelper_cellViewUISettingsDictionary(void) {
 
 + (void)enforceServerUISettings
 {
-    /*
-     *  列表页UI设置参数:
-     *  font_size               标题字体:小，中，大，特大分别对应的字号
-     *  color                   标题字体颜色:日间，夜间，选取态日间，选取态夜间
-     *  cell_background_color   cell的背景颜色:日间，夜间，选取态日间，选取态夜间
-     */
-    NSDictionary *cellViewSettings = [self savedCellViewUISettingInfoDict];
-    if (cellViewSettings) {
-        [[TTUISettingHelper sharedInstance_tt] setCellViewUISettingsDictionary:cellViewSettings];
-        if ([cellViewSettings objectForKey:@"font_size"]) {
-            NSArray *fontSize = [cellViewSettings objectForKey:@"font_size"];
-            if ([fontSize isKindOfClass:[NSArray class]] && [fontSize count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setCellViewTitleFontSizeArray:fontSize];
-            }
-        }
-        
-        if ([cellViewSettings objectForKey:@"color"]) {
-            NSArray *textColor = [cellViewSettings objectForKey:@"color"];
-            if ([textColor isKindOfClass:[NSArray class]] && [textColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setCellViewTitleColorHexStringArray:textColor];
-            }
-        }
-        
-        if ([cellViewSettings objectForKey:@"cell_background_color"]) {
-            NSArray *backgroundColor = [cellViewSettings objectForKey:@"cell_background_color"];
-            if ([backgroundColor isKindOfClass:[NSArray class]] && [backgroundColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setCellViewBackgroundColorHexStringArray:backgroundColor];
-            }
-        }
-    }
-    
-    /*
-     *  详情页UI设置参数:
-     *  title_font_size         标题字体:小，中，大，特大分别对应的字号
-     *  title_color             标题字体颜色:日间，夜间
-     *  body_font_size          正文字体:小，中，大，特大分别对应的字号
-     *  body_color              正文字体颜色:日间，夜间
-     *  detail_background_color 详情页和浮层的背景颜色:日间，夜间
-     *  natant_font_size        浮层相关阅读字体:小，中，大，特大分别对应的字号
-     *  comment_font_size       评论用户名字号:int
-     *  comment_user_color      评论用户名字色:日间，夜间
-     *  comment_font_color      评论内容字色:日间，夜间
-     *  sub_comment_font_color  回复评论内容字色:日间，夜间
-     *  sub_comment_user_font_size     回复评论用户名字号:int
-     *  sub_comment_user_color  回复评论用户名字色:日间，夜间
-     *  sub_comment_background_color   评论中的回复评论背景色:日间，夜间，日间选取，夜间选取
-     */
-    NSDictionary *detailViewSettings = [self savedDetailViewUISettingInfoDict];
-    if (detailViewSettings){
-        [[TTUISettingHelper sharedInstance_tt] setDetailViewUISettingsDictionary:detailViewSettings];
-        if ([detailViewSettings objectForKey:@"title_font_size"]) {
-            NSArray *fontSize = [detailViewSettings objectForKey:@"title_font_size"];
-            if ([fontSize isKindOfClass:[NSArray class]] && [fontSize count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewTitleFontSizeArray:fontSize];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"title_color"]) {
-            NSArray *textColor = [detailViewSettings objectForKey:@"title_color"];
-            if ([textColor isKindOfClass:[NSArray class]] && [textColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewTitleColorHexStringArray:textColor];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"body_font_size"]) {
-            NSArray *fontSize = [detailViewSettings objectForKey:@"body_font_size"];
-            if ([fontSize isKindOfClass:[NSArray class]] && [fontSize count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewBodyFontSizeArray:fontSize];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"body_color"]) {
-            NSArray *textColor = [detailViewSettings objectForKey:@"body_color"];
-            if ([textColor isKindOfClass:[NSArray class]] && [textColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewBodyColorHexStringArray:textColor];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"detail_background_color"]) {
-            NSArray *backgroundColor = [detailViewSettings objectForKey:@"detail_background_color"];
-            if ([backgroundColor isKindOfClass:[NSArray class]] && [backgroundColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewBackgroundColorHexStringArray:backgroundColor];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"natant_font_size"]) {
-            NSArray *fontSize = [detailViewSettings objectForKey:@"natant_font_size"];
-            if ([fontSize isKindOfClass:[NSArray class]] && [fontSize count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewNatantFontSizeArray:fontSize];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"comment_font_size"]) {
-            NSArray *fontSize = [detailViewSettings objectForKey:@"comment_font_size"];
-            if ([fontSize isKindOfClass:[NSArray class]] && [fontSize count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentFontSizeArray:fontSize];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"comment_user_font_size"]) {
-            NSNumber *fontSize = [detailViewSettings objectForKey:@"comment_user_font_size"];
-            if ([fontSize isKindOfClass:[NSNumber class]] && [fontSize intValue] > 0){
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentUserFontSize:[fontSize intValue]];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"comment_user_color"]) {
-            NSArray *textColor = [detailViewSettings objectForKey:@"comment_user_color"];
-            if ([textColor isKindOfClass:[NSArray class]] && [textColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentUserColorHexStringArray:textColor];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"comment_font_color"]) {
-            NSArray *textColor = [detailViewSettings objectForKey:@"comment_font_color"];
-            if ([textColor isKindOfClass:[NSArray class]] && [textColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentContentColorHexStringArray:textColor];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"sub_comment_font_color"]){
-            NSArray *textColor = [detailViewSettings objectForKey:@"sub_comment_font_color"];
-            if ([textColor isKindOfClass:[NSArray class]] && [textColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentReplyContentColorHexStringArray:textColor];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"sub_comment_font_size"]) {
-            NSNumber *fontSize = [detailViewSettings objectForKey:@"sub_comment_font_size"];
-            if ([fontSize isKindOfClass:[NSNumber class]] && [fontSize intValue] > 0){
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentReplyUserFontSize:[fontSize intValue]];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"sub_comment_user_color"]){
-            NSArray *textColor = [detailViewSettings objectForKey:@"sub_comment_user_color"];
-            if ([textColor isKindOfClass:[NSArray class]] && [textColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentReplyUserColorHexStringArray:textColor];
-            }
-        }
-        
-        if ([detailViewSettings objectForKey:@"sub_comment_background_color"]){
-            NSArray *backgroundColor = [detailViewSettings objectForKey:@"sub_comment_background_color"];
-            if ([backgroundColor isKindOfClass:[NSArray class]] && [backgroundColor count] > 0) {
-                [[TTUISettingHelper sharedInstance_tt] setDetailViewCommentReplyBackgroundColorHexStringArray:backgroundColor];
-            }
-        }
-    }
     
     /*
      *  频道导航UI设置参数:
@@ -297,42 +147,6 @@ NSDictionary *tt_ttuisettingHelper_cellViewUISettingsDictionary(void) {
             }
         }
     }
-}
-
-//保存服务端下发的列表页CellView的UI设置，下次启动生效
-+ (void)saveCellViewUISettingInfoDict:(NSDictionary *)dict
-{
-    if ([dict isKindOfClass:[NSDictionary class]] && [dict count] > 0) {
-        [[NSUserDefaults standardUserDefaults] setValue:dict forKey:kCellViewUserDefaultKey];
-    }
-    else {
-        [[NSUserDefaults standardUserDefaults]  removeObjectForKey:kCellViewUserDefaultKey];
-    }
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSDictionary *)savedCellViewUISettingInfoDict
-{
-    NSDictionary * dict = [[NSUserDefaults standardUserDefaults] objectForKey:kCellViewUserDefaultKey];
-    return dict;
-}
-
-//保存服务端下发的详情页的UI设置，下次启动生效
-+ (void)saveDetailViewUISettingInfoDict:(NSDictionary *)dict
-{
-    if ([dict isKindOfClass:[NSDictionary class]] && [dict count] > 0) {
-        [[NSUserDefaults standardUserDefaults] setValue:dict forKey:kDetailViewUserDefaultKey];
-    }
-    else {
-        [[NSUserDefaults standardUserDefaults]  removeObjectForKey:kDetailViewUserDefaultKey];
-    }
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSDictionary *)savedDetailViewUISettingInfoDict
-{
-    NSDictionary * dict = [[NSUserDefaults standardUserDefaults] objectForKey:kDetailViewUserDefaultKey];
-    return dict;
 }
 
 //保存服务端下发的频道导航（即TTCategorySelectorView）的UI设置，下次启动生效

@@ -21,7 +21,6 @@ extern NSInteger ttvs_isVideoShowDirectShare(void);
 /**
  播放器播放结束界面出相关推荐
  */
-extern BOOL ttvs_isPlayerShowRelated(void);
 extern BOOL ttvs_enabledVideoRecommend(void);
 extern BOOL ttvs_enabledVideoNewButton(void);
 extern BOOL ttvs_playerImageScaleEnable(void);
@@ -33,9 +32,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 extern NSInteger ttvs_isShareTimelineOptimize(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 extern BOOL ttvs_isTitanVideoBusiness(void);
-extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
-extern NSString *ttvs_playerFinishedRelatedType(void);
-extern NSDictionary *ttvs_videoMidInsertADDict(void);
+
 extern BOOL ttvs_videoMidInsertADEnable(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);

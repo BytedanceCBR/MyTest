@@ -103,7 +103,7 @@ UIScrollViewDelegate>
     // 首次加载时频道是默认选择的，不是通过滑动或点击，走不到 scrollViewDidEndDecelerating:方法，所以做特殊处理
     if (_firstLoad) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_tab_launch_auto_refresh_enable" defaultValue:@0 freeze:YES] boolValue] || [[TSVPushLaunchManager sharedManager] shouldAutoRefresh] || [TSVEnterTabAutoRefreshConfig shouldAutoRefreshWhenEnterTab]) {
+            if ([[TSVPushLaunchManager sharedManager] shouldAutoRefresh] || [TSVEnterTabAutoRefreshConfig shouldAutoRefreshWhenEnterTab]) {
                 [[TSVPushLaunchManager sharedManager] setShouldAutoRefresh:NO];
                 [cell refreshDataWithType:ListDataOperationReloadFromTypeAuto];
             } else {

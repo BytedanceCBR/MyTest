@@ -14,7 +14,7 @@
 extern BOOL ttvs_isTitanVideoBusiness(void);
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 BOOL ttvs_playerImageScaleEnable(void);
-extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
+
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoFeedCellHeightAjust(void);
 
@@ -115,18 +115,6 @@ NSString *const kTTVAlertPlay = @"继续播放";
 + (BOOL)tt_video_business_refactor
 {
     return ttvs_isTitanVideoBusiness();
-}
-
-+ (BOOL)tt_video_detail_playlast_showtext {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_video_detail_playlast_showtext"];
-}
-
-+ (BOOL)tt_video_detail_playlast_enable {
-#if INHOUSE
-    return YES;
-#else
-    return ttvs_isVideoDetailPlayLastEnabled();
-#endif
 }
 
 + (BOOL)ttvs_playerImageScaleEnable

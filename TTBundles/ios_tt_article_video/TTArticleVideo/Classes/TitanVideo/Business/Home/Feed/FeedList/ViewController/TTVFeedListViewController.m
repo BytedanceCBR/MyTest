@@ -51,7 +51,6 @@
 #import "TTPGCFetchManager.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "TTLocationManager.h"
-#import "PGCAccountManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "TTNavigationController.h"
 #import "TTAuthorizeHintView.h"

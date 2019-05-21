@@ -20,11 +20,9 @@
 #import "TTProfileViewController.h"
 #import "TTSettingsManager.h"
 #import "TSVTabViewController.h"
-#import "TTHTSTabViewController.h"
 #import "TTTabBarProvider.h"
 #import "TTTabBar.h"
 //#import "TTFantasyTimeCountDownManager.h"
-#import "AKActivityTabManager.h"
 #import "AKTaskSettingHelper.h"
 //#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
@@ -116,9 +114,6 @@
     if (isEmptyString(schema) && [TTTabBarProvider hasPriorMiddleTab] &&[[TTTabBarProvider allSupportedTags] containsObject:identifier]) {
         [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:identifier atIndex:2 isRegular:NO];
     }
-    
-    //aikan tab
-    [[AKActivityTabManager sharedManager] updateActivityTabHiddenState:![[AKTaskSettingHelper shareInstance] isEnableShowTaskEntrance]];
 }
 
 - (void)constructDefaultTabs {
@@ -139,30 +134,6 @@
 //    [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:forthTag atIndex:3 isRegular:YES];
     [[TTTabBarManager sharedTTTabBarManager] registerTabBarforIndentifier:kFHouseMineTabKey atIndex:3 isRegular:YES];
 
-}
-
-- (NSString *)thirdTabBarIdentifier {
-    return kTTTabHTSTabKey;
-//    if ([SSCommonLogic isThirdTabHTSEnabled]) {
-//        return kTTTabHTSTabKey;
-//    } else if ([SSCommonLogic isThirdTabWeitoutiaoEnabled]) {
-//        return kTTTabWeitoutiaoTabKey;
-//    }
-//
-//    return kTTTabWeitoutiaoTabKey;
-}
-
-//第四个tab
-- (NSString *)forthTabBarIdentifier
-{
-//    if ([SSCommonLogic isForthTabHTSEnabled]) {
-//        return kTTTabHTSTabKey;
-//    }
-//    else {
-//        return kTTTabMineTabKey;
-//    }
-
-    return kAKTabActivityTabKey;
 }
 
 //第五个tab

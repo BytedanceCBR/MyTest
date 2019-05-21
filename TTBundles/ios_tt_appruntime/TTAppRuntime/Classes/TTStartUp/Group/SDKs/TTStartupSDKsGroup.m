@@ -10,7 +10,7 @@
 #import "SSCommonLogic.h"
 #import "TTWeixinSDKRegister.h"
 //#import "TTDingTalkSDKRegister.h"
-#import "TTShareModuleBridgeTask.h"
+//#import "TTShareModuleBridgeTask.h"
 #import "TTUmengSDKRegister.h"
 //#import "TTHuoshanSDKRegister.h"
 //#import "TTAliPaySDKRegister.h"
@@ -29,9 +29,9 @@
     
     [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeWeixin]];
 //    [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeDingTalk]];
-    [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeShareModuleBridge]];
+//    [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeShareModuleBridge]];
     [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeUmeng]];
-    [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeHuoshan]];
+//    [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeHuoshan]];
 //    [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeAliPay]];
     [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeQQ]];
 //    [group.tasks addObject:[[self class] SDKRegisterStartupForType:TTSDKsRegisterStartupTypeBDOAuth]];
@@ -48,9 +48,9 @@
 //        case TTSDKsRegisterStartupTypeDingTalk:
 //            return [[TTDingTalkSDKRegister alloc] init];
 //            break;
-        case TTSDKsRegisterStartupTypeShareModuleBridge:
-            return [[TTShareModuleBridgeTask alloc] init];
-            break;
+//        case TTSDKsRegisterStartupTypeShareModuleBridge:
+//            return [[TTShareModuleBridgeTask alloc] init];
+//            break;
         case TTSDKsRegisterStartupTypeUmeng:
             return [[TTUmengSDKRegister alloc] init];
             break;

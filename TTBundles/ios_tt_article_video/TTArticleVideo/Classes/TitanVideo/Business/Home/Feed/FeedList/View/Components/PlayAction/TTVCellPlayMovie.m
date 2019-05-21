@@ -45,7 +45,6 @@
 extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
-extern BOOL ttvs_isPlayerShowRelated(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 @interface TTVCellPlayMovie ()<TTVDemandPlayerDelegate,TTVPlayVideoDelegate ,TTVCommodityViewDelegate ,TTVCommodityViewMessage,TTVCommodityButtonViewDelegate>
@@ -223,13 +222,9 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if ([self.cellEntity.originData.adModel isCreativeAd]) {//广告
         playVideo.player.tipCreator = [[TTVPlayerTipAdNewCreator alloc] init];
     }else{
-        if (ttvs_isPlayerShowRelated()) {
-            playVideo.player.tipCreator = [[TTVPlayerTipRelatedCreator alloc] init];
-        }else{
-            NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
-            if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3) && isEmptyString(model.adID)){
-                playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
-            }
+        NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
+        if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3) && isEmptyString(model.adID)){
+            playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
         }
     }
     playVideo.player.enableRotate = ![article showPortrait];
