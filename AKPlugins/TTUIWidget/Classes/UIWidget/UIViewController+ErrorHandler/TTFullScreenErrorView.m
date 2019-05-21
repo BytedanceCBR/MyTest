@@ -189,9 +189,9 @@
     }
 }
 
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
-    
-    BOOL inside = CGRectContainsPoint(self.actionBtn.frame, point) || CGRectContainsPoint(self.refreshButton.frame, point);
-    return inside;
-}
+//- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+//    
+//    BOOL inside = CGRectContainsPoint(self.actionBtn.frame, point) || CGRectContainsPoint(self.refreshButton.frame, point);
+//    return inside;
+//}
 @end
