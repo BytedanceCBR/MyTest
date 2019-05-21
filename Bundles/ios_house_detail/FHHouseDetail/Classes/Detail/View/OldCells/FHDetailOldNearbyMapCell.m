@@ -276,7 +276,7 @@ UITableViewDataSource>
     [_locationList mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mapImageView.mas_bottom).offset(10);
         make.left.right.equalTo(self.contentView);
-        make.bottom.equalTo(self.contentView).offset(-10);
+        make.bottom.equalTo(self.contentView).offset(-20);
         make.height.mas_equalTo(105);
     }];
     
@@ -313,7 +313,7 @@ UITableViewDataSource>
     [_locationList mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.mapImageView.mas_bottom).offset(10);
         make.left.right.equalTo(self.contentView);
-        make.bottom.equalTo(self.contentView).offset(-10);
+        make.bottom.equalTo(self.contentView).offset(-20);
         make.height.mas_equalTo((poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35);
     }];
     
