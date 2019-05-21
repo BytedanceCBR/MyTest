@@ -21,6 +21,7 @@
 #import <FHCommonUI/FHSearchBar.h>
 #import "FHPriceValuationNSCell.h"
 #import "FHPriceValuationNSearchView.h"
+#import <FHCommonUI/FHErrorView.h>
 
 @implementation FHBaseSugListViewModel
 
@@ -53,6 +54,23 @@
     return self;
 }
 
+- (void)setEmptyView:(FHErrorView *)emptyView
+{
+    _emptyView = emptyView;
+    __weak typeof(self)wself = self;
+    UITextField *textField = nil;
+    if (self.searchType == FHSugListSearchTypeNeighborDealList) {
+        textField = self.naviBar.searchInput;
+    }else if (self.searchType == FHSugListSearchTypePriceValuation) {
+        textField = self.searchView.searchInput;
+    }
+    emptyView.retryBlock = ^{
+        if (textField.text > 0) {
+            [wself requestSuggestion:textField.text];
+        }
+    };
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
@@ -60,8 +78,9 @@
 
 - (void)requestSuggestion:(NSString *)text
 {
+    FHEmptyMaskViewType emptyType = FHEmptyMaskViewTypeNoNetWorkAndRefresh;
     if (![TTReachability isNetworkConnected]) {
-        [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+        [self.listController.emptyView showEmptyWithType:emptyType];
         return;
     }
     NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
@@ -247,13 +266,18 @@
         text = [text substringToIndex:maxCount];
         self.naviBar.searchInput.text = text;
     }
+    FHEmptyMaskViewType emptyType = FHEmptyMaskViewTypeNoNetWorkAndRefresh;
+    if (![TTReachability isNetworkConnected]) {
+        [self.listController.emptyView showEmptyWithType:emptyType];
+        return;
+    }
     BOOL hasText = text.length > 0;
     if (hasText) {
         [self requestSuggestion:text];
     } else {
         // 清空sug列表数据
         [self clearSugTableView];
-        self.listController.emptyView.hidden = YES;
+        self.emptyView.hidden = YES;
     }
 }
 
@@ -411,10 +435,14 @@
             self.suggestTableView.hidden = YES;
             self.listController.emptyView.hidden = NO;
             if (![TTReachability isNetworkConnected]) {
-                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+                [self.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             } else {
-                // add by zyk 空页面图需要替换，合并alpha代码后替换
-                [self.listController.emptyView showEmptyWithTip:@"未能找到对应小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                if (self.searchType == FHSugListSearchTypePriceValuation) {
+                    // add by zyk 空页面图需要替换，合并alpha代码后替换
+                    [self.listController.emptyView showEmptyWithTip:@"未能找到对应小区" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+                }else {
+                    self.listController.emptyView.hidden = YES;
+                }
             }
         }
     }

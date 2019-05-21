@@ -53,14 +53,16 @@
     self.panBeginAction = ^{
         [weakSelf.viewModel resignFirstResponder];
     };
+    FHEmptyMaskViewType emptyType = FHEmptyMaskViewTypeNoNetWorkAndRefresh;
     // 初始化
     if (![TTReachability isNetworkConnected]) {
-        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkNotRefresh];
+        [self.emptyView showEmptyWithType:emptyType];
         self.suggestTableView.hidden = YES;
     } else {
         self.suggestTableView.hidden = YES;
         self.emptyView.hidden = YES;
     }
+    self.viewModel.emptyView = self.emptyView;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf.naviBar.searchInput becomeFirstResponder];
         [weakSelf.searchView.searchInput becomeFirstResponder];
