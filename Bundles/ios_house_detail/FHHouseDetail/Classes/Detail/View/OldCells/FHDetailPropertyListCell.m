@@ -119,24 +119,64 @@
                 topOffset += listRowHeight;
             }];
         }
-        // 父视图布局
-        if (lastView) {
-            CGFloat vWidTemp = viewWidth;
-            if (lastViewLeftOffset < 30) {
-                // 单行
-                vWidTemp = viewWidth * 2;
-            }
-            [lastView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(lastTopOffset);
-                make.left.mas_equalTo(lastViewLeftOffset);
-                make.width.mas_equalTo(vWidTemp);
-                make.height.mas_equalTo(listRowHeight);
-                if (!infoView) {
-                    make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
-                }
-            }];
-        }
+//        // 父视图布局
+//        if (lastView) {
+//            CGFloat vWidTemp = viewWidth;
+//            if (lastViewLeftOffset < 30) {
+//                // 单行
+//                vWidTemp = viewWidth * 2;
+//            }
+//            [lastView mas_remakeConstraints:^(MASConstraintMaker *make) {
+//                make.top.mas_equalTo(lastTopOffset);
+//                make.left.mas_equalTo(lastViewLeftOffset);
+//                make.width.mas_equalTo(vWidTemp);
+//                make.height.mas_equalTo(listRowHeight);
+//                if (!infoView && !model.extraInfo) {
+//                    make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
+//                }
+//            }];
+//        }
     }
+    
+    //extra info
+    if (model.extraInfo) {
+        
+        FHDetailExtarInfoRowView *rowView = nil;
+        if (model.extraInfo.official) {
+            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+            
+            [rowView updateWithOfficalData:model.extraInfo.official];
+            [self.contentView addSubview:rowView];
+            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+                }else{
+                    make.top.mas_equalTo(10);
+                }
+                make.left.mas_equalTo(20);
+                make.right.mas_equalTo(-20);
+                make.height.mas_equalTo(20);
+            }];
+            lastView = rowView;
+        }
+        
+        if (model.extraInfo.detective) {
+            rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+            [self.contentView addSubview:rowView];
+            [rowView updateWithDetectiveData:model.extraInfo.detective];
+            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                if (lastView) {
+                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+                }else{
+                    make.top.mas_equalTo(10);
+                }
+                make.left.mas_equalTo(20);
+                make.right.mas_equalTo(-20);
+                make.height.mas_equalTo(20);
+            }];
+            lastView = rowView;
+        }
+    }        
     
     if (infoView) {
         [infoView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -148,9 +188,14 @@
             make.left.mas_equalTo(20);
             make.right.mas_equalTo(self.contentView).offset(-20);
             make.height.mas_equalTo(26);
-            make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
+//            make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
         }];
+        lastView = infoView;
     }
+    
+    [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
+    }];
     
     [self layoutIfNeeded];
 }
@@ -226,6 +271,138 @@
 
 @end
 
+@implementation FHDetailExtarInfoRowView
+
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupUI];
+//#if DEBUG
+//        _logoImageView.backgroundColor = [UIColor redColor];
+//#endif
+    }
+    return self;
+}
+
+- (void)setupUI {
+    self.backgroundColor = UIColor.whiteColor;
+    _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _nameLabel.textColor = [UIColor themeGray3];
+    [self addSubview:_nameLabel];
+
+    
+    _infoLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _infoLabel.textColor = [UIColor themeGray1];
+    [self addSubview:_infoLabel];
+    _infoLabel.textAlignment = NSTextAlignmentLeft;
+    
+    _logoImageView = [[UIImageView alloc] init];
+    _logoImageView.image = SYS_IMG(@"detail_entrance_arrow");
+    
+    _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
+    _indicatorLabel.font = [UIFont themeFontMedium:12];
+    _indicatorLabel.textColor = [UIColor themeRed1];
+    
+    _indicator = [[UIImageView alloc]initWithImage:SYS_IMG(@"detail_entrance_arrow")];
+    
+    
+    [self addSubview:_logoImageView];
+    [self addSubview:_indicatorLabel];
+    [self addSubview:_indicator];
+    
+    // 布局
+    [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(0);
+        make.top.bottom.mas_equalTo(self);
+    }];
+    
+    [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.nameLabel.mas_right).offset(10);
+        make.top.bottom.mas_equalTo(self);
+        make.right.mas_lessThanOrEqualTo(self.logoImageView.mas_left).offset(-10);
+    }];
+    
+    [self.indicator mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(0);
+        make.size.mas_equalTo(CGSizeMake(20, 20));
+        make.centerY.mas_equalTo(self);
+    }];
+    
+    [self.indicatorLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-30);
+        make.centerY.mas_equalTo(self);
+    }];
+    
+    [self.logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-30);
+        make.centerY.mas_equalTo(self);
+    }];
+    
+}
+
+-(void)updateWithOfficalData:(FHDetailDataBaseExtraOfficialModel *)officialModel
+{
+    _nameLabel.text = officialModel.baseTitle;
+    _infoLabel.text =  officialModel.agency.name;
+    _logoImageView.image = nil;
+    
+    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:officialModel.agency.logo.url]];
+    
+    self.indicatorLabel.hidden = YES;
+    
+    CGFloat width = officialModel.agency.logo.width.floatValue;
+    CGFloat height = officialModel.agency.logo.height.floatValue;
+    if (width > 0 && height > 20) {
+        width = 20*width/height;
+    }
+    
+    [self.logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-30);
+        make.size.mas_equalTo(CGSizeMake(width, height));
+    }];
+    
+}
+
+-(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel
+{
+    _nameLabel.text = detectiveModel.baseTitle;
+    
+    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
+    if (!IS_EMPTY_STRING(detectiveModel.content)) {
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:detectiveModel.content attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        [minfoAttrStr appendAttributedString:infoStr];
+    }
+
+    if (!IS_EMPTY_STRING(detectiveModel.warnContent)) {
+        NSAttributedString *warnStr = [[NSAttributedString alloc] initWithString:detectiveModel.warnContent attributes:@{NSForegroundColorAttributeName:[UIColor themeRed1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
+        [minfoAttrStr appendAttributedString:warnStr];
+    }
+    
+    _infoLabel.attributedText = minfoAttrStr;
+    
+    _logoImageView.image = nil;
+    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:detectiveModel.icon]];
+    
+    _indicatorLabel.text = detectiveModel.tips;
+    
+    [_indicatorLabel sizeToFit];
+    
+    CGSize size = _indicatorLabel.bounds.size;
+    _indicatorLabel.hidden = NO;
+    
+    [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
+    
+    [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-(31+size.width));
+        make.size.mas_equalTo(CGSizeMake(20, 20));
+    }];
+    
+}
+
+@end
 
 @implementation FHDetailPropertyListModel
 

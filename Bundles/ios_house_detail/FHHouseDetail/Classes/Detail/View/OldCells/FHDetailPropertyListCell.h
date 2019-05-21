@@ -23,10 +23,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHDetailExtarInfoRowView : UIControl
+
+@property (nonatomic, strong)   UILabel       *nameLabel;
+@property (nonatomic, strong)   UILabel       *infoLabel;
+@property (nonatomic, strong)   UIImageView   *logoImageView;
+@property (nonatomic, strong)   UILabel       *indicatorLabel;
+@property (nonatomic, strong)   UIImageView  *indicator;
+
+-(void)updateWithOfficalData:(FHDetailDataBaseExtraOfficialModel *)officialModel;
+
+-(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel;
+
+@end
+
 // FHDetailPropertyListModel
 @interface FHDetailPropertyListModel : FHDetailBaseModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *extraInfo;
 @property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
 
 @end

@@ -336,10 +336,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:priceChangeHistoryModel];
     }
     // 添加属性列表
-    if (model.data.baseInfo || model.data.certificate) {
+    if (model.data.baseInfo || model.data.certificate || model.data.baseExtra) {
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
         propertyModel.certificate = model.data.certificate;
+        propertyModel.extraInfo = model.data.baseExtra;
         [self.items addObject:propertyModel];
     }
     
