@@ -295,10 +295,6 @@ static TTThemedAlertControllerManager *manager;
     
     // 4.流量提醒弹窗有效性判断
     if (![self ttv_shouldShowTrafficAlert]) {
-        BOOL isEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"tt_mobile_toast_data_usage_enable" defaultValue:@(NO) freeze:YES] boolValue];
-        if (isEnabled) {
-            [self ttv_showTrafficToastTipView];
-        }
         return ;
     }
     
@@ -360,25 +356,6 @@ static TTThemedAlertControllerManager *manager;
     }
     return YES;
 }
-
-- (void)ttv_showTrafficToastTipView {
-    
-    CGFloat size = self.playerStateStore.state.videoSize / 1024.f / 1024.f;
-    TTIndicatorView *trafficToast = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:[NSString stringWithFormat:@"%@%.2fM", @"正在使用流量播放，本视频约", size] indicatorImage:nil dismissHandler:^(BOOL isUserDismiss) {
-    }];
-    SEL selector = NSSelectorFromString(@"indicatorTextLabel");
-    if ([trafficToast respondsToSelector:selector]) {
-        IMP imp = [trafficToast methodForSelector:selector];
-        UILabel* (*func)(id, SEL) = (void *)imp;
-        UILabel *toastLabel = func(trafficToast, selector);
-        toastLabel.font = [UIFont systemFontOfSize:14.f];
-    }
-    [trafficToast showFromParentView:[UIViewController ttmu_currentViewController].view];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [trafficToast dismissFromParentView];
-    });
-}
-
 - (void)ttv_netChanged:(NSNotification *)noti {
     __unused __strong typeof(self) strongSelf = self;//iOS8会crash,在cancel的时候,self可能被释放了,需要一个局部变量来强持有.
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(ttv_netChanged) object:nil];

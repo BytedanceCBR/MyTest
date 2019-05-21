@@ -111,10 +111,8 @@ TTTopBarDelegate
 
 - (instancetype)init {
     if (self = [super init]) {
-        if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-            self.hidesBottomBarWhenPushed = NO;
-            self.ttStatusBarStyle = UIStatusBarStyleDefault;
-        }
+        self.hidesBottomBarWhenPushed = NO;
+        self.ttStatusBarStyle = UIStatusBarStyleDefault;
     }
     return self;
 }

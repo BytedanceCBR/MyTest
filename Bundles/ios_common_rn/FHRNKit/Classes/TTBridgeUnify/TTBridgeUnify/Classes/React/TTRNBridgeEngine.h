@@ -16,7 +16,7 @@
 @property (nonatomic, weak) UIViewController *sourceController;
 @property (nonatomic, strong, readonly) NSURL *sourceURL;
 @property (nonatomic, weak, readonly) NSObject *sourceObject;
-@property (nonatomic, strong) id<TTBridgeAuthorization> authorization;
+@property (nonatomic, strong, readonly) id<TTBridgeAuthorization> authorization;
 @property (nonatomic, strong) NSMutableArray<NSString *> *events;
 
 @end

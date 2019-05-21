@@ -18,7 +18,7 @@
 #define kListLogicReturnBackgroundTimeKey @"kListLogicReturnBackgroundTimeKey"
 
 #define kListSwitchToRecommendTabIntervalKey @"kListSwitchToRecommendTabIntervalKey"//间隔超过指定时间，回到前台，切换到推荐列表
-#define kListTipDisplayIntervalKey @"kListTipDisplayIntervalKey"        //列表tip每次展示的时间间隔
+
 #define kListTipRequestIntervalKey @"kListTipRequestIntervalKey"        //列表页tip刷新间隔
 #define kListAutoReloadIntervalKey @"kListAutoReloadIntervalKey"        //列表页自动刷新间隔
 
@@ -354,19 +354,8 @@ static NewsListLogicManager * shareManager;
 
 + (NSTimeInterval)fetchListTipDisplayInterval
 {
-    NSTimeInterval time = [[[NSUserDefaults standardUserDefaults] objectForKey:kListTipDisplayIntervalKey] doubleValue];
-    if (time <= 0) {
-        time = 15;
-    }
+    NSTimeInterval time = 10;
     return time;
-}
-
-+ (void)saveListTipDisplayInterval:(NSTimeInterval)interval
-{
-    if (interval >= 0) {
-        [[NSUserDefaults standardUserDefaults] setObject:@(interval) forKey:kListTipDisplayIntervalKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
 }
 
 + (void)saveReturnToBackgroundTime
@@ -424,15 +413,7 @@ static NewsListLogicManager * shareManager;
 {
     if ([categoryID isEqualToString:kTTWeitoutiaoCategoryID] && listLocation == ExploreOrderedDataListLocationWeitoutiao) {
         //微头条频道更新tip展示类型单独控制
-        NSUInteger type = [SSCommonLogic WeitoutiaoTabListUpdateTipType];
-        switch (type) {
-            case 1:
-                return TTExploreMixedListUpdateTipTypeTabbarRedPoint;
-            case 2:
-                return TTExploreMixedListUpdateTipTypeBlueBar;
-            default:
-                return TTExploreMixedListUpdateTipTypeNone;
-        }
+        return TTExploreMixedListUpdateTipTypeNone;
     }
     
     if ([categoryID isEqualToString:kTTFollowCategoryID]) {

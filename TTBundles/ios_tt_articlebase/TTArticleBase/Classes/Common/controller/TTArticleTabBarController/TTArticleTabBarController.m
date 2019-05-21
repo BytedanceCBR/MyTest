@@ -45,13 +45,11 @@
 //#import "TTWeitoutiaoViewController.h"
 #import "TTProfileViewController.h"
 #import "TTAccountBindingMobileViewController.h"
-#import "TTHTSTabViewController.h"
 #import <Crashlytics/Crashlytics.h>
 
 //#import "TTUGCPermissionService.h"
 //#import "TTPostUGCEntrance.h"
 #import <TTIndicatorView.h>
-#import "PGCAccountManager.h"
 #import "TTAdSplashMediator.h"
 //#import "TTPLManager.h"
 #import "TTBadgeTrackerHelper.h"
@@ -84,11 +82,9 @@
 #import "TTTabBarCustomMiddleModel.h"
 //#import "TTFantasyTimeCountDownManager.h"
 //#import "TTFantasyWindowManager.h"
-#import "AKActivityTabManager.h"
 #import "TTMessageNotificationTipsManager.h"
 //爱看
 #import "AKImageAlertManager.h"
-#import "AKActivityTabManager.h"
 #import "AKProfileBenefitManager.h"
 #import "AKLoginTrafficViewController.h"
 //#import "Bubble-Swift.h"
@@ -146,7 +142,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 @property (nonatomic, assign) BOOL autoEnterTab;
 @property (nonatomic, strong) NSString *lastSelectedTabTag;
 
-@property (nonatomic, strong) LOTAnimationView *animationView1;
+//@property (nonatomic, strong) LOTAnimationView *animationView1;
 
 @property (nonatomic, assign) BOOL isClickTab;
 
@@ -204,77 +200,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTabbarIndex:) name:TTArticleTabBarControllerChangeSelectedIndexNotification object:nil];
     //消息通知优化重要的人消息未读提示
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showMessageNotificationTips:) name:kTTMessageNotificationTipsChangeNotification object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(baiwanyingxiong:) name:@"kFantasyTimeCountDown" object:nil];
-}
-
-- (void)baiwanyingxiong:(NSNotification *)notification
-{
-    if (![SSCommonLogic fantasyCountDownEnable] || self.viewControllers.count >= 5) {
-        return;
-    }
-    
-    UIView *customView = [TTTabBarManager sharedTTTabBarManager].customMiddleButton;
-    if (!customView || ![[TTTabBarManager sharedTTTabBarManager].middleModel.originalIdentifier isEqualToString:kTTTabActivityTabKey]) {
-        return;
-    }
-    
-    if (!_animationView1) {
-        NSString *filePath1 = [[NSBundle mainBundle] pathForResource:@"data" ofType:@"json" inDirectory:@"FantasyAnimation.bundle"];
-        _animationView1 = [LOTAnimationView animationWithFilePath:filePath1];
-        _animationView1.contentMode = UIViewContentModeScaleToFill;
-        _animationView1.frame = CGRectMake(50, 170, 50, 44);
-        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openFantasyWindow)];
-        [_animationView1 addGestureRecognizer:tapGestureRecognizer];
-    }
-    
-    if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeNight) {
-        _animationView1.alpha = 0.5;
-    } else {
-        _animationView1.alpha = 1.0;
-    }
-    
-    NSDictionary *userInfo = notification.userInfo;
-    CGFloat progress = 0;
-    if (userInfo[@"progress"]) {
-        progress = [userInfo[@"progress"] floatValue];
-    }
-    
-    [TTTrackerWrapper eventV3:@"fantasy_window_countdown_start" params:@{@"progress":@(progress)}];
-    
-    ((TTTabbar *)(self.tabBar)).middleCustomItemView = _animationView1;
-    _animationView1.hidden = NO;
-    _animationView1.animationProgress = 0;
-    [TTTabBarManager sharedTTTabBarManager].customMiddleButton.hidden = YES;
-    [_animationView1 playFromProgress:progress toProgress:1 withCompletion:^(BOOL animationFinished) {
-        if (animationFinished) {
-            UIView *customView = [TTTabBarManager sharedTTTabBarManager].customMiddleButton;
-            ((TTTabbar *)(self.tabBar)).middleCustomItemView = customView;
-        } else {
-            _animationView1.hidden = YES;
-            UIView *customView = [TTTabBarManager sharedTTTabBarManager].customMiddleButton;
-            ((TTTabbar *)(self.tabBar)).middleCustomItemView = customView;
-            
-        }
-        [TTTabBarManager sharedTTTabBarManager].customMiddleButton.hidden = NO;
-    }];
-}
-
-- (void)openFantasyWindow
-{
-    if ([SSCommonLogic fantasyWindowResizeable]) {
-        [TTTrackerWrapper eventV3:@"launch_fantasy_window_from_countdown" params:@{@"resizeable":@"1"}];
-        
-        if ([[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:[TTTabBarManager sharedTTTabBarManager].middleModel.schema]]) {
-            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:[TTTabBarManager sharedTTTabBarManager].middleModel.schema] userInfo:nil];
-        }
-    } else {
-        [TTTrackerWrapper eventV3:@"launch_fantasy_window_from_countdown" params:@{@"resizeable":@"0"}];
-        
-        if ([[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:[TTTabBarManager sharedTTTabBarManager].middleModel.schema]]) {
-            [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:[TTTabBarManager sharedTTTabBarManager].middleModel.schema] userInfo:nil];
-        }
-    }
 }
 
 - (void)initTabbarBadge
@@ -638,9 +563,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kApplicationMainViewDidShowNotification object:nil];
-    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:kApplicationMainViewDidShowNotification object:nil];
     self.isInvisble = NO;
     
     //在这缓存tabbar label的尺寸，此时都已经布局好
@@ -679,42 +602,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //        vc.tabBarItem.selectedImage = [[UIImage themedImageNamed:[NSString stringWithFormat:@"%@_press",tabBarItemImageKeys[index]]] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 //        index++;
 //    }
-    
-    if (_animationView1.isAnimationPlaying) {
-        [_animationView1 pause];
-        CGFloat progress = _animationView1.animationProgress;
-        
-        if ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeNight) {
-            _animationView1.alpha = 0.5;
-        } else {
-            _animationView1.alpha = 1.0;
-        }
-        
-        //_animationView1.animationProgress = 0;
-        
-        ((TTTabbar *)(self.tabBar)).middleCustomItemView = _animationView1;
-        _animationView1.hidden = NO;
-        [TTTabBarManager sharedTTTabBarManager].customMiddleButton.hidden = YES;
-        [_animationView1 playFromProgress:progress toProgress:1 withCompletion:^(BOOL animationFinished) {
-            //            if (animationFinished) {
-            //                UIView *customView = [TTTabBarManager sharedTTTabBarManager].customMiddleButton;
-            //                ((TTTabbar *)(self.tabBar)).middleCustomItemView = customView;
-            //            }
-            
-            if (animationFinished) {
-                UIView *customView = [TTTabBarManager sharedTTTabBarManager].customMiddleButton;
-                ((TTTabbar *)(self.tabBar)).middleCustomItemView = customView;
-            } else {
-                _animationView1.hidden = YES;
-                UIView *customView = [TTTabBarManager sharedTTTabBarManager].customMiddleButton;
-                ((TTTabbar *)(self.tabBar)).middleCustomItemView = customView;
-                
-            }
-            [TTTabBarManager sharedTTTabBarManager].customMiddleButton.hidden = NO;
-            
-            
-        }];
-    }
 }
 
 #pragma mark - TTAccountMulticastProtocol
@@ -1203,17 +1090,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             [AKImageAlertManager checkProfileImageAlertShowIfNeed];
         }
     }
-    else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
-//        // 单击刷新。首次切到tab不刷
-//        static BOOL firstLoad = YES;
-//        if (!firstLoad) {
-//            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
-//        } else {
-//            firstLoad = NO;
-//        }
-        [self trackBadgeWithLabel:@"click" tabBarTag:kAKTabActivityTabKey];
-        
-    }else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
+//    else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
+////        // 单击刷新。首次切到tab不刷
+////        static BOOL firstLoad = YES;
+////        if (!firstLoad) {
+////            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
+////        } else {
+////            firstLoad = NO;
+////        }
+//        [self trackBadgeWithLabel:@"click" tabBarTag:kAKTabActivityTabKey];
+//
+//    }
+    else if ([[self currentTabIdentifier] isEqualToString:kFHouseFindTabKey]) {
         
         [self trackBadgeWithTabBarTag:kFHouseFindTabKey enter_type:@"click_tab"];
         
@@ -1285,9 +1173,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         else if([[self currentTabIdentifier] isEqualToString:kTTTabHTSTabKey]) {
             [self keepTapShortVideoTab];
         }
-        else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
-            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
-        }
+//        else if ([[self currentTabIdentifier] isEqualToString:kAKTabActivityTabKey]) {
+//            [[AKActivityTabManager sharedManager] reloadActivityTabViewController];
+//        }
     } else {
         if (self.tabbarTipView) {
             [self.tabbarTipView removeFromSuperview];
@@ -1806,8 +1694,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
              kTTTabFollowTabKey:@"follow",
              kTTTabHTSTabKey:kTTUGCVideoCategoryID,
              kTTTabWeitoutiaoTabKey:@"weitoutiao",
-             kTTTabMineTabKey:@"mine",
-             kAKTabActivityTabKey:@"tab_task"
+             kTTTabMineTabKey:@"mine"
+//             kAKTabActivityTabKey:@"tab_task"
              };
 }
 

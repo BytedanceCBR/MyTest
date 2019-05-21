@@ -45,7 +45,10 @@
     BOOL needCommonParams = [param tt_boolValueForKey:@"needCommonParams"];
     
     if (!url.length) {
-        TTBRIDGE_CALLBACK_WITH_MSG(TTBridgeMsgFailed, @"url不能为空");
+        callback(TTBridgeMsgFailed, @{ @"response": @"",
+                                                  @"status": @(0),
+                                                  @"code":@(0),
+                                                  });
         return;
     }
     

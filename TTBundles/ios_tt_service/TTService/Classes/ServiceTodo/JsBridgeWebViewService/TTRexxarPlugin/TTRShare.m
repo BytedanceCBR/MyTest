@@ -81,13 +81,8 @@
     } else {
         [self startShareTextWithData:param];
     }
-    
-    if ([SSCommonLogic enableWXShareCallback]) {
-        self.callback = callback;
-    } else {
-        //走原逻辑 直接回调
-        callback(TTRJSBMsgSuccess, @{@"code": @1});
-    }
+    //走原逻辑 直接回调
+    callback(TTRJSBMsgSuccess, @{@"code": @1});
     return;
 }
 

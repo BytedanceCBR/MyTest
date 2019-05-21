@@ -232,7 +232,7 @@
 
 - (BOOL)shouldShowPrivateMessage
 {
-    if(self.infoModel.show_private_letter.integerValue == 1 && [SSCommonLogic isIMServerEnable] && self.infoModel.is_blocking.integerValue != 1 && ![self.infoModel.user_id isEqualToString:self.infoModel.current_user_id]) {
+    if(self.infoModel.show_private_letter.integerValue == 1 && self.infoModel.is_blocking.integerValue != 1 && ![self.infoModel.user_id isEqualToString:self.infoModel.current_user_id]) {
         return YES;
     }
     return NO;

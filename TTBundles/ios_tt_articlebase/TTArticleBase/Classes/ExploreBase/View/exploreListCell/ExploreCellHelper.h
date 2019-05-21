@@ -151,10 +151,6 @@ typedef NS_ENUM(NSUInteger, ExploreCellViewType) {
 // 短内容cell是否显示底部按钮栏
 + (BOOL)shouldShowEssayActionButtons:(NSString *)categoryID;
 
-// 视频频道顶踩全局控制
-+ (BOOL)isShowListDig;
-+ (void)setShowListDig:(NSInteger)bShow;
-
 /**
  *  用户是否在高级调试中手动设置过Feed UGC样式开关
  *
