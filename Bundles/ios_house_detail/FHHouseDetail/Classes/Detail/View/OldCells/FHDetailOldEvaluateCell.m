@@ -50,6 +50,9 @@
     //
     FHDetailOldEvaluateModel *model = (FHDetailOldEvaluateModel *)data;
     if (model.evaluationInfo) {
+        if (model.evaluationInfo.title.length > 0) {
+            [_headerView updateTitle:model.evaluationInfo.title];
+        }
         [self.headerView updateStarsCount:[model.evaluationInfo.totalScore integerValue]];
         if (model.evaluationInfo.subScores.count > 0) {
             UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -97,7 +100,6 @@
 
 - (void)setupUI {
     _headerView = [[FHDetailStarHeaderView alloc] init];
-    // add by zyk 是否有title 确认
     [_headerView updateTitle:@"小区评测"];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -112,7 +114,7 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView).offset(66);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.contentView).offset(-20);
+        make.bottom.mas_equalTo(self.contentView).offset(-30);
     }];
 }
 

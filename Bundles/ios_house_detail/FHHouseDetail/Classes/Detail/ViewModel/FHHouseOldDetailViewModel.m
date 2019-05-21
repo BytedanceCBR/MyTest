@@ -447,9 +447,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     // 小区评测
     if (model.data.neighborhoodInfo.evaluationInfo) {
-//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//        [self.items addObject:grayLine];
         FHDetailOldEvaluateModel *infoModel = [[FHDetailOldEvaluateModel alloc] init];
         infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
         infoModel.log_pb = model.data.neighborhoodInfo.logPb;
