@@ -42,21 +42,21 @@
             case 0:
                 itemView.titleLabel.text = model.comfortInfo.buildingAge;
                 itemView.subtitleLabel.text = @"建议在 0-5年";
-                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                itemView.icon.image = [UIImage imageNamed:@"detail_comfort_1"];
                 break;
             case 1:
                 itemView.titleLabel.text = model.comfortInfo.houseCount;
                 itemView.subtitleLabel.text = @"建议在 3000-5000户";
-                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                itemView.icon.image = [UIImage imageNamed:@"detail_comfort_2"];
                 break;
             case 2:
                 itemView.titleLabel.text = model.comfortInfo.plotRatio;
                 itemView.subtitleLabel.text = @"越低越好,最高不超过5";
-                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                itemView.icon.image = [UIImage imageNamed:@"detail_comfort_3"];
                 break;
             case 3:
                 itemView.titleLabel.text = model.comfortInfo.propertyFee;
-                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                itemView.icon.image = [UIImage imageNamed:@"detail_comfort_4"];
                 itemView.subtitleLabel.text = @"越贵服务等级越高";
                 break;
             default:
