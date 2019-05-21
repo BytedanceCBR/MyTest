@@ -26,7 +26,7 @@
 #import "ExploreExtenstionDataHelper.h"
 #import "SSUserSettingManager.h"
 //#import "TTContactsUserDefaults.h"
-#import "SSIntroduceViewController.h"
+//#import "SSIntroduceViewController.h"
 //#import "SSADManager.h"
 #import "TTAdSplashMediator.h"
 #import "NewsBaseDelegate.h"
@@ -211,25 +211,26 @@ TTAccountMulticastProtocol
 }
 
 - (void)showIntroductionView {
-    if ([SSUserSettingManager shouldShowIntroductionView]) {
-        wrapperTrackEvent(@"guide", @"show");
-    }
     
-    if ([SSCommonLogic accountABVersionEnabled]) {
-        TTAccountLoginViewControllerGuide *loginVCGuide = [TTAccountLoginViewControllerGuide new];
-        [[TTGuideDispatchManager sharedInstance_tt] addGuideViewItem:loginVCGuide withContext:self];
-    }
-    else {
-        NSString * className = TTLogicString(@"IntroduceViewController", @"SSIntroduceViewController");
-        Class cls = NSClassFromString(className);
-        if (!cls) {
-            cls = [SSIntroduceViewController class];
-        }
-        UIViewController<TTGuideProtocol> * introduceViewController = [[cls alloc] init];
-        if ([introduceViewController isKindOfClass:[SSIntroduceViewController class]]) {
-            [[TTGuideDispatchManager sharedInstance_tt] addGuideViewItem:introduceViewController withContext:SharedAppDelegate];
-        }
-    }
+//    if ([SSUserSettingManager shouldShowIntroductionView]) {
+//        wrapperTrackEvent(@"guide", @"show");
+//    }
+//    
+//    if ([SSCommonLogic accountABVersionEnabled]) {
+//        TTAccountLoginViewControllerGuide *loginVCGuide = [TTAccountLoginViewControllerGuide new];
+//        [[TTGuideDispatchManager sharedInstance_tt] addGuideViewItem:loginVCGuide withContext:self];
+//    }
+//    else {
+//        NSString * className = TTLogicString(@"IntroduceViewController", @"SSIntroduceViewController");
+//        Class cls = NSClassFromString(className);
+//        if (!cls) {
+//            cls = [SSIntroduceViewController class];
+//        }
+//        UIViewController<TTGuideProtocol> * introduceViewController = [[cls alloc] init];
+//        if ([introduceViewController isKindOfClass:[SSIntroduceViewController class]]) {
+//            [[TTGuideDispatchManager sharedInstance_tt] addGuideViewItem:introduceViewController withContext:SharedAppDelegate];
+//        }
+//    }
 }
 
 - (void)appStoreStarScoreView:(NSNotification *)notice

@@ -29,12 +29,12 @@
     NSMutableArray *itemArray = [NSMutableArray array];
     STTableViewCellItem *item_39 = [[STTableViewCellItem alloc] initWithTitle:@"查看命中的实验组和配置参数,vid不对请忽略" target:self action:@selector(_showABTestInfo)];
     item_39.switchStyle = NO;
-    item_39.checked = [SSCommonLogic isThirdTabHTSEnabled];
+    item_39.checked = NO;
     [itemArray addObject:item_39];
     
     STTableViewCellItem *item_40 = [[STTableViewCellItem alloc] initWithTitle:@"清空该设备的实验数据" target:self action:@selector(_showResetABStorage)];
     item_40.switchStyle = NO;
-    item_40.checked = [SSCommonLogic isForthTabHTSEnabled];
+    item_40.checked = NO;
     [itemArray addObject:item_40];
     STTableViewSectionItem *section = [[STTableViewSectionItem alloc] initWithSectionTitle:@"AB实验-vid暂时需要对比Libra和app_log核对" items:itemArray];
     [dataSource addObject:section];

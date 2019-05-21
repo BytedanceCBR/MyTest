@@ -209,7 +209,6 @@ extern NSString *const kFHToastCountKey;
     }
     NSString *houseId = customHouseId.length > 0 ? customHouseId : configModel.houseId;
     NSString *from = fromStr.length > 0 ? fromStr : [self fromStrByHouseType:configModel.houseType];
-    // add by zjing for test
     NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
     [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phone from:from agencyList:selectAgencyList completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         

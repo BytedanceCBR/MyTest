@@ -31,8 +31,6 @@
 #import "TTVVideoPlayerStateStore.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 
-extern NSString *ttvs_playerFinishedRelatedType(void);
-
 static const CGFloat shareButtonWidth     =  44;
 static const CGFloat shareButtonHeight    =  65;
 static const CGFloat KMoreButtonCenterY   =  22;
@@ -51,7 +49,6 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern BOOL ttvs_isShareIndividuatioEnable(void);
-extern BOOL ttvs_isPlayerShowRelated(void);
 
 #define kSCreenSizeWidth fminf([TTUIResponderHelper screenSize].width, [TTUIResponderHelper screenSize].height)
 #define KShareItemsPadding (([TTDeviceHelper is736Screen]) ? 24 : (0.053 * (kSCreenSizeWidth)))
@@ -197,16 +194,7 @@ extern BOOL ttvs_isPlayerShowRelated(void);
         [_containerView addSubview:_replayButton];
 
         [_moreButton addTarget:self action:@selector(moreButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        self.hasSettingRelated = ttvs_isPlayerShowRelated();
-        if ([ttvs_playerFinishedRelatedType() isEqualToString:@"only_title"]) {
-            _relatedView = [[TTVPlayerTipRelatedImageIcon alloc] initWithFrame:CGRectMake(0, 0, self.width, 40)];
-        }else if ([ttvs_playerFinishedRelatedType() isEqualToString:@"change_colour"]){
-            _relatedView = [[TTVPlayerTipRelatedRed alloc] initWithFrame:CGRectMake(0, 0, self.width, 40)];
-        }else if ([ttvs_playerFinishedRelatedType() isEqualToString:@"with_picture"]){
-            _relatedView = [[TTVPlayerTipRelatedImageIcon alloc] initWithFrame:CGRectMake(0, 0, self.width, 64)];
-        }else if ([ttvs_playerFinishedRelatedType() isEqualToString:@"with_icon"]){
-            _relatedView = [[TTVPlayerTipRelatedImageIcon alloc] initWithFrame:CGRectMake(0, 0, self.width, 38)];
-        }
+        self.hasSettingRelated = NO;
         if (_relatedView) {
             self.hasSettingRelated = YES;
         }
@@ -318,7 +306,7 @@ extern BOOL ttvs_isPlayerShowRelated(void);
     if (self.playerStateStore.state.isInDetail &&
         !self.playerStateStore.state.isFullScreen &&
         [UIApplication sharedApplication].statusBarHidden == YES) {
-        NSInteger diff = [ttvs_playerFinishedRelatedType() isEqualToString:@"change_colour"] ? 10 : 15;
+        NSInteger diff = 15;
         _containerView.frame = CGRectMake(0, diff, self.width, self.height - _bannerHeight - diff);
     }else{
         _containerView.frame = CGRectMake(0, 0, self.width, self.height - _bannerHeight);

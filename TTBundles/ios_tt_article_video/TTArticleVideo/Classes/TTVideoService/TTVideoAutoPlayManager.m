@@ -201,7 +201,7 @@ static TTVideoAutoPlayManager *manager = nil;
                     CGFloat movieTopPartInScreen = movieViewTopShowHeight / frameInScreen.size.height;
                     CGFloat movieViewbottomShowHeight = topInset - 36 + frameInScreen.size.height;
                     CGFloat moviebottomPartInScreen = movieViewbottomShowHeight / frameInScreen.size.height;
-                    BOOL isVideoAdAutoPlayedWhenHalfShow = [TTDeviceHelper isPadDevice] ? NO : [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_autoplayad_halfshow" defaultValue:@NO freeze:NO] boolValue];
+                    BOOL isVideoAdAutoPlayedWhenHalfShow = NO;
                     
                     if ([self cellIsAutoPlaying:cell]) {
                         

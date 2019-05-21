@@ -40,24 +40,6 @@
 - (void)toSwizzled_onResp:(BaseReq *)resp {
     
     [self toSwizzled_onResp:resp];
-    
-    if ([SSCommonLogic enableWXShareCallback]) {
-        if (self.ttServiceDelegate && [self.ttServiceDelegate respondsToSelector:@selector(weChatShare:oldSharedWithError:customCallbackUserInfo:)]) {
-            
-            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-            
-            [userInfo setValue:[resp valueForKey:@"errCode"] forKey:@"WXCode"];
-            
-            NSMutableDictionary *callBackInfo = [NSMutableDictionary dictionary];
-            
-            [callBackInfo setValue:@(YES) forKey:@"from_swzziled"];
-            
-            NSError *error = [NSError errorWithDomain:TTWeChatShareErrorDomain code:kTTWeChatShareErrorTypeOther userInfo:[userInfo copy]];
-            
-            //走ttServiceDelegate回调
-            [self.ttServiceDelegate weChatShare:self oldSharedWithError:error customCallbackUserInfo:callBackInfo];
-        }
-    }
 }
 
 #pragma mark - property

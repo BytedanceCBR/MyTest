@@ -35,7 +35,6 @@ typedef NS_ENUM(NSUInteger, TTServiceStartupType) {
     TTServiceStartupTypeIESPlayer,//IESPlayer
     TTServiceStartupTypeAkActivityTab,//爱看任务tab启动任务
     TTServiceStartupTypeAkLaunch,//爱看通用启动任务
-    TTServiceStartupTypeHMDMonitor,//Heimdallr monitor
 };
 
 + (TTStartupServiceGroup *)serviceGroup;

@@ -8,7 +8,6 @@
 
 #import "AWEVideoCommentCell.h"
 #import "AWEVideoPlayAccountBridge.h"
-#import "HTSVideoPlayTrackerBridge.h"
 #import "AWEVideoDetailManager.h"
 #import "BTDResponder.h"
 #import "UIImageView+WebCache.h"

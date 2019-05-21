@@ -24,7 +24,7 @@ typedef NS_ENUM(NSUInteger, AWEVideoPlayShareBridgeShareType) {
 @class TTShortVideoModel;
 @interface AWEVideoPlayShareBridge : NSObject
 
-+ (void)shareVideo:(TTShortVideoModel *)videoModel shareType:(AWEVideoPlayShareBridgeShareType)shareType controller:(nullable UIViewController *)controller;
+//+ (void)shareVideo:(TTShortVideoModel *)videoModel shareType:(AWEVideoPlayShareBridgeShareType)shareType controller:(nullable UIViewController *)controller;
 
 + (void)startListenShareWithBlock:(void(^)(id _Nullable params))block;
 

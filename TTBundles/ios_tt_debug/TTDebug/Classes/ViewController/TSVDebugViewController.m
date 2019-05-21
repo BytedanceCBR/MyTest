@@ -23,17 +23,6 @@
     NSMutableArray *dataSource = [NSMutableArray array];
 
     NSMutableArray *itemArray = [NSMutableArray array];
-    STTableViewCellItem *item_39 = [[STTableViewCellItem alloc] initWithTitle:@"第三个tab切换为小视频tab" target:self action:NULL];
-    item_39.switchStyle = YES;
-    item_39.switchAction = @selector(_switchToThirdTabHTS:);
-    item_39.checked = [SSCommonLogic isThirdTabHTSEnabled];
-    [itemArray addObject:item_39];
-
-    STTableViewCellItem *item_40 = [[STTableViewCellItem alloc] initWithTitle:@"第四个tab切换为小视频tab" target:self action:NULL];
-    item_40.switchStyle = YES;
-    item_40.switchAction = @selector(_switchForthTabHtsTab:);
-    item_40.checked = [SSCommonLogic isForthTabHTSEnabled];
-    [itemArray addObject:item_40];
 
     STTableViewCellItem *item_43 = [[STTableViewCellItem alloc] initWithTitle:@"小视频开启上下滑动（进详情页前切换才生效）" target:self action:NULL];
     item_43.switchStyle = YES;
@@ -64,14 +53,6 @@
     [dataSource addObject:section];
 
     self.dataSource = dataSource;
-}
-
-- (void)_switchToThirdTabHTS:(UISwitch *)uiswitch {
-    [SSCommonLogic setHTSTabSwitch:uiswitch.isOn ? 2:0];
-}
-
-- (void)_switchForthTabHtsTab:(UISwitch *)uiswitch {
-    [SSCommonLogic setHTSTabSwitch:uiswitch.isOn ? 1:0];
 }
 
 - (void)_switchToScrollDirectionVertical:(UISwitch *)uiswitch

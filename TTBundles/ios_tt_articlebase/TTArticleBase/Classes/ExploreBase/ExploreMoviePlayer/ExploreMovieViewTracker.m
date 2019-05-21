@@ -1161,36 +1161,10 @@ needOneFrameTime:(BOOL)needOneFrameTime
 
 - (void)mzTrackVideoUrls:(NSArray*)trackUrls adView:(UIView*)adView
 {
-    if ([SSCommonLogic isMZSDKEnable]) {
-        if (self.trackSDK == 1) {
-            UIView* superView = adView.superview;
-            while (superView) {
-                if ([superView isKindOfClass:NSClassFromString(@"TTLayOutCellViewBase")]) {
-                    self.trackSDKView = superView;
-                    break;
-                }
-                superView = superView.superview;
-            }
-            if (self.trackSDKView) {
-                if (!SSIsEmptyArray(trackUrls)) {
-                    self.timerId = [MZMonitor adTrackVideo:trackUrls.firstObject adView:self.trackSDKView];
-                    
-                }
-            }
-        }
-    }
 }
 
 - (void)mzStopTrack
 {
-    if ([SSCommonLogic isMZSDKEnable]) {
-        if (self.trackSDK == 1) {
-            if (self.trackSDKView) {
-                [MZMonitor adTrackStop:self.timerId];
-                [MZMonitor retryCachedRequests];
-            }
-        }
-    }
 }
 
 @end
