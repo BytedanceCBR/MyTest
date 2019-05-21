@@ -201,6 +201,13 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.searchType == FHSugListSearchTypeNeighborDealList) {
+        if (indexPath.row == self.sugListData.count - 1) {
+            return 61;
+        } else {
+            return 41;
+        }
+    }
     return 50;
 }
 
