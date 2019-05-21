@@ -54,10 +54,9 @@
         self.subtitleLabel.text = model.buySuggestion.content;
     }
     if (model.buySuggestion.score.integerValue > 0) {
-        self.starView.hidden = NO;
         [self.starView updateStarsCountWithoutLabel:model.buySuggestion.score.integerValue];
     }else {
-        self.starView.hidden = YES;
+        [self.starView updateStarsCountWithoutLabel:0];
     }
 }
 
