@@ -10,11 +10,12 @@
 #import <FHHouseBase/FHUtils.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
+#import "FHDetailComfortItemView.h"
 
 @interface FHDetailOldComfortCell ()
 
 @property(nonatomic, strong) FHDetailStarHeaderView *headerView;
-@property(nonatomic , strong) UIView *bgView;
+@property(nonatomic, strong) UIView *bgView;
 
 @end
 
@@ -29,7 +30,59 @@
     [self.headerView updateTitle:model.comfortInfo.title];
     [self.headerView updateStarsCount:model.comfortInfo.score.integerValue];
     
+    for (UIView *subview in self.bgView.subviews) {
+        [subview removeFromSuperview];
+    }
     
+    UIView *lastView = nil;
+    for (NSInteger index = 0; index < 4; index++) {
+        FHDetailComfortItemView *itemView = [[FHDetailComfortItemView alloc]initWithFrame:CGRectZero];
+        [self.bgView addSubview:itemView];
+        switch (index) {
+            case 0:
+                itemView.titleLabel.text = model.comfortInfo.buildingAge;
+                itemView.subtitleLabel.text = @"建议在 0-5年";
+                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                break;
+            case 1:
+                itemView.titleLabel.text = model.comfortInfo.houseCount;
+                itemView.subtitleLabel.text = @"建议在 3000-5000户";
+                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                break;
+            case 2:
+                itemView.titleLabel.text = model.comfortInfo.plotRatio;
+                itemView.subtitleLabel.text = @"越低越好,最高不超过5";
+                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                break;
+            case 3:
+                itemView.titleLabel.text = model.comfortInfo.propertyFee;
+                itemView.icon.image = [UIImage imageNamed:@"detail_entrance_icon"];
+                itemView.subtitleLabel.text = @"越贵服务等级越高";
+                break;
+            default:
+                break;
+        }
+        [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+            // first column
+            if (index / 2 == 0) {
+                make.top.mas_equalTo(20);
+            }else {
+                make.top.mas_equalTo(lastView.mas_bottom).mas_offset(20);
+                make.bottom.mas_equalTo(-20);
+            }
+            // first line
+            if (index % 2 == 0) {
+                make.left.mas_equalTo(0);
+            } else {
+                make.left.mas_equalTo(lastView.mas_right);
+                make.right.mas_equalTo(0);
+            }
+            if (lastView) {
+                make.width.height.mas_equalTo(lastView);
+            }
+        }];
+        lastView = itemView;
+    }
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
