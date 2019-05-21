@@ -61,6 +61,7 @@
             FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:122 cellIdentifier:identifier cellCls:[FHDetailOldEvaluationItemCollectionCell class] datas:model.evaluationInfo.subScores];
             [self.containerView addSubview:colView];
             colView.backgroundColor = [UIColor clearColor];
+            colView.collectionContainer.backgroundColor = [UIColor clearColor];
             __weak typeof(self) wSelf = self;
             colView.clickBlk = ^(NSInteger index) {
                 [wSelf collectionCellClick:index];
@@ -96,16 +97,14 @@
 
 - (void)setupUI {
     _headerView = [[FHDetailStarHeaderView alloc] init];
+    // add by zyk 是否有title 确认
     [_headerView updateTitle:@"小区评测"];
-//    _headerView.label.text = @"小区评测";
-//    _headerView.isShowLoadMore = YES;
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo(110);
     }];
-    // add by zyk 记得点击事件
-//    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.headerView addTarget:self action:@selector(moreButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     _containerView.backgroundColor = [UIColor clearColor];
