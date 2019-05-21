@@ -24,9 +24,9 @@
 #pragma mark - UIApplicationDelegate Method
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if (![SSCommonLogic shouldUseOptimisedLaunch]) {
-            [[self class] addFeedbackLaunchCheck];
-        }
+//        if (![SSCommonLogic shouldUseOptimisedLaunch]) {
+//            [[self class] addFeedbackLaunchCheck];
+//        }
     });
 }
 

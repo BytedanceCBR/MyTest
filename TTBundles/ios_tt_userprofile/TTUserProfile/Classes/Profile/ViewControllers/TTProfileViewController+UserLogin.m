@@ -9,7 +9,6 @@
 #import "TTProfileViewController+UserLogin.h"
 #import <TTAccountBusiness.h>
 #import "ArticleBadgeManager.h"
-#import "PGCAccountManager.h"
 #import "TTSettingMineTabGroup.h"
 #import "TTSettingMineTabManager.h"
 #import "TTSettingMineTabEntry.h"

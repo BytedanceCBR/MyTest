@@ -178,10 +178,7 @@ static const CGFloat kPlayLPadding = 14;
 
 - (UIButton *)prePlayBtn {
     
-    if (![TTVPlayerSettingUtility tt_video_detail_playlast_enable]) {
-        
-        return nil;
-    }
+    return nil;
     
     if (!_prePlayBtn) {
         
@@ -190,7 +187,7 @@ static const CGFloat kPlayLPadding = 14;
         _prePlayBtn.enabled = NO;
         _prePlayBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
         [_prePlayBtn setImage:img forState:UIControlStateNormal];
-        NSString *text = ([TTVPlayerSettingUtility tt_video_detail_playlast_showtext]) ? NSLocalizedString(@"上一个", nil): @"";
+        NSString *text = @"";
         [_prePlayBtn setTitle:text forState:UIControlStateNormal];
         [_prePlayBtn setTitleColor:[UIColor tt_defaultColorForKey:kColorText12] forState:UIControlStateNormal];
         [_prePlayBtn setTitleColor:[UIColor tt_defaultColorForKey:kColorText12Highlighted] forState:UIControlStateHighlighted];

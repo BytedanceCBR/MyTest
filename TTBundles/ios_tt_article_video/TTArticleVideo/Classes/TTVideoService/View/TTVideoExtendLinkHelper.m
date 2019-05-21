@@ -164,41 +164,6 @@
     }
 }
 
-- (void)addNewUIWithParameters:(NSDictionary *)aparameters frame:(CGRect)frame parentViewController:(UIViewController *)parentViewController
-{
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:aparameters];
-    [parameters setValue:@(YES) forKey:@"disable_web_progressView"];
-    TTVideoLinkViewTopBar *topBar = [[TTVideoLinkViewTopBar alloc] initWithFrame:CGRectMake(0,-44 - self.safeArea, self.width, 44 + self.safeArea)];
-    topBar.alpha = 0;
-    topBar.title = [parameters valueForKey:@"wap_title"];
-    [topBar.backButton addTarget:self
-                          action:@selector(newClickBackButton)
-                forControlEvents:UIControlEventTouchUpInside];
-    [topBar.moreButton addTarget:self
-                          action:@selector(newClickMoreButton)
-                forControlEvents:UIControlEventTouchUpInside];
-    self.topBar = topBar;
-    self.fullFrame = CGRectMake(self.fullFrame.origin.x, self.fullFrame.origin.y + topBar.height, self.fullFrame.size.width, self.fullFrame.size.height - topBar.height);
-    _webViewController = [TTVideoExtendLinkHelper webControllerWithParameters:parameters isHiddenBar:YES];
-    [_webViewController willMoveToParentViewController:parentViewController];
-    [self addSubview:_webViewController.view];
-    _webViewController.view.frame = self.bounds;
-    [_webViewController didMoveToParentViewController:parentViewController];
-    
-    @weakify(self);
-    [self.KVOController observe:_webViewController.ssWebView.ssWebContainer.ssWebView.scrollView keyPath:@keypath(_webViewController.ssWebView.ssWebContainer.ssWebView.scrollView,contentOffset) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        @strongify(self);
-        self.isScrolledToTop = _webViewController.ssWebView.ssWebContainer.ssWebView.scrollView.contentOffset.y <= 0;
-    }];
-    
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
-    pan.delegate = self;
-    pan.minimumNumberOfTouches = 1;
-    pan.maximumNumberOfTouches = 1;
-    [self addGestureRecognizer:pan];
-    self.panGestureRecognizer = pan;
-}
-
 - (instancetype)initWithHalfFrame:(CGRect)halfFrame fullFrame:(CGRect)fullFrame parentViewController:(UIViewController *)parentViewController parameters:(NSDictionary *)parameters
 {
     CGRect frame = halfFrame;
@@ -209,21 +174,12 @@
         self.fullFrame = fullFrame;
         self.isScrolledToTop = YES;
         self.backgroundColorThemeKey = kColorBackground4;
-        if ([self isNewInteractive]) {
-            [self addNewUIWithParameters:parameters frame:frame parentViewController:parentViewController];
-        }else{
-            [self addOldUIWithParameters:parameters frame:frame parentViewController:parentViewController];
-        };
+        [self addOldUIWithParameters:parameters frame:frame parentViewController:parentViewController];
         if ([self.delegate respondsToSelector:@selector(videoLinkViewWillAppear)]) {
             [self.delegate videoLinkViewWillAppear];
         }
     }
     return self;
-}
-
-- (BOOL)isNewInteractive
-{
-    return [[[TTSettingsManager sharedManager] settingForKey:@"tt_extend_link_new_interactive" defaultValue:@(NO) freeze:YES] boolValue];
 }
 
 - (void)newClickMoreButton
@@ -322,17 +278,6 @@
             break;
     }
     
-}
-
-- (void)autoFull
-{
-    if ([self isNewInteractive]) {
-        [self fullAnimationIsAuto:YES sendTrack:YES];
-        self.hasEnterFull = YES;
-        CGFloat distancePercent = [self getDistancePercentWithStartFrame:self.fullFrame];
-        [self.delegate videoLinkViewScrollIsUp:YES percent:distancePercent];
-        [self showTopBarWithPercent:distancePercent];
-    }
 }
 
 - (CGFloat)getDistancePercentWithStartFrame:(CGRect)startFrame

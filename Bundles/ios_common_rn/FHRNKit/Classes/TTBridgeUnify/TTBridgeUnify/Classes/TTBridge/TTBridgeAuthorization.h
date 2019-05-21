@@ -28,4 +28,9 @@
 
 - (BOOL)engine:(id<TTBridgeEngine>)engine isAuthorizedMeta:(NSString *)meta domain:(NSString *)domain;
 
+@optional
+
+// 兼容 TTRexxar 的方法
+- (BOOL)engine:(id<TTBridgeEngine>)engine isAuthorizedEvent:(NSString *)eventName domain:(NSString *)domain;
+
 @end

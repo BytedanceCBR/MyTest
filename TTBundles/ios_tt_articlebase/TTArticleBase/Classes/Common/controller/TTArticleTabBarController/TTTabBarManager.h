@@ -28,7 +28,7 @@ extern NSString *kTTTabHTSTabKey;//火山小视频tab 标题&图片名
 extern NSString *kTTTabActivityTabKey; //常驻运营活动tab 标题&图片名
 extern NSString *kTTTabUnloginName; //我的tab未登录图片
 extern NSString *kTTTabFeedPublishName; //feed发布器图片
-extern NSString *kAKTabActivityTabKey;  //爱看任务tab
+//extern NSString *kAKTabActivityTabKey;  //爱看任务tab
 extern NSString *kFHouseFindTabKey; //房产找房key
 extern NSString *kFHouseMessageTabKey; //房产首页key
 extern NSString *kFHouseMineTabKey; //房产首页key

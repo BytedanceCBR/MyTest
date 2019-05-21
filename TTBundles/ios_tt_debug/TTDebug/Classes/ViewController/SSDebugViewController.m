@@ -81,7 +81,7 @@
 //#import "TTXiguaLiveManager.h"
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
-extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
+
 extern NSDictionary *ttvs_videoMidInsertADDict(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
@@ -192,12 +192,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item_14.checked = [SSCommonLogic isPosterADClickEnabled];
         [itemArray addObject:item_14];
         
-        STTableViewCellItem *item_15 = [[STTableViewCellItem alloc] initWithTitle:@"图集上下滑退出" target:self action:NULL];
-        item_15.switchStyle = YES;
-        item_15.switchAction = @selector(picturesSlideOutActionFired:);
-        item_15.checked = [SSCommonLogic appGallerySlideOutSwitchOn];
-        [itemArray addObject:item_15];
-        
         STTableViewCellItem *item_16 = [[STTableViewCellItem alloc] initWithTitle:@"日志加密" target:self action:NULL];
         item_16.switchStyle = YES;
         item_16.switchAction = @selector(_encryActionFired:);
@@ -242,31 +236,12 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         item_25.checked = [SSCommonLogic transitionAnimationEnable];
         [itemArray addObject:item_25];
         
-        STTableViewCellItem *item_27 = [[STTableViewCellItem alloc] initWithTitle:@"开启跳转到火山app" target:self action:NULL];
-        item_27.switchStyle = YES;
-        item_27.switchAction = @selector(_switchLaunchHuoShanAppEnabled:);
-        item_27.checked = [SSCommonLogic isLaunchHuoShanAppEnabled];
-        [itemArray addObject:item_27];
-        
         STTableViewCellItem *item_30 = [[STTableViewCellItem alloc] initWithTitle:@"图集开启随手拖动动画" target:self action:NULL];
         item_30.switchStyle = YES;
         item_30.switchAction = @selector(_switchImageTransitionAnimation:);
         item_30.checked = [SSCommonLogic imageTransitionAnimationEnable];
         [itemArray addObject:item_30];
-        
-        STTableViewCellItem *item_31 = [[STTableViewCellItem alloc] initWithTitle:@"视频详情播放上一个" target:self action:NULL];
-        item_31.switchStyle = YES;
-        item_31.switchAction = @selector(videoDetailPlayLastBtnEnableActionFired:);
-        item_31.checked = ttvs_isVideoDetailPlayLastEnabled();
-        [itemArray addObject:item_31];
-        
-        STTableViewCellItem *item_32 = [[STTableViewCellItem alloc] initWithTitle:@"播放上一个按钮样式" target:self action:NULL];
-        item_32.switchStyle = YES;
-        item_32.switchAction = @selector(videoDetailPlayLastShowTextActionFired:);
-        item_32.checked = [SSCommonLogic isVideoDetailPlayLastShowText];
-        [itemArray addObject:item_32];
-    
-        
+
         STTableViewCellItem *item_35 = [[STTableViewCellItem alloc] initWithTitle:@"重置上传通讯录状态" target:self action:@selector(_resetContactsActionFired)];
         [itemArray addObject:item_35];
     
@@ -445,26 +420,26 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         [dataSource addObject:relatedVideoSection];
     }
     
-    if (YES) {
-        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始时间(毫秒)" target:self action:nil];
-        item1.textFieldStyle = YES;
-        item1.textFieldAction = @selector(videoMidInsertADReqStartTimeChange:);
-        item1.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqStartTime()];
-        
-        STTableViewCellItem *item2 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始结束(毫秒)" target:self action:nil];
-        item2.textFieldStyle = YES;
-        item2.textFieldAction = @selector(videoMidInsertADReqEndTimeChange:);
-        item2.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqEndTime()];
-        
-        STTableViewCellItem *item3 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开关" target:self action:nil];
-        item3.switchStyle = YES;
-        item3.checked = [SSCommonLogic isRefactorGetDomainsEnabled];
-        item3.switchAction = @selector(videoMidInsertADReqActionFired:);
-        
-        STTableViewSectionItem *relatedVideoSection = [[STTableViewSectionItem alloc] initWithSectionTitle:@"中插广告" items:@[item1, item2, item3]];
-        
-        [dataSource addObject:relatedVideoSection];
-    }
+//    if (YES) {
+//        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始时间(毫秒)" target:self action:nil];
+//        item1.textFieldStyle = YES;
+//        item1.textFieldAction = @selector(videoMidInsertADReqStartTimeChange:);
+//        item1.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqStartTime()];
+//
+//        STTableViewCellItem *item2 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开始结束(毫秒)" target:self action:nil];
+//        item2.textFieldStyle = YES;
+//        item2.textFieldAction = @selector(videoMidInsertADReqEndTimeChange:);
+//        item2.textFieldContent = [NSString stringWithFormat:@"%ld", ttvs_getVideoMidInsertADReqEndTime()];
+//
+//        STTableViewCellItem *item3 = [[STTableViewCellItem alloc] initWithTitle:@"接口请求开关" target:self action:nil];
+//        item3.switchStyle = YES;
+//        item3.checked = [SSCommonLogic isRefactorGetDomainsEnabled];
+//        item3.switchAction = @selector(videoMidInsertADReqActionFired:);
+//
+//        STTableViewSectionItem *relatedVideoSection = [[STTableViewSectionItem alloc] initWithSectionTitle:@"中插广告" items:@[item1, item2, item3]];
+//
+//        [dataSource addObject:relatedVideoSection];
+//    }
     
     
     if (YES) {
@@ -512,15 +487,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
         [dataSource addObject:section13];
     }
     
-    if (YES) {
-        STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"贴片广告重播按钮开关" target:self action:NULL];
-        item1.switchStyle = YES;
-        item1.checked = [SSCommonLogic isVideoADReplayBtnEnabled];
-        item1.switchAction = @selector(VideoADReplayBtnEnabledActionFired:);
-        STTableViewSectionItem *sectionVideoAD = [[STTableViewSectionItem alloc] initWithSectionTitle:@"QA_video_AD" items:@[item1]];
-        
-        [dataSource addObject:sectionVideoAD];
-    }
     if (YES) {
         STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"跳转到详情gid" target:self action:nil];
         item1.textFieldStyle = YES;
@@ -820,10 +786,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [[TTSettingsManager sharedManager] updateSetting:@(uiswitch.isOn) forKey:@"transition_animation_enabled"];
 }
 
-- (void)_switchLaunchHuoShanAppEnabled:(UISwitch *)uiswitch {
-    [SSCommonLogic setLaunchHuoShanAppEnabled:uiswitch.isOn];
-}
-
 - (void)_switchImageTransitionAnimation:(UISwitch *)uiswitch {
     [SSCommonLogic setImageTransitionAnimationEnable:uiswitch.isOn];
 }
@@ -1062,11 +1024,6 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [SSCommonLogic setPosterADClickEnabled:uiswitch.isOn];
 }
 
-- (void)picturesSlideOutActionFired:(UISwitch *)uiswitch
-{
-    [SSCommonLogic setGallerySlideOutSwitch:@(uiswitch.isOn)];
-}
-
 -(void)_crashActionFired{
     NSArray * array = [NSArray array];
     NSLog(@"array=%@", array[3]);
@@ -1224,32 +1181,9 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     [[TTSettingsManager sharedManager] updateSetting:@(uiswitch.isOn) forKey:@"video_cell_show_share"];
 }
 
-- (void)VideoADReplayBtnEnabledActionFired:(UISwitch *)uiswitch
-{
-    if (uiswitch.isOn) {
-        [SSCommonLogic setVideoADReplayBtnEnabled:YES];
-    }
-    else {
-        [SSCommonLogic setVideoADReplayBtnEnabled:NO];
-    }
-}
 - (void)iCloudEableAction:(UISwitch *)uiswitch
 {
     [SSCommonLogic setIcloudBtnEnabled:uiswitch.isOn];
-}
-
-- (void)videoDetailPlayLastBtnEnableActionFired:(UISwitch *)uiswitch {
-    [[TTSettingsManager sharedManager] updateSetting:@(uiswitch.isOn) forKey:@"tt_video_detail_playlast_enable"];
-}
-
-- (void)videoDetailPlayLastShowTextActionFired:(UISwitch *)uiswitch {
-    
-    if (uiswitch.isOn) {
-        [SSCommonLogic setVideoDetailPlayLastShowText:YES];
-    }
-    else {
-        [SSCommonLogic setVideoDetailPlayLastShowText:NO];
-    }
 }
 
 - (void)videoDetailRelatedStyleChange:(UITextField *)field{
@@ -1260,31 +1194,31 @@ extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
     }
 }
 
-- (void)videoMidInsertADReqStartTimeChange:(UITextField *)field {
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *result = [formatter numberFromString:field.text];
-    if (result) {
-        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
-        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_start"];
-        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
-    }
-}
-
-- (void)videoMidInsertADReqEndTimeChange:(UITextField *)field {
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    NSNumber *result = [formatter numberFromString:field.text];
-    if (result) {
-        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
-        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_end"];
-        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
-    }
-}
-
-- (void)videoMidInsertADReqActionFired:(UISwitch *)uiswitch {
-    NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
-    [videoMidInsertADMutableDict setObject:@(uiswitch.isOn) forKey:@"tt_video_midpatch_req_not_ad"];
-    [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
-}
+//- (void)videoMidInsertADReqStartTimeChange:(UITextField *)field {
+//    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+//    NSNumber *result = [formatter numberFromString:field.text];
+//    if (result) {
+//        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
+//        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_start"];
+//        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
+//    }
+//}
+//
+//- (void)videoMidInsertADReqEndTimeChange:(UITextField *)field {
+//    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+//    NSNumber *result = [formatter numberFromString:field.text];
+//    if (result) {
+//        NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
+//        [videoMidInsertADMutableDict setObject:result forKey:@"tt_video_midpatch_req_end"];
+//        [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
+//    }
+//}
+//
+//- (void)videoMidInsertADReqActionFired:(UISwitch *)uiswitch {
+//    NSMutableDictionary *videoMidInsertADMutableDict = [ttvs_videoMidInsertADDict() mutableCopy];
+//    [videoMidInsertADMutableDict setObject:@(uiswitch.isOn) forKey:@"tt_video_midpatch_req_not_ad"];
+//    [[TTSettingsManager sharedManager] updateSetting:[videoMidInsertADMutableDict copy] forKey:@"tt_video_midpatch_settings"];
+//}
 
 - (void)forceRefreshSettings
 {

@@ -22,15 +22,10 @@
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
-    if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [[self class] setupSDWebImageCacheSize];
-        });
-    } else {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [[self class] setupSDWebImageCacheSize];
-    }
-    
-    
+    });
+
     if ([SSCommonLogic enableImageOptimizeStrategy]) {
         [TTWebImageManager shareManger].shouldUseOptimizeStrategy = YES;
     }

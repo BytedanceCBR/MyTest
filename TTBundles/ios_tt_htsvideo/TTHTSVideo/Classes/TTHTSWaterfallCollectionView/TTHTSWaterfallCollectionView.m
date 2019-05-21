@@ -952,9 +952,8 @@ TTAccountMulticastProtocol
                                              }
 
                                              if (isResponseFromRemote) {
-                                                 if (![[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_refresh_tip" defaultValue:@1 freeze:NO] boolValue]) {
-                                                     tip = nil;
-                                                 }
+
+                                                 tip = nil;
                                                  [self tt_endUpdataData:NO error:nil tip:tip duration:duration tipTouchBlock:nil];
 
                                                  if (getMore) {

@@ -55,7 +55,7 @@ void ttvs_setIsVideoNewRotateEnabled(BOOL enabled)
 
 NSInteger ttvs_isVideoFeedCellHeightAjust(void)
 {
-    return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_feed_cellui_height_adjust" defaultValue:@0 freeze:NO] integerValue];
+    return 0;
 }
 
 NSInteger ttvs_autoPlayModeServerSetting(void)
@@ -97,44 +97,16 @@ BOOL ttvs_isVideoCellShowShareEnabled(void)
 //    return [[[TTSettingsManager sharedManager] settingForKey:@"video_cell_show_share" defaultValue:@NO freeze:NO] boolValue];
 }
 
-/**
- 0:simple 1:red 2:image icon 3:app icon
- ("only_title", "查看更多", ),
- ("change_colour", "立即下载", ),
- ("with_icon", "立即下载", ),
- ("with_picture", "立即下载", ),
- 文案做成可配置：查看更多和立即下载，做成更明确的下载提示
- 四种样式：banner_type: only_title, change_colour, with_icon, with_picture
- */
-extern NSString * ttvs_playerFinishedRelatedType(void)
-{
-    NSDictionary *dic = (NSDictionary *)[[TTSettingsManager sharedManager] settingForKey:@"video_finish_download" defaultValue:@{} freeze:NO];
-    return [dic valueForKey:@"style"];
-}
-
-BOOL ttvs_isVideoDetailPlayLastEnabled(void)
-{
-    if ([TTSandBoxHelper isInHouseApp]) {
-        return YES;
-    }else{
-        return [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_detail_playlast_enable" defaultValue:@NO freeze:NO] boolValue];
-    }
-}
-
-NSDictionary *ttvs_videoMidInsertADDict(void) {
-    return [[TTSettingsManager sharedManager] settingForKey:@"tt_video_midpatch_settings" defaultValue:@{} freeze:NO];
-}
-
 BOOL ttvs_videoMidInsertADEnable(void) {
-    return [ttvs_videoMidInsertADDict() tta_boolForKey:@"tt_video_midpatch_req_not_ad"];
+    return NO;
 }
 
 NSInteger ttvs_getVideoMidInsertADReqStartTime(void) {
-    return [ttvs_videoMidInsertADDict() integerValueForKey:@"tt_video_midpatch_req_start" defaultValue:15000];
+    return 15000;
 }
 
 NSInteger ttvs_getVideoMidInsertADReqEndTime(void) {
-    return [ttvs_videoMidInsertADDict() integerValueForKey:@"tt_video_midpatch_req_end" defaultValue:50000];
+    return 50000;
 }
 
 //播放器内增加分享、更多入口 0:无 1:全屏右上角显示分享按钮 2:全屏右上角展示更多按钮
@@ -152,7 +124,7 @@ NSInteger ttvs_isVideoShowDirectShare(void)
 
 BOOL ttvs_isVideoDetailCenterStrongShare(void)
 {
-    return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_detail_share_strong" defaultValue:@NO freeze:NO] boolValue];
+    return YES;
 }
 
 BOOL ttvs_isVideoFeedshowDirectShare(void)
@@ -160,20 +132,9 @@ BOOL ttvs_isVideoFeedshowDirectShare(void)
     return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_video_feed_enable" defaultValue:@NO freeze:NO] boolValue];
 }
 
-extern BOOL ttvs_isPlayerShowRelated(void)
-{
-    if ([ttvs_playerFinishedRelatedType() isEqualToString:@"only_title"] ||
-        [ttvs_playerFinishedRelatedType() isEqualToString:@"change_colour"] ||
-        [ttvs_playerFinishedRelatedType() isEqualToString:@"with_icon"] ||
-        [ttvs_playerFinishedRelatedType() isEqualToString:@"with_picture"]) {
-        return YES;
-    }
-    return NO;
-}
-
 BOOL ttvs_isVideoPlayFullScreenShowDirectShare(void)
 {
-    return [TTDeviceHelper isPadDevice] ? 0 : [[[TTSettingsManager sharedManager] settingForKey:@"tt_video_fullscreen_share_enable" defaultValue:@NO freeze:NO] boolValue];
+    return NO;
 }
 
 BOOL ttvs_enabledVideoRecommend(void)
@@ -203,12 +164,12 @@ BOOL ttvs_playerImageScaleEnable(void)
 
 BOOL ttvs_threeTopBarEnable(void)
 {
-    return [[[TTSettingsManager sharedManager] settingForKey:@"tt_three_top_bar" defaultValue:@YES freeze:YES] boolValue];
+    return NO;
 }
 
 BOOL ttvs_isShareIndividuatioEnable(void)
 {
-    return [TTDeviceHelper isPadDevice] ? NO : [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_individuation_enable" defaultValue:@NO freeze:NO] integerValue];
+    return NO;
 }
 
 //朋友圈分享样式优化，0:线上，1:无icon，2:三角形icon，3:无icon，title修改。
@@ -230,7 +191,7 @@ BOOL ttvs_isDoubleTapForDiggEnabled(void)
 
 BOOL ttvs_isEnhancePlayerTitleFont(void)
 {
-    return [TTDeviceHelper isPadDevice] ? NO : [[[TTSettingsManager sharedManager] settingForKey:@"tt_feed_title_enhance_style" defaultValue:@NO freeze:NO] integerValue];
+    return NO;
 }
 
 @implementation TTVSettingsConfiguration

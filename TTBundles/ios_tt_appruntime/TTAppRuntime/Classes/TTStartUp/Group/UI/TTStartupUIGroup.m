@@ -8,7 +8,7 @@
 
 #import "TTStartupUIGroup.h"
 #import "TTStartupUITask.h"
-#import "TTIntroduceViewTask.h"
+//#import "TTIntroduceViewTask.h"
 //#import "TTStartupWebViewTask.h"
 //#import "TTWenDaCellRegisterTask.h"
 #import "TTFabricSDKRegister.h"
@@ -24,9 +24,7 @@
     TTStartupUIGroup *group = [[TTStartupUIGroup alloc] init];
     
     [group.tasks addObject:[[self class] UIStartupForType:TTUIStartupTypeMainUI]];
-    [group.tasks addObject:[[self class] UIStartupForType:TTUIStartupTypeIntroduceView]];
-//    [group.tasks addObject:[[self class] UIStartupForType:TTUIStartupTypeWendaCell]];
-//    [group.tasks addObject:[[self class] UIStartupForType:TTUIStartupTypeSFActivityUI]];
+//    [group.tasks addObject:[[self class] UIStartupForType:TTUIStartupTypeIntroduceView]];
     
     return group;
 }
@@ -35,7 +33,6 @@
     TTStartupUIGroup *group = [[TTStartupUIGroup alloc] init];
     
     [group.tasks addObject:[[TTFabricSDKRegister alloc] init]];
-//    [group.tasks addObject:[[self class] UIStartupForType:TTUIStartupTypeWebview]];
     
     return group;
 
@@ -46,17 +43,8 @@
         case TTUIStartupTypeMainUI:
             return [[TTStartupUITask alloc] init];
             break;
-        case TTUIStartupTypeIntroduceView:
-            return [[TTIntroduceViewTask alloc] init];
-            break;
-//        case TTUIStartupTypeWebview:
-//            return [[TTStartupWebViewTask alloc] init];
-//            break;
-//        case TTUIStartupTypeWendaCell:
-//            return [[TTWenDaCellRegisterTask alloc] init];
-//            break;
-//        case TTUIStartupTypeSFActivityUI:
-//            return [[TTSFActivityUITask alloc] init];
+//        case TTUIStartupTypeIntroduceView:
+//            return [[TTIntroduceViewTask alloc] init];
 //            break;
         default:
             return [[TTStartupTask alloc] init];
