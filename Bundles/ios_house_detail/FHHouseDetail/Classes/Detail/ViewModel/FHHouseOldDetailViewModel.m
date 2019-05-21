@@ -40,6 +40,8 @@
 #import "FHDetailMediaHeaderCell.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
 #import <FHHouseBase/FHMainApi+Contact.h>
+#import "FHDetailNewModel.h"
+#import "FHDetailOldNearbyMapCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -81,6 +83,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonCell class])];
+    [self.tableView registerClass:[FHDetailOldNearbyMapCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldNearbyMapCell class])];
 
 }
 // cell class
@@ -129,9 +132,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
         return [FHDetailNeighborhoodEvaluateCell class];
     }
-    // 小区地图
-    if ([model isKindOfClass:[FHDetailNeighborhoodMapInfoModel class]]) {
-        return [FHDetailNeighborhoodMapInfoCell class];
+    // 周边地图
+    if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
+        return [FHDetailOldNearbyMapCell class];
     }
     // 购房小建议
     if ([model isKindOfClass:[FHDetailSuggestTipModel class]]) {
@@ -451,15 +454,23 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         infoModel.log_pb = model.data.neighborhoodInfo.logPb;
         [self.items addObject:infoModel];
     }
-    // 地图
+    // 周边地图
     if (model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0) {
-        FHDetailNeighborhoodMapInfoModel *infoModel = [[FHDetailNeighborhoodMapInfoModel alloc] init];
+        FHDetailNearbyMapModel *infoModel = [[FHDetailNearbyMapModel alloc] init];
         infoModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
         infoModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
         infoModel.title = model.data.neighborhoodInfo.name;
-        infoModel.category = @"公交";
         
         [self.items addObject:infoModel];
+        
+        __weak typeof(self) wSelf = self;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            if ((FHDetailOldNearbyMapCell *)infoModel.cell) {
+                ((FHDetailOldNearbyMapCell *)infoModel.cell).indexChangeCallBack = ^{
+                    [wSelf reloadData];
+                };
+            }
+        });
     }
 
 //    if (model.data.housePricingRank.analyseDetail.length > 0) {
