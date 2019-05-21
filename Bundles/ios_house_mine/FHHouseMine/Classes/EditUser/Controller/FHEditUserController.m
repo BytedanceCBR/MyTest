@@ -20,10 +20,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self initNavbar];
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [self loadData];
+    
 }
 
 - (void)initNavbar {
@@ -43,13 +46,24 @@
 }
 
 - (void)initConstraints {
-    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.view);
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        if (@available(iOS 11.0, *)) {
+            make.top.mas_equalTo(self.mas_topLayoutGuide).offset(44);
+        } else {
+            make.top.mas_equalTo(64);
+        }
+        make.left.right.bottom.equalTo(self.view);
     }];
 }
 
 - (void)initViewModel {
     self.viewModel = [[FHEditUserViewModel alloc] initWithTableView:_tableView controller:self];
+}
+
+- (void)loadData {
+    // initialize loadData
+    [self.viewModel reloadViewModel];
+    [self.viewModel loadRequest];
 }
 
 @end

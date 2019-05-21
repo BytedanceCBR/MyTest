@@ -14,6 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHEditUserController *)viewController;
 
+- (void)reloadViewModel;
+
+- (void)loadRequest;
+
 @end
 
 NS_ASSUME_NONNULL_END
