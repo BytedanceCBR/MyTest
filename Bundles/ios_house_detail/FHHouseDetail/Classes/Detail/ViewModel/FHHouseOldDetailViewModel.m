@@ -42,6 +42,7 @@
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import "FHDetailNewModel.h"
 #import "FHDetailOldNearbyMapCell.h"
+#import "FHDetailOldEvaluateCell.h"
 
 extern NSString *const kFHPhoneNumberCacheKey;
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -79,7 +80,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     [self.tableView registerClass:[FHDetailPureTitleCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailPureTitleCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodInfoCell class])];
     [self.tableView registerClass:[FHDetailNeighborhoodMapInfoCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMapInfoCell class])];
-    [self.tableView registerClass:[FHDetailNeighborhoodEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodEvaluateCell class])];
+    [self.tableView registerClass:[FHDetailOldEvaluateCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailOldEvaluateCell class])];
     [self.tableView registerClass:[FHDetailListEntranceCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailListEntranceCell class])];
     [self.tableView registerClass:[FHDetailHouseSubscribeCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailHouseSubscribeCell class])];
     [self.tableView registerClass:[FHDetailAveragePriceComparisonCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailAveragePriceComparisonCell class])];
@@ -129,8 +130,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         return [FHDetailNeighborhoodInfoCell class];
     }
     // 小区评测
-    if ([model isKindOfClass:[FHDetailNeighborhoodEvaluateModel class]]) {
-        return [FHDetailNeighborhoodEvaluateCell class];
+    if ([model isKindOfClass:[FHDetailOldEvaluateModel class]]) {
+        return [FHDetailOldEvaluateCell class];
     }
     // 周边地图
     if ([model isKindOfClass:[FHDetailNearbyMapModel class]]) {
@@ -446,10 +447,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     // 小区评测
     if (model.data.neighborhoodInfo.evaluationInfo) {
-        // 添加分割线--当存在某个数据的时候在顶部添加分割线
-        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-        [self.items addObject:grayLine];
-        FHDetailNeighborhoodEvaluateModel *infoModel = [[FHDetailNeighborhoodEvaluateModel alloc] init];
+//        // 添加分割线--当存在某个数据的时候在顶部添加分割线
+//        FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
+//        [self.items addObject:grayLine];
+        FHDetailOldEvaluateModel *infoModel = [[FHDetailOldEvaluateModel alloc] init];
         infoModel.evaluationInfo = model.data.neighborhoodInfo.evaluationInfo;
         infoModel.log_pb = model.data.neighborhoodInfo.logPb;
         [self.items addObject:infoModel];
