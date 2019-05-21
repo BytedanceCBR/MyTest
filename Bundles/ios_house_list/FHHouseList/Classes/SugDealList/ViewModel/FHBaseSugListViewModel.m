@@ -276,30 +276,26 @@
         if (self.searchType == FHSugListSearchTypeNeighborDealList) {
             // 拼接URL
             NSString * fullText = [textField.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
-            if (fullText.length > 0) {
-                NSString * placeHolderStr = fullText;
-                NSString *pageType = [self pageTypeString];
-                NSString *queryText = placeHolderStr.length > 0 ? placeHolderStr : @"be_null";
-                NSString *openUrl = [NSString stringWithFormat:@"fschema://neighborhood_deal_list?house_type=%ld&full_text=%@",self.houseType,placeHolderStr];
-                NSString *queryType = @"enter";
-                NSDictionary *houseSearchParams = @{
-                                                    @"enter_query":queryText,
-                                                    @"search_query":queryText,
-                                                    @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                                    @"query_type":queryType
-                                                    };
-                NSMutableDictionary *infos = [NSMutableDictionary new];
-                infos[@"houseSearch"] = houseSearchParams;
-                
-                NSMutableDictionary *tracer = [NSMutableDictionary new];
-                if (self.listController.tracerDict[@"origin_from"]) {
-                    tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
-                }
-                infos[@"tracer"] = tracer;
-                [self jumpToDealListVCByUrl:openUrl infoDict:infos];
-            }else {
-                [self.listController.navigationController popViewControllerAnimated:YES];
+            NSString * placeHolderStr = fullText;
+            NSString *pageType = [self pageTypeString];
+            NSString *queryText = placeHolderStr.length > 0 ? placeHolderStr : @"be_null";
+            NSString *openUrl = [NSString stringWithFormat:@"fschema://neighborhood_deal_list?house_type=%ld&full_text=%@",self.houseType,placeHolderStr];
+            NSString *queryType = @"enter";
+            NSDictionary *houseSearchParams = @{
+                                                @"enter_query":queryText,
+                                                @"search_query":queryText,
+                                                @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                                @"query_type":queryType
+                                                };
+            NSMutableDictionary *infos = [NSMutableDictionary new];
+            infos[@"houseSearch"] = houseSearchParams;
+            
+            NSMutableDictionary *tracer = [NSMutableDictionary new];
+            if (self.listController.tracerDict[@"origin_from"]) {
+                tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
             }
+            infos[@"tracer"] = tracer;
+            [self jumpToDealListVCByUrl:openUrl infoDict:infos];
         }
     }
     return YES;
