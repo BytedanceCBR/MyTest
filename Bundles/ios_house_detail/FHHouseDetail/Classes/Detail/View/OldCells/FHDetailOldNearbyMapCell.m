@@ -172,12 +172,13 @@ UITableViewDataSource>
         
     };
     [self.contentView addSubview:_segmentedControl];
+    _segmentedControl.backgroundColor = [UIColor clearColor];
     
     [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.headerView.mas_bottom);
+        make.top.equalTo(self.contentView).offset(52);
         make.left.right.equalTo(self.contentView);
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
-        make.height.mas_equalTo(kSegementedHeight);
+        make.height.mas_equalTo(50);
     }];
 }
 
