@@ -167,7 +167,7 @@
 
     if (indexPath.section == kFHHomeListHouseTypeBannerViewSection) {
         if (self.showOpDataListEntrance) {
-            return 83;
+            return 89;
         }
         return 0;
     }

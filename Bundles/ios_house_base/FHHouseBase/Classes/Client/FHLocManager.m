@@ -159,6 +159,8 @@ NSString * const kFHAllConfigLoadErrorNotice = @"FHAllConfigLoadErrorNotice"; //
     
     [alertVC addActionWithTitle:@"切换" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (openUrl) {
+            [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_alert";
+
             [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch = YES;
             [FHEnvContext openSwitchCityURL:openUrl completion:^(BOOL isSuccess) {
                 // 进历史
