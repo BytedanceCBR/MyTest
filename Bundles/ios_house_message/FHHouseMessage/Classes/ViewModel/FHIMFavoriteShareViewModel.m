@@ -98,7 +98,7 @@
                                 KSCHEMA_HOUSE_PRICE:obj.displayPrice ? : @"",
                                 KSCHEMA_HOUSE_AVG_PRICE:obj.displayPricePerSqm ? : @"",
                                 KSCHEMA_HOUSE_FROM:@"app_liked_house",
-                                KSCHEMA_HOUSE_CHANNEL:[self getChannel],
+                                KSCHEMA_HOUSE_CHANNEL:[self getChannel] ? : @"local_test",
                                 };
         houseMsg.extraDic = extra;
         [manager.messageService sendMessage:houseMsg ofConversationId:conversactionId];
