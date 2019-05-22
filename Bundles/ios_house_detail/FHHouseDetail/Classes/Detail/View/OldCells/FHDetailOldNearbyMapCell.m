@@ -159,7 +159,7 @@ UITableViewDataSource>
     WeakSelf;
     _segmentedControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-        
+        [self clickFacilitiesTracker:index];
         [self cleanAllAnnotations];
         
         if (self.nameArray.count > index) {
@@ -180,6 +180,17 @@ UITableViewDataSource>
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(50);
     }];
+}
+
+- (void)clickFacilitiesTracker:(NSInteger)index {
+    NSArray *facilities = @[@"traffic",@"shopping",@"hospital",@"education"];
+    if (index >= 0 && index < facilities.count) {
+        // click_facilities
+        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
+        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
+        tracerDic[@"click_position"] = facilities[index];
+        [FHUserTracker writeEvent:@"click_facilities" params:tracerDic];
+    }
 }
 
 - (void)setUpMapImageView
