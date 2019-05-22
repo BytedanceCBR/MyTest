@@ -24,6 +24,8 @@
 "myFocus"            = "FHMyFavoriteViewController";
 //"editUserProfile"       = "TTEditUserProfileViewController";
 "editUserProfile"       = "FHEditUserController";
+"editingInfo"           = "FHEditingInfoController";
+
 // SSAppPageController
 "home"                  = "SSAppPageManagerNotificationHome";
 "profile"               = "ArticleMomentProfileViewController";

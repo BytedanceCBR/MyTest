@@ -78,6 +78,7 @@
     self.customNavBarView.seperatorLine.alpha = 0;
     self.customNavBarView.leftBtn.hidden = YES;
     self.customNavBarView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_mine_header_bg"]];
+    self.customNavBarView.contentMode = UIViewContentModeScaleAspectFill;
 //    [self setNavBar:YES];
     
     self.settingBtn = [[UIButton alloc] init];

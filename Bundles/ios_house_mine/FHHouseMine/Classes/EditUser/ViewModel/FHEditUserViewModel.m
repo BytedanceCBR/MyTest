@@ -13,14 +13,14 @@
 #import "FHEditableUserInfo.h"
 #import "TTURLUtils.h"
 #import "FHEnvContext.h"
+#import "FHEditingInfoController.h"
 
-@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource>
+@interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate>
 
 @property(nonatomic, strong) NSArray *dataList;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, strong) FHEditableUserInfo *userInfo;
 @property(nonatomic, weak) FHEditUserController *viewController;
-@property(nonatomic, weak) TTHttpTask *requestTask;
 
 @end
 
@@ -43,7 +43,7 @@
     return self;
 }
 
-- (void)refreshData {
+- (void)initData {
     self.dataList = @[
                       @[
                           @{
@@ -51,23 +51,21 @@
                               @"key":@"avatar",
                               @"cellId":@"imageCellId",
                               @"cellClassName":@"FHEditUserImageCell",
-                              @"imageUrl":self.userInfo.avatarURL,
+                              @"imageUrl":(self.userInfo.avatarURL ? self.userInfo.avatarURL : @""),
                               },
                           @{
                               @"name":@"昵称",
                               @"key":@"userName",
-                              @"url":@"snssdk1370://favorite?stay_id=favorite",
                               @"cellId":@"textCellId",
                               @"cellClassName":@"FHEditUserTextCell",
-                              @"content":self.userInfo.name
+                              @"content":(self.userInfo.name ? self.userInfo.name : @"")
                               },
                           @{
                               @"name":@"介绍",
                               @"key":@"userDesc",
-                              @"url":@"snssdk1370://feedback",
                               @"cellId":@"textCellId",
                               @"cellClassName":@"FHEditUserTextCell",
-                              @"content":self.userInfo.userDescription
+                              @"content":(self.userInfo.userDescription ? self.userInfo.userDescription : @"")
                               },
                           ],
                       @[
@@ -106,7 +104,7 @@
         [self refreshUserInfo];
     }
     
-    [self refreshData];
+    [self initData];
     [self.tableView reloadData];
 }
 
@@ -140,6 +138,31 @@
     
     NSURL *url = [TTURLUtils URLWithString:urlStr];
     [[TTRoute sharedRoute] openURLByPushViewController:url];
+}
+
+- (void)goToEditingInfo:(NSString *)key {
+    NSString *urlStr = nil;
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    if([key isEqualToString:@"userName"]){
+        dict[@"title"] = @"昵称";
+        urlStr = @"sslocal://editingInfo?type=1";
+    }else if([key isEqualToString:@"userDesc"]){
+        dict[@"title"] = @"介绍";
+        urlStr = @"sslocal://editingInfo?type=2";
+    }
+    dict[@"user_info"] = self.userInfo;
+    
+    NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
+    [delegateTable addObject:self];
+    
+    dict[@"delegate"] = delegateTable;
+    
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    
+    if (urlStr) {
+        NSURL* url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 #pragma mark - UITableViewDataSource
@@ -193,14 +216,7 @@
     
     NSArray *items = self.dataList[indexPath.section];
     NSDictionary *dic = items[indexPath.row];
-    
-    NSString *urlStr = dic[@"url"];
-    if(urlStr){
-        NSURL* url = [NSURL URLWithString:urlStr];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
-    }else{
-        [self doOtherAction:dic[@"key"]];
-    }
+    [self doOtherAction:dic[@"key"]];
 }
 
 - (void)doOtherAction:(NSString *)key {
@@ -208,7 +224,17 @@
         [self triggerLogoutUnRegister];
     }else if([key isEqualToString:@"avatar"]){
         
+    }else if([key isEqualToString:@"userName"]){
+        [self goToEditingInfo:key];
+    }else if([key isEqualToString:@"userDesc"]){
+        [self goToEditingInfo:key];
     }
+}
+
+#pragma mark - FHEditingInfoControllerDelegate
+
+- (void)reloadData {
+    [self reloadViewModel];
 }
 
 @end
