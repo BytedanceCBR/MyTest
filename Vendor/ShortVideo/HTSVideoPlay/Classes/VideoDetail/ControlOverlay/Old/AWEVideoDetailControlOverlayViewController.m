@@ -12,7 +12,6 @@
 #import "AWEAwemeMusicInfoView.h"
 #import "TSVShortVideoOriginalData.h"
 #import "AWEVideoConstants.h"
-#import "AWEVideoPlayTrackerBridge.h"
 #import <Masonry/Masonry.h>
 #import "HTSVideoPlayColor.h"
 #import "AWEVideoDetailManager.h"

@@ -331,40 +331,6 @@ static SSCommonLogic * s_manager;
     return dict;
 }
 
-+ (NSString *)getRecentAppsInterval{
-    
-    NSString * string = [[NSUserDefaults standardUserDefaults] objectForKey:kRecentAppsIntervalKey];
-    return string;
-}
-
-+ (void)saveRecentAppsInterval:(NSString *)recentAppsInterval{
-    
-    if (recentAppsInterval == nil) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kRecentAppsIntervalKey];
-    }
-    else {
-        [[NSUserDefaults standardUserDefaults] setObject:recentAppsInterval forKey:kRecentAppsIntervalKey];
-    }
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSString *)getInstallAppsInterval{
-    
-    NSString * string = [[NSUserDefaults standardUserDefaults] objectForKey:kInstallAppsIntervalKey];
-    return string;
-}
-
-+ (void)saveInstallAppsInterval:(NSString *)installAppsInterval{
-    
-    if (installAppsInterval == nil) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kInstallAppsIntervalKey];
-    }
-    else {
-        [[NSUserDefaults standardUserDefaults] setObject:installAppsInterval forKey:kInstallAppsIntervalKey];
-    }
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 + (void)monitorLoginoutWithUrl:(NSString *)url status:(NSInteger)status error:(NSError *)error
 {
     NSMutableDictionary *extra = [NSMutableDictionary dictionary];
@@ -1226,25 +1192,6 @@ NSString * const SSCommonLogicSettingDiscoverRefreshKey = @"SSCommonLogicSetting
 
 @end
 
-//是否可以重复显示“总是查看大图”alert
-NSString * const SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey = @"SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey";
-@implementation SSCommonLogic (ShowAlwaysOriginImageAlertRepeatly)
-
-+ (BOOL)enabledShowAlwaysOriginImageAlertRepeatly{
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey]) {
-        return [[userDefaults objectForKey:SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey] boolValue];
-    }
-    return YES;
-}
-
-+ (void)setEnabledShowAlwaysOriginImageAlertRepeatly:(BOOL)showAlwaysOriginImageAlertRepeatly{
-    [[NSUserDefaults standardUserDefaults] setValue:@(showAlwaysOriginImageAlertRepeatly) forKey:SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-@end
-
 @implementation SSCommonLogic (AccountABTest)
 
 // 5.4中 控制显示 是否启用新的绑定流程
@@ -1264,8 +1211,6 @@ NSString * const SSCommonLogicSettingShowAlwaysOriginImageAlertRepeatlyKey = @"S
 }
 
 @end
-
-NSString * const SSCommonLogicSettingTopSearchBarTipForNormalKey = @"SSCommonLogicSettingTopSearchBarTipForNormalKey";
 
 NSString * const SSCommonLogicSettingTopSearchBarTipForVideoKey = @"SSCommonLogicSettingTopSearchBarTipForVideoKey";
 
@@ -1305,17 +1250,7 @@ NSString * const SSCommonLogicSettingSearchTransitionEnabel = @"SSCommonLogicSet
             return placeholder;
         }
     }
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey]) {
-        return [userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey];
-    }
     return @"搜索";
-}
-
-+ (void)setSearchBarTipForNormal:(NSString *)tip {
-    [[NSUserDefaults standardUserDefaults] setValue:tip forKey:SSCommonLogicSettingTopSearchBarTipForNormalKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSString *)searchBarTipForVideo {
@@ -1324,11 +1259,6 @@ NSString * const SSCommonLogicSettingSearchTransitionEnabel = @"SSCommonLogicSet
         if (!isEmptyString(placeholder)) {
             return placeholder;
         }
-    }
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey]) {
-        return [userDefaults objectForKey:SSCommonLogicSettingTopSearchBarTipForNormalKey];
     }
     return @"搜索";
 }
@@ -1389,22 +1319,6 @@ NSString * const SSCommonLogicSettingSearchTransitionEnabel = @"SSCommonLogicSet
 }
 
 @end
-
-@implementation SSCommonLogic (MineTabSearch)
-
-NSString * const SSCommonLogicMineTabSearchKey = @"SSCommonLogicMineTabSearchKey";
-+ (BOOL)mineTabSearchEnabled {
-    BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicMineTabSearchKey];
-    return enabled;
-}
-
-+ (void)setMineTabSearchEnabled:(BOOL)mineTabSearchEnabled {
-    [[NSUserDefaults standardUserDefaults] setBool:mineTabSearchEnabled forKey:SSCommonLogicMineTabSearchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-@end
-
 
 @implementation SSCommonLogic (WKWebViewSwitch)
 
@@ -1590,23 +1504,11 @@ NSString * const SSCommonLogicWebContentArticleTimeoutIntervalKey = @"SSCommonLo
 
 @end
 
-NSString * const SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey = @"SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey";
 @implementation SSCommonLogic (ExploreDetailToolBarWriteCommentPlaceholderText)
 
 + (NSString *)exploreDetailToolBarWriteCommentPlaceholderText
 {
-    if ([[NSUserDefaults standardUserDefaults] stringForKey:SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey]) {
-        return [[NSUserDefaults standardUserDefaults] stringForKey:SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey];
-    }
-    else {
-        return NSLocalizedString(@"写评论...", nil);
-    }
-}
-
-+ (void)setExploreDetailToolBarWriteCommentPlaceholderText:(NSString *)placeHolderText
-{
-    [[NSUserDefaults standardUserDefaults] setObject:placeHolderText forKey:SSCommonLogicExploreDetailToolBarWriteCommentPlaceholderTextKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    return NSLocalizedString(@"写评论...", nil);
 }
 
 @end
@@ -1690,9 +1592,6 @@ NSString * const SSCommonLogicTaobaoSlotKey = @"SSCommonLogicTaobaoSlotKey";
 @end
 
 NSString * const SSCommonLogicLastReadRefreshEnableKey = @"SSCommonLogicLastReadRefreshEnableKey";
-NSString * const SSCommonLogicLastReadCellViewStyleKey = @"SSCommonLogicLastReadCellViewStyleKey";
-NSString * const SSCommonLogicLastReadRefreshViewShowEnableKey = @"SSCommonLogicLastReadRefreshViewShowEnableKey";
-NSString * const SSCommonLogicLastReadRefreshViewShowIntervalKey = @"SSCommonLogicLastReadRefreshViewShowIntervalKey";
 
 @implementation SSCommonLogic (LastReadRefresh)
 
@@ -1710,30 +1609,6 @@ NSString * const SSCommonLogicLastReadRefreshViewShowIntervalKey = @"SSCommonLog
 {
     [[NSUserDefaults standardUserDefaults] setBool:lastReadRefreshEnabled forKey:SSCommonLogicLastReadRefreshEnableKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (void)setLastReadStyle:(NSInteger)style
-{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:SSCommonLogicLastReadCellViewStyleKey]) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SSCommonLogicLastReadCellViewStyleKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-}
-
-+ (void)setShowFloatingRefreshBtn:(BOOL)show
-{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:SSCommonLogicLastReadRefreshViewShowEnableKey]) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SSCommonLogicLastReadRefreshViewShowEnableKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-}
-
-+ (void)setAutoFloatingRefreshBtnInterval:(NSInteger)interval
-{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:SSCommonLogicLastReadRefreshViewShowIntervalKey]) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:SSCommonLogicLastReadRefreshViewShowIntervalKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
 }
 
 @end
@@ -1930,20 +1805,10 @@ NSString * const SSCommonLogicLaunchedTimes4ShowIntroductionViewKey = @"SSCommon
 @end
 
 ///...
-NSString * const SSCommonLogicFeedRefreshADDisableKey = @"SSCommonLogicFeedRefreshADDisableKey";
 @implementation SSCommonLogic (FeedRefreshADDisable)
 + (BOOL)feedRefreshADDisable
 {
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:SSCommonLogicFeedRefreshADDisableKey]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicFeedRefreshADDisableKey];
-    }
     return NO;
-}
-
-+ (void)setFeedRefreshADDisable:(BOOL)disabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:disabled forKey:SSCommonLogicFeedRefreshADDisableKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 @end
 
@@ -2038,23 +1903,13 @@ NSString * const SSCommonLogicShowRefreshButtonKey = @"SSCommonLogicShowRefreshB
 @end
 
 
-NSString * const SSCommonLogicVideoTipServerSettingKey = @"SSCommonLogicVideoTipServerSettingKey";
 NSString * const SSCommonLogicVideoTipServerIntervalKey = @"SSCommonLogicVideoTipServerIntervalKey";
 
 @implementation SSCommonLogic (VideoTip)
 
 + (BOOL)videoTipServerSettingEnabled
 {
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:SSCommonLogicVideoTipServerSettingKey]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicVideoTipServerSettingKey];
-    }
     return YES;
-}
-
-+ (void)setVideoTipServerEnabled:(BOOL)enabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:SSCommonLogicVideoTipServerSettingKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSTimeInterval)videoTipServerInterval
@@ -2160,14 +2015,6 @@ NSString * const SSCommonLogicDetailSharedWebViewSettingKey = @"SSCommonLogicDet
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_user_interactive_action_guide_enable"];
 }
 
-+ (void)setShareIconStyle:(NSInteger)style {
-    [[NSUserDefaults standardUserDefaults] setInteger:style forKey:@"tt_share_icon_type"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSInteger)shareIconStye {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:@"tt_share_icon_type"];
-}
 @end
 
 NSString * const SSCommonLogicVideoTabSpotServerSettingKey = @"SSCommonLogicVideoTabSpotServerSettingKey";
@@ -2339,15 +2186,6 @@ typedef NS_ENUM(NSUInteger, SSCrashReportSettingType)
 
 @end
 
-NSString * const TTUgcCellSingleImage = @"TTUgcCellSingleImage";
-NSString * const TTUgcCellNormal = @"TTUgcCellNormal";
-NSString * const TTUgcCellArticleAbstract = @"TTUgcCellArticleAbstract";
-NSString * const TTUgcCellArticlePostContent = @"TTUgcCellArticlePostContent";
-NSString * const TTUgcCellArticleComment = @"TTUgcCellArticleComment";
-NSString * const TTUgcCellTopicComment = @"TTUgcCellTopicComment";
-NSString * const TTUgcCellTopicTitle = @"TTUgcCellTopicTitle";
-NSString * const TTUgcCellTopicContent = @"TTUgcCellTopicContent";
-
 @implementation SSCommonLogic (UGCCellLineNumber)
 typedef NS_ENUM(NSUInteger, TTUgcCellLineNumber) {
     TTUgcCellLineNumberSingleImage = 0,
@@ -2363,75 +2201,21 @@ typedef NS_ENUM(NSUInteger, TTUgcCellLineNumber) {
 + (NSInteger)getUgcCellLineNumber:(NSUInteger)type {
     switch ((TTUgcCellLineNumber)type) {
         case TTUgcCellLineNumberSingleImage:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellSingleImage]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellSingleImage];
-            }
             return 3;
         case TTUgcCellLineNumberNormal:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellNormal]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellNormal];
-            }
             return 2;
         case TTUgcCellLineNumberArticleAbstract:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleAbstract]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleAbstract];
-            }
             return 4;
         case TTUgcCellLineNumberArticlePostContent:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticlePostContent]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticlePostContent];
-            }
             return 3;
         case TTUgcCellLineNumberArticleComment:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleComment]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellArticleComment];
-            }
             return 2;
         case TTUgcCellLineNumberTopicComment:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicComment]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicComment];
-            }
             return 5;
         case TTUgcCellLineNumberTopicTitle:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicTitle]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicTitle];
-            }
             return 2;
         case TTUgcCellLineNumberTopicContent:
-            if ([[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicContent]) {
-                return [[NSUserDefaults standardUserDefaults] integerForKey:TTUgcCellTopicContent];
-            }
             return 10;
-    }
-}
-
-+ (void)setUgcCellLineNumber:(NSDictionary *)dic {
-    if (dic != nil) {
-        if ([dic objectForKey:@"single_image"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"single_image"] forKey:TTUgcCellSingleImage];
-        }
-        if ([dic objectForKey:@"normal"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"normal"] forKey:TTUgcCellNormal];
-        }
-        if ([dic objectForKey:@"article_abstract"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"article_abstract"] forKey:TTUgcCellArticleAbstract];
-        }
-        if ([dic objectForKey:@"article_post_content"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"article_post_content"] forKey:TTUgcCellArticlePostContent];
-        }
-        if ([dic objectForKey:@"article_comment"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"article_comment"] forKey:TTUgcCellArticleComment];
-        }
-        if ([dic objectForKey:@"topic_comment"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"topic_comment"] forKey:TTUgcCellTopicComment];
-        }
-        if ([dic objectForKey:@"topic_title"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"topic_title"] forKey:TTUgcCellTopicTitle];
-        }
-        if ([dic objectForKey:@"topic_content"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:[dic objectForKey:@"topic_content"] forKey:TTUgcCellTopicContent];
-        }
-        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
@@ -2544,23 +2328,11 @@ NSString *const kTTGallerySlideDownOutTipKey =  @"gallerySlideDownOut";
 
 @end
 
-NSString *const kTTGalleryTileSwitchKey =  @"galleryTileSwitch";
-
 @implementation SSCommonLogic (TTGalleryTileSwitch)
 
 + (BOOL)appGalleryTileSwitchOn
 {
-    NSNumber *tileSwitch =  [[NSUserDefaults standardUserDefaults] objectForKey:kTTGalleryTileSwitchKey];
-    if (tileSwitch.integerValue == 1) {
-        return YES;
-    }
     return NO;
-}
-
-+ (void)setGalleryTileSwitch:(NSNumber *)value
-{
-    [[NSUserDefaults standardUserDefaults] setObject:value forKey:kTTGalleryTileSwitchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
@@ -2571,17 +2343,7 @@ NSString *const kTTGallerySlideOutSwitchKey =  @"gallerySlideOutSwitch";
 
 + (BOOL)appGallerySlideOutSwitchOn
 {
-    NSNumber *tileSwitch =  [[NSUserDefaults standardUserDefaults] objectForKey:kTTGallerySlideOutSwitchKey];
-    if (tileSwitch.integerValue == 1) {
-        return YES;
-    }
     return YES;
-}
-
-+ (void)setGallerySlideOutSwitch:(NSNumber *)value
-{
-    [[NSUserDefaults standardUserDefaults] setObject:value forKey:kTTGallerySlideOutSwitchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
@@ -2622,8 +2384,6 @@ NSString * const TTTaobaoSDKEnabbleKey = @"TTTaobaoSDKEnabbleKey";
 
 @end
 
-NSString * const TTTeMaiURLKey = @"TTTeMaiURLKey";
-
 @implementation SSCommonLogic (TeMaiControls)
 
 + (BOOL)isTeMaiURL:(NSString*)url {
@@ -2638,22 +2398,8 @@ NSString * const TTTeMaiURLKey = @"TTTeMaiURLKey";
 
 + (NSArray *)getTeMaiURLs
 {
-    NSArray * ary = [[NSUserDefaults standardUserDefaults] objectForKey:TTTeMaiURLKey];
-    if (ary == nil) {
-        ary = @[@"www.jinritemai.com",@"temai.snssdk.com",@"temai.toutiao.com"];
-    }
+    NSArray * ary = @[@"www.jinritemai.com",@"temai.snssdk.com",@"temai.toutiao.com"];
     return ary;
-}
-
-+ (void)saveTeMaiURLs:(NSArray *)ary
-{
-    if ([ary count] == 0) {
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:TTTeMaiURLKey];
-    }
-    else {
-        [[NSUserDefaults standardUserDefaults] setObject:ary forKey:TTTeMaiURLKey];
-    }
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
@@ -3026,59 +2772,10 @@ static NSString *const kSSCommonLogicVideoFloating = @"kSSCommonLogicVideoFloati
 }
 @end
 
-
-
-@implementation SSCommonLogic (FollowTabTips)
-static NSString *const kSSCommonLogicFollowTabTipsEnalbe = @"kSSCommonLogicFollowTabTipsEnalbe";
-static NSString *const kSSCommonLogicFollowTabTipsString = @"kSSCommonLogicFollowTabTipsString";
-+ (void)setFollowTabTipsEnable:(BOOL)allowed
-{
-    [[NSUserDefaults standardUserDefaults] setBool:allowed forKey:kSSCommonLogicFollowTabTipsEnalbe];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isFollowTabTipsEnable
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicFollowTabTipsEnalbe];
-}
-
-+ (void)setFollowTabTipsString:(NSString *)string
-{
-    [[NSUserDefaults standardUserDefaults] setValue:string forKey:kSSCommonLogicFollowTabTipsString];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSString *)followTabTipsString
-{
-    return [[NSUserDefaults standardUserDefaults] stringForKey:kSSCommonLogicFollowTabTipsString];
-}
-@end
-
-@implementation SSCommonLogic (PreloadFollow)
-static NSString *const kSSCommonLogicPreloadFollowEnable = @"kSSCommonLogicPreloadFollowEnable";
-+ (void)setPreloadFollowEnable:(BOOL)allowed
-{
-    [[NSUserDefaults standardUserDefaults] setBool:allowed forKey:kSSCommonLogicPreloadFollowEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isPreloadFollowEnable
-{
-    BOOL isEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicPreloadFollowEnable];
-    return isEnable;
-}
-@end
-
 @implementation SSCommonLogic (Article)
-static NSString *const kSSCommonLogicArticeReadPositionEnable = @"kSSCommonLogicArticeReadPositionEnable";
-
-+ (void)setArticleReadPositionEnable:(BOOL)enable {
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kSSCommonLogicArticeReadPositionEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 + (BOOL)isEnableArticleReadPosition {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicArticeReadPositionEnable];
+    return YES;
 }
 @end
 
@@ -3219,20 +2916,7 @@ static NSString *const kSSCommonLogicVideoOwnPlayerEnabledKey = @"video_own_play
 
 @end
 
-NSString * const SSCommonLogicUseOptimizedAPPLaunchKey = @"SSCommonLogicUseOptimizedAPPLaunchKey";
 @implementation SSCommonLogic (Optimise)
-
-+ (BOOL)shouldUseOptimisedLaunch{
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:SSCommonLogicUseOptimizedAPPLaunchKey]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:SSCommonLogicUseOptimizedAPPLaunchKey];
-    }
-    return  YES;
-}
-
-+ (void)setShouldUseOptimisedLaunch:(BOOL)useOptimised{
-    [[NSUserDefaults standardUserDefaults] setBool:useOptimised forKey:SSCommonLogicUseOptimizedAPPLaunchKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 NSString * const SSCommonLogicUseALBBServiceKey = @"SSCommonLogicUseALBBServiceKey";
 + (BOOL)shouldUseALBBService{
@@ -3269,20 +2953,6 @@ NSString * const SSCommonLogicSettingNetworkDebugKey = @"debug_disable_network";
 }
 
 @end
-
-@implementation SSCommonLogic (CDN)
-
-+ (NSUInteger)detailCDNVersion {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:@"tt_article_api_cdn_version"];
-}
-
-+ (void)setDetailCDNVersion:(NSUInteger)version {
-    [[NSUserDefaults standardUserDefaults] setInteger:version forKey:@"tt_article_api_cdn_version"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-@end
-
 
 @implementation SSCommonLogic (NewFeedImpression)
 static NSString *const kSSCommonLogicNewFeedImpressionEnabledKey =
@@ -3358,22 +3028,8 @@ static NSString * const kSSCommonLogicDisableSearchOptimize = @"kSSCommonLogicDi
 @end
 
 @implementation SSCommonLogic (ImageDisplayMode)
-static NSString *const kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey = @"kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey";
-static NSString *const kSSCommonLogicImageDisplayModeIsUpgradeUserKey = @"kSSCommonLogicImageDisplayModeIsUpgradeUserKey";
-+ (void)setImageDisplayModeFor3GIsSameAs2GEnable:(BOOL)enabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
-+ (BOOL)imageDisplayModeFor3GIsSameAs2G
-{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey]) {
-        BOOL isEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicImageDisplayModeFor3GIsSameAs2GKey];
-        return isEnabled;
-    }
-    return YES;
-}
+static NSString *const kSSCommonLogicImageDisplayModeIsUpgradeUserKey = @"kSSCommonLogicImageDisplayModeIsUpgradeUserKey";
 
 + (void)setIsUpgradeUserAfterImageDisplayModeControlled:(BOOL)upgrade
 {
@@ -3386,53 +3042,6 @@ static NSString *const kSSCommonLogicImageDisplayModeIsUpgradeUserKey = @"kSSCom
     BOOL isUpgrade = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicImageDisplayModeIsUpgradeUserKey];
     return isUpgrade;
 }
-@end
-
-static NSString *const kSSCommonLogicThirdTabWeitoutiaoEnabledKey = @"kSSCommonLogicThirdTabWeitoutiaoEnabledKey";
-@implementation SSCommonLogic (ThirdTabSwitch)
-
-+ (void)setThirdTabWeitoutiaoEnabled:(BOOL)enabled {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kSSCommonLogicThirdTabWeitoutiaoEnabledKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isThirdTabWeitoutiaoEnabled {
-    //确保在整个app生命周期内isThirdTabWeitoutiaoEnabled不变
-    if ([SSCommonLogic isThirdTabHTSEnabled]) {
-        return NO;
-    }
-    static BOOL isThirdTabWeitoutiaoEnabled = YES;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        //第三个tab默认是微头条
-        NSNumber * enable = [[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicThirdTabWeitoutiaoEnabledKey];
-        if (nil != enable && [enable isKindOfClass:[NSNumber class]]) {
-            isThirdTabWeitoutiaoEnabled = [enable boolValue];
-        }
-    });
-    return isThirdTabWeitoutiaoEnabled;
-}
-
-+ (BOOL)isThirdTabFollowEnabled {
-    if ([SSCommonLogic isThirdTabWeitoutiaoEnabled]) {
-        return NO;
-    } else if ([SSCommonLogic isThirdTabHTSEnabled]) {
-        return NO;
-    } else {
-        return YES;
-    }
-}
-
-+ (BOOL)isMyFollowSwitchEnabled {
-    if ([SSCommonLogic isThirdTabWeitoutiaoEnabled]) {
-        return YES;
-    } else if ([SSCommonLogic isThirdTabHTSEnabled]) {
-        return YES;
-    } else {
-        return NO;
-    }
-}
-
 @end
 
 @implementation SSCommonLogic (UserVerifyConfig)
@@ -3526,29 +3135,6 @@ static NSString * const kSSCommonLogicUserVerifyConfigKey = @"kSSCommonLogicUser
     return nil;
 }
 @end
-
-static NSString * const kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey = @"kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey";
-@implementation SSCommonLogic (WeitoutiaoTabListUpdateTipType)
-
-+ (void)setWeitoutiaoTabListUpdateTipType:(NSUInteger)type {
-    // 0：不作更新提醒；1：tab bar上出红点；2：列表顶部出蓝条
-    if (type > 2) {
-        type = 0;
-    }
-    [[NSUserDefaults standardUserDefaults] setInteger:type forKey:kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSUInteger)WeitoutiaoTabListUpdateTipType {
-    NSUInteger type = [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicWeitoutiaoTabListUpdateTipTypeKey];
-    if (type > 2) {
-        type = 2;
-    }
-    return type;
-}
-
-@end
-
 
 static NSString *const kSSCommonLogicCollectDiskSpaceEnableKey = @"kSSCommonLogicCollectDiskSpaceEnableKey";
 
@@ -4043,27 +3629,6 @@ static NSString* const kWebDomCompleteEnableKey = @"kWebDomCompleteEnableKey";
 
 @end
 
-@implementation SSCommonLogic (TTAdMZSDKEnable)
-
-static NSString* const kMZSDKEnableKey = @"kMZSDKEnableKey";
-
-+ (void)setMZSDKEnable:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kMZSDKEnableKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isMZSDKEnable
-{
-    NSNumber *enable = [[NSUserDefaults standardUserDefaults] objectForKey:kMZSDKEnableKey];
-    if (!enable || [enable boolValue]) {
-        return YES;
-    }
-    return NO;
-}
-
-@end
-
 @implementation SSCommonLogic (TTAdUAEnable)
 
 static NSString* const kTTAdUAEnableKey = @"kTTAdUAEnableKey";
@@ -4314,32 +3879,6 @@ static NSString * const kVideoCompressRefactorEnabled = @"kVideoCompressRefactor
 
 @end
 
-@implementation SSCommonLogic (VideoFeedCellHeightAjust)
-+ (void)setVideoFeedCellHeightAjust:(NSInteger)enabled {
-    [[NSUserDefaults standardUserDefaults] setInteger:enabled forKey:@"tt_video_feed_cellui_height_adjust"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-+ (NSInteger)isVideoFeedCellHeightAjust {
-    if ([TTDeviceHelper isPadDevice]) {
-        return 0;
-    }
-    return [[NSUserDefaults standardUserDefaults] integerForKey:@"tt_video_feed_cellui_height_adjust"];
-}
-@end
-
-@implementation SSCommonLogic (VideoAdAutoPlayedHalfShow)
-+ (void)setVideoAdAutoPlayedWhenHalfShow:(BOOL)enabled  {
-    [[NSUserDefaults standardUserDefaults] setBool: enabled forKey:@"tt_video_autoplayad_halfshow"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-+ (BOOL)isVideoAdAutoPlayedWhenHalfShow {
-    if ([TTDeviceHelper isPadDevice]){
-        return NO;
-    }
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_video_autoplayad_halfshow"];
-}
-@end
-
 static NSString * const kWeitoutiaoRepostOriginalReviewHintKey = @"kWeitoutiaoRepostOriginalReviewHintKey";
 @implementation SSCommonLogic (WeitoutiaoRepostOriginalStatusHint)
 
@@ -4361,7 +3900,6 @@ static NSString * const kWeitoutiaoRepostOriginalReviewHintKey = @"kWeitoutiaoRe
 
 @implementation SSCommonLogic (TTDislikeRefctor)
 NSString *const kTTArticleDislikeRefactor = @"tt_article_dislike_refactor";
-NSString *const kTTArticleFeedDislikeRefactor = @"tt_article_feed_dislike_refactor";
 + (void)setDislikeRefactorEnabled:(BOOL)enabled {
     [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kTTArticleDislikeRefactor];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -4372,33 +3910,6 @@ NSString *const kTTArticleFeedDislikeRefactor = @"tt_article_feed_dislike_refact
         return NO;
     }
     return [[NSUserDefaults standardUserDefaults] boolForKey:kTTArticleDislikeRefactor];
-}
-
-+ (void)setFeedDislikeRefactorEnabled:(BOOL)enabled {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kTTArticleFeedDislikeRefactor];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isFeedDislikeRefactorEnabled {
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kTTArticleFeedDislikeRefactor];
-}
-@end
-
-static NSString *const kVideoADReplayBtnEnabled = @"video_ad_replay_btn_enabled";
-@implementation SSCommonLogic (VideoPasterADReplay)
-
-+ (void)setVideoADReplayBtnEnabled:(BOOL)enabled {
-    
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kVideoADReplayBtnEnabled];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isVideoADReplayBtnEnabled {
-    
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kVideoADReplayBtnEnabled];
 }
 
 @end
@@ -4432,17 +3943,6 @@ static NSString *const kVideoADReplayBtnEnabled = @"video_ad_replay_btn_enabled"
 }
 @end
 
-@implementation SSCommonLogic (ReportTyposAlert)
-+ (void)setReportTyposEnabled:(BOOL)enabled {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:@"article_report_alert_enable"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isReportTyposEnabled {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"article_report_alert_enable"];
-}
-@end
-
 static NSString *const KSSCommonLogicTransitionAnimationEnableKey = @"KSSCommonLogicTransitionAnimationEnableKey";
 static BOOL _transitonAnimationEnable = NO;
 @implementation SSCommonLogic (TransitonAnimationEnable)
@@ -4458,35 +3958,6 @@ static BOOL _transitonAnimationEnable = NO;
     });
     return _transitonAnimationEnable;
 }
-@end
-
-@implementation SSCommonLogic (IMServer)
-
-+ (void)setIMServerEnabled:(BOOL)enable {
-    /*
-     if (enable && [SSCommonLogic isIMServerEnable] != enable) {
-     [[TTIMManager sharedManager] accountDidChanged];
-     [[TTIMSDKService sharedInstance] queryCenterMsgList];
-     }
-     [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"im_server_enabled"];
-     [[NSUserDefaults standardUserDefaults] synchronize];
-     [[TTPLManager sharedManager] refreshUnreadNumber];
-     [[TTSettingMineTabManager sharedInstance_tt] refreshPrivateLetterEntry:enable];
-     */
-    
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:@"im_server_enabled"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-//    [[TTPLManager sharedManager] resetIMServerEnabled:enable];
-}
-
-+ (BOOL)isIMServerEnable {
-    if ([[NSUserDefaults standardUserDefaults] valueForKey:@"im_server_enabled"]) {
-        return [[NSUserDefaults standardUserDefaults] boolForKey:@"im_server_enabled"];
-    }
-    return NO;
-}
-
 @end
 
 static NSString *const KSSCommonLogicImageTransitionAnimationEnableKey = @"KSSCommonLogicImageTransitionAnimationEnableKey";
@@ -4552,94 +4023,16 @@ static NSString * const kNewMessageNotificationEnabledKey = @"kNewMessageNotific
 
 @end
 
-static NSString *const kSSCommonLogicForthTabHTSEnabledKey = @"kSSCommonLogicForthTabHTSEnabledKey";
-static NSString *const kSSCommonLogicForthTabInitialVisibleCategoryIndexKey = @"kSSCommonLogicForthTabInitialVisibleCategoryIndexKey";
-static NSString *const kSSCommonLogicLaunchHuoShanAppEnabledKey = @"kSSCommonLogicLaunchHuoShanAppEnabledKey";
 static NSString *const kSSCommonLogicHTSTabBannerInfoDictKey = @"kSSCommonLogicHTSTabBannerInfoDictKey";
 static NSString *const kSSCommonLogicHTSTabMineIconURLKey = @"kSSCommonLogicHTSTabMineIconURLKey";
-static NSString *const kSSCommonLogicHTSAppDownloadInfoDictKey = @"kSSCommonLogicHTSAppDownloadInfoDictKey";
 static NSString *const kSSCommonLogicHTSTabMineIconTipsHasShowKey = @"kSSCommonLogicHTSTabMineIconTipsHasShowKey";
 static NSString *const kSSCommonLogicHTSVideoPlayerTypeKey = @"kSSCommonLogicHTSVideoPlayerTypeKey";
-static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLogicAWEVideoDetailFirstFrameKey";
 
 @implementation SSCommonLogic (HTSTabSettings)
-
-+ (void)setHTSTabSwitch:(NSInteger)tabSwitch {
-    [[NSUserDefaults standardUserDefaults] setInteger:tabSwitch forKey:kSSCommonLogicForthTabHTSEnabledKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isThirdTabHTSEnabled {
-    static BOOL isThirdTabHTSEnabled = NO;
-    //确保在整个app生命周期内isThirdTabHTSEnabled不变
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        if ([TTDeviceHelper isPadDevice] || [TTDeviceHelper OSVersionNumber] < 8 || [SSCommonLogic isForthTabHTSEnabled]){
-            isThirdTabHTSEnabled = NO;//ipad 或者iOS 7及以下不支持,第四个tab是火山的话第三个tab一定不是
-        }
-        else if ([[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicForthTabHTSEnabledKey]){
-            NSInteger tabSwitch = [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicForthTabHTSEnabledKey];
-            isThirdTabHTSEnabled = tabSwitch == 2;
-        }
-    });
-    return isThirdTabHTSEnabled;
-}
-
-+ (BOOL)isForthTabHTSEnabled {
-    //确保在整个app生命周期内isForthTabHTSEnabledd不变
-    if ([TTDeviceHelper isPadDevice] || [TTDeviceHelper OSVersionNumber] < 8){
-        return NO;//ipad 或者iOS 7及以下不支持
-    }
-    static BOOL isForthTabHTSEnabled = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        //第四个tab默认是我的tab
-        NSInteger tabSwitch = [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicForthTabHTSEnabledKey];
-        if (tabSwitch > 0 && tabSwitch != 2) {
-            isForthTabHTSEnabled = YES;
-        } else{
-            isForthTabHTSEnabled = NO;
-        }
-    });
-    return isForthTabHTSEnabled;
-}
-
-//火山tab 首次进入显示火山／抖音频道
-+ (void)setForthTabInitialVisibleCategoryIndex:(NSInteger)index
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:index forKey:kSSCommonLogicForthTabInitialVisibleCategoryIndexKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSInteger)forthTabInitialVisibleCategoryIndex
-{
-    return [[NSUserDefaults standardUserDefaults] integerForKey:kSSCommonLogicForthTabInitialVisibleCategoryIndexKey];
-}
 
 + (BOOL)isHTSAppInstalled
 {
     return [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"snssdk1370://"]];
-}
-
-//火山tab列表点击cell是否跳转到火山app开关
-+ (void)setLaunchHuoShanAppEnabled:(BOOL)enabled
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kSSCommonLogicLaunchHuoShanAppEnabledKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isLaunchHuoShanAppEnabled
-{
-    static BOOL isLaunchHuoShanAppEnabled = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        //默认是跳转到火山app
-        NSNumber *enable = [[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicLaunchHuoShanAppEnabledKey];
-        if (enable && [enable isKindOfClass:[NSNumber class]]) {
-            isLaunchHuoShanAppEnabled = [enable boolValue];
-        }
-    });
-    return isLaunchHuoShanAppEnabled;
 }
 
 //火山tab顶部banner
@@ -4675,24 +4068,7 @@ static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLo
     return nil;
 }
 
-//火山app下载apple_id
-+ (void)setHTSAppDownloadInfoDict:(NSDictionary *)dict{
-    [[NSUserDefaults standardUserDefaults] setValue:dict forKey:kSSCommonLogicHTSAppDownloadInfoDictKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (NSDictionary *)htsAppDownloadInfoDict{
-    return [[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicHTSAppDownloadInfoDictKey];
-}
-
 + (NSString *)htsAPPAppleID{
-    NSDictionary *dict = [self htsAppDownloadInfoDict];
-    if ([dict objectForKey:@"download_item"]){
-        NSDictionary *downloadItem = [dict tt_dictionaryValueForKey:@"download_item"];
-        if ([downloadItem objectForKey:@"apple_id"]){
-            return [downloadItem tt_stringValueForKey:@"apple_id"];
-        }
-    }
     return @"1086047750";
 }
 
@@ -4720,13 +4096,6 @@ static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLo
         playType = 0;
     }
     [[NSUserDefaults standardUserDefaults] setInteger:playType forKey:kSSCommonLogicHTSVideoPlayerTypeKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-//小视频详情页是否开启显示首帧
-+ (void)setAWEVideoDetailFirstFrame:(NSNumber *)type;
-{
-    [[NSUserDefaults standardUserDefaults] setObject:type forKey:kSSCommonLogicAWEVideoDetailFirstFrameKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -4797,22 +4166,6 @@ static NSString *const kSSCommonLogicAWEVideoDetailFirstFrameKey = @"kSSCommonLo
 }
 @end
 
-static NSString *const kVideoDetailPlayLastShowText = @"tt_video_detail_playlast_showtext";
-@implementation SSCommonLogic (VideoDetailPlayLastShowText)
-
-+ (void)setVideoDetailPlayLastShowText:(BOOL)enabled {
-    
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kVideoDetailPlayLastShowText];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isVideoDetailPlayLastShowText {
-    
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kVideoDetailPlayLastShowText];
-}
-
-@end
-
 static NSString *const kUGCThreadPostImageUserWebP = @"tt_ugc_threadpost_uploadimage_webp";
 static NSString *const kUGCNewCellEnable = @"tt_ugc_new_cell_enable";
 @implementation SSCommonLogic (UGCThreadPost)
@@ -4856,22 +4209,8 @@ static NSString *const kTTChatroomInterrupt = @"tt_chatroom_handle_interrupt";
 }
 @end
 
-static NSString *const kUGCEmojiQuickInputEnabled = @"tt_ugc_emoji_quick_input_enabled";
-@implementation SSCommonLogic (UGCEmojiQuickInput)
-+ (void)setUGCEmojiQuickInputEnabled:(BOOL)enabled {
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kUGCEmojiQuickInputEnabled];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)isUGCEmojiQuickInputEnabled {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kUGCEmojiQuickInputEnabled];
-}
-@end
-
 static NSString * const kSSCommonLogicFollowChannelColdStartEnableKey = @"kSSCommonLogicFollowChannelColdStartEnableKey";
 static NSString * const kSSCommonLogicFollowChannelMessageEnableKey = @"kSSCommonLogicFollowChannelMessageEnableKey";
-static NSString * const kSSCommonLogicFollowChannelUploadContactsKey = @"kSSCommonLogicFollowChannelUploadContactsKey";
-static NSString * const kSSCommonLogicFollowChannelUploadContactsTextKey = @"kSSCommonLogicFollowChannelUploadContactsTextKey";
 
 @implementation SSCommonLogic (FollowChannel)
 
@@ -4903,41 +4242,6 @@ static NSString * const kSSCommonLogicFollowChannelUploadContactsTextKey = @"kSS
 + (BOOL)followChannelMessageEnable {
     BOOL followChannelMessageEnable = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicFollowChannelMessageEnableKey];
     return followChannelMessageEnable;
-}
-
-+ (void)setFollowChannelUploadContactsEnable:(BOOL)enable {
-    [[NSUserDefaults standardUserDefaults] setBool:enable
-                                            forKey:kSSCommonLogicFollowChannelUploadContactsKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)followChannelUploadContactsEnable {
-    static BOOL followChannelUploadContacts = NO;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        followChannelUploadContacts = [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicFollowChannelUploadContactsKey];
-    });
-    return followChannelUploadContacts;
-}
-
-+ (void)setFollowChannelUploadContactsText:(NSString *)text {
-    if (isEmptyString(text) || ![text isKindOfClass:[NSString class]]) {
-        return;
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:text
-                                              forKey:kSSCommonLogicFollowChannelUploadContactsTextKey];
-}
-
-+ (NSString *)followChannelUploadContactsText {
-    static NSString * followChannelUploadContactsText = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        followChannelUploadContactsText = [[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicFollowChannelUploadContactsTextKey];
-        if (isEmptyString(followChannelUploadContactsText)) {
-            followChannelUploadContactsText = NSLocalizedString(@"同步通讯录，找到更多好友", nil);
-        }
-    });
-    return followChannelUploadContactsText;
 }
 
 @end
@@ -5268,17 +4572,11 @@ static NSString *const kTTFeedCaregoryAddHidden = @"tt_feed_category_add_hidden"
 }
 @end
 
-static NSString *const kTTPreloadmoreOutScreenNumber = @"tt_pre_load_more_out_screen_number";
 @implementation SSCommonLogic (PreloadmoreOutScreenNumber)
-+ (void)setPreloadmoreOutScreenNumber:(NSInteger)number
-{
-    [[NSUserDefaults standardUserDefaults] setInteger:number forKey:kTTPreloadmoreOutScreenNumber];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 + (NSInteger)preloadmoreOutScreenNumber
 {
-    return [[NSUserDefaults standardUserDefaults] integerForKey:kTTPreloadmoreOutScreenNumber];
+    return 5;
 }
 @end
 
@@ -5296,90 +4594,16 @@ static NSString *const kTTSearchHintSuggestEnable = @"tt_search_hint_homepage_su
 }
 @end
 
-static NSString *const kTTFeedSearchEntryEnable = @"tt_feed_search_entry_enable";
 @implementation SSCommonLogic (FeedSearchEntry)
-+ (void)setFeedSearchEntryEnable:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setObject:@(enable) forKey:kTTFeedSearchEntryEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
 
 + (BOOL)feedSearchEntrySettingsSaved
 {
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:kTTFeedSearchEntryEnable];
-    if (value) {
-        return YES;
-    } else {
-        return NO;
-    }
+    return NO;
 }
 
 + (BOOL)feedSearchEntryEnable
 {
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    NSNumber *value = [[NSUserDefaults standardUserDefaults] objectForKey:kTTFeedSearchEntryEnable];
-    return [value boolValue];
-}
-@end
-
-static NSString *const kTTFeedFantasyLocalSettings = @"tt_feed_fantasy_local_settings";
-@implementation SSCommonLogic (Fantasy)
-+ (void)setFeedFantasyLocalSettings:(NSDictionary *)dict
-{
-    [[NSUserDefaults standardUserDefaults] setValue:dict forKey:kTTFeedFantasyLocalSettings];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)fantasyCountDownEnable
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    BOOL res = NO;
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedFantasyLocalSettings];
-    if ([info[@"count_down_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
-+ (BOOL)fantasyWindowResizeable
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    BOOL res = NO;
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedFantasyLocalSettings];
-    if ([info[@"fantasy_window_resize_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
-}
-
-+ (BOOL)fantasyWindowAlwaysResizeable
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    
-    BOOL res = NO;
-    NSDictionary *info = [[NSUserDefaults standardUserDefaults] valueForKey:kTTFeedFantasyLocalSettings];
-    if ([info[@"fantasy_window_always_resize_enable"] integerValue] == 1) {
-        res = YES;
-    }
-    
-    return res;
+    return NO;
 }
 @end
 
@@ -5466,18 +4690,6 @@ static NSString *const kTTFeedRefreshHistoryStrategy = @"tt_feed_refresh_history
     }
     
     return res;
-}
-@end
-
-static NSString *const kTTDetailPushTipsEnable = @"tt_detail_push_tips_enable";
-@implementation SSCommonLogic (PushTipsEnable)
-+ (void)setDetailPushTipsEnable:(BOOL)enable{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kTTDetailPushTipsEnable];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)detailPushTipsEnable{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kTTDetailPushTipsEnable];
 }
 @end
 
@@ -5723,17 +4935,6 @@ static NSString *const kSSCommonLogicShortVideoDetailScrollDirectionKey = @"kSSC
 }
 @end
 
-static NSString *const kSSCommonLogicShortVideoFirstUsePromptTypeKey = @"kSSCommonLogicShortVideoFirstUsePromptTypeKey";
-@implementation SSCommonLogic (ShortVideoFirstUsePromptType)
-+(void)setShortVideoFirstUsePromptType:(NSNumber *)direction {
-    [[NSUserDefaults standardUserDefaults] setObject:direction forKey:kSSCommonLogicShortVideoFirstUsePromptTypeKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-+(NSNumber *)shortVideoFirstUsePromptType {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicShortVideoFirstUsePromptTypeKey];
-}
-@end
-
 static NSString *const kSSCommonLogicShortVideoDetailInfiniteScrollEnableKey = @"kSSCommonLogicShortVideoDetailInfiniteScrollEnableKey";
 @implementation SSCommonLogic (ShortVideoDetailInfiniteScrollEnable)
 +(void)setShortVideoDetailInfiniteScrollEnable:(BOOL)enable {
@@ -5976,39 +5177,6 @@ static NSString * const kSSCommonLogicSensetimeLicenceMd5Key = @"kSSCommonLogicS
 
 @end
 
-static NSString * const kSSCommonLogicArticleShareWithPGCNameEnableKey = @"kSSCommonLogicArticleShareWithPGCNameEnableKey";
-@implementation SSCommonLogic (ArticleShareWithPGCName)
-
-+ (void)setArticleShareWithPGCName:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kSSCommonLogicArticleShareWithPGCNameEnableKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)shouldArticleShareWithPGCName
-{
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:kSSCommonLogicArticleShareWithPGCNameEnableKey]){
-        return [[NSUserDefaults standardUserDefaults] boolForKey:kSSCommonLogicArticleShareWithPGCNameEnableKey];
-    }
-    return 1;
-}
-
-@end
-
-static NSString *const kTTCommonLoigcArticleTitleLogoSettingsKey = @"tt_enable_detail_title_logo";
-@implementation SSCommonLogic (ArticleTitleLogoSettings)
-+ (void)setArticleTitleLogoEnbale:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kTTCommonLoigcArticleTitleLogoSettingsKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)articleTitleLogoEnable
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kTTCommonLoigcArticleTitleLogoSettingsKey];
-}
-@end
-
 static NSString *const kTTSearchCancelClickActionChange = @"tt_search_cancel_click_action_change_enable";
 @implementation SSCommonLogic (SearchCancelClickActionChange)
 + (void)setSearchCancelClickActionChangeEnable:(BOOL)enable{
@@ -6116,22 +5284,6 @@ static NSString *const kTTVideoTabMainCategoryNameKey = @"kTTVideoTabMainCategor
     return [[NSUserDefaults standardUserDefaults] stringForKey:kTTVideoTabMainCategoryNameKey];
 }
 @end
-
-// 微信老share接口回调配置
-static NSString *const kTTEnableWXShareCallbackKey = @"kTTEnableWXShareCallbackKey";
-@implementation SSCommonLogic (WXShareConfig)
-+ (void)setEnableWXShareCallback:(BOOL)enable
-{
-    [[NSUserDefaults standardUserDefaults] setBool:enable forKey:kTTEnableWXShareCallbackKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-+ (BOOL)enableWXShareCallback
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kTTEnableWXShareCallbackKey];
-}
-@end
-
 
 //f_settings配置 add by zjing
 

@@ -708,10 +708,7 @@ static TTFeedDislikeView *__visibleDislikeView;
 
 + (BOOL)isFeedDislikeRefactorEnabled
 {
-    if ([TTDeviceHelper isPadDevice]) {
-        return NO;
-    }
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"tt_article_feed_dislike_refactor"];
+    return NO;
 }
 
 #pragma mark - dislike btn

@@ -454,7 +454,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
                 } //分享按钮
                 else if ([shareAction isEqualToString:TTVVideodetailNatantInfoShareViewShareAction])
                 {
-                    NSInteger shareIconStye = [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_icon_type" defaultValue:@0 freeze:NO] integerValue];
+                    NSInteger shareIconStye = 0;
                     [TTTrackerWrapper eventV3:@"share_icon_click" params:@{@"icon_type": @(shareIconStye).stringValue}];
                     if ( self.shareManager && [self.shareManager respondsToSelector:@selector(_detailCentrelShareActionFired)]) {
                         [self.shareManager _detailCentrelShareActionFired];
@@ -862,7 +862,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 - (void)shareButtonPressed:(id)sender
 {
     if (sender == _shareButton){
-        NSInteger shareIconStye = [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_icon_type" defaultValue:@0 freeze:NO] integerValue];
+        NSInteger shareIconStye = 0;
         [TTTrackerWrapper eventV3:@"share_icon_click" params:@{@"icon_type": @(shareIconStye).stringValue}];
         if ( self.shareManager && [self.shareManager respondsToSelector:@selector(_detailCentrelShareActionFired)]) {
             [self.shareManager _detailCentrelShareActionFired];
@@ -929,24 +929,7 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
 #pragma mark - helper
 
 - (NSString *)ttv_shareImageIcon {
-    NSInteger shareIconStye = [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_icon_type" defaultValue:@0 freeze:NO] integerValue];
-    switch (shareIconStye) {
-        case 1:
-            return @"tab_share";
-            break;
-        case 2:
-            return @"tab_share1";
-            break;
-        case 3:
-            return @"tab_share4";
-            break;
-        case 4:
-            return @"tab_share3";
-            break;
-        default:
-            return @"tab_share";
-            break;
-    }
+    return @"tab_share";
 }
 
 - (NSInteger)curScale {

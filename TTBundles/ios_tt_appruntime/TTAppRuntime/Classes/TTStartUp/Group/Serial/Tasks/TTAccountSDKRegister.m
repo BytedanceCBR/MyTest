@@ -20,6 +20,7 @@
 #import "TTAccountLoggerImp.h"
 #import "TTAccountTestSettings.h"
 #import "CommonURLSetting.h"
+#import <FHHouseBase/FHURLSettings.h>
 //#import <BDSDKApi+CompanyProduct.h>
 
 
@@ -54,8 +55,6 @@
 
 + (void)configureAccountSDK
 {
-    [SSCookieManager setSessionIDToCookie:[[TTAccount sharedAccount] sessionKey]];
-    
     [TTAccount accountConf].multiThreadSafeEnabled = [TTAccountTestSettings threadSafeSupported];
     if ([TTSandBoxHelper isInHouseApp]) {
         [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.ss.iphone.InHouse.article.News";
@@ -68,6 +67,8 @@
 //    [TTAccount accountConf].sharingKeyChainGroup = @"XXHND5J98K.com.bytedance.keychainshare";
 //#endif
     
+    [TTAccount accountConf].domain = [FHURLSettings baseURL];
+
     [TTAccount accountConf].networkParamsHandler = ^NSDictionary *() {
         return [[TTNetworkUtilities commonURLParameters] copy];
     };
@@ -87,6 +88,8 @@
     [TTAccount accountConf].loggerDelegate  = delegateImp;
     [TTAccount accountConf].monitorDelegate = delegateImp;
     
+    [SSCookieManager setSessionIDToCookie:[[TTAccount sharedAccount] sessionKey]];
+
     [self.class registerAccountPlatforms];
 }
 
