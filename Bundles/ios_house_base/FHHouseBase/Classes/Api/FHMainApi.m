@@ -13,6 +13,7 @@
 #import <TTSandBoxHelper.h>
 #import "TTSandBoxHelper.h"
 #import "FHJSONHTTPRequestSerializer.h"
+#import "FHEnvContext.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -53,9 +54,6 @@
     
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
-    }else
-    {
-        requestParam[@"city_name"] = nil;
     }
 
     if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
@@ -63,6 +61,18 @@
     }else
     {
         requestParam[@"app_first_start"] = @(0);
+    }
+    
+    NSString *lastCityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
+    if ([lastCityId isKindOfClass:[NSString class]]) {
+        requestParam[@"last_city_id"] = lastCityId;
+    }else
+    {
+        requestParam[@"last_city_id"] = @"";
+    }
+    
+    if ([FHEnvContext sharedInstance].refreshConfigRequestType) {
+        requestParam[@"request_type"] = [FHEnvContext sharedInstance].refreshConfigRequestType;
     }
 
     double longitude = location.longitude;
