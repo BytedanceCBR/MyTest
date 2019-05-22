@@ -86,7 +86,6 @@
     {
         FHhomeHouseTypeBannerCell *bannerCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
         [bannerCell refreshData:nil];
-        bannerCell.backgroundColor = [UIColor redColor];
         return bannerCell;
     }else
     {
@@ -168,7 +167,7 @@
 
     if (indexPath.section == kFHHomeListHouseTypeBannerViewSection) {
         if (self.showOpDataListEntrance) {
-            return 80;
+            return 83;
         }
         return 0;
     }

@@ -153,7 +153,10 @@
     rnView.translatesAutoresizingMaskIntoConstraints = NO;
     self.rnView = rnView;
     [self addSubview:self.rnView];
-    [self addConstraintsToView:self.rnView];
+    if([self.rnView isKindOfClass:[UIView class]])
+    {
+        [self addConstraintsToView:self.rnView];
+    }
 }
 
 - (void)createWebViewOrFallbackForUrl:(NSString *)url
@@ -187,7 +190,10 @@
                 [self.webView setBridgeModule:[self.manager rnKitBridgeModuleForChannel:self.channel]];
                 self.webView.translatesAutoresizingMaskIntoConstraints = NO;
                 [self addSubview:self.webView];
-                [self addConstraintsToView:self.webView];
+                if([self.webView isKindOfClass:[UIView class]])
+                {
+                    [self addConstraintsToView:self.rnView];
+                }
                 if (self.manager.delegate
                     && [self.manager.delegate respondsToSelector:@selector(renderContentWithUrl:resultType:viewWrapper:)]) {
                     [self.manager.delegate renderContentWithUrl:url
@@ -223,8 +229,12 @@
     RCTRootView *rnView = [[RCTRootView alloc] initWithBridge:bridge moduleName:moduleName initialProperties:_urlParams];
     rnView.translatesAutoresizingMaskIntoConstraints = NO;
     self.rnView = rnView;
-    [self addSubview:self.rnView];
-    [self addConstraintsToView:self.rnView];
+    
+    if([self.rnView isKindOfClass:[UIView class]])
+    {
+        [self addSubview:self.rnView];
+        [self addConstraintsToView:self.rnView];
+    }
 //    TTRNKitBridgeModule *bridgeModule = [[TTRNKitBridgeModule alloc] initWithBundleUrl:urlJSBundle1];
 //    RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:bridgeModule launchOptions:nil];
 //
@@ -271,13 +281,13 @@
         _loadingView = loadingView;
         _loadingView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:_loadingView];
-        [self addConstraints:@[
-                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
-                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
-                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:_loadingView.frame.size.width],
-                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:_loadingView.frame.size.height]
-                               ]];
-        [self bringSubviewToFront:_loadingView];
+//        [self addConstraints:@[
+//                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
+//                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
+//                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:_loadingView.frame.size.width],
+//                               [NSLayoutConstraint constraintWithItem:_loadingView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:_loadingView.frame.size.height]
+//                               ]];
+//        [self bringSubviewToFront:_loadingView];
     }
 }
 

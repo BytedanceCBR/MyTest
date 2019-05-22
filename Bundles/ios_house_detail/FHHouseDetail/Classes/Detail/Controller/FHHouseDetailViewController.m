@@ -16,6 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <FHRNHelper.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -498,6 +499,14 @@
 - (void)updateLoadFinish
 {
     [self.viewModel.contactViewModel updateLoadFinish];
+}
+
+- (void)addFirstScreenParams:(NSDictionary *)params
+{
+   TTRouteObject *currentRNobject = [[FHRNHelper sharedInstance] getRNCacheForCacheKey:self.viewModel.contactViewModel.phoneCallViewModel.hash];
+    if ([currentRNobject isKindOfClass:[TTRouteObject class]] && [currentRNobject.instance respondsToSelector:@selector(addFirstScreenNeedUploadEvent:)]) {
+        [currentRNobject.instance performSelector:@selector(addFirstScreenNeedUploadEvent:) withObject:params];
+    }
 }
 
 @end

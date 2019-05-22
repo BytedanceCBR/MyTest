@@ -531,7 +531,7 @@
         //        layout.marginBottom = YGPointValue(-1);
     }];
     
-    [_originPriceLabel setBackgroundColor:[UIColor redColor]];
+    [_originPriceLabel setBackgroundColor:[UIColor whiteColor]];
     [_originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginRight = YGPointValue(20);
