@@ -12,6 +12,9 @@
 #import "FHConfigModel.h"
 #import "UIImageView+BDWebImage.h"
 #import <TTDeviceHelper.h>
+#import "FHHouseBridgeManager.h"
+#import <TTRoute.h>
+#import <FHHomeConfigManager.h>
 
 @implementation FHhomeHouseTypeBannerCell
 
@@ -64,10 +67,12 @@
         backImage.layer.cornerRadius = 2;
 //        backImage.layer.masksToBounds = YE
         // 因为shandowOffset默认为(0,3),此处需要修正下
+        backImage.userInteractionEnabled = YES;
         backImage.layer.shadowOffset = CGSizeMake(0, 0);
         backImage.layer.shadowColor = [UIColor themeGray3].CGColor;
         backImage.layer.shadowOpacity = 0.2;
-        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(houseTypeBannerClick:)];
+        [backImage addGestureRecognizer:tapGesture];
         CGFloat shaderWidht = 1;
         
         if (viewWidth > 82 * [TTDeviceHelper scaleToScreen375]) {
@@ -80,7 +85,7 @@
         // 设置阴影的路径 此处效果为在view周边添加宽度为4的阴影效果
         UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(-shaderWidht, -shaderWidht, backImage.frame.size.width + shaderWidht * 2, backImage.frame.size.height + shaderWidht * 2)];
         backImage.layer.shadowPath = path.CGPath;
-        
+        backImage.tag = i;
         [containView addSubview:backImage];
         
         
@@ -125,6 +130,69 @@
         subTitleLabel.textAlignment = 0;
         [containView addSubview:subTitleLabel];
         [self.contentView addSubview:containView];
+    }
+}
+
+- (void)houseTypeBannerClick:(id)sender
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    
+    if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
+        NSLog(@"op Data = %@",dataModel.opData2list);
+        return;
+    }
+    
+    if (![dataModel.opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
+        return;
+    }
+    
+    NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
+    
+    UITapGestureRecognizer *tap = sender;
+    if ([tap isKindOfClass:[UITapGestureRecognizer class]]) {
+        UIView *tapView = [tap view];
+        if (tapView) {
+            if (items.count > tapView.tag) {
+                FHConfigDataOpDataItemsModel *itemModel = [items objectAtIndex:tapView.tag];
+                
+                NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+                [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+                [dictTrace setValue:@"click" forKey:@"enter_type"];
+                
+                
+                if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
+                    [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
+                }
+                
+                NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
+                if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
+                    [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+                    [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
+                    
+                }else
+                {
+                    [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"school_operation" forKey:@"origin_from"];
+                    [dictTrace setValue:@"school_operation" forKey:@"origin_from"];
+                    
+                }
+                
+                NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+                
+                if (itemModel.openUrl) {
+                    NSURL *url = [NSURL URLWithString:itemModel.openUrl];
+                    
+                    if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                        [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+                        [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
+                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+                    }else
+                    {
+                        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+                    }
+                }
+            }
+        }
     }
 }
 

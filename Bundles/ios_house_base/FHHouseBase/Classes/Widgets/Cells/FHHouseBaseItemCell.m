@@ -449,7 +449,7 @@
     }];
     
     _rightInfoView = [[UIView alloc] init];
-    [_rightInfoView setBackgroundColor:[UIColor redColor]];
+//    [_rightInfoView setBackgroundColor:[UIColor redColor]];
     [self.contentView addSubview:_rightInfoView];
     
     [_rightInfoView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
