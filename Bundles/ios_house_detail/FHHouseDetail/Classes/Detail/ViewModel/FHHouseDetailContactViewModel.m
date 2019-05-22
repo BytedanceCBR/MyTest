@@ -24,7 +24,6 @@
 #import "FHHouseDetailAPI.h"
 #import "TTReachability.h"
 #import <FHHouseBase/FHHouseFollowUpHelper.h>
-#import "FHHouseDetailPhoneCallViewModel.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
@@ -55,7 +54,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
-@property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
 
 @end
