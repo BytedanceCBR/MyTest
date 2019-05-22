@@ -119,7 +119,6 @@
             if (isShowHalfStart) {
                 [self createHalfStarView:starImageView ratio:scoreValue % 10];
             }
-            return;
         }
         if (index <= startCount) {
             starImageView.image = [UIImage imageNamed:@"star_evaluation"];

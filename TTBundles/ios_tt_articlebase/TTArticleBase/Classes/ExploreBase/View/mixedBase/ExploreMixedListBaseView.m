@@ -966,7 +966,7 @@ TTRefreshViewDelegate
     _isShowing = YES;
     self.isLoginStatusChanged = NO;
 
-    if (!self.categoryID && [SSCommonLogic shouldUseOptimisedLaunch]) {
+    if (!self.categoryID) {
         return;
     }
     
@@ -1004,13 +1004,13 @@ TTRefreshViewDelegate
         [self reloadListView];
     }
     else if ([_fetchListManager.items count] > 0) {
-        if ([SSCommonLogic shouldUseOptimisedLaunch]) {
+//        if ([SSCommonLogic shouldUseOptimisedLaunch]) {
             if (SharedAppDelegate.mainViewDidShow) {
                 [self reloadVisibleCellsIfNeeded];
             }
-        }else{
-            [self reloadVisibleCellsIfNeeded];
-        }
+//        }else{
+//            [self reloadVisibleCellsIfNeeded];
+//        }
     }
     
     [self resumeTrackAdCellsInVisibleCells];

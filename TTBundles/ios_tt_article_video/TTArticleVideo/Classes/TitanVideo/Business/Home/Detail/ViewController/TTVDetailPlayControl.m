@@ -52,8 +52,6 @@
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
-extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);
-extern BOOL ttvs_isPlayerShowRelated(void);
 
 @interface TTVDetailPlayControl ()<TTVDemandPlayerDelegate, TTVCommodityViewDelegate ,TTVCommodityButtonViewDelegate>
 @property (nonatomic, assign) BOOL movieViewInitiated;
@@ -629,13 +627,9 @@ extern BOOL ttvs_isPlayerShowRelated(void);
             self.movieView.player.tipCreator = [[TTVPlayerTipAdOldCreator alloc] init];
         }
     } else {
-        if (ttvs_isPlayerShowRelated()) {
-            self.movieView.player.tipCreator = [[TTVPlayerTipRelatedCreator alloc] init];
-        } else {
-            NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
-            if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3)) {
-                self.movieView.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
-            }
+        NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
+        if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3)) {
+            self.movieView.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
         }
     }
     self.movieView.player.enableRotate = ![self.videoInfo detailShowPortrait];

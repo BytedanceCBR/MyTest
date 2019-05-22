@@ -26,4 +26,9 @@
  */
 @property (nonatomic, assign) BOOL authEnabled;
 
+/**
+ 默认为 @"https://i.snssdk.com"
+ */
+@property (atomic, copy) NSString *authRequesthHost;
+
 @end 

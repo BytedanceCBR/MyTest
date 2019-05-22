@@ -195,7 +195,7 @@
 
 - (void)htsTabbarTapped:(NSNotification*)notification
 {
-    BOOL shouldAutoRefreshWhenLaunchEnterTab = [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_tab_launch_auto_refresh_enable" defaultValue:@0 freeze:YES] boolValue] && self.firstTimeEnterShortVideoTab;
+    BOOL shouldAutoRefreshWhenLaunchEnterTab = self.firstTimeEnterShortVideoTab;
     BOOL shouldAutoRefreshWhenEnterTab = [TSVEnterTabAutoRefreshConfig shouldAutoRefreshWhenEnterTab];
     
     if (shouldAutoRefreshWhenLaunchEnterTab || shouldAutoRefreshWhenEnterTab) {

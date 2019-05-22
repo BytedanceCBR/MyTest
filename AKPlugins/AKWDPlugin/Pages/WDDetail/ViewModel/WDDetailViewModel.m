@@ -188,13 +188,6 @@
         [content appendFormat:@"<body class=\"night font_%@\">%@", fontSizeType, articleContent];
     }
     
-    //服务端控制详情页ui设置参数
-    NSDictionary *detailUICustomStyleDictionary = [self savedDetailViewUISettingInfoDict];
-    if ([detailUICustomStyleDictionary isKindOfClass:[NSDictionary class]] && [detailUICustomStyleDictionary count] > 0) {
-        NSString* json = [detailUICustomStyleDictionary tt_JSONRepresentation];
-        [content appendFormat:@"<script>window.custom_style = %@</script>", json];
-    }
-    
     //h5_extra
     NSMutableDictionary *h5Extra;
     if (!SSIsEmptyDictionary(self.detailModel.answerEntity.h5Extra)) {
@@ -326,12 +319,6 @@
             break;
     }
     return keyString;
-}
-
-- (NSDictionary *)savedDetailViewUISettingInfoDict
-{
-    NSDictionary * dict = [[NSUserDefaults standardUserDefaults] objectForKey:@"kDetailViewUserDefaultKey"];
-    return dict;
 }
 
 @end

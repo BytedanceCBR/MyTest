@@ -9,7 +9,7 @@
 #import "TTStartupServiceGroup.h"
 #import "TTMonitorStartupTask.h"
 #import "TTABHelperTask.h"
-#import "TTCustomUISettingTask.h"
+//#import "TTCustomUISettingTask.h"
 #import "TTCellRegisterTask.h"
 #import "TTMapperRegisterTask.h"
 #import "TTAVPlayerTask.h"
@@ -27,7 +27,6 @@
 #import "TTFeedPreloadTask.h"
 #import "TTSettingsManager.h"
 #import "TTIESPlayerTask.h"
-#import "TTStartupAKActivityTabTask.h"
 #import "TTStartupAKLaunchTask.h"
 //#import "TTHMDMonitorStartupTask.h"
 
@@ -40,10 +39,8 @@
 + (TTStartupServiceGroup *)serviceGroup {
     TTStartupServiceGroup *group = [[TTStartupServiceGroup alloc] init];
     
-//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeHMDMonitor]];
-//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMonitor]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCustomUISetting]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeCellRegister]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeMapperRegister]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAVPlayer]];
@@ -58,12 +55,12 @@
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeiOS10NotificationCheck]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeReporter]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeLaunchTime]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeStatistics]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeStatistics]];
     if ([[[TTSettingsManager sharedManager] settingForKey:@"tt_optimize_start_enabled" defaultValue:@1 freeze:YES] boolValue]) {
         [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeFeedPreload]];
     }
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeIESPlayer]];
-    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAkActivityTab]];
+//    [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAkActivityTab]];
     [group.tasks addObject:[[self class] serviceStartupForType:TTServiceStartupTypeAkLaunch]];
     
     
@@ -75,9 +72,9 @@
         case TTServiceStartupTypeMonitor:
             return [[TTMonitorStartupTask alloc] init];
             break;
-        case TTServiceStartupTypeCustomUISetting:
-            return [[TTCustomUISettingTask alloc] init];
-            break;
+//        case TTServiceStartupTypeCustomUISetting:
+//            return [[TTCustomUISettingTask alloc] init];
+//            break;
         case TTServiceStartupTypeCellRegister:
             return [[TTCellRegisterTask alloc] init];
             break;
@@ -126,15 +123,12 @@
         case TTServiceStartupTypeIESPlayer:
             return [[TTIESPlayerTask alloc] init];
             break;
-        case TTServiceStartupTypeAkActivityTab:
-            return [[TTStartupAKActivityTabTask alloc] init];
-            break;
+//        case TTServiceStartupTypeAkActivityTab:
+//            return [[TTStartupAKActivityTabTask alloc] init];
+//            break;
         case TTServiceStartupTypeAkLaunch:
             return [[TTStartupAKLaunchTask alloc] init];
             break;
-//        case TTServiceStartupTypeHMDMonitor:
-//            return [[TTHMDMonitorStartupTask alloc]init];
-//            break;
         default:
             return [[TTStartupTask alloc] init];
             break;
