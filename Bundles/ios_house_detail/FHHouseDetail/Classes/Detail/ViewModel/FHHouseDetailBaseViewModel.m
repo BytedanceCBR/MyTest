@@ -191,6 +191,16 @@
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
+    
+    CGFloat originY = tableView.contentOffset.y;
+    CGFloat cellOriginY = cell.frame.origin.y;
+    CGFloat winH = [UIScreen mainScreen].bounds.size.height;
+    // 起始位置，超出屏幕时不上报 element_show 埋点
+    if (cellOriginY - originY > winH * 1.2 && originY <= 0) {
+        // 超出屏幕
+        return;
+    }
+    
     if ([cell conformsToProtocol:@protocol(FHDetailScrollViewDidScrollProtocol)] && ![self.weakedCellTable containsObject:cell]) {
         [self.weakedCellTable addObject:cell];
     }
