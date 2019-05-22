@@ -11,7 +11,6 @@
 #import "FHHouseType.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import <FHHouseBase/FHFillFormAgencyListItemModel.h>
-#import "FHHouseDetailPhoneCallViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,7 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *fromStr;//floor_plan_detail:app_floor_plan
 @property (nonatomic, strong) FHDetailImShareInfoModel* imShareInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel *> *chooseAgencyList;
-@property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
 
 - (instancetype)initWithNavBar:(FHDetailNavBar *)navBar bottomBar:(FHDetailBottomBarView *)bottomBar;

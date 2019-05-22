@@ -322,9 +322,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
         requestParam[@"city"] = gCityName;
-    }else
-    {
-        requestParam[@"city_name"] = nil;
     }
     
     self.commonRequestParam = requestParam;

@@ -43,6 +43,7 @@
 #import <FHHouseBase/FHHouseFillFormHelper.h>
 #import <HMDTTMonitor.h>
 #import <FHIESGeckoManager.h>
+#import "FHHouseDetailPhoneCallViewModel.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -55,6 +56,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, weak) FHDetailBottomBarView *bottomBar;
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, copy)     NSDictionary       *shareExtraDic;// 额外分享参数字典
+@property (nonatomic, strong)FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
 @end
 

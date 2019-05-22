@@ -195,19 +195,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
                 [self resetAllOthersCacheData];
                 
-                //切换城市之后刷新数据
-                if ([self.tableViewV numberOfSections] > 1 && [self.tableViewV numberOfRowsInSection:0] > 0 && [self.tableViewV numberOfRowsInSection:1] > 0 && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
-                    NSIndexSet *indexSetIcon=[[NSIndexSet alloc] initWithIndex:0];
-                    NSIndexSet *indexSetEntrance=[[NSIndexSet alloc] initWithIndex:1];
-                    
-                    [UIView performWithoutAnimation:^{
-                        [self.tableViewV reloadSections:indexSetIcon withRowAnimation:UITableViewRowAnimationNone];
-                        [self.tableViewV reloadSections:indexSetEntrance withRowAnimation:UITableViewRowAnimationNone];
-                    }];
-                }else
-                {
+                [UIView performWithoutAnimation:^{
                     [self.tableViewV reloadData];
-                }
+                }];
 
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
