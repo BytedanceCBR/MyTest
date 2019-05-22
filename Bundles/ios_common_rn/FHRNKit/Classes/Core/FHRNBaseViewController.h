@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateLoadFinish;
 
+- (void)addFirstScreenNeedUploadEvent:(NSDictionary *)params;
+
 @end
 
 NS_ASSUME_NONNULL_END

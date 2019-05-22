@@ -154,6 +154,7 @@
     NSDictionary *dict = @{
                            @"houseTypeList": @"house_type_list",
                            @"opData2": @"op_data_2",
+                           @"opData2list": @"op_data_2_list",
                            @"opData": @"op_data",
                            @"rentOpData": @"rent_op_data",
                            @"mainPageBannerOpData": @"main_page_banner",
@@ -450,6 +451,28 @@
 
 @end
 
+@implementation  FHConfigDataOpData2ListModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"opDataList": @"op_data_list",
+                           @"opData2Type": @"op_data_2_type",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+
+
 
 @implementation  FHConfigDataCityListModel
 
@@ -501,6 +524,8 @@
                            @"openUrl": @"open_url",
                            @"descriptionStr": @"description",
                            @"backgroundColor": @"background_color",
+                           @"addDescription":@"add_description",
+                           @"tagImage":@"tag_image",
                            @"textColor": @"text_color",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
