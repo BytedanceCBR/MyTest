@@ -15,7 +15,7 @@
 
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, strong) NSString *imageName;
 
 @end
 
@@ -26,7 +26,7 @@
     self = [super initWithFrame:CGRectZero];
     if(self){
         _name = name;
-        _image = [UIImage imageNamed:imageName];
+        _imageName = imageName;
         [self setupUI];
     }
     return self;
@@ -49,7 +49,7 @@
     [self addSubview:_nameLabel];
     
     self.iconView = [[UIImageView alloc] init];
-    _iconView.image = self.image;
+    [self.iconView bd_setImageWithURL:[NSURL URLWithString:_imageName] placeholder:nil];
     _iconView.contentMode = UIViewContentModeScaleAspectFit;
     [self addSubview:_iconView];
 }

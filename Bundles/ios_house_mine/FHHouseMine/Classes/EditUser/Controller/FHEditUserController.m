@@ -17,6 +17,14 @@
 
 @implementation FHEditUserController
 
+- (instancetype)initWithRouteParamObj:(nullable TTRouteParamObj *)paramObj {
+    self = [super initWithRouteParamObj:paramObj];
+    if (self) {
+
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.

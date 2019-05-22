@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHMineFocusCellDelegate <NSObject>
 
-- (void)goToFocusDetail:(FHHouseType)type;
+- (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model;
 
 @end
 

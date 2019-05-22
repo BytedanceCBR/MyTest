@@ -28,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)errorMessageByErrorCode:(NSError *)error;
 
++ (TTHttpTask *)requestMineConfigWithClassName:(NSString *)className completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -11,13 +11,14 @@
 #import "UIColor+Theme.h"
 
 #define itemPadding 10
+#define eachRowCount 4
 
 @interface FHMineMutiItemCell()
 
 @property(nonatomic, strong) UILabel* titleLabel;
 @property(nonatomic, strong) UIImageView* headerView;
 @property(nonatomic, strong) UIView* bgView;
-@property(nonatomic, strong) NSMutableArray<FHMineFavoriteItemView *> *focusItems;
+@property(nonatomic, strong) NSMutableArray<FHMineFavoriteItemView *> *items;
 
 @end
 
@@ -28,7 +29,7 @@
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.contentView.backgroundColor = [UIColor themeGray7];
-        self.focusItems = [NSMutableArray array];
+        self.items = [NSMutableArray array];
         
         [self initViews];
         [self initConstraints];
@@ -41,6 +42,7 @@
     self.headerView = [[UIImageView alloc] init];
     UIImage *image = [self ct_imageFromImage:[UIImage imageNamed:@"fh_mine_header_bg"] inRect:CGRectMake(0, 138, [UIScreen mainScreen].bounds.size.width, 32)];
     _headerView.image = image;
+    _headerView.hidden = YES;
     [self.contentView addSubview:_headerView];
     
     self.bgView = [[UIView alloc] init];
@@ -82,10 +84,13 @@
     return label;
 }
 
-- (void)updateCell:(NSDictionary *)dic
-{
-    if(dic[@"name"] && ![dic[@"name"] isEqualToString:@""]){
-        self.titleLabel.text = dic[@"name"];
+- (void)updateCell:(FHMineConfigDataIconOpDataModel *)model isFirst:(BOOL)isFirst {
+    self.model = model;
+    
+    _headerView.hidden = !isFirst;
+    
+    if(model.title && ![model.title isEqualToString:@""]){
+        self.titleLabel.text = model.title;
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.bgView).offset(15);
             make.right.mas_equalTo(self.bgView).offset(-15);
@@ -101,28 +106,31 @@
             make.height.mas_equalTo(0);
         }];
     }
+    
+    [self initDefaultItems];
 }
 
 - (void)initDefaultItems {
     __weak typeof(self) wself = self;
-    [self.focusItems removeAllObjects];
-    NSArray *typeArray = @[@(FHHouseTypeSecondHandHouse),@(FHHouseTypeRentHouse),@(FHHouseTypeNewHouse),@(FHHouseTypeNeighborhood)];
-    NSArray *nameArray = @[@"二手房",@"租房",@"新房",@"小区"];
-    NSArray *imageNameArray = @[@"icon-ershoufang",@"icon-zufang",@"icon-xinfang",@"icon-xiaoqu"];
-
-    for (NSInteger i = 0; i < typeArray.count; i++) {
-        NSInteger type = [typeArray[i] integerValue];
-        NSString *title = [NSString stringWithFormat:@"%@ (*)",nameArray[i]];
-        FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageNameArray[i]];
+    [self.items removeAllObjects];
+    
+    for (FHMineConfigDataIconOpDataMyIconItemsModel *itemModel in self.model.myIcon.items) {
+        NSString *title = itemModel.title;
+        if([self.model.myIconId isEqualToString:@"0"]){
+            title = [self getFocusItemTitle:itemModel.title];
+        }
+        NSString *imageUrl = ((FHMineConfigDataIconOpDataMyIconItemsImageModel *)[itemModel.image firstObject]).url;
+        FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageUrl];
         view.focusClickBlock = ^{
-            [wself goToFocusDetail:type];
+            [wself didItemClick:itemModel];
         };
-        [self.focusItems addObject:view];
+        [self.items addObject:view];
     }
-    [self setItems:self.focusItems];
+    
+    [self setItemViews:self.items];
 }
 
-- (void)setItems:(NSArray<FHMineFavoriteItemView *> *)items
+- (void)setItemViews:(NSArray<FHMineFavoriteItemView *> *)items
 {
     for (UIView *view in self.bgView.subviews) {
         if([view isKindOfClass:[FHMineFavoriteItemView class]]){
@@ -131,7 +139,7 @@
     }
     
     if(items.count > 0){
-        CGFloat width = (UIScreen.mainScreen.bounds.size.width - 40 - (items.count - 1) * itemPadding) / items.count;
+        CGFloat width = (UIScreen.mainScreen.bounds.size.width - 40 - (eachRowCount - 1) * itemPadding) / eachRowCount;
         
         for (NSInteger i = 0; i < items.count; i++) {
             FHMineFavoriteItemView *view = items[i];
@@ -147,9 +155,13 @@
     }
 }
 
+- (NSString *)getFocusItemTitle:(NSString *)name {
+    return [NSString stringWithFormat:@"%@ (*)",name];
+}
+
 - (void)setItemTitles:(NSArray *)itemTitles {
-    for (NSInteger i = 0; i < self.focusItems.count; i++) {
-        FHMineFavoriteItemView *view = self.focusItems[i];
+    for (NSInteger i = 0; i < self.items.count; i++) {
+        FHMineFavoriteItemView *view = self.items[i];
         view.nameLabel.text = itemTitles[i];
     }
 }
@@ -168,9 +180,9 @@
     return newImage;
 }
 
-- (void)goToFocusDetail:(FHHouseType)type {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(goToFocusDetail:)]) {
-        [self.delegate goToFocusDetail:type];
+- (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didItemClick:)]) {
+        [self.delegate didItemClick:model];
     }
 }
 

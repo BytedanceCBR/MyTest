@@ -41,6 +41,8 @@
     [self initConstraints];
     [self initViewModel];
     [self setupHeaderView];
+    
+    [self.viewModel requestMineConfig];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -126,6 +128,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHMineViewModel alloc] initWithTableView:_tableView controller:self];
+//    [self.viewModel requestMineConfig];
 }
 
 - (void)setupHeaderView {

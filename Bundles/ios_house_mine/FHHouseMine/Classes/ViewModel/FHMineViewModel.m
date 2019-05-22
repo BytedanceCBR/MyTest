@@ -17,6 +17,10 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "TTReachability.h"
+#import "FHMineConfigModel.h"
+#import "FHMineMutiItemCell.h"
+
+#define mutiItemCellId @"mutiItemCellId"
 
 @interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineFocusCellDelegate>
 
@@ -27,6 +31,7 @@
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *focusItemTitles;
 @property(nonatomic , assign) BOOL hasLogin;
+@property(nonatomic , strong) FHMineMutiItemCell *focusCell;
 
 @end
 
@@ -47,67 +52,69 @@
         
         self.viewController = viewController;
         
-        [self initDefaultData];
+        [self.tableView registerClass:NSClassFromString(@"FHMineMutiItemCell") forCellReuseIdentifier:mutiItemCellId];
+        
+//        [self initDefaultData];
     }
     return self;
 }
 
-- (void)initDefaultData {
-    self.defaultList = @[
-                         @{
-                             @"name":@"",
-                             @"cellId":@"focusCellId",
-                             @"cellClassName":@"FHMineMutiItemCell"
-                             },
-                         @{
-                             @"name":@"我的收藏",
-                             @"url":@"snssdk1370://favorite?stay_id=favorite",
-                             @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell"
-                             },
-                         @{
-                             @"name":@"用户反馈",
-                             @"url":@"snssdk1370://feedback",
-                             @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell",
-                             @"click_minetab":@{
-                                        @"click_type":@"feedback",
-                                        @"page_type":@"minetab",
-                                     },
-                             @"go_detail":@{
-                                     @"enter_from":@"minetab",
-                                     @"page_type":@"feedback",
-                                     },
-                             },
-                         @{
-                             @"name":@"系统设置",
-                             @"url":@"snssdk1370://more",
-                             @"cellId":@"settingCellId",
-                             @"cellClassName":@"FHMineSettingCell",
-                             @"click_minetab":@{
-                                     @"click_type":@"setting",
-                                     @"page_type":@"minetab",
-                                     },
-                             @"go_detail":@{
-                                     @"enter_from":@"minetab",
-                                     @"page_type":@"setting",
-                                     },
-                             },
+//- (void)initDefaultData {
+//    self.defaultList = @[
 //                         @{
-//                             @"name":@"视频测试",
-//                             @"url":@"snssdk1370://video_test",
+//                             @"name":@"",
+//                             @"cellId":@"focusCellId",
+//                             @"cellClassName":@"FHMineMutiItemCell"
+//                             },
+//                         @{
+//                             @"name":@"我的收藏",
+//                             @"url":@"snssdk1370://favorite?stay_id=favorite",
+//                             @"cellId":@"settingCellId",
+//                             @"cellClassName":@"FHMineSettingCell"
+//                             },
+//                         @{
+//                             @"name":@"用户反馈",
+//                             @"url":@"snssdk1370://feedback",
 //                             @"cellId":@"settingCellId",
 //                             @"cellClassName":@"FHMineSettingCell",
+//                             @"click_minetab":@{
+//                                        @"click_type":@"feedback",
+//                                        @"page_type":@"minetab",
+//                                     },
+//                             @"go_detail":@{
+//                                     @"enter_from":@"minetab",
+//                                     @"page_type":@"feedback",
+//                                     },
 //                             },
-                         ];
-    [self.dataList addObjectsFromArray:self.defaultList];
-    
-    for (NSDictionary *dic in self.defaultList) {
-        NSString *cellId = dic[@"cellId"];
-        NSString *cellClassName = dic[@"cellClassName"];
-        [self.tableView registerClass:NSClassFromString(cellClassName) forCellReuseIdentifier:cellId];
-    }
-}
+//                         @{
+//                             @"name":@"系统设置",
+//                             @"url":@"snssdk1370://more",
+//                             @"cellId":@"settingCellId",
+//                             @"cellClassName":@"FHMineSettingCell",
+//                             @"click_minetab":@{
+//                                     @"click_type":@"setting",
+//                                     @"page_type":@"minetab",
+//                                     },
+//                             @"go_detail":@{
+//                                     @"enter_from":@"minetab",
+//                                     @"page_type":@"setting",
+//                                     },
+//                             },
+////                         @{
+////                             @"name":@"视频测试",
+////                             @"url":@"snssdk1370://video_test",
+////                             @"cellId":@"settingCellId",
+////                             @"cellClassName":@"FHMineSettingCell",
+////                             },
+//                         ];
+//    [self.dataList addObjectsFromArray:self.defaultList];
+//    
+//    for (NSDictionary *dic in self.defaultList) {
+//        NSString *cellId = dic[@"cellId"];
+//        NSString *cellClassName = dic[@"cellClassName"];
+//        [self.tableView registerClass:NSClassFromString(cellClassName) forCellReuseIdentifier:cellId];
+//    }
+//}
 
 - (void)requestData {
     __weak typeof(self) wself = self;
@@ -117,12 +124,12 @@
             [wself.tableView reloadData];
             return;
         }
-        
+
         if(response.count == 4){
             [self.focusItemTitles removeAllObjects];
             NSArray *typeArray = @[@(FHHouseTypeSecondHandHouse),@(FHHouseTypeRentHouse),@(FHHouseTypeNewHouse),@(FHHouseTypeNeighborhood)];
             NSArray *nameArray = @[@"二手房",@"租房",@"新房",@"小区"];
-            
+
             for (NSInteger i = 0; i < typeArray.count; i++) {
                 NSInteger type = [typeArray[i] integerValue];
                 NSInteger count = [response[@(type)] integerValue];
@@ -130,6 +137,25 @@
                 [self.focusItemTitles addObject:title];
             }
             
+            if(self.focusCell && self.focusItemTitles.count == 4){
+                [self.focusCell setItemTitles:self.focusItemTitles];
+            }
+        }
+    }];
+}
+
+- (void)requestMineConfig {
+    __weak typeof(self) wself = self;
+    [FHMineAPI requestMineConfigWithClassName:@"FHMineConfigModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        NSLog(@"11");
+        if (error) {
+            //TODO: show handle error
+            return;
+        }
+        
+        FHMineConfigModel *configModel = (FHMineConfigModel *)model;
+        if(configModel){
+            wself.dataList = configModel.data.iconOpData;
             [wself.tableView reloadData];
         }
     }];
@@ -226,48 +252,63 @@
 
 #pragma mark - FHMineFocusCellDelegate
 
-- (void)goToFocusDetail:(FHHouseType)type {
-    if ([TTReachability isNetworkConnected]) {
-        NSURL* url = [NSURL URLWithString:@"snssdk1370://myFocus"];
-        
-        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-        tracerDict[@"enter_from"] = @"minetab";
-        tracerDict[@"enter_type"] = @"click";
-        tracerDict[@"element_from"] = @"be_null";
-        tracerDict[@"origin_from"] = [self focusOriginFrom:type];
-        
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"house_type"] = @(type);
-        dict[@"tracer"] = tracerDict;
-        
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    } else {
-        [[ToastManager manager] showToast:@"网络异常"];
-    }
+- (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
+     if ([TTReachability isNetworkConnected]) {
+         //埋点
+         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+         dict[@"tracer"] = model.logPb;
+         
+         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+         
+         NSURL* url = [NSURL URLWithString:model.openUrl];
+         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+     }else{
+         [[ToastManager manager] showToast:@"网络异常"];
+     }
 }
 
-- (NSString *)focusOriginFrom:(FHHouseType)type {
-    NSString *originFrom = @"be_null";
-    switch (type) {
-        case FHHouseTypeNewHouse:
-            originFrom = @"minetab_new";
-            break;
-        case FHHouseTypeRentHouse:
-            originFrom = @"minetab_rent";
-            break;
-        case FHHouseTypeSecondHandHouse:
-            originFrom = @"minetab_old";
-            break;
-        case FHHouseTypeNeighborhood:
-            originFrom = @"minetab_neighborhood";
-            break;
-            
-        default:
-            break;
-    }
-    return originFrom;
-}
+//- (void)goToFocusDetail:(FHHouseType)type {
+//    if ([TTReachability isNetworkConnected]) {
+//        NSURL* url = [NSURL URLWithString:@"snssdk1370://myFocus"];
+//
+//        NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+//        tracerDict[@"enter_from"] = @"minetab";
+//        tracerDict[@"enter_type"] = @"click";
+//        tracerDict[@"element_from"] = @"be_null";
+//        tracerDict[@"origin_from"] = [self focusOriginFrom:type];
+//
+//        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//        dict[@"house_type"] = @(type);
+//        dict[@"tracer"] = tracerDict;
+//
+//        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+//        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+//    } else {
+//        [[ToastManager manager] showToast:@"网络异常"];
+//    }
+//}
+//
+//- (NSString *)focusOriginFrom:(FHHouseType)type {
+//    NSString *originFrom = @"be_null";
+//    switch (type) {
+//        case FHHouseTypeNewHouse:
+//            originFrom = @"minetab_new";
+//            break;
+//        case FHHouseTypeRentHouse:
+//            originFrom = @"minetab_rent";
+//            break;
+//        case FHHouseTypeSecondHandHouse:
+//            originFrom = @"minetab_old";
+//            break;
+//        case FHHouseTypeNeighborhood:
+//            originFrom = @"minetab_neighborhood";
+//            break;
+//
+//        default:
+//            break;
+//    }
+//    return originFrom;
+//}
 
 #pragma mark - UITableViewDataSource
 
@@ -276,15 +317,20 @@
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *cellId = _dataList[indexPath.row][@"cellId"];
-    FHMineBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
-    [cell updateCell:_dataList[indexPath.row]];
+    FHMineConfigDataIconOpDataModel *dataModel = _dataList[indexPath.row];
+    
+    FHMineBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:mutiItemCellId];
+    
+    [cell updateCell:dataModel isFirst:indexPath.row == 0];
     
     if([cell isKindOfClass:[FHMineMutiItemCell class]]){
-        FHMineMutiItemCell *focusCell = (FHMineMutiItemCell *)cell;
-        focusCell.delegate = self;
-        if(self.focusItemTitles.count == 4){
-            [focusCell setItemTitles:self.focusItemTitles];
+        FHMineMutiItemCell *mutiItemCell = (FHMineMutiItemCell *)cell;
+        mutiItemCell.delegate = self;
+        if([dataModel.myIconId isEqualToString:@"0"]){
+            self.focusCell = mutiItemCell;
+            if(self.focusItemTitles.count == 4){
+                [mutiItemCell setItemTitles:self.focusItemTitles];
+            }
         }
     }
     
@@ -293,12 +339,8 @@
 
 #pragma mark - UITableViewDelegate
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *cellClassName = _dataList[indexPath.row][@"cellClassName"];
-    if([cellClassName isEqualToString:@"FHMineMutiItemCell"]){
-        return UITableViewAutomaticDimension;
-    }
-    return 50.0f;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewAutomaticDimension;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

@@ -30,12 +30,13 @@
 {
     self = [super init];
     if (self) {
-        _dataList = [[NSMutableArray alloc] init];
-    
         self.tableView = tableView;
         
         tableView.delegate = self;
         tableView.dataSource = self;
+        
+        [tableView registerClass:NSClassFromString(@"FHEditUserImageCell") forCellReuseIdentifier:@"imageCellId"];
+        [tableView registerClass:NSClassFromString(@"FHEditUserTextCell") forCellReuseIdentifier:@"textCellId"];
         
         self.viewController = viewController;
     }
@@ -79,14 +80,6 @@
                               },
                           ]
                          ];
-    
-    for (NSArray *items in self.dataList) {
-        for (NSDictionary *item in items) {
-            NSString *cellId = item[@"cellId"];
-            NSString *cellClassName = item[@"cellClassName"];
-            [self.tableView registerClass:NSClassFromString(cellClassName) forCellReuseIdentifier:cellId];
-        }
-    }
 }
 
 - (void)loadRequest {

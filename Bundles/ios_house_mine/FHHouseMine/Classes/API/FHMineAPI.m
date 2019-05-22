@@ -153,4 +153,13 @@
     }
 }
 
++ (TTHttpTask *)requestMineConfigWithClassName:(NSString *)className completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion
+{
+    NSString *queryPath = @"/f100/v2/api/my_config";
+    
+    Class cls = NSClassFromString(className);
+    
+    return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
+}
+
 @end

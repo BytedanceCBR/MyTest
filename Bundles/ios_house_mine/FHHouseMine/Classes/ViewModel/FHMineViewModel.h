@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)goToSystemSetting;
 
+- (void)requestMineConfig;
+
 @end
 
 NS_ASSUME_NONNULL_END
