@@ -696,4 +696,35 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
 }
 
+#pragma mark - poplayer
+- (void)onShowPoplayerNotification:(NSNotification *)notification
+{
+    UITableViewCell *cell = notification.userInfo[@"cell"];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    if (!indexPath) {
+        return;
+    }
+    
+    id model = notification.userInfo[@"model"];
+    
+    FHDetailPropertyListModel *propertyModel = nil;
+    for (id item in self.items) {
+        if ([item isKindOfClass:[FHDetailPropertyListModel class]]) {
+            propertyModel = (FHDetailPropertyListModel *)item;
+            break;
+        }
+    }
+    
+    if (!propertyModel) {
+        return;
+    }
+
+    FHDetailHalfPopLayer *popLayer = [self popLayer];
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model];
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model];
+    }
+}
+
 @end

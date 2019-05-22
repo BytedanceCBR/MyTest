@@ -8,6 +8,7 @@
 #import "FHDetailBaseCell.h"
 #import "FHDetailBaseModel.h"
 #import "FHDetailOldModel.h"
+#import "FHDetailRentModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,10 +31,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UIImageView   *logoImageView;
 @property (nonatomic, strong)   UILabel       *indicatorLabel;
 @property (nonatomic, strong)   UIImageView  *indicator;
+@property (nonatomic, strong)   id data;
 
 -(void)updateWithOfficalData:(FHDetailDataBaseExtraOfficialModel *)officialModel;
 
 -(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel;
+
+-(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo;
 
 @end
 
@@ -42,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraModel *extraInfo;
+@property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraModel *rentExtraInfo;
 @property (nonatomic, strong , nullable) FHDetailDataCertificateModel *certificate ;
 
 @end

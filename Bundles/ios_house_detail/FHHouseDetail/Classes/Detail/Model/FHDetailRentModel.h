@@ -185,10 +185,37 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@protocol FHRentDetailDataBaseExtraDialogContentModel<NSObject>
+@end
+
+@interface FHRentDetailDataBaseExtraDialogContentModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *image;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
+@interface FHRentDetailDataBaseExtraSecurityInformationModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *tipsContent;
+@property (nonatomic, copy , nullable) NSString *icon;
+@end
+
+@interface FHRentDetailDataBaseExtraModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHRentDetailDataBaseExtraDialogContentModel> *dialogContent;
+@property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraSecurityInformationModel *securityInformation ;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
+
+@end
+
 @interface  FHRentDetailResponseDataModel  : JSONModel
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseInfoModel> *baseInfo;
+@property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraModel *baseExtra ;
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, strong , nullable) FHRentDetailResponseDataNeighborhoodInfoModel *neighborhoodInfo ;
 @property (nonatomic, copy , nullable) NSString *title;

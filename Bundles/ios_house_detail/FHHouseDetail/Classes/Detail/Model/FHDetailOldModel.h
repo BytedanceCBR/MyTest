@@ -232,7 +232,7 @@ typedef enum : NSInteger {
 @end
 
 #pragma mark - extra info
-@interface FHDetailDataBaseExtraDialogsModel : JSONModel
+@interface FHDetailDataBaseExtraDetectiveDialogsModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *feedbackContent;
 @property (nonatomic, copy , nullable) NSString *title;
@@ -240,10 +240,10 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *icon;
 @end
 
-@protocol FHDetailDataBaseExtraDetectiveDetectiveInfoModel<NSObject>
+@protocol FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel<NSObject>
 @end
 
-@interface FHDetailDataBaseExtraDetectiveDetectiveInfoModel : JSONModel
+@interface FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *explainContent;
@@ -251,17 +251,24 @@ typedef enum : NSInteger {
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
+@interface FHDetailDataBaseExtraDetectiveDetectiveInfoModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel> *detectiveList;
+@property (nonatomic, copy , nullable) NSString *title;
+@end
+
 @interface FHDetailDataBaseExtraDetectiveModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *content;
 @property (nonatomic, copy , nullable) NSString *baseTitle;
-@property (nonatomic, strong , nullable) NSArray<FHDetailDataBaseExtraDetectiveDetectiveInfoModel> *detectiveInfo;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveDetectiveInfoModel *detectiveInfo ;
 @property (nonatomic, copy , nullable) NSString *warnContent;
 @property (nonatomic, copy , nullable) NSString *icon;
 @property (nonatomic, copy , nullable) NSString *tips;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
 
 @end
+
 
 @interface FHDetailDataBaseExtraOfficialAgencyModel : JSONModel
 
@@ -285,6 +292,7 @@ typedef enum : NSInteger {
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveModel *detective ;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official ;
 @end
+
 
 @interface FHDetailOldDataModel : JSONModel
 

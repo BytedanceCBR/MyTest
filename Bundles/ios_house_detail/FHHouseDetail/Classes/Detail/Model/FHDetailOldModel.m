@@ -238,6 +238,22 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"detectiveList": @"detective_list",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
                            @"explainContent": @"explain_content",
                            @"subTitle": @"sub_title",
                            };
@@ -268,6 +284,7 @@
 {
     return YES;
 }
+
 @end
 
 @implementation FHDetailDataBaseExtraOfficialAgencyModel
@@ -303,29 +320,15 @@
 }
 @end
 
-@implementation FHDetailDataBaseExtraDialogsModel
-+ (JSONKeyMapper*)keyMapper
-{
-    NSDictionary *dict = @{
-                           @"subTitle": @"sub_title",
-                           @"feedbackContent": @"feedback_content",
-                           };
-    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
-        return dict[keyName]?:keyName;
-    }];
-}
+@implementation FHDetailDataBaseExtraModel
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
 }
+
 @end
 
-@implementation FHDetailDataBaseExtraModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
 
 @implementation FHDetailOldDataModel
 + (JSONKeyMapper*)keyMapper

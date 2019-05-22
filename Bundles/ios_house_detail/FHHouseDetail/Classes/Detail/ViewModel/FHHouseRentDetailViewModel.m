@@ -245,9 +245,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:coreInfoModel];
     }
     // 添加属性列表
-    if (model.data.baseInfo) {
+    if (model.data.baseInfo || model.data.baseExtra) {
         FHDetailPropertyListModel *propertyModel = [[FHDetailPropertyListModel alloc] init];
         propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.rentExtraInfo = model.data.baseExtra;
         [self.items addObject:propertyModel];
     }
     // 添加房屋配置
@@ -476,6 +477,31 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
 }
 
+- (void)onShowPoplayerNotification:(NSNotification *)notification
+{
+    UITableViewCell *cell = notification.userInfo[@"cell"];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    if (!indexPath) {
+        return;
+    }
+    
+    id model = notification.userInfo[@"model"];
+    
+    FHDetailPropertyListModel *propertyModel = nil;
+    for (id item in self.items) {
+        if ([item isKindOfClass:[FHDetailPropertyListModel class]]) {
+            propertyModel = (FHDetailPropertyListModel *)item;
+            break;
+        }
+    }
+    
+    if (!propertyModel) {
+        return;
+    }
+        
+    FHDetailHalfPopLayer *popLayer = [self popLayer];
+    [popLayer showDealData:propertyModel.rentExtraInfo];
+}
 
 @end
 

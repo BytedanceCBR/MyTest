@@ -14,6 +14,8 @@
 #import "UILabel+House.h"
 #import "FHAgencyNameInfoView.h"
 
+extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
+
 @implementation FHDetailPropertyListCell
 
 - (void)awakeFromNib {
@@ -144,7 +146,7 @@
         FHDetailExtarInfoRowView *rowView = nil;
         if (model.extraInfo.official) {
             rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
-            
+            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
             [rowView updateWithOfficalData:model.extraInfo.official];
             [self.contentView addSubview:rowView];
             [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -162,6 +164,7 @@
         
         if (model.extraInfo.detective) {
             rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
             [self.contentView addSubview:rowView];
             [rowView updateWithDetectiveData:model.extraInfo.detective];
             [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -176,7 +179,26 @@
             }];
             lastView = rowView;
         }
-    }        
+    }
+    
+    if (model.rentExtraInfo.securityInformation) {
+        
+        FHDetailExtarInfoRowView *rowView = [[FHDetailExtarInfoRowView alloc] initWithFrame:CGRectZero ];
+        [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self.contentView addSubview:rowView];
+        [rowView updateWithSecurityInfo:model.rentExtraInfo.securityInformation];
+        [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
+            if (lastView) {
+                make.top.mas_equalTo(lastView.mas_bottom).offset(10);
+            }else{
+                make.top.mas_equalTo(10);
+            }
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
+            make.height.mas_equalTo(20);
+        }];
+        lastView = rowView;                
+    }
     
     if (infoView) {
         [infoView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -221,6 +243,11 @@
 
 - (void)setupUI {
     
+}
+
+-(void)onRowViewAction:(FHDetailExtarInfoRowView *)view
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil userInfo:@{@"cell":self,@"model":view.data?:@""}];
 }
 
 @end
@@ -343,6 +370,7 @@
 
 -(void)updateWithOfficalData:(FHDetailDataBaseExtraOfficialModel *)officialModel
 {
+    self.data = officialModel;
     _nameLabel.text = officialModel.baseTitle;
     _infoLabel.text =  officialModel.agency.name;
     _logoImageView.image = nil;
@@ -355,6 +383,7 @@
     CGFloat height = officialModel.agency.logo.height.floatValue;
     if (width > 0 && height > 20) {
         width = 20*width/height;
+        height = 20;
     }
     
     [self.logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -366,6 +395,7 @@
 
 -(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel
 {
+    self.data = detectiveModel;
     _nameLabel.text = detectiveModel.baseTitle;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
@@ -387,6 +417,33 @@
     _indicatorLabel.text = detectiveModel.tips;
     
     [_indicatorLabel sizeToFit];
+    
+    CGSize size = _indicatorLabel.bounds.size;
+    _indicatorLabel.hidden = NO;
+    
+    [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(size.width);
+    }];
+    
+    [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-(31+size.width));
+        make.size.mas_equalTo(CGSizeMake(20, 20));
+    }];
+    
+}
+
+-(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo
+{
+    self.data = securityInfo;
+    _nameLabel.text = securityInfo.baseTitle;
+    _infoLabel.text = securityInfo.content;
+    
+    _indicatorLabel.text = securityInfo.tipsContent;
+    [_indicatorLabel sizeToFit];
+    
+    _logoImageView.image = nil;
+    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:securityInfo.icon]];
+    
     
     CGSize size = _indicatorLabel.bounds.size;
     _indicatorLabel.hidden = NO;

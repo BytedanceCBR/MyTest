@@ -100,6 +100,49 @@
 
 @end
 
+@implementation FHRentDetailDataBaseExtraDialogContentModel
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHRentDetailDataBaseExtraModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"dialogContent": @"dialog_content",
+                           @"securityInformation": @"security_information",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+@implementation FHRentDetailDataBaseExtraSecurityInformationModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"baseTitle": @"base_title",
+                           @"tipsContent": @"tips_content",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
+
 
 @implementation  FHRentDetailResponseDataModel
 
@@ -118,6 +161,7 @@
                            @"camplaintUrl": @"camplaint_url",
                            @"imShareInfo": @"im_share_info",
                            @"chooseAgencyList": @"choose_agency_list",
+                           @"baseExtra": @"base_extra",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

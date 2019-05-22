@@ -12,6 +12,12 @@
 #import "FHHouseRentDetailViewModel.h"
 #import "FHDetailBaseCell.h"
 #import "UITableView+FDTemplateLayoutCell.h"
+#import <TTNewsAccountBusiness/TTAccountManager.h>
+#import <TTAccountLogin/TTAccountLoginManager.h>
+#import "FHDetailOldModel.h"
+#import "FHDetailRentModel.h"
+#import <FHHouseBase/FHEnvContext.h>
+#import <FHHouseBase/FHURLSettings.h>
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -93,6 +99,7 @@
             }
         }];
     }
+    [self addPopLayerNotification];
 }
 
 - (void)vc_viewDidDisappear:(BOOL)animated {
@@ -106,6 +113,7 @@
             }
         }];
     }
+    [self removePopLayerNotification];
 }
 
 #pragma mark - 需要子类实现的方法
@@ -381,4 +389,117 @@
     [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_failed" status:status extra:attr];
 }
 
+#pragma mark - poplayer
+
+- (void)addPopLayerNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onShowPoplayerNotification:) name:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil];
+}
+- (void)removePopLayerNotification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil];
+}
+- (void)onShowPoplayerNotification:(NSNotification *)notification
+{
+    
+}
+
+- (FHDetailHalfPopLayer *)popLayer
+{
+    FHDetailHalfPopLayer *poplayer = [[FHDetailHalfPopLayer alloc] initWithFrame:self.detailController.view.bounds];
+    __weak typeof(self) wself = self;
+    poplayer.reportBlock = ^(id  _Nonnull data) {
+        [wself popLayerReport:data];
+    };
+    [self.detailController.view addSubview:poplayer];
+    return poplayer;
+}
+
+-(void)popLayerReport:(id)model
+{
+    
+    NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+    tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
+    if ([TTAccountManager isLogin]) {
+        [self gotoReportVC:model];
+    } else {
+        [self gotoLogin:model];
+    }
+}
+
+- (void)gotoLogin:(id)model
+{
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    [params setObject:@"old_feedback" forKey:@"enter_from"];
+    [params setObject:@"feedback" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(NO) forKey:@"need_pop_vc"];
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                [wSelf gotoReportVC:model];
+            }
+            // 移除登录页面
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [wSelf delayRemoveLoginVC];
+            });
+        }
+    }];
+}
+
+// 二手房-房源问题反馈
+- (void)gotoReportVC:(id)model
+{    
+    NSString *reportUrl = nil;
+    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
+        reportUrl = [(FHDetailDataBaseExtraOfficialModel *)model dialogs].reportUrl;
+    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
+        reportUrl = [(FHDetailDataBaseExtraDetectiveModel *)model dialogs].reportUrl;
+    }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
+        reportUrl = [(FHRentDetailDataBaseExtraModel *)model dialogs].reportUrl;
+    }
+    
+    if(reportUrl.length == 0){
+        return;
+    }
+    
+    JSONModel *dataModel = self.detailData;
+    NSDictionary *jsonDic = [dataModel toDictionary];
+    if (jsonDic) {
+
+        NSString *openUrl = @"sslocal://webview";
+        NSDictionary *pageData = @{@"data":jsonDic};
+        NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
+        if (commonParams == nil) {
+            commonParams = @{};
+        }
+        NSDictionary *commonParamsData = @{@"data":commonParams};
+        NSDictionary *jsParams = @{@"requestPageData":pageData,
+                                   @"getNetCommonParams":commonParamsData
+                                   };
+        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+        NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
+        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
+        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
+    }
+}
+
+- (void)delayRemoveLoginVC {
+    UINavigationController *navVC = self.detailController.navigationController;
+    NSInteger count = navVC.viewControllers.count;
+    if (navVC && count >= 2) {
+        NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:navVC.viewControllers];
+        if (vcs.count == count) {
+            [vcs removeObjectAtIndex:count - 2];
+            [self.detailController.navigationController setViewControllers:vcs];
+        }
+    }
+}
+
 @end
+
+NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION = @"_DETAIL_SHOW_POP_LAYER_NOTIFICATION_"; //详情页点击显示半屏弹窗
