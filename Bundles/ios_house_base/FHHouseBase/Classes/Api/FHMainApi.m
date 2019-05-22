@@ -70,7 +70,10 @@
     {
         requestParam[@"last_city_id"] = @"";
     }
-
+    
+    if ([FHEnvContext sharedInstance].refreshConfigRequestType) {
+        requestParam[@"request_type"] = [FHEnvContext sharedInstance].refreshConfigRequestType;
+    }
 
     double longitude = location.longitude;
     double latitude = location.latitude;

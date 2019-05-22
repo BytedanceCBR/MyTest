@@ -343,6 +343,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     //开始网络监听通知
     [self.reachability startNotifier];
 
+    
+    if (![FHEnvContext sharedInstance].refreshConfigRequestType) {
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"launch";
+    }
+
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
 

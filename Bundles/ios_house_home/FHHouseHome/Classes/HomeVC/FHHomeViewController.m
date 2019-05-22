@@ -173,6 +173,8 @@ static CGFloat const kSectionHeaderHeight = 38;
         [self.homeListViewModel requestOriginData:YES];
     }
     
+    [FHEnvContext sharedInstance].refreshConfigRequestType = @"refresh_config";
+
     [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:NO];
     
     //首次无网启动点击加载重试，增加拉取频道

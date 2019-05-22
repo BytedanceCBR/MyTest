@@ -240,6 +240,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayDescription;
 @property (nonatomic, copy , nullable) NSString *displaySameneighborhoodTitle;
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
+@property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmValue;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
