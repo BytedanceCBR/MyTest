@@ -109,8 +109,6 @@
         }else {
             [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_schema_error" metric:nil category:@{@"status":@(0)} extra:nil];
         }
-        // add by zyk 测试视频房源id
-        // self.houseId = @"6671159225713950990";
     }
     return self;
 }
