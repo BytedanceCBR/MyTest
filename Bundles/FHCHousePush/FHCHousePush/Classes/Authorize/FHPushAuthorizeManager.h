@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)showArticleAlertIfNeeded;
 + (void)showFollowAlertIfNeeded;
 + (BOOL)isFollowAlertEnabled;
++ (BOOL)isMessageTipEnabled;
 + (BOOL)isAPNSEnabled;
 
 @end

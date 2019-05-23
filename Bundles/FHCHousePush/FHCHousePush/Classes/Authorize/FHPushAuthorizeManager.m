@@ -81,7 +81,7 @@
         return NO;
     }
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
-    NSTimeInterval interval = now - [FHPushAuthorizeHelper lastTimeShowArticleAlert];
+    NSTimeInterval interval = now - [FHPushAuthorizeHelper lastTimeShowMessageTip];
     if (interval / (24 * 60 * 60) < kPushShowMessageInterval) {
         return NO;
     }
