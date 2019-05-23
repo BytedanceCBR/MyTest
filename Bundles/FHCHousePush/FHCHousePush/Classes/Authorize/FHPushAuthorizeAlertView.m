@@ -20,6 +20,7 @@
 @property(nonatomic , strong) UIButton *closeBtn;
 @property(nonatomic , strong) UIImageView *imgView;
 @property(nonatomic , strong) UIButton *submitBtn;
+@property(nonatomic , copy) FHPushAuthorizeHintComplete completed;
 
 @end
 
@@ -33,6 +34,7 @@
 {
     self = [self init];
     if (self) {
+        _completed = completed;
         self.titleLabel.text = title;
         self.subtitleLabel.text = message;
         [self.submitBtn setTitle:confirmBtnTitle forState:UIControlStateNormal];
@@ -130,11 +132,17 @@
 
 - (void)submitBtnDidClick:(UIButton *)btn
 {
+    if (self.completed) {
+        self.completed(FHAuthorizeHintCompleteTypeDone);
+    }
     [self dismiss];
 }
 
 - (void)closeBtnDidClick:(UIButton *)btn
 {
+    if (self.completed) {
+        self.completed(FHAuthorizeHintCompleteTypeCancel);
+    }
     [self dismiss];
 }
 
@@ -183,7 +191,7 @@
 {
     if (!_bgView) {
         _bgView = [[UIView alloc]init];
-        _bgView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.35];
+        _bgView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.4];
     }
     return _bgView;
 }

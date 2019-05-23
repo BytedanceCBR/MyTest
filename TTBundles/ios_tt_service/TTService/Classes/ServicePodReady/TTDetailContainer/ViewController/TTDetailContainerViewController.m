@@ -27,6 +27,8 @@
 #import <KVOController/KVOController.h>
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTMonitor/TTMonitor.h>
+#import "TTArticleDetailViewController.h"
+#import <FHCHousePush/FHPushAuthorizeManager.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
 
@@ -205,6 +207,7 @@
     if (!className) {
         return;
     }
+    
     if ([self.viewModel.detailModel.article isKindOfClass:[TTVFeedItem class]]) {
         if (![className isEqualToString:NSStringFromClass([TTVVideoDetailViewController class])]) {
             TTVFeedItem *videoFeed = (TTVFeedItem *)self.viewModel.detailModel.article;
@@ -248,6 +251,13 @@
             [self setNeedsUpdateOfHomeIndicatorAutoHidden];
         }
     }
+    // add by zjing for test
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        if ([className isEqualToString:NSStringFromClass([TTArticleDetailViewController class])]) {
+            [FHPushAuthorizeManager showArticleAlertIfNeeded];
+        }
+    });
 }
 
 - (void)detailRightNavBarButtonDidChange:(NSDictionary *)change {
