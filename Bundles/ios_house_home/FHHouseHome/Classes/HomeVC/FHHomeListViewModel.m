@@ -199,9 +199,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
                 [self resetAllOthersCacheData];
                 
-                [UIView performWithoutAnimation:^{
+//                [UIView performWithoutAnimation:^{
                     [self.tableViewV reloadData];
-                }];
+//                }];
 
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {

@@ -369,6 +369,10 @@
                            @"coreInfo": @"core_info",
                            @"houseImage": @"house_image",
                            @"originPrice": @"origin_price",
+                           @"pricingNum":@"pricing_num",
+                           @"pricingUnit":@"pricing_unit",
+                           @"pricePerSqmNum":@"price_per_sqm_num",
+                           @"pricePerSqmUnit":@"price_per_sqm_unit",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
