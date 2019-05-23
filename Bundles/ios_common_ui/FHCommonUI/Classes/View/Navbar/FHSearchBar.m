@@ -1,35 +1,56 @@
 //
-//  FHSuggestionListNavBar.m
+//  FHSearchBar.m
 //  FHHouseList
 //
 //  Created by 张元科 on 2018/12/20.
 //
 
-#import "FHSuggestionListNavBar.h"
+#import "FHSearchBar.h"
 #import <Masonry.h>
 #import <UIFont+House.h>
 #import <UIColor+Theme.h>
 #import "TTDeviceHelper.h"
 #import "FHExtendHotAreaButton.h"
+#define MIN_HEIGHT    44
 
-@interface FHSuggestionListNavBar ()
+@interface FHSearchBar ()
 
 @property (nonatomic, strong)   UIView       *searchAreaPanel;
 @property (nonatomic, strong)   UIImageView       *triangleImage;
 @property (nonatomic, strong)   UIView       *verticalLineView;
 @property (nonatomic, strong)   UIImageView       *searchIcon;
 @property (nonatomic, strong)   UIView       *bottomLineView;
+@property (nonatomic, strong)   UIView       *leftView;
+@property(nonatomic , assign) FHSearchNavType type;
 
 @end
 
-@implementation FHSuggestionListNavBar
+@implementation FHSearchBar
+
+-(instancetype)initWithType:(FHSearchNavType)type
+{
+    CGRect frame = [[UIScreen mainScreen] bounds];
+    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    CGFloat statusBarHeight = (isIphoneX ? 44 : 20);
+    frame.size.height = MIN_HEIGHT + statusBarHeight;
+    self = [super initWithFrame:frame];
+    if (self) {
+        _type = type;
+        [self setupUI];
+    }
+    return self;
+}
+
+-(instancetype)init
+{
+    return [self initWithType:FHSearchNavTypeDefault];
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         [self setupUI];
-        [self setupData];
     }
     return self;
 }
@@ -43,6 +64,10 @@
     _searchAreaPanel.layer.masksToBounds = YES;
     _searchAreaPanel.layer.cornerRadius = 4.0;
     [self addSubview:_searchAreaPanel];
+    
+    _leftView = [[UIView alloc] init];
+    [_searchAreaPanel addSubview:_leftView];
+
     // backBtn
     _backBtn = [[FHExtendHotAreaButton alloc] init];
     [_backBtn setTitle:@"取消" forState:UIControlStateNormal];
@@ -67,55 +92,16 @@
         make.width.mas_equalTo(32);
         make.centerY.mas_equalTo(self.searchAreaPanel);
     }];
-    // searchTypeLabel
-    _searchTypeLabel = [[UILabel alloc] init];
-    _searchTypeLabel.textColor = [UIColor themeGray1];
-    _searchTypeLabel.font = [UIFont themeFontRegular:14];
-    [_searchAreaPanel addSubview:_searchTypeLabel];
-    [_searchTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.searchAreaPanel).offset(10);
-        make.centerY.mas_equalTo(self.searchAreaPanel);
-        make.width.mas_equalTo(42);
+    [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.left.mas_equalTo(0);
     }];
-    
-    // triangleImage
-    _triangleImage = [[UIImageView alloc] init];
-    _triangleImage.image = [UIImage imageNamed:@"icon-triangle-open"];
-    [_searchAreaPanel addSubview:_triangleImage];
-    [_triangleImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.searchTypeLabel.mas_right).offset(6);
-        make.height.width.mas_equalTo(9);
-        make.centerY.mas_equalTo(self.searchAreaPanel);
-    }];
-    // verticalLineView
-    _verticalLineView = [[UIView alloc] init];
-    _verticalLineView.backgroundColor = [UIColor themeGray6];
-    _verticalLineView.layer.masksToBounds = YES;
-    // _verticalLineView.layer.borderColor = [UIColor whiteColor].CGColor;
-    // _verticalLineView.layer.borderWidth = 0.5;
-    [_searchAreaPanel addSubview:_verticalLineView];
-    [_verticalLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(1);
-        make.height.mas_equalTo(15);
-        make.centerY.mas_equalTo(self.searchAreaPanel);
-        make.left.mas_equalTo(self.triangleImage.mas_right).offset(10);
-    }];
-    
-    // searchTypeBtn
-    _searchTypeBtn = [[UIButton alloc] init];
-    _searchTypeBtn.backgroundColor = UIColor.clearColor;
-    [_searchAreaPanel addSubview:_searchTypeBtn];
-    [_searchTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.mas_equalTo(self.searchAreaPanel);
-        make.right.mas_equalTo(self.verticalLineView.mas_left);
-    }];
-    
+  
     // searchIcon
     _searchIcon = [[UIImageView alloc] init];
     _searchIcon.image = [UIImage imageNamed:@"icon-search-titlebar"];
     [_searchAreaPanel addSubview:_searchIcon];
     [_searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.verticalLineView.mas_right).offset(10);
+        make.left.mas_equalTo(self.leftView.mas_right).mas_offset(10);
         make.height.width.mas_equalTo(12);
         make.centerY.mas_equalTo(self.searchAreaPanel);
     }];
@@ -147,10 +133,61 @@
         make.height.mas_equalTo(0.5);
         make.bottom.mas_equalTo(self);
     }];
+    
+    if (self.type == FHSearchNavTypeSug) {
+        [self addSugItem];
+    } else {
+        [_leftView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(0);
+        }];
+    }
 }
 
-- (void)setupData {
-    [self setSearchPlaceHolderText:@"二手房/租房/小区"];
+- (void)addSugItem
+{
+    // searchTypeLabel
+    _searchTypeLabel = [[UILabel alloc] init];
+    _searchTypeLabel.textColor = [UIColor themeGray1];
+    _searchTypeLabel.font = [UIFont themeFontRegular:14];
+    [_leftView addSubview:_searchTypeLabel];
+    [_searchTypeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(10);
+        make.centerY.mas_equalTo(self.leftView);
+        make.width.mas_equalTo(42);
+    }];
+    
+    // triangleImage
+    _triangleImage = [[UIImageView alloc] init];
+    _triangleImage.image = [UIImage imageNamed:@"icon-triangle-open"];
+    [_leftView addSubview:_triangleImage];
+    [_triangleImage mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.searchTypeLabel.mas_right).offset(6);
+        make.height.width.mas_equalTo(9);
+        make.centerY.mas_equalTo(self.leftView);
+    }];
+    // verticalLineView
+    _verticalLineView = [[UIView alloc] init];
+    _verticalLineView.backgroundColor = [UIColor themeGray6];
+    _verticalLineView.layer.masksToBounds = YES;
+    // _verticalLineView.layer.borderColor = [UIColor whiteColor].CGColor;
+    // _verticalLineView.layer.borderWidth = 0.5;
+    [_leftView addSubview:_verticalLineView];
+    [_verticalLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(1);
+        make.height.mas_equalTo(15);
+        make.centerY.mas_equalTo(self.leftView);
+        make.left.mas_equalTo(self.triangleImage.mas_right).offset(10);
+        make.right.mas_equalTo(0);
+    }];
+    
+    // searchTypeBtn
+    _searchTypeBtn = [[UIButton alloc] init];
+    _searchTypeBtn.backgroundColor = UIColor.clearColor;
+    [_leftView addSubview:_searchTypeBtn];
+    [_searchTypeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.mas_equalTo(self.leftView);
+        make.right.mas_equalTo(self.verticalLineView.mas_left);
+    }];
 }
 
 - (void)setSearchPlaceHolderText:(NSString *)text {

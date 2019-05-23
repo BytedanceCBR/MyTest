@@ -64,6 +64,8 @@
 @property (nonatomic , copy) NSString *queryString;
 @property (nonatomic , strong) NSDictionary *tracerDict; // 埋点
 
+@property (nonatomic , assign) FHHouseListSearchType searchType;
+
 @end
 
 @implementation FHHouseListViewController
@@ -76,6 +78,8 @@
         //init coordinate viewmodel according to viewmodel
         self.paramObj = paramObj;
         self.hidesBottomBarWhenPushed = YES;
+        self.searchType = FHHouseListSearchTypeDefault;
+
         NSString *houseTypeStr = paramObj.allParams[@"house_type"];
         self.houseType = houseTypeStr.length > 0 ? houseTypeStr.integerValue : FHHouseTypeSecondHandHouse;
         if (houseTypeStr.length == 0 && [paramObj.sourceURL.host isEqualToString:@"commute_list"]) {
@@ -94,6 +98,10 @@
                                                   category:@{@"status":@(0),@"house_type":res}
                                                      extra:@{@"device_id":did}];
             self.houseType = FHHouseTypeSecondHandHouse;
+        }
+        if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) {
+            self.houseType = FHHouseTypeNeighborhood;
+            self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
         }
         self.tracerModel.categoryName = [self categoryName];
         self.tracerDict = [paramObj.userInfo.allInfo tt_dictionaryValueForKey:@"tracer"];
@@ -515,6 +523,7 @@
     [self initNavbar];
     
     self.viewModel = [[FHHouseListViewModel alloc]initWithTableView:self.tableView routeParam:self.paramObj];
+    self.viewModel.searchType = self.searchType;
     self.viewModel.listVC = self;
     [self initFilter];
     [self setupViewModelBlock];
