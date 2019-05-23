@@ -55,8 +55,10 @@
     }
     if (model.buySuggestion.score.integerValue > 0) {
         [self.starView updateStarsCountWithoutLabel:model.buySuggestion.score.integerValue];
+        self.starView.hidden = NO;
     }else {
         [self.starView updateStarsCountWithoutLabel:0];
+        self.starView.hidden = YES;
     }
 }
 

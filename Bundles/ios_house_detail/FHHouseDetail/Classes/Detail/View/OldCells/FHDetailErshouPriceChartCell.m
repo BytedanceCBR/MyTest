@@ -314,7 +314,7 @@
     self.currentData = data;
     FHDetailPriceTrendCellModel *cellModel = (FHDetailPriceTrendCellModel *)data;
     
-    [self.headerView updateTitle:cellModel.priceAnalyze.title];
+    [self.headerView updateTitle:cellModel.priceAnalyze.title ? : @"价格指数"];
     [self.headerView updateStarsCount:cellModel.priceAnalyze.score.integerValue];
     
     NSArray *priceTrends = cellModel.priceTrends; 

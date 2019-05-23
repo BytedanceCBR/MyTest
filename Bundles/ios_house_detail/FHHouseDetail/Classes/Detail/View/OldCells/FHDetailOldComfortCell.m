@@ -27,7 +27,7 @@
     }
     self.currentData = data;
     FHDetailOldComfortModel *model = (FHDetailOldComfortModel *)data;
-    [self.headerView updateTitle:model.comfortInfo.title];
+    [self.headerView updateTitle:model.comfortInfo.title ? : @"舒适指数"];
     [self.headerView updateStarsCount:model.comfortInfo.score.integerValue];
     
     for (UIView *subview in self.bgView.subviews) {
