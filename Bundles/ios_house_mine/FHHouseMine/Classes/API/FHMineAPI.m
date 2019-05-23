@@ -162,4 +162,29 @@
     return [FHMainApi queryData:queryPath params:nil class:cls completion:completion];
 }
 
++ (void)uploadUserPhoto:(UIImage *)image completion:(void (^)(NSString *imageURIString, NSError *error))completion {
+    [TTAccountManager startUploadUserImage:image completion:^(TTAccountImageEntity *imageEntity, NSError *error) {
+        if (error) {
+            if (completion) {
+                completion(nil, error);
+            }
+        } else {
+            if (completion) {
+                completion(imageEntity.web_uri, nil);
+            }
+        }
+    }];
+}
+
++ (void)uploadUserProfileInfo:(NSDictionary *)params completion:(void (^)(TTAccountUserEntity *userEntity, NSError *error))completedBlock
+{
+    [TTAccount updateUserProfileWithDict:params completion:^(TTAccountUserEntity *userEntity, NSError * _Nullable error) {
+        if (!error) {
+            if (completedBlock) completedBlock(userEntity, nil);
+        } else {
+            if (completedBlock) completedBlock(nil, error);
+        }
+    }];
+}
+
 @end

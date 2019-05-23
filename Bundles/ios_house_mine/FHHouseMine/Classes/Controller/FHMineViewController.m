@@ -15,13 +15,16 @@
 #import "UIViewController+Track.h"
 #import "FHTracerModel.h"
 #import "FHUserTracker.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
+#import "TTReachability.h"
 
-@interface FHMineViewController ()
+@interface FHMineViewController ()<UIViewControllerErrorHandler>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) FHMineViewModel *viewModel;
 @property (nonatomic, strong) NSDate *enterDate;
 @property (nonatomic, assign) NSTimeInterval lastRequestFavoriteTime;
+@property (nonatomic, assign) NSTimeInterval lastRequestConfigTime;
 @property (nonatomic, strong) UIButton *phoneBtn;
 @property (nonatomic, strong) UIButton *settingBtn;
 @property (nonatomic, assign) CGFloat headerViewHeight;
@@ -41,12 +44,12 @@
     [self initConstraints];
     [self initViewModel];
     [self setupHeaderView];
-    
-    [self.viewModel requestMineConfig];
+    [self initSignal];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self.viewModel updateHeaderView];
     [self loadData];
 }
 
@@ -147,16 +150,44 @@
     
     UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showInfo)];
     [headerView addGestureRecognizer:gesture];
+    
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(self.headerViewHeight - self.naviBarHeight, 0, 0, 0)];
+}
+
+- (void)initSignal {
+    //config改变后需要重新刷新数据
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        [self startLoadData];
+    }];
 }
 
 - (void)loadData {
-    [self.viewModel updateHeaderView];
-    
     NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970] - self.lastRequestFavoriteTime;
-    if(currentTime > 2){
+    if(currentTime > 2 && [TTReachability isNetworkConnected]){
         [self.viewModel requestData];
         self.lastRequestFavoriteTime = currentTime;
     }
+}
+
+- (void)startLoadData {
+    if ([TTReachability isNetworkConnected]) {
+        NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970] - self.lastRequestConfigTime;
+        if(currentTime > 2){
+            [self.viewModel requestMineConfig];
+            self.lastRequestConfigTime = currentTime;
+        }
+
+    } else {
+        if(!self.hasValidateData){
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            self.tableView.bounces = NO;
+        }
+    }
+}
+
+- (void)retryLoadData {
+    [self startLoadData];
+    [self loadData];
 }
 
 - (void)showInfo {
@@ -194,6 +225,12 @@
 
 - (void)goToSystemSetting {
     [self.viewModel goToSystemSetting];
+}
+
+#pragma mark - UIViewControllerErrorHandler
+
+- (BOOL)tt_hasValidateData {
+    return self.viewModel.dataList.count == 0 ? NO : YES; //默认会显示空
 }
 
 @end

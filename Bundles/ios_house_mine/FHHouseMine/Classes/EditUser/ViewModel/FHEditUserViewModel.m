@@ -14,6 +14,11 @@
 #import "TTURLUtils.h"
 #import "FHEnvContext.h"
 #import "FHEditingInfoController.h"
+#import "UIActionSheet+TTBlocks.h"
+#import "UIImagePickerController+TTBlocks.h"
+#import "TTReachability.h"
+#import "ToastManager.h"
+#import "FHMineAPI.h"
 
 @interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate>
 
@@ -165,6 +170,121 @@
     }
 }
 
+- (void)changeAvatar {
+    UIActionSheet      *actionSheet = nil;
+    NSArray<NSNumber*> *imageSourceTypes = nil;
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+        imageSourceTypes = @[@(UIImagePickerControllerSourceTypeCamera), @(UIImagePickerControllerSourceTypePhotoLibrary)];
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:nil cancelButtonTitle:NSLocalizedString(@"取消", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"拍照", nil), NSLocalizedString(@"从相册上传", nil), nil];
+    } else {
+        imageSourceTypes = @[@(UIImagePickerControllerSourceTypePhotoLibrary)];
+        actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:nil cancelButtonTitle:NSLocalizedString(@"取消", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"从相册上传", nil), nil];
+    }
+    [actionSheet showInView:self.tableView];
+    [actionSheet setDidDismissBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+        if (buttonIndex != actionSheet.cancelButtonIndex) {
+            UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            if (buttonIndex < [imageSourceTypes count])
+                sourceType = [imageSourceTypes[buttonIndex] unsignedIntegerValue];
+            [self imagePickerWithSource:sourceType forAvatar:YES];
+        }
+        
+        // log
+        if (buttonIndex == actionSheet.cancelButtonIndex) {
+            wrapperTrackEvent(@"account_setting_avatar", @"cancel");
+        } else {
+            if (buttonIndex < [imageSourceTypes count]) {
+                NSString *logString = [imageSourceTypes[buttonIndex] unsignedIntegerValue] == UIImagePickerControllerSourceTypePhotoLibrary ? @"upload_avatar" : @"take_avatar";
+                wrapperTrackEvent(@"account_setting_avatar", logString);
+            }
+        }
+    }];
+    
+    wrapperTrackEvent(@"edit_profile", @"account_setting_avatar");
+}
+
+#pragma mark - pick image and upload image
+
+- (void)imagePickerWithSource:(UIImagePickerControllerSourceType)sourceType forAvatar:(BOOL)bAvatar {
+    __weak typeof(self) wself = self;
+    UIImagePickerControllerDidFinishBlock completionCallback = ^(UIImagePickerController *picker, NSDictionary *info) {
+        __strong typeof(wself) sself = wself;
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+        // iOS 9 的系统 bug，在 iPad 不能选取图片显示区域，系统自动给截了左上角区域；
+        // workaround : iPad 暂时先取 `UIImagePickerControllerOriginalImage` (会导致图片挤压变形).
+        NSString *imageType = UIImagePickerControllerEditedImage;
+        if ([TTDeviceHelper isPadDevice] && [[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0) {
+            if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary) {
+                imageType = UIImagePickerControllerOriginalImage;
+            }
+        }
+        UIImage *image = [info objectForKey:imageType];
+        if (image) {
+            // upload
+            [sself uploadImage:image];
+        }
+    };
+    UIImagePickerControllerDidCancelBlock cancelCallback = ^(UIImagePickerController *picker) {
+        [picker dismissViewControllerAnimated:YES completion:NULL];
+    };
+    
+    UIImagePickerController *imageController = [[UIImagePickerController alloc] init];
+    imageController.sourceType = sourceType;
+    imageController.allowsEditing = YES;
+    imageController.completionBlock = completionCallback;
+    imageController.cancellationBlock = cancelCallback;
+    
+    [self.viewController.navigationController presentViewController:imageController animated:YES completion:NULL];
+}
+
+- (void)uploadImage:(UIImage *)image {
+    if (!image) return;
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络不给力，请稍后重试"];
+        return;
+    }
+    
+    __weak typeof(self) wself = self;
+    
+    void (^didCompletedBlock)(NSString *, NSError *) = ^(NSString *imageURIString, NSError *error) {
+        __strong typeof(wself) sself = wself;
+        if (error || isEmptyString(imageURIString)) {
+            NSString *hint = [error.userInfo objectForKey:@"description"];
+            if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
+            [[ToastManager manager] showToast:hint];
+        } else {
+            // 防止crash
+            imageURIString = imageURIString ? : @"";
+            [FHMineAPI uploadUserProfileInfo:@{TTAccountUserAvatarKey : imageURIString} completion:^(TTAccountUserEntity *userEntity, NSError *error) {
+                __strong typeof(wself) sself2 = wself;
+                
+                if (error) {
+                    NSString *hint = [error.userInfo objectForKey:@"description"];
+                    if (isEmptyString(hint)) hint = [error.userInfo objectForKey:TTAccountErrMsgKey];
+                    if (isEmptyString(hint)) hint = NSLocalizedString(@"头像修改失败，请稍后重试", nil);
+                    [[ToastManager manager] showToast:hint];
+                } else {
+                    [[ToastManager manager] showToast:@"头像修改成功"];
+                    NSString *imageURL = [userEntity.auditInfoSet userAvatarURLString];
+                    if (!isEmptyString(imageURL)) {
+                        TTAccountUserEntity* user = [[TTAccount sharedAccount] user];
+                        if (user != nil) {
+                            user.avatarURL = imageURL;
+                            [[TTAccount sharedAccount] setUser:user];
+                        }
+                        sself2.userInfo.avatarURL = imageURL;
+                        // 使用更新的数据刷新
+                        [sself2 reloadViewModel];
+                    }
+                }
+            }];
+        }
+    };
+    
+    [FHMineAPI uploadUserPhoto:image completion:didCompletedBlock];
+}
+
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -223,7 +343,7 @@
     if([key isEqualToString:@"unRegister"]){
         [self triggerLogoutUnRegister];
     }else if([key isEqualToString:@"avatar"]){
-        
+        [self changeAvatar];
     }else if([key isEqualToString:@"userName"]){
         [self goToEditingInfo:key];
     }else if([key isEqualToString:@"userDesc"]){

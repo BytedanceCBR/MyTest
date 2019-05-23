@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMineViewModel : NSObject
 
+@property(nonatomic, strong) NSMutableArray *dataList;
+
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMineViewController *)viewController;
 
 - (void)requestData;

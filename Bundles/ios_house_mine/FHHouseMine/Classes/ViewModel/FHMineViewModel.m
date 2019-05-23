@@ -24,14 +24,13 @@
 
 @interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineFocusCellDelegate>
 
-@property(nonatomic, strong) NSMutableArray *dataList;
-@property(nonatomic, strong) NSArray *defaultList;
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMineViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) NSMutableArray *focusItemTitles;
 @property(nonatomic , assign) BOOL hasLogin;
 @property(nonatomic , strong) FHMineMutiItemCell *focusCell;
+@property(nonatomic, assign) BOOL isFirstLoad;
 
 @end
 
@@ -44,6 +43,7 @@
         
         _dataList = [[NSMutableArray alloc] init];
         _focusItemTitles = [[NSMutableArray alloc] init];
+        _isFirstLoad = YES;
         
         self.tableView = tableView;
         
@@ -146,12 +146,28 @@
 
 - (void)requestMineConfig {
     __weak typeof(self) wself = self;
+    
+    if(self.isFirstLoad){
+        [self.viewController startLoading];
+    }
+    
     [FHMineAPI requestMineConfigWithClassName:@"FHMineConfigModel" completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        NSLog(@"11");
+        
+        if(self.isFirstLoad){
+            [self.viewController endLoading];
+        }
+        
+        wself.isFirstLoad = NO;
+        
         if (error) {
             //TODO: show handle error
+            [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            wself.tableView.bounces = NO;
             return;
         }
+        
+        wself.tableView.bounces = YES;
+        [wself.viewController.emptyView hideEmptyView];
         
         FHMineConfigModel *configModel = (FHMineConfigModel *)model;
         if(configModel){
