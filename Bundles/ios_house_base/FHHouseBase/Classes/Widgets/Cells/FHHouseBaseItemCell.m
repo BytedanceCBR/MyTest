@@ -346,12 +346,11 @@
     
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
-        layout.marginTop = YGPointValue(6);
-        layout.marginLeft = YGPointValue(-3);
+        layout.paddingTop = YGPointValue(3);
+        layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(15);
         layout.maxWidth = YGPointValue([self contentMaxWidth]);
     }];
-    
     
     _priceBgView = [[UIView alloc] init];
     [_rightInfoView addSubview:_priceBgView];
@@ -484,7 +483,7 @@
     [_subTitleLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
-        layout.height = YGPointValue(17);
+        layout.height = YGPointValue(19);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
         layout.flexGrow = 0;
     }];
@@ -492,7 +491,7 @@
     [_statInfoLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
-        layout.height = YGPointValue(17);
+        layout.height = YGPointValue(19);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
         layout.flexGrow = 0;
     }];
@@ -501,8 +500,8 @@
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
-        layout.marginLeft = YGPointValue(-3);
-        layout.height = YGPointValue(14);
+        layout.marginLeft = YGPointValue(-6);
+        layout.height = YGPointValue(16);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
     }];
     
@@ -597,7 +596,6 @@
         self.priceLabel.text = commonModel.displayPrice;
         self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
-            
             self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
             self.imageTagLabel.text = commonModel.houseImageTag.text;
             self.imageTagLabelBgView.backgroundColor = [UIColor colorWithHexString:commonModel.houseImageTag.backgroundColor];
@@ -641,7 +639,7 @@
     self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;
     self.mainTitleLabel.text = commonModel.displayTitle;
     self.subTitleLabel.text = commonModel.displayDescription;
-    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:commonModel.tags];
+    NSAttributedString * attributeString =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:commonModel.tags];
     self.tagLabel.attributedText =  attributeString;
     
     self.priceLabel.text = commonModel.displayPricePerSqm;
