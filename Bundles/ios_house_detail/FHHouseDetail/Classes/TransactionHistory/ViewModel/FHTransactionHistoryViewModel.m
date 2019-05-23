@@ -17,6 +17,7 @@
 #import "FHRefreshCustomFooter.h"
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "TTReachability.h"
+#import "ToastManager.h"
 
 #define kCellId @"cell_id"
 
@@ -72,7 +73,11 @@
 
 - (void)requestData:(BOOL)isHead {
     [self.requestTask cancel];
-    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        [self updateTableViewWithMoreData:self.tableView.hasMore];
+        return;
+    }
     if(isHead) {
         self.page = 0;
         self.searchId = nil;
