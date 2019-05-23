@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class FHRentDetailDataBaseExtraDialogContentModel;
+@class FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel;
 NS_ASSUME_NONNULL_BEGIN
 //交易贴士cell
 @interface FHDetailHalfPopDealCell : UITableViewCell
@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) UILabel *infoLabel;
 @property(nonatomic , strong) UIImageView *imgView;
 
--(void)updateWithModel:(FHRentDetailDataBaseExtraDialogContentModel *)model;
+-(void)updateWithModel:(FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel *)model;
 
 @end
 

@@ -19,6 +19,7 @@
 #import "FHDetailHalfPopDealCell.h"
 #import "FHDetailHalfPopDealFooter.h"
 #import "FHDetailCheckHeader.h"
+#import <TTBaseLib/UIViewAdditions.h>
 
 #import "FHDetailOldModel.h"
 #import "FHDetailRentModel.h"
@@ -74,6 +75,9 @@
 //        }
         
         _footer = [[FHDetailHalfPopFooter alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), FOOTER_HEIGHT)];
+        _footer.actionBlock = ^(BOOL positive) {
+            [wself feedBack:positive];
+        };
         
         _tableView.tableFooterView = _footer;
         
@@ -140,6 +144,10 @@
     [self dismiss];
 }
 
+-(void)feedBack:(BOOL)positive
+{
+    
+}
 
 -(FHDetailHalfPopLogoHeader *)header
 {
@@ -179,9 +187,11 @@
 {
     self.data = data;
     FHDetailHalfPopLogoHeader *header = [self header];
-    [header updateWithTitle:data.dialogs.title tip:data.dialogs.subTitle imgUrl:data.dialogs.icon];
+    header.height = 47;
+//    data.securityInformation.dialogs
+    [header updateWithTitle:data.securityInformation.dialogs.title tip:data.securityInformation.dialogs.subTitle imgUrl:data.securityInformation.dialogs.icon];
     
-    [_footer showTip:data.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeConfirm positiveTitle:@"提交" negativeTitle:nil];
+    [_footer showTip:data.securityInformation.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeConfirm positiveTitle:@"提交" negativeTitle:nil];
     
     self.tableView.tableHeaderView = header;
     
@@ -227,7 +237,7 @@
         return detectiveModel.detectiveInfo.detectiveList.count;
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         FHRentDetailDataBaseExtraModel *extraModel = (FHRentDetailDataBaseExtraModel *)self.data;
-        return extraModel.dialogContent.count;
+        return extraModel.securityInformation.dialogContent.content.count;
     }
     
     return 0;
@@ -264,7 +274,7 @@
         
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         FHRentDetailDataBaseExtraModel *extraModel = (FHRentDetailDataBaseExtraModel *)self.data;
-        FHRentDetailDataBaseExtraDialogContentModel *dialogModel = extraModel.dialogContent[indexPath.row];
+        FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel *dialogModel = extraModel.securityInformation.dialogContent.content[indexPath.row];
         
         FHDetailHalfPopDealCell *dcell = (FHDetailHalfPopDealCell *)[tableView dequeueReusableCellWithIdentifier:DEAL_CELL];
         [dcell updateWithModel:dialogModel];
@@ -287,7 +297,9 @@
     if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]) {
         return 30;
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
-        return 58;
+        
+        NSString *comment = [(FHRentDetailDataBaseExtraModel *)self.data securityInformation].dialogContent.comment;
+        return [FHDetailHalfPopDealFooter heightForText:comment];
     }
     return CGFLOAT_MIN;
 }

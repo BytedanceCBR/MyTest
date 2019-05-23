@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FHDetailHalfPopDealFooter : UIView
 
++(CGFloat)heightForText:(NSString *)text;
+
 @property(nonatomic , strong) UILabel *infoLabel;
 
 @end

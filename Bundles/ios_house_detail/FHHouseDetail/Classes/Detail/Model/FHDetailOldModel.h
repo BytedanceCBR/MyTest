@@ -282,6 +282,8 @@ typedef enum : NSInteger {
 @interface FHDetailDataBaseExtraOfficialModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *icon;
+@property (nonatomic, copy , nullable) NSString *agencyLogoUrl;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialAgencyModel *agency ;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
 @end

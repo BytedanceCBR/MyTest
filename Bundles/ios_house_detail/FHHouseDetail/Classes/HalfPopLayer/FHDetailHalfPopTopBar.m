@@ -35,6 +35,7 @@
         _reportButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [_reportButton setTitle:@"举报" forState:UIControlStateNormal];
         [_reportButton setTitleColor:[UIColor themeRed1] forState:UIControlStateNormal];
+        [_reportButton addTarget:self action:@selector(onAction:) forControlEvents:UIControlEventTouchUpInside];
         _reportButton.titleLabel.font = [UIFont themeFontRegular:16];
         
         [self addSubview:_closeButton];
@@ -50,7 +51,7 @@
         
         [_reportButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self);
-            make.centerY.mas_equalTo(self);
+            make.top.bottom.mas_equalTo(self);
             make.width.mas_equalTo(72);
         }];
     }

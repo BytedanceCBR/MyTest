@@ -100,7 +100,8 @@
 
 @end
 
-@implementation FHRentDetailDataBaseExtraDialogContentModel
+#pragma mark - base extra
+@implementation FHRentDetailDataBaseExtraSecurityInformationDialogContentModel
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
@@ -111,7 +112,6 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-                           @"dialogContent": @"dialog_content",
                            @"securityInformation": @"security_information",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -128,7 +128,10 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
+                           @"dialogContent": @"dialog_content",
+                           @"baseContent": @"base_content",
                            @"baseTitle": @"base_title",
+                           @"tipsIcon": @"tips_icon",
                            @"tipsContent": @"tips_content",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -141,6 +144,23 @@
 }
 @end
 
+@implementation FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"dialogContentImage": @"dialog_content_image",
+                           @"dialogContentTitle": @"dialog_content_title",
+                           @"dialogContentText": @"dialog_content_text",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
 
 
 

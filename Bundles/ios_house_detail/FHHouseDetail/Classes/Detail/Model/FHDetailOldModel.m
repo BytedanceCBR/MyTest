@@ -309,6 +309,7 @@
 {
     NSDictionary *dict = @{
                            @"baseTitle": @"base_title",
+                           @"agencyLogoUrl":@"agency_logo_url",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

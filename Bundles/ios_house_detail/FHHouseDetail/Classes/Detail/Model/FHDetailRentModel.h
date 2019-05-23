@@ -185,30 +185,37 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
-@protocol FHRentDetailDataBaseExtraDialogContentModel<NSObject>
+#pragma mark - base extra
+
+@protocol FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel<NSObject>
 @end
 
-@interface FHRentDetailDataBaseExtraDialogContentModel : JSONModel
+@interface FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *text;
-@property (nonatomic, copy , nullable) NSString *image;
-@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *dialogContentImage;
+@property (nonatomic, copy , nullable) NSString *dialogContentTitle;
+@property (nonatomic, copy , nullable) NSString *dialogContentText;
+@end
+
+@interface FHRentDetailDataBaseExtraSecurityInformationDialogContentModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel> *content;
+@property (nonatomic, copy , nullable) NSString *comment;
 @end
 
 @interface FHRentDetailDataBaseExtraSecurityInformationModel : JSONModel
 
-@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraSecurityInformationDialogContentModel *dialogContent ;
+@property (nonatomic, copy , nullable) NSString *baseContent;
 @property (nonatomic, copy , nullable) NSString *baseTitle;
+@property (nonatomic, copy , nullable) NSString *tipsIcon;
 @property (nonatomic, copy , nullable) NSString *tipsContent;
-@property (nonatomic, copy , nullable) NSString *icon;
+@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
 @end
 
 @interface FHRentDetailDataBaseExtraModel : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray<FHRentDetailDataBaseExtraDialogContentModel> *dialogContent;
 @property (nonatomic, strong , nullable) FHRentDetailDataBaseExtraSecurityInformationModel *securityInformation ;
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
-
 @end
 
 @interface  FHRentDetailResponseDataModel  : JSONModel

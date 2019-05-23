@@ -10,8 +10,19 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <Masonry/Masonry.h>
+#import <FHHouseBase/FHCommonDefines.h>
 
 @implementation FHDetailHalfPopDealFooter
+
++(CGFloat)heightForText:(NSString *)text
+{
+    if (text.length == 0) {
+        return 0;
+    }
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12]};
+    CGSize size = [text boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 40, 1000) options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attr context:nil].size;
+    return ceil(size.height) + 22;
+}
 
 -(instancetype)initWithFrame:(CGRect)frame
 {

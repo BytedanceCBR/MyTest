@@ -74,13 +74,13 @@
     // Configure the view for the selected state
 }
 
--(void)updateWithModel:(FHRentDetailDataBaseExtraDialogContentModel *)model
+-(void)updateWithModel:(FHRentDetailDataBaseExtraSecurityInformationDialogContentContentModel *)model
 {
-    self.titleLabel.text = model.title;
-    self.infoLabel.text = model.text;
+    self.titleLabel.text = model.dialogContentTitle;
+    self.infoLabel.text = model.dialogContentText;
     
 //    self.imgView
-    [self.imgView bd_setImageWithURL:[NSURL URLWithString:model.image]];
+    [self.imgView bd_setImageWithURL:[NSURL URLWithString:model.dialogContentImage]];
 }
 
 @end

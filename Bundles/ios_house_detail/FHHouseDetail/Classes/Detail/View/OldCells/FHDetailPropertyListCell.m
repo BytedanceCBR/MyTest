@@ -326,6 +326,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     _logoImageView = [[UIImageView alloc] init];
     _logoImageView.image = SYS_IMG(@"detail_entrance_arrow");
+    _logoImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _indicatorLabel.font = [UIFont themeFontMedium:12];
@@ -375,22 +376,25 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _infoLabel.text =  officialModel.agency.name;
     _logoImageView.image = nil;
     
-    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:officialModel.agency.logo.url]];
-    
-    self.indicatorLabel.hidden = YES;
-    
-    CGFloat width = officialModel.agency.logo.width.floatValue;
-    CGFloat height = officialModel.agency.logo.height.floatValue;
-    if (width > 0 && height > 20) {
-        width = 20*width/height;
-        height = 20;
-    }
-    
-    [self.logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-30);
-        make.size.mas_equalTo(CGSizeMake(width, height));
+    __weak typeof(self) wself = self;
+    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:officialModel.agencyLogoUrl] placeholder:nil options:BDImageRequestHighPriority completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+        if (image && wself) {
+            CGFloat width = image.size.width;
+            CGFloat height = image.size.height;
+            if (width > 0 && height > 20) {
+                width = 20*width/height;
+                height = 20;
+            }
+            
+            [wself.logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.mas_equalTo(-30);
+                make.size.mas_equalTo(CGSizeMake(width, height));
+            }];
+        }
     }];
     
+    self.indicatorLabel.hidden = YES;
+        
 }
 
 -(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel
@@ -427,7 +431,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-(31+size.width));
-        make.size.mas_equalTo(CGSizeMake(20, 20));
+        make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     
 }
@@ -436,13 +440,13 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 {
     self.data = securityInfo;
     _nameLabel.text = securityInfo.baseTitle;
-    _infoLabel.text = securityInfo.content;
+    _infoLabel.text = securityInfo.baseContent;
     
     _indicatorLabel.text = securityInfo.tipsContent;
     [_indicatorLabel sizeToFit];
     
     _logoImageView.image = nil;
-    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:securityInfo.icon]];
+    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:securityInfo.tipsIcon]];
     
     
     CGSize size = _indicatorLabel.bounds.size;
@@ -454,7 +458,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-(31+size.width));
-        make.size.mas_equalTo(CGSizeMake(20, 20));
+        make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     
 }

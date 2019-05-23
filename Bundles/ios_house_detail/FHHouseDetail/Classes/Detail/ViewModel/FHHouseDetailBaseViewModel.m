@@ -459,7 +459,7 @@
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
         reportUrl = [(FHDetailDataBaseExtraDetectiveModel *)model dialogs].reportUrl;
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
-        reportUrl = [(FHRentDetailDataBaseExtraModel *)model dialogs].reportUrl;
+        reportUrl = [(FHRentDetailDataBaseExtraModel *)model securityInformation].dialogs.reportUrl;
     }
     
     if(reportUrl.length == 0){
