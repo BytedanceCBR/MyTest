@@ -239,17 +239,6 @@
     if ([param isKindOfClass:[NSDictionary class]]) {
         NSString *paramsEvent = [param tt_stringValueForKey:@"event"];
         if (paramsEvent) {
-            
-            if ([paramsEvent isKindOfClass:[NSString class]] && [paramsEvent isEqualToString:@"house_show"]) {
-                UINavigationController *topVC = [TTUIResponderHelper correctTopNavigationControllerFor:controller];
-                UIViewController *currentVC = nil;
-                
-                if ([[topVC.viewControllers lastObject] respondsToSelector:@selector(addFirstScreenParams:)]) {
-                    [[topVC.viewControllers lastObject] performSelector:@selector(addFirstScreenParams:) withObject:param];
-                    return;
-                }
-            }
-            
             NSString *paramsTrace = param[@"params"];
             if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
                 [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];

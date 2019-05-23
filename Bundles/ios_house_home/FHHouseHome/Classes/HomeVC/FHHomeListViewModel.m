@@ -70,7 +70,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.categoryView = self.categoryView;
         self.dataSource.showPlaceHolder = YES;
         
-   
+
+        [self configIconRowCountAndHeight];
+        
         
         [self updateCategoryViewSegmented:YES];
         self.tableViewV.delegate = self.dataSource;
@@ -140,6 +142,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             StrongSelf;
             self.isRequestFromSwitch = NO;
             
+            [self configIconRowCountAndHeight];
+            
             self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
             
             //切换城市先显示横条
@@ -195,19 +199,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
                 [self resetAllOthersCacheData];
                 
-                //切换城市之后刷新数据
-                if ([self.tableViewV numberOfSections] > 1 && [self.tableViewV numberOfRowsInSection:0] > 0 && [self.tableViewV numberOfRowsInSection:1] > 0 && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
-                    NSIndexSet *indexSetIcon=[[NSIndexSet alloc] initWithIndex:0];
-                    NSIndexSet *indexSetEntrance=[[NSIndexSet alloc] initWithIndex:1];
-                    
-                    [UIView performWithoutAnimation:^{
-                        [self.tableViewV reloadSections:indexSetIcon withRowAnimation:UITableViewRowAnimationNone];
-                        [self.tableViewV reloadSections:indexSetEntrance withRowAnimation:UITableViewRowAnimationNone];
-                    }];
-                }else
-                {
+//                [UIView performWithoutAnimation:^{
                     [self.tableViewV reloadData];
-                }
+//                }];
 
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
@@ -324,6 +318,27 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             return @"be_null";
             break;
     }
+}
+
+- (void)configIconRowCountAndHeight
+{
+    [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //下版本等实验结论再上
+//    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
+//        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 5;
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 42;
+//        }else
+//        {
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+//        }
+//    }else
+//    {
+//        [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+//        [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+//    }
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
