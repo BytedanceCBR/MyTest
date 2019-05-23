@@ -497,7 +497,7 @@ UITableViewDataSource>
             titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
             backImageView.frame = CGRectMake(0, 0, titleLabel.text.length * 13 + 20, 35);
             
-            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_annotation_bg"];
+            UIImage *imageAnna = [UIImage imageNamed:@"mapsearch_detail_annotation_bg"];//mapsearch_annotation_bg
             
             CGFloat width = imageAnna.size.width > 0 ? imageAnna.size.width : 10;
             CGFloat height = imageAnna.size.height > 0 ? imageAnna.size.height : 10;
@@ -517,6 +517,7 @@ UITableViewDataSource>
             titleLabel.textAlignment = NSTextAlignmentCenter;
             titleLabel.backgroundColor = [UIColor clearColor];
             [titleLabel sizeToFit];
+            backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 40, 35);
             titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
             
             UIImageView *bottomArrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"mapsearch_annotation_arrow"]];
