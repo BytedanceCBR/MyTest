@@ -230,13 +230,7 @@
     
     [self.contentView addSubview:self.bottomBgView];
     [self.contentView addSubview:self.priceView];
-//    [self.priceView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(20);
-//        make.right.mas_equalTo(-20);
-//        make.top.mas_equalTo(self.headerView.mas_top).offset(90 - 37);
-//        make.height.mas_equalTo(84);
-//    }];
-    self.priceView.frame = CGRectMake(20, 90 - 37, [UIScreen mainScreen].bounds.size.width - 40, 84);
+    self.priceView.frame = CGRectMake(20, 62, [UIScreen mainScreen].bounds.size.width - 40, 84);
     [self.priceView addSubview:self.priceKeyLabel];
     [self.priceKeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(20);
@@ -297,7 +291,7 @@
     }];
     [self.priceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(80);
+        make.top.mas_equalTo(86);
     }];
     [self.chartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
