@@ -291,7 +291,7 @@
     }];
     [self.priceLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
-        make.top.mas_equalTo(86);
+        make.top.mas_equalTo(90);
     }];
     [self.chartView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
