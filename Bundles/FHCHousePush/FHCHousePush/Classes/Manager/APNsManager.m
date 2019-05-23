@@ -172,7 +172,7 @@ static APNsManager *_sharedManager = nil;
 
             NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
             
-            [FHEnvContext sharedInstance].refreshConfigRequestType = @"launch";
+            [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
 
             if ([[handledOpenURL host] isEqualToString:@"main"]) {
                 TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];

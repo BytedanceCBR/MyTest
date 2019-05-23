@@ -285,6 +285,7 @@
 {
     NSDictionary *dict = @{
                            @"opStyle": @"op_style",
+                           @"iconRowNum":@"icon_row_num"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
