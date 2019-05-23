@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FHMineViewController.h"
+#import "FHMineDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,11 +22,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showInfo;
 
 - (void)updateHeaderView;
-//-(void)addEnterUserProfileLog;
 
 - (void)goToSystemSetting;
 
+- (void)callPhone;
+
 - (void)requestMineConfig;
+
+- (void)updateFocusTitles;
 
 @end
 

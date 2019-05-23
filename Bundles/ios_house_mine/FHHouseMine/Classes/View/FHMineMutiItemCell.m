@@ -9,6 +9,8 @@
 #import <Masonry/Masonry.h>
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
+#import "TTAccount.h"
+#import "FHMineDefine.h"
 
 #define itemPadding 10
 #define eachRowCount 4
@@ -33,7 +35,6 @@
         
         [self initViews];
         [self initConstraints];
-        [self initDefaultItems];
     }
     return self;
 }
@@ -116,7 +117,7 @@
     
     for (FHMineConfigDataIconOpDataMyIconItemsModel *itemModel in self.model.myIcon.items) {
         NSString *title = itemModel.title;
-        if([self.model.myIconId isEqualToString:@"0"]){
+        if([self.model.myIconId integerValue] == FHMineModuleTypeHouseFocus){
             title = [self getFocusItemTitle:itemModel.title];
         }
         NSString *imageUrl = ((FHMineConfigDataIconOpDataMyIconItemsImageModel *)[itemModel.image firstObject]).url;
@@ -130,8 +131,7 @@
     [self setItemViews:self.items];
 }
 
-- (void)setItemViews:(NSArray<FHMineFavoriteItemView *> *)items
-{
+- (void)setItemViews:(NSArray<FHMineFavoriteItemView *> *)items {
     for (UIView *view in self.bgView.subviews) {
         if([view isKindOfClass:[FHMineFavoriteItemView class]]){
             [view removeFromSuperview];
@@ -159,10 +159,27 @@
     return [NSString stringWithFormat:@"%@ (*)",name];
 }
 
+- (void)updateFocusTitles {
+    for (NSInteger i = 0; i < self.items.count; i++) {
+        FHMineConfigDataIconOpDataMyIconItemsModel *itemModel = self.model.myIcon.items[i];
+        FHMineFavoriteItemView *view = self.items[i];
+        view.nameLabel.text = [NSString stringWithFormat:@"%@ (*)",itemModel.title];
+    }
+}
+
 - (void)setItemTitles:(NSArray *)itemTitles {
     for (NSInteger i = 0; i < self.items.count; i++) {
         FHMineFavoriteItemView *view = self.items[i];
         view.nameLabel.text = itemTitles[i];
+    }
+}
+
+- (void)setItemTitlesWithItemDic:(NSDictionary *)itemDic {
+    for (NSInteger i = 0; i < self.items.count; i++) {
+        FHMineConfigDataIconOpDataMyIconItemsModel *itemModel = self.model.myIcon.items[i];
+        NSString *key = itemModel.id;
+        FHMineFavoriteItemView *view = self.items[i];
+        view.nameLabel.text = [NSString stringWithFormat:@"%@ (%i)",itemModel.title,[itemDic[key] integerValue]];
     }
 }
 

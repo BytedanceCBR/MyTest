@@ -74,7 +74,7 @@
             BOOL success = ([json[@"status"] integerValue] == 0);
             if(success){
                 NSInteger count = [json[@"data"][@"total_count"] integerValue];
-                [result setObject:@(count) forKey:@(type)];
+                [result setObject:@(count) forKey:[NSString stringWithFormat:@"%i",type]];
             }
         }
         @catch(NSException *e){

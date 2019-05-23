@@ -38,6 +38,7 @@
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.ttTrackStayEnable = YES;
+    self.ttStatusBarStyle = UIStatusBarStyleLightContent;
     
     [self initNavbar];
     [self initView];
@@ -55,9 +56,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if(self.emptyView && !self.emptyView.hidden){
-        return;
-    }
     [self refreshContentOffset:self.tableView.contentOffset];
 }
 
@@ -70,7 +68,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault];
 }
 
 - (void)initNavbar {
@@ -80,31 +77,23 @@
     self.customNavBarView.title.alpha = 0;
     self.customNavBarView.seperatorLine.alpha = 0;
     self.customNavBarView.leftBtn.hidden = YES;
-    self.customNavBarView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fh_mine_header_bg"]];
-    self.customNavBarView.contentMode = UIViewContentModeScaleAspectFill;
-//    [self setNavBar:YES];
+    self.customNavBarView.bgView.alpha = 0;
+    self.customNavBarView.bgView.image = [UIImage imageNamed:@"fh_mine_header_bg"];
     
     self.settingBtn = [[UIButton alloc] init];
     [_settingBtn setBackgroundImage:[UIImage imageNamed:@"fh_mine_setting"] forState:UIControlStateNormal];
+    _settingBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [_settingBtn addTarget:self action:@selector(goToSystemSetting) forControlEvents:UIControlEventTouchUpInside];
     
     self.phoneBtn = [[UIButton alloc] init];
     [_phoneBtn setBackgroundImage:[UIImage imageNamed:@"fh_mine_phone"] forState:UIControlStateNormal];
+    _phoneBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [_phoneBtn addTarget:self action:@selector(callPhone) forControlEvents:UIControlEventTouchUpInside];
     [self.customNavBarView addRightViews:@[_settingBtn,_phoneBtn] viewsWidth:@[@24,@24] viewsHeight:@[@24,@24] viewsRightOffset:@[@20,@30]];
     
     [self.view layoutIfNeeded];
     self.naviBarHeight = CGRectGetMaxY(self.customNavBarView.frame);
 }
-
-//- (void)setNavBar:(BOOL)error {
-//    if(error){
-//        self.customNavBarView.title.textColor = [UIColor themeGray1];
-//        [self.customNavBarView setNaviBarTransparent:NO];
-//    }else{
-//        self.customNavBarView.title.textColor = [UIColor whiteColor];
-//        [self.customNavBarView setNaviBarTransparent:YES];
-//    }
-//}
 
 - (void)initView {
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -164,8 +153,12 @@
 - (void)loadData {
     NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970] - self.lastRequestFavoriteTime;
     if(currentTime > 2 && [TTReachability isNetworkConnected]){
-        [self.viewModel requestData];
-        self.lastRequestFavoriteTime = currentTime;
+        if([TTAccount sharedAccount].isLogin){
+            [self.viewModel requestData];
+            self.lastRequestFavoriteTime = currentTime;
+        }else{
+            [self.viewModel updateFocusTitles];
+        }
     }
 }
 
@@ -225,6 +218,10 @@
 
 - (void)goToSystemSetting {
     [self.viewModel goToSystemSetting];
+}
+
+- (void)callPhone {
+    [self.viewModel callPhone];
 }
 
 #pragma mark - UIViewControllerErrorHandler

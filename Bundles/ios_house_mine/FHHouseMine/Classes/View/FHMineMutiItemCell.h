@@ -21,6 +21,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setItemTitles:(NSArray *)itemTitles;
 
+- (void)setItemTitlesWithItemDic:(NSDictionary *)itemDic;
+
+- (void)updateFocusTitles;
+
 @property(nonatomic , weak) id<FHMineFocusCellDelegate> delegate;
 
 @end
