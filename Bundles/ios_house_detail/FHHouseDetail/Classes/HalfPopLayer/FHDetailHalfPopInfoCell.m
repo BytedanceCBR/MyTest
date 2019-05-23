@@ -98,7 +98,7 @@
     self.tipImageView.image = [UIImage imageNamed: ok?@"detail_check_ok":@"detail_check_failed"];
     
     self.titleLabel.text  = model.title;
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontMedium:14],NSForegroundColorAttributeName:ok?[UIColor themeGreen1]:[UIColor themeRed1]};
+    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:ok?[UIColor themeGreen1]:[UIColor themeRed1]};
     
     self.stateLabel.attributedText = [[NSAttributedString alloc] initWithString:model.subTitle?:@"" attributes:attr];
     
