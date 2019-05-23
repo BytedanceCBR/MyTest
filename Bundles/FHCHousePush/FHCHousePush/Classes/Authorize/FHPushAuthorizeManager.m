@@ -28,15 +28,15 @@
     }
     FHPushAuthorizeAlertView *alert = [[FHPushAuthorizeAlertView alloc]initAuthorizeHintWithImageName:@"push_alert_price" title:@"房源一降价，立刻提醒我！" message:@"打开推送获取及时通知" confirmBtnTitle:@"打开通知" completed:^(FHAuthorizeHintCompleteType type) {
         NSMutableDictionary *paramDict = @{}.mutableCopy;
+        if (params.count > 0) {
+            [paramDict addEntriesFromDictionary:params];
+        }
         if (type == FHAuthorizeHintCompleteTypeDone) {
             paramDict[@"click_type"] = @"confirm";
             NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
             [[UIApplication sharedApplication] openURL:url];
         }else {
             paramDict[@"click_type"] = @"cancel";
-        }
-        if (params.count > 0) {
-            [paramDict addEntriesFromDictionary:paramDict];
         }
         [FHUserTracker writeEvent:@"article_tip_click" params:paramDict];
     }];
