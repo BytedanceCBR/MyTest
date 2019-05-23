@@ -10,6 +10,7 @@
 #import "NewsBaseDelegate.h"
 #import "SSADManager.h"
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <FHEnvContext.h>
 
 @implementation TTOpenURLTask
 
@@ -23,6 +24,7 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     
+    [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
     BOOL ret = [[TTRoute sharedRoute] canOpenURL:url];
     if (ret && [SharedAppDelegate appTopNavigationController]) {
         [SSADManager shareInstance].splashADShowType = SSSplashADShowTypeHide;

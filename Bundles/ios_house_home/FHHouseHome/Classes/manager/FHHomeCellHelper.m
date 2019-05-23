@@ -28,6 +28,7 @@
 #import "FHHomeScrollBannerCell.h"
 #import <FHHouseList/FHCommuteManager.h>
 #import "FHhomeHouseTypeBannerCell.h"
+#import "FHHomePlaceHolderCell.h"
 
 static NSMutableArray  * _Nullable identifierArr;
 
@@ -64,6 +65,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
     [tableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
+    
+    [tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
     
     [tableView registerClass:[FHhomeHouseTypeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
     
@@ -216,13 +219,13 @@ static NSMutableArray  * _Nullable identifierArr;
         NSInteger countValue = dataModel.opData.items.count;
         
         if (countValue > 0) {
-            if (countValue > kFHHomeIconRowCount * 2)
+            if (countValue > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2)
             {
-                countValue = kFHHomeIconRowCount * 2;
+                countValue = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
             }
 
             CGFloat heightPadding = 20;
-            height += ((countValue - 1)/kFHHomeIconRowCount + 1) * (kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
+            height += ((countValue - 1)/[FHHomeCellHelper sharedInstance].kFHHomeIconRowCount + 1) * ([FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375] + heightPadding);
         }
         
         NSInteger opData2CountValue = dataModel.opData2.items.count;
@@ -303,15 +306,15 @@ static NSMutableArray  * _Nullable identifierArr;
     }
     
     NSInteger countItems = model.items.count;
-    if (countItems > kFHHomeIconRowCount * 2) {
-        countItems = kFHHomeIconRowCount * 2;
+    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
+        countItems = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2;
     }
     
     NSMutableArray *itemsArray = [[NSMutableArray alloc] init];
     for (int index = 0; index < countItems; index++) {
         FHSpringboardIconItemView *itemView = nil;
         if (isNeedAllocNewItems) {
-            if (index < kFHHomeIconRowCount) {
+            if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
                 itemView = [[FHSpringboardIconItemView alloc] initWithIconBottomPadding:-17];
             }else
             {
@@ -321,7 +324,7 @@ static NSMutableArray  * _Nullable identifierArr;
         {
             if (index < cellEntrance.boardView.currentItems.count && [cellEntrance.boardView.currentItems[index] isKindOfClass:[FHSpringboardIconItemView class]]) {
                 itemView = (FHSpringboardIconItemView *)cellEntrance.boardView.currentItems[index];
-                if (index < kFHHomeIconRowCount) {
+                if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
                     itemView.iconBottomPadding = -17;
                 }else
                 {
@@ -342,13 +345,13 @@ static NSMutableArray  * _Nullable identifierArr;
 
                 [itemView.iconView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
                 [itemView.iconView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    if (index < kFHHomeIconRowCount) {
+                    if (index < [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount) {
                         make.top.mas_equalTo(8);
                     }else
                     {
                         make.top.mas_equalTo(5);
                     }
-                    make.width.height.mas_equalTo(kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
+                    make.width.height.mas_equalTo([FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight * [TTDeviceHelper scaleToScreen375]);
                 }];
             }
         }

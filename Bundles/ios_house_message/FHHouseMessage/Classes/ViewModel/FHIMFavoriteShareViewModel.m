@@ -13,7 +13,7 @@
 #import "FHNewHouseItemModel.h"
 #import "FHHouseListModel.h"
 #import "FHDetailBaseModel.h"
-
+#import "TTSandBoxHelper.h"
 @interface FHIMFavoriteShareModel : NSObject
 @property (nonatomic, assign) NSInteger houseType;
 @property (nonatomic, copy) NSString* houseId;
@@ -96,11 +96,17 @@
                                 KSCHEMA_HOUSE_TITLE:obj.displayTitle ? : @"",
                                 KSCHEMA_HOUSE_DES:obj.displaySubTitle ? : @"",
                                 KSCHEMA_HOUSE_PRICE:obj.displayPrice ? : @"",
-                                KSCHEMA_HOUSE_AVG_PRICE:obj.displayPricePerSqm ? : @""
+                                KSCHEMA_HOUSE_AVG_PRICE:obj.displayPricePerSqm ? : @"",
+                                KSCHEMA_HOUSE_FROM:@"app_liked_house",
+                                KSCHEMA_HOUSE_CHANNEL:[self getChannel] ? : @"local_test",
                                 };
         houseMsg.extraDic = extra;
         [manager.messageService sendMessage:houseMsg ofConversationId:conversactionId];
     }];
+}
+
+-(NSString*)getChannel {
+    return [TTSandBoxHelper getCurrentChannel];
 }
 
 +(FHIMFavoriteShareModel*)convertCellModelToShareModel:(FHSingleImageInfoCellModel*)model {

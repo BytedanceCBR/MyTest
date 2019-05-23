@@ -41,6 +41,10 @@
         return;
     }
     
+    for (UIView *view in self.contentView.subviews) {
+        [view removeFromSuperview];
+    }
+    
     NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
     CGFloat viewWidth = ([UIScreen mainScreen].bounds.size.width - 28) / 4.0f;
     
@@ -48,13 +52,12 @@
         FHConfigDataOpData2ItemsModel *itemModel = items[i];
 
         UIView *containView = [UIView new];
-        [containView setFrame:CGRectMake( i * viewWidth + 14, 0.0f, viewWidth, 80)];
+        [containView setFrame:CGRectMake( i * viewWidth + 14, 4.0f, viewWidth, 80)];
         [containView setBackgroundColor:[UIColor whiteColor]];
 
         
         UIImageView *backImage = [UIImageView new];
 
-        
         if ([itemModel.image isKindOfClass:[NSArray class]] && [itemModel.image.firstObject isKindOfClass:[FHConfigDataOpData2ItemsImageModel class]]) {
             FHConfigDataOpData2ItemsImageModel *itemImage = (FHConfigDataOpData2ItemsImageModel *)itemModel.image.firstObject;
             
