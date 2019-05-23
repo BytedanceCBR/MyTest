@@ -70,7 +70,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         self.dataSource.categoryView = self.categoryView;
         self.dataSource.showPlaceHolder = YES;
         
-   
+
+        [self configIconRowCountAndHeight];
+        
         
         [self updateCategoryViewSegmented:YES];
         self.tableViewV.delegate = self.dataSource;
@@ -139,6 +141,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
         [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
             StrongSelf;
             self.isRequestFromSwitch = NO;
+            
+            [self configIconRowCountAndHeight];
             
             self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
             
@@ -314,6 +318,27 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             return @"be_null";
             break;
     }
+}
+
+- (void)configIconRowCountAndHeight
+{
+    [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+    [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+    //下版本等实验结论再上
+//    if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum isKindOfClass:[NSNumber class]]) {
+//        if ([[[FHEnvContext sharedInstance] getConfigFromCache].opData.iconRowNum integerValue] == 5) {
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 5;
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 42;
+//        }else
+//        {
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+//            [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+//        }
+//    }else
+//    {
+//        [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount = 4;
+//        [FHHomeCellHelper sharedInstance].kFHHomeIconDefaultHeight = 57;
+//    }
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {

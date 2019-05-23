@@ -507,7 +507,7 @@
     [self.contentView addSubview:_priceBgView];
     
     [_priceBgView addSubview:self.priceLabel];
-//    [_priceBgView addSubview:self.originPriceLabel];
+    [_priceBgView addSubview:self.originPriceLabel];
     [_priceBgView addSubview:self.pricePerSqmLabel];
     [_priceBgView setBackgroundColor:[UIColor whiteColor]];
     [_priceBgView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -535,19 +535,19 @@
     [_originPriceLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginRight = YGPointValue(20);
-        layout.marginTop = YGPointValue(16);
+        layout.height = YGPointValue(0);
         layout.isIncludedInLayout = NO;
         //        layout.marginBottom = YGPointValue(0);
     }];
     
-//    [_pricePerSqmLabel setBackgroundColor:[UIColor yellowColor]];
-//    [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-//        layout.isEnabled = YES;
-//        layout.marginRight = YGPointValue(20);
-//        layout.marginTop = YGPointValue(41);
-//        layout.flexGrow = 1;
-//        //        layout.marginBottom = YGPointValue(0);
-//    }];
+    [_pricePerSqmLabel setBackgroundColor:[UIColor yellowColor]];
+    [_pricePerSqmLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+        layout.isEnabled = YES;
+        layout.marginRight = YGPointValue(20);
+        layout.marginTop = YGPointValue(41);
+        layout.flexGrow = 1;
+        //        layout.marginBottom = YGPointValue(0);
+    }];
     
     [_rightInfoView addSubview:self.recReasonView];
     [_recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -647,7 +647,13 @@
         [self updateMainImageWithUrl:imageModel.url];
         self.subTitleLabel.text = commonModel.displaySubtitle;
         self.priceLabel.text = commonModel.displayPrice;
-        self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+        if (commonModel.originPrice) {
+            self.pricePerSqmLabel.attributedText = [self originPriceAttr:commonModel.originPrice];
+        }else
+        {
+            self.pricePerSqmLabel.text = commonModel.displayPricePerSqm;
+        }
+        
         if (commonModel.houseImageTag.text && commonModel.houseImageTag.backgroundColor && commonModel.houseImageTag.textColor) {
             
             self.imageTagLabel.textColor = [UIColor colorWithHexString:commonModel.houseImageTag.textColor];
@@ -1061,5 +1067,17 @@
         [self.contentView.yoga applyLayoutPreservingOrigin:NO];
     }
 }
+#pragma mark 字符串处理
+-(NSAttributedString *)originPriceAttr:(NSString *)originPrice {
+    
+    if (originPrice.length < 1) {
+        return nil;
+    }
+    NSMutableAttributedString *attri = [[NSMutableAttributedString alloc] initWithString:originPrice];
+    [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
+    [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray3] range:NSMakeRange(0, originPrice.length)];
+    return attri;
+}
+
 
 @end
