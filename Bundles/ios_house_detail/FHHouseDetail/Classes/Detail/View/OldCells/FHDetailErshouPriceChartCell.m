@@ -230,7 +230,7 @@
     
     [self.contentView addSubview:self.bottomBgView];
     [self.contentView addSubview:self.priceView];
-    self.priceView.frame = CGRectMake(20, 62, [UIScreen mainScreen].bounds.size.width - 40, 84);
+    self.priceView.frame = CGRectMake(20, 65, [UIScreen mainScreen].bounds.size.width - 40, 84);
     [self.priceView addSubview:self.priceKeyLabel];
     [self.priceKeyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(20);
