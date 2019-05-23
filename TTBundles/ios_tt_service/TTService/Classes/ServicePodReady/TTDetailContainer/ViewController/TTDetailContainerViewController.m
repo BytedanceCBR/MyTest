@@ -257,7 +257,7 @@
         if ([className isEqualToString:NSStringFromClass([TTArticleDetailViewController class])]) {
             NSMutableDictionary *params = @{}.mutableCopy;
             params[@"category_name"] = self.viewModel.detailModel.categoryID ? : @"be_null";
-            [params setValue:[FHTraceEventUtils generateEnterfrom:self.viewModel.detailModel.categoryID] forKey:@"enter_from"];
+            params[@"enter_from"] = [FHTraceEventUtils generateEnterfrom:self.viewModel.detailModel.categoryID] ? : @"be_null";
             params[@"log_pb"] = self.viewModel.detailModel.logPb ? : @"be_null";
             params[@"group_id"] = self.viewModel.detailModel.originalGroupID;
             [FHPushAuthorizeManager showArticleAlertIfNeeded:params];
