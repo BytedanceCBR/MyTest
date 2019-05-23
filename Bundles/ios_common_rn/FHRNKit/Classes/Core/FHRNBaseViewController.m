@@ -31,6 +31,7 @@
 #import <TTReachability.h>
 #import <FHEnvContext.h>
 #import <TTCommonBridgeManager.h>
+#import <FHUtils.h>
 
 @interface FHRNBaseViewController ()<TTRNKitProtocol,FHRNDebugViewControllerProtocol>
 
@@ -45,12 +46,13 @@
 @property (nonatomic, strong) NSString *moduleNameStr;
 @property (nonatomic, strong) NSString *bundleNameStr;
 @property (nonatomic, assign) BOOL isDebug;
+@property (nonatomic, assign) BOOL isAppeared;
 @property (nonatomic, assign) BOOL canPreLoad;
 @property (nonatomic, assign) BOOL statusBarHighLight;
 @property (nonatomic, strong) TTRouteParamObj *paramCurrentObj;
 @property (nonatomic, strong) TTRNKit *ttRNKit;
 @property (nonatomic, strong) UIView *container;
-
+@property (nonatomic, strong) NSMutableArray *traceCache;
 @end
 
 @implementation FHRNBaseViewController
@@ -98,10 +100,11 @@
             [self processParams:params];
         }
         _viewWrapper = viewWrapper;
-        
+        self.isAppeared = NO;
         if (_canPreLoad) {
             [self processPreloadAction];
         }
+        _traceCache = [NSMutableArray new];
     }
     return self;
 }
@@ -117,6 +120,9 @@
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:kReachabilityChangedNotification object:nil];
         
+        self.isAppeared = NO;
+        _traceCache = [NSMutableArray new];
+
         if ([paramObj.sourceURL respondsToSelector:@selector(absoluteString)]) {
             _shemeUrlStr = [paramObj.sourceURL absoluteString];
         }
@@ -155,6 +161,52 @@
     [params setValue:[NSString stringWithFormat:@"%ld",netStatusV] forKey:@"available"];
     
     [self sendEventName:@"net_status" andParams:params];
+}
+
+- (void)addFirstScreenNeedUploadEvent:(NSDictionary *)params
+{
+    
+    if(self.isAppeared || !_canPreLoad)
+    {
+        NSString *paramsEvent = [params tt_stringValueForKey:@"event"];
+        if (paramsEvent) {
+            NSString *paramsTrace = params[@"params"];
+            if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
+                [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];
+            }else if ([paramsTrace isKindOfClass:[NSString class]]) {
+                NSDictionary *dictTrace =  [FHUtils dictionaryWithJsonString:paramsTrace];
+                if (dictTrace) {
+                    [FHEnvContext recordEvent:dictTrace andEventKey:paramsEvent];
+                }
+            }
+        }
+    }else
+    {
+        if(params)
+        {
+            [self.traceCache addObject:params];
+        }
+    }
+}
+
+- (void)excuteFirstScreenTrace
+{
+    for (NSDictionary *trace in self.traceCache) {
+        if ([trace isKindOfClass:[NSDictionary class]]) {
+            NSString *paramsEvent = [trace tt_stringValueForKey:@"event"];
+            if (paramsEvent) {
+                NSString *paramsTrace = trace[@"params"];
+                if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
+                    [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];
+                }else if ([paramsTrace isKindOfClass:[NSString class]]) {
+                    NSDictionary *dictTrace =  [FHUtils dictionaryWithJsonString:paramsTrace];
+                    if (dictTrace) {
+                        [FHEnvContext recordEvent:dictTrace andEventKey:paramsEvent];
+                    }
+                }
+            }
+        }
+    }
 }
 
 - (void)processParams:(NSDictionary *)params
@@ -287,6 +339,12 @@
     if (_viewWrapper) {
         [self addViewWrapper:_viewWrapper];
     }
+    
+    if (!self.isAppeared) {
+        [self excuteFirstScreenTrace];
+    }
+    
+    self.isAppeared = YES;
 }
 
 - (void)viewWillDisappear:(BOOL)animated

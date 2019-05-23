@@ -236,16 +236,18 @@
 
 - (void)log_v3WithParam:(NSDictionary *)param callback:(TTBridgeCallback)callback engine:(id<TTBridgeEngine>)engine controller:(UIViewController *)controller
 {
-    NSString *paramsEvent = [param tt_stringValueForKey:@"event"];
-    if (paramsEvent) {
-        NSString *paramsTrace = param[@"params"];
-        if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
-            [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];
-        }else if ([paramsTrace isKindOfClass:[NSString class]]) {
-           NSDictionary *dictTrace =  [FHUtils dictionaryWithJsonString:paramsTrace];
-           if (dictTrace) {
-               [FHEnvContext recordEvent:dictTrace andEventKey:paramsEvent];
-           }
+    if ([param isKindOfClass:[NSDictionary class]]) {
+        NSString *paramsEvent = [param tt_stringValueForKey:@"event"];
+        if (paramsEvent) {
+            NSString *paramsTrace = param[@"params"];
+            if ([paramsTrace isKindOfClass:[NSDictionary class]]) {
+                [FHEnvContext recordEvent:paramsTrace andEventKey:paramsEvent];
+            }else if ([paramsTrace isKindOfClass:[NSString class]]) {
+                NSDictionary *dictTrace =  [FHUtils dictionaryWithJsonString:paramsTrace];
+                if (dictTrace) {
+                    [FHEnvContext recordEvent:dictTrace andEventKey:paramsEvent];
+                }
+            }
         }
     }
 }

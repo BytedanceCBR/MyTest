@@ -141,6 +141,8 @@
 {
     if (self.redirectTips.openUrl.length > 0) {
         
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"switch_house";
+
         [FHEnvContext openSwitchCityURL:self.redirectTips.openUrl completion:^(BOOL isSuccess) {
             // 进历史
             if (isSuccess) {

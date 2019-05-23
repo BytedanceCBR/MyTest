@@ -318,9 +318,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
         requestParam[@"city"] = gCityName;
-    }else
-    {
-        requestParam[@"city_name"] = nil;
     }
     
     self.commonRequestParam = requestParam;
@@ -341,6 +338,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     //开始网络监听通知
     [self.reachability startNotifier];
+
+    
+    if (![FHEnvContext sharedInstance].refreshConfigRequestType) {
+        [FHEnvContext sharedInstance].refreshConfigRequestType = @"launch";
+    }
 
     //开始生成config缓存
     [self.generalBizConfig onStartAppGeneralCache];
