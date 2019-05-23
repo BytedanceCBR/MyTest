@@ -23,7 +23,7 @@
 #import "TTArticleCategoryManager.h"
 #import <FHErrorView.h>
 #import <TTDeviceHelper.h>
-
+#import "FHHomePlaceHolderCell.h"
 #import "FHhomeHouseTypeBannerCell.h"
 
 @interface FHHomeMainTableViewDataSource () <UITableViewDelegate,UITableViewDataSource>
@@ -128,7 +128,7 @@
         }
         
         if (self.showPlaceHolder) {
-            FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+            FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
             return cell;
         }
         

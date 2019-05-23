@@ -28,6 +28,7 @@
 #import "FHHomeScrollBannerCell.h"
 #import <FHHouseList/FHCommuteManager.h>
 #import "FHhomeHouseTypeBannerCell.h"
+#import "FHHomePlaceHolderCell.h"
 
 static NSMutableArray  * _Nullable identifierArr;
 
@@ -64,6 +65,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[FHHomeBaseTableCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeBaseTableCell class])];
     
     [tableView registerClass:[FHHomeEntrancesCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntrancesCell class])];
+    
+    [tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHHomePlaceHolderCell class])];
     
     [tableView registerClass:[FHhomeHouseTypeBannerCell class] forCellReuseIdentifier:NSStringFromClass([FHhomeHouseTypeBannerCell class])];
     
