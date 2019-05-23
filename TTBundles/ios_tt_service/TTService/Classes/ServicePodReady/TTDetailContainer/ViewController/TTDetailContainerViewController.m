@@ -29,6 +29,8 @@
 #import <TTMonitor/TTMonitor.h>
 #import "TTArticleDetailViewController.h"
 #import <FHCHousePush/FHPushAuthorizeManager.h>
+#import <FHHouseBase/FHEnvContext.h>
+#import <TTPlatformBaseLib/TTArticleCategoryManager.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
 
@@ -251,11 +253,17 @@
             [self setNeedsUpdateOfHomeIndicatorAutoHidden];
         }
     }
-    // add by zjing for test
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
+        // add by zjing for test
+        NSMutableDictionary *params = @{}.mutableCopy;
+        NSString * currentCategory = [TTArticleCategoryManager currentSelectedCategoryID];
+        params[@"category_name"] = currentCategory ? : @"be_null";
+        params[@"enter_from"] = @"";
+        params[@"log_pb"] = @"";
+        params[@"group_id"] = @"";
         if ([className isEqualToString:NSStringFromClass([TTArticleDetailViewController class])]) {
-            [FHPushAuthorizeManager showArticleAlertIfNeeded];
+            [FHPushAuthorizeManager showArticleAlertIfNeeded:params];
         }
     });
 }

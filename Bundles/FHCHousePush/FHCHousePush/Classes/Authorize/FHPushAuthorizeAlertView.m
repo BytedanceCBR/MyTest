@@ -84,7 +84,7 @@
     self.bgView.alpha = 0;
     self.contentView.alpha = 0;
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(dismiss)];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeBtnDidClick)];
     self.bgView.userInteractionEnabled = YES;
     [self.bgView addGestureRecognizer:tap];
     
@@ -126,7 +126,7 @@
         make.right.mas_equalTo(-20);
         make.bottom.mas_equalTo(-20);
     }];
-    [self.closeBtn addTarget:self action:@selector(closeBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.closeBtn addTarget:self action:@selector(closeBtnDidClick) forControlEvents:UIControlEventTouchUpInside];
     [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -138,7 +138,7 @@
     [self dismiss];
 }
 
-- (void)closeBtnDidClick:(UIButton *)btn
+- (void)closeBtnDidClick
 {
     if (self.completed) {
         self.completed(FHAuthorizeHintCompleteTypeCancel);

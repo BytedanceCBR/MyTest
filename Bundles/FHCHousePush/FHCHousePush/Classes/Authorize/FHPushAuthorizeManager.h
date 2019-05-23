@@ -11,8 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPushAuthorizeManager : NSObject
 
-+ (void)showArticleAlertIfNeeded;
-+ (void)showFollowAlertIfNeeded;
++ (void)showArticleAlertIfNeeded:(NSDictionary *)params;
++ (void)showFollowAlertIfNeeded:(NSDictionary *)params;
 + (BOOL)isFollowAlertEnabled;
 + (BOOL)isMessageTipEnabled;
 + (BOOL)isAPNSEnabled;

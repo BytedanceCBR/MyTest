@@ -111,7 +111,9 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
         }else {
             if (model.status.integerValue == 0) {
                 if ([FHPushAuthorizeManager isFollowAlertEnabled]) {
-                    [FHPushAuthorizeManager showFollowAlertIfNeeded];
+                    NSMutableDictionary *params = @{}.mutableCopy;
+                    params[@"page_type"] = configModel.pageType;
+                    [FHPushAuthorizeManager showFollowAlertIfNeeded:params];
                 }else {
                     if (model.data.followStatus == 0) {
                         [[ToastManager manager] showToast:@"关注成功"];

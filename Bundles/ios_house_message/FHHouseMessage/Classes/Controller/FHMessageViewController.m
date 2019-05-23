@@ -25,6 +25,7 @@
 #import <FHCHousePush/FHPushMessageTipView.h>
 #import <FHCHousePush/FHPushAuthorizeManager.h>
 #import <FHCHousePush/FHPushAuthorizeHelper.h>
+#import <FHCHousePush/FHPushMessageTipView.h>
 
 @interface FHMessageViewController ()
 
@@ -54,6 +55,9 @@
 {
     BOOL isEnabled = [FHPushAuthorizeManager isMessageTipEnabled];
     CGFloat pushTipHeight = isEnabled ? 36 : 0;
+    if (pushTipHeight > 0) {
+        [self addTipShowLog];
+    }
     self.pushTipView.hidden = pushTipHeight > 0 ? NO : YES;
     [self.pushTipView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(pushTipHeight);
@@ -73,6 +77,27 @@
     [self addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
     [FHBubbleTipManager shareInstance].canShowTip = YES;
+}
+
+- (void)addTipShowLog
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = @"messagetab";
+    [FHUserTracker writeEvent:@"tip_show" params:params];
+
+}
+
+- (void)addTipClickLog:(FHPushMessageTipCompleteType)type
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"page_type"] = @"messagetab";
+    if (type == FHPushMessageTipCompleteTypeDone) {
+        params[@"click_type"] = @"confirm";
+    }else {
+        params[@"click_type"] = @"cancel";
+    }
+    [FHUserTracker writeEvent:@"tip_click" params:params];
+    
 }
 
 - (void)userInfoReload {
@@ -101,6 +126,7 @@
     }
     __weak typeof(self)wself = self;
     _pushTipView = [[FHPushMessageTipView alloc] initAuthorizeTipWithCompleted:^(FHPushMessageTipCompleteType type) {
+        [wself addTipClickLog:type];
         if (type == FHPushMessageTipCompleteTypeDone) {
             NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
             [[UIApplication sharedApplication] openURL:url];

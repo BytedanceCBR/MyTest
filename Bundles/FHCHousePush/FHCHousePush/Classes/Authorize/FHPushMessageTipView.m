@@ -9,6 +9,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIView+House.h>
+#import <TTBaseLib/UIViewAdditions.h>
 #import <Masonry.h>
 
 @interface FHPushMessageTipView ()
@@ -47,9 +48,10 @@
     [self addSubview:self.titleLabel];
     [self addSubview:self.submitBtn];
     
-    [self.closeBtn addTarget:self action:@selector(closeBtnBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    [self.submitBtn addTarget:self action:@selector(submitBtnBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self.closeBtn addTarget:self action:@selector(closeBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.submitBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-5, -5, -5, -5);
+
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.height.top.mas_equalTo(self);
@@ -65,14 +67,14 @@
     }];
 }
 
-- (void)closeBtnBtnDidClick:(UIButton *)btn
+- (void)closeBtnDidClick:(UIButton *)btn
 {
     if (self.completed) {
         self.completed(FHPushMessageTipCompleteTypeCancel);
     }
 }
 
-- (void)submitBtnBtnDidClick:(UIButton *)btn
+- (void)submitBtnDidClick:(UIButton *)btn
 {
     if (self.completed) {
         self.completed(FHPushMessageTipCompleteTypeDone);
