@@ -149,33 +149,9 @@ static SSFetchSettingsManager * manager;
         [SSCommonLogic saveCommentInputViewPlaceHolder:nil];
     }
     
-    if ([[dSettings allKeys] containsObject:@"send_install_apps_interval"]) {
-        NSString* sendInstallAppsInterval = [NSString stringWithFormat:@"%@",[dSettings objectForKey:@"send_install_apps_interval"]];
-        [SSCommonLogic saveInstallAppsInterval:sendInstallAppsInterval];
-    } else {
-        [SSCommonLogic saveInstallAppsInterval:nil];
-    }
-    
-    if([[dSettings allKeys] containsObject:@"send_recent_apps_interval"]) {
-        NSString* sendRecentAppsInterval = [NSString stringWithFormat:@"%@",[dSettings objectForKey:@"send_recent_apps_interval"]];
-        [SSCommonLogic saveRecentAppsInterval:sendRecentAppsInterval];
-    } else {
-        [SSCommonLogic saveRecentAppsInterval:nil];
-    }
-    
     NSNumber *appseeSetting = [dSettings objectForKey:@"appsee_enable"];
     if ([appseeSetting isKindOfClass:[NSNumber class]]) {
         [SSCommonLogic setAppseeSampleSetting:appseeSetting];
-    }
-    
-    NSNumber *galleryTileSwitch = [dSettings objectForKey:@"is_gallery_laied_flat"];
-    if ([galleryTileSwitch isKindOfClass:[NSNumber class]]) {
-        [SSCommonLogic setGalleryTileSwitch:galleryTileSwitch];
-    }
-    
-    NSNumber *gallerySlideOutSwitch = [dSettings objectForKey:@"is_gallery_up_return"];
-    if ([gallerySlideOutSwitch isKindOfClass:[NSNumber class]]) {
-        [SSCommonLogic setGallerySlideOutSwitch:gallerySlideOutSwitch];
     }
     
     if ([[dSettings allKeys] containsObject:@"show_apns_alert_view"]) {
@@ -217,16 +193,6 @@ static SSFetchSettingsManager * manager;
     if ([[dSettings allKeys] containsObject:@"gallery_detail_page_follow_button_enabled"]) {
         BOOL enable = [dSettings tt_boolValueForKey:@"gallery_detail_page_follow_button_enabled"];
         [SSCommonLogic setPicsFollowEnabled:enable];
-    }
-    
-//    obj = [dSettings objectForKey:@"group_comment_max_text_length"];
-//    if ([obj isKindOfClass:[NSNumber class]]) {
-//        g_exploreDetailWriteCommentMaxCharactersLimit = [obj unsignedIntValue];
-//    }
-    
-    if ([[dSettings allKeys] containsObject:@"im_server_enable"]) {
-        BOOL enable = [dSettings tt_boolValueForKey:@"im_server_enable"];
-        [SSCommonLogic setIMServerEnabled:enable];
     }
 
     if ([[dSettings allKeys] containsObject:@"tt_comment_bindmobile_text_settings"]) {

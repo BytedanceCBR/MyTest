@@ -65,8 +65,7 @@ typedef NS_ENUM(NSUInteger, TTExploreMixedListUpdateTipType) {
 + (NSTimeInterval)fetchListTipRefreshInterval;
 //保存tip获取间隔时间常量
 + (void)saveListTipRefreshInterval:(NSTimeInterval)interval;
-//保存tip显示的时间常量
-+ (void)saveListTipDisplayInterval:(NSTimeInterval)interval;
+
 //保存超过一定时常，强制返回主feed流时间
 + (void)saveSwitchToRecommendChannelInterval:(NSTimeInterval)interval;
 

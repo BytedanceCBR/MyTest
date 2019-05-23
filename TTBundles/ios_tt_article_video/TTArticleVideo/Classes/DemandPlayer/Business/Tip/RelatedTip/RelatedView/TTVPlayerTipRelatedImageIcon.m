@@ -19,8 +19,6 @@
 #import <TTBaseLib/TTDeviceUIUtils.h>
 #import <TTBaseLib/TTBaseMacro.h>
 
-extern NSString *ttvs_playerFinishedRelatedType(void);
-
 @class TTVPlayerTipRelatedIconItem;
 @protocol TTVPlayerTipRelatedIconItemDelegate <NSObject>
 - (void)relatedItemClicked:(TTVPlayerTipRelatedIconItem *)item;
@@ -362,13 +360,6 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    if ([ttvs_playerFinishedRelatedType() isEqualToString:@"with_icon"]) {
-        self.pageControl.frame = CGRectMake(0, self.height - 8, self.width, 4);
-    }else if ([ttvs_playerFinishedRelatedType() isEqualToString:@"with_picture"]){
-        self.pageControl.frame = CGRectMake(0, self.height - 15, self.width, 4);
-    }else if ([ttvs_playerFinishedRelatedType() isEqualToString:@"only_title"]){
-        self.pageControl.frame = CGRectMake(0, self.height - 8, self.width, 4);
-    }
     [self.pageControl setNeedsDisplay];
     self.swipeView.frame = self.bounds;
 }
@@ -385,17 +376,6 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
 
 - (UIView *)swipeView:(TTVSwipeView *)swipeView viewForItemAtIndex:(NSInteger)index reusingView:(TTVPlayerTipRelatedIconItem *)view
 {
-    if (!view) {
-        if ([ttvs_playerFinishedRelatedType() isEqualToString:@"with_icon"]) {
-            view = [[TTVPlayerTipRelatedAppIconItem alloc] init];
-        }else if ([ttvs_playerFinishedRelatedType() isEqualToString:@"with_picture"]){
-            view = [[TTVPlayerTipRelatedImageIconItem alloc] init];
-        }else if ([ttvs_playerFinishedRelatedType() isEqualToString:@"only_title"]){
-            view = [[TTVPlayerTipRelatedSimpleItem alloc] init];
-        }
-        
-        view.delegate = self;
-    }
     if ([view isKindOfClass:[TTVPlayerTipRelatedIconItem class]]) {
         if (index <= self.entitys.count - 1) {
             view.entity = [self.entitys objectAtIndex:index];

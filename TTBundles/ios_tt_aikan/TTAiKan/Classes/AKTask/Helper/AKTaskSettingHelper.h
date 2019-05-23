@@ -23,9 +23,6 @@
 - (BOOL)akBenefitEnable;
 - (BOOL)appIsReviewing;//审核期间的开关，主要控一些敏感信息
 
-//setting下来之后，更新benefitEnable
-- (void)updateBenefitValue;
-
 - (BOOL)isEnableWith:(NSString *)key;
 - (void)setEnable:(BOOL)enable key:(NSString *)key;
 @end

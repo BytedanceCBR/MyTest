@@ -21,11 +21,11 @@
 
 #pragma mark - UIApplicationDelegate Method
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    if (![SSCommonLogic shouldUseOptimisedLaunch]) {
-        if ([SSCommonLogic couldRequestForKey:SSCommonLogicTimeDictRequestCheckVersionKey]) {
-            [SSCommonLogic updateRequestTimeForKey:SSCommonLogicTimeDictRequestCheckVersionKey];
-        }
-    }
+//    if (![SSCommonLogic shouldUseOptimisedLaunch]) {
+//        if ([SSCommonLogic couldRequestForKey:SSCommonLogicTimeDictRequestCheckVersionKey]) {
+//            [SSCommonLogic updateRequestTimeForKey:SSCommonLogicTimeDictRequestCheckVersionKey];
+//        }
+//    }
 }
 
 @end

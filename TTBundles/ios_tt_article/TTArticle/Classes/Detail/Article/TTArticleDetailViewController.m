@@ -253,9 +253,6 @@
     }
     
     NSInteger pushTipsEnabled = 0, showTipsOnNavBar = 0;
-    if ([SSCommonLogic detailPushTipsEnable]) {
-        pushTipsEnabled = 1;
-    }
     if (self.shouldShowTipsOnNavBar) {
         showTipsOnNavBar = 1;
     }
@@ -306,37 +303,7 @@
 
 - (BOOL)shouldShowTipsOnNavBar
 {
-    if (![SSCommonLogic detailPushTipsEnable]) {
-        return NO;
-    }
-    
-    if ([self isFromPushAndOtherApp] && !self.showTipsOnNavBarChecked && self.detailModel.article.articleType == ArticleTypeNativeContent) {
-        NSArray *vcArray = self.navigationController.viewControllers;
-        if (vcArray.count > 1) {
-            NSInteger index = 0;
-            UIViewController *vc = [vcArray objectAtIndex:index];
-            if ([vc isKindOfClass:[ArticleTabBarStyleNewsListViewController class]]) {
-                ArticleTabBarStyleNewsListViewController *articleVC = (ArticleTabBarStyleNewsListViewController *)vc;
-                TTExploreMainViewController *mainVC = articleVC.mainVC;
-                TTCategory *currentSelectedCategory = mainVC.categorySelectorView.currentSelectedCategory;
-                _parentPageCategoryID = currentSelectedCategory.categoryID;
-                if (!_parentPageCategoryID) {
-                    _parentPageCategoryID = @"__all__";
-                }
-                
-                [[NewsListLogicManager shareManager] fetchReloadTipWithMinBehotTime:[NewsListLogicManager listLastReloadTimeForCategory:_parentPageCategoryID] categoryID:_parentPageCategoryID count:ListDataDefaultRemoteNormalLoadCount];
-            }
-        }
-        
-        if (!_parentPageCategoryID) {
-            _parentPageCategoryID = @" ";
-        }
-        
-        _shouldShowTipsOnNavBar = YES;
-        self.showTipsOnNavBarChecked = YES;
-    }
-    
-    return _shouldShowTipsOnNavBar;
+    return NO;
 }
 
 - (BOOL)isFromPushAndOtherApp

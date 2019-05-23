@@ -140,6 +140,8 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
             StrongSelf;
             self.isRequestFromSwitch = NO;
             
+            self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
+            
             //切换城市先显示横条
             if([FHEnvContext sharedInstance].isRefreshFromCitySwitch)
             {
@@ -193,16 +195,9 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
 
                 [self resetAllOthersCacheData];
                 
-                
-                if ([self.tableViewV numberOfSections] > 0 && [self.tableViewV numberOfRowsInSection:0] > 0 && ![FHEnvContext sharedInstance].isRefreshFromCitySwitch) {
-                    NSIndexSet *indexSet=[[NSIndexSet alloc] initWithIndex:0];
-                    [UIView performWithoutAnimation:^{
-                        [self.tableViewV reloadSections:indexSet withRowAnimation:UITableViewRowAnimationNone];
-                    }];
-                }else
-                {
+                [UIView performWithoutAnimation:^{
                     [self.tableViewV reloadData];
-                }
+                }];
 
                 if ([[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"] isEqualToString:@"local_test"] && ![[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue)
                 {
@@ -828,12 +823,30 @@ typedef NS_ENUM (NSInteger , FHHomePullTriggerType){
     return [[[TTArticleCategoryManager sharedManager] allCategories] containsObject:[TTArticleCategoryManager categoryModelByCategoryID:@"f_find_house"]];
 }
 
+- (BOOL)checkIsHaveEntrancesList
+{
+    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    //判断是否有新增样式入口
+    if ([dataModel.opData2list isKindOfClass:[NSArray class]] && [dataModel.opData2list.firstObject isKindOfClass:[FHConfigDataOpData2ListModel class]]) {
+        NSArray<FHConfigDataOpData2ItemsModel> *items = ((FHConfigDataOpData2ListModel *)dataModel.opData2list.firstObject).opDataList.items;
+        if (items.count > 0) {
+            return YES;
+        }
+        return NO;
+    }else
+    {
+        return NO;
+    }
+}
+
 //重载首页头部数据
 - (void)reloadHomeTableHeaderSection
 {
     self.dataSource.showPlaceHolder = YES;
     self.dataSource.currentHouseType = self.currentHouseType;
     self.dataSource.isHasFindHouseCategory = [self checkIsHasFindHouse];
+    self.dataSource.showOpDataListEntrance = [self checkIsHaveEntrancesList];
+    
     if (self.tableViewV.numberOfSections > kFHHomeListHeaderBaseViewSection) {
         [UIView performWithoutAnimation:^{
             [self.tableViewV reloadData];

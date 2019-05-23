@@ -481,7 +481,7 @@
     parameter[kTabIndexForComment] = @0;// 热度
     TTVCommentLoadOptions options = self.hasMoreStickComment? TTVCommentLoadOptionsStick: 0;
 
-    BOOL foldCommentEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"folder_comments_of_article_detail" defaultValue:@NO freeze:NO] boolValue];
+    BOOL foldCommentEnabled = YES;
     if (foldCommentEnabled) {
         if (options & TTVCommentLoadOptionsFold) {
             parameter[kFoldForComment] = @2; //非折叠区评论

@@ -612,7 +612,7 @@
 #pragma mark - target-action
 
 - (void)shareButtonOnClicked:(id)sender {
-    [TTTrackerWrapper eventV3:@"share_icon_click" params:@{@"icon_type": @([SSCommonLogic shareIconStye]).stringValue}];
+    [TTTrackerWrapper eventV3:@"share_icon_click" params:@{@"icon_type": @"0"}];
 }
 
 - (void)themeChanged:(NSNotification *)notification {
@@ -639,43 +639,11 @@
 }
 
 - (NSString *)_shareIconName {
-    switch ([SSCommonLogic shareIconStye]) {
-        case 1:
-            return @"tab_share";
-            break;
-        case 2:
-            return @"tab_share1";
-            break;
-        case 3:
-            return @"tab_share4";
-            break;
-        case 4:
-            return @"tab_share3";
-            break;
-        default:
-            return @"tab_share";
-            break;
-    }
+    return @"tab_share";
 }
 
 - (NSString *)_photoShareIconName {
-    switch ([SSCommonLogic shareIconStye]) {
-        case 1:
-            return @"icon_details_share";
-            break;
-        case 2:
-            return @"white_share1";
-            break;
-        case 3:
-            return @"white_share4";
-            break;
-        case 4:
-            return @"white_share3";
-            break;
-        default:
-            return @"icon_details_share";
-            break;
-    }
+    return @"icon_details_share";
 }
 
 @end

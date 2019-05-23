@@ -17,7 +17,6 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 
-extern NSString *ttvs_playerFinishedRelatedType(void);
 @interface TTVPlayerTipRelatedFinishedForward()
 @property (nonatomic, strong) TTVPlayerTipRelatedFinished *relatedView;
 @property (nonatomic, strong) TTVPlayerTipShareFinished *shareView;
@@ -81,41 +80,9 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
         {
             self.backgroundColor = [UIColor clearColor];
             NSArray *array = [self.dataInfo tt_arrayValueForKey:@"data"];
-            if (ttvs_playerFinishedRelatedType().length > 0 &&
-                array.count > 0 &&
-                self.playerStateStore.state.bannerHeight <= 0) {//有底部banner的不出.
-                self.relatedView.hidden = NO;
-                NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-                [dic setValue:@"video_over" forKey:@"direct_source"];
-                [dic setValue:self.playerStateStore.state.playerModel.enterFrom forKey:@"enter_from"];
-                [dic setValue:self.playerStateStore.state.playerModel.categoryID forKey:@"category_name"];
-                [dic setValue:self.playerStateStore.state.playerModel.groupID forKey:@"group_id"];
-                [dic setValue:self.playerStateStore.state.ttv_position forKey:@"position"];
-                [TTTrackerWrapper eventV3:@"app_direction_icon_show" params:dic isDoubleSending:NO];
-                self.shareView.hidden = YES;
-                if (!self.playerStateStore.state.pasterADIsPlaying) {
-                    [self.relatedView startTimer];
-                }
-            }else{
-                if (ttvs_playerFinishedRelatedType().length > 0) {
-                    NSMutableDictionary *dic = [NSMutableDictionary dictionary];
-                    if (self.netError) {
-                        [dic setValue:self.netError.description forKey:@"enter_from"];
-                    }else{
-                        [dic setValue:@"网络错误" forKey:@"error"];
-                    }
-                    [dic setValue:@"video_over" forKey:@"direct_source"];
-                    [dic setValue:self.playerStateStore.state.playerModel.enterFrom forKey:@"enter_from"];
-                    [dic setValue:self.playerStateStore.state.playerModel.categoryID forKey:@"category_name"];
-                    [dic setValue:self.playerStateStore.state.playerModel.groupID forKey:@"group_id"];
-                    [dic setValue:self.playerStateStore.state.ttv_position forKey:@"position"];
-                    [TTTrackerWrapper eventV3:@"app_direction" params:dic isDoubleSending:NO];
-                    
-                }
-                
-                self.shareView.hidden = NO;
-                self.relatedView.hidden = YES;
-            }
+            
+            self.shareView.hidden = NO;
+            self.relatedView.hidden = YES;
         }
             break;
         case TTVPlayerEventTypeFinishUIReplay:
@@ -191,7 +158,7 @@ extern NSString *ttvs_playerFinishedRelatedType(void);
         }else{
             requestInfo.codeId = @"900804100";
         }
-        requestInfo.style = ttvs_playerFinishedRelatedType();
+        requestInfo.style = 0;
         [self.netService fetchRelatedRecommondInfoWithRequestInfo:requestInfo completion:^(id response, NSError *error) {
             NSArray *array = [response tt_arrayValueForKey:@"data"];
             self.canContinueRequest = NO;

@@ -7,8 +7,8 @@
 //
 
 #import "AWEVideoPlayTrackerBridge.h"
-#import "TTModuleBridge.h"
 #import <TTBaseMacro.h>
+#import <TTPlatformBaseLib/TTTrackerWrapper.h>
 
 @implementation AWEVideoPlayTrackerBridge
 
@@ -35,8 +35,7 @@
     [mutParams removeObjectsForKeys:needRemoveKeys];
     
     [moduleParams setValue:[mutParams copy] forKey:@"params"];
-    
-    [[TTModuleBridge sharedInstance_tt] triggerAction:@"HTSV3SendTrack" object:nil withParams:[moduleParams copy] complete:nil];
+    [TTTrackerWrapper eventV3:event params:[mutParams copy]];
 }
 
 @end
