@@ -27,7 +27,6 @@
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMineViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
-@property(nonatomic, strong) NSMutableArray *focusItemTitles;
 @property(nonatomic, strong) NSDictionary *focusItemDic;
 @property(nonatomic, assign) BOOL hasLogin;
 @property(nonatomic, strong) FHMineMutiItemCell *focusCell;
@@ -42,7 +41,6 @@
     if (self) {
         
         _dataList = [[NSMutableArray alloc] init];
-        _focusItemTitles = [[NSMutableArray alloc] init];
         _isFirstLoad = YES;
         
         self.tableView = tableView;
@@ -324,14 +322,11 @@
 }
 
 - (void)goToSugSubscribeList:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
-//    NSDictionary *tracerDic = @{@"page_type":@"search_detail"};
-//    [FHUserTracker writeEvent:@"click_loadmore" params:tracerDic];
-    
     NSHashTable *subscribeDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [subscribeDelegateTable addObject:self];
     //埋点
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"tracer"] = model.logPb;
+    dict[@"tracer"] = model.reportParams;
     dict[@"title"] = @"我订阅的搜索";
     dict[@"subscribe_delegate"] = subscribeDelegateTable;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
