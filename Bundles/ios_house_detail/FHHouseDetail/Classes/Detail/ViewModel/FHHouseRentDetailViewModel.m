@@ -502,8 +502,17 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     
     [self addClickOptionLog];
     
+    NSMutableDictionary *trackInfo = [NSMutableDictionary new];
+    trackInfo[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    trackInfo[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    trackInfo[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    trackInfo[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    trackInfo[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    trackInfo[@"rank"] = self.detailTracerDic[@"rank"];
+    trackInfo[UT_ENTER_FROM] = @"transaction_remind";
+    
     FHDetailHalfPopLayer *popLayer = [self popLayer];
-    [popLayer showDealData:propertyModel.rentExtraInfo trackInfo:@{}];
+    [popLayer showDealData:propertyModel.rentExtraInfo trackInfo:trackInfo];
 }
 
 -(void)addClickOptionLog
@@ -524,8 +533,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
     param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
     param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
-    //TODO: add real element_from
-    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM];
+    
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
     
     [param addEntriesFromDictionary:self.detailTracerDic];
     param[@"click_position"] = @"transaction_remind";

@@ -720,14 +720,26 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         return;
     }
 
+    NSMutableDictionary *trackInfo = [NSMutableDictionary new];
+    trackInfo[UT_PAGE_TYPE] = self.detailTracerDic[UT_PAGE_TYPE];
+    trackInfo[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
+    trackInfo[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
+    trackInfo[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
+    trackInfo[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
+    trackInfo[@"rank"] = self.detailTracerDic[@"rank"];
+    
     NSString *position = nil;
     FHDetailHalfPopLayer *popLayer = [self popLayer];
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
-        [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model trackInfo:nil];
-        position = @"official_inspection ";
+        position = @"official_inspection";
+        trackInfo[UT_ENTER_FROM] = position;
+        [popLayer showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)model trackInfo:trackInfo];
+        
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:nil];
         position = @"happiness_eye";
+        trackInfo[UT_ENTER_FROM] = position;
+        [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
+        
     }
     [self addClickOptionLog:position];
 }
@@ -741,8 +753,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     param[UT_ORIGIN_FROM] = self.detailTracerDic[UT_ORIGIN_FROM];
     param[UT_ORIGIN_SEARCH_ID] = self.detailTracerDic[UT_ORIGIN_SEARCH_ID];
     param[UT_LOG_PB] = self.detailTracerDic[UT_LOG_PB];
-    //TODO: add real element_from
-    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM];
+    
+    param[UT_ELEMENT_FROM] = self.detailTracerDic[UT_ELEMENT_FROM]?:UT_BE_NULL;
     
     [param addEntriesFromDictionary:self.detailTracerDic];
     param[@"click_position"] = position;

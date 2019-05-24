@@ -423,18 +423,6 @@
 
 -(void)popLayerReport:(id)model
 {
-    NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
-    tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
-    if ([TTAccountManager isLogin]) {
-        [self gotoReportVC:model];
-    } else {
-        [self gotoLogin:model];
-    }
-}
-
-- (void)gotoLogin:(id)model
-{
     
     NSString *enterFrom = @"be_null";
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
@@ -444,6 +432,20 @@
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         enterFrom = @"transaction_remind";
     }
+    
+    NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+    tracerDic[@"enter_from"] = enterFrom;
+    tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
+    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
+    if ([TTAccountManager isLogin]) {
+        [self gotoReportVC:model];
+    } else {
+        [self gotoLogin:model enterFrom:enterFrom];
+    }
+}
+
+- (void)gotoLogin:(id)model enterFrom:(NSString *)enterFrom
+{
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     

@@ -67,10 +67,10 @@
     if (type == FHDetailHalfPopFooterTypeConfirm) {
         
         self.negativeButton.hidden = YES;
-        CGSize size = [self.actionButton sizeThatFits:CGSizeMake(200, CGRectGetHeight(self.bounds))];
+//        CGSize size = [self.actionButton sizeThatFits:CGSizeMake(200, CGRectGetHeight(self.bounds))];
         [self.actionButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(ceil(size.width));
-            make.right.mas_equalTo(-20);
+            make.width.mas_equalTo(60);
+            make.right.mas_equalTo(-0);
         }];
         
     }else{
@@ -78,8 +78,8 @@
         [self.negativeButton setTitle:ntitle forState:UIControlStateNormal];
         self.negativeButton.hidden = NO;
         [self.actionButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(20);
-            make.right.mas_equalTo(-88);
+            make.width.mas_equalTo(60);
+            make.right.mas_equalTo(-68);
         }];                
     }
 }
@@ -107,15 +107,13 @@
     }];
     
     [_negativeButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-HOR_MARGIN);
-        make.top.bottom.mas_equalTo(self);
-        make.width.mas_equalTo(20);
+        make.top.bottom.right.mas_equalTo(self);
+        make.width.mas_equalTo(60);
     }];
     
     [_actionButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.bottom.mas_equalTo(self);
-        make.right.mas_equalTo(self).offset(-20);
-        make.width.mas_equalTo(20);
+        make.top.bottom.right.mas_equalTo(self);        
+        make.width.mas_equalTo(60);
     }];
     
     

@@ -63,7 +63,7 @@
         _menu = [[FHDetailHalfPopTopBar alloc] initWithFrame:CGRectZero];
         _menu.headerActionBlock = ^(BOOL isClose) {
             if (isClose) {
-                [wself dismiss];
+                [wself dismiss:YES];
             }else{
                 [wself report];
             }
@@ -101,7 +101,7 @@
         
         [self initConstraints];
         
-        self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        self.backgroundColor = [UIColor clearColor];//[[UIColor blackColor] colorWithAlphaComponent:0.6];
         
         [self.tableView addObserver:self forKeyPath:@"contentSize" options:NSKeyValueObservingOptionNew context:nil];
         
@@ -117,17 +117,23 @@
     [self.tableView removeObserver:self forKeyPath:@"contentSize"];
 }
 
--(void)dismiss
+-(void)dismiss:(BOOL)animated
 {
-    CGRect frame = self.bgView.frame;
-    frame.origin.y = CGRectGetHeight(self.bounds);
-    [UIView animateWithDuration:0.3 animations:^{
-        
-        self.bgView.frame = frame;
-        
-    } completion:^(BOOL finished) {
+    if (animated) {
+        CGRect frame = self.bgView.frame;
+        frame.origin.y = CGRectGetHeight(self.bounds);
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            self.bgView.frame = frame;
+            
+        } completion:^(BOOL finished) {
+            [self removeFromSuperview];
+        }];
+    }else{
         [self removeFromSuperview];
-    }];
+    }
+    
+    [self addStayLog];
 }
 
 -(void)report
@@ -135,7 +141,7 @@
     if (self.reportBlock) {
         self.reportBlock(self.data);
     }
-    [self removeFromSuperview];
+    [self dismiss:NO];
 }
 
 -(void)onTapAction:(UITapGestureRecognizer *)gesture
@@ -147,7 +153,7 @@
     if (CGRectContainsPoint(_bgView.frame, location)) {
         return;
     }
-    [self dismiss];
+    [self dismiss:YES];
 }
 
 -(void)feedBack:(NSInteger)type
@@ -157,6 +163,7 @@
         self.feedBack(type, self.data, ^(BOOL success) {            
             [wself updateFooterFeedback:success];
         });
+        [wself addClickAgreeLogType:type];
     }
     self.footer.actionButton.enabled = NO;
     self.footer.negativeButton.enabled = NO;
@@ -182,12 +189,12 @@
     self.enterDate = [NSDate date];
     self.trackInfo = trackInfo;
     self.data = data;    
-    [self addShowLog:@"official_inspection"];
+//    [self addShowLog:@"inspection_show"];
     
     FHDetailHalfPopLogoHeader *header = [self header];
     [header updateWithTitle:data.dialogs.title tip:data.dialogs.subTitle imgUrl:data.dialogs.icon];
     
-    [_footer showTip:data.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeConfirm positiveTitle:@"提交" negativeTitle:nil];
+    [_footer showTip:data.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeChoose positiveTitle:@"是" negativeTitle:@"否"];
     
     self.tableView.tableHeaderView = header;
     
@@ -200,7 +207,7 @@
     self.data = data;
     self.trackInfo = trackInfo;
     self.enterDate = [NSDate date];
-    [self addShowLog:@"happiness_eye"];
+//    [self addShowLog:@"happiness_show"];
     
     FHDetailHalfPopLogoHeader *header = [self header];
     
@@ -218,14 +225,14 @@
     self.data = data;
     self.trackInfo = trackInfo;
     self.enterDate = [NSDate date];
-    [self addShowLog:@"transaction_remind"];
+//    [self addShowLog:@"remind_show"];
     
     FHDetailHalfPopLogoHeader *header = [self header];
     header.height = 47;
 //    data.securityInformation.dialogs
     [header updateWithTitle:data.securityInformation.dialogs.title tip:data.securityInformation.dialogs.subTitle imgUrl:data.securityInformation.dialogs.icon];
     
-    [_footer showTip:data.securityInformation.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeConfirm positiveTitle:@"提交" negativeTitle:nil];
+    [_footer showTip:data.securityInformation.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeChoose positiveTitle:@"是" negativeTitle:@"否"];
     
     self.tableView.tableHeaderView = header;
     
@@ -411,6 +418,7 @@
         [UIView animateWithDuration:0.3 animations:^{
             
             self.bgView.frame = frame;
+            self.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
             
         } completion:^(BOOL finished) {
             
@@ -420,9 +428,13 @@
 }
 
 #pragma mark - log
--(void)addShowLog:(NSString *)key
+-(void)addClickAgreeLogType:(NSInteger)type
 {
-    TRACK_EVENT(key, self.trackInfo);
+    NSMutableDictionary *param = [NSMutableDictionary new];
+    [param addEntriesFromDictionary:self.trackInfo];
+    param[@"click_position"] = (type == 1)?@"yes":@"no";
+    
+    TRACK_EVENT(@"click_agree", param);
 }
 
 -(void)addStayLog
