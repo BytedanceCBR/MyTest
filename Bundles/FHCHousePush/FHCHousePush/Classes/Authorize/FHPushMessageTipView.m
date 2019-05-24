@@ -85,7 +85,7 @@
 {
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc]init];
-        _titleLabel.text = @"打开系统通知，随时接受最新房源动态";
+        _titleLabel.text = @"打开系统通知，随时接收最新消息";
         _titleLabel.font = [UIFont themeFontRegular:14];
         _titleLabel.textColor = [UIColor themeGray2];
         _titleLabel.numberOfLines = 0;
