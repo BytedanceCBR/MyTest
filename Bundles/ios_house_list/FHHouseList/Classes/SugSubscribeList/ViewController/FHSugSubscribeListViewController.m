@@ -54,7 +54,6 @@
         // 添加固定埋点
         self.categoryLogDict[@"category_name"] = @"search_subscribe";
         self.categoryLogDict[@"enter_type"] = @"click";
-        // 从url的param中获取
     }
     return self;
 }
