@@ -51,68 +51,9 @@
         self.viewController = viewController;
         
         [self.tableView registerClass:NSClassFromString(@"FHMineMutiItemCell") forCellReuseIdentifier:mutiItemCellId];
-        
-//        [self initDefaultData];
     }
     return self;
 }
-
-//- (void)initDefaultData {
-//    self.defaultList = @[
-//                         @{
-//                             @"name":@"",
-//                             @"cellId":@"focusCellId",
-//                             @"cellClassName":@"FHMineMutiItemCell"
-//                             },
-//                         @{
-//                             @"name":@"我的收藏",
-//                             @"url":@"snssdk1370://favorite?stay_id=favorite",
-//                             @"cellId":@"settingCellId",
-//                             @"cellClassName":@"FHMineSettingCell"
-//                             },
-//                         @{
-//                             @"name":@"用户反馈",
-//                             @"url":@"snssdk1370://feedback",
-//                             @"cellId":@"settingCellId",
-//                             @"cellClassName":@"FHMineSettingCell",
-//                             @"click_minetab":@{
-//                                        @"click_type":@"feedback",
-//                                        @"page_type":@"minetab",
-//                                     },
-//                             @"go_detail":@{
-//                                     @"enter_from":@"minetab",
-//                                     @"page_type":@"feedback",
-//                                     },
-//                             },
-//                         @{
-//                             @"name":@"系统设置",
-//                             @"url":@"snssdk1370://more",
-//                             @"cellId":@"settingCellId",
-//                             @"cellClassName":@"FHMineSettingCell",
-//                             @"click_minetab":@{
-//                                     @"click_type":@"setting",
-//                                     @"page_type":@"minetab",
-//                                     },
-//                             @"go_detail":@{
-//                                     @"enter_from":@"minetab",
-//                                     @"page_type":@"setting",
-//                                     },
-//                             },
-////                         @{
-////                             @"name":@"视频测试",
-////                             @"url":@"snssdk1370://video_test",
-////                             @"cellId":@"settingCellId",
-////                             @"cellClassName":@"FHMineSettingCell",
-////                             },
-//                         ];
-//    [self.dataList addObjectsFromArray:self.defaultList];
-//    
-//    for (NSDictionary *dic in self.defaultList) {
-//        NSString *cellId = dic[@"cellId"];
-//        NSString *cellClassName = dic[@"cellClassName"];
-//        [self.tableView registerClass:NSClassFromString(cellClassName) forCellReuseIdentifier:cellId];
-//    }
-//}
 
 - (void)requestData {
     __weak typeof(self) wself = self;
@@ -170,8 +111,7 @@
     if([TTAccount sharedAccount].isLogin){
         NSDictionary *fhSettings = [self fhSettings];
         NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
-        //测试数据
-        state = 2;
+
         if(state == 1){
             [[ToastManager manager] showToast:@"个人资料功能升级中，敬请期待"];
         }else if(state == 2){
@@ -215,8 +155,7 @@
     
     NSDictionary *fhSettings = [self fhSettings];
     NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
-    //测试数据
-    state = 2;
+
     [self.viewController.headerView setUserInfoState:state];
     
     if (userInfo != nil) {
