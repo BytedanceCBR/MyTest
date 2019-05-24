@@ -21,7 +21,7 @@
 #import <TTRexxar/TTRWKWebView.h>
 #endif
 #import <React/RCTRootView.h>
-
+#import <FHIESGeckoManager.h>
 
 #define BasicHost @[@"appInfo",@"bundleInfo",@"open",@"close"]
 
@@ -236,6 +236,10 @@
             [self addSubview:self.rnView];
             [self addConstraintsToView:self.rnView];
         }
+    }else
+    {
+        //尝试重新下载
+        [FHIESGeckoManager configGeckoInfo];
     }
 
 //    TTRNKitBridgeModule *bridgeModule = [[TTRNKitBridgeModule alloc] initWithBundleUrl:urlJSBundle1];
