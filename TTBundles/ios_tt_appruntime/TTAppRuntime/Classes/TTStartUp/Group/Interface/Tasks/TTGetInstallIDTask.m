@@ -11,7 +11,7 @@
 #import "TTPlatformSwitcher.h"
 #import "ExploreExtenstionDataHelper.h"
 #import "TTModuleBridge.h"
-#import "TTPhoneConnectWatchManager.h"
+//#import "TTPhoneConnectWatchManager.h"
 #import "AccountKeyChainManager.h"
 #import "TTFingerprintManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -66,15 +66,15 @@
         if (!isEmptyString(deviceID)) {
             [ExploreExtenstionDataHelper saveSharedDeviceID:deviceID];
             
-            [self sendDeveiceIDToWatch:deviceID];
+//            [self sendDeveiceIDToWatch:deviceID];
         }
     }];
 }
 
-+ (void)sendDeveiceIDToWatch:(NSString *)deviceID {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setValue:deviceID forKey:@"deviceID"];
-    [[TTPhoneConnectWatchManager sharedInstance] sendUserInfo:dict];
-}
+//+ (void)sendDeveiceIDToWatch:(NSString *)deviceID {
+//    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+//    [dict setValue:deviceID forKey:@"deviceID"];
+//    [[TTPhoneConnectWatchManager sharedInstance] sendUserInfo:dict];
+//}
 
 @end

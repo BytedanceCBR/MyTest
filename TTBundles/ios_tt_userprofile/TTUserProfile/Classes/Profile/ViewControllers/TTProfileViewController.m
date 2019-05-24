@@ -106,15 +106,10 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
 
 - (instancetype)init
 {
-    if ([SSCommonLogic shouldUseOptimisedLaunch]) {
-        self = [self initWithNibName:nil bundle:nil];
-        self.ttHideNavigationBar = YES;
-        self.ttStatusBarStyle = UIStatusBarStyleDefault;
-        self.ttTrackStayEnable = YES;
-    } else {
-        self = [super init];
-    }
-    
+    self = [self initWithNibName:nil bundle:nil];
+    self.ttHideNavigationBar = YES;
+    self.ttStatusBarStyle = UIStatusBarStyleDefault;
+    self.ttTrackStayEnable = YES;
     [self registerNotifications];
     self.ttTrackStayEnable = YES;
     if (![TTTabBarProvider isMineTabOnTabBar]){

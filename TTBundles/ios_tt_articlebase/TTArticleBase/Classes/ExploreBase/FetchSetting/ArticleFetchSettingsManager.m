@@ -255,11 +255,6 @@
         [NewsFetchArticleDetailManager saveArticleDetailURLHosts:detailCotentHosts isFull:NO];
     }
     
-    NSArray * temaiUrls = [dSettings objectForKey:@"temai_url_list"];
-    if ([temaiUrls isKindOfClass:[NSArray class]]) {
-        [SSCommonLogic saveTeMaiURLs:temaiUrls];
-    }
-    
     if ([[dSettings allKeys] containsObject:@"category_refresh_interval"]) {
         NSTimeInterval timeInterval = [[dSettings objectForKey:@"category_refresh_interval"] doubleValue];
         [NewsListLogicManager saveListAutoReloadInterval:timeInterval];
@@ -279,11 +274,6 @@
         [NewsListLogicManager saveSwitchToRecommendChannelInterval:timeInterval];
     }
     
-    if ([[dSettings allKeys] containsObject:@"category_tip_duration"]) {
-        NSTimeInterval timeInterval = [[dSettings objectForKey:@"category_tip_duration"] doubleValue];
-        [NewsListLogicManager saveListTipDisplayInterval:timeInterval];
-    }
-    
     if ([[dSettings allKeys] containsObject:@"preload_count_max"]) {
         NSUInteger count = (NSUInteger)[[dSettings objectForKey:@"preload_count_max"] longLongValue];
         [ExploreListHelper setPreloadCount:count userSettingStatus:TTNetworkTrafficOptimum];
@@ -297,10 +287,6 @@
     if ([[dSettings allKeys] containsObject:@"preload_count_min"]) {
         NSUInteger count = (NSUInteger)[[dSettings objectForKey:@"preload_count_min"] longLongValue];
         [ExploreListHelper setPreloadCount:count userSettingStatus:TTNetworkTrafficSave];
-    }
-    
-    if ([[dSettings allKeys] containsObject:@"report_send_html"]) {
-        [TTReportManager setNeedPostArticleHTML:[[dSettings objectForKey:@"report_send_html"] boolValue]];
     }
     
     if ([[dSettings allKeys] containsObject:@"report_options"]) {
@@ -483,11 +469,7 @@
     if ([dSettings valueForKey:@"lbs_sync_interval"]) {
         [SSCommonLogic setMinimumLocationUploadTimeInterval:[dSettings[@"lbs_sync_interval"] doubleValue]];
     }
-    
-    if ([dSettings valueForKey:@"large_image_dialog_repeat_enabled"]) {
-        [SSCommonLogic setEnabledShowAlwaysOriginImageAlertRepeatly:[dSettings[@"large_image_dialog_repeat_enabled"] boolValue]];
-    }
-    
+
     if ([dSettings valueForKey:@"lbs_timeout_interval"]) {
         [SSCommonLogic setLocateTimeoutInterval:[dSettings[@"lbs_timeout_interval"] doubleValue]];
     }
@@ -514,10 +496,7 @@
     [SSCommonLogic setWebContentArticleProtectionTimeoutDisabled:disabled];
     NSTimeInterval webContentTimeoutInterval = [[dSettings valueForKey:@"web_transform_delay_sec_float"] doubleValue];
     [SSCommonLogic setWebContentArticleProtectionTimeoutInterval:webContentTimeoutInterval];
-    
-    NSString *toolbarPlaceholderString = [dSettings valueForKey:@"write_comment_hint"];
-    [SSCommonLogic setExploreDetailToolBarWriteCommentPlaceholderText:toolbarPlaceholderString];
-    
+
     NSArray *taobaoSlotIDs = [dSettings valueForKey:@"slot_ids"];
     [SSCommonLogic setTaobaoSlotIDs:taobaoSlotIDs];
     
@@ -530,18 +509,6 @@
     if ([dSettings objectForKey:@"last_read_refresh"]) {
         BOOL lastReadRefreshEnabled = [[dSettings valueForKey:@"last_read_refresh"] boolValue];
         [SSCommonLogic setLastReadRefreshEnabled:lastReadRefreshEnabled];
-    }
-    
-    if ([dSettings objectForKey:@"last_read_style"]) {
-        [SSCommonLogic setLastReadStyle:[dSettings tt_integerValueForKey:@"last_read_style"]];
-    }
-    
-    if ([dSettings objectForKey:@"show_floating_refresh_btn"]) {
-        [SSCommonLogic setShowFloatingRefreshBtn:[dSettings tt_boolValueForKey:@"show_floating_refresh_btn"]];
-    }
-    
-    if ([dSettings objectForKey:@"auto_floating_refresh_btn_interval"]) {
-        [SSCommonLogic setAutoFloatingRefreshBtnInterval:[dSettings tt_integerValueForKey:@"auto_floating_refresh_btn_interval"]];
     }
     
     if ([dSettings objectForKey:@"tt_enable_feed_show_scene"]) {
@@ -560,10 +527,7 @@
     
     BOOL essayCommentDetailEnabled = [[dSettings valueForKey:@"essay_comment_detail_enabled"] boolValue];
     [SSCommonLogic setEssayCommentDetailEnabled:essayCommentDetailEnabled];
-    
-    NSDictionary *ugcCellLineNumber = [dSettings valueForKey:@"feed_text_max_line"];
-    [SSCommonLogic setUgcCellLineNumber: ugcCellLineNumber];
-    
+
     if ([dSettings valueForKey:@"use_tab_tip"]) {
         [NewsListLogicManager setTipListUpdateUseTabbar:[[dSettings objectForKey:@"use_tab_tip"] boolValue]];
     }
@@ -642,10 +606,6 @@
     
     if ([dSettings objectForKey:@"enable_jsonmodel_monitor"]) {
         [SSCommonLogic setEnableJSONModelMonitor:[[dSettings objectForKey:@"enable_jsonmodel_monitor"] boolValue]];
-    }
-    
-    if ([dSettings objectForKey:@"mytab_search_enabled"]) {
-        [SSCommonLogic setMineTabSearchEnabled:[[dSettings objectForKey:@"mytab_search_enabled"] boolValue]];
     }
     
     if ([dSettings valueForKey:@"monitor_white_web"]) {
@@ -879,12 +839,6 @@
          [TTDeviceHelper resetAppLaunchedTimes];
          */
     }
-    
-    ///...
-    // 下拉刷新广告位是否显示
-    if ([dSettings objectForKey:@"refresh_ad_disable"]) {
-        [SSCommonLogic setFeedRefreshADDisable:[[dSettings objectForKey:@"refresh_ad_disable"] boolValue]];
-    }
     // 下拉刷新广告资源请求间隔
     if ([dSettings objectForKey:@"refresh_ad_expire_sec"]) {
         [SSCommonLogic setFeedRefreshADExpireInterval:[[dSettings objectForKey:@"refresh_ad_expire_sec"] doubleValue]];
@@ -902,27 +856,9 @@
     if ([dSettings objectForKey:@"tt_refector_adphotoalbum_enable"]) {
         [SSCommonLogic setRefacorPhotoAlbumControlAble:[[dSettings objectForKey:@"tt_refector_adphotoalbum_enable"] boolValue]];
     }
-    
-    // 新浪微博分享过期提醒间隔时间
-    if ([[dSettings allKeys] containsObject:@"notify_platform_expired_period"]) {
-        NSNumber *seconds = [NSNumber numberWithLongLong:([[dSettings valueForKey:@"notify_platform_expired_period"] intValue] * 24 * 3600)];
-        [[NSUserDefaults standardUserDefaults] setValue:seconds forKey:@"weiboExpiredShowInterval"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    
-    
+
     [[TTAuthorizeManager sharedManager].authorizeModel saveData];
-    
-    // 视频出顶踩全局控制
-    if ([dSettings objectForKey:@"show_list_digg"]) {
-        [ExploreCellHelper setShowListDig:[[dSettings objectForKey:@"show_list_digg"] intValue]];
-    }
-    
-    // 视频tab 气泡tip控制
-    if ([dSettings objectForKey:@"enable_video_tab_bubble"]) {
-        [SSCommonLogic setVideoTipServerEnabled:[[dSettings objectForKey:@"enable_video_tab_bubble"] boolValue]];
-    }
-    
+
     if ([dSettings objectForKey:@"video_tab_bubble_interval"]) {
         [SSCommonLogic setVideoTipServerInterval:[[dSettings objectForKey:@"video_tab_bubble_interval"] doubleValue]];
     }
@@ -951,11 +887,7 @@
     //    if ([dSettings objectForKey:@"quick_login"]) {
     //        [SSCommonLogic setQuickLoginSwitch:[dSettings tt_boolValueForKey:@"quick_login"]];
     //    }
-    
-    // 搜索框提示语
-    if ([dSettings objectForKey:@"top_search_bar_tips_style"]) {
-        [SSCommonLogic setSearchBarTipForNormal:[dSettings tt_stringValueForKey:@"top_search_bar_tips_style"]];
-    }
+
     
     // 详情页顶部搜索
     if ([dSettings objectForKey:@"detail_search_tab_style"]) {
@@ -969,33 +901,9 @@
     if ([dSettings objectForKey:@"web_view_common_query_host_list"]) {
         [SSCommonLogic setWebViewQueryEnableHostList:[dSettings arrayValueForKey:@"web_view_common_query_host_list" defaultValue:nil]];
     }
-    
-    // 关注TAB Tips提醒，如果没有或为空则不显示
-    if ([dSettings objectForKey:@"follow_tab_tips"]) {
-        NSString *tips = [dSettings tt_stringValueForKey:@"follow_tab_tips"];
-        if (!isEmptyString(tips)) {
-            [SSCommonLogic setFollowTabTipsEnable:YES];
-            [SSCommonLogic setFollowTabTipsString:tips];
-        }
-        else {
-            [SSCommonLogic setFollowTabTipsEnable:NO];
-        }
-    }
-    else{
-        [SSCommonLogic setFollowTabTipsEnable:NO];
-    }
-    
-    // 是否预加载关注页面     0不预加载，1预加载
-    if ([dSettings objectForKey:@"is_follow_preload"]) {
-        [SSCommonLogic setPreloadFollowEnable:[dSettings tt_boolValueForKey:@"is_follow_preload"]];
-    }
-    
+
     [WDSettingHelper saveWendaAppInfoDict:[dSettings objectForKey:@"wenda_settings"]];
         
-    //列表页UI设置
-    [TTUISettingHelper saveCellViewUISettingInfoDict:[dSettings objectForKey:@"list_ui_option"]];
-    //详情页UI设置
-    [TTUISettingHelper saveDetailViewUISettingInfoDict:[dSettings objectForKey:@"detail_ui_option"]];
     //频道导航UI设置
     [TTUISettingHelper saveCategoryViewUISettingInfoDict:[dSettings objectForKey:@"category_ui_option"]];
     //tabbarUI设置
@@ -1053,11 +961,6 @@
     if ([dSettings objectForKey:@"tt_user_interactive_action_guide_enable"]) {
         [SSCommonLogic setToolbarLabelEnabled:[dSettings tt_boolValueForKey:@"tt_user_interactive_action_guide_enable"]];
     }
-    
-    if ([dSettings objectForKey:@"tt_share_icon_type"]) {
-        [SSCommonLogic setShareIconStyle:[dSettings tt_integerValueForKey:@"tt_share_icon_type"]];
-    }
-    
     if ([dSettings objectForKey:@"new_natant_style"]) {
         BOOL res = [dSettings tt_boolValueForKey:@"new_natant_style"];
         [SSCommonLogic setNewNatantStyleEnabled:res];
@@ -1079,12 +982,8 @@
         [TTUserSettingsManager setNetworkTrafficSetting:settingType];
     }
     
-    if ([dSettings objectForKey:@"3g_image_display_mode"]) {
-        [SSCommonLogic setImageDisplayModeFor3GIsSameAs2GEnable:[dSettings tt_boolValueForKey:@"3g_image_display_mode"]];
-    }
-    
     //阅读位置默认开启
-    [SSCommonLogic setArticleReadPositionEnable:!![dSettings integerValueForKey:@"article_read_position_enable" defaultValue:1]];
+
     if ([dSettings objectForKey:@"albb_link_enable"]) {
         [SSCommonLogic setTBSDKEnable:[dSettings tt_boolValueForKey:@"albb_link_enable"]];
     }
@@ -1103,10 +1002,6 @@
     
     if ([dSettings objectForKey:@"poster_ad_click_enabled"]) {
         [SSCommonLogic setPosterADClickEnabled:[dSettings tt_boolValueForKey:@"poster_ad_click_enabled"]];
-    }
-    
-    if ([dSettings objectForKey:@"should_optimize_launch"]) {
-        [SSCommonLogic setShouldUseOptimisedLaunch:[[dSettings objectForKey:@"should_optimize_launch"] boolValue]];
     }
     //是否用重构后的导航栏
     if([dSettings objectForKey:@"refactor_navi_enable"]) {
@@ -1130,7 +1025,7 @@
             
             NSDictionary *userInfo = @{@"delaySceonds":@(delay)};
             TTAdSplashMediator *mediator = [TTAdSplashMediator shareInstance];
-            if (mediator.adWillShow && [SSCommonLogic shouldUseOptimisedLaunch]) {
+            if (mediator.adWillShow) {
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.65 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [[NSNotificationCenter defaultCenter] postNotificationName:kFirstRefreshTipsSettingEnabledNotification object:nil userInfo:userInfo];
                 });
@@ -1143,10 +1038,6 @@
     //iOS10适配采用新的impression统计开关
     if ([dSettings objectForKey:@"new_feed_impression"]) {
         [SSCommonLogic setNewFeedImpressionEnabled:[dSettings tt_boolValueForKey:@"new_feed_impression"]];
-    }
-    
-    if ([dSettings objectForKey:@"tt_article_api_cdn_version"]) {
-        [SSCommonLogic setDetailCDNVersion:[dSettings tt_integerValueForKey:@"tt_article_api_cdn_version"]];
     }
     
     //是否使用严格的详情页类型区分
@@ -1176,27 +1067,14 @@
     if ([dSettings objectForKey:@"video_own_player"]) {
         [SSCommonLogic setVideoOwnPlayerEnabled:[dSettings tt_boolValueForKey:@"video_own_player"]];
     }
-    
-    //第三个tab是否开放小流量实验
-    if ([dSettings objectForKey:@"third_tab_switch"]) {
-        [SSCommonLogic setThirdTabWeitoutiaoEnabled:[dSettings tt_boolValueForKey:@"third_tab_switch"]];
-    }
-    
+
     [TTKitchen parseSettings:dSettings];
     
     //头条认证展现配置
     if ([dSettings valueForKey:@"user_verify_info_conf"]) {
         [SSCommonLogic setUserVerifyConfigs:[dSettings tt_dictionaryValueForKey:@"user_verify_info_conf"]];
     }
-    
-    //微头条tab列表更新tips展示类型
-    if ([dSettings objectForKey:@"toutiaoquan_tab_tips"]) {
-        NSNumber * type = [dSettings objectForKey:@"toutiaoquan_tab_tips"];
-        if ([type isKindOfClass:[NSNumber class]]) {
-            [SSCommonLogic setWeitoutiaoTabListUpdateTipType:type.unsignedIntegerValue];
-        }
-    }
-    
+
     if ([dSettings objectForKey:@"ugc_user_medal"]) {
         [WDCommonLogic setUGCMedalsWithDictionay:[dSettings tt_dictionaryValueForKey:@"ugc_user_medal"]];
     }
@@ -1355,12 +1233,7 @@
     if ([dSettings objectForKey:@"dom_complete_enabled"]) {
         [SSCommonLogic setWebDomCompleteEnable:[dSettings tt_boolValueForKey:@"dom_complete_enabled"]];
     }
-    
-    //接入秒针视频可见性sdk开关
-    if ([dSettings objectForKey:@"mz_sdk_enabled"]) {
-        [SSCommonLogic setMZSDKEnable:[dSettings tt_boolValueForKey:@"mz_sdk_enabled"]];
-    }
-    
+
     //app_log header插入ua原值开关
     if ([dSettings objectForKey:@"ad_ua_enabled"]) {
         [SSCommonLogic setUAEnable:[dSettings tt_boolValueForKey:@"ad_ua_enabled"]];
@@ -1465,22 +1338,9 @@
     if ([dSettings objectForKey:@"tt_search_transition_animation_enabled"]){
         [SSCommonLogic setSearchTransitionEnabled:[dSettings tt_boolValueForKey:@"tt_search_transition_animation_enabled"]];
     }
-    
-    if ([dSettings objectForKey:@"tt_video_feed_cellui_height_adjust"]){
-        [SSCommonLogic setVideoFeedCellHeightAjust:[dSettings tt_integerValueForKey:@"tt_video_feed_cellui_height_adjust"]];
-    }
-    
-    if ([dSettings objectForKey:@"tt_video_autoplayad_halfshow"]){
-        [SSCommonLogic setVideoAdAutoPlayedWhenHalfShow:[dSettings tt_boolValueForKey:@"tt_video_autoplayad_halfshow"]];
-    }
-    
+
     if ([dSettings objectForKey:@"tt_video_business_refactor"]) {
         [TTVSettingsConfiguration setTitanVideoBusiness:[dSettings tt_boolValueForKey:@"tt_video_business_refactor"]];
-    }
-    
-    if ([dSettings objectForKey:@"video_ad_replay_btn_enabled"]) {
-        
-        [SSCommonLogic setVideoADReplayBtnEnabled:[dSettings tt_boolValueForKey:@"video_ad_replay_btn_enabled"]];
     }
     
     if([dSettings objectForKey:@"tt_push_sdk_upload_enable"]) {
@@ -1499,11 +1359,6 @@
         [SSCommonLogic setObject:@([dSettings tt_floatValueForKey:key]) forKey:key];
     }
     
-    //举报错别字是否弹框
-    if ([dSettings objectForKey:@"article_report_alert_enable"]) {
-        [SSCommonLogic setReportTyposEnabled:[dSettings tt_boolValueForKey:@"article_report_alert_enable"]];
-    }
-    
     if ([dSettings objectForKey:@"app_log_send_optimize"]) {
         [SSCommonLogic setAppLogSendOptimizeEnabled:[dSettings tt_boolValueForKey:@"app_log_send_optimize"]];
     }
@@ -1511,11 +1366,7 @@
     if ([dSettings objectForKey:kTTArticleDislikeRefactor]) {
         [SSCommonLogic setDislikeRefactorEnabled:[dSettings tt_boolValueForKey:kTTArticleDislikeRefactor]];
     }
-    //Feed流Dislike重构开关
-    if ([dSettings objectForKey:kTTArticleFeedDislikeRefactor]) {
-        [SSCommonLogic setFeedDislikeRefactorEnabled:[dSettings tt_boolValueForKey:kTTArticleFeedDislikeRefactor]];
-    }
-    
+
     if ([dSettings objectForKey:@"tt_refresh_by_click_category"]) {
         [SSCommonLogic setObject:[dSettings objectForKey:@"tt_refresh_by_click_category"] forKey:@"tt_refresh_by_click_category"];
     }
@@ -1524,19 +1375,6 @@
         [SSCommonLogic setPlayerImageEnhancementEnabel:[dSettings tt_boolValueForKey:@"tt_play_image_enhancement"]];
     }
     
-    ///第四个tab为火山
-    if ([dSettings objectForKey:@"tt_huoshan_tab_switch"]){
-        [SSCommonLogic setHTSTabSwitch:[dSettings tt_integerValueForKey:@"tt_huoshan_tab_switch"]];
-    }
-    
-    if ([dSettings objectForKey:@"tt_huoshan_tab_default_index"]) {
-        [SSCommonLogic setForthTabInitialVisibleCategoryIndex:[dSettings tt_integerValueForKey:@"tt_huoshan_tab_default_index"]];
-    }
-    
-    [SSCommonLogic isLaunchHuoShanAppEnabled];
-    if ([dSettings objectForKey:@"tt_launch_huoshan_switch"]) {
-        [SSCommonLogic setLaunchHuoShanAppEnabled:[dSettings tt_boolValueForKey:@"tt_launch_huoshan_switch"]];
-    }
     if ([dSettings objectForKey:@"tt_mine_icon_url"]) {
         [SSCommonLogic setHTSTabMineIconURL:[dSettings tt_stringValueForKey:@"tt_mine_icon_url"]];
     }
@@ -1545,27 +1383,11 @@
         [SSCommonLogic setHTSTabBannerInfoDict:[dSettings tt_dictionaryValueForKey:@"tt_huoshan_tab_banner_info"]];
     }
     
-    if ([dSettings objectForKey:@"tt_huoshan_app_download_info"]) {
-        [SSCommonLogic setHTSAppDownloadInfoDict:[dSettings tt_dictionaryValueForKey:@"tt_huoshan_app_download_info"]];
-    }
-    
     if ([dSettings objectForKey:@"tt_short_video_ios_player_type"]) {
         [SSCommonLogic setHTSVideoPlayerType:[dSettings tt_integerValueForKey:@"tt_short_video_ios_player_type"]];
     }
     
-    if ([dSettings objectForKey:@"tt_huoshan_first_frame"]) {
-        [SSCommonLogic setAWEVideoDetailFirstFrame:[dSettings objectForKey:@"tt_huoshan_first_frame"]];
-    }
-    
     [TTBubbleViewManager shareManager];
-    if ([dSettings objectForKey:@"tab_show_tips"]) {
-        NSDictionary *dict = [dSettings dictionaryValueForKey:@"tab_show_tips" defalutValue:nil];
-        [[TTBubbleViewManager shareManager] saveShowTips:dict];
-    }
-    // 视频详情页播放上一个UI样式开关
-    if ([dSettings objectForKey:@"tt_video_detail_playlast_showtext"]) {
-        [SSCommonLogic setVideoDetailPlayLastShowText:[dSettings tt_boolValueForKey:@"tt_video_detail_playlast_showtext"]];
-    }
     
     // ugc的图片上传是否采用webp压缩
     if ([dSettings objectForKey:@"ugc_image_post_encodewebp"]) {
@@ -1574,11 +1396,6 @@
     
     if ([dSettings objectForKey:@"tt_ios_launch_optimize_enabled"]) {
         [SSCommonLogic setNewLaunchOptimizeEnabled:[dSettings tt_boolValueForKey:@"tt_ios_launch_optimize_enabled"]];
-    }
-    
-    // 常用表情选择
-    if ([dSettings objectForKey:@"tt_user_expression_style"]) {
-        [SSCommonLogic setUGCEmojiQuickInputEnabled:[dSettings tt_boolValueForKey:@"tt_user_expression_style"]];
     }
     
     // 表情排序接口请求间隔时间
@@ -1619,16 +1436,6 @@
     if ([dSettings objectForKey:@"tt_follow_channel_cold_start"]) {
         BOOL enabled = [dSettings tt_boolValueForKey:@"tt_follow_channel_cold_start"];
         [SSCommonLogic setFollowChannelColdStartEnable:enabled];
-    }
-    
-    if ([dSettings objectForKey:@"tt_follow_channel_upload_contacts"]) {
-        BOOL enabled = [dSettings tt_boolValueForKey:@"tt_follow_channel_upload_contacts"];
-        [SSCommonLogic setFollowChannelUploadContactsEnable:enabled];
-    }
-    
-    if ([dSettings objectForKey:@"tt_follow_channel_upload_contacts_text"]) {
-        NSString * text = [dSettings tt_stringValueForKey:@"tt_follow_channel_upload_contacts_text"];
-        [SSCommonLogic setFollowChannelUploadContactsText:text];
     }
     
     if ([dSettings objectForKey:@"tt_weibo_expiration_enable"]) {
@@ -1684,29 +1491,11 @@
     }else{
         [SSCommonLogic setFeedCaregoryAddHiddenEnable:NO];
     }
-    
-    if ([dSettings objectForKey:@"tt_feed_search_entry_enable"]) {
-        [SSCommonLogic setFeedSearchEntryEnable:[dSettings tt_boolValueForKey:@"tt_feed_search_entry_enable"]];
-    }else{
-        [SSCommonLogic setFeedSearchEntryEnable:NO];
-    }
-    
-    if ([dSettings objectForKey:@"tt_pre_load_more_out_screen_number"]) {
-        [SSCommonLogic setPreloadmoreOutScreenNumber:[dSettings tt_integerValueForKey:@"tt_pre_load_more_out_screen_number"]];
-    }else{
-        [SSCommonLogic setPreloadmoreOutScreenNumber:100];
-    }
-    
+
     if ([dSettings objectForKey:@"tt_feed_tips_show_strategy"]) {
         [SSCommonLogic setFeedTipsShowStrategyDict:[dSettings tt_dictionaryValueForKey:@"tt_feed_tips_show_strategy"]];
     }else{
         [SSCommonLogic setFeedTipsShowStrategyDict:nil];
-    }
-    
-    if ([dSettings objectForKey:@"tt_feed_fantasy_local_settings"]) {
-        [SSCommonLogic setFeedFantasyLocalSettings:[dSettings tt_dictionaryValueForKey:@"tt_feed_fantasy_local_settings"]];
-    }else{
-        [SSCommonLogic setFeedFantasyLocalSettings:nil];
     }
     
     if ([dSettings objectForKey:@"tt_feed_refresh_settings"]) {
@@ -1714,13 +1503,6 @@
     }else{
         [SSCommonLogic setFeedRefreshStrategyDict:nil];
     }
-    
-    if ([dSettings objectForKey:@"tt_detail_push_tips_enable"]) {
-        [SSCommonLogic setDetailPushTipsEnable:[dSettings tt_boolValueForKey:@"tt_detail_push_tips_enable"]];
-    }else{
-        [SSCommonLogic setDetailPushTipsEnable:NO];
-    }
-    
     if ([dSettings objectForKey:@"tt_feed_auto_insert_setting"]) {
         [SSCommonLogic setFeedAutoInsertDict:[dSettings tt_dictionaryValueForKey:@"tt_feed_auto_insert_setting"]];
     }else{
@@ -1756,11 +1538,7 @@
     if ([dSettings objectForKey:@"tt_channel_tip_polling_interval"]) {
         [[TTInfiniteLoopFetchNewsListRefreshTipManager sharedManager] setChannelTipPollingInterval:[dSettings tt_arrayValueForKey:@"tt_channel_tip_polling_interval"]];
     }
-    
-    if ([dSettings objectForKey:@"tt_three_top_bar"]){
-        [SSCommonLogic setThreeTopBarEnable:[dSettings tt_boolValueForKey:@"tt_three_top_bar"]];
-    }
-    
+ 
 //    if ([dSettings objectForKey:@"tt_contacts_collect_interval"]) {
 //        [SSCommonLogic setAutoUploadContactsInterval:[dSettings objectForKey:@"tt_contacts_collect_interval"]];
 //        [TTContactsGuideManager autoUploadContactsIfNeeded]; // settings 更新之后再判断一次是否上传
@@ -1778,10 +1556,6 @@
     
     if ([dSettings objectForKey:@"tt_huoshan_detail_scroll_direction"]){
         [SSCommonLogic setShortVideoScrollDirection:[dSettings objectForKey:@"tt_huoshan_detail_scroll_direction"]];
-    }
-    
-    if ([dSettings objectForKey:@"tt_huoshan_swipe_prompt"]){
-        [SSCommonLogic setShortVideoFirstUsePromptType:[dSettings objectForKey:@"tt_huoshan_swipe_prompt"]];
     }
     
     if ([dSettings objectForKey:@"tt_huoshan_detail_infinite_scrolling"]) {
@@ -1840,44 +1614,6 @@
         [SSCommonLogic setRecorderMaxLength:[dSettings tt_doubleValueForKey:@"tt_ugc_mediamaker_max_duration"]];
     }
     
-//    if ([dSettings objectForKey:@"tt_live_TTVideoLive_enable"]) {
-//        [SSCommonLogic setChatroomVideoLiveSDKEnable:[dSettings tt_boolValueForKey:@"tt_live_TTVideoLive_enable"]];
-//    }
-    
-    if ([dSettings objectForKey:@"tt_share_with_pgcname_enable"]) {
-        [SSCommonLogic setArticleShareWithPGCName:[dSettings tt_boolValueForKey:@"tt_share_with_pgcname_enable"]];
-    }
-    
-//    if ([dSettings tt_dictionaryValueForKey:@"rp_config"]) {
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_network_settings"]) {
-//            [SSCommonLogic setSFNetworkSettings:[[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_network_settings"]];
-//        }
-//
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_tab_config"]) {
-//            [SSCommonLogic setTTSFActivitySetting:[[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_tab_config"]];
-//        }
-//
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_resources_settings"]) {
-//            [SSCommonLogic setTTSFResourcesSetting:[[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_dictionaryValueForKey:@"rp_resources_settings"]];
-//        }
-//
-//        if ([[dSettings tt_dictionaryValueForKey:@"rp_config"] objectForKey:@"rp_resources_available"]) {
-//            BOOL canBeUsed = [[dSettings tt_dictionaryValueForKey:@"rp_config"] tt_boolValueForKey:@"rp_resources_available"];
-//            [TTSFResourcesManager setResourceCanBeUsed:canBeUsed];
-//        }
-//    }
-    
-//    //fantasy settings
-//    if ([dSettings objectForKey:@"hproject_settings"]) {
-//        [TTFantasy ttf_updateSettings:[dSettings tt_dictionaryValueForKey:@"hproject_settings"]];
-//        [[TTToutiaoFantasyManager sharedManager] updateHProjectSettings:[dSettings tt_dictionaryValueForKey:@"hproject_settings"]];
-//    }
-    
-    //article title logo
-    if ([dSettings objectForKey:@"tt_enable_detail_title_logo"]) {
-        [SSCommonLogic setArticleTitleLogoEnbale:[dSettings tt_boolValueForKey:@"tt_enable_detail_title_logo"]];
-    }
-    
     //mine tab auth entry
     if ([dSettings objectForKey:@"my_homepage_auth_control"]) {
         NSDictionary *settingsDict = [dSettings tt_dictionaryValueForKey:@"my_homepage_auth_control"];
@@ -1914,12 +1650,6 @@
         NSArray *list = [config tt_arrayValueForKey:@"category_list"];
         [SSCommonLogic setClearLocalFeedDataList:list];
     }
-    
-    //wechat share config
-    if ([dSettings objectForKey:@"tt_wechat_oldshare_callback_enable"]) {
-        [SSCommonLogic setEnableWXShareCallback:[dSettings tt_boolValueForKey:@"tt_wechat_oldshare_callback_enable"]];
-    }
-    [[AKTaskSettingHelper shareInstance] updateBenefitValue];
 }
 
 static NSString *const kShowMallUserDefaultsKey = @"kShowMallUserDefaultsKey";

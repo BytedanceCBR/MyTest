@@ -39,7 +39,6 @@
 #import "TTShareConstants.h"
 //#import "SSPayManager.h"
 
-#import <TTABManager/TTABHelper.h>
 #import "TTVersionHelper.h"
 #import "TTDeviceHelper.h"
 #import "TTURLUtils.h"

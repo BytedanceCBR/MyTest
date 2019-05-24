@@ -609,10 +609,11 @@
     attr[@"message"] = message;
     attr[@"house_id"] = houseId;
     attr[@"url"] = urlStr;
-    if (userInfo.count > 0 && [userInfo valueForKey:@"NSErrorFailingURLKey"]) {
-        NSString *str =[NSString stringWithFormat:@"%@",[userInfo valueForKey:@"NSErrorFailingURLKey"]];
-        BDALOG_WARN_TAG(@"house_detail",str);
-    }
+    // 字符串超长会有问题，鉴于这个log意义不大，先不加
+//    if (userInfo.count > 0 && [userInfo valueForKey:@"NSErrorFailingURLKey"]) {
+//        NSString *str =[NSString stringWithFormat:@"%@",[userInfo valueForKey:@"NSErrorFailingURLKey"]];
+//        BDALOG_WARN_TAG(@"house_detail",str);
+//    }
     [[HMDTTMonitor defaultManager]hmdTrackService:@"detail_request_related_failed" status:status.integerValue extra:attr];
 }
 

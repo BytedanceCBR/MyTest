@@ -5,10 +5,8 @@
 //  Created by chenjiesheng on 2018/3/1.
 //
 
-#import "AKRedPacketManager.h"
 #import "AKTaskSettingDefine.h"
 #import "AKTaskSettingHelper.h"
-#import "AKActivityTabManager.h"
 #import <TTSettingsManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 
@@ -65,12 +63,12 @@ static AKTaskSettingHelper *shareInstance = nil;
     return enable;
 }
 
-- (void)updateBenefitValue
-{
-      [[AKRedPacketManager sharedManager] applyNewbeeRedPacketIgnoreLocalFlag:NO];
-//    [[AKActivityTabManager sharedManager] updateActivityTabHiddenState:![AKTaskSettingHelper shareInstance].isEnableShowTaskEntrance];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kAKBenefitSettingValueUpdateNotification object:self];
-}
+//- (void)updateBenefitValue
+//{
+//      [[AKRedPacketManager sharedManager] applyNewbeeRedPacketIgnoreLocalFlag:NO];
+////    [[AKActivityTabManager sharedManager] updateActivityTabHiddenState:![AKTaskSettingHelper shareInstance].isEnableShowTaskEntrance];
+////    [[NSNotificationCenter defaultCenter] postNotificationName:kAKBenefitSettingValueUpdateNotification object:self];
+//}
 
 - (void)setShowTaskEntrance:(BOOL)enable
 {

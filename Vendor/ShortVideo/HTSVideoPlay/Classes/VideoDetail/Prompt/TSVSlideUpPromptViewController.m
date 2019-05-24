@@ -97,14 +97,4 @@ static UIViewController<AWEVideoDetailFirstUsePromptViewController> *slideUpProm
     return [[NSUserDefaults standardUserDefaults] integerForKey:[NSString stringWithFormat:@"TSVVideoPlayCountForProfileSlideUp%lu", [self slideUpViewType]]];
 }
 
-+ (TSVDetailAvatarClickType)clickAvatarType
-{
-    NSNumber *config = [[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_detail_avatar_click_config" defaultValue:@0 freeze:YES];
-    if ([config integerValue] > 1 || [config integerValue] < 0) {
-        return 1;
-    } else {
-        return [config integerValue];
-    }
-}
-
 @end

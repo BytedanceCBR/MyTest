@@ -12,8 +12,6 @@
 @property(nonatomic , strong) id envContextBridge;
 @property(nonatomic , strong) id cellsBridge;
 @property(nonatomic , strong) id cityListBridge;
-@property(nonatomic , strong) id accountBridge;
-
 
 @end
 
@@ -60,14 +58,6 @@
         _cityListBridge = [[clazz alloc] init];
     }
     return _cityListBridge;
-}
-
--(id<FHHouseAccountBridge>)accountBridge {
-    if (!_accountBridge) {
-        Class clazz = NSClassFromString(@"FHAccountBridgeImp");
-        _accountBridge = [[clazz alloc] init];
-    }
-    return _accountBridge;
 }
 
 @end
