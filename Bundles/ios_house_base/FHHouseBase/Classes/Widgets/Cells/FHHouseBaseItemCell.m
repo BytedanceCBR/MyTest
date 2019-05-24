@@ -30,7 +30,7 @@
 #define INFO_TO_ICON_MARGIN 12
 #define PRICE_BG_TOP_MARGIN 5
 
-#define YOGA_RIGHT_PRICE_WIDITH 72
+#define YOGA_RIGHT_PRICE_WIDITH 70
 
 
 @interface FHHouseBaseItemCell ()
@@ -500,7 +500,7 @@
     [_tagLabel configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.marginTop = YGPointValue(0);
-        layout.marginLeft = YGPointValue(-6);
+        layout.marginLeft = YGPointValue(0);
         layout.height = YGPointValue(16);
         layout.maxWidth = YGPointValue([self contentSmallImageMaxWidth]);
     }];
