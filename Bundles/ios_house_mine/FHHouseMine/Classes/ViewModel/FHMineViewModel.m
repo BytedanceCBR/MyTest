@@ -161,7 +161,9 @@
     if (userInfo != nil) {
         self.viewController.headerView.userNameLabel.text = name?:@"";
         self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
-        self.viewController.headerView.editIcon.hidden = NO;
+        if(state != 0){
+            self.viewController.headerView.editIcon.hidden = NO;
+        }
         _hasLogin = YES;
     } else {
         self.viewController.headerView.userNameLabel.text = @"登录/注册";
