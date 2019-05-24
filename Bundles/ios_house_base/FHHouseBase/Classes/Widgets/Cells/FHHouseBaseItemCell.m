@@ -30,7 +30,7 @@
 #define INFO_TO_ICON_MARGIN 12
 #define PRICE_BG_TOP_MARGIN 5
 
-#define YOGA_RIGHT_PRICE_WIDITH 70
+#define YOGA_RIGHT_PRICE_WIDITH 72
 
 
 @interface FHHouseBaseItemCell ()
