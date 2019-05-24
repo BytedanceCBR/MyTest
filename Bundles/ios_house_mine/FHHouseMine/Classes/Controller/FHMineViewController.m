@@ -101,6 +101,7 @@
     _tableView.backgroundColor = [UIColor themeGray7];
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.001)];
     _tableView.tableHeaderView = headerView;
+    _tableView.estimatedRowHeight = 124;
     [self.view addSubview:_tableView];
     if (@available(iOS 11.0, *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
