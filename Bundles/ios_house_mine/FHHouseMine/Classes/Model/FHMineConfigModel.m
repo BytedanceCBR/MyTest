@@ -22,6 +22,7 @@
 {
   NSDictionary *dict = @{
     @"logPb": @"log_pb",
+    @"reportParams": @"report_params",
     @"openUrl": @"open_url",
     @"textColor": @"text_color",
     @"addDescription": @"add_description",

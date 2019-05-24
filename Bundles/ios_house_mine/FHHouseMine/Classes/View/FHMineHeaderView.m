@@ -11,6 +11,7 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import <UIImageView+BDWebImage.h>
+#import "FHUtils.h"
 
 @interface FHMineHeaderView ()
 
@@ -46,12 +47,15 @@
     _beforeHeaderView.image = [self ct_imageFromImage:image inRect:CGRectMake(0,0, image.size.width, 1)];
     [self addSubview:_beforeHeaderView];
     
+    self.iconBorderView = [[UIView alloc] init];
+    [self addSubview:_iconBorderView];
+    
     self.icon = [[UIImageView alloc] init];
     self.icon.clipsToBounds = YES;
     self.icon.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:_icon];
-    _icon.layer.cornerRadius = 27;
-    _icon.layer.masksToBounds = YES;
+    [self.iconBorderView addSubview:_icon];
+//    _icon.layer.cornerRadius = 27;
+//    _icon.layer.masksToBounds = YES;
     
     self.userNameLabel = [[UILabel alloc] init];
     [self addSubview:_userNameLabel];
@@ -78,16 +82,22 @@
         make.height.mas_equalTo(500);
     }];
     
-    [_icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
+    [self.iconBorderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(14);
         make.top.mas_equalTo(self.naviBarHeight);
+        make.width.height.mas_equalTo(66);
+    }];
+    
+    [_icon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.iconBorderView).offset(6);
+        make.top.mas_equalTo(self.iconBorderView).offset(4);
         make.width.height.mas_equalTo(54);
     }];
 
     [_userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(28);
-        make.top.mas_equalTo(self.icon.mas_top).offset(3);
-        make.left.mas_equalTo(self.icon.mas_right).offset(14);
+        make.top.mas_equalTo(self.iconBorderView.mas_top).offset(7);
+        make.left.mas_equalTo(self.iconBorderView.mas_right).offset(8);
         make.right.mas_lessThanOrEqualTo(self).offset(-20).priorityHigh();
     }];
     
@@ -103,6 +113,9 @@
         make.left.mas_equalTo(self.descLabel.mas_right).mas_offset(5);
         make.centerY.mas_equalTo(self.descLabel);
     }];
+    
+    [self layoutIfNeeded];
+    [FHUtils addShadowToView:self.icon withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(0, 0) shadowRadius:6 andCornerRadius:27];
 }
 
 -(void)setNameLabelStyle: (UILabel*) nameLabel {

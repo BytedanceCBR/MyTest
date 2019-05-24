@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMineConfigDataIconOpDataMyIconItemsModel : JSONModel 
 
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, strong , nullable) NSDictionary *reportParams;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *description;
 @property (nonatomic, copy , nullable) NSString *title;

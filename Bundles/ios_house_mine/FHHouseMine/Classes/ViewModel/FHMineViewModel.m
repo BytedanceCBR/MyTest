@@ -242,15 +242,35 @@
     }
 }
 
-//- (NSString *)getFocusItemTitle:(NSString *)name count:(NSInteger)count {
-//    if([TTAccount sharedAccount].isLogin){
-//        return [NSString stringWithFormat:@"%@ (%i)",name,count];
-//    }else{
-//        return [NSString stringWithFormat:@"%@ (*)",name];
-//    }
-//}
+- (void)goToFeedback:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
+    NSString *goDetailTrackDic = @{
+                                   @"enter_from":@"minetab",
+                                   @"page_type":@"feedback",
+                                   };
+    TRACK_EVENT(@"go_detail", goDetailTrackDic);
+    NSString *clickTrackDic = @{
+                                @"click_type":@"feedback",
+                                @"page_type":@"minetab",
+                                };
+    TRACK_EVENT(@"click_minetab", clickTrackDic);
+    
+    NSURL* url = [NSURL URLWithString:model.openUrl];
+    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+}
+
 
 - (void)goToSystemSetting {
+    NSString *goDetailTrackDic = @{
+                                   @"enter_from":@"minetab",
+                                   @"page_type":@"setting",
+                                   };
+    TRACK_EVENT(@"go_detail", goDetailTrackDic);
+    NSString *clickTrackDic = @{
+                                @"click_type":@"setting",
+                                @"page_type":@"minetab",
+                                };
+    TRACK_EVENT(@"click_minetab", clickTrackDic);
+
     NSURL* url = [NSURL URLWithString:@"sslocal://more"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }
@@ -272,12 +292,12 @@
 - (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
      if ([TTReachability isNetworkConnected]) {
          FHMineItemType type = [model.id integerValue];
-         if(type == FHMineItemTypeSugSubscribe){
+         if(type == FHMineItemTypeSugSubscribe || type == FHMineItemTypeFeedback){
              [self jumpWithMoreAction:model];
          }else{
              //埋点
              NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-             dict[@"tracer"] = model.logPb;
+             dict[@"tracer"] = model.reportParams;
              
              TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
              
@@ -295,7 +315,9 @@
         case FHMineItemTypeSugSubscribe:
             [self goToSugSubscribeList:model];
             break;
-            
+        case FHMineItemTypeFeedback:
+            [self goToFeedback:model];
+            break;
         default:
             break;
     }

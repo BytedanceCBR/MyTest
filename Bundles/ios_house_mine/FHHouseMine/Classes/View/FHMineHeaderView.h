@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIImageView *headerImageView;
 @property (nonatomic, strong) UILabel *userNameLabel;
 @property (nonatomic, strong) UILabel *descLabel;
+@property (nonatomic, strong) UIView *iconBorderView;
 @property (nonatomic, strong) UIImageView *icon;
 @property (nonatomic, strong) UIImageView *editIcon;
 
