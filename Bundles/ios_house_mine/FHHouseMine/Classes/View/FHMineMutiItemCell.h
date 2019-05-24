@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FHMineFocusCellDelegate <NSObject>
+@protocol FHMineMutiItemCellDelegate <NSObject>
 
 - (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model;
 
@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateFocusTitles;
 
-@property(nonatomic , weak) id<FHMineFocusCellDelegate> delegate;
+@property(nonatomic , weak) id<FHMineMutiItemCellDelegate> delegate;
 
 @end
 

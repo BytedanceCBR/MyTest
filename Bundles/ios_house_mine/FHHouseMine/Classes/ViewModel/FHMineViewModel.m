@@ -22,7 +22,7 @@
 
 #define mutiItemCellId @"mutiItemCellId"
 
-@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineFocusCellDelegate>
+@interface FHMineViewModel()<UITableViewDelegate,UITableViewDataSource,FHMineMutiItemCellDelegate>
 
 @property(nonatomic, strong) UITableView *tableView;
 @property(nonatomic, weak) FHMineViewController *viewController;
@@ -226,7 +226,7 @@
     }
 }
 
-#pragma mark - FHMineFocusCellDelegate
+#pragma mark - FHMineMutiItemCellDelegate
 
 - (void)didItemClick:(FHMineConfigDataIconOpDataMyIconItemsModel *)model {
      if ([TTReachability isNetworkConnected]) {
