@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(NSAttributedString *)tagsStringWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList;
 
++(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHSearchHouseDataItemsTagsModel *> *)tagList;
+
 #pragma mark log
 -(NSString *)imprId;
 -(NSString *)groupId;

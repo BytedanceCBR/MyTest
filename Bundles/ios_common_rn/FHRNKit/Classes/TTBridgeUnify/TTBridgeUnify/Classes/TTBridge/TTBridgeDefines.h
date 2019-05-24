@@ -33,22 +33,22 @@ typedef NS_OPTIONS(NSInteger, TTBridgeRegisterEngineType) {
 
 #define TTBRIDGE_CALLBACK_SUCCESS \
 if (callback) {\
-callback(TTBridgeMsgSuccess, @{});\
+callback(TTBridgeMsgSuccess, @{}, nil);\
 }\
 
 #define TTBRIDGE_CALLBACK_FAILED \
 if (callback) {\
-callback(TTBridgeMsgFailed, @{});\
+callback(TTBridgeMsgFailed, @{}, nil);\
 }\
 
 #define TTBRIDGE_CALLBACK_FAILED_MSG(msg) \
 if (callback) {\
-callback(TTBridgeMsgFailed, @{@"msg": [NSString stringWithFormat:msg]? :@""});\
+callback(TTBridgeMsgFailed, @{@"msg": [NSString stringWithFormat:msg]? :@""}, nil);\
 }\
 
 #define TTBRIDGE_CALLBACK_WITH_MSG(status, msg) \
 if (callback) {\
-callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWithFormat:msg] :@""});\
+callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWithFormat:msg] :@""}, nil);\
 }\
 
 #ifndef isEmptyString
@@ -62,7 +62,8 @@ typedef NS_ENUM(NSUInteger, TTBridgeInstanceType) {
 };
 
 typedef NS_ENUM(NSUInteger, TTBridgeAuthType){
-    TTBridgeAuthPublic, // 所有均可调用(默认)
+    TTBridgeAuthNotRegistered = 0, 
+    TTBridgeAuthPublic = 1, // 所有均可调用(默认)
     TTBridgeAuthProtected, //内部domain，及外部授权可调用
     TTBridgeAuthPrivate // 仅内部domain，appinfo不可见
 };
@@ -75,6 +76,8 @@ typedef enum : NSInteger {
     TTBridgeMsgNoPermission = -1
 } TTBridgeMsg;
 
-typedef void(^TTBridgeCallback)(TTBridgeMsg, NSDictionary *);
+typedef void(^TTBridgeCallback)(TTBridgeMsg msg, NSDictionary *params, void(^resultBlock)(NSString *result));
 
 typedef NSString * TTBridgeName;
+
+typedef void(^TTBridgePluginHandler)(NSDictionary *params, TTBridgeCallback callback);

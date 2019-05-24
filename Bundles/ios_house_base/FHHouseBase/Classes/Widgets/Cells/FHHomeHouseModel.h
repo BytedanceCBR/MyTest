@@ -240,6 +240,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayDescription;
 @property (nonatomic, copy , nullable) NSString *displaySameneighborhoodTitle;
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
+@property (nonatomic, copy , nullable) NSString *originPrice;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqmValue;
 @property (nonatomic, copy , nullable) NSString *displayPrice;
@@ -259,6 +260,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *searchId;
 //租房相关
 @property (nonatomic, copy , nullable) NSString *pricing;
+@property (nonatomic, copy , nullable) NSString *pricingNum;
+@property (nonatomic, copy , nullable) NSString *pricingUnit;
+@property (nonatomic, copy , nullable) NSString *pricePerSqmNum;
+@property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 
 
 @end

@@ -31,6 +31,7 @@
 #import <FHLocManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
+#import <FHEnvContext.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -170,6 +171,9 @@ static APNsManager *_sharedManager = nil;
             [self dealWithOpenURL:&openURL];
 
             NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
+            
+            [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
+
             if ([[handledOpenURL host] isEqualToString:@"main"]) {
                 TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
                 NSDictionary* params = [obj queryParams];

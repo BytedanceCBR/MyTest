@@ -116,24 +116,7 @@ typedef NS_ENUM(NSInteger, TTVVideoDetailNatantInfoShareViewShareAction)
 }
 
 - (NSString *)ttv_shareImageIcon {
-    NSInteger shareIconStye = [[[TTSettingsManager sharedManager] settingForKey:@"tt_share_icon_type" defaultValue:@0 freeze:NO] integerValue];
-    switch (shareIconStye) {
-        case 1:
-            return @"tab_share";
-            break;
-        case 2:
-            return @"tab_share1";
-            break;
-        case 3:
-            return @"tab_share4";
-            break;
-        case 4:
-            return @"tab_share3";
-            break;
-        default:
-            return @"tab_share";
-            break;
-    }
+    return @"tab_share";
 }
 
 

@@ -52,7 +52,6 @@
 
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
-extern BOOL ttvs_isPlayerShowRelated(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
 extern NSInteger ttvs_isShareTimelineOptimize(void);
 
@@ -420,13 +419,9 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
         self.movieView.player.tipCreator = [[TTVPlayerTipAdOldCreator alloc] init];
     }else{
         self.movieView.player.enableRotate = YES;
-        if (ttvs_isPlayerShowRelated()) {
-            self.movieView.player.tipCreator = [[TTVPlayerTipRelatedCreator alloc] init];
-        }else{
-            NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
-            if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3)){
-                self.movieView.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
-            }
+        NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
+        if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3)){
+            self.movieView.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
         }
     }
 

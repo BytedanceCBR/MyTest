@@ -660,7 +660,7 @@ static NewsFetchArticleDetailManager * sharedManager;
         [result appendString:@"/"];
     }
     
-    [result appendFormat:@"%lu/", (unsigned long)[SSCommonLogic detailCDNVersion]];
+    [result appendFormat:@"%lu/", (unsigned long)0];
     return [result copy];
 }
 

@@ -95,8 +95,8 @@
             }];
             [self traceElementShow:@{@"element_type": model.type ? : @""}];
         }
-        _headerViews[@(section)] = result;
-        
+        //这里暂时去掉缓存机制，避免因为二次数据刷新reload，造成缓存的view的位置发生变化后，造成显示问题
+//        _headerViews[@(section)] = result;
     }
     return result;
 }

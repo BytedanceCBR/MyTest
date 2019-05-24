@@ -289,10 +289,8 @@ static const CGFloat kResolutionRPadding = 20;
 
 - (UIButton *)prePlayBtn {
     
-    if (![TTVPlayerSettingUtility tt_video_detail_playlast_enable]) {
-        
-        return nil;
-    }
+    return nil;
+
     return _prePlayBtn;
 }
 

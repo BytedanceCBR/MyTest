@@ -564,66 +564,14 @@
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         [wrongWords setObject:jsonString forKey:@"wrong_words"];
     }
-    if ([SSCommonLogic isReportTyposEnabled]) {
-        NSString *title;
-        if (resultArray.count > 2) {
-            NSString *keyWord = [resultArray objectAtIndex:1];
-            if (keyWord.length > 3) {
-                keyWord = [keyWord substringToIndex:3];
-                keyWord = [keyWord stringByAppendingString:@"..."];
-            }
-            title = [NSString stringWithFormat:@"举报\"%@\"为错别字？", keyWord];
-        }
-        else {
-            title = @"是否举报错别字?";
-        }
-        
-        WeakSelf;
-        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:title message:@"" preferredType:TTThemedAlertControllerTypeAlert];
-        [alert addActionWithTitle:NSLocalizedString(@"取消", @"取消") actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-            StrongSelf;
-            NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
-            [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-            [extra setValue:@"article" forKey:@"group_type"];
-            [extra setValue:@"detail_long_press" forKey:@"position"];
-            [extra setValue:@"report" forKey:@"style"];
-            if (!isEmptyString(self.detailModel.orderedData.ad_id)) {
-                [extra setValue:self.detailModel.orderedData.ad_id forKey:@"aid"];
-            }
-            wrapperTrackEventWithCustomKeys(@"pop", @"report_pop_cancel", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
-        }];
-        [alert addActionWithTitle:NSLocalizedString(@"确定", @"确定") actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            StrongSelf;
-            TTReportContentModel *model = [[TTReportContentModel alloc] init];
-            model.groupID = self.detailModel.article.groupModel.groupID;
-            model.itemID = self.detailModel.article.groupModel.itemID;
-            model.aggrType = @(self.detailModel.article.groupModel.aggrType);
-            NSString *contentType = self.detailModel.adID.longLongValue ? kTTReportContentTypeAD : kTTReportContentTypeArticle;
-            
-            [[TTReportManager shareInstance] startReportContentWithType:@"12" inputText:nil contentType:contentType reportFrom:TTReportFromByEnterFromAndCategory(self.detailModel.clickLabel, self.detailModel.categoryID) contentModel:model extraDic:wrongWords animated:YES];
-            NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
-            [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-            [extra setValue:@"article" forKey:@"group_type"];
-            [extra setValue:@"detail_long_press" forKey:@"position"];
-            [extra setValue:@"report" forKey:@"style"];
-            if (!isEmptyString(self.detailModel.orderedData.ad_id)) {
-                [extra setValue:self.detailModel.orderedData.ad_id forKey:@"aid"];
-            }
-            wrapperTrackEventWithCustomKeys(@"pop", @"report_pop_confirm", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
-        }];
-        [alert showFrom:self animated:YES];
-        [self reportTyposAlertTrack];
-    }
-    else {
-        TTReportContentModel *model = [[TTReportContentModel alloc] init];
-        model.groupID = self.detailModel.article.groupModel.groupID;
-        model.itemID = self.detailModel.article.groupModel.itemID;
-        model.aggrType = @(self.detailModel.article.groupModel.aggrType);
-        NSString *contentType = self.detailModel.adID.longLongValue ? kTTReportContentTypeAD : kTTReportContentTypeArticle;
-        
-        [[TTReportManager shareInstance] startReportContentWithType:@"12" inputText:nil contentType:contentType reportFrom:TTReportFromByEnterFromAndCategory(self.detailModel.clickLabel, self.detailModel.categoryID) contentModel:model extraDic:wrongWords animated:YES];
-        [self reportTyposTrack];
-    }
+    TTReportContentModel *model = [[TTReportContentModel alloc] init];
+    model.groupID = self.detailModel.article.groupModel.groupID;
+    model.itemID = self.detailModel.article.groupModel.itemID;
+    model.aggrType = @(self.detailModel.article.groupModel.aggrType);
+    NSString *contentType = self.detailModel.adID.longLongValue ? kTTReportContentTypeAD : kTTReportContentTypeArticle;
+    
+    [[TTReportManager shareInstance] startReportContentWithType:@"12" inputText:nil contentType:contentType reportFrom:TTReportFromByEnterFromAndCategory(self.detailModel.clickLabel, self.detailModel.categoryID) contentModel:model extraDic:wrongWords animated:YES];
+    [self reportTyposTrack];
 }
 
 - (void)reportTyposTrack {

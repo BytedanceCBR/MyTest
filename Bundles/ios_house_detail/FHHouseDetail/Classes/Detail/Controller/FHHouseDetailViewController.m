@@ -16,6 +16,7 @@
 #import "UIViewController+Track.h"
 #import "UIView+House.h"
 #import <Heimdallr/HMDTTMonitor.h>
+#import <FHRNHelper.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 

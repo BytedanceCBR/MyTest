@@ -32,29 +32,6 @@
 
 @implementation TTAppLogStartupTask
 
-+ (void)load
-{
-    [[TTModuleBridge sharedInstance_tt] registerAction:@"HTSSendTrack" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
-        NSString *event = params[@"event"];
-        NSString *label = params[@"label"];
-        NSString *value = params[@"value"];
-        NSString *extValue = params[@"extra"];
-        NSDictionary *attributes = params[@"attributes"];
-        NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
-        [extraDic setValue:extValue forKey:@"ext_value"];
-        [extraDic addEntriesFromDictionary:attributes];
-        wrapperTrackEventWithCustomKeys(event, label, value, nil, extraDic);
-        return nil;
-    }];
-    
-    [[TTModuleBridge sharedInstance_tt] registerAction:@"HTSV3SendTrack" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
-        NSString *event = params[@"event"];
-        NSDictionary *paramsDict = params[@"params"];
-        [TTTrackerWrapper eventV3:event params:paramsDict];
-        return nil;
-    }];
-}
-
 - (NSString *)taskIdentifier {
     return @"AppLog";
 }
