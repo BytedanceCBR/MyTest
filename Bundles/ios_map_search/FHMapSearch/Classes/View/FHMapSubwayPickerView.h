@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "FHMapSubwayModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHMapSubwayPickerView : UIView
 
-@property(nonatomic , copy) void (^chooseStation)(id line , id station);
+@property(nonatomic , copy) void (^chooseStation)(FHMapSubwayDataOptionModel * line , FHMapSubwayDataOptionOptionsModel *station);
+@property(nonatomic , copy) void (^requestDataBlock)(FHMapSubwayDataModel *data);
 
--(void)showWithSubwayData:(id)data inView:(UIView *)view;
+-(void)showWithSubwayData:(FHMapSubwayDataModel *)data inView:(UIView *)view;
 
 @end
 
